@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>47389819812-cf2tfr3ltqbcao7hme7gh741d1nbrhta.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.47389819812-cf2tfr3ltqbcao7hme7gh741d1nbrhta</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>47389819812-1s0skgsiperg200mav2j3pckr934sr17.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDXC95Jif27RyUeCMvmalklhqKEJtYy9j4</string>
+	<key>GCM_SENDER_ID</key>
+	<string>47389819812</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.layabox.momoyo</string>
+	<key>PROJECT_ID</key>
+	<string>uge-o-f4ba2</string>
+	<key>STORAGE_BUCKET</key>
+	<string>uge-o-f4ba2.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:47389819812:ios:f8bfadb4bad675b3d77731</string>
+</dict>
+</plist>

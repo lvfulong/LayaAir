@@ -1,0 +1,10 @@
+node_modules
+build
+out
+*.xcuserstate
+publish/nativetools/template/ios/LayaBox/LayaBox.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+*.xcscheme
+LayaMe/MomoYo_iOS/MomoYo.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+*.xcbkptlist
+publish/nativetools/template/ios/LayaBox/LayaBox.xcodeproj/xcuserdata/joychina.xcuserdatad/xcschemes/xcschememanagement.plist
+ThirdParty

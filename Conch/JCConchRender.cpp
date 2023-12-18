@@ -1,0 +1,365 @@
+/**
+@file			JCConchRender.cpp
+@brief			
+@author			James
+@version		1.0
+@date			2016_5_12
+*/
+
+#include "JCConchRender.h"
+#include <Utils/Log.h>
+#include <Utils/JCCommonMethod.h>
+#include "JCSystemConfig.h"
+#include <Utils/JCFileSource.h>
+#include <downloadCache/JCServerFileCache.h>
+#include "JCScriptRuntime.h"
+#include <Bindings/JSConchConfig.h>
+#include "JCConch.h"
+#include <Bindings/JSLayaGL.h>
+#include <LayaGL/JCLayaGLDispatch.h>
+#include "../../LayaAir/2D/ScreenCanvasContext2D.h"
+#include "../../LayaAir/2D/RenderTexture2D.h"
+#include "LayaAir/2D/RenderState2D.h"
+#ifdef __APPLE__
+#include "OpenGLBackendiOS.h"
+#elif LINUX
+#include "OpenGLBackendLinuxEGLX11.h"
+#elif ANDROID
+#include "OpenGLBackendAndroidEGL.h"
+#elif _WIN32
+#include "OpenGLBackendWinEGL.h"
+#endif
+
+extern int g_nInnerHeight;
+extern int g_nInnerWidth;
+
+namespace laya
+{
+   
+    extern WebGLEngine* g_WebGLEngine;
+    extern int g_nMainFrameBuffer;
+    extern int g_nRealMainFrameBuffer;
+
+	JCConchRender::JCConchRender(void* pFileResManager)
+	{
+        m_pRenderThread = NULL;
+        m_nFrameCount = 0;
+		m_fShowPerfScale = 0;
+        m_pFileResManager = (JCFileResManager*)pFileResManager;
+	}
+    void JCConchRender::init()
+    {
+        m_pImageManager = new JCImageManager();
+        m_pIDGenerator = new JCIDGenerator();
+        m_pProgramLocationTable = new JCIDGenerator();
+        m_pIDGenerator->reset();
+        m_pProgramLocationTable->reset();
+        m_pLayaGL = new JCLayaGL(g_nInnerWidth, g_nInnerHeight,m_pImageManager, m_pIDGenerator, m_pProgramLocationTable);
+        JCLayaGLDispatch::ms_pLayaGL = m_pLayaGL;
+        
+
+        m_pWebGLInternalTexManager = new ObjectManager<WebGLInternalTex>();
+        m_pShaderDataManager = new ObjectManager<ShaderData>();
+        m_pWordTextManager = new ObjectManager<WordText>();
+        m_pUniformBufferObjectManager = new ObjectManager<UniformBufferObject>();
+#ifdef WEBGL_THREAD
+        m_WebGLThread = new WebGLThread();
+#endif
+
+    }
+	JCConchRender::~JCConchRender()
+	{
+        //这个是在JCConch中传过来的，但是为了确保最后一帧，在这释放了，因为JCConchRender全局只有一个
+        if (m_pFileResManager)
+        {
+            //这个fileCache也是同理，需要在这删除，
+            if (m_pFileResManager->m_pFileCache)
+            {
+                delete m_pFileResManager->m_pFileCache;
+                m_pFileResManager->m_pFileCache = NULL;
+            }
+            delete m_pFileResManager;
+            m_pFileResManager = NULL;
+        }
+        if (m_pImageManager)
+        {
+            delete m_pImageManager;
+            m_pImageManager = NULL;
+        }
+        if (m_pLayaGL)
+        {
+            delete m_pLayaGL;
+            m_pLayaGL = NULL;
+        }
+
+        if (m_pIDGenerator)
+        {
+            delete m_pIDGenerator;
+            m_pIDGenerator = NULL;
+        }
+        if (m_pProgramLocationTable)
+        {
+            delete m_pProgramLocationTable;
+            m_pProgramLocationTable = NULL;
+        }
+#ifdef WEBGL_THREAD
+        m_WebGLThread->postTaskSync([this]()->bool {
+#else
+        JCConch::s_pScriptRuntime->m_pScriptThread->postTaskSync([this]()->bool {
+#endif
+            if (m_pScreenContext)
+            {
+                delete m_pScreenContext;
+                m_pScreenContext = 0;
+            }
+            if (m_pWordTextManager)
+            {
+                delete m_pWordTextManager;
+                m_pWordTextManager = NULL;
+            }
+            if (m_pShaderDataManager)
+            {
+                delete m_pShaderDataManager;
+                m_pShaderDataManager = NULL;
+            }
+            if (m_pWebGLInternalTexManager)
+            {
+                delete m_pWebGLInternalTexManager;
+                m_pWebGLInternalTexManager = NULL;
+            }
+            if (m_pUniformBufferObjectManager)
+            {
+                delete m_pUniformBufferObjectManager;
+                m_pUniformBufferObjectManager = NULL;
+            }
+            delete g_WebGLEngine;
+            g_WebGLEngine = nullptr;
+
+            delete m_GfxBackend;
+            m_GfxBackend = nullptr;
+            return true;
+        }).get();
+#ifdef WEBGL_THREAD
+        if (m_WebGLThread != nullptr)
+        {
+            delete m_WebGLThread;
+            m_WebGLThread = nullptr;
+        }
+#endif
+	}
+    void JCConchRender::update() {
+        m_nFrameCount++;
+        if (m_nFrameCount % 60 == 0)
+        {
+            m_pImageManager->update(m_nFrameCount);
+        }
+    }
+	void JCConchRender::clearAllData()
+	{
+        LOGI(">>>JCConchRender::clearAllData =%d", std::this_thread::get_id());
+        //m_kPerfRender.invalidGLRes();
+        m_pLayaGL->deleteAllGLRes();
+        //图片全部清空
+        if (m_pImageManager) {
+            m_pImageManager->resetRenderThread();
+        }
+        m_pIDGenerator->reset();
+        m_pProgramLocationTable->reset();
+	}
+
+void JCConchRender::setMainContextSize(int width,int height)
+{
+    postTaskFromJSToRenderAsync([width, height, this]() {
+        JCConch::s_pConchRender->m_pLayaGL->m_nMainCanvasWidth = width;
+        JCConch::s_pConchRender->m_pLayaGL->m_nMainCanvasHeight = height;
+        if (m_pScreenContext) {
+            m_pScreenContext->size(width, height);
+        }
+    });
+}
+void JCConchRender::start()
+{
+    if (!g_WebGLEngine)
+    {
+        return;
+    }
+    //webgl mode need restore gl state
+    if (m_pScreenContext == nullptr)
+    {
+        m_pScreenContext = new ScreenCanvasContext2D(g_WebGLEngine);
+    }
+    //m_pMainContext->m_target->start();
+    m_pScreenContext->startForMainCanvas();
+    //m_pMainContext->m_target->clear(0.0f, 0.0f, 0.0f, 1.0f);
+}
+void JCConchRender::end()
+{
+    if (!g_WebGLEngine)
+    {
+        return;
+    }
+    GLenum last_active_texture;
+    GLint last_program;
+    GLint last_texture;
+    GLint last_sampler;
+    GLint last_array_buffer;
+    GLint last_element_array_buffer;
+    GLint last_vertex_array;
+    GLint last_polygon_mode[2];
+    GLint last_viewport[4];
+    GLint last_scissor_box[4];
+    GLenum last_blend_src_rgb;
+    GLenum last_blend_dst_rgb;
+    GLenum last_blend_src_alpha;
+    GLenum last_blend_dst_alpha;
+    GLenum last_blend_equation_rgb;
+    GLenum last_blend_equation_alpha;
+    GLboolean last_enable_blend;
+    GLboolean last_enable_cull_face;
+    GLboolean last_enable_depth_test;
+    GLboolean last_enable_scissor_test;
+    int last_width;
+    int last_height;
+    if (g_kSystemConfig.m_bConchWebGL)
+    {
+        glGetIntegerv(GL_ACTIVE_TEXTURE, (GLint*)&last_active_texture);
+        glActiveTexture(GL_TEXTURE0);
+        glGetIntegerv(GL_CURRENT_PROGRAM, &last_program);
+        glGetIntegerv(GL_TEXTURE_BINDING_2D, &last_texture);
+        glGetIntegerv(GL_SAMPLER_BINDING, &last_sampler);
+        glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &last_array_buffer);
+        glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &last_element_array_buffer);
+        glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &last_vertex_array);
+        //glGetIntegerv(GL_POLYGON_MODE, last_polygon_mode);
+        glGetIntegerv(GL_VIEWPORT, last_viewport);
+        glGetIntegerv(GL_SCISSOR_BOX, last_scissor_box);
+        glGetIntegerv(GL_BLEND_SRC_RGB, (GLint*)&last_blend_src_rgb);
+        glGetIntegerv(GL_BLEND_DST_RGB, (GLint*)&last_blend_dst_rgb);
+        glGetIntegerv(GL_BLEND_SRC_ALPHA, (GLint*)&last_blend_src_alpha);
+        glGetIntegerv(GL_BLEND_DST_ALPHA, (GLint*)&last_blend_dst_alpha);
+        glGetIntegerv(GL_BLEND_EQUATION_RGB, (GLint*)&last_blend_equation_rgb);
+        glGetIntegerv(GL_BLEND_EQUATION_ALPHA, (GLint*)&last_blend_equation_alpha);
+        last_enable_blend = glIsEnabled(GL_BLEND);
+        last_enable_cull_face = glIsEnabled(GL_CULL_FACE);
+        last_enable_depth_test = glIsEnabled(GL_DEPTH_TEST);
+        last_enable_scissor_test = glIsEnabled(GL_SCISSOR_TEST);
+    }
+    last_width = RenderState2D::width;
+    last_height = RenderState2D::height;
+    int last_main_frame_buffer = g_nMainFrameBuffer;
+    g_nMainFrameBuffer = g_nRealMainFrameBuffer;
+    m_pScreenContext->endForMainCanvas();
+    //int width = m_pScreenContext->m_target->getWidth();
+    //int height = m_pScreenContext->m_target->getHeight();
+    Matrix m(JCLayaGL::s_fMainCanvasScaleX, 0.0f, 0.0f, JCLayaGL::s_fMainCanvasScaleY, JCLayaGL::s_fMainCanvasTX, JCLayaGL::s_fMainCanvasTY);
+    static float INV_UV[8] = { 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f };
+    g_WebGLEngine->viewport(0, 0, g_nInnerWidth, g_nInnerHeight);
+    g_WebGLEngine->scissor(0, 0, g_nInnerWidth, g_nInnerHeight);
+    //glClearColor(1, 1, 1, 1);
+    //glClear(GL_COLOR_BUFFER_BIT);
+    RenderState2D::width = g_nInnerWidth;
+    RenderState2D::height = g_nInnerHeight;
+    m_pScreenContext->clear();
+    //m_pScreenContext->size(g_nInnerWidth, g_nInnerHeight);
+    m_pScreenContext->drawToScreen(m);
+    //m_pScreenContext->drawTarget(m_pScreenContext->m_target, 0, 0, width, height, m, INV_UV, BlendMode::disable);
+    m_pScreenContext->flush();
+    m_pScreenContext->clear();
+    if (g_kSystemConfig.m_bConchWebGL)
+    {
+        glUseProgram(last_program);
+        glBindTexture(GL_TEXTURE_2D, last_texture);
+        glBindSampler(0, last_sampler);
+        glActiveTexture(last_active_texture);
+        glBindVertexArray(last_vertex_array);
+        glBindBuffer(GL_ARRAY_BUFFER, last_array_buffer);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, last_element_array_buffer);
+        glBlendEquationSeparate(last_blend_equation_rgb, last_blend_equation_alpha);
+        glBlendFuncSeparate(last_blend_src_rgb, last_blend_dst_rgb, last_blend_src_alpha, last_blend_dst_alpha);
+        if (last_enable_blend) glEnable(GL_BLEND); else glDisable(GL_BLEND);
+        if (last_enable_cull_face) glEnable(GL_CULL_FACE); else glDisable(GL_CULL_FACE);
+        if (last_enable_depth_test) glEnable(GL_DEPTH_TEST); else glDisable(GL_DEPTH_TEST);
+        if (last_enable_scissor_test) glEnable(GL_SCISSOR_TEST); else glDisable(GL_SCISSOR_TEST);
+        //glPolygonMode(GL_FRONT_AND_BACK, (GLenum)last_polygon_mode[0]);
+        g_WebGLEngine->viewport(last_viewport[0], last_viewport[1], (GLsizei)last_viewport[2], (GLsizei)last_viewport[3]);
+        g_WebGLEngine->scissor(last_scissor_box[0], last_scissor_box[1], (GLsizei)last_scissor_box[2], (GLsizei)last_scissor_box[3]);
+        
+    }
+    g_nMainFrameBuffer = last_main_frame_buffer;
+    RenderState2D::width = last_width;
+    RenderState2D::height = last_height;
+}
+void JCConchRender::swapBuffer()
+{
+    if (m_GfxBackend != nullptr)
+    {
+        m_GfxBackend->swapBuffer();
+    }
+}
+void JCConchRender::requestCaptureScreen()
+{
+    m_pScreenContext->requestCaptureScreen();
+}
+    void JCConchRender::createScreenSurface(void *nativeHandle)
+    {
+#ifdef WEBGL_THREAD
+        m_WebGLThread->postTaskAsync([this, nativeHandle]() {
+#else
+        JCConch::s_pScriptRuntime->m_pScriptThread->post([this, nativeHandle]()  {
+#endif
+            m_GfxBackend->createScreenSurface(nativeHandle);
+            m_GfxBackend->makeCurrent();
+            if (g_kSystemConfig.m_bConchWebGL && g_WebGLEngine == nullptr)
+            {
+                g_WebGLEngine = new WebGLEngine(WebGLMode::Auto);
+                g_WebGLEngine->initRenderEngine();
+                g_WebGLEngine->createTextureContext(g_WebGLEngine->isWebGL2());
+            }
+        });
+    }
+    void JCConchRender::onScreenSurfaceResize(int width, int height)
+    {
+#ifdef WEBGL_THREAD
+        m_WebGLThread->postTaskAsync([this, width, height](){
+#else
+        JCConch::s_pScriptRuntime->m_pScriptThread->post([this, width, height]() {
+#endif
+            m_GfxBackend->onScreenSurfaceResize(width, height);
+        });
+    }
+    void JCConchRender::destroyScreenSurface()
+    {
+#ifdef WEBGL_THREAD
+        m_WebGLThread->postTaskAsync([this]() {
+#else
+        JCConch::s_pScriptRuntime->m_pScriptThread->post([this](){
+#endif  
+            m_GfxBackend->destroyScreenSurface();
+        });
+    }
+    void JCConchRender::createBackend(const BackendOptions& options)
+    {
+#ifdef WEBGL_THREAD
+        m_WebGLThread->postTaskAsync([this, options](){
+#else
+        JCConch::s_pScriptRuntime->m_pScriptThread->post([this, options]() {
+#endif
+            if (m_GfxBackend == nullptr) {
+ #ifdef __APPLE__
+                m_GfxBackend = new OpenGLBackendiOS();
+#elif LINUX
+                m_GfxBackend = new OpenGLBackendLinuxEGLX11();
+#elif ANDROID
+                m_GfxBackend = new OpenGLBackendAndroidEGL();
+#elif _WIN32
+                m_GfxBackend = new OpenGLBackendWinEGL();
+#endif
+                m_GfxBackend->create(options);
+            }
+        });
+    }
+}
+//------------------------------------------------------------------------------
+
+
+//-----------------------------END FILE--------------------------------

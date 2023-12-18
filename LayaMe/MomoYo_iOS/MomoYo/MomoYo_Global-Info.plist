@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Need to access your photo library to store photos in your phone library.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need to get relevant data from your location through your location information.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Need to access your camera to capture a photo and update profile picture.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Need to access your photo library to select a photo add and update profile picture.</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>Twitter</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>twitterkit-LRbCRQsY42hksRja0QGWmrpwx</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>facebook</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb495468879072320</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.layabox.momoyo</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>momoyo</string>
+			</array>
+		</dict>
+	</array>
+	<key>FacebookAppID</key>
+	<string>495468879072320</string>
+	<key>FacebookClientToken</key>
+	<string>fb2d5d63ccaaffcf1c9235f54e658aae</string>
+	<key>GCLayaSDKParameters</key>
+	<dict>
+		<key>Analytics</key>
+		<dict>
+			<key>AppleAppID</key>
+			<string>1640004642</string>
+			<key>AppsFlyerDevKey</key>
+			<string>9dgaMpMBebzYAhvmGmafNR</string>
+		</dict>
+	</dict>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>twitterauth</string>
+		<string>twitter</string>
+	</array>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>Your data will be used to deliver personalized ads to you.</string>
+</dict>
+</plist>

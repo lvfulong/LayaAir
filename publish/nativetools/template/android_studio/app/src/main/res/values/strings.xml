@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">LayaBox</string>
+    <string name="on_back_pressed">再次点击后退键退出游戏!</string>
+    <string name="alert_dialog_title">提示</string>
+    <string name="todo">TODO</string>
+    <string name="waring">警告</string>
+    <string name="permission_waring">获取权限失败,可能导致部分功能无法正常使用，请到到应用权限设置页面手动授权</string>
+    <string name="init_failed">初始化失败，请推出重试</string>
+    <string name="ok">确定</string>
+    <string name="network_error">网络异常，请检查您的网络或与开发商联系</string>
+    <string name="parse_json_error">解析JSON错误，请您重新启动应用或与开发商联系</string>
+    <string name="download_error">下载失败请退出重试</string>
+    <string name="internal_error">内部错误</string>
+    <string name="tips0">新世界的大门即将打开</string>
+    <string name="tips1">敌军还有30秒抵达战场</string>
+    <string name="tips2">妈妈说，心急吃不了热豆腐</string>
+</resources>

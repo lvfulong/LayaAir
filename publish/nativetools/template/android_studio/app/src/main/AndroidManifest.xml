@@ -1,0 +1,68 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <!--normal-->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <!--<uses-permission android:name="android.permission.VIBRATE"/>-->
+    <!--dangerous-->
+
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" tools:ignore="ProtectedPermissions"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!--<uses-permission android:name="android.permission.RECORD_AUDIO"/>-->
+    <!--<uses-permission android:name="android.permission.READ_PHONE_STATE"/>-->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" />
+        </intent>
+    </queries>
+    <application
+        android:name="demo.LayaApplication"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+		android:theme="@style/Theme.AppCompat.NoActionBar"
+        android:allowBackup="false"
+        android:requestLegacyExternalStorage="true"
+        tools:replace="android:allowBackup">
+        <!--xiaomi-->
+        <meta-data android:name="notch.config" android:value="portrait" />
+        <!--huawei-->
+        <meta-data android:name="android.notch_support" android:value="true" />
+        <provider
+            android:name="demo.LayaFileProvider"
+            android:authorities="${applicationId}.laya.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/laya_file_paths" />
+        </provider>
+        <!--
+       <activity android:name="demo.WelcomeActivity"
+           android:theme="@style/SplashTheme">
+           <intent-filter>
+               <action android:name="android.intent.action.MAIN" />
+               <category android:name="android.intent.category.LAUNCHER" />
+           </intent-filter>
+       </activity>-->
+       <activity
+           android:name="demo.MainActivity"
+           android:theme="@style/ThemeWithoutAnim"
+           android:screenOrientation="portrait"
+           android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
+           android:launchMode="singleTop"
+           android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+           android:label="@string/app_name" >
+           <intent-filter>
+               <action android:name="android.intent.action.MAIN" />
+               <category android:name="android.intent.category.LAUNCHER" />
+           </intent-filter>
+       </activity>
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
+   </application>
+</manifest>

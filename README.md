@@ -1,2 +1,4 @@
-# LayaNative3.0
-Laya3.0 native engine 
+build android
+
+1).so too big with debug info
+delete -g in file android.toolchain.cmake

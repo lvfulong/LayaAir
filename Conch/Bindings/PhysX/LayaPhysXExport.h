@@ -1,0 +1,21 @@
+#ifndef __LayaConchPhysXExport_H__
+#define __LayaConchPhysXExport_H__
+
+#include <JCConch.h>
+#include "../../JCScriptRuntime.h"
+#include <Binder/JSInterface.h>
+#include "PxPhysicsAPI.h"
+#include <Bindings/JSRuntime.h>
+typedef intptr_t pointer_t;
+namespace laya
+{
+    class JSLayaConchPhysX
+    {
+    public:
+
+        static void exportJS(Context& context);
+
+        static void onMalloc(JSValueAsParam ab);
+    };
+}
+#endif

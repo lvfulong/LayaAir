@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">English</string>
+    <string name="mis_action_button_string">%1$s(%2$d/%3$d)</string>
+    <string name="mis_count_limit_string">You can choose %1$d pictures</string>
+    <string name="done">Done</string>
+    <string name="next">Next</string>
+    <string name="search">Search</string>
+    <string name="go">Go</string>
+    <string name="send">Send</string>
+</resources>

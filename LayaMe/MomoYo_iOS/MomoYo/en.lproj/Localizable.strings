@@ -1,0 +1,12 @@
+"done" = "done";
+"next" = "next";
+"search" = "search";
+"go" = "go";
+"send" = "send";
+"新世界的大门即将打开" = "Welcome to the world of MomoYo";
+"正在准备犀利的创作工具" = "A funny and creative community is waiting";
+"正在将玩家的作品摆上货架" = "Preparing tools for creation";
+"network_error" = "The network is abnormal, please check your network or contact the developer";
+"parse_json_error" = "Parse json error, please exit and try again";
+"download_error" = "Download error, please exit and try again";
+"internal_error" = "Internal error, please contact the developer";

@@ -1,0 +1,26 @@
+#ifndef __FontManager_H__
+#define __FontManager_H__
+#include <string>
+#include <unordered_map>
+#include <vector>
+
+namespace laya
+{
+class FontManager
+{
+  public:
+    FontManager();
+    ~FontManager();
+    bool registerFont(const std::string &family, const std::string &path);
+    bool registerFont(const std::string &family, const uint8_t *data, int32_t byteLength);
+    std::vector<std::string> getAllSystemFonts();
+    std::pair<bool, std::string> getRealFontName(const std::string &family);
+
+    static FontManager *getInstance();
+    static void deleteInstance();
+
+  public:
+    std::unordered_map<std::string, std::string> m_fontName2RealName;
+};
+} // namespace laya
+#endif

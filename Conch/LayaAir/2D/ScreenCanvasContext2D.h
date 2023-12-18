@@ -1,0 +1,51 @@
+#ifndef __ScreenCanvasContext2D_H__
+#define __ScreenCanvasContext2D_H__
+
+#include <stdio.h>
+#include <stack>
+#include "Matrix.h"
+#include <vector>
+#include "MeshTexture.h"
+#include "BlendMode.h"
+#include "Rectangle.h"
+#include "Context2D.h"
+#include <memory>
+#include <atomic>
+
+namespace laya
+{
+	class WebGLEngine;
+	class SubmitBase;
+	class WebGLInternalTex;
+	class RenderTexture2D;
+	class ISubmit;
+	class WebGLInternalRT;
+	class ScreenCanvasContext2D
+	{
+	public:
+		ScreenCanvasContext2D(WebGLEngine* pWebglEngine);
+		~ScreenCanvasContext2D();
+		void clear();
+		void flush();
+		void drawToScreen(const Matrix& m);
+		void startForMainCanvas();
+		void endForMainCanvas();
+		bool drawTarget(WebGLInternalTex* rt, float x, float y, float width, float height, const Matrix& m, /*shaderValue : Value2D,*/ float uv[4], BlendMode blend = BlendMode::invalid);
+		void size(int w, int h);
+		void submitElement(int start, int end);
+        void captureScreen();
+        void requestCaptureScreen();
+	public:
+		MeshQuadTexture*					            m_mesh;
+		std::vector<ISubmit*>				            m_submits;
+		SubmitBase*							            m_curSubmit = nullptr;
+		std::vector<Mesh2D*>				            m_meshlist;
+		int m_width							            = Context2D::MAXSIZE;
+		int m_height						            = Context2D::MAXSIZE;
+		WebGLEngine*						            m_pWebGLEngine;
+		std::shared_ptr<WebGLInternalTex>				m_texture = nullptr;
+		WebGLInternalRT*					            m_target = nullptr;
+		std::atomic_bool                                m_requestCaptureScreen{ false };
+	};
+}
+#endif //__ScreenCanvasContext2D_H__

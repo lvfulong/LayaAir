@@ -1,0 +1,23 @@
+{
+  "name": "test_ts",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --mode none",
+    "release": "webpack --mode production",
+    "watch": "webpack serve --mode development",
+    "publish": "cd ./scripts && node publish.js"
+  },
+  "keywords": [],
+  "type": "commonjs",
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+  },
+  "dependencies": {
+    "archiver": "^5.3.1",
+    "xml2js": "^0.4.23"
+  }
+}
