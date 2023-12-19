@@ -1,9 +1,10 @@
 ﻿
-#ifndef RenderListQueue
-#define RenderListQueue
+#ifndef __RenderListQueue_H_
+#define __RenderListQueue_H_
 
 #include <vector>
 #include <functional>
+#include <memory>
 
 //RenderElement
 
@@ -19,20 +20,7 @@ namespace layaRender
 
     };
 
-    class RenderContext
-    {
-    public:
-        using p_context = std::shared_ptr<Buffer>;
-        static p_context create() {
-            return std::make_shared<RenderContext>();
-        }
-        ~RenderContext();
-    private:
-        RenderContext();
-    public:
-        CameraInfo* cameraInfo;
   
-    };
 
     template <class T>
     class SingleList
@@ -41,8 +29,30 @@ namespace layaRender
         SingleList();
         ~SingleList();
 
+    public:
+        uint32_t length;
+
     private:
 
+    };
+
+    class RenderElement;
+
+    class RenderContext
+    {
+    public:
+        using p_context = std::shared_ptr<RenderContext>;
+        static p_context create() {
+            return std::make_shared<RenderContext>();
+        }
+        ~RenderContext();
+        RenderContext();
+        uint32_t drawRenderElementList(SingleList<RenderElement*>& list);
+        void drawRenderElementOne(RenderElement* one);
+    private:
+       
+    public:
+        CameraInfo* cameraInfo;
     };
 
     class RenderDataElement
@@ -61,10 +71,6 @@ namespace layaRender
     public:
         struct geometryData
         {
-            transform
-
-                boundbox
-                flag
 
         }composeData;
 
@@ -77,12 +83,13 @@ namespace layaRender
 
     };
 
-    
+    typedef std::function<void(SingleList<RenderElement*>&, CameraInfo*) >  cullfun;
+    typedef std::function<void(SingleList<RenderElement*>&)> batchfun;
+    typedef std::function<void(SingleList<RenderElement*>&, uint32_t, uint32_t)> composefun;
 	class RenderListQueue {
-        typedef std::function<void(SingleList<RenderElement*> &allElements), CameraInfo* cameraInfo >  cullfun;
-        typedef std::function<void(SingleList<RenderElement*> &allElements)> batchfun;
-        typedef std::function<void(SingleList<RenderElement*> &allElements), uint32_t left, uint32_t right> composefun;
+      
     public:
+       
         RenderListQueue(cullfun cull, batchfun batch, composefun compose);
         ~RenderListQueue();
         uint32_t renderQueue();
@@ -93,8 +100,8 @@ namespace layaRender
         cullfun _cull;
         batchfun _batch;
         composefun _compose;
-        SingleList<RenderElement*> _elements = nullptr;
-        RenderContext::p_context _context = nullptr;
+        SingleList<RenderElement*> _elements;
+        RenderContext::p_context _context;
 	};
 }
 #endif //RenderListQueue

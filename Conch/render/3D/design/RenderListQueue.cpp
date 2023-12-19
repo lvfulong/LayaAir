@@ -1,10 +1,13 @@
+#ifndef __RenderListQueue_CPP_
+#define __RenderListQueue_CPP_
 #include "RenderListQueue.h"
 namespace layaRender
 {
-    RenderListQueue(cullfun cull, batchfun batch, composefun compose) {
-        this._cull = cull;
-        this._batch = batch;
-        this._compose = compose;
+    RenderListQueue::RenderListQueue(cullfun cull, batchfun batch, composefun compose)
+    {
+        this->_cull = cull;
+        this->_batch = batch;
+        this->_compose = compose;
     }
 
     RenderListQueue::~RenderListQueue() {
@@ -17,9 +20,9 @@ namespace layaRender
         //batchqueue
         _batch(_elements);
         //compose
-        _compose(_elements);
+        _compose(_elements,0,_elements.length);
         //render
-        _context->drawRenderElementList(_elements);
+        return _context->drawRenderElementList(_elements);
     }
 
     void RenderListQueue::addRenderElement(RenderElement* value){
@@ -37,3 +40,4 @@ namespace layaRender
 
 
 }
+#endif //__RenderListQueue_CPP_

@@ -119,8 +119,8 @@ list(APPEND CONCH_SRC
 
 	
 	#render/3D/design 3D框架设计文件夹
-	#render/3D/design/RenderListQueue.cpp
-	#render/3D/design/RenderListQueue.h
+	render/3D/design/RenderListQueue.cpp
+	render/3D/design/RenderListQueue.h
 	
 	#render/driver/gles/driver
 
