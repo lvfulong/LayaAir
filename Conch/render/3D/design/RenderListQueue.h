@@ -5,36 +5,16 @@
 #include <vector>
 #include <functional>
 #include <memory>
-
+#include "render/tempbase.h"
 //RenderElement
 
 namespace layaRender
 {
-    class CameraInfo
-    {
-    public:
-        CameraInfo();
-        ~CameraInfo();
 
-    private:
-
-    };
 
   
 
-    template <class T>
-    class SingleList
-    {
-    public:
-        SingleList();
-        ~SingleList();
-
-    public:
-        uint32_t length;
-
-    private:
-
-    };
+   
 
     class RenderElement;
 
@@ -55,33 +35,7 @@ namespace layaRender
         CameraInfo* cameraInfo;
     };
 
-    class RenderDataElement
-    {
-    public:
-        RenderDataElement();
-        ~RenderDataElement();
-
-    private:
-
-    };
-
-
-    class RenderElement
-    {
-    public:
-        struct geometryData
-        {
-
-        }composeData;
-
-        RenderDataElement* renderData;
-
-        RenderElement();
-        ~RenderElement();
-
-    private:
-
-    };
+  
 
     typedef std::function<void(SingleList<RenderElement*>&, CameraInfo*) >  cullfun;
     typedef std::function<void(SingleList<RenderElement*>&)> batchfun;

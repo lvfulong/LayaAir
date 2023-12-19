@@ -122,6 +122,8 @@ list(APPEND CONCH_SRC
 	render/3D/design/RenderListQueue.cpp
 	render/3D/design/RenderListQueue.h
 	
+	#临时引用文件
+	render/tempbase.h
 	#render/driver/gles/driver
 
 
