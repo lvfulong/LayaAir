@@ -16,14 +16,6 @@ using laya::BoundFrustum;
 
 namespace layaRender
 {
-
-    class SceneRenderManager
-    {
-    public:
-        SceneRenderManager();
-        ~SceneRenderManager();
-    private:
-    };
     class CullInfo
     {
     public:
