@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.16)
 set(PROJECT_NAME LayaMe)
 project(${PROJECT_NAME})
 

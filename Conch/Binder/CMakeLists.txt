@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.16)
 
 set(TARGET Binder)
 
@@ -75,7 +75,7 @@ target_link_libraries(${TARGET}
     Utils
     ${DEPS_V8}
 )
-
+target_precompile_headers(${TARGET} PRIVATE ${HEADERS})
 # set(INSTALL_TYPE ARCHIVE)
 # install(TARGETS ${TARGET} ${INSTALL_TYPE} DESTINATION lib/${HEADERS})
 # install(FILES ${HEADERS} DESTINATION include/${TARGET})
