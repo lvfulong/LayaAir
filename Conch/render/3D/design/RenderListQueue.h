@@ -5,43 +5,17 @@
 #include <vector>
 #include <functional>
 #include <memory>
+#include "RenderContext.h"
 #include "render/tempbase.h"
 //RenderElement
 
 namespace layaRender
 {
-
-
-  
-
-   
-
-    class RenderElement;
-
-    class RenderContext
-    {
-    public:
-        using p_context = std::shared_ptr<RenderContext>;
-        static p_context create() {
-            return std::make_shared<RenderContext>();
-        }
-        ~RenderContext();
-        RenderContext();
-        uint32_t drawRenderElementList(SingleList<RenderElement*>& list);
-        void drawRenderElementOne(RenderElement* one);
-    private:
-       
-    public:
-        CameraInfo* cameraInfo;
-    };
-
-  
-
+    static  public void aaa();
     typedef std::function<void(SingleList<RenderElement*>&, CameraInfo*) >  cullfun;
     typedef std::function<void(SingleList<RenderElement*>&)> batchfun;
     typedef std::function<void(SingleList<RenderElement*>&, uint32_t, uint32_t)> composefun;
 	class RenderListQueue {
-      
     public:
        
         RenderListQueue(cullfun cull, batchfun batch, composefun compose);

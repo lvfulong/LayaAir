@@ -21,9 +21,12 @@ namespace layaRender
     public:
         SingleList();
         ~SingleList();
-
+        uint32_t getLength(){return length};
     public:
+        std::vector<T>	m_vElements;
+    private:
         uint32_t length;
+        
 
     private:
 
@@ -46,7 +49,9 @@ namespace layaRender
     public:
         struct geometryData
         {
-            
+            uint32_t m_nDistanceForSort;
+            float m_nSortingFudge;//排序矫正值
+            uint32_t renderQueue;//material Renderqueue
 
         }composeData;
 
