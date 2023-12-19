@@ -1,0 +1,18 @@
+#ifndef __CullPass_H__
+#define __CullPass_H__
+
+#include "render/tempbase.h"
+
+namespace layaRender
+{
+	class RenderElement;
+	class CullPass
+	{
+	public:
+		void cullByCameraCullInfo(const CameraCullInfo& cameraCullInfo, const SceneRenderManager& renderManager);
+		void cullByShadowCullInfo(const ShadowCullInfo& shadowCullInfo, const SceneRenderManager& renderManager);
+		void cullingSpotShadow(const CameraCullInfo& cameraCullInfo, const SceneRenderManager& renderManager);
+		SingleList<RenderElement*> _elements;
+	};
+}
+#endif //__CullPass_H__
