@@ -9,9 +9,9 @@ namespace layaRender
 	class CullPass
 	{
 	public:
-		void cullByCameraCullInfo(const CameraCullInfo& cameraCullInfo, const SceneRenderManager& renderManager);
-		void cullByShadowCullInfo(const ShadowCullInfo& shadowCullInfo, const SceneRenderManager& renderManager);
-		void cullingSpotShadow(const CameraCullInfo& cameraCullInfo, const SceneRenderManager& renderManager);
+		void cullByCameraCullInfo(const CullInfo& cullInfo, const SceneRenderManager& renderManager);
+		void cullByShadowCullInfo(const CullInfo& cullInfo, const SceneRenderManager& renderManager);
+		void cullingSpotShadow(const CullInfo& cullInfo, const SceneRenderManager& renderManager);
 		SingleList<RenderElement*> _elements;
 	};
 }

@@ -24,31 +24,31 @@ namespace layaRender
         ~SceneRenderManager();
     private:
     };
-    class CameraCullInfo
+    class CullInfo
     {
     public:
-        CameraCullInfo();
-        ~CameraCullInfo();
+        CullInfo();
+        ~CullInfo();
 
     private:
-        Vector3							_position;
-		bool							_useOcclusionCulling;
-		BoundFrustum					_boundFrustum;
-		uint32_t						_cullingMask;
-		uint32_t						_staticMask = 0;
-    };
-    class ShadowCullInfo
-	{
-	public:
-        ShadowCullInfo();
-		~ShadowCullInfo();
-	private:
-		Vector3							_position;
-		std::vector<Plane>				_cullPlanes;
-		BoundSphere						_cullSphere;
-		int								_cullPlaneCount;
-		Vector3							_direction;
-	};
+        struct CameraFrusCullInfo
+        {
+            Vector3							_position;
+            bool							_useOcclusionCulling;
+            BoundFrustum					_boundFrustum;
+            uint32_t						_cullingMask;
+            uint32_t						_staticMask = 0;
+        } _cameraFrusCullInfo;
+        struct DirectLightFrusCullInfo
+        {
+            Vector3							_position;
+		    std::vector<Plane>				_cullPlanes;
+		    BoundSphere						_cullSphere;
+		    int								_cullPlaneCount;
+		    Vector3							_direction;
+	    }_directLightFrusCullInfo;
+       };
+		
     class CameraInfo
     {
     public:
