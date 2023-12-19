@@ -3,13 +3,13 @@
 
 namespace layaRender
 {
-	void CullPass::cullByCameraCullInfo(const CullInfo& cameraCullInfo, const SceneRenderManager& renderManager)
+	void CullPass::cullByCameraCullInfo(const CullInfo& cameraCullInfo, const SingleList<RenderElement*>& list)
 	{
 	}
-	void CullPass::cullByShadowCullInfo(const CullInfo& shadowCullInfo, const SceneRenderManager& renderManager)
+	void CullPass::cullByShadowCullInfo(const CullInfo& shadowCullInfo, const SingleList<RenderElement*>& list)
 	{
 	}
-	void CullPass::cullingSpotShadow(const CullInfo& cameraCullInfo, const SceneRenderManager& renderManager)
+	void CullPass::cullingSpotShadow(const CullInfo& cameraCullInfo, const SingleList<RenderElement*>& list)
 	{
 	}
 }
