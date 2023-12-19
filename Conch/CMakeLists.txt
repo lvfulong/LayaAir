@@ -83,6 +83,39 @@ if(CONCH_USE_CURL_DOWNLOAD)
 endif()
 
 list(APPEND CONCH_SRC
+	#分开数据库类core/Math 和相关方法类core/Util
+	core/math/Matrix3x3.h
+	core/math/Matrix3x3.cpp
+	core/math/Matrix4x4.h
+	core/math/Matrix4x4.cpp
+	core/math/Vector2.h
+	core/math/Vector2.cpp
+	core/math/Vector3.h
+	core/math/Vector3.cpp
+	core/math/Vector4.h
+	core/math/Vector4.cpp
+	core/math/MathUtils3D.h
+	core/math/MathUtils3D.cpp
+	core/math/Quaternion.h
+	core/math/Quaternion.cpp
+	core/math/Plane.h
+	core/math/Plane.cpp
+	core/math/BoundBox.h
+	core/math/BoundBox.cpp
+	core/math/BoundFrustum.h
+	core/math/BoundFrustum.cpp
+	core/math/BoundSphere.h
+	core/math/BoundSphere.cpp
+	core/math/Ray.h
+	core/math/ContainmentType.h
+	core/math/CollisionUtils.h
+	core/math/CollisionUtils.cpp
+	core/math/Color.h
+	core/math/Color.cpp
+	core/math/Viewport.h
+	core/math/Viewport.cpp
+
+
 	Audio/JCAudioManager.cpp
 	Audio/JCAudioManager.h
 	downloadCache/JCFileTable.cpp
@@ -204,36 +237,7 @@ list(APPEND CONCH_SRC
 	LayaAir/2D/Buffer.cpp
 
 	# LayaAir3D相关的
-	LayaAir/3D/Math/Matrix3x3.h
-	LayaAir/3D/Math/Matrix3x3.cpp
-	LayaAir/3D/Math/Matrix4x4.h
-	LayaAir/3D/Math/Matrix4x4.cpp
-	LayaAir/3D/Math/Vector2.h
-	LayaAir/3D/Math/Vector2.cpp
-	LayaAir/3D/Math/Vector3.h
-	LayaAir/3D/Math/Vector3.cpp
-	LayaAir/3D/Math/Vector4.h
-	LayaAir/3D/Math/Vector4.cpp
-	LayaAir/3D/Math/MathUtils3D.h
-	LayaAir/3D/Math/MathUtils3D.cpp
-	LayaAir/3D/Math/Quaternion.h
-	LayaAir/3D/Math/Quaternion.cpp
-	LayaAir/3D/Math/Plane.h
-	LayaAir/3D/Math/Plane.cpp
-	LayaAir/3D/Math/BoundBox.h
-	LayaAir/3D/Math/BoundBox.cpp
-	LayaAir/3D/Math/BoundFrustum.h
-	LayaAir/3D/Math/BoundFrustum.cpp
-	LayaAir/3D/Math/BoundSphere.h
-	LayaAir/3D/Math/BoundSphere.cpp
-	LayaAir/3D/Math/Ray.h
-	LayaAir/3D/Math/ContainmentType.h
-	LayaAir/3D/Math/CollisionUtils.h
-	LayaAir/3D/Math/CollisionUtils.cpp
-	LayaAir/3D/Math/Color.h
-	LayaAir/3D/Math/Color.cpp
-	LayaAir/3D/Math/Viewport.h
-	LayaAir/3D/Math/Viewport.cpp
+	
 	LayaAir/3D/IndexBuffer3D.h
 	LayaAir/3D/IndexBuffer3D.cpp
 	LayaAir/3D/RenderContext3D.h

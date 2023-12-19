@@ -2,7 +2,7 @@
 #include <Binder/JSInterface.h>
 #include <Utils/Log.h>
 #include <Utils/JCMemorySurvey.h>
-#include "../../../LayaAir/3D/Math/BoundFrustum.h"
+#include <core/math/BoundFrustum.h>
 #include "../../../LayaAir/3D/Transform3D.h"
 namespace laya
 {

@@ -3,8 +3,8 @@
 
 #include <stdio.h>
 #include <Binder/JSInterface.h>
-#include "../../../LayaAir/3D/Math/Vector3.h"
-#include "../../../LayaAir/3D/Math/BoundFrustum.h"
+#include <core/math/Vector3.h>
+#include <core/math/BoundFrustum.h>
 
 namespace laya
 {

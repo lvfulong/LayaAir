@@ -3,9 +3,9 @@
 
 #include <stdio.h>
 #include <Binder/JSInterface.h>
-#include "../../LayaAir/3D/Math/Matrix4x4.h"
-#include "../../LayaAir/3D/Math/Vector3.h"
-#include "../../LayaAir/3D/Math/Quaternion.h"
+#include <core/math/Matrix4x4.h>
+#include <core/math/Vector3.h>
+#include <core/math/Quaternion.h>
 #include "../../LayaAir/3D/Transform3D.h"
 
 namespace laya

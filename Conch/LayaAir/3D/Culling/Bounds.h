@@ -2,7 +2,7 @@
 #define __Bounds_H__
 
 #include <stdio.h>
-#include "LayaAir/3D/Math/BoundBox.h"
+#include <core/math/BoundBox.h>
 
 namespace laya
 {

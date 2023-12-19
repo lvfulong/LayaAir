@@ -193,7 +193,11 @@ elseif(MSVC)
 	)
 	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
 
-	file(GLOB DLLS ${CMAKE_CURRENT_SOURCE_DIR}/../ThirdParty/v8/lib/win64/*.dll ${CMAKE_CURRENT_SOURCE_DIR}/../ThirdParty/angle/lib/win64/*.dll)
+	file(GLOB DLLS 
+		${CMAKE_CURRENT_SOURCE_DIR}/../ThirdParty/v8/lib/win64/*.dll 
+		${CMAKE_CURRENT_SOURCE_DIR}/../ThirdParty/angle/lib/win64/*.dll
+		${CMAKE_CURRENT_SOURCE_DIR}/../ThirdParty/openal/lib/win64/*.dll
+	)
 
 	foreach(file ${DLLS})
 		add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

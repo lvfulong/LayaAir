@@ -11,8 +11,8 @@
 #include "GLEnum/WebGLExtension.h"
 #include "GLCapable.h"
 #include <vector>
-#include "../../../3D/Math/Vector4.h"
-#include "../../../3D/Math/Color.h"
+#include <core/math/Vector4.h>
+#include <core/math/Color.h>
 #include "../WebGLEngine/GLEnum/WebGLMode.h"
 #include "../../../3D/RenderStateCommand.h"
 
@@ -103,10 +103,10 @@ namespace laya
 		GLRender2DContext*											m_GL2DRenderContext;
 		std::vector<int>											m_glTextureIDParams{ GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2, GL_TEXTURE3, GL_TEXTURE4, GL_TEXTURE5, GL_TEXTURE6, GL_TEXTURE7, GL_TEXTURE8, GL_TEXTURE9, GL_TEXTURE10, GL_TEXTURE11, GL_TEXTURE12, GL_TEXTURE13, GL_TEXTURE14, GL_TEXTURE15, GL_TEXTURE16, GL_TEXTURE17, GL_TEXTURE18, GL_TEXTURE19, GL_TEXTURE20, GL_TEXTURE21, GL_TEXTURE22, GL_TEXTURE23, GL_TEXTURE24, GL_TEXTURE25, GL_TEXTURE26, GL_TEXTURE27, GL_TEXTURE28, GL_TEXTURE29, GL_TEXTURE30, GL_TEXTURE31 };
 		int															m_curUBOPointer = 0;
-		//¼ÇÂ¼°ó¶¨UBOµÄglPointer
+		//ï¿½ï¿½Â¼ï¿½ï¿½UBOï¿½ï¿½glPointer
 		std::unordered_map<std::string, int>						m_GLUBOPointerMap;
-		//¼ÇÂ¼°ó¶¨PointerµÄUBO
-		//GPUÍ³¼ÆÊý¾Ý
+		//ï¿½ï¿½Â¼ï¿½ï¿½Pointerï¿½ï¿½UBO
+		//GPUÍ³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		typedef std::unordered_map<RenderStatisticsInfo, int>		RenderStatisticsInfoMapType;
 		RenderStatisticsInfoMapType									m_GLStatisticsInfo;
 	};

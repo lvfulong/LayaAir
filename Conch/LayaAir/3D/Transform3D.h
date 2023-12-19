@@ -3,11 +3,11 @@
 
 #include <stdio.h>
 #include <vector>
-#include "Math/Vector4.h"
-#include "Math/Vector3.h"
-#include "Math/Quaternion.h"
-#include "Math/Matrix4x4.h"
-#include "Math/Matrix3x3.h"
+#include <core/math/Vector4.h>
+#include <core/math/Vector3.h>
+#include <core/math/Quaternion.h>
+#include <core/math/Matrix4x4.h>
+#include <core/math/Matrix3x3.h>
 
 
 namespace laya

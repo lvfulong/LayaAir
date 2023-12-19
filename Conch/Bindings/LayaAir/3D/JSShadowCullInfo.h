@@ -4,9 +4,9 @@
 #include <stdio.h>
 #include <Binder/JSInterface.h>
 #include <vector>
-#include "../../../LayaAir/3D/Math/Vector3.h"
-#include "../../../LayaAir/3D/Math/BoundSphere.h"
-#include "../../../LayaAir/3D/Math/Plane.h"
+#include <core/math/Vector3.h>
+#include <core/math/BoundSphere.h>
+#include <core/math/Plane.h>
 namespace laya
 {
 	class JSShadowCullInfo

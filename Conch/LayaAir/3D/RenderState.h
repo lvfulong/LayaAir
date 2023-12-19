@@ -17,8 +17,8 @@
 #include "../RenderEngine/RenderEnum/BlendFactor.h"
 #include "../RenderEngine/RenderEnum/CompareFunction.h"
 #include "../RenderEngine/RenderEnum/StencilOperation.h"
-#include "./Math/Vector4.h"
-#include "./Math/Vector3.h"
+#include <core/math/Vector4.h>
+#include <core/math/Vector3.h>
 
 namespace laya
 {
