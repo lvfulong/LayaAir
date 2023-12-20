@@ -2,7 +2,7 @@
 #define __GLParams_H__
 
 #include <unordered_map>
-#include "../../RenderEnum/RenderParams.h"
+#include <render/3D/design/renderEnum/RenderParams.h>
 
 namespace laya
 {

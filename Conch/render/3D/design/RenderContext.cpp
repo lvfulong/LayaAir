@@ -2,7 +2,7 @@
 #ifndef __RenderContext_CPP_
 #define __RenderContext_CPP_
 
-namespace layaRender{
+namespace laya{
     RenderContext::RenderContext(){
         //TODO
     }

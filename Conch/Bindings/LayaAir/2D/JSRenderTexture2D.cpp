@@ -1,8 +1,8 @@
 #include "JSRenderTexture2D.h"
 #include <Utils/Log.h>
 #include "../RenderEngine/WebGLEngine/JSWebGLEngine.h"
-#include "../../../LayaAir/RenderEngine/RenderEngine/WebGLEngine/WebGLEngine.h"
-#include "../../../LayaAir/RenderEngine/RenderEngine/WebGLEngine/GLTextureContext.h"
+#include <render/driver/gles/WebGLEngine.h>
+#include <render/driver/gles/GLTextureContext.h>
 #include "../RenderEngine/WebGLEngine/JSGLTextureContext.h"
 #include "../RenderEngine/WebGLEngine/JSWebGLInternalRT.h"
 

@@ -5,7 +5,7 @@
 #include "JSCProxyType.h"
 #include "JSCProxyClass.h"
 #include <pthread.h>
-using namespace laya;
+
 
 class JSClassMgr{
 public:

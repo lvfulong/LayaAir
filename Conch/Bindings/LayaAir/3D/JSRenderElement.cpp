@@ -8,8 +8,8 @@
 #include "JSRenderContext3D.h"
 #include "JSTransform.h"
 #include "JSVertexBuffer3D.h"
-#include "../../../LayaAir/3D/InstanceRenderElementOBJ.h"
-#include "../../../LayaAir/3D/SkinRenderElement.h"
+#include <render/3D/temp/InstanceRenderElementOBJ.h>
+#include <render/3D/temp/SkinRenderElement.h>
 #include "../RenderEngine/WebGLEngine/JSWebGLEngine.h"
 
 namespace laya

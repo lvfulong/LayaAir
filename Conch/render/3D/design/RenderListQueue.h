@@ -9,7 +9,7 @@
 #include "render/tempbase.h"
 //RenderElement
 
-namespace layaRender
+namespace laya
 {
     typedef std::function<void(SingleList<RenderElement*>&, CameraInfo*) >  cullfun;
     typedef std::function<void(SingleList<RenderElement*>&)> batchfun;

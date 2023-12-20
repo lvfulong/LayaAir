@@ -38,7 +38,7 @@
 #include "network/HttpClientAndroid.h"
 #include "2D/CanvasRenderingContext2DAndroid.h"
 
-using namespace laya;
+
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
 extern bool g_bGLCanvasSizeChanged;

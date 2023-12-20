@@ -18,13 +18,13 @@
 #include "GLBuffer.h"
 #include "GLVertexState.h"
 #include "GLShaderInstance.h"
-#include "../../LayaAir/3D/ShaderData.h"
+#include <render/3D/temp/ShaderData.h>
 #include "GLRenderDrawContext.h"
-#include "../../LayaAir/3D/CommandEncoder.h"
+#include <render/3D/temp/CommandEncoder.h>
 #include "WebGLInternalTex.h"
 #include "GLRender2DContext.h"
 #include "JCSystemConfig.h"
-#include "../../../2D/BufferStateBase.h"
+#include "LayaAir/2D/BufferStateBase.h"
 
 
 namespace laya

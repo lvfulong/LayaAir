@@ -12,7 +12,7 @@
 
 using namespace physx;
 #ifdef CONCH
-using namespace laya;
+
 #else
 using namespace emscripten;
 #endif

@@ -2,7 +2,7 @@
 #define __GLCapable_H__
 
 #include <unordered_map>
-#include "../../RenderEnum/RenderCapable.h"
+#include <render/3D/design/renderEnum/RenderCapable.h>
 #include "GLEnum/WebGLExtension.h"
 #ifdef __APPLE__
 #include <OpenGLES/ES3/GL.h>

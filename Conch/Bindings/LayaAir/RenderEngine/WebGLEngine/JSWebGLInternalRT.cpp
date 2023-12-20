@@ -1,7 +1,7 @@
 #include "JSWebGLInternalRT.h"
 #include <Utils/Log.h>
 #include <Utils/JCMemorySurvey.h>
-#include "../../../../LayaAir/RenderEngine/RenderEngine/WebGLEngine/WebGLInternalRT.h"
+#include <render/driver/gles/WebGLInternalRT.h>
 #include "JSWebGLInternalTex.h"
 
 namespace laya

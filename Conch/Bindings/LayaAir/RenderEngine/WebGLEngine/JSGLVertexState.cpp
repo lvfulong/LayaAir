@@ -4,8 +4,8 @@
 #include "JSWebGLEngine.h"
 #include "../../3D/JSIndexBuffer3D.h"
 #include "../../3D/JSVertexBuffer3D.h"
-#include "../../LayaAir/3D/IndexBuffer.h"
-#include "../../LayaAir/3D/VertexBuffer.h"
+#include <render/3D/temp/IndexBuffer.h>
+#include <render/3D/temp/VertexBuffer.h>
 
 namespace laya
 {

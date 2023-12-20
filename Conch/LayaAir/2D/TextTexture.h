@@ -3,7 +3,7 @@
 
 #include <string>
 #include <imageLib/JCImageRW.h>
-#include "../RenderEngine/RenderEngine/WebGLEngine/WebGLInternalTex.h"
+#include <render/driver/gles/WebGLInternalTex.h>
 #include "CharRenderInfo.h"
 #include <memory>
 
@@ -23,7 +23,7 @@ namespace laya
 		WebGLInternalTex* getSource() { return m_source; }
 		bool __destroyed = false;
 		void touchRect(CharRenderInfo* ri, uint64_t curloop);
-		std::shared_ptr<CharRenderInfo> ri; 		// 如果是独立文字贴图的话带有这个信息
+		std::shared_ptr<CharRenderInfo> ri; 		// 锟斤拷锟斤拷嵌锟斤拷锟斤拷锟斤拷锟斤拷锟酵硷拷幕锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷息
 		void discard();
 	private:
 		friend class TextRender;
@@ -31,8 +31,8 @@ namespace laya
 		int m_texH = 0;
 		
 		WebGLInternalTex*  m_source = nullptr;
-		float m_curUsedCovRate = 0.0f; 	// 当前使用到的使用率。根据面积算的
-		float m_curUsedCovRateAtlas = 0.0f; 	// 大图集中的占用率。由于大图集分辨率低，所以会浪费一些空间
+		float m_curUsedCovRate = 0.0f; 	// 锟斤拷前使锟矫碉拷锟斤拷使锟斤拷锟绞★拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷
+		float m_curUsedCovRateAtlas = 0.0f; 	// 锟斤拷图锟斤拷锟叫碉拷占锟斤拷锟绞★拷锟斤拷锟节达拷图锟斤拷锟街憋拷锟绞低ｏ拷锟斤拷锟皆伙拷锟剿凤拷一些锟秸硷拷
 		uint64_t m_lastTouchLoopCount = 0;
 		WebGLEngine*		m_pWebglEngine;
 	};

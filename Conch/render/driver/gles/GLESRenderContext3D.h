@@ -4,7 +4,7 @@
 
 #include <render/3D/design/RenderContext.h>
 #include <render/tempbase.h>
-namespace layaRender{
+namespace laya{
     class GLESRenderContext3D : public RenderContext3D {
     public:
         GLESRenderContext3D();

@@ -1,9 +1,9 @@
 #include "GLVertexState.h"
 #include <cassert>
-#include "../../LayaAir/3D/IndexBuffer.h"
-#include "../../LayaAir/3D/VertexBuffer.h"
-#include "../../LayaAir/2D/IndexBuffer2D.h"
-#include "../../LayaAir/2D/VertexBuffer2D.h"
+#include <render/3D/temp/IndexBuffer.h>
+#include <render/3D/temp/VertexBuffer.h>
+#include "LayaAir/2D/IndexBuffer2D.h"
+#include "LayaAir/2D/VertexBuffer2D.h"
 
 namespace laya
 {

@@ -2,8 +2,8 @@
 #include <Utils/Log.h>
 #include "Shader2DCompile.h"
 #include <assert.h>
-#include "../RenderEngine/RenderEngine/WebGLEngine/WebGLEngine.h"
-#include "../RenderEngine/RenderInterface/IRender2DContext.h"
+#include <render/driver/gles/WebGLEngine.h>
+#include <render/3D/design/renderInterface/IRender2DContext.h>
 
 namespace laya
 {
@@ -93,8 +93,8 @@ namespace laya
 
 		//var one : any, i : number, j : number, n : number, location : any;
 
-		//ÊôÐÔÓÃÖ¸¶¨locationµÄ·½·¨£¬ÕâÑù¸üÁé»î£¬¸ü·½±ãÓëvao½áºÏ¡£
-		//×¢Òâ×¢Òâ×¢Òâ Õâ¸ö±ØÐë·Åµ½linkÇ°Ãæ
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½locationï¿½Ä·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½î£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½vaoï¿½ï¿½Ï¡ï¿½
+		//×¢ï¿½ï¿½×¢ï¿½ï¿½×¢ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Åµï¿½linkÇ°ï¿½ï¿½
 		int attribDescNum = this->_attribInfo.size();
 		for (int i = 0; i < attribDescNum; i++) 
 		{
@@ -297,7 +297,7 @@ namespace laya
 	void Shader2D::recreateResource()
 	{
 		this->_compile();
-		//this->_setGPUMemory(0);//ºöÂÔ³ß´ç³ß´ç
+		//this->_setGPUMemory(0);//ï¿½ï¿½ï¿½Ô³ß´ï¿½ß´ï¿½
 	}
 
 	void Shader2D::_disposeResource()

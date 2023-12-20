@@ -21,11 +21,11 @@
 #include <atomic>
 #include <WebGL/WebGLThread.h>
 #include <Backend.h>
-#include "LayaAir/RenderEngine/ObjectBase.h"
-#include "LayaAir/RenderEngine/RenderEngine/WebGLEngine/WebGLInternalTex.h"
-#include "LayaAir/3D/ShaderData.h"
+#include <render/3D/temp/ObjectBase.h>
+#include <render/driver/gles/WebGLInternalTex.h>
+#include <render/3D/temp/ShaderData.h>
 #include "LayaAir/2D/WordText.h"
-#include "LayaAir/3D/UniformBufferObject.h"
+#include <render/3D/temp/UniformBufferObject.h>
 
 namespace laya
 {

@@ -1,7 +1,7 @@
 #include "BufferStateBase.h"
 #include <cassert>
-#include "../RenderEngine/RenderEngine/WebGLEngine/WebGLEngine.h"
-#include "../RenderEngine/RenderEngine/WebGLEngine/GLVertexState.h"
+#include <render/driver/gles/WebGLEngine.h>
+#include <render/driver/gles/GLVertexState.h>
 #include "VertexBuffer2D.h"
 #include "IndexBuffer2D.h"
 
@@ -54,7 +54,7 @@ namespace laya
 		//this._bindedIndexBuffer = indexBuffer;
 		if (indexBuffer)
 		{
-			indexBuffer->unbind();//Çå¿Õ°ó¶¨
+			indexBuffer->unbind();//ï¿½ï¿½Õ°ï¿½
 		}
 		bind();
 		m_nativeVertexArrayObject->applyVertexBuffer(stride, attribInfo, vertexBuffer);
@@ -62,7 +62,7 @@ namespace laya
 		unBind();
 		if (indexBuffer)
 		{
-			indexBuffer->unbind();//Çå¿Õ°ó¶¨
+			indexBuffer->unbind();//ï¿½ï¿½Õ°ï¿½
 		}
 	}
 }

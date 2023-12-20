@@ -1,5 +1,5 @@
 ﻿#include "RenderUtil.h"
-namespace layaRender{
+namespace laya{
     void RenderUtil::opaqueRenderSort(SingleList<RenderElement*>& list, uint32_t left, uint32_t right){
        _quickSort(list,left,right,true);
     }

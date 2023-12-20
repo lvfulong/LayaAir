@@ -2,7 +2,7 @@
 #define __GLObject_H__
 
 #include "WebGLEngine.h"
-#include "../../ObjectBase.h"
+#include <render/3D/temp/ObjectBase.h>
 
 namespace laya
 {

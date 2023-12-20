@@ -2,7 +2,7 @@
 #include "IndexBuffer2D.h"
 #include "VertexBuffer2D.h"
 #include "BufferStateBase.h"
-#include "../RenderEngine/RenderEnum/BufferTargetType.h"
+#include <render/3D/design/renderEnum/BufferTargetType.h>
 
 namespace laya
 {
@@ -67,7 +67,7 @@ namespace laya
 				BufferStateBase::m_curBindedBufferState->unBind();
 			}
 		}
-		//ÒªÏÈbind£¬ÔÚbufferData
+		//Òªï¿½ï¿½bindï¿½ï¿½ï¿½ï¿½bufferData
 		if (!m_applied)
 		{
 			configVAO();
@@ -76,11 +76,11 @@ namespace laya
 		m_vb->m_buffer2D->_bind_upload();
 		m_vao->bind();
 	}
-	//Ö±½Ó´´½¨Ò»¸ö¹Ì¶¨µÄib¡£°´ÕÕ¹Ì¶¨ËÄ±ßÐÎµÄË÷Òý¡£
+	//Ö±ï¿½Ó´ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ì¶ï¿½ï¿½ï¿½ibï¿½ï¿½ï¿½ï¿½ï¿½Õ¹Ì¶ï¿½ï¿½Ä±ï¿½ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	void Mesh2D::createQuadIB(int quadNum)
 	{
 		//this._quadNum = quadNum;
-		m_ib->m_buffer2D->_resizeBuffer(quadNum * 6 * 2, false);	//shortÀàÐÍ
+		m_ib->m_buffer2D->_resizeBuffer(quadNum * 6 * 2, false);	//shortï¿½ï¿½ï¿½ï¿½
 		m_ib->m_buffer2D->setByteLength(m_ib->m_buffer2D->getBufferLength());
 
 		uint16_t* bd = (uint16_t*)m_ib->m_buffer2D->getData();

@@ -1,5 +1,5 @@
 #include "GLESRenderContext3D.h"
-namespace layaRender{
+namespace laya{
     GLESRenderContext3D::GLESRenderContext3D() {
 
     };

@@ -16,7 +16,7 @@ using laya::Plane;
 using laya::BoundFrustum;
 
 
-namespace layaRender
+namespace laya
 {
     class RenderContext3D;
     enum ClearFlag {

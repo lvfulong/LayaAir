@@ -1,13 +1,10 @@
-//
-//  KTXTextureInfo.h
-//  MomoYo
-//
-//  Created by 范祎楠 on 2023/1/3.
-//
-
 #ifndef KTXTextureInfo_h
 #define KTXTextureInfo_h
 #include <Binder/JSInterface.h>
+#include <render/3D/design/renderEnum/TextureFormat.h>
+#include <render/3D/design/renderEnum/TextureDimension.h>
+
+
 
 namespace laya {
 

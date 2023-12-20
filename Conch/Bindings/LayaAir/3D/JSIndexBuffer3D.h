@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <Binder/JSInterface.h>
-#include "../../../LayaAir/3D/IndexBuffer3D.h"
+#include <render/3D/temp/IndexBuffer3D.h>
 
 namespace laya
 {

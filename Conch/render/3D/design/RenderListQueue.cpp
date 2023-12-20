@@ -1,7 +1,7 @@
 #ifndef __RenderListQueue_CPP_
 #define __RenderListQueue_CPP_
 #include "RenderListQueue.h"
-namespace layaRender
+namespace laya
 {
     RenderListQueue::RenderListQueue(cullfun cull, batchfun batch, composefun compose)
     {

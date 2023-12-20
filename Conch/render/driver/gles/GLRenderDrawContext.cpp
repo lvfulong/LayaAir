@@ -9,7 +9,7 @@
 #include <GLES3/gl3.h>
 #endif
 #include "GLCapable.h"
-#include "../../LayaAir/3D/RenderGeometryElement.h"
+#include <render/3D/temp/RenderGeometryElement.h>
 #include "GLVertexState.h"
 
 namespace laya

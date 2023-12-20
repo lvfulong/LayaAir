@@ -1,5 +1,5 @@
 #include "IndexBuffer2D.h"
-#include "../RenderEngine/RenderInterface/IRenderBuffer.h"
+#include <render/3D/design/renderInterface/IRenderBuffer.h>
 
 namespace laya
 {

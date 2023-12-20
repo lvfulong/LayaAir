@@ -2,9 +2,9 @@
 #include <Binder/JSInterface.h>
 #include <Utils/Log.h>
 #include <Utils/JCMemorySurvey.h>
-#include "../../../LayaAir/RenderEngine/RenderEnum/MemoryDataType.h"
-#include "../../../JCConch.h"
-#include "../../../JCConchRender.h"
+#include <render/3D/design/renderEnum/MemoryDataType.h>
+#include "JCConch.h"
+#include "JCConchRender.h"
 
 namespace laya
 {

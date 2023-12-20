@@ -1,5 +1,5 @@
 #include "Buffer2D.h"
-#include "../RenderEngine/RenderInterface/IRenderBuffer.h"
+#include <render/3D/design/renderInterface/IRenderBuffer.h>
 
 namespace laya
 {
@@ -14,7 +14,7 @@ namespace laya
 	{
 		return m_constBuffer->m_buffer.size();
 	}
-	// Ïàµ±ÓÚsetUploadSize()
+	// ï¿½àµ±ï¿½ï¿½setUploadSize()
 	void Buffer2D::setByteLength(int value)
 	{
 		if (m_constBuffer->m_byteLength != value) 
@@ -40,7 +40,7 @@ namespace laya
 		}
 		return old;
 	}
-	Buffer2D& Buffer2D::_resizeBuffer(int nsz, bool copy)//ÊÇ·ñÐÞ¸ÄÁË³¤¶È
+	Buffer2D& Buffer2D::_resizeBuffer(int nsz, bool copy)//ï¿½Ç·ï¿½ï¿½Þ¸ï¿½ï¿½Ë³ï¿½ï¿½ï¿½
 	{
 		if (nsz <= m_constBuffer->m_buffer.size())
 			return *this;

@@ -1,6 +1,5 @@
 #include "BlendMode.h"
 
-
 namespace laya
 {
 	std::vector<BlendModInfo> BlendModes = 

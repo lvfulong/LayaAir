@@ -2,8 +2,8 @@
 #define __GlBuffer_H__
 
 #include "GLObject.h"
-#include "../../RenderEnum/BufferTargetType.h"
-#include "../../RenderInterface/IRenderBuffer.h"
+#include <render/3D/design/renderEnum/BufferTargetType.h>
+#include <render/3D/design/renderInterface/IRenderBuffer.h>
 
 namespace laya
 {

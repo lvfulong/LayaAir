@@ -1,13 +1,13 @@
 #ifndef __GL2TextureContext_H__
 #define __GL2TextureContext_H__
 
+#include <render/3D/design/renderEnum/RenderTargetFormat.h>
+#include "GLObject.h"
+#include "GLTextureContext.h"
+#include <render/3D/design/renderEnum/RenderParams.h>
 #include <string>
 #include <unordered_map>
-#include "../../RenderEnum/RenderParams.h"
-#include "GLObject.h"
-#include "../../RenderEnum/RenderTargetFormat.h"
-#include "GLTextureContext.h"
-
+#include <Bindings/JSImage.h>
 #ifdef __APPLE__
 #include <OpenGLES/ES3/gl.h>
 #elif LINUX
@@ -16,6 +16,7 @@
 #else
 #include <GLES3/gl3.h>
 #endif
+
 
 namespace laya
 {

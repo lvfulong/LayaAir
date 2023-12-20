@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <Binder/JSInterface.h>
-#include "LayaAir/RenderEngine/RenderEngine/WebGLEngine/GLVertexState.h"
+#include <render/driver/gles/GLVertexState.h>
 
 namespace laya
 {

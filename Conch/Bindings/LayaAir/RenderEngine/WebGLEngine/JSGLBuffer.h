@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <Binder/JSInterface.h>
-#include "LayaAir/RenderEngine/RenderEngine/WebGLEngine/GLBuffer.h"
+#include <render/driver/gles/GLBuffer.h>
 
 namespace laya
 {

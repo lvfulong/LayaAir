@@ -3,7 +3,7 @@
 
 #include "render/tempbase.h"
 #include <core/math/Bounds.h>
-namespace layaRender{
+namespace laya{
 	class RenderUtil
 	{
 	public:

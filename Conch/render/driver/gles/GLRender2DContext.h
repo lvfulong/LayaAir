@@ -2,7 +2,7 @@
 #define __GLRender2DContext_H__
 
 #include "GLObject.h"
-#include "../../RenderInterface/IRender2DContext.h"
+#include <render/3D/design/renderInterface/IRender2DContext.h>
 #include "WebGLEngine.h"
 #include "JCSystemConfig.h"
 namespace laya
@@ -19,7 +19,7 @@ namespace laya
 
 		void activeTexture(int textureID) override
 		{
-			if (g_kSystemConfig.m_bConchWebGL)
+			if (laya::g_kSystemConfig.m_bConchWebGL)
 			{
 				glActiveTexture(textureID);
 			}

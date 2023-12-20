@@ -3,18 +3,18 @@
 
 #include <string>
 #include <unordered_map>
-#include "../../RenderEnum/RenderClearFlag.h"
-#include "../../RenderEnum/RenderCapable.h"
-#include "../../RenderEnum/RenderParams.h"
-#include "../../RenderEnum/BufferTargetType.h"
-#include "../../RenderEnum/RenderStatInfo.h"
+#include <render/3D/design/renderEnum/RenderClearFlag.h>
+#include <render/3D/design/renderEnum/RenderCapable.h>
+#include <render/3D/design/renderEnum/RenderParams.h>
+#include <render/3D/design/renderEnum/BufferTargetType.h>
+#include <render/3D/design/renderEnum/RenderStatInfo.h>
 #include "GLEnum/WebGLExtension.h"
 #include "GLCapable.h"
 #include <vector>
 #include <core/math/Vector4.h>
 #include <core/math/Color.h>
-#include "../WebGLEngine/GLEnum/WebGLMode.h"
-#include "../../../3D/RenderStateCommand.h"
+#include "GLEnum/WebGLMode.h"
+#include <render/3D/temp/RenderStateCommand.h>
 
 namespace laya
 {
@@ -90,9 +90,9 @@ namespace laya
 		GLParams*													m_params;
 		GLCapable*													m_supportCapatable;
 		GLRenderState*												m_renderState;
-		Vector4														m_lastViewport;
-		Vector4														m_lastScissor;
-		Color														m_lastClearColor;
+		laya::Vector4														m_lastViewport;
+		laya::Vector4														m_lastScissor;
+		laya::Color														m_lastClearColor;
 		float														m_lastClearDepth = 1.0f;
 		GLTextureContext*											m_textureContext = nullptr;
 		bool														m_isWebGL2 = false;
