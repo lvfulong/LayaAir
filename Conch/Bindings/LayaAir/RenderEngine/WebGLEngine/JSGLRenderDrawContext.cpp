@@ -3,10 +3,10 @@
 #include <Utils/JCMemorySurvey.h>
 #include "JSWebGLEngine.h"
 #include "../../3D/JSRenderGeometryElement.h"
-#include "LayaAir/RenderEngine/RenderEngine/WebGLEngine/WebGLEngine.h"
-#include "LayaAir/RenderEngine/RenderInterface/IRenderDrawContext.h"
-#include "LayaAir/RenderEngine/RenderEnum/RenderPologyMode.h"
-#include "LayaAir/RenderEngine/RenderEnum/IndexFormat.h"
+#include <render/driver/gles/WebGLEngine.h>
+#include <render/3D/design/renderInterface/IRenderDrawContext.h>
+#include <render/3D/design/renderEnum/RenderPologyMode.h>
+#include <render/3D/design/renderEnum/IndexFormat.h>
 
 namespace laya
 {

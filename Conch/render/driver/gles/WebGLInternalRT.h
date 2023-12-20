@@ -2,9 +2,9 @@
 #define __WebGLInternalRT_H__
 
 #include <unordered_map>
-#include "../../RenderEnum/RenderParams.h"
+#include <render/3D/design/renderEnum/RenderParams.h>
 #include "GLObject.h"
-#include "../../RenderEnum/RenderTargetFormat.h"
+#include <render/3D/design/renderEnum/RenderTargetFormat.h>
 #include <vector>
 #include <memory>
 #ifdef __APPLE__

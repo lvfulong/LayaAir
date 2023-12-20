@@ -1,11 +1,11 @@
 #include "GLTextureContext.h"
 #include <assert.h>
 #include "WebGLInternalTex.h"
-#include "../../Image/JCImage.h"
+#include "Image/JCImage.h"
 #include "WebGLInternalRT.h"
 #include <Bindings/JSImage.h>
-#include "LayaAir/RenderEngine/RenderEngine/WebGLEngine/GLUtils.h"
-#include "../../../../LayaGL/JCLayaGL.h"
+#include "GLUtils.h"
+#include "LayaGL/JCLayaGL.h"
 #ifdef WIN32
 #ifdef min
 #undef min

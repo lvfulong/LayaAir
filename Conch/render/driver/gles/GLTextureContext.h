@@ -1,16 +1,16 @@
 #ifndef __GLTextureContext_H__
 #define __GLTextureContext_H__
 
+#include "GLCapable.h"
+#include "GLObject.h"
+#include "KTXTextureInfo.h"
+#include <render/3D/design/renderEnum/RenderParams.h>
+#include <render/3D/design/renderEnum/RenderTargetFormat.h>
+#include <render/3D/design/renderEnum/TextureCompareMode.h>
+#include <render/3D/design/renderEnum/TextureDimension.h>
+#include <render/3D/design/renderEnum/TextureFormat.h>
 #include <string>
 #include <unordered_map>
-#include "../../RenderEnum/RenderParams.h"
-#include "GLObject.h"
-#include "../../RenderEnum/RenderTargetFormat.h"
-#include "../../RenderEnum/TextureFormat.h"
-#include "../../RenderEnum/TextureDimension.h"
-#include "../../RenderEnum/TextureCompareMode.h"
-#include "GLCapable.h"
-#include "KTXTextureInfo.h"
 #ifdef __APPLE__
 #include <OpenGLES/ES3/gl.h>
 #elif LINUX
@@ -21,6 +21,8 @@
 #endif
 #include <array>
 #include <memory>
+
+
 
 namespace laya
 {

@@ -7,7 +7,7 @@
 #include "TextTexture.h"
 #include <unordered_map>
 #include "CharRenderInfo.h"
-#include "../RenderEngine/ObjectBase.h"
+#include <render/3D/temp/ObjectBase.h>
 
 namespace laya
 {

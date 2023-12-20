@@ -2,14 +2,14 @@
 #define __WebGLInternalTex_H__
 
 #include <math.h>
-#include "../../ObjectBase.h"
-#include "../..//RenderEnum/RenderPologyMode.h"
-#include "../../RenderEnum/IndexFormat.h"
-#include "../../RenderEnum/FilterMode.h"
-#include "../../RenderEnum/TextureCompareMode.h"
-#include "../../RenderEnum/TextureDimension.h"
-#include "../../RenderEnum/WrapMode.h"
-#include "../../RenderEnum/RenderTargetFormat.h"
+#include <render/3D/temp/ObjectBase.h>
+#include <render/3D/design/renderEnum/RenderPologyMode.h>
+#include <render/3D/design/renderEnum/IndexFormat.h>
+#include <render/3D/design/renderEnum/FilterMode.h>
+#include <render/3D/design/renderEnum/TextureCompareMode.h>
+#include <render/3D/design/renderEnum/TextureDimension.h>
+#include <render/3D/design/renderEnum/WrapMode.h>
+#include <render/3D/design/renderEnum/RenderTargetFormat.h>
 #include "GLEnum/WebGLExtension.h"
 #include "GLObject.h"
 #include "WebGLEngine.h"
@@ -25,7 +25,7 @@
 #include <GLES3/gl3.h>
 #endif
 
-namespace layaRender
+namespace laya
 {
 	class WebGLInternalTex : public GLObject, public ObjectBase<WebGLInternalTex>
 	{

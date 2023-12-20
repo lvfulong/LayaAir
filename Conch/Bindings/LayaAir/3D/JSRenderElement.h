@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <Binder/JSInterface.h>
-#include "../../../LayaAir/3D/RenderElement.h"
+#include <render/3D/temp/RenderElement.h>
 
 namespace laya
 {

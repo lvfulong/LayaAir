@@ -1,6 +1,6 @@
 #include "Buffer.h"
-#include "LayaAir/RenderEngine/RenderInterface/IRenderBuffer.h"
-#include "LayaAir/RenderEngine/RenderEngine/WebGLEngine/WebGLEngine.h"
+#include <render/3D/design/renderInterface/IRenderBuffer.h>
+#include <render/driver/gles/WebGLEngine.h>
 
 namespace laya
 {

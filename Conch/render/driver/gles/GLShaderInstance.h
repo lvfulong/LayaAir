@@ -3,11 +3,11 @@
 
 #include <string>
 #include <unordered_map>
-#include "../../RenderEnum/RenderParams.h"
+#include <render/3D/design/renderEnum/RenderParams.h>
 #include "GLObject.h"
-#include "../../RenderEnum/RenderTargetFormat.h"
+#include <render/3D/design/renderEnum/RenderTargetFormat.h>
 #include <vector>
-#include "../../RenderShader/ShaderVariable.h"
+#include <render/3D/design/renderShader/ShaderVariable.h>
 #ifdef __APPLE__
 	#include <OpenGLES/ES3/gl.h>
 #elif LINUX
@@ -17,7 +17,7 @@
 	#include <GLES3/gl3.h>
 #endif
 #include "GLAttributeMap.h"
-#include "../../../3D/ShaderData.h"
+#include <render/3D/temp/ShaderData.h>
 
 namespace laya
 {

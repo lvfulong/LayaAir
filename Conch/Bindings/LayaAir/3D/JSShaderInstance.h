@@ -3,9 +3,9 @@
 
 #include <stdio.h>
 #include <Binder/JSInterface.h>
-#include "../../../LayaAir/RenderEngine/RenderEngine/WebGLEngine/GLAttributeMap.h"
-#include "../../../LayaAir/RenderEngine/RenderEngine/WebGLEngine/GLShaderInstance.h"
-#include "../../../LayaAir/3D/ShaderInstance.h"
+#include <render/driver/gles/GLAttributeMap.h>
+#include <render/driver/gles/GLShaderInstance.h>
+#include <render/3D/temp/ShaderInstance.h>
 
 namespace laya
 {

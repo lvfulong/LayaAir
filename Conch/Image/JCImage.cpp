@@ -10,7 +10,7 @@
 #include <Utils/Log.h>
 #include "JCImageManager.h"
 #include <Utils/JCCommonMethod.h>
-#include "LayaAir/RenderEngine/RenderEngine/WebGLEngine/GLUtils.h"
+#include <render/driver/gles/GLUtils.h>
 
 namespace laya
 {

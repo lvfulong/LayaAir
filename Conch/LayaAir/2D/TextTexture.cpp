@@ -1,9 +1,9 @@
 #include "TextTexture.h"
 #include "TextRender.h"
 #include <Utils/Log.h>
-#include "../RenderEngine/RenderEngine/WebGLEngine/WebGLEngine.h"
-#include "../RenderEngine/RenderEngine/WebGLEngine/GLTextureContext.h"
-#include "../RenderEngine/RenderEngine/WebGLEngine/WebGLInternalRT.h"
+#include <render/driver/gles/WebGLEngine.h>
+#include <render/driver/gles/GLTextureContext.h>
+#include <render/driver/gles/WebGLInternalRT.h>
 #include "TextAtlas.h"
 #include <Bindings/JSRuntime.h>
 

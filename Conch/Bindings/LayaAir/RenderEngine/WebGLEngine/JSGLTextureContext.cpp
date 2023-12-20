@@ -5,8 +5,8 @@
 #include "JSWebGLInternalTex.h"
 #include "JSWebGLInternalRT.h"
 #include "JSWebGLEngine.h"
-#include "LayaAir/RenderEngine/RenderEngine/WebGLEngine/WebGLInternalRT.h"
-#include "LayaAir/RenderEngine/RenderEngine/WebGLEngine/GL2TextureContext.h"
+#include <render/driver/gles/WebGLInternalRT.h>
+#include <render/driver/gles/GL2TextureContext.h>
 
 namespace laya
 {

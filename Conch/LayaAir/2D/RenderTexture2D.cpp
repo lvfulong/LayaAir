@@ -1,10 +1,10 @@
 #include "RenderTexture2D.h"
 #include <Utils/Log.h>
-#include "../RenderEngine/RenderStateContext.h"
+#include <render/3D/temp/RenderStateContext.h>
 #include "RenderState2D.h"
-#include "../RenderEngine/RenderEngine/WebGLEngine/WebGLEngine.h"
-#include "../RenderEngine/RenderEngine/WebGLEngine/GLTextureContext.h"
-#include "../RenderEngine/RenderEngine/WebGLEngine/WebGLInternalRT.h"
+#include <render/driver/gles/WebGLEngine.h>
+#include <render/driver/gles/GLTextureContext.h>
+#include <render/driver/gles/WebGLInternalRT.h>
 namespace laya
 {
 	static Color _clearColor;
@@ -61,7 +61,7 @@ namespace laya
 		m_pWebGLEngine->getTextureContext()->bindRenderTarget(m_renderTarget, 0);
 		m_lastRT = RenderTexture2D::m_currentActive;
 		RenderTexture2D::m_currentActive = this;
-		m_pWebGLEngine->viewport(0, 0, m_width, m_height);//Íâ²¿ÉèÖÃ
+		m_pWebGLEngine->viewport(0, 0, m_width, m_height);//ï¿½â²¿ï¿½ï¿½ï¿½ï¿½
 		m_lastWidth = RenderState2D::width;
 		m_lastHeight = RenderState2D::height;
 		RenderState2D::width = m_width;

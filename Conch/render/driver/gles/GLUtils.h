@@ -12,8 +12,7 @@
 #else
 #include <GLES3/gl3.h>
 #endif
-#include "../../RenderInterface/IRenderVertexState.h"
-#include "../../../RenderEngine/RenderEngine/WebGLEngine/GLCapable.h"
+#include <render/3D/design/renderInterface/IRenderVertexState.h>
 
 namespace laya
 {

@@ -1,10 +1,10 @@
 #ifndef __GLRenderDrawContext_H__
 #define __GLRenderDrawContext_H__
 
-#include "../../RenderEnum/RenderPologyMode.h"
-#include "../../RenderEnum/IndexFormat.h"
+#include <render/3D/design/renderEnum/RenderPologyMode.h>
+#include <render/3D/design/renderEnum/IndexFormat.h>
 #include "GLObject.h"
-#include "../../RenderInterface/IRenderDrawContext.h"
+#include <render/3D/design/renderInterface/IRenderDrawContext.h>
 
 namespace laya
 {

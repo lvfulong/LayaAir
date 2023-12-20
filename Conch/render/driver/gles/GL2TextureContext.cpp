@@ -3,8 +3,7 @@
 #include "WebGLInternalTex.h"
 #include "../../Image/JCImage.h"
 #include "WebGLInternalRT.h"
-#include <Bindings/JSImage.h>
-#include "LayaAir/RenderEngine/RenderEngine/WebGLEngine/GLUtils.h"
+#include "GLUtils.h"
 
 namespace laya
 {

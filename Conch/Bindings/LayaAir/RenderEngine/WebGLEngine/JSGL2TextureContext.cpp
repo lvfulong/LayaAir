@@ -1,13 +1,13 @@
 #include "JSGL2TextureContext.h"
 #include <Utils/Log.h>
 #include <Utils/JCMemorySurvey.h>
-#include "../../../../LayaAir/RenderEngine/RenderEngine/WebGLEngine/GL2TextureContext.h"
+#include <render/driver/gles/GL2TextureContext.h>
 #include "JCConch.h"
 #include "JSWebGLInternalTex.h"
 #include "JCConch.h"
 #include "JSWebGLInternalRT.h"
 #include "JSWebGLEngine.h"
-#include "LayaAir/RenderEngine/RenderEngine/WebGLEngine/WebGLInternalRT.h"
+#include <render/driver/gles/WebGLInternalRT.h>
 #include "JSGLTextureContext.h"
 
 namespace laya

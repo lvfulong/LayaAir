@@ -11,8 +11,8 @@
 #endif
 #include <stdint.h> 
 #include <stack> 
-#include "../RenderEngine/RenderEngine/WebGLEngine/WebGLInternalTex.h"
-#include "../RenderEngine/RenderEngine/WebGLEngine/WebGLInternalRT.h"
+#include <render/driver/gles/WebGLInternalTex.h>
+#include <render/driver/gles/WebGLInternalRT.h>
 #include <memory>
 
 namespace laya

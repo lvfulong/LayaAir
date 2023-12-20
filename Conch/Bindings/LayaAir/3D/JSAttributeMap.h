@@ -3,8 +3,8 @@
 
 #include <stdio.h>
 #include <Binder/JSInterface.h>
-#include "../../../LayaAir/RenderEngine/RenderEngine/WebGLEngine/GLAttributeMap.h"
-#include "../../../LayaAir/RenderEngine/RenderEngine/WebGLEngine/GLStateMap.h"
+#include <render/driver/gles/GLAttributeMap.h>
+#include <render/driver/gles/GLStateMap.h>
 
 namespace laya
 {

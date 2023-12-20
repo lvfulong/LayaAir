@@ -1,10 +1,10 @@
 #include "JSWebGLEngine.h"
 #include <Utils/Log.h>
 #include <Utils/JCMemorySurvey.h>
-#include "../../../../LayaAir/RenderEngine/RenderEngine/WebGLEngine/WebGLInternalTex.h"
-#include "../../../../LayaAir/RenderEngine/RenderEnum/RenderCapable.h"
-#include "../../../../LayaAir/RenderEngine/RenderEnum/RenderParams.h"
-#include "../../../../LayaAir/RenderEngine/RenderEngine/WebGLEngine/GLEnum/WebGLMode.h"
+#include <render/driver/gles/WebGLInternalTex.h>
+#include <render/3D/design/renderEnum/RenderCapable.h>
+#include <render/3D/design/renderEnum/RenderParams.h>
+#include <render/driver/gles/GLEnum/WebGLMode.h>
 #include "../../3D/JSCommandUniformMap.h"
 #include "../../3D/JSRenderStateCommand.h"
 #include "JSWebGLInternalTex.h"

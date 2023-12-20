@@ -6,7 +6,7 @@
 #include <core/math/Viewport.h>
 #include <core/math/Vector4.h>
 #include <core/math/Color.h>
-namespace layaRender{
+namespace laya{
     typedef std::function<void(SingleList<RenderElement*>&) > extendCall;
  class RenderContext3D
  {

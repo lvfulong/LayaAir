@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <Binder/JSInterface.h>
-#include "../../../LayaAir/3D/CommandUniformMap.h"
+#include <render/3D/temp/CommandUniformMap.h>
 
 namespace laya
 {

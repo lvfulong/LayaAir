@@ -246,7 +246,7 @@ namespace laya
 	{
 		const char* extention = (const char*)glGetString(GL_EXTENSIONS);/*GL_EXTENSIONS*/
 		const char* version = (const char*)glGetString(GL_VERSION);
-		const char* strOS = JSConchConfig::getOS();
+		const char* strOS = laya::JSConchConfig::getOS();
 		if (strcmp(name, "EXT_texture_filter_anisotropic") == 0 
 			&& strstr(extention, "GL_EXT_texture_filter_anisotropic") != nullptr)
 		{

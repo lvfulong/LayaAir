@@ -1,6 +1,6 @@
 #include "WebGLInternalTex.h"
-#include "../../../../JCConch.h"
-#include "../../../../JCConchRender.h"
+#include "JCConch.h"
+#include "JCConchRender.h"
 #ifdef WIN32
 #ifdef min
 #undef min
@@ -9,6 +9,7 @@
 #undef max
 #endif
 #endif
+using laya::JCConch;
 namespace laya
 {
 	WebGLInternalTex::WebGLInternalTex(WebGLEngine* engine, int target, int width, int height, TextureDimension dimension, bool mipmap, bool useSRGBLoader, int gammaCorrection) 

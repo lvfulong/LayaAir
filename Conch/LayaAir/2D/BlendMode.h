@@ -11,7 +11,7 @@
 #endif
 #include <vector> 
 #include <Utils/Log.h>
-#include "../RenderEngine/RenderEnum/BlendFactor.h"
+#include <render/3D/design/renderEnum/BlendFactor.h>
 #include <cstring>
 
 namespace laya

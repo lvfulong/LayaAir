@@ -2,7 +2,7 @@
 #include <Binder/JSInterface.h>
 #include <Utils/Log.h>
 #include <Utils/JCMemorySurvey.h>
-#include "../../../LayaAir/3D/QuickSort.h"
+#include <render/3D/temp/QuickSort.h>
 
 namespace laya
 {

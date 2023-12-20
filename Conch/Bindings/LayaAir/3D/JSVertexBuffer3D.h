@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <Binder/JSInterface.h>
-#include "../../../LayaAir/3D/VertexBuffer3D.h"
+#include <render/3D/temp/VertexBuffer3D.h>
 
 namespace laya
 {

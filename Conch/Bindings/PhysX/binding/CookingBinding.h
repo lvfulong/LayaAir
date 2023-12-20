@@ -12,7 +12,7 @@
 
 using namespace physx;
 #ifdef CONCH
-using namespace laya;
+
 namespace laya
 {
 extern char* PHYSX_HEAP_BASE_ADDRESS;
