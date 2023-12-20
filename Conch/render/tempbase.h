@@ -7,6 +7,7 @@
 #include <core/math/BoundSphere.h>
 #include <core/math/Plane.h>
 #include <core/math/BoundFrustum.h>
+#include <core/math/Bounds>
 
 using laya::Vector3;
 using laya::BoundSphere;
@@ -16,6 +17,14 @@ using laya::BoundFrustum;
 
 namespace layaRender
 {
+
+    enum pipelineMode
+    {
+        ForwardADD,
+        Depth,
+        DepthNormal
+    };
+
     class CullInfo
     {
     public:
@@ -56,12 +65,12 @@ namespace layaRender
     public:
         SingleList();
         ~SingleList();
-        uint32_t getLength(){return length};
-        void setLength(uint32_t length) { m_vElements.resize(length); }
+        uint32_t getLength() { return _length; };
+        void setLength(uint32_t length) {length = _length}
     public:
         std::vector<T>	m_vElements;
     private:
-        uint32_t length;
+        uint32_t _length;
         
 
     private:
@@ -75,7 +84,9 @@ namespace layaRender
         RenderDataElement();
         ~RenderDataElement();
 
+
     private:
+      
 
     };
 
@@ -83,11 +94,17 @@ namespace layaRender
     class RenderElement
     {
     public:
-        struct geometryData
+        struct ComposeData
         {
             uint32_t m_nDistanceForSort;
             float m_nSortingFudge;//排序矫正值
             uint32_t renderQueue;//material Renderqueue
+            bool castShadow;
+            bool enable;
+            uint32_t renderbitFlag;
+            uint32_t layer;
+            Bounds bounds;
+            bool customCull;
 
         }composeData;
 

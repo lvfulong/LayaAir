@@ -20,7 +20,7 @@ namespace layaRender
         //batchqueue
         _batch(_elements);
         //compose
-        _compose(_elements,0,_elements.length);
+        _compose(_elements,0,_elements.getLength());
         //render
         return _context->drawRenderElementList(_elements);
     }
