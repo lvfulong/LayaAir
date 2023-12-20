@@ -40,13 +40,13 @@ namespace layaRender{
             //排版数据
             ComposeData* composeData;
             //渲染数据
-            RenderInstanceData* renderData;
+            RenderInstanceData renderData;
     }
 
 
     class RenderInstanceData{
         public:
-            virtual render(RenderContext3D* context);
+            virtual void render(RenderContext3D* context);
             void set_renderData_geometry(uint32_t value);
             void set_renderData_materialData(uint32_t value);
             void set_renderData_renderNodeData(uint32_t value);

@@ -7,7 +7,6 @@
 #include <memory>
 #include "RenderContext.h"
 #include "render/tempbase.h"
-//RenderElement
 
 namespace laya
 {

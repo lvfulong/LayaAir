@@ -15,8 +15,6 @@ namespace laya
     }
 
     uint32_t RenderListQueue::renderQueue(){
-        //cull
-        //if(_cull) _cull(_elements, _context->cameraInfo);
         //batchqueue
         if (_batch) _batch(_elements);
         //compose

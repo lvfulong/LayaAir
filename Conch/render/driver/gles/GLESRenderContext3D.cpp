@@ -19,7 +19,7 @@ namespace laya{
        if (preRender) preRender(list);
        //render
        for (uint32_t i = 0, n = list.getLength(); i < n; i++) {
-           list.m_vElements[i]->renderData->_render(this);
+           list.m_vElements[i]->RenderInstanceData._render(this);
        }
        if (preRender) afterRender(list);
         _end();

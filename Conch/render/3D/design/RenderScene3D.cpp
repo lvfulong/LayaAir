@@ -6,19 +6,25 @@
 namespace layaRender{
 
     void renderScenePass(RenderContext3D* context,CullInfo* cullinfo,SingleList<BaseRenderNode> renderNodeList){
+            //cull
+            
+            //更新数据
 
+            //分 renderlistqueue
+
+            //分别渲染renderlist
     }
 
     void renderShadowPass(RenderContext3D* context,CullInfo* cullinfo,SingleList<BaseRenderNode> renderNodeList){
-        
+        //shadowCull
     }
 
     void renderDepthPass(RenderContext3D* context,CullInfo* cullinfo,SingleList<BaseRenderNode> renderNodeList){
-
+        //
     }
 
     void renderDepthNormalPass(RenderContext3D* context,CullInfo* cullinfo,SingleList<BaseRenderNode> renderNodeList){
-
+        //
     }
 }
 
