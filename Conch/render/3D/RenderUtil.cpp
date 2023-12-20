@@ -1,16 +1,16 @@
-#include "RenderUtil"
+﻿#include "RenderUtil.h"
 namespace layaRender{
     void RenderUtil::opaqueRenderSort(SingleList<RenderElement*>& list, uint32_t left, uint32_t right){
        _quickSort(list,left,right,true);
     }
 
     void RenderUtil::transparentSort(SingleList<RenderElement*>& list, uint32_t left, uint32_t right){
-        _quickSort(list,left,right,false)
+        _quickSort(list, left, right, false);
     }
 
   static void _quickSort(SingleList<RenderElement*>& list,uint32_t left, uint32_t right,bool nearToFar)
     {
-        if (list->getLength() > 1)
+        if (list.getLength() > 1)
         {
             uint32_t index = _partitionRenderObject(list,left, right,nearToFar);
             uint32_t leftIndex = index - 1;
@@ -56,12 +56,42 @@ namespace layaRender{
         if (renderQueue == 0) 
         {
             uint32_t sort = (!nearToFar) ? right->composeData.m_nDistanceForSort - left->composeData.m_nDistanceForSort : left->composeData.m_nDistanceForSort - right->composeData.m_nDistanceForSort;
-            return sort + right->composeData->m_nSortingFudge - left->composeData.m_nSortingFudge;
+            return sort + right->composeData.m_nSortingFudge - left->composeData.m_nSortingFudge;
         }
         else
         {
             return renderQueue;
         }
+    }
+    bool RenderUtil::cullingRenderBounds(const laya::Bounds& bounds, const CullInfo& cullInfo)
+    {
+        int cullPlaneCount = cullInfo._directLightFrustumCullInfo._cullPlaneCount;
+        const std::vector<Plane>& cullPlanes = cullInfo._directLightFrustumCullInfo._cullPlanes;
+
+        const Vector3& min = bounds.getMin();
+        const Vector3& max = bounds.getMax();
+        float minX = min.x;
+        float minY = min.y;
+        float minZ = min.z;
+        float maxX = max.x;
+        float maxY = max.y;
+        float maxZ = max.z;
+        //TODO:ͨ������ü�ֱ��pass
+
+        bool pass = true;
+        // cull by planes
+        // Improve:Maybe use sphre and direction cull can savle the far plane cull
+        for (int j = 0; j < cullPlaneCount; j++)
+        {
+            const Plane& plane = cullPlanes[j];
+            const Vector3& normal = plane.normal;
+            if (plane.distance + (normal.x * (normal.x < 0.0 ? minX : maxX)) + (normal.y * (normal.y < 0.0 ? minY : maxY)) + (normal.z * (normal.z < 0.0 ? minZ : maxZ)) < 0.0)
+            {
+                pass = false;
+                break;
+            }
+        }
+        return pass;
     }
     void RenderUtil::cullByCameraCullInfo(const CullInfo& cullInfo, const SingleList<RenderElement*>& cullListIn, SingleList<RenderElement*>& cullListOut)
     {
@@ -69,27 +99,41 @@ namespace layaRender{
     }
     void RenderUtil::cullByShadowCullInfo(const CullInfo& cullInfo, const SingleList<RenderElement*>& cullListIn, SingleList<RenderElement*>& cullListOut) 
     {
-
+        cullListOut.setLength(0);
+        const std::vector<RenderElement*>& renders = cullListIn.m_vElements;
+        for (int i = 0, n = cullListIn.getLength(); i < n; i++)
+        {
+            RenderElement* render = renders[i];
+            bool canPass = render->shadowCullPass();
+            if (canPass)
+            {
+                //lvtodo Stat.frustumCulling++;
+                if (cullingRenderBounds(render->composeData.bounds, cullInfo))
+                {
+                    cullListOut.add(render);
+                }
+            }
+        }
     }
-    void RenderUtil::cullingSpotShadow(const CullInfo& cameraCullInfo, const SingleList<RenderElement*>& cullListIn, SingleList<RenderElement*>& cullListOut)
+    void RenderUtil::cullingSpotShadow(const CullInfo& cullInfo, const SingleList<RenderElement*>& cullListIn, SingleList<RenderElement*>& cullListOut)
     {
         cullListOut.setLength(0);
-        std::vector<RenderElement*>& renders = cullListIn.m_vElements;
-        const BoundFrustum& boundFrustum = _cameraFrustumCullInfo._boundFrustum;
+        const std::vector<RenderElement*>& renders = cullListIn.m_vElements;
+        const BoundFrustum& boundFrustum = cullInfo._cameraFrustumCullInfo._boundFrustum;
         int index = 0;
         for (int i = 0, n = cullListIn.getLength(); i < n; i++)
         {
             RenderElement* render = renders[i];
-            //bool canPass = render->getCastShadow()/*&& render._enabled*/ && (render->m_renderbitFlag == 0);
-            //if (canPass)
-            //{
+            bool canPass = render->composeData.castShadow && render->composeData.enable && (render->composeData.renderbitFlag == 0);
+            if (canPass)
+            {
                 //lvtodo Stat.frustumCulling++;
-                //if (render->_needRender(boundFrustum))
-                //{
-                //}
-            //}
+                //lvtodo if (render->_needRender(boundFrustum))
+                {
+                    cullListOut.add(render);
+                }
+            }
         }
 
     }
 }
-#endif
