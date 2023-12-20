@@ -1,11 +1,10 @@
-#ifndef __RenderUtil_CPP_
-#define __RenderUtil_CPP_
+#include "RenderUtil"
 namespace layaRender{
-    void opaqueRenderSort(SingleList<RenderElement*>& list, uint32_t left, uint32_t right){
+    void RenderUtil::opaqueRenderSort(SingleList<RenderElement*>& list, uint32_t left, uint32_t right){
        _quickSort(list,left,right,true);
     }
 
-    void transparentSort(SingleList<RenderElement*>& list, uint32_t left, uint32_t right){
+    void RenderUtil::transparentSort(SingleList<RenderElement*>& list, uint32_t left, uint32_t right){
         _quickSort(list,left,right,false)
     }
 
@@ -64,6 +63,33 @@ namespace layaRender{
             return renderQueue;
         }
     }
+    void RenderUtil::cullByCameraCullInfo(const CullInfo& cullInfo, const SingleList<RenderElement*>& cullListIn, SingleList<RenderElement*>& cullListOut)
+    {
 
+    }
+    void RenderUtil::cullByShadowCullInfo(const CullInfo& cullInfo, const SingleList<RenderElement*>& cullListIn, SingleList<RenderElement*>& cullListOut) 
+    {
+
+    }
+    void RenderUtil::cullingSpotShadow(const CullInfo& cameraCullInfo, const SingleList<RenderElement*>& cullListIn, SingleList<RenderElement*>& cullListOut)
+    {
+        cullListOut.setLength(0);
+        std::vector<RenderElement*>& renders = cullListIn.m_vElements;
+        const BoundFrustum& boundFrustum = _cameraFrustumCullInfo._boundFrustum;
+        int index = 0;
+        for (int i = 0, n = cullListIn.getLength(); i < n; i++)
+        {
+            RenderElement* render = renders[i];
+            //bool canPass = render->getCastShadow()/*&& render._enabled*/ && (render->m_renderbitFlag == 0);
+            //if (canPass)
+            //{
+                //lvtodo Stat.frustumCulling++;
+                //if (render->_needRender(boundFrustum))
+                //{
+                //}
+            //}
+        }
+
+    }
 }
 #endif

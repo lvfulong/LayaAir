@@ -23,22 +23,22 @@ namespace layaRender
         ~CullInfo();
 
     private:
-        struct CameraFrusCullInfo
+        struct CameraFrustumCullInfo
         {
             Vector3							_position;
             bool							_useOcclusionCulling;
             BoundFrustum					_boundFrustum;
             uint32_t						_cullingMask;
             uint32_t						_staticMask = 0;
-        } _cameraFrusCullInfo;
-        struct DirectLightFrusCullInfo
+        } _cameraFrustumCullInfo;
+        struct DirectLightFrustumCullInfo
         {
             Vector3							_position;
 		    std::vector<Plane>				_cullPlanes;
 		    BoundSphere						_cullSphere;
 		    int								_cullPlaneCount;
 		    Vector3							_direction;
-	    }_directLightFrusCullInfo;
+	    }_directLightFrustumCullInfo;
        };
 		
     class CameraInfo
@@ -57,6 +57,7 @@ namespace layaRender
         SingleList();
         ~SingleList();
         uint32_t getLength(){return length};
+        void setLength(uint32_t length) { m_vElements.resize(length); }
     public:
         std::vector<T>	m_vElements;
     private:

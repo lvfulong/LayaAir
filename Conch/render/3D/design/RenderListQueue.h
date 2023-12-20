@@ -11,7 +11,6 @@
 
 namespace layaRender
 {
-    static  public void aaa();
     typedef std::function<void(SingleList<RenderElement*>&, CameraInfo*) >  cullfun;
     typedef std::function<void(SingleList<RenderElement*>&)> batchfun;
     typedef std::function<void(SingleList<RenderElement*>&, uint32_t, uint32_t)> composefun;

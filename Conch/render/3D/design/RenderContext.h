@@ -29,11 +29,11 @@ namespace layaRender{
     
  public:
     CameraInfo* cameraInfo;
-    destTarget: IRenderTarget;
+    destTarget IRenderTarget;
     //viewPort
     Viewport viewPort;
     //scissor
-    Vector4 scissor: ;
+    Vector4 scissor;
  };
 
 }
