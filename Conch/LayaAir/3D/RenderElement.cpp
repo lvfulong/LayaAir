@@ -80,7 +80,7 @@ namespace laya
 					}
 				}
 				//renderData update
-				//TODO£ºRenderstate as a Object to less upload
+				//TODOï¿½ï¿½Renderstate as a Object to less upload
 				//if (m_pMaterialShaderData != nullptr)
 				{
 					shaderIns->uploadRenderStateBlendDepth(m_pMaterialShaderData);

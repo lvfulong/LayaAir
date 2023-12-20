@@ -50,15 +50,6 @@ namespace layaRender
 	    }_directLightFrustumCullInfo;
        };
 		
-    class CameraInfo
-    {
-    public:
-        CameraInfo();
-        ~CameraInfo();
-
-    private:
-
-    };
      template <class T>
     class SingleList
     {
@@ -118,6 +109,7 @@ namespace layaRender
             uint32_t layer;
             laya::Bounds bounds;
             bool customCull;
+            bool customCullResoult;
 
         }composeData;
 

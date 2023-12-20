@@ -16,11 +16,11 @@ namespace layaRender
 
     uint32_t RenderListQueue::renderQueue(){
         //cull
-        _cull(_elements, _context->cameraInfo);
+        //if(_cull) _cull(_elements, _context->cameraInfo);
         //batchqueue
-        _batch(_elements);
+        if (_batch) _batch(_elements);
         //compose
-        _compose(_elements,0,_elements.getLength());
+        if(_compose) _compose(_elements,0,_elements.getLength());
         //render
         return _context->drawRenderElementList(_elements);
     }
