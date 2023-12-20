@@ -11,7 +11,7 @@ namespace layaRender
     }
 
     RenderListQueue::~RenderListQueue() {
-       _context.reset();
+        
     }
 
     uint32_t RenderListQueue::renderQueue(){
@@ -34,7 +34,7 @@ namespace layaRender
         //_elements.clear();
     }
 
-    void RenderListQueue::set_context(RenderContext::p_context context) {
+    void RenderListQueue::set_context(RenderContext3D* context) {
         _context = context;
     }
 

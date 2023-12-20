@@ -123,7 +123,11 @@ list(APPEND CONCH_SRC
 	#render/3D/design 3D框架设计文件夹
 	render/3D/design/RenderListQueue.cpp
 	render/3D/design/RenderListQueue.h
-	
+
+
+	#render/driver/gles  以gles为基本的渲染驱动类
+	render/driver/gles/GLESRenderContext3D.h
+	render/driver/gles/GLESRenderContext3D.cpp
 	#临时引用文件
 	render/tempbase.h
 	#render/driver/gles/driver

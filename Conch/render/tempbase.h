@@ -8,6 +8,7 @@
 #include <core/math/Plane.h>
 #include <core/math/BoundFrustum.h>
 #include <core/math/Bounds.h>
+#include <render/3D/design/RenderContext.h>
 
 using laya::Vector3;
 using laya::BoundSphere;
@@ -17,12 +18,12 @@ using laya::BoundFrustum;
 
 namespace layaRender
 {
-
-    enum PipelineMode
-    {
-        ForwardADD,
-        Depth,
-        DepthNormal
+    class RenderContext3D;
+    enum ClearFlag {
+        Nothing = 0,
+        Color = 1,
+        Depth = 2,
+        Stencil = 4,
     };
 
     class CullInfo
@@ -81,10 +82,10 @@ namespace layaRender
       class RenderDataElement
     {
     public:
-        RenderDataElement();
-        ~RenderDataElement();
-
-
+        RenderDataElement() {};
+        ~RenderDataElement() {};
+        void _renderUpdatePre(RenderContext3D* context) {};
+        void _render(RenderContext3D* context) {};
     private:
       
 

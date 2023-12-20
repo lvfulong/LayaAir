@@ -22,13 +22,13 @@ namespace layaRender
         uint32_t renderQueue();
         void addRenderElement(RenderElement* value);
         void clear();
-        void set_context(RenderContext::p_context context);
+        void set_context(RenderContext3D* context);
     private:
         cullfun _cull;
         batchfun _batch;
         composefun _compose;
         SingleList<RenderElement*> _elements;
-        RenderContext::p_context _context;
+        RenderContext3D* _context;
 	};
 }
 #endif //RenderListQueue
