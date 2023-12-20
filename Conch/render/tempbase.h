@@ -32,7 +32,6 @@ namespace layaRender
         CullInfo();
         ~CullInfo();
 
-    private:
         struct CameraFrustumCullInfo
         {
             Vector3							_position;
@@ -67,7 +66,20 @@ namespace layaRender
         SingleList();
         ~SingleList();
         uint32_t getLength() { return _length; };
+        uint32_t getLength() const { return _length; };
         void setLength(uint32_t length) {length = _length}
+        void add(T element) 
+        {
+            if (m_vElements.size() == m_nLength)
+            {
+                m_vElements.push_back(element);
+            }
+            else
+            {
+                m_vElements[m_nLength] = element;
+            }
+            m_nLength++;
+        }
     public:
         std::vector<T>	m_vElements;
     private:
@@ -110,7 +122,10 @@ namespace layaRender
         }composeData;
 
         RenderDataElement* renderData;
-
+        bool shadowCullPass()
+        {
+            return this->composeData.castShadow && this->composeData.enable && (this->composeData.renderbitFlag == 0);
+        }
         RenderElement();
         ~RenderElement();
 

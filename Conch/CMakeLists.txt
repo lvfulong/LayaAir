@@ -123,15 +123,49 @@ list(APPEND CONCH_SRC
 	#render/3D/design 3D框架设计文件夹
 	render/3D/design/RenderListQueue.cpp
 	render/3D/design/RenderListQueue.h
-
-
-	#render/driver/gles  以gles为基本的渲染驱动类
+	render/3D/RenderUtil.h
+	render/3D/RenderUtil.cpp
+#render/driver/gles  以gles为基本的渲染驱动类
 	render/driver/gles/GLESRenderContext3D.h
-	render/driver/gles/GLESRenderContext3D.cpp
-	#临时引用文件
+	render/driver/gles/GLESRenderContext3D.cpp	#临时引用文件
 	render/tempbase.h
 	#render/driver/gles/driver
-
+	render/driver/gles/GLRenderDrawContext.h
+	render/driver/gles/GLRenderDrawContext.cpp
+	render/driver/gles/GLRenderState.h
+	render/driver/gles/GLRenderState.cpp
+	render/driver/gles/GLCapable.h
+	render/driver/gles/GLCapable.cpp
+	render/driver/gles/GLParams.h
+	render/driver/gles/GLParams.cpp
+	render/driver/gles/WebGLEngine.h
+	render/driver/gles/WebGLEngine.cpp
+	render/driver/gles/GLObject.h
+	render/driver/gles/GLObject.cpp
+	render/driver/gles/GLEnum/WebGLExtension.h
+	render/driver/gles/GLEnum/WebGLMode.h
+	render/driver/gles/GLBuffer.h
+	render/driver/gles/GLBuffer.cpp
+	render/driver/gles/WebGLInternalTex.h
+	render/driver/gles/WebGLInternalTex.cpp
+	render/driver/gles/WebGLInternalRT.h
+	render/driver/gles/WebGLInternalRT.cpp
+	render/driver/gles/GLShaderInstance.h
+	render/driver/gles/GLShaderInstance.cpp
+	render/driver/gles/GLAttributeMap.h
+	render/driver/gles/GLAttributeMap.cpp
+	render/driver/gles/GLStateMap.h
+	render/driver/gles/GLStateMap.cpp
+	render/driver/gles/GL2TextureContext.h
+	render/driver/gles/GL2TextureContext.cpp
+	render/driver/gles/GLTextureContext.h
+	render/driver/gles/GLTextureContext.cpp
+	render/driver/gles/GLVertexState.h
+	render/driver/gles/GLVertexState.cpp
+	render/driver/gles/GLRender2DContext.h
+	render/driver/gles/GLRender2DContext.cpp
+	render/driver/gles/GLUtils.h
+	render/driver/gles/GLUtils.cpp
 
 	Audio/JCAudioManager.cpp
 	Audio/JCAudioManager.h
