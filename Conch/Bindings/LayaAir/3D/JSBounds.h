@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <Binder/JSInterface.h>
 #include <core/math/BoundBox.h>
-#include "../../LayaAir/3D/Culling/Bounds.h"
+#include <core/math/Bounds.h>
 
 namespace laya
 {

@@ -7,7 +7,7 @@
 #include <core/math/BoundSphere.h>
 #include <core/math/Plane.h>
 #include <core/math/BoundFrustum.h>
-#include <core/math/Bounds>
+#include <core/math/Bounds.h>
 
 using laya::Vector3;
 using laya::BoundSphere;
@@ -18,7 +18,7 @@ using laya::BoundFrustum;
 namespace layaRender
 {
 
-    enum pipelineMode
+    enum PipelineMode
     {
         ForwardADD,
         Depth,
@@ -103,7 +103,7 @@ namespace layaRender
             bool enable;
             uint32_t renderbitFlag;
             uint32_t layer;
-            Bounds bounds;
+            laya::Bounds bounds;
             bool customCull;
 
         }composeData;

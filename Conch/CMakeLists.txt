@@ -102,6 +102,8 @@ list(APPEND CONCH_SRC
 	core/math/Quaternion.cpp
 	core/math/Plane.h
 	core/math/Plane.cpp
+	core/math/Bounds.h
+	core/math/Bounds.cpp
 	core/math/BoundBox.h
 	core/math/BoundBox.cpp
 	core/math/BoundFrustum.h
@@ -287,8 +289,6 @@ list(APPEND CONCH_SRC
 	LayaAir/3D/InstanceRenderElementOBJ.cpp
 	LayaAir/3D/UniformBufferObject.h
 	LayaAir/3D/UniformBufferObject.cpp
-	LayaAir/3D/Culling/Bounds.h
-	LayaAir/3D/Culling/Bounds.cpp
 	LayaAir/RenderEngine/RenderEnum/RenderPologyMode.h
 	LayaAir/RenderEngine/RenderEnum/DrawType.h
 	LayaAir/RenderEngine/RenderEnum/IndexFormat.h

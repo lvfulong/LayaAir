@@ -39,7 +39,7 @@ namespace layaRender{
 
     bool invertY;
 
-    pipelineMode:
+    PipelineMode pipelineMode;
  };
 
 }
