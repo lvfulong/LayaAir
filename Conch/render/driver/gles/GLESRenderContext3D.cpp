@@ -8,16 +8,16 @@ namespace layaRender{
     
     };
     uint32_t GLESRenderContext3D::drawRenderElementList(SingleList<RenderElement*>& list) {
-        _bindRenderTarget();
-        _start();
-        if (preUpdate) preUpdate(list);
-        //update
-        for (uint32_t i = 0, n = list.getLength(); i < n; i++) {
-            list.m_vElements[i]->renderData->_renderUpdatePre(this);
-        }
+       _bindRenderTarget();
+       _start();
+       if (preUpdate) preUpdate(list);
+       //update
+       for (uint32_t i = 0, n = list.getLength(); i < n; i++) {
+           list.m_vElements[i]->renderData->_renderUpdatePre(this);
+       }
        if (afterUpdate)  afterUpdate(list);
        if (preRender) preRender(list);
-        //list->render();
+       //render
        for (uint32_t i = 0, n = list.getLength(); i < n; i++) {
            list.m_vElements[i]->renderData->_render(this);
        }

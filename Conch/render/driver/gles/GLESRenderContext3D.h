@@ -20,7 +20,6 @@ namespace layaRender{
         void clearData(ClearFlag flag, laya::Color color, float depthValue, uint8_t stencilValue) override;
         void setSceneUpdateMask(uint32_t mask) override;
         void setCameraUpdateMask(uint32_t mask) override;
-
     private:
         void _bindRenderTarget();
         void _start();
