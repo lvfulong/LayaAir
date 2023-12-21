@@ -136,7 +136,8 @@ list(APPEND CONCH_SRC
 	render/3D/renderInstance/BaseRenderNode.cpp
 	render/3D/renderInstance/MeshRenderNode.h
 	render/3D/renderInstance/MeshRenderNode.cpp
-
+	render/3D/renderInstance/RenderModuleData.h
+	render/3D/renderInstance/RenderModuleData.cpp
 
 #render/driver/gles  以gles为基本的渲染驱动类
 	render/driver/gles/GLESRenderContext3D.h
