@@ -5,9 +5,12 @@
 #include <render/3D/temp/RenderStateContext.h>
 #include "Shader3D.h"
 #include <Utils/Log.h>
+#include "JCConch.h"
+#include "JCConchRender.h"
+
 namespace laya
 {
-	ShaderInstance::ShaderInstance(WebGLEngine* engine, const char* vs, const char* ps, GLAttributeMap* pAttributeMap, GLStateMap* pStateMap, RenderState* pRenderState)
+	ShaderInstance::ShaderInstance(WebGLEngine* engine, const char* vs, const char* ps, GLAttributeMap* pAttributeMap, GLStateMap* pStateMap, RenderState* pRenderState) : ResourceBase(JCConch::s_pConchRender->m_pShaderInstanceManager)
 	{
 		m_pWebGLEngine = engine;
 		m_stateParamsMap = pStateMap;
@@ -476,6 +479,10 @@ namespace laya
 			break;
 		}
 		m_pWebGLEngine->applyRenderStateCMD(m_cullStateCMD);
+	}
+	ShaderInstance* ShaderInstance::getShaderInstance(uint32_t id)
+	{
+		return JCConch::s_pConchRender->m_pShaderInstanceManager->getResource(id);
 	}
 }
 //------------------------------------------------------------------------------

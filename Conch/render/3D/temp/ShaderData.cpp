@@ -7,7 +7,7 @@
 
 namespace laya
 {
-	ShaderData::ShaderData(JSShaderData* data): ObjectBase(JCConch::s_pConchRender->m_pShaderDataManager)
+	ShaderData::ShaderData(JSShaderData* data): ResourceBase(JCConch::s_pConchRender->m_pShaderDataManager)
 	{
         m_data = data;
 	}
@@ -260,5 +260,9 @@ namespace laya
     {
         m_data->applyUBOData();
     }
+	ShaderData *ShaderData::getShaderData(uint32_t id)
+	{
+		return JCConch::s_pConchRender->m_pShaderDataManager->getResource(id);
+	}
 }
 //------------------------------------------------------------------------------

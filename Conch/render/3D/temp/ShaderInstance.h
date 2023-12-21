@@ -12,19 +12,19 @@
 #endif
 #include <render/driver/gles/GLShaderInstance.h>
 #include "CommandEncoder.h"
-
+#include "ResourceBase.h"
 
 namespace laya
 {	
 	class GLStateMap;
 	class ShaderVariable;
 	class RenderState;
-	class ShaderInstance
+	class ShaderInstance: public ResourceBase<ShaderInstance>
 	{
 	public:
 		ShaderInstance(WebGLEngine* engine, const char* vs, const char* ps, GLAttributeMap* pAttributeMap, GLStateMap* pStateMap, RenderState* pRenderState);
 		~ShaderInstance();
-
+		static ShaderInstance* getShaderInstance(uint32_t id);
 		bool bind();
 		void destroy();
 		void _disposeResource();

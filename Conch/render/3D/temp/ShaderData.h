@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <unordered_map>
-#include "ObjectBase.h"
+#include "ResourceBase.h"
 
 namespace laya
 {
@@ -20,7 +20,7 @@ namespace laya
 		UBO,
 	};
     class JSShaderData;
-	class ShaderData: public ObjectBase<ShaderData>
+	class ShaderData: public ResourceBase<ShaderData>
 	{
 	public:
 		struct DataInfo
@@ -64,6 +64,8 @@ namespace laya
         
         void applyUBOData();
         
+		static ShaderData *getShaderData(uint32_t id);
+		
 	private:
 
 		void printfDataInfoValue();

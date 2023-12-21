@@ -38,13 +38,14 @@ namespace laya {
 
     class RenderInstanceData {
     public:
+        virtual ~RenderInstanceData() {}
         virtual void render(RenderContext3D* context);
         virtual void preRender(RenderContext3D* context);
         void set_renderData_geometry(uint32_t value);
         void set_renderData_materialData(uint32_t value);
         void set_renderData_renderNodeData(uint32_t value);
-        void set_renderData_invertFront(bool value);
-        void set_isRender(bool value);
+        void set_renderData_invertFront(bool value) { _invertFront = value; }
+        void set_isRender(bool value) { _isRender = value; }
         void set_shader(uint32_t shader, uint32_t pipelineMode);
 
     public:

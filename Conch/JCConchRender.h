@@ -22,10 +22,12 @@
 #include <WebGL/WebGLThread.h>
 #include <Backend.h>
 #include <render/3D/temp/ObjectBase.h>
+#include <render/3D/temp/ResourceBase.h>
 #include <render/driver/gles/WebGLInternalTex.h>
 #include <render/3D/temp/ShaderData.h>
 #include "LayaAir/2D/WordText.h"
 #include <render/3D/temp/UniformBufferObject.h>
+#include <render/3D/temp/ShaderInstance.h>
 
 namespace laya
 {
@@ -81,7 +83,8 @@ namespace laya
         JCFileResManager*                       m_pFileResManager;              ///<FileResManager 外部设置的
         //JCPerfDataRender                        m_kPerfRender;                  ///<性能测试
 		ObjectManager<WebGLInternalTex>*		m_pWebGLInternalTexManager;
-		ObjectManager<ShaderData>*				m_pShaderDataManager;			///<ShaderData的Manger
+		ResourceManager<ShaderData>*			m_pShaderDataManager;
+        ResourceManager<ShaderInstance>*		m_pShaderInstanceManager;
 		ObjectManager<WordText>*				m_pWordTextManager;
 		ObjectManager<UniformBufferObject>*	    m_pUniformBufferObjectManager;
         ScreenCanvasContext2D*                  m_pScreenContext = nullptr;

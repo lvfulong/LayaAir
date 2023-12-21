@@ -59,7 +59,8 @@ namespace laya
         
 
         m_pWebGLInternalTexManager = new ObjectManager<WebGLInternalTex>();
-        m_pShaderDataManager = new ObjectManager<ShaderData>();
+        m_pShaderDataManager = new ResourceManager<ShaderData>();
+        m_pShaderInstanceManager = new ResourceManager<ShaderInstance>();
         m_pWordTextManager = new ObjectManager<WordText>();
         m_pUniformBufferObjectManager = new ObjectManager<UniformBufferObject>();
 #ifdef WEBGL_THREAD
@@ -116,6 +117,11 @@ namespace laya
             {
                 delete m_pWordTextManager;
                 m_pWordTextManager = NULL;
+            }
+            if (m_pShaderInstanceManager)
+            {
+                delete m_pShaderInstanceManager;
+                m_pShaderInstanceManager = NULL;
             }
             if (m_pShaderDataManager)
             {
