@@ -181,6 +181,8 @@ list(APPEND CONCH_SRC
 	render/driver/gles/GLRender2DContext.cpp
 	render/driver/gles/GLUtils.h
 	render/driver/gles/GLUtils.cpp
+	render/driver/gles/LayaGL.h
+	render/driver/gles/LayaGL.cpp
 	render/3D/design/renderEnum/RenderPologyMode.h
 	render/3D/design/renderEnum/DrawType.h
 	render/3D/design/renderEnum/IndexFormat.h

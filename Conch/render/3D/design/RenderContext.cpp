@@ -1,10 +1,7 @@
 
 #include "RenderContext.h"
 namespace laya{
-    RenderContext3D::RenderContext3D(){
-        //TODO
-    }
-
+uint32_t RenderContext3D::globalShaderData = 0;
     RenderContext3D::~RenderContext3D(){
         //TODO
     }

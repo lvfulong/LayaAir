@@ -41,11 +41,11 @@ namespace laya
 		CommandEncoder									m_spriteUniformParamsMap;
 		CommandEncoder									m_materialUniformParamsMap;
 		GLShaderInstance*								m_GLShaderInstance;
-		int												m_uploadMark = -1;
-		int												m_uploadScene = -1;
-		ShaderData*										m_uploadRender = nullptr;
-		ShaderData*										m_uploadCameraShaderValue = nullptr;
-		ShaderData*										m_uploadMaterial = nullptr;
+		uint32_t										m_uploadMark = 0;
+		uint32_t										m_uploadScene = 0;
+		uint32_t										m_uploadRender = 0;
+		uint32_t										m_uploadCameraShaderValue = 0;
+		uint32_t										m_uploadMaterial = 0;
 		WebGLEngine*									m_pWebGLEngine = nullptr;
 		GLStateMap*										m_stateParamsMap = nullptr;
 		RenderStateCommand								m_cullStateCMD;

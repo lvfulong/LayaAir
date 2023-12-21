@@ -16,7 +16,7 @@ namespace laya{
  class RenderContext3D
  {
  public:
-     static uint32_t gloableShaderData;
+     static uint32_t globalShaderData;
      virtual ~RenderContext3D() {};
      RenderContext3D() ;
      virtual uint32_t drawRenderElementList(JCSingletonList<RenderElement3D*>& list) = 0;

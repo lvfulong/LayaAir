@@ -77,12 +77,6 @@ namespace laya
 		m_customUniformParamsMap.clear();
 		m_stateParamsMap = nullptr;
 		m_renderState = nullptr;
-
-		m_uploadMaterial = nullptr;
-		m_uploadRender = nullptr;
-		m_uploadCameraShaderValue = nullptr;
-		m_uploadScene = -1;
-		m_uploadMark = -1;
 	}
 	ShaderData::DataInfo* ShaderInstance::_getRenderState(ShaderData* shaderDatas, int stateIndex)
 	{
