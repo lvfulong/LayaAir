@@ -2,20 +2,20 @@
 #ifndef __RenderContext_H_
 #define __RenderContext_H_
 #include <functional>
-#include <render/tempbase.h>
+#include "render/3D/design/RenderElement.h"
 #include <core/math/Viewport.h>
 #include <core/math/Vector4.h>
 #include <core/math/Color.h>
 namespace laya{
-    typedef std::function<void(SingleList<RenderElement*>&) > extendCall;
+    typedef std::function<void(SingleList<RenderElement3D*>&) > extendCall;
  class RenderContext3D
  {
  public:
      static uint32_t gloableShaderData;
      virtual ~RenderContext3D() {};
      RenderContext3D() ;
-     virtual uint32_t drawRenderElementList(SingleList<RenderElement*>& list) = 0;
-     virtual void drawRenderElementOne(RenderElement* one) = 0;
+     virtual uint32_t drawRenderElementList(SingleList<RenderElement3D*>& list) = 0;
+     virtual void drawRenderElementOne(RenderElement3D* one) = 0;
      virtual void setDestTarget(uint32_t rendertarget) = 0;
      virtual void setCameraData(uint32_t shaderdata) = 0;
      virtual void setSceneData(uint32_t sceneData) = 0;

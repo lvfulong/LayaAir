@@ -6,7 +6,7 @@
 #include "render/3D/design/Rendercontext"
 namespace layaRender{
 
-	class RenderScene3D
+	class Render3DProcess
 	{
 	public:
 		static void renderScenePass(RenderContext3D* context,CullInfo* cullinfo,SingleList<BaseRenderNode> renderNodeList);

@@ -3,9 +3,8 @@
 #include "RenderListQueue.h"
 namespace laya
 {
-    RenderListQueue::RenderListQueue(cullfun cull, batchfun batch, composefun compose)
+    RenderListQueue::RenderListQueue( batchfun batch, composefun compose)
     {
-        this->_cull = cull;
         this->_batch = batch;
         this->_compose = compose;
     }
@@ -23,7 +22,7 @@ namespace laya
         return _context->drawRenderElementList(_elements);
     }
 
-    void RenderListQueue::addRenderElement(RenderElement* value){
+    void RenderListQueue::addRenderElement(RenderElement3D* value){
         //TODO
         //_elements.add(renderelement);
     }

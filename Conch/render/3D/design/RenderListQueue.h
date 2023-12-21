@@ -6,27 +6,26 @@
 #include <functional>
 #include <memory>
 #include "RenderContext.h"
+#include "render/3D/design/RenderElement.h"
 #include "render/tempbase.h"
 
 namespace laya
 {
-    typedef std::function<void(SingleList<RenderElement*>&, CameraInfo*) >  cullfun;
-    typedef std::function<void(SingleList<RenderElement*>&)> batchfun;
-    typedef std::function<void(SingleList<RenderElement*>&, uint32_t, uint32_t)> composefun;
+    typedef std::function<void(SingleList<RenderElement3D*>&)> batchfun;
+    typedef std::function<void(SingleList<RenderElement3D*>&, uint32_t, uint32_t)> composefun;
 	class RenderListQueue {
     public:
        
-        RenderListQueue(cullfun cull, batchfun batch, composefun compose);
+        RenderListQueue(batchfun batch, composefun compose);
         ~RenderListQueue();
         uint32_t renderQueue();
-        void addRenderElement(RenderElement* value);
+        void addRenderElement(RenderElement3D* value);
         void clear();
         void set_context(RenderContext3D* context);
     private:
-        cullfun _cull;
         batchfun _batch;
         composefun _compose;
-        SingleList<RenderElement*> _elements;
+        SingleList<RenderElement3D*> _elements;
         RenderContext3D* _context;
 	};
 }

@@ -3,7 +3,7 @@
 #define __GLESRenderContext3D_H_
 
 #include <render/3D/design/RenderContext.h>
-#include <render/tempbase.h>
+#include <render/3D/design/RenderElement.h>
 namespace laya{
     class GLESRenderContext3D : public RenderContext3D {
     public:
@@ -12,7 +12,6 @@ namespace laya{
         uint32_t drawRenderElementList(SingleList<RenderElement*>& list) override;
         void drawRenderElementOne(RenderElement* one) override;
         void setDestTarget(uint32_t rendertarget) override;
-        void setCameraInfo(CameraInfo* camerainfo) override;
         void setCameraData(uint32_t shaderdata) override;
         void setSceneData(uint32_t sceneData) override;
         void setViewport(laya::Viewport viewport) override;

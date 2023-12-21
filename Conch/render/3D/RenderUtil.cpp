@@ -1,14 +1,14 @@
 ﻿#include "RenderUtil.h"
 namespace laya{
-    void RenderUtil::opaqueRenderSort(SingleList<RenderElement*>& list, uint32_t left, uint32_t right){
+    void RenderUtil::opaqueRenderSort(SingleList<laya::RenderElement3D*>& list, uint32_t left, uint32_t right){
        _quickSort(list,left,right,true);
     }
 
-    void RenderUtil::transparentSort(SingleList<RenderElement*>& list, uint32_t left, uint32_t right){
+    void RenderUtil::transparentSort(SingleList<laya::RenderElement3D*>& list, uint32_t left, uint32_t right){
         _quickSort(list, left, right, false);
     }
 
-  static void _quickSort(SingleList<RenderElement*>& list,uint32_t left, uint32_t right,bool nearToFar)
+  static void _quickSort(SingleList<laya::RenderElement3D*>& list,uint32_t left, uint32_t right,bool nearToFar)
     {
         if (list.getLength() > 1)
         {
@@ -22,9 +22,9 @@ namespace laya{
         }
     }
 
-    static uint32_t _partitionRenderObject(SingleList<RenderElement*>& list,uint32_t left, uint32_t right,bool nearToFar)
+    static uint32_t _partitionRenderObject(SingleList<laya::RenderElement3D*>& list,uint32_t left, uint32_t right,bool nearToFar)
     {
-        std::vector<RenderElement*>& elements = list.m_vElements;
+        std::vector<RenderElement3D*>& elements = list.m_vElements;
         uint32_t tempIndex = floor((right + left) / 2.0f);
         RenderElement* pivot = elements[tempIndex];
         while (left <= right)
@@ -50,7 +50,7 @@ namespace laya{
         return left;
     }
 
-    static uint32_t _compare(RenderElement* left , RenderElement* right,bool nearToFar)
+    static uint32_t _compare(RenderElement* left , RenderElement3D* right,bool nearToFar)
     {
         uint32_t renderQueue = left->composeData.m_nRenderQueue - right->composeData.m_nRenderQueue;
         if (renderQueue == 0) 
@@ -93,11 +93,11 @@ namespace laya{
         }
         return pass;
     }
-    void RenderUtil::cullByCameraCullInfo(const CullInfo& cullInfo, const SingleList<RenderElement*>& cullListIn, SingleList<RenderElement*>& cullListOut)
+    void RenderUtil::cullByCameraCullInfo(const CullInfo& cullInfo, const SingleList<RenderElement3D*>& cullListIn, SingleList<RenderElement*>& cullListOut)
     {
 
     }
-    void RenderUtil::cullByShadowCullInfo(const CullInfo& cullInfo, const SingleList<RenderElement*>& cullListIn, SingleList<RenderElement*>& cullListOut) 
+    void RenderUtil::cullByShadowCullInfo(const CullInfo& cullInfo, const SingleList<RenderElement3D*>& cullListIn, SingleList<RenderElement*>& cullListOut)
     {
         cullListOut.setLength(0);
         const std::vector<RenderElement*>& renders = cullListIn.m_vElements;

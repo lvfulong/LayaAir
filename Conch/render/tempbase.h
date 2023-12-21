@@ -19,7 +19,7 @@ using laya::BoundFrustum;
 namespace laya
 {
     class RenderContext3D;
-    enum ClearFlag {
+    enum class ClearFlag {
         Nothing = 0,
         Color = 1,
         Depth = 2,
@@ -95,35 +95,35 @@ namespace laya
     };
 
 
-    class RenderElement
-    {
-    public:
-        struct ComposeData
-        {
-            uint32_t m_nDistanceForSort;
-            float m_nSortingFudge;//排序矫正值
-            uint32_t renderQueue;//material Renderqueue
-            bool castShadow;
-            bool enable;
-            uint32_t renderbitFlag;
-            uint32_t layer;
-            laya::Bounds bounds;
-            bool customCull;
-            bool customCullResoult;
+    //class RenderElement
+    //{
+    //public:
+    //    struct ComposeData
+    //    {
+    //        uint32_t m_nDistanceForSort;
+    //        float m_nSortingFudge;//排序矫正值
+    //        uint32_t renderQueue;//material Renderqueue
+    //        bool castShadow;
+    //        bool enable;
+    //        uint32_t renderbitFlag;
+    //        uint32_t layer;
+    //        laya::Bounds bounds;
+    //        bool customCull;
+    //        bool customCullResoult;
 
-        }composeData;
+    //    }composeData;
 
-        RenderDataElement* renderData;
-        bool shadowCullPass()
-        {
-            return this->composeData.castShadow && this->composeData.enable && (this->composeData.renderbitFlag == 0);
-        }
-        RenderElement();
-        ~RenderElement();
+    //    RenderDataElement* renderData;
+    //    bool shadowCullPass()
+    //    {
+    //        return this->composeData.castShadow && this->composeData.enable && (this->composeData.renderbitFlag == 0);
+    //    }
+    //    RenderElement();
+    //    ~RenderElement();
 
-    private:
+    //private:
 
-    };
+    //};
 
 
 }

@@ -5,7 +5,7 @@
 
 namespace layaRender{
 
-    void renderScenePass(RenderContext3D* context,CullInfo* cullinfo,SingleList<BaseRenderNode> renderNodeList){
+    void RenderScene3D::renderScenePass(RenderContext3D* context,CullInfo* cullinfo,SingleList<BaseRenderNode> renderNodeList){
             //cull
             
             //更新数据
