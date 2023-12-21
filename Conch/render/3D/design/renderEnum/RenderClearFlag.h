@@ -10,5 +10,7 @@ namespace laya
 		Depth = 0x02,
 		Stencil = 0x04,
 	};
+
+	using RenderClearFlagBits = uint32_t;
 }
 #endif
