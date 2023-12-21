@@ -1,4 +1,5 @@
-﻿#include "RenderUtil.h"
+﻿#include "render/3D/RenderUtil.h"
+
 namespace laya{
     void RenderUtil::opaqueRenderSort(SingleList<laya::RenderElement3D*>& list, uint32_t left, uint32_t right){
        _quickSort(list,left,right,true);
@@ -22,7 +23,7 @@ namespace laya{
         }
     }
 
-    static uint32_t _partitionRenderObject(SingleList<laya::RenderElement3D*>& list,uint32_t left, uint32_t right,bool nearToFar)
+    static uint32_t _partitionRenderObject(SingleList<RenderElement3D*>& list,uint32_t left, uint32_t right,bool nearToFar)
     {
         std::vector<RenderElement3D*>& elements = list.m_vElements;
         uint32_t tempIndex = floor((right + left) / 2.0f);

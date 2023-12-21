@@ -6,6 +6,7 @@
 #include <core/math/Viewport.h>
 #include <core/math/Vector4.h>
 #include <core/math/Color.h>
+#include "render/tempbase.h"
 namespace laya{
     typedef std::function<void(SingleList<RenderElement3D*>&) > extendCall;
  class RenderContext3D

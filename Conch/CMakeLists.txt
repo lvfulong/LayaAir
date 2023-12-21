@@ -120,11 +120,23 @@ list(APPEND CONCH_SRC
 	core/math/Viewport.cpp
 
 	
-	#render/3D/design 3D框架设计文件夹
+	#render/3D/design
 	render/3D/design/RenderListQueue.cpp
 	render/3D/design/RenderListQueue.h
+	render/3D/design/RenderElement.h
+	render/3D/design/RenderElement.cpp
 	render/3D/RenderUtil.h
 	render/3D/RenderUtil.cpp
+	
+
+
+	#渲染节点类
+	render/3D/renderInstance/BaseRenderNode.h
+	render/3D/renderInstance/BaseRenderNode.cpp
+	render/3D/renderInstance/MeshRenderNode.h
+	render/3D/renderInstance/MeshRenderNode.cpp
+
+
 #render/driver/gles  以gles为基本的渲染驱动类
 	render/driver/gles/GLESRenderContext3D.h
 	render/driver/gles/GLESRenderContext3D.cpp	#临时引用文件
