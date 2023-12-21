@@ -35,33 +35,6 @@ namespace laya{
         _end();
     }
 
-    void GLESRenderContext3D::setDestTarget(uint32_t rendertarget) {
-       this->renderTarget = rendertarget;
-    }
-    
-    void GLESRenderContext3D::setCameraData(uint32_t shaderdata) {
-        this->cameraData = shaderdata;
-    }
-    
-    void GLESRenderContext3D::setSceneData(uint32_t sceneData) {
-        this->sceneData = sceneData;
-    }
-
-    void GLESRenderContext3D::setViewport(laya::Viewport viewport) {
-        this->viewPort = viewport;
-    }
-
-    void GLESRenderContext3D::setScissor(uint32_t x, uint32_t y, uint32_t width, uint32_t height) {
-        scissor.setValue(x, y, width, height);
-    }
-    
-    void GLESRenderContext3D::clearData(RenderClearFlag flag, laya::Color color, float depthValue, uint8_t stencilValue) {
-        clearflag = flag;
-        clearDepth = depthValue;
-        clearStencil = stencilValue;
-        clearColor = color;
-    }
-
     void GLESRenderContext3D::_bindRenderTarget(){
         //bind rendertarget
     }
@@ -73,13 +46,5 @@ namespace laya{
     }
     void GLESRenderContext3D::_end() {
     
-    }
-
-    void GLESRenderContext3D::setSceneUpdateMask(uint32_t mask) {
-        _sceneUpdataMask = mask;
-    }
-
-    void GLESRenderContext3D::setCameraUpdateMask(uint32_t mask) {
-        _cameraUpdateMask = mask;
     }
 }

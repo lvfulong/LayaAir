@@ -29,6 +29,7 @@ namespace laya
 			m_pScissor = NULL;
 		}
 	}
+
 	void RenderContext3D::applyContext(int cameraUpdateMark)
 	{
 		m_nCameraUpdateMark = cameraUpdateMark;
@@ -36,4 +37,3 @@ namespace laya
 		m_pEngine->scissor(m_pScissor->x, m_pScissor->y, m_pScissor->z, m_pScissor->w);
 	}
 }
-//------------------------------------------------------------------------------
