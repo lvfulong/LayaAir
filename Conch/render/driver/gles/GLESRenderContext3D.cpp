@@ -7,7 +7,7 @@ namespace laya{
     GLESRenderContext3D::~GLESRenderContext3D() {
     
     };
-    uint32_t GLESRenderContext3D::drawRenderElementList(SingleList<RenderElement3D*>& list) {
+    uint32_t GLESRenderContext3D::drawRenderElementList(JCSingletonList<RenderElement3D*>& list) {
        _bindRenderTarget();
        _start();
        if (preUpdate) preUpdate(list);

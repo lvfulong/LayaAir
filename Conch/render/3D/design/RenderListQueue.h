@@ -8,11 +8,12 @@
 #include "RenderContext.h"
 #include "render/3D/design/RenderElement.h"
 #include "render/tempbase.h"
+#include <Utils/JCSingletonList.h>
 
 namespace laya
 {
-    typedef std::function<void(SingleList<RenderElement3D*>&)> batchfun;
-    typedef std::function<void(SingleList<RenderElement3D*>&, uint32_t, uint32_t)> composefun;
+    typedef std::function<void(JCSingletonList<RenderElement3D*>&)> batchfun;
+    typedef std::function<void(JCSingletonList<RenderElement3D*>&, uint32_t, uint32_t)> composefun;
 	class RenderListQueue {
     public:
        
@@ -25,7 +26,7 @@ namespace laya
     private:
         batchfun _batch;
         composefun _compose;
-        SingleList<RenderElement3D*> _elements;
+        JCSingletonList<RenderElement3D*> _elements;
         RenderContext3D* _context;
 	};
 }

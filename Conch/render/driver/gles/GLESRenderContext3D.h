@@ -4,12 +4,13 @@
 
 #include <render/3D/design/RenderContext.h>
 #include <render/3D/design/RenderElement.h>
+#include <Utils/JCSingletonList.h>
 namespace laya{
     class GLESRenderContext3D : public RenderContext3D {
     public:
         GLESRenderContext3D();
         ~GLESRenderContext3D();
-        uint32_t drawRenderElementList(SingleList<RenderElement3D*>& list) override;
+        uint32_t drawRenderElementList(JCSingletonList<RenderElement3D*>& list) override;
         void drawRenderElementOne(RenderElement3D* one) override;
         void setDestTarget(uint32_t rendertarget) override;
         void setCameraData(uint32_t shaderdata) override;

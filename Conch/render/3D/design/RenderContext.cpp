@@ -11,7 +11,7 @@ namespace laya{
         //TODO
     }
 
-    uint32_t RenderContext::drawRenderElementList(SingleList<RenderElement*>& list){
+    uint32_t RenderContext::drawRenderElementList(JCSingletonList<RenderElement*>& list){
         //TODO
         return 0;
     }

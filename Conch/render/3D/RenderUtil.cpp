@@ -2,7 +2,7 @@
 
 namespace laya{
 
-    static void _quickSort(SingleList<laya::RenderElement3D*>& list, uint32_t left, uint32_t right, bool nearToFar)
+    static void _quickSort(JCSingletonList<laya::RenderElement3D*>& list, uint32_t left, uint32_t right, bool nearToFar)
     {
         if (list.getLength() > 1)
         {
@@ -16,7 +16,7 @@ namespace laya{
         }
     }
 
-    static uint32_t _partitionRenderObject(laya::SingleList<laya::RenderElement3D*>& list, uint32_t left, uint32_t right, bool nearToFar)
+    static uint32_t _partitionRenderObject(JCSingletonList<laya::RenderElement3D*>& list, uint32_t left, uint32_t right, bool nearToFar)
     {
         std::vector<laya::RenderElement3D*>& elements = list.m_vElements;
         uint32_t tempIndex = floor((right + left) / 2.0f);
@@ -58,11 +58,11 @@ namespace laya{
         }
     }
 
-    void RenderUtil::opaqueRenderSort(SingleList<laya::RenderElement3D*>& list, uint32_t left, uint32_t right){
+    void RenderUtil::opaqueRenderSort(JCSingletonList<laya::RenderElement3D*>& list, uint32_t left, uint32_t right){
        _quickSort(list,left,right,true);
     }
 
-    void RenderUtil::transparentSort(SingleList<laya::RenderElement3D*>& list, uint32_t left, uint32_t right){
+    void RenderUtil::transparentSort(JCSingletonList<laya::RenderElement3D*>& list, uint32_t left, uint32_t right){
         _quickSort(list, left, right, false);
     }
 
@@ -97,13 +97,13 @@ namespace laya{
         }
         return pass;
     }
-    void RenderUtil::cullByCameraCullInfo(const CullInfo& cullInfo, const SingleList<laya::RenderElement3D*>& cullListIn, SingleList<RenderElement*>& cullListOut)
+    void RenderUtil::cullByCameraCullInfo(const CullInfo& cullInfo, const JCSingletonList<laya::RenderElement3D*>& cullListIn, JCSingletonList<RenderElement*>& cullListOut)
     {
 
     }
-    void RenderUtil::cullByShadowCullInfo(const CullInfo& cullInfo, const SingleList<laya::RenderElement3D*>& cullListIn, SingleList<RenderElement*>& cullListOut)
+    void RenderUtil::cullByShadowCullInfo(const CullInfo& cullInfo, const JCSingletonList<laya::RenderElement3D*>& cullListIn, JCSingletonList<RenderElement*>& cullListOut)
     {
-        cullListOut.setLength(0);
+        /*cullListOut.resetLength();
         const std::vector<laya::RenderElement3D*>& renders = cullListIn.m_vElements;
         for (int i = 0, n = cullListIn.getLength(); i < n; i++)
         {
@@ -117,11 +117,11 @@ namespace laya{
                     cullListOut.add(render);
                 }
             }
-        }
+        }*/
     }
-    void RenderUtil::cullingSpotShadow(const CullInfo& cullInfo, const SingleList<RenderElement*>& cullListIn, SingleList<RenderElement*>& cullListOut)
+    void RenderUtil::cullingSpotShadow(const CullInfo& cullInfo, const JCSingletonList<RenderElement*>& cullListIn, JCSingletonList<RenderElement*>& cullListOut)
     {
-        cullListOut.setLength(0);
+        /*cullListOut.resetLength();
         const std::vector<laya::RenderElement3D*>& renders = cullListIn.m_vElements;
         const BoundFrustum& boundFrustum = cullInfo._cameraFrustumCullInfo._boundFrustum;
         int index = 0;
@@ -137,7 +137,6 @@ namespace laya{
                     cullListOut.add(render);
                 }
             }
-        }
-
+        }*/
     }
 }

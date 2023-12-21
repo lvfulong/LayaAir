@@ -5,7 +5,7 @@
 
 namespace layaRender{
 
-    void RenderScene3D::renderScenePass(RenderContext3D* context,CullInfo* cullinfo,SingleList<BaseRenderNode> renderNodeList){
+    void RenderScene3D::renderScenePass(RenderContext3D* context,CullInfo* cullinfo,JCSingletonList<BaseRenderNode> renderNodeList){
             //cull
             
             //更新数据
@@ -15,15 +15,15 @@ namespace layaRender{
             //分别渲染renderlist
     }
 
-    void renderShadowPass(RenderContext3D* context,CullInfo* cullinfo,SingleList<BaseRenderNode> renderNodeList){
+    void renderShadowPass(RenderContext3D* context,CullInfo* cullinfo,JCSingletonList<BaseRenderNode> renderNodeList){
         //shadowCull
     }
 
-    void renderDepthPass(RenderContext3D* context,CullInfo* cullinfo,SingleList<BaseRenderNode> renderNodeList){
+    void renderDepthPass(RenderContext3D* context,CullInfo* cullinfo,JCSingletonList<BaseRenderNode> renderNodeList){
         //
     }
 
-    void renderDepthNormalPass(RenderContext3D* context,CullInfo* cullinfo,SingleList<BaseRenderNode> renderNodeList){
+    void renderDepthNormalPass(RenderContext3D* context,CullInfo* cullinfo,JCSingletonList<BaseRenderNode> renderNodeList){
         //
     }
 }
