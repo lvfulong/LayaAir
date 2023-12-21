@@ -125,9 +125,10 @@ list(APPEND CONCH_SRC
 	render/3D/design/RenderListQueue.h
 	render/3D/design/RenderElement.h
 	render/3D/design/RenderElement.cpp
+	render/3D/design/Render3DProcess.cpp
+	render/3D/design/Render3DProcess.h
 	render/3D/RenderUtil.h
 	render/3D/RenderUtil.cpp
-	
 
 
 	#渲染节点类
