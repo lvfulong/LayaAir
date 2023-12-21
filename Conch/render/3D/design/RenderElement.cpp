@@ -1,6 +1,7 @@
-#ifndef __RenderElement_CPP_
-#define __RenderElement_CPP_
-namespace layaRender{
+#include "RenderElement.h"
+
+namespace laya
+{
    ComposeData::ComposeData(){
    }
 
@@ -41,4 +42,3 @@ namespace layaRender{
         customCullResoult = value;
     }
 }
-#endif

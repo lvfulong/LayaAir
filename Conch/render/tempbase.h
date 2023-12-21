@@ -15,13 +15,6 @@
 namespace laya
 {
     class RenderContext3D;
-    enum class ClearFlag {
-        Nothing = 0,
-        Color = 1,
-        Depth = 2,
-        Stencil = 4
-    };
-
     class CullInfo
     {
     public:

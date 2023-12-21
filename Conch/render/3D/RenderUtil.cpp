@@ -16,20 +16,6 @@ namespace laya{
         }
     }
 
-    static void _quickSort(JCSingletonList<RenderElement3D*>& list, uint32_t left, uint32_t right, bool nearToFar)
-    {
-        if (list.getLength() > 1)
-        {
-            uint32_t index = _partitionRenderObject(list, left, right, nearToFar);
-            uint32_t leftIndex = index - 1;
-            if (left < leftIndex)
-                _quickSort(list, left, leftIndex, nearToFar);
-
-            if (index < right)
-                _quickSort(list, index, right, nearToFar);
-        }
-    }
-
     static uint32_t _partitionRenderObject(JCSingletonList<RenderElement3D*>& list, uint32_t left, uint32_t right, bool nearToFar)
     {
         std::vector<laya::RenderElement3D*>& elements = list.m_vElements;
@@ -57,6 +43,22 @@ namespace laya{
         }
         return left;
     }
+
+    static void _quickSort(JCSingletonList<RenderElement3D*>& list, uint32_t left, uint32_t right, bool nearToFar)
+    {
+        if (list.getLength() > 1)
+        {
+            uint32_t index = _partitionRenderObject(list, left, right, nearToFar);
+            uint32_t leftIndex = index - 1;
+            if (left < leftIndex)
+                _quickSort(list, left, leftIndex, nearToFar);
+
+            if (index < right)
+                _quickSort(list, index, right, nearToFar);
+        }
+    }
+
+   
 
     
 

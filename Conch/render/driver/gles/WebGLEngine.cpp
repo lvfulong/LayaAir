@@ -380,7 +380,7 @@ namespace laya
 	{
         assert(shaderData != nullptr);
 		shader->bind();
-        shaderData->applyUBOData();
+        /////TODO lvshaderData->applyUBOData();
 		std::unordered_map<int, ShaderData::DataInfo*>& data = shaderData->m_vData;
 		std::vector<ShaderVariable*>& shaderUniform = commandEncoder->getArrayData();
 		int shaderCall = 0;

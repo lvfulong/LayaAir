@@ -17,7 +17,7 @@ namespace laya {
         void set_composeData_renderEnable(bool value);
         void set_composeData_renderbitFlag(uint32_t value);
         void set_composeData_layer(uint32_t value);
-        void set_composeData_bounds(Bounds value);
+        void set_composeData_bounds(Bounds* value);
         void set_composeData_customCull(bool value);
         void set_composeData_customCullResoult(bool value);
     public:

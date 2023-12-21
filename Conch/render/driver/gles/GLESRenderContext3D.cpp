@@ -55,7 +55,7 @@ namespace laya{
         scissor.setValue(x, y, width, height);
     }
     
-    void GLESRenderContext3D::clearData(ClearFlag flag, laya::Color color, float depthValue, uint8_t stencilValue) {
+    void GLESRenderContext3D::clearData(RenderClearFlag flag, laya::Color color, float depthValue, uint8_t stencilValue) {
         clearflag = flag;
         clearDepth = depthValue;
         clearStencil = stencilValue;

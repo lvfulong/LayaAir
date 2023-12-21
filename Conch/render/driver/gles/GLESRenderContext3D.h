@@ -5,6 +5,8 @@
 #include <render/3D/design/RenderContext.h>
 #include <render/3D/design/RenderElement.h>
 #include <Utils/JCSingletonList.h>
+#include <render/3D/design/renderEnum/RenderClearFlag.h>
+
 namespace laya{
     class GLESRenderContext3D : public RenderContext3D {
     public:
@@ -17,7 +19,7 @@ namespace laya{
         void setSceneData(uint32_t sceneData) override;
         void setViewport(laya::Viewport viewport) override;
         void setScissor(uint32_t x, uint32_t y, uint32_t width, uint32_t height) override;
-        void clearData(ClearFlag flag, laya::Color color, float depthValue, uint8_t stencilValue) override;
+        void clearData(RenderClearFlag flag, laya::Color color, float depthValue, uint8_t stencilValue) override;
         void setSceneUpdateMask(uint32_t mask) override;
         void setCameraUpdateMask(uint32_t mask) override;
     private:

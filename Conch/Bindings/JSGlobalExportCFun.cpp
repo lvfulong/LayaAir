@@ -546,7 +546,7 @@ namespace laya
 		JSStat::exportJS(context);
         //JSTextMemoryCanvas::getInstance()->exportJS(context);
         JSArrayBufferRef::exportJS(context);
-        if (!g_kSystemConfig.m_bConchWebGL) {
+        /*if (!g_kSystemConfig.m_bConchWebGL) {
             JSTransform::exportJS(context);
             JSRenderStateCommand::exportJS(context);
             JSRenderState::exportJS(context);
@@ -583,7 +583,7 @@ namespace laya
             JSSubmitScene3D::exportJS(context);
             JSBounds::exportJS(context);
             JSUniformBufferObject::exportJS(context);
-        }
+        }*/
         Module layaNative(context.isolate());
 		JSLayaNative::getInstance()->exportJS(layaNative);
 
