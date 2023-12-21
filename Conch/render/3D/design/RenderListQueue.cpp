@@ -1,5 +1,3 @@
-#ifndef __RenderListQueue_CPP_
-#define __RenderListQueue_CPP_
 #include "RenderListQueue.h"
 namespace laya
 {
@@ -37,4 +35,3 @@ namespace laya
 
 
 }
-#endif //__RenderListQueue_CPP_

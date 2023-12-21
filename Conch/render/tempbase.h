@@ -10,10 +10,6 @@
 #include <core/math/Bounds.h>
 #include <render/3D/design/RenderContext.h>
 
-using laya::Vector3;
-using laya::BoundSphere;
-using laya::Plane;
-using laya::BoundFrustum;
 
 
 namespace laya
@@ -23,7 +19,7 @@ namespace laya
         Nothing = 0,
         Color = 1,
         Depth = 2,
-        Stencil = 4,
+        Stencil = 4
     };
 
     class CullInfo

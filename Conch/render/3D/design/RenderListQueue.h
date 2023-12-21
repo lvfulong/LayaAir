@@ -26,7 +26,7 @@ namespace laya
     private:
         batchfun _batch;
         composefun _compose;
-        JCSingletonList<RenderElement3D*> _elements;
+        JCSingletonList<RenderElement3D*> _elements{ false };//lv todo
         RenderContext3D* _context;
 	};
 }

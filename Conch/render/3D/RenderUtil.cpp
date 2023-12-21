@@ -2,7 +2,21 @@
 
 namespace laya{
 
-    static void _quickSort(JCSingletonList<laya::RenderElement3D*>& list, uint32_t left, uint32_t right, bool nearToFar)
+    static uint32_t _compare(RenderElement3D* left, RenderElement3D* right, bool nearToFar)
+    {
+        uint32_t renderQueue = left->composeData->renderQueue - right->composeData->renderQueue;
+        if (renderQueue == 0)
+        {
+            uint32_t sort = (!nearToFar) ? right->composeData->m_nDistanceForSort - left->composeData->m_nDistanceForSort : left->composeData->m_nDistanceForSort - right->composeData->m_nDistanceForSort;
+            return sort + right->composeData->m_nSortingFudge - left->composeData->m_nSortingFudge;
+        }
+        else
+        {
+            return renderQueue;
+        }
+    }
+
+    static void _quickSort(JCSingletonList<RenderElement3D*>& list, uint32_t left, uint32_t right, bool nearToFar)
     {
         if (list.getLength() > 1)
         {
@@ -16,16 +30,16 @@ namespace laya{
         }
     }
 
-    static uint32_t _partitionRenderObject(JCSingletonList<laya::RenderElement3D*>& list, uint32_t left, uint32_t right, bool nearToFar)
+    static uint32_t _partitionRenderObject(JCSingletonList<RenderElement3D*>& list, uint32_t left, uint32_t right, bool nearToFar)
     {
         std::vector<laya::RenderElement3D*>& elements = list.m_vElements;
         uint32_t tempIndex = floor((right + left) / 2.0f);
         laya::RenderElement3D* pivot = elements[tempIndex];
         while (left <= right)
         {
-            while (_compare(list, elements[left], pivot, nearToFar) < 0)
+            while (_compare(elements[left], pivot, nearToFar) < 0)
                 left++;
-            while (_compare(list, elements[right], pivot, nearToFar) > 0)
+            while (_compare(elements[right], pivot, nearToFar) > 0)
                 right--;
             if (left < right)
             {
@@ -44,19 +58,7 @@ namespace laya{
         return left;
     }
 
-    static uint32_t _compare(laya::RenderElement3D* left, laya::RenderElement3D* right, bool nearToFar)
-    {
-        uint32_t renderQueue = left->composeData->renderQueue - right->composeData->renderQueue;
-        if (renderQueue == 0)
-        {
-            uint32_t sort = (!nearToFar) ? right->composeData->m_nDistanceForSort - left->composeData->m_nDistanceForSort : left->composeData->m_nDistanceForSort - right->composeData->m_nDistanceForSort;
-            return sort + right->composeData->m_nSortingFudge - left->composeData->m_nSortingFudge;
-        }
-        else
-        {
-            return renderQueue;
-        }
-    }
+    
 
     void RenderUtil::opaqueRenderSort(JCSingletonList<laya::RenderElement3D*>& list, uint32_t left, uint32_t right){
        _quickSort(list,left,right,true);
@@ -97,11 +99,11 @@ namespace laya{
         }
         return pass;
     }
-    void RenderUtil::cullByCameraCullInfo(const CullInfo& cullInfo, const JCSingletonList<laya::RenderElement3D*>& cullListIn, JCSingletonList<RenderElement*>& cullListOut)
+    void RenderUtil::cullByCameraCullInfo(const CullInfo& cullInfo, const JCSingletonList<RenderElement3D*>& cullListIn, JCSingletonList<RenderElement3D*>& cullListOut)
     {
 
     }
-    void RenderUtil::cullByShadowCullInfo(const CullInfo& cullInfo, const JCSingletonList<laya::RenderElement3D*>& cullListIn, JCSingletonList<RenderElement*>& cullListOut)
+    void RenderUtil::cullByShadowCullInfo(const CullInfo& cullInfo, const JCSingletonList<RenderElement3D*>& cullListIn, JCSingletonList<RenderElement3D*>& cullListOut)
     {
         /*cullListOut.resetLength();
         const std::vector<laya::RenderElement3D*>& renders = cullListIn.m_vElements;
@@ -119,7 +121,7 @@ namespace laya{
             }
         }*/
     }
-    void RenderUtil::cullingSpotShadow(const CullInfo& cullInfo, const JCSingletonList<RenderElement*>& cullListIn, JCSingletonList<RenderElement*>& cullListOut)
+    void RenderUtil::cullingSpotShadow(const CullInfo& cullInfo, const JCSingletonList<RenderElement3D*>& cullListIn, JCSingletonList<RenderElement3D*>& cullListOut)
     {
         /*cullListOut.resetLength();
         const std::vector<laya::RenderElement3D*>& renders = cullListIn.m_vElements;

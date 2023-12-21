@@ -8,6 +8,8 @@
 #include <core/math/Color.h>
 #include "render/tempbase.h"
 #include <Utils/JCSingletonList.h>
+
+class RenderElement3D;
 namespace laya{
     typedef std::function<void(JCSingletonList<RenderElement3D*>&) > extendCall;
  class RenderContext3D
@@ -35,8 +37,7 @@ namespace laya{
     bool invertY;
     //pipelineMode
     uint32_t pipelineMode;
-
-    ClearFlag clearflag;
+    ClearFlag clearflag{ ClearFlag::Nothing };
     float clearDepth;
     uint8_t clearStencil;
     Color clearColor;
