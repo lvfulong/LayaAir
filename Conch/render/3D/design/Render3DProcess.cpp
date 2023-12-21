@@ -1,11 +1,8 @@
-#ifndef __RenderScene3D_CPP_
-#define __RenderScene3D_CPP_
+#include "Render3DProcess.h"
 
-#include "RenderScene3D.h"
+namespace laya{
 
-namespace layaRender{
-
-    void RenderScene3D::renderScenePass(RenderContext3D* context,CullInfo* cullinfo,JCSingletonList<BaseRenderNode> renderNodeList){
+    void Render3DProcess::renderScenePass(RenderContext3D* context,CullInfo* cullinfo,JCSingletonList<BaseRenderNode> renderNodeList){
             //cull
             
             //更新数据
@@ -15,7 +12,7 @@ namespace layaRender{
             //分别渲染renderlist
     }
 
-    void renderShadowPass(RenderContext3D* context,CullInfo* cullinfo,JCSingletonList<BaseRenderNode> renderNodeList){
+    void Render3DProcess::renderShadowPass(RenderContext3D* context,CullInfo* cullinfo,JCSingletonList<BaseRenderNode> renderNodeList){
         //shadowCull
     }
 
@@ -27,5 +24,3 @@ namespace layaRender{
         //
     }
 }
-
-#endif

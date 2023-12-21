@@ -3,10 +3,12 @@
 
 #include "render/tempbase.h"
 #include <core/math/Bounds.h>
-#include "render/3D/design/Rendercontext"
-#include <Utils/JCSingletonList.h>
 
-namespace layaRender{
+#include <Utils/JCSingletonList.h>
+#include "render/3D/design/RenderContext.h"
+#include "render/3D/renderInstance/BaseRenderNode.h"
+
+namespace laya{
 
 	class Render3DProcess
 	{
