@@ -50,37 +50,6 @@ namespace laya
 	    }_directLightFrustumCullInfo;
        };
 		
-     template <class T>
-    class SingleList
-    {
-    public:
-        SingleList();
-        ~SingleList();
-        uint32_t getLength() { return _length; };
-        uint32_t getLength() const { return _length; };
-        void setLength(uint32_t length) {length = _length}
-        void add(T element) 
-        {
-            if (m_vElements.size() == m_nLength)
-            {
-                m_vElements.push_back(element);
-            }
-            else
-            {
-                m_vElements[m_nLength] = element;
-            }
-            m_nLength++;
-        }
-    public:
-        std::vector<T>	m_vElements;
-    private:
-        uint32_t _length;
-        
-
-    private:
-
-    };
-
 
       class RenderDataElement
     {

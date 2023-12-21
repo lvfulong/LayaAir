@@ -9,8 +9,8 @@ namespace laya{
     public:
         GLESRenderContext3D();
         ~GLESRenderContext3D();
-        uint32_t drawRenderElementList(SingleList<RenderElement*>& list) override;
-        void drawRenderElementOne(RenderElement* one) override;
+        uint32_t drawRenderElementList(SingleList<RenderElement3D*>& list) override;
+        void drawRenderElementOne(RenderElement3D* one) override;
         void setDestTarget(uint32_t rendertarget) override;
         void setCameraData(uint32_t shaderdata) override;
         void setSceneData(uint32_t sceneData) override;

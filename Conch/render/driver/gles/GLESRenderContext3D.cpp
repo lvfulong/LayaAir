@@ -7,31 +7,31 @@ namespace laya{
     GLESRenderContext3D::~GLESRenderContext3D() {
     
     };
-    uint32_t GLESRenderContext3D::drawRenderElementList(SingleList<RenderElement*>& list) {
+    uint32_t GLESRenderContext3D::drawRenderElementList(SingleList<RenderElement3D*>& list) {
        _bindRenderTarget();
        _start();
        if (preUpdate) preUpdate(list);
        //update
        for (uint32_t i = 0, n = list.getLength(); i < n; i++) {
-           list.m_vElements[i]->renderData->_renderUpdatePre(this);
+           list.m_vElements[i]->renderData.preRender(this);
        }
        if (afterUpdate)  afterUpdate(list);
        if (preRender) preRender(list);
        //render
        for (uint32_t i = 0, n = list.getLength(); i < n; i++) {
-           list.m_vElements[i]->renderData._render(this);
+           list.m_vElements[i]->renderData.render(this);
        }
        if (preRender) afterRender(list);
         _end();
     }
 
-    void GLESRenderContext3D::drawRenderElementOne(RenderElement* one) {
+    void GLESRenderContext3D::drawRenderElementOne(RenderElement3D* one) {
         _bindRenderTarget();
         _start();
         //update
-        one->renderData->_renderUpdatePre(this);
+        one->renderData.preRender(this);
         //render
-        one->renderData->_render(this);
+        one->renderData.render(this);
         _end();
     }
 
