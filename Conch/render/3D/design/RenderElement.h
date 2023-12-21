@@ -5,6 +5,7 @@
 #include "render/3D/design/RenderContext.h"
 #include "core/math/Bounds.h"
 
+class RenderContext3D;
 namespace laya {
     class ComposeData {
     public:

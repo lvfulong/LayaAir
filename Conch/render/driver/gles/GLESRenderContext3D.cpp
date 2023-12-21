@@ -1,4 +1,6 @@
 #include "GLESRenderContext3D.h"
+#include "LayaGL.h"
+
 namespace laya{
     GLESRenderContext3D::GLESRenderContext3D() {
 
@@ -36,13 +38,14 @@ namespace laya{
     }
 
     void GLESRenderContext3D::_bindRenderTarget(){
-        //bind rendertarget
+        //bind rendertarget todo
     }
     
     void GLESRenderContext3D::_start() {
-        //set viewport
-        //set scissor
-        //clear color depth stencil data
+        LayaGL::m_pWebglEngine->viewport(viewPort.x, viewPort.y, viewPort.width, viewPort.height);
+		LayaGL::m_pWebglEngine->scissor(scissor.x, scissor.y, scissor.z, scissor.w);
+        LayaGL::m_pWebglEngine->clearRenderTexture(clearflag, &clearColor, clearDepth);
+
     }
     void GLESRenderContext3D::_end() {
     

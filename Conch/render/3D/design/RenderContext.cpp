@@ -6,12 +6,12 @@ uint32_t RenderContext3D::globalShaderData = 0;
         //TODO
     }
 
-    void RenderContext3D::setDestTarget(uint32_t rendertarget) {
-        this->renderTarget = rendertarget;
+    void RenderContext3D::setDestTarget(uint32_t renderTarget) {
+        this->renderTarget = renderTarget;
     }
 
-    void RenderContext3D::setCameraData(uint32_t shaderdata) {
-        this->cameraData = shaderdata;
+    void RenderContext3D::setCameraData(uint32_t shaderData) {
+        this->cameraData = shaderData;
     }
 
     void RenderContext3D::setSceneData(uint32_t sceneData) {

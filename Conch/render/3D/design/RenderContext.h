@@ -21,8 +21,8 @@ namespace laya{
      RenderContext3D() ;
      virtual uint32_t drawRenderElementList(JCSingletonList<RenderElement3D*>& list) = 0;
      virtual void drawRenderElementOne(RenderElement3D* one) = 0;
-     virtual void setDestTarget(uint32_t rendertarget);
-     virtual void setCameraData(uint32_t shaderdata);
+     virtual void setDestTarget(uint32_t renderTarget);
+     virtual void setCameraData(uint32_t shaderData);
      virtual void setSceneData(uint32_t sceneData);
      virtual void setViewport(Viewport value);
      virtual void setScissor(uint32_t x,uint32_t y,uint32_t width,uint32_t height);
@@ -33,8 +33,8 @@ namespace laya{
     
  public:
     uint32_t renderTarget;
-    laya::Viewport viewPort;
-    laya::Vector4 scissor;
+    Viewport viewPort;
+    Vector4 scissor;
     bool invertY;
     //pipelineMode
     uint32_t pipelineMode;

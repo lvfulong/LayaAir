@@ -263,7 +263,7 @@ namespace laya
 		}
 		if ((uint32_t)clearFlag & (uint32_t)RenderClearFlag::Stencil)
 		{
-			glClearStencil(0);
+			glClearStencil(0);//todo clearStencil
 			m_renderState->setStencilMask(true);
 			flag |= GL_STENCIL_BUFFER_BIT;
 		}
