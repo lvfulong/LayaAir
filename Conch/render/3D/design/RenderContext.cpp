@@ -3,6 +3,7 @@
 #define __RenderContext_CPP_
 
 namespace laya{
+    uint32_t RenderContext3D::globalShaderData = 0;
     RenderContext::RenderContext(){
         //TODO
     }

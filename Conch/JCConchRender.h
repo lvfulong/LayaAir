@@ -23,6 +23,7 @@
 #include <Backend.h>
 #include <render/3D/temp/ObjectBase.h>
 #include <render/3D/temp/ResourceBase.h>
+#include <render/3D/temp/RenderGeometryElement.h>
 #include <render/driver/gles/WebGLInternalTex.h>
 #include <render/3D/temp/ShaderData.h>
 #include "LayaAir/2D/WordText.h"
@@ -85,6 +86,7 @@ namespace laya
 		ObjectManager<WebGLInternalTex>*		m_pWebGLInternalTexManager;
 		ResourceManager<ShaderData>*			m_pShaderDataManager;
         ResourceManager<ShaderInstance>*		m_pShaderInstanceManager;
+        ResourceManager<RenderGeometryElement>* m_pRenderGeometryElementManager;
 		ObjectManager<WordText>*				m_pWordTextManager;
 		ObjectManager<UniformBufferObject>*	    m_pUniformBufferObjectManager;
         ScreenCanvasContext2D*                  m_pScreenContext = nullptr;

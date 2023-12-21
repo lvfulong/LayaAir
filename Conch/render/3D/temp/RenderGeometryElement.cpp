@@ -1,10 +1,12 @@
 #include "RenderGeometryElement.h"
-
+#include "JCConch.h"
+#include "JCConchRender.h"
 
 namespace laya
 {
 	RenderGeometryElement::RenderGeometryElement(MeshTopology mode, DrawType drawType)
-		:m_nRenderMode(mode),m_nDrawType(drawType)
+		: ResourceBase(JCConch::s_pConchRender->m_pRenderGeometryElementManager)
+		,m_nRenderMode(mode),m_nDrawType(drawType)
 	{
 		m_pDrawParams = new laya::JCSingletonList<int>(false);
 	}
@@ -34,6 +36,10 @@ namespace laya
 			delete m_pDrawParams;
 			m_pDrawParams = NULL;
 		}
+	}
+    RenderGeometryElement *RenderGeometryElement::getRenderGeometryElement(uint32_t id)
+	{
+		return JCConch::s_pConchRender->m_pRenderGeometryElementManager->getResource(id);
 	}
 }
 //------------------------------------------------------------------------------

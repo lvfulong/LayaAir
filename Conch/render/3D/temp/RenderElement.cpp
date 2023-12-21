@@ -21,7 +21,7 @@ namespace laya
 	}
 	void RenderElement::render(RenderContext3D* pContext)
 	{
-		bool forceInvertFace = pContext->m_bInvertY;
+		/*bool forceInvertFace = pContext->m_bInvertY;
 		int updateMark = pContext->m_nCameraUpdateMark;
 		int sceneID = pContext->m_nSceneID;
 		ShaderData* sceneShaderData = pContext->m_pSceneShaderData;
@@ -88,7 +88,7 @@ namespace laya
 				}
 				drawGeometry(shaderIns);
 			}
-		}
+		}*/
 	}
 	void RenderElement::drawGeometry(ShaderInstance* shaderIns) 
 	{

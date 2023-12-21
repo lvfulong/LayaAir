@@ -15,11 +15,12 @@
 #include <render/3D/design/renderEnum/DrawType.h>
 #include <render/3D/design/renderEnum/IndexFormat.h>
 #include <Utils/JCSingletonList.h>
+#include "ResourceBase.h"
 
 namespace laya
 {
 	class IRenderVertexState;
-	class RenderGeometryElement
+	class RenderGeometryElement: public ResourceBase<RenderGeometryElement>
 	{
 	public:
 		RenderGeometryElement(MeshTopology mode,DrawType drawType);
@@ -28,6 +29,7 @@ namespace laya
 		void setDrawElemenParams(int count, int offset);
 		void clearRenderParams();
 		void destroy();
+		static RenderGeometryElement *getRenderGeometryElement(uint32_t id);
 	public:
 		IRenderVertexState*		m_pBufferState3D;
 		MeshTopology			m_nRenderMode;
