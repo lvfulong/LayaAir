@@ -21,9 +21,9 @@ namespace laya {
 		_applyReflection();
 		_applyLightProb();
 		//TODO set ShaderData
-		//this._setShaderValue(Sprite3D::WORLDMATRIX, ShaderDataType::Matrix4x4, trans.worldMatrix);
+		//this._setShaderValue(Sprite3DProperty::WORLDMATRIX, ShaderDataType::Matrix4x4, trans.worldMatrix);
 		//this._worldParams.x = trans.getFrontFaceValue();
-		//this._setShaderValue(Sprite3D::WORLDINVERTFRONT, ShaderDataType::Vector4, this._worldParams);
+		//this._setShaderValue(Sprite3DProperty::WORLDINVERTFRONT, ShaderDataType::Vector4, this._worldParams);
 		return;
 	}
 }

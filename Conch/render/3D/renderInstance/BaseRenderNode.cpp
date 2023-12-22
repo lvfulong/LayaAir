@@ -30,19 +30,19 @@ namespace laya{
         var lightmapIndex : number = this._lightmapIndex;
         if (lightmapIndex >= 0 && lightmapIndex < lightMaps.length) {
             var lightMap : Lightmap = lightMaps[lightmapIndex];
-            shaderValues.setTexture(RenderableSprite3D::LIGHTMAP, lightMap.lightmapColor);
-            shaderValues.addDefine(RenderableSprite3D::SAHDERDEFINE_LIGHTMAP);
+            shaderValues.setTexture(RenderableSprite3DProperty::LIGHTMAP, lightMap.lightmapColor);
+            shaderValues.addDefine(RenderableSprite3DProperty::SAHDERDEFINE_LIGHTMAP);
             if (lightMap.lightmapDirection) {
-                shaderValues.setTexture(RenderableSprite3D::LIGHTMAP_DIRECTION, lightMap.lightmapDirection);
-                shaderValues.addDefine(RenderableSprite3D::SHADERDEFINE_LIGHTMAP_DIRECTIONAL);
+                shaderValues.setTexture(RenderableSprite3DProperty::LIGHTMAP_DIRECTION, lightMap.lightmapDirection);
+                shaderValues.addDefine(RenderableSprite3DProperty::SHADERDEFINE_LIGHTMAP_DIRECTIONAL);
             }
             else {
-                shaderValues.removeDefine(RenderableSprite3D::SHADERDEFINE_LIGHTMAP_DIRECTIONAL);
+                shaderValues.removeDefine(RenderableSprite3DProperty::SHADERDEFINE_LIGHTMAP_DIRECTIONAL);
             }
         }
         else {
-            shaderValues.removeDefine(RenderableSprite3D::SAHDERDEFINE_LIGHTMAP);
-            shaderValues.removeDefine(RenderableSprite3D::SHADERDEFINE_LIGHTMAP_DIRECTIONAL);
+            shaderValues.removeDefine(RenderableSprite3DProperty::SAHDERDEFINE_LIGHTMAP);
+            shaderValues.removeDefine(RenderableSprite3DProperty::SHADERDEFINE_LIGHTMAP_DIRECTIONAL);
         }*/
     }
 
