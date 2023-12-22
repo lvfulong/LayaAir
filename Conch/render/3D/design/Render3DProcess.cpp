@@ -2,7 +2,7 @@
 
 namespace laya{
 
-    void Render3DProcess::renderScenePass(RenderContext3D* context,CullInfo* cullinfo,JCSingletonList<BaseRenderNode> renderNodeList){
+    void Render3DProcess::renderSceneByCameraPass(RenderContext3D* context,CullInfo* cullinfo,JCSingletonList<BaseRenderNode> renderNodeList){
             //cull
             
             //更新数据
