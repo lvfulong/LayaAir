@@ -127,6 +127,8 @@ list(APPEND CONCH_SRC
 	render/3D/design/RenderElement.cpp
 	render/3D/design/Render3DProcess.cpp
 	render/3D/design/Render3DProcess.h
+	render/3D/RenderableSprite3DProperty.h
+	render/3D/RenderableSprite3DProperty.cpp
 	render/3D/RenderUtil.h
 	render/3D/RenderUtil.cpp
 
