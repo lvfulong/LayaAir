@@ -9,15 +9,18 @@ namespace laya
 {
 	enum class ShaderDataType
 	{
-		Number32 = 0,
+		Int,
+		Bool,
+		Float,
 		Vector2,
 		Vector3,
 		Vector4,
+		Color,
 		Matrix4x4,
-		Number32Array,
-		Texture,
-		ShaderDefine,
-		UBO,
+		Texture2D,
+		TextureCube,
+		Buffer,
+		Matrix3x3,
 	};
     class JSShaderData;
 	class ShaderData: public ResourceBase<ShaderData>

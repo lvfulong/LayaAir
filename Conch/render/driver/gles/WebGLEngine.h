@@ -59,6 +59,7 @@ namespace laya
 		void colorMask(bool r, bool g, bool b, bool a);
 		void clearRenderTexture(uint32_t clearFlag, Color* clearcolor, float clearDepth);
 		int propertyNameToID(const char* name);
+		uint32_t getDefineByName(const char* name);
 		IRenderState* getRenderState();
 		IRenderVertexState* createVertexState();
 		IRenderDrawContext* getDrawContext();
