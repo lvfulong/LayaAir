@@ -20,7 +20,6 @@ namespace laya
     public:
         CullInfo();
         ~CullInfo();
-
         struct CameraFrustumCullInfo
         {
             Vector3							_position;
@@ -38,51 +37,5 @@ namespace laya
 		    Vector3							_direction;
 	    }_directLightFrustumCullInfo;
        };
-		
-
-      class RenderDataElement
-    {
-    public:
-        RenderDataElement() {};
-        ~RenderDataElement() {};
-        void _renderUpdatePre(RenderContext3D* context) {};
-        void _render(RenderContext3D* context) {};
-    private:
-      
-
-    };
-
-
-    //class RenderElement
-    //{
-    //public:
-    //    struct ComposeData
-    //    {
-    //        uint32_t m_nDistanceForSort;
-    //        float m_nSortingFudge;//排序矫正值
-    //        uint32_t renderQueue;//material Renderqueue
-    //        bool castShadow;
-    //        bool enable;
-    //        uint32_t renderbitFlag;
-    //        uint32_t layer;
-    //        laya::Bounds bounds;
-    //        bool customCull;
-    //        bool customCullResoult;
-
-    //    }composeData;
-
-    //    RenderDataElement* renderData;
-    //    bool shadowCullPass()
-    //    {
-    //        return this->composeData.castShadow && this->composeData.enable && (this->composeData.renderbitFlag == 0);
-    //    }
-    //    RenderElement();
-    //    ~RenderElement();
-
-    //private:
-
-    //};
-
-
 }
 #endif
