@@ -360,6 +360,10 @@ namespace laya
 			return id;
 		}
 	}
+	uint32_t WebGLEngine::getDefineByName(const char* name)
+	{
+		return 0;//TODO
+	}
 	IRenderState* WebGLEngine::getRenderState()
 	{
 		return (IRenderState*)m_renderState;
@@ -403,7 +407,7 @@ namespace laya
 	{
 		shader->bind();
 		int shaderCall = 0;
-		static ShaderData::DataInfo tempData;
+		/*static ShaderData::DataInfo tempData;
 		tempData.type = ShaderDataType::Number32Array;
 		tempData.data = (unsigned char*)data;
 		tempData.size = byteSize / sizeof(GLfloat);
@@ -416,7 +420,7 @@ namespace laya
 			if (one && data != nullptr)
 				shaderCall += one->fun(one, &tempData);
 			tempData.data = nullptr;
-		}
+		}*/
 		return shaderCall;
 	}
 	void WebGLEngine::applyRenderStateCMD(const RenderStateCommand& cmd)

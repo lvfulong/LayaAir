@@ -20,7 +20,7 @@ namespace laya
         if (isDestroy) {
             return;
         }
-		int* pBufferData = (int*)pData;
+		/*int* pBufferData = (int*)pData;
 		int nLocation=0;
 		ShaderDataType nShaderType;
 		int nSize=1;
@@ -147,12 +147,12 @@ namespace laya
 			default:
 				break;
 			}
-		}
+		}*/
 		//printfDataInfoValue();
 	}
 	void ShaderData::printfDataInfoValue()
 	{
-		for (std::unordered_map<int, DataInfo*>::iterator iter = m_vData.begin(); iter != m_vData.end(); iter++)
+		/*for (std::unordered_map<int, DataInfo*>::iterator iter = m_vData.begin(); iter != m_vData.end(); iter++)
 		{
 			DataInfo* pDataInfo = iter->second;
 			if (pDataInfo)
@@ -230,7 +230,7 @@ namespace laya
 					break;
 				}
 			}
-		}
+		}*/
 	}
 	ShaderData::DataInfo* ShaderData::getData(int key)
 	{
