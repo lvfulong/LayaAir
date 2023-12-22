@@ -37,7 +37,7 @@ namespace laya{
                 shaderValues.addDefine(RenderableSprite3D::SHADERDEFINE_LIGHTMAP_DIRECTIONAL);
             }
             else {
-                shaderValues.removeDefine(RenderableSprite3D:SHADERDEFINE_LIGHTMAP_DIRECTIONAL);
+                shaderValues.removeDefine(RenderableSprite3D::SHADERDEFINE_LIGHTMAP_DIRECTIONAL);
             }
         }
         else {
