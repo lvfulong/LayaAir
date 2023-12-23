@@ -1068,7 +1068,7 @@
 		CFC2330428B874610004936A /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		CFC2330528B874610004936A /* FBSDKCoreKit_Basics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit_Basics.framework; sourceTree = "<group>"; };
 		CFC2330C28B876E30004936A /* GameCreatorLayaSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameCreatorLayaSDK.framework; path = libs/GameCreatorLayaSDK.framework; sourceTree = "<group>"; };
-		CFC2330E28B87AB50004936A /* libpng.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng.a; path = ../../ThirdParty/png/lib/ios/libpng.a; sourceTree = "<group>"; };
+		CFC2330E28B87AB50004936A /* libpng.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng.a; path = ../../Third_party/png/lib/ios/libpng.a; sourceTree = "<group>"; };
 		CFC2332928B89CF90004936A /* TTNetworkManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TTNetworkManager.framework; path = ../proj.ios_OhaMe_Global/libs/TTNetworkManager.framework; sourceTree = "<group>"; };
 		CFC2332B28B89DB10004936A /* TTNetworkManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TTNetworkManager.framework; path = libs/TTNetworkManager.framework; sourceTree = "<group>"; };
 		CFCEAE9D28F7B95000B024C4 /* TZImagePickerController.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TZImagePickerController.bundle; sourceTree = "<group>"; };
@@ -2982,20 +2982,20 @@
 					"$(PROJECT_DIR)/../../Conch",
 					"$(PROJECT_DIR)/../../Conch/platform/iOS",
 					"$(PROJECT_DIR)/../../Conch/JSWrapper/LayaWrap/LayaAir/RenderEngine/WebGLEngine",
-					"$(PROJECT_DIR)/../../ThirdParty/freetype/include/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/websockets/include/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/openssl/include/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/bullet/include",
-					"$(PROJECT_DIR)/../../ThirdParty/zip/include/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/png/include/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/ogg/include/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/mpg123/include/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/freetype/include/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/jpeg-turbo/include/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/curl/include/ios",
+					"$(PROJECT_DIR)/../../Third_party/freetype/include/ios",
+					"$(PROJECT_DIR)/../../Third_party/websockets/include/ios",
+					"$(PROJECT_DIR)/../../Third_party/openssl/include/ios",
+					"$(PROJECT_DIR)/../../Third_party/bullet/include",
+					"$(PROJECT_DIR)/../../Third_party/zip/include/ios",
+					"$(PROJECT_DIR)/../../Third_party/png/include/ios",
+					"$(PROJECT_DIR)/../../Third_party/ogg/include/ios",
+					"$(PROJECT_DIR)/../../Third_party/mpg123/include/ios",
+					"$(PROJECT_DIR)/../../Third_party/freetype/include/ios",
+					"$(PROJECT_DIR)/../../Third_party/jpeg-turbo/include/ios",
+					"$(PROJECT_DIR)/../../Third_party/curl/include/ios",
 					"$(PROJECT_DIR)/../../Conch/WebGL/include",
 					"$(PROJECT_DIR)/../../Conch/Backend/src",
-					"$(PROJECT_DIR)/../../ThirdParty/physx/include",
+					"$(PROJECT_DIR)/../../Third_party/physx/include",
 					"$(PROJECT_DIR)/../../Conch/JSWrapper/LayaWrap/PhysX",
 				);
 				INFOPLIST_FILE = "MomoYo/MomoYo_Global-Info.plist";
@@ -3016,18 +3016,18 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/../../ThirdParty/png/lib/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/jpeg-turbo/lib/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/curl/lib/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/freetype/lib/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/openssl/lib/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/zip/lib/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/bullet/lib/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/v8/lib/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/mpg123/lib/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/websockets/lib/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/ogg/lib/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/physx/lib/ios",
+					"$(PROJECT_DIR)/../../Third_party/png/lib/ios",
+					"$(PROJECT_DIR)/../../Third_party/jpeg-turbo/lib/ios",
+					"$(PROJECT_DIR)/../../Third_party/curl/lib/ios",
+					"$(PROJECT_DIR)/../../Third_party/freetype/lib/ios",
+					"$(PROJECT_DIR)/../../Third_party/openssl/lib/ios",
+					"$(PROJECT_DIR)/../../Third_party/zip/lib/ios",
+					"$(PROJECT_DIR)/../../Third_party/bullet/lib/ios",
+					"$(PROJECT_DIR)/../../Third_party/v8/lib/ios",
+					"$(PROJECT_DIR)/../../Third_party/mpg123/lib/ios",
+					"$(PROJECT_DIR)/../../Third_party/websockets/lib/ios",
+					"$(PROJECT_DIR)/../../Third_party/ogg/lib/ios",
+					"$(PROJECT_DIR)/../../Third_party/physx/lib/ios",
 				);
 				MARKETING_VERSION = 1.0.1;
 				OTHER_CPLUSPLUSFLAGS = (
@@ -3085,7 +3085,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "MomoYo/MomoYo_Global-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
-				SYSTEM_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../../ThirdParty/v8/include";
+				SYSTEM_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../../Third_party/v8/include";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_WORKSPACE = YES;
 			};
@@ -3129,20 +3129,20 @@
 					"$(PROJECT_DIR)/../../Conch",
 					"$(PROJECT_DIR)/../../Conch/platform/iOS",
 					"$(PROJECT_DIR)/../../Conch/JSWrapper/LayaWrap/LayaAir/RenderEngine/WebGLEngine",
-					"$(PROJECT_DIR)/../../ThirdParty/freetype/include/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/websockets/include/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/openssl/include/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/bullet/include",
-					"$(PROJECT_DIR)/../../ThirdParty/zip/include/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/png/include/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/ogg/include/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/mpg123/include/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/freetype/include/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/jpeg-turbo/include/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/curl/include/ios",
+					"$(PROJECT_DIR)/../../Third_party/freetype/include/ios",
+					"$(PROJECT_DIR)/../../Third_party/websockets/include/ios",
+					"$(PROJECT_DIR)/../../Third_party/openssl/include/ios",
+					"$(PROJECT_DIR)/../../Third_party/bullet/include",
+					"$(PROJECT_DIR)/../../Third_party/zip/include/ios",
+					"$(PROJECT_DIR)/../../Third_party/png/include/ios",
+					"$(PROJECT_DIR)/../../Third_party/ogg/include/ios",
+					"$(PROJECT_DIR)/../../Third_party/mpg123/include/ios",
+					"$(PROJECT_DIR)/../../Third_party/freetype/include/ios",
+					"$(PROJECT_DIR)/../../Third_party/jpeg-turbo/include/ios",
+					"$(PROJECT_DIR)/../../Third_party/curl/include/ios",
 					"$(PROJECT_DIR)/../../Conch/WebGL/include",
 					"$(PROJECT_DIR)/../../Conch/Backend/src",
-					"$(PROJECT_DIR)/../../ThirdParty/physx/include",
+					"$(PROJECT_DIR)/../../Third_party/physx/include",
 					"$(PROJECT_DIR)/../../Conch/JSWrapper/LayaWrap/PhysX",
 				);
 				INFOPLIST_FILE = "MomoYo/MomoYo_Global-Info.plist";
@@ -3163,18 +3163,18 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/../../ThirdParty/png/lib/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/jpeg-turbo/lib/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/curl/lib/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/freetype/lib/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/openssl/lib/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/zip/lib/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/bullet/lib/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/v8/lib/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/mpg123/lib/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/websockets/lib/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/ogg/lib/ios",
-					"$(PROJECT_DIR)/../../ThirdParty/physx/lib/ios",
+					"$(PROJECT_DIR)/../../Third_party/png/lib/ios",
+					"$(PROJECT_DIR)/../../Third_party/jpeg-turbo/lib/ios",
+					"$(PROJECT_DIR)/../../Third_party/curl/lib/ios",
+					"$(PROJECT_DIR)/../../Third_party/freetype/lib/ios",
+					"$(PROJECT_DIR)/../../Third_party/openssl/lib/ios",
+					"$(PROJECT_DIR)/../../Third_party/zip/lib/ios",
+					"$(PROJECT_DIR)/../../Third_party/bullet/lib/ios",
+					"$(PROJECT_DIR)/../../Third_party/v8/lib/ios",
+					"$(PROJECT_DIR)/../../Third_party/mpg123/lib/ios",
+					"$(PROJECT_DIR)/../../Third_party/websockets/lib/ios",
+					"$(PROJECT_DIR)/../../Third_party/ogg/lib/ios",
+					"$(PROJECT_DIR)/../../Third_party/physx/lib/ios",
 				);
 				MARKETING_VERSION = 1.0.1;
 				OTHER_CPLUSPLUSFLAGS = (
@@ -3231,7 +3231,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "MomoYo/MomoYo_Global-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-				SYSTEM_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../../ThirdParty/v8/include";
+				SYSTEM_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../../Third_party/v8/include";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_WORKSPACE = YES;
 			};
