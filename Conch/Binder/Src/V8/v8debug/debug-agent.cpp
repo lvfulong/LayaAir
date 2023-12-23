@@ -1,18 +1,13 @@
-
-#ifdef JS_V8_DEBUGGER
 #include <Binder/V8/v8debug/debug-agent.h>
 #include <Utils/Log.h>
 #include <Binder/V8/v8debug/V8Socket.h>
 #include <Utils/JCFileSystem.h>
 #include <Utils/JCJson.h>
 #include <Utils/JCCommonMethod.h>
-//#include "../LayaWrap/JSConchConfig.h"
-#include "../../JCScriptRuntime.h"
 #include <string>
 #include <chrono>
 #include <thread>
-#include <JCConch.h>
-#include "V8WSSv.h"
+#include <Binder/V8/v8debug/V8WSSv.h>
 
 namespace laya {
 
@@ -213,8 +208,8 @@ namespace laya {
 
         //ע�� �����߳����⣬������µ�ǰ��������������ǰ��ˢ�£�����js������������󣬿��ܻᵼ�·Ƿ�����������������٣������Ļ��ֲ��ÿ����Ⱥ��ԡ�
         pWsSessionData = pData;
-        gLayaLog = mygLayaLog;
-        gLayaLogNoParam = mygLayaLogSimp;
+        //gLayaLog = mygLayaLog;
+        //gLayaLogNoParam = mygLayaLogSimp;
         m_pInspectorChannel->pAgent = this;
         /*
         if (bFirst) {
@@ -225,8 +220,8 @@ namespace laya {
     }
 
     void DebuggerAgent::onFrontEndClose() {//TODO ��û�е���
-        gLayaLog = nullptr;
-        gLayaLogNoParam = nullptr;
+        //gLayaLog = nullptr;
+        //gLayaLogNoParam = nullptr;
     }
 
     void dispatchProtocolMsg_inJSThread(DebuggerAgent* pAgent, v8_inspector::StringView msg, int msgid) {
@@ -479,4 +474,3 @@ namespace laya {
         sendMsgToFrontend(strbuf.getBuffer(), strbuf.getDataSize());
     }
 }
-#endif

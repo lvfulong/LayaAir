@@ -17,9 +17,6 @@ set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/V8/Class.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/V8/Promise.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/V8/Value.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/V8/v8debug/debug-agent.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/V8/v8debug/V8Socket.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/V8/v8debug/V8WSSv.h
 )
 
 set(SOURCES
@@ -31,13 +28,23 @@ set(SOURCES
     Src/V8/Class.cpp
     Src/V8/Module.cpp
     Src/V8/Context.cpp
-    Src/V8/v8debug/debug-agent.cpp
-    Src/V8/v8debug/V8WSSv.cpp
 )
 
 if(MSVC AND CONCH_USE_JS_V8_DEBUGGER)
     list(APPEND SOURCES
         Src/V8/v8debug/V8Win32Socket.cpp
+    )
+endif()
+
+if(CONCH_USE_JS_V8_DEBUGGER)
+    list(APPEND HEADERS
+        ${PUBLIC_HEADER_DIR}/${TARGET}/V8/v8debug/debug-agent.h
+        ${PUBLIC_HEADER_DIR}/${TARGET}/V8/v8debug/V8Socket.h
+        ${PUBLIC_HEADER_DIR}/${TARGET}/V8/v8debug/V8WSSv.h
+    )
+    list(APPEND SOURCES
+        Src/V8/v8debug/debug-agent.cpp
+        Src/V8/v8debug/V8WSSv.cpp
     )
 endif()
 

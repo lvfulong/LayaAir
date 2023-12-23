@@ -1,4 +1,3 @@
-#ifdef JS_V8_DEBUGGER
 #include <Binder/V8/v8debug/V8WSSv.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -279,4 +278,4 @@ namespace laya {
         }
     }
 }
-#endif
+

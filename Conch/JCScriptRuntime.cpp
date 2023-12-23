@@ -28,9 +28,6 @@
 #include <Bindings/JSLaunchOptions.h>
 #include <Bindings/JSPromiseRejectionEvent.h>
 #include "LayaAir/2D/RenderState2D.h"
-#ifdef JS_V8_DEBUGGER
-    #include <Binder/V8/v8debug/debug-agent.h>
-#endif
 #include "LayaAir/2D/CharRenderInfo.h"
 #include "LayaAir/2D/Context2D.h"
 #include "LayaAir/2D/RenderTexture2D.h"
@@ -43,6 +40,59 @@ extern laya::JCZip *g_ZipPackage;
 
 namespace laya 
 {
+#ifdef JS_V8_DEBUGGER
+    bool g_bSendLogToDbg = true;
+
+    void mygLayaLog(int level, const char* file, int line, const char* fmt, ...) {
+        if (!JCConch::s_pScriptRuntime)
+            return;
+        DebuggerAgent* pDbgAgent = JCConch::s_pScriptRuntime->m_pDbgAgent;
+        if (!g_bSendLogToDbg || !pDbgAgent) {
+            va_list args;
+            va_start(args, fmt);
+            vprintf(fmt, args);
+            va_end(args);
+            return;
+        }
+        char buf[1024];
+        char* pBuf = NULL;
+        va_list args;
+        va_start(args, fmt);
+        int len = vsnprintf(buf, 1024, fmt, args);
+        if (len < 0) {
+            printf("log error! \n");
+            return;
+        }
+        if (len > 1024) {
+            pBuf = new char[len + 1];
+            len = vsnprintf(pBuf, len + 1, fmt, args);
+            if (len < 0)
+                return;
+        }
+        va_end(args);
+        const char* pTypes[] = { "warning","error", "debug", "log","runtime" };
+        int sz = sizeof(pTypes) / sizeof(const char*);
+        pDbgAgent->sendToDbgConsole(pBuf ? pBuf : buf, file, line, 0, level < sz ? pTypes[level] : "unknown");
+        if (pBuf) {
+            delete[] pBuf;
+        }
+    }
+
+    void mygLayaLogSimp(int level, const char* file, int line, const char* msg) {
+        if (!JCConch::s_pScriptRuntime)
+            return;
+        DebuggerAgent* pDbgAgent = JCConch::s_pScriptRuntime->m_pDbgAgent;
+        if (!g_bSendLogToDbg || !pDbgAgent) {
+            printf("%s", msg);
+            return;
+        }
+        const char* pTypes[] = { "warning","error", "debug", "log","runtime" };
+        int sz = sizeof(pTypes) / sizeof(const char*);
+        pDbgAgent->sendToDbgConsole((char*)msg, file, line, 0, level < sz ? pTypes[level] : "unknown");
+    }
+
+#endif
+
 	extern WebGLEngine* g_WebGLEngine;
     JCScriptRuntime::JCScriptRuntime()
     {
@@ -504,59 +554,9 @@ namespace laya
             this->m_pJSOnFocusFunction.call<void>(getCurrentContext().global(), JSP_TO_JS(JSLaunchOptions*, new JSLaunchOptions()));
         }
 	}
-}
-#ifdef JS_V8_DEBUGGER
-bool g_bSendLogToDbg = true;
 
-void mygLayaLog(int level, const char* file, int line, const char* fmt, ...) {
-    if (!JCConch::s_pScriptRuntime)
-        return;
-    DebuggerAgent* pDbgAgent = JCConch::s_pScriptRuntime->m_pDbgAgent;
-	if (!g_bSendLogToDbg || !pDbgAgent) {
-		va_list args;
-		va_start(args, fmt);
-		vprintf(fmt, args);
-		va_end(args);
-		return;
-	}
-	char buf[1024];
-	char* pBuf = NULL;
-	va_list args;
-	va_start(args, fmt);
-	int len = vsnprintf(buf, 1024,fmt, args);
-    if (len < 0) {
-        printf("log error! \n");
-        return;
-    }
-    if (len > 1024) {
-        pBuf = new char[len + 1];
-        len = vsnprintf(pBuf, len + 1, fmt, args);
-        if (len < 0)
-            return;
-    }
-	va_end(args);
-	const char* pTypes[] = { "warning","error", "debug", "log","runtime" };
-	int sz = sizeof(pTypes) / sizeof(const char*);
-    pDbgAgent->sendToDbgConsole(pBuf ? pBuf : buf, file, line, 0, level<sz ? pTypes[level] : "unknown");
-	if (pBuf) {
-		delete[] pBuf;
-	}
 }
 
-void mygLayaLogSimp(int level, const char* file, int line, const char* msg) {
-    if (!JCConch::s_pScriptRuntime)
-        return;
-    DebuggerAgent* pDbgAgent = JCConch::s_pScriptRuntime->m_pDbgAgent;
-    if (!g_bSendLogToDbg || !pDbgAgent) {
-		printf("%s", msg);
-		return;
-	}
-	const char* pTypes[] = { "warning","error", "debug", "log","runtime" };
-	int sz = sizeof(pTypes) / sizeof(const char*);
-	pDbgAgent->sendToDbgConsole((char*)msg, file, line, 0, level<sz ? pTypes[level] : "unknown");
-}
-
-#endif
 //------------------------------------------------------------------------------
 
 

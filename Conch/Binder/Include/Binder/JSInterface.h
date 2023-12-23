@@ -17,6 +17,9 @@
 #include <Binder/V8/Object.h>
 #include <Binder/V8/Value.h>
 #include <Binder/V8/Promise.h>
+#ifdef JS_V8_DEBUGGER
+#include <Binder/V8/v8debug/debug-agent.h>
+#endif
 #endif
 
 namespace laya

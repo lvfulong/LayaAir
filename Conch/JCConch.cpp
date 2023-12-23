@@ -23,9 +23,7 @@
 #include <LayaGL/JCLayaGL.h>
 #include <Audio/JCAudioManager.h>
 #include <Bindings/JSInput.h>
-#ifdef JS_V8_DEBUGGER
-#include <Binder/V8/v8debug/debug-agent.h>
-#endif
+
 #ifdef ANDROID
     #include "WebSocket/WebSocket.h"
     #include "CToJavaBridge.h"

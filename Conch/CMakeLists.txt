@@ -17,7 +17,7 @@ else()
 endif()
 add_definitions(-DCONCH)
 
-option(CONCH_USE_JS_V8_DEBUGGER "Use v8 debugger" OFF)
+option(CONCH_USE_JS_V8_DEBUGGER "Use v8 debugger" ON)
 
 if(CONCH_USE_JS_V8_DEBUGGER)
 	if(ANDROID OR MSVC)
@@ -75,6 +75,7 @@ list(APPEND CONCH_INCLUDE
 	WebGL/include
 	Backend/src
 	Bindings/PhysX
+	${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 if(CONCH_USE_CURL_DOWNLOAD)
@@ -135,8 +136,8 @@ list(APPEND CONCH_SRC
 	render/3D/Sprite3DProperty.cpp
 	render/3D/RenderUtil.h
 	render/3D/RenderUtil.cpp
-
-
+	render/3D/RenderBindings.h
+	render/3D/RenderBindings.cpp
 	#渲染节点类
 	render/3D/renderInstance/BaseRenderNode.h
 	render/3D/renderInstance/BaseRenderNode.cpp
@@ -875,8 +876,9 @@ elseif(LINUX)
 endif()
 
 if(MSVC)
-	set(WARNINGS)
-
+	set(WARNINGS
+	/wd4819 # 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失	
+	)
 # set(WARNINGS /W3)
 else()
 	set(WARNINGS

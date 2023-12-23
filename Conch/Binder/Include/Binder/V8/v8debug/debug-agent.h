@@ -1,7 +1,7 @@
 
 #ifndef V8_DEBUG_AGENT_H_
 #define V8_DEBUG_AGENT_H_
-#ifdef JS_V8_DEBUGGER
+
 #include <v8.h>
 #include <v8-inspector.h>
 #include <thread>
@@ -115,5 +115,4 @@ namespace laya {
         InspectorFrontend*                  m_pInspectorChannel = nullptr;
 	};
 }
-#endif
 #endif  // V8_DEBUG_AGENT_H_

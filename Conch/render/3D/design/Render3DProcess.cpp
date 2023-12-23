@@ -21,13 +21,13 @@ namespace laya{
         //将渲染结果 写入scene和camera的shaderData中
     }
 
-    void DirectLightShadowCasterRenderPass::set_lightUp(Vector3 value) {
+    void DirectLightShadowCasterRenderPass::set_lightUp(const Vector3& value) {
     
     }
-    void DirectLightShadowCasterRenderPass::set_lightSide(Vector3 value) {
+    void DirectLightShadowCasterRenderPass::set_lightSide(const Vector3&  value) {
     
     }
-    void DirectLightShadowCasterRenderPass::set_lightForward(Vector3 value) {
+    void DirectLightShadowCasterRenderPass::set_lightForward(const Vector3&  value) {
     
     }
     

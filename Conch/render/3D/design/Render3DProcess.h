@@ -24,11 +24,11 @@ namespace laya{
 	public: 
 		enum class ShadowCascadesMode
 		{
-			/** ÎÞ¼¶Áª¡£ */
+			/** ï¿½Þ¼ï¿½ï¿½ï¿½ï¿½ï¿½ */
 			NoCascades,
-			/** ¶þ¼¶¼¶Áª¡£ */
+			/** ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 			TwoCascades,
-			/** ËÄ¼¶¼¶Áª¡£ */
+			/** ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 			FourCascades,
 		};
 
@@ -53,13 +53,13 @@ namespace laya{
 		void render(RenderContext3D* context, JCSingletonList<BaseRenderNode>& renderNodeList) override;
 		void applyRenderData(uint32_t sceneShaderData, uint32_t cameraShaderData);
 
-		void set_lightUp(Vector3 value);
-		void set_lightSide(Vector3 value);
-		void set_lightForward(Vector3 value);
+		void set_lightUp(const Vector3& value);
+		void set_lightSide(const Vector3& value);
+		void set_lightForward(const Vector3& value);
 		void set_shadowCascadeMode(ShadowCascadesMode value);
 		void set_cameraInfo(CameraInfo value);
 		void set_destTarget(uint32_t value);
-
+		
 	public:
 		Vector3 lightUp;
 		Vector3 lightSide;
