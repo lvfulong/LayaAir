@@ -7,10 +7,10 @@
 */
 
 #include "JCConchRender.h"
-#include <Utils/Log.h>
-#include <Utils/JCCommonMethod.h>
+#include <utils/Log.h>
+#include <utils/JCCommonMethod.h>
 #include "JCSystemConfig.h"
-#include <Utils/JCFileSource.h>
+#include <utils/JCFileSource.h>
 #include <downloadCache/JCServerFileCache.h>
 #include "JCScriptRuntime.h"
 #include <Bindings/JSConchConfig.h>

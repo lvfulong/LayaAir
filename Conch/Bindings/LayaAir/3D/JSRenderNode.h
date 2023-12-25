@@ -5,7 +5,7 @@
 #include <binder/JSInterface.h>
 #include "JSBounds.h"
 #include "JSTransform.h"
-#include <Utils/JCSimpleSingletonList.h>
+#include <utils/JCSimpleSingletonList.h>
 #include <stdint.h>
 
 

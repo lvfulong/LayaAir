@@ -7,8 +7,8 @@
 */
 
 #include "JCPerfHUD.h"
-#include <Utils/Log.h>
-#include <Utils/JCCommonMethod.h>
+#include <utils/Log.h>
+#include <utils/JCCommonMethod.h>
 #include "../LayaGL/JCLayaGL.h"
 #if __APPLE__
 #include <OpenGLES/ES3/gl.h>

@@ -1,8 +1,8 @@
 #include "JCContext2DDispatch.h"
 #include "../../JCCmdStruct.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include <manager/JCArrayBufferManager.h>
-#include <Utils/JCCommonMethod.h>
+#include <utils/JCCommonMethod.h>
 #include "Context2D.h"
 #include <LayaGL/JCLayaGLDispatch.h>
 #include <JCConch.h>

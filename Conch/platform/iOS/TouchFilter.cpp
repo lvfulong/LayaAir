@@ -11,7 +11,7 @@
 #include "TouchFilter.h"
 #include <Bindings/JSInput.h>
 #include "JCScriptRuntime.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 
 static const int __iMoveRangeDefault = 10;
 //------------------------------------------------------------------------------

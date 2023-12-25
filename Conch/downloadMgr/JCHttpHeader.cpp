@@ -7,9 +7,9 @@
 */
 
 #include "JCHttpHeader.h"
-#include <Utils/Log.h>
-#include <Utils/JCCommonMethod.h>
-#include <Utils/JCCrypto.h>
+#include <utils/Log.h>
+#include <utils/JCCommonMethod.h>
+#include <utils/JCCrypto.h>
 #include <stdlib.h>
 
 #define peek(buf, c1) *(buf+1) != '\0' && *(buf+1) == c1

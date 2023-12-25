@@ -8,7 +8,7 @@
 
 #include "CToJavaBridge.h"
 #include <android/log.h>
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include <malloc.h>
 #include "imageLib/JCImageRW.h"
 #include <pthread.h>

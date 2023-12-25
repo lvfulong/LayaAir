@@ -1,8 +1,8 @@
 #include "JSCanvasRenderingContext2D.h"
 #include <binder/JSInterface.h>
 #include "2D/CanvasRenderingContext2D.h"
-#include <Utils/JCMemorySurvey.h>
-#include <Utils/Log.h>
+#include <utils/JCMemorySurvey.h>
+#include <utils/Log.h>
 
 #include "../../JCConch.h"
 #include "../../JCSystemConfig.h"

@@ -12,7 +12,7 @@
 #include <thread>
 #include <vector>
 //#include <threadpool.h>
-#include <Utils/JCEmitter.h>
+#include <utils/JCEmitter.h>
 #include "JCLayaThreadPool.h"
 
 #ifdef __APPLE__

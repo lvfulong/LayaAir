@@ -10,10 +10,10 @@
 #define __JCScriptRuntime_H__
 
 #include <binder/JSInterface.h>
-#include <Utils/JCLayaUrl.h>
+#include <utils/JCLayaUrl.h>
 #include <manager/JCArrayBufferManager.h>
 #include <mutex>
-#include <Utils/JCCommonMethod.h>
+#include <utils/JCCommonMethod.h>
 #include <vector>
 
 #ifdef ANDROID

@@ -1,6 +1,6 @@
 #include "WinEditBox.h"
 //#include "winWindows.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 extern HWND g_hWnd;
 
 static HMENU IDL_EditBox = (HMENU) 100;

@@ -4,7 +4,7 @@
 #include <GLES3/gl3.h>
 #include <vector>
 // #define GLES_SILENCE_DEPRECATION
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include <android/native_window_jni.h>
 
 namespace laya {

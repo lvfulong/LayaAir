@@ -7,9 +7,9 @@
 */
 
 #include "JCZip.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include <zip.h>
-#include <Utils/JCBuffer.h>
+#include <utils/JCBuffer.h>
 
 namespace laya 
 {

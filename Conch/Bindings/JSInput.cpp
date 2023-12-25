@@ -1,5 +1,5 @@
 #include "JSInput.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include <Bindings/JSInput.h>
 #include "../../JCConch.h"
 

@@ -10,7 +10,7 @@
 #include <memory.h>
 #include <stdlib.h>
 #include "JCImageRW.h"
-#include <Utils/JCCommonMethod.h>
+#include <utils/JCCommonMethod.h>
 #pragma warning (disable: 4996)
 //------------------------------------------------------------------------------
 

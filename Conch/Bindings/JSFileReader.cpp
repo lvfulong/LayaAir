@@ -9,9 +9,9 @@
 #include "JSFileReader.h"
 #include <resource/JCFileResManager.h>
 #include <thread>
-#include <Utils/Log.h>
-#include <Utils/JCZlib.h>
-#include <Utils/JCMemorySurvey.h>
+#include <utils/Log.h>
+#include <utils/JCZlib.h>
+#include <utils/JCMemorySurvey.h>
 #include "../../JCScriptRuntime.h"
 #include "JSGlobalExportCFun.h"
 #include <fstream>

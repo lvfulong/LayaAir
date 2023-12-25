@@ -1,8 +1,8 @@
 #include "FontManager.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #ifdef ANDROID
 #include "CanvasRenderingContext2DAndroid.h"
-#include <Utils/JCFileSystem.h>
+#include <utils/JCFileSystem.h>
 #elif __APPLE__
 #include <CoreGraphics/CGDataProvider.h>
 #include <CoreGraphics/CGFont.h>

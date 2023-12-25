@@ -1,4 +1,4 @@
-﻿#include <Utils/Log.h>
+﻿#include <utils/Log.h>
 int g_nDebugLevel = 3;
 void(*gLayaLog)(int level, const char* file, int line, const char* fmt, ...) = 0;
 void(*gLayaLogNoParam)(int level, const char* file, int line, const char* msg) = 0;

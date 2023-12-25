@@ -1,7 +1,7 @@
 #include "JSQuickSort.h"
 #include <binder/JSInterface.h>
-#include <Utils/Log.h>
-#include <Utils/JCMemorySurvey.h>
+#include <utils/Log.h>
+#include <utils/JCMemorySurvey.h>
 #include <render/3D/temp/QuickSort.h>
 
 namespace laya

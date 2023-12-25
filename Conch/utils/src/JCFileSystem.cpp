@@ -6,9 +6,9 @@
  @date			2016_5_11
  */
 
-#include <Utils/JCFileSystem.h>
+#include <utils/JCFileSystem.h>
 #include <stdio.h>
-#include <Utils/JCCommonMethod.h>
+#include <utils/JCCommonMethod.h>
 #define ERROR_FILE_C_R_W (-6)
 #pragma warning(disable:4996)
 

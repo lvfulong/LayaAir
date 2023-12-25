@@ -16,7 +16,7 @@
 #include <functional>
 #include "JCWorkSemaphore.h"
 //#include "conchDebugThread.h"
-#include <Utils/JCCommonMethod.h>
+#include <utils/JCCommonMethod.h>
 #include <mutex>
 
 #ifdef WIN32

@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <regex>
 #include <unordered_map>
-#include <Utils/Log.h>
+#include <utils/Log.h>
 
 namespace laya
 {

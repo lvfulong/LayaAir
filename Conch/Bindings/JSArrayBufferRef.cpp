@@ -1,6 +1,6 @@
 ﻿#include "JSArrayBufferRef.h"
-#include <Utils/JCCommonMethod.h>
-#include <Utils/JCMemorySurvey.h>
+#include <utils/JCCommonMethod.h>
+#include <utils/JCMemorySurvey.h>
 #include <JCConch.h>
 #include <binder/JSInterface.h>
 #include "JCScriptRuntime.h"

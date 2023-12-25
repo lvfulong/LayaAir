@@ -1,6 +1,6 @@
 #include "CharRenderInfo.h"
 #include "TextTexture.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 
 namespace laya
 {
@@ -10,7 +10,7 @@ namespace laya
 	{
 		uint64_t curLoop = RenderInfo::loopCount;
 		if (this->touchTick != curLoop)
-		{// Õâ¸ö±£Ö¤Ã¿Ö¡Ö»µ÷ÓÃÒ»´Î
+		{// ï¿½ï¿½ï¿½ï¿½ï¿½Ö¤Ã¿Ö¡Ö»ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
 			std::shared_ptr<TextTexture> t = this->tex.lock();
 			if (t)
 			{

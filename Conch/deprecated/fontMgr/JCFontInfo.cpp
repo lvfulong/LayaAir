@@ -8,9 +8,9 @@
 
 #include "JCFontInfo.h"
 #include <vector>
-#include <Utils/JCCommonMethod.h>
+#include <utils/JCCommonMethod.h>
 #include "util/JCColor.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 
 namespace laya
 {

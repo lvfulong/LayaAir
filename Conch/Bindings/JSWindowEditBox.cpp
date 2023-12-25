@@ -8,9 +8,9 @@
 
 #include "JSWindowEditBox.h"
 #include <binder/JSInterface.h>
-#include <Utils/Log.h>
-#include <Utils/JCColor.h>
-#include <Utils/JCMemorySurvey.h>
+#include <utils/Log.h>
+#include <utils/JCColor.h>
+#include <utils/JCMemorySurvey.h>
 #include <CommCtrl.h>
 
 namespace laya

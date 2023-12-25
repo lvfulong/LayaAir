@@ -8,10 +8,10 @@
 
 #include "JCConch.h"
 #include <algorithm>
-#include <Utils/Log.h>
-#include <Utils/JCCommonMethod.h>
-#include <Utils/JCFileSystem.h>
-#include <Utils/JCFileSource.h>
+#include <utils/Log.h>
+#include <utils/JCCommonMethod.h>
+#include <utils/JCFileSystem.h>
+#include <utils/JCFileSource.h>
 #include <resource/JCFileResManager.h>
 #include "JCConch.h"
 #include <binder/JSInterface.h>

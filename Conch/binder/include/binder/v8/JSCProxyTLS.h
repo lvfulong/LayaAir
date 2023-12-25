@@ -12,8 +12,8 @@
 #include <cassert>
 #include <sstream>
 #include <string>
-#include <Utils/JCCommonMethod.h>
-#include <Utils/Log.h>
+#include <utils/JCCommonMethod.h>
+#include <utils/Log.h>
 #include <v8.h>
 
 namespace laya

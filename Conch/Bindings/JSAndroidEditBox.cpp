@@ -6,11 +6,11 @@
 #include "JSAndroidEditBox.h"
 #include <binder/JSInterface.h>
 #include "../../JCScriptRuntime.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #ifdef ANDROID
 	#include "CToJavaBridge.h"
 #endif
-#include <Utils/JCColor.h>
+#include <utils/JCColor.h>
 	
 namespace laya 
 {

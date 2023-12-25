@@ -1,7 +1,7 @@
 #ifndef __JSInterface_H__
 #define __JSInterface_H__
 
-#include <Utils/JCMemorySurvey.h>
+#include <utils/JCMemorySurvey.h>
 #ifdef JS_JSC
 #include "jsc/JSCArrayBuffer.h"
 #include "jsc/JSCBinder.h"

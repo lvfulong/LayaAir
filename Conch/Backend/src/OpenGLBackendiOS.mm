@@ -5,7 +5,7 @@
 #import <OpenGLES/ES3/gl.h>
 #import <OpenGLES/ES3/glext.h>
 #import <OpenGLES/ES2/glext.h>
-#include <Utils/Log.h>
+#include <utils/Log.h>
 
 namespace laya {
 extern int g_nRealMainFrameBuffer;

@@ -14,7 +14,7 @@
 #include <stdint.h>
 #include "JCVBOManager.h"
 #include <mutex>
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #define USEPERF
 
 namespace laya

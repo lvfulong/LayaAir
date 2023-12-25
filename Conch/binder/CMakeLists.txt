@@ -79,7 +79,7 @@ set_target_properties(${TARGET} PROPERTIES FOLDER Conch/${TARGET})
 target_link_libraries(${TARGET}
     websockets
     ssl
-    Utils
+    utils
     ${DEPS_V8}
 )
 target_precompile_headers(${TARGET} PRIVATE ${HEADERS})

@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <binder/JSInterface.h>
 #include "resource/Audio/JCAudioInterface.h"
-#include <Utils/JCBuffer.h>
+#include <utils/JCBuffer.h>
 
 
 namespace laya 

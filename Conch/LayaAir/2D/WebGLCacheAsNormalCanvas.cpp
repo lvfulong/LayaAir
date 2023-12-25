@@ -1,6 +1,6 @@
 #include "WebGLCacheAsNormalCanvas.h"
-#include <Utils/Log.h>
-#include <Utils/JCMemorySurvey.h>
+#include <utils/Log.h>
+#include <utils/JCMemorySurvey.h>
 #include "Context2D.h"
 #include "MeshQuadTexture.h"
 #include "MeshVG.h"

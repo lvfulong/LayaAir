@@ -7,11 +7,11 @@
 */
 
 #include "JCFreeTypeRender.h"
-#include <Utils/Log.h>
-#include <Utils/JCFileSystem.h>
-#include <Utils/CLayaUrl.h>
+#include <utils/Log.h>
+#include <utils/JCFileSystem.h>
+#include <utils/CLayaUrl.h>
 #include <thread>
-#include <Utils/JCCommonMethod.h>
+#include <utils/JCCommonMethod.h>
 
 namespace laya
 {

@@ -2,7 +2,7 @@
 #define __JCContext2DDispatch_H__
 
 #include <stdlib.h>
-#include <Utils/JCBuffer.h>
+#include <utils/JCBuffer.h>
 
 //#define DEBUG_PARSE_STREAM 0
 

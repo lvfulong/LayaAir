@@ -8,7 +8,7 @@
 
 #include "JCResManager.h"
 #include "JCResource.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include <stdlib.h>
 #include <string>
 #include <sstream>

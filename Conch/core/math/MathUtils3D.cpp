@@ -1,5 +1,5 @@
 #include "MathUtils3D.h"
-#include <Utils/JCCommonMethod.h>
+#include <utils/JCCommonMethod.h>
 #include <limits>
 
 namespace laya

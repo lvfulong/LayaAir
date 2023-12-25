@@ -13,7 +13,7 @@
 #include<unordered_map>
 #include <string>
 #include "../resource/JCResource.h"
-#include <Utils/JCBuffer.h>
+#include <utils/JCBuffer.h>
 #include <thread>
 #include <mutex>
 #include "JCFontInfo.h"

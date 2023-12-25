@@ -3,7 +3,7 @@
 #include <glad/gles2.h>
 #include <vector>
 // #define GLES_SILENCE_DEPRECATION
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <cassert>

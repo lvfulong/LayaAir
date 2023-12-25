@@ -2,7 +2,7 @@
 #include <downloadMgr/JCDownloadMgr.h>
 #include <resource/JCFileResManager.h>
 #include "../../JCScriptRuntime.h"
-#include <Utils/JCFileSystem.h>
+#include <utils/JCFileSystem.h>
 #include <downloadCache/JCServerFileCache.h>
 #include <JCConch.h>
 

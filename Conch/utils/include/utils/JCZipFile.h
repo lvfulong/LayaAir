@@ -8,7 +8,7 @@
 #ifndef __JCZipFile_H__
 #define __JCZipFile_H__
 
-#include <Utils/JCFileSource.h>
+#include <utils/JCFileSource.h>
 #include <zip.h>
 #include <stdio.h>
 #include <string>

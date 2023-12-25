@@ -21,13 +21,13 @@
 #include <android/asset_manager_jni.h>
 #include <android/bitmap.h>
 #include <downloadMgr/JCDownloadMgr.h>
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include "JCConch.h"
 #include <Bindings/JSConchConfig.h>
 #include "CToJavaBridge.h"
 #include "Audio/JCAudioManager.h"
 #include <Bindings/JSInput.h>
-#include <Utils/JCZipFile.h>
+#include <utils/JCZipFile.h>
 #include "JCSystemConfig.h"
 #include <Bindings/JSGlobalExportCFun.h>
 #include "JCConchRender.h"

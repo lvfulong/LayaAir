@@ -14,7 +14,7 @@
 #include <render/3D/design/renderEnum/RenderPologyMode.h>
 #include <render/3D/design/renderEnum/DrawType.h>
 #include <render/3D/design/renderEnum/IndexFormat.h>
-#include <Utils/JCSingletonList.h>
+#include <utils/JCSingletonList.h>
 #include "ResourceBase.h"
 
 namespace laya

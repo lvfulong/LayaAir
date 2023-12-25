@@ -3,7 +3,7 @@
 
 #include <string>
 #include <map>
-#include <Utils/JCBuffer.h>
+#include <utils/JCBuffer.h>
 #include <binder/JSInterface.h>
 
 namespace laya

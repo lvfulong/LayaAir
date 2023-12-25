@@ -10,11 +10,11 @@
 #define __JCAndroidFileSource_H__
 
 //包含头文件
-#include <Utils/JCFileSource.h>
+#include <utils/JCFileSource.h>
 #include <android/asset_manager.h>
 #include <android/log.h>
-#include <Utils/Log.h>
-#include <Utils/JCZipFile.h>
+#include <utils/Log.h>
+#include <utils/JCZipFile.h>
 
 namespace laya{
 

@@ -4,7 +4,7 @@
 
 #include <render/3D/design/RenderContext.h>
 #include <render/3D/design/RenderElement.h>
-#include <Utils/JCSingletonList.h>
+#include <utils/JCSingletonList.h>
 #include <render/3D/design/renderEnum/RenderClearFlag.h>
 
 namespace laya{

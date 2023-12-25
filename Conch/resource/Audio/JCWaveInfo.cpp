@@ -7,7 +7,7 @@
 */
 
 #include "JCWaveInfo.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #pragma warning (disable: 4996)
 
 namespace laya

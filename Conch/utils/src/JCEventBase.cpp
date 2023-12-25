@@ -7,7 +7,7 @@
 */
 
 //����ͷ�ļ�
-#include <Utils/JCEmitter.h>
+#include <utils/JCEmitter.h>
 //------------------------------------------------------------------------------
 namespace laya
 {

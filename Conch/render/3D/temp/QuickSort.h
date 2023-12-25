@@ -1,7 +1,7 @@
 #ifndef __QuickSort_H__
 #define __QuickSort_H__
 
-#include <Utils/JCSingletonList.h>
+#include <utils/JCSingletonList.h>
 #include <render/3D/design/renderInterface/ISortPass.h>
 
 namespace laya

@@ -1,8 +1,8 @@
 #include "FontDescriptionParser.h"
 #include <math.h>
 #include <regex>
-#include <Utils/JCCommonMethod.h>
-#include <Utils/Log.h>
+#include <utils/JCCommonMethod.h>
+#include <utils/Log.h>
 namespace laya
 {
 FontDescriptionParser::~FontDescriptionParser()

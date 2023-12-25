@@ -10,7 +10,7 @@
 #define __JCIDGenerator_H__
 
 #include <string>
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include <vector>
 #if __APPLE__
     #include <OpenGLES/ES3/gl.h>

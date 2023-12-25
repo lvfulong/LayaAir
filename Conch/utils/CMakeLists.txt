@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.16)
 
-set(TARGET Utils)
+set(TARGET utils)
 
 project(${TARGET})
-set(PUBLIC_HEADER_DIR Include)
+set(PUBLIC_HEADER_DIR include)
 
 set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/RefObject.h
@@ -37,26 +37,26 @@ set(HEADERS
 )
 
 set(SOURCES
-    Src/Log.cpp
-    Src/JCZlib.cpp
-    Src/JCZipFile.cpp
-    Src/JCXml.cpp
-    Src/JCMemorySurvey.cpp
-    Src/JCLayaUrl.cpp
-    Src/JCJson.cpp
-    Src/JCIniFile.cpp
-    Src/JCFlog.cpp
-    Src/JCCrypto.cpp
-    Src/JCCommonMethed.cpp
-    Src/JCColor.cpp
-    Src/Base64.cpp
-    Src/JCFileSystem.cpp
-    Src/JCBuffer.cpp
-    Src/JCEmitter.cpp
-    Src/JCEventBase.cpp
-    Src/Thread/JCLayaThreadPool.cpp
-    Src/Thread/JCWorkerThread.cpp
-    Src/Thread/JCWorkSemaphore.cpp
+    src/Log.cpp
+    src/JCZlib.cpp
+    src/JCZipFile.cpp
+    src/JCXml.cpp
+    src/JCMemorySurvey.cpp
+    src/JCLayaUrl.cpp
+    src/JCJson.cpp
+    src/JCIniFile.cpp
+    src/JCFlog.cpp
+    src/JCCrypto.cpp
+    src/JCCommonMethed.cpp
+    src/JCColor.cpp
+    src/Base64.cpp
+    src/JCFileSystem.cpp
+    src/JCBuffer.cpp
+    src/JCEmitter.cpp
+    src/JCEventBase.cpp
+    src/Thread/JCLayaThreadPool.cpp
+    src/Thread/JCWorkerThread.cpp
+    src/Thread/JCWorkSemaphore.cpp
 )
 
 include_directories(${PUBLIC_HEADER_DIR})

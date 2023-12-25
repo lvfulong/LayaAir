@@ -4,8 +4,8 @@
 #include <binder/JSInterface.h>
 #include <time.h>
 #include "JsBlob.h"
-#include <Utils/JCMemorySurvey.h>
-#include <Utils/JCFileSystem.h>
+#include <utils/JCMemorySurvey.h>
+#include <utils/JCFileSystem.h>
 #ifdef WIN32
     #define strcasecmp _stricmp
     #define strncasecmp _strnicmp

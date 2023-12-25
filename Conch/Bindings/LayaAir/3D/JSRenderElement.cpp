@@ -1,7 +1,7 @@
 #include "JSRenderElement.h"
 #include <binder/JSInterface.h>
-#include <Utils/Log.h>
-#include <Utils/JCMemorySurvey.h>
+#include <utils/Log.h>
+#include <utils/JCMemorySurvey.h>
 #include "JSRenderGeometryElement.h"
 #include "JSShaderInstance.h"
 #include "JSShaderData.h"

@@ -7,9 +7,9 @@
 */
 
 //包含头文件
-#include <Utils/JCMemorySurvey.h>
-#include <Utils/Log.h>
-#include <Utils/JCFileSystem.h>
+#include <utils/JCMemorySurvey.h>
+#include <utils/Log.h>
+#include <utils/JCFileSystem.h>
 
 namespace laya 
 {

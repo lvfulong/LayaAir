@@ -1,6 +1,6 @@
 #include "AtlasGrid.h"
 #include <cassert>
-#include <Utils/Log.h>
+#include <utils/Log.h>
 
 namespace laya
 {
@@ -31,13 +31,13 @@ namespace laya
 	}
 	bool AtlasGrid::addRect(int type, int width, int height, Point& pt)
 	{
-		//╣Всц╩Я╣цс╕╦ц╥етздд ╥╣╩ьж╣спхЩ╦Ж║ё║ёbRetйг╥ЯЁи╧╕ё╛nX xн╩жцё╛nY yн╩жц
+		//О©╫О©╫О©╫ц╩О©╫О©╫с╕О©╫ц╥О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫ж╣О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫bRetО©╫г╥О©╫и╧О©╫О©╫О©╫nX xн╩О©╫цёО©╫nY yн╩О©╫О©╫
 		if (!_get(width, height, pt))
 			return false;
-		//╦Ы╬щ╩Я╣ц╣дx,yлНЁД
+		//О©╫О©╫О©╫щ╩О©╫ц╣О©╫x,yО©╫О©╫О©╫
 		_fill(pt.x, pt.y, width, height, type);
 		//this._texCount++;
-		//╥╣╩ьйг╥ЯЁи╧╕ё╛рт╪╟Xн╩жц╨мYн╩жц
+		//О©╫О©╫О©╫О©╫О©╫г╥О©╫и╧О©╫О©╫О©╫О©╫т╪О©╫Xн╩О©╫ц╨О©╫Yн╩О©╫О©╫
 		return true;
 	}
 	bool AtlasGrid::_get(int width, int height, Point& pt)
@@ -46,19 +46,19 @@ namespace laya
 		{
 			return false;
 		}
-		//╤╗рЕ╥╣╩ь╣дx,y╣дн╩жц
+		//О©╫О©╫О©╫Е╥╣О©╫ь╣О©╫x,yО©╫О©╫н╩О©╫О©╫
 		int rx = -1;
 		int ry = -1;
-		//н╙акп╖бйох╠ё╢Фаый╠╠Да©
+		//н╙О©╫О©╫п╖О©╫О©╫О©╫х╠О©╫О©╫О©╫О©╫О©╫й╠О©╫О©╫О©╫О©╫
 		int nWidth = m_width;
 		int nHeight = m_height;
-		//╤╗рЕр╩╦Ж╠Да©н╙акж╦оР m_pCells
+		//О©╫О©╫О©╫О©╫р╩О©╫О©╫О©╫О©╫О©╫О©╫н╙О©╫О©╫ж╦О©╫О©╫ m_pCells
 		uint8_t* pCellBox = m_cells;
 
-		//╠ИюЗ╡Иур╨ойй╣дн╩жц  //TODO обцФ╣д╥╫╥╗с╕╦ц©иртсе╩╞
+		//О©╫О©╫О©╫О©╫О©╫О©╫О©╫р╨О©╫О©╫й╣О©╫н╩О©╫О©╫  //TODO О©╫О©╫О©╫О©╫д╥О©╫О©╫О©╫с╕О©╫ц©О©╫О©╫О©╫О©╫е╩О©╫
 		for (int y = 0; y < nHeight; y++)
 		{
-			//хГ╧Ш╦цпп╣д©у╟вйЩ п║сз р╙╥ехК╣д©М╤х╥╣╩ь
+			//О©╫О©╫О©╫О©╫О©╫О©╫п╣д©у╟О©╫О©╫О©╫ п║О©╫О©╫ р╙О©╫О©╫О©╫О©╫д©О©╫О©╫х╥О©╫О©╫О©╫
 			if (m_rowInfo[y] < width) 
 				continue;
 			for (int x = 0; x < nWidth;)
@@ -73,7 +73,7 @@ namespace laya
 				}
 				rx = x;
 				ry = y;
-				// ╪Л╡И╣╠г╟©М╤хйг╥ЯдэмЙх╚╥еобё╛╪╢x╥╫оР╣дц©╦Жн╩жц╤╪спвЦ╧╩╣д╦ъ╤х║ё
+				// О©╫О©╫И╣╠г╟О©╫О©╫О©╫О©╫О©╫г╥О©╫О©╫О©╫О©╫О©╫х╚О©╫О©╫О©╫бёО©╫О©╫О©╫xО©╫О©╫О©╫О©╫О©╫ц©О©╫О©╫н╩О©╫ц╤О©╫О©╫О©╫О©╫Ц╧╩О©╫д╦ъ╤х║О©╫
 				for (int xx = 0; xx < width; xx++)
 				{
 					if (pCellBox[3 * xx + tm + 2] < height) 
@@ -82,13 +82,13 @@ namespace laya
 						break;
 					}
 				}
-				// ╡╩пп╬мx╪лпЬг╟╫Ь
+				// О©╫О©╫О©╫п╬О©╫xО©╫О©╫О©╫О©╫г╟О©╫О©╫
 				if (rx < 0) 
 				{
 					x += pCellBox[tm + 1];
 					continue;
 				}
-				// ур╣╫ак
+				// О©╫р╣О©╫О©╫О©╫
 				pt.x = rx;
 				pt.y = ry;
 				return true;
@@ -116,13 +116,13 @@ namespace laya
 	}
 	void AtlasGrid::_fill(int x, int y, int w, int h, int type)
 	{
-		//╤╗рЕр╩п╘аый╠╠Да©
+		//О©╫О©╫О©╫О©╫р╩п╘О©╫О©╫й╠О©╫О©╫О©╫О©╫
 		int nWidth = m_width;
 		int nHeghit = m_height;
-		//╢ЗбК╪Л╡И
+		//О©╫О©╫О©╫О©╫О©╫О©╫
 		_check((x + w) <= nWidth && (y + h) <= nHeghit);
 
-		//лНЁД
+		//О©╫О©╫О©╫
 		for (int yy = y; yy < (h + y); ++yy) 
 		{
 			_check(m_rowInfo[yy] >= w);
@@ -136,12 +136,12 @@ namespace laya
 				m_cells[tm + 2] = h;
 			}
 		}
-		//╣ВуШнрвС╥╫оЮаз©у╟в╦Явс╣д©М╤ха╛пЬпео╒цХйЖ
+		//О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫з©у╟в╦О©╫О©╫с╣д©О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫о╒О©╫О©╫О©╫О©╫
 		if (x > 0) 
 		{
 			for (int yy = 0; yy < h; ++yy)
 			{
-				// TODO обцФс╕╦ц©иртсе╩╞
+				// TODO О©╫О©╫О©╫О©╫с╕О©╫ц©О©╫О©╫О©╫О©╫е╩О©╫
 				int s = 0;
 				for (int xx = x - 1; xx >= 0; --xx, ++s)
 				{
@@ -155,12 +155,12 @@ namespace laya
 				}
 			}
 		}
-		//╣ВуШнрио╥╫оЮаз©у╟в╦Явс╣д╦ъ╤ха╛пЬпео╒цХйЖ
+		//О©╫О©╫О©╫О©╫О©╫О©╫О©╫о╥О©╫О©╫О©╫О©╫з©у╟в╦О©╫О©╫с╣д╦ъ╤О©╫О©╫О©╫О©╫О©╫О©╫О©╫о╒О©╫О©╫О©╫О©╫
 		if (y > 0)
 		{
 			for (int xx = x; xx < (x + w); ++xx)
 			{
-				// TODO обцФс╕╦ц©иртсе╩╞
+				// TODO О©╫О©╫О©╫О©╫с╕О©╫ц©О©╫О©╫О©╫О©╫е╩О©╫
 				int s = 0;
 				for (int yy = y - 1; yy >= 0; --yy, s++)
 				{
@@ -182,7 +182,7 @@ namespace laya
 	{
 		if (ret == false) 
 		{
-			LOGI("xtexMerger ╢МнСю╡");
+			LOGI("xtexMerger О©╫О©╫О©╫О©╫О©╫О©╫");
 		}
 	}
 }

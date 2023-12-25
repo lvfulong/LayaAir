@@ -704,7 +704,7 @@ if(ANDROID)
 		EGL
 		GLESv3
 		OpenSLES
-		Utils
+		utils
 		binder
 		zlib
 		mpg123
@@ -765,7 +765,7 @@ elseif(IOS)
 		"-framework SystemConfiguration"
 		"-framework StoreKit"
 		"-framework CoreImage"
-		Utils
+		utils
 		binder
 		zlib
 		mpg123
@@ -811,7 +811,7 @@ elseif(MSVC)
 		strmiids.lib
 		shlwapi.lib
 		Iphlpapi.lib
-		Utils
+		utils
 		binder
 		zlib
 		mpg123
@@ -848,7 +848,7 @@ elseif(LINUX)
 		X11
 		SDL2
 		SDL2main
-		Utils
+		utils
 		binder
 		zlib
 		mpg123
@@ -890,9 +890,9 @@ target_compile_options(${PROJECT_NAME} PRIVATE
 	${WARNINGS}
 )
 
-# target_link_libraries(${PROJECT_NAME} PUBLIC Utils)
+# target_link_libraries(${PROJECT_NAME} PUBLIC utils)
 # target_link_libraries(${PROJECT_NAME} PUBLIC binder)
-add_subdirectory(Utils)
+add_subdirectory(utils)
 add_subdirectory(binder)
 
 

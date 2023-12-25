@@ -7,8 +7,8 @@
 */
 
 #include "JCAudioWavPlayer.h"
-#include <Utils/JCCommonMethod.h>
-#include <Utils/Log.h>
+#include <utils/JCCommonMethod.h>
+#include <utils/Log.h>
 #include "JCWaveParser.h"
 #include "JCOggParser.h"
 #ifdef ANDROID

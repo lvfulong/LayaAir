@@ -7,7 +7,7 @@
 */
 
 #include "WebGL/JCGpuProgram.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include <stdio.h>
 
 namespace laya{

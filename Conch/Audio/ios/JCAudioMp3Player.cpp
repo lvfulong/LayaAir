@@ -9,7 +9,7 @@
 
 //包含头文件
 #include "JCAudioMp3Player.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include "CToObjectC.h"
 
 namespace laya

@@ -10,7 +10,7 @@
 #else
 #include <GLES3/gl3.h>
 #endif
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include "JCConch.h"
 #include "WebGLInternalTex.h"
 #include "JCSystemConfig.h"

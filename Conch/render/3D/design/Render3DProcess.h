@@ -5,7 +5,7 @@
 #include <core/math/Bounds.h>
 #include "core/math/Vector3.h"
 #include <unordered_map>
-#include <Utils/JCSingletonList.h>
+#include <utils/JCSingletonList.h>
 #include "render/3D/design/RenderContext.h"
 #include "render/3D/renderInstance/BaseRenderNode.h"
 

@@ -13,7 +13,7 @@
 #include <math.h>
 #include "JSTextMemoryCanvas.h"
 #include "../../JCScriptRuntime.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include "JSTextBitmapInfo.h"
 #ifdef __APPLE__
 #include "../../IOSFreetype/JCIOSFreeType.h"

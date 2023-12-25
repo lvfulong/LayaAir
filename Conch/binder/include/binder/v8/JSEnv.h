@@ -12,11 +12,11 @@
 #include "JSArrayBuffer.h"
 #include "JSCProxyTLS.h"
 #include <libplatform/libplatform.h>
-#include <Utils/Thread/JCWorkerThread.h>
+#include <utils/Thread/JCWorkerThread.h>
 #include <mutex>
 #include <thread>
-#include <Utils/ListNode.h>
-#include <Utils/Log.h>
+#include <utils/ListNode.h>
+#include <utils/Log.h>
 #include <v8.h>
 
 namespace laya

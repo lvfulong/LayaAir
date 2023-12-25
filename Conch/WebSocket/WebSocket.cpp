@@ -17,14 +17,14 @@
 #include <libwebsockets.h>
 #include <thread>
 #include <stdlib.h>
-#include <Utils/JCFileSource.h>
+#include <utils/JCFileSource.h>
 #include <algorithm>
 #ifdef ANDROID
 #include <downloadCache/JCAndroidFileSource.h>
 #elif __APPLE_
 #include <downloadCache/JCIosFileSource.h>
 #endif
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #ifdef WIN32
 #include <filesystem>
 namespace  fs = std::filesystem;
@@ -32,7 +32,7 @@ namespace  fs = std::filesystem;
 #undef min
 #endif
 #else
-#include <Utils/JCFileSystem.h>
+#include <utils/JCFileSystem.h>
 #endif
 extern std::string gRedistPath;
 extern std::string gResourcePath;

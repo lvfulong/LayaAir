@@ -10,9 +10,9 @@
 #define __JCIosFileSource_H__
 
 #include <stdio.h>
-#include <Utils/JCFileSource.h>
-#include <Utils/JCCommonMethod.h>
-#include <Utils/Log.h>
+#include <utils/JCFileSource.h>
+#include <utils/JCCommonMethod.h>
+#include <utils/Log.h>
 #include <string.h>
 #pragma warning (disable: 4996)
 

@@ -6,9 +6,9 @@
 #include <map>
 #include <string>
 #include <memory>
-#include <Utils/JCBuffer.h>
+#include <utils/JCBuffer.h>
 #include <mutex>
-#include <Utils/JCLayaUrl.h>
+#include <utils/JCLayaUrl.h>
 
 #define MAXDOWNLOADTRY 3
 

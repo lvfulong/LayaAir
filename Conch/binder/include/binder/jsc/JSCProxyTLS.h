@@ -6,8 +6,8 @@
 #include <JavaScriptCore/JSStringRef.h>
 #include <JavaScriptCore/JSValueRef.h>
 #include "../../../CToObjectC.h"
-#include <Utils/JCCommonMethod.h>
-#include <Utils/Log.h>
+#include <utils/JCCommonMethod.h>
+#include <utils/Log.h>
 #include <thread>
 namespace laya
 {

@@ -8,7 +8,7 @@
 
 //包含头文件
 #include "JCMp3Parser.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include <vector>
 
 namespace laya

@@ -1,7 +1,7 @@
 ﻿
-#include <Utils/JCFlog.h>
+#include <utils/JCFlog.h>
 #include <stdarg.h>
-#include <Utils/JCCommonMethod.h>
+#include <utils/JCCommonMethod.h>
 #pragma warning(disable:4996)
 
 namespace laya{

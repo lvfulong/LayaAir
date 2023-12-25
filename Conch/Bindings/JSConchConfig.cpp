@@ -11,7 +11,7 @@
     #include "CToObjectC.h"
 #endif
 #include "downloadMgr/JCDownloadMgr.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include "../../JCSystemConfig.h"
 #include "../../JCConchRender.h"
 #include "../../JCConch.h"

@@ -3,8 +3,8 @@
 #include <binder/v8/JSArrayBuffer.h>
 #include <binder/JSInterface.h>
 #include <binder/V8/Converter.h>
-#include <Utils/JCMemorySurvey.h>
-#include <Utils/Log.h>
+#include <utils/JCMemorySurvey.h>
+#include <utils/Log.h>
 
 namespace laya
 {

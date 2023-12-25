@@ -6,8 +6,8 @@
 @date			2016_5_12
 */
 
-#include <Utils/JCZipFile.h>
-#include  <Utils/Log.h>
+#include <utils/JCZipFile.h>
+#include <utils/Log.h>
 
 namespace laya
 {

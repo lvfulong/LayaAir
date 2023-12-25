@@ -1,7 +1,7 @@
 #include "JSDOMParser.h"
 #include <downloadMgr/JCDownloadMgr.h>
 #include "../../JCScriptRuntime.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include "JCConch.h"
 
 #define OnLoadJSFunctionID 0

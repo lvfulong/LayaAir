@@ -5,9 +5,9 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIFont.h>
 #import <UIKit/UIKit.h>
-#include <Utils/JCCommonMethod.h>
-#include <Utils/JCCrypto.h>
-#include <Utils/Log.h>
+#include <utils/JCCommonMethod.h>
+#include <utils/JCCrypto.h>
+#include <utils/Log.h>
 #include "FontManager.h"
 
 namespace laya

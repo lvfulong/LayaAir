@@ -7,7 +7,7 @@
 */
 
 #include <string.h>
-#include <Utils/JCColor.h>
+#include <utils/JCColor.h>
 #pragma warning (disable: 4996)
 
 namespace laya

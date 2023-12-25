@@ -3,7 +3,7 @@
 #include <core/math/Bounds.h>
 #include "render/3D/design/RenderElement.h"
 #include "render/tempbase.h"
-#include <Utils/JCSingletonList.h>
+#include <utils/JCSingletonList.h>
 namespace laya{
 	class RenderUtil
 	{

@@ -1,8 +1,8 @@
 #include "JSRuntime.h"
-#include <Utils/JCCrypto.h>
+#include <utils/JCCrypto.h>
 #include "downloadMgr/JCDownloadMgr.h"
 #include "../../JCConch.h"
-#include <Utils/JCFileSource.h>
+#include <utils/JCFileSource.h>
 #ifdef __APPLE__ 
     #include "CToObjectC.h"
 #endif

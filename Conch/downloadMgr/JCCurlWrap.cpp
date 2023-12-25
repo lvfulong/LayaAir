@@ -7,10 +7,10 @@
 */
 
 #include "../downloadMgr/JCCurlWrap.h"
-#include <Utils/Log.h>
-#include <Utils/JCCommonMethod.h>
+#include <utils/Log.h>
+#include <utils/JCCommonMethod.h>
 #include "../downloadMgr/JCDownloadMgr.h"
-#include <Utils/JCLayaUrl.h>
+#include <utils/JCLayaUrl.h>
 #include <cmath>
 #ifdef WIN32
 //#ifdef _DEBUG

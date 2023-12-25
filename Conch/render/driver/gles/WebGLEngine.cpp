@@ -9,7 +9,7 @@
 #include <GLES3/gl3.h>
 #endif
 #include <regex>
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include "GLParams.h"
 #include "GLCapable.h"
 #include "GLRenderState.h"

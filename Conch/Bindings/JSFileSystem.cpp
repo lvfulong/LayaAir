@@ -1,7 +1,7 @@
 #include "JSFileSystem.h"
 #include <binder/JSInterface.h>
-#include <Utils/Log.h>
-#include <Utils/JCFileSystem.h>
+#include <utils/Log.h>
+#include <utils/JCFileSystem.h>
 #include <ctime>
 
 namespace laya

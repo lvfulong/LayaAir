@@ -10,7 +10,7 @@
 //包含头文件
 #include <vector>
 #include "JCAudioMp3Media.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include "CToJavaBridge.h"
 
 namespace laya

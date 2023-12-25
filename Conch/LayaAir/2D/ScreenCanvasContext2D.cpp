@@ -1,7 +1,7 @@
 #include "ScreenCanvasContext2D.h"
-#include <Utils/Log.h>
-#include <Utils/JCMemorySurvey.h>
-#include <Utils/JCBuffer.h>
+#include <utils/Log.h>
+#include <utils/JCMemorySurvey.h>
+#include <utils/JCBuffer.h>
 #include "SubmitBase.h"
 #include "BlendMode.h"
 #include "SubmitTexture.h"

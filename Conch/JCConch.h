@@ -10,11 +10,11 @@
 #define __JCConch_H__
 
 #include <vector>
-#include <Utils/JCCommonMethod.h>
+#include <utils/JCCommonMethod.h>
 #include "JCConchRender.h"
 #include "WebGL/WebGLThread.h"
 #include "Backend.h"
-#include <Utils/InputTypes.h>
+#include <utils/InputTypes.h>
 
 namespace laya
 {

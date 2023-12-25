@@ -10,7 +10,7 @@
 #ifdef __APPLE__
     #include "CToObjectC.h"
 #endif
-#include <Utils/Log.h>
+#include <utils/Log.h>
 
 extern std::string gRedistPath;
 extern std::string gResourcePath;

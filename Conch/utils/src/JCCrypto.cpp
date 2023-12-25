@@ -6,7 +6,7 @@
 @date			2016_5_12
 */
 
-#include <Utils/JCCrypto.h>
+#include <utils/JCCrypto.h>
 #include <stdlib.h>
 #include <string.h>
 

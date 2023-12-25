@@ -7,7 +7,7 @@
 */
 
 #include "JCAudioMp3Player.h"
-#include <Utils/JCCommonMethod.h>
+#include <utils/JCCommonMethod.h>
 
 //------------------------------------------------------------------------------
 namespace laya
@@ -91,7 +91,7 @@ namespace laya
 	    return true;
 	    if( m_nNotifyThreadID == 0 )
 	    {
-		    //创建一个线程接收notify消息
+		    //锟斤拷锟斤拷一锟斤拷锟竭程斤拷锟斤拷notify锟斤拷息
 		    m_hNotifyThread = CreateThread( NULL, 0, handleMp3ListenerThread, this, 0, &m_nNotifyThreadID ); 
 	    }
 	    return true;

@@ -6,7 +6,7 @@
 #include <list>
 #include <math.h>
 #include "../../JCScriptRuntime.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #ifdef __APPLE__
 #include "../../IOSFreetype/JCIOSFreeType.h"
 #endif

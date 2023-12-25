@@ -5,7 +5,7 @@
 #include "Quaternion.h"
 #include "Vector4.h"
 #include "Vector3.h"
-#include <Utils/JCCommonMethod.h>
+#include <utils/JCCommonMethod.h>
 
 namespace laya
 {

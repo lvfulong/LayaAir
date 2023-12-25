@@ -12,7 +12,7 @@
 
 //包含头文件
 //------------------------------------------------------------------------------
-#include <Utils/JCBuffer.h>
+#include <utils/JCBuffer.h>
 
 namespace laya 
 {

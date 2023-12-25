@@ -9,7 +9,7 @@
 #ifndef __JCArrayBufferManager_H__
 #define __JCArrayBufferManager_H__
 
-#include <Utils/JCBuffer.h>
+#include <utils/JCBuffer.h>
 #include <vector>
 #include <unordered_map>
 

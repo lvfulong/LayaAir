@@ -23,7 +23,7 @@
 #endif
 #include <stdio.h>
 #include <thread>
-#include <Utils/JCCommonMethod.h>
+#include <utils/JCCommonMethod.h>
 #include "JCWaveInfo.h"
 #include "JCAudioInterface.h"
 #include<unordered_map>

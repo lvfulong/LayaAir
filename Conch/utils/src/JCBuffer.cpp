@@ -6,7 +6,7 @@
 @date			2016_5_11
 */
 
-#include <Utils/JCBuffer.h>
+#include <utils/JCBuffer.h>
 
 namespace laya
 {
@@ -54,7 +54,7 @@ namespace laya
 	void JCCommandEncoderBuffer::expand(int nExpandSize)
 	{
 		if (nExpandSize<1 ) return;
-		unsigned long nSize= nExpandSize+m_nBufSize+m_nAdjustSize;	//ÐèÒª°´4¶ÔÆëÃ´
+		unsigned long nSize= nExpandSize+m_nBufSize+m_nAdjustSize;	//ï¿½ï¿½Òªï¿½ï¿½4ï¿½ï¿½ï¿½ï¿½Ã´
 		char* pBuf=new char[nSize];
 		if (!pBuf)
         {

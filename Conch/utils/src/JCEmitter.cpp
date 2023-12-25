@@ -6,8 +6,8 @@
 @date			2016_5_11
 */
 
-#include <Utils/JCEmitter.h>
-#include <Utils/Thread/JCWorkerThread.h>
+#include <utils/JCEmitter.h>
+#include <utils/Thread/JCWorkerThread.h>
 
 namespace laya
 {	

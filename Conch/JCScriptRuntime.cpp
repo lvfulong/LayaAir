@@ -8,13 +8,13 @@
 
 #include "JCScriptRuntime.h"
 #include <algorithm>
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include <binder/JSInterface.h>
 #include <Bindings/JSFileReader.h>
 #include <Bindings/JSFileReaderWX.h>
 #include <Bindings/JSGlobalExportCFun.h>
 #include <Bindings/JSInput.h>
-#include <Utils/JCFileSource.h>
+#include <utils/JCFileSource.h>
 #include <resource/JCFileResManager.h>
 #include "Audio/JCAudioManager.h"
 #include "JCSystemConfig.h"

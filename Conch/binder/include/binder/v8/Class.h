@@ -1,14 +1,14 @@
 #ifndef __V8_CLASS_H__
 #define __V8_CLASS_H__
 
-#include <Utils/RTTI.h>
+#include <utils/RTTI.h>
 #include "Invocation.h"
 #include "Utility.h"
 #include "Value.h"
 #include <assert.h>
 #include <map>
 #include <string>
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include <v8.h>
 #include <functional>
 

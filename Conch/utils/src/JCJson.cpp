@@ -6,7 +6,7 @@
 @date			2014_6_17
 */
 
-#include <Utils/JCJson.h>
+#include <utils/JCJson.h>
 #include <ctype.h>
 
 namespace laya

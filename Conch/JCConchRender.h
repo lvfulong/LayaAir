@@ -11,10 +11,10 @@
 
 
 #include <resource/JCFileResManager.h>
-#include <Utils/Thread/JCWorkSemaphore.h>
+#include <utils/Thread/JCWorkSemaphore.h>
 //#include <Performance/JCPerfHUD.h>
 #include <LayaGL/JCLayaGL.h>
-#include <Utils/Thread/JCWorkerThread.h>
+#include <utils/Thread/JCWorkerThread.h>
 #ifdef __APPLE__
 #include "IOSFreetype/JCIOSFreeType.h"
 #endif

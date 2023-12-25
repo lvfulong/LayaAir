@@ -7,7 +7,7 @@
 */
 
 #include "JCMeasureTextManager.h"
-#include <Utils/JCCommonMethod.h>
+#include <utils/JCCommonMethod.h>
 #include <cmath>
 //------------------------------------------------------------------------------
 namespace laya

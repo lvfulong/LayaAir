@@ -1,5 +1,5 @@
 #include "ImageBitmap.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include <assert.h>
 
 namespace laya

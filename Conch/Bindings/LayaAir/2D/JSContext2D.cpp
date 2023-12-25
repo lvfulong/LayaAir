@@ -1,7 +1,7 @@
 #include "JSContext2D.h"
 #include <binder/JSInterface.h>
-#include <Utils/Log.h>
-#include <Utils/JCMemorySurvey.h>
+#include <utils/Log.h>
+#include <utils/JCMemorySurvey.h>
 #include "../../../LayaAir/2D/WebGLCacheAsNormalCanvas.h"
 #include "JSRenderTexture2D.h"
 #include "../../../LayaAir/2D/SubmitTarget.h"

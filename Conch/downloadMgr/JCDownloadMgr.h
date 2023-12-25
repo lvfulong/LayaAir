@@ -9,13 +9,13 @@
 #ifndef __JCDownloadMgr_H__
 #define __JCDownloadMgr_H__
 
-#include <Utils/JCBuffer.h>
+#include <utils/JCBuffer.h>
 #include <functional>
 #include <thread>
 #include <mutex>
 #include <map>
 #include <atomic>
-#include <Utils/Thread/JCLayaThreadPool.h>
+#include <utils/Thread/JCLayaThreadPool.h>
 
 namespace laya{
 

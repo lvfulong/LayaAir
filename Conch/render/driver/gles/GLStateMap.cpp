@@ -9,7 +9,7 @@
 #else
 	#include <GLES3/gl3.h>
 #endif
-#include <Utils/Log.h>
+#include <utils/Log.h>
 
 namespace laya
 {

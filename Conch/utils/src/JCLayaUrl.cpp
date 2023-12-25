@@ -6,9 +6,9 @@
 @date			2016_5_12
 */
 
-#include <Utils/JCLayaUrl.h>
-#include <Utils/Log.h>
-#include <Utils/JCCommonMethod.h>
+#include <utils/JCLayaUrl.h>
+#include <utils/Log.h>
+#include <utils/JCCommonMethod.h>
 #include "../../Conch/JCSystemConfig.h"
 
 namespace laya{

@@ -1,7 +1,7 @@
 #include "JSRenderContext3D.h"
 #include <binder/JSInterface.h>
-#include <Utils/Log.h>
-#include <Utils/JCMemorySurvey.h>
+#include <utils/Log.h>
+#include <utils/JCMemorySurvey.h>
 #include "../RenderEngine/WebGLEngine/JSWebGLEngine.h"
 #include "JSShaderData.h"
 #include "../RenderEngine/WebGLEngine/JSWebGLInternalRT.h"

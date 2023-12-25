@@ -1,6 +1,6 @@
 #include "JSNotify.h"
-#include <Utils/Log.h>
-#include <Utils/JCMemorySurvey.h>
+#include <utils/Log.h>
+#include <utils/JCMemorySurvey.h>
 #ifdef ANDROID
 	#include <jni.h>
 	#include "CToJavaBridge.h"

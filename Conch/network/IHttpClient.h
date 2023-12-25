@@ -1,7 +1,7 @@
 #ifndef __HTTP_CLIENT_H__
 #define __HTTP_CLIENT_H__
 
-#include <Utils/JCBuffer.h>
+#include <utils/JCBuffer.h>
 #include <functional>
 #include <memory>
 #include <mutex>

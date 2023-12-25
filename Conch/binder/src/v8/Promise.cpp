@@ -1,6 +1,6 @@
 #include <binder/v8/Promise.h>
 #include "assert.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 namespace laya
 {
 Promise::Promise(v8::Local<v8::Value> value)

@@ -1,5 +1,5 @@
 #include "HttpClientAndroid.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 
 static const char *s_className = "layaair/game/browser/LayaHttpClient";
 

@@ -6,10 +6,10 @@
 @date			2016_5_12
 */
 
-#include <Utils/Thread/JCWorkerThread.h>
+#include <utils/Thread/JCWorkerThread.h>
 //#include "../misc/conchDebugThread.h"
-#include <Utils/JCCommonMethod.h>
-#include <Utils/Log.h>
+#include <utils/JCCommonMethod.h>
+#include <utils/Log.h>
 #ifdef WIN32
 #include <windows.h>
 #include <process.h>

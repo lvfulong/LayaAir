@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <memory.h>
 #include <stdlib.h>
-#include <Utils/JCCommonMethod.h>
+#include <utils/JCCommonMethod.h>
 #include "JCImageRW.h"
 
 //------------------------------------------------------------------------------

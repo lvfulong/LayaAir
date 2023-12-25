@@ -1,7 +1,7 @@
 #include "JSIOSEditBox.h"
 #include <binder/JSInterface.h>
-#include <Utils/Log.h>
-#include <Utils/JCColor.h>
+#include <utils/Log.h>
+#include <utils/JCColor.h>
 #include "CToObjectC.h"
 #include "JCScriptRuntime.h"
 #include "JCConch.h"

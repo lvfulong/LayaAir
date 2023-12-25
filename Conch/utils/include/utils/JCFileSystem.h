@@ -8,9 +8,9 @@
 #ifndef __JCFileSystem_H__
 #define __JCFileSystem_H__
 
-#include <Utils/JCBuffer.h>
+#include <utils/JCBuffer.h>
 
-//ÏÖÔÚ¸÷¸öÆ½Ì¨¶¼ÓÃÕâ¸ö,¶¼Ö§³ÖÁËÔÙ»»³ÉC++17±ê×¼¿â
+//ï¿½ï¿½ï¿½Ú¸ï¿½ï¿½ï¿½Æ½Ì¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½Ö§ï¿½ï¿½ï¿½ï¿½ï¿½Ù»ï¿½ï¿½ï¿½C++17ï¿½ï¿½×¼ï¿½ï¿½
 //https://github.com/gulrak/filesystem.git
 #include "ghc/filesystem.hpp"
 namespace fs = ghc::filesystem;
@@ -29,36 +29,36 @@ namespace fs = ghc::filesystem;
 namespace laya
 {
     
-    /** @brief Í¬²½¶ÁÈ¡±¾µØÎÄ¼ş
-     *  @param[in] ÎÄ¼şÃû×Ö
-     *  @param[out] ·µ»ØµÄbuffer
-     *  @param[in] EncodeÊÇ±íÊ¾ÎÄ¼şÄÚÈİµÄÔ­±¾µÄ±àÂë·½Ê½¡£¼´ÓÃÕâÖÖ±àÂë·½Ê½È¥½âÊÍÄÚÈİ
-     *  @return ÊÇ·ñ¶ÁÈ¡³É¹¦
+    /** @brief Í¬ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½
+     *  @param[in] ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½
+     *  @param[out] ï¿½ï¿½ï¿½Øµï¿½buffer
+     *  @param[in] Encodeï¿½Ç±ï¿½Ê¾ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½İµï¿½Ô­ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ë·½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½ï¿½ë·½Ê½È¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+     *  @return ï¿½Ç·ï¿½ï¿½È¡ï¿½É¹ï¿½
      */
     bool readFileSync(const char* p_pszFile, JCBuffer& p_buf, int p_nEncode = JCBuffer::raw);
     
     
-    /** @brief Í¬²½¶ÁÈ¡±¾µØÎÄ¼ş
-     *  @param[in] ÎÄ¼şÃû×Ö
-     *  @param[in] EncodeÊÇ±íÊ¾ÎÄ¼şÄÚÈİµÄÔ­±¾µÄ±àÂë·½Ê½¡£¼´ÓÃÕâÖÖ±àÂë·½Ê½È¥½âÊÍÄÚÈİ
-     *  @return ·µ»Ø×Ö·û´®
+    /** @brief Í¬ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½
+     *  @param[in] ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½
+     *  @param[in] Encodeï¿½Ç±ï¿½Ê¾ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½İµï¿½Ô­ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ë·½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½ï¿½ë·½Ê½È¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+     *  @return ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½
      */
     std::string readFileSync1(const char* p_pszFile, const char* p_pszEncode);
     
-    /** @brief Í¬²½Ğ´±¾µØÎÄ¼ş
-     *  @param[in] ÎÄ¼şÃû×Ö
-     *  @param[in] ·µ»ØµÄbuffer
-     *  @param[in] EncodeÊÇÒª°ÑÎÄ¼ş±£´æ³ÉÊ²Ã´µÄ±àÂë·½Ê½
-     *  @return ÊÇ·ñĞ´Èë³É¹¦
+    /** @brief Í¬ï¿½ï¿½Ğ´ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½
+     *  @param[in] ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½
+     *  @param[in] ï¿½ï¿½ï¿½Øµï¿½buffer
+     *  @param[in] Encodeï¿½ï¿½Òªï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê²Ã´ï¿½Ä±ï¿½ï¿½ë·½Ê½
+     *  @return ï¿½Ç·ï¿½Ğ´ï¿½ï¿½É¹ï¿½
      */
     bool writeFileSync(const char* p_pszFile, JCBuffer& p_buf, int p_nEncode = JCBuffer::raw);
     
-    /** @brief Ğ´±¾µØÎÄ¼ş
-     *  @param[in] ÎÄ¼şÃû
-     *  @param[in] Ğ´ÈëµÄbuffer
-     *  @param[in] ³¤¶È
+    /** @brief Ğ´ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½
+     *  @param[in] ï¿½Ä¼ï¿½ï¿½ï¿½
+     *  @param[in] Ğ´ï¿½ï¿½ï¿½buffer
+     *  @param[in] ï¿½ï¿½ï¿½ï¿½
      *  @param[in] encodetype
-     *  @return ÊÇ·ñĞ´Èë³É¹¦
+     *  @return ï¿½Ç·ï¿½Ğ´ï¿½ï¿½É¹ï¿½
      */
     bool writeFileSync1(const char* p_pszFile, char* p_pBuff, int p_nLen, int p_nEncode = JCBuffer::raw);
     

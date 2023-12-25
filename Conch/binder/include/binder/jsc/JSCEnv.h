@@ -11,7 +11,7 @@
 
 #include <JavaScriptCore/JavaScriptCore.h>
 #include "JSCProxyTLS.h"
-#include <Utils/Thread/JCWorkerThread.h>
+#include <utils/Thread/JCWorkerThread.h>
 
 namespace laya
 {

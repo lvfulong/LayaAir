@@ -8,7 +8,7 @@
 #include "WordText.h"
 #include "CharRender.h"
 #include <algorithm>
-#include <Utils/JCCommonMethod.h>
+#include <utils/JCCommonMethod.h>
 #include <cassert>
 #include "../../JCConch.h"
 #include "../../JCConchRender.h"

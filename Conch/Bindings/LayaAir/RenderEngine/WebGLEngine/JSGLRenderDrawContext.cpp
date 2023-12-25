@@ -1,6 +1,6 @@
 #include "JSGLRenderDrawContext.h"
-#include <Utils/Log.h>
-#include <Utils/JCMemorySurvey.h>
+#include <utils/Log.h>
+#include <utils/JCMemorySurvey.h>
 #include "JSWebGLEngine.h"
 #include "../../3D/JSRenderGeometryElement.h"
 #include <render/driver/gles/WebGLEngine.h>

@@ -1,5 +1,5 @@
 #include "JSZip.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include <zip.h>
 
 namespace laya 

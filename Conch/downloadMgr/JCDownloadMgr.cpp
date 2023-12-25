@@ -14,11 +14,11 @@
 #include <network/IHttpClient.h>
 #endif
 
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include <algorithm>
-#include <Utils/JCCommonMethod.h>
+#include <utils/JCCommonMethod.h>
 #include <thread>
-#include <Utils/JCLayaUrl.h>
+#include <utils/JCLayaUrl.h>
 #include <atomic>
 #include <stdlib.h>
 #define TIMEOUTTRYNUM 40

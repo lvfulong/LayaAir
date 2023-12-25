@@ -10,7 +10,7 @@
 #define __gles_H__
 
 #include "esUtil.h"
-#include <Utils/JCEmitter.h>
+#include <utils/JCEmitter.h>
 
 namespace laya{
     class winWindows;

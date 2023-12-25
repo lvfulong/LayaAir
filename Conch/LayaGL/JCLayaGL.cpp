@@ -7,11 +7,11 @@
 */
 
 #include "JCLayaGL.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "../JCCmdStruct.h"
-#include <Utils/JCCommonMethod.h>
+#include <utils/JCCommonMethod.h>
 #include "JCLayaGLDispatch.h"
 //#include "../Performance/JCPerfHUD.h"
 #ifdef __APPLE__

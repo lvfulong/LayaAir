@@ -11,7 +11,7 @@
 #include "winWindows.h"
 #include "gles.h"
 #include "shlobj.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include "JCConch.h"
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;

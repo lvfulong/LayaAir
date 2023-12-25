@@ -22,7 +22,7 @@
 #include <map>
 #include <vector>
 #include "resource/Audio/JCWaveInfo.h"
-#include <Utils/JCBuffer.h>
+#include <utils/JCBuffer.h>
 #include "resource/Audio/JCMp3Interface.h"
 #include <mutex>
 namespace laya

@@ -1,6 +1,6 @@
 #include "JSXmlNode.h"
 #include <sstream>
-#include <Utils/Log.h>
+#include <utils/Log.h>
 
 namespace laya
 {

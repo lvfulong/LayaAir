@@ -1,7 +1,7 @@
 #include "FontInfo.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include <vector>
-#include <Utils/JCCommonMethod.h>
+#include <utils/JCCommonMethod.h>
 #include <algorithm>
 namespace laya
 {

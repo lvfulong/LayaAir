@@ -11,7 +11,7 @@
 	#include <GLES3/gl3.h>
 #endif
 #include "RenderElement.h"
-#include <Utils/JCSingletonList.h>
+#include <utils/JCSingletonList.h>
 #include "RenderElement.h"
 
 namespace laya

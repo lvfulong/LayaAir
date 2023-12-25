@@ -1,7 +1,7 @@
 #ifndef __ISortPass_H__
 #define __ISortPass_H__
 
-#include <Utils/JCSingletonList.h>
+#include <utils/JCSingletonList.h>
 
 namespace laya
 {

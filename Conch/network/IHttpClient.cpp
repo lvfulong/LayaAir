@@ -1,4 +1,4 @@
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include <network/IHttpClient.h>
 #if ANDROID
 #include "network/HttpClientAndroid.h"

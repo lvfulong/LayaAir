@@ -9,7 +9,7 @@
 //包含头文件
 #include "JCAudioManager.h"
 #include "resource/Audio/JCWaveParser.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include "../JCConch.h"
 
 namespace laya

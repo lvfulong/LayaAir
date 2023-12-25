@@ -7,7 +7,7 @@
 */
 
 #include "JCArrayBufferManager.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 
 namespace laya
 {

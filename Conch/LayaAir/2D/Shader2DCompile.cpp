@@ -1,7 +1,7 @@
 #include "Shader2DCompile.h"
 #include "Shader2DNode.h"
-#include <Utils/Log.h>
-#include <Utils/JCCommonMethod.h>
+#include <utils/Log.h>
+#include <utils/JCCommonMethod.h>
 #include "Shader2D.h"
 
 namespace laya

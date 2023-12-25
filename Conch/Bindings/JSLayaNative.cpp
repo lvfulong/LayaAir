@@ -6,16 +6,16 @@
 #include <math.h>
 #include "JSLayaNative.h"
 #include "../../JCScriptRuntime.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include <stdio.h>
-#include <Utils/JCFileSystem.h>
+#include <utils/JCFileSystem.h>
 #ifdef ANDROID
 #include "CToJavaBridge.h"
 #elif __APPLE__
     #include "CToObjectC.h"
 #endif
 #include "VideoRecorder/MediaRecorder.h"
-#include <Utils/JCCrypto.h>
+#include <utils/JCCrypto.h>
 #include <resource/JCFileResManager.h>
 #include "JCConch.h"
 

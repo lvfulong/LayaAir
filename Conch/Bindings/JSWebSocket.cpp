@@ -1,8 +1,8 @@
 #include "JSWebSocket.h"
 #include <binder/JSInterface.h>
-#include <Utils/Log.h>
-#include <Utils/JCCommonMethod.h>
-#include <Utils/JCMemorySurvey.h>
+#include <utils/Log.h>
+#include <utils/JCCommonMethod.h>
+#include <utils/JCMemorySurvey.h>
 #include "../../WebSocket/WebSocket.h"
 #include "../../JCScriptRuntime.h"
 #include "JCConch.h"

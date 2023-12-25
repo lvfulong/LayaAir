@@ -1,6 +1,6 @@
 #include "Bounds.h"
-#include <Utils/Log.h>
-#include <Utils/JCMemorySurvey.h>
+#include <utils/Log.h>
+#include <utils/JCMemorySurvey.h>
 #ifdef WIN32
 #ifdef min
 #undef min

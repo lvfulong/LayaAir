@@ -6,7 +6,7 @@
 @date			2016_5_13
 */
 
-#include <Utils/JCZlib.h>
+#include <utils/JCZlib.h>
 #include <string>
 #include <memory.h>
 

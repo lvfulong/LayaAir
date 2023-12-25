@@ -8,9 +8,9 @@
 
 #include "JCLayaGLDispatch.h"
 #include "../JCCmdStruct.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include <manager/JCArrayBufferManager.h>
-#include <Utils/JCCommonMethod.h>
+#include <utils/JCCommonMethod.h>
 //#include "Performance/JCPerfHUD.h"
 #include "2D/CanvasRenderingContext2D.h"
 

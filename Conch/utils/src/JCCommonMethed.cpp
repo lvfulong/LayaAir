@@ -9,11 +9,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include <Utils/JCCommonMethod.h>
+#include <utils/JCCommonMethod.h>
 #ifndef WEBASM
-#include <Utils/JCLayaUrl.h>
+#include <utils/JCLayaUrl.h>
 #endif
-#include <Utils/Log.h>
+#include <utils/Log.h>
 
 #if __APPLE__
     #include <sys/time.h>

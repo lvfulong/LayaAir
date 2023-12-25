@@ -7,7 +7,7 @@
 #include <core/math/Vector4.h>
 #include <core/math/Color.h>
 #include "render/tempbase.h"
-#include <Utils/JCSingletonList.h>
+#include <utils/JCSingletonList.h>
 #include <render/3D/design/renderEnum/RenderClearFlag.h>
 
 class RenderElement3D;
@@ -61,7 +61,7 @@ namespace laya{
  class NodeContext3DData
  {
  public:
-     //¼ÇÂ¼Ò»Ð©äÖÈ¾¸üÐÂÊ±ºòµÄÊý¾Ý£¬±ÈÈç½Å±¾ÖÐµÄsceneÊý¾Ý
+     //ï¿½ï¿½Â¼Ò»Ð©ï¿½ï¿½È¾ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý£ï¿½ï¿½ï¿½ï¿½ï¿½Å±ï¿½ï¿½Ðµï¿½sceneï¿½ï¿½ï¿½ï¿½
      NodeContext3DData();
      ~NodeContext3DData();
  public:

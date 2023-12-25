@@ -8,7 +8,7 @@
 
 #include "JCGifImg.h"
 #include <string.h>
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include "JCImageRW.h"
 #ifdef ANDROID
 #include <malloc.h>

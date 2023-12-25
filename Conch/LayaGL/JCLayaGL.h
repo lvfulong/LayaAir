@@ -24,7 +24,7 @@
 #include "../Image/JCImageManager.h"
 #include "JCIDGenerator.h"
 #include <manager/JCArrayBufferManager.h>
-#include <Utils/JCBuffer.h>
+#include <utils/JCBuffer.h>
 #include <WebGL/JCGpuProgram.h>
 //1024*1024*4
 #define  TEX_IMAGE2D_DUMMY_MAX_SIZE 4194304

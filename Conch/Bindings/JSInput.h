@@ -5,7 +5,7 @@
 #include <binder/JSInterface.h>
 #include "../../JCScriptRuntime.h"
 #include <mutex>
-#include <Utils/InputTypes.h>
+#include <utils/InputTypes.h>
 
 namespace laya
 {

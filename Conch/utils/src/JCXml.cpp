@@ -6,7 +6,7 @@
 @date			2014_6_17
 */
 
-#include <Utils/JCXml.h>
+#include <utils/JCXml.h>
 #include <stdlib.h>
 
 namespace laya

@@ -1,14 +1,14 @@
 #include "JSImage.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #ifndef WEBASM
-    #include <Utils/JCMemorySurvey.h>
+    #include <utils/JCMemorySurvey.h>
     #include <binder/JSInterface.h>
     #include "../../JCScriptRuntime.h"
-    #include <Utils/JCFileSource.h>
+    #include <utils/JCFileSource.h>
     #include <resource/JCFileResManager.h>
     
     #include "JSRuntime.h"
-    #include <Utils/JCFileSystem.h>
+    #include <utils/JCFileSystem.h>
 #else
     #include "../../JCScrpitRuntimeWASM.h"
 #endif
@@ -17,7 +17,7 @@
 #include "../../JCSystemConfig.h"
 
 #include <LayaGL/JCLayaGLDispatch.h>
-#include <Utils/JCCrypto.h>
+#include <utils/JCCrypto.h>
 
 namespace laya
 {

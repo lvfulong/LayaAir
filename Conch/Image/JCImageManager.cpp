@@ -8,8 +8,8 @@
 
 //包含头文件
 #include "JCImageManager.h"
-#include <Utils/Log.h>
-#include <Utils/JCCommonMethod.h>
+#include <utils/Log.h>
+#include <utils/JCCommonMethod.h>
 
 //------------------------------------------------------------------------------
 namespace laya

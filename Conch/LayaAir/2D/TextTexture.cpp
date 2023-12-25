@@ -1,6 +1,6 @@
 #include "TextTexture.h"
 #include "TextRender.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include <render/driver/gles/WebGLEngine.h>
 #include <render/driver/gles/GLTextureContext.h>
 #include <render/driver/gles/WebGLInternalRT.h>

@@ -1,6 +1,6 @@
 #include "GLParams.h"
 #include "WebGLEngine.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include <math.h>
 #include <algorithm>
 #ifdef __APPLE__

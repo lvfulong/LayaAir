@@ -2,7 +2,7 @@
 #include "JSCArrayBuffer.h"
 #include <JavaScriptCore/JSTypedArray.h>
 #include "JSCProxyTLS.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include <vector>
 #include "JSCProxyType.h"
 

@@ -13,11 +13,11 @@
 #include <math.h>
 #include "JSFileSystemManager.h"
 #include "../../JCScriptRuntime.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include <stdio.h>
-#include <Utils/JCFileSystem.h>
+#include <utils/JCFileSystem.h>
 #include "JSZip.h"
-#include <Utils/JCCrypto.h>
+#include <utils/JCCrypto.h>
 #include "JSStat.h"
 #include <zip/JCZip.h>
 #include "../../JCConch.h"

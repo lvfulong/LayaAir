@@ -7,7 +7,7 @@
 */
 
 #include "JCFileTable.h"
-#include <Utils/JCFileSystem.h>
+#include <utils/JCFileSystem.h>
 #include <stdlib.h>
 
 namespace laya

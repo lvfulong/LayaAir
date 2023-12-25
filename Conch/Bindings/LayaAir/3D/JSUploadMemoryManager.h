@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <binder/JSInterface.h>
 #include "JSShaderData.h"
-#include <Utils/JCSingletonList.h>
+#include <utils/JCSingletonList.h>
 
 namespace laya
 {

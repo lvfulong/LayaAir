@@ -8,14 +8,14 @@
 
 #include "JSGlobalExportCFun.h"
 #include <binder/JSInterface.h>
-#include <Utils/Log.h>
-#include <Utils/JCCommonMethod.h>
-#include <Utils/JCFileSystem.h>
-#include <Utils/JCMemorySurvey.h>
-#include <Utils/JCLayaUrl.h>
-#include <Utils/JCCrypto.h>
-#include <Utils/Log.h>
-#include <Utils/Base64.h>
+#include <utils/Log.h>
+#include <utils/JCCommonMethod.h>
+#include <utils/JCFileSystem.h>
+#include <utils/JCMemorySurvey.h>
+#include <utils/JCLayaUrl.h>
+#include <utils/JCCrypto.h>
+#include <utils/Log.h>
+#include <utils/Base64.h>
 #include "JSConsole.h"
 #include "XMLHttpRequest.h"
 #include "JSConchConfig.h"
@@ -42,7 +42,7 @@
 #endif
 #include "JSRuntime.h"
 #include "../../JCConch.h"
-#include <Utils/JCFileSource.h>
+#include <utils/JCFileSource.h>
 #include "JSImage.h"
 #include "JSHistory.h"
 //#include "JSTextMemoryCanvas.h"

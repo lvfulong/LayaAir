@@ -7,9 +7,9 @@
 */
 
 #include "JCVideo.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include "JCImageManager.h"
-#include <Utils/JCCommonMethod.h>
+#include <utils/JCCommonMethod.h>
 
 namespace laya
 {

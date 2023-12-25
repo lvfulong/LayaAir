@@ -1,9 +1,9 @@
 #include <binder/v8/v8debug/debug-agent.h>
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include <binder/v8/v8debug/V8Socket.h>
-#include <Utils/JCFileSystem.h>
-#include <Utils/JCJson.h>
-#include <Utils/JCCommonMethod.h>
+#include <utils/JCFileSystem.h>
+#include <utils/JCJson.h>
+#include <utils/JCCommonMethod.h>
 #include <string>
 #include <chrono>
 #include <thread>

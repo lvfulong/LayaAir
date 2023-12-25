@@ -1,6 +1,6 @@
 #include "JSGL2TextureContext.h"
-#include <Utils/Log.h>
-#include <Utils/JCMemorySurvey.h>
+#include <utils/Log.h>
+#include <utils/JCMemorySurvey.h>
 #include <render/driver/gles/GL2TextureContext.h>
 #include "JCConch.h"
 #include "JSWebGLInternalTex.h"

@@ -1,4 +1,4 @@
-﻿#include <Utils/JCIniFile.h>
+﻿#include <utils/JCIniFile.h>
 #include <string.h>
 #include <stdio.h>
 #pragma warning(disable:4996)

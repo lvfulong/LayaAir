@@ -1,13 +1,13 @@
 ﻿#include <JCConch.h>
 #include "JSAppCache.h"
 #include "downloadCache/JCServerFileCache.h"
-#include <Utils/JCFileSystem.h>
+#include <utils/JCFileSystem.h>
 #include "resource/JCFileResManager.h"
-#include <Utils/Log.h>
+#include <utils/Log.h>
 #include "JSFile.h"
 #include "../../JCScriptRuntime.h"
-#include <Utils/JCSimpleCRC.h>
-#include <Utils/JCFileSource.h>
+#include <utils/JCSimpleCRC.h>
+#include <utils/JCFileSource.h>
 
 extern std::string gRedistPath;
 #ifdef _DEBUG

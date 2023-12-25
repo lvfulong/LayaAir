@@ -1,10 +1,10 @@
 #include "JSFileReaderWX.h"
 #include <resource/JCFileResManager.h>
-#include <Utils/Log.h>
-#include <Utils/JCCrypto.h>
-#include <Utils/JCMemorySurvey.h>
+#include <utils/Log.h>
+#include <utils/JCCrypto.h>
+#include <utils/JCMemorySurvey.h>
 #include "../../JCScriptRuntime.h"
-#include <Utils/JCFileSystem.h>
+#include <utils/JCFileSystem.h>
 #include <JCConch.h>
 
 //extern std::string LAYA_NATIVE_FILE_CACHE_USR_PATH;
