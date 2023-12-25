@@ -27,10 +27,10 @@ set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/JCFileSource.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/JCFileSystem.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/JCBuffer.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/Thread/JCCondition.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/Thread/JCLayaThreadPool.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/Thread/JCWorkerThread.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/Thread/JCWorkSemaphore.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/thread/JCCondition.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/thread/JCLayaThreadPool.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/thread/JCWorkerThread.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/thread/JCWorkSemaphore.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/JCEmitter.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/JCEventBase.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/InputTypes.h
@@ -54,9 +54,9 @@ set(SOURCES
     src/JCBuffer.cpp
     src/JCEmitter.cpp
     src/JCEventBase.cpp
-    src/Thread/JCLayaThreadPool.cpp
-    src/Thread/JCWorkerThread.cpp
-    src/Thread/JCWorkSemaphore.cpp
+    src/thread/JCLayaThreadPool.cpp
+    src/thread/JCWorkerThread.cpp
+    src/thread/JCWorkSemaphore.cpp
 )
 
 include_directories(${PUBLIC_HEADER_DIR})

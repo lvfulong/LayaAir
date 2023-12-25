@@ -6,7 +6,7 @@
 @date			2016_5_12
 */
 
-#include <utils/Thread/JCWorkerThread.h>
+#include <utils/thread/JCWorkerThread.h>
 //#include "../misc/conchDebugThread.h"
 #include <utils/JCCommonMethod.h>
 #include <utils/Log.h>

@@ -6,7 +6,7 @@
 #include "JCSystemConfig.h"
 #include "JCConch.h"
 #include "JCScriptRuntime.h"
-//#include <utils/Thread/JCWorkerThread.h>
+//#include <utils/thread/JCWorkerThread.h>
 
 
 extern int g_nInnerWidth;

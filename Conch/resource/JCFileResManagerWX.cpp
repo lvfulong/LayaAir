@@ -9,7 +9,7 @@
 #include "JCFileResManager.h"
 #include "../downloadCache/JCServerFileCache.h"
 #include "../downloadCache/JCFileTable.h"
-#include <utils/Thread/JCWorkerThread.h>
+#include <utils/thread/JCWorkerThread.h>
 #include <utils/JCCommonMethod.h>
 #include <utils/Log.h>
 #include <utils/JCLayaUrl.h>

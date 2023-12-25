@@ -12,7 +12,7 @@
 
 #include <Windows.h>
 #include <thread>
-#include <utils/Thread/JCWorkerThread.h>
+#include <utils/thread/JCWorkerThread.h>
 #include "gles.h"
 
 #include <map>

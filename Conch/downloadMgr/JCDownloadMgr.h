@@ -15,7 +15,7 @@
 #include <mutex>
 #include <map>
 #include <atomic>
-#include <utils/Thread/JCLayaThreadPool.h>
+#include <utils/thread/JCLayaThreadPool.h>
 
 namespace laya{
 

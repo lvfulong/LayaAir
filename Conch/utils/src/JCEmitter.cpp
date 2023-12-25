@@ -7,7 +7,7 @@
 */
 
 #include <utils/JCEmitter.h>
-#include <utils/Thread/JCWorkerThread.h>
+#include <utils/thread/JCWorkerThread.h>
 
 namespace laya
 {	

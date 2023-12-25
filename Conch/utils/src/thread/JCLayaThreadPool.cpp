@@ -6,7 +6,7 @@
 @date			2016_5_12
 */
 
-#include <utils/Thread/JCLayaThreadPool.h>
+#include <utils/thread/JCLayaThreadPool.h>
 #include <utils/Log.h>
 #ifdef WIN32
 #include <windows.h>

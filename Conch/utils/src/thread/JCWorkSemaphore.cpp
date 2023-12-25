@@ -6,7 +6,7 @@
 @date			2016_5_12
 */
 
-#include <utils/Thread/JCWorkSemaphore.h>
+#include <utils/thread/JCWorkSemaphore.h>
 
 namespace laya
 {

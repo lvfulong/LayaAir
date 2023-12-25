@@ -7,7 +7,7 @@
 */
 
 #include "JCImageRW.h"
-#include <utils/Thread/JCWorkerThread.h>
+#include <utils/thread/JCWorkerThread.h>
 #include <utils/JCBuffer.h>
 #include <utils/JCFileSystem.h>
 #include <cmath>
