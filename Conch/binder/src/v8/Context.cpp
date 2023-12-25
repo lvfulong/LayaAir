@@ -1,5 +1,5 @@
-#include <binder/V8/Context.h>
-#include <binder/V8/Module.h>
+#include <binder/v8/Context.h>
+#include <binder/v8/Module.h>
 
 namespace laya
 {

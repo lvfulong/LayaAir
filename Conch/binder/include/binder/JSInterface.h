@@ -7,18 +7,18 @@
 #include "jsc/JSCBinder.h"
 #include "jsc/JSCEnv.h"
 #elif JS_V8
-#include <binder/V8/JSArrayBuffer.h>
-#include <binder/V8/JSEnv.h>
+#include <binder/v8/JSArrayBuffer.h>
+#include <binder/v8/JSEnv.h>
 #include <v8.h>
-#include <binder/V8/Converter.h>
-#include <binder/V8/Class.h>
-#include <binder/V8/Context.h>
-#include <binder/V8/Module.h>
-#include <binder/V8/Object.h>
-#include <binder/V8/Value.h>
-#include <binder/V8/Promise.h>
+#include <binder/v8/Converter.h>
+#include <binder/v8/Class.h>
+#include <binder/v8/Context.h>
+#include <binder/v8/Module.h>
+#include <binder/v8/Object.h>
+#include <binder/v8/Value.h>
+#include <binder/v8/Promise.h>
 #ifdef JS_V8_DEBUGGER
-#include <binder/V8/v8debug/debug-agent.h>
+#include <binder/v8/v8debug/debug-agent.h>
 #endif
 #endif
 

@@ -12,7 +12,7 @@
 #include "JSArrayBuffer.h"
 #include "JSCProxyTLS.h"
 #include <libplatform/libplatform.h>
-#include <utils/Thread/JCWorkerThread.h>
+#include <utils/thread/JCWorkerThread.h>
 #include <mutex>
 #include <thread>
 #include <utils/ListNode.h>

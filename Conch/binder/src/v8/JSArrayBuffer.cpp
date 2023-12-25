@@ -1,8 +1,8 @@
-#ifdef JS_V8
+
 
 #include <binder/v8/JSArrayBuffer.h>
 #include <binder/JSInterface.h>
-#include <binder/V8/Converter.h>
+#include <binder/v8/Converter.h>
 #include <utils/JCMemorySurvey.h>
 #include <utils/Log.h>
 
@@ -274,4 +274,3 @@ void __JSRun::ReportException(v8::Isolate *isolate, v8::TryCatch *try_catch)
     LOGE("==JSERROR:\n%s", errInfo);
 }
 } // namespace laya
-#endif
