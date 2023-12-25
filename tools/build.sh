@@ -31,9 +31,9 @@ function build_ios {
 		-DIOS_ARCH="${arch}" \
 		-DPLATFORM_NAME="${platform}" \
 		-DIOS=1 \
-		-DCMAKE_TOOLCHAIN_FILE=../../CMake/clang/iOS.cmake \
+		-DCMAKE_TOOLCHAIN_FILE=../../../CMake/clang/iOS.cmake \
 		-DCMAKE_SYSTEM_NAME=iOS \
-		../../Conch
+		../../../Conch
 
    #cmake --build .
    make
@@ -83,7 +83,7 @@ function build_android {
 		-DANDROID_PLATFORM=${CONCH_ANDROID_MINI_SDK_VERSION} \
 		-DANDROID_ARM_NEON=TRUE \
 		-DANDROID_TOOLCHAIN=clang \
-		../../Conch
+		../../../Conch
 
 		cmake --build .
 		cmake --install .
@@ -96,138 +96,98 @@ function build_android {
 
 function archive_ios {
     #—————————————————————merge static lib————————————————————————
-    rm -rf ./publish/nativetools/template/ios/LayaRuntime-iOS
-    mkdir ./publish/nativetools/template/ios/LayaRuntime-iOS
-    mkdir ./publish/nativetools/template/ios/LayaRuntime-iOS/libs
+    rm -rf ../publish/nativetools/template/ios/LayaRuntime-iOS
+    mkdir ../publish/nativetools/template/ios/LayaRuntime-iOS
+    mkdir ../publish/nativetools/template/ios/LayaRuntime-iOS/libs
     
     rm -rf armv64
     rm -rf x86_64
     mkdir armv64
     mkdir x86_64
 
-    #lipo -extract armv7 ./Third_party/bullet/lib/ios/libBulletDynamics.a -o armv7a/libBulletDynamics.a
-    lipo -extract arm64 ./Third_party/bullet/lib/ios/libBulletDynamics.a -o armv64/libBulletDynamics.a
-    #lipo -extract i386 ./Third_party/bullet/lib/ios/libBulletDynamics.a -o i386/libBulletDynamics.a
-    lipo -extract x86_64 ./Third_party/bullet/lib/ios/libBulletDynamics.a -o x86_64/libBulletDynamics.a
+    lipo -extract arm64 ../Third_party/bullet/lib/ios/libBulletDynamics.a -o armv64/libBulletDynamics.a
+    lipo -extract x86_64 .//Third_party/bullet/lib/ios/libBulletDynamics.a -o x86_64/libBulletDynamics.a
 
-    #lipo -extract armv7 ./Third_party/bullet/lib/ios/libBulletCollision.a -o armv7a/libBulletCollision.a
-    lipo -extract arm64 ./Third_party/bullet/lib/ios/libBulletCollision.a -o armv64/libBulletCollision.a
-    #lipo -extract i386 ./Third_party/bullet/lib/ios/libBulletCollision.a -o i386/libBulletCollision.a
-    lipo -extract x86_64 ./Third_party/bullet/lib/ios/libBulletCollision.a -o x86_64/libBulletCollision.a
+    lipo -extract arm64 ../Third_party/bullet/lib/ios/libBulletCollision.a -o armv64/libBulletCollision.a
+    lipo -extract x86_64 ../Third_party/bullet/lib/ios/libBulletCollision.a -o x86_64/libBulletCollision.a
 
-    #lipo -extract armv7 ./Third_party/bullet/lib/ios/libBulletSoftBody.a -o armv7a/libBulletSoftBody.a
-    #lipo -extract arm64 ./Third_party/bullet/lib/ios/libBulletSoftBody.a -o armv64/libBulletSoftBody.a
-    #lipo -extract i386 ./Third_party/bullet/lib/ios/libBulletSoftBody.a -o i386/libBulletSoftBody.a
-    #lipo -extract x86_64 ./Third_party/bullet/lib/ios/libBulletSoftBody.a -o x86_64/libBulletSoftBody.a
+    #lipo -extract arm64 ../Third_party/bullet/lib/ios/libBulletSoftBody.a -o armv64/libBulletSoftBody.a
+    #lipo -extract x86_64 .//Third_party/bullet/lib/ios/libBulletSoftBody.a -o x86_64/libBulletSoftBody.a
 
-    #lipo -extract armv7 ./Third_party/bullet/lib/ios/libLinearMath.a -o armv7a/libLinearMath.a
-    lipo -extract arm64 ./Third_party/bullet/lib/ios/libLinearMath.a -o armv64/libLinearMath.a
-    #lipo -extract i386 ./Third_party/bullet/lib/ios/libLinearMath.a -o i386/libLinearMath.a
-    lipo -extract x86_64 ./Third_party/bullet/lib/ios/libLinearMath.a -o x86_64/libLinearMath.a
+    lipo -extract arm64 ../Third_party/bullet/lib/ios/libLinearMath.a -o armv64/libLinearMath.a
+    lipo -extract x86_64 ../Third_party/bullet/lib/ios/libLinearMath.a -o x86_64/libLinearMath.a
 
-    #lipo -extract armv7 ./Third_party/v8/lib/ios/libv8_monolith.a -o armv7a/libv8_monolith.a
-    lipo -extract arm64 ./Third_party/v8/lib/ios/libv8_monolith.a -o armv64/libv8_monolith.a
-    #lipo -extract i386 ./Third_party/v8/lib/ios/libv8_monolith.a -o i386/libv8_monolith.a
-    lipo -extract x86_64 ./Third_party/v8/lib/ios/libv8_monolith.a -o x86_64/libv8_monolith.a
+    lipo -extract arm64 ../Third_party/v8/lib/ios/libv8_monolith.a -o armv64/libv8_monolith.a
+    lipo -extract x86_64 ../Third_party/v8/lib/ios/libv8_monolith.a -o x86_64/libv8_monolith.a
 
-    #lipo -extract armv7 ./Third_party/mpg123/lib/ios/libmpg123.a -o armv7a/libmpg123.a
-    lipo -extract arm64 ./Third_party/mpg123/lib/ios/libmpg123.a -o armv64/libmpg123.a
-    #lipo -extract i386 ./Third_party/mpg123/lib/ios/libmpg123.a -o i386/libmpg123.a
-    lipo -extract x86_64 ./Third_party/mpg123/lib/ios/libmpg123.a -o x86_64/libmpg123.a
+    lipo -extract arm64 ../Third_party/mpg123/lib/ios/libmpg123.a -o armv64/libmpg123.a
+    lipo -extract x86_64 ../Third_party/mpg123/lib/ios/libmpg123.a -o x86_64/libmpg123.a
 
+    lipo -extract arm64 ../Third_party/freetype/lib/ios/libfreetype.a -o armv64/libfreetype.a
+    lipo -extract x86_64 ../Third_party/freetype/lib/ios/libfreetype.a -o x86_64/libfreetype.a
 
-    #lipo -extract armv7 ./Third_party/freetype/lib/ios/libfreetype.a -o armv7a/libfreetype.a
-    lipo -extract arm64 ./Third_party/freetype/lib/ios/libfreetype.a -o armv64/libfreetype.a
-    #lipo -extract i386 ./Third_party/freetype/lib/ios/libfreetype.a -o i386/libfreetype.a
-    lipo -extract x86_64 ./Third_party/freetype/lib/ios/libfreetype.a -o x86_64/libfreetype.a
-
-    #lipo -extract armv7 ./Third_party/jpeg-turbo/lib/ios/libjpeg.a -o armv7a/libjpeg.a
-    lipo -extract arm64 ./Third_party/jpeg-turbo/lib/ios/libjpeg.a -o armv64/libjpeg.a
-    #lipo -extract i386 ./Third_party/jpeg-turbo/lib/ios/libjpeg.a -o i386/libjpeg.a
-    lipo -extract x86_64 ./Third_party/jpeg-turbo/lib/ios/libjpeg.a -o x86_64/libjpeg.a
+    lipo -extract arm64 ../Third_party/jpeg-turbo/lib/ios/libjpeg.a -o armv64/libjpeg.a
+    lipo -extract x86_64 ../Third_party/jpeg-turbo/lib/ios/libjpeg.a -o x86_64/libjpeg.a
     
-    #lipo -extract armv7 ./Third_party/jpeg-turbo/lib/ios/libjpeg.a -o armv7a/libturbojpeg.a
-    lipo -extract arm64 ./Third_party/jpeg-turbo/lib/ios/libturbojpeg.a -o armv64/libturbojpeg.a
-    #lipo -extract i386 ./Third_party/jpeg-turbo/lib/ios/libjpeg.a -o i386/libturbojpeg.a
-    lipo -extract x86_64 ./Third_party/jpeg-turbo/lib/ios/libturbojpeg.a -o x86_64/libturbojpeg.a
+    lipo -extract arm64 ../Third_party/jpeg-turbo/lib/ios/libturbojpeg.a -o armv64/libturbojpeg.a
+    lipo -extract x86_64 ../Third_party/jpeg-turbo/lib/ios/libturbojpeg.a -o x86_64/libturbojpeg.a
 
-    #lipo -extract armv7 ./Third_party/png/lib/ios/libpng.a -o armv7a/libpng.a
-    lipo -extract arm64 ./Third_party/png/lib/ios/libpng.a -o armv64/libpng.a
-    #lipo -extract i386 ./Third_party/png/lib/ios/libpng.a -o i386/libpng.a
-    lipo -extract x86_64 ./Third_party/png/lib/ios/libpng.a -o x86_64/libpng.a
+    lipo -extract arm64 ../Third_party/png/lib/ios/libpng.a -o armv64/libpng.a
+    lipo -extract x86_64 ../Third_party/png/lib/ios/libpng.a -o x86_64/libpng.a
 
-    #lipo -extract armv7 ./Third_party/websockets/lib/ios/libwebsockets.a -o armv7a/libwebsockets.a
-    lipo -extract arm64 ./Third_party/websockets/lib/ios/libwebsockets.a -o armv64/libwebsockets.a
-    #lipo -extract i386 ./Third_party/websockets/lib/ios/libwebsockets.a -o i386/libwebsockets.a
-    lipo -extract x86_64 ./Third_party/websockets/lib/ios/libwebsockets.a -o x86_64/libwebsockets.a
+    lipo -extract arm64 ../Third_party/websockets/lib/ios/libwebsockets.a -o armv64/libwebsockets.a
+    lipo -extract x86_64 ../Third_party/websockets/lib/ios/libwebsockets.a -o x86_64/libwebsockets.a
 
-    #lipo -extract armv7 ./Third_party/zip/lib/ios/libzip.a -o armv7a/libzip.a
-    lipo -extract arm64 ./Third_party/zip/lib/ios/libzip.a -o armv64/libzip.a
-    #lipo -extract i386 ./Third_party/zip/lib/ios/libzip.a -o i386/libzip.a
-    lipo -extract x86_64 ./Third_party/zip/lib/ios/libzip.a -o x86_64/libzip.a
+    lipo -extract arm64 ../Third_party/zip/lib/ios/libzip.a -o armv64/libzip.a
+    lipo -extract x86_64 ../Third_party/zip/lib/ios/libzip.a -o x86_64/libzip.a
 
-    #lipo -extract armv7 ./Third_party/ogg/lib/ios/libogg.a -o armv7a/libogg.a
-    lipo -extract arm64 ./Third_party/ogg/lib/ios/libogg.a -o armv64/libogg.a
-    #lipo -extract i386 ./Third_party/ogg/lib/ios/libogg.a -o i386/libogg.a
-    lipo -extract x86_64 ./Third_party/ogg/lib/ios/libogg.a -o x86_64/libogg.a
+    lipo -extract arm64 ../Third_party/ogg/lib/ios/libogg.a -o armv64/libogg.a
+    lipo -extract x86_64 ../Third_party/ogg/lib/ios/libogg.a -o x86_64/libogg.a
 
-    #lipo -extract armv7 ./Third_party/ogg/lib/ios/libvorbis.a -o armv7a/libvorbis.a
-    lipo -extract arm64 ./Third_party/ogg/lib/ios/libvorbis.a -o armv64/libvorbis.a
-    #lipo -extract i386 ./Third_party/ogg/lib/ios/libvorbis.a -o i386/libvorbis.a
-    lipo -extract x86_64 ./Third_party/ogg/lib/ios/libvorbis.a -o x86_64/libvorbis.a
+    lipo -extract arm64 ../Third_party/ogg/lib/ios/libvorbis.a -o armv64/libvorbis.a
+    lipo -extract x86_64 ../Third_party/ogg/lib/ios/libvorbis.a -o x86_64/libvorbis.a
 
-    #lipo -extract armv7 ./Third_party/ogg/lib/ios/libvorbisfile.a -o armv7a/libvorbisfile.a
-    lipo -extract arm64 ./Third_party/ogg/lib/ios/libvorbisfile.a -o armv64/libvorbisfile.a
-    #lipo -extract i386 ./Third_party/ogg/lib/ios/libvorbisfile.a -o i386/libvorbisfile.a
-    lipo -extract x86_64 ./Third_party/ogg/lib/ios/libvorbisfile.a -o x86_64/libvorbisfile.a
+    lipo -extract arm64 ../Third_party/ogg/lib/ios/libvorbisfile.a -o armv64/libvorbisfile.a
+    lipo -extract x86_64 ../Third_party/ogg/lib/ios/libvorbisfile.a -o x86_64/libvorbisfile.a
 
-    #lipo -extract armv7 ./Third_party/zlib/lib/ios/libz.a -o armv7a/libz.a
-    lipo -extract arm64 ./Third_party/zlib/lib/ios/libz.a -o armv64/libz.a
-    #lipo -extract i386 ./Third_party/zlib/lib/ios/libz.a -o i386/libz.a
-    lipo -extract x86_64 ./Third_party/zlib/lib/ios/libz.a -o x86_64/libz.a
+    lipo -extract arm64 ../Third_party/zlib/lib/ios/libz.a -o armv64/libz.a
+    lipo -extract x86_64 ../Third_party/zlib/lib/ios/libz.a -o x86_64/libz.a
 
-    #lipo -extract armv7 ./Third_party/curl/lib/ios/libcurl.a -o armv7a/libcurl.a
-    lipo -extract arm64 ./Third_party/curl/lib/ios/libcurl.a -o armv64/libcurl.a
-    #lipo -extract i386 ./Third_party/curl/lib/ios/libcurl.a -o i386/libcurl.a
-    lipo -extract x86_64 ./Third_party/curl/lib/ios/libcurl.a -o x86_64/libcurl.a
+    lipo -extract arm64 ../Third_party/curl/lib/ios/libcurl.a -o armv64/libcurl.a
+    lipo -extract x86_64 ../Third_party/curl/lib/ios/libcurl.a -o x86_64/libcurl.a
 
-    #lipo -extract armv7 ./Third_party/openssl/lib/ios/libssl.a -o armv7a/libssl.a
-    lipo -extract arm64 ./Third_party/openssl/lib/ios/libssl.a -o armv64/libssl.a
-    #lipo -extract i386 ./Third_party/openssl/lib/ios/libssl.a -o i386/libssl.a
-    lipo -extract x86_64 ./Third_party/openssl/lib/ios/libssl.a -o x86_64/libssl.a
+    lipo -extract arm64 ../Third_party/openssl/lib/ios/libssl.a -o armv64/libssl.a
+    lipo -extract x86_64 ../Third_party/openssl/lib/ios/libssl.a -o x86_64/libssl.a
 
+    lipo -extract arm64 ../Third_party/openssl/lib/ios/libcrypto.a -o armv64/libcrypto.a
+    lipo -extract x86_64 ../Third_party/openssl/lib/ios/libcrypto.a -o x86_64/libcrypto.a
 
-    #lipo -extract armv7 ./Third_party/openssl/lib/ios/libcrypto.a -o armv7a/libcrypto.a
-    lipo -extract arm64 ./Third_party/openssl/lib/ios/libcrypto.a -o armv64/libcrypto.a
-    #lipo -extract i386 ./Third_party/openssl/lib/ios/libcrypto.a -o i386/libcrypto.a
-    lipo -extract x86_64 ./Third_party/openssl/lib/ios/libcrypto.a -o x86_64/libcrypto.a
+    lipo -extract arm64 ../Third_party/physx/lib/ios/libPhysX_static.a -o armv64/libPhysX_static.a
+    lipo -extract x86_64 ../Third_party/physx/lib/ios/libPhysX_static.a -o x86_64/libPhysX_static.a
 
-    lipo -extract arm64 ./Third_party/physx/lib/ios/libPhysX_static.a -o armv64/libPhysX_static.a
-    lipo -extract x86_64 ./Third_party/physx/lib/ios/libPhysX_static.a -o x86_64/libPhysX_static.a
+    lipo -extract arm64 ../Third_party/physx/lib/ios/libPhysXCharacterKinematic_static.a -o armv64/libPhysXCharacterKinematic_static.a
+    lipo -extract x86_64 ../Third_party/physx/lib/ios/libPhysXCharacterKinematic_static.a -o x86_64/libPhysXCharacterKinematic_static.a
 
-    lipo -extract arm64 ./Third_party/physx/lib/ios/libPhysXCharacterKinematic_static.a -o armv64/libPhysXCharacterKinematic_static.a
-    lipo -extract x86_64 ./Third_party/physx/lib/ios/libPhysXCharacterKinematic_static.a -o x86_64/libPhysXCharacterKinematic_static.a
+    lipo -extract arm64 ../Third_party/physx/lib/ios/libPhysXCommon_static.a -o armv64/libPhysXCommon_static.a
+    lipo -extract x86_64 ../Third_party/physx/lib/ios/libPhysXCommon_static.a -o x86_64/libPhysXCommon_static.a
 
-    lipo -extract arm64 ./Third_party/physx/lib/ios/libPhysXCommon_static.a -o armv64/libPhysXCommon_static.a
-    lipo -extract x86_64 ./Third_party/physx/lib/ios/libPhysXCommon_static.a -o x86_64/libPhysXCommon_static.a
+    lipo -extract arm64 ../Third_party/physx/lib/ios/libPhysXCooking_static.a -o armv64/libPhysXCooking_static.a
+    lipo -extract x86_64 ../Third_party/physx/lib/ios/libPhysXCooking_static.a -o x86_64/libPhysXCooking_static.a
 
-    lipo -extract arm64 ./Third_party/physx/lib/ios/libPhysXCooking_static.a -o armv64/libPhysXCooking_static.a
-    lipo -extract x86_64 ./Third_party/physx/lib/ios/libPhysXCooking_static.a -o x86_64/libPhysXCooking_static.a
+    lipo -extract arm64 ../Third_party/physx/lib/ios/libPhysXExtensions_static.a -o armv64/libPhysXExtensions_static.a
+    lipo -extract x86_64 ../Third_party/physx/lib/ios/libPhysXExtensions_static.a -o x86_64/libPhysXExtensions_static.a
 
-    lipo -extract arm64 ./Third_party/physx/lib/ios/libPhysXExtensions_static.a -o armv64/libPhysXExtensions_static.a
-    lipo -extract x86_64 ./Third_party/physx/lib/ios/libPhysXExtensions_static.a -o x86_64/libPhysXExtensions_static.a
+    lipo -extract arm64 ../Third_party/physx/lib/ios/libPhysXFoundation_static.a -o armv64/libPhysXFoundation_static.a
+    lipo -extract x86_64 ../Third_party/physx/lib/ios/libPhysXFoundation_static.a -o x86_64/libPhysXFoundation_static.a
 
-    lipo -extract arm64 ./Third_party/physx/lib/ios/libPhysXFoundation_static.a -o armv64/libPhysXFoundation_static.a
-    lipo -extract x86_64 ./Third_party/physx/lib/ios/libPhysXFoundation_static.a -o x86_64/libPhysXFoundation_static.a
+    #lipo -extract arm64 ../Third_party/physx/lib/ios/libPhysXPvdSDK_static.a -o armv64/libPhysXPvdSDK_static.a
+    #lipo -extract x86_64 ../Third_party/physx/lib/ios/libPhysXPvdSDK_static.a -o x86_64/libPhysXPvdSDK_static.a
 
-    #lipo -extract arm64 ./Third_party/physx/lib/ios/libPhysXPvdSDK_static.a -o armv64/libPhysXPvdSDK_static.a
-    #lipo -extract x86_64 ./Third_party/physx/lib/ios/libPhysXPvdSDK_static.a -o x86_64/libPhysXPvdSDK_static.a
-
-    #lipo -extract arm64 ./Third_party/physx/lib/ios/libPhysXVehicle_static.a -o armv64/libPhysXVehicle_static.a
+    #lipo -extract arm64 ../Third_party/physx/lib/ios/libPhysXVehicle_static.a -o armv64/libPhysXVehicle_static.a
     #lipo -extract x86_64 ./Third_party/physx/lib/ios/libPhysXVehicle_static.a -o x86_64/libPhysXVehicle_static.a
 
-    #lipo -extract arm64 ./Third_party/physx/lib/ios/libPhysXVehicle2_static.a -o armv64/libPhysXVehicle2_static.a
-    #lipo -extract x86_64 ./Third_party/physx/lib/ios/libPhysXVehicle2_static.a -o x86_64/libPhysXVehicle2_static.a
+    #lipo -extract arm64 ../Third_party/physx/lib/ios/libPhysXVehicle2_static.a -o armv64/libPhysXVehicle2_static.a
+    #lipo -extract x86_64 ../Third_party/physx/lib/ios/libPhysXVehicle2_static.a -o x86_64/libPhysXVehicle2_static.a
 
     local build_type=$1
     cp build/cmake-ios-${build_type}-arm64/libconch.a armv64
@@ -241,33 +201,85 @@ function archive_ios {
     libtool -static *.a -o libconch.a
     cd ..
 
-    lipo -create armv64/libconch.a x86_64/libconch.a -output ./publish/nativetools/template/ios/LayaRuntime-iOS/libs/libconch.a
+    lipo -create armv64/libconch.a x86_64/libconch.a -output ../publish/nativetools/template/ios/LayaRuntime-iOS/libs/libconch.a
 
-    strip -S -X ./publish/nativetools/template/ios/LayaRuntime-iOS/libs/libconch.a
+    strip -S -X ../publish/nativetools/template/ios/LayaRuntime-iOS/libs/libconch.a
     rm -rf armv64
     rm -rf x86_64
 
     #—————————————————————copy .h————————————————————————
 
-    rm -rf ./publish/nativetools/template/ios/LayaRuntime-iOS/include
-    mkdir ./publish/nativetools/template/ios/LayaRuntime-iOS/include
-    cp  ./Conch/platform/iOS/conchRuntime.h ./publish/nativetools/template/ios/LayaRuntime-iOS/include
-    cp  ./Conch/platform/iOS/conchConfig.h ./publish/nativetools/template/ios/LayaRuntime-iOS/include
-    mkdir ./publish/nativetools/template/ios/LayaRuntime-iOS/include/Reachability
-    cp  ./Conch/platform/iOS/Reachability/Reachability.h ./publish/nativetools/template/ios/LayaRuntime-iOS/include/Reachability
+    rm -rf ../publish/nativetools/template/ios/LayaRuntime-iOS/include
+    mkdir ../publish/nativetools/template/ios/LayaRuntime-iOS/include
+    cp  ../Conch/platform/iOS/conchRuntime.h ../publish/nativetools/template/ios/LayaRuntime-iOS/include
+    cp  ../Conch/platform/iOS/conchConfig.h ../publish/nativetools/template/ios/LayaRuntime-iOS/include
+    mkdir ../publish/nativetools/template/ios/LayaRuntime-iOS/include/Reachability
+    cp  ../Conch/platform/iOS/Reachability/Reachability.h ../publish/nativetools/template/ios/LayaRuntime-iOS/include/Reachability
     #—————————————————————resource————————————————————————
-    #rm -rf ./publish/nativetools/template/ios/LayaRuntime-iOS/resource
-    #mkdir ./publish/nativetools/template/ios/LayaRuntime-iOS/resource
-    #cp -rf ./Conch/build/conch/proj.ios/resource ./publish/nativetools/template/ios/LayaBox/
+    #rm -rf ../publish/nativetools/template/ios/LayaRuntime-iOS/resource
+    #mkdir ../publish/nativetools/template/ios/LayaRuntime-iOS/resource
+    #cp -rf ../Conch/build/conch/proj.ios/resource ../publish/nativetools/template/ios/LayaBox/
 }
 
-#check_android_environment
-#build_android release "aarch64"
-#build_android release "arm7"
-#build_android release "x86_64"
-#build_android release "x86"
-	
-build_ios release arm64 iphoneos
-build_ios release x86_64 iphonesimulator
-archive_ios release
+
+
+function clean {
+    echo "Cleaning build directories..."
+    #rm -Rf ${root_dir}/build todo 
+}
+
+pushd "$(dirname "$0")" > /dev/null
+
+while getopts ":hct:" opt; do
+    case ${opt} in
+        h)
+            print_help
+            exit 1
+            ;;
+        \?)
+            echo "Invalid option: -${OPTARG}" >&2
+            echo ""
+            print_help
+            exit 1
+            ;;
+        :)
+            echo "Option -${OPTARG} requires an argument." >&2
+            echo ""
+            print_help
+            exit 1
+            ;;
+		c)	
+			ISSUE_CLEAN=true
+            ;;
+		t)	
+			BUILD_LIB_TYPE=${OPTARG}
+		 	echo "option t: -${OPTARG}" >&2
+            ;;
+    esac
+done
+# 命令行未提供参数
+if [[ "$#" == "0" ]]; then
+    print_help
+    exit 1
+fi
+
+if [[ "${ISSUE_CLEAN}" == "true" ]]; then
+    clean
+fi
+    case ${BUILD_LIB_TYPE} in
+        ios)
+           	build_ios release arm64 iphoneos
+            build_ios release x86_64 iphonesimulator
+            archive_ios release
+            exit 1
+            ;;
+		android)
+           	check_android_environment
+            build_android release "aarch64"
+            build_android release "arm7"
+            build_android release "x86_64"
+            build_android release "x86"
+            exit 1
+            ;;
+    esac
 
