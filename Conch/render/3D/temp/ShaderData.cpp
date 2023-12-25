@@ -258,7 +258,7 @@ namespace laya
 
     void ShaderData::applyUBOData()
     {
-        m_data->applyUBOData();
+        //m_data->applyUBOData();
     }
 	ShaderData *ShaderData::getShaderData(uint32_t id)
 	{

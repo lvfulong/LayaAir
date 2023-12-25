@@ -6,6 +6,14 @@
 #include <render/3D/RenderableSprite3DProperty.h>
 
 namespace laya {
+	RenderModuleData::RenderModuleData()
+	{
+
+	}
+    RenderModuleData::~RenderModuleData()
+	{
+
+	}
 	void RenderModuleData::set_updataMask(uint32_t value) {
 		updataMask = value;
 	}

@@ -17,8 +17,8 @@ namespace laya{
  {
  public:
      static uint32_t globalShaderData;
-     virtual ~RenderContext3D() {};
-     RenderContext3D() ;
+     virtual ~RenderContext3D();
+     RenderContext3D();
      virtual uint32_t drawRenderElementList(JCSingletonList<RenderElement3D*>& list) = 0;
      virtual void drawRenderElementOne(RenderElement3D* one) = 0;
      virtual void setDestTarget(uint32_t renderTarget);
@@ -26,7 +26,7 @@ namespace laya{
      virtual void setSceneData(uint32_t sceneData);
      virtual void setViewport(Viewport value);
      virtual void setScissor(uint32_t x,uint32_t y,uint32_t width,uint32_t height);
-     virtual void clearData(RenderClearFlag flag, Color color, float depthValue, uint8_t stencilValue) = 0;
+     virtual void clearData(RenderClearFlagBits flag, Color color, float depthValue, uint8_t stencilValue);
      virtual void setSceneUpdateMask(uint32_t mask);
      virtual void setCameraUpdateMask(uint32_t mask);
  private:

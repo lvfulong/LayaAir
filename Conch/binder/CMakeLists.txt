@@ -89,9 +89,13 @@ target_precompile_headers(${TARGET} PRIVATE ${HEADERS})
 
 
 ####  benchmark
-set(BENCHMARK_SOURCES benchmark/benchmark.cpp)
-add_executable(benchmark_${TARGET} ${BENCHMARK_SOURCES})
-#target_compile_options(benchmark_${TARGET} PRIVATE ${OPTIMIZATION_FLAGS})
-target_link_libraries(benchmark_${TARGET} PRIVATE binder benchmark benchmark_main)
-set_target_properties(benchmark_${TARGET} PROPERTIES FOLDER benchmark)
-target_compile_definitions(benchmark_${TARGET}  PRIVATE BENCHMARK_STATIC_DEFINE)
+
+if(MSVC OR (ANDROID AND ANDROID_ABI STREQUAL "arm64-v8a" OR ANDROID_ABI STREQUAL "armeabi-v7a") OR (IOS AND IOS_ARCH STREQUAL "arm64"))
+    set(BENCHMARK_SOURCES benchmark/benchmark.cpp)
+    add_executable(benchmark_${TARGET} ${BENCHMARK_SOURCES})
+    #target_compile_options(benchmark_${TARGET} PRIVATE ${OPTIMIZATION_FLAGS})
+    target_link_libraries(benchmark_${TARGET} PRIVATE binder benchmark benchmark_main)
+    set_target_properties(benchmark_${TARGET} PROPERTIES FOLDER benchmark)
+    target_compile_definitions(benchmark_${TARGET}  PRIVATE BENCHMARK_STATIC_DEFINE)
+endif()
+

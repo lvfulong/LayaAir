@@ -9,7 +9,7 @@ namespace laya{
     class RenderModuleData {
     public:
         RenderModuleData();
-        virtual ~RenderModuleData() {};
+        virtual ~RenderModuleData();
         virtual void applyRenderData(uint32_t shaderData) = 0;
         //bind set Script function
         void set_updataMask(uint32_t value);

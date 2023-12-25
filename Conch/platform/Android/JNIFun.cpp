@@ -52,6 +52,7 @@ extern std::string gAPKExpansionPatchPath;
 int64_t g_nInitTime = 0;
 extern std::string g_ConfigJS;
 
+using namespace laya;
 
 extern std::string LAYA_NATIVE_FILE_CACHE_TMP_PATH;
 //------------------------------------------------------------------------------

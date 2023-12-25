@@ -41,4 +41,13 @@ namespace laya
     void ComposeData::set_composeData_customCullResoult(bool value){
         customCullResoult = value;
     }
+
+    RenderElement3D::RenderElement3D()
+    {
+        
+    }
+    RenderElement3D::~RenderElement3D()
+    {
+        
+    }
 }

@@ -2,6 +2,9 @@
 #include "RenderContext.h"
 namespace laya{
 uint32_t RenderContext3D::globalShaderData = 0;
+    RenderContext3D::RenderContext3D() {
+
+    }
     RenderContext3D::~RenderContext3D(){
         //TODO
     }
@@ -19,7 +22,7 @@ uint32_t RenderContext3D::globalShaderData = 0;
     }
 
     void RenderContext3D::setViewport(Viewport value) {
-        this->viewPort = viewport;
+        this->viewPort = value;
     }
 
     void RenderContext3D::setScissor(uint32_t x, uint32_t y, uint32_t width, uint32_t height) {

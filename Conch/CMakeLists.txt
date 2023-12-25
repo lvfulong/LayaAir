@@ -128,6 +128,8 @@ list(APPEND CONCH_SRC
 	render/3D/design/RenderElement.cpp
 	render/3D/design/Render3DProcess.cpp
 	render/3D/design/Render3DProcess.h
+	render/3D/design/RenderContext.cpp
+	render/3D/design/RenderContext.h
 	render/3D/RenderableSprite3DProperty.h
 	render/3D/RenderableSprite3DProperty.cpp
 	render/3D/Sprite3DRenderDeclarationProperty.h
@@ -224,8 +226,8 @@ list(APPEND CONCH_SRC
 	render/3D/temp/ObjectBase.cpp
 	render/3D/temp/IndexBuffer3D.h
 	render/3D/temp/IndexBuffer3D.cpp
-	render/3D/temp/RenderContext3D.h
-	render/3D/temp/RenderContext3D.cpp
+	#render/3D/temp/RenderContext3D.h
+	#render/3D/temp/RenderContext3D.cpp
 	render/3D/temp/RenderElement.h
 	render/3D/temp/RenderElement.cpp
 	render/3D/temp/SkinRenderElement.h
