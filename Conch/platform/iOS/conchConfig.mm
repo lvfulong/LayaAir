@@ -8,11 +8,11 @@
  */
 
 #import "conchConfig.h"
-#import <Utils/JCIniFile.h>
+#import <utils/JCIniFile.h>
 #import <string>
 #import "conchRuntime.h"
 #import "JCSystemConfig.h"
-#import <Utils/JCCommonMethod.h>
+#import <utils/JCCommonMethod.h>
 //-------------------------------------------------------------------------------
 static conchConfig* g_pConchConfig = nil;
 //-------------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 #include "HttpClientiOS.h"
-#include <Utils/Log.h>
-#include <Utils/Log.h>
+#include <utils/Log.h>
+#include <utils/Log.h>
 #include "JCSystemConfig.h"
 #import <CFNetwork/CFNetwork.h>
 #import <Foundation/Foundation.h>

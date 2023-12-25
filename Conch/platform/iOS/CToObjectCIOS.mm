@@ -12,9 +12,9 @@
 #import "Audio/JCMp3Player.h"
 #import "LayaEditBox.h"
 #import "CToObjectCIOS.h"
-#import <Utils/JCColor.h>
-#import <Utils/JCCommonMethod.h>
-#import <Utils/Log.h>
+#import <utils/JCColor.h>
+#import <utils/JCCommonMethod.h>
+#import <utils/Log.h>
 #import <mach/mach.h>
 #import "conchConfig.h"
 #import "LayaToast.h"
