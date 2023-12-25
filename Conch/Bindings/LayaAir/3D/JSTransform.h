@@ -2,7 +2,7 @@
 #define __JSTransform_H__
 
 #include <stdio.h>
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include <core/math/Matrix4x4.h>
 #include <core/math/Vector3.h>
 #include <core/math/Quaternion.h>

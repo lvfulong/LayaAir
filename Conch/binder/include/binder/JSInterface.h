@@ -3,22 +3,22 @@
 
 #include <Utils/JCMemorySurvey.h>
 #ifdef JS_JSC
-#include "JSC/JSCArrayBuffer.h"
-#include "JSC/JSCBinder.h"
-#include "JSC/JSCEnv.h"
+#include "jsc/JSCArrayBuffer.h"
+#include "jsc/JSCBinder.h"
+#include "jsc/JSCEnv.h"
 #elif JS_V8
-#include <Binder/V8/JSArrayBuffer.h>
-#include <Binder/V8/JSEnv.h>
+#include <binder/V8/JSArrayBuffer.h>
+#include <binder/V8/JSEnv.h>
 #include <v8.h>
-#include <Binder/V8/Converter.h>
-#include <Binder/V8/Class.h>
-#include <Binder/V8/Context.h>
-#include <Binder/V8/Module.h>
-#include <Binder/V8/Object.h>
-#include <Binder/V8/Value.h>
-#include <Binder/V8/Promise.h>
+#include <binder/V8/Converter.h>
+#include <binder/V8/Class.h>
+#include <binder/V8/Context.h>
+#include <binder/V8/Module.h>
+#include <binder/V8/Object.h>
+#include <binder/V8/Value.h>
+#include <binder/V8/Promise.h>
 #ifdef JS_V8_DEBUGGER
-#include <Binder/V8/v8debug/debug-agent.h>
+#include <binder/V8/v8debug/debug-agent.h>
 #endif
 #endif
 

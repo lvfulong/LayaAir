@@ -2,7 +2,7 @@
 #define __JSConsole_H__
 
 #include <stdio.h>
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 
 
 namespace laya 

@@ -1,7 +1,7 @@
 #ifndef __JSLayaNative_H__
 #define __JSLayaNative_H__
 
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include <set>
 class MediaRecorder;
 namespace laya

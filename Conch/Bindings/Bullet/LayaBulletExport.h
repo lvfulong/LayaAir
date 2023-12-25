@@ -3,7 +3,7 @@
 
 #include <JCConch.h>
 #include "../../JCScriptRuntime.h"
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include "btBulletDynamicsCommon.h"
 #include "BulletCollision/Gimpact/btGImpactCollisionAlgorithm.h"
 #include "BulletCollision/Gimpact/btGImpactShape.h"

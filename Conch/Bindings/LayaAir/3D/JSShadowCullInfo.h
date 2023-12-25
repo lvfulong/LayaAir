@@ -2,7 +2,7 @@
 #define __JSShadowCullInfo_H__
 
 #include <stdio.h>
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include <vector>
 #include <core/math/Vector3.h>
 #include <core/math/BoundSphere.h>

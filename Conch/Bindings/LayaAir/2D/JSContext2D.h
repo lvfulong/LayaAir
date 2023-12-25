@@ -2,7 +2,7 @@
 #define __JSContext2D_H__
 
 #include <stdio.h>
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include "../../../LayaAir/2D/Context2D.h"
 
 namespace laya

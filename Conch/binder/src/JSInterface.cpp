@@ -1,4 +1,4 @@
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 
 
 namespace laya

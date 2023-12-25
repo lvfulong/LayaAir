@@ -2,7 +2,7 @@
 #define __JSGLBuffer_H__
 
 #include <stdio.h>
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include <render/driver/gles/GLBuffer.h>
 
 namespace laya

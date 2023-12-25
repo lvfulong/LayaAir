@@ -1,5 +1,5 @@
 #include "JSCanvasRenderingContext2D.h"
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include "2D/CanvasRenderingContext2D.h"
 #include <Utils/JCMemorySurvey.h>
 #include <Utils/Log.h>

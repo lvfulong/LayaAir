@@ -2,7 +2,7 @@
 #define __JSAttributeMap_H__
 
 #include <stdio.h>
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include <render/driver/gles/GLAttributeMap.h>
 #include <render/driver/gles/GLStateMap.h>
 

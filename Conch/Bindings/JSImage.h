@@ -3,7 +3,7 @@
 
 //包含头文件
 #include <stdio.h>
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include <Image/JCImage.h>
 #include <resource/JCResource.h>
 

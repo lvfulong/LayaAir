@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <string>
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 
 namespace laya 
 {

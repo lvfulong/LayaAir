@@ -2,7 +2,7 @@
 #define __JSCullPass_H__
 
 #include <stdio.h>
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include "JSRenderNode.h"
 
 namespace laya

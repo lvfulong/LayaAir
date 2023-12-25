@@ -2,7 +2,7 @@
 #define __JSRenderNode_H__
 
 #include <stdio.h>
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include "JSBounds.h"
 #include "JSTransform.h"
 #include <Utils/JCSimpleSingletonList.h>

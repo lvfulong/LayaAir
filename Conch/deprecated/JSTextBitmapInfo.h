@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string>
 #include <map>
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include <fontMgr/JCFontInfo.h>
 
 namespace laya

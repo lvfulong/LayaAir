@@ -6,13 +6,13 @@
 @date			2018_8_23
 */
 #ifdef JS_V8
-#include <Binder/V8/JSEnv.h>
+#include <binder/V8/JSEnv.h>
 #ifdef JS_V8_DEBUGGER
-#include <Binder/V8/v8debug/debug-agent.h>
+#include <binder/V8/v8debug/debug-agent.h>
 #endif
-#include <Binder/V8/IsolateData.h>
-#include <Binder/V8/JSCProxyTLS.h>
-#include <Binder/V8/Converter.h>
+#include <binder/V8/IsolateData.h>
+#include <binder/V8/JSCProxyTLS.h>
+#include <binder/V8/Converter.h>
 #include <Utils/Log.h>
 #include <v8-profiler.h>
 #ifdef WIN32

@@ -1,7 +1,7 @@
 ﻿#ifndef __JSZip_H__
 #define __JSZip_H__
 
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include <zip/JCZip.h>
 
 namespace laya 

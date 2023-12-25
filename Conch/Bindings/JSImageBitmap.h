@@ -1,7 +1,7 @@
 ﻿#ifndef __JSImageBitmap_H__
 #define __JSImageBitmap_H__
 
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include <Image/ImageBitmap.h>
 #include <map>
 #include <stdio.h>

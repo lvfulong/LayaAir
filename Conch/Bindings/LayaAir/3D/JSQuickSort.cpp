@@ -1,5 +1,5 @@
 #include "JSQuickSort.h"
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include <Utils/Log.h>
 #include <Utils/JCMemorySurvey.h>
 #include <render/3D/temp/QuickSort.h>

@@ -9,7 +9,7 @@
 #include "JCScriptRuntime.h"
 #include <algorithm>
 #include <Utils/Log.h>
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include <Bindings/JSFileReader.h>
 #include <Bindings/JSFileReaderWX.h>
 #include <Bindings/JSGlobalExportCFun.h>

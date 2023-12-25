@@ -2,7 +2,7 @@
 #include <Utils/Log.h>
 #ifndef WEBASM
     #include <Utils/JCMemorySurvey.h>
-    #include <Binder/JSInterface.h>
+    #include <binder/JSInterface.h>
     #include "../../JCScriptRuntime.h"
     #include <Utils/JCFileSource.h>
     #include <resource/JCFileResManager.h>

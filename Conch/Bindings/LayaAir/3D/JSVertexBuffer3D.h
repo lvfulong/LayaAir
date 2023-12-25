@@ -2,7 +2,7 @@
 #define __JSVertexBuffer3D_H__
 
 #include <stdio.h>
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include <render/3D/temp/VertexBuffer3D.h>
 
 namespace laya

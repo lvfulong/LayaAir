@@ -1,5 +1,5 @@
 #include "JSWebGLCacheAsNormalCanvas.h"
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include <Utils/Log.h>
 #include <Utils/JCMemorySurvey.h>
 #include "../../../LayaAir/2D/Context2D.h"

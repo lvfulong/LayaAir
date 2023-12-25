@@ -1,7 +1,7 @@
 #ifndef __JSWebGLInternalTex_H__
 #define __JSWebGLInternalTex_H__
 
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 
 namespace laya
 {

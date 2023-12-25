@@ -1,7 +1,7 @@
 #ifndef __JSGLTextureContext_H__
 #define __JSGLTextureContext_H__
 
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 
 namespace laya
 {

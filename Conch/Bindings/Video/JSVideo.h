@@ -1,7 +1,7 @@
 #ifndef __JsVideo_h__
 #define __JsVideo_h__
 
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 
 #include <map>
 #include <set>

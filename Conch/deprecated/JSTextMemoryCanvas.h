@@ -2,7 +2,7 @@
 #define __JSTextMemoryCanvas_H__
 
 #include <vector>
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 
 namespace laya
 {

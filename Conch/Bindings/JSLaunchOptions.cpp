@@ -1,5 +1,5 @@
 ﻿#include "JSLaunchOptions.h"
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include <Utils/Log.h>
 #include <Utils/JCMemorySurvey.h>
 #include "../../JCScriptRuntime.h"

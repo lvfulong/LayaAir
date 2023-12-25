@@ -4,7 +4,7 @@
 
 #endif
 #include "JSAndroidEditBox.h"
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include "../../JCScriptRuntime.h"
 #include <Utils/Log.h>
 #ifdef ANDROID

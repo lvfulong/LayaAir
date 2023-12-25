@@ -1,5 +1,5 @@
 #include "JSVertexBuffer3D.h"
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include <Utils/Log.h>
 #include <Utils/JCMemorySurvey.h>
 #include "../RenderEngine/WebGLEngine/JSWebGLEngine.h"

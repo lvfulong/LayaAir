@@ -1,7 +1,7 @@
 ﻿#ifndef __JSFile_H__
 #define __JSFile_H__
 
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include <time.h>
 #include "JsBlob.h"
 #include <Utils/JCMemorySurvey.h>

@@ -1,8 +1,8 @@
 #ifdef JS_V8
 
-#include <Binder/V8/JSArrayBuffer.h>
-#include <Binder/JSInterface.h>
-#include <Binder/V8/Converter.h>
+#include <binder/v8/JSArrayBuffer.h>
+#include <binder/JSInterface.h>
+#include <binder/V8/Converter.h>
 #include <Utils/JCMemorySurvey.h>
 #include <Utils/Log.h>
 

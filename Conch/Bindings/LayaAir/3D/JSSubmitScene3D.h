@@ -2,7 +2,7 @@
 #define __JSSubmitScene3D_H__
 
 #include <stdio.h>
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include "../../LayaAir/ISubmit.h"
 
 namespace laya

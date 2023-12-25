@@ -1,7 +1,7 @@
 ﻿#ifndef __JSAppCache_H__
 #define __JSAppCache_H__
 
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include <string>
 
 namespace laya

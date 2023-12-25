@@ -2,7 +2,7 @@
 #define __JSRenderTexture2D_H__
 
 #include "../../../LayaAir/2D/RenderTexture2D.h"
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include <memory>
 
 namespace laya

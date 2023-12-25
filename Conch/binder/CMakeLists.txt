@@ -1,50 +1,50 @@
 cmake_minimum_required(VERSION 3.16)
 
-set(TARGET Binder)
+set(TARGET binder)
 
 project(${TARGET})
-set(PUBLIC_HEADER_DIR Include)
+set(PUBLIC_HEADER_DIR include)
 
 set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/JSInterface.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/V8/IsolateData.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/V8/JSArrayBuffer.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/V8/JSCProxyTLS.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/V8/Converter.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/V8/JSEnv.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/V8/Context.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/V8/Module.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/V8/Class.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/V8/Promise.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/V8/Value.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/IsolateData.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/JSArrayBuffer.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/JSCProxyTLS.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Converter.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/JSEnv.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Context.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Module.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Class.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Promise.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Value.h
 )
 
 set(SOURCES
-    Src/JSInterface.cpp
-    Src/V8/IsolateData.cpp
-    Src/V8/JSArrayBuffer.cpp
-    Src/V8/JSEnv.cpp
-    Src/V8/Promise.cpp
-    Src/V8/Class.cpp
-    Src/V8/Module.cpp
-    Src/V8/Context.cpp
+    src/JSInterface.cpp
+    src/v8/IsolateData.cpp
+    src/v8/JSArrayBuffer.cpp
+    src/v8/JSEnv.cpp
+    src/v8/Promise.cpp
+    src/v8/Class.cpp
+    src/v8/Module.cpp
+    src/v8/Context.cpp
 )
 
 if(MSVC AND CONCH_USE_JS_V8_DEBUGGER)
     list(APPEND SOURCES
-        Src/V8/v8debug/V8Win32Socket.cpp
+        src/v8/v8debug/V8Win32Socket.cpp
     )
 endif()
 
 if(CONCH_USE_JS_V8_DEBUGGER)
     list(APPEND HEADERS
-        ${PUBLIC_HEADER_DIR}/${TARGET}/V8/v8debug/debug-agent.h
-        ${PUBLIC_HEADER_DIR}/${TARGET}/V8/v8debug/V8Socket.h
-        ${PUBLIC_HEADER_DIR}/${TARGET}/V8/v8debug/V8WSSv.h
+        ${PUBLIC_HEADER_DIR}/${TARGET}/v8/v8debug/debug-agent.h
+        ${PUBLIC_HEADER_DIR}/${TARGET}/v8/v8debug/V8Socket.h
+        ${PUBLIC_HEADER_DIR}/${TARGET}/v8/v8debug/V8WSSv.h
     )
     list(APPEND SOURCES
-        Src/V8/v8debug/debug-agent.cpp
-        Src/V8/v8debug/V8WSSv.cpp
+        src/v8/v8debug/debug-agent.cpp
+        src/v8/v8debug/V8WSSv.cpp
     )
 endif()
 

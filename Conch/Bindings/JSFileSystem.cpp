@@ -1,5 +1,5 @@
 #include "JSFileSystem.h"
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include <Utils/Log.h>
 #include <Utils/JCFileSystem.h>
 #include <ctime>

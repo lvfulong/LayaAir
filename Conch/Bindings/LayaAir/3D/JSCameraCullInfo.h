@@ -2,7 +2,7 @@
 #define __JSCameraCullInfo_H__
 
 #include <stdio.h>
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include <core/math/Vector3.h>
 #include <core/math/BoundFrustum.h>
 

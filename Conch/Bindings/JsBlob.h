@@ -1,7 +1,7 @@
 ﻿#ifndef __JsBlob_H__
 #define __JsBlob_H__
 
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include <stdio.h>
 #include <string.h>
 

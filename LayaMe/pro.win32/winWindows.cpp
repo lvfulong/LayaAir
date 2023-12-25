@@ -1,5 +1,5 @@
 ﻿#include "winWindows.h"
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include "JCConch.h"
 //#include "JCScriptRuntime.h"
 

@@ -2,7 +2,7 @@
 #define __JSRenderStateCommand_H__
 
 #include <stdio.h>
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include <render/3D/design/renderEnum/RenderStateType.h>
 
 namespace laya

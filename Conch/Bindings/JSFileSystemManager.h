@@ -1,7 +1,7 @@
 #ifndef __JSFileSystemManager_H__
 #define __JSFileSystemManager_H__
 
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include <set>
 namespace laya
 {

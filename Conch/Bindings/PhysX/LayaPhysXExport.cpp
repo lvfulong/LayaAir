@@ -1,8 +1,8 @@
 #include "LayaPhysXExport.h"
 
-#include <Binder/V8/Class.h>
-#include <Binder/V8/Context.h>
-#include <Binder/V8/Module.h>
+#include <binder/v8/Class.h>
+#include <binder/v8/Context.h>
+#include <binder/v8/Module.h>
 #include "emscripten.h"
 
 namespace laya

@@ -2,7 +2,7 @@
 #define __JSRenderElement_H__
 
 #include <stdio.h>
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include <render/3D/temp/RenderElement.h>
 
 namespace laya

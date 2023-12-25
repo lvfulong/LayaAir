@@ -1,7 +1,7 @@
 #ifndef __JSWebGLEngine_H__
 #define __JSWebGLEngine_H__
 
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 
 namespace laya
 {

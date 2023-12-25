@@ -5,7 +5,7 @@
 //------------------------------------------------------------------------------
 
 
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 #include <Utils/JCMemorySurvey.h>
 
 namespace laya 

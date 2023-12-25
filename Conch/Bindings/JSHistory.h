@@ -1,7 +1,7 @@
 #ifndef __JSHistory_H__
 #define __JSHistory_H__
 
-#include <Binder/JSInterface.h>
+#include <binder/JSInterface.h>
 
 namespace laya 
 {
