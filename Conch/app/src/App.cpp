@@ -1,5 +1,5 @@
 #include "JCConch.h"
-#include <App/App.h>
+#include <app/App.h>
 #ifdef WIN32
 #include <SDL2/SDL_syswm.h>
 #include <Windows.h>

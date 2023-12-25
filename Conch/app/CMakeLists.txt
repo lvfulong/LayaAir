@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-set(TARGET App)
+set(TARGET app)
 
 project(${TARGET})
 set(PUBLIC_HEADER_DIR Include)
@@ -11,7 +11,7 @@ set(HEADERS
 )
 
 set(SOURCES
-    Src/App.cpp
+    src/App.cpp
 )
 
 include_directories(${PUBLIC_HEADER_DIR})
@@ -22,7 +22,7 @@ set_target_properties(${TARGET} PROPERTIES FOLDER Conch/${TARGET})
 target_link_libraries(${TARGET}
     SDL2
     SDL2main
-    Conch
+    conch
 )
 target_precompile_headers(${TARGET} PRIVATE ${HEADERS})
 # set(INSTALL_TYPE ARCHIVE)

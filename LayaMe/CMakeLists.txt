@@ -171,7 +171,7 @@ if(IOS)
 		"-framework Accelerate"
 		"-framework AVFoundation"
 	)
-	target_link_libraries(${PROJECT_NAME} Conch)
+	target_link_libraries(${PROJECT_NAME} conch)
 elseif(MSVC)
 	list(APPEND PROJECT_SOURCES
 		pro.win32/AppMessage.h
@@ -215,7 +215,7 @@ elseif(MSVC)
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${file} $<TARGET_FILE_DIR:${PROJECT_NAME}>/${relative_path}
 		)
 	endforeach()
-	target_link_libraries(${PROJECT_NAME} App)
+	target_link_libraries(${PROJECT_NAME} app)
 elseif(LINUX)
 	list(APPEND PROJECT_SOURCES
 		pro.linux/Conch6.cpp
@@ -224,7 +224,7 @@ elseif(LINUX)
 	add_executable(${PROJECT_NAME}
 		${PROJECT_SOURCES}
 	)
-	target_link_libraries(${PROJECT_NAME} App)
+	target_link_libraries(${PROJECT_NAME} app)
 endif()
 
 # target_include_directories(${PROJECT_NAME})

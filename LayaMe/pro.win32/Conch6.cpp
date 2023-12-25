@@ -4,7 +4,7 @@
 #include "JCConch.h"
 #include "JCConchApp.h"
 #include "JCSystemConfig.h"
-#include <App/App.h>
+#include <app/App.h>
 #include <downloadCache/JCIosFileSource.h>
 #ifdef _TEST_
     #include "../../../../Conch/source/conch/Test/JCTestManager.h"
@@ -16,17 +16,17 @@ extern std::string gRedistPath;
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
 /*
-ÓÃ·¨£º
+ï¿½Ã·ï¿½ï¿½ï¿½
     conch6.exe [options] url
-²ÎÊý£º
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     -test
-        Ö»Ö´ÐÐcµÄ²âÊÔÓÃÀý¡£ÕâÊ±ºò²»ÔÙÊ¹ÓÃurl
+        Ö»Ö´ï¿½ï¿½cï¿½Ä²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½url
     -perf
-        Ö´ÐÐÒ»¸öurl½øÐÐÍ³¼Æ
+        Ö´ï¿½ï¿½Ò»ï¿½ï¿½urlï¿½ï¿½ï¿½ï¿½Í³ï¿½ï¿½
     -perf_count
-        updateµÄ´ÎÊý
+        updateï¿½Ä´ï¿½ï¿½ï¿½
     -opath    path
-        Ö¸¶¨Ð§ÂÊ²âÊÔµÄÊä³öÄ¿Â¼
+        Ö¸ï¿½ï¿½Ð§ï¿½Ê²ï¿½ï¿½Ôµï¿½ï¿½ï¿½ï¿½Ä¿Â¼
     -debug=""
 */
 static std::string	GetTypeString(LPCTSTR section_name, LPCTSTR key_name, LPCTSTR ini_file_path)
@@ -40,7 +40,7 @@ int main(int argc, _TCHAR* argv[])
 {
     bool bRunTest = false;
     char* pRunTestCase = NULL;
-    //½âÎö²ÎÊý
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     for (int i = 1; i < argc; i++) 
     {
         if (argv[i][0] != '-') 
@@ -51,7 +51,7 @@ int main(int argc, _TCHAR* argv[])
             }
             else
             {
-                printf(" ²ÎÊý´íÎó£¡Ö»ÄÜÓÐÒ»¸öÆô¶¯url£¬·ñÔò¾ÍÊÇ²ÎÊý£¬ÐèÒªÒÔ¡®-¡¯¿ªÍ·!\n ");
+                printf(" ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½urlï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½Ô¡ï¿½-ï¿½ï¿½ï¿½ï¿½Í·!\n ");
                 return 1;
             }
             if (memcmp(argv[i], "http", 4) != 0) 
@@ -96,7 +96,7 @@ int main(int argc, _TCHAR* argv[])
     ::GetModuleFileName(NULL, szPath, MAX_PATH);
     gRedistPath.append(szPath, strlen(szPath) - 10);
     printf("start .exePath=%s\n", gRedistPath.c_str());
-    //¸ù¾ÝÅäÖÃÎÄ¼þÉèÖÃ¿í¸ß
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½
     fs::path configpath(szPath);
     configpath.remove_filename();
     configpath /= "config.ini";

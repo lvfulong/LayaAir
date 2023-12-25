@@ -1,7 +1,7 @@
 #include <string>
 #include "JCConch.h"
 #include "JCSystemConfig.h"
-#include <App/App.h>
+#include <app/App.h>
 #include <downloadCache/JCIosFileSource.h>
 #ifdef _TEST_
     #include "../../../../Conch/source/conch/Test/JCTestManager.h"
