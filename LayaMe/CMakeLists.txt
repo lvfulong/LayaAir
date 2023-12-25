@@ -64,7 +64,16 @@ function(mark_multi_resources res_out)
 	set(${res_out} ${tmp_file_list} PARENT_SCOPE)
 endfunction()
 
-#[[if (IOS)
+if (UNIX AND NOT APPLE AND NOT ANDROID AND NOT WEBGL)
+    set(LINUX TRUE)
+	message("LINUX : true")
+else()
+    set(LINUX FALSE)
+	message("LINUX : false")
+endif()
+
+
+if(IOS)
 	list(APPEND PROJECT_SOURCES
 		proj.ios/AppDelegate.h
 		proj.ios/AppDelegate.mm
@@ -79,69 +88,17 @@ endfunction()
 		proj.ios/main.m
 		proj.ios/LayaApp.h
 		proj.ios/LayaApp.mm
-		proj.ios/BDHub.h
-		proj.ios/BDHub.mm
-		proj.ios/ExpressRewardedVideoAdDelegate.h
-		proj.ios/ExpressRewardedVideoAdDelegate.mm
-
-     )
+	)
 	list(APPEND PROJECT_RESOURCES
 		proj.ios/Main.storyboard
 		proj.ios/LaunchScreen.storyboard
-        proj.ios/Assets.xcassets
+		proj.ios/Assets.xcassets
 		proj.ios/Base.lproj/Localizable.strings
-    )
+		proj.ios/en.lproj/Localizable.strings
+	)
 	set(GAME_RES_FOLDER
 		"${CMAKE_CURRENT_SOURCE_DIR}/resource"
     )
-    mark_multi_resources(common_res_files RES_TO "Resources" FOLDERS ${GAME_RES_FOLDER})
-	list(APPEND PROJECT_SOURCES ${common_res_files})
-	add_executable(${PROJECT_NAME}
-		${PROJECT_SOURCES}
-		${PROJECT_RESOURCES}
-	)]]
-# OhaMe
-IF(USE_GLOBAL)
-	set(IOS_PROJ "proj.ios_OhaMe_Global")
-	set(GAME_RES_FOLDER "${CMAKE_CURRENT_SOURCE_DIR}/resource_ohame_global")
-ELSE(USE_GLOBAL)
-	set(IOS_PROJ "proj.ios_OhaMe")
-	set(GAME_RES_FOLDER "${CMAKE_CURRENT_SOURCE_DIR}/resource_ohame")
-ENDIF(USE_GLOBAL)
-
-
-if (UNIX AND NOT APPLE AND NOT ANDROID AND NOT WEBGL)
-    set(LINUX TRUE)
-	message("LINUX : true")
-else()
-    set(LINUX FALSE)
-	message("LINUX : false")
-endif()
-
-
-if(IOS)
-	list(APPEND PROJECT_SOURCES
-		${IOS_PROJ}/AppDelegate.h
-		${IOS_PROJ}/AppDelegate.mm
-		${IOS_PROJ}/JSBridge.h
-		${IOS_PROJ}/JSBridge.mm
-		${IOS_PROJ}/LaunchView.h
-		${IOS_PROJ}/LaunchView.m
-		${IOS_PROJ}/ViewController.h
-		${IOS_PROJ}/ViewController.mm
-		${IOS_PROJ}/iap/IAPManager.h
-		${IOS_PROJ}/iap/IAPManager.m
-		${IOS_PROJ}/main.m
-		${IOS_PROJ}/LayaApp.h
-		${IOS_PROJ}/LayaApp.mm
-	)
-	list(APPEND PROJECT_RESOURCES
-		${IOS_PROJ}/Main.storyboard
-		${IOS_PROJ}/LaunchScreen.storyboard
-		${IOS_PROJ}/Assets.xcassets
-		${IOS_PROJ}/Base.lproj/Localizable.strings
-		${IOS_PROJ}/en.lproj/Localizable.strings
-	)
 	mark_multi_resources(common_res_files RES_TO "Resources" FOLDERS ${GAME_RES_FOLDER})
 	list(APPEND PROJECT_SOURCES ${common_res_files})
 	add_executable(${PROJECT_NAME}
@@ -175,14 +132,6 @@ if(IOS)
 elseif(MSVC)
 	list(APPEND PROJECT_SOURCES
 		pro.win32/AppMessage.h
-		# pro.win32/esUtil.h
-		# pro.win32/esUtil.c
-		# pro.win32/gles.h
-		# pro.win32/gles.cpp
-		# pro.win32/JCConchApp.cpp
-		# pro.win32/JCConchApp.h
-		#pro.win32/winWindows.h
-		#pro.win32/winWindows.cpp
 		pro.win32/conch6.cpp
 		pro.win32/stdafx.h
 		pro.win32/stdafx.cpp
@@ -229,46 +178,14 @@ endif()
 
 # target_include_directories(${PROJECT_NAME})
 
-# OhaMe
 function(set_xcode_property TARGET XCODE_PROPERTY XCODE_VALUE)
 	set_property(TARGET ${TARGET} PROPERTY XCODE_ATTRIBUTE_${XCODE_PROPERTY} ${XCODE_VALUE})
 endfunction(set_xcode_property)
 
-if(IOS)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fobjc-arc")
-	set(CMAKE_XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_ARC "YES" CACHE INTERNAL "")
-	set_xcode_property(${PROJECT_NAME} PRODUCT_BUNDLE_IDENTIFIER "com.layabox.layame")
-
-	SET(CMAKE_XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET 9.0)
-	add_subdirectory(${CONCH_PATH} ${PROJECT_BINARY_DIR}/Conch)
-
-	# set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/${app_name}")
-	set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE 1)
-
-	# cocos_mark_code_files(${app_name})
-	# cocos_config_app_xcode_property(${app_name})
-	set_target_properties(${PROJECT_NAME} PROPERTIES RESOURCE "${PROJECT_RESOURCES}")
-	set_xcode_property(${PROJECT_NAME} INSTALL_PATH "\$(LOCAL_APPS_DIR)")
-	set_xcode_property(${PROJECT_NAME} INFOPLIST_FILE "${CMAKE_CURRENT_SOURCE_DIR}/${IOS_PROJ}/Info.plist")
-	set_xcode_property(${PROJECT_NAME} ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon")
-
-	# SET_XCODE_PROPERTY(${PROJECT_NAME} CODE_SIGN_IDENTITY"iPhone Developer")
-	SET_XCODE_PROPERTY(${PROJECT_NAME} DEVELOPMENT_TEAM "4XRST2UF2Q")
-	set_xcode_property(${PROJECT_NAME} ENABLE_BITCODE "NO")
-	set_xcode_property(${PROJECT_NAME} ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES "YES")
-	set_xcode_property(${PROJECT_NAME} OTHER_LDFLAGS "$(inherited) -ObjC")
-	set_xcode_property(${PROJECT_NAME} VALIDATE_WORKSPACE "YES")
-	set_xcode_property(${PROJECT_NAME} VALID_ARCHS "arm64")
-endif()
-
-#[[if(IOS)	
+if(IOS)	
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fobjc-arc")
 	set(CMAKE_XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_ARC "YES" CACHE INTERNAL "")
-	set(PRODUCT_BUNDLE_IDENTIFIER "com.layabox.layame")
-	function(set_xcode_property TARGET XCODE_PROPERTY XCODE_VALUE)
-		set_property(TARGET ${TARGET} PROPERTY XCODE_ATTRIBUTE_${XCODE_PROPERTY} ${XCODE_VALUE})
-	endfunction(set_xcode_property)
-	SET (CMAKE_XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET 9.0)
+	SET (CMAKE_XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET 12.0)
 	add_subdirectory(${CONCH_PATH} ${PROJECT_BINARY_DIR}/Conch)
 	#set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/${app_name}")
     set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE 1)
@@ -281,5 +198,9 @@ endif()
     #SET_XCODE_PROPERTY(${PROJECT_NAME} CODE_SIGN_IDENTITY"iPhone Developer")
 	SET_XCODE_PROPERTY(${PROJECT_NAME} DEVELOPMENT_TEAM "4XRST2UF2Q")
 	set_xcode_property(${PROJECT_NAME} ENABLE_BITCODE "NO")
+	set_xcode_property(${PROJECT_NAME} VALID_ARCHS "arm64")
+	set_xcode_property(${PROJECT_NAME} ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES "YES")
+	set_xcode_property(${PROJECT_NAME} OTHER_LDFLAGS "$(inherited) -ObjC")
+	set_xcode_property(${PROJECT_NAME} VALIDATE_WORKSPACE "YES")
+	set_xcode_property(${PROJECT_NAME} PRODUCT_BUNDLE_IDENTIFIER "com.layabox.conch6")
 endif()
-]]
