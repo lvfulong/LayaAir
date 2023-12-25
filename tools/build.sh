@@ -29,7 +29,7 @@ function build_ios {
     local build_type=$1
     local arch=$2
     local platform=$3
-    local build_dir="build/cmake-ios-${build_type}-${arch}"
+    local build_dir="build/ios-${build_type}-${arch}"
     mkdir -p "${build_dir}"
     cd "${build_dir}"
 
@@ -72,7 +72,7 @@ function build_android {
     local build_type=$1
     local arch=$2
     local platform=$3
-    local build_dir="build/cmake-android-${build_type}-${arch}"
+    local build_dir="build/android-${build_type}-${arch}"
     mkdir -p "${build_dir}"
     cd "${build_dir}"
 	#-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=../android-${build_type}/Conch why not work?
