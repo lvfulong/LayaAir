@@ -7,6 +7,7 @@
 -(void)setFontColor:(NSString*)color;
 -(void)setBackgroundColor:(NSString*)color;
 -(void)showTextInfo:(Boolean)show;
+-(void)showTips:(NSString*)type;
 @property (strong, nonatomic) UIView* view;
 @property (strong, nonatomic) NSArray* tips;
 @property (assign, nonatomic) NSInteger percent;

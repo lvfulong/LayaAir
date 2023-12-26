@@ -9,11 +9,11 @@
         [appDelegate.launchView hide];
     });
 }
-+(void)setTips:(NSArray*)tips
++(void)showTips:(NSString*)type
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         AppDelegate * appDelegate = (AppDelegate*)[UIApplication sharedApplication].delegate;
-        appDelegate.launchView.tips = tips;
+        [appDelegate.launchView showTips:type];
     });
 }
 +(void)setFontColor:(NSString*)color

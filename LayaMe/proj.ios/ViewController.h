@@ -2,17 +2,17 @@
 #import <GLKit/GLKit.h>
 #import <conchRuntime.h>
 
-@interface ViewController : GLKViewController
+@interface ViewController : UIViewController
 {
 @public
     
-    GLKView*                    m_pGLKView;
+    UIView*                    m_pView;
     
     EAGLContext*                m_pGLContext;
     
     conchRuntime*               m_pConchRuntime;
 }
 +(ViewController*)GetIOSViewController;
--(id)init;
+- (instancetype)initWithFrame:(CGRect)frame;
 @end
 

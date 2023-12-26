@@ -1,9 +1,25 @@
 #import "ViewController.h"
-extern int g_SafeInsetTop;
-extern int g_SafeInsetLeft;
-extern int g_SafeInsetBottom;
-extern int g_SafeInsetRight;
+#import <AppTrackingTransparency/AppTrackingTransparency.h>
+#import <AdSupport/AdSupport.h>
+#import <CoreTelephony/CTCellularData.h>
+#import "Reachability/Reachability.h"
+
+extern std::string g_ConfigJS;
+extern NSString* url;
+extern NSString* qudao;
+extern NSInteger qudaoID;
+extern NSString* channel;
+extern long g_startMS;
+long long g_nowMS = 0;
+
 @implementation ViewController
+{
+    CTCellularData *_cellularData;
+    LayaReachability *_pNetworkListener;
+    CGRect _frame;
+    CADisplayLink* _displayLink;
+    bool _isInit;
+}
 
 static ViewController* g_pIOSMainViewController = nil;
 //------------------------------------------------------------------------------
@@ -12,60 +28,77 @@ static ViewController* g_pIOSMainViewController = nil;
     return g_pIOSMainViewController;
 }
 //------------------------------------------------------------------------------
--(id)init
-{
+- (instancetype)initWithFrame:(CGRect)frame {
     self = [super init];
     if( self != nil )
     {
         g_pIOSMainViewController = self;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStateChange) name:LayakReachabilityChangedNotification object:nil];
+        _pNetworkListener = [LayaReachability reachabilityForInternetConnection];
+        [_pNetworkListener startNotifier];
+        _frame = frame;
+        _isInit = false;
         return self;
     }
-    return Nil;
+    return nil;
 }
 //------------------------------------------------------------------------------
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     //保持屏幕常亮，可以通过脚本设置
-    [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
-    self->m_pGLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
-    if (self->m_pGLContext)
-    {
-        NSLog(@"iOS OpenGL ES 3.0 context created");
-    }
-    else
-    {
-        self->m_pGLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-        if (self->m_pGLContext)
-        {
-            NSLog(@"iOS OpenGL ES 2.0 context created");
-        }
-        else
-        {
-            NSLog(@"iOS OpenGL ES 2.0 context created failed");
-        }
-    }
-    m_pGLKView = (GLKView *)self.view;
-    m_pGLKView.context = self->m_pGLContext;
-    m_pGLKView.drawableDepthFormat = GLKViewDrawableDepthFormat24;
-    m_pGLKView.drawableStencilFormat = GLKViewDrawableStencilFormat8;
-    [EAGLContext setCurrentContext:self->m_pGLContext];
-    self.preferredFramesPerSecond = 10000;
+    m_pConchRuntime = [[conchRuntime alloc] initWithFrame:_frame URL:url];
+    self.view = m_pConchRuntime->m_pView;
+    [self setupGlobalConfig];
     
-    //conchRuntime 初始化ConchRuntime引擎
-    m_pConchRuntime = [[conchRuntime alloc]initWithView:m_pGLKView EAGLContext:m_pGLContext downloadThreadNum:3];
+    _cellularData = [[CTCellularData alloc] init];
+    //选择仅无线网络时也返回kCTCellularDataRestricted，因此需要Reachability协助判断
+    if (_cellularData.restrictedState == kCTCellularDataNotRestricted || _pNetworkListener.currentReachabilityStatus != NotReachable) {
+        [self initConch];
+    } else {
+        __weak ViewController* weakSelf = self;
+        [self networkAuthorizationAvalible:^{
+            ViewController *strongSelf = weakSelf;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [strongSelf initConch];
+            });
+        }];
+    }
 }
 - (void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
+    const CGSize size = self.view.bounds.size;
+    [m_pConchRuntime onResize: size];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    if (@available(iOS 14, *)) {
+        [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
+            NSLog(@"App tracking authorization: %lu", (unsigned long)status);
+        }];
+    }
+    //[self.navigationController setNavigationBarHidden:YES animated:NO];
 }
 //------------------------------------------------------------------------------
 - (void)dealloc
 {
-    [self tearDownGL];
-    if ( [EAGLContext currentContext] == self->m_pGLContext )
+    [self destory];
+}
+-(void)destory
+{
+    if (_displayLink != nil)
     {
-        [EAGLContext setCurrentContext:nil];
+        [_displayLink invalidate];
+        _displayLink = nil;
+        [m_pConchRuntime destroy];
+        m_pConchRuntime = nil;
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:LayakReachabilityChangedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
     }
 }
 //------------------------------------------------------------------------------
@@ -77,20 +110,10 @@ static ViewController* g_pIOSMainViewController = nil;
     [m_pConchRuntime didReceiveMemoryWarning];
 }
 //------------------------------------------------------------------------------
-- (void)tearDownGL
-{
-    [EAGLContext setCurrentContext:self->m_pGLContext];
-}
-//------------------------------------------------------------------------------
-- (void)update
-{
-    
-}
-//------------------------------------------------------------------------------
-- (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
+-(void)update:(CADisplayLink*)displayLink
 {
     //conchRuntime renderFrame
-    [m_pConchRuntime renderFrame];
+    [m_pConchRuntime update];
 }
 //-------------------------------------------------------------------------------
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
@@ -135,5 +158,89 @@ static ViewController* g_pIOSMainViewController = nil;
 - (BOOL)prefersStatusBarHidden
 {
     return YES;
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    [m_pConchRuntime onOrientationChanged:size];
+    [m_pConchRuntime hideEditBoxWX];
+}
+
+- (void)initConch
+{
+    if (_isInit)
+        return;
+    _isInit = true;
+    //[conchRuntime setAppLaunchStartTimeInMs:g_startMS];
+    [m_pConchRuntime initConch];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
+
+    [formatter setDateStyle:NSDateFormatterMediumStyle];
+
+    [formatter setTimeStyle:NSDateFormatterShortStyle];
+
+    [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss SSS"];
+    NSTimeZone* timeZone = [NSTimeZone timeZoneWithName:@"Asia/Shanghai"];
+    [formatter setTimeZone:timeZone];
+    NSDate *datenow = [NSDate date];
+    if (g_nowMS == 0)
+    {
+        g_nowMS = (long long)([datenow timeIntervalSince1970] * 1000);
+    }
+    //[conchRuntime setAppLaunchTimeInMs:(g_nowMS - g_startMS)];
+
+    NSLog(@"initConch  %lld  %lld   %lld ", g_startMS, g_nowMS, (g_nowMS - g_startMS));
+        
+    
+    _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(update:)];
+    if ([_displayLink respondsToSelector: @selector(preferredFramesPerSecond)] == YES)
+    {
+        _displayLink.preferredFramesPerSecond = 60;
+    }
+    [_displayLink addToRunLoop: [NSRunLoop mainRunLoop] forMode: NSDefaultRunLoopMode];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+}
+
+- (void)setupGlobalConfig
+{
+    g_ConfigJS += "window._qudao = \"" + std::string([qudao UTF8String]) + "\";";
+    g_ConfigJS += "window._qudao_id = " + std::to_string(qudaoID) + ";";
+    g_ConfigJS += "window._channel = \"" + std::string([channel UTF8String]) + "\";";
+}
+
+- (void)networkAuthorizationAvalible:(void(^)())changeAvaliable
+{
+    _cellularData.cellularDataRestrictionDidUpdateNotifier = ^(CTCellularDataRestrictedState state) {
+        switch (state) {
+            case kCTCellularDataRestricted:
+                break;
+            case kCTCellularDataNotRestricted:
+                changeAvaliable();
+                break;
+                //未知，第一次请求
+            case kCTCellularDataRestrictedStateUnknown:
+                break;
+            default:
+                break;
+        };
+    };
+}
+- (void)networkStateChange
+{
+    LayaNetworkStatus networkStatus = _pNetworkListener.currentReachabilityStatus;
+    if (networkStatus != NotReachable) {
+        [self initConch];
+    }
+}
+
+- (void)applicationDidEnterBackground:(NSNotification *)notification {
+    _displayLink.paused = TRUE;
+}
+
+- (void)applicationWillEnterForeground:(NSNotification *)notification {
+    _displayLink.paused = FALSE;
 }
 @end

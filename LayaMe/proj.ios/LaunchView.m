@@ -1,7 +1,7 @@
 #import "LaunchView.h"
 
 static const NSTimeInterval REFRESH_INTERVAL = 1.0;
-static const int LEAST_SHOW_TIME = 2;
+static const int LEAST_SHOW_TIME = 0;//2;
 @interface LaunchView()
 @property (strong, nonatomic) UIViewController* viewController;
 @property (assign, nonatomic) NSTimeInterval startTime;
@@ -21,24 +21,14 @@ static const int LEAST_SHOW_TIME = 2;
         _startTime = [[NSDate date] timeIntervalSince1970];
         _percent = 0;
         _index = 0;
-        __weak typeof(self) weakSelf = self;
+        _tips = @[@"tips0", @"tips1", @"tips2", @"tips3", @"tips4"];
+        __weak LaunchView *weakSelf = self;
         dispatch_queue_t queue = dispatch_get_main_queue();
         _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
         dispatch_source_set_timer(_timer, dispatch_walltime(NULL, 0), REFRESH_INTERVAL * NSEC_PER_SEC, 0);
         dispatch_source_set_event_handler(_timer, ^{
-            NSInteger length = weakSelf.tips != nil ? weakSelf.tips.count : 0;
-            if (length > 0) {
-                if (weakSelf.index >= length) {
-                    weakSelf.index = 0;
-                }
-                for (UIView* subView in weakSelf.view.subviews) {
-                    if ([subView isKindOfClass:[UILabel class]]) {
-                        UILabel* label = (UILabel*)subView;
-                        label.text = [NSString stringWithFormat:@"%@(%ld%%)", [weakSelf.tips objectAtIndex:weakSelf.index], (long)weakSelf.percent];
-                    }
-                }
-                weakSelf.index++;
-            }
+            [weakSelf setPercent:weakSelf.percent];
+            weakSelf.index++;
         });
         dispatch_resume(_timer);
             
@@ -48,7 +38,10 @@ static const int LEAST_SHOW_TIME = 2;
 }
 -(void)hide
 {
-    NSTimeInterval showTime = [[NSDate date] timeIntervalSince1970] - _startTime;
+    NSLog(@"hideSplash22");
+    [_viewController.view removeFromSuperview];
+    dispatch_source_cancel(_timer);
+    /*NSTimeInterval showTime = [[NSDate date] timeIntervalSince1970] - _startTime;
     if (showTime >= LEAST_SHOW_TIME)
     {
         [_viewController.view removeFromSuperview];
@@ -57,12 +50,12 @@ static const int LEAST_SHOW_TIME = 2;
     else
     {
         NSTimeInterval timeLeft = LEAST_SHOW_TIME - showTime;
-        __weak typeof(self) weakSelf = self;
+        __weak LaunchView *weakSelf = self;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(timeLeft * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [weakSelf.viewController.view removeFromSuperview];
             dispatch_source_cancel(weakSelf.timer);
         });
-    }
+    }*/
 }
 + (UIColor *)colorWithHexString:(NSString*)color
 {
@@ -111,9 +104,6 @@ static const int LEAST_SHOW_TIME = 2;
     if (_percent > 100) {
         _percent = 100;
     }
-    if (_percent < 0) {
-        _percent = 0;
-    }
     NSInteger length = self.tips != nil ? self.tips.count : 0;
     if (length > 0) {
         if (self.index >= length) {
@@ -122,7 +112,11 @@ static const int LEAST_SHOW_TIME = 2;
         for (UIView* subView in self.view.subviews) {
             if ([subView isKindOfClass:[UILabel class]]) {
                 UILabel* label = (UILabel*)subView;
-                label.text = [NSString stringWithFormat:@"%@(%ld%%)", [self.tips objectAtIndex:self.index], (long)self.percent];
+                if (self.percent < 0) {
+                    label.text = [NSString stringWithFormat:@"%@", NSLocalizedString([self.tips objectAtIndex:self.index], nil)];
+                } else {
+                    label.text = [NSString stringWithFormat:@"%@(%ld%%)", NSLocalizedString([self.tips objectAtIndex:self.index], nil), (long)self.percent];
+                }
             }
         }
     }
@@ -142,5 +136,22 @@ static const int LEAST_SHOW_TIME = 2;
             label.hidden = !show;
         }
     }
+}
+-(void)showTips:(NSString*)type
+{
+    if ([type isEqual:@"NetworkError"]) {
+        _tips = [NSArray arrayWithObjects:@"network_error", nil];
+    }
+    else if ([type isEqual:@"DownloadError"]) {
+        _tips = [NSArray arrayWithObjects:@"download_error", nil];
+    }
+    else if ([type isEqual:@"ParseJSonError"]) {
+        _tips = [NSArray arrayWithObjects:@"parse_json_error", nil];
+    }
+    else if ([type isEqual:@"InternalError"]) {
+        _tips = [NSArray arrayWithObjects:@"internal_error", nil];
+    }
+    
+    [self setPercent:-1];
 }
 @end
