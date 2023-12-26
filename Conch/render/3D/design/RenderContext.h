@@ -50,11 +50,6 @@ namespace laya{
     //upload flag
     uint32_t _sceneUpdataMask;
     uint32_t _cameraUpdateMask;
-
-    extendCall preUpdate;
-    extendCall afterUpdate;
-    extendCall preRender;
-    extendCall afterRender;
     
  };
 
