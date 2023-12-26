@@ -130,8 +130,12 @@ namespace laya{
     void ForwardClusterRenderPass::set_destTarget(uint32_t value){
         
     }
-    void ForwardClusterRenderPass::set_skyRenderNode(BaseRenderNode* skyRenderNode){
+    void ForwardClusterRenderPass::set_skyRenderNode(BaseRenderNode* value){
         
+    }
+
+    void ForwardClusterRenderPass::set_depthTextureMode(DepthTextureMode value) {
+
     }
 
     //RenderForwardADDPass
@@ -143,9 +147,6 @@ namespace laya{
 
     }
 
-    void RenderForwardADDPass::set_destTarget(){
-
-    }
     void RenderForwardADDPass::set_shadowCasterPass(){
 
     }

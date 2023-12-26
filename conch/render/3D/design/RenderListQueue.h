@@ -24,7 +24,7 @@ namespace laya
         void clear();
         void set_context(RenderContext3D* context);
     private:
-        batchfun _batch;
+        batchfun _batch;xor
         composefun _compose;
         JCSingletonList<RenderElement3D*> _elements{ false };//lv todo
         RenderContext3D* _context;

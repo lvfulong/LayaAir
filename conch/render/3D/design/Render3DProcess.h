@@ -5,11 +5,30 @@
 #include <core/math/Bounds.h>
 #include "core/math/Vector3.h"
 #include <unordered_map>
-#include <utils/JCSingletonList.h>
+#include <core/math/Matrix4x4.h>
 #include "render/3D/design/RenderContext.h"
 #include "render/3D/renderInstance/BaseRenderNode.h"
 
+
 namespace laya{
+
+	class CameraNode
+	{
+	public:
+		CameraNode();
+		~CameraNode();
+	public:
+		Transform3D* transform;
+		float farplane;
+		float nearplane;
+		Matrix4x4 projectionViewMatrix;
+		float fieldOfView;
+		float aspectRatio;
+
+
+	private:
+
+	};
 
 	class DirectLightShadowPass {
 	public:
@@ -24,11 +43,8 @@ namespace laya{
 	public: 
 		enum class ShadowCascadesMode
 		{
-			/** �޼����� */
 			NoCascades,
-			/** ���������� */
 			TwoCascades,
-			/** �ļ������� */
 			FourCascades,
 		};
 
@@ -111,6 +127,14 @@ namespace laya{
 
 	class ForwardClusterRenderPass {
 	public:
+		enum class DepthTextureMode
+		{
+			None = 0,
+			Depth = 1,
+			DepthNormals = 2,
+			DepthAndDepthNormals = 3,
+		};
+		
 		struct CameraFrustumCullInfo
 		{
 			Vector3							_position;
@@ -130,15 +154,18 @@ namespace laya{
 		void set_beforeSkybox(std::vector<uint32_t> value);
 		void set_beforeTransparent(std::vector<uint32_t> value);
 		void set_destTarget(uint32_t value);
-		void set_skyRenderNode(BaseRenderNode* skyRenderNode);
+		void set_skyRenderNode(BaseRenderNode* value);
+		void set_depthTextureMode(DepthTextureMode value);
 	public:
 		CameraFrustumCullInfo CameraCullInfo;
 		std::vector<uint32_t> beforeForwardCmds;
-		std::vector<uint32_t> beforeSkybox;
-		std::vector<uint32_t> beforeTransparent;
+		std::vector<uint32_t> beforeSkyboxCmds;
+		std::vector<uint32_t> beforeTransparentCmds;
 		uint32_t destTarget;
+		uint32_t depthTarget;
+		uint32_t depthNormalTarget;
 		BaseRenderNode* skyRenderNode;
-		
+		DepthTextureMode renderpassNode;
 	};
 
 	//render Camera Pass data
@@ -147,7 +174,6 @@ namespace laya{
 		RenderForwardADDPass();
 		~RenderForwardADDPass();
 
-		void set_destTarget();
 		void set_shadowCasterPass();
 		void set_DirectLightShadowCasterRenderPass(DirectLightShadowCasterRenderPass* value);
 		void set_needDirectShadowPass(bool value);
@@ -155,7 +181,6 @@ namespace laya{
 		void set_renderpass(ForwardClusterRenderPass* value);
 		void set_afterEverything(std::vector<uint32_t> value);
 	public:
-		uint32_t destTarget;
 		bool shadowCasterPass;
 		//directLightPass
 		DirectLightShadowCasterRenderPass* directLightShadowPass;
