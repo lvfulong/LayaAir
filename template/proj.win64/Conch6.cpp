@@ -94,7 +94,8 @@ int main(int argc, _TCHAR* argv[])
     }
     TCHAR   szPath[MAX_PATH];
     ::GetModuleFileName(NULL, szPath, MAX_PATH);
-    gRedistPath.append(szPath, strlen(szPath) - 10);
+    fs::path exePath = szPath;
+    gRedistPath = exePath.remove_filename().string();
     printf("start .exePath=%s\n", gRedistPath.c_str());
     //���������ļ����ÿ���
     fs::path configpath(szPath);
@@ -185,7 +186,7 @@ int main(int argc, _TCHAR* argv[])
     //}
     laya::App app;
     Config config;
-    config.title = "Conch3.0";
+    config.title = "LayaNative3.0";
     app.run(config, g_nInnerWidth, g_nInnerHeight, nJSDebugMode, nJSDebugPort);
     //app.handleMessage();
     //app.exitApp();

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-set(PROJECT_NAME LayaMe)
+set(PROJECT_NAME LayaNative3.0)
 project(${PROJECT_NAME})
 
 set(CMAKE_C_STANDARD 99)
