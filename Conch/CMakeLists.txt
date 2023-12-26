@@ -767,6 +767,8 @@ elseif(IOS)
 		"-framework SystemConfiguration"
 		"-framework StoreKit"
 		"-framework CoreImage"
+		"-framework QuartzCore"
+		"-framework CoreHaptics"
 		utils
 		binder
 		zlib
@@ -778,7 +780,7 @@ elseif(IOS)
 		png
 		jpeg
 		jpeg-turbo
-		openal
+		#openal
 		vorbisfile
 		vorbis
 		ogg

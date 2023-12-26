@@ -487,7 +487,8 @@ namespace laya
 
 	int GLShaderInstance::_uniform_sampler2D(ShaderVariable* one, ShaderData::DataInfo* dataInfo)
 	{
-		assert((ShaderDataType)dataInfo->type == ShaderDataType::Texture);
+        //todo
+		/*assert((ShaderDataType)dataInfo->type == ShaderDataType::Texture);
 		int id = *((int*)dataInfo->data);
 		WebGLInternalTex* texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(id);
 		if (texture != nullptr)
@@ -498,7 +499,7 @@ namespace laya
 		{
 			LOGI("_uniform_sampler2D find no texture");
 		}
-		
+		*/
 		return 0;
 	}
 	int GLShaderInstance::_uniform_sampler2DArray(ShaderVariable* one, ShaderData::DataInfo* dataInfo)
@@ -518,36 +519,39 @@ namespace laya
 	}
 	int GLShaderInstance::_uniform_sampler3D(ShaderVariable* one, ShaderData::DataInfo* dataInfo)
 	{
-		assert((ShaderDataType)dataInfo->type == ShaderDataType::Texture);
+        //todo
+		/*assert((ShaderDataType)dataInfo->type == ShaderDataType::Texture);
 		int id = *((int*)dataInfo->data);
 		WebGLInternalTex* texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(id);
 		if (texture != nullptr)
 		{
 			_bindTexture(one->textureID, GL_TEXTURE_3D, texture);
-		}
+		}*/
 		return 0;
 	}
 
 	int GLShaderInstance::_uniform_samplerCube(ShaderVariable* one, ShaderData::DataInfo* dataInfo)
 	{
-		assert((ShaderDataType)dataInfo->type == ShaderDataType::Texture);
+        //todo
+		/*assert((ShaderDataType)dataInfo->type == ShaderDataType::Texture);
 		int id = *((int*)dataInfo->data);
 		WebGLInternalTex* texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(id);
 		if (texture != nullptr)
 		{
 			_bindTexture(one->textureID, GL_TEXTURE_CUBE_MAP, texture);
-		}
+		}*/
 		return 0;
 	}
 	int GLShaderInstance::_uniform_UniformBuffer(ShaderVariable* one, ShaderData::DataInfo* dataInfo)
 	{
-		assert((ShaderDataType)dataInfo->type == ShaderDataType::UBO);
+        /*todo
+		assert((ShaderDataType)dataInfo->type == laya::ShaderDataType::UBO);
 		int id = *((int*)dataInfo->data);
 		UniformBufferObject* ubo = JCConch::s_pConchRender->m_pUniformBufferObjectManager->getObject(id);
 		if (ubo != nullptr)
 		{
 			ubo->_bindUniformBufferBase();
-		}
+		}*/
 		return 0;
 	}
 	void GLShaderInstance::_bindTexture(int textureID, GLenum target, WebGLInternalTex* texture)

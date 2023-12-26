@@ -1,13 +1,4 @@
-//
-//  LayaApp.h
-//  WKWebview
-//
-//  Created by Alex on 2019/9/5.
-//  Copyright © 2019 LayaBox. All rights reserved.
-//
-
 #import <Foundation/NSObject.h>
-#import "WXApi.h"
 #import "iap/IAPManager.h"
 
 @interface LayaApp: NSObject

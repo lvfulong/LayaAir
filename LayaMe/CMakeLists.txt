@@ -86,15 +86,13 @@ if(IOS)
 		proj.ios/iap/IAPManager.h
 		proj.ios/iap/IAPManager.m
 		proj.ios/main.m
-		proj.ios/LayaApp.h
-		proj.ios/LayaApp.mm
 	)
 	list(APPEND PROJECT_RESOURCES
 		proj.ios/Main.storyboard
 		proj.ios/LaunchScreen.storyboard
 		proj.ios/Assets.xcassets
 		proj.ios/Base.lproj/Localizable.strings
-		proj.ios/en.lproj/Localizable.strings
+		#proj.ios/en.lproj/Localizable.strings
 	)
 	set(GAME_RES_FOLDER
 		"${CMAKE_CURRENT_SOURCE_DIR}/resource"
@@ -195,8 +193,8 @@ if(IOS)
     set_xcode_property(${PROJECT_NAME} INSTALL_PATH "\$(LOCAL_APPS_DIR)")
     set_xcode_property(${PROJECT_NAME} INFOPLIST_FILE "${CMAKE_CURRENT_SOURCE_DIR}/proj.ios/Info.plist")
     set_xcode_property(${PROJECT_NAME} ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon")
-    #SET_XCODE_PROPERTY(${PROJECT_NAME} CODE_SIGN_IDENTITY"iPhone Developer")
-	SET_XCODE_PROPERTY(${PROJECT_NAME} DEVELOPMENT_TEAM "4XRST2UF2Q")
+    #set_xcode_property(${PROJECT_NAME} CODE_SIGN_IDENTITY"iPhone Developer")
+	set_xcode_property(${PROJECT_NAME} DEVELOPMENT_TEAM "MH4ZKZTS68")
 	set_xcode_property(${PROJECT_NAME} ENABLE_BITCODE "NO")
 	set_xcode_property(${PROJECT_NAME} VALID_ARCHS "arm64")
 	set_xcode_property(${PROJECT_NAME} ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES "YES")
