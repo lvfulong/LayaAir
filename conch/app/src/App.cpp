@@ -78,36 +78,109 @@ void App::run(const Config &config, size_t width, size_t height, int nJSDebugMod
                 m_closed = true;
                 break;
             case SDL_KEYDOWN:
+            {
                 if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
                 {
                     m_closed = true;
                 }
-                // window->keyDown(event.key.keysym.scancode);
+                inputEvent e;
+                e.nTouchType = e.nType = E_ONKEYDOWN;
+                strncpy(e.type, "keydown", 256);
+                e.keyCode = event.key.keysym.scancode;
+
+                JCConch::s_pConch->dispatchInputEvent(e);
+               }
                 break;
             case SDL_KEYUP:
-                // window->keyUp(event.key.keysym.scancode);
+            {
+                inputEvent e;
+                e.nTouchType = e.nType = E_ONKEYUP;
+                strncpy(e.type, "keyup", 256);
+                e.keyCode = event.key.keysym.scancode;
+
+                JCConch::s_pConch->dispatchInputEvent(e);
+            }
                 break;
             case SDL_MOUSEWHEEL:
-                // if (!io || !io->WantCaptureMouse)
-                //     window->mouseWheel(event.wheel.y);
+            {
+                inputEvent e;
+                e.nTouchType = e.nType = E_ONMOUSEWHEEL;
+                strncpy(e.type, "mousewheel", 256);
+                e.posX = event.button.x;
+                e.posY = event.button.y;
+                e.nWheel = event.wheel.y;
+
+                JCConch::s_pConch->dispatchInputEvent(e);
                 break;
+            }
+
             case SDL_MOUSEBUTTONDOWN:
-                // if (!io || !io->WantCaptureMouse)
-                //     window->mouseDown(event.button.button, event.button.x, event.button.y);
+            {
+                inputEvent e;
+                if (SDL_BUTTON_LEFT == event.button.button)
+                {
+                    e.nTouchType = e.nType = E_ONMOUSEDOWN;
+                    e.posX = event.button.x;
+                    e.posY = event.button.y;
+                    strncpy(e.type, "mousedown", 256);
+
+                    JCConch::s_pConch->dispatchInputEvent(e);
+                }
+                else if (SDL_BUTTON_RIGHT == event.button.button)
+                {
+                    inputEvent e;
+                    e.nTouchType = e.nType = E_ONRIGHTMOUSEDOWN;
+                    e.posX = event.button.x;
+                    e.posY = event.button.y;
+                    strncpy(e.type, "rightmousedown", 256);
+
+                    JCConch::s_pConch->dispatchInputEvent(e);
+                }
+               
                 break;
+            }
             case SDL_MOUSEBUTTONUP:
-                // if (!io || !io->WantCaptureMouse)
-                //     window->mouseUp(event.button.x, event.button.y);
+            {
+                inputEvent e;
+                if (SDL_BUTTON_LEFT == event.button.button)
+                {
+                    inputEvent e;
+                    e.nTouchType = e.nType = E_ONMOUSEUP;
+                    e.posX = x;
+                    e.posY = y;
+                    strncpy(e.type, "mouseup", 256);
+
+                    JCConch::s_pConch->dispatchInputEvent(e);
+                }
+                else if (SDL_BUTTON_RIGHT == event.button.button)
+                {
+                    inputEvent e;
+                    e.nTouchType = e.nType = E_ONRIGHTMOUSEUP;
+                    e.posX = x;
+                    e.posY = y;
+                    strncpy(e.type, "rightmouseup", 256);
+
+                    JCConch::s_pConch->dispatchInputEvent(e);
+                }
+
                 break;
+            }
             case SDL_MOUSEMOTION:
-                // if (!io || !io->WantCaptureMouse)
-                //     window->mouseMoved(event.motion.x, event.motion.y);
+            {
+                inputEvent e;
+                e.nTouchType = e.nType = E_ONMOUSEMOVE;
+                strncpy(e.type, "mousemove", 256);
+                e.posX = event.motion.x;
+                e.posY = event.motion.y;
+
+                JCConch::s_pConch->dispatchInputEvent(e);
                 break;
+            }
             case SDL_WINDOWEVENT:
                 switch (event.window.event)
                 {
                 case SDL_WINDOWEVENT_RESIZED:
-                    // window->resize();
+                    // window->resize();todo
                     break;
                 default:
                     break;

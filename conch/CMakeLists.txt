@@ -646,6 +646,8 @@ elseif(MSVC)
 		Backend/src/OpenGLBackendWinEGL.cpp
 		Backend/src/esUtil.h
 		Backend/src/esUtil.c
+		2D/CanvasRenderingContext2DWin.h
+		2D/CanvasRenderingContext2DWin.cpp
 	)
 elseif(LINUX)
 	list(APPEND PLATFORM_HEADER_DIR
@@ -655,6 +657,8 @@ elseif(LINUX)
 		Backend/src/OpenGLBackendLinuxEGLX11.h
 		Backend/src/OpenGLBackendLinuxEGLX11.cpp
 		Bindings/Video/JSVideo_LinuxImpl.cpp
+		2D/CanvasRenderingContext2DLinux.h
+		2D/CanvasRenderingContext2DLinux.cpp
 	)
 endif()
 

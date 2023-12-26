@@ -2,8 +2,11 @@
 #ifdef ANDROID
 #include "CanvasRenderingContext2DAndroid.h"
 #elif WIN32
+#include "CanvasRenderingContext2DWin.h"
 #elif __APPLE__
 #include "CanvasRenderingContext2DCG.h"
+#elif LINUX
+#include "CanvasRenderingContext2DLinux.h"
 #endif
 #include "ColorParser.h"
 #include "JCConch.h"
@@ -17,9 +20,11 @@ CanvasRenderingContext2D *CanvasRenderingContext2D::create(int width, int height
 #ifdef ANDROID
     return new CanvasRenderingContext2DAndroid(width, height);
 #elif WIN32
-    return nullptr;
+    return new CanvasRenderingContext2DWin(width, height);
 #elif __APPLE__
     return new CanvasRenderingContext2DCG(width, height);
+#elif LINUX
+    return new CanvasRenderingContext2DLinux(width, height);
 #endif
 }
 CanvasRenderingContext2D *CanvasRenderingContext2D::get(int id)
