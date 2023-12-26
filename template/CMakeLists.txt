@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-set(PROJECT_NAME LayaMe)
+set(PROJECT_NAME LayaNative3.0)
 project(${PROJECT_NAME})
 
 set(CMAKE_C_STANDARD 99)
@@ -129,10 +129,10 @@ if(IOS)
 	target_link_libraries(${PROJECT_NAME} conch)
 elseif(MSVC)
 	list(APPEND PROJECT_SOURCES
-		proj.win32/AppMessage.h
-		proj.win32/conch6.cpp
-		proj.win32/stdafx.h
-		proj.win32/stdafx.cpp
+		proj.win64/AppMessage.h
+		proj.win64/conch6.cpp
+		proj.win64/stdafx.h
+		proj.win64/stdafx.cpp
 	)
 	add_subdirectory(${CONCH_PATH} ${PROJECT_BINARY_DIR}/conch)
 	add_executable(${PROJECT_NAME}
