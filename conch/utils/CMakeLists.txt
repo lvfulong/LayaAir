@@ -1,0 +1,75 @@
+cmake_minimum_required(VERSION 3.16)
+
+set(TARGET utils)
+
+project(${TARGET})
+set(PUBLIC_HEADER_DIR include)
+
+set(HEADERS
+    ${PUBLIC_HEADER_DIR}/${TARGET}/RefObject.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/Log.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/ListNode.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/JCZlib.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/JCZipFile.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/JCXml.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/JCSimpleCRC.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/JCMemorySurvey.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/JCLayaUrl.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/JCJson.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/JCIniFile.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/JCFlog.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/JCCrypto.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/JCCommonMethod.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/JCColor.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/JCSingletonList.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/JCSimpleSingletonList.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/Base64.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/JCFileSource.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/JCFileSystem.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/JCBuffer.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/thread/JCCondition.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/thread/JCLayaThreadPool.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/thread/JCWorkerThread.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/thread/JCWorkSemaphore.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/JCEmitter.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/JCEventBase.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/InputTypes.h
+)
+
+set(SOURCES
+    src/Log.cpp
+    src/JCZlib.cpp
+    src/JCZipFile.cpp
+    src/JCXml.cpp
+    src/JCMemorySurvey.cpp
+    src/JCLayaUrl.cpp
+    src/JCJson.cpp
+    src/JCIniFile.cpp
+    src/JCFlog.cpp
+    src/JCCrypto.cpp
+    src/JCCommonMethed.cpp
+    src/JCColor.cpp
+    src/Base64.cpp
+    src/JCFileSystem.cpp
+    src/JCBuffer.cpp
+    src/JCEmitter.cpp
+    src/JCEventBase.cpp
+    src/thread/JCLayaThreadPool.cpp
+    src/thread/JCWorkerThread.cpp
+    src/thread/JCWorkSemaphore.cpp
+)
+
+include_directories(${PUBLIC_HEADER_DIR})
+
+add_library(${TARGET} STATIC ${HEADERS} ${SOURCES})
+target_include_directories(${TARGET} PUBLIC ${PUBLIC_HEADER_DIR})
+set_target_properties(${TARGET} PROPERTIES FOLDER conch/${TARGET})
+target_link_libraries(${TARGET}
+    rapidxml
+    ghc
+    zip
+    zlib)
+target_precompile_headers(${TARGET} PRIVATE ${HEADERS})
+# set(INSTALL_TYPE ARCHIVE)
+# install(TARGETS ${TARGET} ${INSTALL_TYPE} DESTINATION lib/${HEADERS})
+# install(FILES ${HEADERS} DESTINATION include/${TARGET})

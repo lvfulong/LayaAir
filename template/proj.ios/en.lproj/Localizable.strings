@@ -1,0 +1,12 @@
+"done" = "done";
+"next" = "next";
+"search" = "search";
+"go" = "go";
+"send" = "send";
+"tips0" = "The gates of the new world are about to open";
+"tips1" = "The enemy has 30 seconds left to reach the battlefield";
+"tips2" = "Mom said, Nobody can eat hot tofu in a hurry";
+"network_error" = "The network is abnormal, please check your network or contact the developer";
+"parse_json_error" = "Parse json error, please exit and try again";
+"download_error" = "Download error, please exit and try again";
+"internal_error" = "Internal error, please contact the developer";
