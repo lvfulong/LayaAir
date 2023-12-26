@@ -1,4 +1,3 @@
-
 #include "RenderContext.h"
 namespace laya{
 uint32_t RenderContext3D::globalShaderData = 0;
@@ -21,12 +20,12 @@ uint32_t RenderContext3D::globalShaderData = 0;
         this->sceneData = sceneData;
     }
 
-    void RenderContext3D::setViewport(Viewport value) {
+    void RenderContext3D::setViewport(const Viewport& value) {
         this->viewPort = value;
     }
 
-    void RenderContext3D::setScissor(uint32_t x, uint32_t y, uint32_t width, uint32_t height) {
-        scissor.setValue(x, y, width, height);
+    void RenderContext3D::setScissor(const Vector4& value) {
+        this->scissor = value;
     }
 
     void RenderContext3D::clearData(RenderClearFlagBits flag, Color color, float depthValue, uint8_t stencilValue) {

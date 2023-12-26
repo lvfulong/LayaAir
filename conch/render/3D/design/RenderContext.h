@@ -1,4 +1,3 @@
-
 #ifndef __RenderContext_H_
 #define __RenderContext_H_
 #include <functional>
@@ -9,6 +8,7 @@
 #include "render/tempbase.h"
 #include <utils/JCSingletonList.h>
 #include <render/3D/design/renderEnum/RenderClearFlag.h>
+
 
 class RenderElement3D;
 namespace laya{
@@ -24,11 +24,12 @@ namespace laya{
      virtual void setDestTarget(uint32_t renderTarget);
      virtual void setCameraData(uint32_t shaderData);
      virtual void setSceneData(uint32_t sceneData);
-     virtual void setViewport(Viewport value);
-     virtual void setScissor(uint32_t x,uint32_t y,uint32_t width,uint32_t height);
+     virtual void setViewport(const Viewport& value);
+     virtual void setScissor(const Vector4& value);
      virtual void clearData(RenderClearFlagBits flag, Color color, float depthValue, uint8_t stencilValue);
      virtual void setSceneUpdateMask(uint32_t mask);
      virtual void setCameraUpdateMask(uint32_t mask);
+     
  private:
     
  public:
@@ -37,7 +38,7 @@ namespace laya{
     Vector4 scissor;
     bool invertY;
     //pipelineMode
-    uint32_t pipelineMode;
+    std::string pipelineMode;
     RenderClearFlagBits clearflag{ 0 };
     float clearDepth;
     uint8_t clearStencil;
