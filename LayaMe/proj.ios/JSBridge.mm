@@ -4,6 +4,7 @@
 
 +(void)hideSplash
 {
+    NSLog(@"hideSplash11");
     dispatch_async(dispatch_get_main_queue(), ^{
         AppDelegate * appDelegate = (AppDelegate*)[UIApplication sharedApplication].delegate;
         [appDelegate.launchView hide];
