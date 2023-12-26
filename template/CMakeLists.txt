@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(CONCH_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../Conch)
+set(CONCH_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../conch)
 
 set(PROJECT_SOURCES)
 set(PROJECT_RESOURCES)
@@ -129,12 +129,12 @@ if(IOS)
 	target_link_libraries(${PROJECT_NAME} conch)
 elseif(MSVC)
 	list(APPEND PROJECT_SOURCES
-		pro.win32/AppMessage.h
-		pro.win32/conch6.cpp
-		pro.win32/stdafx.h
-		pro.win32/stdafx.cpp
+		proj.win32/AppMessage.h
+		proj.win32/conch6.cpp
+		proj.win32/stdafx.h
+		proj.win32/stdafx.cpp
 	)
-	add_subdirectory(${CONCH_PATH} ${PROJECT_BINARY_DIR}/Conch)
+	add_subdirectory(${CONCH_PATH} ${PROJECT_BINARY_DIR}/conch)
 	add_executable(${PROJECT_NAME}
 		${PROJECT_SOURCES}
 	)
@@ -165,9 +165,9 @@ elseif(MSVC)
 	target_link_libraries(${PROJECT_NAME} app)
 elseif(LINUX)
 	list(APPEND PROJECT_SOURCES
-		pro.linux/Conch6.cpp
+		proj.linux/conch6.cpp
 	)
-	add_subdirectory(${CONCH_PATH} ${PROJECT_BINARY_DIR}/Conch)
+	add_subdirectory(${CONCH_PATH} ${PROJECT_BINARY_DIR}/conch)
 	add_executable(${PROJECT_NAME}
 		${PROJECT_SOURCES}
 	)
@@ -184,7 +184,7 @@ if(IOS)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fobjc-arc")
 	set(CMAKE_XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_ARC "YES" CACHE INTERNAL "")
 	SET (CMAKE_XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET 12.0)
-	add_subdirectory(${CONCH_PATH} ${PROJECT_BINARY_DIR}/Conch)
+	add_subdirectory(${CONCH_PATH} ${PROJECT_BINARY_DIR}/conch)
 	#set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/${app_name}")
     set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE 1)
     #cocos_mark_code_files(${app_name})
