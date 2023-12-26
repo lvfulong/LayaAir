@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-set(PROJECT_NAME LayaNative3.0)
+set(PROJECT_NAME LayaMe)
 project(${PROJECT_NAME})
 
 set(CMAKE_C_STANDARD 99)
@@ -141,9 +141,9 @@ elseif(MSVC)
 	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
 
 	file(GLOB DLLS 
-		${CMAKE_CURRENT_SOURCE_DIR}/../Third_party/v8/lib/win64/*.dll 
-		${CMAKE_CURRENT_SOURCE_DIR}/../Third_party/angle/lib/win64/*.dll
-		${CMAKE_CURRENT_SOURCE_DIR}/../Third_party/openal/lib/win64/*.dll
+		${CMAKE_CURRENT_SOURCE_DIR}/../third_party/v8/lib/win64/*.dll 
+		${CMAKE_CURRENT_SOURCE_DIR}/../third_party/angle/lib/win64/*.dll
+		${CMAKE_CURRENT_SOURCE_DIR}/../third_party/openal/lib/win64/*.dll
 	)
 
 	foreach(file ${DLLS})
