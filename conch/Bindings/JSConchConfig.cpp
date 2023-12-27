@@ -480,7 +480,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         }
         LOGI("getDeviceInfo::get_Value=%s", m_sDeviceInfo.c_str());
         return m_sDeviceInfo.c_str();
-#elif WIN32
+#elif WIN32 || LINUX
         return "{\"resolution\":\"1920*1080\",	\"guid\":\"xxxxxxxxx\",\"imei\":[\"imeixxx\"],\"imsi\":[\"imsixxx\"],\"os\":\"windows\",\"osversion\":\"windows7 64\",\"phonemodel\":\"Wintel\"	}";
 #endif
     }

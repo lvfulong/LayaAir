@@ -108,3 +108,4 @@ if(MSVC OR (ANDROID AND ANDROID_ABI STREQUAL "arm64-v8a" OR ANDROID_ABI STREQUAL
     endif()
 endif()
 
+message("binder: ${LINUX}")

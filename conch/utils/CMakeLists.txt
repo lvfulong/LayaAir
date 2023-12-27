@@ -73,3 +73,5 @@ target_precompile_headers(${TARGET} PRIVATE ${HEADERS})
 # set(INSTALL_TYPE ARCHIVE)
 # install(TARGETS ${TARGET} ${INSTALL_TYPE} DESTINATION lib/${HEADERS})
 # install(FILES ${HEADERS} DESTINATION include/${TARGET})
+
+message("utils: ${LINUX}")

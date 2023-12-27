@@ -1,13 +1,16 @@
 #include <string>
 #include "JCConch.h"
 #include "JCSystemConfig.h"
-#include <app/App.h>
+#include <App/App.h>
 #include <downloadCache/JCIosFileSource.h>
 #ifdef _TEST_
     #include "../../../../Conch/source/conch/Test/JCTestManager.h"
 #endif
 #include <filesystem>
 #include "JCSystemConfig.h"
+#include <unistd.h>
+#include <Utils/Log.h>
+
 namespace  fs = std::filesystem;
 extern std::string gRedistPath;
 extern int g_nInnerWidth;
@@ -33,6 +36,18 @@ extern int g_nInnerHeight;
     GetPrivateProfileString(section_name, key_name, "not found", buffa, kMaxString, ini_file_path);
     return buffa;
 }*/
+std::string getExePath()
+{
+    char buf[256];
+	memset(buf, 0, 256);
+	ssize_t len = readlink("/proc/self/exe", buf, sizeof(buf));
+	if (len <= 0) {
+		printf("getExePath failed");
+        return "";
+	}
+	std::string ret(buf);
+	return ret;
+}
 int main(int argc, char* argv[])
 {
     bool bRunTest = false;
@@ -88,12 +103,11 @@ int main(int argc, char* argv[])
                 printf("Unknown param:%s\n", cargv);
             }
         }
-    }
-    TCHAR   szPath[MAX_PATH];
-    ::GetModuleFileName(NULL, szPath, MAX_PATH);
-    gRedistPath.append(szPath, strlen(szPath) - 10);
+    }*/
+    fs::path exePath = getExePath();
+    gRedistPath = exePath.remove_filename().string();
     printf("start .exePath=%s\n", gRedistPath.c_str());
-    //���������ļ����ÿ���
+    /*
     fs::path configpath(szPath);
     configpath.remove_filename();
     configpath /= "config.ini";
@@ -182,7 +196,7 @@ int main(int argc, char* argv[])
     //}
     laya::App app;
     Config config;
-    config.title = "LayaNative3.0";
+    config.title = "Conch3.0";
     app.run(config, g_nInnerWidth, g_nInnerHeight, nJSDebugMode, nJSDebugPort);
     //app.handleMessage();
     //app.exitApp();

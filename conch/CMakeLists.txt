@@ -848,8 +848,8 @@ elseif(MSVC)
 	)
 elseif(LINUX)
 	find_package(X11 REQUIRED)
-	add_subdirectory("../Third_party/glad/glad-2.0.4/cmake" glad_cmake)
-	glad_add_library(glad_egl_15_gles2_20 REPRODUCIBLE LOADER API egl=1.5 gl:compatibility=3.3,gles2=3.2 glx=1.4)
+	add_subdirectory("../ThirdParty/glad/glad-2.0.4/cmake" glad_cmake)
+	glad_add_library(glad REPRODUCIBLE LOADER API egl=1.5 gles2=3.0)
 
 	target_compile_definitions(${PROJECT_NAME} PRIVATE GL_GLEXT_PROTOTYPES BT_USE_DOUBLE_PRECISION)
 	target_link_libraries(${PROJECT_NAME} PUBLIC
@@ -876,7 +876,7 @@ elseif(LINUX)
 		BulletCollision
 		LinearMath
 		#BulletSoftBody
-		glad_egl_15_gles2_20
+		glad
 		ssl
 		crypto
 		pthread

@@ -130,24 +130,27 @@ void OpenGLBackendLinuxEGLX11::create(const BackendOptions &options)
     }
     int egl_version = gladLoaderLoadEGL(NULL);
     assert(egl_version != 0 && "Unable to load EGL.\n");
-     LOGE("egl_version  %d", egl_version);
+     LOGE("egl_version  %d %d", egl_version, eglGetError());
     //EGLBoolean result = eglBindAPI(EGL_OPENGL_API);
     //assert(result != EGL_FALSE && "eglBindAPI failed");
     m_impl->m_eglDisplay = eglGetDisplay(EGL_DEFAULT_DISPLAY);
     //m_impl->m_eglDisplay = eglGetDisplay((EGLNativeDisplayType)sys.info.x11.display);
     // m_impl->m_eglDisplay = sys.info.x11.display;
     assert(m_impl->m_eglDisplay != EGL_NO_DISPLAY);
+    LOGE("pre eglInitialize  %d ", eglGetError());
+    m_impl->m_preserveBackBuffer = options.preserveBackBuffer;
+    EGLint majorVersion = 0;
+    EGLint minorVersion = 0;
+    EGLBoolean  result = eglInitialize(m_impl->m_eglDisplay, &majorVersion, &minorVersion);
+     LOGE("eglInitialize  %d %d %d", majorVersion, minorVersion, eglGetError());
+    assert(result != EGL_FALSE);
 
 
     egl_version = gladLoaderLoadEGL(m_impl->m_eglDisplay);
     assert(egl_version != 0 && "Unable to load EGL.\n");
     LOGE("egl_version  %d", egl_version);
 
-    m_impl->m_preserveBackBuffer = options.preserveBackBuffer;
-    EGLint majorVersion = 0;
-    EGLint minorVersion = 0;
-    EGLBoolean  result = eglInitialize(m_impl->m_eglDisplay, &majorVersion, &minorVersion);
-    assert(result != EGL_FALSE);
+    
 
     bool use_es3 = false;//true;
     // chooseConfig(options);
@@ -225,10 +228,18 @@ void OpenGLBackendLinuxEGLX11::createScreenSurface(void *nativeHandle)
         //preserveBackBuffer();
     }
     
-     //XWindowAttributes xgwa;
-    //XGetWindowAttributes(sys.info.x11.display, sys.info.x11.window, &xgwa);
-   // m_impl->m_width = xgwa.width;
-    //m_impl->m_height = xgwa.height;
+    XWindowAttributes xgwa;
+    XGetWindowAttributes(sys.info.x11.display, sys.info.x11.window, &xgwa);
+    m_impl->m_width = xgwa.width;
+    m_impl->m_height = xgwa.height;
+     LOGI("width height %d %d \n", m_impl->m_width,m_impl->m_height);
+
+    makeCurrent();
+    int gles_version = gladLoaderLoadGLES2();
+    if (!gles_version) {
+        LOGE("Unable to load GLES.\n");
+    }
+    //LOGI("Loaded GLES %d.%d.\n",GLAD_VERSION_MAJOR(gles_version), GLAD_VERSION_MINOR(gles_version));
 }
 void OpenGLBackendLinuxEGLX11::destroyScreenSurface()
 {
