@@ -529,6 +529,7 @@ if(IOS)
 		Audio/ios/JCAudioMp3Player.cpp
 		Audio/ios/JCAudioMp3Player.h
 		downloadCache/JCIosFileSource.h
+		downloadCache/JCIosFileSource.cpp
 		IOSFreetype/JCIOSFreeType.h
 		IOSFreetype/JCIOSFreeType.cpp
 		Bindings/Video/JSVideo_IOSImpl.cpp
@@ -654,6 +655,8 @@ elseif(LINUX)
 		Backend/src
 	)
 	list(APPEND CONCH_SRC
+		downloadCache/JCIosFileSource.h
+		downloadCache/JCIosFileSource.cpp
 		Backend/src/OpenGLBackendLinuxEGLX11.h
 		Backend/src/OpenGLBackendLinuxEGLX11.cpp
 		Bindings/Video/JSVideo_LinuxImpl.cpp
