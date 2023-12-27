@@ -9,7 +9,6 @@
 #include <utils/JCLayaUrl.h>
 #include <utils/Log.h>
 #include <utils/JCCommonMethod.h>
-#include "../../Conch/JCSystemConfig.h"
 
 namespace laya{
 	JCUrl::JCUrl(){
