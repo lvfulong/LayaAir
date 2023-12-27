@@ -20,7 +20,7 @@ root_dir=${current_dir}/..
 echo ${root_dir}
 
 
-conch_dir=${root_dir}/Conch
+conch_dir=${root_dir}/conch
 publish_dir=${root_dir}/publish
 third_party_dir=${root_dir}/third_party
 
@@ -199,8 +199,8 @@ function archive_ios {
     #lipo -extract x86_64 ${third_party_dir}/physx/lib/ios/libPhysXVehicle2_static.a -o x86_64/libPhysXVehicle2_static.a
 
     local build_type=$1
-    cp build/cmake-ios-${build_type}-arm64/libconch.a armv64
-    cp build/cmake-ios-${build_type}-x86_64/libconch.a x86_64
+    cp build/ios-${build_type}-arm64/libconch.a armv64
+    cp build/ios-${build_type}-x86_64/libconch.a x86_64
 
     cd armv64
     libtool -static *.a -o libconch.a

@@ -14,4 +14,19 @@ void RenderBindings::exportJS(Context &context)
 
     GLESRenderContext3D::exportJS(context);
 }
+namespace internal
+{
+template <> struct is_value_object<laya::Vector3> : std::true_type
+{
+};
+template <> struct is_wrapped_class<laya::Vector3> : std::false_type
+{
+};
+template <> struct is_value_object<laya::Vector4> : std::true_type
+{
+};
+template <> struct is_wrapped_class<laya::Vector4> : std::false_type
+{
+};
+}
 } // namespace laya
