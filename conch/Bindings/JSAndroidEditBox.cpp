@@ -1,15 +1,15 @@
-﻿#ifdef ANDROID
+﻿
 #include <jni.h>
 #include <JCConch.h>
 
-#endif
+
 #include "JSAndroidEditBox.h"
 #include <binder/JSInterface.h>
 #include "../../JCScriptRuntime.h"
 #include <utils/Log.h>
-#ifdef ANDROID
-	#include "CToJavaBridge.h"
-#endif
+
+#include "CToJavaBridge.h"
+
 #include <utils/JCColor.h>
 	
 namespace laya 

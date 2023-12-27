@@ -659,6 +659,8 @@ elseif(LINUX)
 		Bindings/Video/JSVideo_LinuxImpl.cpp
 		2D/CanvasRenderingContext2DLinux.h
 		2D/CanvasRenderingContext2DLinux.cpp
+		Bindings/JSLinuxEditBox.h
+		Bindings/JSLinuxEditBox.cpp
 	)
 endif()
 
@@ -848,7 +850,7 @@ elseif(MSVC)
 	)
 elseif(LINUX)
 	find_package(X11 REQUIRED)
-	add_subdirectory("../ThirdParty/glad/glad-2.0.4/cmake" glad_cmake)
+	add_subdirectory("../third_party/glad/glad-2.0.4/cmake" glad_cmake)
 	glad_add_library(glad REPRODUCIBLE LOADER API egl=1.5 gles2=3.0)
 
 	target_compile_definitions(${PROJECT_NAME} PRIVATE GL_GLEXT_PROTOTYPES BT_USE_DOUBLE_PRECISION)
