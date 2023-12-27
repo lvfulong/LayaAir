@@ -187,12 +187,12 @@ void JSLinuxEditBox::setVisible( bool p_bVisible )
 //------------------------------------------------------------------------------
 void JSLinuxEditBox::focus()
 {
-	JCConch::s_pScriptRuntime->m_pCurEditBox = this;
+	//JCConch::s_pScriptRuntime->m_pCurEditBox = this;
 }
 //------------------------------------------------------------------------------
 void JSLinuxEditBox::blur()
 {
-	JCConch::s_pScriptRuntime->m_pCurEditBox = NULL;
+	//JCConch::s_pScriptRuntime->m_pCurEditBox = NULL;
 }
 //------------------------------------------------------------------------------
 void JSLinuxEditBox::setColor( const char* p_sColor )
