@@ -109,6 +109,8 @@
 #include "2D/FontManager.h"
 #include <stdarg.h>
 
+
+#include <render/3D/RenderBindings.h>
 extern int g_nInnerWidth ;
 extern int g_nInnerHeight ;
 extern bool g_bGLCanvasSizeChanged;
@@ -601,7 +603,9 @@ namespace laya
 
         context.module("LayaNative", layaNative);
 
-		JSVideo::exportJS(context);     
+		JSVideo::exportJS(context);   
+
+        RenderBindings::exportJS(context);    
         //以下是全局函数
         //------------------------------------------------------------------------------
         context.function("setTouchEvtFunction", &setTouchEvtFunc);
