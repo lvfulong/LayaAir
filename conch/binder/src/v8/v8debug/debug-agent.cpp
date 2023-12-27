@@ -8,7 +8,7 @@
 #include <chrono>
 #include <thread>
 #include <binder/v8/v8debug/V8WSSv.h>
-
+#include <binder/JSInterface.h>
 namespace laya {
 
     int   DebuggerAgent::sMsgID=0;
