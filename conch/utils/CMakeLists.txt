@@ -27,7 +27,6 @@ set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/JCFileSource.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/JCFileSystem.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/JCBuffer.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/thread/JCCondition.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/thread/JCLayaThreadPool.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/thread/JCWorkerThread.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/thread/JCWorkSemaphore.h
