@@ -6,9 +6,6 @@
 #include "JCSystemConfig.h"
 #include <app/App.h>
 #include <downloadCache/JCIosFileSource.h>
-#ifdef _TEST_
-    #include "../../../../Conch/source/conch/Test/JCTestManager.h"
-#endif
 #include <filesystem>
 #include "JCSystemConfig.h"
 namespace  fs = std::filesystem;
@@ -172,10 +169,6 @@ int main(int argc, _TCHAR* argv[])
     laya::JCConch::s_pAssetsFiles = pAssets;
     if (bRunTest) 
     {
-#ifdef _TEST_
-        JCTestMgr* pTest = JCTestMgr::getInstance();
-        pTest->run(pRunTestCase);
-#endif
         //JSMemorySurvey::DelInstance();
         //svFileCache::delInstance();
         //delete pAssets;

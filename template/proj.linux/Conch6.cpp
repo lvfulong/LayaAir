@@ -1,15 +1,12 @@
 #include <string>
 #include "JCConch.h"
 #include "JCSystemConfig.h"
-#include <App/App.h>
+#include <app/App.h>
 #include <downloadCache/JCIosFileSource.h>
-#ifdef _TEST_
-    #include "../../../../Conch/source/conch/Test/JCTestManager.h"
-#endif
 #include <filesystem>
 #include "JCSystemConfig.h"
 #include <unistd.h>
-#include <Utils/Log.h>
+#include <utils/Log.h>
 
 namespace  fs = std::filesystem;
 extern std::string gRedistPath;
@@ -182,10 +179,6 @@ int main(int argc, char* argv[])
     laya::JCConch::s_pAssetsFiles = pAssets;
     if (bRunTest) 
     {
-#ifdef _TEST_
-        JCTestMgr* pTest = JCTestMgr::getInstance();
-        pTest->run(pRunTestCase);
-#endif
         //JSMemorySurvey::DelInstance();
         //svFileCache::delInstance();
         //delete pAssets;
