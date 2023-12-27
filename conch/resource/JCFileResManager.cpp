@@ -20,7 +20,7 @@
 #include "../downloadMgr/JCDownloadMgr.h"
 #include <utils/JCCrypto.h>
 #include "../downloadMgr/JCHttpHeader.h"
-#include "../../Conch/JCSystemConfig.h"
+#include "../JCSystemConfig.h"
 namespace laya
 {
     HandleFileData gHandleDataFunc = nullptr;
