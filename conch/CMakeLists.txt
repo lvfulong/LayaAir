@@ -928,7 +928,7 @@ add_subdirectory(../third_party/sdl sdl)
 add_subdirectory(../third_party/benchmark benchmark)
 
 if(MSVC OR LINUX)
-	add_subdirectory(App)
+	add_subdirectory(app)
 endif()
 message("CMAKE_BUILD_TYPE:${CMAKE_BUILD_TYPE}")
 message("CMAKE_C_FLAGS:${CMAKE_C_FLAGS}")
