@@ -634,6 +634,8 @@ elseif(MSVC)
 		platform/Windows
 	)
 	list(APPEND CONCH_SRC
+		downloadCache/JCIosFileSource.h
+		downloadCache/JCIosFileSource.cpp
 		Audio/windows/JCAudioMp3Player.cpp
 		Audio/windows/JCAudioMp3Player.h
 		Bindings/EditBox/WinEditBox.h
