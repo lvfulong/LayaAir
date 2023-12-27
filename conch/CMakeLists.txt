@@ -218,7 +218,7 @@ list(APPEND CONCH_SRC
 	render/3D/design/renderEnum/WrapMode.h
 	render/3D/design/renderEnum/MemoryDataType.h
 	render/3D/design/renderEnum/RenderStatInfo.h	
-	render/3D/design/RenderShader/ShaderVariable.h
+	render/3D/design/renderShader/ShaderVariable.h
 
 	render/3D/temp/RenderStateContext.h
 	render/3D/temp/RenderStateContext.cpp

@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.16)
 set(TARGET app)
 
 project(${TARGET})
-set(PUBLIC_HEADER_DIR Include)
+set(PUBLIC_HEADER_DIR include)
 
 set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/App.h

@@ -165,7 +165,7 @@ elseif(MSVC)
 	target_link_libraries(${PROJECT_NAME} app)
 elseif(LINUX)
 	list(APPEND PROJECT_SOURCES
-		proj.linux/conch6.cpp
+		proj.linux/Conch6.cpp
 	)
 	add_subdirectory(${CONCH_PATH} ${PROJECT_BINARY_DIR}/conch)
 	add_executable(${PROJECT_NAME}
