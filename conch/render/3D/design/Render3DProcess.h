@@ -35,7 +35,7 @@ namespace laya{
 		DirectLightShadowPass() {};
 		virtual ~DirectLightShadowPass() {};
 		virtual void update(RenderContext3D* context) = 0;
-		virtual void render(RenderContext3D* context, JCSingletonList<BaseRenderNode>& renderNodeList) = 0;
+		virtual void render(RenderContext3D* context, std::vector<BaseRenderNode*> renderNodeList, uint32_t count) = 0;
 	public:
 	};
 
@@ -66,7 +66,7 @@ namespace laya{
 		~DirectLightShadowCasterRenderPass() ;
 		
 		void update(RenderContext3D* context) override;
-		void render(RenderContext3D* context, JCSingletonList<BaseRenderNode>& renderNodeList) override;
+		void render(RenderContext3D* context, std::vector<BaseRenderNode*> renderNodeList, uint32_t count) override;
 		void applyRenderData(uint32_t sceneShaderData, uint32_t cameraShaderData);
 
 		void set_lightUp(const Vector3& value);
@@ -96,7 +96,7 @@ namespace laya{
 		SpotLightShadowRenderPass();
 		~SpotLightShadowRenderPass();
 		void update(RenderContext3D* context);
-		void render(RenderContext3D* context, JCSingletonList<BaseRenderNode>& renderNodeList);
+		void render(RenderContext3D* context, std::vector<BaseRenderNode*> renderNodeList, uint32_t count);
 		void applyRenderData(uint32_t sceneShaderData, uint32_t cameraShaderData);
 
 		void set_position(Vector3 value);
@@ -146,7 +146,7 @@ namespace laya{
 	public:
 		ForwardClusterRenderPass();
 		~ForwardClusterRenderPass();
-		void render(RenderContext3D* context, JCSingletonList<BaseRenderNode>& renderNodeList);
+		void render(RenderContext3D* context, std::vector<BaseRenderNode*> renderNodeList, uint32_t count);
 		void renderDepthPass(RenderContext3D* context, JCSingletonList<BaseRenderNode>& renderNodeList);
 		void renderDepthNormalPass(RenderContext3D* context, JCSingletonList<BaseRenderNode>& renderNodeList);
 		void set_cameraCullInfo(CameraFrustumCullInfo value);
@@ -194,10 +194,10 @@ namespace laya{
 		std::vector<uint32_t> afterEverything;//cmd buffer
 	};
 
-	class Render3DProcess
+	class IRender3DProcess
 	{
 	public:
-		static void renderCameraForwardPass(RenderContext3D* context, RenderForwardADDPass* passInfo, JCSingletonList<BaseRenderNode> renderNodeList);
+		virtual void renderCameraForwardPass(RenderContext3D* context, RenderForwardADDPass* passInfo, std::vector<BaseRenderNode*> renderNodeList, uint32_t count) = 0;
     };
 }
 #endif

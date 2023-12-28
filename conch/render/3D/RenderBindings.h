@@ -37,6 +37,8 @@ class RenderBindings
         //class_binding.property("pipelineMode", &GLESRenderContext3D::pipelineMode);
       
         context.class_("ConchGLESRenderContext3D", class_binding);
+
+        //TODO GLESRender3DProcess
     }
 };
 namespace internal

@@ -13,7 +13,7 @@ namespace laya{
     void DirectLightShadowCasterRenderPass::update(RenderContext3D* context) {
         //根据cameraInfo的数据和mode还有directlight的数据,确认裁剪数据,确认shaderData的值
     }
-    void DirectLightShadowCasterRenderPass::render(RenderContext3D* context, JCSingletonList<BaseRenderNode>& renderNodeList) {
+    void DirectLightShadowCasterRenderPass::render(RenderContext3D* context, std::vector<BaseRenderNode*> renderNodeList, uint32_t count) {
         //for循环  裁剪完 更新渲染数据，再渲染
     }
 
@@ -54,7 +54,7 @@ namespace laya{
         //根据cameraInfo的数据和mode还有directlight的数据,确认裁剪数据,确认shaderData的值
     }
 
-    void SpotLightShadowRenderPass::render(RenderContext3D* context, JCSingletonList<BaseRenderNode>& renderNodeList) {
+    void SpotLightShadowRenderPass::render(RenderContext3D* context, std::vector<BaseRenderNode*> renderNodeList, uint32_t count) {
         //for循环  裁剪完 更新渲染数据，再渲染
     }
 
@@ -93,7 +93,7 @@ namespace laya{
     ForwardClusterRenderPass::~ForwardClusterRenderPass(){
         
     }
-    void ForwardClusterRenderPass::render(RenderContext3D* context, JCSingletonList<BaseRenderNode>& renderNodeList){
+    void ForwardClusterRenderPass::render(RenderContext3D* context, std::vector<BaseRenderNode*> renderNodeList, uint32_t count){
         //根据cull信息进行裁剪,
         //通过裁剪的BaseRenderNode 进行preRenderUpdate
         //分开transparent和opaque renderQueueList
@@ -164,28 +164,5 @@ namespace laya{
     }
     void RenderForwardADDPass::set_afterEverything(std::vector<uint32_t> value){
 
-    }
-     
- 
-    //renderCameraForwardPass
-    void Render3DProcess::renderCameraForwardPass(RenderContext3D* context, RenderForwardADDPass* passInfo, JCSingletonList<BaseRenderNode> renderNodeList){
-        //先渲染ShadowTexture
-        if (passInfo->shadowCasterPass) {
-            if (passInfo->needDirectShadowPass) {
-                passInfo->directLightShadowPass->update(context);
-                passInfo->directLightShadowPass->render(context, renderNodeList);
-            }
-            if (passInfo->needSpotPass) {
-                passInfo->spotLightShadowPass->update(context);
-                passInfo->spotLightShadowPass->render(context, renderNodeList);
-            }
-        }
-        
-        //postProcess TODO
-        passInfo->renderpass->render(context, renderNodeList);
-
-        //PostProcess
-        
-        //afterEverything cmd
     }
 }

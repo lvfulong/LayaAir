@@ -10,7 +10,7 @@ namespace laya{
     
     };
     uint32_t GLESRenderContext3D::drawRenderElementList(JCSingletonList<RenderElement3D*>& list) {
-       _bindRenderTarget();
+       /*_bindRenderTarget();
        _start();
        if (preUpdate) preUpdate(list);
        //update
@@ -24,7 +24,9 @@ namespace laya{
            list.m_vElements[i]->renderData.render(this);
        }
        if (preRender) afterRender(list);
-        _end();
+        _end();*/
+
+        return 0;
     }
 
     void GLESRenderContext3D::drawRenderElementOne(RenderElement3D* one) {
