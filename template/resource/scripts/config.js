@@ -116,19 +116,3 @@ window.onLayaInitError=function(e)
 window.hideSplashScreen = function() {
     window.loadingView.hideLoadingView();
 }
-
-var c = new ConchGLESRenderContext3D();
-//alert(c.pipelineMode)
-c.pipelineMode = "cspipelineMode"
-//alert(c.pipelineMode)
-class V4{
-
-}
-
-var v4 = new V4();
-v4.x = 10;
-v4.y = 0;
-v4.z = 0;
-v4.w = 9;
-//c.setScissor(v4);
-c.setScissor({x:10,y:10,z:10,w:10});
