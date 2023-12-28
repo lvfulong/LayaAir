@@ -138,8 +138,6 @@ list(APPEND CONCH_SRC
 	render/3D/Sprite3DProperty.cpp
 	render/3D/RenderUtil.h
 	render/3D/RenderUtil.cpp
-	render/3D/RenderBindings.h
-	render/3D/RenderBindings.cpp
 	#渲染节点类
 	render/3D/renderInstance/BaseRenderNode.h
 	render/3D/renderInstance/BaseRenderNode.cpp

@@ -14,7 +14,7 @@
 #include <utils/JCSingletonList.h>
 #include <render/driver/gles/GLShaderInstance.h>
 #include "ShaderData.h"
-#include "RenderContext3D.h"
+//#include "RenderContext3D.h"
 #include "ShaderInstance.h"
 
 namespace laya
@@ -22,6 +22,7 @@ namespace laya
 	class WebGLEngine;
 	class JSRenderNode;
 	class JSTransform;
+    class RenderContext3D;
 	class RenderElement
 	{
 	public:

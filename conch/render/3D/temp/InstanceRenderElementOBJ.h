@@ -14,7 +14,7 @@
 #include <utils/JCSingletonList.h>
 #include <render/driver/gles/GLShaderInstance.h>
 #include "ShaderData.h"
-#include "RenderContext3D.h"
+//#include "RenderContext3D.h"
 #include "ShaderInstance.h"
 #include "RenderElement.h"
 #include  <vector>

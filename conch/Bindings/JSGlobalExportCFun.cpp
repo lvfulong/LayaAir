@@ -81,7 +81,7 @@
 #include "LayaAir/3D/JSRenderElement.h"
 #include "LayaAir/3D/JSRenderQueue.h"
 #include "LayaAir/3D/JSCommandUniformMap.h"
-#include "LayaAir/3D/JSRenderContext3D.h"
+//#include "LayaAir/3D/JSRenderContext3D.h"
 #include "LayaAir/3D/JSCommandEncoder.h"
 #include "LayaAir/3D/JSRenderNode.h"
 #include "LayaAir/3D/JSSceneCullManger.h"
@@ -108,9 +108,8 @@
 #include "LayaAir/RenderEngine/WebGLEngine/JSGLRenderDrawContext.h"
 #include "2D/FontManager.h"
 #include <stdarg.h>
-
-
 #include <render/3D/RenderBindings.h>
+
 extern int g_nInnerWidth ;
 extern int g_nInnerHeight ;
 extern bool g_bGLCanvasSizeChanged;
