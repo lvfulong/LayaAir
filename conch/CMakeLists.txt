@@ -149,6 +149,8 @@ list(APPEND CONCH_SRC
 #render/driver/gles  以gles为基本的渲染驱动类
 	render/driver/gles/GLESRenderContext3D.h
 	render/driver/gles/GLESRenderContext3D.cpp	#临时引用文件
+	render/driver/gles/GLESRender3DProcess.h
+	render/driver/gles/GLESRender3DProcess.cpp
 	render/tempbase.h
 	#render/driver/gles/driver
 	render/driver/gles/GLESRenderInstanceData.h

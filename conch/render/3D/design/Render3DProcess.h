@@ -194,10 +194,10 @@ namespace laya{
 		std::vector<uint32_t> afterEverything;//cmd buffer
 	};
 
-	class Render3DProcess
+	class IRender3DProcess
 	{
 	public:
-		void renderCameraForwardPass(RenderContext3D* context, RenderForwardADDPass* passInfo, std::vector<BaseRenderNode*> renderNodeList, uint32_t count);
+		virtual void renderCameraForwardPass(RenderContext3D* context, RenderForwardADDPass* passInfo, std::vector<BaseRenderNode*> renderNodeList, uint32_t count) = 0;
     };
 }
 #endif

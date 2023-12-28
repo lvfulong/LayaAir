@@ -495,4 +495,4 @@ async function loadSmallGameLocal(url) {
     let md5 = calcmd5(fs_readFileSync(localCachePkg));
     console.log('md5 ' + md5);
 }
-loadApp(conch.presetUrl || "http://layabox.com/layanative3.0/demo/index.js");
+loadApp("https://lv.layabox.com/test/lfl/bin/index.js");
