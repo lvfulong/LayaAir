@@ -38,7 +38,7 @@ class RenderBindings
       
         context.class_("ConchGLESRenderContext3D", class_binding);
 
-        //TODO GLESRender3DProcess
+        //TODO Render3DProcess
     }
 };
 namespace internal
