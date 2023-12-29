@@ -5,6 +5,11 @@
 #include <core/math/Vector4.h>
 #include <binder/JSInterface.h>
 #include <render/driver/gles/GLESRenderContext3D.h>
+#include <render/driver/gles/GLESRender3DProcess.h>
+#include <render/driver/gles/GLESForwardAddRP.h>
+#include <render/driver/gles/GLESDirectLightShadowCastRP.h>
+#include <render/driver/gles/GLESSpotLightShadowRP.h>
+#include <render/driver/gles/GLESForwardAddClusterRP.h>
 
 namespace laya
 {
@@ -19,30 +24,55 @@ class RenderBindings
 
         //GLESRenderContext3D::exportJS(context);
         
-        
-        class_<GLESRenderContext3D> class_binding;
-        class_binding.constructor<>();
-        //todo class_binding.function("drawRenderElementList", &GLESRenderContext3D::drawRenderElementList);
-        //class_binding.function("drawRenderElementOne", &GLESRenderContext3D::drawRenderElementOne);
-        //class_binding.function("setDestTarget", &GLESRenderContext3D::setDestTarget);
-        //class_binding.function("setViewport", &GLESRenderContext3D::setViewport);
-        //class_binding.function("setScissor", &GLESRenderContext3D::setScissor);
-        class_binding.function_optional_override("setScissor", optional_override([](GLESRenderContext3D &ctx, const Vector4& value){
-            ctx.setScissor(value);
-        }));
-        //class_binding.function("setSceneUpdateMask", &GLESRenderContext3D::setSceneUpdateMask);
-        //class_binding.function("setCameraUpdateMask", &GLESRenderContext3D::setCameraUpdateMask);
-        //class_binding.property("invertY", &GLESRenderContext3D::invertY);
-        //class_binding.property("sceneID", &GLESRenderContext3D::sceneData);
-        //class_binding.property("pipelineMode", &GLESRenderContext3D::pipelineMode);
-      
-        context.class_("ConchGLESRenderContext3D", class_binding);
+        {
+            class_<GLESRenderContext3D> class_binding;
+            class_binding.constructor<>();
+            //todo class_binding.function("drawRenderElementList", &GLESRenderContext3D::drawRenderElementList);
+            //class_binding.function("drawRenderElementOne", &GLESRenderContext3D::drawRenderElementOne);
+            //class_binding.function("setDestTarget", &GLESRenderContext3D::setDestTarget);
+            //class_binding.function("setViewport", &GLESRenderContext3D::setViewport);
+            //class_binding.function("setScissor", &GLESRenderContext3D::setScissor);
+            class_binding.function_optional_override("setScissor", optional_override([](GLESRenderContext3D& ctx, const Vector4& value) {
+                ctx.setScissor(value);
+                }));
+            //class_binding.function("setSceneUpdateMask", &GLESRenderContext3D::setSceneUpdateMask);
+            //class_binding.function("setCameraUpdateMask", &GLESRenderContext3D::setCameraUpdateMask);
+            //class_binding.property("invertY", &GLESRenderContext3D::invertY);
+            //class_binding.property("sceneID", &GLESRenderContext3D::sceneData);
+            //class_binding.property("pipelineMode", &GLESRenderContext3D::pipelineMode);
 
-        //TODO GLESRender3DProcess
-        //GLESForwardAddRP
-        //GLESDirectLightShadowCastRP
-        //GLESSpotLightShadowRP
-        //GLESForwardAddClusterRP
+            context.class_("ConchGLESRenderContext3D", class_binding);
+        }
+        {
+            class_<GLESRender3DProcess> class_binding;
+            class_binding.constructor<>();
+            class_binding.function("renderCameraForwardPass", &GLESRender3DProcess::renderCameraForwardPass);
+            context.class_("ConchGLESRender3DProcess", class_binding);
+        }
+        {
+            class_<GLESForwardAddRP> class_binding;
+            class_binding.constructor<>();
+            class_binding.function("set_DirectLightShadowCasterRenderPass", &GLESForwardAddRP::set_DirectLightShadowCasterRenderPass);
+            context.class_("ConchGLESForwardAddRP", class_binding);
+        }
+        {
+            class_<GLESDirectLightShadowCastRP> class_binding;
+            class_binding.constructor<>();
+            class_binding.function("set_lightUp", &GLESDirectLightShadowCastRP::set_lightUp);
+            context.class_("ConchGLESDirectLightShadowCastRP", class_binding);
+        }
+        {
+            class_<GLESSpotLightShadowRP> class_binding;
+            class_binding.constructor<>();
+            class_binding.function("set_position", &GLESSpotLightShadowRP::set_position);
+            context.class_("ConchGLESSpotLightShadowRP", class_binding);
+        }
+        {
+            class_<GLESForwardAddClusterRP> class_binding;
+            class_binding.constructor<>();
+            class_binding.function("set_skyRenderNode", &GLESForwardAddClusterRP::set_skyRenderNode);
+            context.class_("ConchGLESForwardAddClusterRP", class_binding);
+        }
     }
 };
 namespace internal

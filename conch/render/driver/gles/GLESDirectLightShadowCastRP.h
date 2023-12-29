@@ -26,8 +26,8 @@ class GLESDirectLightShadowCastRP : public IDirectLightShadowRP
     };
     struct CameraInfo
     {
-        float far;
-        float near;
+        float _far;
+        float _near;
     };
 
   public:
