@@ -5,7 +5,7 @@
 
 namespace laya {
 	class GLESDirectLightShadowCastRP;
-	class SpotLightShadowRenderPass;
+	class GLESSpotLightShadowRP;
 	class ForwardClusterRenderPass;
 	//render Camera Pass data
 	class GLESForwardAddRP {
@@ -16,7 +16,7 @@ namespace laya {
 		void set_shadowCasterPass();
 		void set_DirectLightShadowCasterRenderPass(GLESDirectLightShadowCastRP* value);
 		void set_needDirectShadowPass(bool value);
-		void set_spotLightShadowPass(SpotLightShadowRenderPass* value);
+		void set_spotLightShadowPass(GLESSpotLightShadowRP* value);
 		void set_renderpass(ForwardClusterRenderPass* value);
 		void set_afterEverything(std::vector<uint32_t> value);
 	public:
@@ -25,7 +25,7 @@ namespace laya {
 		GLESDirectLightShadowCastRP* directLightShadowPass;
 		bool needDirectShadowPass;
 		//spotLightPass
-		SpotLightShadowRenderPass* spotLightShadowPass;
+		GLESSpotLightShadowRP* spotLightShadowPass;
 		bool needSpotPass;
 		ForwardClusterRenderPass* renderpass;
 		// TODO

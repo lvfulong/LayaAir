@@ -20,7 +20,7 @@ namespace laya {
     void GLESForwardAddRP::set_needDirectShadowPass(bool value) {
 
     }
-    void GLESForwardAddRP::set_spotLightShadowPass(SpotLightShadowRenderPass* value) {
+    void GLESForwardAddRP::set_spotLightShadowPass(GLESSpotLightShadowRP* value) {
 
     }
     void GLESForwardAddRP::set_renderpass(ForwardClusterRenderPass* value) {
