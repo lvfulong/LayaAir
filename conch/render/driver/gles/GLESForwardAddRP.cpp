@@ -23,7 +23,7 @@ namespace laya {
     void GLESForwardAddRP::set_spotLightShadowPass(GLESSpotLightShadowRP* value) {
 
     }
-    void GLESForwardAddRP::set_renderpass(ForwardClusterRenderPass* value) {
+    void GLESForwardAddRP::set_renderpass(GLESForwardAddClusterRP* value) {
 
     }
     void GLESForwardAddRP::set_afterEverything(std::vector<uint32_t> value) {

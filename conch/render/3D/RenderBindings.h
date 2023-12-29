@@ -41,6 +41,8 @@ class RenderBindings
         //TODO GLESRender3DProcess
         //GLESForwardAddRP
         //GLESDirectLightShadowCastRP
+        //GLESSpotLightShadowRP
+        //GLESForwardAddClusterRP
     }
 };
 namespace internal

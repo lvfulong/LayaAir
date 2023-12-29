@@ -3,6 +3,7 @@
 #include "GLESForwardAddRP.h"
 #include "GLESDirectLightShadowCastRP.h"
 #include "GLESSpotLightShadowRP.h"
+#include "GLESForwardAddClusterRP.h"
 
 namespace laya {
 
