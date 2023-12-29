@@ -151,6 +151,8 @@ list(APPEND CONCH_SRC
 	render/driver/gles/GLESRenderContext3D.cpp	#临时引用文件
 	render/driver/gles/GLESRender3DProcess.h
 	render/driver/gles/GLESRender3DProcess.cpp
+	render/driver/gles/GLESForwardAddRP.h
+	render/driver/gles/GLESForwardAddRP.cpp
 	render/tempbase.h
 	#render/driver/gles/driver
 	render/driver/gles/GLESRenderInstanceData.h

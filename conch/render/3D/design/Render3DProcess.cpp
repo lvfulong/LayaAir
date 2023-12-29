@@ -138,31 +138,4 @@ namespace laya{
 
     }
 
-    //RenderForwardADDPass
-    RenderForwardADDPass::RenderForwardADDPass() {
-
-    }
-
-    RenderForwardADDPass::~RenderForwardADDPass() {
-
-    }
-
-    void RenderForwardADDPass::set_shadowCasterPass(){
-
-    }
-    void RenderForwardADDPass::set_DirectLightShadowCasterRenderPass(DirectLightShadowCasterRenderPass* value){
-
-    }
-    void RenderForwardADDPass::set_needDirectShadowPass(bool value){
-
-    }
-    void RenderForwardADDPass::set_spotLightShadowPass(SpotLightShadowRenderPass* value){
-
-    }
-    void RenderForwardADDPass::set_renderpass(ForwardClusterRenderPass* value){
-
-    }
-    void RenderForwardADDPass::set_afterEverything(std::vector<uint32_t> value){
-
-    }
 }

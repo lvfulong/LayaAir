@@ -30,16 +30,16 @@ namespace laya{
 
 	};
 
-	class DirectLightShadowPass {
+	class IDirectLightShadowRP {
 	public:
-		DirectLightShadowPass() {};
-		virtual ~DirectLightShadowPass() {};
+		IDirectLightShadowRP() {};
+		virtual ~IDirectLightShadowRP() {};
 		virtual void update(RenderContext3D* context) = 0;
 		virtual void render(RenderContext3D* context, std::vector<BaseRenderNode*> renderNodeList, uint32_t count) = 0;
 	public:
 	};
 
-	class DirectLightShadowCasterRenderPass :public DirectLightShadowPass {
+	class DirectLightShadowCasterRenderPass :public IDirectLightShadowRP {
 	public: 
 		enum class ShadowCascadesMode
 		{

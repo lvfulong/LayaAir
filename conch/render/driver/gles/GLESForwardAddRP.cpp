@@ -1,0 +1,32 @@
+#include "GLESForwardAddRP.h"
+
+namespace laya {
+
+    //RenderForwardADDPass
+    GLESForwardAddRP::GLESForwardAddRP() {
+
+    }
+
+    GLESForwardAddRP::~GLESForwardAddRP() {
+
+    }
+
+    void GLESForwardAddRP::set_shadowCasterPass() {
+
+    }
+    void GLESForwardAddRP::set_DirectLightShadowCasterRenderPass(DirectLightShadowCasterRenderPass* value) {
+
+    }
+    void GLESForwardAddRP::set_needDirectShadowPass(bool value) {
+
+    }
+    void GLESForwardAddRP::set_spotLightShadowPass(SpotLightShadowRenderPass* value) {
+
+    }
+    void GLESForwardAddRP::set_renderpass(ForwardClusterRenderPass* value) {
+
+    }
+    void GLESForwardAddRP::set_afterEverything(std::vector<uint32_t> value) {
+
+    }
+}
