@@ -1,9 +1,12 @@
 #include "GLESRender3DProcess.h"
 #include "render/3D/design/Render3DProcess.h"
+#include "GLESForwardAddRP.h"
+#include "GLESDirectLightShadowCastRP.h"
+
 namespace laya {
 
     //renderCameraForwardPass
-    void GLESRender3DProcess::renderCameraForwardPass(RenderContext3D* context, RenderForwardADDPass* passInfo, std::vector<BaseRenderNode*> renderNodeList, uint32_t count){
+    void GLESRender3DProcess::renderCameraForwardPass(RenderContext3D* context, GLESForwardAddRP* passInfo, std::vector<BaseRenderNode*> renderNodeList, uint32_t count){
         //先渲染ShadowTexture
         if (passInfo->shadowCasterPass) {
             if (passInfo->needDirectShadowPass) {

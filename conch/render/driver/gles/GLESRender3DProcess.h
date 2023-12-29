@@ -6,12 +6,12 @@
 
 
 namespace laya {
-	class RenderForwardADDPass;
+	class GLESForwardAddRP;
 	class BaseRenderNode;
 	class GLESRender3DProcess
 	{
 	public:
-		void renderCameraForwardPass(RenderContext3D* context, RenderForwardADDPass* passInfo, std::vector<BaseRenderNode*> renderNodeList, uint32_t count);
+		void renderCameraForwardPass(RenderContext3D* context, GLESForwardAddRP* passInfo, std::vector<BaseRenderNode*> renderNodeList, uint32_t count);
     };
 }
 #endif

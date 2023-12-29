@@ -39,56 +39,7 @@ namespace laya{
 	public:
 	};
 
-	class DirectLightShadowCasterRenderPass :public IDirectLightShadowRP {
-	public: 
-		enum class ShadowCascadesMode
-		{
-			NoCascades,
-			TwoCascades,
-			FourCascades,
-		};
-
-		struct DirectLightFrustumCullInfo
-		{
-			Vector3							_position;
-			std::vector<Plane>				_cullPlanes;
-			BoundSphere						_cullSphere;
-			int								_cullPlaneCount;
-			Vector3							_direction;
-		};
-		struct CameraInfo
-		{
-			float far;
-			float near;
-		};
-	public:
-		DirectLightShadowCasterRenderPass();
-		~DirectLightShadowCasterRenderPass() ;
-		
-		void update(RenderContext3D* context) override;
-		void render(RenderContext3D* context, std::vector<BaseRenderNode*> renderNodeList, uint32_t count) override;
-		void applyRenderData(uint32_t sceneShaderData, uint32_t cameraShaderData);
-
-		void set_lightUp(const Vector3& value);
-		void set_lightSide(const Vector3& value);
-		void set_lightForward(const Vector3& value);
-		void set_shadowCascadeMode(ShadowCascadesMode value);
-		void set_cameraInfo(CameraInfo value);
-		void set_destTarget(uint32_t value);
-		
-	public:
-		Vector3 lightUp;
-		Vector3 lightSide;
-		Vector3 lightForward;
-		ShadowCascadesMode mode;
-		CameraInfo cameraInfo;
-		uint32_t destTarget;
-		std::vector<uint32_t> shadowSliceShaderData;
-		std::vector<DirectLightFrustumCullInfo> cullInfos;
-		uint32_t pipelineMode;
-
-
-	};
+	
 
 	class SpotLightShadowRenderPass
 	{
@@ -168,36 +119,10 @@ namespace laya{
 		DepthTextureMode renderpassNode;
 	};
 
-	//render Camera Pass data
-	class RenderForwardADDPass {
-	public:
-		RenderForwardADDPass();
-		~RenderForwardADDPass();
-
-		void set_shadowCasterPass();
-		void set_DirectLightShadowCasterRenderPass(DirectLightShadowCasterRenderPass* value);
-		void set_needDirectShadowPass(bool value);
-		void set_spotLightShadowPass(SpotLightShadowRenderPass* value);
-		void set_renderpass(ForwardClusterRenderPass* value);
-		void set_afterEverything(std::vector<uint32_t> value);
-	public:
-		bool shadowCasterPass;
-		//directLightPass
-		DirectLightShadowCasterRenderPass* directLightShadowPass;
-		bool needDirectShadowPass;
-		//spotLightPass
-		SpotLightShadowRenderPass* spotLightShadowPass;
-		bool needSpotPass;
-		ForwardClusterRenderPass* renderpass;
-		// TODO
-		//PostProcessPass postprecessPass;
-		std::vector<uint32_t> afterEverything;//cmd buffer
-	};
-
-	class IRender3DProcess
+	/*class IRender3DProcess
 	{
 	public:
-		virtual void renderCameraForwardPass(RenderContext3D* context, RenderForwardADDPass* passInfo, std::vector<BaseRenderNode*> renderNodeList, uint32_t count) = 0;
-    };
+		virtual void renderCameraForwardPass(RenderContext3D* context, IForwardAddRP* passInfo, std::vector<BaseRenderNode*> renderNodeList, uint32_t count) = 0;
+    };*/
 }
 #endif

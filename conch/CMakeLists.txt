@@ -153,6 +153,8 @@ list(APPEND CONCH_SRC
 	render/driver/gles/GLESRender3DProcess.cpp
 	render/driver/gles/GLESForwardAddRP.h
 	render/driver/gles/GLESForwardAddRP.cpp
+	render/driver/gles/GLESDirectLightShadowCastRP.h
+	render/driver/gles/GLESDirectLightShadowCastRP.cpp
 	render/tempbase.h
 	#render/driver/gles/driver
 	render/driver/gles/GLESRenderInstanceData.h

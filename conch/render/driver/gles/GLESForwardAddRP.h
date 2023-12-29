@@ -4,7 +4,7 @@
 #include <vector>
 
 namespace laya {
-	class DirectLightShadowCasterRenderPass;
+	class GLESDirectLightShadowCastRP;
 	class SpotLightShadowRenderPass;
 	class ForwardClusterRenderPass;
 	//render Camera Pass data
@@ -14,7 +14,7 @@ namespace laya {
 		~GLESForwardAddRP();
 
 		void set_shadowCasterPass();
-		void set_DirectLightShadowCasterRenderPass(DirectLightShadowCasterRenderPass* value);
+		void set_DirectLightShadowCasterRenderPass(GLESDirectLightShadowCastRP* value);
 		void set_needDirectShadowPass(bool value);
 		void set_spotLightShadowPass(SpotLightShadowRenderPass* value);
 		void set_renderpass(ForwardClusterRenderPass* value);
@@ -22,7 +22,7 @@ namespace laya {
 	public:
 		bool shadowCasterPass;
 		//directLightPass
-		DirectLightShadowCasterRenderPass* directLightShadowPass;
+		GLESDirectLightShadowCastRP* directLightShadowPass;
 		bool needDirectShadowPass;
 		//spotLightPass
 		SpotLightShadowRenderPass* spotLightShadowPass;
