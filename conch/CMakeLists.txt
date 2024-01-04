@@ -136,6 +136,10 @@ list(APPEND CONCH_SRC
 	render/3D/Sprite3DRenderDeclarationProperty.cpp
 	render/3D/Sprite3DProperty.h
 	render/3D/Sprite3DProperty.cpp
+	render/3D/ShadowCasterPassProperty.h
+	render/3D/ShadowCasterPassProperty.cpp
+	render/3D/BaseCameraProperty.h
+	render/3D/BaseCameraProperty.cpp
 	render/3D/RenderUtil.h
 	render/3D/RenderUtil.cpp
 	#渲染节点类

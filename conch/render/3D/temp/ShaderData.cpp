@@ -264,5 +264,17 @@ namespace laya
 	{
 		return JCConch::s_pConchRender->m_pShaderDataManager->getResource(id);
 	}
+	void ShaderData::setVector(int32_t index, const Vector4& value)
+	{
+		//todo
+	}
+	void ShaderData::setVector3(int32_t index, const Vector3& value)
+	{
+		//todo
+	}
+	void ShaderData::setMatrix4x4(int32_t index, const Matrix4x4& value)
+	{
+		//todo
+	}
 }
 //------------------------------------------------------------------------------

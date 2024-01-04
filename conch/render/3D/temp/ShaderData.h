@@ -4,6 +4,9 @@
 #include <stdio.h>
 #include <unordered_map>
 #include "ResourceBase.h"
+#include <core/math/Vector4.h>
+#include <core/math/Vector3.h>
+#include <core/math/Matrix4x4.h>
 
 namespace laya
 {
@@ -68,7 +71,10 @@ namespace laya
         void applyUBOData();
         
 		static ShaderData *getShaderData(uint32_t id);
-		
+
+		void setVector(int32_t index, const Vector4& value);
+		void setVector3(int32_t index, const Vector3& value);
+		void setMatrix4x4(int32_t index, const Matrix4x4& value);
 	private:
 
 		void printfDataInfoValue();

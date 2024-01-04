@@ -4,6 +4,8 @@
 #include "CanvasRenderingContext2D.h"
 #include <optional>
 #include <string>
+#include <windows.h>
+
 namespace laya
 {
 class CanvasRenderingContext2DWin : public CanvasRenderingContext2D
@@ -32,6 +34,10 @@ class CanvasRenderingContext2DWin : public CanvasRenderingContext2D
      static bool registerFontFromPath(const std::string &fontName, const std::string &path);
   protected:
     BitmapData m_bitmapData;
+    HBITMAP m_hBitmap;
+    HDC m_hdcScreen;
+    HDC m_hdcMem;
+    HBITMAP m_hbmOld;
 };
 } // namespace laya
 #endif

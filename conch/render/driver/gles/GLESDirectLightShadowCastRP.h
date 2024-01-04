@@ -1,11 +1,14 @@
 #ifndef __GLESDirectLightShadowCastRP_H_
 #define __GLESDirectLightShadowCastRP_H_
 
-#include <vector>
+#include "render/3D/ShadowSliceData.h"
 #include "render/3D/design/Render3DProcess.h"
+#include <vector>
 
 namespace laya
 {
+constexpr size_t _maxCascades = 4;
+class ShaderData;
 class GLESDirectLightShadowCastRP : public IDirectLightShadowRP
 {
   public:
@@ -45,14 +48,18 @@ class GLESDirectLightShadowCastRP : public IDirectLightShadowRP
     void set_cameraInfo(CameraInfo value);
     void set_destTarget(uint32_t value);
 
+  private:
+    void _setupShadowCasterShaderValues(ShaderData *shaderValues, const ShadowSliceData &shadowSliceData,
+                                        const Vector3 &LightParam, const Vector4 &shadowBias);
+
   public:
-    Vector3 lightUp;
-    Vector3 lightSide;
-    Vector3 lightForward;
+    Vector3 _lightUp;
+    Vector3 _lightSide;
+    Vector3 _lightForward;
     ShadowCascadesMode mode;
     CameraInfo cameraInfo;
     uint32_t destTarget;
-    std::vector<uint32_t> shadowSliceShaderData;
+    std::vector<uint32_t> _cascadesSplitDistance;
     std::vector<DirectLightFrustumCullInfo> cullInfos;
     uint32_t pipelineMode;
 };
