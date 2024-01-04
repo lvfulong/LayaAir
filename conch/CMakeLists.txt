@@ -142,6 +142,8 @@ list(APPEND CONCH_SRC
 	render/3D/BaseCameraProperty.cpp
 	render/3D/RenderUtil.h
 	render/3D/RenderUtil.cpp
+	render/3D/Scene3DShaderDeclaration.h
+	render/3D/Scene3DShaderDeclaration.cpp
 	#渲染节点类
 	render/3D/renderInstance/BaseRenderNode.h
 	render/3D/renderInstance/BaseRenderNode.cpp

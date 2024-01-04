@@ -360,9 +360,9 @@ namespace laya
 			return id;
 		}
 	}
-	uint32_t WebGLEngine::getDefineByName(const char* name)
+	ShaderDefine* WebGLEngine::getDefineByName(const char* name)
 	{
-		return 0;//TODO
+		return nullptr;//TODO
 	}
 	IRenderState* WebGLEngine::getRenderState()
 	{

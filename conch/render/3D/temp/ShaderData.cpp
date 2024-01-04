@@ -276,5 +276,13 @@ namespace laya
 	{
 		//todo
 	}
+	void ShaderData::addDefine(ShaderDefine* define)
+	{
+		//todo
+	}
+	void ShaderData::removeDefine(ShaderDefine* define)
+	{
+		//todo
+	}
 }
 //------------------------------------------------------------------------------

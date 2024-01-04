@@ -3,6 +3,7 @@
 
 #include "render/3D/ShadowSliceData.h"
 #include "render/3D/design/Render3DProcess.h"
+#include "GLESDirectLight.h"
 #include <vector>
 
 namespace laya
@@ -12,12 +13,7 @@ class ShaderData;
 class GLESDirectLightShadowCastRP : public IDirectLightShadowRP
 {
   public:
-    enum class ShadowCascadesMode
-    {
-        NoCascades,
-        TwoCascades,
-        FourCascades,
-    };
+
 
     struct DirectLightFrustumCullInfo
     {
@@ -51,7 +47,8 @@ class GLESDirectLightShadowCastRP : public IDirectLightShadowRP
   private:
     void _setupShadowCasterShaderValues(ShaderData *shaderValues, const ShadowSliceData &shadowSliceData,
                                         const Vector3 &LightParam, const Vector4 &shadowBias);
-
+    void getShadowBias(const Matrix4x4 &shadowProjectionMatrix, double shadowResolution, Vector4 &out);
+    void _applyRenderData(ShaderData* scene, ShaderData* camera);
   public:
     Vector3 _lightUp;
     Vector3 _lightSide;
@@ -62,6 +59,9 @@ class GLESDirectLightShadowCastRP : public IDirectLightShadowRP
     std::vector<uint32_t> _cascadesSplitDistance;
     std::vector<DirectLightFrustumCullInfo> cullInfos;
     uint32_t pipelineMode;
+    GLESDirectLight _light;
+    Vector4 _shadowMapSize;
+    Vector4 _shadowParams;
 };
 } // namespace laya
 #endif

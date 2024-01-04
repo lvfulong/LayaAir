@@ -26,6 +26,7 @@ namespace laya
 		Matrix3x3,
 	};
     class JSShaderData;
+	class ShaderDefine;
 	class ShaderData: public ResourceBase<ShaderData>
 	{
 	public:
@@ -75,6 +76,8 @@ namespace laya
 		void setVector(int32_t index, const Vector4& value);
 		void setVector3(int32_t index, const Vector3& value);
 		void setMatrix4x4(int32_t index, const Matrix4x4& value);
+		void addDefine(ShaderDefine* define);
+		void removeDefine(ShaderDefine* define);
 	private:
 
 		void printfDataInfoValue();

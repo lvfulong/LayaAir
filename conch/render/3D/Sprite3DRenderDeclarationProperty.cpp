@@ -1,11 +1,11 @@
 #include "Sprite3DRenderDeclarationProperty.h"
 namespace laya
 {
-uint32_t Sprite3DRenderDeclarationProperty::SHADERDEFINE_SPECCUBE_BOX_PROJECTION = 0;
-uint32_t Sprite3DRenderDeclarationProperty::SHADERDEFINE_GI_LEGACYIBL = 0;
-uint32_t Sprite3DRenderDeclarationProperty::SHADERDEFINE_GI_IBL = 0;
-uint32_t Sprite3DRenderDeclarationProperty::SHADERDEFINE_IBL_RGBD = 0;
-uint32_t Sprite3DRenderDeclarationProperty::SHADERDEFINE_VOLUMETRICGI = 0;
+ShaderDefine* Sprite3DRenderDeclarationProperty::SHADERDEFINE_SPECCUBE_BOX_PROJECTION = nullptr;
+ShaderDefine* Sprite3DRenderDeclarationProperty::SHADERDEFINE_GI_LEGACYIBL = nullptr;
+ShaderDefine* Sprite3DRenderDeclarationProperty::SHADERDEFINE_GI_IBL = nullptr;
+ShaderDefine* Sprite3DRenderDeclarationProperty::SHADERDEFINE_IBL_RGBD = nullptr;
+ShaderDefine* Sprite3DRenderDeclarationProperty::SHADERDEFINE_VOLUMETRICGI = nullptr;
 
 void Sprite3DRenderDeclarationProperty::__init__()
 {

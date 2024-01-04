@@ -10,6 +10,8 @@ class ShadowCasterPassProperty
   public:
     static uint32_t SHADOW_BIAS;
     static uint32_t SHADOW_LIGHT_DIRECTION;
+    static uint32_t SHADOW_PARAMS;
+    static uint32_t SHADOW_MAP_SIZE;
     static void __init__();
 };
 
