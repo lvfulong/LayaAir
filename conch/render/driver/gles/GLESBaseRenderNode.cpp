@@ -1,4 +1,11 @@
 #include "GLESBaseRenderNode.h"
 
-namespace laya {
+namespace laya
+{
+
+bool GLESBaseRenderNode::shadowCullPass()
+{
+    // todo
+    return true;
 }
+} // namespace laya
