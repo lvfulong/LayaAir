@@ -5,12 +5,12 @@
 
 namespace laya
 {
-	class RenderElement;
+	class RenderElementOBJ;
 	class ISortPass
 	{
 	public:
 		virtual ~ISortPass() {}
-		virtual void sort(JCSingletonList<RenderElement*>* elements, bool isTransparent, int left, int right) = 0;
+		virtual void sort(JCSingletonList<RenderElementOBJ*>* elements, bool isTransparent, int left, int right) = 0;
 	};
 }
 

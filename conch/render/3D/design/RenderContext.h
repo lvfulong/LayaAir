@@ -10,17 +10,18 @@
 #include <render/3D/design/renderEnum/RenderClearFlag.h>
 
 
-class RenderElement3D;
+
 namespace laya{
-    typedef std::function<void(JCSingletonList<RenderElement3D*>&) > extendCall;
+    class RenderElementOBJ;
+    typedef std::function<void(JCSingletonList<RenderElementOBJ*>&) > extendCall;
  class RenderContext3D
  {
  public:
      static uint32_t globalShaderData;
      virtual ~RenderContext3D();
      RenderContext3D();
-     virtual uint32_t drawRenderElementList(JCSingletonList<RenderElement3D*>& list) = 0;
-     virtual void drawRenderElementOne(RenderElement3D* one) = 0;
+     virtual uint32_t drawRenderElementList(const JCSingletonList<RenderElementOBJ*>& list) = 0;
+     virtual void drawRenderElementOne(RenderElementOBJ* one) = 0;
      virtual void setDestTarget(uint32_t renderTarget);
      virtual void setCameraData(uint32_t shaderData);
      virtual void setSceneData(uint32_t sceneData);

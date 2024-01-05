@@ -1,6 +1,6 @@
 #include "QuickSort.h"
-#include "RenderElement.h"
 #include <Bindings/LayaAir/3D/JSRenderNode.h>
+#include "RenderElementOBJ.h"
 
 namespace laya
 {
@@ -9,7 +9,7 @@ namespace laya
 		m_pElementArray = nullptr;
 	}
 
-    void QuickSort::sort(JCSingletonList<RenderElement*>* elements, bool isTransparent, int left, int right)
+    void QuickSort::sort(JCSingletonList<RenderElementOBJ*>* elements, bool isTransparent, int left, int right)
 	{
 		m_pElementArray = elements;
 		m_bIsTransparent = isTransparent;
@@ -32,9 +32,9 @@ namespace laya
 
 	int QuickSort::_partitionRenderObject(int left, int right)
 	{
-		std::vector<RenderElement*>& elements = m_pElementArray->m_vElements;
+		std::vector<RenderElementOBJ*>& elements = m_pElementArray->m_vElements;
 		int tempIndex = floor((right + left) / 2.0f);
-		RenderElement* pivot = elements[tempIndex];
+		RenderElementOBJ* pivot = elements[tempIndex];
 		while (left <= right)
 		{
 			while (_compare(elements[left], pivot) < 0)
@@ -43,7 +43,7 @@ namespace laya
 				right--;
 			if (left < right) 
 			{
-				RenderElement* temp = elements[left];
+				RenderElementOBJ* temp = elements[left];
 				elements[left] = elements[right];
 				elements[right] = temp;
 				left++;
@@ -58,13 +58,13 @@ namespace laya
 		return left;
 	}
 
-	int QuickSort::_compare(RenderElement* left , RenderElement* right)
+	int QuickSort::_compare(RenderElementOBJ* left , RenderElementOBJ* right)
 	{
-		int renderQueue = left->m_nRenderQueue - right->m_nRenderQueue;
+		int renderQueue = left->composeData->renderQueue - right->composeData->renderQueue;
 		if (renderQueue == 0) 
 		{
-			int sort = m_bIsTransparent ? right->m_pRenderNode->m_nDistanceForSort - left->m_pRenderNode->m_nDistanceForSort : left->m_pRenderNode->m_nDistanceForSort - right->m_pRenderNode->m_nDistanceForSort;
-			return sort + right->m_nSortingFudge - left->m_nSortingFudge;
+			int sort = m_bIsTransparent ? right->composeData->m_nDistanceForSort - left->composeData->m_nDistanceForSort : left->composeData->m_nDistanceForSort - right->composeData->m_nDistanceForSort;
+			return sort + right->composeData->m_nSortingFudge - left->composeData->m_nSortingFudge;
 		}
 		else
 		{

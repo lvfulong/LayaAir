@@ -24,7 +24,7 @@ namespace laya{
         //排版数据 用于renderqueuelist
         ComposeData compose{};
         //渲染数据 用于最终list渲染
-        std::vector<RenderElement3D> elments{};
+        std::vector<RenderElementOBJ*> elments{};
         //设置这个值，所有的updateBounds renderUpdate和renderupdatebyCamera 必须在native执行
         bool nativeUpdateData = false;
         bool boundsChange = true;

@@ -12,21 +12,21 @@
 
 namespace laya
 {
-    typedef std::function<void(JCSingletonList<RenderElement3D*>&)> batchfun;
-    typedef std::function<void(JCSingletonList<RenderElement3D*>&, uint32_t, uint32_t)> composefun;
+    typedef std::function<void(JCSingletonList<RenderElementOBJ*>&)> batchfun;
+    typedef std::function<void(JCSingletonList<RenderElementOBJ*>&, uint32_t, uint32_t)> composefun;
 	class RenderListQueue {
     public:
        
         RenderListQueue(batchfun batch, composefun compose);
         ~RenderListQueue();
         uint32_t renderQueue();
-        void addRenderElement(RenderElement3D* value);
+        void addRenderElement(RenderElementOBJ* value);
         void clear();
         void set_context(RenderContext3D* context);
     private:
         batchfun _batch;
         composefun _compose;
-        JCSingletonList<RenderElement3D*> _elements{ false };//lv todo
+        JCSingletonList<RenderElementOBJ*> _elements{ false };//lv todo
         RenderContext3D* _context;
 	};
 }

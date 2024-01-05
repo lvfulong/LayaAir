@@ -10,19 +10,20 @@ namespace laya
 {
 constexpr size_t _maxCascades = 4;
 class ShaderData;
+
+
+struct ShadowCullInfo
+{
+    Vector3							_position;
+    std::vector<Plane>				_cullPlanes;
+    BoundSphere						_cullSphere;
+    int								_cullPlaneCount;
+    Vector3							_direction;
+};
+
 class GLESDirectLightShadowCastRP : public IDirectLightShadowRP
 {
   public:
-
-
-    struct DirectLightFrustumCullInfo
-    {
-        Vector3 _position;
-        std::vector<Plane> _cullPlanes;
-        BoundSphere _cullSphere;
-        int _cullPlaneCount;
-        Vector3 _direction;
-    };
     struct CameraInfo
     {
         float _far;
@@ -57,7 +58,7 @@ class GLESDirectLightShadowCastRP : public IDirectLightShadowRP
     CameraInfo cameraInfo;
     uint32_t destTarget;
     std::vector<uint32_t> _cascadesSplitDistance;
-    std::vector<DirectLightFrustumCullInfo> cullInfos;
+    //std::vector<DirectLightFrustumCullInfo> cullInfos;
     uint32_t pipelineMode;
     GLESDirectLight _light;
     Vector4 _shadowMapSize;

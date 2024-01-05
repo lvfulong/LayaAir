@@ -140,8 +140,6 @@ list(APPEND CONCH_SRC
 	render/3D/ShadowCasterPassProperty.cpp
 	render/3D/BaseCameraProperty.h
 	render/3D/BaseCameraProperty.cpp
-	render/3D/RenderUtil.h
-	render/3D/RenderUtil.cpp
 	render/3D/Scene3DShaderDeclaration.h
 	render/3D/Scene3DShaderDeclaration.cpp
 	#渲染节点类
@@ -167,6 +165,8 @@ list(APPEND CONCH_SRC
 	render/driver/gles/GLESForwardAddClusterRP.cpp
 	render/driver/gles/GLESBaseRenderNode.h
 	render/driver/gles/GLESBaseRenderNode.cpp
+	render/driver/gles/GLESCullUtil.h
+	render/driver/gles/GLESCullUtil.cpp
 	render/tempbase.h
 	#render/driver/gles/driver
 	render/driver/gles/GLESRenderInstanceData.h
@@ -278,7 +278,8 @@ list(APPEND CONCH_SRC
 	render/3D/temp/InstanceRenderElementOBJ.cpp
 	render/3D/temp/UniformBufferObject.h
 	render/3D/temp/UniformBufferObject.cpp
-
+	render/3D/temp/RenderElementOBJ.h
+	render/3D/temp/RenderElementOBJ.cpp
 	Audio/JCAudioManager.cpp
 	Audio/JCAudioManager.h
 	downloadCache/JCFileTable.cpp

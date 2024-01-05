@@ -3,5 +3,10 @@
 
 
 namespace laya {
+    class GLESBaseRenderNode
+    {
+        public:
+
+    };
 }
 #endif

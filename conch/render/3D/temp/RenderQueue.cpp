@@ -43,6 +43,6 @@ namespace laya
 		if (m_pSortPass == nullptr)
 			return;
 		int count = m_pElementList->getLength();
-		m_pSortPass->sort(m_pElementList, m_bIsTransparent, 0, count - 1);
+		///todo m_pSortPass->sort(m_pElementList, m_bIsTransparent, 0, count - 1);
 	}
 }

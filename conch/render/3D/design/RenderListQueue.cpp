@@ -20,7 +20,7 @@ namespace laya
         return _context->drawRenderElementList(_elements);
     }
 
-    void RenderListQueue::addRenderElement(RenderElement3D* value){
+    void RenderListQueue::addRenderElement(RenderElementOBJ* value){
         //TODO
         //_elements.add(renderelement);
     }

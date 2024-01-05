@@ -58,17 +58,5 @@ namespace laya {
         bool _isRender;
         uint32_t pipelineMode;
     };
-
-    class RenderElement3D {
-    public:
-        RenderElement3D();
-        ~RenderElement3D();
-
-    public:
-        //排版数据
-        ComposeData* composeData;
-        //渲染数据
-        RenderInstanceData renderData;
-    };
 }
 #endif
