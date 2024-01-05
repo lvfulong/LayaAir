@@ -7,11 +7,11 @@
 #include <unordered_map>
 #include <core/math/Matrix4x4.h>
 #include "render/3D/design/RenderContext.h"
-#include "render/3D/renderInstance/BaseRenderNode.h"
-
 
 namespace laya{
 
+	class BaseRenderNode;
+	class Transform3D;
 	class CameraNode
 	{
 	public:

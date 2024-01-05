@@ -143,8 +143,6 @@ list(APPEND CONCH_SRC
 	render/3D/Scene3DShaderDeclaration.h
 	render/3D/Scene3DShaderDeclaration.cpp
 	#渲染节点类
-	render/3D/renderInstance/BaseRenderNode.h
-	render/3D/renderInstance/BaseRenderNode.cpp
 	render/3D/renderInstance/MeshRenderNode.h
 	render/3D/renderInstance/MeshRenderNode.cpp
 	render/3D/renderInstance/RenderModuleData.h

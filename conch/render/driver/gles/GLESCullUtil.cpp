@@ -1,4 +1,6 @@
 #include "GLESCullUtil.h"
+#include "render/3D/FrustumCulling.h"
+
 namespace laya
 {
 void GLESCullUtil::cullByCameraCullInfo(const CameraCullInfo &cameraCullInfo, std::vector<GLESBaseRenderNode *> &list,
@@ -48,7 +50,7 @@ void GLESCullUtil::cullByCameraCullInfo(const CameraCullInfo &cameraCullInfo, st
 }
 
 void GLESCullUtil::culldirectLightShadow(const ShadowCullInfo &shadowCullInfo, std::vector<GLESBaseRenderNode *> &list,
-                                         uint32_t count, std::vector<GLESBaseRenderNode *> &opaqueList,
+                                         uint32_t count, GLESRenderQueueList &opaqueList,
                                          const GLESRenderContext3D &context)
 {
     opaqueList.clear();
@@ -60,21 +62,20 @@ void GLESCullUtil::culldirectLightShadow(const ShadowCullInfo &shadowCullInfo, s
         if (canPass)
         {
             // Stat.frustumCulling++; todo
-            /*bool pass = FrustumCulling::cullingRenderBounds(render.bounds, shadowCullInfo);
+            bool pass = FrustumCulling::cullingRenderBounds(render->getBounds(), shadowCullInfo);
             if (pass)
             {
-                render.distanceForSort = Vector3::distance(
-                    render.bounds.getCenter(), shadowCullInfo.position); // TODO:合并计算浪费,或者合并后取平均值
-                render._renderUpdatePre(context);                        // TS OR Native
-                var elements =
-                    render.renderelements for (var j : number = 0, m : number = elements.length; j < m; j++)
+                render->distanceForSort = Vector3::distance(
+                    render->getBounds()->getCenter(), shadowCullInfo._position); // TODO:合并计算浪费,或者合并后取平均值
+                render->_renderUpdatePre(context);                               // TS OR Native
+                std::vector<RenderElementOBJ *>& elements = render->renderelements;
+                for (int j = 0, m = elements.size(); j < m; j++)
                 {
-                    var element = elements[j];
-                    if (element._materialRenderQueue < 2500)
+                    RenderElementOBJ* element = elements[j];
+                    if (element->composeData->_materialRenderQueue < 2500)
                         opaqueList.addRenderElement(element);
-                    pCull
                 }
-            }*/
+            }
         }
     }
 }

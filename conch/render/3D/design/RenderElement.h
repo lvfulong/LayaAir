@@ -13,7 +13,7 @@ namespace laya {
         ~ComposeData();
         void set_composeData_distanceForsort(float value);
         void set_composeData_sortingFudge(float value);
-        void set_composeData_renderQueue(uint32_t value);
+        void set_composeData_materialRenderQueue(uint32_t value);
         void set_composeData_castShadow(bool value);
         void set_composeData_renderEnable(bool value);
         void set_composeData_renderbitFlag(uint32_t value);
@@ -24,7 +24,8 @@ namespace laya {
     public:
         float m_nDistanceForSort;
         float m_nSortingFudge;//排序矫正值
-        uint32_t renderQueue;//material Renderqueue//TODO
+        //uint32_t renderQueue;//material Renderqueue//TODO
+        uint32_t _materialRenderQueue;
         bool castShadow;
         bool enable;
         uint32_t renderbitFlag;

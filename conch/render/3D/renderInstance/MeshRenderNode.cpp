@@ -2,7 +2,7 @@
 #include <render/3D/temp/ShaderData.h>
 
 namespace laya {
-	MeshRenderNode::MeshRenderNode()
+	/*MeshRenderNode::MeshRenderNode()
 	{
 	}
 
@@ -25,5 +25,5 @@ namespace laya {
 		//this._worldParams.x = trans.getFrontFaceValue();
 		//this._setShaderValue(Sprite3DProperty::WORLDINVERTFRONT, ShaderDataType::Vector4, this._worldParams);
 		return;
-	}
+	}*/
 }

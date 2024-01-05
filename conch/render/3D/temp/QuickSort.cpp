@@ -60,7 +60,7 @@ namespace laya
 
 	int QuickSort::_compare(RenderElementOBJ* left , RenderElementOBJ* right)
 	{
-		int renderQueue = left->composeData->renderQueue - right->composeData->renderQueue;
+		int renderQueue = left->composeData->_materialRenderQueue - right->composeData->_materialRenderQueue;
 		if (renderQueue == 0) 
 		{
 			int sort = m_bIsTransparent ? right->composeData->m_nDistanceForSort - left->composeData->m_nDistanceForSort : left->composeData->m_nDistanceForSort - right->composeData->m_nDistanceForSort;

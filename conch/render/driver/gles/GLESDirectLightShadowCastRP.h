@@ -12,14 +12,7 @@ constexpr size_t _maxCascades = 4;
 class ShaderData;
 
 
-struct ShadowCullInfo
-{
-    Vector3							_position;
-    std::vector<Plane>				_cullPlanes;
-    BoundSphere						_cullSphere;
-    int								_cullPlaneCount;
-    Vector3							_direction;
-};
+
 
 class GLESDirectLightShadowCastRP : public IDirectLightShadowRP
 {

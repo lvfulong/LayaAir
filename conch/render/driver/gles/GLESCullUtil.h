@@ -19,7 +19,7 @@ class GLESCullUtil
                                      const GLESRenderContext3D &context);
 
     static void culldirectLightShadow(const ShadowCullInfo &shadowCullInfo, std::vector<GLESBaseRenderNode *> &list,
-                                      uint32_t count, std::vector<GLESBaseRenderNode *> &opaqueList,
+                                      uint32_t count, GLESRenderQueueList &opaqueList,
                                       const GLESRenderContext3D &context);
 
     static void cullingSpotShadow(const CameraCullInfo &cameraCullInfo, std::vector<GLESBaseRenderNode *> &list,

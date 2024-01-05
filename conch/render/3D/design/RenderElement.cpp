@@ -15,8 +15,8 @@ namespace laya
     void ComposeData::set_composeData_sortingFudge(float value){
         m_nSortingFudge = value;
     }
-    void ComposeData::set_composeData_renderQueue(uint32_t value){
-        renderQueue = value;
+    void ComposeData::set_composeData_materialRenderQueue(uint32_t value){
+        _materialRenderQueue = value;
     }
     void ComposeData::set_composeData_castShadow(bool value){
         castShadow = value;
