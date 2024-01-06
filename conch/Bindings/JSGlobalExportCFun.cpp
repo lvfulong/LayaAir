@@ -36,6 +36,8 @@
 #elif WIN32
 	#include <Windows.h>
     #include "JSWindowEditBox.h"
+#elif LINUX
+    #include "JSLinuxEditBox.h"
 #elif __APPLE__
     #include "JSIOSEditBox.h"
     #include "CToObjectC.h"
@@ -532,8 +534,9 @@ namespace laya
 #ifdef WIN32
 
         JSWindowEditBox::exportJS(context);
+#elif LINUX
+        JSLinuxEditBox::exportJS(context);
 #elif ANDROID
-
         JSAndroidEditBox::exportJS(context);
 #elif __APPLE__
 

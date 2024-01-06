@@ -2,6 +2,7 @@
 #define __GLESForwardAddRP_H_
 
 #include <vector>
+#include <stdint.h>
 
 namespace laya {
 	class GLESDirectLightShadowCastRP;
