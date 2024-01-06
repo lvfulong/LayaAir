@@ -11,8 +11,8 @@ class FrustumCulling
   public:
 	static bool cullingRenderBounds(Bounds* bounds, const ShadowCullInfo& cullInfo)
     {
-        int cullPlaneCount = cullInfo._cullPlaneCount;
-        const std::vector<Plane>& cullPlanes = cullInfo._cullPlanes;
+        int cullPlaneCount = cullInfo.cullPlaneCount;
+        const std::array<Plane, 10>& cullPlanes = cullInfo.cullPlanes;
 
         const Vector3& min = bounds->getMin();
         const Vector3& max = bounds->getMax();

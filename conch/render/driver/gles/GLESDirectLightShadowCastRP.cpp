@@ -1,14 +1,16 @@
 #include "GLESDirectLightShadowCastRP.h"
 #include "render/3D/BaseCameraProperty.h"
-#include "render/3D/ShadowCasterPassProperty.h"
-#include <render/3D/temp/ShaderData.h>
-#include <render/3D/ShadowMode.h>
 #include "render/3D/Scene3DShaderDeclaration.h"
+#include "render/3D/ShadowCasterPassProperty.h"
+#include <render/3D/ShadowMode.h>
+#include <render/3D/temp/ShaderData.h>
+#include "GLESCullUtil.h"
+
 namespace laya
 {
 
 // GLESDirectLightShadowCastRP
-GLESDirectLightShadowCastRP::GLESDirectLightShadowCastRP()
+GLESDirectLightShadowCastRP::GLESDirectLightShadowCastRP() : _renderQueue(false)
 {
     _cascadesSplitDistance.resize(_maxCascades + 1);
 }
@@ -21,15 +23,54 @@ void GLESDirectLightShadowCastRP::update(RenderContext3D *context)
 {
     // 根据cameraInfo的数据和mode还有directlight的数据,确认裁剪数据,确认shaderData的值
 }
-void GLESDirectLightShadowCastRP::render(RenderContext3D *context, std::vector<BaseRenderNode *> renderNodeList,
+void GLESDirectLightShadowCastRP::render(RenderContext3D *context, std::vector<GLESBaseRenderNode*>& list,
                                          uint32_t count)
 {
-    // for循环  裁剪完 更新渲染数据，再渲染
-}
+    ShaderData *shaderValues = context->sceneData;
+    context->pipelineMode = "ShadowCaster";
+    // too var shadowMap = this.destTarget
+    // too context.setRenderTarget(shadowMap);
+    // 需要把shadowmap clear Depth;
+    for (int i = 0, n = this->_cascadeCount; i < n; i++)
+    {
+        ShadowSliceData& sliceData = this->_shadowSliceDatas[i];
+        this->getShadowBias(sliceData.projectionMatrix, sliceData.resolution, this->_shadowBias);
+        this->_setupShadowCasterShaderValues(shaderValues, sliceData, this->_lightForward, this->_shadowBias);
+        ShadowCullInfo& shadowCullInfo = this->_shadowCullInfo;
+        shadowCullInfo.position = sliceData.position;
+        shadowCullInfo.cullPlanes = sliceData.cullPlanes;
+        shadowCullInfo.cullPlaneCount = sliceData.cullPlaneCount;
+        shadowCullInfo.cullSphere = sliceData.splitBoundSphere;
+        shadowCullInfo.direction = this->_lightForward;
+        //cull
+        GLESCullUtil::culldirectLightShadow(shadowCullInfo, list, count, this->_renderQueue, (GLESRenderContext3D*)context);
 
-void GLESDirectLightShadowCastRP::applyRenderData(uint32_t sceneShaderData, uint32_t cameraShaderData)
-{
-    // 将渲染结果 写入scene和camera的shaderData中
+        context->cameraData = sliceData.cameraShaderValue;
+        // todo Camera._updateMark++;
+        // todo context.cameraUpdateMask = Camera._updateMark;
+        auto resolution = sliceData.resolution;
+        auto offsetX = sliceData.offsetX;
+        auto offsetY = sliceData.offsetY;
+
+        if (this->_renderQueue._elements.getLength() > 0)
+        { // if one cascade have anything to render.
+            Viewport _tempViewport(offsetX, offsetY, resolution, resolution);
+            Vector4 tempVec4(offsetX + 1, offsetY + 1, resolution - 2, resolution - 2);
+            context->setViewport(_tempViewport);
+            context->setScissor(tempVec4);
+        }
+        else
+        {
+            Viewport _tempViewport(offsetX, offsetY, resolution, resolution);
+            context->setViewport(_tempViewport);
+            Vector4 tempVec4(offsetX, offsetY, resolution, resolution);
+            context->setScissor(tempVec4);
+        }
+        context->setClearData((RenderClearFlagBits)RenderClearFlag::Depth, Color::BLACK, 1, 0);
+        this->_renderQueue.renderQueue(*(GLESRenderContext3D *)context);
+        // todo this._applyCasterPassCommandBuffer(context);
+    }
+    this->_applyRenderData(context->sceneData, context->cameraData);
 }
 
 void GLESDirectLightShadowCastRP::set_lightUp(const Vector3 &value)
@@ -53,9 +94,9 @@ void GLESDirectLightShadowCastRP::set_destTarget(uint32_t value)
 {
     // TODO
 }
-void GLESDirectLightShadowCastRP::_applyRenderData(ShaderData* scene, ShaderData* camera)
+void GLESDirectLightShadowCastRP::_applyRenderData(ShaderData *scene, ShaderData *camera)
 {
-    const GLESDirectLight& light = this->_light;
+    const GLESDirectLight &light = this->_light;
     if (light.shadowCascadesMode != ShadowCascadesMode::NoCascades)
         scene->addDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_CASCADE);
     else
@@ -76,13 +117,14 @@ void GLESDirectLightShadowCastRP::_applyRenderData(ShaderData* scene, ShaderData
         scene->removeDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SOFT_SHADOW_LOW);
         break;
     }
-    //scene.setTexture(ShadowCasterPass.SHADOW_MAP, this.destTarget); todo
-    //scene.setBuffer(ShadowCasterPass.SHADOW_MATRICES, this._shadowMatrices); todo
+    // scene.setTexture(ShadowCasterPass.SHADOW_MAP, this.destTarget); todo
+    // scene.setBuffer(ShadowCasterPass.SHADOW_MATRICES, this._shadowMatrices); todo
     scene->setVector(ShadowCasterPassProperty::SHADOW_MAP_SIZE, this->_shadowMapSize);
     scene->setVector(ShadowCasterPassProperty::SHADOW_PARAMS, this->_shadowParams);
-    //scene.setBuffer(ShadowCasterPass.SHADOW_SPLIT_SPHERES, this._splitBoundSpheres); todo
+    // scene.setBuffer(ShadowCasterPass.SHADOW_SPLIT_SPHERES, this._splitBoundSpheres); todo
 }
-void GLESDirectLightShadowCastRP::getShadowBias(const Matrix4x4& shadowProjectionMatrix, double shadowResolution, Vector4& out)
+void GLESDirectLightShadowCastRP::getShadowBias(const Matrix4x4 &shadowProjectionMatrix, double shadowResolution,
+                                                Vector4 &out)
 {
     double frustumSize;
 
@@ -90,13 +132,13 @@ void GLESDirectLightShadowCastRP::getShadowBias(const Matrix4x4& shadowProjectio
     // elements[0] = 2.0 / (right - left)
     frustumSize = 2.0 / shadowProjectionMatrix.elements[0];
 
-
     // depth and normal bias scale is in shadowmap texel size in world space
     double texelSize = frustumSize / shadowResolution;
     double depthBias = -this->_light.shadowDepthBias * texelSize;
     double normalBias = -this->_light.shadowNormalBias * texelSize;
 
-    if (this->_light.shadowMode == ShadowMode::SoftHigh) {
+    if (this->_light.shadowMode == ShadowMode::SoftHigh)
+    {
         // TODO: depth and normal bias assume sample is no more than 1 texel away from shadowmap
         // This is not true with PCF. Ideally we need to do either
         // cone base bias (based on distance to center sample)

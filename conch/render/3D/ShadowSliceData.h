@@ -1,8 +1,11 @@
 #ifndef __ShadowSliceData_H_
 #define __ShadowSliceData_H_
 
+#include <array>
 #include <core/math/Matrix4x4.h>
 #include <core/math/Vector3.h>
+#include <core/math/Plane.h>
+#include <core/math/BoundSphere.h>
 
 namespace laya
 {
@@ -18,14 +21,11 @@ class ShadowSliceData
     Matrix4x4 viewMatrix;
     Matrix4x4 projectionMatrix;
     Matrix4x4 viewProjectMatrix;
-    /*cullPlanes : Array<Plane> = [
-        new Plane(new Vector3(), 0), new Plane(new Vector3(), 0), new Plane(new Vector3(), 0),
-        new Plane(new Vector3(), 0), new Plane(new Vector3(), 0), new Plane(new Vector3(), 0),
-        new Plane(new Vector3(), 0), new Plane(new Vector3(), 0), new Plane(new Vector3(), 0),
-        new Plane(new Vector3(), 0)
-    ];*/
+    std::array<Plane, 10> cullPlanes = {
+        Plane(Vector3(), 0), Plane(Vector3(), 0), Plane(Vector3(), 0), Plane(Vector3(), 0), Plane(Vector3(), 0),
+        Plane(Vector3(), 0), Plane(Vector3(), 0), Plane(Vector3(), 0), Plane(Vector3(), 0), Plane(Vector3(), 0)};
     uint32_t cullPlaneCount;
-    // splitBoundSphere : BoundSphere = new BoundSphere(new Vector3(), 0.0);
+    BoundSphere splitBoundSphere{ Vector3(),0.0f };
     double sphereCenterZ; // todo type
 };
 } // namespace laya

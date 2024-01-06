@@ -12,7 +12,7 @@ class GLESSpotLightShadowRP
     GLESSpotLightShadowRP();
     ~GLESSpotLightShadowRP();
     void update(RenderContext3D *context);
-    void render(RenderContext3D *context, std::vector<BaseRenderNode *> renderNodeList, uint32_t count);
+    void render(RenderContext3D *context, std::vector<GLESBaseRenderNode*> renderNodeList, uint32_t count);
     void applyRenderData(uint32_t sceneShaderData, uint32_t cameraShaderData);
 
     void set_position(Vector3 value);

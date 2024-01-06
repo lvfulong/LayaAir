@@ -9,6 +9,7 @@
 #include <core/math/Vector3.h>
 #include <render/3D/design/RenderContext.h>
 #include <vector>
+#include <array>
 
 namespace laya
 {
@@ -16,11 +17,11 @@ class RenderContext3D;
 
 struct ShadowCullInfo
 {
-    Vector3 _position;
-    std::vector<Plane> _cullPlanes;
-    BoundSphere _cullSphere;
-    int _cullPlaneCount;
-    Vector3 _direction;
+    Vector3 position;
+    std::array<Plane, 10> cullPlanes;
+    BoundSphere cullSphere;
+    int cullPlaneCount;
+    Vector3 direction;
 };
 struct CameraCullInfo
 {

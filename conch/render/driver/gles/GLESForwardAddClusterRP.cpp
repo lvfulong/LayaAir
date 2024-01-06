@@ -9,7 +9,7 @@ namespace laya
     GLESForwardAddClusterRP::~GLESForwardAddClusterRP(){
         
     }
-    void GLESForwardAddClusterRP::render(RenderContext3D* context, std::vector<BaseRenderNode*> renderNodeList, uint32_t count){
+    void GLESForwardAddClusterRP::render(RenderContext3D* context, std::vector<GLESBaseRenderNode*> renderNodeList, uint32_t count){
         //根据cull信息进行裁剪,
         //通过裁剪的BaseRenderNode 进行preRenderUpdate
         //分开transparent和opaque renderQueueList
@@ -23,11 +23,11 @@ namespace laya
         //渲染 transparent
         //结束
     }
-    void GLESForwardAddClusterRP::renderDepthPass(RenderContext3D* context, JCSingletonList<BaseRenderNode>& renderNodeList){
+    void GLESForwardAddClusterRP::renderDepthPass(RenderContext3D* context, JCSingletonList<GLESBaseRenderNode>& renderNodeList){
         //set render context pipeline
         //render queue list
     }
-    void GLESForwardAddClusterRP::renderDepthNormalPass(RenderContext3D* context, JCSingletonList<BaseRenderNode>& renderNodeList){
+    void GLESForwardAddClusterRP::renderDepthNormalPass(RenderContext3D* context, JCSingletonList<GLESBaseRenderNode>& renderNodeList){
         //set render context pipeline
          //render queue list
     }
@@ -46,7 +46,7 @@ namespace laya
     void GLESForwardAddClusterRP::set_destTarget(uint32_t value){
         
     }
-    void GLESForwardAddClusterRP::set_skyRenderNode(BaseRenderNode* value){
+    void GLESForwardAddClusterRP::set_skyRenderNode(GLESBaseRenderNode* value){
         
     }
 

@@ -30,15 +30,15 @@ class GLESForwardAddClusterRP
   public:
     GLESForwardAddClusterRP();
     ~GLESForwardAddClusterRP();
-    void render(RenderContext3D *context, std::vector<BaseRenderNode *> renderNodeList, uint32_t count);
-    void renderDepthPass(RenderContext3D *context, JCSingletonList<BaseRenderNode> &renderNodeList);
-    void renderDepthNormalPass(RenderContext3D *context, JCSingletonList<BaseRenderNode> &renderNodeList);
+    void render(RenderContext3D *context, std::vector<GLESBaseRenderNode*> renderNodeList, uint32_t count);
+    void renderDepthPass(RenderContext3D *context, JCSingletonList<GLESBaseRenderNode> &renderNodeList);
+    void renderDepthNormalPass(RenderContext3D *context, JCSingletonList<GLESBaseRenderNode> &renderNodeList);
     void set_cameraCullInfo(CameraFrustumCullInfo value);
     void set_beforeForwardCmds(std::vector<uint32_t> value);
     void set_beforeSkybox(std::vector<uint32_t> value);
     void set_beforeTransparent(std::vector<uint32_t> value);
     void set_destTarget(uint32_t value);
-    void set_skyRenderNode(BaseRenderNode *value);
+    void set_skyRenderNode(GLESBaseRenderNode*value);
     void set_depthTextureMode(DepthTextureMode value);
 
   public:
@@ -49,7 +49,7 @@ class GLESForwardAddClusterRP
     uint32_t destTarget;
     uint32_t depthTarget;
     uint32_t depthNormalTarget;
-    BaseRenderNode *skyRenderNode;
+    GLESBaseRenderNode*skyRenderNode;
     DepthTextureMode renderpassNode;
 };
 } // namespace laya

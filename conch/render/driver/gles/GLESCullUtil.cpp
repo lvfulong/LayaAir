@@ -51,7 +51,7 @@ void GLESCullUtil::cullByCameraCullInfo(const CameraCullInfo &cameraCullInfo, st
 
 void GLESCullUtil::culldirectLightShadow(const ShadowCullInfo &shadowCullInfo, std::vector<GLESBaseRenderNode *> &list,
                                          uint32_t count, GLESRenderQueueList &opaqueList,
-                                         const GLESRenderContext3D &context)
+                                          GLESRenderContext3D* context)
 {
     opaqueList.clear();
     std::vector<GLESBaseRenderNode *> &renders = list;
@@ -66,8 +66,8 @@ void GLESCullUtil::culldirectLightShadow(const ShadowCullInfo &shadowCullInfo, s
             if (pass)
             {
                 render->distanceForSort = Vector3::distance(
-                    render->getBounds()->getCenter(), shadowCullInfo._position); // TODO:合并计算浪费,或者合并后取平均值
-                render->_renderUpdatePre(context);                               // TS OR Native
+                    render->getBounds()->getCenter(), shadowCullInfo.position); // TODO:合并计算浪费,或者合并后取平均值
+                render->_renderUpdatePre(*context);                               // TS OR Native
                 std::vector<RenderElementOBJ *>& elements = render->renderelements;
                 for (int j = 0, m = elements.size(); j < m; j++)
                 {

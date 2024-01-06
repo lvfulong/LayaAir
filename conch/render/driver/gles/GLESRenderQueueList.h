@@ -11,7 +11,7 @@ namespace laya
 
 class GLESRenderQueueList
 {
-  private:
+  public:
     JCSingletonList<RenderElementOBJ *> _elements;
     QuickSort quickSort;
     bool _isTransparent;

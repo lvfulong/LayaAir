@@ -42,9 +42,9 @@ namespace laya
 		CommandEncoder									m_materialUniformParamsMap;
 		GLShaderInstance*								m_GLShaderInstance;
 		uint32_t										m_uploadMark = 0;
-		uint32_t										m_uploadScene = 0;
+		ShaderData*										m_uploadScene = 0;
 		uint32_t										m_uploadRender = 0;
-		uint32_t										m_uploadCameraShaderValue = 0;
+		ShaderData*										m_uploadCameraShaderValue = 0;
 		uint32_t										m_uploadMaterial = 0;
 		WebGLEngine*									m_pWebGLEngine = nullptr;
 		GLStateMap*										m_stateParamsMap = nullptr;

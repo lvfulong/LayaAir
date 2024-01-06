@@ -12,11 +12,11 @@ uint32_t RenderContext3D::globalShaderData = 0;
         this->renderTarget = renderTarget;
     }
 
-    void RenderContext3D::setCameraData(uint32_t shaderData) {
+    void RenderContext3D::setCameraData(ShaderData* shaderData) {
         this->cameraData = shaderData;
     }
 
-    void RenderContext3D::setSceneData(uint32_t sceneData) {
+    void RenderContext3D::setSceneData(ShaderData* sceneData) {
         this->sceneData = sceneData;
     }
 
@@ -28,7 +28,7 @@ uint32_t RenderContext3D::globalShaderData = 0;
         this->scissor = value;
     }
 
-    void RenderContext3D::clearData(RenderClearFlagBits flag, Color color, float depthValue, uint8_t stencilValue) {
+    void RenderContext3D::setClearData(RenderClearFlagBits flag, Color color, float depthValue, uint8_t stencilValue) {
         clearflag = flag;
         clearColor = color;
         clearDepth = depthValue;

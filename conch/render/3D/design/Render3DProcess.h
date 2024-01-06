@@ -10,7 +10,7 @@
 
 namespace laya{
 
-	class BaseRenderNode;
+	class GLESBaseRenderNode;
 	class Transform3D;
 	class CameraNode
 	{
@@ -35,7 +35,7 @@ namespace laya{
 		IDirectLightShadowRP() {};
 		virtual ~IDirectLightShadowRP() {};
 		virtual void update(RenderContext3D* context) = 0;
-		virtual void render(RenderContext3D* context, std::vector<BaseRenderNode*> renderNodeList, uint32_t count) = 0;
+		virtual void render(RenderContext3D* context, std::vector<GLESBaseRenderNode*>& renderNodeList, uint32_t count) = 0;
 	public:
 	};
 

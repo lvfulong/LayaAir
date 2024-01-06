@@ -12,8 +12,8 @@ void GLESRenderInstanceData::render(RenderContext3D *context)
     auto forceInvertFace = context->invertY;
     auto updateMark = context->_cameraUpdateMask;
     auto sceneID = context->sceneData;
-    ShaderData *sceneShaderData = ShaderData::getShaderData(context->sceneData);
-    ShaderData *cameraShaderData = ShaderData::getShaderData(context->cameraData);
+	ShaderData* sceneShaderData = context->sceneData;// ShaderData::getShaderData(context->sceneData);
+	ShaderData* cameraShaderData = context->cameraData;// ShaderData::getShaderData(context->cameraData);
     if (_isRender)
     {
         std::vector<uint32_t>& passes = _shaderInstances;

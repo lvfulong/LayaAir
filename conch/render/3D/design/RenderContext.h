@@ -13,6 +13,7 @@
 
 namespace laya{
     class RenderElementOBJ;
+    class ShaderData;
     typedef std::function<void(JCSingletonList<RenderElementOBJ*>&) > extendCall;
  class RenderContext3D
  {
@@ -23,11 +24,11 @@ namespace laya{
      virtual uint32_t drawRenderElementList(const JCSingletonList<RenderElementOBJ*>& list) = 0;
      virtual void drawRenderElementOne(RenderElementOBJ* one) = 0;
      virtual void setDestTarget(uint32_t renderTarget);
-     virtual void setCameraData(uint32_t shaderData);
-     virtual void setSceneData(uint32_t sceneData);
+     virtual void setCameraData(ShaderData* shaderData);
+     virtual void setSceneData(ShaderData* sceneData);
      virtual void setViewport(const Viewport& value);
      virtual void setScissor(const Vector4& value);
-     virtual void clearData(RenderClearFlagBits flag, Color color, float depthValue, uint8_t stencilValue);
+     virtual void setClearData(RenderClearFlagBits flag, Color color, float depthValue, uint8_t stencilValue);
      virtual void setSceneUpdateMask(uint32_t mask);
      virtual void setCameraUpdateMask(uint32_t mask);
      
@@ -46,8 +47,8 @@ namespace laya{
     Color clearColor;
 
     //data
-    uint32_t cameraData;
-    uint32_t sceneData;
+    ShaderData* cameraData;
+    ShaderData* sceneData;
 
     //upload flag
     uint32_t _sceneUpdataMask;
