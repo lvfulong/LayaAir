@@ -30,13 +30,13 @@ set(SOURCES
     src/v8/Context.cpp
 )
 
-if(MSVC AND CONCH_USE_JS_V8_DEBUGGER)
+if(MSVC AND USE_JS_V8_DEBUGGER)
     list(APPEND SOURCES
         src/v8/v8debug/V8Win32Socket.cpp
     )
 endif()
 
-if(CONCH_USE_JS_V8_DEBUGGER)
+if(USE_JS_V8_DEBUGGER)
     list(APPEND HEADERS
         ${PUBLIC_HEADER_DIR}/${TARGET}/v8/v8debug/debug-agent.h
         ${PUBLIC_HEADER_DIR}/${TARGET}/v8/v8debug/V8Socket.h

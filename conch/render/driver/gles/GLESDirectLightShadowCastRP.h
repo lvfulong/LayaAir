@@ -7,6 +7,7 @@
 #include <vector>
 #include "GLESRenderQueueList.h"
 #include <array>
+#include <core/math/Types.h>
 
 namespace laya
 {
@@ -18,9 +19,9 @@ class ShadowSpotData
   public:
     ShaderData *cameraShaderValue;
     Vector3 position;
-    double offsetX;    // todo type
-    double offsetY;    // todo type
-    double resolution; // todo type
+    Real offsetX;
+    Real offsetY;
+    Real resolution;
     Matrix4x4 viewMatrix;
     Matrix4x4 projectionMatrix;
     Matrix4x4 viewProjectMatrix;
@@ -32,8 +33,8 @@ class GLESDirectLightShadowCastRP : public IDirectLightShadowRP
   public:
     struct CameraInfo
     {
-        float _far;
-        float _near;
+        float farPlane;
+        float nearPlane;
     };
 
   public:
@@ -61,9 +62,9 @@ class GLESDirectLightShadowCastRP : public IDirectLightShadowRP
     Vector3 _lightSide;
     Vector3 _lightForward;
     ShadowCascadesMode mode;
-    CameraInfo cameraInfo;
+    CameraInfo camera;
     uint32_t destTarget;
-    std::vector<uint32_t> _cascadesSplitDistance;
+    std::array<uint32_t, _maxCascades + 1> _cascadesSplitDistance;
     // std::vector<DirectLightFrustumCullInfo> cullInfos;
     ShadowCullInfo _shadowCullInfo;
     uint32_t pipelineMode;
@@ -75,6 +76,7 @@ class GLESDirectLightShadowCastRP : public IDirectLightShadowRP
     uint32_t _cascadeCount = 0;
     GLESRenderQueueList _renderQueue;
     std::array<ShadowSliceData, 4> _shadowSliceDatas;
+    std::vector<Plane> _frustumPlanes;
 };
 } // namespace laya
 #endif
