@@ -33,8 +33,13 @@ class GLESDirectLightShadowCastRP : public IDirectLightShadowRP
   public:
     struct CameraInfo
     {
-        float farPlane;
-        float nearPlane;
+        Real farPlane;
+        Real nearPlane;
+        Real fieldOfView;
+        Real aspectRatio;
+        Vector3 position;
+        Vector3 forward;
+        Matrix4x4 projectionViewMatrix;
     };
 
   public:
@@ -61,10 +66,12 @@ class GLESDirectLightShadowCastRP : public IDirectLightShadowRP
     Vector3 _lightUp;
     Vector3 _lightSide;
     Vector3 _lightForward;
-    ShadowCascadesMode mode;
+    ShadowCascadesMode shadowCastMode;
     CameraInfo camera;
     uint32_t destTarget;
-    std::array<uint32_t, _maxCascades + 1> _cascadesSplitDistance;
+    std::array<F32, 16 * _maxCascades> _shadowMatrices;
+    std::array<F32, 4 * _maxCascades> _splitBoundSpheres;
+    std::vector<Real> _cascadesSplitDistance;
     // std::vector<DirectLightFrustumCullInfo> cullInfos;
     ShadowCullInfo _shadowCullInfo;
     uint32_t pipelineMode;
@@ -77,6 +84,8 @@ class GLESDirectLightShadowCastRP : public IDirectLightShadowRP
     GLESRenderQueueList _renderQueue;
     std::array<ShadowSliceData, 4> _shadowSliceDatas;
     std::vector<Plane> _frustumPlanes;
+    uint32_t _shadowMapWidth = 0;
+    uint32_t _shadowMapHeight = 0;
 };
 } // namespace laya
 #endif

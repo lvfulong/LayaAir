@@ -13,6 +13,7 @@ namespace laya
 // GLESDirectLightShadowCastRP
 GLESDirectLightShadowCastRP::GLESDirectLightShadowCastRP() : _renderQueue(false)
 {
+    _cascadesSplitDistance.resize(_maxCascades + 1);
 }
 
 GLESDirectLightShadowCastRP::~GLESDirectLightShadowCastRP()
@@ -21,26 +22,27 @@ GLESDirectLightShadowCastRP::~GLESDirectLightShadowCastRP()
 
 void GLESDirectLightShadowCastRP::update(RenderContext3D *context)
 {
-    std::array<uint32_t, _maxCascades + 1>& splitDistance = this->_cascadesSplitDistance;
-    std::vector<Plane>& frustumPlaness = this->_frustumPlanes;
+    std::vector<F32>& splitDistance = this->_cascadesSplitDistance;
+    std::vector<Plane>& frustumPlanes = this->_frustumPlanes;
     auto cameraNear = this->camera.nearPlane;
     auto shadowFar = std::min(this->camera.farPlane, this->_light.shadowDistance);
-    /*var shadowMatrices : Float32Array = this._shadowMatrices;
-    var boundSpheres : Float32Array = this._splitBoundSpheres;
-    ShadowUtils.getCascadesSplitDistance(this._light.shadowTwoCascadeSplits, this._light._shadowFourCascadeSplits, cameraNear, shadowFar, this.camera.fieldOfView * MathUtils3D.Deg2Rad, this.camera.aspectRatio, this.shadowCastMode, splitDistance);
-    ShadowUtils.getCameraFrustumPlanes(this.camera.projectionViewMatrix, frustumPlanes);
-    var forward : Vector3 = Vector3._tempVector3;
-    this.camera._transform.getForward(forward);
-    Vector3.normalize(forward, forward);
-    for (int i = 0; i < this->_cascadeCount; i++) {
-        var sliceData : ShadowSliceData = this._shadowSliceDatas[i];
-        sliceData.sphereCenterZ = ShadowUtils.getBoundSphereByFrustum(splitDistance[i], splitDistance[i + 1], this.camera.fieldOfView * MathUtils3D.Deg2Rad, this.camera.aspectRatio, this.camera._transform.position, forward, sliceData.splitBoundSphere);
-        ShadowUtils.getDirectionLightShadowCullPlanes(frustumPlanes, i, splitDistance, cameraNear, this._lightForward, sliceData);
-        ShadowUtils.getDirectionalLightMatrices(this._lightup, this._lightSide, this._lightForward, i, this._light.shadowNearPlane, this._shadowTileResolution, sliceData, shadowMatrices);
-        if (this._cascadeCount > 1)
-            ShadowUtils.applySliceTransform(sliceData, this._shadowMapWidth, this._shadowMapHeight, i, shadowMatrices);
+    //var shadowMatrices : Float32Array = this->_shadowMatrices;
+    //var boundSpheres : Float32Array = this->_splitBoundSpheres;
+    ShadowUtils::getCascadesSplitDistance(this->_light.shadowTwoCascadeSplits, this->_light._shadowFourCascadeSplits, cameraNear, shadowFar, this->camera.fieldOfView * MathUtils3D::Deg2Rad, this->camera.aspectRatio, this->shadowCastMode, splitDistance);
+    ShadowUtils::getCameraFrustumPlanes(this->camera.projectionViewMatrix, frustumPlanes);
+    Vector3 forward;
+    //this.camera._transform.getForward(forward);
+    Vector3::normalize(this->camera.forward, forward);
+    for (int i = 0; i < this->_cascadeCount; i++)
+    {
+        ShadowSliceData& sliceData = this->_shadowSliceDatas[i];
+        sliceData.sphereCenterZ = ShadowUtils::getBoundSphereByFrustum(splitDistance[i], splitDistance[i + 1], this->camera.fieldOfView * MathUtils3D::Deg2Rad, this->camera.aspectRatio, this->camera.position, forward, sliceData.splitBoundSphere);
+        /*ShadowUtils::getDirectionLightShadowCullPlanes(frustumPlanes, i, splitDistance, cameraNear, this->_lightForward, sliceData);
+        ShadowUtils.getDirectionalLightMatrices(this._lightup, this._lightSide, this._lightForward, i, this._light.shadowNearPlane, this._shadowTileResolution, sliceData, this->_shadowMatrices);*/
+        if (this->_cascadeCount > 1)
+            ShadowUtils::applySliceTransform(sliceData, this->_shadowMapWidth, this->_shadowMapHeight, i, this->_shadowMatrices.data());
     }
-    ShadowUtils.prepareShadowReceiverShaderValues(this._light.shadowStrength, this._shadowMapWidth, this._shadowMapHeight, this._shadowSliceDatas, this._cascadeCount, this._shadowMapSize, this._shadowParams, shadowMatrices, boundSpheres);*/
+    //ShadowUtils.prepareShadowReceiverShaderValues(this._light.shadowStrength, this._shadowMapWidth, this._shadowMapHeight, this._shadowSliceDatas, this._cascadeCount, this._shadowMapSize, this._shadowParams, shadowMatrices, boundSpheres);
 }
 void GLESDirectLightShadowCastRP::render(RenderContext3D *context, std::vector<GLESBaseRenderNode*>& list,
                                          uint32_t count)
