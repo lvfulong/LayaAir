@@ -1,11 +1,11 @@
 #include "GLESDirectLightShadowCastRP.h"
+#include "GLESCullUtil.h"
 #include "render/3D/BaseCameraProperty.h"
 #include "render/3D/Scene3DShaderDeclaration.h"
 #include "render/3D/ShadowCasterPassProperty.h"
-#include <render/3D/ShadowUtils.h>
 #include <render/3D/ShadowMode.h>
+#include <render/3D/ShadowUtils.h>
 #include <render/3D/temp/ShaderData.h>
-#include "GLESCullUtil.h"
 
 namespace laya
 {
@@ -22,29 +22,40 @@ GLESDirectLightShadowCastRP::~GLESDirectLightShadowCastRP()
 
 void GLESDirectLightShadowCastRP::update(RenderContext3D *context)
 {
-    std::vector<F32>& splitDistance = this->_cascadesSplitDistance;
-    std::vector<Plane>& frustumPlanes = this->_frustumPlanes;
+    std::vector<F32> &splitDistance = this->_cascadesSplitDistance;
+    std::vector<Plane> &frustumPlanes = this->_frustumPlanes;
     auto cameraNear = this->camera.nearPlane;
     auto shadowFar = std::min(this->camera.farPlane, this->_light.shadowDistance);
-    //var shadowMatrices : Float32Array = this->_shadowMatrices;
-    //var boundSpheres : Float32Array = this->_splitBoundSpheres;
-    ShadowUtils::getCascadesSplitDistance(this->_light.shadowTwoCascadeSplits, this->_light._shadowFourCascadeSplits, cameraNear, shadowFar, this->camera.fieldOfView * MathUtils3D::Deg2Rad, this->camera.aspectRatio, this->shadowCastMode, splitDistance);
+    // var shadowMatrices : Float32Array = this->_shadowMatrices;
+    // var boundSpheres : Float32Array = this->_splitBoundSpheres;
+    ShadowUtils::getCascadesSplitDistance(this->_light.shadowTwoCascadeSplits, this->_light._shadowFourCascadeSplits,
+                                          cameraNear, shadowFar, this->camera.fieldOfView * MathUtils3D::Deg2Rad,
+                                          this->camera.aspectRatio, this->shadowCastMode, splitDistance);
     ShadowUtils::getCameraFrustumPlanes(this->camera.projectionViewMatrix, frustumPlanes);
     Vector3 forward;
-    //this.camera._transform.getForward(forward);
+    // this.camera._transform.getForward(forward);
     Vector3::normalize(this->camera.forward, forward);
     for (int i = 0; i < this->_cascadeCount; i++)
     {
-        ShadowSliceData& sliceData = this->_shadowSliceDatas[i];
-        sliceData.sphereCenterZ = ShadowUtils::getBoundSphereByFrustum(splitDistance[i], splitDistance[i + 1], this->camera.fieldOfView * MathUtils3D::Deg2Rad, this->camera.aspectRatio, this->camera.position, forward, sliceData.splitBoundSphere);
-        /*ShadowUtils::getDirectionLightShadowCullPlanes(frustumPlanes, i, splitDistance, cameraNear, this->_lightForward, sliceData);
-        ShadowUtils.getDirectionalLightMatrices(this._lightup, this._lightSide, this._lightForward, i, this._light.shadowNearPlane, this._shadowTileResolution, sliceData, this->_shadowMatrices);*/
+        ShadowSliceData &sliceData = this->_shadowSliceDatas[i];
+        sliceData.sphereCenterZ = ShadowUtils::getBoundSphereByFrustum(
+            splitDistance[i], splitDistance[i + 1], this->camera.fieldOfView * MathUtils3D::Deg2Rad,
+            this->camera.aspectRatio, this->camera.position, forward, sliceData.splitBoundSphere);
+        ShadowUtils::getDirectionLightShadowCullPlanes(&frustumPlanes[0], i, &splitDistance[0], cameraNear,
+                                                       this->_lightForward, sliceData);
+        ShadowUtils::getDirectionalLightMatrices(this->_lightUp, this->_lightSide, this->_lightForward, i,
+                                                 this->_light.shadowNearPlane, this->_shadowTileResolution, sliceData,
+                                                 this->_shadowMatrices.data());
         if (this->_cascadeCount > 1)
-            ShadowUtils::applySliceTransform(sliceData, this->_shadowMapWidth, this->_shadowMapHeight, i, this->_shadowMatrices.data());
+            ShadowUtils::applySliceTransform(sliceData, this->_shadowMapWidth, this->_shadowMapHeight, i,
+                                             this->_shadowMatrices.data());
     }
-    //ShadowUtils.prepareShadowReceiverShaderValues(this._light.shadowStrength, this._shadowMapWidth, this._shadowMapHeight, this._shadowSliceDatas, this._cascadeCount, this._shadowMapSize, this._shadowParams, shadowMatrices, boundSpheres);
+    ShadowUtils::prepareShadowReceiverShaderValues(this->_light.shadowStrength, this->_shadowMapWidth,
+                                                   this->_shadowMapHeight, this->_shadowSliceDatas.data(),
+                                                   this->_cascadeCount, this->_shadowMapSize, this->_shadowParams,
+                                                   this->_shadowMatrices.data(), this->_splitBoundSpheres.data());
 }
-void GLESDirectLightShadowCastRP::render(RenderContext3D *context, std::vector<GLESBaseRenderNode*>& list,
+void GLESDirectLightShadowCastRP::render(RenderContext3D *context, std::vector<GLESBaseRenderNode *> &list,
                                          uint32_t count)
 {
     ShaderData *shaderValues = context->sceneData;
@@ -54,17 +65,18 @@ void GLESDirectLightShadowCastRP::render(RenderContext3D *context, std::vector<G
     // 需要把shadowmap clear Depth;
     for (int i = 0, n = this->_cascadeCount; i < n; i++)
     {
-        ShadowSliceData& sliceData = this->_shadowSliceDatas[i];
+        ShadowSliceData &sliceData = this->_shadowSliceDatas[i];
         this->getShadowBias(sliceData.projectionMatrix, sliceData.resolution, this->_shadowBias);
         this->_setupShadowCasterShaderValues(shaderValues, sliceData, this->_lightForward, this->_shadowBias);
-        ShadowCullInfo& shadowCullInfo = this->_shadowCullInfo;
+        ShadowCullInfo &shadowCullInfo = this->_shadowCullInfo;
         shadowCullInfo.position = sliceData.position;
         shadowCullInfo.cullPlanes = sliceData.cullPlanes;
         shadowCullInfo.cullPlaneCount = sliceData.cullPlaneCount;
         shadowCullInfo.cullSphere = sliceData.splitBoundSphere;
         shadowCullInfo.direction = this->_lightForward;
-        //cull
-        GLESCullUtil::culldirectLightShadow(shadowCullInfo, list, count, this->_renderQueue, (GLESRenderContext3D*)context);
+        // cull
+        GLESCullUtil::culldirectLightShadow(shadowCullInfo, list, count, this->_renderQueue,
+                                            (GLESRenderContext3D *)context);
 
         context->cameraData = sliceData.cameraShaderValue;
         // todo Camera._updateMark++;

@@ -86,6 +86,7 @@ class GLESDirectLightShadowCastRP : public IDirectLightShadowRP
     std::vector<Plane> _frustumPlanes;
     uint32_t _shadowMapWidth = 0;
     uint32_t _shadowMapHeight = 0;
+    Real _shadowTileResolution = 0;
 };
 } // namespace laya
 #endif
