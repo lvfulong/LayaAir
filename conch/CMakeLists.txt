@@ -871,6 +871,7 @@ elseif(MSVC)
 		bulletdynamics
 		linearmath
 		BulletSoftBody
+		gdiplus
 	)
 elseif(LINUX)
 	find_package(X11 REQUIRED)

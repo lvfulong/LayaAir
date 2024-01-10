@@ -5,6 +5,7 @@
 #include <optional>
 #include <string>
 #include <windows.h>
+#include <gdiplus.h>
 
 namespace laya
 {
@@ -34,7 +35,8 @@ class CanvasRenderingContext2DWin : public CanvasRenderingContext2D
      static bool registerFontFromPath(const std::string &fontName, const std::string &path);
   protected:
     BitmapData m_bitmapData;
-    HBITMAP m_hBitmap;
+    Gdiplus::Bitmap* m_gdiBitmap;
+    Gdiplus::Graphics* m_gdiGraphics;
     HDC m_hdcScreen;
     HDC m_hdcMem;
     HBITMAP m_hbmOld;
