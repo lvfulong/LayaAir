@@ -329,6 +329,8 @@ namespace laya
         return 1.0;
 #elif __APPLE__
 		return 1.0;// CToObjectCGetDevicePixelRatio();
+#elif LINUX
+        return 1.0;
 #endif
     }
 	JsValue getExePath()

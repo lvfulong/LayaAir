@@ -301,6 +301,8 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         return "Conch-android";
 #elif WIN32
         return "Conch-window";
+#elif LINUX
+        return "Conch-linux";
 #endif
     }
     const char* JSConchConfig::getBrowserInfo()
@@ -311,6 +313,8 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         return "Conch-android";
 #elif WIN32
         return "Conch-window";
+#elif LINUX
+        return "Conch-linux";
 #endif
     }
     const char* JSConchConfig::getGuid()
@@ -328,6 +332,8 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         return m_sGUID.c_str();
 #elif WIN32
         return "window";
+#elif LINUX
+        return "linux";
 #endif
     }
     const char* JSConchConfig::getRuntimeVersion()
@@ -338,6 +344,8 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         return "android-conch6-release-3.1.0-beta.1";
 #elif WIN32
         return "window-conch6-release-3.1.0-beta.1";
+#elif LINUX
+        return "linux-conch6-release-3.1.0-beta.1";
 #endif
     }
 	//机型
@@ -356,6 +364,8 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 		return "";
 #elif WIN32
 		return "";
+#elif LINUX
+        return "";
 #endif
 	}
 	//国家&地区
@@ -374,6 +384,8 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 		return "";
 #elif WIN32
 		return "";
+#elif LINUX
+        return "";
 #endif
 	}
 
@@ -393,6 +405,8 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         return "";
 #elif WIN32
         return "";
+#elif LINUX
+        return "";
 #endif
     }
 
@@ -411,6 +425,8 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 		return "";
 #elif WIN32
 		return "";
+#elif LINUX
+        return "";
 #endif
 	}
 	void JSConchConfig::setLanguage(const char* pStrLanguage)
@@ -438,7 +454,9 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         }
         return "";
 #elif WIN32
-        return "2.0";
+        return "3.0";
+#elif LINUX
+        return "3.0";
 #endif
     }
     const char* JSConchConfig::getAppLocalVersion()
@@ -455,7 +473,9 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         }
         return "";
 #elif WIN32
-        return "2.0";
+        return "3.0";
+#elif LINUX
+        return "3.0";
 #endif
     }
     bool JSConchConfig::getIsPlug() 
@@ -667,6 +687,8 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 		}
 		return 0;
 #elif WIN32
+        return 0;
+#elif LINUX
         return 0;
 #endif
     }
