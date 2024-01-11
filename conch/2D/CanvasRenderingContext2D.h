@@ -57,9 +57,7 @@ class CanvasRenderingContext2D
     virtual void setFont(const char *font)
     {
         m_font = font;
-#ifndef WIN32 //TODO crash
         FontDescriptionParser::parse(font, m_fontDescription);
-#endif
     }
     virtual const BitmapData &getBitmapData() const = 0;
     int getID()

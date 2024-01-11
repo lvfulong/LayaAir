@@ -1,8 +1,21 @@
 #include "FontDescriptionParser.h"
 #include <math.h>
-#include <regex>
+
 #include <utils/JCCommonMethod.h>
 #include <utils/Log.h>
+
+#if WIN32
+#include <boost/regex.hpp>
+using boost::regex;
+using boost::regex_search;
+using boost::smatch;
+#else
+#include <regex>
+using std::regex;
+using std::regex_search;
+using std::smatch;
+#endif
+
 namespace laya
 {
 FontDescriptionParser::~FontDescriptionParser()
@@ -11,11 +24,12 @@ FontDescriptionParser::~FontDescriptionParser()
 // TODO default value check
 void FontDescriptionParser::parse(const std::string &fontStr, FontDescription &out, int32_t dpi /*= 96*/)
 {
-    std::regex fontRegex(
+    regex fontRegex(
         "^ *(?:(normal|bold|bolder|lighter|[1-9]00) *)?(?:(normal|italic|oblique) *)?([\\d\\.]+)(px|pt|pc|in|cm|mm|%) "
-        "*((?:\'([^\']+)\'|\"([^\"]+)\"|[\\w\\s\\u4e00-\\u9fff-]+)( *, *(?:\'([^\']+)\'|\"([^\"]+)\"|[\\w\\s\\u4e00-\\u9fff-]+))*)");
-    std::smatch results;
-    if (std::regex_search(fontStr.begin(), fontStr.end(), results, fontRegex))
+        "*((?:\'([^\']+)\'|\"([^\"]+)\"|[\\w\\s\\u4e00-\\u9fff-]+)( *, "
+        "*(?:\'([^\']+)\'|\"([^\"]+)\"|[\\w\\s\\u4e00-\\u9fff-]+))*)");
+    smatch results;
+    if (regex_search(fontStr.begin(), fontStr.end(), results, fontRegex))
     {
         out.m_weight = !results[1].str().empty() ? results[1].str() : "normal";
         out.m_style = !results[2].str().empty() ? results[2].str() : "normal";

@@ -2,9 +2,9 @@
 #include <algorithm>
 #include <cassert>
 #include <cstring>
+#include <regex>
 #include <utils/JCCrypto.h>
 #include <utils/Log.h>
-
 extern HWND g_hWnd;
 
 namespace laya
@@ -32,8 +32,15 @@ CanvasRenderingContext2DWin::CanvasRenderingContext2DWin(int width, int height)
     m_bitmapData.m_nWidth = width;
     m_bitmapData.m_nHeight = height;
     m_bitmapData.m_pImageData = new char[width * height * 4];
-
-    // setDefault();
+    try
+    {
+        FontDescriptionParser::test();
+    }
+    catch (const std::regex_error &e)
+    {
+        LOGI("FontDescriptionParser::parse error %s", e.what());
+    }
+    setDefault();
 }
 CanvasRenderingContext2DWin::~CanvasRenderingContext2DWin()
 {
@@ -46,6 +53,7 @@ void CanvasRenderingContext2DWin::setLineJoin(const char *lineJoin)
 }
 wchar_t *utf8ToUtf16(const std::string &str, int *pRetLen /* = nullptr*/)
 {
+
     wchar_t *pwszBuffer = nullptr;
     do
     {
@@ -58,9 +66,7 @@ wchar_t *utf8ToUtf16(const std::string &str, int *pRetLen /* = nullptr*/)
         pwszBuffer = new wchar_t[nBufLen];
         assert(!pwszBuffer);
         memset(pwszBuffer, 0, sizeof(wchar_t) * nBufLen);
-        // str.size() not equal actuallyLen for Chinese char
         int actuallyLen = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), nLen, pwszBuffer, nBufLen);
-        // SE_LOGE("_utf8ToUtf16, str:%s, strLen:%d, retLen:%d\n", str.c_str(), str.size(), actuallyLen);
         if (pRetLen != nullptr)
         {
             *pRetLen = actuallyLen;
@@ -76,18 +82,12 @@ void CanvasRenderingContext2DWin::fillText(const std::string &text, double x, do
     }
     int bufferLen = 0;
     wchar_t *pwszBuffer = utf8ToUtf16(text, &bufferLen);
-
-    WCHAR *p = NULL;
-    Gdiplus::FontFamily fontfamily(L"Arial");
-
-    Gdiplus::Font font(&fontfamily, 60, Gdiplus::FontStyleRegular, Gdiplus::UnitPixel);
-
     Gdiplus::StringFormat strFormat;
     strFormat.SetAlignment(Gdiplus::StringAlignmentCenter);     // 水平居左
     strFormat.SetLineAlignment(Gdiplus::StringAlignmentCenter); // 垂直居中
-    m_gdiGraphics->DrawRectangle(&Gdiplus::Pen(Gdiplus::Color::Red, 2), Gdiplus::RectF(0, 0, 480, 480));
-    // m_gdiGraphics->DrawString(pwszBuffer, bufferLen, &font, Gdiplus::RectF(0, 0, 480, 480), &strFormat,
-    // &Gdiplus::SolidBrush(Gdiplus::Color::Black));
+    // m_gdiGraphics->DrawRectangle(&Gdiplus::Pen(Gdiplus::Color::Red, 2), Gdiplus::RectF(0, 0, 480, 480));
+    m_gdiGraphics->DrawString(pwszBuffer, bufferLen, m_font, Gdiplus::PointF(x, y), &strFormat,
+                              &Gdiplus::SolidBrush(Gdiplus::Color::Black));
 }
 
 void CanvasRenderingContext2DWin::strokeText(const std::string &text, double x, double y,
@@ -99,18 +99,12 @@ void CanvasRenderingContext2DWin::strokeText(const std::string &text, double x, 
     }
     int bufferLen = 0;
     wchar_t *pwszBuffer = utf8ToUtf16(text, &bufferLen);
-
-    WCHAR *p = NULL;
-    Gdiplus::FontFamily fontfamily(L"Arial");
-
-    Gdiplus::Font font(&fontfamily, 60, Gdiplus::FontStyleRegular, Gdiplus::UnitPixel);
-
     Gdiplus::StringFormat strFormat;
     strFormat.SetAlignment(Gdiplus::StringAlignmentCenter);     // 水平居左
     strFormat.SetLineAlignment(Gdiplus::StringAlignmentCenter); // 垂直居中
-    m_gdiGraphics->DrawRectangle(&Gdiplus::Pen(Gdiplus::Color::Red, 2), Gdiplus::RectF(0, 0, 480, 480));
-    // m_gdiGraphics->DrawString(pwszBuffer, bufferLen, &font, Gdiplus::RectF(0, 0, 480, 480), &strFormat,
-    // &Gdiplus::SolidBrush(Gdiplus::Color::Black));
+    // m_gdiGraphics->DrawRectangle(&Gdiplus::Pen(Gdiplus::Color::Red, 2), Gdiplus::RectF(0, 0, 480, 480));
+    m_gdiGraphics->DrawString(pwszBuffer, bufferLen, m_font, Gdiplus::PointF(x, y), &strFormat,
+                              &Gdiplus::SolidBrush(Gdiplus::Color::Black));
 }
 
 TextMetrics CanvasRenderingContext2DWin::measureText(const std::string &text)
@@ -120,31 +114,28 @@ TextMetrics CanvasRenderingContext2DWin::measureText(const std::string &text)
 
     Gdiplus::GraphicsPath graphicsPathObj;
 
-    Gdiplus::FontFamily fontfamily(L"Arial");
-
-    Gdiplus::Font font(&fontfamily, 60, Gdiplus::FontStyleRegular, Gdiplus::UnitPixel);
     Gdiplus::StringFormat strFormat;
     strFormat.SetAlignment(Gdiplus::StringAlignmentCenter);     // 水平居左
     strFormat.SetLineAlignment(Gdiplus::StringAlignmentCenter); // 垂直居中
-    // Gdiplus::FontFamily fontfamily;
-    // font.GetFamily(&fontfamily);
+    Gdiplus::FontFamily fontfamily;
+    m_font->GetFamily(&fontfamily);
 
     int bufferLen = 0;
     wchar_t *pwszBuffer = utf8ToUtf16(text, &bufferLen);
 
-    graphicsPathObj.AddString(pwszBuffer, bufferLen /* -1 */, &fontfamily, font.GetStyle(), font.GetSize(),
+    graphicsPathObj.AddString(pwszBuffer, bufferLen /* -1 */, &fontfamily, m_font->GetStyle(), m_font->GetSize(),
                               Gdiplus::PointF(0, 0), &strFormat);
     Gdiplus::RectF rcBound;
     /// 获取边界范围
     graphicsPathObj.GetBounds(&rcBound);
 
     Gdiplus::RectF layoutRect(0, 0, m_width, m_height);
-    m_gdiGraphics->MeasureString(pwszBuffer, bufferLen, &font, layoutRect, &strFormat, &rcBound);
+    m_gdiGraphics->MeasureString(pwszBuffer, bufferLen, m_font, layoutRect, &strFormat, &rcBound);
 
     /// 返回文本的宽高
     metrics.m_width = rcBound.Width;
     metrics, m_height = rcBound.Height;
-    LOGE("%f %f", rcBound.Width, rcBound.Height);
+    LOGE("measureText %f %f", rcBound.Width, rcBound.Height);
     return metrics;
 }
 void CanvasRenderingContext2DWin::clearRect(double x, double y, double width, double height)
@@ -169,57 +160,6 @@ void CanvasRenderingContext2DWin::restore()
     }
 }
 
-static std::string toBase64(const char *type, float encoderOptions, char *pPixels, int nABLen, int w, int h, bool flipY)
-{
-    int size = sizeof(GLubyte) * w * h * 4;
-    if (w == 0 || h == 0 || size != nABLen)
-    {
-        const char *pstrHeader = "data:";
-        int length = strlen(pstrHeader);
-        std::unique_ptr<char[]> pDest(new char[length + 1]);
-        memcpy(pDest.get(), pstrHeader, length);
-        pDest.get()[length] = '\0';
-        return std::string(pDest.get());
-    }
-
-    if (flipY)
-    {
-        // laya::flipPixelsY((uint8_t*)pPixels, w * 4, h);
-    }
-
-    std::string strType(type);
-    int length = (size + 2) / 3 * 4;
-    std::unique_ptr<char[]> pDest(new char[length]);
-    memset(pDest.get(), 0, length);
-    char *pCurrent = pDest.get();
-    std::pair<unsigned char *, unsigned long> result;
-    if (strType == "image/jpeg")
-    {
-        const char *pstrHeader = "data:image/jpeg;base64,";
-        int length = strlen(pstrHeader);
-        for (int i = 0; i < length; i++)
-        {
-            *pCurrent = pstrHeader[i];
-            pCurrent++;
-        }
-        result = convertBitmapToJpeg((const char *)pPixels, w, h, 32);
-    }
-    else
-    {
-        const char *pstrHeader = "data:image/png;base64,";
-        int length = strlen(pstrHeader);
-        for (int i = 0; i < length; i++)
-        {
-            *pCurrent = pstrHeader[i];
-            pCurrent++;
-        }
-        result = laya::convertBitmapToPng((const char *)pPixels, w, h, 8);
-    }
-
-    base64Encode(pCurrent, (const char *)result.first, result.second);
-    delete[] result.first;
-    return std::string(pDest.get());
-}
 ImageData CanvasRenderingContext2DWin::getImageData(double x, double y, double width, double height)
 {
     int clampedX = std::clamp(x, 0.0, static_cast<double>(m_width));
@@ -290,9 +230,6 @@ ImageData CanvasRenderingContext2DWin::getImageData(double x, double y, double w
         m_gdiBitmap->UnlockBits(&bitmapData);
         // delete pBitmap;
 
-        printf("%s \n", toBase64("image/png", 0.8f, (char *)&data.m_data[0], data.m_data.size(), data.m_width,
-                                 data.m_height, false)
-                            .c_str());
         return data;
     }
     else
@@ -337,17 +274,26 @@ void CanvasRenderingContext2DWin::setFont(const char *font)
     CanvasRenderingContext2D::setFont(font);
     bool isBold = m_fontDescription.isBold();
     bool isItalic = m_fontDescription.isItalic();
-    int style = 0;
+    uint32_t style = Gdiplus::FontStyle::FontStyleRegular;
     if (isBold)
     {
-        style |= 1;
+        style |= Gdiplus::FontStyle::FontStyleBold;
     }
     if (isItalic)
     {
-        style |= 2;
+        style |= Gdiplus::FontStyle::FontStyleItalic;
     }
+    int bufferLen = 0;
+    wchar_t *pwszBuffer = utf8ToUtf16(m_fontDescription.m_family, &bufferLen);
+    Gdiplus::FontFamily fontfamily(L"Arial"); // Gdiplus::FontFamily fontfamily(pwszBuffer);
+    if (m_font != nullptr)
+    {
+        delete m_font;
+    }
+    m_font = new Gdiplus::Font(&fontfamily, m_fontDescription.m_size, style, Gdiplus::UnitPixel);
     // setTypeface(env, m_fontDescription.m_family, style);
     // setTextSize(env, m_fontDescription.m_size);
+    LOGE("setFont %s %f", font, m_fontDescription.m_size);
 }
 bool CanvasRenderingContext2DWin::registerFontFromPath(const std::string &fontName, const std::string &path)
 {

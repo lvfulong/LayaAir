@@ -872,6 +872,7 @@ elseif(MSVC)
 		linearmath
 		BulletSoftBody
 		gdiplus
+		boost_regex
 	)
 elseif(LINUX)
 	find_package(X11 REQUIRED)
@@ -951,7 +952,9 @@ add_subdirectory(../third_party/bullet bullet)
 add_subdirectory(../third_party/physx physx)
 add_subdirectory(../third_party/sdl sdl)
 add_subdirectory(../third_party/benchmark benchmark)
-
+if(MSVC)
+	add_subdirectory(../third_party/boost boost_regex)
+endif()
 if(MSVC OR LINUX)
 	add_subdirectory(app)
 endif()

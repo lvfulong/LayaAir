@@ -37,9 +37,7 @@ class CanvasRenderingContext2DWin : public CanvasRenderingContext2D
     BitmapData m_bitmapData;
     Gdiplus::Bitmap* m_gdiBitmap;
     Gdiplus::Graphics* m_gdiGraphics;
-    HDC m_hdcScreen;
-    HDC m_hdcMem;
-    HBITMAP m_hbmOld;
+    Gdiplus::Font* m_font = nullptr;
 };
 } // namespace laya
 #endif
