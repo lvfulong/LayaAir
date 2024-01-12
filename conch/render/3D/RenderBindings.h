@@ -10,6 +10,7 @@
 #include <render/driver/gles/GLESDirectLightShadowCastRP.h>
 #include <render/driver/gles/GLESSpotLightShadowRP.h>
 #include <render/driver/gles/GLESForwardAddClusterRP.h>
+#include <render/driver/gles/GLESBaseRenderNode.h>
 
 namespace laya
 {
@@ -23,7 +24,12 @@ class RenderBindings
         value_object<Vector4>("NativeVector4").field("x", &Vector4::x).field("y", &Vector4::y).field("z", &Vector4::z).field("w", &Vector4::w);
 
         //GLESRenderContext3D::exportJS(context);
-        
+        {
+            class_<GLESBaseRenderNode> class_binding;
+            class_binding.constructor<>();
+            //class_binding.function("set_skyRenderNode", &GLESForwardAddClusterRP::set_skyRenderNode);
+            context.class_("conchBaseRenderNode", class_binding);
+        }
         {
             class_<GLESRenderContext3D> class_binding;
             class_binding.constructor<>();
