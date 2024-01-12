@@ -3,42 +3,42 @@
 
 namespace laya
 {
-void GLESCullUtil::cullByCameraCullInfo(const CameraCullInfo &cameraCullInfo, std::vector<GLESBaseRenderNode *> &list,
+void GLESCullUtil::cullByCameraCullInfo(CameraCullInfo &cameraCullInfo, std::vector<GLESBaseRenderNode *> &list,
                                         uint32_t count, GLESRenderQueueList &opaqueList,
                                         GLESRenderQueueList &transparent, const GLESRenderContext3D &context)
 {
-    /*var renders = list;
-    var boundFrustum : BoundFrustum = cameraCullInfo.boundFrustum;
-    var cullMask : number = cameraCullInfo.cullingMask;
-    let staticMask = cameraCullInfo.staticMask;
-    for (var i : number = 0, n : number = count; i < n; i++)
+    std::vector<GLESBaseRenderNode *> &renders = list;
+    BoundFrustum& boundFrustum = cameraCullInfo._boundFrustum;
+    uint32_t cullMask = cameraCullInfo._cullingMask;
+    uint32_t staticMask = cameraCullInfo._staticMask;
+    for (int i = 0, n  = count; i < n; i++)
     {
-        var render = renders[i];
-        var canPass : boolean;
-        canPass = (Math.pow(2, render.layer) & cullMask) != 0 && render.enable && (render.renderbitFlag == 0);
-        canPass = canPass && ((render.staticMask & staticMask) != 0);
+        auto render = renders[i];
+        bool canPass;
+        canPass = (static_cast<uint32_t>(pow(static_cast<uint32_t>(2), render->layer)) & cullMask) != 0 && (render->renderbitFlag == 0);
+        canPass = canPass && ((render->staticMask & staticMask) != 0);
         if (canPass)
         {
-            Stat.frustumCulling++;
+            //Stat.frustumCulling++;todo
             // needRender 方案有问题 会造成native和js的差异
-            if (!cameraCullInfo.useOcclusionCulling || render._needRender(boundFrustum)) // NEEDRENDER TS OR NATIVE
+            if (!cameraCullInfo._useOcclusionCulling || render->_needRender(&boundFrustum)) // NEEDRENDER TS OR NATIVE
             {
-                render.distanceForSort = Vector3.distance(render.bounds.getCenter(), cameraCullInfo.position);
-                render._renderUpdatePre(context); // TS OR Native
-                let elments = render.renderelements;
-                if (elments.length == 1)
+                render->distanceForSort = Vector3::distance(render->getBounds()->getCenter(), cameraCullInfo._position);
+                render->_renderUpdatePre(context); // TS OR Native
+                std::vector<RenderElementOBJ *>& elements = render->renderelements;
+                if (elements.size() == 1)
                 { // js 优化
-                    if (elments[0]._materialRenderQueue > 2500)
-                        transparent.addRenderElement(elments[0]);
+                    if (elements[0]->composeData->_materialRenderQueue > 2500)
+                        transparent.addRenderElement(elements[0]);
                     else
-                        opaqueList.addRenderElement(elments[0]);
+                        opaqueList.addRenderElement(elements[0]);
                 }
                 else
                 {
-                    for (var j : number = 0, m : number = elments.length; j < m; j++)
+                    for (int j = 0, m = elements.size(); j < m; j++)
                     {
-                        var element = elments[j];
-                        if (element._materialRenderQueue > 2500)
+                        RenderElementOBJ* element = elements[j];
+                        if (element->composeData->_materialRenderQueue > 2500)
                             transparent.addRenderElement(element);
                         else
                             opaqueList.addRenderElement(element);
@@ -46,7 +46,7 @@ void GLESCullUtil::cullByCameraCullInfo(const CameraCullInfo &cameraCullInfo, st
                 }
             }
         }
-    }*/
+    }
 }
 
 void GLESCullUtil::culldirectLightShadow(const ShadowCullInfo &shadowCullInfo, std::vector<GLESBaseRenderNode *> &list,
@@ -80,33 +80,33 @@ void GLESCullUtil::culldirectLightShadow(const ShadowCullInfo &shadowCullInfo, s
     }
 }
 
-void GLESCullUtil::cullingSpotShadow(const CameraCullInfo &cameraCullInfo, std::vector<GLESBaseRenderNode *> &list,
-                                     uint32_t count, std::vector<GLESBaseRenderNode *> &opaqueList,
+void GLESCullUtil::cullingSpotShadow(CameraCullInfo &cameraCullInfo, std::vector<GLESBaseRenderNode *> &list,
+                                     uint32_t count, GLESRenderQueueList& opaqueList,
                                      const GLESRenderContext3D &context)
 {
-    /*opaqueList.clear();
-    let renders = list;
-    let boundFrustum : BoundFrustum = cameraCullInfo.boundFrustum;
-    for (let i = 0, n = count; i < n; i++)
+    opaqueList.clear();
+    std::vector<GLESBaseRenderNode*>& renders = list;
+    BoundFrustum& boundFrustum = cameraCullInfo._boundFrustum;
+    for (int i = 0, n = count; i < n; i++)
     {
-        let render = renders[i];
-        let canPass : boolean = render.shadowCullPass();
-        render._renderUpdatePre(context); // TS OR Native
+        auto render = renders[i];
+        bool canPass = render->shadowCullPass();
+        render->_renderUpdatePre(context); // TS OR Native
         if (canPass)
         {
-            Stat.frustumCulling++;
-            render.distanceForSort = Vector3.distance(render.bounds.getCenter(), cameraCullInfo.position);
-            if (render._needRender(boundFrustum))
+            //Stat.frustumCulling++; todo
+            render->distanceForSort = Vector3::distance(render->getBounds()->getCenter(), cameraCullInfo._position);
+            if (render->_needRender(&boundFrustum))
             {
-                let elements = render.renderelements;
-                for (var j : number = 0, m : number = elements.length; j < m; j++)
+                std::vector<RenderElementOBJ*>& elements = render->renderelements;
+                for (int j = 0, m  = elements.size(); j < m; j++)
                 {
-                    var element = elements[j];
-                    if (element._materialRenderQueue < 2500)
+                    RenderElementOBJ* element = elements[j];
+                    if (element->composeData->_materialRenderQueue < 2500)
                         opaqueList.addRenderElement(element);
                 }
             }
         }
-    }*/
+    }
 }
 } // namespace laya

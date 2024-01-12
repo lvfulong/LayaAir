@@ -70,4 +70,9 @@ void GLESBaseRenderNode::_renderUpdatePre(const GLESRenderContext3D& context3D)
 {
     // TODO
 }
+bool GLESBaseRenderNode::_needRender(BoundFrustum* pBoundFrustum)
+{
+    // TODO
+    return true;
+}
 } // namespace laya

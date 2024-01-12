@@ -14,7 +14,7 @@ namespace laya
 class GLESCullUtil
 {
   public:
-    static void cullByCameraCullInfo(const CameraCullInfo &cameraCullInfo, std::vector<GLESBaseRenderNode *> &list,
+    static void cullByCameraCullInfo(CameraCullInfo &cameraCullInfo, std::vector<GLESBaseRenderNode *> &list,
                                      uint32_t count, GLESRenderQueueList &opaqueList, GLESRenderQueueList &transparent,
                                      const GLESRenderContext3D &context);
 
@@ -22,8 +22,8 @@ class GLESCullUtil
                                       uint32_t count, GLESRenderQueueList &opaqueList,
                                        GLESRenderContext3D* context);
 
-    static void cullingSpotShadow(const CameraCullInfo &cameraCullInfo, std::vector<GLESBaseRenderNode *> &list,
-                                  uint32_t count, std::vector<GLESBaseRenderNode *> &opaqueList,
+    static void cullingSpotShadow(CameraCullInfo &cameraCullInfo, std::vector<GLESBaseRenderNode *> &list,
+                                  uint32_t count, GLESRenderQueueList& opaqueList,
                                   const GLESRenderContext3D &context);
 };
 } // namespace laya

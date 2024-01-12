@@ -5,7 +5,7 @@
 #include "render/3D/temp/Transform3D.h"
 #include <vector>
 #include "GLESRenderContext3D.h"
-
+#include <core/math/Types.h>
 namespace laya
 {
 enum class IrradianceMode
@@ -23,7 +23,7 @@ class GLESBaseRenderNode
 
     bool shadowCullPass();
     Bounds *getBounds();
-    double distanceForSort; // todo double?
+   
 
     virtual void _renderUpdate(NodeContext3DData data){};
     virtual void _renderupdatebyCamera(NodeContext3DData data){};
@@ -31,6 +31,7 @@ class GLESBaseRenderNode
     //virtual Bounds *get_BoundBox();
     void _set_GeometryBounds(Bounds &bounds);
     void _renderUpdatePre(const GLESRenderContext3D& context3D);
+    bool _needRender(BoundFrustum* pBoundFrustum);
   public:
     // 排版数据 用于renderqueuelist
     ComposeData compose{};
@@ -50,7 +51,10 @@ class GLESBaseRenderNode
     // shaderData_ID
     uint32_t shaderData;
     IrradianceMode irradianceMode;
-
+    uint32_t renderbitFlag;
+    uint32_t layer;
+    uint32_t staticMask;
+    Real distanceForSort;
     // lightmapData
     struct LightmapData
     {
