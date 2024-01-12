@@ -27,7 +27,8 @@ class RenderBindings
         {
             class_<GLESBaseRenderNode> class_binding;
             class_binding.constructor<>();
-            //class_binding.function("set_skyRenderNode", &GLESForwardAddClusterRP::set_skyRenderNode);
+            class_binding.function("set_distanceForSort", &GLESBaseRenderNode::set_distanceForSort);
+            class_binding.function("set_transform", &GLESBaseRenderNode::set_transform);
             context.class_("conchBaseRenderNode", class_binding);
         }
         {
@@ -79,6 +80,10 @@ class RenderBindings
             class_binding.function("set_skyRenderNode", &GLESForwardAddClusterRP::set_skyRenderNode);
             context.class_("ConchGLESForwardAddClusterRP", class_binding);
         }
+
+
+
+
     }
 };
 namespace internal

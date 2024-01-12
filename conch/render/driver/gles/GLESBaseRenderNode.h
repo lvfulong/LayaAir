@@ -80,6 +80,11 @@ class GLESBaseRenderNode
     void _applyReflection();
     void _applyLightmap();
     void _applyLightProb();
+public:
+    //binding
+    void set_distanceForSort(Real value) {  distanceForSort = value; }
+    void set_transform(laya::Transform3D* value) { transform = value; }
+
 };
 } // namespace laya
 #endif

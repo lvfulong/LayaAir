@@ -59,9 +59,8 @@ namespace laya{
  class NodeContext3DData
  {
  public:
-     //��¼һЩ��Ⱦ����ʱ������ݣ�����ű��е�scene����
-     NodeContext3DData();
-     ~NodeContext3DData();
+     NodeContext3DData(){};
+     ~NodeContext3DData() {};
  public:
      uint32_t sceneLightmapDirtyFlag;
  };
