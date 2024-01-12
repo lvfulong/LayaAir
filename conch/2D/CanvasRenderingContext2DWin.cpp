@@ -32,14 +32,7 @@ CanvasRenderingContext2DWin::CanvasRenderingContext2DWin(int width, int height)
     m_bitmapData.m_nWidth = width;
     m_bitmapData.m_nHeight = height;
     m_bitmapData.m_pImageData = new char[width * height * 4];
-    try
-    {
-        FontDescriptionParser::test();
-    }
-    catch (const std::regex_error &e)
-    {
-        LOGI("FontDescriptionParser::parse error %s", e.what());
-    }
+
     setDefault();
 }
 CanvasRenderingContext2DWin::~CanvasRenderingContext2DWin()
@@ -82,11 +75,7 @@ void CanvasRenderingContext2DWin::fillText(const std::string &text, double x, do
     }
     int bufferLen = 0;
     wchar_t *pwszBuffer = utf8ToUtf16(text, &bufferLen);
-    Gdiplus::StringFormat strFormat;
-    strFormat.SetAlignment(Gdiplus::StringAlignmentCenter);     // 水平居左
-    strFormat.SetLineAlignment(Gdiplus::StringAlignmentCenter); // 垂直居中
-    // m_gdiGraphics->DrawRectangle(&Gdiplus::Pen(Gdiplus::Color::Red, 2), Gdiplus::RectF(0, 0, 480, 480));
-    m_gdiGraphics->DrawString(pwszBuffer, bufferLen, m_font, Gdiplus::PointF(x, y), &strFormat,
+    m_gdiGraphics->DrawString(pwszBuffer, bufferLen, m_font, Gdiplus::PointF(x, y), &m_stringFormat,
                               &Gdiplus::SolidBrush(Gdiplus::Color::Black));
 }
 
@@ -99,11 +88,7 @@ void CanvasRenderingContext2DWin::strokeText(const std::string &text, double x, 
     }
     int bufferLen = 0;
     wchar_t *pwszBuffer = utf8ToUtf16(text, &bufferLen);
-    Gdiplus::StringFormat strFormat;
-    strFormat.SetAlignment(Gdiplus::StringAlignmentCenter);     // 水平居左
-    strFormat.SetLineAlignment(Gdiplus::StringAlignmentCenter); // 垂直居中
-    // m_gdiGraphics->DrawRectangle(&Gdiplus::Pen(Gdiplus::Color::Red, 2), Gdiplus::RectF(0, 0, 480, 480));
-    m_gdiGraphics->DrawString(pwszBuffer, bufferLen, m_font, Gdiplus::PointF(x, y), &strFormat,
+    m_gdiGraphics->DrawString(pwszBuffer, bufferLen, m_font, Gdiplus::PointF(x, y), &m_stringFormat,
                               &Gdiplus::SolidBrush(Gdiplus::Color::Black));
 }
 
@@ -113,29 +98,27 @@ TextMetrics CanvasRenderingContext2DWin::measureText(const std::string &text)
     TextMetrics metrics;
 
     Gdiplus::GraphicsPath graphicsPathObj;
-
-    Gdiplus::StringFormat strFormat;
-    strFormat.SetAlignment(Gdiplus::StringAlignmentCenter);     // 水平居左
-    strFormat.SetLineAlignment(Gdiplus::StringAlignmentCenter); // 垂直居中
-    Gdiplus::FontFamily fontfamily;
-    m_font->GetFamily(&fontfamily);
+    Gdiplus::FontFamily fontFamily;
+    m_font->GetFamily(&fontFamily);
 
     int bufferLen = 0;
     wchar_t *pwszBuffer = utf8ToUtf16(text, &bufferLen);
 
-    graphicsPathObj.AddString(pwszBuffer, bufferLen /* -1 */, &fontfamily, m_font->GetStyle(), m_font->GetSize(),
-                              Gdiplus::PointF(0, 0), &strFormat);
+    graphicsPathObj.AddString(pwszBuffer, bufferLen /* -1 */, &fontFamily, m_font->GetStyle(), m_font->GetSize(),
+                              Gdiplus::PointF(0, 0), &m_stringFormat);
     Gdiplus::RectF rcBound;
-    /// 获取边界范围
     graphicsPathObj.GetBounds(&rcBound);
 
     Gdiplus::RectF layoutRect(0, 0, m_width, m_height);
-    m_gdiGraphics->MeasureString(pwszBuffer, bufferLen, m_font, layoutRect, &strFormat, &rcBound);
-
-    /// 返回文本的宽高
+    m_gdiGraphics->MeasureString(pwszBuffer, bufferLen, m_font, layoutRect, &m_stringFormat, &rcBound);
     metrics.m_width = rcBound.Width;
-    metrics, m_height = rcBound.Height;
-    LOGE("measureText %f %f", rcBound.Width, rcBound.Height);
+    metrics.m_height = rcBound.Height;
+    //UINT16 desent = fontFamily.GetCellDescent(m_fontStyle);
+    //UINT16 descentPixel = m_font->GetSize() * desent / fontFamily.GetEmHeight(m_fontStyle);
+    UINT16 ascender = fontFamily.GetCellAscent(m_fontStyle);
+    UINT16 ascenderPixel = m_font->GetSize() * ascender / fontFamily.GetEmHeight(m_fontStyle);
+    metrics.m_ascender = ascenderPixel;
+    //LOGI("measureText %f %f", rcBound.Width, rcBound.Height);
     return metrics;
 }
 void CanvasRenderingContext2DWin::clearRect(double x, double y, double width, double height)
@@ -259,6 +242,28 @@ void CanvasRenderingContext2DWin::scale(double x, double y)
 }
 void CanvasRenderingContext2DWin::setTextAlign(const char *textAlign)
 {
+    if (strcmp(textAlign, "left") == 0)
+    {
+        m_textAlign = TextAlign::Left;
+        m_stringFormat.SetAlignment(Gdiplus::StringAlignmentNear);       // 水平
+        m_stringFormat.SetLineAlignment(Gdiplus::StringAlignmentCenter); // 垂直
+    }
+    else if (strcmp(textAlign, "right") == 0)
+    {
+        m_textAlign = TextAlign::Right;
+        m_stringFormat.SetAlignment(Gdiplus::StringAlignmentFar);        // 水平
+        m_stringFormat.SetLineAlignment(Gdiplus::StringAlignmentCenter); // 垂直
+    }
+    else if (strcmp(textAlign, "center") == 0)
+    {
+        m_textAlign = TextAlign::Center;
+        m_stringFormat.SetAlignment(Gdiplus::StringAlignmentCenter);     // 水平
+        m_stringFormat.SetLineAlignment(Gdiplus::StringAlignmentCenter); // 垂直
+    }
+    else
+    {
+        LOGE("textAlign invalid");
+    }
 }
 void CanvasRenderingContext2DWin::setTextBaseline(const char *textBaseline)
 {
@@ -274,26 +279,32 @@ void CanvasRenderingContext2DWin::setFont(const char *font)
     CanvasRenderingContext2D::setFont(font);
     bool isBold = m_fontDescription.isBold();
     bool isItalic = m_fontDescription.isItalic();
-    uint32_t style = Gdiplus::FontStyle::FontStyleRegular;
-    if (isBold)
+
+    if (isBold && isItalic)
     {
-        style |= Gdiplus::FontStyle::FontStyleBold;
+        m_fontStyle = Gdiplus::FontStyle::FontStyleBoldItalic;
     }
-    if (isItalic)
+    else if (isBold)
     {
-        style |= Gdiplus::FontStyle::FontStyleItalic;
+        m_fontStyle = Gdiplus::FontStyle::FontStyleBold;
+    }
+    else if (isItalic)
+    {
+        m_fontStyle = Gdiplus::FontStyle::FontStyleItalic;
+    }
+    else
+    {
+        m_fontStyle = Gdiplus::FontStyle::FontStyleRegular;
     }
     int bufferLen = 0;
     wchar_t *pwszBuffer = utf8ToUtf16(m_fontDescription.m_family, &bufferLen);
-    Gdiplus::FontFamily fontfamily(L"Arial"); // Gdiplus::FontFamily fontfamily(pwszBuffer);
+    Gdiplus::FontFamily fontfamily(pwszBuffer);
     if (m_font != nullptr)
     {
         delete m_font;
     }
-    m_font = new Gdiplus::Font(&fontfamily, m_fontDescription.m_size, style, Gdiplus::UnitPixel);
-    // setTypeface(env, m_fontDescription.m_family, style);
-    // setTextSize(env, m_fontDescription.m_size);
-    LOGE("setFont %s %f", font, m_fontDescription.m_size);
+    m_font = new Gdiplus::Font(&fontfamily, m_fontDescription.m_size, m_fontStyle, Gdiplus::UnitPixel);
+    // LOGI("setFont %s %f", font, m_fontDescription.m_size);
 }
 bool CanvasRenderingContext2DWin::registerFontFromPath(const std::string &fontName, const std::string &path)
 {
