@@ -27,7 +27,10 @@ class RenderBindings
         {
             class_<GLESBaseRenderNode> class_binding;
             class_binding.constructor<>();
-            class_binding.function("set_distanceForSort", &GLESBaseRenderNode::set_distanceForSort);
+            class_binding.property("_distanceForSort", &GLESBaseRenderNode::get_distanceForSort, &GLESBaseRenderNode::set_distanceForSort);
+            class_binding.property("_sortingFudge", &GLESBaseRenderNode::get_sortingFudge, &GLESBaseRenderNode::set_sortingFudge);
+            class_binding.property("_castShadow", &GLESBaseRenderNode::get_castShadow, &GLESBaseRenderNode::set_castShadow);
+            class_binding.property("_enable", &GLESBaseRenderNode::get_enable, &GLESBaseRenderNode::set_enable);
             class_binding.function("set_transform", &GLESBaseRenderNode::set_transform);
             context.class_("conchBaseRenderNode", class_binding);
         }

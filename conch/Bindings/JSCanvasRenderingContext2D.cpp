@@ -132,8 +132,8 @@ void JSCanvasRenderingContext2D::exportJS(Context &context)
 {
     class_<ImageData> class_binding_image_data;
     class_binding_image_data.constructor<>();
-    class_binding_image_data.property("width", &ImageData::m_width);
-    class_binding_image_data.property("height", &ImageData::m_height);
+    class_binding_image_data.property_field("width", &ImageData::m_width);
+    class_binding_image_data.property_field("height", &ImageData::m_height);
     class_binding_image_data.property_optional_override(
         "data", optional_override([](ImageData &imageData) {
             JsValue ab = createJSAB((char *)imageData.m_data.data(), imageData.m_data.size());
@@ -144,8 +144,8 @@ void JSCanvasRenderingContext2D::exportJS(Context &context)
 
     class_<TextMetrics> class_binding_text_metrics;
     class_binding_text_metrics.constructor<>();
-    class_binding_text_metrics.property("width", &TextMetrics::m_width);
-    class_binding_text_metrics.property("height", &TextMetrics::m_height);
+    class_binding_text_metrics.property_field("width", &TextMetrics::m_width);
+    class_binding_text_metrics.property_field("height", &TextMetrics::m_height);
     context.class_("TextMetrics", class_binding_text_metrics);
 
     class_<JSCanvasRenderingContext2D> class_binding;
@@ -175,5 +175,6 @@ void JSCanvasRenderingContext2D::exportJS(Context &context)
     class_binding.function("setTransform", &JSCanvasRenderingContext2D::setTransform);
     class_binding.function("scale", &JSCanvasRenderingContext2D::scale);
     context.class_("conchCanvasRenderingContext2D", class_binding);
+
 }
 } // namespace laya

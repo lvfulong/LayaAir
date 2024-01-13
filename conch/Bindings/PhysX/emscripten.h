@@ -120,7 +120,7 @@ template <typename ClassType, typename BaseSpecifier = NoBaseClass> class Class_
         typename PropertyType /*, typename = typename std::enable_if<!std::is_function<PropertyType>::value>::type>*/>
     const Class_ &property(std::string_view name, PropertyType ClassType::*field) const
     {
-        mclass_->property(name, field);
+        mclass_->property_field(name, field);
         return *this;
     }
     template <typename WrapperType>

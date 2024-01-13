@@ -403,13 +403,13 @@ template <typename ClassType> class class_
     }
     template <
         typename PropertyType /*, typename = typename std::enable_if<!std::is_function<PropertyType>::value>::type>*/>
-    const class_ &property(std::string_view name, PropertyType ClassType::*field) const
+    const class_ &property_field(std::string_view name, PropertyType ClassType::*field) const
     {
         auto info = new FuncInfo<decltype(field)>(field);
         internal::addDeinitializer([info]() { delete info; });
         classRegistry_.class_function_template()->PrototypeTemplate()->SetAccessor(
             Js_Str(isolate_, name.data()), internal::InvokeGetPropertyField<ClassType, PropertyType>,
-            field == nullptr ? nullptr : internal::InvokeSetPropertyField<ClassType, PropertyType>,
+            internal::InvokeSetPropertyField<ClassType, PropertyType>,
             v8::External::New(isolate_, (void *)info));
         return *this;
     }

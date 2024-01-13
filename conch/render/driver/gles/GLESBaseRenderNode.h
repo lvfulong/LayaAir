@@ -55,6 +55,9 @@ class GLESBaseRenderNode
     uint32_t layer;
     uint32_t staticMask;
     Real distanceForSort;
+    Real sortingFudge;
+    bool castShadow;
+    bool enable;
     // lightmapData
     struct LightmapData
     {
@@ -83,8 +86,14 @@ class GLESBaseRenderNode
 public:
     //binding
     void set_distanceForSort(Real value) {  distanceForSort = value; }
+    Real get_distanceForSort() { return distanceForSort; }
+    void set_sortingFudge(Real value) { sortingFudge = value; }
+    Real get_sortingFudge() { return sortingFudge; }
     void set_transform(laya::Transform3D* value) { transform = value; }
-
+    bool get_castShadow() { return castShadow; }
+    void set_castShadow(bool value) { castShadow = value; }
+    bool get_enable() { return enable; }
+    void set_enable(bool value) { enable = value; }
 };
 } // namespace laya
 #endif
