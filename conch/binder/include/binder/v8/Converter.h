@@ -55,6 +55,25 @@ template <typename T> class Converter<T, std::enable_if_t<internal::is_value_obj
     }
 };
 
+template <typename T> class Converter<T, std::enable_if_t<std::is_enum<T>::value>>
+{
+public:
+    static T ToCpp(v8::Local<v8::Value> p_vl)
+    {
+        return static_cast<T>(p_vl.As<v8::Uint32>()->Value());
+        // return p_vl->Uint32Value();
+    }
+    static v8::Local<v8::Value> ToJs(T p_vl)
+    {
+        return v8::Uint32::NewFromUnsigned(v8::Isolate::GetCurrent(), static_cast<uint32_t>(p_vl));
+    }
+    static bool is(v8::Local<v8::Value> p_vl)
+    {
+        return p_vl->IsUint32();
+    }
+
+};
+
 template <typename T> class Converter<T, std::enable_if_t<internal::is_wrapped_class<T>::value>>
 {
   public:

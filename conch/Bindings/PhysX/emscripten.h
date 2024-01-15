@@ -306,7 +306,7 @@ class PhysxAdapter_ : public PhysxAdapter
 };
 } // namespace laya
 
-namespace laya
+/*namespace laya
 {
 
 template <> class Converter<physx::PxRigidBodyFlag::Enum>
@@ -487,5 +487,5 @@ template <> class Converter<physx::PxCombineMode::Enum>
     }
 };
 
-} // namespace laya
+} // namespace laya*/
 #endif
