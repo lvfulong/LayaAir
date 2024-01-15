@@ -7,7 +7,7 @@
 
 class RenderContext3D;
 namespace laya {
-    class ComposeData {
+    /*class ComposeData {
     public:
         ComposeData();
         ~ComposeData();
@@ -33,7 +33,7 @@ namespace laya {
         Bounds* bounds;
         bool customCull;
         bool customCullResoult;
-    };
+    };*/
 
 
 

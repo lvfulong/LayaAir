@@ -211,6 +211,8 @@ list(APPEND CONCH_SRC
 	render/driver/gles/GLUtils.cpp
 	render/driver/gles/LayaGL.h
 	render/driver/gles/LayaGL.cpp
+	render/driver/gles/QuickSort.h
+	render/driver/gles/QuickSort.cpp
 	render/3D/design/renderEnum/RenderPologyMode.h
 	render/3D/design/renderEnum/DrawType.h
 	render/3D/design/renderEnum/IndexFormat.h
@@ -267,8 +269,7 @@ list(APPEND CONCH_SRC
 	render/3D/temp/CommandUniformMap.h
 	render/3D/temp/CommandUniformMap.cpp
 	render/3D/temp/CommandEncoder.h
-	render/3D/temp/QuickSort.h
-	render/3D/temp/QuickSort.cpp
+	
 	render/3D/temp/RenderStateCommand.h
 	render/3D/temp/RenderStateCommand.cpp
 	render/3D/temp/RenderState.h

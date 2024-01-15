@@ -25,8 +25,18 @@ class RenderBindings
 
         //GLESRenderContext3D::exportJS(context);
         {
+            //todo Bounds
+        }
+        {
             class_<GLESBaseRenderNode> class_binding;
             class_binding.constructor<>();
+            class_binding.property("_bounds", &GLESBaseRenderNode::get_bounds, &GLESBaseRenderNode::set_bounds);
+            class_binding.property("_boundsChange", &GLESBaseRenderNode::get_boundsChange, &GLESBaseRenderNode::set_boundsChange);
+            class_binding.property("_customCullResoult", &GLESBaseRenderNode::get_customCullResoult, &GLESBaseRenderNode::set_customCullResoult);
+            class_binding.property("_customCull", &GLESBaseRenderNode::get_customCull, &GLESBaseRenderNode::set_customCull);
+            class_binding.property("_staticMask", &GLESBaseRenderNode::get_staticMask, &GLESBaseRenderNode::set_staticMask);
+            class_binding.property("_layer", &GLESBaseRenderNode::get_layer, &GLESBaseRenderNode::set_layer);
+            class_binding.property("_renderbitFlag", &GLESBaseRenderNode::get_renderbitFlag, &GLESBaseRenderNode::set_renderbitFlag);
             class_binding.property("_distanceForSort", &GLESBaseRenderNode::get_distanceForSort, &GLESBaseRenderNode::set_distanceForSort);
             class_binding.property("_sortingFudge", &GLESBaseRenderNode::get_sortingFudge, &GLESBaseRenderNode::set_sortingFudge);
             class_binding.property("_castShadow", &GLESBaseRenderNode::get_castShadow, &GLESBaseRenderNode::set_castShadow);

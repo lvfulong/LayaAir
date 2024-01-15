@@ -9,15 +9,18 @@ bool GLESBaseRenderNode::shadowCullPass()
     // todo
     return true;
 }
-Bounds *GLESBaseRenderNode::getBounds()
+Bounds *GLESBaseRenderNode::get_bounds()
 {
     if (nativeUpdateData)
     {
         _calculateGeometryBoundingBox();
     }
-    return compose.bounds;
+    return bounds;
 }
-
+void GLESBaseRenderNode::set_bounds(Bounds*)
+{
+    // todo
+}
 void GLESBaseRenderNode::_set_GeometryBounds(Bounds &bounds)
 {
     geometryBounds = bounds;

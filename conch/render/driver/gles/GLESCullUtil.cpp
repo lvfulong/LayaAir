@@ -23,12 +23,12 @@ void GLESCullUtil::cullByCameraCullInfo(CameraCullInfo &cameraCullInfo, std::vec
             // needRender 方案有问题 会造成native和js的差异
             if (!cameraCullInfo._useOcclusionCulling || render->_needRender(&boundFrustum)) // NEEDRENDER TS OR NATIVE
             {
-                render->distanceForSort = Vector3::distance(render->getBounds()->getCenter(), cameraCullInfo._position);
+                render->distanceForSort = Vector3::distance(render->get_bounds()->getCenter(), cameraCullInfo._position);
                 render->_renderUpdatePre(context); // TS OR Native
                 std::vector<RenderElementOBJ *>& elements = render->renderelements;
                 if (elements.size() == 1)
                 { // js 优化
-                    if (elements[0]->composeData->_materialRenderQueue > 2500)
+                    if (elements[0]->_materialRenderQueue > 2500)
                         transparent.addRenderElement(elements[0]);
                     else
                         opaqueList.addRenderElement(elements[0]);
@@ -38,7 +38,7 @@ void GLESCullUtil::cullByCameraCullInfo(CameraCullInfo &cameraCullInfo, std::vec
                     for (int j = 0, m = elements.size(); j < m; j++)
                     {
                         RenderElementOBJ* element = elements[j];
-                        if (element->composeData->_materialRenderQueue > 2500)
+                        if (element->_materialRenderQueue > 2500)
                             transparent.addRenderElement(element);
                         else
                             opaqueList.addRenderElement(element);
@@ -62,17 +62,17 @@ void GLESCullUtil::culldirectLightShadow(const ShadowCullInfo &shadowCullInfo, s
         if (canPass)
         {
             // Stat.frustumCulling++; todo
-            bool pass = FrustumCulling::cullingRenderBounds(render->getBounds(), shadowCullInfo);
+            bool pass = FrustumCulling::cullingRenderBounds(render->get_bounds(), shadowCullInfo);
             if (pass)
             {
                 render->distanceForSort = Vector3::distance(
-                    render->getBounds()->getCenter(), shadowCullInfo.position); // TODO:合并计算浪费,或者合并后取平均值
+                    render->get_bounds()->getCenter(), shadowCullInfo.position); // TODO:合并计算浪费,或者合并后取平均值
                 render->_renderUpdatePre(*context);                               // TS OR Native
                 std::vector<RenderElementOBJ *>& elements = render->renderelements;
                 for (int j = 0, m = elements.size(); j < m; j++)
                 {
                     RenderElementOBJ* element = elements[j];
-                    if (element->composeData->_materialRenderQueue < 2500)
+                    if (element->_materialRenderQueue < 2500)
                         opaqueList.addRenderElement(element);
                 }
             }
@@ -95,14 +95,14 @@ void GLESCullUtil::cullingSpotShadow(CameraCullInfo &cameraCullInfo, std::vector
         if (canPass)
         {
             //Stat.frustumCulling++; todo
-            render->distanceForSort = Vector3::distance(render->getBounds()->getCenter(), cameraCullInfo._position);
+            render->distanceForSort = Vector3::distance(render->get_bounds()->getCenter(), cameraCullInfo._position);
             if (render->_needRender(&boundFrustum))
             {
                 std::vector<RenderElementOBJ*>& elements = render->renderelements;
                 for (int j = 0, m  = elements.size(); j < m; j++)
                 {
                     RenderElementOBJ* element = elements[j];
-                    if (element->composeData->_materialRenderQueue < 2500)
+                    if (element->_materialRenderQueue < 2500)
                         opaqueList.addRenderElement(element);
                 }
             }

@@ -1,7 +1,8 @@
 #include "QuickSort.h"
 #include <Bindings/LayaAir/3D/JSRenderNode.h>
-#include "RenderElementOBJ.h"
-
+#include "render/3D/design/RenderElement.h"
+#include "render/3D/temp/RenderElementOBJ.h"
+#include "GLESBaseRenderNode.h"
 namespace laya
 {
 	QuickSort::~QuickSort()
@@ -60,11 +61,11 @@ namespace laya
 
 	int QuickSort::_compare(RenderElementOBJ* left , RenderElementOBJ* right)
 	{
-		int renderQueue = left->composeData->_materialRenderQueue - right->composeData->_materialRenderQueue;
+		int renderQueue = left->_materialRenderQueue - right->_materialRenderQueue;
 		if (renderQueue == 0) 
 		{
-			int sort = m_bIsTransparent ? right->composeData->m_nDistanceForSort - left->composeData->m_nDistanceForSort : left->composeData->m_nDistanceForSort - right->composeData->m_nDistanceForSort;
-			return sort + right->composeData->m_nSortingFudge - left->composeData->m_nSortingFudge;
+			int sort = m_bIsTransparent ? right->_owner->distanceForSort - left->_owner->distanceForSort : left->_owner->distanceForSort - right->_owner->distanceForSort;
+			return sort + right->_owner->sortingFudge - left->_owner->sortingFudge;
 		}
 		else
 		{

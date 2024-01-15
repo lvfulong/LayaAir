@@ -22,7 +22,7 @@ class GLESBaseRenderNode
     virtual ~GLESBaseRenderNode(){};
 
     bool shadowCullPass();
-    Bounds *getBounds();
+   
    
 
     virtual void _renderUpdate(NodeContext3DData data){};
@@ -34,12 +34,12 @@ class GLESBaseRenderNode
     bool _needRender(BoundFrustum* pBoundFrustum);
   public:
     // 排版数据 用于renderqueuelist
-    ComposeData compose{};
+    //ComposeData compose{};
     // 渲染数据 用于最终list渲染
     std::vector<RenderElementOBJ *> renderelements{};
     // 设置这个值，所有的updateBounds renderUpdate和renderupdatebyCamera 必须在native执行
     bool nativeUpdateData = false;
-    bool boundsChange = true;
+
     // Logic Property
     Bounds geometryBounds{};
     Transform3D *transform = nullptr;
@@ -59,6 +59,10 @@ class GLESBaseRenderNode
     bool castShadow;
     bool enable;
     // lightmapData
+    bool customCull;
+    bool customCullResoult;
+    bool boundsChange;
+    Bounds* bounds = nullptr;
     struct LightmapData
     {
         uint32_t lightmap = 0;
@@ -94,6 +98,20 @@ public:
     void set_castShadow(bool value) { castShadow = value; }
     bool get_enable() { return enable; }
     void set_enable(bool value) { enable = value; }
+    uint32_t get_renderbitFlag() { return renderbitFlag; }
+    void set_renderbitFlag(uint32_t value) { renderbitFlag = value; }
+    uint32_t get_layer() { return layer; }
+    void set_layer(uint32_t value) { layer = value; }
+    uint32_t get_staticMask() { return staticMask; }
+    void set_staticMask(uint32_t value) { staticMask = value; }
+    bool get_customCull() { return customCull; }
+    void set_customCull(bool value) { customCull = value; }
+    bool get_customCullResoult() { return customCullResoult; }
+    void set_customCullResoult(bool value) { customCullResoult = value; }
+    bool get_boundsChange() { return boundsChange; }
+    void set_boundsChange(bool value) { boundsChange = value; }
+    Bounds* get_bounds();
+    void set_bounds(Bounds*);
 };
 } // namespace laya
 #endif

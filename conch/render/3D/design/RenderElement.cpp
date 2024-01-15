@@ -2,7 +2,7 @@
 
 namespace laya
 {
-   ComposeData::ComposeData(){
+   /*ComposeData::ComposeData() {
    }
 
    ComposeData::~ComposeData(){
@@ -40,5 +40,5 @@ namespace laya
     
     void ComposeData::set_composeData_customCullResoult(bool value){
         customCullResoult = value;
-    }
+    }*/
 }

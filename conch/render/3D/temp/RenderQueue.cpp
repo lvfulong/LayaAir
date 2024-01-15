@@ -1,5 +1,5 @@
 #include "RenderQueue.h"
-#include "QuickSort.h"
+//#include "QuickSort.h"
 
 namespace laya
 {
