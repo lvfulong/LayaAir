@@ -30,6 +30,13 @@ class RenderBindings
         {
             class_<GLESBaseRenderNode> class_binding;
             class_binding.constructor<>();
+            class_binding.property("_reflectionMode", &GLESBaseRenderNode::get_reflectionMode, &GLESBaseRenderNode::set_reflectionMode);
+            class_binding.property("_lightProbUpdateMark", &GLESBaseRenderNode::get_lightProbUpdateMark, &GLESBaseRenderNode::set_lightProbUpdateMark);
+            class_binding.property("_irradianceMode", &GLESBaseRenderNode::get_irradianceMode, &GLESBaseRenderNode::set_irradianceMode);
+            class_binding.property("_probeReflectionUpdateMark", &GLESBaseRenderNode::get_probeReflectionUpdateMark, &GLESBaseRenderNode::set_probeReflectionUpdateMark);
+            class_binding.property("_lightmapIndex", &GLESBaseRenderNode::get_lightmapIndex, &GLESBaseRenderNode::set_lightmapIndex);
+            class_binding.function("set_shaderData", &GLESBaseRenderNode::set_shaderData);
+            class_binding.function("set_baseGeometryBounds", &GLESBaseRenderNode::set_baseGeometryBounds);
             class_binding.property("_bounds", &GLESBaseRenderNode::get_bounds, &GLESBaseRenderNode::set_bounds);
             class_binding.property("_boundsChange", &GLESBaseRenderNode::get_boundsChange, &GLESBaseRenderNode::set_boundsChange);
             class_binding.property("_customCullResoult", &GLESBaseRenderNode::get_customCullResoult, &GLESBaseRenderNode::set_customCullResoult);

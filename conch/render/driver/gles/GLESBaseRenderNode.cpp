@@ -15,17 +15,21 @@ Bounds *GLESBaseRenderNode::get_bounds()
     {
         _calculateGeometryBoundingBox();
     }
-    return bounds;
+    return this->bounds;
 }
-void GLESBaseRenderNode::set_bounds(Bounds*)
+void GLESBaseRenderNode::set_bounds(Bounds* bounds)
 {
-    // todo
-}
-void GLESBaseRenderNode::_set_GeometryBounds(Bounds &bounds)
-{
-    geometryBounds = bounds;
+    this->bounds = bounds;
 }
 
+void GLESBaseRenderNode::set_baseGeometryBounds(Bounds* bounds)
+{
+    baseGeometryBounds = bounds;
+}
+void GLESBaseRenderNode::set_shaderData(ShaderData* data)
+{
+    this->shaderData = data;
+}
 void GLESBaseRenderNode::_applyReflection()
 {
     // TODO
