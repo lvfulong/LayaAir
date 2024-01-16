@@ -39,7 +39,7 @@ function build_ios {
 		-DIOS_ARCH="${arch}" \
 		-DPLATFORM_NAME="${platform}" \
 		-DIOS=1 \
-		-DCMAKE_TOOLCHAIN_FILE=${root_dir}/CMake/clang/iOS.cmake \
+		-DCMAKE_TOOLCHAIN_FILE=${root_dir}/cmake/clang/iOS.cmake \
 		-DCMAKE_SYSTEM_NAME=iOS \
 		${conch_dir}
 
