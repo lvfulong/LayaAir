@@ -641,12 +641,13 @@ namespace laya
 			return true;
 
 		}
-		/*
-			cloneTo(destObject: any) : void {
-			var i : number, s : Float32Array, d : Float32Array;
-			s = this.elements;
-			d = destObject.elements;
-			if (s == = d) {
+		
+		void cloneTo(Matrix4x4& destObject)
+		{
+			int i;
+			float* s = this->elements;
+			float* d = destObject.elements;
+			if (s == d) {
 				return;
 			}
 			for (i = 0; i < 16; ++i) {
@@ -654,7 +655,7 @@ namespace laya
 			}
 		}
 
-		cloneByArray(destObject:Float32Array) {
+		/*cloneByArray(destObject:Float32Array) {
 			let s = this.elements;
 			let d = destObject;
 

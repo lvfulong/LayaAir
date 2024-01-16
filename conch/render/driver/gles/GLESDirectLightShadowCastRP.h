@@ -14,19 +14,7 @@ namespace laya
 constexpr size_t _maxCascades = 4;
 class ShaderData;
 
-class ShadowSpotData
-{
-  public:
-    ShaderData *cameraShaderValue;
-    Vector3 position;
-    Real offsetX;
-    Real offsetY;
-    Real resolution;
-    Matrix4x4 viewMatrix;
-    Matrix4x4 projectionMatrix;
-    Matrix4x4 viewProjectMatrix;
-    CameraCullInfo cameraCullInfo;
-};
+
 
 class GLESDirectLightShadowCastRP : public IDirectLightShadowRP
 {
@@ -79,7 +67,7 @@ class GLESDirectLightShadowCastRP : public IDirectLightShadowRP
     Vector4 _shadowMapSize;
     Vector4 _shadowParams;
     Vector4 _shadowBias;
-    ShadowSpotData _shadowSpotData;
+    //ShadowSpotData _shadowSpotData;
     uint32_t _cascadeCount = 0;
     GLESRenderQueueList _renderQueue;
     std::array<ShadowSliceData, 4> _shadowSliceDatas;

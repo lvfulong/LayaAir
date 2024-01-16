@@ -32,9 +32,8 @@ class Scene3DShaderDeclaration
     /**@internal */
     // static SHADERDEFINE_SHADOW_SPOT : ShaderDefine;
     /**@internal */
-    // static SHADERDEFINE_SHADOW_SPOT_SOFT_SHADOW_LOW : ShaderDefine;
-    /**@internal */
-    // static SHADERDEFINE_SHADOW_SPOT_SOFT_SHADOW_HIGH : ShaderDefine;
+    static ShaderDefine *SHADERDEFINE_SHADOW_SPOT_SOFT_SHADOW_LOW;
+    static ShaderDefine *SHADERDEFINE_SHADOW_SPOT_SOFT_SHADOW_HIGH;
     static void __init__();
 };
 } // namespace laya

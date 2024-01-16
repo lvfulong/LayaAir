@@ -215,13 +215,13 @@ namespace laya
 			this->z = 0;
 		}
 
-		/*cloneTo(destObject: any): void {
-			var destVector3: Vector3 = (<Vector3>destObject);
-			destVector3.x = this.x;
-			destVector3.y = this.y;
-			destVector3.z = this.z;
+		void cloneTo(Vector3& destVector3)
+		{
+			destVector3.x = this->x;
+			destVector3.y = this->y;
+			destVector3.z = this->z;
 		}
-		clone(): any {
+		/*clone(): any {
 			var destVector3: Vector3 = new Vector3();
 			this.cloneTo(destVector3);
 			return destVector3;
