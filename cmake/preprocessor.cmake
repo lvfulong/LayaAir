@@ -1,0 +1,8 @@
+if (UNIX AND NOT APPLE AND NOT ANDROID AND NOT WEBGL)
+    set(LINUX TRUE)
+	message("LINUX : true")
+else()
+    set(LINUX FALSE)
+	message("LINUX : false")
+endif()
+add_definitions(-DCONCH)

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-
+include(${CONCH_ROOT_DIR}/cmake/preprocessor.cmake)
 set(TARGET binder)
 
 project(${TARGET})

@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
+
 set(PROJECT_NAME LayaNative3.0)
 project(${PROJECT_NAME})
 
@@ -8,7 +9,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+
 set(CONCH_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../conch)
+include(${CMAKE_CURRENT_SOURCE_DIR}/../cmake/preprocessor.cmake)
 
 set(PROJECT_SOURCES)
 set(PROJECT_RESOURCES)
@@ -63,15 +66,6 @@ function(mark_multi_resources res_out)
 
 	set(${res_out} ${tmp_file_list} PARENT_SCOPE)
 endfunction()
-
-if (UNIX AND NOT APPLE AND NOT ANDROID AND NOT WEBGL)
-    set(LINUX TRUE)
-	message("LINUX : true")
-else()
-    set(LINUX FALSE)
-	message("LINUX : false")
-endif()
-
 
 if(IOS)
 	list(APPEND PROJECT_SOURCES
@@ -202,3 +196,6 @@ if(IOS)
 	set_xcode_property(${PROJECT_NAME} VALIDATE_WORKSPACE "YES")
 	set_xcode_property(${PROJECT_NAME} PRODUCT_BUNDLE_IDENTIFIER "com.layabox.conch6")
 endif()
+
+
+message("main: ${LINUX}")

@@ -8,14 +8,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 
-if (UNIX AND NOT APPLE AND NOT ANDROID AND NOT WEBGL)
-    set(LINUX TRUE)
-	message("LINUX : true")
-else()
-    set(LINUX FALSE)
-	message("LINUX : false")
-endif()
-add_definitions(-DCONCH)
+
+set(CONCH_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
+include(${CONCH_ROOT_DIR}/cmake/preprocessor.cmake)
 
 option(USE_JS_V8_DEBUGGER "Use v8 debugger" ON)
 option(USE_DOUBLE_PRECISION "Use double" OFF)
