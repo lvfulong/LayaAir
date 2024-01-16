@@ -616,6 +616,12 @@ class __JsByteArray
 template <typename T> class Converter<std::vector<T>>
 {
   public:
+     static std::vector<T> ToCpp(v8::Local<v8::Value> p_vl)
+     {
+         std::vector<T> vec;
+         __JsArray<T>::FromJsArray(p_vl, vec);
+         return vec;
+     }
     static v8::Local<v8::Value> ToJs(const std::vector<T> &p_vl)
     {
         return __JsArray<T>::ToJsArray(p_vl);
@@ -626,7 +632,7 @@ template <typename T> class Converter<std::vector<T *>>
   public:
     static std::vector<T *> ToCpp(v8::Local<v8::Value> p_vl)
     {
-        static std::vector<T *> vec;
+        std::vector<T *> vec;
         __JsArray<T>::FromJsArray(p_vl, vec);
         return vec;
     }
@@ -634,10 +640,10 @@ template <typename T> class Converter<std::vector<T *>>
     {
         return __JsArray<T>::ToJsArray(p_vl);
     }
-    static void ToCpp(v8::Local<v8::Value> p_vl, std::vector<T *> &vec)
+    /*static void ToCpp(v8::Local<v8::Value> p_vl, std::vector<T*>& vec)
     {
         return __JsArray<T>::FromJsArray(p_vl, vec);
-    }
+    }*/
 
     static bool is(v8::Local<v8::Value> p_vl)
     {

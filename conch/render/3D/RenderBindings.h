@@ -35,6 +35,12 @@ class RenderBindings
             class_binding.property("_irradianceMode", &GLESBaseRenderNode::get_irradianceMode, &GLESBaseRenderNode::set_irradianceMode);
             class_binding.property("_probeReflectionUpdateMark", &GLESBaseRenderNode::get_probeReflectionUpdateMark, &GLESBaseRenderNode::set_probeReflectionUpdateMark);
             class_binding.property("_lightmapIndex", &GLESBaseRenderNode::get_lightmapIndex, &GLESBaseRenderNode::set_lightmapIndex);
+            class_binding.function("set_commonUniformMap", &GLESBaseRenderNode::set_commonUniformMap);
+            class_binding.function("set_lightmapScaleOffset", &GLESBaseRenderNode::set_lightmapScaleOffset);
+            class_binding.function("set_worldParams", &GLESBaseRenderNode::set_worldParams);
+            class_binding.function("destroy", &GLESBaseRenderNode::destroy);
+            class_binding.function("set_calculateBoundingBox", &GLESBaseRenderNode::set_calculateBoundingBox);
+            class_binding.function("set_renderUpdatePre", &GLESBaseRenderNode::set_renderUpdatePre);
             class_binding.function("set_shaderData", &GLESBaseRenderNode::set_shaderData);
             class_binding.function("set_baseGeometryBounds", &GLESBaseRenderNode::set_baseGeometryBounds);
             class_binding.property("_bounds", &GLESBaseRenderNode::get_bounds, &GLESBaseRenderNode::set_bounds);

@@ -82,4 +82,20 @@ bool GLESBaseRenderNode::_needRender(BoundFrustum* pBoundFrustum)
     // TODO
     return true;
 }
+void GLESBaseRenderNode::set_renderUpdatePre(JSValueAsParam function)
+{
+    m_JSFunctionRenderUpdatePre.reset(function);
+}
+void GLESBaseRenderNode::set_calculateBoundingBox(JSValueAsParam function)
+{
+    m_JSFunctionCalculateBoundingBox.reset(function);
+}
+void GLESBaseRenderNode::set_commonUniformMap(const std::vector<std::string>& value)
+{
+    // TODO
+}
+void GLESBaseRenderNode::destroy()
+{
+    //TODO
+}
 } // namespace laya

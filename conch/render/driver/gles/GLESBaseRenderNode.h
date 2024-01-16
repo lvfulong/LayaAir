@@ -6,6 +6,8 @@
 #include <vector>
 #include "GLESRenderContext3D.h"
 #include <core/math/Types.h>
+#include <binder/JSInterface.h>
+
 namespace laya
 {
 enum class IrradianceMode
@@ -63,7 +65,7 @@ class GLESBaseRenderNode
     bool customCullResoult;
     bool boundsChange;
     Bounds* bounds = nullptr;
-
+    Vector4 worldParams;
     struct LightmapData
     {
         uint32_t lightmapIndex = 0;
@@ -82,7 +84,8 @@ class GLESBaseRenderNode
         uint32_t lightProb = 0;
         uint32_t lightProbUpdateMark;
     } lightprob;
-
+    Persistent			    m_JSFunctionRenderUpdatePre;
+    Persistent			    m_JSFunctionCalculateBoundingBox;
   private:
   protected:
     void _applyReflection();
@@ -142,6 +145,17 @@ public:
 
     uint32_t get_reflectionMode() { return reflectionMode; }
     void set_reflectionMode(uint32_t value) { reflectionMode = value; }
+
+    void set_renderUpdatePre(JSValueAsParam function);
+
+    void set_calculateBoundingBox(JSValueAsParam function);
+
+    void set_lightmapScaleOffset(const Vector4& value) { lightmapdata.lightmapScaleOffset = value; }
+
+    void set_worldParams(const Vector4& value) { worldParams = value; }
+
+    void set_commonUniformMap(const std::vector<std::string>& value);
+    void destroy();
 };
 } // namespace laya
 #endif
