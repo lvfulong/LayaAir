@@ -73,14 +73,15 @@ namespace laya
 			_tempMatrix4x4.invert(_tempMatrix4x4);
 			unprojectFromMat(source, _tempMatrix4x4, out);
 		}
-		/*cloneTo(out: Viewport): void {
-			out.x = this.x;
-			out.y = this.y;
-			out.width = this.width;
-			out.height = this.height;
-			out.minDepth = this.minDepth;
-			out.maxDepth = this.maxDepth;
-		}*/
+		void cloneTo(Viewport& out)
+		{
+			out.x = this->x;
+			out.y = this->y;
+			out.width = this->width;
+			out.height = this->height;
+			out.minDepth = this->minDepth;
+			out.maxDepth = this->maxDepth;
+		}
 	};
 }
 #endif

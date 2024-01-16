@@ -100,7 +100,7 @@ void GLESDirectLightShadowCastRP::render(RenderContext3D *context, std::vector<G
             context->setScissor(tempVec4);
         }
         context->setClearData((RenderClearFlagBits)RenderClearFlag::Depth, Color::BLACK, 1, 0);
-        this->_renderQueue.renderQueue(*(GLESRenderContext3D *)context);
+        this->_renderQueue.renderQueue((GLESRenderContext3D *)context);
         // todo this._applyCasterPassCommandBuffer(context);
     }
     this->_applyRenderData(context->sceneData, context->cameraData);

@@ -8,10 +8,11 @@
 namespace laya {
 	class GLESForwardAddRP;
 	class GLESBaseRenderNode;
+	class GLESRenderContext3D;
 	class GLESRender3DProcess
 	{
 	public:
-		void renderCameraForwardPass(RenderContext3D* context, GLESForwardAddRP* passInfo, std::vector<GLESBaseRenderNode*> renderNodeList, uint32_t count);
+		void renderCameraForwardPass(GLESRenderContext3D* context, GLESForwardAddRP* passInfo, std::vector<GLESBaseRenderNode*> renderNodeList, uint32_t count);
     };
 }
 #endif

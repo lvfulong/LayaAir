@@ -3,10 +3,14 @@
 
 #include "render/3D/design/Render3DProcess.h"
 #include <vector>
+#include "GLESRenderQueueList.h"
+#include <core/math/Types.h>
+#include <core/math/Vector4.h>
+#include "render/tempbase.h"
 
 namespace laya
 {
-
+    class GLESRenderContext3D;
 class GLESForwardAddClusterRP
 {
   public:
@@ -16,33 +20,36 @@ class GLESForwardAddClusterRP
         Depth = 1,
         DepthNormals = 2,
         DepthAndDepthNormals = 3,
+        MotionVectors = 4,
     };
 
-    struct CameraFrustumCullInfo
+    struct CameraInfo
     {
-        Vector3 _position;
-        bool _useOcclusionCulling;
-        BoundFrustum _boundFrustum;
-        uint32_t _cullingMask;
-        uint32_t _staticMask = 0;
+        Real farPlane;
+        Real nearPlane;
+      
     };
 
   public:
     GLESForwardAddClusterRP();
     ~GLESForwardAddClusterRP();
-    void render(RenderContext3D *context, std::vector<GLESBaseRenderNode*> renderNodeList, uint32_t count);
-    void renderDepthPass(RenderContext3D *context, JCSingletonList<GLESBaseRenderNode> &renderNodeList);
-    void renderDepthNormalPass(RenderContext3D *context, JCSingletonList<GLESBaseRenderNode> &renderNodeList);
-    void set_cameraCullInfo(CameraFrustumCullInfo value);
+    void render(GLESRenderContext3D*context, std::vector<GLESBaseRenderNode*> renderNodeList, uint32_t count);
+  
+    void set_cameraCullInfo(CameraCullInfo value);
     void set_beforeForwardCmds(std::vector<uint32_t> value);
     void set_beforeSkybox(std::vector<uint32_t> value);
     void set_beforeTransparent(std::vector<uint32_t> value);
     void set_destTarget(uint32_t value);
     void set_skyRenderNode(GLESBaseRenderNode*value);
     void set_depthTextureMode(DepthTextureMode value);
-
+private:
+    void _recoverRenderContext3D(GLESRenderContext3D* context);
+    void _mainPass(GLESRenderContext3D* context);
+    void opaqueTexturePass();
+    void _renderDepthPass(GLESRenderContext3D*context);
+    void _renderDepthNormalPass(GLESRenderContext3D* context);
   public:
-    CameraFrustumCullInfo CameraCullInfo;
+    CameraCullInfo cameraCullInfo;
     std::vector<uint32_t> beforeForwardCmds;
     std::vector<uint32_t> beforeSkyboxCmds;
     std::vector<uint32_t> beforeTransparentCmds;
@@ -51,6 +58,22 @@ class GLESForwardAddClusterRP
     uint32_t depthNormalTarget;
     GLESBaseRenderNode*skyRenderNode;
     DepthTextureMode renderpassNode;
+    static Viewport _context3DViewPortCatch;
+    static Vector4 _contextScissorPortCatch;
+    std::string pipelineMode;
+    Color clearColor;
+    uint32_t clearFlag;
+    bool enableOpaque;
+    GLESRenderQueueList opaqueList;
+    GLESRenderQueueList transparent;
+    Viewport _viewPort;
+    std::string depthNormalPipelineMode;
+    Color _defaultNormalDepthColor;
+    std::string depthPipelineMode;
+    Vector4 _zBufferParams;
+    CameraInfo camera;
+    Vector4 _scissor;
+    DepthTextureMode depthTextureMode;
 };
 } // namespace laya
 #endif

@@ -67,14 +67,14 @@ namespace laya
 		}
 
 
-		/*cloneTo(destObject: any): void {
-			var destVector4: Vector4 = (<Vector4>destObject);
+		void cloneTo(Vector4& destVector4)
+		{
 			destVector4.x = this->x;
 			destVector4.y = this->y;
 			destVector4.z = this->z;
 			destVector4.w = this->w;
 		}
-		clone(): any {
+		/*clone(): any {
 			var destVector4: Vector4 = new Vector4();
 			this->cloneTo(destVector4);
 			return destVector4;

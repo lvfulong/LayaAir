@@ -141,6 +141,8 @@ list(APPEND CONCH_SRC
 	render/3D/BaseCameraProperty.cpp
 	render/3D/Scene3DShaderDeclaration.h
 	render/3D/Scene3DShaderDeclaration.cpp
+	render/3D/DepthPassProperty.h
+	render/3D/DepthPassProperty.cpp
 	#渲染节点类
 	render/3D/renderInstance/MeshRenderNode.h
 	render/3D/renderInstance/MeshRenderNode.cpp

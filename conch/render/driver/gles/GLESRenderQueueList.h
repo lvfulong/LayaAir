@@ -26,12 +26,12 @@ class GLESRenderQueueList
         this->_elements.add(renderelement);
     }
 
-    void renderQueue(GLESRenderContext3D &context)
+    void renderQueue(GLESRenderContext3D* context)
     {
         // this._batchQueue();//合并的地方
         uint32_t count = this->_elements.getLength();
         this->quickSort.sort(&this->_elements, this->_isTransparent, 0, count - 1);
-        context.drawRenderElementList(this->_elements);
+        context->drawRenderElementList(this->_elements);
     }
 
     void clear()
