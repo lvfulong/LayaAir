@@ -3,13 +3,11 @@
 #include <utils/Log.h>
 #include "JCConch.h"
 #include "JCConchRender.h"
-#include <Bindings/LayaAir/3D/JSShaderData.h>
 
 namespace laya
 {
-	ShaderData::ShaderData(JSShaderData* data): ResourceBase(JCConch::s_pConchRender->m_pShaderDataManager)
+	ShaderData::ShaderData(): ResourceBase(JCConch::s_pConchRender->m_pShaderDataManager)
 	{
-        m_data = data;
 	}
 	ShaderData::~ShaderData()
 	{
@@ -150,88 +148,6 @@ namespace laya
 		}*/
 		//printfDataInfoValue();
 	}
-	void ShaderData::printfDataInfoValue()
-	{
-		/*for (std::unordered_map<int, DataInfo*>::iterator iter = m_vData.begin(); iter != m_vData.end(); iter++)
-		{
-			DataInfo* pDataInfo = iter->second;
-			if (pDataInfo)
-			{
-				ShaderDataType	type = pDataInfo->type;
-				switch (type)
-				{
-				case ShaderDataType::Number32:
-				{
-					float number = *((float*)(pDataInfo->data));
-					printf("Number32 location=%d,size=%d,type=%d,number=%f\n",iter->first,pDataInfo->size,pDataInfo->type,number);
-				}
-					break;
-				case ShaderDataType::Vector2:
-				{
-					float number = *((float*)(pDataInfo->data));
-					float number1 = *((float*)(pDataInfo->data)+1);
-					printf("Vector2 location=%d,size=%d,type=%d,number=%f,number1=%f\n", iter->first, pDataInfo->size, pDataInfo->type, number,number1);
-				}
-					break;
-				case ShaderDataType::Vector3:
-				{
-					float number = *((float*)(pDataInfo->data));
-					float number1 = *((float*)(pDataInfo->data) + 1);
-					float number2 = *((float*)(pDataInfo->data) + 2);
-					printf("Vector3 location=%d,size=%d,type=%d,number=%f,number1=%f,number2=%f\n", iter->first, pDataInfo->size, pDataInfo->type, number, number1,number2);
-				}
-					break;
-				case ShaderDataType::Vector4:
-				{
-					float number = *((float*)(pDataInfo->data));
-					float number1 = *((float*)(pDataInfo->data) + 1);
-					float number2 = *((float*)(pDataInfo->data) + 2);
-					float number3 = *((float*)(pDataInfo->data) + 3);
-					printf("Vector4 location=%d,size=%d,type=%d,number=%f,number1=%f,number2=%f,number3=%f\n", iter->first, pDataInfo->size, pDataInfo->type, number, number1, number2,number3);
-				}
-					break;
-				case ShaderDataType::Matrix4x4:
-				{
-					float* number = (float*)(pDataInfo->data);
-					printf("Matrix4x4 location=%d,size=%d,type=%d,matrix={\n", iter->first, pDataInfo->size, pDataInfo->type);
-					for ( int i=0;i<16;i++)
-					{
-						printf("%f,", *(number+i));
-					}
-					printf("}\n");
-				}
-					break;
-				case ShaderDataType::Number32Array:
-				{
-					float* number = (float*)(pDataInfo->data);
-					printf("Number32Array location=%d,size=%d,type=%d,numberArray={\n", iter->first, pDataInfo->size, pDataInfo->type);
-					for (int i = 0; i < pDataInfo->size; i++)
-					{
-						printf("%f,", *(number + i));
-					}
-					printf("}\n");
-				}
-					break;
-				case ShaderDataType::Texture:
-				{
-					int number = *((int*)(pDataInfo->data));
-					printf("Texture location=%d,size=%d,type=%d,number=%d\n", iter->first, pDataInfo->size, pDataInfo->type, number);
-				}
-					break;
-				case ShaderDataType::ShaderDefine:
-					break;
-				case ShaderDataType::UBO:
-				{
-					int id = *((int*)(pDataInfo->data));
-					printf("UBO location=%d,size=%d,type=%d,id=%d\n", iter->first, pDataInfo->size, pDataInfo->type, id);
-				}
-					break;
-				default:
-					break;
-				}
-			}
-		}*/
-	}
 	ShaderData::DataInfo* ShaderData::getData(int key)
 	{
 		std::unordered_map<int, DataInfo*>::iterator it = m_vData.find(key);
@@ -244,16 +160,7 @@ namespace laya
 
     void ShaderData::destroy() {
         isDestroy = true;
-        for (std::unordered_map<int, DataInfo*>::iterator iter = m_vData.begin(); iter != m_vData.end(); iter++)
-        {
-            DataInfo* pDataInfo = iter->second;
-            if (pDataInfo)
-            {
-                delete pDataInfo;
-                pDataInfo = NULL;
-            }
-        }
-        m_vData.clear();
+        m_data.clear();
     }
 
     void ShaderData::applyUBOData()
@@ -264,23 +171,55 @@ namespace laya
 	{
 		return JCConch::s_pConchRender->m_pShaderDataManager->getResource(id);
 	}
+	void ShaderData::setBool(int32_t index, bool value)
+	{
+		m_data[index] = value;
+	}
+	void ShaderData::setInt(int32_t index, int32_t value)
+	{
+		m_data[index] = value;
+	}
+	void ShaderData::setNumber(int32_t index, float value)
+	{
+		m_data[index] = value;
+	}
+	void ShaderData::setVector2(int32_t index, const Vector2& value)
+	{
+		m_data[index] = value;
+	}
 	void ShaderData::setVector(int32_t index, const Vector4& value)
 	{
-		//todo
+		m_data[index] = value;
 	}
 	void ShaderData::setVector3(int32_t index, const Vector3& value)
 	{
-		//todo
+		m_data[index] = value;
+	}
+	void ShaderData::setColor(int32_t index, const Color& value)
+	{
+		m_data[index] = value;
+	}
+	void ShaderData::setMatrix3x3(int32_t index, const Matrix3x3& value)
+	{
+		m_data[index] = value;
 	}
 	void ShaderData::setMatrix4x4(int32_t index, const Matrix4x4& value)
 	{
-		//todo
+		m_data[index] = value;
 	}
+	//void ShaderData::setBuffer(int32_t index, JSValueAsParam value)
+	//{
+		//todo
+	//}
 	void ShaderData::addDefine(ShaderDefine* define)
 	{
 		//todo
 	}
 	void ShaderData::removeDefine(ShaderDefine* define)
+	{
+		//todo
+	}
+	void ShaderData::cloneTo(ShaderData* destObject)
 	{
 		//todo
 	}

@@ -1,8 +1,10 @@
 #ifndef __RenderBindings_H__
 #define __RenderBindings_H__
 
+#include <core/math/Vector2.h>
 #include <core/math/Vector3.h>
 #include <core/math/Vector4.h>
+#include <core/math/Color.h>
 #include <binder/JSInterface.h>
 #include <render/driver/gles/GLESRenderContext3D.h>
 #include <render/driver/gles/GLESRender3DProcess.h>
@@ -11,18 +13,70 @@
 #include <render/driver/gles/GLESSpotLightShadowRP.h>
 #include <render/driver/gles/GLESForwardAddClusterRP.h>
 #include <render/driver/gles/GLESBaseRenderNode.h>
+#include <render/3D/temp/ShaderData.h>
+#include <core/math/Matrix4x4.h>
+#include <core/math/Matrix3x3.h>
 
 namespace laya
 {
+    template <> class Converter<Matrix3x3>
+    {
+    public:
+        static Matrix3x3 ToCpp(JSValueAsParam ab)
+        {
+            char* pArrayBufferPtr = NULL;
+            int nABLen = 0;
+            bool bIsArrayBuffer = extractJSAB(ab, pArrayBufferPtr, nABLen);
+            if (bIsArrayBuffer)
+            {
+                Matrix3x3 mat;
+                memcpy(mat.elements, pArrayBufferPtr, sizeof(float) * 9);
+            }
+            else 
+            { 
+                return Matrix3x3();
+            }
+        }
+        static JsValue ToJs(const Matrix3x3& p_vl)
+        {
+            assert(true && "not implemented");
+            return JSP_TO_JS_UNDEFINE;
+        }
+    };
+    template <> class Converter<Matrix4x4>
+    {
+    public:
+        static Matrix4x4 ToCpp(JSValueAsParam ab)
+        {
+            char* pArrayBufferPtr = NULL;
+            int nABLen = 0;
+            bool bIsArrayBuffer = extractJSAB(ab, pArrayBufferPtr, nABLen);
+            if (bIsArrayBuffer)
+            {
+                Matrix4x4 mat;
+                memcpy(mat.elements, pArrayBufferPtr, sizeof(float) * 16);
+            }
+            else
+            {
+                return Matrix4x4();
+            }
+        }
+        static JsValue ToJs(const Matrix3x3& p_vl)
+        {
+            assert(true && "not implemented");
+            return JSP_TO_JS_UNDEFINE;
+        }
+    };
 class RenderBindings
 {
   public:
     static void exportJS(Context &context)
     {
         //Math Bindings
+        value_object<Vector2>("NativeVector2").field("x", &Vector2::x).field("y", &Vector2::y);
         value_object<Vector3>("NativeVector3").field("x", &Vector3::x).field("y", &Vector3::y).field("z", &Vector3::z);
         value_object<Vector4>("NativeVector4").field("x", &Vector4::x).field("y", &Vector4::y).field("z", &Vector4::z).field("w", &Vector4::w);
-
+        value_object<Color>("NativeColor").field("r", &Color::r).field("g", &Color::g).field("b", &Color::b).field("a", &Color::a);
         //GLESRenderContext3D::exportJS(context);
         {
             //todo Bounds
@@ -106,7 +160,23 @@ class RenderBindings
             class_binding.function("set_skyRenderNode", &GLESForwardAddClusterRP::set_skyRenderNode);
             context.class_("ConchGLESForwardAddClusterRP", class_binding);
         }
-
+        {
+            class_<ShaderData> class_binding;
+            class_binding.constructor<>();
+            class_binding.function("setBool", &ShaderData::setBool);
+            class_binding.function("setInt", &ShaderData::setInt);
+            class_binding.function("setNumber", &ShaderData::setNumber);
+            class_binding.function("setVector2", &ShaderData::setVector2);
+            class_binding.function("setVector3", &ShaderData::setVector3);
+            class_binding.function("setVector", &ShaderData::setVector);
+            class_binding.function("setColor", &ShaderData::setColor);
+            class_binding.function("setMatrix4x4", &ShaderData::setMatrix4x4);
+            class_binding.function("setMatrix3x3", &ShaderData::setMatrix3x3);
+            //class_binding.function("setBuffer", &ShaderData::setBuffer);
+            class_binding.function("cloneTo", &ShaderData::cloneTo);
+            class_binding.function("destroy", &ShaderData::destroy);
+            context.class_("conchShaderData", class_binding);
+        }
 
 
 

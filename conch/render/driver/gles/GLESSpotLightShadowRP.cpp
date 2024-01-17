@@ -39,14 +39,14 @@ void GLESSpotLightShadowRP::render(GLESRenderContext3D* context, std::vector<GLE
     // TODOCamera::_updateMark++;
     // TODOcontext->cameraUpdateMask = Camera::_updateMark;
 
-    if (_renderQueue._elements.getLength() > 0) {
+    //if (_renderQueue._elements.getLength() > 0) {
         Viewport _tempViewport(shadowSpotData.offsetX, shadowSpotData.offsetY, shadowSpotData.resolution, shadowSpotData.resolution);
         Vector4 tempVec4(shadowSpotData.offsetX, shadowSpotData.offsetY, shadowSpotData.resolution, shadowSpotData.resolution);
-    }
-    else {
-        Viewport _tempViewport(shadowSpotData.offsetX, shadowSpotData.offsetY, shadowSpotData.resolution, shadowSpotData.resolution);
-        Vector4 tempVec4(shadowSpotData.offsetX, shadowSpotData.offsetY, shadowSpotData.resolution, shadowSpotData.resolution);
-    }
+    //}
+    //else {
+    //    Viewport _tempViewport(shadowSpotData.offsetX, shadowSpotData.offsetY, shadowSpotData.resolution, shadowSpotData.resolution);
+    //    Vector4 tempVec4(shadowSpotData.offsetX, shadowSpotData.offsetY, shadowSpotData.resolution, shadowSpotData.resolution);
+    //}
 
     context->setClearData(static_cast<RenderClearFlagBits>(RenderClearFlag::Depth), Color::BLACK, 1.0f, 0);
     _renderQueue.renderQueue(context);
@@ -108,7 +108,7 @@ void GLESSpotLightShadowRP::_setupShadowCasterShaderValues(ShaderData* shaderVal
 void GLESSpotLightShadowRP::_applyRenderData(ShaderData* sceneData, ShaderData* cameraData)
 {
     const GLESSpotLight& spotLight = this->_light;
-    switch (static_cast<uint32_t>(spotLight.shadowMode)) {
+    switch (spotLight.shadowMode) {
     case ShadowMode::Hard:
         sceneData->removeDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT_SOFT_SHADOW_HIGH);
         sceneData->removeDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT_SOFT_SHADOW_LOW);

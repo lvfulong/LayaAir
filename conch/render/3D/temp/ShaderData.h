@@ -1,12 +1,17 @@
 #ifndef __ShaderData_H__
 #define __ShaderData_H__
-
+#include <binder/JSInterface.h>
 #include <stdio.h>
 #include <unordered_map>
 #include "ResourceBase.h"
+#include <core/math/Color.h>
 #include <core/math/Vector4.h>
 #include <core/math/Vector3.h>
+#include <core/math/Vector2.h>
 #include <core/math/Matrix4x4.h>
+#include <core/math/Matrix3x3.h>
+#include <any>
+
 
 namespace laya
 {
@@ -25,7 +30,6 @@ namespace laya
 		Buffer,
 		Matrix3x3,
 	};
-    class JSShaderData;
 	class ShaderDefine;
 	class ShaderData: public ResourceBase<ShaderData>
 	{
@@ -59,7 +63,7 @@ namespace laya
 
 	public:
 
-		ShaderData(JSShaderData* data);
+		ShaderData();
 
 		~ShaderData();
 
@@ -72,20 +76,28 @@ namespace laya
         void applyUBOData();
         
 		static ShaderData *getShaderData(uint32_t id);
-
+		void setBool(int32_t index, bool value);
+		void setInt(int32_t index, int32_t value);
+		void setNumber(int32_t index, float value);
+		void setVector2(int32_t index, const Vector2& value);
 		void setVector(int32_t index, const Vector4& value);
 		void setVector3(int32_t index, const Vector3& value);
+		void setColor(int32_t index, const Color& value);
 		void setMatrix4x4(int32_t index, const Matrix4x4& value);
+		void setMatrix3x3(int32_t index, const Matrix3x3& value);
+		//void setBuffer(int32_t index, JSValueAsParam value);
 		void addDefine(ShaderDefine* define);
 		void removeDefine(ShaderDefine* define);
-	private:
 
-		void printfDataInfoValue();
+		void cloneTo(ShaderData* destObject);
+	private:
 
         bool isDestroy{false};
 	public:
-        JSShaderData* m_data;
+
 		std::unordered_map<int, DataInfo*>	m_vData;
+
+		std::unordered_map<uint32_t, std::any>	m_data;
 
 	};
 }
