@@ -39,7 +39,7 @@ void GLESRenderInstanceData::render(IRenderContext3D* context)
 			if (_renderNodeData)
 			{
 				bool uploadSprite3D = (shaderIns->m_uploadRender != _renderNodeData) || switchUpdateMark;
-				ShaderData* renderNodeShaderData = ShaderData::getShaderData(_renderNodeData);
+				ShaderData* renderNodeShaderData = _renderNodeData;// ShaderData::getShaderData(_renderNodeData);
 				if (uploadSprite3D || switchShader)
 				{
 					if (renderNodeShaderData != nullptr)
@@ -61,7 +61,7 @@ void GLESRenderInstanceData::render(IRenderContext3D* context)
 			}
 			//material
 			bool uploadMaterial = (shaderIns->m_uploadMaterial != _materialData) || switchUpdateMark;
-			ShaderData* materialShaderData = ShaderData::getShaderData(_materialData);
+			ShaderData* materialShaderData = _materialData;// ShaderData::getShaderData(_materialData);
 			if (uploadMaterial || switchShader)
 			{
 				if (materialShaderData != nullptr)
@@ -70,7 +70,7 @@ void GLESRenderInstanceData::render(IRenderContext3D* context)
 					shaderIns->m_uploadMaterial = _materialData;
 				}
 				//GlobalData
-				ShaderData* globalShaderData = ShaderData::getShaderData(IRenderContext3D::globalShaderData);
+				ShaderData* globalShaderData = context->globalShaderData;// ShaderData::getShaderData(context->globalShaderData);
 				if (globalShaderData != nullptr)
 				{
 					shaderIns->uploadUniforms(&shaderIns->m_materialUniformParamsMap, globalShaderData, uploadMaterial);

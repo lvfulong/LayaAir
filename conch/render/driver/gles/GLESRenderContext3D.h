@@ -14,8 +14,7 @@ class GLESRenderContext3D : public IRenderContext3D
     GLESRenderContext3D();
     ~GLESRenderContext3D();
     uint32_t drawRenderElementList(const JCSingletonList<RenderElementOBJ *> &list) override;
-    void drawRenderElementOne(RenderElementOBJ *one) override;
-
+    uint32_t drawRenderElementOne(RenderElementOBJ * node) override;
   private:
     void _bindRenderTarget();
     void _start();

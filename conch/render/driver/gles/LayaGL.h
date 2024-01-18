@@ -2,7 +2,7 @@
 #define __LayaGL_H__
 
 #include <render/driver/gles/WebGLEngine.h>
-
+#include <render/driver/gles/GLTextureContext.h>
 namespace laya
 {
 class LayaGL

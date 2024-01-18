@@ -11,11 +11,12 @@ class RenderElementOBJ
   public:
     RenderElementOBJ();
     ~RenderElementOBJ();
-
+    void _render(IRenderContext3D* context);
+    void _preUpdatePre(IRenderContext3D* context);
     // 排版数据
     //ComposeData *composeData;
     // 渲染数据
-    RenderInstanceData renderData;
+    //TODO RenderInstanceData renderData;
     GLESBaseRenderNode* _owner;
     uint32_t _materialRenderQueue;
 };

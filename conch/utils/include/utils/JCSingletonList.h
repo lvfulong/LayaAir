@@ -58,6 +58,11 @@ namespace laya
 			assert(!m_bNeedDelete);
 			m_nLength = 0;
 		}
+		inline void setLength(int value)
+		{
+			assert(!m_bNeedDelete);
+			m_nLength = value;
+		}
 		inline void clear()
 		{
 			assert(!m_bNeedDelete);
@@ -65,6 +70,10 @@ namespace laya
 			m_vElements.clear();
 		}
 		inline int getLength()
+		{
+			return m_nLength;
+		}
+		inline int getLength() const
 		{
 			return m_nLength;
 		}

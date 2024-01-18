@@ -14,34 +14,35 @@
 namespace laya{
     class RenderElementOBJ;
     class ShaderData;
-    typedef std::function<void(JCSingletonList<RenderElementOBJ*>&) > extendCall;
+    class WebGLInternalRT;
+    class RTSceneNodeData;
+    class RTCameraModuleData;
+    //typedef std::function<void(JCSingletonList<RenderElementOBJ*>&) > extendCall;
  class IRenderContext3D
  {
  public:
-     static uint32_t globalShaderData;
      virtual ~IRenderContext3D();
      IRenderContext3D();
      virtual uint32_t drawRenderElementList(const JCSingletonList<RenderElementOBJ*>& list) = 0;
-     virtual void drawRenderElementOne(RenderElementOBJ* one) = 0;
-     virtual void setDestTarget(uint32_t renderTarget);
+     virtual uint32_t drawRenderElementOne(RenderElementOBJ* one) = 0;
+     virtual void setRenderTarget(WebGLInternalRT* renderTarget);
      virtual void setCameraData(ShaderData* shaderData);
      virtual void setSceneData(ShaderData* sceneData);
      virtual void setViewport(const Viewport& value);
      virtual void setScissor(const Vector4& value);
-     virtual void setClearData(RenderClearFlagBits flag, Color color, float depthValue, uint8_t stencilValue);
-     virtual void setSceneUpdateMask(uint32_t mask);
-     virtual void setCameraUpdateMask(uint32_t mask);
-     
- private:
-    
+     virtual uint32_t setClearData(RenderClearFlagBits flag, Color color, float depthValue, uint8_t stencilValue);
+     void setSceneNodeData(RTSceneNodeData* value) { sceneNodeData = value; }
+     void setCameraNodeData(RTCameraModuleData* value) { cameraNodeData = value; }
+     void setGlobalShaderData(ShaderData* value);
  public:
-    uint32_t renderTarget;
+     ShaderData* globalShaderData;
+     WebGLInternalRT* _renderTarget;
     Viewport viewPort;
     Vector4 scissor;
     bool invertY;
     //pipelineMode
     std::string pipelineMode;
-    RenderClearFlagBits clearflag{ 0 };
+    RenderClearFlagBits clearFlag{ 0 };
     float clearDepth;
     uint8_t clearStencil;
     Color clearColor;
@@ -51,9 +52,10 @@ namespace laya{
     ShaderData* sceneData;
 
     //upload flag
-    uint32_t _sceneUpdataMask;
+    uint32_t _sceneUpdateMask;
     uint32_t _cameraUpdateMask;
-    
+    RTSceneNodeData* sceneNodeData;
+    RTCameraModuleData* cameraNodeData;
  };
 
  class NodeContext3DData

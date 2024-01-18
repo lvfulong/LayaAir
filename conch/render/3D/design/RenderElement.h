@@ -8,6 +8,7 @@
 
 namespace laya {
     class IRenderContext3D;
+    class ShaderData;
     /*class ComposeData {
     public:
         ComposeData();
@@ -34,19 +35,19 @@ namespace laya {
         Bounds* bounds;
         bool customCull;
         bool customCullResoult;
-    };*/
+    };
 
 
 
-
+*/
     class RenderInstanceData {
     public:
         virtual ~RenderInstanceData() {}
         virtual void render(IRenderContext3D* context){}
         virtual void preRender(IRenderContext3D* context){}
         void set_renderData_geometry(uint32_t value);
-        void set_renderData_materialData(uint32_t value);
-        void set_renderData_renderNodeData(uint32_t value);
+        void set_renderData_materialData(ShaderData* value);
+        void set_renderData_renderNodeData(ShaderData* value);
         void set_renderData_invertFront(bool value) { _invertFront = value; }
         void set_isRender(bool value) { _isRender = value; }
         void set_shader(uint32_t shader, uint32_t pipelineMode);
@@ -54,8 +55,8 @@ namespace laya {
     public:
         uint32_t _geometry;//顶点排布，渲染数量等等，是否是instance等
         std::vector<uint32_t> _shaderInstances;//shader数据
-        uint32_t _materialData;
-        uint32_t _renderNodeData;
+        ShaderData* _materialData;
+        ShaderData* _renderNodeData;
         bool _invertFront;
         bool _isRender;
         uint32_t pipelineMode;

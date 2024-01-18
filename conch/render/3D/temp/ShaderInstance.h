@@ -43,9 +43,9 @@ namespace laya
 		GLShaderInstance*								m_GLShaderInstance;
 		uint32_t										m_uploadMark = 0;
 		ShaderData*										m_uploadScene = 0;
-		uint32_t										m_uploadRender = 0;
+		ShaderData*										m_uploadRender = 0;
 		ShaderData*										m_uploadCameraShaderValue = 0;
-		uint32_t										m_uploadMaterial = 0;
+		ShaderData*										m_uploadMaterial = 0;
 		WebGLEngine*									m_pWebGLEngine = nullptr;
 		GLStateMap*										m_stateParamsMap = nullptr;
 		RenderStateCommand								m_cullStateCMD;

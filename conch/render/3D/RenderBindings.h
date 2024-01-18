@@ -79,7 +79,7 @@ class RenderBindings
         value_object<Vector3>("NativeVector3").field("x", &Vector3::x).field("y", &Vector3::y).field("z", &Vector3::z);
         value_object<Vector4>("NativeVector4").field("x", &Vector4::x).field("y", &Vector4::y).field("z", &Vector4::z).field("w", &Vector4::w);
         value_object<Color>("NativeColor").field("r", &Color::r).field("g", &Color::g).field("b", &Color::b).field("a", &Color::a);
-        //GLESRenderContext3D::exportJS(context);
+
         {
             //todo Bounds
         }
@@ -119,21 +119,30 @@ class RenderBindings
         {
             class_<GLESRenderContext3D> class_binding;
             class_binding.constructor<>();
-            //todo class_binding.function("drawRenderElementList", &GLESRenderContext3D::drawRenderElementList);
-            //class_binding.function("drawRenderElementOne", &GLESRenderContext3D::drawRenderElementOne);
-            //class_binding.function("setDestTarget", &GLESRenderContext3D::setDestTarget);
-            //class_binding.function("setViewport", &GLESRenderContext3D::setViewport);
-            //class_binding.function("setScissor", &GLESRenderContext3D::setScissor);
-            class_binding.function_optional_override("setScissor", optional_override([](GLESRenderContext3D& ctx, const Vector4& value) {
+            class_binding.function("setClearData", &GLESRenderContext3D::setClearData);
+            class_binding.function("setSceneData", &GLESRenderContext3D::setSceneData);
+            class_binding.function("setCameraData", &GLESRenderContext3D::setCameraData);
+            class_binding.function("setSceneNodeData", &GLESRenderContext3D::setSceneNodeData);
+            class_binding.function("setCameraNodeData", &GLESRenderContext3D::setCameraNodeData);
+            class_binding.function("setGlobalShaderData", &GLESRenderContext3D::setGlobalShaderData);
+            class_binding.function("drawRenderElementOne", &GLESRenderContext3D::drawRenderElementOne);
+            class_binding.function_optional_override("drawRenderElementList", optional_override([](GLESRenderContext3D& ctx, const std::vector<RenderElementOBJ*> elements, uint32_t length) {
+                JCSingletonList<RenderElementOBJ*> list(false);
+                list.m_vElements = elements;
+                list.setLength(length);
+                ctx.drawRenderElementList(list);
+            }));
+            class_binding.function("setRenderTarget", &GLESRenderContext3D::setRenderTarget);
+            class_binding.function("setViewport", &GLESRenderContext3D::setViewport);
+            class_binding.function("setScissor", &GLESRenderContext3D::setScissor);
+            /*class_binding.function_optional_override("setScissor", optional_override([](GLESRenderContext3D& ctx, const Vector4& value) {
                 ctx.setScissor(value);
-                }));
-            //class_binding.function("setSceneUpdateMask", &GLESRenderContext3D::setSceneUpdateMask);
-            //class_binding.function("setCameraUpdateMask", &GLESRenderContext3D::setCameraUpdateMask);
-            //class_binding.property("invertY", &GLESRenderContext3D::invertY);
-            //class_binding.property("sceneID", &GLESRenderContext3D::sceneData);
-            //class_binding.property("pipelineMode", &GLESRenderContext3D::pipelineMode);
-
-            context.class_("ConchGLESRenderContext3D", class_binding);
+                }));*/
+            class_binding.property_field("_sceneUpdateMask", &GLESRenderContext3D::_sceneUpdateMask);
+            class_binding.property_field("_sceneUpdateMask", &GLESRenderContext3D::_sceneUpdateMask);
+            class_binding.property_field("_invertY", &GLESRenderContext3D::invertY);
+            class_binding.property_field("_pipelineMode", &GLESRenderContext3D::pipelineMode);
+            context.class_("conchRTRenderContext3D", class_binding);
         }
         {
             class_<GLESRender3DProcess> class_binding;
@@ -211,7 +220,7 @@ class RenderBindings
             class_binding.function("setColor", &ShaderData::setColor);
             class_binding.function("setMatrix4x4", &ShaderData::setMatrix4x4);
             class_binding.function("setMatrix3x3", &ShaderData::setMatrix3x3);
-            //class_binding.function("setBuffer", &ShaderData::setBuffer);
+            //todo class_binding.function("setBuffer", &ShaderData::setBuffer);
             class_binding.function("cloneTo", &ShaderData::cloneTo);
             class_binding.function("destroy", &ShaderData::destroy);
             context.class_("conchRTShaderData", class_binding);
