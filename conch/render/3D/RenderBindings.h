@@ -15,6 +15,8 @@
 #include <render/driver/gles/GLESBaseRenderNode.h>
 #include <render/driver/gles/RTDirectLight.h>
 #include <render/driver/gles/RTModuleData.h>
+#include <render/driver/gles/RTLightmapData.h>
+#include <render/driver/gles/RTVolumetricGI.h>
 #include <render/3D/temp/ShaderData.h>
 #include <core/math/Matrix4x4.h>
 #include <core/math/Matrix3x3.h>
@@ -175,6 +177,14 @@ class RenderBindings
             context.class_("ConchGLESForwardAddClusterRP", class_binding);
         }
         {
+            class_<RTLightmapData> class_binding;
+            class_binding.constructor<>();
+            class_binding.function("setLightmapColor", &RTLightmapData::setLightmapColor);
+            class_binding.function("setLightmapDirection", &RTLightmapData::setLightmapDirection);
+            class_binding.function("destroy", &RTLightmapData::destroy);
+            context.class_("conchRTLightmapData", class_binding);
+        }
+        {
             class_<RTCameraNodeData> class_binding;
             class_binding.constructor<>();
             class_binding.property_field("_aspectRatio", &RTCameraNodeData::aspectRatio);
@@ -184,6 +194,19 @@ class RenderBindings
             class_binding.function("setTransform", &RTCameraNodeData::setTransform);
             class_binding.function("setProjectionViewMatrix", &RTCameraNodeData::setProjectionViewMatrix);
             context.class_("conchRTCameraNodeData", class_binding);
+        }
+        {
+            class_<RTVolumetricGI> class_binding;
+            class_binding.constructor<>();
+            class_binding.function("setParams", &RTVolumetricGI::setParams);
+            class_binding.function("setProbeCounts", &RTVolumetricGI::setProbeCounts);
+            class_binding.function("setProbeStep", &RTVolumetricGI::setProbeStep);
+            class_binding.function("setBounds", &RTVolumetricGI::setBounds);
+            class_binding.function("setIrradiance", &RTVolumetricGI::setIrradiance);
+            class_binding.function("setDistance", &RTVolumetricGI::setDistance);
+            class_binding.property_field("_intensity", &RTVolumetricGI::intensity);
+            class_binding.property_field("_updateMark", &RTVolumetricGI::updateMark);
+            context.class_("conchRTVolumetricGI", class_binding);
         }
         {
             class_<RTSceneNodeData> class_binding;
