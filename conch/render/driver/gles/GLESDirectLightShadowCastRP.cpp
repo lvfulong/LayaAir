@@ -21,9 +21,35 @@ GLESDirectLightShadowCastRP::~GLESDirectLightShadowCastRP()
 }
 void GLESDirectLightShadowCastRP::set_light(RTDirectLight* light)
 {
-    //TODO
+    this->_light = light;
+    Matrix4x4 lightWorld;
+    float* lightWorldE = lightWorld.elements;
+    Vector3& lightUp = this->_lightUp;
+    Vector3& lightSide = this->_lightSide;
+    Vector3& lightForward = this->_lightForward;
+    Matrix4x4::createFromQuaternion(this->_light->transform->getRotation(), lightWorld);
+    lightSide.setValue(lightWorldE[0], lightWorldE[1], lightWorldE[2]);
+    lightUp.setValue(lightWorldE[4], lightWorldE[5], lightWorldE[6]);
+    lightForward.setValue(-lightWorldE[8], -lightWorldE[9], -lightWorldE[10]);
+    //设置分辨率
+    auto atlasResolution = this->_light->shadowResolution;
+    auto cascadesMode = this->shadowCastMode = this->_light->shadowCascadesMode;
+    Real shadowTileResolution;
+
+    if (cascadesMode == ShadowCascadesMode::NoCascades) {
+        this->_cascadeCount = 1;
+        this->_shadowTileResolution = atlasResolution;
+        this->_shadowMapWidth = atlasResolution;
+        this->_shadowMapHeight = atlasResolution;
+    }
+    else {
+        this->_cascadeCount = cascadesMode == ShadowCascadesMode::TwoCascades ? 2 : 4;
+        this->_shadowTileResolution = ShadowUtils::getMaxTileResolutionInAtlas(atlasResolution, atlasResolution, this->_cascadeCount);
+        this->_shadowMapWidth = shadowTileResolution * 2;
+        this->_shadowMapHeight = cascadesMode == ShadowCascadesMode::TwoCascades ? shadowTileResolution : shadowTileResolution * 2;
+    }
 }
-void GLESDirectLightShadowCastRP::update(RenderContext3D *context)
+void GLESDirectLightShadowCastRP::update(GLESRenderContext3D*context)
 {
     std::vector<F32> &splitDistance = this->_cascadesSplitDistance;
     std::vector<Plane> &frustumPlanes = this->_frustumPlanes;
@@ -58,7 +84,7 @@ void GLESDirectLightShadowCastRP::update(RenderContext3D *context)
                                                    this->_cascadeCount, this->_shadowMapSize, this->_shadowParams,
                                                    this->_shadowMatrices.data(), this->_splitBoundSpheres.data());
 }
-void GLESDirectLightShadowCastRP::render(RenderContext3D *context, std::vector<GLESBaseRenderNode *> &list,
+void GLESDirectLightShadowCastRP::render(GLESRenderContext3D*context, std::vector<GLESBaseRenderNode *> &list,
                                          uint32_t count)
 {
     ShaderData *shaderValues = context->sceneData;

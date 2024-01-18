@@ -12,15 +12,19 @@ namespace laya
 class RTCameraNodeData
 {
   public:
-    Transform3D *_transform;
-    Real _farplane;
-    Real _nearplane;
-    Real _fieldOfView;
-    Real _aspectRatio;
-    Matrix4x4 _projectViewMatrix;
+    Transform3D *transform;
+    Real farplane;
+    Real nearplane;
+    Real fieldOfView;
+    Real aspectRatio;
+    Matrix4x4 projectViewMatrix;
     void setProjectionViewMatrix(const Matrix4x4 &value)
     {
-        _projectViewMatrix = value;
+        projectViewMatrix = value;
+    }
+    void setTransform(Transform3D* value)
+    {
+        transform = value;
     }
 };
 class RTSceneNodeData

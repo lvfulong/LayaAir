@@ -356,5 +356,16 @@ void getCascadesSplitDistance(Real twoSplitRatio, const Vector3 &fourSplitRatio,
         break;
     }
 }
+Real getMaxTileResolutionInAtlas(uint32_t atlasWidth, uint32_t atlasHeight, uint32_t tileCount)
+{
+    uint32_t resolution = std::min(atlasWidth, atlasHeight);
+    int32_t currentTileCount = std::floor(atlasWidth / resolution) * std::floor(atlasHeight / resolution);
+    while (currentTileCount < tileCount)
+    {
+        resolution = std::floor(resolution >> 1);
+        currentTileCount = std::floor(atlasWidth / resolution) * std::floor(atlasHeight / resolution);
+    }
+    return resolution;
+}
 } // namespace ShadowUtils
 #endif

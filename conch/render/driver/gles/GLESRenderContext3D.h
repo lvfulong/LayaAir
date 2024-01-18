@@ -8,7 +8,7 @@
 
 namespace laya
 {
-class GLESRenderContext3D : public RenderContext3D
+class GLESRenderContext3D : public IRenderContext3D
 {
   public:
     GLESRenderContext3D();

@@ -16,6 +16,7 @@ class ShaderData;
 
 
 class WebGLInternalRT;
+class GLESRenderContext3D;
 class GLESDirectLightShadowCastRP : public IDirectLightShadowRP
 {
   public:
@@ -34,8 +35,8 @@ class GLESDirectLightShadowCastRP : public IDirectLightShadowRP
     GLESDirectLightShadowCastRP();
     ~GLESDirectLightShadowCastRP();
 
-    void update(RenderContext3D *context) override;
-    void render(RenderContext3D *context, std::vector<GLESBaseRenderNode*>& list, uint32_t count) override;
+    void update(GLESRenderContext3D* context);
+    void render(GLESRenderContext3D* context, std::vector<GLESBaseRenderNode*>& list, uint32_t count);
 
     //void set_lightUp(const Vector3 &value);
     //void set_lightSide(const Vector3 &value);

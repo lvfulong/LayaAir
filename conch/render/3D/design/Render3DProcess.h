@@ -34,9 +34,12 @@ namespace laya{
 	public:
 		IDirectLightShadowRP() {};
 		virtual ~IDirectLightShadowRP() {};
-		virtual void update(RenderContext3D* context) = 0;
-		virtual void render(RenderContext3D* context, std::vector<GLESBaseRenderNode*>& renderNodeList, uint32_t count) = 0;
+		//virtual void update(RenderContext3D* context) = 0;
+		//virtual void render(RenderContext3D* context, std::vector<GLESBaseRenderNode*>& renderNodeList, uint32_t count) = 0;
 	public:
+		//light : IDirectLightData;
+		//camera: ICameraNodeData;
+		//destTarget: InternalRenderTarget;
 	};
 
 	

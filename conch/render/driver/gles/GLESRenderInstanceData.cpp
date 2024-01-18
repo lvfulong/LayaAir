@@ -4,10 +4,11 @@
 #include <render/3D/temp/ShaderInstance.h>
 #include <render/3D/temp/RenderGeometryElement.h>
 #include <render/3D/design/renderInterface/IRenderDrawContext.h>
+#include "GLESRenderContext3D.h"
 
 namespace laya
 {
-void GLESRenderInstanceData::render(RenderContext3D *context)
+void GLESRenderInstanceData::render(IRenderContext3D* context)
 {
     auto forceInvertFace = context->invertY;
     auto updateMark = context->_cameraUpdateMask;
@@ -69,7 +70,7 @@ void GLESRenderInstanceData::render(RenderContext3D *context)
 					shaderIns->m_uploadMaterial = _materialData;
 				}
 				//GlobalData
-				ShaderData* globalShaderData = ShaderData::getShaderData(RenderContext3D::globalShaderData);
+				ShaderData* globalShaderData = ShaderData::getShaderData(IRenderContext3D::globalShaderData);
 				if (globalShaderData != nullptr)
 				{
 					shaderIns->uploadUniforms(&shaderIns->m_materialUniformParamsMap, globalShaderData, uploadMaterial);
@@ -90,7 +91,7 @@ void GLESRenderInstanceData::render(RenderContext3D *context)
         }
     }
 }
-void GLESRenderInstanceData::preRender(RenderContext3D *context)
+void GLESRenderInstanceData::preRender(IRenderContext3D* context)
 {
 }
 

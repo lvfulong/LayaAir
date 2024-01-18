@@ -15,12 +15,12 @@ namespace laya{
     class RenderElementOBJ;
     class ShaderData;
     typedef std::function<void(JCSingletonList<RenderElementOBJ*>&) > extendCall;
- class RenderContext3D
+ class IRenderContext3D
  {
  public:
      static uint32_t globalShaderData;
-     virtual ~RenderContext3D();
-     RenderContext3D();
+     virtual ~IRenderContext3D();
+     IRenderContext3D();
      virtual uint32_t drawRenderElementList(const JCSingletonList<RenderElementOBJ*>& list) = 0;
      virtual void drawRenderElementOne(RenderElementOBJ* one) = 0;
      virtual void setDestTarget(uint32_t renderTarget);

@@ -16,7 +16,7 @@ class RTDirectLight
     Real shadowNearPlane; 
     ShadowCascadesMode shadowCascadesMode;
     Transform3D *transform;
-    Real shadowResolution;
+    int32_t shadowResolution;
     Real shadowDistance;
     ShadowMode shadowMode;
     Real shadowStrength;

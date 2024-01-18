@@ -5,8 +5,9 @@
 #include "render/3D/design/RenderContext.h"
 #include "core/math/Bounds.h"
 
-class RenderContext3D;
+
 namespace laya {
+    class IRenderContext3D;
     /*class ComposeData {
     public:
         ComposeData();
@@ -41,8 +42,8 @@ namespace laya {
     class RenderInstanceData {
     public:
         virtual ~RenderInstanceData() {}
-        virtual void render(RenderContext3D* context){}
-        virtual void preRender(RenderContext3D* context){}
+        virtual void render(IRenderContext3D* context){}
+        virtual void preRender(IRenderContext3D* context){}
         void set_renderData_geometry(uint32_t value);
         void set_renderData_materialData(uint32_t value);
         void set_renderData_renderNodeData(uint32_t value);

@@ -114,7 +114,7 @@ class RenderBindings
             class_binding.property("_castShadow", &GLESBaseRenderNode::get_castShadow, &GLESBaseRenderNode::set_castShadow);
             class_binding.property("_enable", &GLESBaseRenderNode::get_enable, &GLESBaseRenderNode::set_enable);
             class_binding.function("set_transform", &GLESBaseRenderNode::set_transform);
-            context.class_("conchBaseRenderNode", class_binding);
+            context.class_("conchRTBaseRenderNode", class_binding);
         }
         {
             class_<GLESRenderContext3D> class_binding;
@@ -168,6 +168,11 @@ class RenderBindings
         {
             class_<RTCameraNodeData> class_binding;
             class_binding.constructor<>();
+            class_binding.property_field("_aspectRatio", &RTCameraNodeData::aspectRatio);
+            class_binding.property_field("_fieldOfView", &RTCameraNodeData::fieldOfView);
+            class_binding.property_field("_nearplane", &RTCameraNodeData::nearplane);
+            class_binding.property_field("_farplane", &RTCameraNodeData::farplane);
+            class_binding.function("setTransform", &RTCameraNodeData::setTransform);
             class_binding.function("setProjectionViewMatrix", &RTCameraNodeData::setProjectionViewMatrix);
             context.class_("conchRTCameraNodeData", class_binding);
         }
@@ -209,7 +214,7 @@ class RenderBindings
             //class_binding.function("setBuffer", &ShaderData::setBuffer);
             class_binding.function("cloneTo", &ShaderData::cloneTo);
             class_binding.function("destroy", &ShaderData::destroy);
-            context.class_("conchShaderData", class_binding);
+            context.class_("conchRTShaderData", class_binding);
         }
 
 

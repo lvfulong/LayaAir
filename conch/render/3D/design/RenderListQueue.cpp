@@ -29,7 +29,7 @@ namespace laya
         //_elements.clear();
     }
 
-    void RenderListQueue::set_context(RenderContext3D* context) {
+    void RenderListQueue::set_context(IRenderContext3D* context) {
         _context = context;
     }
 

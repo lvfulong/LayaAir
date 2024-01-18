@@ -22,12 +22,12 @@ namespace laya
         uint32_t renderQueue();
         void addRenderElement(RenderElementOBJ* value);
         void clear();
-        void set_context(RenderContext3D* context);
+        void set_context(IRenderContext3D* context);
     private:
         batchfun _batch;
         composefun _compose;
         JCSingletonList<RenderElementOBJ*> _elements{ false };//lv todo
-        RenderContext3D* _context;
+        IRenderContext3D* _context;
 	};
 }
 #endif //RenderListQueue

@@ -36,9 +36,9 @@ void GLESRenderContext3D::drawRenderElementOne(RenderElementOBJ *one)
     _bindRenderTarget();
     _start();
     // update
-    one->renderData.preRender(this);
+    one->renderData.preRender(static_cast<IRenderContext3D*>(this));
     // render
-    one->renderData.render(this);
+    one->renderData.render(static_cast<IRenderContext3D*>(this));
     _end();
 }
 

@@ -5,11 +5,12 @@
 
 namespace laya
 {
+    class GLESRenderContext3D;
     class GLESRenderInstanceData : public RenderInstanceData
     {
     public:
-        void render(RenderContext3D* context) override;
-        void preRender(RenderContext3D* context) override;
+        void render(IRenderContext3D* context) override;
+        void preRender(IRenderContext3D* context) override;
     };
 } // namespace laya
 #endif
