@@ -19,16 +19,19 @@ GLESDirectLightShadowCastRP::GLESDirectLightShadowCastRP() : _renderQueue(false)
 GLESDirectLightShadowCastRP::~GLESDirectLightShadowCastRP()
 {
 }
-
+void GLESDirectLightShadowCastRP::set_light(RTDirectLight* light)
+{
+    //TODO
+}
 void GLESDirectLightShadowCastRP::update(RenderContext3D *context)
 {
     std::vector<F32> &splitDistance = this->_cascadesSplitDistance;
     std::vector<Plane> &frustumPlanes = this->_frustumPlanes;
     auto cameraNear = this->camera.nearPlane;
-    auto shadowFar = std::min(this->camera.farPlane, this->_light.shadowDistance);
+    auto shadowFar = std::min(this->camera.farPlane, this->_light->shadowDistance);
     // var shadowMatrices : Float32Array = this->_shadowMatrices;
     // var boundSpheres : Float32Array = this->_splitBoundSpheres;
-    ShadowUtils::getCascadesSplitDistance(this->_light.shadowTwoCascadeSplits, this->_light._shadowFourCascadeSplits,
+    ShadowUtils::getCascadesSplitDistance(this->_light->shadowTwoCascadeSplits, this->_light->_shadowFourCascadeSplits,
                                           cameraNear, shadowFar, this->camera.fieldOfView * MathUtils3D::Deg2Rad,
                                           this->camera.aspectRatio, this->shadowCastMode, splitDistance);
     ShadowUtils::getCameraFrustumPlanes(this->camera.projectionViewMatrix, frustumPlanes);
@@ -44,13 +47,13 @@ void GLESDirectLightShadowCastRP::update(RenderContext3D *context)
         ShadowUtils::getDirectionLightShadowCullPlanes(&frustumPlanes[0], i, &splitDistance[0], cameraNear,
                                                        this->_lightForward, sliceData);
         ShadowUtils::getDirectionalLightMatrices(this->_lightUp, this->_lightSide, this->_lightForward, i,
-                                                 this->_light.shadowNearPlane, this->_shadowTileResolution, sliceData,
+                                                 this->_light->shadowNearPlane, this->_shadowTileResolution, sliceData,
                                                  this->_shadowMatrices.data());
         if (this->_cascadeCount > 1)
             ShadowUtils::applySliceTransform(sliceData, this->_shadowMapWidth, this->_shadowMapHeight, i,
                                              this->_shadowMatrices.data());
     }
-    ShadowUtils::prepareShadowReceiverShaderValues(this->_light.shadowStrength, this->_shadowMapWidth,
+    ShadowUtils::prepareShadowReceiverShaderValues(this->_light->shadowStrength, this->_shadowMapWidth,
                                                    this->_shadowMapHeight, this->_shadowSliceDatas.data(),
                                                    this->_cascadeCount, this->_shadowMapSize, this->_shadowParams,
                                                    this->_shadowMatrices.data(), this->_splitBoundSpheres.data());
@@ -106,7 +109,7 @@ void GLESDirectLightShadowCastRP::render(RenderContext3D *context, std::vector<G
     this->_applyRenderData(context->sceneData, context->cameraData);
 }
 
-void GLESDirectLightShadowCastRP::set_lightUp(const Vector3 &value)
+/*void GLESDirectLightShadowCastRP::set_lightUp(const Vector3& value)
 {
 }
 void GLESDirectLightShadowCastRP::set_lightSide(const Vector3 &value)
@@ -122,14 +125,14 @@ void GLESDirectLightShadowCastRP::set_shadowCascadeMode(ShadowCascadesMode value
 void GLESDirectLightShadowCastRP::set_cameraInfo(CameraInfo value)
 {
     // TODO
-}
-void GLESDirectLightShadowCastRP::set_destTarget(uint32_t value)
+}*/
+void GLESDirectLightShadowCastRP::set_destTarget(WebGLInternalRT* value)
 {
-    // TODO
+    destTarget = value;
 }
 void GLESDirectLightShadowCastRP::_applyRenderData(ShaderData *scene, ShaderData *camera)
 {
-    const RTDirectLight&light = this->_light;
+    const RTDirectLight&light = *this->_light;
     if (light.shadowCascadesMode != ShadowCascadesMode::NoCascades)
         scene->addDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_CASCADE);
     else
@@ -167,10 +170,10 @@ void GLESDirectLightShadowCastRP::getShadowBias(const Matrix4x4 &shadowProjectio
 
     // depth and normal bias scale is in shadowmap texel size in world space
     double texelSize = frustumSize / shadowResolution;
-    double depthBias = -this->_light.shadowDepthBias * texelSize;
-    double normalBias = -this->_light.shadowNormalBias * texelSize;
+    double depthBias = -this->_light->shadowDepthBias * texelSize;
+    double normalBias = -this->_light->shadowNormalBias * texelSize;
 
-    if (this->_light.shadowMode == ShadowMode::SoftHigh)
+    if (this->_light->shadowMode == ShadowMode::SoftHigh)
     {
         // TODO: depth and normal bias assume sample is no more than 1 texel away from shadowmap
         // This is not true with PCF. Ideally we need to do either

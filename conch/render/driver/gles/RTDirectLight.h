@@ -27,15 +27,19 @@ class RTDirectLight
     Vector3 _shadowFourCascadeSplits;
     Vector3 _direction;
 
-    /*void setShadowFourCascadeSplits(value : Vector3) :
+    void setShadowFourCascadeSplits(const Vector3& value)
     {
-        //throw new Error("Method not implemented.");
+        this->_shadowFourCascadeSplits = value;// value.cloneTo(this->_shadowFourCascadeSplits)
     }
 
-    void setDirection(value : Vector3) :
+    void setDirection(const Vector3& value)
     {
-        //throw new Error("Method not implemented.");
-    }*/
+        this->_direction = value;// value.cloneTo(this->_direction)
+    }
+    void setTransform(Transform3D* transform)
+    {
+        this->transform = transform;
+    }
 };
 } // namespace laya
 #endif

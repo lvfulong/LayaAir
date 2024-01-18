@@ -15,7 +15,7 @@ constexpr size_t _maxCascades = 4;
 class ShaderData;
 
 
-
+class WebGLInternalRT;
 class GLESDirectLightShadowCastRP : public IDirectLightShadowRP
 {
   public:
@@ -37,13 +37,13 @@ class GLESDirectLightShadowCastRP : public IDirectLightShadowRP
     void update(RenderContext3D *context) override;
     void render(RenderContext3D *context, std::vector<GLESBaseRenderNode*>& list, uint32_t count) override;
 
-    void set_lightUp(const Vector3 &value);
-    void set_lightSide(const Vector3 &value);
-    void set_lightForward(const Vector3 &value);
-    void set_shadowCascadeMode(ShadowCascadesMode value);
-    void set_cameraInfo(CameraInfo value);
-    void set_destTarget(uint32_t value);
-
+    //void set_lightUp(const Vector3 &value);
+    //void set_lightSide(const Vector3 &value);
+    //void set_lightForward(const Vector3 &value);
+    //void set_shadowCascadeMode(ShadowCascadesMode value);
+    //void set_cameraInfo(CameraInfo value);
+    void set_destTarget(WebGLInternalRT* value);
+    void set_light(RTDirectLight* light);
   private:
     void _setupShadowCasterShaderValues(ShaderData *shaderValues, const ShadowSliceData &shadowSliceData,
                                         const Vector3 &LightParam, const Vector4 &shadowBias);
@@ -56,14 +56,14 @@ class GLESDirectLightShadowCastRP : public IDirectLightShadowRP
     Vector3 _lightForward;
     ShadowCascadesMode shadowCastMode;
     CameraInfo camera;
-    uint32_t destTarget;
+    WebGLInternalRT* destTarget;
     std::array<F32, 16 * _maxCascades> _shadowMatrices;
     std::array<F32, 4 * _maxCascades> _splitBoundSpheres;
     std::vector<Real> _cascadesSplitDistance;
     // std::vector<DirectLightFrustumCullInfo> cullInfos;
     ShadowCullInfo _shadowCullInfo;
     uint32_t pipelineMode;
-    RTDirectLight _light;
+    RTDirectLight* _light;
     Vector4 _shadowMapSize;
     Vector4 _shadowParams;
     Vector4 _shadowBias;

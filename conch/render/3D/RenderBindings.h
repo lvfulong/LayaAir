@@ -13,6 +13,8 @@
 #include <render/driver/gles/GLESSpotLightShadowRP.h>
 #include <render/driver/gles/GLESForwardAddClusterRP.h>
 #include <render/driver/gles/GLESBaseRenderNode.h>
+#include <render/driver/gles/RTDirectLight.h>
+#include <render/driver/gles/RTModuleData.h>
 #include <render/3D/temp/ShaderData.h>
 #include <core/math/Matrix4x4.h>
 #include <core/math/Matrix3x3.h>
@@ -82,6 +84,9 @@ class RenderBindings
             //todo Bounds
         }
         {
+            //todo conchWebGLInternalRT
+        }
+        {
             class_<GLESBaseRenderNode> class_binding;
             class_binding.constructor<>();
             class_binding.property("_reflectionMode", &GLESBaseRenderNode::get_reflectionMode, &GLESBaseRenderNode::set_reflectionMode);
@@ -145,8 +150,8 @@ class RenderBindings
         {
             class_<GLESDirectLightShadowCastRP> class_binding;
             class_binding.constructor<>();
-            class_binding.function("set_lightUp", &GLESDirectLightShadowCastRP::set_lightUp);
-            context.class_("ConchGLESDirectLightShadowCastRP", class_binding);
+            class_binding.function("set_light", &GLESDirectLightShadowCastRP::set_light);
+            context.class_("conchRTDirectLightShadowCastRP", class_binding);
         }
         {
             class_<GLESSpotLightShadowRP> class_binding;
@@ -159,6 +164,35 @@ class RenderBindings
             class_binding.constructor<>();
             class_binding.function("set_skyRenderNode", &GLESForwardAddClusterRP::set_skyRenderNode);
             context.class_("ConchGLESForwardAddClusterRP", class_binding);
+        }
+        {
+            class_<RTCameraNodeData> class_binding;
+            class_binding.constructor<>();
+            class_binding.function("setProjectionViewMatrix", &RTCameraNodeData::setProjectionViewMatrix);
+            context.class_("conchRTCameraNodeData", class_binding);
+        }
+        {
+            class_<RTSceneNodeData> class_binding;
+            class_binding.constructor<>();
+            class_binding.property_field("_lightmapDirtyFlag", &RTSceneNodeData::lightmapDirtyFlag);
+            context.class_("conchRTSceneNodeData", class_binding);
+        }
+        {
+            class_<RTDirectLight> class_binding;
+            class_binding.constructor<>();
+            class_binding.property_field("_shadowNearPlane", &RTDirectLight::shadowNearPlane);
+            class_binding.property_field("_shadowCascadesMode", &RTDirectLight::shadowCascadesMode);
+            class_binding.property_field("_shadowResolution", &RTDirectLight::shadowResolution);
+            class_binding.property_field("_shadowDistance", &RTDirectLight::shadowDistance);
+            class_binding.property_field("_shadowMode", &RTDirectLight::shadowMode);
+            class_binding.property_field("_shadowStrength", &RTDirectLight::shadowStrength);
+            class_binding.property_field("_shadowDepthBias", &RTDirectLight::shadowDepthBias);
+            class_binding.property_field("_shadowNormalBias", &RTDirectLight::shadowNormalBias);
+            class_binding.property_field("_shadowTwoCascadeSplits", &RTDirectLight::shadowTwoCascadeSplits);
+            class_binding.function("setShadowFourCascadeSplits", &RTDirectLight::setShadowFourCascadeSplits);
+            class_binding.function("setDirection", &RTDirectLight::setDirection);
+            class_binding.function("setTransform", &RTDirectLight::setTransform);
+            context.class_("conchRTDirectLight", class_binding);
         }
         {
             class_<ShaderData> class_binding;
