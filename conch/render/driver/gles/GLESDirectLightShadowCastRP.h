@@ -1,7 +1,7 @@
 #ifndef __GLESDirectLightShadowCastRP_H_
 #define __GLESDirectLightShadowCastRP_H_
 
-#include "GLESDirectLight.h"
+#include "RTDirectLight.h"
 #include "render/3D/ShadowSliceData.h"
 #include "render/3D/design/Render3DProcess.h"
 #include <vector>
@@ -63,7 +63,7 @@ class GLESDirectLightShadowCastRP : public IDirectLightShadowRP
     // std::vector<DirectLightFrustumCullInfo> cullInfos;
     ShadowCullInfo _shadowCullInfo;
     uint32_t pipelineMode;
-    GLESDirectLight _light;
+    RTDirectLight _light;
     Vector4 _shadowMapSize;
     Vector4 _shadowParams;
     Vector4 _shadowBias;

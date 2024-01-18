@@ -129,7 +129,7 @@ void GLESDirectLightShadowCastRP::set_destTarget(uint32_t value)
 }
 void GLESDirectLightShadowCastRP::_applyRenderData(ShaderData *scene, ShaderData *camera)
 {
-    const GLESDirectLight &light = this->_light;
+    const RTDirectLight&light = this->_light;
     if (light.shadowCascadesMode != ShadowCascadesMode::NoCascades)
         scene->addDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_CASCADE);
     else

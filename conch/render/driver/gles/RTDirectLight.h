@@ -1,5 +1,5 @@
-#ifndef __GLESDirectLight_H__
-#define __GLESDirectLight_H__
+#ifndef __RTDirectLight_H__
+#define __RTDirectLight_H__
 
 #include <core/math/Matrix4x4.h>
 #include <core/math/Vector3.h>
@@ -10,7 +10,7 @@
 namespace laya
 {
 class Transform3D;
-class GLESDirectLight
+class RTDirectLight
 {
   public:
     Real shadowNearPlane; 
