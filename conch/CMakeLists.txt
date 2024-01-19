@@ -150,8 +150,8 @@ list(APPEND CONCH_SRC
 	render/3D/renderInstance/RenderModuleData.cpp
 
 
-	render/3D/RenderObjs/RuntimeOBJ/GLESRenderContext3D.h
-	render/3D/RenderObjs/RuntimeOBJ/GLESRenderContext3D.cpp
+	render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.h
+	render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.cpp
 
 	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESRender3DProcess.h
 	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESRender3DProcess.cpp

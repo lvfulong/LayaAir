@@ -35,8 +35,8 @@ class GLESDirectLightShadowCastRP : public IDirectLightShadowRP
     GLESDirectLightShadowCastRP();
     ~GLESDirectLightShadowCastRP();
 
-    void update(GLESRenderContext3D* context);
-    void render(GLESRenderContext3D* context, std::vector<GLESBaseRenderNode*>& list, uint32_t count);
+    void update(RTRenderContext3D* context);
+    void render(RTRenderContext3D* context, std::vector<GLESBaseRenderNode*>& list, uint32_t count);
 
     //void set_lightUp(const Vector3 &value);
     //void set_lightSide(const Vector3 &value);

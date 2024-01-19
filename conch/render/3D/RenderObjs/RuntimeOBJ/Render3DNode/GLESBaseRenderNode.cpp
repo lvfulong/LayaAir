@@ -73,7 +73,7 @@ void GLESBaseRenderNode::_applyLightProb()
         this._lightProb.applyVolumetricGI(this._shaderValues);
     }*/
 }
-void GLESBaseRenderNode::_renderUpdatePre(const GLESRenderContext3D& context3D)
+void GLESBaseRenderNode::_renderUpdatePre(RTRenderContext3D* context3D)
 {
     // TODO
 }

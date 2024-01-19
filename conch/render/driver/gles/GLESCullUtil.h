@@ -16,15 +16,15 @@ class GLESCullUtil
   public:
     static void cullByCameraCullInfo(CameraCullInfo &cameraCullInfo, std::vector<GLESBaseRenderNode *> &list,
                                      uint32_t count, GLESRenderQueueList &opaqueList, GLESRenderQueueList &transparent,
-                                     const GLESRenderContext3D &context);
+        RTRenderContext3D* context);
 
     static void culldirectLightShadow(const ShadowCullInfo &shadowCullInfo, std::vector<GLESBaseRenderNode *> &list,
                                       uint32_t count, GLESRenderQueueList &opaqueList,
-                                       GLESRenderContext3D* context);
+        RTRenderContext3D* context);
 
     static void cullingSpotShadow(CameraCullInfo &cameraCullInfo, std::vector<GLESBaseRenderNode *> &list,
                                   uint32_t count, GLESRenderQueueList& opaqueList,
-                                  const GLESRenderContext3D &context);
+        RTRenderContext3D* context);
 };
 } // namespace laya
 #endif

@@ -3,7 +3,7 @@
 #include "render/3D/ShadowCasterPassProperty.h"
 #include "render/3D/BaseCameraProperty.h"
 #include <render/3D/temp/ShaderData.h>
-#include "render/3D/RenderObjs/RuntimeOBJ/GLESRenderContext3D.h"
+#include "render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.h"
 #include "render/driver/gles/GLESCullUtil.h"
 
 namespace laya
@@ -17,13 +17,13 @@ GLESSpotLightShadowRP::~GLESSpotLightShadowRP()
 {
 }
 
-void GLESSpotLightShadowRP::update(GLESRenderContext3D* context)
+void GLESSpotLightShadowRP::update(RTRenderContext3D* context)
 {
     ShadowSpotData& shadowSpotData = this->_shadowSpotData;
     this->_getSpotLightShadowData(shadowSpotData, this->_shadowResolution, this->_shadowParams, this->_shadowSpotMatrices, this->_shadowSpotMapSize);
 }
 
-void GLESSpotLightShadowRP::render(GLESRenderContext3D* context, std::vector<GLESBaseRenderNode*>& list, uint32_t count) 
+void GLESSpotLightShadowRP::render(RTRenderContext3D* context, std::vector<GLESBaseRenderNode*>& list, uint32_t count)
 {
     ShaderData* shaderValues = context->sceneData;
     context->pipelineMode = "ShadowCaster";
@@ -34,7 +34,7 @@ void GLESSpotLightShadowRP::render(GLESRenderContext3D* context, std::vector<GLE
     this->_setupShadowCasterShaderValues(shaderValues, &shadowSpotData, this->_shadowParams, this->_shadowBias);
 
     // Culling
-    GLESCullUtil::cullingSpotShadow(shadowSpotData.cameraCullInfo, list, count, this->_renderQueue, *context);
+    GLESCullUtil::cullingSpotShadow(shadowSpotData.cameraCullInfo, list, count, this->_renderQueue, context);
     context->cameraData = shadowSpotData.cameraShaderValue;
     // TODOCamera::_updateMark++;
     // TODOcontext->cameraUpdateMask = Camera::_updateMark;

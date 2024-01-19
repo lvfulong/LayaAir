@@ -7,7 +7,7 @@
 #include "render/driver/gles/GLESRenderQueueList.h"
 namespace laya
 {
-    class GLESRenderContext3D;
+    class RTRenderContext3D;
     class ShadowSpotData
     {
     public:
@@ -26,8 +26,8 @@ class GLESSpotLightShadowRP
   public:
     GLESSpotLightShadowRP();
     ~GLESSpotLightShadowRP();
-    void update(GLESRenderContext3D*context);
-    void render(GLESRenderContext3D* context, std::vector<GLESBaseRenderNode*>& list, uint32_t count);
+    void update(RTRenderContext3D*context);
+    void render(RTRenderContext3D* context, std::vector<GLESBaseRenderNode*>& list, uint32_t count);
     void _applyRenderData(ShaderData* sceneData, ShaderData* cameraData);
     void _setupShadowCasterShaderValues(ShaderData* shaderValues, ShadowSpotData* shadowSliceData, const Vector4& shadowparams, const Vector4& shadowBias);
     void set_position(Vector3 value);

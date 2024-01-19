@@ -4,7 +4,7 @@
 #include "render/3D/design/RenderElement.h"
 #include "render/3D/temp/Transform3D.h"
 #include <vector>
-#include "render/3D/RenderObjs/RuntimeOBJ/GLESRenderContext3D.h"
+#include "render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.h"
 #include <core/math/Types.h>
 #include <binder/JSInterface.h>
 
@@ -33,7 +33,7 @@ class GLESBaseRenderNode
     virtual void _calculateGeometryBoundingBox(){};
     //virtual Bounds *get_BoundBox();
     
-    void _renderUpdatePre(const GLESRenderContext3D& context3D);
+    void _renderUpdatePre(RTRenderContext3D* context3D);
     bool _needRender(BoundFrustum* pBoundFrustum);
   public:
     // 排版数据 用于renderqueuelist

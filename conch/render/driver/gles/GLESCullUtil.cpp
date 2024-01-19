@@ -5,7 +5,7 @@ namespace laya
 {
 void GLESCullUtil::cullByCameraCullInfo(CameraCullInfo &cameraCullInfo, std::vector<GLESBaseRenderNode *> &list,
                                         uint32_t count, GLESRenderQueueList &opaqueList,
-                                        GLESRenderQueueList &transparent, const GLESRenderContext3D &context)
+                                        GLESRenderQueueList &transparent, RTRenderContext3D* context)
 {
     std::vector<GLESBaseRenderNode *> &renders = list;
     BoundFrustum& boundFrustum = cameraCullInfo._boundFrustum;
@@ -51,7 +51,7 @@ void GLESCullUtil::cullByCameraCullInfo(CameraCullInfo &cameraCullInfo, std::vec
 
 void GLESCullUtil::culldirectLightShadow(const ShadowCullInfo &shadowCullInfo, std::vector<GLESBaseRenderNode *> &list,
                                          uint32_t count, GLESRenderQueueList &opaqueList,
-                                          GLESRenderContext3D* context)
+    RTRenderContext3D* context)
 {
     opaqueList.clear();
     std::vector<GLESBaseRenderNode *> &renders = list;
@@ -67,7 +67,7 @@ void GLESCullUtil::culldirectLightShadow(const ShadowCullInfo &shadowCullInfo, s
             {
                 render->distanceForSort = Vector3::distance(
                     render->getBounds()->getCenter(), shadowCullInfo.position); // TODO:合并计算浪费,或者合并后取平均值
-                render->_renderUpdatePre(*context);                               // TS OR Native
+                render->_renderUpdatePre(context);                               // TS OR Native
                 std::vector<RenderElementOBJ *>& elements = render->renderelements;
                 for (int j = 0, m = elements.size(); j < m; j++)
                 {
@@ -82,7 +82,7 @@ void GLESCullUtil::culldirectLightShadow(const ShadowCullInfo &shadowCullInfo, s
 
 void GLESCullUtil::cullingSpotShadow(CameraCullInfo &cameraCullInfo, std::vector<GLESBaseRenderNode *> &list,
                                      uint32_t count, GLESRenderQueueList& opaqueList,
-                                     const GLESRenderContext3D &context)
+    RTRenderContext3D* context)
 {
     opaqueList.clear();
     std::vector<GLESBaseRenderNode*>& renders = list;
