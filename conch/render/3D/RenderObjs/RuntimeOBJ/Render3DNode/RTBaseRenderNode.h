@@ -1,5 +1,5 @@
-#ifndef __GLESBaseRenderNode_H_
-#define __GLESBaseRenderNode_H_
+#ifndef __RTBaseRenderNode_H_
+#define __RTBaseRenderNode_H_
 
 #include "render/3D/design/RenderElement.h"
 #include "render/3D/temp/Transform3D.h"
@@ -18,11 +18,11 @@ enum class IrradianceMode
 };
 class Bounds;
 class ShaderData;
-class GLESBaseRenderNode
+class RTBaseRenderNode
 {
   public:
-    GLESBaseRenderNode(){};
-    virtual ~GLESBaseRenderNode(){};
+    RTBaseRenderNode(){};
+    virtual ~RTBaseRenderNode(){};
 
     bool shadowCullPass();
    

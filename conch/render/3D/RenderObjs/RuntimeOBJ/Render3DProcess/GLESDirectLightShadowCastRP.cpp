@@ -84,7 +84,7 @@ void GLESDirectLightShadowCastRP::update(RTRenderContext3D*context)
                                                    this->_cascadeCount, this->_shadowMapSize, this->_shadowParams,
                                                    this->_shadowMatrices.data(), this->_splitBoundSpheres.data());
 }
-void GLESDirectLightShadowCastRP::render(RTRenderContext3D* context, std::vector<GLESBaseRenderNode *> &list,
+void GLESDirectLightShadowCastRP::render(RTRenderContext3D* context, std::vector<RTBaseRenderNode*> &list,
                                          uint32_t count)
 {
     ShaderData *shaderValues = context->sceneData;

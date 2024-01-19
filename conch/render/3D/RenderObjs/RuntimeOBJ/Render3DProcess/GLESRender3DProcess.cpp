@@ -8,7 +8,7 @@
 namespace laya {
 
     //renderCameraForwardPass
-    void GLESRender3DProcess::renderCameraForwardPass(RTRenderContext3D* context, GLESForwardAddRP* passInfo, std::vector<GLESBaseRenderNode*> renderNodeList, uint32_t count){
+    void GLESRender3DProcess::renderCameraForwardPass(RTRenderContext3D* context, GLESForwardAddRP* passInfo, std::vector<RTBaseRenderNode*> renderNodeList, uint32_t count){
         //先渲染ShadowTexture
         if (passInfo->shadowCasterPass) {
             if (passInfo->needDirectShadowPass) {

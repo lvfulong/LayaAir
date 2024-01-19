@@ -11,6 +11,7 @@
 namespace laya
 {
     class RTRenderContext3D;
+    class RTBaseRenderNode;
 class GLESForwardAddClusterRP
 {
   public:
@@ -33,14 +34,14 @@ class GLESForwardAddClusterRP
   public:
     GLESForwardAddClusterRP();
     ~GLESForwardAddClusterRP();
-    void render(RTRenderContext3D* context, std::vector<GLESBaseRenderNode*> renderNodeList, uint32_t count);
+    void render(RTRenderContext3D* context, std::vector<RTBaseRenderNode*> renderNodeList, uint32_t count);
   
     void set_cameraCullInfo(CameraCullInfo value);
     void set_beforeForwardCmds(std::vector<uint32_t> value);
     void set_beforeSkybox(std::vector<uint32_t> value);
     void set_beforeTransparent(std::vector<uint32_t> value);
     void set_destTarget(uint32_t value);
-    void set_skyRenderNode(GLESBaseRenderNode*value);
+    void set_skyRenderNode(RTBaseRenderNode*value);
     void set_depthTextureMode(DepthTextureMode value);
 private:
     void _recoverRenderContext3D(RTRenderContext3D* context);

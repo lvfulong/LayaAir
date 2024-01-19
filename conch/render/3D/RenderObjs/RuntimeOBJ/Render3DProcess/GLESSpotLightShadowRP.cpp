@@ -23,7 +23,7 @@ void GLESSpotLightShadowRP::update(RTRenderContext3D* context)
     this->_getSpotLightShadowData(shadowSpotData, this->_shadowResolution, this->_shadowParams, this->_shadowSpotMatrices, this->_shadowSpotMapSize);
 }
 
-void GLESSpotLightShadowRP::render(RTRenderContext3D* context, std::vector<GLESBaseRenderNode*>& list, uint32_t count)
+void GLESSpotLightShadowRP::render(RTRenderContext3D* context, std::vector<RTBaseRenderNode*>& list, uint32_t count)
 {
     ShaderData* shaderValues = context->sceneData;
     context->pipelineMode = "ShadowCaster";

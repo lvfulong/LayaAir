@@ -163,8 +163,8 @@ list(APPEND CONCH_SRC
 	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESSpotLightShadowRP.h
 	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESForwardAddClusterRP.h
 	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESForwardAddClusterRP.cpp
-	render/3D/RenderObjs/RuntimeOBJ/Render3DNode/GLESBaseRenderNode.h
-	render/3D/RenderObjs/RuntimeOBJ/Render3DNode/GLESBaseRenderNode.cpp
+	render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.h
+	render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.cpp
 	render/driver/gles/GLESCullUtil.h
 	render/driver/gles/GLESCullUtil.cpp
 	render/tempbase.h

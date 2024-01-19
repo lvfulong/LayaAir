@@ -12,7 +12,7 @@
 #include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESDirectLightShadowCastRP.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESSpotLightShadowRP.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESForwardAddClusterRP.h>
-#include <render/3D/RenderObjs/RuntimeOBJ/Render3DNode/GLESBaseRenderNode.h>
+#include <render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTDirectLight.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTModuleData.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTLightmapData.h>
@@ -91,33 +91,33 @@ class RenderBindings
             //todo conchWebGLInternalRT
         }
         {
-            class_<GLESBaseRenderNode> class_binding;
+            class_<RTBaseRenderNode> class_binding;
             class_binding.constructor<>();
-            class_binding.property("_reflectionMode", &GLESBaseRenderNode::getReflectionMode, &GLESBaseRenderNode::setReflectionMode);
-            class_binding.property("_lightProbUpdateMark", &GLESBaseRenderNode::getLightProbUpdateMark, &GLESBaseRenderNode::setLightProbUpdateMark);
-            class_binding.property("_irradianceMode", &GLESBaseRenderNode::getIrradianceMode, &GLESBaseRenderNode::setIrradianceMode);
-            class_binding.property("_probeReflectionUpdateMark", &GLESBaseRenderNode::getProbeReflectionUpdateMark, &GLESBaseRenderNode::setProbeReflectionUpdateMark);
-            class_binding.property("_lightmapIndex", &GLESBaseRenderNode::getLightmapIndex, &GLESBaseRenderNode::setLightmapIndex);
-            class_binding.function("setCommonUniformMap", &GLESBaseRenderNode::setCommonUniformMap);
-            class_binding.function("setLightmapScaleOffset", &GLESBaseRenderNode::setLightmapScaleOffset);
-            class_binding.function("setWorldParams", &GLESBaseRenderNode::setWorldParams);
-            class_binding.function("destroy", &GLESBaseRenderNode::destroy);
-            class_binding.function("setCalculateBoundingBox", &GLESBaseRenderNode::setCalculateBoundingBox);
-            class_binding.function("setRenderUpdatePre", &GLESBaseRenderNode::setRenderUpdatePre);
-            class_binding.function("setShaderData", &GLESBaseRenderNode::setShaderData);
-            class_binding.function("setBaseGeometryBounds", &GLESBaseRenderNode::setBaseGeometryBounds);
-            class_binding.property("_bounds", &GLESBaseRenderNode::getBounds, &GLESBaseRenderNode::setBounds);
-            class_binding.property("_boundsChange", &GLESBaseRenderNode::getBoundsChange, &GLESBaseRenderNode::setBoundsChange);
-            class_binding.property("_customCullResoult", &GLESBaseRenderNode::getCustomCullResoult, &GLESBaseRenderNode::setCustomCullResoult);
-            class_binding.property("_customCull", &GLESBaseRenderNode::getCustomCull, &GLESBaseRenderNode::setCustomCull);
-            class_binding.property("_staticMask", &GLESBaseRenderNode::getStaticMask, &GLESBaseRenderNode::setStaticMask);
-            class_binding.property("_layer", &GLESBaseRenderNode::getLayer, &GLESBaseRenderNode::setLayer);
-            class_binding.property("_renderbitFlag", &GLESBaseRenderNode::getRenderbitFlag, &GLESBaseRenderNode::setRenderbitFlag);
-            class_binding.property("_distanceForSort", &GLESBaseRenderNode::getDistanceForSort, &GLESBaseRenderNode::setDistanceForSort);
-            class_binding.property("_sortingFudge", &GLESBaseRenderNode::getSortingFudge, &GLESBaseRenderNode::setSortingFudge);
-            class_binding.property("_castShadow", &GLESBaseRenderNode::getCastShadow, &GLESBaseRenderNode::setCastShadow);
-            class_binding.property("_enable", &GLESBaseRenderNode::getEnable, &GLESBaseRenderNode::setEnable);
-            class_binding.function("setTransform", &GLESBaseRenderNode::setTransform);
+            class_binding.property("_reflectionMode", &RTBaseRenderNode::getReflectionMode, &RTBaseRenderNode::setReflectionMode);
+            class_binding.property("_lightProbUpdateMark", &RTBaseRenderNode::getLightProbUpdateMark, &RTBaseRenderNode::setLightProbUpdateMark);
+            class_binding.property("_irradianceMode", &RTBaseRenderNode::getIrradianceMode, &RTBaseRenderNode::setIrradianceMode);
+            class_binding.property("_probeReflectionUpdateMark", &RTBaseRenderNode::getProbeReflectionUpdateMark, &RTBaseRenderNode::setProbeReflectionUpdateMark);
+            class_binding.property("_lightmapIndex", &RTBaseRenderNode::getLightmapIndex, &RTBaseRenderNode::setLightmapIndex);
+            class_binding.function("setCommonUniformMap", &RTBaseRenderNode::setCommonUniformMap);
+            class_binding.function("setLightmapScaleOffset", &RTBaseRenderNode::setLightmapScaleOffset);
+            class_binding.function("setWorldParams", &RTBaseRenderNode::setWorldParams);
+            class_binding.function("destroy", &RTBaseRenderNode::destroy);
+            class_binding.function("setCalculateBoundingBox", &RTBaseRenderNode::setCalculateBoundingBox);
+            class_binding.function("setRenderUpdatePre", &RTBaseRenderNode::setRenderUpdatePre);
+            class_binding.function("setShaderData", &RTBaseRenderNode::setShaderData);
+            class_binding.function("setBaseGeometryBounds", &RTBaseRenderNode::setBaseGeometryBounds);
+            class_binding.property("_bounds", &RTBaseRenderNode::getBounds, &RTBaseRenderNode::setBounds);
+            class_binding.property("_boundsChange", &RTBaseRenderNode::getBoundsChange, &RTBaseRenderNode::setBoundsChange);
+            class_binding.property("_customCullResoult", &RTBaseRenderNode::getCustomCullResoult, &RTBaseRenderNode::setCustomCullResoult);
+            class_binding.property("_customCull", &RTBaseRenderNode::getCustomCull, &RTBaseRenderNode::setCustomCull);
+            class_binding.property("_staticMask", &RTBaseRenderNode::getStaticMask, &RTBaseRenderNode::setStaticMask);
+            class_binding.property("_layer", &RTBaseRenderNode::getLayer, &RTBaseRenderNode::setLayer);
+            class_binding.property("_renderbitFlag", &RTBaseRenderNode::getRenderbitFlag, &RTBaseRenderNode::setRenderbitFlag);
+            class_binding.property("_distanceForSort", &RTBaseRenderNode::getDistanceForSort, &RTBaseRenderNode::setDistanceForSort);
+            class_binding.property("_sortingFudge", &RTBaseRenderNode::getSortingFudge, &RTBaseRenderNode::setSortingFudge);
+            class_binding.property("_castShadow", &RTBaseRenderNode::getCastShadow, &RTBaseRenderNode::setCastShadow);
+            class_binding.property("_enable", &RTBaseRenderNode::getEnable, &RTBaseRenderNode::setEnable);
+            class_binding.function("setTransform", &RTBaseRenderNode::setTransform);
             context.class_("conchRTBaseRenderNode", class_binding);
         }
         {

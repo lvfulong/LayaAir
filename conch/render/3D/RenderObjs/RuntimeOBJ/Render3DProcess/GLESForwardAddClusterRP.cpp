@@ -15,7 +15,7 @@ namespace laya
     GLESForwardAddClusterRP::~GLESForwardAddClusterRP(){
         
     }
-    void GLESForwardAddClusterRP::render(RTRenderContext3D* context, std::vector<GLESBaseRenderNode*> list, uint32_t count){
+    void GLESForwardAddClusterRP::render(RTRenderContext3D* context, std::vector<RTBaseRenderNode*> list, uint32_t count){
         //TODO Camera._updateMark++;
         this->opaqueList.clear();
         this->transparent.clear();
@@ -82,7 +82,7 @@ namespace laya
     void GLESForwardAddClusterRP::set_destTarget(uint32_t value){
         
     }
-    void GLESForwardAddClusterRP::set_skyRenderNode(GLESBaseRenderNode* value){
+    void GLESForwardAddClusterRP::set_skyRenderNode(RTBaseRenderNode* value){
         
     }
 

@@ -1,15 +1,15 @@
-#include "GLESBaseRenderNode.h"
+#include "RTBaseRenderNode.h"
 #include "render/3D/RenderableSprite3DProperty.h"
 
 namespace laya
 {
 
-bool GLESBaseRenderNode::shadowCullPass()
+bool RTBaseRenderNode::shadowCullPass()
 {
     // todo
     return true;
 }
-Bounds *GLESBaseRenderNode::getBounds()
+Bounds *RTBaseRenderNode::getBounds()
 {
     if (nativeUpdateData)
     {
@@ -17,20 +17,20 @@ Bounds *GLESBaseRenderNode::getBounds()
     }
     return this->bounds;
 }
-void GLESBaseRenderNode::setBounds(Bounds* bounds)
+void RTBaseRenderNode::setBounds(Bounds* bounds)
 {
     this->bounds = bounds;
 }
 
-void GLESBaseRenderNode::setBaseGeometryBounds(Bounds* bounds)
+void RTBaseRenderNode::setBaseGeometryBounds(Bounds* bounds)
 {
     baseGeometryBounds = bounds;
 }
-void GLESBaseRenderNode::setShaderData(ShaderData* data)
+void RTBaseRenderNode::setShaderData(ShaderData* data)
 {
     this->shaderData = data;
 }
-void GLESBaseRenderNode::_applyReflection()
+void RTBaseRenderNode::_applyReflection()
 {
     // TODO
     /* if (!this._probReflection) return;
@@ -40,7 +40,7 @@ void GLESBaseRenderNode::_applyReflection()
      }*/
 }
 
-void GLESBaseRenderNode::_applyLightmap()
+void RTBaseRenderNode::_applyLightmap()
 {
     // TODO
     /* var lightMaps : Lightmap[] = this._scene.lightmaps;
@@ -64,7 +64,7 @@ void GLESBaseRenderNode::_applyLightmap()
      }*/
 }
 
-void GLESBaseRenderNode::_applyLightProb()
+void RTBaseRenderNode::_applyLightProb()
 {
     // TODO
     /*if (this.lightmapIndex >= 0 || !this._lightProb) return;
@@ -73,28 +73,28 @@ void GLESBaseRenderNode::_applyLightProb()
         this._lightProb.applyVolumetricGI(this._shaderValues);
     }*/
 }
-void GLESBaseRenderNode::_renderUpdatePre(RTRenderContext3D* context3D)
+void RTBaseRenderNode::_renderUpdatePre(RTRenderContext3D* context3D)
 {
     // TODO
 }
-bool GLESBaseRenderNode::_needRender(BoundFrustum* pBoundFrustum)
+bool RTBaseRenderNode::_needRender(BoundFrustum* pBoundFrustum)
 {
     // TODO
     return true;
 }
-void GLESBaseRenderNode::setRenderUpdatePre(JSValueAsParam function)
+void RTBaseRenderNode::setRenderUpdatePre(JSValueAsParam function)
 {
     m_JSFunctionRenderUpdatePre.reset(function);
 }
-void GLESBaseRenderNode::setCalculateBoundingBox(JSValueAsParam function)
+void RTBaseRenderNode::setCalculateBoundingBox(JSValueAsParam function)
 {
     m_JSFunctionCalculateBoundingBox.reset(function);
 }
-void GLESBaseRenderNode::setCommonUniformMap(const std::vector<std::string>& value)
+void RTBaseRenderNode::setCommonUniformMap(const std::vector<std::string>& value)
 {
     // TODO
 }
-void GLESBaseRenderNode::destroy()
+void RTBaseRenderNode::destroy()
 {
     //TODO
 }

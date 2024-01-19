@@ -3,11 +3,11 @@
 
 namespace laya
 {
-void GLESCullUtil::cullByCameraCullInfo(CameraCullInfo &cameraCullInfo, std::vector<GLESBaseRenderNode *> &list,
+void GLESCullUtil::cullByCameraCullInfo(CameraCullInfo &cameraCullInfo, std::vector<RTBaseRenderNode*> &list,
                                         uint32_t count, GLESRenderQueueList &opaqueList,
                                         GLESRenderQueueList &transparent, RTRenderContext3D* context)
 {
-    std::vector<GLESBaseRenderNode *> &renders = list;
+    std::vector<RTBaseRenderNode*> &renders = list;
     BoundFrustum& boundFrustum = cameraCullInfo._boundFrustum;
     uint32_t cullMask = cameraCullInfo._cullingMask;
     uint32_t staticMask = cameraCullInfo._staticMask;
@@ -49,12 +49,12 @@ void GLESCullUtil::cullByCameraCullInfo(CameraCullInfo &cameraCullInfo, std::vec
     }
 }
 
-void GLESCullUtil::culldirectLightShadow(const ShadowCullInfo &shadowCullInfo, std::vector<GLESBaseRenderNode *> &list,
+void GLESCullUtil::culldirectLightShadow(const ShadowCullInfo &shadowCullInfo, std::vector<RTBaseRenderNode*> &list,
                                          uint32_t count, GLESRenderQueueList &opaqueList,
     RTRenderContext3D* context)
 {
     opaqueList.clear();
-    std::vector<GLESBaseRenderNode *> &renders = list;
+    std::vector<RTBaseRenderNode*> &renders = list;
     for (int i = 0, n = count; i < n; i++)
     {
         auto render = renders[i];
@@ -80,12 +80,12 @@ void GLESCullUtil::culldirectLightShadow(const ShadowCullInfo &shadowCullInfo, s
     }
 }
 
-void GLESCullUtil::cullingSpotShadow(CameraCullInfo &cameraCullInfo, std::vector<GLESBaseRenderNode *> &list,
+void GLESCullUtil::cullingSpotShadow(CameraCullInfo &cameraCullInfo, std::vector<RTBaseRenderNode*> &list,
                                      uint32_t count, GLESRenderQueueList& opaqueList,
     RTRenderContext3D* context)
 {
     opaqueList.clear();
-    std::vector<GLESBaseRenderNode*>& renders = list;
+    std::vector<RTBaseRenderNode*>& renders = list;
     BoundFrustum& boundFrustum = cameraCullInfo._boundFrustum;
     for (int i = 0, n = count; i < n; i++)
     {

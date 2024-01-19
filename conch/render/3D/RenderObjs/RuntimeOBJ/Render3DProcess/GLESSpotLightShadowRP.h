@@ -8,6 +8,7 @@
 namespace laya
 {
     class RTRenderContext3D;
+    class RTBaseRenderNode;
     class ShadowSpotData
     {
     public:
@@ -27,7 +28,7 @@ class GLESSpotLightShadowRP
     GLESSpotLightShadowRP();
     ~GLESSpotLightShadowRP();
     void update(RTRenderContext3D*context);
-    void render(RTRenderContext3D* context, std::vector<GLESBaseRenderNode*>& list, uint32_t count);
+    void render(RTRenderContext3D* context, std::vector<RTBaseRenderNode*>& list, uint32_t count);
     void _applyRenderData(ShaderData* sceneData, ShaderData* cameraData);
     void _setupShadowCasterShaderValues(ShaderData* shaderValues, ShadowSpotData* shadowSliceData, const Vector4& shadowparams, const Vector4& shadowBias);
     void set_position(Vector3 value);
