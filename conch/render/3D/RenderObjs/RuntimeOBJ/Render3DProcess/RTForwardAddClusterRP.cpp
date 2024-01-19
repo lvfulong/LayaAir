@@ -45,8 +45,8 @@ namespace laya
         //TODO  context->setRenderTarget(this.depthTarget._renderTarget);
         this->opaqueList.renderQueue((RTRenderContext3D*)context);
         //渲染完后传入使用的参数
-        auto far = this->camera.farPlane;
-        auto near = this->camera.nearPlane;
+        auto far = this->camera->farplane;
+        auto near = this->camera->nearplane;
         this->_zBufferParams.setValue(1.0 - far / near, far / near, (near - far) / (near * far), 1 / near);
         context->cameraData->setVector(DepthPassProperty::DEFINE_SHADOW_BIAS, DepthPassProperty::SHADOW_BIAS);
         //TODO context.cameraData.setTexture(DepthPassProperty::DEPTHTEXTURE, this.depthTarget);
