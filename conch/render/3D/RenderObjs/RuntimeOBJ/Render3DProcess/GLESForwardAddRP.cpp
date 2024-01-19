@@ -11,9 +11,6 @@ namespace laya {
 
     }
 
-    void GLESForwardAddRP::set_shadowCasterPass() {
-
-    }
     void GLESForwardAddRP::set_DirectLightShadowCasterRenderPass(GLESDirectLightShadowCastRP* value) {
 
     }

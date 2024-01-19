@@ -14,14 +14,13 @@ namespace laya {
 		GLESForwardAddRP();
 		~GLESForwardAddRP();
 
-		void set_shadowCasterPass();
 		void set_DirectLightShadowCasterRenderPass(GLESDirectLightShadowCastRP* value);
 		void set_needDirectShadowPass(bool value);
 		void set_spotLightShadowPass(GLESSpotLightShadowRP* value);
 		void set_renderpass(GLESForwardAddClusterRP* value);
 		void set_afterEverything(std::vector<uint32_t> value);
 	public:
-		bool shadowCasterPass;
+		bool shadowCastPass;
 		//directLightPass
 		GLESDirectLightShadowCastRP* directLightShadowPass;
 		bool needDirectShadowPass;

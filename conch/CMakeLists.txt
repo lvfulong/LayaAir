@@ -153,8 +153,8 @@ list(APPEND CONCH_SRC
 	render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.h
 	render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.cpp
 
-	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESRender3DProcess.h
-	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESRender3DProcess.cpp
+	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTRender3DProcess.h
+	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTRender3DProcess.cpp
 	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESForwardAddRP.h
 	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESForwardAddRP.cpp
 	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESDirectLightShadowCastRP.h

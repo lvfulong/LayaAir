@@ -7,7 +7,7 @@
 #include <core/math/Color.h>
 #include <binder/JSInterface.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.h>
-#include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESRender3DProcess.h>
+#include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTRender3DProcess.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESForwardAddRP.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESDirectLightShadowCastRP.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESSpotLightShadowRP.h>
@@ -149,16 +149,17 @@ class RenderBindings
             context.class_("conchRTRenderContext3D", class_binding);
         }
         {
-            class_<GLESRender3DProcess> class_binding;
+            class_<RTRender3DProcess> class_binding;
             class_binding.constructor<>();
-            class_binding.function("renderCameraForwardPass", &GLESRender3DProcess::renderCameraForwardPass);
-            context.class_("ConchGLESRender3DProcess", class_binding);
+            class_binding.function("renderFowarAddCameraPass", &RTRender3DProcess::renderFowarAddCameraPass);
+            context.class_("conchRTRender3DProcess", class_binding);
         }
         {
             class_<GLESForwardAddRP> class_binding;
             class_binding.constructor<>();
+            class_binding.property_field("_shadowCastPass", &GLESForwardAddRP::shadowCastPass);
             class_binding.function("set_DirectLightShadowCasterRenderPass", &GLESForwardAddRP::set_DirectLightShadowCasterRenderPass);
-            context.class_("ConchGLESForwardAddRP", class_binding);
+            context.class_("conchRTForwardAddRP", class_binding);
         }
         {
             class_<GLESDirectLightShadowCastRP> class_binding;
