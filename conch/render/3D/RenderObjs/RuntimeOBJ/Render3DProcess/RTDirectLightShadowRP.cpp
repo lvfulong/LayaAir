@@ -1,4 +1,4 @@
-#include "GLESDirectLightShadowCastRP.h"
+#include "RTDirectLightShadowRP.h"
 #include "render/driver/gles/GLESCullUtil.h"
 #include "render/3D/BaseCameraProperty.h"
 #include "render/3D/Scene3DShaderDeclaration.h"
@@ -9,17 +9,15 @@
 
 namespace laya
 {
-
-// GLESDirectLightShadowCastRP
-GLESDirectLightShadowCastRP::GLESDirectLightShadowCastRP() : _renderQueue(false)
+    RTDirectLightShadowRP::RTDirectLightShadowRP() : _renderQueue(false)
 {
     _cascadesSplitDistance.resize(_maxCascades + 1);
 }
 
-GLESDirectLightShadowCastRP::~GLESDirectLightShadowCastRP()
+    RTDirectLightShadowRP::~RTDirectLightShadowRP()
 {
 }
-void GLESDirectLightShadowCastRP::set_light(RTDirectLight* light)
+void RTDirectLightShadowRP::set_light(RTDirectLight* light)
 {
     this->_light = light;
     Matrix4x4 lightWorld;
@@ -49,7 +47,7 @@ void GLESDirectLightShadowCastRP::set_light(RTDirectLight* light)
         this->_shadowMapHeight = cascadesMode == ShadowCascadesMode::TwoCascades ? shadowTileResolution : shadowTileResolution * 2;
     }
 }
-void GLESDirectLightShadowCastRP::update(RTRenderContext3D*context)
+void RTDirectLightShadowRP::update(RTRenderContext3D*context)
 {
     std::vector<F32> &splitDistance = this->_cascadesSplitDistance;
     std::vector<Plane> &frustumPlanes = this->_frustumPlanes;
@@ -84,7 +82,7 @@ void GLESDirectLightShadowCastRP::update(RTRenderContext3D*context)
                                                    this->_cascadeCount, this->_shadowMapSize, this->_shadowParams,
                                                    this->_shadowMatrices.data(), this->_splitBoundSpheres.data());
 }
-void GLESDirectLightShadowCastRP::render(RTRenderContext3D* context, std::vector<RTBaseRenderNode*> &list,
+void RTDirectLightShadowRP::render(RTRenderContext3D* context, std::vector<RTBaseRenderNode*> &list,
                                          uint32_t count)
 {
     ShaderData *shaderValues = context->sceneData;
@@ -152,11 +150,11 @@ void GLESDirectLightShadowCastRP::set_cameraInfo(CameraInfo value)
 {
     // TODO
 }*/
-void GLESDirectLightShadowCastRP::set_destTarget(WebGLInternalRT* value)
+void RTDirectLightShadowRP::set_destTarget(WebGLInternalRT* value)
 {
     destTarget = value;
 }
-void GLESDirectLightShadowCastRP::_applyRenderData(ShaderData *scene, ShaderData *camera)
+void RTDirectLightShadowRP::_applyRenderData(ShaderData *scene, ShaderData *camera)
 {
     const RTDirectLight&light = *this->_light;
     if (light.shadowCascadesMode != ShadowCascadesMode::NoCascades)
@@ -185,7 +183,7 @@ void GLESDirectLightShadowCastRP::_applyRenderData(ShaderData *scene, ShaderData
     scene->setVector(ShadowCasterPassProperty::SHADOW_PARAMS, this->_shadowParams);
     // scene.setBuffer(ShadowCasterPass.SHADOW_SPLIT_SPHERES, this._splitBoundSpheres); todo
 }
-void GLESDirectLightShadowCastRP::getShadowBias(const Matrix4x4 &shadowProjectionMatrix, double shadowResolution,
+void RTDirectLightShadowRP::getShadowBias(const Matrix4x4 &shadowProjectionMatrix, double shadowResolution,
                                                 Vector4 &out)
 {
     double frustumSize;
@@ -212,7 +210,7 @@ void GLESDirectLightShadowCastRP::getShadowBias(const Matrix4x4 &shadowProjectio
     }
     out.setValue(depthBias, normalBias, 0.0, 0.0);
 }
-void GLESDirectLightShadowCastRP::_setupShadowCasterShaderValues(ShaderData *shaderValues,
+void RTDirectLightShadowRP::_setupShadowCasterShaderValues(ShaderData *shaderValues,
                                                                  const ShadowSliceData &shadowSliceData,
                                                                  const Vector3 &LightParam, const Vector4 &shadowBias)
 {

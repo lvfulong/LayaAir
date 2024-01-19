@@ -1,5 +1,5 @@
-#ifndef __GLESForwardAddClusterRP_H_
-#define __GLESForwardAddClusterRP_H_
+#ifndef __RTForwardAddClusterRP_H_
+#define __RTForwardAddClusterRP_H_
 
 #include "render/3D/design/Render3DProcess.h"
 #include <vector>
@@ -12,7 +12,7 @@ namespace laya
 {
     class RTRenderContext3D;
     class RTBaseRenderNode;
-class GLESForwardAddClusterRP
+class RTForwardAddClusterRP
 {
   public:
     enum class DepthTextureMode
@@ -32,8 +32,8 @@ class GLESForwardAddClusterRP
     };
 
   public:
-    GLESForwardAddClusterRP();
-    ~GLESForwardAddClusterRP();
+      RTForwardAddClusterRP();
+    ~RTForwardAddClusterRP();
     void render(RTRenderContext3D* context, std::vector<RTBaseRenderNode*> renderNodeList, uint32_t count);
   
     void set_cameraCullInfo(CameraCullInfo value);

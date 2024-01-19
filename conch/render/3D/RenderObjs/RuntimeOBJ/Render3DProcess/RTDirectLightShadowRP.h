@@ -1,5 +1,5 @@
-#ifndef __GLESDirectLightShadowCastRP_H_
-#define __GLESDirectLightShadowCastRP_H_
+#ifndef __RTDirectLightShadowRP_H_
+#define __RTDirectLightShadowRP_H_
 
 #include "render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTDirectLight.h"
 #include "render/3D/ShadowSliceData.h"
@@ -18,7 +18,7 @@ class ShaderData;
 class WebGLInternalRT;
 class GLESRenderContext3D;
 class RTBaseRenderNode;
-class GLESDirectLightShadowCastRP : public IDirectLightShadowRP
+class RTDirectLightShadowRP : public IDirectLightShadowRP
 {
   public:
     struct CameraInfo
@@ -33,8 +33,8 @@ class GLESDirectLightShadowCastRP : public IDirectLightShadowRP
     };
 
   public:
-    GLESDirectLightShadowCastRP();
-    ~GLESDirectLightShadowCastRP();
+      RTDirectLightShadowRP();
+    ~RTDirectLightShadowRP();
 
     void update(RTRenderContext3D* context);
     void render(RTRenderContext3D* context, std::vector<RTBaseRenderNode*>& list, uint32_t count);

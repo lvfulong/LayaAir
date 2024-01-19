@@ -8,10 +8,10 @@
 #include <binder/JSInterface.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTRender3DProcess.h>
-#include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESForwardAddRP.h>
-#include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESDirectLightShadowCastRP.h>
-#include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESSpotLightShadowRP.h>
-#include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESForwardAddClusterRP.h>
+#include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTForwardAddRP.h>
+#include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTDirectLightShadowRP.h>
+#include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTSpotLightShadowRP.h>
+#include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTForwardAddClusterRP.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTDirectLight.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTModuleData.h>
@@ -155,28 +155,28 @@ class RenderBindings
             context.class_("conchRTRender3DProcess", class_binding);
         }
         {
-            class_<GLESForwardAddRP> class_binding;
+            class_<RTForwardAddRP> class_binding;
             class_binding.constructor<>();
-            class_binding.property_field("_shadowCastPass", &GLESForwardAddRP::shadowCastPass);
-            class_binding.function("set_DirectLightShadowCasterRenderPass", &GLESForwardAddRP::set_DirectLightShadowCasterRenderPass);
+            class_binding.property_field("_shadowCastPass", &RTForwardAddRP::shadowCastPass);
+            class_binding.function("set_DirectLightShadowCasterRenderPass", &RTForwardAddRP::set_DirectLightShadowCasterRenderPass);
             context.class_("conchRTForwardAddRP", class_binding);
         }
         {
-            class_<GLESDirectLightShadowCastRP> class_binding;
+            class_<RTDirectLightShadowRP> class_binding;
             class_binding.constructor<>();
-            class_binding.function("set_light", &GLESDirectLightShadowCastRP::set_light);
+            class_binding.function("set_light", &RTDirectLightShadowRP::set_light);
             context.class_("conchRTDirectLightShadowCastRP", class_binding);
         }
         {
-            class_<GLESSpotLightShadowRP> class_binding;
+            class_<RTSpotLightShadowRP> class_binding;
             class_binding.constructor<>();
-            class_binding.function("set_position", &GLESSpotLightShadowRP::set_position);
+            class_binding.function("set_position", &RTSpotLightShadowRP::set_position);
             context.class_("ConchGLESSpotLightShadowRP", class_binding);
         }
         {
-            class_<GLESForwardAddClusterRP> class_binding;
+            class_<RTForwardAddClusterRP> class_binding;
             class_binding.constructor<>();
-            class_binding.function("set_skyRenderNode", &GLESForwardAddClusterRP::set_skyRenderNode);
+            class_binding.function("set_skyRenderNode", &RTForwardAddClusterRP::set_skyRenderNode);
             context.class_("ConchGLESForwardAddClusterRP", class_binding);
         }
         {

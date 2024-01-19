@@ -155,14 +155,14 @@ list(APPEND CONCH_SRC
 
 	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTRender3DProcess.h
 	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTRender3DProcess.cpp
-	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESForwardAddRP.h
-	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESForwardAddRP.cpp
-	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESDirectLightShadowCastRP.h
-	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESDirectLightShadowCastRP.cpp
-	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESSpotLightShadowRP.cpp
-	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESSpotLightShadowRP.h
-	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESForwardAddClusterRP.h
-	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESForwardAddClusterRP.cpp
+	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTForwardAddRP.h
+	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTForwardAddRP.cpp
+	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTDirectLightShadowRP.h
+	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTDirectLightShadowRP.cpp
+	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTSpotLightShadowRP.cpp
+	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTSpotLightShadowRP.h
+	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTForwardAddClusterRP.h
+	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTForwardAddClusterRP.cpp
 	render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.h
 	render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.cpp
 	render/driver/gles/GLESCullUtil.h
