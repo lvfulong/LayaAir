@@ -14,19 +14,18 @@ namespace laya {
 		RTForwardAddRP();
 		~RTForwardAddRP();
 
-		void set_DirectLightShadowCasterRenderPass(RTDirectLightShadowRP* value);
-		void set_needDirectShadowPass(bool value);
-		void set_spotLightShadowPass(RTSpotLightShadowRP* value);
-		void set_renderpass(RTForwardAddClusterRP* value);
+		void setDirectLightShadowPass(RTDirectLightShadowRP* value) { directLightShadowPass = value; }
+		void setSpotLightShadowPass(RTSpotLightShadowRP* value) { spotLightShadowPass = value; }
+		void setForwardAddClusterRP(RTForwardAddClusterRP* value) { renderpass = value; }
 		void set_afterEverything(std::vector<uint32_t> value);
 	public:
 		bool shadowCastPass;
 		//directLightPass
 		RTDirectLightShadowRP* directLightShadowPass;
-		bool needDirectShadowPass;
+		bool enableDirectLightShadow;
 		//spotLightPass
 		RTSpotLightShadowRP* spotLightShadowPass;
-		bool needSpotPass;
+		bool enableSpotLightShadowPass;
 		RTForwardAddClusterRP* renderpass;
 		// TODO
 		//PostProcessPass postprecessPass;

@@ -27,13 +27,13 @@ namespace laya
         if (((uint32_t)this->depthTextureMode & (uint32_t)DepthTextureMode::DepthNormals) != 0) {
             this->_renderDepthNormalPass(context);
         }
-        this->_viewPort.cloneTo(RTForwardAddClusterRP::_context3DViewPortCatch);
-        this->_scissor.cloneTo(RTForwardAddClusterRP::_contextScissorPortCatch);
+        this->viewPort.cloneTo(RTForwardAddClusterRP::_context3DViewPortCatch);
+        this->scissor.cloneTo(RTForwardAddClusterRP::_contextScissorPortCatch);
         this->_mainPass(context);
     }
     void RTForwardAddClusterRP::_renderDepthPass(RTRenderContext3D* context){
         context->pipelineMode = this->depthPipelineMode;
-        Viewport& viewport = this->_viewPort;
+        Viewport& viewport = this->viewPort;
         ShaderData* shadervalue = context->sceneData;
         shadervalue->addDefine(DepthPassProperty::DEPTHPASS);
         shadervalue->setVector(DepthPassProperty::DEFINE_SHADOW_BIAS, Vector4::ZERO);
@@ -56,7 +56,7 @@ namespace laya
     void RTForwardAddClusterRP::_renderDepthNormalPass(RTRenderContext3D* context){
         context->pipelineMode = this->depthNormalPipelineMode;
         //传入shader该传的值
-        Viewport& viewport = this->_viewPort;
+        Viewport& viewport = this->viewPort;
         Viewport _tempViewport(viewport.x, viewport.y, viewport.width, viewport.height);
         Vector4 tempVec4(viewport.x, viewport.y, viewport.width, viewport.height);
         context->setViewport(_tempViewport);
@@ -80,13 +80,6 @@ namespace laya
     }
     void RTForwardAddClusterRP::set_destTarget(uint32_t value){
         
-    }
-    void RTForwardAddClusterRP::set_skyRenderNode(RTBaseRenderNode* value){
-        
-    }
-
-    void RTForwardAddClusterRP::set_depthTextureMode(DepthTextureMode value) {
-
     }
 
     void RTForwardAddClusterRP::opaqueTexturePass()

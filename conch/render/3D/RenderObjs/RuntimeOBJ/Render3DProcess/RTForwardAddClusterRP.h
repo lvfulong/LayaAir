@@ -41,8 +41,10 @@ class RTForwardAddClusterRP
     void set_beforeSkybox(std::vector<uint32_t> value);
     void set_beforeTransparent(std::vector<uint32_t> value);
     void set_destTarget(uint32_t value);
-    void set_skyRenderNode(RTBaseRenderNode*value);
-    void set_depthTextureMode(DepthTextureMode value);
+    void setSkyRenderNode(RTBaseRenderNode* value) { skyRenderNode = value; }
+    void setClearColor(Color& value) { value.cloneTo(this->clearColor); }
+    void setScissor(Vector4& value) { value.cloneTo(this->scissor); }
+    void setViewport(Viewport& value) { value.cloneTo(this->viewPort); }
 private:
     void _recoverRenderContext3D(RTRenderContext3D* context);
     void _mainPass(RTRenderContext3D* context);
@@ -57,7 +59,7 @@ private:
     uint32_t destTarget;
     uint32_t depthTarget;
     uint32_t depthNormalTarget;
-    GLESBaseRenderNode*skyRenderNode;
+    RTBaseRenderNode*skyRenderNode;
     DepthTextureMode renderpassNode;
     static Viewport _context3DViewPortCatch;
     static Vector4 _contextScissorPortCatch;
@@ -67,14 +69,17 @@ private:
     bool enableOpaque;
     GLESRenderQueueList opaqueList;
     GLESRenderQueueList transparent;
-    Viewport _viewPort;
+    Viewport viewPort;
     std::string depthNormalPipelineMode;
     Color _defaultNormalDepthColor;
     std::string depthPipelineMode;
     Vector4 _zBufferParams;
     CameraInfo camera;
-    Vector4 _scissor;
+    Vector4 scissor;
     DepthTextureMode depthTextureMode;
+    bool enableCMD;
+    bool enableTransparent;
+    bool enableOpaqueTexture;
 };
 } // namespace laya
 #endif

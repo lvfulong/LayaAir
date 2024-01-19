@@ -5,7 +5,7 @@ namespace laya
 {
 class ComposeData;
 class RenderInstanceData;
-class GLESBaseRenderNode;
+class RTBaseRenderNode;
 class RenderElementOBJ
 {
   public:
@@ -17,7 +17,7 @@ class RenderElementOBJ
     //ComposeData *composeData;
     // 渲染数据
     //TODO RenderInstanceData renderData;
-    GLESBaseRenderNode* _owner;
+    RTBaseRenderNode* _owner;
     uint32_t _materialRenderQueue;
 };
 } // namespace laya

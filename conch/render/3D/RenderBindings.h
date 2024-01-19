@@ -156,9 +156,13 @@ class RenderBindings
         }
         {
             class_<RTForwardAddRP> class_binding;
-            class_binding.constructor<>();
+            class_binding.constructor<>(); 
+            class_binding.property_field("_enableSpotLightShadowPass", &RTForwardAddRP::enableSpotLightShadowPass);
+            class_binding.property_field("_enableDirectLightShadow", &RTForwardAddRP::enableDirectLightShadow);
             class_binding.property_field("_shadowCastPass", &RTForwardAddRP::shadowCastPass);
-            class_binding.function("set_DirectLightShadowCasterRenderPass", &RTForwardAddRP::set_DirectLightShadowCasterRenderPass);
+            class_binding.function("setForwardAddClusterRP", &RTForwardAddRP::setForwardAddClusterRP);
+            class_binding.function("setDirectLightShadowPass", &RTForwardAddRP::setDirectLightShadowPass);
+            class_binding.function("setSpotLightShadowPass", &RTForwardAddRP::setSpotLightShadowPass);
             context.class_("conchRTForwardAddRP", class_binding);
         }
         {
@@ -178,8 +182,21 @@ class RenderBindings
         {
             class_<RTForwardAddClusterRP> class_binding;
             class_binding.constructor<>();
-            class_binding.function("set_skyRenderNode", &RTForwardAddClusterRP::set_skyRenderNode);
-            context.class_("ConchGLESForwardAddClusterRP", class_binding);
+            class_binding.property_field("_depthNormalPipelineMode", &RTForwardAddClusterRP::depthNormalPipelineMode);
+            class_binding.property_field("_depthPipelineMode", &RTForwardAddClusterRP::depthPipelineMode);
+            class_binding.property_field("_pipelineMode", &RTForwardAddClusterRP::pipelineMode);
+            class_binding.property_field("_pipelineMode", &RTForwardAddClusterRP::pipelineMode);
+            class_binding.property_field("_enableOpaqueTexture", &RTForwardAddClusterRP::enableOpaqueTexture);
+            class_binding.property_field("_enableCMD", &RTForwardAddClusterRP::enableCMD);
+            class_binding.property_field("_enableTransparent", &RTForwardAddClusterRP::enableTransparent);
+            class_binding.property_field("_enableCMD", &RTForwardAddClusterRP::enableCMD);
+            class_binding.property_field("_enableOpaque", &RTForwardAddClusterRP::enableOpaque);
+            class_binding.property_field("_clearFlag", &RTForwardAddClusterRP::clearFlag);
+            class_binding.function("setClearColor", &RTForwardAddClusterRP::setClearColor);
+            class_binding.function("setViewport", &RTForwardAddClusterRP::setViewport);
+            class_binding.function("setScissor", &RTForwardAddClusterRP::setScissor);
+            class_binding.function("setSkyRenderNode", &RTForwardAddClusterRP::setSkyRenderNode);
+            context.class_("conchRTForwardAddClusterRP", class_binding);
         }
         {
             class_<RTLightmapData> class_binding;
