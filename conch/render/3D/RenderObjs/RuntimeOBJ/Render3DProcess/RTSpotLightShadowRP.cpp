@@ -107,8 +107,8 @@ void RTSpotLightShadowRP::_setupShadowCasterShaderValues(ShaderData* shaderValue
 }
 void RTSpotLightShadowRP::_applyRenderData(ShaderData* sceneData, ShaderData* cameraData)
 {
-    const RTSpotLight& spotLight = this->_light;
-    switch (spotLight.shadowMode) {
+    const RTSpotLight* spotLight = this->light;
+    switch (spotLight->shadowMode) {
     case ShadowMode::Hard:
         sceneData->removeDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT_SOFT_SHADOW_HIGH);
         sceneData->removeDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT_SOFT_SHADOW_LOW);
@@ -128,6 +128,8 @@ void RTSpotLightShadowRP::_applyRenderData(ShaderData* sceneData, ShaderData* ca
     sceneData->setVector(ShadowCasterPassProperty::SHADOW_PARAMS, this->_shadowParams);
 }
 
+
+/*
 void RTSpotLightShadowRP::set_position(Vector3 value)
 {
 }
@@ -135,11 +137,6 @@ void RTSpotLightShadowRP::set_position(Vector3 value)
 void RTSpotLightShadowRP::set_lightforward(Vector3 value)
 {
 }
-
-void RTSpotLightShadowRP::set_destTarget(uint32_t value)
-{
-}
-
 void RTSpotLightShadowRP::set_offsetx(uint32_t value)
 {
 }
@@ -151,5 +148,5 @@ void RTSpotLightShadowRP::set_offsety(uint32_t value)
 void RTSpotLightShadowRP::set_resolution(uint32_t value)
 {
 }
-
+*/
 } // namespace laya

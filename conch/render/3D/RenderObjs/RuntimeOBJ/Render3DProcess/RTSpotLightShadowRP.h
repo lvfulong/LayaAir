@@ -9,6 +9,7 @@ namespace laya
 {
     class RTRenderContext3D;
     class RTBaseRenderNode;
+    class WebGLInternalRT;
     class ShadowSpotData
     {
     public:
@@ -31,18 +32,18 @@ class RTSpotLightShadowRP
     void render(RTRenderContext3D* context, std::vector<RTBaseRenderNode*>& list, uint32_t count);
     void _applyRenderData(ShaderData* sceneData, ShaderData* cameraData);
     void _setupShadowCasterShaderValues(ShaderData* shaderValues, ShadowSpotData* shadowSliceData, const Vector4& shadowparams, const Vector4& shadowBias);
-    void set_position(Vector3 value);
+    void setRenderTarget(WebGLInternalRT* value) { destTarget = value; }
+    void setLight(RTSpotLight* value) { light = value; }
+    /*void set_position(Vector3 value);
     void set_lightforward(Vector3 value);
-    void set_destTarget(uint32_t value);
     void set_offsetx(uint32_t value);
     void set_offsety(uint32_t value);
-    void set_resolution(uint32_t value);
+    void set_resolution(uint32_t value);*/
     void _getShadowBias(Real shadowResolution, Vector4& out);
     void _getSpotLightShadowData(ShadowSpotData& shadowSpotData, Real resolution, Vector4& shadowParams, Matrix4x4& shadowSpotMatrices, Vector4& shadowMapSize);
   public:
     //Vector3 position;
     Vector3 lightforward;
-    uint32_t destTarget;
     //uint32_t offsetx;
     //uint32_t offsety;
    // uint32_t resolution;
@@ -56,7 +57,7 @@ class RTSpotLightShadowRP
         uint32_t _staticMask = 0;
     } spotlightCullInfo;
 
-    RTSpotLight _light;
+    RTSpotLight* light;
     Vector3 _lightPos;
     Matrix4x4 _lightWorldMatrix;
     Real _shadowResolution;
@@ -72,6 +73,7 @@ class RTSpotLightShadowRP
     Real _shadowStrength;
     ShadowSpotData _shadowSpotData;
     GLESRenderQueueList _renderQueue;
+    WebGLInternalRT* destTarget;
 };
 } // namespace laya
 #endif

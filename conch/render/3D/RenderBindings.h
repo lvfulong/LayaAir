@@ -164,14 +164,16 @@ class RenderBindings
         {
             class_<RTDirectLightShadowRP> class_binding;
             class_binding.constructor<>();
-            class_binding.function("set_light", &RTDirectLightShadowRP::set_light);
+            class_binding.function("setRenderTarget", &RTDirectLightShadowRP::setRenderTarget);
+            class_binding.function("setLight", &RTDirectLightShadowRP::setLight);
             context.class_("conchRTDirectLightShadowCastRP", class_binding);
         }
         {
             class_<RTSpotLightShadowRP> class_binding;
             class_binding.constructor<>();
-            class_binding.function("set_position", &RTSpotLightShadowRP::set_position);
-            context.class_("ConchGLESSpotLightShadowRP", class_binding);
+            class_binding.function("setRenderTarget", &RTSpotLightShadowRP::setRenderTarget);
+            class_binding.function("setLight", &RTSpotLightShadowRP::setLight);
+            context.class_("conchRTSpotLightShadowRP", class_binding);
         }
         {
             class_<RTForwardAddClusterRP> class_binding;

@@ -44,8 +44,8 @@ class RTDirectLightShadowRP : public IDirectLightShadowRP
     //void set_lightForward(const Vector3 &value);
     //void set_shadowCascadeMode(ShadowCascadesMode value);
     //void set_cameraInfo(CameraInfo value);
-    void set_destTarget(WebGLInternalRT* value);
-    void set_light(RTDirectLight* light);
+    void setRenderTarget(WebGLInternalRT* value) { destTarget = value; }
+    void setLight(RTDirectLight* light);
   private:
     void _setupShadowCasterShaderValues(ShaderData *shaderValues, const ShadowSliceData &shadowSliceData,
                                         const Vector3 &LightParam, const Vector4 &shadowBias);

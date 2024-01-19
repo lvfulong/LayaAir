@@ -17,7 +17,7 @@ namespace laya
     RTDirectLightShadowRP::~RTDirectLightShadowRP()
 {
 }
-void RTDirectLightShadowRP::set_light(RTDirectLight* light)
+void RTDirectLightShadowRP::setLight(RTDirectLight* light)
 {
     this->_light = light;
     Matrix4x4 lightWorld;
@@ -150,10 +150,7 @@ void GLESDirectLightShadowCastRP::set_cameraInfo(CameraInfo value)
 {
     // TODO
 }*/
-void RTDirectLightShadowRP::set_destTarget(WebGLInternalRT* value)
-{
-    destTarget = value;
-}
+
 void RTDirectLightShadowRP::_applyRenderData(ShaderData *scene, ShaderData *camera)
 {
     const RTDirectLight&light = *this->_light;
