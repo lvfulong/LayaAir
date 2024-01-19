@@ -4,7 +4,7 @@
 #include <render/3D/temp/ShaderInstance.h>
 #include <render/3D/temp/RenderGeometryElement.h>
 #include <render/3D/design/renderInterface/IRenderDrawContext.h>
-#include "GLESRenderContext3D.h"
+#include "render/3D/RenderObjs/RuntimeOBJ/GLESRenderContext3D.h"
 
 namespace laya
 {

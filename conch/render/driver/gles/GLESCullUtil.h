@@ -1,8 +1,8 @@
 #ifndef __GLESCullUtil_H_
 #define __GLESCullUtil_H_
 
-#include "GLESBaseRenderNode.h"
-#include "GLESDirectLightShadowCastRP.h"
+#include "render/3D/RenderObjs/RuntimeOBJ/Render3DNode/GLESBaseRenderNode.h"
+#include "render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESDirectLightShadowCastRP.h"
 #include "GLESRenderQueueList.h"
 #include "render/3D/design/RenderElement.h"
 #include "render/tempbase.h"

@@ -149,21 +149,22 @@ list(APPEND CONCH_SRC
 	render/3D/renderInstance/RenderModuleData.h
 	render/3D/renderInstance/RenderModuleData.cpp
 
-#render/driver/gles  以gles为基本的渲染驱动类
-	render/driver/gles/GLESRenderContext3D.h
-	render/driver/gles/GLESRenderContext3D.cpp	#临时引用文件
-	render/driver/gles/GLESRender3DProcess.h
-	render/driver/gles/GLESRender3DProcess.cpp
-	render/driver/gles/GLESForwardAddRP.h
-	render/driver/gles/GLESForwardAddRP.cpp
-	render/driver/gles/GLESDirectLightShadowCastRP.h
-	render/driver/gles/GLESDirectLightShadowCastRP.cpp
-	render/driver/gles/GLESSpotLightShadowRP.cpp
-	render/driver/gles/GLESSpotLightShadowRP.h
-	render/driver/gles/GLESForwardAddClusterRP.h
-	render/driver/gles/GLESForwardAddClusterRP.cpp
-	render/driver/gles/GLESBaseRenderNode.h
-	render/driver/gles/GLESBaseRenderNode.cpp
+
+	render/3D/RenderObjs/RuntimeOBJ/GLESRenderContext3D.h
+	render/3D/RenderObjs/RuntimeOBJ/GLESRenderContext3D.cpp
+
+	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESRender3DProcess.h
+	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESRender3DProcess.cpp
+	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESForwardAddRP.h
+	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESForwardAddRP.cpp
+	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESDirectLightShadowCastRP.h
+	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESDirectLightShadowCastRP.cpp
+	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESSpotLightShadowRP.cpp
+	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESSpotLightShadowRP.h
+	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESForwardAddClusterRP.h
+	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/GLESForwardAddClusterRP.cpp
+	render/3D/RenderObjs/RuntimeOBJ/Render3DNode/GLESBaseRenderNode.h
+	render/3D/RenderObjs/RuntimeOBJ/Render3DNode/GLESBaseRenderNode.cpp
 	render/driver/gles/GLESCullUtil.h
 	render/driver/gles/GLESCullUtil.cpp
 	render/tempbase.h

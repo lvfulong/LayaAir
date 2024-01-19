@@ -3,8 +3,8 @@
 #include "render/3D/ShadowCasterPassProperty.h"
 #include "render/3D/BaseCameraProperty.h"
 #include <render/3D/temp/ShaderData.h>
-#include "GLESRenderContext3D.h"
-#include "GLESCullUtil.h"
+#include "render/3D/RenderObjs/RuntimeOBJ/GLESRenderContext3D.h"
+#include "render/driver/gles/GLESCullUtil.h"
 
 namespace laya
 {

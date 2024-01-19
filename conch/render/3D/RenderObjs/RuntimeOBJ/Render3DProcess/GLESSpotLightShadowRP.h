@@ -3,8 +3,8 @@
 
 #include "render/3D/design/Render3DProcess.h"
 #include <vector>
-#include "RTSpotLight.h"
-#include "GLESRenderQueueList.h"
+#include "render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTSpotLight.h"
+#include "render/driver/gles/GLESRenderQueueList.h"
 namespace laya
 {
     class GLESRenderContext3D;

@@ -1,7 +1,7 @@
 #ifndef __GLESRenderQueueList_H_
 #define __GLESRenderQueueList_H_
 
-#include "GLESRenderContext3D.h"
+#include "render/3D/RenderObjs/RuntimeOBJ/GLESRenderContext3D.h"
 #include <render/driver/gles/QuickSort.h>
 #include <render/3D/temp/RenderElementOBJ.h>
 #include <utils/JCSingletonList.h>

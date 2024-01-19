@@ -1,11 +1,11 @@
 #ifndef __GLESDirectLightShadowCastRP_H_
 #define __GLESDirectLightShadowCastRP_H_
 
-#include "RTDirectLight.h"
+#include "render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTDirectLight.h"
 #include "render/3D/ShadowSliceData.h"
 #include "render/3D/design/Render3DProcess.h"
 #include <vector>
-#include "GLESRenderQueueList.h"
+#include "render/driver/gles/GLESRenderQueueList.h"
 #include <array>
 #include <core/math/Types.h>
 

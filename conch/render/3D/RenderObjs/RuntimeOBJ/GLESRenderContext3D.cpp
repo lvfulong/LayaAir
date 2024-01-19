@@ -1,5 +1,5 @@
 #include "GLESRenderContext3D.h"
-#include "LayaGL.h"
+#include "render/driver/gles/LayaGL.h"
 #include <render/3D/temp/RenderElementOBJ.h>
 #include "render/driver/gles/LayaGL.h"
 namespace laya
