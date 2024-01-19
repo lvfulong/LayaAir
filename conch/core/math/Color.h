@@ -96,14 +96,14 @@ namespace laya
 			out.b = Color::linearToGammaSpace(this->b);
 		    out.a = this->a;
 		}
-		/*cloneTo(destObject: any): void {
-		var destColor: Color = (<Color>destObject);
-		destColor.r = this.r;
-		destColor.g = this.g;
-		destColor.b = this.b;
-		destColor.a = this.a;
+		void cloneTo(Color& destObject)
+		{
+			destObject.r = this->r;
+			destObject.g = this->g;
+			destObject.b = this->b;
+			destObject.a = this->a;
 		}
-		clone(): any {
+		/*clone(): any {
 		var dest: Color = new Color();
 		this.cloneTo(dest);
 		return dest;

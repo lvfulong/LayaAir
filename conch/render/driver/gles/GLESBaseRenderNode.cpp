@@ -9,7 +9,7 @@ bool GLESBaseRenderNode::shadowCullPass()
     // todo
     return true;
 }
-Bounds *GLESBaseRenderNode::get_bounds()
+Bounds *GLESBaseRenderNode::getBounds()
 {
     if (nativeUpdateData)
     {
@@ -17,16 +17,16 @@ Bounds *GLESBaseRenderNode::get_bounds()
     }
     return this->bounds;
 }
-void GLESBaseRenderNode::set_bounds(Bounds* bounds)
+void GLESBaseRenderNode::setBounds(Bounds* bounds)
 {
     this->bounds = bounds;
 }
 
-void GLESBaseRenderNode::set_baseGeometryBounds(Bounds* bounds)
+void GLESBaseRenderNode::setBaseGeometryBounds(Bounds* bounds)
 {
     baseGeometryBounds = bounds;
 }
-void GLESBaseRenderNode::set_shaderData(ShaderData* data)
+void GLESBaseRenderNode::setShaderData(ShaderData* data)
 {
     this->shaderData = data;
 }
@@ -82,15 +82,15 @@ bool GLESBaseRenderNode::_needRender(BoundFrustum* pBoundFrustum)
     // TODO
     return true;
 }
-void GLESBaseRenderNode::set_renderUpdatePre(JSValueAsParam function)
+void GLESBaseRenderNode::setRenderUpdatePre(JSValueAsParam function)
 {
     m_JSFunctionRenderUpdatePre.reset(function);
 }
-void GLESBaseRenderNode::set_calculateBoundingBox(JSValueAsParam function)
+void GLESBaseRenderNode::setCalculateBoundingBox(JSValueAsParam function)
 {
     m_JSFunctionCalculateBoundingBox.reset(function);
 }
-void GLESBaseRenderNode::set_commonUniformMap(const std::vector<std::string>& value)
+void GLESBaseRenderNode::setCommonUniformMap(const std::vector<std::string>& value)
 {
     // TODO
 }

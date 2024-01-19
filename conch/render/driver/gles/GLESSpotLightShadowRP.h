@@ -3,7 +3,7 @@
 
 #include "render/3D/design/Render3DProcess.h"
 #include <vector>
-#include "GLESSpotLight.h"
+#include "RTSpotLight.h"
 #include "GLESRenderQueueList.h"
 namespace laya
 {
@@ -55,7 +55,7 @@ class GLESSpotLightShadowRP
         uint32_t _staticMask = 0;
     } spotlightCullInfo;
 
-    GLESSpotLight _light;
+    RTSpotLight _light;
     Vector3 _lightPos;
     Matrix4x4 _lightWorldMatrix;
     Real _shadowResolution;

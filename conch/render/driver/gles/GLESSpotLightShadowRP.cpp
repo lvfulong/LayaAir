@@ -107,7 +107,7 @@ void GLESSpotLightShadowRP::_setupShadowCasterShaderValues(ShaderData* shaderVal
 }
 void GLESSpotLightShadowRP::_applyRenderData(ShaderData* sceneData, ShaderData* cameraData)
 {
-    const GLESSpotLight& spotLight = this->_light;
+    const RTSpotLight& spotLight = this->_light;
     switch (spotLight.shadowMode) {
     case ShadowMode::Hard:
         sceneData->removeDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT_SOFT_SHADOW_HIGH);

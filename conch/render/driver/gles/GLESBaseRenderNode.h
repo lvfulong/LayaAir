@@ -93,68 +93,68 @@ class GLESBaseRenderNode
     void _applyLightProb();
 public:
     //binding
-    void set_distanceForSort(Real value) {  distanceForSort = value; }
-    Real get_distanceForSort() { return distanceForSort; }
+    void setDistanceForSort(Real value) {  distanceForSort = value; }
+    Real getDistanceForSort() { return distanceForSort; }
 
-    void set_sortingFudge(Real value) { sortingFudge = value; }
-    Real get_sortingFudge() { return sortingFudge; }
+    void setSortingFudge(Real value) { sortingFudge = value; }
+    Real getSortingFudge() { return sortingFudge; }
 
-    void set_transform(laya::Transform3D* value) { transform = value; }
+    void setTransform(laya::Transform3D* value) { transform = value; }
 
-    bool get_castShadow() { return castShadow; }
-    void set_castShadow(bool value) { castShadow = value; }
+    bool getCastShadow() { return castShadow; }
+    void setCastShadow(bool value) { castShadow = value; }
 
-    bool get_enable() { return enable; }
-    void set_enable(bool value) { enable = value; }
+    bool getEnable() { return enable; }
+    void setEnable(bool value) { enable = value; }
 
-    uint32_t get_renderbitFlag() { return renderbitFlag; }
-    void set_renderbitFlag(uint32_t value) { renderbitFlag = value; }
+    uint32_t getRenderbitFlag() { return renderbitFlag; }
+    void setRenderbitFlag(uint32_t value) { renderbitFlag = value; }
 
-    uint32_t get_layer() { return layer; }
-    void set_layer(uint32_t value) { layer = value; }
+    uint32_t getLayer() { return layer; }
+    void setLayer(uint32_t value) { layer = value; }
 
-    uint32_t get_staticMask() { return staticMask; }
-    void set_staticMask(uint32_t value) { staticMask = value; }
+    uint32_t getStaticMask() { return staticMask; }
+    void setStaticMask(uint32_t value) { staticMask = value; }
 
-    bool get_customCull() { return customCull; }
-    void set_customCull(bool value) { customCull = value; }
+    bool getCustomCull() { return customCull; }
+    void setCustomCull(bool value) { customCull = value; }
 
-    bool get_customCullResoult() { return customCullResoult; }
-    void set_customCullResoult(bool value) { customCullResoult = value; }
+    bool getCustomCullResoult() { return customCullResoult; }
+    void setCustomCullResoult(bool value) { customCullResoult = value; }
 
-    bool get_boundsChange() { return boundsChange; }
-    void set_boundsChange(bool value) { boundsChange = value; }
+    bool getBoundsChange() { return boundsChange; }
+    void setBoundsChange(bool value) { boundsChange = value; }
 
-    Bounds* get_bounds();
-    void set_bounds(Bounds*);
+    Bounds* getBounds();
+    void setBounds(Bounds*);
 
-    void set_baseGeometryBounds(Bounds* bounds);
-    void set_shaderData(ShaderData* data);
+    void setBaseGeometryBounds(Bounds* bounds);
+    void setShaderData(ShaderData* data);
 
-    uint32_t get_lightmapIndex() { return lightmapdata.lightmapIndex; }
-    void set_lightmapIndex(uint32_t value) { lightmapdata.lightmapIndex = value; }
+    uint32_t getLightmapIndex() { return lightmapdata.lightmapIndex; }
+    void setLightmapIndex(uint32_t value) { lightmapdata.lightmapIndex = value; }
 
-    uint32_t get_probeReflectionUpdateMark() { return probflection.probeReflectionUpdateMark; }
-    void set_probeReflectionUpdateMark(uint32_t value) { probflection.probeReflectionUpdateMark = value; }
+    uint32_t getProbeReflectionUpdateMark() { return probflection.probeReflectionUpdateMark; }
+    void setProbeReflectionUpdateMark(uint32_t value) { probflection.probeReflectionUpdateMark = value; }
 
-    IrradianceMode get_irradianceMode() { return irradianceMode; }
-    void set_irradianceMode(IrradianceMode value) { irradianceMode = value; }
+    IrradianceMode getIrradianceMode() { return irradianceMode; }
+    void setIrradianceMode(IrradianceMode value) { irradianceMode = value; }
 
-    uint32_t get_lightProbUpdateMark() { return lightprob.lightProbUpdateMark; }
-    void set_lightProbUpdateMark(uint32_t value) { lightprob.lightProbUpdateMark = value; }
+    uint32_t getLightProbUpdateMark() { return lightprob.lightProbUpdateMark; }
+    void setLightProbUpdateMark(uint32_t value) { lightprob.lightProbUpdateMark = value; }
 
-    uint32_t get_reflectionMode() { return reflectionMode; }
-    void set_reflectionMode(uint32_t value) { reflectionMode = value; }
+    uint32_t getReflectionMode() { return reflectionMode; }
+    void setReflectionMode(uint32_t value) { reflectionMode = value; }
 
-    void set_renderUpdatePre(JSValueAsParam function);
+    void setRenderUpdatePre(JSValueAsParam function);
 
-    void set_calculateBoundingBox(JSValueAsParam function);
+    void setCalculateBoundingBox(JSValueAsParam function);
 
-    void set_lightmapScaleOffset(const Vector4& value) { lightmapdata.lightmapScaleOffset = value; }
+    void setLightmapScaleOffset(const Vector4& value) { lightmapdata.lightmapScaleOffset = value; }
 
-    void set_worldParams(const Vector4& value) { worldParams = value; }
+    void setWorldParams(const Vector4& value) { worldParams = value; }
 
-    void set_commonUniformMap(const std::vector<std::string>& value);
+    void setCommonUniformMap(const std::vector<std::string>& value);
     void destroy();
 };
 } // namespace laya

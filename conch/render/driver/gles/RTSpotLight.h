@@ -1,5 +1,5 @@
-#ifndef __GLESSpotLight_H__
-#define __GLESSpotLight_H__
+#ifndef __RTSpotLight_H__
+#define __RTSpotLight_H__
 
 #include <core/math/Matrix4x4.h>
 #include <core/math/Types.h>
@@ -10,7 +10,7 @@
 namespace laya
 {
 class Transform3D;
-class GLESSpotLight
+class RTSpotLight
 {
   public:
     Transform3D* transform;
@@ -24,6 +24,10 @@ class GLESSpotLight
     Real spotRange;
     Real spotAngle;
     Vector3 _direction;
+    void setTransform(Transform3D* value)
+    {
+        this->transform = value;
+    }
 
     void setDirection(Vector3& value)
     {

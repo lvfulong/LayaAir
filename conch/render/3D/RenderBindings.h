@@ -17,6 +17,8 @@
 #include <render/driver/gles/RTModuleData.h>
 #include <render/driver/gles/RTLightmapData.h>
 #include <render/driver/gles/RTVolumetricGI.h>
+#include <render/driver/gles/RTSpotLight.h>
+#include <render/driver/gles/RTReflectionProb.h>
 #include <render/3D/temp/ShaderData.h>
 #include <core/math/Matrix4x4.h>
 #include <core/math/Matrix3x3.h>
@@ -91,31 +93,31 @@ class RenderBindings
         {
             class_<GLESBaseRenderNode> class_binding;
             class_binding.constructor<>();
-            class_binding.property("_reflectionMode", &GLESBaseRenderNode::get_reflectionMode, &GLESBaseRenderNode::set_reflectionMode);
-            class_binding.property("_lightProbUpdateMark", &GLESBaseRenderNode::get_lightProbUpdateMark, &GLESBaseRenderNode::set_lightProbUpdateMark);
-            class_binding.property("_irradianceMode", &GLESBaseRenderNode::get_irradianceMode, &GLESBaseRenderNode::set_irradianceMode);
-            class_binding.property("_probeReflectionUpdateMark", &GLESBaseRenderNode::get_probeReflectionUpdateMark, &GLESBaseRenderNode::set_probeReflectionUpdateMark);
-            class_binding.property("_lightmapIndex", &GLESBaseRenderNode::get_lightmapIndex, &GLESBaseRenderNode::set_lightmapIndex);
-            class_binding.function("set_commonUniformMap", &GLESBaseRenderNode::set_commonUniformMap);
-            class_binding.function("set_lightmapScaleOffset", &GLESBaseRenderNode::set_lightmapScaleOffset);
-            class_binding.function("set_worldParams", &GLESBaseRenderNode::set_worldParams);
+            class_binding.property("_reflectionMode", &GLESBaseRenderNode::getReflectionMode, &GLESBaseRenderNode::setReflectionMode);
+            class_binding.property("_lightProbUpdateMark", &GLESBaseRenderNode::getLightProbUpdateMark, &GLESBaseRenderNode::setLightProbUpdateMark);
+            class_binding.property("_irradianceMode", &GLESBaseRenderNode::getIrradianceMode, &GLESBaseRenderNode::setIrradianceMode);
+            class_binding.property("_probeReflectionUpdateMark", &GLESBaseRenderNode::getProbeReflectionUpdateMark, &GLESBaseRenderNode::setProbeReflectionUpdateMark);
+            class_binding.property("_lightmapIndex", &GLESBaseRenderNode::getLightmapIndex, &GLESBaseRenderNode::setLightmapIndex);
+            class_binding.function("setCommonUniformMap", &GLESBaseRenderNode::setCommonUniformMap);
+            class_binding.function("setLightmapScaleOffset", &GLESBaseRenderNode::setLightmapScaleOffset);
+            class_binding.function("setWorldParams", &GLESBaseRenderNode::setWorldParams);
             class_binding.function("destroy", &GLESBaseRenderNode::destroy);
-            class_binding.function("set_calculateBoundingBox", &GLESBaseRenderNode::set_calculateBoundingBox);
-            class_binding.function("set_renderUpdatePre", &GLESBaseRenderNode::set_renderUpdatePre);
-            class_binding.function("set_shaderData", &GLESBaseRenderNode::set_shaderData);
-            class_binding.function("set_baseGeometryBounds", &GLESBaseRenderNode::set_baseGeometryBounds);
-            class_binding.property("_bounds", &GLESBaseRenderNode::get_bounds, &GLESBaseRenderNode::set_bounds);
-            class_binding.property("_boundsChange", &GLESBaseRenderNode::get_boundsChange, &GLESBaseRenderNode::set_boundsChange);
-            class_binding.property("_customCullResoult", &GLESBaseRenderNode::get_customCullResoult, &GLESBaseRenderNode::set_customCullResoult);
-            class_binding.property("_customCull", &GLESBaseRenderNode::get_customCull, &GLESBaseRenderNode::set_customCull);
-            class_binding.property("_staticMask", &GLESBaseRenderNode::get_staticMask, &GLESBaseRenderNode::set_staticMask);
-            class_binding.property("_layer", &GLESBaseRenderNode::get_layer, &GLESBaseRenderNode::set_layer);
-            class_binding.property("_renderbitFlag", &GLESBaseRenderNode::get_renderbitFlag, &GLESBaseRenderNode::set_renderbitFlag);
-            class_binding.property("_distanceForSort", &GLESBaseRenderNode::get_distanceForSort, &GLESBaseRenderNode::set_distanceForSort);
-            class_binding.property("_sortingFudge", &GLESBaseRenderNode::get_sortingFudge, &GLESBaseRenderNode::set_sortingFudge);
-            class_binding.property("_castShadow", &GLESBaseRenderNode::get_castShadow, &GLESBaseRenderNode::set_castShadow);
-            class_binding.property("_enable", &GLESBaseRenderNode::get_enable, &GLESBaseRenderNode::set_enable);
-            class_binding.function("set_transform", &GLESBaseRenderNode::set_transform);
+            class_binding.function("setCalculateBoundingBox", &GLESBaseRenderNode::setCalculateBoundingBox);
+            class_binding.function("setRenderUpdatePre", &GLESBaseRenderNode::setRenderUpdatePre);
+            class_binding.function("setShaderData", &GLESBaseRenderNode::setShaderData);
+            class_binding.function("setBaseGeometryBounds", &GLESBaseRenderNode::setBaseGeometryBounds);
+            class_binding.property("_bounds", &GLESBaseRenderNode::getBounds, &GLESBaseRenderNode::setBounds);
+            class_binding.property("_boundsChange", &GLESBaseRenderNode::getBoundsChange, &GLESBaseRenderNode::setBoundsChange);
+            class_binding.property("_customCullResoult", &GLESBaseRenderNode::getCustomCullResoult, &GLESBaseRenderNode::setCustomCullResoult);
+            class_binding.property("_customCull", &GLESBaseRenderNode::getCustomCull, &GLESBaseRenderNode::setCustomCull);
+            class_binding.property("_staticMask", &GLESBaseRenderNode::getStaticMask, &GLESBaseRenderNode::setStaticMask);
+            class_binding.property("_layer", &GLESBaseRenderNode::getLayer, &GLESBaseRenderNode::setLayer);
+            class_binding.property("_renderbitFlag", &GLESBaseRenderNode::getRenderbitFlag, &GLESBaseRenderNode::setRenderbitFlag);
+            class_binding.property("_distanceForSort", &GLESBaseRenderNode::getDistanceForSort, &GLESBaseRenderNode::setDistanceForSort);
+            class_binding.property("_sortingFudge", &GLESBaseRenderNode::getSortingFudge, &GLESBaseRenderNode::setSortingFudge);
+            class_binding.property("_castShadow", &GLESBaseRenderNode::getCastShadow, &GLESBaseRenderNode::setCastShadow);
+            class_binding.property("_enable", &GLESBaseRenderNode::getEnable, &GLESBaseRenderNode::setEnable);
+            class_binding.function("setTransform", &GLESBaseRenderNode::setTransform);
             context.class_("conchRTBaseRenderNode", class_binding);
         }
         {
@@ -207,6 +209,49 @@ class RenderBindings
             class_binding.property_field("_intensity", &RTVolumetricGI::intensity);
             class_binding.property_field("_updateMark", &RTVolumetricGI::updateMark);
             context.class_("conchRTVolumetricGI", class_binding);
+        }
+        {
+            //RTSpotLight
+            class_<RTSpotLight> class_binding;
+            class_binding.constructor<>();
+            class_binding.property_field("_shadowResolution", &RTSpotLight::shadowResolution);
+            class_binding.property_field("_shadowDistance", &RTSpotLight::shadowDistance);
+            class_binding.property_field("_shadowMode", &RTSpotLight::shadowMode);
+            class_binding.property_field("_shadowStrength", &RTSpotLight::shadowStrength);
+            class_binding.property_field("_shadowDepthBias", &RTSpotLight::shadowDepthBias);
+            class_binding.property_field("_shadowNormalBias", &RTSpotLight::shadowNormalBias);
+            class_binding.property_field("_shadowNearPlane", &RTSpotLight::shadowNearPlane);
+            class_binding.property_field("_spotRange", &RTSpotLight::spotRange);
+            class_binding.property_field("_spotAngle", &RTSpotLight::spotAngle);
+            class_binding.function("setDirection", &RTSpotLight::setDirection);
+            class_binding.function("setTransform", &RTSpotLight::setTransform);
+            context.class_("conchRTSpotLight", class_binding);
+        }
+        {
+            class_<RTReflectionProb> class_binding;
+            class_binding.constructor<>();
+            class_binding.property_field("_iblTexRGBD", &RTReflectionProb::iblTexRGBD);
+            class_binding.property_field("_updateMark", &RTReflectionProb::updateMark);
+            class_binding.property_field("_reflectionIntensity", &RTReflectionProb::reflectionIntensity);
+            class_binding.property_field("_ambientMode", &RTReflectionProb::ambientMode);
+            class_binding.property_field("_boxProjection", &RTReflectionProb::boxProjection);
+            class_binding.property_field("_ambientIntensity", &RTReflectionProb::ambientIntensity);
+            class_binding.function_optional_override("setAmbientSH", optional_override([](RTReflectionProb& ctx, JSValueAsParam value) {
+                char* pArrayBufferPtr = NULL;
+                int nABLen = 0;
+                bool bIsArrayBuffer = extractJSAB(value, pArrayBufferPtr, nABLen);
+                if (bIsArrayBuffer)
+                {
+                    ctx.setAmbientSH((float*)pArrayBufferPtr);
+                }
+               }));
+            class_binding.function("setReflectionTexture", &RTReflectionProb::setReflectionTexture);
+            class_binding.function("setIblTex", &RTReflectionProb::setIblTex);
+            class_binding.function("setAmbientColor", &RTReflectionProb::setAmbientColor);
+            class_binding.function("setProbePosition", &RTReflectionProb::setProbePosition);
+            class_binding.function("setBounds", &RTReflectionProb::setBounds);
+            class_binding.function("destroy", &RTReflectionProb::destroy);
+            context.class_("conchRTReflectionProb", class_binding);
         }
         {
             class_<RTSceneNodeData> class_binding;
