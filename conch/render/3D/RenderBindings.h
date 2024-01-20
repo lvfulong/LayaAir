@@ -67,7 +67,7 @@ namespace laya
                 return Matrix4x4();
             }
         }
-        static JsValue ToJs(const Matrix3x3& p_vl)
+        static JsValue ToJs(const Matrix4x4& p_vl)
         {
             assert(true && "not implemented");
             return JSP_TO_JS_UNDEFINE;
@@ -83,7 +83,9 @@ class RenderBindings
         value_object<Vector3>("NativeVector3").field("x", &Vector3::x).field("y", &Vector3::y).field("z", &Vector3::z);
         value_object<Vector4>("NativeVector4").field("x", &Vector4::x).field("y", &Vector4::y).field("z", &Vector4::z).field("w", &Vector4::w);
         value_object<Color>("NativeColor").field("r", &Color::r).field("g", &Color::g).field("b", &Color::b).field("a", &Color::a);
-
+        value_object<Plane>("NativePlane").field("_normal", &Plane::normal).field("_distance", &Plane::distance);
+        value_object<BoundFrustum>("NativeBoundFrustum").field("_matrix", &BoundFrustum::_matrix).field("_near", &BoundFrustum::_near).field("_far", &BoundFrustum::_far).field("_left", &BoundFrustum::_left).field("_right", &BoundFrustum::_right).field("_top", &BoundFrustum::_top).field("_bottom", &BoundFrustum::_bottom);
+        value_object<CameraCullInfo>("NativeCameraCullInfo").field("position", &CameraCullInfo::_position).field("cullingMask", &CameraCullInfo::_cullingMask).field("staticMask", &CameraCullInfo::_staticMask).field("boundFrustum", &CameraCullInfo::_boundFrustum).field("useOcclusionCulling", &CameraCullInfo::_useOcclusionCulling);
         {
             //todo Bounds
         }
@@ -193,6 +195,7 @@ class RenderBindings
             class_binding.property_field("_enableCMD", &RTForwardAddClusterRP::enableCMD);
             class_binding.property_field("_enableOpaque", &RTForwardAddClusterRP::enableOpaque);
             class_binding.property_field("_clearFlag", &RTForwardAddClusterRP::clearFlag);
+            class_binding.function("setCameraCullInfo", &RTForwardAddClusterRP::setCameraCullInfo);
             class_binding.function("setCameraNodeData", &RTForwardAddClusterRP::setCameraNodeData);
             class_binding.function("setDestTarget", &RTForwardAddClusterRP::setDestTarget);
             class_binding.function("setDepthTarget", &RTForwardAddClusterRP::setDepthTarget);

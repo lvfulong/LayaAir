@@ -7,6 +7,7 @@
 #include <core/math/Types.h>
 #include <core/math/Vector4.h>
 #include "render/tempbase.h"
+#include "render/3D/ShadowSliceData.h"
 
 namespace laya
 {
@@ -36,12 +37,11 @@ class RTForwardAddClusterRP
       RTForwardAddClusterRP();
     ~RTForwardAddClusterRP();
     void render(RTRenderContext3D* context, std::vector<RTBaseRenderNode*> renderNodeList, uint32_t count);
-  
-    void set_cameraCullInfo(CameraCullInfo value);
-    void set_beforeForwardCmds(std::vector<uint32_t> value);
-    void set_beforeSkybox(std::vector<uint32_t> value);
-    void set_beforeTransparent(std::vector<uint32_t> value);
-    void set_destTarget(uint32_t value);
+
+    //void set_beforeForwardCmds(std::vector<uint32_t> value);
+    //void set_beforeSkybox(std::vector<uint32_t> value);
+    //void set_beforeTransparent(std::vector<uint32_t> value);
+    void setCameraCullInfo(const CameraCullInfo& value) { cameraCullInfo = value; }
     void setSkyRenderNode(RTBaseRenderNode* value) { skyRenderNode = value; }
     void setClearColor(Color& value) { value.cloneTo(this->clearColor); }
     void setScissor(Vector4& value) { value.cloneTo(this->scissor); }

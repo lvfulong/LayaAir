@@ -5,6 +5,8 @@
 #include <vector>
 #include "render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTSpotLight.h"
 #include "render/driver/gles/GLESRenderQueueList.h"
+#include "render/3D/ShadowSliceData.h"
+
 namespace laya
 {
     class RTRenderContext3D;

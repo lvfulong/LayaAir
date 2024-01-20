@@ -68,21 +68,6 @@ namespace laya
         this->opaqueList.renderQueue((RTRenderContext3D*)context);
         //TODO context.cameraData.setTexture(DepthPass.DEPTHNORMALSTEXTURE, this.depthNormalTarget);
     }
-    void RTForwardAddClusterRP::set_cameraCullInfo(CameraCullInfo value){
-        
-    }
-    void RTForwardAddClusterRP::set_beforeForwardCmds(std::vector<uint32_t> value){
-        
-    }
-    void RTForwardAddClusterRP::set_beforeSkybox(std::vector<uint32_t> value){
-        
-    }
-    void RTForwardAddClusterRP::set_beforeTransparent(std::vector<uint32_t> value){
-        
-    }
-    void RTForwardAddClusterRP::set_destTarget(uint32_t value){
-        
-    }
 
     void RTForwardAddClusterRP::opaqueTexturePass()
     {

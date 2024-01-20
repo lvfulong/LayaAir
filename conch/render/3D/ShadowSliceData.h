@@ -6,10 +6,19 @@
 #include <core/math/Vector3.h>
 #include <core/math/Plane.h>
 #include <core/math/BoundSphere.h>
+#include <core/math/BoundFrustum.h>
 
 namespace laya
 {
 class ShaderData;
+struct CameraCullInfo
+{
+    Vector3 _position;
+    bool _useOcclusionCulling;
+    BoundFrustum _boundFrustum;
+    uint32_t _cullingMask = 0;
+    uint32_t _staticMask = 0;
+};
 class ShadowSliceData
 {
   public:
