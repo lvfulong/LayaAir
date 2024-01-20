@@ -281,6 +281,15 @@ list(APPEND CONCH_SRC
 	render/3D/temp/UniformBufferObject.cpp
 	render/3D/temp/RenderElementOBJ.h
 	render/3D/temp/RenderElementOBJ.cpp
+	
+	render/3D/temp/SubShader.cpp
+	render/3D/temp/SubShader.h
+	render/3D/temp/ShaderPass.cpp
+	render/3D/temp/ShaderPass.h
+	render/3D/temp/DefineDatas.h
+	render/3D/temp/DefineDatas.cpp
+	
+
 	Audio/JCAudioManager.cpp
 	Audio/JCAudioManager.h
 	downloadCache/JCFileTable.cpp
