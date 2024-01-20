@@ -92,6 +92,12 @@ class RenderBindings
         {
             //todo conchWebGLInternalRT
         }
+         {
+            //todo WebGLInternalTex
+        }
+        {
+            //todo UniformBufferObject
+        }
         {
             class_<RTBaseRenderNode> class_binding;
             class_binding.constructor<>();
@@ -329,6 +335,12 @@ class RenderBindings
 };
 namespace internal
 {
+template <> struct is_value_object<Vector2> : std::true_type
+{
+};
+template <> struct is_wrapped_class<Vector2> : std::false_type
+{
+};
 template <> struct is_value_object<Vector3> : std::true_type
 {
 };
@@ -339,6 +351,30 @@ template <> struct is_value_object<Vector4> : std::true_type
 {
 };
 template <> struct is_wrapped_class<Vector4> : std::false_type
+{
+};
+template <> struct is_value_object<Color> : std::true_type
+{
+};
+template <> struct is_wrapped_class<Color> : std::false_type
+{
+};
+template <> struct is_value_object<Plane> : std::true_type
+{
+};
+template <> struct is_wrapped_class<Plane> : std::false_type
+{
+};
+template <> struct is_value_object<BoundFrustum> : std::true_type
+{
+};
+template <> struct is_wrapped_class<BoundFrustum> : std::false_type
+{
+};
+template <> struct is_value_object<CameraCullInfo> : std::true_type
+{
+};
+template <> struct is_wrapped_class<CameraCullInfo> : std::false_type
 {
 };
 }
