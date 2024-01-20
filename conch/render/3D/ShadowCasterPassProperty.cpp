@@ -7,6 +7,9 @@ uint32_t ShadowCasterPassProperty::SHADOW_PARAMS = 0;
 uint32_t ShadowCasterPassProperty::SHADOW_MAP_SIZE = 0;
 uint32_t ShadowCasterPassProperty::SHADOW_SPOTMATRICES = 0; 
 uint32_t ShadowCasterPassProperty::SHADOW_SPOTMAP_SIZE = 0; 
+uint32_t ShadowCasterPassProperty::SHADOW_MATRICES = 0;
+uint32_t ShadowCasterPassProperty::SHADOW_SPLIT_SPHERES = 0;
+
 void ShadowCasterPassProperty::__init__()
 {
     ShadowCasterPassProperty::SHADOW_BIAS = LayaGL::m_pWebglEngine->propertyNameToID("u_ShadowBias");
@@ -23,5 +26,9 @@ void ShadowCasterPassProperty::__init__()
         LayaGL::m_pWebglEngine->propertyNameToID("u_SpotViewProjectMatrix");
     ShadowCasterPassProperty::SHADOW_SPOTMAP_SIZE =
         LayaGL::m_pWebglEngine->propertyNameToID("u_SpotShadowMapSize");
+    ShadowCasterPassProperty::SHADOW_MATRICES =
+        LayaGL::m_pWebglEngine->propertyNameToID("u_ShadowMatrices");
+    ShadowCasterPassProperty::SHADOW_SPLIT_SPHERES =
+        LayaGL::m_pWebglEngine->propertyNameToID("u_ShadowSplitSpheres");
 }
 }; // namespace laya

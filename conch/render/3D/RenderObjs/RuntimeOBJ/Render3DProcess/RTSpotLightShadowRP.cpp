@@ -16,7 +16,18 @@ RTSpotLightShadowRP::RTSpotLightShadowRP() : _renderQueue(false)
 RTSpotLightShadowRP::~RTSpotLightShadowRP()
 {
 }
-
+void RTSpotLightShadowRP::setLight(RTSpotLight* value) 
+{ 
+    this->light = value;
+    this->_shadowResolution = this->light->shadowResolution;
+    this->_lightWorldMatrix = this->light->getWorldMatrix(this->_lightWorldMatrix);
+    this->_lightPos = this->light->transform->getPosition();
+    this->_spotAngle = this->light->spotAngle;
+    this->_spotRange = this->light->spotRange;
+    this->_shadowStrength = this->light->shadowStrength;
+    // this.destTarget && RenderTexture.recoverToPool(this.destTarget);// TODO 优化
+    //this.destTarget = ShadowUtils.getTemporaryShadowTexture(this._shadowResolution, this._shadowResolution, ShadowMapFormat.bit16);
+}
 void RTSpotLightShadowRP::update(RTRenderContext3D* context)
 {
     ShadowSpotData& shadowSpotData = this->_shadowSpotData;
@@ -27,7 +38,7 @@ void RTSpotLightShadowRP::render(RTRenderContext3D* context, std::vector<RTBaseR
 {
     ShaderData* shaderValues = context->sceneData;
     context->pipelineMode = "ShadowCaster";
-    // TODOcontext->setRenderTarget(destTarget);
+    context->setRenderTarget(destTarget);
 
     ShadowSpotData& shadowSpotData = this->_shadowSpotData;
     this->_getShadowBias(shadowSpotData.resolution, this->_shadowBias);
@@ -47,7 +58,8 @@ void RTSpotLightShadowRP::render(RTRenderContext3D* context, std::vector<RTBaseR
     //    Viewport _tempViewport(shadowSpotData.offsetX, shadowSpotData.offsetY, shadowSpotData.resolution, shadowSpotData.resolution);
     //    Vector4 tempVec4(shadowSpotData.offsetX, shadowSpotData.offsetY, shadowSpotData.resolution, shadowSpotData.resolution);
     //}
-
+    context->setViewport(_tempViewport);
+    context->setScissor(tempVec4);
     context->setClearData(static_cast<RenderClearFlagBits>(RenderClearFlag::Depth), Color::BLACK, 1.0f, 0);
     _renderQueue.renderQueue(context);
     // TODOthis->_applyCasterPassCommandBuffer(context);
@@ -122,7 +134,6 @@ void RTSpotLightShadowRP::_applyRenderData(ShaderData* sceneData, ShaderData* ca
         sceneData->removeDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT_SOFT_SHADOW_LOW);
         break;
     }
-    //todo sceneData.setTexture(ShadowCasterPass.SHADOW_SPOTMAP, this.destTarget);
     sceneData->setMatrix4x4(ShadowCasterPassProperty::SHADOW_SPOTMATRICES, this->_shadowSpotMatrices);
     sceneData->setVector(ShadowCasterPassProperty::SHADOW_SPOTMAP_SIZE, this->_shadowSpotMapSize);
     sceneData->setVector(ShadowCasterPassProperty::SHADOW_PARAMS, this->_shadowParams);

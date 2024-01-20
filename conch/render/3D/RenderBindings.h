@@ -67,7 +67,7 @@ namespace laya
                 return Matrix4x4();
             }
         }
-        static JsValue ToJs(const Matrix3x3& p_vl)
+        static JsValue ToJs(const Matrix4x4& p_vl)
         {
             assert(true && "not implemented");
             return JSP_TO_JS_UNDEFINE;
@@ -83,12 +83,20 @@ class RenderBindings
         value_object<Vector3>("NativeVector3").field("x", &Vector3::x).field("y", &Vector3::y).field("z", &Vector3::z);
         value_object<Vector4>("NativeVector4").field("x", &Vector4::x).field("y", &Vector4::y).field("z", &Vector4::z).field("w", &Vector4::w);
         value_object<Color>("NativeColor").field("r", &Color::r).field("g", &Color::g).field("b", &Color::b).field("a", &Color::a);
-
+        value_object<Plane>("NativePlane").field("_normal", &Plane::normal).field("_distance", &Plane::distance);
+        value_object<BoundFrustum>("NativeBoundFrustum").field("_matrix", &BoundFrustum::_matrix).field("_near", &BoundFrustum::_near).field("_far", &BoundFrustum::_far).field("_left", &BoundFrustum::_left).field("_right", &BoundFrustum::_right).field("_top", &BoundFrustum::_top).field("_bottom", &BoundFrustum::_bottom);
+        value_object<CameraCullInfo>("NativeCameraCullInfo").field("position", &CameraCullInfo::_position).field("cullingMask", &CameraCullInfo::_cullingMask).field("staticMask", &CameraCullInfo::_staticMask).field("boundFrustum", &CameraCullInfo::_boundFrustum).field("useOcclusionCulling", &CameraCullInfo::_useOcclusionCulling);
         {
             //todo Bounds
         }
         {
             //todo conchWebGLInternalRT
+        }
+         {
+            //todo WebGLInternalTex
+        }
+        {
+            //todo UniformBufferObject
         }
         {
             class_<RTBaseRenderNode> class_binding;
@@ -168,6 +176,7 @@ class RenderBindings
         {
             class_<RTDirectLightShadowRP> class_binding;
             class_binding.constructor<>();
+            class_binding.function("setCameraNodeData", &RTDirectLightShadowRP::setCameraNodeData);
             class_binding.function("setRenderTarget", &RTDirectLightShadowRP::setRenderTarget);
             class_binding.function("setLight", &RTDirectLightShadowRP::setLight);
             context.class_("conchRTDirectLightShadowCastRP", class_binding);
@@ -185,13 +194,19 @@ class RenderBindings
             class_binding.property_field("_depthNormalPipelineMode", &RTForwardAddClusterRP::depthNormalPipelineMode);
             class_binding.property_field("_depthPipelineMode", &RTForwardAddClusterRP::depthPipelineMode);
             class_binding.property_field("_pipelineMode", &RTForwardAddClusterRP::pipelineMode);
-            class_binding.property_field("_pipelineMode", &RTForwardAddClusterRP::pipelineMode);
+            class_binding.property_field("_depthTextureMode", &RTForwardAddClusterRP::depthTextureMode);
             class_binding.property_field("_enableOpaqueTexture", &RTForwardAddClusterRP::enableOpaqueTexture);
             class_binding.property_field("_enableCMD", &RTForwardAddClusterRP::enableCMD);
             class_binding.property_field("_enableTransparent", &RTForwardAddClusterRP::enableTransparent);
             class_binding.property_field("_enableCMD", &RTForwardAddClusterRP::enableCMD);
             class_binding.property_field("_enableOpaque", &RTForwardAddClusterRP::enableOpaque);
             class_binding.property_field("_clearFlag", &RTForwardAddClusterRP::clearFlag);
+            class_binding.function("setCameraCullInfo", &RTForwardAddClusterRP::setCameraCullInfo);
+            class_binding.function("setCameraNodeData", &RTForwardAddClusterRP::setCameraNodeData);
+            class_binding.function("setDestTarget", &RTForwardAddClusterRP::setDestTarget);
+            class_binding.function("setDepthTarget", &RTForwardAddClusterRP::setDepthTarget);
+            class_binding.function("setDepthNormalTarget", &RTForwardAddClusterRP::setDepthNormalTarget);
+            class_binding.function("setOpaqueTexture", &RTForwardAddClusterRP::setOpaqueTexture);
             class_binding.function("setClearColor", &RTForwardAddClusterRP::setClearColor);
             class_binding.function("setViewport", &RTForwardAddClusterRP::setViewport);
             class_binding.function("setScissor", &RTForwardAddClusterRP::setScissor);
@@ -320,6 +335,12 @@ class RenderBindings
 };
 namespace internal
 {
+template <> struct is_value_object<Vector2> : std::true_type
+{
+};
+template <> struct is_wrapped_class<Vector2> : std::false_type
+{
+};
 template <> struct is_value_object<Vector3> : std::true_type
 {
 };
@@ -330,6 +351,30 @@ template <> struct is_value_object<Vector4> : std::true_type
 {
 };
 template <> struct is_wrapped_class<Vector4> : std::false_type
+{
+};
+template <> struct is_value_object<Color> : std::true_type
+{
+};
+template <> struct is_wrapped_class<Color> : std::false_type
+{
+};
+template <> struct is_value_object<Plane> : std::true_type
+{
+};
+template <> struct is_wrapped_class<Plane> : std::false_type
+{
+};
+template <> struct is_value_object<BoundFrustum> : std::true_type
+{
+};
+template <> struct is_wrapped_class<BoundFrustum> : std::false_type
+{
+};
+template <> struct is_value_object<CameraCullInfo> : std::true_type
+{
+};
+template <> struct is_wrapped_class<CameraCullInfo> : std::false_type
 {
 };
 }

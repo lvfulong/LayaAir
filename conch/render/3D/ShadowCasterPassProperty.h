@@ -14,6 +14,8 @@ class ShadowCasterPassProperty
     static uint32_t SHADOW_MAP_SIZE;
     static uint32_t SHADOW_SPOTMAP_SIZE;
     static uint32_t SHADOW_SPOTMATRICES;
+    static uint32_t SHADOW_MATRICES;
+    static uint32_t SHADOW_SPLIT_SPHERES;
     static void __init__();
 };
 
