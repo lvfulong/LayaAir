@@ -25,14 +25,6 @@ class RTForwardAddClusterRP
         DepthAndDepthNormals = 3,
         MotionVectors = 4,
     };
-
-    /*struct CameraInfo
-    {
-        Real farPlane;
-        Real nearPlane;
-      
-    };*/
-
   public:
       RTForwardAddClusterRP();
     ~RTForwardAddClusterRP();
@@ -82,7 +74,6 @@ private:
     Color _defaultNormalDepthColor;
     std::string depthPipelineMode;
     Vector4 _zBufferParams;
-    //CameraInfo camera;
     Vector4 scissor;
     DepthTextureMode depthTextureMode;
     bool enableCMD;

@@ -44,14 +44,14 @@ namespace laya
         context->setViewport(_tempViewport);
         context->setScissor(tempVec4);
         context->setClearData(static_cast<RenderClearFlagBits>(RenderClearFlag::Depth), Color::BLACK, 1, 0);
-        //TODO  context->setRenderTarget(this.depthTarget._renderTarget);
+        context->setRenderTarget(this->depthTarget);
         this->opaqueList.renderQueue((RTRenderContext3D*)context);
         //渲染完后传入使用的参数
         auto far = this->camera->farplane;
         auto near = this->camera->nearplane;
         this->_zBufferParams.setValue(1.0 - far / near, far / near, (near - far) / (near * far), 1 / near);
         context->cameraData->setVector(DepthPassProperty::DEFINE_SHADOW_BIAS, DepthPassProperty::SHADOW_BIAS);
-        //TODO context.cameraData.setTexture(DepthPassProperty::DEPTHTEXTURE, this.depthTarget);
+
         context->cameraData->setVector(DepthPassProperty::DEPTHZBUFFERPARAMS, this->_zBufferParams);
         shadervalue->removeDefine(DepthPassProperty::DEPTHPASS);
     }
@@ -64,9 +64,8 @@ namespace laya
         context->setViewport(_tempViewport);
         context->setScissor(tempVec4);
         context->setClearData(static_cast<uint32_t>(RenderClearFlag::Color) | static_cast<uint32_t>(RenderClearFlag::Depth), this->_defaultNormalDepthColor, 1, 0);
-        //TODO context->setRenderTarget(this.depthNormalTarget._renderTarget);
+        context->setRenderTarget(this->depthNormalTarget);
         this->opaqueList.renderQueue((RTRenderContext3D*)context);
-        //TODO context.cameraData.setTexture(DepthPass.DEPTHNORMALSTEXTURE, this.depthNormalTarget);
     }
 
     void RTForwardAddClusterRP::opaqueTexturePass()
@@ -104,6 +103,6 @@ namespace laya
         const Vector4& cacheScissor = RTForwardAddClusterRP::_contextScissorPortCatch;
         context->setViewport(cacheViewPor);
         context->setScissor(cacheScissor);
-        // todo context->setRenderTarget(this.destTarget._renderTarget);
+        context->setRenderTarget(this->destTarget);
     }
 } // namespace laya

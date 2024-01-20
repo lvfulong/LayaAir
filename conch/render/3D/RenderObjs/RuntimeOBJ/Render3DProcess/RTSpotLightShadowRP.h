@@ -35,7 +35,7 @@ class RTSpotLightShadowRP
     void _applyRenderData(ShaderData* sceneData, ShaderData* cameraData);
     void _setupShadowCasterShaderValues(ShaderData* shaderValues, ShadowSpotData* shadowSliceData, const Vector4& shadowparams, const Vector4& shadowBias);
     void setRenderTarget(WebGLInternalRT* value) { destTarget = value; }
-    void setLight(RTSpotLight* value) { light = value; }
+    void setLight(RTSpotLight* value);
     /*void set_position(Vector3 value);
     void set_lightforward(Vector3 value);
     void set_offsetx(uint32_t value);
@@ -45,19 +45,19 @@ class RTSpotLightShadowRP
     void _getSpotLightShadowData(ShadowSpotData& shadowSpotData, Real resolution, Vector4& shadowParams, Matrix4x4& shadowSpotMatrices, Vector4& shadowMapSize);
   public:
     //Vector3 position;
-    Vector3 lightforward;
+    //Vector3 lightforward;
     //uint32_t offsetx;
     //uint32_t offsety;
    // uint32_t resolution;
 
-    struct CameraFrustumCullInfo
+    /*struct CameraFrustumCullInfo
     {
         Vector3 _position;
         bool _useOcclusionCulling;
         BoundFrustum _boundFrustum;
         uint32_t _cullingMask;
         uint32_t _staticMask = 0;
-    } spotlightCullInfo;
+    } spotlightCullInfo;*/
 
     RTSpotLight* light;
     Vector3 _lightPos;
