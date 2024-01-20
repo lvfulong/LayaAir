@@ -211,6 +211,10 @@ namespace laya
 	{
 		
 	}
+	//void ShaderData::setBufferJS(int32_t index, JSValueAsParam value)
+	//{
+		//todo
+	//}
 	//void ShaderData::setTexture(int32_t index, const Vector3& value)
 	//{
 	//	m_data[index] = value;

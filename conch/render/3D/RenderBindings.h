@@ -19,6 +19,8 @@
 #include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTVolumetricGI.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTSpotLight.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTReflectionProb.h>
+#include <render/3D/temp/RenderElementOBJ.h>
+#include <render/3D/temp/ShaderPass.h>
 #include <render/3D/temp/ShaderData.h>
 #include <core/math/Matrix4x4.h>
 #include <core/math/Matrix3x3.h>
@@ -97,6 +99,18 @@ class RenderBindings
         }
         {
             //todo UniformBufferObject
+        }
+        {
+            class_<ShaderPass> class_binding;
+            class_binding.constructor<>();
+            class_binding.function("setCreateShaderInstanceFunction", &ShaderPass::setCreateShaderInstanceFunction);
+            context.class_("conchShaderPass", class_binding);
+        }
+        {
+            class_<RenderElementOBJ> class_binding;
+            class_binding.constructor<>();
+            //class_binding.function("renderFowarAddCameraPass", &RTRender3DProcess::renderFowarAddCameraPass);
+            context.class_("conchRTRenderElementOBJ", class_binding);
         }
         {
             class_<RTBaseRenderNode> class_binding;
@@ -323,7 +337,7 @@ class RenderBindings
             class_binding.function("setColor", &ShaderData::setColor);
             class_binding.function("setMatrix4x4", &ShaderData::setMatrix4x4);
             class_binding.function("setMatrix3x3", &ShaderData::setMatrix3x3);
-            //todo class_binding.function("setBuffer", &ShaderData::setBuffer);
+            //class_binding.function("setBuffer", &ShaderData::setBufferJS);
             class_binding.function("cloneTo", &ShaderData::cloneTo);
             class_binding.function("destroy", &ShaderData::destroy);
             context.class_("conchRTShaderData", class_binding);
