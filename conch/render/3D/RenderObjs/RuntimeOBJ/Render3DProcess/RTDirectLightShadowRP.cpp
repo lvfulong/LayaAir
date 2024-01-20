@@ -6,7 +6,7 @@
 #include <render/3D/ShadowMode.h>
 #include <render/3D/ShadowUtils.h>
 #include <render/3D/temp/ShaderData.h>
-
+#include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTModuleData.h>
 namespace laya
 {
     RTDirectLightShadowRP::RTDirectLightShadowRP() : _renderQueue(false)
@@ -51,23 +51,23 @@ void RTDirectLightShadowRP::update(RTRenderContext3D*context)
 {
     std::vector<F32> &splitDistance = this->_cascadesSplitDistance;
     std::vector<Plane> &frustumPlanes = this->_frustumPlanes;
-    auto cameraNear = this->camera.nearPlane;
-    auto shadowFar = std::min(this->camera.farPlane, this->_light->shadowDistance);
+    auto cameraNear = this->camera->nearplane;
+    auto shadowFar = std::min(this->camera->farplane, this->_light->shadowDistance);
     // var shadowMatrices : Float32Array = this->_shadowMatrices;
     // var boundSpheres : Float32Array = this->_splitBoundSpheres;
     ShadowUtils::getCascadesSplitDistance(this->_light->shadowTwoCascadeSplits, this->_light->_shadowFourCascadeSplits,
-                                          cameraNear, shadowFar, this->camera.fieldOfView * MathUtils3D::Deg2Rad,
-                                          this->camera.aspectRatio, this->shadowCastMode, splitDistance);
-    ShadowUtils::getCameraFrustumPlanes(this->camera.projectionViewMatrix, frustumPlanes);
+                                          cameraNear, shadowFar, this->camera->fieldOfView * MathUtils3D::Deg2Rad,
+                                          this->camera->aspectRatio, this->shadowCastMode, splitDistance);
+    ShadowUtils::getCameraFrustumPlanes(this->camera->projectViewMatrix, frustumPlanes);
     Vector3 forward;
-    // this.camera._transform.getForward(forward);
-    Vector3::normalize(this->camera.forward, forward);
+    this->camera->transform->getForward(forward);
+    Vector3::normalize(forward, forward);
     for (int i = 0; i < this->_cascadeCount; i++)
     {
         ShadowSliceData &sliceData = this->_shadowSliceDatas[i];
         sliceData.sphereCenterZ = ShadowUtils::getBoundSphereByFrustum(
-            splitDistance[i], splitDistance[i + 1], this->camera.fieldOfView * MathUtils3D::Deg2Rad,
-            this->camera.aspectRatio, this->camera.position, forward, sliceData.splitBoundSphere);
+            splitDistance[i], splitDistance[i + 1], this->camera->fieldOfView * MathUtils3D::Deg2Rad,
+            this->camera->aspectRatio, this->camera->transform->getPosition(), forward, sliceData.splitBoundSphere);
         ShadowUtils::getDirectionLightShadowCullPlanes(&frustumPlanes[0], i, &splitDistance[0], cameraNear,
                                                        this->_lightForward, sliceData);
         ShadowUtils::getDirectionalLightMatrices(this->_lightUp, this->_lightSide, this->_lightForward, i,
@@ -87,8 +87,8 @@ void RTDirectLightShadowRP::render(RTRenderContext3D* context, std::vector<RTBas
 {
     ShaderData *shaderValues = context->sceneData;
     context->pipelineMode = "ShadowCaster";
-    // too var shadowMap = this.destTarget
-    // too context.setRenderTarget(shadowMap);
+    auto shadowMap = this->destTarget;
+    context->setRenderTarget(shadowMap);
     // 需要把shadowmap clear Depth;
     for (int i = 0, n = this->_cascadeCount; i < n; i++)
     {
@@ -132,25 +132,6 @@ void RTDirectLightShadowRP::render(RTRenderContext3D* context, std::vector<RTBas
     }
     this->_applyRenderData(context->sceneData, context->cameraData);
 }
-
-/*void GLESDirectLightShadowCastRP::set_lightUp(const Vector3& value)
-{
-}
-void GLESDirectLightShadowCastRP::set_lightSide(const Vector3 &value)
-{
-}
-void GLESDirectLightShadowCastRP::set_lightForward(const Vector3 &value)
-{
-}
-
-void GLESDirectLightShadowCastRP::set_shadowCascadeMode(ShadowCascadesMode value)
-{
-}
-void GLESDirectLightShadowCastRP::set_cameraInfo(CameraInfo value)
-{
-    // TODO
-}*/
-
 void RTDirectLightShadowRP::_applyRenderData(ShaderData *scene, ShaderData *camera)
 {
     const RTDirectLight&light = *this->_light;
@@ -174,11 +155,10 @@ void RTDirectLightShadowRP::_applyRenderData(ShaderData *scene, ShaderData *came
         scene->removeDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SOFT_SHADOW_LOW);
         break;
     }
-    // scene.setTexture(ShadowCasterPass.SHADOW_MAP, this.destTarget); todo
-    // scene.setBuffer(ShadowCasterPass.SHADOW_MATRICES, this._shadowMatrices); todo
+    scene->setBuffer(ShadowCasterPassProperty::SHADOW_MATRICES, (uint8_t*)this->_shadowMatrices.data(), _shadowMatrices.size() * sizeof(F32));
     scene->setVector(ShadowCasterPassProperty::SHADOW_MAP_SIZE, this->_shadowMapSize);
     scene->setVector(ShadowCasterPassProperty::SHADOW_PARAMS, this->_shadowParams);
-    // scene.setBuffer(ShadowCasterPass.SHADOW_SPLIT_SPHERES, this._splitBoundSpheres); todo
+    scene->setBuffer(ShadowCasterPassProperty::SHADOW_SPLIT_SPHERES, (uint8_t*)this->_splitBoundSpheres.data(), this->_splitBoundSpheres.size() * sizeof(F32));
 }
 void RTDirectLightShadowRP::getShadowBias(const Matrix4x4 &shadowProjectionMatrix, double shadowResolution,
                                                 Vector4 &out)

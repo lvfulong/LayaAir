@@ -18,20 +18,9 @@ class ShaderData;
 class WebGLInternalRT;
 class GLESRenderContext3D;
 class RTBaseRenderNode;
+class RTCameraNodeData;
 class RTDirectLightShadowRP : public IDirectLightShadowRP
 {
-  public:
-    struct CameraInfo
-    {
-        Real farPlane;
-        Real nearPlane;
-        Real fieldOfView;
-        Real aspectRatio;
-        Vector3 position;
-        Vector3 forward;
-        Matrix4x4 projectionViewMatrix;
-    };
-
   public:
       RTDirectLightShadowRP();
     ~RTDirectLightShadowRP();
@@ -39,13 +28,11 @@ class RTDirectLightShadowRP : public IDirectLightShadowRP
     void update(RTRenderContext3D* context);
     void render(RTRenderContext3D* context, std::vector<RTBaseRenderNode*>& list, uint32_t count);
 
-    //void set_lightUp(const Vector3 &value);
-    //void set_lightSide(const Vector3 &value);
-    //void set_lightForward(const Vector3 &value);
-    //void set_shadowCascadeMode(ShadowCascadesMode value);
-    //void set_cameraInfo(CameraInfo value);
+public:
+    //js bindings
     void setRenderTarget(WebGLInternalRT* value) { destTarget = value; }
     void setLight(RTDirectLight* light);
+    void setCameraNodeData(RTCameraNodeData* value) { camera = value; }
   private:
     void _setupShadowCasterShaderValues(ShaderData *shaderValues, const ShadowSliceData &shadowSliceData,
                                         const Vector3 &LightParam, const Vector4 &shadowBias);
@@ -57,19 +44,17 @@ class RTDirectLightShadowRP : public IDirectLightShadowRP
     Vector3 _lightSide;
     Vector3 _lightForward;
     ShadowCascadesMode shadowCastMode;
-    CameraInfo camera;
+    RTCameraNodeData* camera = nullptr;
     WebGLInternalRT* destTarget;
     std::array<F32, 16 * _maxCascades> _shadowMatrices;
     std::array<F32, 4 * _maxCascades> _splitBoundSpheres;
     std::vector<Real> _cascadesSplitDistance;
-    // std::vector<DirectLightFrustumCullInfo> cullInfos;
     ShadowCullInfo _shadowCullInfo;
     uint32_t pipelineMode;
     RTDirectLight* _light;
     Vector4 _shadowMapSize;
     Vector4 _shadowParams;
     Vector4 _shadowBias;
-    //ShadowSpotData _shadowSpotData;
     uint32_t _cascadeCount = 0;
     GLESRenderQueueList _renderQueue;
     std::array<ShadowSliceData, 4> _shadowSliceDatas;

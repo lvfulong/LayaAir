@@ -10,6 +10,7 @@
 
 namespace laya
 {
+    class RTCameraNodeData;
     class RTRenderContext3D;
     class RTBaseRenderNode;
 class RTForwardAddClusterRP
@@ -24,12 +25,12 @@ class RTForwardAddClusterRP
         MotionVectors = 4,
     };
 
-    struct CameraInfo
+    /*struct CameraInfo
     {
         Real farPlane;
         Real nearPlane;
       
-    };
+    };*/
 
   public:
       RTForwardAddClusterRP();
@@ -45,6 +46,11 @@ class RTForwardAddClusterRP
     void setClearColor(Color& value) { value.cloneTo(this->clearColor); }
     void setScissor(Vector4& value) { value.cloneTo(this->scissor); }
     void setViewport(Viewport& value) { value.cloneTo(this->viewPort); }
+    void setOpaqueTexture(WebGLInternalRT* value) { opaqueTexture = value; }
+    void setDepthNormalTarget(WebGLInternalRT* value) { depthNormalTarget = value; }
+    void setDepthTarget(WebGLInternalRT* value) { depthTarget = value; }
+    void setDestTarget(WebGLInternalRT* value) { destTarget = value; }
+    void setCameraNodeData(RTCameraNodeData* value) { camera = value; }
 private:
     void _recoverRenderContext3D(RTRenderContext3D* context);
     void _mainPass(RTRenderContext3D* context);
@@ -56,9 +62,11 @@ private:
     std::vector<uint32_t> beforeForwardCmds;
     std::vector<uint32_t> beforeSkyboxCmds;
     std::vector<uint32_t> beforeTransparentCmds;
-    uint32_t destTarget;
-    uint32_t depthTarget;
-    uint32_t depthNormalTarget;
+    RTCameraNodeData* camera;
+    WebGLInternalRT* opaqueTexture;
+    WebGLInternalRT* destTarget;
+    WebGLInternalRT* depthTarget;
+    WebGLInternalRT* depthNormalTarget;
     RTBaseRenderNode*skyRenderNode;
     DepthTextureMode renderpassNode;
     static Viewport _context3DViewPortCatch;
@@ -74,12 +82,13 @@ private:
     Color _defaultNormalDepthColor;
     std::string depthPipelineMode;
     Vector4 _zBufferParams;
-    CameraInfo camera;
+    //CameraInfo camera;
     Vector4 scissor;
     DepthTextureMode depthTextureMode;
     bool enableCMD;
     bool enableTransparent;
     bool enableOpaqueTexture;
+    
 };
 } // namespace laya
 #endif

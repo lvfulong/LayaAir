@@ -85,7 +85,7 @@ namespace laya
 		void setColor(int32_t index, const Color& value);
 		void setMatrix4x4(int32_t index, const Matrix4x4& value);
 		void setMatrix3x3(int32_t index, const Matrix3x3& value);
-		//void setBuffer(int32_t index, JSValueAsParam value);
+		void setBuffer(int32_t index, uint8_t* data, uint32_t lengthInBytes);
 		void addDefine(ShaderDefine* define);
 		void removeDefine(ShaderDefine* define);
 

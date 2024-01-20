@@ -3,6 +3,8 @@
 #include "render/3D/DepthPassProperty.h"
 #include <render/3D/temp/ShaderData.h>
 #include "render/driver/gles/GLESCullUtil.h"
+#include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTModuleData.h>
+
 namespace laya
 {
     Viewport RTForwardAddClusterRP::_context3DViewPortCatch =  Viewport(0, 0, 0, 0);

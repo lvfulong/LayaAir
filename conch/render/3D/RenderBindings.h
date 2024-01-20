@@ -168,6 +168,7 @@ class RenderBindings
         {
             class_<RTDirectLightShadowRP> class_binding;
             class_binding.constructor<>();
+            class_binding.function("setCameraNodeData", &RTDirectLightShadowRP::setCameraNodeData);
             class_binding.function("setRenderTarget", &RTDirectLightShadowRP::setRenderTarget);
             class_binding.function("setLight", &RTDirectLightShadowRP::setLight);
             context.class_("conchRTDirectLightShadowCastRP", class_binding);
