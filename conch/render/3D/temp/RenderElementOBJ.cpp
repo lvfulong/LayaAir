@@ -86,9 +86,9 @@ namespace laya
         std::vector<ShaderPass*> passes = subshader->shaderpasses;
         _clearShaderInstance();
         for (uint32_t j = 0, m = passes.size(); j < m; j++) {
-            ShaderPass pass = *passes[j];
+            ShaderPass* pass = passes[j];
             //NOTE:this will cause maybe a shader not render but do prepare before，but the developer can avoide this manual,for example shaderCaster=false.
-            if (pass.pipelineMode != context->pipelineMode)
+            if (pass->pipelineMode != context->pipelineMode)
                 continue;
 
 
@@ -104,17 +104,17 @@ namespace laya
                 comDef->addDefineDatas(context->cameraData->_defineDatas);
             if (renderShaderData != nullptr) {
                 comDef->addDefineDatas(renderShaderData->_defineDatas);
-                pass.nodeCommonMap = owner->commonUniformMap;
+                pass->nodeCommonMap = owner->commonUniformMap;
             }
             else {
-                pass.nodeCommonMap.clear();
+                pass->nodeCommonMap.clear();
             }
             comDef->addDefineDatas(materialShaderData->_defineDatas);
 
-            ShaderInstance* shader = pass.getCacheShader(comDef);
+            ShaderInstance* shader = pass->getCacheShader(comDef);
             if (shader == nullptr) {
-                pass.createShaderInstance(comDef);
-                shader = pass.getCacheShader(comDef);
+                pass->createShaderInstance(comDef);
+                shader = pass->getCacheShader(comDef);
             }
             _addShaderInstance(shader);
         }

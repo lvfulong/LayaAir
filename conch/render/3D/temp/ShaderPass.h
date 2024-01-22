@@ -18,13 +18,15 @@ namespace laya{
     public:
         //binds
         void setCreateShaderInstanceFunction(JSValueAsParam value);
+        void createShaderInstance(DefineDatas* compileDefine);
     private:
         void _resizeCacheShaderMap(void* cacheMap, uint32_t hierarchy, uint32_t resizeLength);
-        void createShaderInstance(DefineDatas* compileDefine);
+      
     public:
         std::string pipelineMode;
         bool statefirst = false;
         DefineDatas validDefine;
+        std::vector<std::string> nodeCommonMap;
     private:
         std::unordered_map<uint32_t, void*> _cacheSharders{};
         uint32_t _cacheShaderHierarchy = 1;
