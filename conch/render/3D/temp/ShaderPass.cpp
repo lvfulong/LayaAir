@@ -103,5 +103,12 @@ namespace laya{
         //调用绑定好的生成shaderInstance的方法
         //TODO
     }
-
+    void ShaderPass::setCreateShaderInstanceFunction(JSValueAsParam value)
+    {
+        m_createShaderInstanceFunctionJS.reset(value);
+    }
+    void ShaderPass::callCreateShaderInstanceFunction()
+    {
+        m_createShaderInstanceFunctionJS.call<void>(getCurrentContext().global());//todo check this
+    }
 }

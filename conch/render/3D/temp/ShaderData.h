@@ -89,7 +89,7 @@ namespace laya
 		void setBuffer(int32_t index, uint8_t* data, uint32_t lengthInBytes);
 		void addDefine(ShaderDefine* define);
 		void removeDefine(ShaderDefine* define);
-
+		//void setBufferJS(int32_t index, JSValueAsParam value);
 		void cloneTo(ShaderData* destObject);
 	private:
 
