@@ -8,6 +8,7 @@
 #include "render/tempbase.h"
 #include <utils/JCSingletonList.h>
 #include <render/3D/design/renderEnum/RenderClearFlag.h>
+#include <render/3D/temp/DefineDatas.h>
 
 
 
@@ -34,8 +35,10 @@ namespace laya{
      void setSceneNodeData(RTSceneNodeData* value) { sceneNodeData = value; }
      void setCameraNodeData(RTCameraModuleData* value) { cameraNodeData = value; }
      void setGlobalShaderData(ShaderData* value);
+     void setglobalConfigShaderData(DefineDatas* value);
  public:
      ShaderData* globalShaderData;
+     DefineDatas* globalConfigShaderData;
      WebGLInternalRT* _renderTarget;
     Viewport viewPort;
     Vector4 scissor;

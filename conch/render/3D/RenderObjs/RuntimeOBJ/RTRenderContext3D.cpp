@@ -35,8 +35,8 @@ uint32_t RTRenderContext3D::drawRenderElementOne(RenderElementOBJ *node)
 {
     _bindRenderTarget();
     _start();
-    node->_preUpdatePre(static_cast<IRenderContext3D *>(this));
-    node->_render(static_cast<IRenderContext3D *>(this));
+    node->_preUpdatePre(this);
+    node->_render(this);
     _end();
     return 0;
 }

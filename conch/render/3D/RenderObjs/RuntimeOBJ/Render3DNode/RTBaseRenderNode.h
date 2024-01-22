@@ -22,7 +22,7 @@ class RTBaseRenderNode
 {
   public:
     RTBaseRenderNode(){};
-    virtual ~RTBaseRenderNode(){};
+    ~RTBaseRenderNode(){};
 
     bool shadowCullPass();
    
@@ -66,6 +66,8 @@ class RTBaseRenderNode
     bool boundsChange;
     Bounds* bounds = nullptr;
     Vector4 worldParams;
+
+    std::vector<std::string> commonUniformMap;
     struct LightmapData
     {
         uint32_t lightmapIndex = 0;

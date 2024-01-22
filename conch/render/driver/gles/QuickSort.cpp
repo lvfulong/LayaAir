@@ -61,11 +61,11 @@ namespace laya
 
 	int QuickSort::_compare(RenderElementOBJ* left , RenderElementOBJ* right)
 	{
-		int renderQueue = left->_materialRenderQueue - right->_materialRenderQueue;
+		int renderQueue = left->materialRenderQueue - right->materialRenderQueue;
 		if (renderQueue == 0) 
 		{
-			int sort = m_bIsTransparent ? right->_owner->distanceForSort - left->_owner->distanceForSort : left->_owner->distanceForSort - right->_owner->distanceForSort;
-			return sort + right->_owner->sortingFudge - left->_owner->sortingFudge;
+			int sort = m_bIsTransparent ? right->owner->distanceForSort - left->owner->distanceForSort : left->owner->distanceForSort - right->owner->distanceForSort;
+			return sort + right->owner->sortingFudge - left->owner->sortingFudge;
 		}
 		else
 		{

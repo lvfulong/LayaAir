@@ -1,6 +1,7 @@
 #ifndef __ShaderData_H__
 #define __ShaderData_H__
 #include <binder/JSInterface.h>
+#include <render/3D/temp/DefineDatas.h>
 #include <stdio.h>
 #include <unordered_map>
 #include "ResourceBase.h"
@@ -98,7 +99,7 @@ namespace laya
 		std::unordered_map<int, DataInfo*>	m_vData;
 
 		std::unordered_map<uint32_t, std::any>	m_data;
-
+		DefineDatas _defineDatas;
 	};
 }
 #endif //__ShaderData_H__

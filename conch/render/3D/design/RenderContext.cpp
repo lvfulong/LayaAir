@@ -1,4 +1,5 @@
 #include "RenderContext.h"
+#include <render/3D/temp/DefineDatas.h>
 namespace laya{
 
 IRenderContext3D::IRenderContext3D() {
@@ -10,6 +11,10 @@ IRenderContext3D::IRenderContext3D() {
     void IRenderContext3D::setGlobalShaderData(ShaderData* value)
     {
         this->globalShaderData = value;
+    }
+    void IRenderContext3D::setglobalConfigShaderData(DefineDatas* value)
+    {
+        globalConfigShaderData = value;
     }
     void IRenderContext3D::setRenderTarget(WebGLInternalRT* renderTarget) {
         this->_renderTarget = renderTarget;
