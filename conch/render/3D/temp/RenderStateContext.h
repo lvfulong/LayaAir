@@ -10,6 +10,7 @@
 #include <render/3D/design/renderEnum/StencilOperation.h>
 #include <render/driver/gles/WebGLEngine.h>
 #include <render/3D/design/renderInterface/IRenderState.h>
+#include "render/driver/gles/LayaGL.h"
 
 namespace laya
 {
@@ -17,76 +18,76 @@ namespace laya
 	{
 	public:
 
-		static void setDepthTest(WebGLEngine* pWebGLEngine, bool value)
+		static void setDepthTest(bool value)
 		{
-			pWebGLEngine->getRenderState()->setDepthTest(value);
+			LayaGL::m_pWebglEngine->getRenderState()->setDepthTest(value);
 		}
 
-		static void setDepthMask(WebGLEngine* pWebGLEngine, bool value)
+		static void setDepthMask(bool value)
 		{
-			pWebGLEngine->getRenderState()->setDepthMask(value);
+			LayaGL::m_pWebglEngine->getRenderState()->setDepthMask(value);
 		}
 
-		static void setDepthFunc(WebGLEngine* pWebGLEngine, CompareFunction value)
+		static void setDepthFunc(CompareFunction value)
 		{
-			pWebGLEngine->getRenderState()->setDepthFunc(value);
+			LayaGL::m_pWebglEngine->getRenderState()->setDepthFunc(value);
 		}
 
-		static void setStencilTest(WebGLEngine* pWebGLEngine, bool value)
+		static void setStencilTest(bool value)
 		{
-			pWebGLEngine->getRenderState()->setStencilTest(value);
-		}
-
-
-		static void setStencilMask(WebGLEngine* pWebGLEngine, bool value)
-		{
-			pWebGLEngine->getRenderState()->setStencilMask(value);
+			LayaGL::m_pWebglEngine->getRenderState()->setStencilTest(value);
 		}
 
 
-		static void setStencilFunc(WebGLEngine* pWebGLEngine, CompareFunction fun, int ref)
+		static void setStencilMask(bool value)
 		{
-			pWebGLEngine->getRenderState()->setStencilFunc(fun, ref);
+			LayaGL::m_pWebglEngine->getRenderState()->setStencilMask(value);
 		}
 
-		static void setstencilOp(WebGLEngine* pWebGLEngine, StencilOperation fail, StencilOperation zfail, StencilOperation zpass)
+
+		static void setStencilFunc(CompareFunction fun, int ref)
 		{
-			pWebGLEngine->getRenderState()->setstencilOp(fail, zfail, zpass);
+			LayaGL::m_pWebglEngine->getRenderState()->setStencilFunc(fun, ref);
 		}
 
-		static void setBlend(WebGLEngine* pWebGLEngine, bool value)
+		static void setstencilOp(StencilOperation fail, StencilOperation zfail, StencilOperation zpass)
 		{
-			pWebGLEngine->getRenderState()->setBlend(value);
+			LayaGL::m_pWebglEngine->getRenderState()->setstencilOp(fail, zfail, zpass);
 		}
 
-		static void setBlendEquation(WebGLEngine* pWebGLEngine, BlendEquationSeparate blendEquation)
+		static void setBlend(bool value)
 		{
-			pWebGLEngine->getRenderState()->setBlendEquation(blendEquation);
+			LayaGL::m_pWebglEngine->getRenderState()->setBlend(value);
 		}
 
-		static void setBlendEquationSeparate(WebGLEngine* pWebGLEngine, BlendEquationSeparate blendEquationRGB, BlendEquationSeparate blendEquationAlpha)
+		static void setBlendEquation(BlendEquationSeparate blendEquation)
 		{
-			pWebGLEngine->getRenderState()->setBlendEquationSeparate(blendEquationRGB, blendEquationAlpha);
+			LayaGL::m_pWebglEngine->getRenderState()->setBlendEquation(blendEquation);
 		}
 
-		static void setBlendFunc(WebGLEngine* pWebGLEngine, BlendFactor sFactor, BlendFactor dFactor, bool force = false)
+		static void setBlendEquationSeparate(BlendEquationSeparate blendEquationRGB, BlendEquationSeparate blendEquationAlpha)
 		{
-			pWebGLEngine->getRenderState()->setBlendFunc(sFactor, dFactor, force);
+			LayaGL::m_pWebglEngine->getRenderState()->setBlendEquationSeparate(blendEquationRGB, blendEquationAlpha);
 		}
 
-		static void setBlendFuncSeperate(WebGLEngine* pWebGLEngine, BlendFactor srcRGB, BlendFactor dstRGB, BlendFactor srcAlpha, BlendFactor dstAlpha)
+		static void setBlendFunc(BlendFactor sFactor, BlendFactor dFactor, bool force = false)
 		{
-			pWebGLEngine->getRenderState()->setBlendFuncSeperate(srcRGB, dstRGB, srcAlpha, dstAlpha);
+			LayaGL::m_pWebglEngine->getRenderState()->setBlendFunc(sFactor, dFactor, force);
 		}
 
-		static void setCullFace(WebGLEngine* pWebGLEngine, bool value)
+		static void setBlendFuncSeperate(BlendFactor srcRGB, BlendFactor dstRGB, BlendFactor srcAlpha, BlendFactor dstAlpha)
 		{
-			pWebGLEngine->getRenderState()->setCullFace(value);
+			LayaGL::m_pWebglEngine->getRenderState()->setBlendFuncSeperate(srcRGB, dstRGB, srcAlpha, dstAlpha);
 		}
 
-		static void setFrontFace(WebGLEngine* pWebGLEngine, CullMode value)
+		static void setCullFace(bool value)
 		{
-			pWebGLEngine->getRenderState()->setFrontFace(value);
+			LayaGL::m_pWebglEngine->getRenderState()->setCullFace(value);
+		}
+
+		static void setFrontFace(CullMode value)
+		{
+			LayaGL::m_pWebglEngine->getRenderState()->setFrontFace(value);
 		}
 	};
 }

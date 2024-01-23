@@ -90,14 +90,14 @@ namespace laya
         
 		m_mesh->useMesh();
 
-		RenderStateContext::setBlend(m_pWebGLEngine, true);
+		RenderStateContext::setBlend(true);
 		if (m_renderTarget)
 		{
-			RenderStateContext::setBlendFunc(m_pWebGLEngine, BlendModes[(int)m_key.m_blendMode].sourceTarget, BlendModes[(int)m_key.m_blendMode].destinationTarget);
+			RenderStateContext::setBlendFunc(BlendModes[(int)m_key.m_blendMode].sourceTarget, BlendModes[(int)m_key.m_blendMode].destinationTarget);
 		}
 		else
 		{
-			RenderStateContext::setBlendFunc(m_pWebGLEngine, BlendModes[(int)m_key.m_blendMode].source, BlendModes[(int)m_key.m_blendMode].destination);
+			RenderStateContext::setBlendFunc(BlendModes[(int)m_key.m_blendMode].source, BlendModes[(int)m_key.m_blendMode].destination);
 		}
 		// ����о���Ļ��������� WORLDMAT ��
 		if (RenderState2D::worldMatrix4 != RenderState2D::TEMPMAT4_ARRAY)

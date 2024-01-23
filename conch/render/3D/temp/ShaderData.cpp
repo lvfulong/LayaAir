@@ -13,150 +13,6 @@ namespace laya
 	{
         destroy();
 	}
-	void ShaderData::refreshData(int32_t* pData, int nLength, int counts)
-	{
-        if (isDestroy) {
-            return;
-        }
-		/*int* pBufferData = (int*)pData;
-		int nLocation=0;
-		ShaderDataType nShaderType;
-		int nSize=1;
-		int nIntLength = nLength;
-		int i = 0;
-		for (int j = 0; j < counts && i < nIntLength; j++)
-		{
-			nLocation = *(pBufferData + i++);
-			nShaderType = (ShaderDataType)(*(pBufferData + i++));
-			ShaderData::DataInfo* pDataInfo = NULL;
-			std::unordered_map<int, DataInfo*>::iterator iter = m_vData.find(nLocation);
-			if (iter != m_vData.end())
-			{
-				pDataInfo = iter->second;
-			}
-			switch (nShaderType)
-			{
-			case ShaderDataType::Number32:
-				nSize = 1;
-				if (pDataInfo == NULL)
-				{
-					pDataInfo = new ShaderData::DataInfo(nShaderType, nSize, sizeof(int));
-					pDataInfo->data = new unsigned char[sizeof(int)];
-					m_vData[nLocation] = pDataInfo;
-				}
-				memcpy(pDataInfo->data, pBufferData + i, sizeof(int));
-				i++;
-				break;
-			case ShaderDataType::Vector2:
-				nSize = 1;
-				if (pDataInfo == NULL)
-				{
-					pDataInfo = new ShaderData::DataInfo(nShaderType, nSize, sizeof(float) * 2);
-					pDataInfo->data = new unsigned char[sizeof(float) * 2];
-					m_vData[nLocation] = pDataInfo;
-				}
-				memcpy(pDataInfo->data, pBufferData + i, sizeof(float) * 2);
-				i += 2;
-				break;
-			case ShaderDataType::Vector3:
-				nSize = 1;
-				if (pDataInfo == NULL)
-				{
-					pDataInfo = new ShaderData::DataInfo(nShaderType, nSize, sizeof(float) * 3);
-					pDataInfo->data = new unsigned char[sizeof(float) * 3];
-					m_vData[nLocation] = pDataInfo;
-				}
-				memcpy(pDataInfo->data, pBufferData + i, sizeof(float) * 3);
-				i += 3;
-				break;
-			case ShaderDataType::Vector4:
-				nSize = 1;
-				if (pDataInfo == NULL)
-				{
-					pDataInfo = new ShaderData::DataInfo(nShaderType, nSize, sizeof(float) * 4);
-					pDataInfo->data = new unsigned char[sizeof(float) * 4];
-					m_vData[nLocation] = pDataInfo;
-				}
-				memcpy(pDataInfo->data, pBufferData + i, sizeof(float) * 4);
-				i += 4;
-				break;
-			case ShaderDataType::Matrix4x4:
-				nSize = 1;
-				if (pDataInfo == NULL)
-				{
-					pDataInfo = new ShaderData::DataInfo(nShaderType, nSize, sizeof(float) * 16);
-					pDataInfo->data = new unsigned char[sizeof(float) * 16];
-					m_vData[nLocation] = pDataInfo;
-				}
-				memcpy(pDataInfo->data, pBufferData + i, sizeof(float) * 16);
-				i += 16;
-				break;
-			case ShaderDataType::Number32Array:
-				nSize = *(pBufferData + i++);
-				if (pDataInfo == NULL)
-				{
-					pDataInfo = new ShaderData::DataInfo(nShaderType, nSize, sizeof(float)*nSize);
-					pDataInfo->data = new unsigned char[sizeof(float)*nSize];
-					memcpy(pDataInfo->data, pBufferData + i, sizeof(float)*nSize);
-					i += nSize;
-					m_vData[nLocation] = pDataInfo;
-				}
-				else
-				{
-					if ( nSize != pDataInfo->size )
-					{
-						delete[] pDataInfo->data;
-						pDataInfo->size = nSize;
-						pDataInfo->data = new unsigned char[sizeof(float)*nSize];
-						pDataInfo->byteSize = sizeof(float)*nSize;
-						memcpy(pDataInfo->data, pBufferData + i, sizeof(float)*nSize);
-					}
-					else
-					{
-						pDataInfo->byteSize = sizeof(float)*nSize;
-						memcpy(pDataInfo->data, pBufferData + i, sizeof(float)*nSize);
-					}
-					i += nSize;
-				}
-				break;
-			case ShaderDataType::Texture:
-				nSize = 1;
-				if (pDataInfo == NULL)
-				{
-					pDataInfo = new ShaderData::DataInfo(nShaderType, nSize, sizeof(int));
-					pDataInfo->data = new unsigned char[sizeof(int)];
-					m_vData[nLocation] = pDataInfo;
-				}
-				memcpy(pDataInfo->data, pBufferData + i++, sizeof(int));
-				break;
-			case ShaderDataType::ShaderDefine:
-				assert(true);
-				break;
-			case ShaderDataType::UBO:
-				nSize = 1;
-				if (pDataInfo == NULL)
-				{
-					pDataInfo = new ShaderData::DataInfo(nShaderType, nSize, sizeof(int));
-					pDataInfo->data = new unsigned char[sizeof(int)];
-					m_vData[nLocation] = pDataInfo;
-				}
-				memcpy(pDataInfo->data, pBufferData + i++, sizeof(int));
-				break;
-			default:
-				break;
-			}
-		}*/
-		//printfDataInfoValue();
-	}
-	ShaderData::DataInfo* ShaderData::getData(int key)
-	{
-		std::unordered_map<int, DataInfo*>::iterator it = m_vData.find(key);
-		if (it != m_vData.end())
-		{
-			return it->second;
-		}
-		return nullptr;
-	}
 
     void ShaderData::destroy() {
         isDestroy = true;
@@ -167,10 +23,10 @@ namespace laya
     {
         //m_data->applyUBOData();
     }
-	ShaderData *ShaderData::getShaderData(uint32_t id)
+	/*ShaderData* ShaderData::getShaderData(uint32_t id)
 	{
 		return JCConch::s_pConchRender->m_pShaderDataManager->getResource(id);
-	}
+	}*/
 	void ShaderData::setBool(int32_t index, bool value)
 	{
 		m_data[index] = value;
@@ -209,7 +65,10 @@ namespace laya
 	}
 	void ShaderData::setBuffer(int32_t index, uint8_t* data, uint32_t lengthInBytes)
 	{
-		
+		BufferDataInfo info;
+		info.m_data = data;
+		info.m_lengthInBytes = lengthInBytes;
+		m_data[index] = info;
 	}
 	//void ShaderData::setBufferJS(int32_t index, JSValueAsParam value)
 	//{

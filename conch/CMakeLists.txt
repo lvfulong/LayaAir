@@ -143,6 +143,8 @@ list(APPEND CONCH_SRC
 	render/3D/Scene3DShaderDeclaration.cpp
 	render/3D/DepthPassProperty.h
 	render/3D/DepthPassProperty.cpp
+	render/3D/Shader3D.h
+	render/3D/Shader3D.cpp
 	#渲染节点类
 	render/3D/renderInstance/MeshRenderNode.h
 	render/3D/renderInstance/MeshRenderNode.cpp
@@ -272,7 +274,6 @@ list(APPEND CONCH_SRC
 	render/3D/temp/RenderStateCommand.cpp
 	render/3D/temp/RenderState.h
 	render/3D/temp/RenderState.cpp
-	render/3D/temp/Shader3D.h
 	render/3D/temp/Transform3D.h
 	render/3D/temp/Transform3D.cpp
 	render/3D/temp/InstanceRenderElementOBJ.h

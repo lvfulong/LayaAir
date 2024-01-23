@@ -28,85 +28,85 @@ namespace laya
 	public:
 		enum
 		{
-			CULL_NONE = (int)CullMode::Off,
-			CULL_FRONT = (int)CullMode::Front,
-			CULL_BACK = (int)CullMode::Back,
+			CULL_NONE = (int32_t)CullMode::Off,
+			CULL_FRONT = (int32_t)CullMode::Front,
+			CULL_BACK = (int32_t)CullMode::Back,
 
 
-			BLEND_DISABLE = (int)BlendType::BLEND_DISABLE,
-			BLEND_ENABLE_ALL = (int)BlendType::BLEND_ENABLE_ALL,
-			BLEND_ENABLE_SEPERATE = (int)BlendType::BLEND_ENABLE_SEPERATE,
+			BLEND_DISABLE = (int32_t)BlendType::BLEND_DISABLE,
+			BLEND_ENABLE_ALL = (int32_t)BlendType::BLEND_ENABLE_ALL,
+			BLEND_ENABLE_SEPERATE = (int32_t)BlendType::BLEND_ENABLE_SEPERATE,
 
-			BLENDPARAM_ZERO = (int)BlendFactor::Zero,
-			BLENDPARAM_ONE = (int)BlendFactor::One,
-			BLENDPARAM_SRC_COLOR = (int)BlendFactor::SourceColor,
-			BLENDPARAM_ONE_MINUS_SRC_COLOR = (int)BlendFactor::OneMinusSourceColor,
-			BLENDPARAM_DST_COLOR = (int)BlendFactor::DestinationColor,
-			BLENDPARAM_ONE_MINUS_DST_COLOR = (int)BlendFactor::OneMinusDestinationColor,
-			BLENDPARAM_SRC_ALPHA = (int)BlendFactor::SourceAlpha,
-			BLENDPARAM_ONE_MINUS_SRC_ALPHA = (int)BlendFactor::OneMinusSourceAlpha,
-			BLENDPARAM_DST_ALPHA = (int)BlendFactor::DestinationAlpha,
-			BLENDPARAM_ONE_MINUS_DST_ALPHA = (int)BlendFactor::OneMinusDestinationAlpha,
-			BLENDPARAM_SRC_ALPHA_SATURATE = (int)BlendFactor::SourceAlphaSaturate,
-			BLENDPARAM_BLENDCOLOR = (int)BlendFactor::BlendColor,
-			BLENDPARAM_BLEND_ONEMINUS_COLOR = (int)BlendFactor::OneMinusBlendColor,
+			BLENDPARAM_ZERO = (int32_t)BlendFactor::Zero,
+			BLENDPARAM_ONE = (int32_t)BlendFactor::One,
+			BLENDPARAM_SRC_COLOR = (int32_t)BlendFactor::SourceColor,
+			BLENDPARAM_ONE_MINUS_SRC_COLOR = (int32_t)BlendFactor::OneMinusSourceColor,
+			BLENDPARAM_DST_COLOR = (int32_t)BlendFactor::DestinationColor,
+			BLENDPARAM_ONE_MINUS_DST_COLOR = (uint32_t)BlendFactor::OneMinusDestinationColor,
+			BLENDPARAM_SRC_ALPHA = (int32_t)BlendFactor::SourceAlpha,
+			BLENDPARAM_ONE_MINUS_SRC_ALPHA = (int32_t)BlendFactor::OneMinusSourceAlpha,
+			BLENDPARAM_DST_ALPHA = (int32_t)BlendFactor::DestinationAlpha,
+			BLENDPARAM_ONE_MINUS_DST_ALPHA = (int32_t)BlendFactor::OneMinusDestinationAlpha,
+			BLENDPARAM_SRC_ALPHA_SATURATE = (int32_t)BlendFactor::SourceAlphaSaturate,
+			BLENDPARAM_BLENDCOLOR = (int32_t)BlendFactor::BlendColor,
+			BLENDPARAM_BLEND_ONEMINUS_COLOR = (int32_t)BlendFactor::OneMinusBlendColor,
 
-			BLENDEQUATION_ADD = (int)BlendEquationSeparate::ADD,
-			BLENDEQUATION_SUBTRACT = (int)BlendEquationSeparate::SUBTRACT,
-			BLENDEQUATION_REVERSE_SUBTRACT = (int)BlendEquationSeparate::REVERSE_SUBTRACT,
-			BLENDEQUATION_MIN = (int)BlendEquationSeparate::MIN,
-			BLENDEQUATION_MAX = (int)BlendEquationSeparate::MAX,
+			BLENDEQUATION_ADD = (int32_t)BlendEquationSeparate::ADD,
+			BLENDEQUATION_SUBTRACT = (int32_t)BlendEquationSeparate::SUBTRACT,
+			BLENDEQUATION_REVERSE_SUBTRACT = (int32_t)BlendEquationSeparate::REVERSE_SUBTRACT,
+			BLENDEQUATION_MIN = (int32_t)BlendEquationSeparate::MIN,
+			BLENDEQUATION_MAX = (int32_t)BlendEquationSeparate::MAX,
 
-			DEPTHTEST_OFF = 0/*WebGLContext.NEVER*/,//TODO:ʲô��
-			DEPTHTEST_NEVER = (int)CompareFunction::Never/*WebGLContext.NEVER*/,
-			DEPTHTEST_LESS = (int)CompareFunction::Less/*WebGLContext.LESS*/,
-			DEPTHTEST_EQUAL = (int)CompareFunction::Equal/*WebGLContext.EQUAL*/,
-			DEPTHTEST_LEQUAL = (int)CompareFunction::LessEqual/*WebGLContext.LEQUAL*/,
-			DEPTHTEST_GREATER = (int)CompareFunction::Greater/*WebGLContext.GREATER*/,
-			DEPTHTEST_NOTEQUAL = (int)CompareFunction::NotEqual/*WebGLContext.NOTEQUAL*/,
-			DEPTHTEST_GEQUAL = (int)CompareFunction::GreaterEqual/*WebGLContext.GEQUAL*/,
-			DEPTHTEST_ALWAYS = (int)CompareFunction::Always/*WebGLContext.ALWAYS*/,
+			DEPTHTEST_OFF = (int32_t)CompareFunction::Off/*WebGLContext.NEVER*/,//TODO:ʲô��
+			DEPTHTEST_NEVER = (int32_t)CompareFunction::Never/*WebGLContext.NEVER*/,
+			DEPTHTEST_LESS = (int32_t)CompareFunction::Less/*WebGLContext.LESS*/,
+			DEPTHTEST_EQUAL = (int32_t)CompareFunction::Equal/*WebGLContext.EQUAL*/,
+			DEPTHTEST_LEQUAL = (int32_t)CompareFunction::LessEqual/*WebGLContext.LEQUAL*/,
+			DEPTHTEST_GREATER = (int32_t)CompareFunction::Greater/*WebGLContext.GREATER*/,
+			DEPTHTEST_NOTEQUAL = (int32_t)CompareFunction::NotEqual/*WebGLContext.NOTEQUAL*/,
+			DEPTHTEST_GEQUAL = (int32_t)CompareFunction::GreaterEqual/*WebGLContext.GEQUAL*/,
+			DEPTHTEST_ALWAYS = (int32_t)CompareFunction::Always/*WebGLContext.ALWAYS*/,
 
 
 			STENCILTEST_OFF = 0,
-			STENCILTEST_NEVER = (int)CompareFunction::Never/*WebGLContext.NEVER*/,
-			STENCILTEST_LESS = (int)CompareFunction::Less/*WebGLContext.LESS*/,
-			STENCILTEST_EQUAL = (int)CompareFunction::Equal/*WebGLContext.EQUAL*/,
-			STENCILTEST_LEQUAL = (int)CompareFunction::LessEqual/*WebGLContext.LEQUAL*/,
-			STENCILTEST_GREATER = (int)CompareFunction::Greater/*WebGLContext.GREATER*/,
-			STENCILTEST_NOTEQUAL = (int)CompareFunction::NotEqual/*WebGLContext.NOTEQUAL*/,
-			STENCILTEST_GEQUAL = (int)CompareFunction::GreaterEqual/*WebGLContext.GEQUAL*/,
-			STENCILTEST_ALWAYS = (int)CompareFunction::Always/*WebGLContext.ALWAYS*/,
-			STENCILOP_KEEP = (int)StencilOperation::Keep,
-			STENCILOP_ZERO = (int)StencilOperation::Zero,
-			STENCILOP_REPLACE = (int)StencilOperation::Replace,
-			STENCILOP_INCR = (int)StencilOperation::IncrementSaturate,
-			STENCILOP_INCR_WRAP = (int)StencilOperation::IncrementWrap,
-			STENCILOP_DECR = (int)StencilOperation::DecrementSaturate,
-			STENCILOP_DECR_WRAP = (int)StencilOperation::DecrementWrap,
-			STENCILOP_INVERT = (int)StencilOperation::Invert,
+			STENCILTEST_NEVER = (int32_t)CompareFunction::Never/*WebGLContext.NEVER*/,
+			STENCILTEST_LESS = (int32_t)CompareFunction::Less/*WebGLContext.LESS*/,
+			STENCILTEST_EQUAL = (int32_t)CompareFunction::Equal/*WebGLContext.EQUAL*/,
+			STENCILTEST_LEQUAL = (int32_t)CompareFunction::LessEqual/*WebGLContext.LEQUAL*/,
+			STENCILTEST_GREATER = (int32_t)CompareFunction::Greater/*WebGLContext.GREATER*/,
+			STENCILTEST_NOTEQUAL = (int32_t)CompareFunction::NotEqual/*WebGLContext.NOTEQUAL*/,
+			STENCILTEST_GEQUAL = (int32_t)CompareFunction::GreaterEqual/*WebGLContext.GEQUAL*/,
+			STENCILTEST_ALWAYS = (int32_t)CompareFunction::Always/*WebGLContext.ALWAYS*/,
+			STENCILOP_KEEP = (int32_t)StencilOperation::Keep,
+			STENCILOP_ZERO = (int32_t)StencilOperation::Zero,
+			STENCILOP_REPLACE = (int32_t)StencilOperation::Replace,
+			STENCILOP_INCR = (int32_t)StencilOperation::IncrementSaturate,
+			STENCILOP_INCR_WRAP = (int32_t)StencilOperation::IncrementWrap,
+			STENCILOP_DECR = (int32_t)StencilOperation::DecrementSaturate,
+			STENCILOP_DECR_WRAP = (int32_t)StencilOperation::DecrementWrap,
+			STENCILOP_INVERT = (int32_t)StencilOperation::Invert,
 		};
-		static float		s_cull;
-		static int			s_blend;
-		static int			s_srcBlend;
-		static int			s_dstBlend;
-		static int			s_srcBlendRGB;
-		static int		    s_dstBlendRGB;
-		static int			s_srcBlendAlpha;
-		static int			s_dstBlendAlpha;
+		static int32_t			s_cull;
+		static int32_t			s_blend;
+		static int32_t			s_srcBlend;
+		static int32_t			s_dstBlend;
+		static int32_t			s_srcBlendRGB;
+		static int32_t		    s_dstBlendRGB;
+		static int32_t			s_srcBlendAlpha;
+		static int32_t			s_dstBlendAlpha;
 		//Vector4			s_blendConstColor;
-		static int			s_blendEquation;
-		static int			s_blendEquationRGB;
-		static int			s_blendEquationAlpha;
-		static int			s_depthTest;
-		static bool			s_depthWrite;
-		static bool			s_stencilWrite;
-		static int			s_stencilTest;
-		static int			s_stencilRef;
-		//Vector3			stencilOp;
-		static int			s_stencilOpX;
-		static int			s_stencilOpY;
-		static int			s_stencilOpZ;
+		static int32_t			s_blendEquation;
+		static int32_t			s_blendEquationRGB;
+		static int32_t			s_blendEquationAlpha;
+		static int32_t			s_depthTest;
+		static bool				s_depthWrite;
+		static bool				s_stencilWrite;
+		static int32_t			s_stencilTest;
+		static int32_t			s_stencilRef;
+		//Vector3				stencilOp;
+		static double			s_stencilOpX;
+		static double			s_stencilOpY;
+		static double			s_stencilOpZ;
 		RenderState();
 
 		~RenderState();
@@ -114,27 +114,27 @@ namespace laya
 		void setNull();
 		static RenderState Default;
 	public:
-		float*			cull;
-		int*			blend;
-		int*			srcBlend;
-		int*			dstBlend;
-		int*			srcBlendRGB;
-		int*		    dstBlendRGB;
-		int*			srcBlendAlpha;
-		int*			dstBlendAlpha;
-		//Vector4		blendConstColor;
-		int*			blendEquation;
-		int*			blendEquationRGB;
-		int*			blendEquationAlpha;
-		int*			depthTest;
-		bool*		depthWrite;
-		bool*		stencilWrite;
-		int*			stencilTest;
-		int*			stencilRef;
-		//Vector3		stencilOp;
-		int*			stencilOpX;
-		int*			stencilOpY;
-		int*			stencilOpZ;
+		int32_t*			cull;
+		int32_t*			blend;
+		int32_t*			srcBlend;
+		int32_t*			dstBlend;
+		int32_t*			srcBlendRGB;
+		int32_t*		    dstBlendRGB;
+		int32_t*			srcBlendAlpha;
+		int32_t*			dstBlendAlpha;
+		//Vector4			blendConstColor;
+		int32_t*			blendEquation;
+		int32_t*			blendEquationRGB;
+		int32_t*			blendEquationAlpha;
+		int32_t*			depthTest;
+		bool*				depthWrite;
+		bool*				stencilWrite;
+		int32_t*			stencilTest;
+		int32_t*			stencilRef;
+		//Vector3			stencilOp;
+		double*				stencilOpX;
+		double*				stencilOpY;
+		double*				stencilOpZ;//double? todo
 	};
 }
 #endif //__RenderState_H__

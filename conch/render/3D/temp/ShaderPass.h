@@ -8,6 +8,7 @@
 
 namespace laya{
 
+    class RenderState;
     class ShaderPass {
     public:
         ShaderPass();
@@ -15,6 +16,7 @@ namespace laya{
         void setCacheShader(DefineDatas* compileDefine , ShaderInstance* shader);
         ShaderInstance* getCacheShader(DefineDatas* compileDefine);
         void callCreateShaderInstanceFunction();
+        void setRenderState(RenderState* value) { renderState = value; }
     public:
         //binds
         void setCreateShaderInstanceFunction(JSValueAsParam value);
@@ -26,6 +28,7 @@ namespace laya{
         std::string pipelineMode;
         bool statefirst = false;
         DefineDatas validDefine;
+        RenderState* renderState = nullptr;
         std::vector<std::string> nodeCommonMap;
     private:
         std::unordered_map<uint32_t, void*> _cacheSharders{};

@@ -20,8 +20,8 @@ namespace laya
         if (isRender) {
             for (uint32_t j = 0, m = _shaderInstances.getLength(); j < m; j++) {
                 ShaderInstance* shaderIns = _shaderInstances.m_vElements[j];
-                if (!shaderIns->complete)
-                    continue;
+                //if (!shaderIns->complete) todo
+                //    continue;
                 bool switchShader = shaderIns->bind();
                 bool switchUpdateMark = (updateMark != shaderIns->m_uploadMark);
                 bool uploadScene = (shaderIns->m_uploadScene != sceneShaderData) || switchUpdateMark;

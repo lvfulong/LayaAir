@@ -271,24 +271,25 @@ namespace laya
 		m_engine->m_glUseProgram = this;
 		return true;
 	}
-	int GLShaderInstance::_uniform1f(ShaderVariable* one, ShaderData::DataInfo* dataInfo)
+	int GLShaderInstance::_uniform1f(ShaderVariable* one, const std::any& dataInfo)
 	{
-		//assert((ShaderDataType)dataInfo->type == ShaderDataType::Number32);
-		assert(dataInfo->byteSize >= sizeof(GLfloat));
-		GLfloat* pData = (GLfloat*)dataInfo->data;
-		if (memcmp(one->uploadedValue.data(), pData, sizeof(GLfloat)) != 0)
+		assert(dataInfo.type == std::typeid(float));
+		float data = std::any_cast<float>(dataInfo);
+
+		if (memcmp(one->uploadedValue.data(), &data, sizeof(float)) != 0)
 		{
-			glUniform1f(one->location, *(pData));
-			memcpy(one->uploadedValue.data(), pData, sizeof(GLfloat));
+			glUniform1f(one->location, data);
+			memcpy(one->uploadedValue.data(), &data, sizeof(float));
 			return 1;
 		}
 		return 0;
 	}
-	int GLShaderInstance::_uniform1fv(ShaderVariable* one, ShaderData::DataInfo* dataInfo)
+	int GLShaderInstance::_uniform1fv(ShaderVariable* one, const std::any& dataInfo)
 	{
-		//assert((ShaderDataType)dataInfo->type == ShaderDataType::Number32Array);
-		GLfloat* value = (GLfloat*)dataInfo->data;
-		int count = dataInfo->byteSize / sizeof(GLfloat);
+		assert(dataInfo.type == std::typeid(ShaderData::BufferDataInfo));
+		ShaderData::BufferDataInfo info = std::any_cast<ShaderData::BufferDataInfo>(dataInfo);
+		GLfloat* value = (GLfloat*)info.m_data;
+		int count = info.m_lengthInBytes / sizeof(GLfloat);
 		/*if (count < 4)
 		{
 			GLfloat* uploadedValue = (GLfloat*)one->uploadedValue.data();
@@ -309,23 +310,24 @@ namespace laya
 			return 1;
 		}
 	}
-	int GLShaderInstance::_uniform_vec2(ShaderVariable* one, ShaderData::DataInfo* dataInfo)
+	int GLShaderInstance::_uniform_vec2(ShaderVariable* one, const std::any& dataInfo)
 	{
-		//assert((ShaderDataType)dataInfo->type == ShaderDataType::Vector2);
-		assert(dataInfo->byteSize >= sizeof(GLfloat) * 2);
-		GLfloat* pData = (GLfloat*)dataInfo->data;
-		if (memcmp(one->uploadedValue.data(), pData, sizeof(GLfloat) * 2) != 0)
+		assert(dataInfo.type == std::typeid(Vector2));
+		Vector2 data = std::any_cast<Vector2>(dataInfo);
+		if (memcmp(one->uploadedValue.data(), &data, sizeof(Vector2)) != 0)
 		{
-			glUniform2f(one->location, pData[0], pData[1]);
-			memcpy(one->uploadedValue.data(), pData, sizeof(GLfloat) * 2);
+			glUniform2f(one->location, data.x, data.y);
+			memcpy(one->uploadedValue.data(), &data, sizeof(Vector2));
 			return 1;
 		}
 		return 0;
 	}
-	int GLShaderInstance::_uniform_vec2v(ShaderVariable* one, ShaderData::DataInfo* dataInfo)
+	int GLShaderInstance::_uniform_vec2v(ShaderVariable* one, const std::any& dataInfo)
 	{
-		GLfloat* value = (GLfloat*)dataInfo->data;
-		int count = dataInfo->byteSize / (sizeof(GLfloat) * 2);
+		assert(dataInfo.type == std::typeid(ShaderData::BufferDataInfo));
+		ShaderData::BufferDataInfo info = std::any_cast<ShaderData::BufferDataInfo>(dataInfo);
+		GLfloat* value = (GLfloat*)info.m_data;
+		int count = info.m_lengthInBytes / (sizeof(GLfloat) * 2);
 		/*if (count < 2) 
 		{
 			GLfloat* uploadedValue= (GLfloat*)one->uploadedValue.data();
@@ -346,94 +348,103 @@ namespace laya
 			return 1;
 		}
 	}
-	int GLShaderInstance::_uniform_vec3(ShaderVariable* one, ShaderData::DataInfo* dataInfo)
+	int GLShaderInstance::_uniform_vec3(ShaderVariable* one, const std::any& dataInfo)
 	{
-		//assert((ShaderDataType)dataInfo->type == ShaderDataType::Vector3);
-		assert(dataInfo->byteSize >= sizeof(GLfloat) * 3);
-		GLfloat* pData = (GLfloat*)dataInfo->data;
-		if (memcmp(one->uploadedValue.data(), pData, sizeof(GLfloat) * 3) != 0)
+		assert(dataInfo.type == std::typeid(Vector3));
+		Vector3 data = std::any_cast<Vector3>(dataInfo);
+		if (memcmp(one->uploadedValue.data(), &data, sizeof(Vector3)) != 0)
 		{
-			glUniform3f(one->location, pData[0], pData[1], pData[2]);
-			memcpy(one->uploadedValue.data(), pData, sizeof(GLfloat) * 3);
+			glUniform3f(one->location, data.x, data.y, data.z);
+			memcpy(one->uploadedValue.data(), &data, sizeof(Vector3));
 			return 1;
 		}
 		return 0;
 	}
 
-	int GLShaderInstance::_uniform_vec3v(ShaderVariable* one, ShaderData::DataInfo* dataInfo)
+	int GLShaderInstance::_uniform_vec3v(ShaderVariable* one, const std::any& dataInfo)
 	{
-		GLfloat* pData = (GLfloat*)dataInfo->data;
-		glUniform3fv(one->location, dataInfo->byteSize / (sizeof(GLfloat) * 3), pData);
+		assert(dataInfo.type == std::typeid(ShaderData::BufferDataInfo));
+		ShaderData::BufferDataInfo info = std::any_cast<ShaderData::BufferDataInfo>(dataInfo);
+		GLfloat* pData = (GLfloat*)info.m_data;
+		glUniform3fv(one->location, info.m_lengthInBytes / (sizeof(GLfloat) * 3), pData);
 		return 0;
 	}
-	int GLShaderInstance::_uniform_vec4(ShaderVariable* one, ShaderData::DataInfo* dataInfo)
+	int GLShaderInstance::_uniform_vec4(ShaderVariable* one, const std::any& dataInfo)
 	{
-		//assert((ShaderDataType)dataInfo->type == ShaderDataType::Vector4);
-//		assert(dataInfo->byteSize >= sizeof(GLfloat) * 4);
-		GLfloat* pData = (GLfloat*)dataInfo->data;
-		if (memcmp(one->uploadedValue.data(), pData, sizeof(GLfloat) * 4) != 0)
+		assert(dataInfo.type == std::typeid(Vector4));
+		Vector4 data = std::any_cast<Vector4>(dataInfo);
+		if (memcmp(one->uploadedValue.data(), &data, sizeof(Vector4)) != 0)
 		{
-			glUniform4f(one->location, pData[0], pData[1], pData[2], pData[3]);
-			memcpy(one->uploadedValue.data(), pData, sizeof(GLfloat) * 4);
+			glUniform4f(one->location, data.x, data.y, data.z, data.w);
+			memcpy(one->uploadedValue.data(), &data, sizeof(Vector4));
 			return 1;
 		}
 		return 0;
 	}
-	int GLShaderInstance::_uniform_vec4v(ShaderVariable* one, ShaderData::DataInfo* dataInfo)
+	int GLShaderInstance::_uniform_vec4v(ShaderVariable* one, const std::any& dataInfo)
 	{
-		GLfloat* pData = (GLfloat*)dataInfo->data;
-		glUniform4fv(one->location, dataInfo->byteSize / (sizeof(GLfloat) * 4), pData);
+		assert(dataInfo.type == std::typeid(ShaderData::BufferDataInfo));
+		ShaderData::BufferDataInfo info = std::any_cast<ShaderData::BufferDataInfo>(dataInfo);
+		GLfloat* pData = (GLfloat*)info.m_data;
+		glUniform4fv(one->location, info.m_lengthInBytes / (sizeof(GLfloat) * 4), pData);
 		return 1;
 	}
 
-	int GLShaderInstance::_uniformMatrix2fv(ShaderVariable* one, ShaderData::DataInfo* dataInfo)
+	int GLShaderInstance::_uniformMatrix2fv(ShaderVariable* one, const std::any& dataInfo)
 	{
-		GLfloat* pData = (GLfloat*)dataInfo->data;
-		glUniformMatrix2fv(one->location, false, dataInfo->byteSize / (4 * sizeof(float)) , pData);
+		assert(dataInfo.type == std::typeid(ShaderData::BufferDataInfo));
+		ShaderData::BufferDataInfo info = std::any_cast<ShaderData::BufferDataInfo>(dataInfo);
+		GLfloat* pData = (GLfloat*)info.m_data;
+		glUniformMatrix2fv(one->location, false, info.m_lengthInBytes / (4 * sizeof(float)) , pData);
 		return 1;
 	}
 
-	int GLShaderInstance::_uniformMatrix3fv(ShaderVariable* one, ShaderData::DataInfo* dataInfo)
+	int GLShaderInstance::_uniformMatrix3fv(ShaderVariable* one, const std::any& dataInfo)
 	{
-		GLfloat* pData = (GLfloat*)dataInfo->data;
-		glUniformMatrix3fv(one->location, false, dataInfo->byteSize / (9 * sizeof(float)), pData);
+		assert(dataInfo.type == std::typeid(ShaderData::BufferDataInfo));
+		ShaderData::BufferDataInfo info = std::any_cast<ShaderData::BufferDataInfo>(dataInfo);
+		GLfloat* pData = (GLfloat*)info.m_data;
+		glUniformMatrix3fv(one->location, false, info.m_lengthInBytes / (9 * sizeof(float)), pData);
 		return 1;
 	}
-	int GLShaderInstance::_uniformMatrix4f(ShaderVariable* one, ShaderData::DataInfo* dataInfo)
+	int GLShaderInstance::_uniformMatrix4f(ShaderVariable* one, const std::any& dataInfo)
 	{
-		//assert((ShaderDataType)dataInfo->type == ShaderDataType::Matrix4x4);
-		assert(dataInfo->byteSize >= 16 * sizeof(float));
-		GLfloat* pData = (GLfloat*)dataInfo->data;
+		assert(dataInfo.type == std::typeid(ShaderData::BufferDataInfo));
+		ShaderData::BufferDataInfo info = std::any_cast<ShaderData::BufferDataInfo>(dataInfo);
+		assert(info.m_lengthInBytes >= 16 * sizeof(float));
+		GLfloat* pData = (GLfloat*)info.m_data;
 		glUniformMatrix4fv(one->location, 1, false, pData);
 		return 1;
 	}
-	int GLShaderInstance::_uniformMatrix4fv(ShaderVariable* one, ShaderData::DataInfo* dataInfo)
+	int GLShaderInstance::_uniformMatrix4fv(ShaderVariable* one, const std::any& dataInfo)
 	{
-		GLfloat* pData = (GLfloat*)dataInfo->data;
-        glUniformMatrix4fv(one->location, dataInfo->byteSize / (16 * sizeof(float)), false, pData);
+		assert(dataInfo.type == std::typeid(ShaderData::BufferDataInfo));
+		ShaderData::BufferDataInfo info = std::any_cast<ShaderData::BufferDataInfo>(dataInfo);
+		GLfloat* pData = (GLfloat*)(GLfloat*)info.m_data;
+        glUniformMatrix4fv(one->location, info.m_lengthInBytes / (16 * sizeof(float)), false, pData);
         return 1;
 	}
 	
-	int GLShaderInstance::_uniform1i(ShaderVariable* one, ShaderData::DataInfo* dataInfo)
+	int GLShaderInstance::_uniform1i(ShaderVariable* one, const std::any& dataInfo)
 	{
-		//assert((ShaderDataType)one->type == ShaderDataType::Number32);
-		assert(dataInfo->byteSize >= sizeof(GLint));
-		GLint pData = *(GLfloat*)dataInfo->data;//注意转型 脚本只有float buffer
-		if (memcmp(one->uploadedValue.data(), &pData, sizeof(GLint)) != 0)
+		assert(dataInfo.type == std::typeid(int32_t));
+		int32_t data = std::any_cast<int32_t>(dataInfo);
+		if (memcmp(one->uploadedValue.data(), &data, sizeof(int32_t)) != 0)
 		{
-			glUniform1i(one->location, pData);
-			memcpy(one->uploadedValue.data(), &pData, sizeof(GLint));
+			glUniform1i(one->location, data);
+			memcpy(one->uploadedValue.data(), &data, sizeof(GLint));
 			return 1;
 		}
 		return 0;
 	}
 	
-	int GLShaderInstance::_uniform1iv(ShaderVariable* one, ShaderData::DataInfo* dataInfo)
+	int GLShaderInstance::_uniform1iv(ShaderVariable* one, const std::any& dataInfo)
 	{
-		//assert((ShaderDataType)one->type == ShaderDataType::Number32Array);
+		assert(dataInfo.type == std::typeid(ShaderData::BufferDataInfo));
+		ShaderData::BufferDataInfo info = std::any_cast<ShaderData::BufferDataInfo>(dataInfo);
 		//当前引擎未使用 需要用int32Array
-		GLint* pData = (GLint*)dataInfo->data;
-		glUniform1iv(one->location, dataInfo->byteSize / sizeof(GLint), pData);
+		GLint* pData = (GLint*)info.m_data;
+		glUniform1iv(one->location, info.m_lengthInBytes/ sizeof(GLint), pData);
 		return 1;
 	}
 	/*int _uniform_ivec2(one: any, value : any)
@@ -485,11 +496,10 @@ namespace laya
 		return 1;
 	}*/
 
-	int GLShaderInstance::_uniform_sampler2D(ShaderVariable* one, ShaderData::DataInfo* dataInfo)
+	int GLShaderInstance::_uniform_sampler2D(ShaderVariable* one, const std::any& dataInfo)
 	{
-        //todo
-		/*assert((ShaderDataType)dataInfo->type == ShaderDataType::Texture);
-		int id = *((int*)dataInfo->data);
+		assert(dataInfo.type == std::typeid(uint32_t));
+		uint32_t id = std::any_cast<uint32_t>(dataInfo);
 		WebGLInternalTex* texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(id);
 		if (texture != nullptr)
 		{
@@ -499,12 +509,12 @@ namespace laya
 		{
 			LOGI("_uniform_sampler2D find no texture");
 		}
-		*/
 		return 0;
 	}
-	int GLShaderInstance::_uniform_sampler2DArray(ShaderVariable* one, ShaderData::DataInfo* dataInfo)
+	int GLShaderInstance::_uniform_sampler2DArray(ShaderVariable* one, const std::any& dataInfo)
 	{
-		int id = *((int*)dataInfo->data);
+		assert(dataInfo.type == std::typeid(uint32_t));
+		uint32_t id = std::any_cast<uint32_t>(dataInfo);
 		WebGLInternalTex* texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(id);
 		if (texture != nullptr)
 		{
@@ -517,41 +527,39 @@ namespace laya
 		return 0;
 
 	}
-	int GLShaderInstance::_uniform_sampler3D(ShaderVariable* one, ShaderData::DataInfo* dataInfo)
+	int GLShaderInstance::_uniform_sampler3D(ShaderVariable* one, const std::any& dataInfo)
 	{
-        //todo
-		/*assert((ShaderDataType)dataInfo->type == ShaderDataType::Texture);
-		int id = *((int*)dataInfo->data);
+		assert(dataInfo.type == std::typeid(uint32_t));
+		uint32_t id = std::any_cast<uint32_t>(dataInfo);
 		WebGLInternalTex* texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(id);
 		if (texture != nullptr)
 		{
 			_bindTexture(one->textureID, GL_TEXTURE_3D, texture);
-		}*/
+		}
 		return 0;
 	}
 
-	int GLShaderInstance::_uniform_samplerCube(ShaderVariable* one, ShaderData::DataInfo* dataInfo)
+	int GLShaderInstance::_uniform_samplerCube(ShaderVariable* one, const std::any& dataInfo)
 	{
-        //todo
-		/*assert((ShaderDataType)dataInfo->type == ShaderDataType::Texture);
-		int id = *((int*)dataInfo->data);
+		assert(dataInfo.type == std::typeid(uint32_t));
+		uint32_t id = std::any_cast<uint32_t>(dataInfo);
 		WebGLInternalTex* texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(id);
 		if (texture != nullptr)
 		{
 			_bindTexture(one->textureID, GL_TEXTURE_CUBE_MAP, texture);
-		}*/
+		}
 		return 0;
 	}
-	int GLShaderInstance::_uniform_UniformBuffer(ShaderVariable* one, ShaderData::DataInfo* dataInfo)
+	int GLShaderInstance::_uniform_UniformBuffer(ShaderVariable* one, const std::any& dataInfo)
 	{
-        /*todo
-		assert((ShaderDataType)dataInfo->type == laya::ShaderDataType::UBO);
-		int id = *((int*)dataInfo->data);
+		assert(dataInfo.type == std::typeid(uint32_t));
+		uint32_t id = std::any_cast<uint32_t>(dataInfo);
 		UniformBufferObject* ubo = JCConch::s_pConchRender->m_pUniformBufferObjectManager->getObject(id);
 		if (ubo != nullptr)
 		{
 			ubo->_bindUniformBufferBase();
-		}*/
+		}
+
 		return 0;
 	}
 	void GLShaderInstance::_bindTexture(int textureID, GLenum target, WebGLInternalTex* texture)

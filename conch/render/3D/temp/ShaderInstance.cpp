@@ -3,18 +3,19 @@
 #include <render/driver/gles/GLStateMap.h>
 #include "RenderState.h"
 #include <render/3D/temp/RenderStateContext.h>
-#include "Shader3D.h"
+#include <render/3D/temp/ShaderPass.h>
+#include <render/3D/Shader3D.h>
 #include <utils/Log.h>
 #include "JCConch.h"
 #include "JCConchRender.h"
 
 namespace laya
 {
-	ShaderInstance::ShaderInstance(WebGLEngine* engine, const char* vs, const char* ps, GLAttributeMap* pAttributeMap, GLStateMap* pStateMap, RenderState* pRenderState) : ResourceBase(JCConch::s_pConchRender->m_pShaderInstanceManager)
+	ShaderInstance::ShaderInstance(WebGLEngine* engine, const char* vs, const char* ps, GLAttributeMap* pAttributeMap, GLStateMap* pStateMap/*, RenderState* pRenderState*/) : ResourceBase(JCConch::s_pConchRender->m_pShaderInstanceManager)
 	{
 		m_pWebGLEngine = engine;
 		m_stateParamsMap = pStateMap;
-		m_renderState = pRenderState;
+		//m_renderState = pRenderState;
 		m_GLShaderInstance = new GLShaderInstance(engine, vs, ps, pAttributeMap);
 		_create();
 	}
@@ -76,16 +77,16 @@ namespace laya
 		m_materialUniformParamsMap.clear();
 		m_customUniformParamsMap.clear();
 		m_stateParamsMap = nullptr;
-		m_renderState = nullptr;
+		//m_renderState = nullptr;
 	}
-	ShaderData::DataInfo* ShaderInstance::_getRenderState(ShaderData* shaderDatas, int stateIndex)
+	/*ShaderData::DataInfo* ShaderInstance::_getRenderState(ShaderData* shaderDatas, int stateIndex)
 	{
 		int stateID = m_stateParamsMap->getData(stateIndex);
 		if (stateID == -1)
 			return nullptr;
 		else
 			return shaderDatas->getData(stateID);
-	}
+	}*/
 
 	int ShaderInstance::uploadUniforms(CommandEncoder* shaderUniform, ShaderData* shaderDatas, bool uploadUnTexture)
 	{
@@ -97,382 +98,205 @@ namespace laya
 	}
 	void ShaderInstance::uploadRenderStateBlendDepth(ShaderData* shaderDatas)
 	{
-		ShaderData::DataInfo* depthWrite = _getRenderState(shaderDatas, (int)Shader3D::RENDER_STATE_DEPTH_WRITE);
-		ShaderData::DataInfo* depthTest = _getRenderState(shaderDatas, (int)Shader3D::RENDER_STATE_DEPTH_TEST);
-		ShaderData::DataInfo* blend = _getRenderState(shaderDatas, (int)Shader3D::RENDER_STATE_BLEND);
-		ShaderData::DataInfo* stencilRef = _getRenderState(shaderDatas, (int)Shader3D::RENDER_STATE_STENCIL_REF);
-		ShaderData::DataInfo* stencilTest = _getRenderState(shaderDatas, (int)Shader3D::RENDER_STATE_STENCIL_TEST);
-		ShaderData::DataInfo* stencilWrite = _getRenderState(shaderDatas, (int)Shader3D::RENDER_STATE_STENCIL_WRITE);
-		ShaderData::DataInfo* stencilOp = _getRenderState(shaderDatas, (int)Shader3D::RENDER_STATE_STENCIL_OP);
-
-		int nDepthWrite;
-		int nDepthTest;
-
-		int nBlend;
-
-		int nStencilRef;
-
-		int nStencilTest;
-
-		int nStencilWrite;
-
-		int nStencilOpX;
-		int nStencilOpY;
-		int nStencilOpZ;
-
-
-		if (m_stateParamsMap->m_shaderPassStatefirst)
-		{
-			m_renderState->depthWrite != nullptr ? nDepthWrite = *m_renderState->depthWrite : 0;
-			m_renderState->depthTest != nullptr ? nDepthTest = *m_renderState->depthTest : 0;
-			m_renderState->blend != nullptr ? nBlend = *m_renderState->blend : 0;
-			m_renderState->stencilRef != nullptr ? nStencilRef = *m_renderState->stencilRef : 0;
-			m_renderState->stencilTest != nullptr ? nStencilTest = *m_renderState->stencilTest : 0;
-			m_renderState->stencilWrite != nullptr ? nStencilWrite = *m_renderState->stencilWrite : 0;
-			m_renderState->stencilOpX != nullptr ? nStencilOpX = *m_renderState->stencilOpX : 0;
-			m_renderState->stencilOpY != nullptr ? nStencilOpY = *m_renderState->stencilOpY : 0;
-			m_renderState->stencilOpZ != nullptr ? nStencilOpZ = *m_renderState->stencilOpZ : 0;
-		}
-
-		if (depthWrite == nullptr)
-		{
-			if (m_renderState->depthWrite != nullptr)
-				nDepthWrite = *m_renderState->depthWrite;
-			else
-				nDepthWrite = *RenderState::Default.depthWrite;
-		}
+		if (this->_shaderPass->statefirst)
+			this->uploadRenderStateBlendDepthByShader(shaderDatas);
 		else
-		{
-			nDepthWrite = *(float*)depthWrite->data;
+			this->uploadRenderStateBlendDepthByMaterial(shaderDatas);
+	}
+	void ShaderInstance::uploadRenderStateBlendDepthByShader(ShaderData* shaderDatas)
+	{
+		//todo
+		/*var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7;
+		var datas = shaderDatas.getData();
+		var renderState = this._shaderPass.renderState;
+		var depthWrite = (_b = ((_a = renderState.depthWrite) != nullptr  ? _a : datas[Shader3D::DEPTH_WRITE])) != nullptr ? _b : RenderState::Default.depthWrite;
+		RenderStateContext::setDepthMask(depthWrite);
+		var depthTest = (_d = ((_c = renderState.depthTest) != nullptr  ? _c : datas[Shader3D::DEPTH_TEST])) != nullptr ? _d : RenderState::Default.depthTest;
+		if (depthTest == RenderState::DEPTHTEST_OFF)
+			RenderStateContext::setDepthTest(false);
+		else {
+			RenderStateContext::setDepthTest(true);
+			RenderStateContext::setDepthFunc(depthTest);
 		}
-
-		if (depthTest == nullptr)
-		{
-			if (m_renderState->depthTest != nullptr)
-				nDepthTest = *m_renderState->depthTest;
-			else
-				nDepthTest = *RenderState::Default.depthTest;
+		bool* stencilWrite = (_f = ((_e = renderState.stencilWrite) != nullptr ? _e : datas[Shader3D::STENCIL_WRITE])) != nullptr ? _f : RenderState::Default.stencilWrite;
+		var stencilTest = (_h = ((_g = renderState.stencilTest) != nullptr ? _g : datas[Shader3D::STENCIL_TEST])) != nullptr ? _h : RenderState::Default.stencilTest;
+		RenderStateContext::setStencilMask(stencilWrite);
+		if (stencilWrite) {
+			var stencilOp = (_k = ((_j = renderState.stencilOp) != = null && _j != = void 0 ? _j : datas[Shader3D.STENCIL_Op])) != = null && _k != = void 0 ? _k : RenderState.Default.stencilOp;
+			RenderStateContext.setstencilOp(stencilOp.x, stencilOp.y, stencilOp.z);
 		}
-		else
-		{
-			nDepthTest = *(float*)depthTest->data;
+		if (stencilTest == RenderState::STENCILTEST_OFF) {
+			RenderStateContext.setStencilTest(false);
 		}
-
-		if (blend == nullptr)
-		{
-			if (m_renderState->blend != nullptr)
-				nBlend = *m_renderState->blend;
-			else
-				nBlend = *RenderState::Default.blend;
+		else {
+			var stencilRef = (_m = ((_l = renderState.stencilRef) != = null && _l != = void 0 ? _l : datas[Shader3D.STENCIL_Ref])) != = null && _m != = void 0 ? _m : RenderState.Default.stencilRef;
+			RenderStateContext.setStencilTest(true);
+			RenderStateContext.setStencilFunc(stencilTest, stencilRef);
 		}
-		else
-		{
-			nBlend = *(float*)blend->data;
-		}
-
-		if (stencilRef == nullptr)
-		{
-			if (m_renderState->stencilRef != nullptr)
-				nStencilRef = *m_renderState->stencilRef;
-			else
-				nStencilRef = *RenderState::Default.stencilRef;
-		}
-		else
-		{
-			nStencilRef = *(float*)stencilRef->data;
-		}
-
-		if (stencilTest == nullptr)
-		{
-			if (m_renderState->stencilTest != nullptr)
-				nStencilTest = *m_renderState->stencilTest;
-			else
-				nStencilTest = *RenderState::Default.stencilTest;
-		}
-		else
-		{
-			nStencilTest = *(float*)stencilTest->data;
-		}
-
-		if (stencilWrite == nullptr)
-		{
-			if (m_renderState->stencilWrite != nullptr)
-				nStencilWrite = *m_renderState->stencilWrite;
-			else
-				nStencilWrite = *RenderState::Default.stencilWrite;
-		}
-		else
-		{
-			nStencilWrite = *(float*)stencilWrite->data;
-		}
-
-		if (stencilOp == nullptr)
-		{
-			if (m_renderState->stencilOpX != nullptr)
-			{
-				nStencilOpX = *m_renderState->stencilOpX;
-				nStencilOpY = *m_renderState->stencilOpY;
-				nStencilOpZ = *m_renderState->stencilOpZ;
-			}
-			else
-			{
-				nStencilOpX = *RenderState::Default.stencilOpX;
-				nStencilOpY = *RenderState::Default.stencilOpY;
-				nStencilOpZ = *RenderState::Default.stencilOpZ;
-			}
-		}
-		else
-		{
-			nStencilOpX = *(float*)stencilOp->data;
-			nStencilOpY = *((float*)stencilOp->data + 1);
-			nStencilOpZ = *((float*)stencilOp->data + 2);
-		}
-
-
-		RenderStateContext::setDepthMask(m_pWebGLEngine, nDepthWrite > 0 ? true : false);
-		if (nDepthTest == RenderState::DEPTHTEST_OFF)
-			RenderStateContext::setDepthTest(m_pWebGLEngine, false);
-		else 
-		{
-			RenderStateContext::setDepthTest(m_pWebGLEngine, true);
-			RenderStateContext::setDepthFunc(m_pWebGLEngine, (CompareFunction)nDepthTest);
-		}
-		//blend
-		switch (nBlend)
-		{
+		var blend = (_p = ((_o = renderState.blend) != = null && _o != = void 0 ? _o : datas[Shader3D.BLEND])) != = null && _p != = void 0 ? _p : RenderState.Default.blend;
+		switch (blend) {
 		case RenderState::BLEND_DISABLE:
-			RenderStateContext::setBlend(m_pWebGLEngine, false);
+			RenderStateContext::setBlend(false);
 			break;
 		case RenderState::BLEND_ENABLE_ALL:
-			{
-				ShaderData::DataInfo* blendEquation = _getRenderState(shaderDatas, (int)Shader3D::RENDER_STATE_BLEND_EQUATION);
-				ShaderData::DataInfo* srcBlend = _getRenderState(shaderDatas, (int)Shader3D::RENDER_STATE_BLEND_SRC);
-				ShaderData::DataInfo* dstBlend = _getRenderState(shaderDatas, (int)Shader3D::RENDER_STATE_BLEND_DST);
-
-				int nBlendEquation;
-				int nSrcBlend;
-				int nDstBlend;
-
-				if (m_stateParamsMap->m_shaderPassStatefirst)
-				{
-					m_renderState->blendEquation != nullptr ? nBlendEquation = *m_renderState->blendEquation : 0;
-					m_renderState->srcBlend != nullptr ? nSrcBlend = *m_renderState->srcBlend : 0;
-					m_renderState->dstBlend != nullptr ? nDstBlend = *m_renderState->dstBlend : 0;
-				}
-				if (blendEquation == nullptr)
-				{
-					if (m_renderState->blendEquation != nullptr)
-						nBlendEquation = *m_renderState->blendEquation;
-					else
-						nBlendEquation = *RenderState::Default.blendEquation;
-				}
-				else
-				{
-					nBlendEquation = *(float*)blendEquation->data;
-				}
-
-				if (srcBlend == nullptr)
-				{
-					if (m_renderState->srcBlend != nullptr)
-						nSrcBlend = *m_renderState->srcBlend;
-					else
-						nSrcBlend = *RenderState::Default.srcBlend;
-				}
-				else
-				{
-					nSrcBlend = *(float*)srcBlend->data;
-				}
-
-				if (dstBlend == nullptr)
-				{
-					if (m_renderState->srcBlend != nullptr)
-						nDstBlend = *m_renderState->dstBlend;
-					else
-						nDstBlend = *RenderState::Default.dstBlend;
-				}
-				else
-				{
-					nDstBlend = *(float*)dstBlend->data;
-				}
-
-				RenderStateContext::setBlend(m_pWebGLEngine, true);
-				RenderStateContext::setBlendEquation(m_pWebGLEngine, (BlendEquationSeparate)nBlendEquation);
-				RenderStateContext::setBlendFunc(m_pWebGLEngine, (BlendFactor)nSrcBlend, (BlendFactor)nDstBlend);
-			}
+			var blendEquation = (_r = ((_q = renderState.blendEquation) != = null && _q != = void 0 ? _q : datas[Shader3D.BLEND_EQUATION])) != = null && _r != = void 0 ? _r : RenderState.Default.blendEquation;
+			var srcBlend = (_t = ((_s = renderState.srcBlend) != = null && _s != = void 0 ? _s : datas[Shader3D.BLEND_SRC])) != = null && _t != = void 0 ? _t : RenderState.Default.srcBlend;
+			var dstBlend = (_v = ((_u = renderState.dstBlend) != = null && _u != = void 0 ? _u : datas[Shader3D.BLEND_DST])) != = null && _v != = void 0 ? _v : RenderState.Default.dstBlend;
+			RenderStateContext::setBlend(true);
+			RenderStateContext::setBlendEquation(blendEquation);
+			RenderStateContext::setBlendFunc(srcBlend, dstBlend);
 			break;
 		case RenderState::BLEND_ENABLE_SEPERATE:
-			ShaderData::DataInfo* blendEquationRGB = _getRenderState(shaderDatas, (int)Shader3D::RENDER_STATE_BLEND_EQUATION_RGB);
-			ShaderData::DataInfo* blendEquationAlpha = _getRenderState(shaderDatas, (int)Shader3D::RENDER_STATE_BLEND_EQUATION_ALPHA);
-			ShaderData::DataInfo* srcRGB = _getRenderState(shaderDatas, (int)Shader3D::RENDER_STATE_BLEND_SRC_RGB);
-			ShaderData::DataInfo* dstRGB = _getRenderState(shaderDatas, (int)Shader3D::RENDER_STATE_BLEND_DST_RGB);
-			ShaderData::DataInfo* srcAlpha = _getRenderState(shaderDatas, (int)Shader3D::RENDER_STATE_BLEND_SRC_ALPHA);
-			ShaderData::DataInfo* dstAlpha = _getRenderState(shaderDatas, (int)Shader3D::RENDER_STATE_BLEND_DST_ALPHA);
-
-			int nBlendEquationRGB;
-			int nBlendEquationAlpha;
-			int nSrcRGB;
-			int nDstRGB;
-			int nSrcAlpha;
-			int nDstAlpha;
-
-			if (m_stateParamsMap->m_shaderPassStatefirst)
-			{
-				m_renderState->blendEquationRGB != nullptr ? nBlendEquationRGB = *m_renderState->blendEquationRGB : 0;
-				m_renderState->blendEquationAlpha != nullptr ? nBlendEquationAlpha = *m_renderState->blendEquationAlpha : 0;
-				m_renderState->srcBlendRGB != nullptr ? nSrcRGB = *m_renderState->srcBlendRGB : 0;
-				m_renderState->dstBlendRGB != nullptr ? nDstRGB = *m_renderState->dstBlendRGB : 0;
-				m_renderState->srcBlendAlpha != nullptr ? nSrcAlpha = *m_renderState->srcBlendAlpha : 0;
-				m_renderState->dstBlendAlpha != nullptr ? nDstAlpha = *m_renderState->dstBlendAlpha : 0;
-			}
-			if (blendEquationRGB == nullptr)
-			{
-				if (m_renderState->blendEquationRGB != nullptr)
-					nBlendEquationRGB = *m_renderState->blendEquationRGB;
-				else
-					nBlendEquationRGB = *RenderState::Default.blendEquationRGB;
-			}
-			else
-			{
-				nBlendEquationRGB = *(float*)blendEquationRGB->data;
-			}
-
-			if (blendEquationAlpha == nullptr)
-			{
-				if (m_renderState->blendEquationAlpha != nullptr)
-					nBlendEquationAlpha = *m_renderState->blendEquationAlpha;
-				else
-					nBlendEquationAlpha = *RenderState::Default.blendEquationAlpha;
-			}
-			else
-			{
-				nBlendEquationAlpha = *(float*)blendEquationAlpha->data;
-			}
-
-			if (srcRGB == nullptr)
-			{
-				if (m_renderState->srcBlendRGB != nullptr)
-					nSrcRGB = *m_renderState->srcBlendRGB;
-				else
-					nSrcRGB = *RenderState::Default.srcBlendRGB;
-			}
-			else
-			{
-				nSrcRGB = *(float*)srcRGB->data;
-			}
-
-			if (dstRGB == nullptr)
-			{
-				if (m_renderState->dstBlendRGB != nullptr)
-					nDstRGB = *m_renderState->dstBlendRGB;
-				else
-					nDstRGB = *RenderState::Default.dstBlendRGB;
-			}
-			else
-			{
-				nDstRGB = *(float*)dstRGB->data;
-			}
-
-			if (srcAlpha == nullptr)
-			{
-				if (m_renderState->srcBlendAlpha != nullptr)
-					nSrcAlpha = *m_renderState->srcBlendAlpha;
-				else
-					nSrcAlpha = *RenderState::Default.srcBlendAlpha;
-			}
-			else
-			{
-				nSrcAlpha = *(float*)srcAlpha->data;
-			}
-
-			if (dstAlpha == nullptr)
-			{
-				if (m_renderState->dstBlendAlpha != nullptr)
-					nDstAlpha = *m_renderState->dstBlendAlpha;
-				else
-					nDstAlpha = *RenderState::Default.dstBlendAlpha;
-			}
-			else
-			{
-				nDstAlpha = *(float*)dstAlpha->data;
-			}
-
-			RenderStateContext::setBlend(m_pWebGLEngine, true);
-			RenderStateContext::setBlendEquationSeparate(m_pWebGLEngine, (BlendEquationSeparate)nBlendEquationRGB, (BlendEquationSeparate)nBlendEquationAlpha);
-			RenderStateContext::setBlendFuncSeperate(m_pWebGLEngine, (BlendFactor)nSrcRGB, (BlendFactor)nDstRGB, (BlendFactor)nSrcAlpha, (BlendFactor)nDstAlpha);
+			var blendEquationRGB = (_x = ((_w = renderState.blendEquationRGB) != nullptr && _w != = void 0 ? _w : datas[Shader3D.BLEND_EQUATION_RGB])) != = null && _x != = void 0 ? _x : RenderState.Default.blendEquationRGB;
+			var blendEquationAlpha = (_z = ((_y = renderState.blendEquationAlpha) != nullptr && _y != = void 0 ? _y : datas[Shader3D.BLEND_EQUATION_ALPHA])) != = null && _z != = void 0 ? _z : RenderState.Default.blendEquationAlpha;
+			var srcRGB = (_1 = ((_0 = renderState.srcBlendRGB) != nullptr && _0 != = void 0 ? _0 : datas[Shader3D.BLEND_SRC_RGB])) != = null && _1 != = void 0 ? _1 : RenderState.Default.srcBlendRGB;
+			var dstRGB = (_3 = ((_2 = renderState.dstBlendRGB) != nullptr && _2 != = void 0 ? _2 : datas[Shader3D.BLEND_DST_RGB])) != = null && _3 != = void 0 ? _3 : RenderState.Default.dstBlendRGB;
+			var srcAlpha = (_5 = ((_4 = renderState.srcBlendAlpha) != nullptr && _4 != = void 0 ? _4 : datas[Shader3D.BLEND_SRC_ALPHA])) != = null && _5 != = void 0 ? _5 : RenderState.Default.srcBlendAlpha;
+			var dstAlpha = (_7 = ((_6 = renderState.dstBlendAlpha) != nullptr && _6 != = void 0 ? _6 : datas[Shader3D.BLEND_DST_ALPHA])) != = null && _7 != = void 0 ? _7 : RenderState.Default.dstBlendAlpha;
+			RenderStateContext::setBlend(true);
+			RenderStateContext::setBlendEquationSeparate(blendEquationRGB, blendEquationAlpha);
+			RenderStateContext::setBlendFuncSeperate(srcRGB, dstRGB, srcAlpha, dstAlpha);
 			break;
-		}
+		}*/
+	}
+	void ShaderInstance::uploadRenderStateBlendDepthByMaterial(ShaderData* shaderDatas) {
+		//var datas = shaderDatas.getData();
+		//var depthWrite = datas[Shader3D.DEPTH_WRITE];
 
-		//Stencil
-		RenderStateContext::setStencilMask(m_pWebGLEngine, nStencilWrite > 0 ? true : false);
-		if (nStencilTest == RenderState::STENCILTEST_OFF)
-		{
-			RenderStateContext::setStencilTest(m_pWebGLEngine, false);
+		bool* depthWrite = (bool*)shaderDatas->getData<int32_t>(Shader3D::DEPTH_WRITE);
+		depthWrite = depthWrite != nullptr /*&& depthWrite != = void 0*/ ? depthWrite : RenderState::Default.depthWrite;
+		RenderStateContext::setDepthMask(depthWrite);
+
+
+		//var depthTest = datas[Shader3D.DEPTH_TEST];
+		int32_t* depthTest = shaderDatas->getData<int32_t>(Shader3D::DEPTH_TEST);
+
+		depthTest = depthTest != nullptr /* && depthTest != = void 0*/ ? depthTest : RenderState::Default.depthTest;
+		if (*depthTest == RenderState::DEPTHTEST_OFF) {
+			RenderStateContext::setDepthTest(false);
 		}
-		else 
-		{
-			RenderStateContext::setStencilTest(m_pWebGLEngine, true);
-			RenderStateContext::setStencilFunc(m_pWebGLEngine, (CompareFunction)nStencilTest, nStencilRef);
+		else {
+			RenderStateContext::setDepthTest(true);
+			RenderStateContext::setDepthFunc((CompareFunction)*depthTest);
 		}
-		RenderStateContext::setstencilOp(m_pWebGLEngine, (StencilOperation)nStencilOpX, (StencilOperation)nStencilOpY, (StencilOperation)nStencilOpZ);
+		//var stencilWrite = datas[Shader3D::STENCIL_WRITE];
+		bool* stencilWrite = (bool*)shaderDatas->getData<int32_t>(Shader3D::STENCIL_WRITE);
+
+		stencilWrite = stencilWrite != nullptr /* && stencilWrite != = void 0*/ ? stencilWrite : RenderState::Default.stencilWrite;
+		RenderStateContext::setStencilMask(stencilWrite);
+		if (stencilWrite) {
+			//var stencilOp = datas[Shader3D::STENCIL_Op];
+			Vector3* stencilOp = shaderDatas->getData<Vector3>(Shader3D::STENCIL_Op);
+			auto* stencilOpX = stencilOp != nullptr /* && stencilOp != = void 0*/ ? &stencilOp->x : RenderState::Default.stencilOpX;
+			auto* stencilOpY = stencilOp != nullptr /* && stencilOp != = void 0*/ ? &stencilOp->y : RenderState::Default.stencilOpY;
+			auto* stencilOpZ = stencilOp != nullptr /* && stencilOp != = void 0*/ ? &stencilOp->z : RenderState::Default.stencilOpZ;
+			RenderStateContext::setstencilOp((StencilOperation)*stencilOpX, (StencilOperation)*stencilOpY, (StencilOperation)*stencilOpZ);
+		}
+		//var stencilTest = datas[Shader3D::STENCIL_TEST];
+		int32_t* stencilTest = shaderDatas->getData<int32_t>(Shader3D::STENCIL_TEST);
+		stencilTest = stencilTest != nullptr /* && stencilTest != = void 0*/ ? stencilTest : RenderState::Default.stencilTest;
+		if (*stencilTest == RenderState::STENCILTEST_OFF) {
+			RenderStateContext::setStencilTest(false);
+		}
+		else {
+			//var stencilRef = datas[Shader3D::STENCIL_Ref];
+			int32_t* stencilRef = shaderDatas->getData<int32_t>(Shader3D::STENCIL_Ref);
+			stencilRef = stencilRef != nullptr /* && stencilRef != = void 0*/ ? stencilRef : RenderState::Default.stencilRef;
+			RenderStateContext::setStencilTest(true);
+			RenderStateContext::setStencilFunc((CompareFunction)*stencilTest, *stencilRef);
+		}
+		//var blend = datas[Shader3D.BLEND];
+		int32_t* blend = shaderDatas->getData<int32_t>(Shader3D::BLEND);
+		blend = blend != nullptr /* && blend != = void 0*/ ? blend : RenderState::Default.blend;
+		switch (*blend) {
+		case RenderState::BLEND_ENABLE_ALL:
+		{
+			//var blendEquation = datas[Shader3D::BLEND_EQUATION];
+			int32_t* blendEquation = shaderDatas->getData<int32_t>(Shader3D::BLEND_EQUATION);
+			blendEquation = blendEquation != nullptr /* && blendEquation != = void 0*/ ? blendEquation : RenderState::Default.blendEquation;
+			//var srcBlend = datas[Shader3D::BLEND_SRC];
+			int32_t* srcBlend = shaderDatas->getData<int32_t>(Shader3D::BLEND_SRC);
+			srcBlend = srcBlend != nullptr /* && srcBlend != = void 0*/ ? srcBlend : RenderState::Default.srcBlend;
+			//var dstBlend = datas[Shader3D::BLEND_DST];
+			int32_t* dstBlend = shaderDatas->getData<int32_t>(Shader3D::BLEND_DST);
+			dstBlend = dstBlend != nullptr /* && dstBlend != = void 0*/ ? dstBlend : RenderState::Default.dstBlend;
+			RenderStateContext::setBlend(true);
+			RenderStateContext::setBlendEquation((BlendEquationSeparate)*blendEquation);
+			RenderStateContext::setBlendFunc((BlendFactor)*srcBlend, (BlendFactor)*dstBlend);
+		}
+			break;
+		case RenderState::BLEND_ENABLE_SEPERATE:
+		{
+			//var blendEquationRGB = datas[Shader3D::BLEND_EQUATION_RGB];
+			int32_t* blendEquationRGB = shaderDatas->getData<int32_t>(Shader3D::BLEND_EQUATION_RGB);
+			blendEquationRGB = blendEquationRGB != nullptr /* && blendEquationRGB != = void 0*/ ? blendEquationRGB : RenderState::Default.blendEquationRGB;
+			//var blendEquationAlpha = datas[Shader3D::BLEND_EQUATION_ALPHA];
+			int32_t* blendEquationAlpha = shaderDatas->getData<int32_t>(Shader3D::BLEND_EQUATION_ALPHA);
+			blendEquationAlpha = blendEquationAlpha != nullptr /*&& blendEquationAlpha != = void 0*/ ? blendEquationAlpha : RenderState::Default.blendEquationAlpha;
+			//var srcRGB = datas[Shader3D::BLEND_SRC_RGB];
+			int32_t* srcRGB = shaderDatas->getData<int32_t>(Shader3D::BLEND_SRC_RGB);
+			srcRGB = srcRGB != nullptr /*&& srcRGB != = void 0*/ ? srcRGB : RenderState::Default.srcBlendRGB;
+			//var dstRGB = datas[Shader3D::BLEND_DST_RGB];
+			int32_t* dstRGB = shaderDatas->getData<int32_t>(Shader3D::BLEND_DST_RGB);
+			dstRGB = dstRGB != nullptr /*&& dstRGB != = void 0*/ ? dstRGB : RenderState::Default.dstBlendRGB;
+			//var srcAlpha = datas[Shader3D::BLEND_SRC_ALPHA];
+			int32_t* srcAlpha = shaderDatas->getData<int32_t>(Shader3D::BLEND_SRC_ALPHA);
+			srcAlpha = srcAlpha != nullptr /*&& srcAlpha != = void 0*/ ? srcAlpha : RenderState::Default.srcBlendAlpha;
+			//var dstAlpha = datas[Shader3D::BLEND_DST_ALPHA];
+			int32_t* dstAlpha = shaderDatas->getData<int32_t>(Shader3D::BLEND_DST_ALPHA);
+			dstAlpha = dstAlpha != nullptr /* && dstAlpha != = void 0*/ ? dstAlpha : RenderState::Default.dstBlendAlpha;
+			RenderStateContext::setBlend(true);
+			RenderStateContext::setBlendEquationSeparate((BlendEquationSeparate)*blendEquationRGB, (BlendEquationSeparate)*blendEquationAlpha);
+			RenderStateContext::setBlendFuncSeperate((BlendFactor)*srcRGB, (BlendFactor)*dstRGB, (BlendFactor)*srcAlpha, (BlendFactor)*dstAlpha);
+		}
+			break;
+		case RenderState::BLEND_DISABLE:
+		default:
+			RenderStateContext::setBlend(false);
+			break;
+		};
 	}
 	void ShaderInstance::uploadRenderStateFrontFace(ShaderData* shaderDatas, bool isTarget, bool invertFront)
 	{
-		m_cullStateCMD.clear();
-		ShaderData::DataInfo* pCull = _getRenderState(shaderDatas, (int)Shader3D::RENDER_STATE_CULL);
-		
-		/*if (pCull)
-		{
-			float cc = *(float*)pCull->data;
-			LOGI("cc %f %p", cc, pCull->data);
-		}*/
-        float* pfCull = (pCull != nullptr ? (float*)pCull->data : nullptr);
-		if (m_stateParamsMap->m_shaderPassStatefirst)
-		{
-			if (m_renderState->cull != nullptr )
-			{
-				pfCull = m_renderState->cull;
-			}
-			
-		}
-		int nCull;
-		if (pfCull != nullptr)
-		{
-            nCull = *(float*)pfCull;
-		}
-		else
-		{
-            nCull = *RenderState::Default.cull;
-		}
+		int32_t* _a = nullptr;
+		RenderState* renderState = this->_shaderPass->renderState;
 
-		int forntFace;
-		switch (nCull)
+		int32_t* cull = shaderDatas->getData<int32_t>(Shader3D::CULL);
+
+		if (this->_shaderPass->statefirst) 
+		{
+			cull = (_a = renderState->cull) != nullptr /* && _a !== void 0*/ ? _a : cull;
+		}
+		cull = cull != nullptr /*&& cull != = void 0*/ ? cull : RenderState::Default.cull;
+
+		CullMode forntFace;
+		switch (*cull)
 		{
 		case RenderState::CULL_NONE:
-			m_cullStateCMD.addCMDInt1(RenderStateType::CullFace, false);
+			RenderStateContext::setCullFace(false);
 				if (isTarget != invertFront)
-					forntFace = (int)CullMode::Front;//gl.CCW
+					forntFace = CullMode::Front;//gl.CCW
 				else
-					forntFace = (int)CullMode::Back;
-				m_cullStateCMD.addCMDInt1(RenderStateType::FrontFace, forntFace);
+					forntFace = CullMode::Back;
+				RenderStateContext::setFrontFace(forntFace);
 			break;
 		case RenderState::CULL_FRONT:
-			m_cullStateCMD.addCMDInt1(RenderStateType::CullFace, true);
+			RenderStateContext::setCullFace(true);
 			if (isTarget == invertFront)
-				forntFace = (int)CullMode::Front;//gl.CCW
+				forntFace = CullMode::Front;//gl.CCW
 			else
-				forntFace = (int)CullMode::Back;
-			m_cullStateCMD.addCMDInt1(RenderStateType::FrontFace, forntFace);
+				forntFace = CullMode::Back;
+			RenderStateContext::setFrontFace(forntFace);
 			break;
 		case RenderState::CULL_BACK:
-			m_cullStateCMD.addCMDInt1(RenderStateType::CullFace, true);
+			RenderStateContext::setCullFace(true);
 			if (isTarget != invertFront)
-				forntFace = (int)CullMode::Front;//gl.CCW
+				forntFace = CullMode::Front;//gl.CCW
 			else
-				forntFace = (int)CullMode::Back;
-			m_cullStateCMD.addCMDInt1(RenderStateType::FrontFace, forntFace);
+				forntFace = CullMode::Back;
+			RenderStateContext::setFrontFace(forntFace);
 			break;
 		}
-		m_pWebGLEngine->applyRenderStateCMD(m_cullStateCMD);
 	}
 	ShaderInstance* ShaderInstance::getShaderInstance(uint32_t id)
 	{

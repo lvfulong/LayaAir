@@ -30,35 +30,36 @@ namespace laya
 		bool useProgram();
 		void destroy();
 		std::vector<ShaderVariable*>& getUniformMap() { return m_uniformMap; }
+
 	private:
 		void _create();
 		GLuint _createShader(const std::string& str, int type);
 		void _addShaderUnifiormFun(ShaderVariable* one);
-		int _uniform1f(ShaderVariable* one, ShaderData::DataInfo* dataInfo);
-		int _uniform1fv(ShaderVariable* one, ShaderData::DataInfo* dataInfo);
-		int _uniform_vec2(ShaderVariable* one, ShaderData::DataInfo* dataInfo);
-		int _uniform_vec2v(ShaderVariable* one, ShaderData::DataInfo* dataInfo);
-		int _uniform_vec3(ShaderVariable* one, ShaderData::DataInfo* dataInfo);
-		int _uniform_vec3v(ShaderVariable* one, ShaderData::DataInfo* dataInfo);
-		int _uniform_vec4(ShaderVariable* one, ShaderData::DataInfo* dataInfo);
-		int _uniform_vec4v(ShaderVariable* one, ShaderData::DataInfo* dataInfo);
-		int _uniformMatrix2fv(ShaderVariable* one, ShaderData::DataInfo* dataInfo);
-		int _uniformMatrix3fv(ShaderVariable* one, ShaderData::DataInfo* dataInfo);
-		int _uniformMatrix4f(ShaderVariable* one, ShaderData::DataInfo* dataInfo);
-		int _uniformMatrix4fv(ShaderVariable* one, ShaderData::DataInfo* dataInfo);
-		int _uniform1i(ShaderVariable* one, ShaderData::DataInfo* dataInfo);
-		int _uniform1iv(ShaderVariable* one, ShaderData::DataInfo* dataInfo);
+		int _uniform1f(ShaderVariable* one, const std::any& dataInfo);
+		int _uniform1fv(ShaderVariable* one, const std::any& dataInfo);
+		int _uniform_vec2(ShaderVariable* one, const std::any& dataInfo);
+		int _uniform_vec2v(ShaderVariable* one, const std::any& dataInfo);
+		int _uniform_vec3(ShaderVariable* one, const std::any& dataInfo);
+		int _uniform_vec3v(ShaderVariable* one, const std::any& dataInfo);
+		int _uniform_vec4(ShaderVariable* one, const std::any& dataInfo);
+		int _uniform_vec4v(ShaderVariable* one, const std::any& dataInfo);
+		int _uniformMatrix2fv(ShaderVariable* one, const std::any& dataInfo);
+		int _uniformMatrix3fv(ShaderVariable* one, const std::any& dataInfo);
+		int _uniformMatrix4f(ShaderVariable* one, const std::any& dataInfo);
+		int _uniformMatrix4fv(ShaderVariable* one, const std::any& dataInfo);
+		int _uniform1i(ShaderVariable* one, const std::any& dataInfo);
+		int _uniform1iv(ShaderVariable* one, const std::any& dataInfo);
 		/*int _uniform_ivec2(ShaderVariable* one, ShaderData::DataInfo* dataInfo);
 		int _uniform_ivec2v(ShaderVariable* one, ShaderData::DataInfo* dataInfo);
 		__uniform_vec3i(one: any, value : any) : number;
 		_uniform_vec3vi(one: any, value : any) : number;
 		_uniform_vec4i(one: any, value : any) : number;
 		_uniform_vec4vi(one: any, value : any) : number;*/
-		int _uniform_sampler2DArray(ShaderVariable* one, ShaderData::DataInfo* dataInfo);
-		int _uniform_sampler2D(ShaderVariable* one, ShaderData::DataInfo* dataInfo);
-		int _uniform_sampler3D(ShaderVariable* one, ShaderData::DataInfo* dataInfo);
-		int _uniform_samplerCube(ShaderVariable* one, ShaderData::DataInfo* dataInfo);
-		int _uniform_UniformBuffer(ShaderVariable* one, ShaderData::DataInfo* dataInfo);
+		int _uniform_sampler2DArray(ShaderVariable* one, const std::any& dataInfo);
+		int _uniform_sampler2D(ShaderVariable* one, const std::any& dataInfo);
+		int _uniform_sampler3D(ShaderVariable* one, const std::any& dataInfo);
+		int _uniform_samplerCube(ShaderVariable* one, const std::any& dataInfo);
+		int _uniform_UniformBuffer(ShaderVariable* one, const std::any& dataInfo);
 
 		void _bindTexture(int textureID, GLenum target, WebGLInternalTex* texture);
 

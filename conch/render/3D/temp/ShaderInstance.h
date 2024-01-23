@@ -19,10 +19,11 @@ namespace laya
 	class GLStateMap;
 	class ShaderVariable;
 	class RenderState;
+	class ShaderPass;
 	class ShaderInstance: public ResourceBase<ShaderInstance>
 	{
 	public:
-		ShaderInstance(WebGLEngine* engine, const char* vs, const char* ps, GLAttributeMap* pAttributeMap, GLStateMap* pStateMap, RenderState* pRenderState);
+		ShaderInstance(WebGLEngine* engine, const char* vs, const char* ps, GLAttributeMap* pAttributeMap, GLStateMap* pStateMap/*, RenderState* pRenderState*/);
 		~ShaderInstance();
 		static ShaderInstance* getShaderInstance(uint32_t id);
 		bool bind();
@@ -32,9 +33,11 @@ namespace laya
 		int uploadCustomUniforms(int index, char* data, int byteSize);
 		void uploadRenderStateFrontFace(ShaderData* shaderDatas, bool isTarget, bool invertFront);
 		void uploadRenderStateBlendDepth(ShaderData* shaderDatas);
+		void uploadRenderStateBlendDepthByMaterial(ShaderData* shaderDatas);
+		void uploadRenderStateBlendDepthByShader(ShaderData* shaderDatas);
 	private:
 		void _create();
-		ShaderData::DataInfo* _getRenderState(ShaderData* shaderDatas, int stateIndex);
+		//ShaderData::DataInfo* _getRenderState(ShaderData* shaderDatas, int stateIndex);
 	public:
 		CommandEncoder									m_sceneUniformParamsMap;
 		CommandEncoder									m_cameraUniformParamsMap;
@@ -48,9 +51,9 @@ namespace laya
 		ShaderData*										m_uploadMaterial = 0;
 		WebGLEngine*									m_pWebGLEngine = nullptr;
 		GLStateMap*										m_stateParamsMap = nullptr;
-		RenderStateCommand								m_cullStateCMD;
-		RenderState*									m_renderState = nullptr;
+		//RenderStateCommand								m_cullStateCMD;
 		std::unordered_map<int, ShaderVariable*>		m_customUniformParamsMap;
+		ShaderPass*										_shaderPass = nullptr;
 	};
 }
 #endif //__ShaderInstance_H__

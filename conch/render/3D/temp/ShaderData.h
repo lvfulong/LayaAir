@@ -16,7 +16,7 @@
 
 namespace laya
 {
-	enum class ShaderDataType
+	/*enum class ShaderDataType
 	{
 		Int,
 		Bool,
@@ -30,36 +30,20 @@ namespace laya
 		TextureCube,
 		Buffer,
 		Matrix3x3,
-	};
+	};*/
 	class ShaderDefine;
+	class UniformBufferObject;
 	class ShaderData: public ResourceBase<ShaderData>
 	{
 	public:
-		struct DataInfo
+		
+
+	public:
+		class BufferDataInfo
 		{
-			ShaderDataType	type;	//����
-			int size;				//�������͵ĸ���
-			unsigned char*	data;	//ָ��
-			int byteSize = 0;//
-			DataInfo()
-			{
-				data = nullptr;
-			}
-			DataInfo(ShaderDataType nType, int nSize, int nByteSize)
-			{
-				type = nType;
-				size = nSize;
-				data = nullptr;
-				byteSize = nByteSize;
-			}
-			~DataInfo()
-			{
-				if (data)
-				{
-					delete[] data;
-					data = nullptr;
-				}
-			}
+		public:
+			uint8_t* m_data = nullptr;
+			uint32_t m_lengthInBytes = 0;
 		};
 
 	public:
@@ -68,15 +52,25 @@ namespace laya
 
 		~ShaderData();
 
-		void refreshData(int32_t* pBufferData,int nLength, int counts);
+		//void refreshData(int32_t* pBufferData,int nLength, int counts);
 
-		ShaderData::DataInfo* getData(int key);
+		template<typename T>
+		T* getData(uint32_t key)
+		{
+			std::unordered_map<uint32_t, std::any>::iterator it = m_data.find(key);
+			if (it != m_data.end())
+			{
+				assert(it->second.type == std::typeid(T));
+				return std::any_cast<T>(&it->second);
+			}
+			return nullptr;
+		}
 
         void destroy();
         
         void applyUBOData();
         
-		static ShaderData *getShaderData(uint32_t id);
+		//static ShaderData *getShaderData(uint32_t id);
 		void setBool(int32_t index, bool value);
 		void setInt(int32_t index, int32_t value);
 		void setNumber(int32_t index, float value);
@@ -95,8 +89,6 @@ namespace laya
 
         bool isDestroy{false};
 	public:
-
-		std::unordered_map<int, DataInfo*>	m_vData;
 
 		std::unordered_map<uint32_t, std::any>	m_data;
 		DefineDatas _defineDatas;

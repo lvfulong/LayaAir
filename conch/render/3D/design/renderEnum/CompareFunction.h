@@ -12,7 +12,8 @@ namespace laya
 		Greater,
 		NotEqual,
 		GreaterEqual,
-		Always
+		Always,
+		Off
 	};
 }
 #endif

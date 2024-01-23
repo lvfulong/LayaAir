@@ -4,27 +4,27 @@
 namespace laya
 {
 	RenderState RenderState::Default;
-	float		RenderState::s_cull = (float)RenderState::CULL_BACK;;
-	int			RenderState::s_blend = RenderState::BLEND_DISABLE;
-	int			RenderState::s_srcBlend = RenderState::BLENDPARAM_ONE;
-	int			RenderState::s_dstBlend = RenderState::BLENDPARAM_ZERO;
-	int			RenderState::s_srcBlendRGB = RenderState::BLENDPARAM_ONE;
-	int		    RenderState::s_dstBlendRGB = RenderState::BLENDPARAM_ZERO;
-	int			RenderState::s_srcBlendAlpha = RenderState::BLENDPARAM_ONE;
-	int			RenderState::s_dstBlendAlpha = RenderState::BLENDPARAM_ZERO;
-	//Vector4	RenderState::s_blendConstColor;
-	int			RenderState::s_blendEquation = RenderState::BLENDEQUATION_ADD;
-	int			RenderState::s_blendEquationRGB = RenderState::BLENDEQUATION_ADD;
-	int			RenderState::s_blendEquationAlpha = RenderState::BLENDEQUATION_ADD;
-	int			RenderState::s_depthTest = RenderState::DEPTHTEST_LEQUAL;
-	bool		RenderState::s_depthWrite = true;
-	bool		RenderState::s_stencilWrite = false;
-	int			RenderState::s_stencilTest = RenderState::STENCILTEST_OFF;
-	int			RenderState::s_stencilRef = 1;
-	//Vector3	RenderState::stencilOp;
-	int			RenderState::s_stencilOpX = RenderState::STENCILOP_KEEP;
-	int			RenderState::s_stencilOpY = RenderState::STENCILOP_KEEP;
-	int			RenderState::s_stencilOpZ = RenderState::STENCILOP_REPLACE;
+	int32_t			RenderState::s_cull = RenderState::CULL_BACK;;
+	int32_t			RenderState::s_blend = RenderState::BLEND_DISABLE;
+	int32_t			RenderState::s_srcBlend = RenderState::BLENDPARAM_ONE;
+	int32_t			RenderState::s_dstBlend = RenderState::BLENDPARAM_ZERO;
+	int32_t			RenderState::s_srcBlendRGB = RenderState::BLENDPARAM_ONE;
+	int32_t		    RenderState::s_dstBlendRGB = RenderState::BLENDPARAM_ZERO;
+	int32_t			RenderState::s_srcBlendAlpha = RenderState::BLENDPARAM_ONE;
+	int32_t			RenderState::s_dstBlendAlpha = RenderState::BLENDPARAM_ZERO;
+	//Vector4			RenderState::s_blendConstColor;
+	int32_t			RenderState::s_blendEquation = RenderState::BLENDEQUATION_ADD;
+	int32_t			RenderState::s_blendEquationRGB = RenderState::BLENDEQUATION_ADD;
+	int32_t			RenderState::s_blendEquationAlpha = RenderState::BLENDEQUATION_ADD;
+	int32_t			RenderState::s_depthTest = RenderState::DEPTHTEST_LEQUAL;
+	bool				RenderState::s_depthWrite = true;
+	bool				RenderState::s_stencilWrite = false;
+	int32_t			RenderState::s_stencilTest = RenderState::STENCILTEST_OFF;
+	int32_t			RenderState::s_stencilRef = 1;
+	//Vector3			RenderState::stencilOp;
+	double			RenderState::s_stencilOpX = RenderState::STENCILOP_KEEP;
+	double			RenderState::s_stencilOpY = RenderState::STENCILOP_KEEP;
+	double			RenderState::s_stencilOpZ = RenderState::STENCILOP_REPLACE;
 	RenderState::RenderState()
 	{
 		this->cull = &s_cull;

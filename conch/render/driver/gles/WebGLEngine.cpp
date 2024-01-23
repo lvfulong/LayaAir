@@ -385,7 +385,7 @@ namespace laya
         assert(shaderData != nullptr);
 		shader->bind();
         /////TODO lvshaderData->applyUBOData();
-		std::unordered_map<int, ShaderData::DataInfo*>& data = shaderData->m_vData;
+		std::unordered_map<uint32_t, std::any>& data = shaderData->m_data;
 		std::vector<ShaderVariable*>& shaderUniform = commandEncoder->getArrayData();
 		int shaderCall = 0;
 		for (int i = 0, n = shaderUniform.size(); i < n; i++)
@@ -394,10 +394,10 @@ namespace laya
 			if (uploadUnTexture || one->textureID != -1) 
 			{
 				//如uniform为纹理切换Shader时需要重新上传
-				std::unordered_map<int, ShaderData::DataInfo*>::iterator it = data.find(one->dataOffset);
+				std::unordered_map<uint32_t, std::any>::iterator it = data.find(one->dataOffset);
 				if (it != data.end())
 				{
-					shaderCall += one->fun(one, it->second);
+					shaderCall += one->fun(one, &it->second);
 				}
 			}
 		}
