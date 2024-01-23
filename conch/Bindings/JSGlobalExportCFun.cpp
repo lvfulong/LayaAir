@@ -78,11 +78,8 @@
 #include "LayaAir/3D/JSIndexBuffer3D.h"
 #include "LayaAir/3D/JSRenderGeometryElement.h"
 #include "LayaAir/3D/JSRenderElement.h"
-#include "LayaAir/3D/JSRenderQueue.h"
+
 #include "LayaAir/3D/JSCommandUniformMap.h"
-//#include "LayaAir/3D/JSRenderContext3D.h"
-#include "LayaAir/3D/JSCommandEncoder.h"
-#include "LayaAir/3D/JSRenderNode.h"
 #include "LayaAir/3D/JSTransform.h"
 #include "LayaAir/3D/JSSubmitScene3D.h"
 #include "LayaAir/3D/JSBounds.h"

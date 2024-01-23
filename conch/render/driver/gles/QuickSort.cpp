@@ -1,5 +1,4 @@
 #include "QuickSort.h"
-#include <Bindings/LayaAir/3D/JSRenderNode.h>
 #include "render/3D/design/RenderElement.h"
 #include "render/3D/temp/RenderElementOBJ.h"
 #include "render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.h"
