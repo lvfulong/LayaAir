@@ -111,4 +111,8 @@ namespace laya{
     {
         m_createShaderInstanceFunctionJS.call<void>(getCurrentContext().global());//todo check this
     }
+    void ShaderPass::destroy()
+    {
+        //todo
+    }
 }

@@ -8,8 +8,12 @@ namespace laya
 	SubShader::~SubShader()
 	{
 	}
-	void SubShader::addShaderpass(ShaderPass* pass)
+	void SubShader::addShaderPass(ShaderPass* pass)
 	{
 		shaderpasses.push_back(pass);
+	}
+	void SubShader::destroy()
+	{
+		//todo
 	}
 } // namespace laya

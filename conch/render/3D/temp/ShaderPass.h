@@ -17,6 +17,7 @@ namespace laya{
         ShaderInstance* getCacheShader(DefineDatas* compileDefine);
         void callCreateShaderInstanceFunction();
         void setRenderState(RenderState* value) { renderState = value; }
+        void destroy();
     public:
         //binds
         void setCreateShaderInstanceFunction(JSValueAsParam value);

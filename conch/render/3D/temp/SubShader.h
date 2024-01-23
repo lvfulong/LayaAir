@@ -10,7 +10,8 @@ namespace laya {
     public:
         SubShader();
         ~SubShader();
-        void addShaderpass(ShaderPass* pass);
+        void addShaderPass(ShaderPass* pass);
+        void destroy();
     public:
         std::vector<ShaderPass*> shaderpasses;
     };

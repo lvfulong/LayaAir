@@ -23,6 +23,7 @@
 #include <render/3D/temp/ShaderPass.h>
 #include <render/3D/temp/ShaderData.h>
 #include <render/3D/temp/ShaderInstance.h>
+#include <render/3D/temp/SubShader.h>
 #include <core/math/Matrix4x4.h>
 #include <core/math/Matrix3x3.h>
 
@@ -105,7 +106,14 @@ class RenderBindings
             //todo RenderState
         }
         {
-            //todo SubShader
+            //todo DefineDatas
+        }
+        {
+            class_<SubShader> class_binding;
+            class_binding.constructor<>();
+            class_binding.function("addShaderPass", &SubShader::addShaderPass);
+            class_binding.function("destroy", &SubShader::destroy);
+            context.class_("conchSubShader", class_binding);
         }
         {
             //todo RenderGeometryElementOBJ
@@ -120,6 +128,11 @@ class RenderBindings
             class_<ShaderPass> class_binding;
             class_binding.constructor<>();
             class_binding.function("setCreateShaderInstanceFunction", &ShaderPass::setCreateShaderInstanceFunction);
+            class_binding.function("setCacheShader", &ShaderPass::setCacheShader);
+            //class_binding.function("getCacheShader", &ShaderPass::getCacheShader);//todo
+            class_binding.function("destroy", &ShaderPass::destroy);
+            class_binding.property_field("_pipelineMode", &ShaderPass::pipelineMode);
+            class_binding.property_field("_statefirst", &ShaderPass::statefirst);
             context.class_("conchShaderPass", class_binding);
         }
         {
