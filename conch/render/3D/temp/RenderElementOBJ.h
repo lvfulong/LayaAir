@@ -21,6 +21,13 @@ class RenderElementOBJ
     ~RenderElementOBJ();
     void _render(RTRenderContext3D* context);
     void _preUpdatePre(RTRenderContext3D* context);
+    void setRenderShaderData(ShaderData* value) { renderShaderData = value; }
+    void setMaterialShaderData(ShaderData* value) { materialShaderData = value; }
+    void setTransform(Transform3D* value) { transform = value;}
+    void setOwner(RTBaseRenderNode* value) { owner = value; }
+    void setGeometry(RenderGeometryElement* value) { geometry = value; }
+    void setSubShader(SubShader* value) { subshader = value; }
+    void destroy();
 private:
     void _addShaderInstance(ShaderInstance* shader);
     void _clearShaderInstance();
@@ -28,13 +35,13 @@ private:
     void _compileShader(RTRenderContext3D* context);
     void drawGeometry(ShaderInstance* shaderIns);
 public:
-    RenderGeometryElement* geometry;
-    SubShader* subshader;
-    ShaderData* materialShaderData;
+    RenderGeometryElement* geometry = nullptr;
+    SubShader* subshader = nullptr;
+    ShaderData* materialShaderData = nullptr;
     uint32_t materialRenderQueue;
-    ShaderData* renderShaderData;
-    Transform3D* transform;
-    RTBaseRenderNode* owner;
+    ShaderData* renderShaderData = nullptr;
+    Transform3D* transform = nullptr;
+    RTBaseRenderNode* owner = nullptr;
     bool isRender;
 private:
     DefineDatas _compileDefines;

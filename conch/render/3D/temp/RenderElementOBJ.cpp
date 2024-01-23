@@ -123,5 +123,9 @@ namespace laya
     {
         LayaGL::m_pWebglEngine->getDrawContext()->drawGeometryElement(geometry);
     }
+    void RenderElementOBJ::destroy()
+    {
+        //todo
+    }
 }
 //namespace laya

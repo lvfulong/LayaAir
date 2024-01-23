@@ -105,6 +105,12 @@ class RenderBindings
             //todo RenderState
         }
         {
+            //todo SubShader
+        }
+        {
+            //todo RenderGeometryElementOBJ
+        }
+        {
             class_<ShaderInstance> class_binding;
             class_binding.constructor<WebGLEngine*, const char*, const char*, const std::unordered_map<std::string, int32_t>&>();//todo
             class_binding.function("destroy", &ShaderInstance::destroy);
@@ -119,8 +125,16 @@ class RenderBindings
         {
             class_<RenderElementOBJ> class_binding;
             class_binding.constructor<>();
-            //class_binding.function("renderFowarAddCameraPass", &RTRender3DProcess::renderFowarAddCameraPass);
-            context.class_("conchRTRenderElementOBJ", class_binding);
+            class_binding.function("destroy", &RenderElementOBJ::destroy);
+            class_binding.function("setTransform", &RenderElementOBJ::setTransform); 
+            class_binding.function("setMaterialShaderData", &RenderElementOBJ::setMaterialShaderData);
+            class_binding.function("setRenderShaderData", &RenderElementOBJ::setRenderShaderData);
+            class_binding.function("setOwner", &RenderElementOBJ::setOwner);
+            class_binding.function("setGeometry", &RenderElementOBJ::setGeometry);
+            class_binding.function("setSubShader", &RenderElementOBJ::setSubShader);
+            class_binding.property_field("_isRender", &RenderElementOBJ::isRender);
+            class_binding.property_field("_materialRenderQueue", &RenderElementOBJ::materialRenderQueue);
+            context.class_("conchRenderElementOBJ", class_binding);
         }
         {
             class_<RTBaseRenderNode> class_binding;
