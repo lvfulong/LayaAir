@@ -111,6 +111,40 @@ namespace laya
 
 		~RenderState();
 
+		int32_t getCull();
+		void setCull(int32_t value);
+		int32_t getBlend();
+		void setBlend(int32_t value);
+		int32_t getSrcBlend();
+		void setSrcBlend(int32_t value);
+		int32_t getDstBlend();
+		void setDstBlend(int32_t value);
+		int32_t getSrcBlendRGB();
+		void setSrcBlendRGB(int32_t value);
+		int32_t getDstBlendRGB();
+		void setDstBlendRGB(int32_t value);
+		int32_t getSrcBlendAlpha();
+		void setSrcBlendAlpha(int32_t value);
+		int32_t getDstBlendAlpha();
+		void setDstBlendAlpha(int32_t value);
+		int32_t getBlendEquation();
+		void setBlendEquation(int32_t value);
+		int32_t getBlendEquationRGB();
+		void setBlendEquationRGB(int32_t value);
+		int32_t getBlendEquationAlpha();
+		void setBlendEquationAlpha(int32_t value);
+		int32_t getDepthTest();
+		void setDepthTest(int32_t value);
+		bool getDepthWrite();
+		void setDepthWrite(bool value);
+		bool getStencilWrite();
+		void setStencilWrite(bool value);
+		int32_t getStencilTest();
+		void setStencilTest(int32_t value);
+		int32_t getStencilRef();
+		void setStencilRef(int32_t value);
+		//void setBlendConstColor(float r, float g, float b, float a);
+		void setStencilOp(const Vector3& value);
 		void setNull();
 		static RenderState Default;
 	public:
@@ -135,6 +169,30 @@ namespace laya
 		//double*				stencilOpX;
 		//double*				stencilOpY;
 		//double*				stencilOpZ;//double? todo
+
+
+
+		int32_t			m_cull;
+		int32_t			m_blend;
+		int32_t			m_srcBlend;
+		int32_t			m_dstBlend;
+		int32_t			m_srcBlendRGB;
+		int32_t		    m_dstBlendRGB;
+		int32_t			m_srcBlendAlpha;
+		int32_t			m_dstBlendAlpha;
+		//Vector4		blendConstColor;
+		int32_t			m_blendEquation;
+		int32_t			m_blendEquationRGB;
+		int32_t			m_blendEquationAlpha;
+		int32_t			m_depthTest;
+		bool			m_depthWrite;
+		bool			m_stencilWrite;
+		int32_t			m_stencilTest;
+		int32_t			m_stencilRef;
+		Vector3			m_stencilOp;
+		//int32_t			stencilOpX;
+		//int32_t			stencilOpY;
+		//int32_t			stencilOpZ;
 	};
 }
 #endif //__RenderState_H__

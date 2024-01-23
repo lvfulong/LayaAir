@@ -24,6 +24,7 @@
 #include <render/3D/temp/ShaderData.h>
 #include <render/3D/temp/ShaderInstance.h>
 #include <render/3D/temp/SubShader.h>
+#include <render/3D/temp/RenderState.h>
 #include <core/math/Matrix4x4.h>
 #include <core/math/Matrix3x3.h>
 
@@ -103,7 +104,28 @@ class RenderBindings
             //todo UniformBufferObject
         }
         {
-            //todo RenderState
+            class_<RenderState> class_binding;
+            class_binding.constructor<>();
+            class_binding.property("cull", &RenderState::getCull, &RenderState::setCull);
+            class_binding.property("blend", &RenderState::getBlend, &RenderState::setBlend);
+            class_binding.property("srcBlend", &RenderState::getSrcBlend, &RenderState::setSrcBlend);
+            class_binding.property("dstBlend", &RenderState::getDstBlend, &RenderState::setDstBlend);
+            class_binding.property("srcBlendRGB", &RenderState::getSrcBlendRGB, &RenderState::setSrcBlendRGB);
+            class_binding.property("dstBlendRGB", &RenderState::getDstBlendRGB, &RenderState::setDstBlendRGB);
+            class_binding.property("srcBlendAlpha", &RenderState::getSrcBlendAlpha, &RenderState::setSrcBlendAlpha);
+            class_binding.property("dstBlendAlpha", &RenderState::getDstBlendAlpha, &RenderState::setDstBlendAlpha);
+            //JSP_ADD_METHOD("blendConstColor", RenderState::setBlendConstColor);
+            class_binding.property("blendEquation", &RenderState::getBlendEquation, &RenderState::setBlendEquation);
+            class_binding.property("blendEquationRGB", &RenderState::getBlendEquationRGB, &RenderState::setBlendEquationRGB);
+            class_binding.property("blendEquationAlpha", &RenderState::getBlendEquationAlpha, &RenderState::setBlendEquationAlpha);
+            class_binding.property("depthTest", &RenderState::getDepthTest, &RenderState::setDepthTest);
+            class_binding.property("depthWrite", &RenderState::getDepthWrite, &RenderState::setDepthWrite);
+            class_binding.property("stencilWrite", &RenderState::getStencilWrite, &RenderState::setStencilWrite);
+            class_binding.property("stencilTest", &RenderState::getStencilTest, &RenderState::setStencilTest);
+            class_binding.property("stencilRef", &RenderState::getStencilRef, &RenderState::setStencilRef);
+            class_binding.function("stencilOp", &RenderState::setStencilOp);
+            class_binding.function("setNull", &RenderState::setNull);
+            context.class_("conchRenderState", class_binding);
         }
         {
             //todo DefineDatas

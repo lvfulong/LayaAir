@@ -74,5 +74,162 @@ namespace laya
 		this->stencilOp = nullptr;
 		//this->stencilOpX = this->stencilOpY = this->stencilOpZ = nullptr;
 	}
+	int32_t RenderState::getCull()
+	{
+		return *this->cull;
+	}
+	void RenderState::setCull(int32_t value)
+	{
+		this->m_cull = value;
+		this->cull = &this->m_cull;
+	}
+	int32_t RenderState::getBlend()
+	{
+		return *this->blend;
+	}
+	void RenderState::setBlend(int32_t value)
+	{
+		this->m_blend = value;
+		this->blend = &this->m_blend;
+	}
+	int32_t RenderState::getSrcBlend()
+	{
+		return *this->srcBlend;
+	}
+	void RenderState::setSrcBlend(int32_t value)
+	{
+		this->m_srcBlend = value;
+		this->srcBlend = &this->m_srcBlend;
+	}
+	int32_t RenderState::getDstBlend()
+	{
+		return *this->dstBlend;
+	}
+	void RenderState::setDstBlend(int32_t value)
+	{
+		this->m_dstBlend = value;
+		this->dstBlend = &this->m_dstBlend;
+	}
+	int32_t RenderState::getSrcBlendRGB()
+	{
+		return *this->srcBlendRGB;
+	}
+	void RenderState::setSrcBlendRGB(int32_t value)
+	{
+		this->m_srcBlendRGB = value;
+		this->srcBlendRGB = &this->m_srcBlendRGB;
+	}
+	int32_t RenderState::getDstBlendRGB()
+	{
+		return *this->dstBlendRGB;
+	}
+	void RenderState::setDstBlendRGB(int32_t value)
+	{
+		this->m_dstBlendRGB = value;
+		this->dstBlendRGB = &this->m_dstBlendRGB;
+	}
+	int32_t RenderState::getSrcBlendAlpha()
+	{
+		return *this->srcBlendAlpha;
+	}
+	void RenderState::setSrcBlendAlpha(int32_t value)
+	{
+		this->m_srcBlendAlpha = value;
+		this->srcBlendAlpha = &this->m_srcBlendAlpha;
+	}
+	int32_t RenderState::getDstBlendAlpha()
+	{
+		return *this->dstBlendAlpha;
+	}
+	void RenderState::setDstBlendAlpha(int32_t value)
+	{
+		this->m_dstBlendAlpha = value;
+		this->dstBlendAlpha = &this->m_dstBlendAlpha;
+	}
+	int32_t RenderState::getBlendEquation()
+	{
+		return *this->blendEquation;
+	}
+	void RenderState::setBlendEquation(int32_t value)
+	{
+		this->m_blendEquation = value;
+		this->blendEquation = &this->m_blendEquation;
+	}
+	int32_t RenderState::getBlendEquationRGB()
+	{
+		return *this->blendEquationRGB;
+	}
+	void RenderState::setBlendEquationRGB(int32_t value)
+	{
+		this->m_blendEquationRGB = value;
+		this->blendEquationRGB = &this->m_blendEquationRGB;
+	}
+	int32_t RenderState::getBlendEquationAlpha()
+	{
+		return *this->blendEquationAlpha;
+	}
+	void RenderState::setBlendEquationAlpha(int32_t value)
+	{
+		this->m_blendEquationAlpha = value;
+		this->blendEquationAlpha = &this->m_blendEquationAlpha;
+	}
+	int32_t RenderState::getDepthTest()
+	{
+		return *this->depthTest;
+	}
+	void RenderState::setDepthTest(int32_t value)
+	{
+		this->m_depthTest = value;
+		this->depthTest = &this->m_depthTest;
+	}
+	bool RenderState::getDepthWrite()
+	{
+		return this->depthWrite;
+	}
+	void RenderState::setDepthWrite(bool value)
+	{
+		this->m_depthWrite = value;
+		this->depthWrite = &this->m_depthWrite;
+	}
+	bool RenderState::getStencilWrite()
+	{
+		return this->stencilWrite;
+	}
+	void RenderState::setStencilWrite(bool value)
+	{
+		this->m_stencilWrite = value;
+		this->stencilWrite = &this->m_stencilWrite;
+	}
+	int32_t RenderState::getStencilTest()
+	{
+		return *this->stencilTest;
+	}
+	void RenderState::setStencilTest(int32_t value)
+	{
+		this->m_stencilTest = value;
+		this->stencilTest = &this->m_stencilTest;
+	}
+	int32_t RenderState::getStencilRef()
+	{
+		return *this->stencilRef;
+	}
+	void RenderState::setStencilRef(int32_t value)
+	{
+		this->m_stencilRef = value;
+		this->stencilRef = &this->m_stencilRef;
+	}
+	/*void RenderState::setBlendConstColor(float r, float g, float b, float a)
+	{
+		m_renderState.blendConstColor.x = r;
+		m_renderState.blendConstColor.y = g;
+		m_renderState.blendConstColor.z = b;
+		m_renderState.blendConstColor.w = a;
+	}*/
+	void RenderState::setStencilOp(const Vector3& value)
+	{
+		this->m_stencilOp = value;
+
+		this->stencilOp = &this->m_stencilOp;
+	}
 }
 //------------------------------------------------------------------------------
