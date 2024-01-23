@@ -14,7 +14,7 @@
 #include <core/math/Vector4.h>
 #include <core/math/Color.h>
 #include "GLEnum/WebGLMode.h"
-#include <render/3D/temp/RenderStateCommand.h>
+
 
 namespace laya
 {
@@ -67,7 +67,6 @@ namespace laya
 		IRender2DContext* get2DRenderContext();
 		int uploadUniforms(GLShaderInstance* shader, CommandEncoder* commandEncoder, ShaderData* shaderData, bool uploadUnTexture);
 		int uploadCustomUniforms(GLShaderInstance* shader, const std::unordered_map<int, ShaderVariable*>& custom, int index, char* data, int byteSize);
-		void applyRenderStateCMD(const RenderStateCommand& cmd);
 		GLVertexState* m_GLBindVertexArray = nullptr;
 		int getUBOPointer(const char* name);
 		void copySubFrameBuffertoTex(WebGLInternalTex* texture, int level, int xoffset, int yoffset, int x, int y, int width, int height);

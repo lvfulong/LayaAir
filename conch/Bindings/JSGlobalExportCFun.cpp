@@ -86,8 +86,6 @@
 #include "LayaAir/3D/JSRenderNode.h"
 #include "LayaAir/3D/JSSceneCullManger.h"
 #include "LayaAir/3D/JSTransform.h"
-#include "LayaAir/3D/JSUploadMemoryManager.h"
-#include "LayaAir/3D/JSRenderStateCommand.h"
 #include "LayaAir/3D/JSRenderState.h"
 #include "LayaAir/3D/JSCameraCullInfo.h"
 #include "LayaAir/3D/JSShadowCullInfo.h"

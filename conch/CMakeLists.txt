@@ -265,9 +265,6 @@ list(APPEND CONCH_SRC
 	render/3D/temp/CommandUniformMap.h
 	render/3D/temp/CommandUniformMap.cpp
 	render/3D/temp/CommandEncoder.h
-	
-	render/3D/temp/RenderStateCommand.h
-	render/3D/temp/RenderStateCommand.cpp
 	render/3D/temp/RenderState.h
 	render/3D/temp/RenderState.cpp
 	render/3D/temp/Transform3D.h

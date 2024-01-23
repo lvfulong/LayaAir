@@ -423,10 +423,6 @@ namespace laya
 		}*/
 		return shaderCall;
 	}
-	void WebGLEngine::applyRenderStateCMD(const RenderStateCommand& cmd)
-	{
-		m_renderState->applyRenderStateCommand(cmd);
-	}
 	int WebGLEngine::getUBOPointer(const char* name)
 	{
 		std::unordered_map<std::string, int>::iterator it = m_GLUBOPointerMap.find(name);

@@ -9,7 +9,6 @@
 #include <render/3D/design/renderEnum/RenderStateType.h>
 #include <render/3D/design/renderEnum/StencilOperation.h>
 #include <render/3D/design/renderInterface/IRenderState.h>
-#include <render/3D/temp/RenderStateCommand.h>
 
 #include <cassert>
 #ifdef __APPLE__
@@ -403,8 +402,6 @@ namespace laya
 				}
 			}
 		}
-
-		void applyRenderStateCommand(const RenderStateCommand& cmd);
 	};
 }
 
