@@ -128,6 +128,8 @@ template <typename T> struct Converter<T &> : Converter<T>
 template <typename T> struct Converter<const T &> : Converter<T>
 {
 };
+
+
 template <> class Converter<int32_t>
 {
   public:
@@ -655,7 +657,7 @@ template <typename T> class Converter<std::unordered_set<T>>
   public:
     static std::unordered_set<T> ToCpp(v8::Local<v8::Value> p_vl)
     {
-        static std::unordered_set<T> vec;
+        std::unordered_set<T> vec;
         __JsSet<T>::FromJsSet(p_vl, vec);
         return vec;
     }
@@ -665,9 +667,31 @@ template <typename T, typename R> class Converter<std::unordered_map<T, R>>
   public:
     static std::unordered_map<T, R> ToCpp(v8::Local<v8::Value> p_vl)
     {
-        static std::unordered_map<T, R> map;
+         std::unordered_map<T, R> map;
         __JsMap<T, R>::FromJsMap(p_vl, map);
         return map;
+    }
+    static v8::Local<v8::Value> ToJs(const std::vector<T> &p_vl)
+    {
+        assert("to do");
+        return Undefined(v8::Isolate::GetCurrent());
+    }
+};
+
+
+template <typename T, typename R> class Converter<const std::unordered_map<T, R>&>
+{
+public:
+    static std::unordered_map<T, R> ToCpp(v8::Local<v8::Value> p_vl)
+    {
+        std::unordered_map<T, R> map;
+        __JsMap<T, R>::FromJsMap(p_vl, map);
+        return map;
+    }
+    static v8::Local<v8::Value> ToJs(const std::vector<T>& p_vl)
+    {
+        assert("to do");
+        return Undefined(v8::Isolate::GetCurrent());
     }
 };
 

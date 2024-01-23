@@ -195,10 +195,6 @@ list(APPEND CONCH_SRC
 	render/driver/gles/WebGLInternalRT.cpp
 	render/driver/gles/GLShaderInstance.h
 	render/driver/gles/GLShaderInstance.cpp
-	render/driver/gles/GLAttributeMap.h
-	render/driver/gles/GLAttributeMap.cpp
-	render/driver/gles/GLStateMap.h
-	render/driver/gles/GLStateMap.cpp
 	render/driver/gles/GL2TextureContext.h
 	render/driver/gles/GL2TextureContext.cpp
 	render/driver/gles/GLTextureContext.h

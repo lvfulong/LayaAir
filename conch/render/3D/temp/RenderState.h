@@ -103,10 +103,10 @@ namespace laya
 		static bool				s_stencilWrite;
 		static int32_t			s_stencilTest;
 		static int32_t			s_stencilRef;
-		//Vector3				stencilOp;
-		static double			s_stencilOpX;
-		static double			s_stencilOpY;
-		static double			s_stencilOpZ;
+		static Vector3			s_stencilOp;
+		//static double			s_stencilOpX;
+		//static double			s_stencilOpY;
+		//static double			s_stencilOpZ;
 		RenderState();
 
 		~RenderState();
@@ -131,10 +131,10 @@ namespace laya
 		bool*				stencilWrite;
 		int32_t*			stencilTest;
 		int32_t*			stencilRef;
-		//Vector3			stencilOp;
-		double*				stencilOpX;
-		double*				stencilOpY;
-		double*				stencilOpZ;//double? todo
+		Vector3*			stencilOp;
+		//double*				stencilOpX;
+		//double*				stencilOpY;
+		//double*				stencilOpZ;//double? todo
 	};
 }
 #endif //__RenderState_H__

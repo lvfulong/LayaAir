@@ -23,7 +23,7 @@ namespace laya
 	class ShaderInstance: public ResourceBase<ShaderInstance>
 	{
 	public:
-		ShaderInstance(WebGLEngine* engine, const char* vs, const char* ps, GLAttributeMap* pAttributeMap, GLStateMap* pStateMap/*, RenderState* pRenderState*/);
+		ShaderInstance(WebGLEngine* engine, const char* vs, const char* ps, const std::unordered_map<std::string, int32_t>& attributeMap/*, RenderState* pRenderState*/);
 		~ShaderInstance();
 		static ShaderInstance* getShaderInstance(uint32_t id);
 		bool bind();
@@ -36,8 +36,7 @@ namespace laya
 		void uploadRenderStateBlendDepthByMaterial(ShaderData* shaderDatas);
 		void uploadRenderStateBlendDepthByShader(ShaderData* shaderDatas);
 	private:
-		void _create();
-		//ShaderData::DataInfo* _getRenderState(ShaderData* shaderDatas, int stateIndex);
+		void _create3D();
 	public:
 		CommandEncoder									m_sceneUniformParamsMap;
 		CommandEncoder									m_cameraUniformParamsMap;
@@ -50,7 +49,6 @@ namespace laya
 		ShaderData*										m_uploadCameraShaderValue = 0;
 		ShaderData*										m_uploadMaterial = 0;
 		WebGLEngine*									m_pWebGLEngine = nullptr;
-		GLStateMap*										m_stateParamsMap = nullptr;
 		//RenderStateCommand								m_cullStateCMD;
 		std::unordered_map<int, ShaderVariable*>		m_customUniformParamsMap;
 		ShaderPass*										_shaderPass = nullptr;

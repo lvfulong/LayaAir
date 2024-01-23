@@ -21,10 +21,10 @@ namespace laya
 	bool				RenderState::s_stencilWrite = false;
 	int32_t			RenderState::s_stencilTest = RenderState::STENCILTEST_OFF;
 	int32_t			RenderState::s_stencilRef = 1;
-	//Vector3			RenderState::stencilOp;
-	double			RenderState::s_stencilOpX = RenderState::STENCILOP_KEEP;
-	double			RenderState::s_stencilOpY = RenderState::STENCILOP_KEEP;
-	double			RenderState::s_stencilOpZ = RenderState::STENCILOP_REPLACE;
+	Vector3			RenderState::s_stencilOp = Vector3(RenderState::STENCILOP_KEEP, RenderState::STENCILOP_KEEP, RenderState::STENCILOP_REPLACE);
+	//double			RenderState::s_stencilOpX = RenderState::STENCILOP_KEEP;
+	//double			RenderState::s_stencilOpY = RenderState::STENCILOP_KEEP;
+	//double			RenderState::s_stencilOpZ = RenderState::STENCILOP_REPLACE;
 	RenderState::RenderState()
 	{
 		this->cull = &s_cull;
@@ -44,9 +44,10 @@ namespace laya
 		this->stencilRef = &s_stencilRef;
 		this->stencilTest = &s_stencilTest;
 		this->stencilWrite = &s_stencilWrite;
-		this->stencilOpX = &s_stencilOpX;
-		this->stencilOpY = &s_stencilOpY;
-		this->stencilOpZ = &s_stencilOpZ;
+		this->stencilOp = &s_stencilOp;
+		//this->stencilOpX = &s_stencilOpX;
+		//this->stencilOpY = &s_stencilOpY;
+		//this->stencilOpZ = &s_stencilOpZ;
 	}
 	RenderState::~RenderState()
 	{
@@ -70,7 +71,8 @@ namespace laya
 		this->stencilRef = nullptr;
 		this->stencilTest = nullptr;
 		this->stencilWrite = nullptr;
-		this->stencilOpX = this->stencilOpY = this->stencilOpZ = nullptr;
+		this->stencilOp = nullptr;
+		//this->stencilOpX = this->stencilOpY = this->stencilOpZ = nullptr;
 	}
 }
 //------------------------------------------------------------------------------

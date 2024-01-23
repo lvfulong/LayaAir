@@ -16,7 +16,6 @@
 #else
 	#include <GLES3/gl3.h>
 #endif
-#include "GLAttributeMap.h"
 #include <render/3D/temp/ShaderData.h>
 
 namespace laya
@@ -24,7 +23,7 @@ namespace laya
 	class GLShaderInstance : public GLObject
 	{
 	public:
-		GLShaderInstance(WebGLEngine* engine, const char* vs, const char* ps, GLAttributeMap* pAttributeMap);
+		GLShaderInstance(WebGLEngine* engine, const char* vs, const char* ps, const std::unordered_map<std::string, int32_t>& attributeMap);
 		~GLShaderInstance();
 		bool bind();
 		bool useProgram();
@@ -70,7 +69,7 @@ namespace laya
 		GLuint m_vshader;
 		GLuint m_pshader;
 		GLuint m_program;
-		GLAttributeMap*	m_pAttributeMap;
+		std::unordered_map<std::string, int32_t> m_attributeMap;
 		std::vector<ShaderVariable*> m_uniformMap;
 		std::unordered_map<std::string, ShaderVariable*> m_uniformObjectMap;
 	};

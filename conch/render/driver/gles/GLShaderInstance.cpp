@@ -17,11 +17,11 @@
 
 namespace laya
 {
-	GLShaderInstance::GLShaderInstance(WebGLEngine* engine, const char* vs, const char* ps, GLAttributeMap* pAttributeMap): GLObject(engine)
+	GLShaderInstance::GLShaderInstance(WebGLEngine* engine, const char* vs, const char* ps, const std::unordered_map<std::string, int32_t>&  attributeMap): GLObject(engine)
 	{
 		m_vs = vs;
 		m_ps = ps;
-		m_pAttributeMap = pAttributeMap;
+		m_attributeMap = attributeMap;
 		m_uniformMap.clear();
 		_create();
 	}
@@ -37,8 +37,7 @@ namespace laya
 		glAttachShader(m_program, m_vshader);
 		glAttachShader(m_program, m_pshader);
 
-		std::map<std::string, int> attributes = m_pAttributeMap->getAttributeMap();
-		for (std::map<std::string, int>::iterator it = attributes.begin(); it != attributes.end(); it++)
+		for (std::unordered_map<std::string, int32_t>::iterator it = m_attributeMap.begin(); it != m_attributeMap.end(); it++)
 		{
 			glBindAttribLocation(m_program, it->second, it->first.c_str());
 		}

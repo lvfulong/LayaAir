@@ -22,6 +22,7 @@
 #include <render/3D/temp/RenderElementOBJ.h>
 #include <render/3D/temp/ShaderPass.h>
 #include <render/3D/temp/ShaderData.h>
+#include <render/3D/temp/ShaderInstance.h>
 #include <core/math/Matrix4x4.h>
 #include <core/math/Matrix3x3.h>
 
@@ -99,6 +100,15 @@ class RenderBindings
         }
         {
             //todo UniformBufferObject
+        }
+        {
+            //todo RenderState
+        }
+        {
+            class_<ShaderInstance> class_binding;
+            class_binding.constructor<WebGLEngine*, const char*, const char*, const std::unordered_map<std::string, int32_t>&>();//todo
+            class_binding.function("destroy", &ShaderInstance::destroy);
+            context.class_("conchShaderInstance", class_binding);
         }
         {
             class_<ShaderPass> class_binding;
