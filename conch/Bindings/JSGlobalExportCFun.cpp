@@ -76,7 +76,6 @@
 #include "LayaAir/2D/JSRenderTexture2D.h"
 #include "LayaAir/3D/JSVertexBuffer3D.h"
 #include "LayaAir/3D/JSIndexBuffer3D.h"
-#include "LayaAir/3D/JSRenderGeometryElement.h"
 #include "LayaAir/3D/JSRenderElement.h"
 
 #include "LayaAir/3D/JSCommandUniformMap.h"

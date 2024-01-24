@@ -20,6 +20,7 @@
 #include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTSpotLight.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTReflectionProb.h>
 #include <render/3D/temp/RenderElementOBJ.h>
+#include <render/3D/temp/RenderGeometryElement.h>
 #include <render/3D/temp/ShaderPass.h>
 #include <render/3D/temp/ShaderData.h>
 #include <render/3D/temp/ShaderInstance.h>
@@ -138,7 +139,19 @@ class RenderBindings
             context.class_("conchSubShader", class_binding);
         }
         {
-            //todo RenderGeometryElementOBJ
+            class_<RenderGeometryElement> class_binding;
+            //class_binding.constructor<>();
+            class_binding.constructor<MeshTopology, DrawType>();
+            //todo class_binding.property("bufferState", &JSRenderGeometryElement::getBufferState3D, &JSRenderGeometryElement::setBufferState3D);
+            class_binding.property("mode", &RenderGeometryElement::getMeshTopology, &RenderGeometryElement::setMeshTopology);
+            class_binding.property("drawType", &RenderGeometryElement::getDrawType, &RenderGeometryElement::setDrawType);
+            class_binding.property("instanceCount", &RenderGeometryElement::getInstanceCount, &RenderGeometryElement::setInstanceCount);
+            class_binding.property("indexFormat", &RenderGeometryElement::getIndexFormat, &RenderGeometryElement::setIndexFormat);
+            class_binding.function("setDrawArrayParams", &RenderGeometryElement::setDrawArrayParams);
+            class_binding.function("setDrawElementParams", &RenderGeometryElement::setDrawElementParams);
+            class_binding.function("clearRenderParams", &RenderGeometryElement::clearRenderParams);
+            class_binding.function("destroy", &RenderGeometryElement::destroy);
+            context.class_("conchRenderGeometryElementOBJ", class_binding);
         }
         {
             class_<ShaderInstance> class_binding;

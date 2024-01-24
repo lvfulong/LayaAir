@@ -19,7 +19,7 @@ namespace laya
 		m_pDrawParams->add(first);
 		m_pDrawParams->add(count);
 	}
-	void RenderGeometryElement::setDrawElemenParams(int count, int offset)
+	void RenderGeometryElement::setDrawElementParams(int count, int offset)
 	{
 		m_pDrawParams->add(offset);
 		m_pDrawParams->add(count);

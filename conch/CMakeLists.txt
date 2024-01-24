@@ -242,16 +242,12 @@ list(APPEND CONCH_SRC
 	render/3D/temp/ObjectBase.cpp
 	render/3D/temp/IndexBuffer3D.h
 	render/3D/temp/IndexBuffer3D.cpp
-	#render/3D/temp/RenderContext3D.h
-	#render/3D/temp/RenderContext3D.cpp
 	render/3D/temp/RenderElement.h
 	render/3D/temp/RenderElement.cpp
 	render/3D/temp/SkinRenderElement.h
 	render/3D/temp/SkinRenderElement.cpp
 	render/3D/temp/RenderGeometryElement.h
 	render/3D/temp/RenderGeometryElement.cpp
-	render/3D/temp/RenderQueue.h
-	render/3D/temp/RenderQueue.cpp
 	render/3D/temp/ShaderData.h
 	render/3D/temp/ShaderData.cpp
 	render/3D/temp/VertexBuffer3D.h
