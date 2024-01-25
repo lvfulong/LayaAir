@@ -141,10 +141,13 @@ list(APPEND CONCH_SRC
 	render/3D/BaseCameraProperty.cpp
 	render/3D/Scene3DShaderDeclaration.h
 	render/3D/Scene3DShaderDeclaration.cpp
+	render/3D/SkinnedMeshSprite3DProperty.h
+	render/3D/SkinnedMeshSprite3DProperty.cpp
 	render/3D/DepthPassProperty.h
 	render/3D/DepthPassProperty.cpp
 	render/3D/Shader3D.h
 	render/3D/Shader3D.cpp
+	
 	#渲染节点类
 	render/3D/renderInstance/MeshRenderNode.h
 	render/3D/renderInstance/MeshRenderNode.cpp
@@ -242,8 +245,6 @@ list(APPEND CONCH_SRC
 	render/3D/temp/ObjectBase.cpp
 	render/3D/temp/IndexBuffer3D.h
 	render/3D/temp/IndexBuffer3D.cpp
-	render/3D/temp/RenderElement.h
-	render/3D/temp/RenderElement.cpp
 	render/3D/temp/SkinRenderElement.h
 	render/3D/temp/SkinRenderElement.cpp
 	render/3D/temp/RenderGeometryElement.h

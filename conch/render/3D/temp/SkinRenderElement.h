@@ -14,24 +14,21 @@
 #include <utils/JCSingletonList.h>
 #include <render/driver/gles/GLShaderInstance.h>
 #include "ShaderData.h"
-//#include "RenderContext3D.h"
 #include "ShaderInstance.h"
-#include "RenderElement.h"
+#include "RenderElementOBJ.h"
 #include  <vector>
+#include <binder/JSInterface.h>
 
 namespace laya
 {
-	class JSRenderNode;
-	class JSTransform;
-	class WebGLEngine;
-	class SkinRenderElement: public RenderElement
+	class SkinRenderElement: public RenderElementOBJ
 	{
 	public:
-		SkinRenderElement(WebGLEngine* pWebGLEngine);
+		SkinRenderElement();
 		~SkinRenderElement();
 
 		void drawGeometry(ShaderInstance* shaderIns) override;
-
+		void setSkinnedData(JSValueAsParam pData);
 	public:
 		std::vector<std::pair<char*, int>> m_vSkinData;
 	};

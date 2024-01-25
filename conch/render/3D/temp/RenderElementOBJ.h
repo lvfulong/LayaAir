@@ -18,7 +18,7 @@ class RenderElementOBJ
 {
   public:
     RenderElementOBJ();
-    ~RenderElementOBJ();
+    virtual ~RenderElementOBJ();
     void _render(RTRenderContext3D* context);
     void _preUpdatePre(RTRenderContext3D* context);
     void setRenderShaderData(ShaderData* value) { renderShaderData = value; }
@@ -33,7 +33,8 @@ private:
     void _clearShaderInstance();
     bool _getInvertFront();
     void _compileShader(RTRenderContext3D* context);
-    void drawGeometry(ShaderInstance* shaderIns);
+protected:
+    virtual void drawGeometry(ShaderInstance* shaderIns);
 public:
     RenderGeometryElement* geometry = nullptr;
     SubShader* subshader = nullptr;
@@ -43,7 +44,7 @@ public:
     Transform3D* transform = nullptr;
     RTBaseRenderNode* owner = nullptr;
     bool isRender;
-private:
+protected:
     DefineDatas _compileDefines;
     JCSingletonList<ShaderInstance*> _shaderInstances = JCSingletonList<ShaderInstance*>(false);
     bool _invertFront;

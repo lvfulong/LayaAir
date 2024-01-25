@@ -27,6 +27,7 @@
 #include <render/3D/temp/SubShader.h>
 #include <render/3D/temp/RenderState.h>
 #include <render/3D/temp/DefineDatas.h>
+#include <render/3D/temp/SkinRenderElement.h>
 #include <core/math/Matrix4x4.h>
 #include <core/math/Matrix3x3.h>
 
@@ -201,7 +202,14 @@ class RenderBindings
             class_binding.function("setSubShader", &RenderElementOBJ::setSubShader);
             class_binding.property_field("_isRender", &RenderElementOBJ::isRender);
             class_binding.property_field("_materialRenderQueue", &RenderElementOBJ::materialRenderQueue);
-            context.class_("conchRenderElementOBJ", class_binding);
+            context.class_("conchGLESRenderElement3D", class_binding);
+        }
+        {
+            class_<SkinRenderElement> class_binding;
+            class_binding.inherit<RenderElementOBJ>();
+            class_binding.function("setSkinnedData", &SkinRenderElement::setSkinnedData);
+            class_binding.constructor<>();
+            context.class_("conchGLESSkinRenderElement3D", class_binding);
         }
         {
             class_<RTBaseRenderNode> class_binding;
