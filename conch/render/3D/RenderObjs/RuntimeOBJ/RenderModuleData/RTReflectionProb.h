@@ -48,11 +48,11 @@ class RTReflectionProb
     {
         iblTex = value;
     }
-    void setProbePosition(Vector3 &value)
+    void setProbePosition(Vector3 value)
     {
         value.cloneTo(this->probePosition);
     }
-    void setAmbientColor(Color &value)
+    void setAmbientColor(Color value)
     {
         value.cloneTo(this->ambientColor);
     }
