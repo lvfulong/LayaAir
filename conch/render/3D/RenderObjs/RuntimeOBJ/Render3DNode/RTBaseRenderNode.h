@@ -30,18 +30,19 @@ class RTBaseRenderNode
 
     virtual void _renderUpdate(NodeContext3DData data){};
     virtual void _renderupdatebyCamera(NodeContext3DData data){};
-    virtual void _calculateGeometryBoundingBox(){};
+    //virtual void _calculateGeometryBoundingBox(){};
     //virtual Bounds *get_BoundBox();
     
     void _renderUpdatePre(RTRenderContext3D* context3D);
     bool _needRender(BoundFrustum* pBoundFrustum);
   public:
+    void _calculateBoundingBox();
     // 排版数据 用于renderqueuelist
     //ComposeData compose{};
     // 渲染数据 用于最终list渲染
     std::vector<RenderElementOBJ *> renderelements{};
     // 设置这个值，所有的updateBounds renderUpdate和renderupdatebyCamera 必须在native执行
-    bool nativeUpdateData = false;
+    //bool nativeUpdateData = false;
 
     // Logic Property
     Bounds* baseGeometryBounds = nullptr;
@@ -61,9 +62,9 @@ class RTBaseRenderNode
     bool castShadow;
     bool enable;
     // lightmapData
-    bool customCull;
-    bool customCullResoult;
-    bool boundsChange;
+    bool customCull = false;
+    bool customCullResoult = false;
+    bool boundsChange = false;
     Bounds* bounds = nullptr;
     Vector4 worldParams;
 

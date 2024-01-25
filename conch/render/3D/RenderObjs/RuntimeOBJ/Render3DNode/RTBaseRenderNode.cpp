@@ -11,17 +11,29 @@ bool RTBaseRenderNode::shadowCullPass()
 }
 Bounds *RTBaseRenderNode::getBounds()
 {
-    if (nativeUpdateData)
-    {
-        _calculateGeometryBoundingBox();
-    }
+    if (this->boundsChange)
+	{
+        this->_calculateBoundingBox();
+		this->boundsChange = false;
+	}
     return this->bounds;
 }
 void RTBaseRenderNode::setBounds(Bounds* bounds)
 {
     this->bounds = bounds;
 }
-
+void RTBaseRenderNode::_calculateBoundingBox()
+{
+    if (customCull)
+	{
+	    //todo 
+	}
+	else
+    {
+        const Matrix4x4& worldMat = this->transform->getWorldMatrix();
+		this->baseGeometryBounds->_tranform(worldMat, *this->bounds);
+    }
+}
 void RTBaseRenderNode::setBaseGeometryBounds(Bounds* bounds)
 {
     baseGeometryBounds = bounds;
@@ -79,8 +91,10 @@ void RTBaseRenderNode::_renderUpdatePre(RTRenderContext3D* context3D)
 }
 bool RTBaseRenderNode::_needRender(BoundFrustum* pBoundFrustum)
 {
-    // TODO
-    return true;
+    if (pBoundFrustum)
+			return pBoundFrustum->intersects(getBounds()->_getBoundBox());
+		else
+			return true;
 }
 void RTBaseRenderNode::setRenderUpdatePre(JSValueAsParam function)
 {
