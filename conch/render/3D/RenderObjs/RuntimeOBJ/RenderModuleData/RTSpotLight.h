@@ -29,7 +29,7 @@ class RTSpotLight
         this->transform = value;
     }
 
-    void setDirection(Vector3& value)
+    void setDirection(Vector3 value)
     {
         value.cloneTo(this->_direction);
     }

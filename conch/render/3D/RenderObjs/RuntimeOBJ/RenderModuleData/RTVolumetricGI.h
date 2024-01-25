@@ -25,16 +25,16 @@ class RTVolumetricGI
       void setIrradiance(WebGLInternalTex* value) { irradiance = value; }
       void setDistance(WebGLInternalTex* value) { distance = value; }
       void setBounds(Bounds* value) { bound = value; }
-      void setParams(const Vector4& value)
+      void setParams(Vector4 value)
       {
           params = value;
       }
-      void setProbeCounts(const Vector3& value)
+      void setProbeCounts(Vector3 value)
       {
           probeCounts = value;
       }
 
-      void setProbeStep(const Vector3& value)
+      void setProbeStep(Vector3 value)
       {
           probeStep = value;
       }

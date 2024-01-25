@@ -27,12 +27,12 @@ class RTDirectLight
     Vector3 _shadowFourCascadeSplits;
     Vector3 _direction;
 
-    void setShadowFourCascadeSplits(const Vector3& value)
+    void setShadowFourCascadeSplits(Vector3 value)
     {
         this->_shadowFourCascadeSplits = value;// value.cloneTo(this->_shadowFourCascadeSplits)
     }
 
-    void setDirection(const Vector3& value)
+    void setDirection(Vector3 value)
     {
         this->_direction = value;// value.cloneTo(this->_direction)
     }
