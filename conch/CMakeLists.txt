@@ -266,8 +266,8 @@ list(APPEND CONCH_SRC
 	render/3D/temp/RenderState.cpp
 	render/3D/temp/Transform3D.h
 	render/3D/temp/Transform3D.cpp
-	render/3D/temp/InstanceRenderElementOBJ.h
-	render/3D/temp/InstanceRenderElementOBJ.cpp
+	#render/3D/temp/InstanceRenderElementOBJ.h
+	#render/3D/temp/InstanceRenderElementOBJ.cpp
 	render/3D/temp/UniformBufferObject.h
 	render/3D/temp/UniformBufferObject.cpp
 	render/3D/temp/RenderElementOBJ.h
