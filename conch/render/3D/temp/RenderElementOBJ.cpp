@@ -94,7 +94,7 @@ namespace laya
 
             DefineDatas* comDef = &_compileDefines;
             if (context->sceneData) {
-                context->sceneData->_defineDatas.cloneTo(comDef);
+                context->sceneData->_defineDatas->cloneTo(comDef);
             }
             else {
                 context->globalConfigShaderData->cloneTo(comDef);

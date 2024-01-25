@@ -26,6 +26,7 @@
 #include <render/3D/temp/ShaderInstance.h>
 #include <render/3D/temp/SubShader.h>
 #include <render/3D/temp/RenderState.h>
+#include <render/3D/temp/DefineDatas.h>
 #include <core/math/Matrix4x4.h>
 #include <core/math/Matrix3x3.h>
 
@@ -129,7 +130,25 @@ class RenderBindings
             context.class_("conchRenderState", class_binding);
         }
         {
-            //todo DefineDatas
+            class_<ShaderDefine> class_binding;
+            class_binding.constructor<int32_t, int32_t>();
+            context.class_("conchRTShaderDefine", class_binding);
+        }
+        {
+            class_<DefineDatas> class_binding;
+            class_binding.constructor<>();
+            class_binding.function("clone", &DefineDatas::clone);
+            class_binding.function("cloneTo", &DefineDatas::cloneTo);
+            class_binding.function("add", &DefineDatas::add);
+            class_binding.function("remove", &DefineDatas::remove);
+            class_binding.function("addDefineDatas", &DefineDatas::addDefineDatas);
+            class_binding.function("removeDefineDatas", &DefineDatas::removeDefineDatas);
+            class_binding.function("has", &DefineDatas::has);
+            class_binding.function("clear", &DefineDatas::clear);
+            class_binding.function("destroy", &DefineDatas::destroy);
+            class_binding.property_field("_length", &DefineDatas::_length);
+            class_binding.property_field("_mask", &DefineDatas::_mask);
+            context.class_("conchRTDefineDatas", class_binding);
         }
         {
             class_<SubShader> class_binding;

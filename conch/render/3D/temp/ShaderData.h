@@ -91,7 +91,7 @@ namespace laya
 	public:
 
 		std::unordered_map<uint32_t, std::any>	m_data;
-		DefineDatas _defineDatas;
+		DefineDatas* _defineDatas;//todo
 	};
 }
 #endif //__ShaderData_H__

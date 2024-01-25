@@ -23,9 +23,9 @@ namespace laya{
 		}
 	}
 
-	void DefineDatas::add(ShaderDefine &define)
+	void DefineDatas::add(ShaderDefine* define)
 	{
-		uint32_t index = define._index;
+		uint32_t index = define->_index;
 		uint32_t size = index + 1;
 		
 		//must from this._length because this._length maybe less than mask.length and have dirty data should clear.
@@ -34,34 +34,34 @@ namespace laya{
 			uint32_t maskStart = _length;
 			for (; maskStart < index; maskStart++)
 				_mask[maskStart] = 0;
-			_mask[index] = define._value;
+			_mask[index] = define->_value;
 			_length = maskStart;
 		}
 		else {
-			_mask[index] |= define._value;
+			_mask[index] |= define->_value;
 		}
 	}
 
-	void DefineDatas::remove(ShaderDefine &define)
+	void DefineDatas::remove(ShaderDefine* define)
 	{
-		uint32_t index = define._index;
+		uint32_t index = define->_index;
 		//var mask : Array<number> = this._mask;
 		uint32_t  endIndex = _length - 1;
-		if (index > endIndex)//²»ÖØÖÃLength,±ÜÃâ¾­³£À©³ä
+		if (index > endIndex)//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Length,ï¿½ï¿½ï¿½â¾­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			return;
-		uint32_t newValue = _mask[index] & ~define._value;
+		uint32_t newValue = _mask[index] & ~define->_value;
 		if (index == endIndex && newValue == 0)
 			_length--;
 		else
 			_mask[index] = newValue;
 	}
 
-	bool DefineDatas::has(ShaderDefine &define)
+	bool DefineDatas::has(ShaderDefine* define)
 	{
-		uint32_t index = define._index;
+		uint32_t index = define->_index;
 		if (index >= _length)
 			return false;
-		return ((_mask[index] & define._value) != 0);
+		return ((_mask[index] & define->_value) != 0);
 	}
 
 	void DefineDatas::clear()
@@ -70,35 +70,35 @@ namespace laya{
 		_mask.resize(0);
 	}
 
-	void DefineDatas::addDefineDatas(DefineDatas &defines)
+	void DefineDatas::addDefineDatas(DefineDatas* defines)
 	{
 		//var addMask : Array<number> = define._mask;
-		uint32_t size = defines._length;
+		uint32_t size = defines->_length;
 		//var mask : Array<number> = this._mask;
 		uint32_t maskStart = _length;
 		if (maskStart < size) {
 			_length = size;
 			uint32_t i = 0;
 			for (; i < maskStart; i++)
-				_mask[i] |= defines._mask[i];
+				_mask[i] |= defines->_mask[i];
 			for (; i < size; i++)
-				_mask.push_back(defines._mask[i]) ;
+				_mask.push_back(defines->_mask[i]) ;
 		}
 		else {
 			for (uint32_t i = 0; i < size; i++) {
-				_mask[i] |= defines._mask[i];
+				_mask[i] |= defines->_mask[i];
 			}
 		}
 	}
 
-	void DefineDatas::removeDefineDatas(DefineDatas &defines)
+	void DefineDatas::removeDefineDatas(DefineDatas* defines)
 	{
 		//var removeMask : Array<number> = define._mask;
 		//var mask : Array<number> = this._mask;
 		uint32_t endIndex = _length - 1;
-		uint32_t i =std::min(defines._length, endIndex);
+		uint32_t i =std::min(defines->_length, endIndex);
 		for (; i >= 0; i--) {
-			uint32_t newValue = _mask[i] & ~defines._mask[i];
+			uint32_t newValue = _mask[i] & ~defines->_mask[i];
 			if (i == endIndex && newValue == 0) {
 				endIndex--;
 				_length--;
@@ -126,5 +126,9 @@ namespace laya{
 		DefineDatas* defines = new DefineDatas();
 		cloneTo(defines);
 		return defines;
+	}
+	void DefineDatas::destroy()
+	{
+    	//TODO
 	}
 }
