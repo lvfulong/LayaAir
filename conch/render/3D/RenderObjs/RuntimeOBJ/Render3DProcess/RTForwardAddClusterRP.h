@@ -35,9 +35,9 @@ class RTForwardAddClusterRP
     //void set_beforeTransparent(std::vector<uint32_t> value);
     void setCameraCullInfo(const CameraCullInfo& value) { cameraCullInfo = value; }
     void setSkyRenderNode(RTBaseRenderNode* value) { skyRenderNode = value; }
-    void setClearColor(Color& value) { value.cloneTo(this->clearColor); }
-    void setScissor(Vector4& value) { value.cloneTo(this->scissor); }
-    void setViewport(Viewport& value) { value.cloneTo(this->viewPort); }
+    void setClearColor(Color value) { value.cloneTo(this->clearColor); }
+    void setScissor(Vector4 value) { value.cloneTo(this->scissor); }
+    void setViewport(Viewport value) { value.cloneTo(this->viewPort); }
     void setOpaqueTexture(WebGLInternalRT* value) { opaqueTexture = value; }
     void setDepthNormalTarget(WebGLInternalRT* value) { depthNormalTarget = value; }
     void setDepthTarget(WebGLInternalRT* value) { depthTarget = value; }
