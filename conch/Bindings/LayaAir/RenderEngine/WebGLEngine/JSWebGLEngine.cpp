@@ -6,10 +6,9 @@
 #include <render/3D/design/renderEnum/RenderParams.h>
 #include <render/driver/gles/GLEnum/WebGLMode.h>
 #include "../../3D/JSCommandUniformMap.h"
-#include "../../3D/JSRenderStateCommand.h"
 #include "JSWebGLInternalTex.h"
 #include "JCSystemConfig.h"
-
+#include "render/driver/gles/LayaGL.h"
 namespace laya
 {
 
@@ -23,7 +22,7 @@ namespace laya
 	//------------------------------------------------------------------------------
 	JSWebGLEngine::JSWebGLEngine(int webglMode)
 	{
-		m_pEngine = new WebGLEngine((WebGLMode)webglMode);
+		LayaGL::m_pWebglEngine = m_pEngine = new WebGLEngine((WebGLMode)webglMode);
 		AdjustAmountOfExternalAllocatedMemory(4);
 		JCMemorySurvey::GetInstance()->newClass("conchWebGLEngine", 4, this);
 	}

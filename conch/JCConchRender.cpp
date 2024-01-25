@@ -29,7 +29,7 @@
 #elif _WIN32
 #include "OpenGLBackendWinEGL.h"
 #endif
-
+#include "render/driver/gles/LayaGL.h"
 extern int g_nInnerHeight;
 extern int g_nInnerWidth;
 
@@ -323,7 +323,7 @@ void JCConchRender::requestCaptureScreen()
             m_GfxBackend->makeCurrent();
             if (g_kSystemConfig.m_bConchWebGL && g_WebGLEngine == nullptr)
             {
-                g_WebGLEngine = new WebGLEngine(WebGLMode::Auto);
+                LayaGL::m_pWebglEngine = g_WebGLEngine = new WebGLEngine(WebGLMode::Auto);
                 g_WebGLEngine->initRenderEngine();
                 g_WebGLEngine->createTextureContext(g_WebGLEngine->isWebGL2());
             }

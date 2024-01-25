@@ -133,13 +133,13 @@ namespace laya
 		m_mesh->useMesh();
 		if (m_key.m_blendMode == BlendMode::disable)
 		{
-			RenderStateContext::setBlend(m_pWebGLEngine, false);
+			RenderStateContext::setBlend(false);
 		}
 		else
 		{
-			RenderStateContext::setBlend(m_pWebGLEngine, true);
+			RenderStateContext::setBlend(true);
 
-			RenderStateContext::setBlendFunc(m_pWebGLEngine, BlendModes[(int)m_key.m_blendMode].source, BlendModes[(int)m_key.m_blendMode].destination);
+			RenderStateContext::setBlendFunc(BlendModes[(int)m_key.m_blendMode].source, BlendModes[(int)m_key.m_blendMode].destination);
 		}
 		// ����о���Ļ��������� WORLDMAT ��
 		if (RenderState2D::worldMatrix4 != RenderState2D::TEMPMAT4_ARRAY)
