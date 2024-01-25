@@ -28,8 +28,8 @@ class RTBaseRenderNode
    
    
 
-    virtual void _renderUpdate(NodeContext3DData data){};
-    virtual void _renderupdatebyCamera(NodeContext3DData data){};
+    //todo virtual void _renderUpdate(NodeContext3DData data){};
+    //todo virtual void _renderupdatebyCamera(NodeContext3DData data){};
     //virtual void _calculateGeometryBoundingBox(){};
     //virtual Bounds *get_BoundBox();
     

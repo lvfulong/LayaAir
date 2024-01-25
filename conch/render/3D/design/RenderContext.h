@@ -24,8 +24,8 @@ namespace laya{
  public:
      virtual ~IRenderContext3D();
      IRenderContext3D();
-     virtual uint32_t drawRenderElementList(const JCSingletonList<RenderElementOBJ*>& list) = 0;
-     virtual uint32_t drawRenderElementOne(RenderElementOBJ* one) = 0;
+     virtual uint32_t drawRenderElementList(const JCSingletonList<RenderElementOBJ*>& list) { return 0; }
+     virtual uint32_t drawRenderElementOne(RenderElementOBJ* one) { return 0; }
      virtual void setRenderTarget(WebGLInternalRT* renderTarget);
      virtual void setCameraData(ShaderData* shaderData);
      virtual void setSceneData(ShaderData* sceneData);
@@ -61,14 +61,6 @@ namespace laya{
     RTCameraModuleData* cameraNodeData;
  };
 
- class NodeContext3DData
- {
- public:
-     NodeContext3DData(){};
-     ~NodeContext3DData() {};
- public:
-     uint32_t sceneLightmapDirtyFlag;
- };
 }
 
 #endif

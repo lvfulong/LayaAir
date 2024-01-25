@@ -242,31 +242,38 @@ class RenderBindings
             context.class_("conchRTBaseRenderNode", class_binding);
         }
         {
-            class_<RTRenderContext3D> class_binding;
+            class_<IRenderContext3D> class_binding;
             class_binding.constructor<>();
-            class_binding.function("setClearData", &RTRenderContext3D::setClearData);
-            class_binding.function("setSceneData", &RTRenderContext3D::setSceneData);
-            class_binding.function("setCameraData", &RTRenderContext3D::setCameraData);
-            class_binding.function("setSceneNodeData", &RTRenderContext3D::setSceneNodeData);
-            class_binding.function("setCameraNodeData", &RTRenderContext3D::setCameraNodeData);
-            class_binding.function("setGlobalShaderData", &RTRenderContext3D::setGlobalShaderData);
+            class_binding.function("setClearData", &IRenderContext3D::setClearData);
+            class_binding.function("setSceneData", &IRenderContext3D::setSceneData);
+            class_binding.function("setCameraData", &IRenderContext3D::setCameraData);
+            class_binding.function("setSceneNodeData", &IRenderContext3D::setSceneNodeData);
+            class_binding.function("setCameraNodeData", &IRenderContext3D::setCameraNodeData);
+            class_binding.function("setGlobalShaderData", &IRenderContext3D::setGlobalShaderData);
+           
+            class_binding.function("setRenderTarget", &IRenderContext3D::setRenderTarget);
+            class_binding.function("setViewport", &IRenderContext3D::setViewport);
+            class_binding.function("setScissor", &IRenderContext3D::setScissor);
+            /*class_binding.function_optional_override("setScissor", optional_override([](GLESRenderContext3D& ctx, const Vector4& value) {
+                ctx.setScissor(value);
+                }));*/
+            class_binding.property_field("_sceneUpdateMask", &IRenderContext3D::_sceneUpdateMask);
+            class_binding.property_field("_sceneUpdateMask", &IRenderContext3D::_sceneUpdateMask);
+            class_binding.property_field("_invertY", &IRenderContext3D::invertY);
+            class_binding.property_field("_pipelineMode", &IRenderContext3D::pipelineMode);
+            context.class_("conchIRenderContext3D", class_binding);
+        }
+        {
+            class_<RTRenderContext3D> class_binding;
+            class_binding.inherit<IRenderContext3D>();
             class_binding.function("drawRenderElementOne", &RTRenderContext3D::drawRenderElementOne);
             class_binding.function_optional_override("drawRenderElementList", optional_override([](RTRenderContext3D& ctx, const std::vector<RenderElementOBJ*> elements, uint32_t length) {
                 JCSingletonList<RenderElementOBJ*> list(false);
                 list.m_vElements = elements;
                 list.setLength(length);
                 ctx.drawRenderElementList(list);
-            }));
-            class_binding.function("setRenderTarget", &RTRenderContext3D::setRenderTarget);
-            class_binding.function("setViewport", &RTRenderContext3D::setViewport);
-            class_binding.function("setScissor", &RTRenderContext3D::setScissor);
-            /*class_binding.function_optional_override("setScissor", optional_override([](GLESRenderContext3D& ctx, const Vector4& value) {
-                ctx.setScissor(value);
-                }));*/
-            class_binding.property_field("_sceneUpdateMask", &RTRenderContext3D::_sceneUpdateMask);
-            class_binding.property_field("_sceneUpdateMask", &RTRenderContext3D::_sceneUpdateMask);
-            class_binding.property_field("_invertY", &RTRenderContext3D::invertY);
-            class_binding.property_field("_pipelineMode", &RTRenderContext3D::pipelineMode);
+                }));
+            class_binding.constructor<>();
             context.class_("conchRTRenderContext3D", class_binding);
         }
         {
@@ -448,6 +455,9 @@ class RenderBindings
 };
 namespace internal
 {
+template <>
+void raw_destructor<IRenderContext3D>(IRenderContext3D*) { /* do nothing */}
+
 template <> struct is_value_object<Vector2> : std::true_type
 {
 };
