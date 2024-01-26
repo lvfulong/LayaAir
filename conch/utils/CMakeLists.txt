@@ -33,6 +33,7 @@ set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/JCEmitter.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/JCEventBase.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/InputTypes.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/Preprocessor.h
 )
 
 set(SOURCES
@@ -58,6 +59,15 @@ set(SOURCES
     src/thread/JCWorkSemaphore.cpp
 )
 
+set(DEPS_GL)
+
+if(MSVC)
+    list(APPEND DEPS_GL
+        egl
+        gles
+    )
+endif()
+
 include_directories(${PUBLIC_HEADER_DIR})
 
 add_library(${TARGET} STATIC ${HEADERS} ${SOURCES})
@@ -67,10 +77,13 @@ target_link_libraries(${TARGET}
     rapidxml
     ghc
     zip
-    zlib)
+    zlib
+    ${DEPS_GL}
+)
+
 target_precompile_headers(${TARGET} PRIVATE ${HEADERS})
+
 # set(INSTALL_TYPE ARCHIVE)
 # install(TARGETS ${TARGET} ${INSTALL_TYPE} DESTINATION lib/${HEADERS})
 # install(FILES ${HEADERS} DESTINATION include/${TARGET})
-
 message("utils: ${LINUX}")

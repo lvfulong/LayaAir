@@ -47,9 +47,9 @@ namespace laya
         context->setRenderTarget(this->depthTarget);
         this->opaqueList.renderQueue((RTRenderContext3D*)context);
         //渲染完后传入使用的参数
-        auto far = this->camera->farplane;
-        auto near = this->camera->nearplane;
-        this->_zBufferParams.setValue(1.0 - far / near, far / near, (near - far) / (near * far), 1 / near);
+        Real far_ = this->camera->farplane;
+        Real near_ = this->camera->nearplane;
+        this->_zBufferParams.setValue(1.0 - far_ / near_, far_ / near_, (near_ - far_) / (near_ * far_), 1 / near_);
         context->cameraData->setVector(DepthPassProperty::DEFINE_SHADOW_BIAS, DepthPassProperty::SHADOW_BIAS);
 
         context->cameraData->setVector(DepthPassProperty::DEPTHZBUFFERPARAMS, this->_zBufferParams);

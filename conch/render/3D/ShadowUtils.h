@@ -157,8 +157,8 @@ void getDirectionLightShadowCullPlanes(Plane *cameraFrustumPlanes, uint32_t casc
     std::array<Plane, 10> &out = shadowSliceData.cullPlanes;
 
     // cameraFrustumPlanes is share
-    Plane &near = cameraFrustumPlanes[(uint32_t)FrustumFace::Near];
-    Plane &far = cameraFrustumPlanes[(uint32_t)FrustumFace::Far];
+    Plane &near_ = cameraFrustumPlanes[(uint32_t)FrustumFace::Near];
+    Plane &far_ = cameraFrustumPlanes[(uint32_t)FrustumFace::Far];
     Plane &left = cameraFrustumPlanes[(uint32_t)FrustumFace::Left];
     Plane &right = cameraFrustumPlanes[(uint32_t)FrustumFace::Right];
     Plane &bottom = cameraFrustumPlanes[(uint32_t)FrustumFace::Bottom];
@@ -168,12 +168,12 @@ void getDirectionLightShadowCullPlanes(Plane *cameraFrustumPlanes, uint32_t casc
     Real splitNearDistance = splitDistance[cascadeIndex] - cameraNear;
     Plane &splitNear = ShadowUtils::_adjustNearPlane;
     Plane &splitFar = ShadowUtils::_adjustFarPlane;
-    splitNear.normal = near.normal;
-    splitFar.normal = far.normal;
-    splitNear.distance = near.distance - splitNearDistance;
+    splitNear.normal = near_.normal;
+    splitFar.normal = far_.normal;
+    splitNear.distance = near_.distance - splitNearDistance;
     splitFar.distance =
-        std::min(-near.distance + shadowSliceData.sphereCenterZ + shadowSliceData.splitBoundSphere.radius,
-                 far.distance); // do a clamp is the sphere is out of range the far plane
+        std::min(-near_.distance + shadowSliceData.sphereCenterZ + shadowSliceData.splitBoundSphere.radius,
+            far_.distance); // do a clamp is the sphere is out of range the far plane
 
     BoundFrustum::get3PlaneInterPoint(splitNear, bottom, right,
                                       frustumCorners[(uint32_t)FrustumCorner::nearBottomRight]);
@@ -287,7 +287,7 @@ void applySliceTransform(const ShadowSliceData &shadowSliceData, uint32_t atlasW
     uint32_t offset = cascadeIndex * 16;
     Utils3D::_mulMatrixArray(sliceE, outShadowMatrices, offset, outShadowMatrices, offset);
 }
-Real getBoundSphereByFrustum(Real near, Real far, Real fov, Real aspectRatio, const Vector3 &cameraPos,
+Real getBoundSphereByFrustum(Real near_, Real far_, Real fov, Real aspectRatio, const Vector3 &cameraPos,
                              const Vector3 &forward, BoundSphere &outBoundSphere)
 {
     // https://lxjk.github.io/2017/04/15/Calculate-Minimal-Bounding-Sphere-of-Frustum.html
@@ -295,17 +295,17 @@ Real getBoundSphereByFrustum(Real near, Real far, Real fov, Real aspectRatio, co
     Real radius;
     Real k = sqrt(1.0 + aspectRatio * aspectRatio) * tan(fov / 2.0);
     Real k2 = k * k;
-    Real farSNear = far - near;
-    Real farANear = far + near;
+    Real farSNear = far_ - near_;
+    Real farANear = far_ + near_;
     if (k2 > farSNear / farANear)
     {
-        centerZ = far;
-        radius = far * k;
+        centerZ = far_;
+        radius = far_ * k;
     }
     else
     {
         centerZ = 0.5 * farANear * (1 + k2);
-        radius = 0.5 * sqrt(farSNear * farSNear + 2.0 * (far * far + near * near) * k2 + farANear * farANear * k2 * k2);
+        radius = 0.5 * sqrt(farSNear * farSNear + 2.0 * (far_ * far_ + near_ * near_) * k2 + farANear * farANear * k2 * k2);
     }
 
     Vector3 &center = outBoundSphere.center;
