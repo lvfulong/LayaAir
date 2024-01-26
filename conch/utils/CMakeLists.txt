@@ -66,6 +66,10 @@ if(MSVC)
         egl
         gles
     )
+elseif(LINUX)
+    list(APPEND DEPS_GL
+        glad
+    )
 endif()
 
 include_directories(${PUBLIC_HEADER_DIR})
