@@ -2,14 +2,7 @@
 #include <unordered_map>
 #include "GLObject.h"
 #include <assert.h>
-#ifdef __APPLE__
-#include <OpenGLES/ES3/gl.h>
-#elif LINUX
-#include <glad/egl.h>
-#include <glad/gles2.h>
-#else
-#include <GLES3/gl3.h>
-#endif
+#include <utils/Preprocessor.h>
 #include <utils/Log.h>
 #include "JCConch.h"
 #include "WebGLInternalTex.h"

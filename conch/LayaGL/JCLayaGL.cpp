@@ -14,14 +14,7 @@
 #include <utils/JCCommonMethod.h>
 #include "JCLayaGLDispatch.h"
 //#include "../Performance/JCPerfHUD.h"
-#ifdef __APPLE__
-#include <OpenGLES/ES3/gl.h>
-#elif LINUX
-#include <glad/egl.h>
-#include <glad/gles2.h>
-#else
-#include <GLES3/gl3.h>
-#endif
+#include <utils/Preprocessor.h>
 #include <JCSystemConfig.h>
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;

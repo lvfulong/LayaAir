@@ -9,15 +9,7 @@
 #ifndef __JCGpuProgram_H__
 #define __JCGpuProgram_H__
 
-#if __APPLE__
-    #include <OpenGLES/ES3/gl.h>
-    #include <OpenGLES/ES3/glext.h>
-#elif LINUX
-#include <glad/egl.h>
-#include <glad/gles2.h>
-#else
-    #include <GLES3/gl3.h>
-#endif
+#include <utils/Preprocessor.h>
 #include <string>
 #include <map>
 #include <vector>

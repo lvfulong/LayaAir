@@ -1,11 +1,12 @@
 #ifndef __CanvasRenderingContext2DWin_H__
 #define __CanvasRenderingContext2DWin_H__
 
+#include <windows.h>
+#include <gdiplus.h>
 #include "CanvasRenderingContext2D.h"
 #include <optional>
 #include <string>
-#include <windows.h>
-#include <gdiplus.h>
+
 
 namespace laya
 {

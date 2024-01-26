@@ -8,14 +8,7 @@
 #include <render/3D/design/renderEnum/RenderTargetFormat.h>
 #include <vector>
 #include <render/3D/design/renderShader/ShaderVariable.h>
-#ifdef __APPLE__
-	#include <OpenGLES/ES3/gl.h>
-#elif LINUX
-#include <glad/egl.h>
-#include <glad/gles2.h>
-#else
-	#include <GLES3/gl3.h>
-#endif
+#include <utils/Preprocessor.h>
 #include <render/3D/temp/ShaderData.h>
 
 namespace laya

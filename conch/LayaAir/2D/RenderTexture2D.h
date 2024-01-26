@@ -1,14 +1,7 @@
 #ifndef __RenderTexture2D_H__
 #define __RenderTexture2D_H__
 
-#ifdef __APPLE__
-#include <OpenGLES/ES3/GL.h>
-#elif LINUX
-#include <glad/egl.h>
-#include <glad/gles2.h>
-#else
-#include <GLES3/gl3.h>
-#endif
+#include <utils/Preprocessor.h>
 #include <stdint.h> 
 #include <stack> 
 #include <render/driver/gles/WebGLInternalTex.h>

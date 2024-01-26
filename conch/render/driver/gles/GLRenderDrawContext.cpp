@@ -1,13 +1,6 @@
 #include "GLRenderDrawContext.h"
 #include "GLEnum/WebGLExtension.h"
-#ifdef __APPLE__
-#include <OpenGLES/ES3/GL.h>
-#elif LINUX
-#include <glad/egl.h>
-#include <glad/gles2.h>
-#else
-#include <GLES3/gl3.h>
-#endif
+#include <utils/Preprocessor.h>
 #include "GLCapable.h"
 #include <render/3D/temp/RenderGeometryElement.h>
 #include "GLVertexState.h"

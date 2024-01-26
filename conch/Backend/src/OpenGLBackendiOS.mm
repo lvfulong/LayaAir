@@ -1,10 +1,6 @@
 #include "OpenGLBackendiOS.h"
 #import <GLKit/GLKit.h>
-#define GLES_SILENCE_DEPRECATION
-#import <OpenGLES/EAGL.h>
-#import <OpenGLES/ES3/gl.h>
-#import <OpenGLES/ES3/glext.h>
-#import <OpenGLES/ES2/glext.h>
+#include <utils/Preprocessor.h>
 #include <utils/Log.h>
 
 namespace laya {

@@ -9,16 +9,8 @@
 #include <render/3D/design/renderEnum/RenderStateType.h>
 #include <render/3D/design/renderEnum/StencilOperation.h>
 #include <render/3D/design/renderInterface/IRenderState.h>
-
 #include <cassert>
-#ifdef __APPLE__
-#include <OpenGLES/ES3/GL.h>
-#elif LINUX
-#include <glad/egl.h>
-#include <glad/gles2.h>
-#else
-#include <GLES3/gl3.h>
-#endif
+#include <utils/Preprocessor.h>
 #include "JCSystemConfig.h"
 
 namespace laya

@@ -12,55 +12,10 @@
 #include <memory>
 #include <functional>
 #define PNG_UINT32 unsigned int
-#if __APPLE__
-#include <OpenGLES/ES3/gl.h>
-#elif LINUX
-#include <glad/egl.h>
-#include <glad/gles2.h>
-#else
-#include <GLES3/gl3.h>
-#endif
-
+#include <utils/Preprocessor.h>
+#include "BitmapData.h"
 namespace laya
 {
-	enum ImageType
-    {
-        ImgType_unknow,
-		ImgType_jpeg,
-		ImgType_png,
-		ImgType_gif,
-        ImgType_ETC1,
-        ImgType_ETC2,
-        ImgType_PVR,
-	};
-
-	struct ImageBaseInfo
-    {
-		int m_nWidth, m_nHeight, m_nBpp;
-	};
-
-	class BitmapData:public ImageBaseInfo
-    {
-	public:
-		BitmapData();
-		BitmapData(char* p_pData, int p_nWidth, int p_nHeight );
-		BitmapData(int p_nWidth, int p_nHeight, bool p_bTranslate, int p_nFillColor );
-		void releaseData()
-        { 
-			if(m_pImageData)
-            {
-				delete [] m_pImageData;
-				m_pImageData=0;
-			}
-		}
-        int         m_nImageID;
-		char*	    m_pImageData;
-        ImageType   m_nImageType;
-
-		void reconfigure(int width, int height, int bpp, ImageType imageType);
-		void copyData(char* dataPtr);
-	};
-
 #ifndef WEBASM
 
 	//�����Ƕ���ʵ�����������á���Ϊʵ�ʶ����������ʱ����

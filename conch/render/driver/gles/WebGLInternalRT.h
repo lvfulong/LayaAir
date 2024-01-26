@@ -7,14 +7,7 @@
 #include <render/3D/design/renderEnum/RenderTargetFormat.h>
 #include <vector>
 #include <memory>
-#ifdef __APPLE__
-#include <OpenGLES/ES3/gl.h>
-#elif LINUX
-#include <glad/egl.h>
-#include <glad/gles2.h>
-#else
-#include <GLES3/gl3.h>
-#endif
+#include <utils/Preprocessor.h>
 
 namespace laya
 {

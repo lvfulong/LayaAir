@@ -2,14 +2,7 @@
 #define __RenderState_H__
 
 #include <stdio.h>
-#ifdef __APPLE__
-	#include <OpenGLES/ES3/gl.h>
-#elif LINUX
-#include <glad/egl.h>
-#include <glad/gles2.h>
-#else
-	#include <GLES3/gl3.h>
-#endif
+#include <utils/Preprocessor.h>
 #include <unordered_map>
 #include <render/3D/design/renderEnum/BlendType.h>
 #include <render/3D/design/renderEnum/CullMode.h>

@@ -5,14 +5,7 @@
 #include <map>
 #include <vector>
 #include <stack>
-#ifdef __APPLE__
-#include <OpenGLES/ES3/gl.h>
-#elif LINUX
-#include <glad/egl.h>
-#include <glad/gles2.h>
-#else
-#include <GLES3/gl3.h>
-#endif
+#include <utils/Preprocessor.h>
 #include "Shader2DDefines.h"
 
 namespace laya

@@ -15,14 +15,9 @@
 #include "WebGLEngine.h"
 #include <math.h>
 #include <algorithm>
-#ifdef __APPLE__
-#include <OpenGLES/ES3/gl.h>
-#elif LINUX
-#include <glad/egl.h>
-#include <glad/gles2.h>
+#include <utils/Preprocessor.h>
+#ifdef LINUX
 #define GL_TEXTURE_WRAP_R                 0x8072
-#else
-#include <GLES3/gl3.h>
 #endif
 
 namespace laya

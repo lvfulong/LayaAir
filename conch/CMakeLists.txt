@@ -318,6 +318,8 @@ list(APPEND CONCH_SRC
 	imageLib/JCGifImg.cpp
 	imageLib/JCImageRW.h
 	imageLib/JCImageRW.cpp
+	imageLib/BitmapData.h
+	imageLib/BitmapData.cpp
 	imageLib/JCJpegImg.cpp
 	imageLib/JCPngImg.cpp
 

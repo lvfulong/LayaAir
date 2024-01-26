@@ -2,14 +2,7 @@
 #define __VertexBuffer3D_H__
 
 #include <stdio.h>
-#ifdef __APPLE__
-#include <OpenGLES/ES3/gl.h>
-#elif LINUX
-#include <glad/egl.h>
-#include <glad/gles2.h>
-#else
-#include <GLES3/gl3.h>
-#endif
+#include <utils/Preprocessor.h>
 #include <render/driver/gles/GLBuffer.h>
 #include "VertexBuffer.h"
 

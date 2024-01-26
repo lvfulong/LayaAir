@@ -2,14 +2,7 @@
 #define _IndexBuffer3D_H__
 
 #include <stdio.h>
-#ifdef __APPLE__
-#include <OpenGLES/ES3/gl.h>
-#elif LINUX
-#include <glad/egl.h>
-#include <glad/gles2.h>
-#else
-#include <GLES3/gl3.h>
-#endif
+#include <utils/Preprocessor.h>
 #include <render/driver/gles/GLBuffer.h>
 #include <render/3D/design/renderEnum/IndexFormat.h>
 #include "IndexBuffer.h"

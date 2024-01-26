@@ -6,14 +6,7 @@
 #include <vector>
 #include <stack>
 #include <render/3D/design/renderInterface/IRenderVertexState.h>
-#ifdef __APPLE__
-#include <OpenGLES/ES3/GL.h>
-#elif LINUX
-#include <glad/egl.h>
-#include <glad/gles2.h>
-#else
-#include <GLES3/gl3.h>
-#endif
+#include <utils/Preprocessor.h>
 
 namespace laya
 {

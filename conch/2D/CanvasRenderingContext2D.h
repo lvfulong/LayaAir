@@ -4,7 +4,7 @@
 #include "FontDescriptionParser.h"
 #include "ImageData.h"
 #include "TextMetrics.h"
-#include "imageLib/JCImageRW.h"
+#include "imageLib/BitmapData.h"
 #include <optional>
 #include <string>
 namespace laya
