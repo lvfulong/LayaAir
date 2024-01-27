@@ -2,11 +2,11 @@
 #include "Mesh2D.h"
 #include <render/3D/temp/RenderStateContext.h>
 #include "Shader2D.h"
-#include <render/driver/gles/WebGLInternalTex.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalTex.h>
 #include "RenderState2D.h"
 #include "Context2D.h"
 #include "RenderTexture2D.h"
-#include <render/driver/gles/WebGLEngine.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.h>
 #include <render/3D/design/renderInterface/IRenderDrawContext.h>
 #include "JCConch.h"
 

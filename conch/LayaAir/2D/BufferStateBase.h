@@ -5,8 +5,6 @@
 #include <map>
 #include <vector>
 #include <stack>
-#include <render/3D/design/renderInterface/IRenderVertexState.h>
-
 
 namespace laya
 {

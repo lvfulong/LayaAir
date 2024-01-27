@@ -3,7 +3,7 @@
 
 #include <string>
 #include <imageLib/JCImageRW.h>
-#include <render/driver/gles/WebGLInternalTex.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalTex.h>
 #include "CharRenderInfo.h"
 #include <memory>
 

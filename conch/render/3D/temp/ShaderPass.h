@@ -2,8 +2,8 @@
 #define __ShaderPass_H__
 #include <string>
 #include <unordered_map>
-#include "DefineDatas.h"
-#include "ShaderInstance.h"
+#include "render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderInstance.h"
 #include <binder/JSInterface.h>
 
 namespace laya{

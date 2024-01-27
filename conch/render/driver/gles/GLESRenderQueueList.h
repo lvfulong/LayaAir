@@ -3,7 +3,7 @@
 
 #include "render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.h"
 #include <render/driver/gles/QuickSort.h>
-#include <render/3D/temp/RenderElementOBJ.h>
+#include <render/RenderDriver/3DRenderPass/GLESRenderElement3D.h>
 #include <utils/JCSingletonList.h>
 
 namespace laya

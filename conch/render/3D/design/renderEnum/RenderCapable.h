@@ -10,6 +10,7 @@ namespace laya
 		TextureFormat_R16G16B16A16,//TextureFloat16
 		Texture_anisotropic,//anisotropic function
 		RenderTextureFormat_R16G16B16A16,//Rendertexture Float16
+		RenderTextureFormat_R32G32B32A32, // rendertexture float32
 		RenderTextureFormat_Depth,//depthTexture
 		RenderTextureFormat_ShadowMap,//shadowMap Texture
 		Vertex_VAO,//VAO
@@ -24,8 +25,9 @@ namespace laya
 		Texture_SRGB,//Textrue srgb   
 		MSAA,//MSAA
 		UnifromBufferObject,
-		GRAPHICS_API_GLES3,//TODO 感觉不太合适
 		Texture3D,
+		Texture_FloatLinearFiltering,
+    	Texture_HalfFloatLinearFiltering,
 	};
 }
 

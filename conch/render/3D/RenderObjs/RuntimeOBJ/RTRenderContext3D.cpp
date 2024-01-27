@@ -1,6 +1,6 @@
 #include "RTRenderContext3D.h"
 #include "render/driver/gles/LayaGL.h"
-#include <render/3D/temp/RenderElementOBJ.h>
+#include <render/RenderDriver/3DRenderPass/GLESRenderElement3D.h>
 namespace laya
 {
 RTRenderContext3D::RTRenderContext3D(){

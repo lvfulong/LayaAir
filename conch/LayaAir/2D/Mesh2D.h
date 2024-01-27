@@ -5,7 +5,6 @@
 #include <map>
 #include <vector>
 #include <stack>
-#include <render/3D/design/renderInterface/IRenderVertexState.h>
 #include <utils/Preprocessor.h>
 
 namespace laya

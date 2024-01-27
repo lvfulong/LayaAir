@@ -4,8 +4,8 @@
 #include <utils/Preprocessor.h>
 #include <stdint.h> 
 #include <stack> 
-#include <render/driver/gles/WebGLInternalTex.h>
-#include <render/driver/gles/WebGLInternalRT.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalTex.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalRT.h>
 #include <memory>
 
 namespace laya

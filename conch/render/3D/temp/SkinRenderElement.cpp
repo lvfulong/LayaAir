@@ -1,6 +1,5 @@
 #include "SkinRenderElement.h"
 #include <render/driver/gles/WebGLEngine.h>
-#include <render/3D/design/renderInterface/IRenderDrawContext.h>
 #include <Bindings/LayaAir/3D/JSTransform.h>
 #include "RenderGeometryElement.h"
 #include <render/3D/design/renderInterface/IRenderVertexState.h>

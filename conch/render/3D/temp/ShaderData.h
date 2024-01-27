@@ -1,10 +1,9 @@
 #ifndef __ShaderData_H__
 #define __ShaderData_H__
 #include <binder/JSInterface.h>
-#include <render/3D/temp/DefineDatas.h>
+#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h>
 #include <stdio.h>
 #include <unordered_map>
-#include "ResourceBase.h"
 #include <core/math/Color.h>
 #include <core/math/Vector4.h>
 #include <core/math/Vector3.h>
@@ -33,7 +32,7 @@ namespace laya
 	};*/
 	class ShaderDefine;
 	class UniformBufferObject;
-	class ShaderData: public ResourceBase<ShaderData>
+	class ShaderData//: public ResourceBase<ShaderData>
 	{
 	public:
 		

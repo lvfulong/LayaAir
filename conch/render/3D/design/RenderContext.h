@@ -8,7 +8,7 @@
 #include "render/tempbase.h"
 #include <utils/JCSingletonList.h>
 #include <render/3D/design/renderEnum/RenderClearFlag.h>
-#include <render/3D/temp/DefineDatas.h>
+#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h>
 
 
 
@@ -37,9 +37,9 @@ namespace laya{
      void setGlobalShaderData(ShaderData* value);
      void setglobalConfigShaderData(DefineDatas* value);
  public:
-     ShaderData* globalShaderData;
-     DefineDatas* globalConfigShaderData;
-     WebGLInternalRT* _renderTarget;
+     ShaderData* globalShaderData = nullptr;
+     DefineDatas* globalConfigShaderData = nullptr;
+     WebGLInternalRT* _renderTarget = nullptr;
     Viewport viewPort;
     Vector4 scissor;
     bool invertY;
@@ -51,14 +51,14 @@ namespace laya{
     Color clearColor;
 
     //data
-    ShaderData* cameraData;
-    ShaderData* sceneData;
+    ShaderData* cameraData = nullptr;
+    ShaderData* sceneData = nullptr;
 
     //upload flag
-    uint32_t _sceneUpdateMask;
-    uint32_t _cameraUpdateMask;
-    RTSceneNodeData* sceneNodeData;
-    RTCameraModuleData* cameraNodeData;
+    uint32_t _sceneUpdateMask = 0;
+    uint32_t _cameraUpdateMask = 0;
+    RTSceneNodeData* sceneNodeData = nullptr;
+    RTCameraModuleData* cameraNodeData = nullptr;
  };
 
 }

@@ -17,7 +17,7 @@ namespace laya
         
     }
     void RTForwardAddClusterRP::render(RTRenderContext3D* context, std::vector<RTBaseRenderNode*> list, uint32_t count){
-        //TODO Camera._updateMark++;
+        context->_cameraUpdateMask++;
         this->opaqueList.clear();
         this->transparent.clear();
         //裁剪cull TODO 自定义

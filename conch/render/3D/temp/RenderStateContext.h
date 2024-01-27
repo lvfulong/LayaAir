@@ -8,8 +8,7 @@
 #include <render/3D/design/renderEnum/CullMode.h>
 #include <render/3D/design/renderEnum/RenderStateType.h>
 #include <render/3D/design/renderEnum/StencilOperation.h>
-#include <render/driver/gles/WebGLEngine.h>
-#include <render/3D/design/renderInterface/IRenderState.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.h>
 #include "render/driver/gles/LayaGL.h"
 
 namespace laya

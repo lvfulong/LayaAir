@@ -20,9 +20,9 @@
 #include "SubmitCanvas.h"
 #include "TextRender.h"
 #include "JCConch.h"
-#include <render/driver/gles/WebGLEngine.h>
-#include <render/driver/gles/GLTextureContext.h>
-#include <render/driver/gles/WebGLInternalRT.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLTextureContext.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalRT.h>
 #include "Bezier.h"
 #include "JCContext2DDispatch.h"
 #include <Bindings/JSLayaGL.h>

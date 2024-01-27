@@ -107,6 +107,12 @@ class RenderBindings
             //todo UniformBufferObject
         }
         {
+            //GLESIndexBuffer.h
+        }
+        {
+            //GLESVertexBuffer
+        }
+        {
             class_<RenderState> class_binding;
             class_binding.constructor<>();
             class_binding.property("cull", &RenderState::getCull, &RenderState::setCull);
@@ -257,7 +263,7 @@ class RenderBindings
             /*class_binding.function_optional_override("setScissor", optional_override([](GLESRenderContext3D& ctx, const Vector4& value) {
                 ctx.setScissor(value);
                 }));*/
-            class_binding.property_field("_sceneUpdateMask", &IRenderContext3D::_sceneUpdateMask);
+            class_binding.property_field("_cameraUpdateMask", &IRenderContext3D::_cameraUpdateMask);
             class_binding.property_field("_sceneUpdateMask", &IRenderContext3D::_sceneUpdateMask);
             class_binding.property_field("_invertY", &IRenderContext3D::invertY);
             class_binding.property_field("_pipelineMode", &IRenderContext3D::pipelineMode);

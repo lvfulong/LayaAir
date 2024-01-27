@@ -6,7 +6,7 @@
 
 namespace laya
 {
-	ShaderData::ShaderData(): ResourceBase(JCConch::s_pConchRender->m_pShaderDataManager)
+	ShaderData::ShaderData()//: ResourceBase(JCConch::s_pConchRender->m_pShaderDataManager)
 	{
 	}
 	ShaderData::~ShaderData()

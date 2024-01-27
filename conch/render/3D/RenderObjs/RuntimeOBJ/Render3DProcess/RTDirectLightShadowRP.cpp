@@ -107,7 +107,7 @@ void RTDirectLightShadowRP::render(RTRenderContext3D* context, std::vector<RTBas
 
         context->cameraData = sliceData.cameraShaderValue;
         // todo Camera._updateMark++;
-        // todo context.cameraUpdateMask = Camera._updateMark;
+        context->_cameraUpdateMask++;
         auto resolution = sliceData.resolution;
         auto offsetX = sliceData.offsetX;
         auto offsetY = sliceData.offsetY;
