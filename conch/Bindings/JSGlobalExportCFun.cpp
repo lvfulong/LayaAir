@@ -86,8 +86,6 @@
 #include "LayaAir/RenderEngine/WebGLEngine/JSWebGLEngine.h"
 #include "LayaAir/RenderEngine/WebGLEngine/JSWebGLInternalTex.h"
 #include "LayaAir/RenderEngine/WebGLEngine/JSWebGLInternalRT.h"
-#include "LayaAir/RenderEngine/WebGLEngine/JSGLBuffer.h"
-#include "LayaAir/RenderEngine/WebGLEngine/JSGLVertexState.h"
 #include "LayaAir/RenderEngine/WebGLEngine/JSGLRenderDrawContext.h"
 #include "2D/FontManager.h"
 #include <stdarg.h>

@@ -2,7 +2,7 @@
 #define __DepthPassProperty_H__
 
 #include <core/math/Vector4.h>
-#include <render/3D/temp/ShaderDefine.h>
+#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTShaderDefine.h>
 
 namespace laya
 {

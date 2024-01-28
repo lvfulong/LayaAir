@@ -5,7 +5,7 @@
 #include "render/3D/ShadowSliceData.h"
 #include "render/3D/design/Render3DProcess.h"
 #include <vector>
-#include "render/driver/gles/GLESRenderQueueList.h"
+#include "render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESRenderListQueue.h"
 #include <array>
 #include <core/math/Types.h>
 
@@ -56,7 +56,7 @@ public:
     Vector4 _shadowParams;
     Vector4 _shadowBias;
     uint32_t _cascadeCount = 0;
-    GLESRenderQueueList _renderQueue;
+    GLESRenderListQueue _renderQueue;
     std::array<ShadowSliceData, 4> _shadowSliceDatas;
     std::vector<Plane> _frustumPlanes;
     uint32_t _shadowMapWidth = 0;

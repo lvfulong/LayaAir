@@ -1,6 +1,6 @@
 #include "Buffer.h"
-#include <render/3D/design/renderInterface/IRenderBuffer.h>
-#include <render/driver/gles/WebGLEngine.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLBuffer.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.h>
 
 namespace laya
 {

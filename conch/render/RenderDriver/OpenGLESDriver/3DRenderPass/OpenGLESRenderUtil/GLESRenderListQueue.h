@@ -1,32 +1,32 @@
-#ifndef __GLESRenderQueueList_H_
-#define __GLESRenderQueueList_H_
+#ifndef __GLESRenderListQueue_H_
+#define __GLESRenderListQueue_H_
 
 #include "render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.h"
-#include <render/driver/gles/QuickSort.h>
-#include <render/RenderDriver/3DRenderPass/GLESRenderElement3D.h>
+#include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderElement3D.h>
+#include <render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESQuickSort.h>
 #include <utils/JCSingletonList.h>
 
 namespace laya
 {
 
-class GLESRenderQueueList
+class GLESRenderListQueue
 {
   public:
-    JCSingletonList<RenderElementOBJ *> _elements;
+    JCSingletonList<GLESRenderElement3D *> _elements;
     QuickSort quickSort;
     bool _isTransparent;
 
   public:
-    GLESRenderQueueList(bool isTransParent) : _isTransparent(isTransParent), _elements(false)
+    GLESRenderListQueue(bool isTransParent) : _isTransparent(isTransParent), _elements(false)
     {
     }
 
-    void addRenderElement(RenderElementOBJ *renderelement)
+    void addRenderElement(GLESRenderElement3D *renderelement)
     {
         this->_elements.add(renderelement);
     }
 
-    void renderQueue(RTRenderContext3D* context)
+    void renderQueue(RTRenderContext3D *context)
     {
         // this._batchQueue();//合并的地方
         uint32_t count = this->_elements.getLength();

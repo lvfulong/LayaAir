@@ -1,6 +1,8 @@
 #include "GLESRenderElement3D.h"
 #include <render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.h>
-#include <render/driver/gles/GLRenderDrawContext.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLRenderDrawContext.h>
+#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTShaderPass.h>
+#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTShaderData.h>
 namespace laya
 {
     GLESRenderElement3D::GLESRenderElement3D()
@@ -83,10 +85,10 @@ namespace laya
 
     void GLESRenderElement3D::_compileShader(RTRenderContext3D* context)
     {
-        std::vector<ShaderPass*> passes = subshader->shaderpasses;
+        std::vector<RTShaderPass*> passes = subshader->shaderpasses;
         _clearShaderInstance();
         for (uint32_t j = 0, m = passes.size(); j < m; j++) {
-            ShaderPass* pass = passes[j];
+            RTShaderPass* pass = passes[j];
             //NOTE:this will cause maybe a shader not render but do prepare before，but the developer can avoide this manual,for example shaderCaster=false.
             if (pass->pipelineMode != context->pipelineMode)
                 continue;

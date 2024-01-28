@@ -5,9 +5,8 @@
 #include <utils/Preprocessor.h>
 #include "RenderGeometryElement.h"
 #include <utils/JCSingletonList.h>
-#include <render/driver/gles/GLShaderInstance.h>
-#include "ShaderData.h"
-//#include "RenderContext3D.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLShaderInstance.h"
+#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTShaderData.h>
 #include "ShaderInstance.h"
 #include "RenderElement.h"
 #include  <vector>

@@ -5,7 +5,7 @@
 namespace laya
 {
 GLESRenderGeometryElement::GLESRenderGeometryElement(MeshTopology mode, DrawType drawType)
-    : /*ResourceBase(JCConch::s_pConchRender->m_pRenderGeometryElementManager), */m_nRenderMode(mode), m_nDrawType(drawType)
+    : /*ResourceBase(JCConch::s_pConchRender->m_pRenderGeometryElementManager), */ _mode(mode), m_nDrawType(drawType)
 {
     m_pDrawParams = new laya::JCSingletonList<int>(false);
 }

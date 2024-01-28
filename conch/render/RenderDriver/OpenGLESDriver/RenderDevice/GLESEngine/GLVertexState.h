@@ -2,35 +2,39 @@
 #define __GLVertexState_H__
 
 #include "GLCapable.h"
-#include "GLObject.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLObject.h"
+#include "LayaAir/2D/IndexBuffer2D.h"
+#include "LayaAir/2D/VertexBuffer2D.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESIndexBuffer.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESVertexBuffer.h"
 #include <string>
 #include <utils/Preprocessor.h>
-#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESVertexBuffer.h"
-#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESIndexBuffer.h"
 namespace laya
 {
-   /* struct AttribInfo
-    {
-        uint32_t _type;
-        uint32_t _size;
-        uint32_t _off;
-    };*/
+struct AttribInfo
+{
+    uint32_t _type;
+    uint32_t _size;
+    uint32_t _off;
+};
 
 class GLVertexState : public GLObject
 {
   public:
     GLVertexState(WebGLEngine *engine);
     ~GLVertexState();
-    void applyVertexBuffer(const std::vector<GLESVertexBuffer *> &vertexBuffers) ;
+    void applyVertexBuffer(const std::vector<GLESVertexBuffer *> &vertexBuffers);
 
     void applyIndexBuffer(GLESIndexBuffer *indexBuffer);
 
-    // void applyVertexBuffer(int stride, const std::vector<AttribInfo>& attribInfo, VertexBuffer2D* vertexBuffers);
+    void applyVertexBufferTemp2d(int stride, const std::vector<AttribInfo> &attribInfo,
+                                 VertexBuffer2D *vertexBuffers); // TODO
 
-    // void applyIndexBuffer(IndexBuffer2D* indexBuffer);
+    void applyIndexBufferTemp2d(IndexBuffer2D *indexBuffer); // TODO
     void destroy();
 
   private:
+    friend class BufferStateBase;
     void createVertexArray();
 
     void deleteVertexArray();
@@ -46,12 +50,13 @@ class GLVertexState : public GLObject
     }*/
 
     void vertexAttribDivisor(int index, int divisor);
+    void clearVAO();
 
   private:
     ANGLEInstancedArraysExt *m_angleInstancedArrays;
     OESVertexArrayObjectExt *m_vaoExt;
     GLenum m_vao;
-    std::vector<VertexDeclaration> _vertexDeclaration_vertexDeclaration;
+    std::vector<VertexDeclaration> _vertexDeclaration;
     // IndexBuffer* m_bindedIndexBuffer;
     //_vertexBuffers: VertexBuffer[];
     GLESIndexBuffer *_bindedIndexBuffer = nullptr;

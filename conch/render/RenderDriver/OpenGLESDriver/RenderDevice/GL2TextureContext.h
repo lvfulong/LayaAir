@@ -2,7 +2,7 @@
 #define __GL2TextureContext_H__
 
 #include <render/3D/design/renderEnum/RenderTargetFormat.h>
-#include "GLObject.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLObject.h"
 #include "GLTextureContext.h"
 #include <render/3D/design/renderEnum/RenderParams.h>
 #include <string>

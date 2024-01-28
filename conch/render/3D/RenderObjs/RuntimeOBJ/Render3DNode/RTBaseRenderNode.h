@@ -1,7 +1,6 @@
 #ifndef __RTBaseRenderNode_H_
 #define __RTBaseRenderNode_H_
 
-#include "render/3D/design/RenderElement.h"
 #include "render/3D/temp/Transform3D.h"
 #include <vector>
 #include "render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.h"
@@ -18,6 +17,7 @@ enum class IrradianceMode
 };
 class Bounds;
 class ShaderData;
+class GLESRenderElement3D;
 class RTBaseRenderNode
 {
   public:
@@ -40,7 +40,7 @@ class RTBaseRenderNode
     // 排版数据 用于renderqueuelist
     //ComposeData compose{};
     // 渲染数据 用于最终list渲染
-    std::vector<RenderElementOBJ *> renderelements{};
+    std::vector<GLESRenderElement3D*> renderelements{};
     // 设置这个值，所有的updateBounds renderUpdate和renderupdatebyCamera 必须在native执行
     //bool nativeUpdateData = false;
 

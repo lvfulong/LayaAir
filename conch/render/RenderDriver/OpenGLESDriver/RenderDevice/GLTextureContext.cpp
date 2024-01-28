@@ -1,10 +1,10 @@
 #include "GLTextureContext.h"
 #include <assert.h>
-#include "WebGLInternalTex.h"
+#include "GLESInternalTex.h"
 #include "Image/JCImage.h"
-#include "WebGLInternalRT.h"
+#include "GLESInternalRT.h"
 #include <Bindings/JSImage.h>
-#include "GLUtils.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLUtils.h"
 #include "LayaGL/JCLayaGL.h"
 #ifdef WIN32
 #ifdef min

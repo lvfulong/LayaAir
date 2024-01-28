@@ -1,16 +1,16 @@
 #include "GLESShaderInstance.h"
-#include "CommandUniformMap.h"
-#include "RenderState.h"
+#include "render/3D/temp/CommandUniformMap.h"
+#include "render/3D/temp/RenderState.h"
 #include <render/3D/temp/RenderStateContext.h>
-#include <render/3D/temp/ShaderPass.h>
+#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTShaderPass.h>
 #include <render/3D/Shader3D.h>
 #include <utils/Log.h>
 #include "JCConch.h"
 #include "JCConchRender.h"
-
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLShaderInstance.h"
 namespace laya
 {
-	ShaderInstance::ShaderInstance(WebGLEngine* engine, const char* vs, const char* ps, const std::unordered_map<std::string, int32_t>& attributeMap/*, RenderState* pRenderState*/) : ResourceBase(JCConch::s_pConchRender->m_pShaderInstanceManager)
+	ShaderInstance::ShaderInstance(WebGLEngine* engine, const char* vs, const char* ps, const std::unordered_map<std::string, int32_t>& attributeMap/*, RenderState* pRenderState*/)// : ResourceBase(JCConch::s_pConchRender->m_pShaderInstanceManager)
 	{
 		m_pWebGLEngine = engine;
 		//m_renderState = pRenderState;
@@ -295,9 +295,9 @@ namespace laya
 			break;
 		}
 	}
-	ShaderInstance* ShaderInstance::getShaderInstance(uint32_t id)
+	/*haderInstance* ShaderInstance::getShaderInstance(uint32_t id)
 	{
 		return JCConch::s_pConchRender->m_pShaderInstanceManager->getResource(id);
-	}
+	}*/
 }
 //------------------------------------------------------------------------------

@@ -6,6 +6,7 @@
 #include <vector>
 #include <stack>
 #include <utils/Preprocessor.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLVertexState.h>
 
 namespace laya
 {

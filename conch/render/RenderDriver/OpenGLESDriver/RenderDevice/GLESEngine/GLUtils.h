@@ -2,10 +2,9 @@
 #define __GLUtils_H__
 
 #include <string>
-#include "GLObject.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLObject.h"
 #include "GLCapable.h"
 #include <utils/Preprocessor.h>
-#include <render/3D/design/renderInterface/IRenderVertexState.h>
 
 namespace laya
 {

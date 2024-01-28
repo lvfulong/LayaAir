@@ -1,13 +1,13 @@
 #include "GLShaderInstance.h"
 #include <unordered_map>
-#include "GLObject.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLObject.h"
 #include <assert.h>
 #include <utils/Preprocessor.h>
 #include <utils/Log.h>
 #include "JCConch.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalTex.h"
 #include "JCSystemConfig.h"
-
+#include <render/3D/temp/UniformBufferObject.h>
 namespace laya
 {
 	GLShaderInstance::GLShaderInstance(WebGLEngine* engine, const char* vs, const char* ps, const std::unordered_map<std::string, int32_t>&  attributeMap): GLObject(engine)

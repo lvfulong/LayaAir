@@ -8,7 +8,7 @@
 namespace laya
 {
 	class WebGLEngine;
-	class IRenderBuffer;
+	class GLBuffer;
 	class UniformBufferObject : public ObjectBase<UniformBufferObject>
 	{
 	public:
@@ -17,12 +17,12 @@ namespace laya
 
 		~UniformBufferObject();
 
-		void setGLBuffer(IRenderBuffer* pBuffer);
+		void setGLBuffer(GLBuffer* pBuffer);
 		
 		void _bindUniformBufferBase();
 
 	public:
-		IRenderBuffer*	m_pBuffer = nullptr;
+		GLBuffer*	m_pBuffer = nullptr;
 
 		int				m_glPointer;
 

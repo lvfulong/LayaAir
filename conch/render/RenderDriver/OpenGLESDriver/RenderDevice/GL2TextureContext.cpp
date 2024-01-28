@@ -1,9 +1,9 @@
 #include "GL2TextureContext.h"
 #include <assert.h>
-#include "WebGLInternalTex.h"
+#include "GLESInternalTex.h"
 #include "../../Image/JCImage.h"
-#include "WebGLInternalRT.h"
-#include "GLUtils.h"
+#include "GLESInternalRT.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLUtils.h"
 
 namespace laya
 {

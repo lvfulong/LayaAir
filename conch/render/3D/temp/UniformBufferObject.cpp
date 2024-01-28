@@ -3,7 +3,7 @@
 #include <utils/Log.h>
 #include "JCConch.h"
 #include "JCConchRender.h"
-#include <render/3D/design/renderInterface/IRenderBuffer.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLBuffer.h>
 
 namespace laya
 {
@@ -25,7 +25,7 @@ namespace laya
 			}
 		}
 	}
-	void UniformBufferObject::setGLBuffer(IRenderBuffer* pBuffer)
+	void UniformBufferObject::setGLBuffer(GLBuffer* pBuffer)
 	{
 		m_pBuffer = pBuffer;
 	}

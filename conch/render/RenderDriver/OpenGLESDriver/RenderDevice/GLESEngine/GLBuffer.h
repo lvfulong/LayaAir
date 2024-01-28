@@ -1,7 +1,7 @@
 #ifndef __GLBuffer_H__
 #define __GLBuffer_H__
 
-#include "GLObject.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLObject.h"
 #include <render/3D/design/renderEnum/BufferTargetType.h>
 
 namespace laya
@@ -26,7 +26,7 @@ namespace laya
 		void _memorychange(int bytelength);
 		void _getGLUsage(BufferUsage usage);
 		void _getGLTarget(BufferTargetType target);
-	private:
+	public:
 		//GLParams
 		GLuint				m_glBuffer = 0;
 		int					m_glTarget = 0;

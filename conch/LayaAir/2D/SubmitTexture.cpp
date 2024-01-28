@@ -3,11 +3,11 @@
 #include <render/3D/temp/RenderStateContext.h>
 #include "Shader2D.h"
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalTex.h>
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLRenderDrawContext.h"
 #include "RenderState2D.h"
 #include "Context2D.h"
 #include "RenderTexture2D.h"
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.h>
-#include <render/3D/design/renderInterface/IRenderDrawContext.h>
 #include "JCConch.h"
 
 namespace laya
@@ -136,7 +136,7 @@ namespace laya
   
 		shader->uniform_sampler2D("texture", texture);
 	
-		m_pWebGLEngine->getDrawContext()->drawElements(MeshTopology::Triangles, m_elementNum, IndexFormat::UInt16, m_startIndex);
+		m_pWebGLEngine->getDrawContext()->drawElements2DTemp(MeshTopology::Triangles, m_elementNum, IndexFormat::UInt16, m_startIndex);
 		return 1;
 	}
 	

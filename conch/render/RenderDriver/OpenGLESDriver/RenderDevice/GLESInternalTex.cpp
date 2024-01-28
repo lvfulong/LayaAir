@@ -52,8 +52,8 @@ namespace laya
 	void WebGLInternalTex::setGpuMemory(int value)
 	{
 		m_gpuMemory = value;
-		m_engine->addStatisticsInfo(RenderStatisticsInfo::GPUMemory, m_gpuMemory);
-		m_engine->addStatisticsInfo(RenderStatisticsInfo::TextureMemeory, m_gpuMemory);
+		m_engine->_addStatisticsInfo(RenderStatisticsInfo::GPUMemory, m_gpuMemory);
+		m_engine->_addStatisticsInfo(RenderStatisticsInfo::TextureMemeory, m_gpuMemory);
 	}
 	GLenum WebGLInternalTex::getFilteMinrParam(FilterMode filterMode, bool mipmap)
 	{
@@ -149,8 +149,8 @@ namespace laya
 		{
 			glDeleteTextures(1, &m_resource);
 			m_resource = 0;
-			m_engine->addStatisticsInfo(RenderStatisticsInfo::GPUMemory, -m_gpuMemory);
-			m_engine->addStatisticsInfo(RenderStatisticsInfo::TextureMemeory, -m_gpuMemory);
+			m_engine->_addStatisticsInfo(RenderStatisticsInfo::GPUMemory, -m_gpuMemory);
+			m_engine->_addStatisticsInfo(RenderStatisticsInfo::TextureMemeory, -m_gpuMemory);
 			m_gpuMemory = 0;
 		}
 

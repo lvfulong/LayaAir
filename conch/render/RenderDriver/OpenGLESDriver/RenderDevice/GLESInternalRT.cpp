@@ -26,8 +26,8 @@ namespace laya
 	void WebGLInternalRT::setGpuMemory(int value)
 	{
 		m_gpuMemory = value;
-		m_engine->addStatisticsInfo(RenderStatisticsInfo::GPUMemory, m_gpuMemory);
-		m_engine->addStatisticsInfo(RenderStatisticsInfo::RenderTextureMemory, m_gpuMemory);
+		m_engine->_addStatisticsInfo(RenderStatisticsInfo::GPUMemory, m_gpuMemory);
+		m_engine->_addStatisticsInfo(RenderStatisticsInfo::RenderTextureMemory, m_gpuMemory);
 	}
 
 	WebGLInternalRT::~WebGLInternalRT()
@@ -66,8 +66,8 @@ namespace laya
 			m_msaaRenderbuffer = 0;
 		}
 
-		m_engine->addStatisticsInfo(RenderStatisticsInfo::GPUMemory, -m_gpuMemory);
-		m_engine->addStatisticsInfo(RenderStatisticsInfo::RenderTextureMemory, -m_gpuMemory);
+		m_engine->_addStatisticsInfo(RenderStatisticsInfo::GPUMemory, -m_gpuMemory);
+		m_engine->_addStatisticsInfo(RenderStatisticsInfo::RenderTextureMemory, -m_gpuMemory);
 		m_gpuMemory = 0;
 	}
 

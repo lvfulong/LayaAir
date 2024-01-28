@@ -6,7 +6,6 @@
 #include "core/math/Vector3.h"
 #include <unordered_map>
 #include <core/math/Matrix4x4.h>
-#include "render/3D/design/RenderContext.h"
 
 namespace laya{
 

@@ -4,7 +4,7 @@
 #include "render/3D/design/Render3DProcess.h"
 #include <vector>
 #include "render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTSpotLight.h"
-#include "render/driver/gles/GLESRenderQueueList.h"
+#include "render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESRenderListQueue.h"
 #include "render/3D/ShadowSliceData.h"
 
 namespace laya
@@ -74,7 +74,7 @@ class RTSpotLightShadowRP
     ShadowMode _shadowMode;
     Real _shadowStrength;
     ShadowSpotData _shadowSpotData;
-    GLESRenderQueueList _renderQueue;
+    GLESRenderListQueue _renderQueue;
     WebGLInternalRT* destTarget;
 };
 } // namespace laya

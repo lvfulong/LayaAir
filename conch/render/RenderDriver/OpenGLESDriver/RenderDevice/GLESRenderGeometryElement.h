@@ -1,16 +1,18 @@
 #ifndef __GLESRenderGeometryElement_H__
 #define __GLESRenderGeometryElement_H__
+#include "render/driver/gles/LayaGL.h"
 #include <render/3D/design/renderEnum/DrawType.h>
 #include <render/3D/design/renderEnum/IndexFormat.h>
 #include <render/3D/design/renderEnum/RenderPologyMode.h>
 #include <stdio.h>
 #include <utils/JCSingletonList.h>
 #include <utils/Preprocessor.h>
-
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLRenderDrawContext.h"
 namespace laya
 {
 class GLESBufferState;
-class GLESRenderGeometryElement// : public ResourceBase<GLESRenderGeometryElement>
+
+class GLESRenderGeometryElement // : public ResourceBase<GLESRenderGeometryElement>
 {
   public:
     GLESRenderGeometryElement(MeshTopology mode, DrawType drawType);
@@ -22,21 +24,21 @@ class GLESRenderGeometryElement// : public ResourceBase<GLESRenderGeometryElemen
     // static GLESRenderGeometryElement *getRenderGeometryElement(uint32_t id);
     void setIndexFormat(IndexFormat indexFormat)
     {
-        m_nIndexFormat = indexFormat;
-        //TODO this->_glindexFormat = (LayaGL.renderDrawContext as GLRenderDrawContext).getIndexType(this._indexFormat);
+        _indexFormat = indexFormat;
+        this->_glindexFormat = LayaGL::m_pWebglEngine->getDrawContext()->getIndexType(this->_indexFormat);
     }
     IndexFormat getIndexFormat()
     {
-        return m_nIndexFormat;
+        return _indexFormat;
     }
     void setMeshTopology(MeshTopology nMode)
     {
-        m_nRenderMode = nMode;
-        //TODO this->_glmode = (LayaGL.renderDrawContext as GLRenderDrawContext).getMeshTopology(this._mode);
+        _mode = nMode;
+        this->_glmode = LayaGL::m_pWebglEngine->getDrawContext()->getMeshTopology(this->_mode);
     }
     MeshTopology getMeshTopology()
     {
-        return m_nRenderMode;
+        return _mode;
     }
     void setDrawType(DrawType nDrawType)
     {
@@ -61,13 +63,13 @@ class GLESRenderGeometryElement// : public ResourceBase<GLESRenderGeometryElemen
 
   public:
     GLESBufferState *_bufferState;
-    MeshTopology m_nRenderMode;
+    MeshTopology _mode;
     DrawType m_nDrawType;
-    IndexFormat m_nIndexFormat;
+    IndexFormat _indexFormat;
     int m_nInstanceCount;
     laya::JCSingletonList<int> *m_pDrawParams;
-    int _glindexFormat;
-    int _glmode;
+    GLenum _glindexFormat;
+    GLenum _glmode;
 };
 } // namespace laya
 #endif //__GLESRenderGeometryElement_H__

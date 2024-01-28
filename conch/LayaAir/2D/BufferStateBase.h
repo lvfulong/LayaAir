@@ -4,14 +4,14 @@
 #include <stdio.h>
 #include <map>
 #include <vector>
-#include <stack>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLVertexState.h>
 
 namespace laya
 {
-	class IRenderVertexState;
 	class WebGLEngine;
 	class VertexBuffer2D;
 	class IndexBuffer2D;
+	class GLVertexState;
 	class BufferStateBase
 	{	
 	public:
@@ -23,7 +23,7 @@ namespace laya
 		void destroy();
 		void applyState(int stride, const std::vector<AttribInfo>& attribInfo, VertexBuffer2D* vertexBuffer, IndexBuffer2D* indexBuffer);
 	public:
-		IRenderVertexState*				m_nativeVertexArrayObject = nullptr;
+		GLVertexState*				m_nativeVertexArrayObject = nullptr;
 		static BufferStateBase*			m_curBindedBufferState;
 	};
 }

@@ -90,6 +90,9 @@ namespace laya
 				return GL_CONSTANT_COLOR;
 			case BlendFactor::OneMinusBlendColor:
 				return GL_ONE_MINUS_CONSTANT_COLOR;
+			default:
+				assert("Unknow type");
+				return GL_ZERO;
 			};
 		}
 		GLenum _getBlendOperation(BlendEquationSeparate factor)
@@ -104,6 +107,7 @@ namespace laya
 				return GL_FUNC_REVERSE_SUBTRACT;
 			default:
 				assert("Unknow type");
+				return GL_FUNC_ADD;
 			};
 		}
 
@@ -128,6 +132,8 @@ namespace laya
 			return GL_GEQUAL;
 		case CompareFunction::Always:
 			return GL_ALWAYS;
+		default:
+			return GL_LEQUAL; // todo
 		}
 		}
 
@@ -151,6 +157,9 @@ namespace laya
 			return GL_INCR_WRAP;
 		case StencilOperation::DecrementWrap:
 			return GL_DECR_WRAP;
+		default:
+			assert("Unknow type");
+			return GL_KEEP;
 		}
 		}
 

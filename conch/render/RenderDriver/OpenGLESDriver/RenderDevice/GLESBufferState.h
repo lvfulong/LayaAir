@@ -14,6 +14,7 @@ class GLESBufferState //: public IBufferState
   public:
     GLESBufferState();
     ~GLESBufferState();
+    void bind();
     void applyState(const std::vector<GLESVertexBuffer *> &vertexBuffers, GLESIndexBuffer *indexBuffer);
     void destroy();
 

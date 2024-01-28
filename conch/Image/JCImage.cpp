@@ -10,7 +10,7 @@
 #include <utils/Log.h>
 #include "JCImageManager.h"
 #include <utils/JCCommonMethod.h>
-#include <render/driver/gles/GLUtils.h>
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLUtils.h"
 
 namespace laya
 {

@@ -57,8 +57,8 @@ namespace laya
 	}
 	void GLBuffer::_memorychange(int bytelength)
 	{
-		m_engine->addStatisticsInfo(RenderStatisticsInfo::BufferMemory, bytelength);
-		m_engine->addStatisticsInfo(RenderStatisticsInfo::GPUMemory, bytelength);
+		m_engine->_addStatisticsInfo(RenderStatisticsInfo::BufferMemory, bytelength);
+		m_engine->_addStatisticsInfo(RenderStatisticsInfo::GPUMemory, bytelength);
 	}
 	bool GLBuffer::bindBuffer()
 	{

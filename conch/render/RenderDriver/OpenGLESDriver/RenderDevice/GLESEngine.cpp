@@ -4,17 +4,17 @@
 #include <regex>
 #include <utils/Log.h>
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLParams.h"
-#include "GLCapable.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLCapable.h"
 #include "GLTextureContext.h"
 #include "GL2TextureContext.h"
-#include "GLBuffer.h"
-#include "GLVertexState.h"
-#include "GLShaderInstance.h"
-#include <render/3D/temp/ShaderData.h>
-#include "GLRenderDrawContext.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLBuffer.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLVertexState.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLShaderInstance.h"
+#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTShaderData.h>
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLRenderDrawContext.h"
 #include <render/3D/temp/CommandEncoder.h>
-#include "WebGLInternalTex.h"
-#include "GLRender2DContext.h"
+#include "GLESInternalTex.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLRender2DContext.h"
 #include "JCSystemConfig.h"
 #include "LayaAir/2D/BufferStateBase.h"
 
@@ -72,10 +72,10 @@ namespace laya
 			delete m_params;
 			m_params = nullptr;
 		}
-		if (_GLRenderState)
+		if (m_renderState)
 		{
-			delete _GLRenderState;
-			_GLRenderState = nullptr;
+			delete m_renderState;
+			m_renderState = nullptr;
 		}
 		if (m_GLRenderDrawContext)
 		{
@@ -109,7 +109,7 @@ namespace laya
 		}		
 		m_supportCapatable = new GLCapable(this);
 		m_params = new GLParams(this);
-		_GLRenderState = new GLRenderState(this);
+		m_renderState = new GLRenderState(this);
 		m_GLRenderDrawContext = new GLRenderDrawContext(this);
 		m_GL2DRenderContext = new GLRender2DContext(this);
 	}
@@ -133,7 +133,7 @@ namespace laya
 		m_GLStatisticsInfo.insert(std::make_pair(RenderStatisticsInfo::RenderTextureMemory, 0));
 		m_GLStatisticsInfo.insert(std::make_pair(RenderStatisticsInfo::BufferMemory, 0));
 	}
-	void WebGLEngine::addStatisticsInfo(RenderStatisticsInfo info, int value)
+	void WebGLEngine::_addStatisticsInfo(RenderStatisticsInfo info, int value)
 	{
 		int newValue = getStatisticsInfo(info) + value;
 		m_GLStatisticsInfo[info] = newValue;
@@ -277,7 +277,7 @@ namespace laya
 		}
 		return m_textureContext;
 	}
-	IRenderBuffer* WebGLEngine::createBuffer(BufferTargetType targetType, BufferUsage bufferUsageType)
+	GLBuffer* WebGLEngine::createBuffer(BufferTargetType targetType, BufferUsage bufferUsageType)
 	{
 		//TODO SourceManager
 		return new GLBuffer(this, targetType, bufferUsageType);
@@ -358,15 +358,15 @@ namespace laya
 	}
 	GLRenderState* WebGLEngine::getRenderState()
 	{
-		return _GLRenderState;
+		return m_renderState;
 	}
-	IRenderVertexState* WebGLEngine::createVertexState()
+	GLVertexState* WebGLEngine::createVertexState()
 	{
 		return new GLVertexState(this);
 	}
-	IRenderDrawContext* WebGLEngine::getDrawContext()
+	GLRenderDrawContext* WebGLEngine::getDrawContext()
 	{
-		return (IRenderDrawContext*)m_GLRenderDrawContext;
+		return m_GLRenderDrawContext;
 	}
 	IRender2DContext* WebGLEngine::get2DRenderContext()
 	{

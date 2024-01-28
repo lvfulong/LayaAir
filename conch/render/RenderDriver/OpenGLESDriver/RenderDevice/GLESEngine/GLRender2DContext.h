@@ -1,9 +1,9 @@
 #ifndef __GLRender2DContext_H__
 #define __GLRender2DContext_H__
 
-#include "GLObject.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLObject.h"
 #include <render/3D/design/renderInterface/IRender2DContext.h>
-#include "WebGLEngine.h"
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.h>
 #include "JCSystemConfig.h"
 namespace laya
 {

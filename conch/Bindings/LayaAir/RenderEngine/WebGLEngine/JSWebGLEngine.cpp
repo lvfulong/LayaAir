@@ -5,7 +5,7 @@
 #include <render/3D/design/renderEnum/RenderCapable.h>
 #include <render/3D/design/renderEnum/RenderParams.h>
 #include <render/driver/gles/GLEnum/WebGLMode.h>
-#include "../../3D/JSCommandUniformMap.h"
+#include "render/3D/temp/CommandUniformMap.h"
 #include "JSWebGLInternalTex.h"
 #include "JCSystemConfig.h"
 #include "render/driver/gles/LayaGL.h"
@@ -110,7 +110,7 @@ namespace laya
 	}
 	void JSWebGLEngine::addStatisticsInfo(int info, int value)
 	{
-		m_pEngine->addStatisticsInfo((RenderStatisticsInfo)info, value);
+		m_pEngine->_addStatisticsInfo((RenderStatisticsInfo)info, value);
 	}
 	void JSWebGLEngine::clearStatisticsInfo(int value)
 	{

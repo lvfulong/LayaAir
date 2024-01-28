@@ -52,7 +52,7 @@ void GLVertexState::unbindVertexArray()
 void GLVertexState::applyVertexBuffer(const std::vector<GLESVertexBuffer *> &vertexBuffers)
 {
     // Clear front VAO
-    this.clearVAO();
+    this->clearVAO();
     // this->_vertexBuffers = vertexBuffer;
     if (m_engine->m_GLBindVertexArray == this)
     {
@@ -68,7 +68,7 @@ void GLVertexState::applyVertexBuffer(const std::vector<GLESVertexBuffer *> &ver
                 glVertexAttribPointer(verDec->location, verDec->size, verDec->type,
                                       (verDec->normalize > 0) ? GL_TRUE : GL_FALSE, verDec->stride,
                                       ((const void *)verDec->offset));
-                if (element->m_bInstanceBuffer)
+                if (element->_instanceBuffer)
                     this->vertexAttribDivisor(verDec->location, 1);
             }
         }
@@ -78,17 +78,12 @@ void GLVertexState::applyVertexBuffer(const std::vector<GLESVertexBuffer *> &ver
         assert("BufferState: must call bind() function first.");
     }
 }
-clearVAO()
+void GLVertexState::clearVAO()
 {
-    for (let i = 0, n = this._vertexDeclaration.length; i < n; i++)
+    for (int i = 0, n = this->_vertexDeclaration.size(); i < n; i++)
     {
-        var verDec : VertexDeclaration = this._vertexDeclaration[i];
-        var valueData : any = verDec._shaderValues;
-        for (var k in valueData)
-        {
-            var loc : number = parseInt(k);
-            this._gl.disableVertexAttribArray(loc);
-        }
+        VertexDeclaration *verDec = &this->_vertexDeclaration[i];
+        glDisableVertexAttribArray(verDec->location);
     }
 }
 void GLVertexState::applyIndexBuffer(GLESIndexBuffer *indexBuffer)
@@ -103,7 +98,7 @@ void GLVertexState::applyIndexBuffer(GLESIndexBuffer *indexBuffer)
     {
         if (this->_bindedIndexBuffer != indexBuffer)
         {
-            indexBuffer->bind(); // TODO:可和vao合并bind
+            indexBuffer->_glBuffer->bindBuffer(); // TODO:可和vao合并bind
             this->_bindedIndexBuffer = indexBuffer;
         }
     }
@@ -112,30 +107,31 @@ void GLVertexState::applyIndexBuffer(GLESIndexBuffer *indexBuffer)
         assert("BufferState: must call bind() function first.");
     }
 }
-/*void GLVertexState::applyVertexBuffer(int stride, const std::vector<AttribInfo>& attribInfo, VertexBuffer2D*
-vertexBuffers)
+void GLVertexState::applyVertexBufferTemp2d(int stride, const std::vector<AttribInfo> &attribInfo,
+                                            VertexBuffer2D *vertexBuffers)
 {
-    //this._vertexBuffers = vertexBuffer;
+    // this._vertexBuffers = vertexBuffer;
     if (m_engine->m_GLBindVertexArray == this)
     {
-        VertexBuffer2D* element = vertexBuffers;
+        VertexBuffer2D *element = vertexBuffers;
         element->bind();
         int attribNum = attribInfo.size();
         for (int i = 0; i < attribNum; i++)
         {
             glEnableVertexAttribArray(i);
-            glVertexAttribPointer(i, attribInfo[i]._size, attribInfo[i]._type, GL_FALSE, stride, (const
-void*)attribInfo[i]._off); //注意 normalize都设置为false了，想必没人要用这个功能把。
+            glVertexAttribPointer(
+                i, attribInfo[i]._size, attribInfo[i]._type, GL_FALSE, stride,
+                (const void *)attribInfo[i]._off); // 注意 normalize都设置为false了，想必没人要用这个功能把。
         }
     }
     else
     {
         assert("BufferState: must call bind() function first.");
     }
-}*/
-/*void GLVertexState::applyIndexBuffer(IndexBuffer2D* indexBuffer)
+}
+void GLVertexState::applyIndexBufferTemp2d(IndexBuffer2D *indexBuffer)
 {
-    //需要强制更新IndexBuffer
+    // 需要强制更新IndexBuffer
 
     if (indexBuffer == nullptr)
     {
@@ -143,17 +139,17 @@ void*)attribInfo[i]._off); //注意 normalize都设置为false了，想必没人
     }
     if (m_engine->m_GLBindVertexArray == this)
     {
-        //if (m_bindedIndexBuffer2D != indexBuffer)
+        // if (m_bindedIndexBuffer2D != indexBuffer)
         {
-            indexBuffer->bind();//TODO:可和vao合并bind
-            //m_bindedIndexBuffer2D = indexBuffer;
+            indexBuffer->bind(); // TODO:可和vao合并bind
+            // m_bindedIndexBuffer2D = indexBuffer;
         }
     }
     else
     {
         assert("BufferState: must call bind() function first.");
     }
-}*/
+}
 void GLVertexState::vertexAttribDivisor(int index, int divisor)
 {
     if (m_engine->isWebGL2())
@@ -170,4 +166,4 @@ void GLVertexState::destroy()
         m_destroyed = true;
     }
 }
-}
+} // namespace laya

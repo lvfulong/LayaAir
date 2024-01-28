@@ -1,6 +1,7 @@
 #ifndef __RenderClearFlag_H__
 #define __RenderClearFlag_H__
 
+#include <stdint.h>
 namespace laya
 {
 	enum class RenderClearFlag

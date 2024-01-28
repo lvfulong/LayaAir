@@ -2,7 +2,7 @@
 #include <utils/Log.h>
 #include "Shader2DCompile.h"
 #include <assert.h>
-#include <render/driver/gles/WebGLEngine.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.h>
 #include <render/3D/design/renderInterface/IRender2DContext.h>
 
 namespace laya

@@ -1,7 +1,7 @@
 #ifndef __DefineDatas_H__
 #define __DefineDatas_H__
 #include <vector>
-#include "RTShaderDefine.h"
+#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTShaderDefine.h>
 namespace laya{
 
     class DefineDatas {

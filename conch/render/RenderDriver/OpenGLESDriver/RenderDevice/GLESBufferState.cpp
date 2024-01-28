@@ -11,6 +11,10 @@ GLESBufferState::GLESBufferState()
 GLESBufferState::~GLESBufferState()
 {
 }
+void GLESBufferState::bind()
+{
+
+}
 void GLESBufferState::applyState(const std::vector<GLESVertexBuffer *> &vertexBuffers, GLESIndexBuffer *indexBuffer)
 {
 }

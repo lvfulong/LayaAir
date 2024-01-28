@@ -11,13 +11,13 @@ namespace laya
 	class GLStateMap;
 	class ShaderVariable;
 	class RenderState;
-	class ShaderPass;
+	class RTShaderPass;
 	class ShaderInstance//: public ResourceBase<ShaderInstance>
 	{
 	public:
 		ShaderInstance(WebGLEngine* engine, const char* vs, const char* ps, const std::unordered_map<std::string, int32_t>& attributeMap/*, RenderState* pRenderState*/);
 		~ShaderInstance();
-		static ShaderInstance* getShaderInstance(uint32_t id);
+		//static ShaderInstance* getShaderInstance(uint32_t id);
 		bool bind();
 		void destroy();
 		void _disposeResource();
@@ -43,7 +43,7 @@ namespace laya
 		WebGLEngine*									m_pWebGLEngine = nullptr;
 		//RenderStateCommand								m_cullStateCMD;
 		std::unordered_map<int, ShaderVariable*>		m_customUniformParamsMap;
-		ShaderPass*										_shaderPass = nullptr;
+		RTShaderPass*										_shaderPass = nullptr;
 	};
 }
 #endif //__ShaderInstance_H__

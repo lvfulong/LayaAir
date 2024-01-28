@@ -1,7 +1,7 @@
 #include "JSRenderTexture2D.h"
 #include <utils/Log.h>
 #include "../RenderEngine/WebGLEngine/JSWebGLEngine.h"
-#include <render/driver/gles/WebGLEngine.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.h>
 #include <render/driver/gles/GLTextureContext.h>
 #include "../RenderEngine/WebGLEngine/JSGLTextureContext.h"
 #include "../RenderEngine/WebGLEngine/JSWebGLInternalRT.h"

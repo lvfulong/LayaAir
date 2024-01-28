@@ -119,14 +119,8 @@ list(APPEND CONCH_SRC
 	core/math/Viewport.h
 	core/math/Viewport.cpp
 
-	
-	#render/3D/design
-	render/3D/design/RenderElement.h
-	render/3D/design/RenderElement.cpp
 	render/3D/design/Render3DProcess.cpp
 	render/3D/design/Render3DProcess.h
-	render/3D/design/RenderContext.cpp
-	render/3D/design/RenderContext.h
 	render/3D/RenderableSprite3DProperty.h
 	render/3D/RenderableSprite3DProperty.cpp
 	render/3D/Sprite3DRenderDeclarationProperty.h
@@ -168,50 +162,45 @@ list(APPEND CONCH_SRC
 	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTForwardAddClusterRP.cpp
 	render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.h
 	render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.cpp
-	render/driver/gles/GLESCullUtil.h
-	render/driver/gles/GLESCullUtil.cpp
 	render/tempbase.h
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESBufferState.h
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESBufferState.cpp
-
-	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLRenderDrawContext.h
-	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLRenderDrawContext.cpp
+	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.h
+	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.cpp
+	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalTex.h
+	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalTex.cpp
+	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalRT.h
+	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalRT.cpp
+	render/RenderDriver/OpenGLESDriver/RenderDevice/GL2TextureContext.h
+	render/RenderDriver/OpenGLESDriver/RenderDevice/GL2TextureContext.cpp
+	render/RenderDriver/OpenGLESDriver/RenderDevice/GLTextureContext.h
+	render/RenderDriver/OpenGLESDriver/RenderDevice/GLTextureContext.cpp
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderGeometryElement.h
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderGeometryElement.cpp
+	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLRenderDrawContext.h
+	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLRenderDrawContext.cpp
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLRenderState.h
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLRenderState.cpp
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLCapable.h
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLCapable.cpp
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLParams.h
-	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLParams.cpp
-	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.h
-	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.cpp
+	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLParams.cpp	
+	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLShaderInstance.h
+	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLShaderInstance.cpp
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLObject.h
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLObject.cpp
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLEnum/WebGLExtension.h
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLEnum/WebGLMode.h
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLBuffer.h
-	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLBuffer.cpp
-	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalTex.h
-	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalTex.cpp
-	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalRT.h
-	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalRT.cpp
-	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLShaderInstance.h
-	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLShaderInstance.cpp
-	render/RenderDriver/OpenGLESDriver/RenderDevice/GL2TextureContext.h
-	render/RenderDriver/OpenGLESDriver/RenderDevice/GL2TextureContext.cpp
-	render/RenderDriver/OpenGLESDriver/RenderDevice/GLTextureContext.h
-	render/RenderDriver/OpenGLESDriver/RenderDevice/GLTextureContext.cpp
+	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLBuffer.cpp	
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLVertexState.h
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLVertexState.cpp
-	render/driver/gles/GLRender2DContext.h
-	render/driver/gles/GLRender2DContext.cpp
-	render/driver/gles/GLUtils.h
-	render/driver/gles/GLUtils.cpp
+	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLRender2DContext.h
+	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLRender2DContext.cpp
+	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLUtils.h
+	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLUtils.cpp
 	render/driver/gles/LayaGL.h
 	render/driver/gles/LayaGL.cpp
-	render/driver/gles/QuickSort.h
-	render/driver/gles/QuickSort.cpp
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESIndexBuffer.h
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESIndexBuffer.cpp
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESVertexBuffer.h
@@ -247,11 +236,9 @@ list(APPEND CONCH_SRC
 	render/3D/temp/RenderStateContext.cpp
 	render/3D/temp/ObjectBase.h
 	render/3D/temp/ObjectBase.cpp
-	render/3D/temp/SkinRenderElement.h
-	render/3D/temp/SkinRenderElement.cpp
 	
-	render/3D/temp/ShaderData.h
-	render/3D/temp/ShaderData.cpp
+	
+	
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderInstance.h
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderInstance.cpp
 	render/3D/temp/CommandUniformMap.h
@@ -265,15 +252,22 @@ list(APPEND CONCH_SRC
 	#render/3D/temp/InstanceRenderElementOBJ.cpp
 	render/3D/temp/UniformBufferObject.h
 	render/3D/temp/UniformBufferObject.cpp
-	render/RenderDriver/3DRenderPass/GLESRenderElement3D.h
-	render/RenderDriver/3DRenderPass/GLESRenderElement3D.cpp
-	render/3D/temp/SubShader.cpp
-	render/3D/temp/SubShader.h
-	render/3D/temp/ShaderPass.cpp
-	render/3D/temp/ShaderPass.h
+	render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderElement3D.h
+	render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderElement3D.cpp
+	render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESSkinRenderElement.h
+	render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESSkinRenderElement.cpp
+	render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESCullUtil.h
+	render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESCullUtil.cpp
+	render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESQuickSort.h
+	render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESQuickSort.cpp	
+	render/RenderDriver/RenderModuleData/RuntimeModuleData/RTShaderData.cpp
 	render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h
 	render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.cpp
-	
+	render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTSubShader.cpp
+	render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTSubShader.h
+	render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTShaderPass.cpp
+	render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTShaderPass.h
+
 
 	Audio/JCAudioManager.cpp
 	Audio/JCAudioManager.h

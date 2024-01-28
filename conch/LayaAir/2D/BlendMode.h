@@ -66,6 +66,7 @@ namespace laya
 			break;
 		default:
 			LOGW("invalid BlendMode value");
+			return "normal";
 			break;
 		}
 	}
@@ -90,9 +91,10 @@ namespace laya
 			return BlendMode::destination_out;
 		else if (strcmp(name, "add_old") == 0 || strcmp(name, "lighter_old") == 0)
 			return BlendMode::add_old;
-		else
+		else {
 			LOGW("invalid BlendMode name");
-		return BlendMode::normal;
+			return BlendMode::normal;
+		}
 	}
 }
 #endif //__BlendMode_H__

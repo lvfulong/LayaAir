@@ -1,13 +1,12 @@
 #ifndef __GLESRenderElement3D_H__
 #define __GLESRenderElement3D_H__
-#include "render/3D/design/RenderElement.h"
+
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderInstance.h"
 #include "render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderGeometryElement.h"
-#include "SubShader.h"
+#include "render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTSubShader.h"
 #include <render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.h>
-
-#include "Transform3D.h"
+#include "render/3D/temp/Transform3D.h"
 #include "render/driver/gles/LayaGL.h"
 namespace laya
 {
@@ -25,8 +24,8 @@ class GLESRenderElement3D
     void setMaterialShaderData(ShaderData* value) { materialShaderData = value; }
     void setTransform(Transform3D* value) { transform = value;}
     void setOwner(RTBaseRenderNode* value) { owner = value; }
-    void setGeometry(RenderGeometryElement* value) { geometry = value; }
-    void setSubShader(SubShader* value) { subshader = value; }
+    void setGeometry(GLESRenderGeometryElement* value) { geometry = value; }
+    void setSubShader(RTSubShader* value) { subshader = value; }
     void destroy();
 private:
     void _addShaderInstance(ShaderInstance* shader);
@@ -36,8 +35,8 @@ private:
 protected:
     virtual void drawGeometry(ShaderInstance* shaderIns);
 public:
-    RenderGeometryElement* geometry = nullptr;
-    SubShader* subshader = nullptr;
+    GLESRenderGeometryElement* geometry = nullptr;
+    RTSubShader* subshader = nullptr;
     ShaderData* materialShaderData = nullptr;
     uint32_t materialRenderQueue;
     ShaderData* renderShaderData = nullptr;

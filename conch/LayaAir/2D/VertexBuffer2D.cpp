@@ -1,5 +1,5 @@
 #include "VertexBuffer2D.h"
-#include <render/3D/design/renderInterface/IRenderBuffer.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLBuffer.h>
 
 namespace laya
 {

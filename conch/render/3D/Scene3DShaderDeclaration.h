@@ -1,7 +1,7 @@
 #ifndef __Scene3DShaderDeclaration_H__
 #define __Scene3DShaderDeclaration_H__
 
-#include <render/3D/temp/ShaderDefine.h>
+#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTShaderDefine.h>
 
 namespace laya
 {

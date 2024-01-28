@@ -9,7 +9,7 @@
 
 namespace laya
 {
-    class IRenderBuffer;
+    class GLBuffer;
 	class WebGLEngine;
 	class Buffer
 	{
@@ -20,7 +20,7 @@ namespace laya
 		void unbind();
 		void resizelength(int bytelength);
 	public:
-		IRenderBuffer*				m_glBuffer = nullptr;
+		GLBuffer*				m_glBuffer = nullptr;
 		std::vector<uint8_t>		m_buffer;
 		BufferTargetType			m_bufferType;
 		BufferUsage					m_bufferUsage;

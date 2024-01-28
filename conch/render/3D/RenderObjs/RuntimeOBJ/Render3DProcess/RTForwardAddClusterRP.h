@@ -3,7 +3,7 @@
 
 #include "render/3D/design/Render3DProcess.h"
 #include <vector>
-#include "render/driver/gles/GLESRenderQueueList.h"
+#include "render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESRenderListQueue.h"
 #include <core/math/Types.h>
 #include <core/math/Vector4.h>
 #include "render/tempbase.h"
@@ -67,8 +67,8 @@ private:
     Color clearColor;
     uint32_t clearFlag;
     bool enableOpaque;
-    GLESRenderQueueList opaqueList;
-    GLESRenderQueueList transparent;
+    GLESRenderListQueue opaqueList;
+    GLESRenderListQueue transparent;
     Viewport viewPort;
     std::string depthNormalPipelineMode;
     Color _defaultNormalDepthColor;

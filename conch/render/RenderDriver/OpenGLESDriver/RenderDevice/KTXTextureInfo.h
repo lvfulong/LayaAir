@@ -1,5 +1,6 @@
 #ifndef KTXTextureInfo_h
 #define KTXTextureInfo_h
+
 #include <binder/JSInterface.h>
 #include <render/3D/design/renderEnum/TextureFormat.h>
 #include <render/3D/design/renderEnum/TextureDimension.h>

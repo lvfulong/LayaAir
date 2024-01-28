@@ -16,11 +16,10 @@
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLEnum/WebGLMode.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLRenderState.h"
 
+
 namespace laya
 {
 	class GLRenderDrawContext;
-	class IRenderDrawContext;
-	class IRenderBuffer;
 	class GLTextureContext;
 	class Color;
 	class GLParams;
@@ -29,7 +28,6 @@ namespace laya
 	class GLShaderInstance;
 	class IRenderState;
 	class GLVertexState;
-	class IRenderVertexState;
 	class ShaderData;
 	class ShaderVariable;
 	class CommandEncoder;
@@ -48,7 +46,7 @@ namespace laya
 		bool getCapable(RenderCapable capatableType) { return m_supportCapatable->getCapable(capatableType); }
 		GLTextureContext* getTextureContext() { return m_textureContext; };
 		GLTextureContext* createTextureContext(bool isWebGL2);
-		IRenderBuffer* createBuffer(BufferTargetType targetType, BufferUsage bufferUsageType);
+		GLBuffer* createBuffer(BufferTargetType targetType, BufferUsage bufferUsageType);
 		GLBuffer* _getbindBuffer(BufferTargetType target);
 		void _setbindBuffer(BufferTargetType target, GLBuffer* buffer);
 		void _bindTexture(GLenum target, WebGLInternalTex* texture);
@@ -61,8 +59,8 @@ namespace laya
 		int propertyNameToID(const char* name);
 		ShaderDefine* getDefineByName(const char* name);
 		GLRenderState* getRenderState();
-		IRenderVertexState* createVertexState();
-		IRenderDrawContext* getDrawContext();
+		GLVertexState* createVertexState();
+		GLRenderDrawContext* getDrawContext();
 		IRender2DContext* get2DRenderContext();
 		int uploadUniforms(GLShaderInstance* shader, CommandEncoder* commandEncoder, ShaderData* shaderData, bool uploadUnTexture);
 		int uploadCustomUniforms(GLShaderInstance* shader, const std::unordered_map<int, ShaderVariable*>& custom, int index, char* data, int byteSize);
@@ -72,7 +70,7 @@ namespace laya
 		GLBuffer* _getBindUBOBuffer(int glPointer);
 		void _setBindUBOBuffer(int glPointer, GLBuffer* buffer);
 		void _initStatisticsInfo();
-		void addStatisticsInfo(RenderStatisticsInfo info, int value);
+		void _addStatisticsInfo(RenderStatisticsInfo info, int value);
 		void clearStatisticsInfo(RenderStatisticsInfo info);
 		int getStatisticsInfo(RenderStatisticsInfo info);
 		void unbindVertexState();
@@ -89,7 +87,7 @@ namespace laya
 		std::vector<WebGLInternalTex*>								m_activeTextures;
 		GLParams*													m_params;
 		GLCapable*													m_supportCapatable;
-		GLRenderState*												_GLRenderState;
+		GLRenderState* m_renderState;
 		laya::Vector4														m_lastViewport;
 		laya::Vector4														m_lastScissor;
 		laya::Color														m_lastClearColor;

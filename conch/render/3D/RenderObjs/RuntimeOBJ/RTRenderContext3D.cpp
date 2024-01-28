@@ -1,6 +1,6 @@
 #include "RTRenderContext3D.h"
 #include "render/driver/gles/LayaGL.h"
-#include <render/RenderDriver/3DRenderPass/GLESRenderElement3D.h>
+#include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderElement3D.h>
 namespace laya
 {
 RTRenderContext3D::RTRenderContext3D(){
@@ -10,7 +10,7 @@ RTRenderContext3D::RTRenderContext3D(){
 RTRenderContext3D::~RTRenderContext3D(){
 
 };
-uint32_t RTRenderContext3D::drawRenderElementList(const JCSingletonList<RenderElementOBJ *> &list)
+uint32_t RTRenderContext3D::drawRenderElementList(const JCSingletonList<GLESRenderElement3D*> &list)
 {
     _bindRenderTarget();
     _start();
@@ -31,7 +31,7 @@ uint32_t RTRenderContext3D::drawRenderElementList(const JCSingletonList<RenderEl
     return 0;
 }
 
-uint32_t RTRenderContext3D::drawRenderElementOne(RenderElementOBJ *node)
+uint32_t RTRenderContext3D::drawRenderElementOne(GLESRenderElement3D*node)
 {
     _bindRenderTarget();
     _start();

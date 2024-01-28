@@ -56,7 +56,7 @@ void GLESVertexBuffer::unbind()
 void GLESVertexBuffer::orphanStorage()
 {
     bind();
-    this->_glBuffer->setDataLength(this->_glBuffer->_byteLength);
+    this->_glBuffer->setDataLength(this->_glBuffer->m_byteLength);
 }
 
 void GLESVertexBuffer::setVertexDeclaration(int *declaration, int intLength)

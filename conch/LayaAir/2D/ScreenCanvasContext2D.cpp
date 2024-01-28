@@ -21,8 +21,8 @@
 #include "TextRender.h"
 #include "JCConch.h"
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.h>
-#include <render/driver/gles/GLTextureContext.h>
-#include <render/driver/gles/WebGLInternalRT.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLTextureContext.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalRT.h>
 #include "JCContext2DDispatch.h"
 #include <Bindings/JSLayaGL.h>
 #include "BufferStateBase.h"
