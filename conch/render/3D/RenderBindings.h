@@ -1,115 +1,170 @@
 #ifndef __RenderBindings_H__
 #define __RenderBindings_H__
 
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/WebGLConfig.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderGeometryElement.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderInstance.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESBufferState.h"
+#include "render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTSubShader.h"
+#include <binder/JSInterface.h>
+#include <core/math/Color.h>
+#include <core/math/Matrix3x3.h>
+#include <core/math/Matrix4x4.h>
 #include <core/math/Vector2.h>
 #include <core/math/Vector3.h>
 #include <core/math/Vector4.h>
-#include <core/math/Color.h>
-#include <binder/JSInterface.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.h>
-#include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTRender3DProcess.h>
-#include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTForwardAddRP.h>
-#include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTDirectLightShadowRP.h>
-#include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTSpotLightShadowRP.h>
-#include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTForwardAddClusterRP.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.h>
+#include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTDirectLightShadowRP.h>
+#include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTForwardAddClusterRP.h>
+#include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTForwardAddRP.h>
+#include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTRender3DProcess.h>
+#include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTSpotLightShadowRP.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTDirectLight.h>
-#include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTModuleData.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTLightmapData.h>
-#include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTVolumetricGI.h>
-#include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTSpotLight.h>
+#include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTModuleData.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTReflectionProb.h>
-#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTShaderPass.h>
-#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTShaderData.h>
-#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderInstance.h"
-#include "render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTSubShader.h"
-#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderGeometryElement.h"
+#include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTSpotLight.h>
+#include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTVolumetricGI.h>
 #include <render/3D/temp/RenderState.h>
-#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h>
 #include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESSkinRenderElement.h>
-#include <core/math/Matrix4x4.h>
-#include <core/math/Matrix3x3.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.h>
+#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTShaderPass.h>
+#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h>
+#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTShaderData.h>
 
 namespace laya
 {
-    template <> class Converter<Matrix3x3>
+template <> class Converter<Matrix3x3>
+{
+  public:
+    static Matrix3x3 ToCpp(JSValueAsParam ab)
     {
-    public:
-        static Matrix3x3 ToCpp(JSValueAsParam ab)
+        char *pArrayBufferPtr = NULL;
+        int nABLen = 0;
+        bool bIsArrayBuffer = extractJSAB(ab, pArrayBufferPtr, nABLen);
+        if (bIsArrayBuffer)
         {
-            char* pArrayBufferPtr = NULL;
-            int nABLen = 0;
-            bool bIsArrayBuffer = extractJSAB(ab, pArrayBufferPtr, nABLen);
-            if (bIsArrayBuffer)
-            {
-                Matrix3x3 mat;
-                memcpy(mat.elements, pArrayBufferPtr, sizeof(float) * 9);
-            }
-            else 
-            { 
-                return Matrix3x3();
-            }
+            Matrix3x3 mat;
+            memcpy(mat.elements, pArrayBufferPtr, sizeof(float) * 9);
         }
-        static JsValue ToJs(const Matrix3x3& p_vl)
+        else
         {
-            assert(true && "not implemented");
-            return JSP_TO_JS_UNDEFINE;
+            return Matrix3x3();
         }
-    };
-    template <> class Converter<Matrix4x4>
+    }
+    static JsValue ToJs(const Matrix3x3 &p_vl)
     {
-    public:
-        static Matrix4x4 ToCpp(JSValueAsParam ab)
+        assert(true && "not implemented");
+        return JSP_TO_JS_UNDEFINE;
+    }
+};
+template <> class Converter<Matrix4x4>
+{
+  public:
+    static Matrix4x4 ToCpp(JSValueAsParam ab)
+    {
+        char *pArrayBufferPtr = NULL;
+        int nABLen = 0;
+        bool bIsArrayBuffer = extractJSAB(ab, pArrayBufferPtr, nABLen);
+        if (bIsArrayBuffer)
         {
-            char* pArrayBufferPtr = NULL;
-            int nABLen = 0;
-            bool bIsArrayBuffer = extractJSAB(ab, pArrayBufferPtr, nABLen);
-            if (bIsArrayBuffer)
-            {
-                Matrix4x4 mat;
-                memcpy(mat.elements, pArrayBufferPtr, sizeof(float) * 16);
-            }
-            else
-            {
-                return Matrix4x4();
-            }
+            Matrix4x4 mat;
+            memcpy(mat.elements, pArrayBufferPtr, sizeof(float) * 16);
         }
-        static JsValue ToJs(const Matrix4x4& p_vl)
+        else
         {
-            assert(true && "not implemented");
-            return JSP_TO_JS_UNDEFINE;
+            return Matrix4x4();
         }
-    };
+    }
+    static JsValue ToJs(const Matrix4x4 &p_vl)
+    {
+        assert(true && "not implemented");
+        return JSP_TO_JS_UNDEFINE;
+    }
+};
 class RenderBindings
 {
   public:
     static void exportJS(Context &context)
     {
-        //Math Bindings
-        value_object<Vector2>("NativeVector2").field("x", &Vector2::x).field("y", &Vector2::y);
-        value_object<Vector3>("NativeVector3").field("x", &Vector3::x).field("y", &Vector3::y).field("z", &Vector3::z);
-        value_object<Vector4>("NativeVector4").field("x", &Vector4::x).field("y", &Vector4::y).field("z", &Vector4::z).field("w", &Vector4::w);
-        value_object<Color>("NativeColor").field("r", &Color::r).field("g", &Color::g).field("b", &Color::b).field("a", &Color::a);
-        value_object<Plane>("NativePlane").field("_normal", &Plane::normal).field("_distance", &Plane::distance);
-        value_object<BoundFrustum>("NativeBoundFrustum").field("_matrix", &BoundFrustum::_matrix).field("_near", &BoundFrustum::_near).field("_far", &BoundFrustum::_far).field("_left", &BoundFrustum::_left).field("_right", &BoundFrustum::_right).field("_top", &BoundFrustum::_top).field("_bottom", &BoundFrustum::_bottom);
-        value_object<CameraCullInfo>("NativeCameraCullInfo").field("position", &CameraCullInfo::_position).field("cullingMask", &CameraCullInfo::_cullingMask).field("staticMask", &CameraCullInfo::_staticMask).field("boundFrustum", &CameraCullInfo::_boundFrustum).field("useOcclusionCulling", &CameraCullInfo::_useOcclusionCulling);
+        // Math Bindings
+        value_object<Vector2>("conchVector2").field("x", &Vector2::x).field("y", &Vector2::y);
+        value_object<Vector3>("conchVector3").field("x", &Vector3::x).field("y", &Vector3::y).field("z", &Vector3::z);
+        value_object<Vector4>("conchVector4")
+            .field("x", &Vector4::x)
+            .field("y", &Vector4::y)
+            .field("z", &Vector4::z)
+            .field("w", &Vector4::w);
+        value_object<Color>("conchColor")
+            .field("r", &Color::r)
+            .field("g", &Color::g)
+            .field("b", &Color::b)
+            .field("a", &Color::a);
+        value_object<Plane>("conchPlane").field("_normal", &Plane::normal).field("_distance", &Plane::distance);
+        value_object<BoundFrustum>("conchBoundFrustum")
+            .field("_matrix", &BoundFrustum::_matrix)
+            .field("_near", &BoundFrustum::_near)
+            .field("_far", &BoundFrustum::_far)
+            .field("_left", &BoundFrustum::_left)
+            .field("_right", &BoundFrustum::_right)
+            .field("_top", &BoundFrustum::_top)
+            .field("_bottom", &BoundFrustum::_bottom);
+        value_object<CameraCullInfo>("conchCameraCullInfo")
+            .field("position", &CameraCullInfo::_position)
+            .field("cullingMask", &CameraCullInfo::_cullingMask)
+            .field("staticMask", &CameraCullInfo::_staticMask)
+            .field("boundFrustum", &CameraCullInfo::_boundFrustum)
+            .field("useOcclusionCulling", &CameraCullInfo::_useOcclusionCulling);
+        value_object<WebGLConfig>("conchWebGLConfig")
+            .field("stencil", &WebGLConfig::stencil)
+            .field("alpha", &WebGLConfig::alpha)
+            .field("depth", &WebGLConfig::depth)
+            .field("antialias", &WebGLConfig::antialias)
+            .field("failIfMajorPerformanceCaveat", &WebGLConfig::failIfMajorPerformanceCaveat)
+            .field("premultipliedAlpha", &WebGLConfig::premultipliedAlpha)
+            .field("posipreserveDrawingBuffertion", &WebGLConfig::preserveDrawingBuffer);
+
         {
-            //todo Bounds
+            // todo Bounds
         }
         {
-            //todo conchWebGLInternalRT
-        }
-         {
-            //todo WebGLInternalTex
+            // todo conchWebGLInternalRT
         }
         {
-            //todo UniformBufferObject
+            // todo WebGLInternalTex
         }
         {
-            //GLESIndexBuffer.h
+            // todo UniformBufferObject
         }
         {
-            //GLESVertexBuffer
+            // GLESIndexBuffer.h
+        }
+        {
+            // GLESVertexBuffer
+        }
+        {
+            class_<GLESEngine> class_binding;
+            class_binding.constructor<WebGLConfig, WebGLMode>();
+            class_binding.function("initRenderEngine", &GLESEngine::initRenderEngine);
+            //todo class_binding.function("copySubFrameBuffertoTex", &GLESEngine::copySubFrameBuffertoTex);
+            //todo class_binding.function("getTextureContext", &GLESEngine::getTextureContext);
+            class_binding.function("getParams", &GLESEngine::getParams);
+            class_binding.function("getCapable", &GLESEngine::getCapable);
+            class_binding.function("propertyNameToID", &GLESEngine::propertyNameToID);
+            class_binding.function("propertyIDToName", &GLESEngine::propertyIDToName);
+            class_binding.function("clearStatisticsInfo", &GLESEngine::clearStatisticsInfo);
+            class_binding.function("getStatisticsInfo", &GLESEngine::getStatisticsInfo);
+            context.class_("conchGLESEngine", class_binding);
+        }
+        {
+            
+            class_<GLESBufferState> class_binding;
+            class_binding.constructor<>();
+            class_binding.function("applyState", &GLESBufferState::applyState);
+            class_binding.function("destroy", &GLESBufferState::destroy);
+            context.class_("conchGLESBufferState", class_binding);
+
         }
         {
             class_<RenderState> class_binding;
@@ -122,10 +177,12 @@ class RenderBindings
             class_binding.property("dstBlendRGB", &RenderState::getDstBlendRGB, &RenderState::setDstBlendRGB);
             class_binding.property("srcBlendAlpha", &RenderState::getSrcBlendAlpha, &RenderState::setSrcBlendAlpha);
             class_binding.property("dstBlendAlpha", &RenderState::getDstBlendAlpha, &RenderState::setDstBlendAlpha);
-            //JSP_ADD_METHOD("blendConstColor", RenderState::setBlendConstColor);
+            // JSP_ADD_METHOD("blendConstColor", RenderState::setBlendConstColor);
             class_binding.property("blendEquation", &RenderState::getBlendEquation, &RenderState::setBlendEquation);
-            class_binding.property("blendEquationRGB", &RenderState::getBlendEquationRGB, &RenderState::setBlendEquationRGB);
-            class_binding.property("blendEquationAlpha", &RenderState::getBlendEquationAlpha, &RenderState::setBlendEquationAlpha);
+            class_binding.property("blendEquationRGB", &RenderState::getBlendEquationRGB,
+                                   &RenderState::setBlendEquationRGB);
+            class_binding.property("blendEquationAlpha", &RenderState::getBlendEquationAlpha,
+                                   &RenderState::setBlendEquationAlpha);
             class_binding.property("depthTest", &RenderState::getDepthTest, &RenderState::setDepthTest);
             class_binding.property("depthWrite", &RenderState::getDepthWrite, &RenderState::setDepthWrite);
             class_binding.property("stencilWrite", &RenderState::getStencilWrite, &RenderState::setStencilWrite);
@@ -165,13 +222,18 @@ class RenderBindings
         }
         {
             class_<GLESRenderGeometryElement> class_binding;
-            //class_binding.constructor<>();
+            // class_binding.constructor<>();
             class_binding.constructor<MeshTopology, DrawType>();
-            //todo class_binding.property("bufferState", &GLESRenderGeometryElement::getBufferState3D, &GLESRenderGeometryElement::setBufferState3D);
-            class_binding.property("mode", &GLESRenderGeometryElement::getMeshTopology, &GLESRenderGeometryElement::setMeshTopology);
-            class_binding.property("drawType", &GLESRenderGeometryElement::getDrawType, &GLESRenderGeometryElement::setDrawType);
-            class_binding.property("instanceCount", &GLESRenderGeometryElement::getInstanceCount, &GLESRenderGeometryElement::setInstanceCount);
-            class_binding.property("indexFormat", &GLESRenderGeometryElement::getIndexFormat, &GLESRenderGeometryElement::setIndexFormat);
+            // todo class_binding.property("bufferState", &GLESRenderGeometryElement::getBufferState3D,
+            // &GLESRenderGeometryElement::setBufferState3D);
+            class_binding.property("mode", &GLESRenderGeometryElement::getMeshTopology,
+                                   &GLESRenderGeometryElement::setMeshTopology);
+            class_binding.property("drawType", &GLESRenderGeometryElement::getDrawType,
+                                   &GLESRenderGeometryElement::setDrawType);
+            class_binding.property("instanceCount", &GLESRenderGeometryElement::getInstanceCount,
+                                   &GLESRenderGeometryElement::setInstanceCount);
+            class_binding.property("indexFormat", &GLESRenderGeometryElement::getIndexFormat,
+                                   &GLESRenderGeometryElement::setIndexFormat);
             class_binding.function("setDrawArrayParams", &GLESRenderGeometryElement::setDrawArrayParams);
             class_binding.function("setDrawElementParams", &GLESRenderGeometryElement::setDrawElementParams);
             class_binding.function("clearRenderParams", &GLESRenderGeometryElement::clearRenderParams);
@@ -180,7 +242,8 @@ class RenderBindings
         }
         {
             class_<ShaderInstance> class_binding;
-            class_binding.constructor<GLESEngine*, const char*, const char*, const std::unordered_map<std::string, int32_t>&>();//todo
+            class_binding.constructor<GLESEngine *, const char *, const char *,
+                                      const std::unordered_map<std::string, int32_t> &>(); // todo
             class_binding.function("destroy", &ShaderInstance::destroy);
             context.class_("conchShaderInstance", class_binding);
         }
@@ -189,7 +252,7 @@ class RenderBindings
             class_binding.constructor<>();
             class_binding.function("setCreateShaderInstanceFunction", &RTShaderPass::setCreateShaderInstanceFunction);
             class_binding.function("setCacheShader", &RTShaderPass::setCacheShader);
-            //class_binding.function("getCacheShader", &RTShaderPass::getCacheShader);//todo
+            // class_binding.function("getCacheShader", &RTShaderPass::getCacheShader);//todo
             class_binding.function("destroy", &RTShaderPass::destroy);
             class_binding.property_field("_pipelineMode", &RTShaderPass::pipelineMode);
             class_binding.property_field("_statefirst", &RTShaderPass::statefirst);
@@ -219,11 +282,16 @@ class RenderBindings
         {
             class_<RTBaseRenderNode> class_binding;
             class_binding.constructor<>();
-            class_binding.property("_reflectionMode", &RTBaseRenderNode::getReflectionMode, &RTBaseRenderNode::setReflectionMode);
-            class_binding.property("_lightProbUpdateMark", &RTBaseRenderNode::getLightProbUpdateMark, &RTBaseRenderNode::setLightProbUpdateMark);
-            class_binding.property("_irradianceMode", &RTBaseRenderNode::getIrradianceMode, &RTBaseRenderNode::setIrradianceMode);
-            class_binding.property("_probeReflectionUpdateMark", &RTBaseRenderNode::getProbeReflectionUpdateMark, &RTBaseRenderNode::setProbeReflectionUpdateMark);
-            class_binding.property("_lightmapIndex", &RTBaseRenderNode::getLightmapIndex, &RTBaseRenderNode::setLightmapIndex);
+            class_binding.property("_reflectionMode", &RTBaseRenderNode::getReflectionMode,
+                                   &RTBaseRenderNode::setReflectionMode);
+            class_binding.property("_lightProbUpdateMark", &RTBaseRenderNode::getLightProbUpdateMark,
+                                   &RTBaseRenderNode::setLightProbUpdateMark);
+            class_binding.property("_irradianceMode", &RTBaseRenderNode::getIrradianceMode,
+                                   &RTBaseRenderNode::setIrradianceMode);
+            class_binding.property("_probeReflectionUpdateMark", &RTBaseRenderNode::getProbeReflectionUpdateMark,
+                                   &RTBaseRenderNode::setProbeReflectionUpdateMark);
+            class_binding.property("_lightmapIndex", &RTBaseRenderNode::getLightmapIndex,
+                                   &RTBaseRenderNode::setLightmapIndex);
             class_binding.function("setCommonUniformMap", &RTBaseRenderNode::setCommonUniformMap);
             class_binding.function("setLightmapScaleOffset", &RTBaseRenderNode::setLightmapScaleOffset);
             class_binding.function("setWorldParams", &RTBaseRenderNode::setWorldParams);
@@ -233,14 +301,19 @@ class RenderBindings
             class_binding.function("setShaderData", &RTBaseRenderNode::setShaderData);
             class_binding.function("setBaseGeometryBounds", &RTBaseRenderNode::setBaseGeometryBounds);
             class_binding.property("_bounds", &RTBaseRenderNode::getBounds, &RTBaseRenderNode::setBounds);
-            class_binding.property("_boundsChange", &RTBaseRenderNode::getBoundsChange, &RTBaseRenderNode::setBoundsChange);
-            class_binding.property("_customCullResoult", &RTBaseRenderNode::getCustomCullResoult, &RTBaseRenderNode::setCustomCullResoult);
+            class_binding.property("_boundsChange", &RTBaseRenderNode::getBoundsChange,
+                                   &RTBaseRenderNode::setBoundsChange);
+            class_binding.property("_customCullResoult", &RTBaseRenderNode::getCustomCullResoult,
+                                   &RTBaseRenderNode::setCustomCullResoult);
             class_binding.property("_customCull", &RTBaseRenderNode::getCustomCull, &RTBaseRenderNode::setCustomCull);
             class_binding.property("_staticMask", &RTBaseRenderNode::getStaticMask, &RTBaseRenderNode::setStaticMask);
             class_binding.property("_layer", &RTBaseRenderNode::getLayer, &RTBaseRenderNode::setLayer);
-            class_binding.property("_renderbitFlag", &RTBaseRenderNode::getRenderbitFlag, &RTBaseRenderNode::setRenderbitFlag);
-            class_binding.property("_distanceForSort", &RTBaseRenderNode::getDistanceForSort, &RTBaseRenderNode::setDistanceForSort);
-            class_binding.property("_sortingFudge", &RTBaseRenderNode::getSortingFudge, &RTBaseRenderNode::setSortingFudge);
+            class_binding.property("_renderbitFlag", &RTBaseRenderNode::getRenderbitFlag,
+                                   &RTBaseRenderNode::setRenderbitFlag);
+            class_binding.property("_distanceForSort", &RTBaseRenderNode::getDistanceForSort,
+                                   &RTBaseRenderNode::setDistanceForSort);
+            class_binding.property("_sortingFudge", &RTBaseRenderNode::getSortingFudge,
+                                   &RTBaseRenderNode::setSortingFudge);
             class_binding.property("_castShadow", &RTBaseRenderNode::getCastShadow, &RTBaseRenderNode::setCastShadow);
             class_binding.property("_enable", &RTBaseRenderNode::getEnable, &RTBaseRenderNode::setEnable);
             class_binding.function("setTransform", &RTBaseRenderNode::setTransform);
@@ -259,20 +332,23 @@ class RenderBindings
             class_binding.function("setRenderTarget", &RTRenderContext3D::setRenderTarget);
             class_binding.function("setViewport", &RTRenderContext3D::setViewport);
             class_binding.function("setScissor", &RTRenderContext3D::setScissor);
-            /*class_binding.function_optional_override("setScissor", optional_override([](GLESRenderContext3D& ctx, const Vector4& value) {
-                ctx.setScissor(value);
+            /*class_binding.function_optional_override("setScissor", optional_override([](GLESRenderContext3D& ctx,
+               const Vector4& value) { ctx.setScissor(value);
                 }));*/
             class_binding.property_field("_cameraUpdateMask", &RTRenderContext3D::_cameraUpdateMask);
             class_binding.property_field("_sceneUpdateMask", &RTRenderContext3D::_sceneUpdateMask);
             class_binding.property_field("_invertY", &RTRenderContext3D::invertY);
             class_binding.property_field("_pipelineMode", &RTRenderContext3D::pipelineMode);
             class_binding.function("drawRenderElementOne", &RTRenderContext3D::drawRenderElementOne);
-            class_binding.function_optional_override("drawRenderElementList", optional_override([](RTRenderContext3D& ctx, const std::vector<GLESRenderElement3D*> elements, uint32_t length) {
-                JCSingletonList<GLESRenderElement3D*> list(false);
-                list.m_vElements = elements;
-                list.setLength(length);
-                ctx.drawRenderElementList(list);
-                }));
+            class_binding.function_optional_override(
+                "drawRenderElementList",
+                optional_override(
+                    [](RTRenderContext3D &ctx, const std::vector<GLESRenderElement3D *> elements, uint32_t length) {
+                        JCSingletonList<GLESRenderElement3D *> list(false);
+                        list.m_vElements = elements;
+                        list.setLength(length);
+                        ctx.drawRenderElementList(list);
+                    }));
             class_binding.constructor<>();
             context.class_("conchRTRenderContext3D", class_binding);
         }
@@ -284,7 +360,7 @@ class RenderBindings
         }
         {
             class_<RTForwardAddRP> class_binding;
-            class_binding.constructor<>(); 
+            class_binding.constructor<>();
             class_binding.property_field("_enableSpotLightShadowPass", &RTForwardAddRP::enableSpotLightShadowPass);
             class_binding.property_field("_enableDirectLightShadow", &RTForwardAddRP::enableDirectLightShadow);
             class_binding.property_field("_shadowCastPass", &RTForwardAddRP::shadowCastPass);
@@ -366,7 +442,7 @@ class RenderBindings
             context.class_("conchRTVolumetricGI", class_binding);
         }
         {
-            //RTSpotLight
+            // RTSpotLight
             class_<RTSpotLight> class_binding;
             class_binding.constructor<>();
             class_binding.property_field("_shadowResolution", &RTSpotLight::shadowResolution);
@@ -391,15 +467,16 @@ class RenderBindings
             class_binding.property_field("_ambientMode", &RTReflectionProb::ambientMode);
             class_binding.property_field("_boxProjection", &RTReflectionProb::boxProjection);
             class_binding.property_field("_ambientIntensity", &RTReflectionProb::ambientIntensity);
-            class_binding.function_optional_override("setAmbientSH", optional_override([](RTReflectionProb& ctx, JSValueAsParam value) {
-                char* pArrayBufferPtr = NULL;
-                int nABLen = 0;
-                bool bIsArrayBuffer = extractJSAB(value, pArrayBufferPtr, nABLen);
-                if (bIsArrayBuffer)
-                {
-                    ctx.setAmbientSH((float*)pArrayBufferPtr);
-                }
-               }));
+            class_binding.function_optional_override(
+                "setAmbientSH", optional_override([](RTReflectionProb &ctx, JSValueAsParam value) {
+                    char *pArrayBufferPtr = NULL;
+                    int nABLen = 0;
+                    bool bIsArrayBuffer = extractJSAB(value, pArrayBufferPtr, nABLen);
+                    if (bIsArrayBuffer)
+                    {
+                        ctx.setAmbientSH((float *)pArrayBufferPtr);
+                    }
+                }));
             class_binding.function("setReflectionTexture", &RTReflectionProb::setReflectionTexture);
             class_binding.function("setIblTex", &RTReflectionProb::setIblTex);
             class_binding.function("setAmbientColor", &RTReflectionProb::setAmbientColor);
@@ -443,14 +520,11 @@ class RenderBindings
             class_binding.function("setColor", &ShaderData::setColor);
             class_binding.function("setMatrix4x4", &ShaderData::setMatrix4x4);
             class_binding.function("setMatrix3x3", &ShaderData::setMatrix3x3);
-            //class_binding.function("setBuffer", &ShaderData::setBufferJS);
+            // class_binding.function("setBuffer", &ShaderData::setBufferJS);
             class_binding.function("cloneTo", &ShaderData::cloneTo);
             class_binding.function("destroy", &ShaderData::destroy);
             context.class_("conchRTShaderData", class_binding);
         }
-
-
-
     }
 };
 namespace internal
@@ -497,7 +571,12 @@ template <> struct is_value_object<CameraCullInfo> : std::true_type
 template <> struct is_wrapped_class<CameraCullInfo> : std::false_type
 {
 };
-}
+template <> struct is_value_object<WebGLConfig> : std::true_type
+{
+};
+template <> struct is_wrapped_class<WebGLConfig> : std::false_type
+{
+};
+} // namespace internal
 } // namespace laya
 #endif
-

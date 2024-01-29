@@ -323,7 +323,8 @@ void JCConchRender::requestCaptureScreen()
             m_GfxBackend->makeCurrent();
             if (g_kSystemConfig.m_bConchWebGL && g_GLESEngine == nullptr)
             {
-                LayaGL::m_pWebglEngine = g_GLESEngine = new GLESEngine(WebGLMode::Auto);
+                WebGLConfig config;
+                LayaGL::m_pWebglEngine = g_GLESEngine = new GLESEngine(config, WebGLMode::Auto);
                 g_GLESEngine->initRenderEngine();
                 g_GLESEngine->createTextureContext(g_GLESEngine->isWebGL2());
             }

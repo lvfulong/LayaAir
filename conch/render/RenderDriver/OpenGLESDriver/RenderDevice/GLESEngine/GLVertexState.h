@@ -35,6 +35,7 @@ class GLVertexState : public GLObject
 
   private:
     friend class BufferStateBase;
+    friend class GLESBufferState;
     void createVertexArray();
 
     void deleteVertexArray();
