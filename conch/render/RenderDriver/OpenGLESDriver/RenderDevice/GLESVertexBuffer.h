@@ -21,16 +21,16 @@ class GLESVertexBuffer // : public VertexBuffer
   public:
     GLESVertexBuffer(BufferTargetType targetType, BufferUsage bufferUsageType);
     ~GLESVertexBuffer();
-    void GLESVertexBuffer::destory();
-    void GLESVertexBuffer::setDataLength(int byteLength);
+    void destroy();
+    void setDataLength(int byteLength);
 
-    void GLESVertexBuffer::setData(const char *buffer, int bufferOffset /* = 0*/, int dataStartIndex /* = 0*/,
-                                   int dataCount /*= Number.MAX_SAFE_INTEGER*/);
-    void GLESVertexBuffer::bind();
-    void GLESVertexBuffer::unbind();
-    void GLESVertexBuffer::orphanStorage();
+    void setData(const char *buffer, int bufferOffset /* = 0*/, int dataStartIndex /* = 0*/,
+                 int dataCount /*= Number.MAX_SAFE_INTEGER*/);
+    void bind();
+    void unbind();
+    void orphanStorage();
 
-    void GLESVertexBuffer::setVertexDeclaration(int *declaration, int intLength);
+    void setVertexDeclaration(int *declaration, int intLength);
 
   public:
     GLBuffer *_glBuffer;

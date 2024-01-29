@@ -12,7 +12,7 @@ namespace laya
 	{	
 	public:
 		static SubmitCMD* create(std::function<void()> func);
-        static void onDestory();
+        static void onDestroy();
 		SubmitCMD(WebGLEngine* pWebglEngine);
 		int renderSubmit() override;
 		void recycle() override;

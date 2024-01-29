@@ -27,7 +27,7 @@ namespace laya
 		}
 	}
     //------------------------------------------------------------------------------
-    void MeshVG::onDestory()
+    void MeshVG::onDestroy()
     {
         while (!MeshVG::_POOL.empty())
         {
@@ -66,7 +66,7 @@ namespace laya
 	//------------------------------------------------------------------------------
 	void MeshVG::addVertAndIBToMesh(const std::vector<float>& points, uint32_t rgba, const std::vector<uint16_t>& ib)
 	{
-		int startpos = m_vb->m_buffer2D->needSize(points.size() / 2 * MeshVG::const_stride);//vbµÄÆðµã¡£
+		int startpos = m_vb->m_buffer2D->needSize(points.size() / 2 * MeshVG::const_stride);//vbï¿½ï¿½ï¿½ï¿½ã¡£
 		int f32pos = startpos >> 2;
 		float* vbdata = (float*)m_vb->m_buffer2D->getData();
 		uint32_t* vbu32Arr = (uint32_t*)m_vb->m_buffer2D->getData();
@@ -79,9 +79,9 @@ namespace laya
 			vbdata[f32pos++] = points[ci]; vbdata[f32pos++] = points[ci + 1]; ci += 2;
 			vbu32Arr[f32pos++] = rgba;
 			/*
-			//²Ã¼ôÐÅÏ¢¡£
-			vbdata[f32pos++] = clipinfo[2] ; vbdata[f32pos++] = clipinfo[3]; vbdata[f32pos++] = clipinfo[4]; vbdata[f32pos++] = clipinfo[5];//cliprectµÄ·½Ïò
-			vbdata[f32pos++] = clipinfo[0]; vbdata[f32pos++] = clipinfo[1]; //cliprectµÄÎ»ÖÃ
+			//ï¿½Ã¼ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½
+			vbdata[f32pos++] = clipinfo[2] ; vbdata[f32pos++] = clipinfo[3]; vbdata[f32pos++] = clipinfo[4]; vbdata[f32pos++] = clipinfo[5];//cliprectï¿½Ä·ï¿½ï¿½ï¿½
+			vbdata[f32pos++] = clipinfo[0]; vbdata[f32pos++] = clipinfo[1]; //cliprectï¿½ï¿½Î»ï¿½ï¿½
 			*/
 		}
 		m_vb->m_buffer2D->setNeedUpload();
@@ -89,7 +89,7 @@ namespace laya
 		int idxLength = ib.size();
 		int stib = m_ib->m_buffer2D->needSize(idxLength * sizeof(uint16_t));
 		uint16_t* cidx = (uint16_t*)m_ib->m_buffer2D->getData();
-		int stibid = stib >> 1;	// indexbufferµÄÆðÊ¼Î»ÖÃ
+		int stibid = stib >> 1;	// indexbufferï¿½ï¿½ï¿½ï¿½Ê¼Î»ï¿½ï¿½
 
 		{
 			memcpy(cidx + stibid, &ib[0], idxLength * sizeof(uint16_t));
@@ -105,7 +105,7 @@ namespace laya
 	//------------------------------------------------------------------------------
 	void MeshVG::addVertAndIBToMesh(const std::vector<std::array<float, 2> >& points, uint32_t rgba, const std::vector<uint16_t>& ib)
 	{
-		int startpos = m_vb->m_buffer2D->needSize(points.size() * MeshVG::const_stride);//vbµÄÆðµã¡£
+		int startpos = m_vb->m_buffer2D->needSize(points.size() * MeshVG::const_stride);//vbï¿½ï¿½ï¿½ï¿½ã¡£
 		int f32pos = startpos >> 2;
 		float* vbdata = (float*)m_vb->m_buffer2D->getData();
 		uint32_t* vbu32Arr = (uint32_t*)m_vb->m_buffer2D->getData();
@@ -118,9 +118,9 @@ namespace laya
 			vbdata[f32pos++] = points[i][0]; vbdata[f32pos++] = points[i][1]; ci += 2;
 			vbu32Arr[f32pos++] = rgba;
 			/*
-			//²Ã¼ôÐÅÏ¢¡£
-			vbdata[f32pos++] = clipinfo[2] ; vbdata[f32pos++] = clipinfo[3]; vbdata[f32pos++] = clipinfo[4]; vbdata[f32pos++] = clipinfo[5];//cliprectµÄ·½Ïò
-			vbdata[f32pos++] = clipinfo[0]; vbdata[f32pos++] = clipinfo[1]; //cliprectµÄÎ»ÖÃ
+			//ï¿½Ã¼ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½
+			vbdata[f32pos++] = clipinfo[2] ; vbdata[f32pos++] = clipinfo[3]; vbdata[f32pos++] = clipinfo[4]; vbdata[f32pos++] = clipinfo[5];//cliprectï¿½Ä·ï¿½ï¿½ï¿½
+			vbdata[f32pos++] = clipinfo[0]; vbdata[f32pos++] = clipinfo[1]; //cliprectï¿½ï¿½Î»ï¿½ï¿½
 			*/
 		}
 		m_vb->m_buffer2D->setNeedUpload();
@@ -128,7 +128,7 @@ namespace laya
 		int idxLength = ib.size();
 		int stib = m_ib->m_buffer2D->needSize(idxLength * sizeof(uint16_t));
 		uint16_t* cidx = (uint16_t*)m_ib->m_buffer2D->getData();
-		int stibid = stib >> 1;	// indexbufferµÄÆðÊ¼Î»ÖÃ
+		int stibid = stib >> 1;	// indexbufferï¿½ï¿½ï¿½ï¿½Ê¼Î»ï¿½ï¿½
 
 		{
 			memcpy(cidx + stibid, &ib[0], idxLength * sizeof(uint16_t));

@@ -56,12 +56,12 @@ public class LayaEditBox
 	//---------------------------------------------------------------
 	public boolean m_bConfirmTypeSearch = false;
 
-	public void destory()
+	public void destroy()
 	{
 		m_pApplication=null;
 		if(m_pEditBoxWatcher!=null)
 		{
-			m_pEditBoxWatcher.destory();
+			m_pEditBoxWatcher.destroy();
 			m_pEditBoxWatcher=null;
 		}
 		if(m_pEditBox!=null)

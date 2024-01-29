@@ -67,7 +67,7 @@ namespace laya
 		SubmitTexture::POOL.push(this);
 	}
     //------------------------------------------------------------------------------
-    void SubmitTexture::onDestory()
+    void SubmitTexture::onDestroy()
     {
         while (!SubmitTexture::POOL.empty())
         {

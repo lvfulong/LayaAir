@@ -125,7 +125,7 @@ public class GameEngine implements IPlugin {
 		mLayaGameEngine.onStop();
 	}
 	@Override
-	public  void game_plugin_onDestory() {
+	public  void game_plugin_onDestroy() {
 		mLayaGameEngine.onDestroy();
 	}
 
@@ -171,7 +171,7 @@ public class GameEngine implements IPlugin {
 		}
 
 		@Override
-		public void destory() {
+		public void destroy() {
 		}
 	}
 

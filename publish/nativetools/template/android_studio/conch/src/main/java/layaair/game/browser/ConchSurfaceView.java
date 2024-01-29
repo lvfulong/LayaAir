@@ -56,7 +56,7 @@ public class ConchSurfaceView extends SurfaceView {
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
                 Log.d(TAG, "surfaceDestroyed()");
-                ConchJNI.OnSurfaceDestory();
+                ConchJNI.OnSurfaceDestroy();
             }
         };
 
@@ -74,7 +74,7 @@ public class ConchSurfaceView extends SurfaceView {
         return true;
     }
 
-    public void destory() {
+    public void destroy() {
         this.mTouchFilter = null;
     }
 }

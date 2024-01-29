@@ -69,15 +69,15 @@ namespace laya
             curm->recycle();
 		}
 
-        SubmitTarget::onDestory();
-        MeshVG::onDestory();
-        SubmitTexture::onDestory();
-        MeshTexture::onDestory();
-        MeshQuadTexture::onDestory();
-        SubmitVG::onDestory();
-        SubmitCMD::onDestory();
-        SubmitCanvas::onDestory();
-        Shader2D::onDestory();
+        SubmitTarget::onDestroy();
+        MeshVG::onDestroy();
+        SubmitTexture::onDestroy();
+        MeshTexture::onDestroy();
+        MeshQuadTexture::onDestroy();
+        SubmitVG::onDestroy();
+        SubmitCMD::onDestroy();
+        SubmitCanvas::onDestroy();
+        Shader2D::onDestroy();
         if (Context2D::m_textRender)
         {
             delete Context2D::m_textRender;

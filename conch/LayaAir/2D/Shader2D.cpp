@@ -42,7 +42,7 @@ namespace laya
 		m_pRender2DContext = pWebGLEngine->get2DRenderContext();
 	}
     //------------------------------------------------------------------------------
-    void Shader2D::onDestory()
+    void Shader2D::onDestroy()
     {
         {
             std::unordered_map<int, Shader2DCompile*>::iterator it = Shader2D::_preCompileShader.begin();

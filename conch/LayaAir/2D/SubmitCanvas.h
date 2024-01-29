@@ -13,14 +13,14 @@ namespace laya
 	{	
 	public:
 		static SubmitCanvas* create(WebGLCacheAsNormalCanvas* context/*, float alpha*/);
-        static void onDestory();
+        static void onDestroy();
 		SubmitCanvas(WebGLEngine* pWebglEngine);
 		int renderSubmit() override;
 		void recycle() override;
 		float u_TexRange[4];
 	public:
 		static std::stack<SubmitCanvas*> POOL;
-		Matrix m_matrix;		// ÓÃÀ´¼ÆËãµ±Ç°µÄÊÀ½ç¾ØÕó
+		Matrix m_matrix;		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ãµ±Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		WebGLCacheAsNormalCanvas* m_context;
 		float m_matrix4[16] = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
 		Matrix m_worldMatrix;

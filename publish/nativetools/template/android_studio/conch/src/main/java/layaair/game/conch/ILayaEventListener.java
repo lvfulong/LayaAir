@@ -3,5 +3,5 @@ package layaair.game.conch;
 public  interface ILayaEventListener {
 	void ExitGame();
 	void Finish();
-	void destory();
+	void destroy();
 }

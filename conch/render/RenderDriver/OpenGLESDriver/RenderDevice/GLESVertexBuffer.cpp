@@ -21,7 +21,7 @@ GLESVertexBuffer::~GLESVertexBuffer()
         this->_glBuffer = nullptr;
     }
 }
-void GLESVertexBuffer::destory()
+void GLESVertexBuffer::destroy()
 {
     this->_glBuffer->destroy();
     // this._vertexDeclaration = null

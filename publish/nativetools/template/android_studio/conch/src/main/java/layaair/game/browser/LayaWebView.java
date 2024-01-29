@@ -92,7 +92,7 @@ public class LayaWebView extends AbsoluteLayout implements View.OnKeyListener
 		m_pWebView.addJavascriptInterface(this, "runtime");
 		m_pWebView.setOnKeyListener(this);
 	}
-	public void destory()
+	public void destroy()
 	{
 		this.removeAllViews();
 		if(m_pWebViewClient!=null)

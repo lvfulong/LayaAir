@@ -17,7 +17,7 @@ namespace laya
 	public:
 		static SubmitTarget* create(Mesh2D* mesh, BlendMode blendMode, RenderTexture2D* target, Context2D* ctx);
 		static SubmitTarget* create(Mesh2D* mesh, BlendMode blendMode, WebGLInternalTex* pTexture, WebGLEngine* pWebGLEngine, bool gamma);
-        static void onDestory();
+        static void onDestroy();
 		SubmitTarget(WebGLEngine* pWebglEngine);
 		int renderSubmit() override;
 		void recycle() override;

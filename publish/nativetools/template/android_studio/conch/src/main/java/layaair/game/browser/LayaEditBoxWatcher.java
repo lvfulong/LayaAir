@@ -20,7 +20,7 @@ public class LayaEditBoxWatcher implements TextWatcher,TextView.OnEditorActionLi
 		m_pEditBox = p_pEditBox;
 	}
 	
-	public void destory()
+	public void destroy()
 	{
 		m_pEditBox=null;
 	}

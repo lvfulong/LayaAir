@@ -131,7 +131,7 @@ public class MainActivity extends Activity {
             return;
         }
         doDestroy();
-        if(isLoad)mPlugin.game_plugin_onDestory();
+        if(isLoad)mPlugin.game_plugin_onDestroy);
 
     }
 

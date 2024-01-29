@@ -21,7 +21,7 @@ namespace laya
 		MeshTexture(WebGLEngine* engine);
 		~MeshTexture();
 		static MeshTexture* getAMesh(WebGLEngine* engine, bool mainctx);
-        static void onDestory();
+        static void onDestroy();
 		void recycle();
 		void addData(float* vertices, int verticesLength, float* uvs, int uvLength, uint16_t* idx, int idxLength, const Matrix& matrix, uint32_t rgba);
 	public:

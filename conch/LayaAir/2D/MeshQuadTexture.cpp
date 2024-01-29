@@ -65,7 +65,7 @@ namespace laya
 		MeshQuadTexture::_POOL.push(this);
 	}
 
-    void MeshQuadTexture::onDestory()
+    void MeshQuadTexture::onDestroy()
     {
         while (!MeshQuadTexture::_POOL.empty())
         {
@@ -78,9 +78,9 @@ namespace laya
 	//------------------------------------------------------------------------------
 	void MeshQuadTexture::addQuad(float pos[8], float uv[8], uint32_t color, bool useTex)
 	{
-		uint32_t vpos = m_vb->m_byteLength >> 2;	//floatÊý×éµÄÏÂ±ê
+		uint32_t vpos = m_vb->m_byteLength >> 2;	//floatï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â±ï¿½
 													//x,y,u,v,rgba
-		m_vb->m_buffer2D->setByteLength((vpos + MeshQuadTexture::const_stride) << 2); //ÊÇÒ»¸öËÄ±ßÐÎµÄ´óÐ¡£¬Ò²ÊÇÕâÀïÌî³äµÄ´óÐ¡
+		m_vb->m_buffer2D->setByteLength((vpos + MeshQuadTexture::const_stride) << 2); //ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ÎµÄ´ï¿½Ð¡ï¿½ï¿½Ò²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä´ï¿½Ð¡
 		float* vbdata = (float*)m_vb->m_buffer2D->getData();
 		uint32_t* vbu32Arr = (uint32_t*)m_vb->m_buffer2D->getData();
 		int cpos = vpos;

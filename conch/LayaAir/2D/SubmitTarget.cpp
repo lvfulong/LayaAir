@@ -109,7 +109,7 @@ namespace laya
 		SubmitTarget::POOL.push(this);
 	}
     //------------------------------------------------------------------------------
-    void SubmitTarget::onDestory()
+    void SubmitTarget::onDestroy()
     {
         while (!SubmitTarget::POOL.empty())
         {

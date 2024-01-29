@@ -46,7 +46,7 @@ namespace laya
 		SubmitCanvas::POOL.push(this);
 	}
     //------------------------------------------------------------------------------
-    void SubmitCanvas::onDestory()
+    void SubmitCanvas::onDestroy()
     {
         while (!SubmitCanvas::POOL.empty())
         {

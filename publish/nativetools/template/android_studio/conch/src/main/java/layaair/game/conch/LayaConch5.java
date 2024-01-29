@@ -937,19 +937,19 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 		delInstance();
 
 		if(m_pCavans!=null){
-			m_pCavans.destory();
+			m_pCavans.destroy();
 		}
 		else{
 			Log.e("Canvas", ">>>>>onDestroy m_pCavans is null");
 		}
 
 		LayaAudioMusic.uninit();
-		destory();
+		destroy();
 
 		ConchJNI.ReleaseDLib();
 	}
 	@SuppressLint("NewApi") @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	private void destory()
+	private void destroy()
 	{
 		mChoreographer.removeFrameCallback(this);
 		if(m_pAbsLayout!=null)
@@ -960,7 +960,7 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 		}
 		m_pAbsLayout=null;
 		if(m_pCavans!=null) {
-			m_pCavans.destory();
+			m_pCavans.destroy();
 			m_pCavans = null;
 		}
 		ms_layaConche = null;
@@ -968,7 +968,7 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 
 		if(m_pLayaWebView!=null)
 		{
-			m_pLayaWebView.destory();
+			m_pLayaWebView.destroy();
 			m_pLayaWebView=null;
 		}
 		if(m_pEditBoxLayout!=null)
@@ -978,7 +978,7 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 		}
 		if(m_pEditBox!=null)
 		{
-			m_pEditBox.destory();
+			m_pEditBox.destroy();
 			m_pEditBox=null;
 		}
 		mCtx=null;
@@ -990,7 +990,7 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 		ExportJavaFunction.DelInstance();
 		config.DelInstance();
 		if(m_layaEventListener!=null) {
-			m_layaEventListener.destory();
+			m_layaEventListener.destroy();
 		}
 	}
 

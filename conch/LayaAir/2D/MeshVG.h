@@ -21,7 +21,7 @@ namespace laya
 		MeshVG(WebGLEngine* engine);
 		~MeshVG();
 		static MeshVG* getAMesh(WebGLEngine* engine, bool mainctx);
-        static void onDestory();
+        static void onDestroy();
 		void recycle();
 		void addVertAndIBToMesh(const std::vector<float>& points, uint32_t rgba, const std::vector<uint16_t>& ib);
 		void addVertAndIBToMesh(const std::vector<std::array<float, 2> >& points, uint32_t rgba, const std::vector<uint16_t>& ib);

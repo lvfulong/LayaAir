@@ -54,7 +54,7 @@ namespace laya
 		SubmitVG::POOL.push(this);
 	}
     //------------------------------------------------------------------------------
-    void SubmitVG::onDestory()
+    void SubmitVG::onDestroy()
     {
         while (!SubmitVG::POOL.empty())
         {

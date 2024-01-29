@@ -75,7 +75,7 @@ extern "C"
     JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_OnAppPause(JNIEnv * env, jobject obj );
     JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onSurfaceCreated(JNIEnv * env, jobject obj, jobject surface);
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_OnSurfaceResize(JNIEnv * env, jobject obj, int width,int height);
-	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_OnSurfaceDestory(JNIEnv * env, jobject obj);
+	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_OnSurfaceDestroy(JNIEnv * env, jobject obj);
     JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_OnAppResume(JNIEnv * env, jobject obj );
     JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onDrawFrame(JNIEnv * env, jobject obj );
     JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_exportStaticMethodToC(JNIEnv * env, jobject obj, jstring packcls);
@@ -450,9 +450,9 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_OnSurfaceResize(JNIEnv
     LOGI("JNI init dev w=%d,h=%d",width,height);
     //pRender->onGLDeviceLosted();
 }
-JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_OnSurfaceDestory(JNIEnv * env, jobject obj)
+JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_OnSurfaceDestroy(JNIEnv * env, jobject obj)
 {
-	LOGI("JNI OnDestory tid=%x", std::this_thread::get_id());
+	LOGI("JNI OnDestroy tid=%x", std::this_thread::get_id());
 	laya::JCConch::s_pConchRender->destroyScreenSurface();
 }
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onDrawFrame(JNIEnv * env, jobject obj )

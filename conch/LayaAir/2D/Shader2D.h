@@ -62,7 +62,7 @@ namespace laya
 		int uniform4f(const char* name, float value0, float value1, float value2, float value3);
 		int uniform_sampler2D(const char* name, WebGLInternalTex* value);
 		int uniformMatrix4fv(const char* name, float* value);
-        static void onDestory();
+        static void onDestroy();
 	public:
 		std::string _vs;
 		std::string _ps;

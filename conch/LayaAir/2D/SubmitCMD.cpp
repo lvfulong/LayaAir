@@ -45,7 +45,7 @@ namespace laya
 		SubmitCMD::POOL.push(this);
 	}
     //------------------------------------------------------------------------------
-    void SubmitCMD::onDestory()
+    void SubmitCMD::onDestroy()
     {
         while (!SubmitCMD::POOL.empty())
         {

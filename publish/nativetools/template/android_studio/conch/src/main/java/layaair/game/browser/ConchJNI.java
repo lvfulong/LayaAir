@@ -92,7 +92,7 @@ public class ConchJNI
 
 	public static native void onSurfaceCreated(Object surface);
 
-	public static native void OnSurfaceDestory();
+	public static native void OnSurfaceDestroy();
 
 	//通知app又进入前台了。与上面不同的是不保证context有效了
 	public static native void OnAppResume();
