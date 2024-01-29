@@ -7,13 +7,13 @@
 
 namespace laya
 {
-	class WebGLEngine;
+	class GLESEngine;
 	class GLBuffer;
 	class UniformBufferObject : public ObjectBase<UniformBufferObject>
 	{
 	public:
 
-		UniformBufferObject(WebGLEngine* pEngine, int glPointer, bool bSelfCreateBuffer);
+		UniformBufferObject(GLESEngine* pEngine, int glPointer, bool bSelfCreateBuffer);
 
 		~UniformBufferObject();
 

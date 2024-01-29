@@ -6,7 +6,7 @@ namespace laya
 {
 	std::stack<MeshVG*> MeshVG::_POOL;
 	//------------------------------------------------------------------------------
-	MeshVG::MeshVG(WebGLEngine* engine): Mesh2D(engine, MeshVG::const_stride, 4, 4, true)
+	MeshVG::MeshVG(GLESEngine* engine): Mesh2D(engine, MeshVG::const_stride, 4, 4, true)
 	{
 		m_canReuse = true;
 		m_attribInfo.push_back({ GL_FLOAT, 2, 0 });
@@ -36,7 +36,7 @@ namespace laya
         }
     }
 	//------------------------------------------------------------------------------
-	MeshVG* MeshVG::getAMesh(WebGLEngine* engine, bool mainctx)
+	MeshVG* MeshVG::getAMesh(GLESEngine* engine, bool mainctx)
 	{
 		MeshVG* ret;
 		if (!MeshVG::_POOL.empty())

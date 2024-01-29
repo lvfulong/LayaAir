@@ -28,7 +28,7 @@ namespace laya
 	class RenderTexture2D
 	{
 	public:
-		RenderTexture2D(WebGLEngine* pWebGLEngine, int width, int height, RenderTargetFormat format, RenderTargetFormat depthStencilFormat);
+		RenderTexture2D(GLESEngine* pGLESEngine, int width, int height, RenderTargetFormat format, RenderTargetFormat depthStencilFormat);
 		~RenderTexture2D();
 		void _create(int width, int height);
 		int getWidth() { return m_width; }
@@ -53,7 +53,7 @@ namespace laya
 		int                                                 m_lastWidth = 0;
 		int                                                 m_lastHeight = 0;
 		static std::stack<RenderTexture2DStackEntry>        m_rtStack;
-		WebGLEngine*                                        m_pWebGLEngine;
+		GLESEngine*                                        m_pGLESEngine;
 	};
 }
 #endif //__RenderTexture2D_H__

@@ -6,7 +6,7 @@ namespace laya
 {
 	std::stack<MeshTexture*> MeshTexture::_POOL;
 	//------------------------------------------------------------------------------
-	MeshTexture::MeshTexture(WebGLEngine* engine): Mesh2D(engine, MeshTexture::const_stride, 4, 4, true)	//x,y,u,v,rgba
+	MeshTexture::MeshTexture(GLESEngine* engine): Mesh2D(engine, MeshTexture::const_stride, 4, 4, true)	//x,y,u,v,rgba
 	{
 		m_canReuse = true;
 		m_attribInfo.push_back({ GL_FLOAT, 4, 0 });			//pos,uv
@@ -28,7 +28,7 @@ namespace laya
 		}
 	}
 	//------------------------------------------------------------------------------
-	MeshTexture* MeshTexture::getAMesh(WebGLEngine* engine, bool mainctx)
+	MeshTexture* MeshTexture::getAMesh(GLESEngine* engine, bool mainctx)
 	{
 		MeshTexture* ret;
 		if (!MeshTexture::_POOL.empty()) 

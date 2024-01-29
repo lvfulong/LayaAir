@@ -8,7 +8,7 @@
 namespace laya
 {
 	extern int g_nMainFrameBuffer;
-	GL2TextureContext::GL2TextureContext(WebGLEngine* engine): GLTextureContext(engine)
+	GL2TextureContext::GL2TextureContext(GLESEngine* engine): GLTextureContext(engine)
 	{
     }
 	GL2TextureContext::~GL2TextureContext()

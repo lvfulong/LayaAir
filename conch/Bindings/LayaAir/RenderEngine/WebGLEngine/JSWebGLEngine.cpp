@@ -1,4 +1,4 @@
-#include "JSWebGLEngine.h"
+#include "JSGLESEngine.h"
 #include <utils/Log.h>
 #include <utils/JCMemorySurvey.h>
 #include <render/driver/gles/WebGLInternalTex.h>
@@ -12,27 +12,27 @@
 namespace laya
 {
 
-	JSWebGLEngine::JSWebGLEngine()
+	JSGLESEngine::JSGLESEngine()
 	{
 		assert(true);
-		//m_pEngine = new WebGLEngine((WebGLMode)webglMode);
+		//m_pEngine = new GLESEngine((WebGLMode)webglMode);
 		AdjustAmountOfExternalAllocatedMemory(4);
-		JCMemorySurvey::GetInstance()->newClass("conchWebGLEngine", 4, this);
+		JCMemorySurvey::GetInstance()->newClass("conchGLESEngine", 4, this);
 	}
 	//------------------------------------------------------------------------------
-	JSWebGLEngine::JSWebGLEngine(int webglMode)
+	JSGLESEngine::JSGLESEngine(int webglMode)
 	{
-		LayaGL::m_pWebglEngine = m_pEngine = new WebGLEngine((WebGLMode)webglMode);
+		LayaGL::m_pWebglEngine = m_pEngine = new GLESEngine((WebGLMode)webglMode);
 		AdjustAmountOfExternalAllocatedMemory(4);
-		JCMemorySurvey::GetInstance()->newClass("conchWebGLEngine", 4, this);
+		JCMemorySurvey::GetInstance()->newClass("conchGLESEngine", 4, this);
 	}
 	//------------------------------------------------------------------------------
-	void JSWebGLEngine::initRenderEngine()
+	void JSGLESEngine::initRenderEngine()
 	{
 		m_pEngine->initRenderEngine();
 	}
 	//------------------------------------------------------------------------------
-	JSWebGLEngine::~JSWebGLEngine()
+	JSGLESEngine::~JSGLESEngine()
 	{
         if (!g_kSystemConfig.m_bConchWebGL)
         {
@@ -42,113 +42,113 @@ namespace laya
                 m_pEngine = nullptr;
             }
         }
-		JCMemorySurvey::GetInstance()->releaseClass("conchWebGLEngine", this);
+		JCMemorySurvey::GetInstance()->releaseClass("conchGLESEngine", this);
 	}
 	//------------------------------------------------------------------------------
-	int JSWebGLEngine::getParams(int type)
+	int JSGLESEngine::getParams(int type)
 	{
 		return m_pEngine->getParams((RenderParams)type);
 	}
 	//------------------------------------------------------------------------------
-	bool JSWebGLEngine::getCapable(int type)
+	bool JSGLESEngine::getCapable(int type)
 	{
 		return m_pEngine->getCapable((RenderCapable)type);
 	}
 	//------------------------------------------------------------------------------
-	/*void JSWebGLEngine::applyRenderState(JSValueAsParam param)
+	/*void JSGLESEngine::applyRenderState(JSValueAsParam param)
 	{
 	}*/
 	//------------------------------------------------------------------------------
-	void JSWebGLEngine::applyRenderStateCommand(JSValueAsParam param)
+	void JSGLESEngine::applyRenderStateCommand(JSValueAsParam param)
 	{
 		JSRenderStateCommand* pJSRenderStateCommand = (JSRenderStateCommand*)Converter<JSRenderStateCommand*>::ToCpp(param);
 		m_pEngine->applyRenderStateCMD(*pJSRenderStateCommand->m_pRenderStateCommand);
 	}
 	//------------------------------------------------------------------------------
-	void JSWebGLEngine::viewport(int x, int y, int width, int height)
+	void JSGLESEngine::viewport(int x, int y, int width, int height)
 	{
 		m_pEngine->viewport(x, y, width, height);
 	}
 	//------------------------------------------------------------------------------
-	void JSWebGLEngine::scissor(int x, int y, int width, int height)
+	void JSGLESEngine::scissor(int x, int y, int width, int height)
 	{
 		m_pEngine->scissor(x, y, width, height);
 	}
 	//------------------------------------------------------------------------------
-	void JSWebGLEngine::scissorTest(bool value)
+	void JSGLESEngine::scissorTest(bool value)
 	{
 		m_pEngine->scissorTest(value);
 	}
 	//------------------------------------------------------------------------------
-	void JSWebGLEngine::colorMask(bool r, bool g, bool b, bool a)
+	void JSGLESEngine::colorMask(bool r, bool g, bool b, bool a)
 	{
 		m_pEngine->colorMask(r, g, b, a);
 	}
 	//------------------------------------------------------------------------------
-	void JSWebGLEngine::clearRenderTexture(int clearFlag, bool hasClearcolor, float r, float g, float b, float a, float clearDepth)
+	void JSGLESEngine::clearRenderTexture(int clearFlag, bool hasClearcolor, float r, float g, float b, float a, float clearDepth)
 	{
 		Color c(r, g, b, a);
 		m_pEngine->clearRenderTexture((uint32_t)clearFlag, hasClearcolor ? &c : nullptr, clearDepth);
 	}
 	//------------------------------------------------------------------------------
-	bool JSWebGLEngine::isWebGL2()
+	bool JSGLESEngine::isWebGL2()
 	{
 		return m_pEngine->isWebGL2();
 	}
-	int JSWebGLEngine::propertyNameToID(const char* name)
+	int JSGLESEngine::propertyNameToID(const char* name)
 	{
 		return m_pEngine->propertyNameToID(name);
 	}
-	int JSWebGLEngine::getUBOPointer(const char* name)
+	int JSGLESEngine::getUBOPointer(const char* name)
 	{
 		return m_pEngine->getUBOPointer(name);
 	}
-	void JSWebGLEngine::copySubFrameBuffertoTex(JSValueAsParam texture, int level, int xoffset, int yoffset, int x, int y, int width, int height)
+	void JSGLESEngine::copySubFrameBuffertoTex(JSValueAsParam texture, int level, int xoffset, int yoffset, int x, int y, int width, int height)
 	{
 		JSWebGLInternalTex* pJSInternalTex = (JSWebGLInternalTex*)Converter<JSWebGLInternalTex*>::ToCpp(texture);
 		return m_pEngine->copySubFrameBuffertoTex(pJSInternalTex->m_texture.get(), level, xoffset, yoffset, x, y, width, height);
 	}
-	void JSWebGLEngine::addStatisticsInfo(int info, int value)
+	void JSGLESEngine::addStatisticsInfo(int info, int value)
 	{
 		m_pEngine->_addStatisticsInfo((RenderStatisticsInfo)info, value);
 	}
-	void JSWebGLEngine::clearStatisticsInfo(int value)
+	void JSGLESEngine::clearStatisticsInfo(int value)
 	{
 		m_pEngine->clearStatisticsInfo((RenderStatisticsInfo)value);
 	}
-	int JSWebGLEngine::getStatisticsInfo(int value)
+	int JSGLESEngine::getStatisticsInfo(int value)
 	{
 		return m_pEngine->getStatisticsInfo((RenderStatisticsInfo)value);
 	}
-	void JSWebGLEngine::unbindVertexState()
+	void JSGLESEngine::unbindVertexState()
 	{
 		return m_pEngine->unbindVertexState();
 	}
 	//------------------------------------------------------------------------------
-	void JSWebGLEngine::exportJS(Context& context)
+	void JSGLESEngine::exportJS(Context& context)
 	{
-        class_<JSWebGLEngine> class_binding;
+        class_<JSGLESEngine> class_binding;
 		class_binding.constructor<>();
 		class_binding.constructor<int>();
-		class_binding.property("isWebGL2", &JSWebGLEngine::isWebGL2);
-		class_binding.function("clearRenderTexture", &JSWebGLEngine::clearRenderTexture);
-		class_binding.function("viewport", &JSWebGLEngine::viewport);
-		class_binding.function("scissor", &JSWebGLEngine::scissor);
-		class_binding.function("scissorTest", &JSWebGLEngine::scissorTest);
-		class_binding.function("colorMask", &JSWebGLEngine::colorMask);
-		class_binding.function("getParams", &JSWebGLEngine::getParams);
-		class_binding.function("getCapable", &JSWebGLEngine::getCapable);
-		//JSP_ADD_METHOD("applyRenderState", JSWebGLEngine::applyRenderState);
-		class_binding.function("applyRenderStateCommand", &JSWebGLEngine::applyRenderStateCommand);
-		class_binding.function("initRenderEngine", &JSWebGLEngine::initRenderEngine);
-		class_binding.function("propertyNameToID", &JSWebGLEngine::propertyNameToID);
-		class_binding.function("getUBOPointer", &JSWebGLEngine::getUBOPointer);
-		class_binding.function("copySubFrameBuffertoTex", &JSWebGLEngine::copySubFrameBuffertoTex);
-		class_binding.function("addStatisticsInfo", &JSWebGLEngine::addStatisticsInfo);
-		class_binding.function("clearStatisticsInfo", &JSWebGLEngine::clearStatisticsInfo);
-		class_binding.function("getStatisticsInfo", &JSWebGLEngine::getStatisticsInfo);
-		class_binding.function("unbindVertexState", &JSWebGLEngine::unbindVertexState);
-		context.class_("conchWebGLEngine", class_binding);
+		class_binding.property("isWebGL2", &JSGLESEngine::isWebGL2);
+		class_binding.function("clearRenderTexture", &JSGLESEngine::clearRenderTexture);
+		class_binding.function("viewport", &JSGLESEngine::viewport);
+		class_binding.function("scissor", &JSGLESEngine::scissor);
+		class_binding.function("scissorTest", &JSGLESEngine::scissorTest);
+		class_binding.function("colorMask", &JSGLESEngine::colorMask);
+		class_binding.function("getParams", &JSGLESEngine::getParams);
+		class_binding.function("getCapable", &JSGLESEngine::getCapable);
+		//JSP_ADD_METHOD("applyRenderState", JSGLESEngine::applyRenderState);
+		class_binding.function("applyRenderStateCommand", &JSGLESEngine::applyRenderStateCommand);
+		class_binding.function("initRenderEngine", &JSGLESEngine::initRenderEngine);
+		class_binding.function("propertyNameToID", &JSGLESEngine::propertyNameToID);
+		class_binding.function("getUBOPointer", &JSGLESEngine::getUBOPointer);
+		class_binding.function("copySubFrameBuffertoTex", &JSGLESEngine::copySubFrameBuffertoTex);
+		class_binding.function("addStatisticsInfo", &JSGLESEngine::addStatisticsInfo);
+		class_binding.function("clearStatisticsInfo", &JSGLESEngine::clearStatisticsInfo);
+		class_binding.function("getStatisticsInfo", &JSGLESEngine::getStatisticsInfo);
+		class_binding.function("unbindVertexState", &JSGLESEngine::unbindVertexState);
+		context.class_("conchGLESEngine", class_binding);
 	}
 	//------------------------------------------------------------------------------
 }

@@ -8,7 +8,7 @@
 namespace laya
 {
 class ScreenCanvasContext2D;
-class WebGLEngine;
+class GLESEngine;
 class WebGLActiveInfo;
 struct ShaderPrecisionFormat
 {

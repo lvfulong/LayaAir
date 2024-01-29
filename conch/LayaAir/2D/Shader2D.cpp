@@ -10,7 +10,7 @@ namespace laya
 	std::unordered_map<int, Shader2DCompile*> Shader2D::_preCompileShader;
 	std::unordered_map<uint64_t, Shader2D*> Shader2D::shaders;
 
-	Shader2D* Shader2D::withCompile2D(WebGLEngine* pWebGLEngine, int shaderID, const Shader2DDefines& defines, const std::vector<std::pair<std::string, int> >& bindAttrib)
+	Shader2D* Shader2D::withCompile2D(GLESEngine* pGLESEngine, int shaderID, const Shader2DDefines& defines, const std::vector<std::pair<std::string, int> >& bindAttrib)
 	{
 		uint64_t cacheId = shaderID | defines.getValue();
 		std::unordered_map<uint64_t, Shader2D*>::iterator it = Shader2D::shaders.find(cacheId);
@@ -23,11 +23,11 @@ namespace laya
 			//LOGE("withCompile shader err!");
 			return nullptr;
 		}
-		Shader2D* shader = pre->createShader(pWebGLEngine, defines.toNameDic(), bindAttrib);
+		Shader2D* shader = pre->createShader(pGLESEngine, defines.toNameDic(), bindAttrib);
 		Shader2D::shaders[cacheId] = shader;
 		return shader;
 	}
-	Shader2D::Shader2D(WebGLEngine* pWebGLEngine, const std::string& vs, const std::string& ps, const std::vector<std::pair<std::string, int> >& bindAttrib)
+	Shader2D::Shader2D(GLESEngine* pGLESEngine, const std::string& vs, const std::string& ps, const std::vector<std::pair<std::string, int> >& bindAttrib)
 	{
 		//LOGI("Shader2D::Shader vs %s", vs.c_str());
 		//LOGI("Shader2D::Shader ps %s", ps.c_str());
@@ -39,7 +39,7 @@ namespace laya
 		//Shader2D::shaders[cacheId] = this;
 		this->recreateResource();
 		//this.lock = true;
-		m_pRender2DContext = pWebGLEngine->get2DRenderContext();
+		m_pRender2DContext = pGLESEngine->get2DRenderContext();
 	}
     //------------------------------------------------------------------------------
     void Shader2D::onDestroy()

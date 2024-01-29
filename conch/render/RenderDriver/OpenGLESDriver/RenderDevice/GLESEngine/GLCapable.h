@@ -155,11 +155,11 @@ namespace laya
 
 	};
 
-	class WebGLEngine;
+	class GLESEngine;
 	class GLCapable
 	{
 	public:
-		GLCapable(WebGLEngine* glEngine);
+		GLCapable(GLESEngine* glEngine);
 		bool getCapable(RenderCapable type);
 		IWebGLExtention* getExtension(WebGLExtension type);
 	private:

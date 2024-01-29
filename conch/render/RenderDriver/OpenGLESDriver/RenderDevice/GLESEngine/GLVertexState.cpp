@@ -3,7 +3,7 @@
 
 namespace laya
 {
-GLVertexState::GLVertexState(WebGLEngine *engine) : GLObject(engine)
+GLVertexState::GLVertexState(GLESEngine *engine) : GLObject(engine)
 {
     if (!engine->isWebGL2())
         m_vaoExt = (OESVertexArrayObjectExt *)engine->getExtension(WebGLExtension::OES_vertex_array_object);

@@ -7,7 +7,7 @@
 namespace laya
 {
 	class IRenderDrawContext;
-	class WebGLEngine;
+	class GLESEngine;
 	class JSGLRenderDrawContext 
 	{
 	public:
@@ -24,7 +24,7 @@ namespace laya
 		void drawGeometryElement(JSValueAsParam pGeometryElement);
 
 	public:
-		WebGLEngine*				m_pEngine;
+		GLESEngine*				m_pEngine;
 		IRenderDrawContext*			m_pRenderDrawContext;
 	};
 }

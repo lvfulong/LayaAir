@@ -25,7 +25,7 @@ namespace laya
 	class WebGLInternalTex : public GLObject, public ObjectBase<WebGLInternalTex>
 	{
 	public:
-		WebGLInternalTex(WebGLEngine* engine, int target, int width, int height, TextureDimension dimension, bool mipmap, bool useSRGBLoader, int gammaCorrection);
+		WebGLInternalTex(GLESEngine* engine, int target, int width, int height, TextureDimension dimension, bool mipmap, bool useSRGBLoader, int gammaCorrection);
 		~WebGLInternalTex()
 		{
 			dispose();

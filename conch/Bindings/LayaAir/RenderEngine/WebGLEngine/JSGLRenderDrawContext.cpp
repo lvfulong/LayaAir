@@ -1,9 +1,9 @@
 #include "JSGLRenderDrawContext.h"
 #include <utils/Log.h>
 #include <utils/JCMemorySurvey.h>
-#include "JSWebGLEngine.h"
+#include "JSGLESEngine.h"
 #include "../../3D/JSRenderGeometryElement.h"
-#include <render/driver/gles/WebGLEngine.h>
+#include <render/driver/gles/GLESEngine.h>
 #include <render/3D/design/renderInterface/IRenderDrawContext.h>
 #include <render/3D/design/renderEnum/RenderPologyMode.h>
 #include <render/3D/design/renderEnum/IndexFormat.h>
@@ -19,7 +19,7 @@ namespace laya
 	}
 	JSGLRenderDrawContext::JSGLRenderDrawContext(JSValueAsParam engine)
 	{
-		JSWebGLEngine* pWebglEngine = (JSWebGLEngine*)Converter<JSWebGLEngine*>::ToCpp(engine);
+		JSGLESEngine* pWebglEngine = (JSGLESEngine*)Converter<JSGLESEngine*>::ToCpp(engine);
 		m_pEngine = pWebglEngine->m_pEngine;
 		m_pRenderDrawContext = m_pEngine->getDrawContext();
 		AdjustAmountOfExternalAllocatedMemory(128);

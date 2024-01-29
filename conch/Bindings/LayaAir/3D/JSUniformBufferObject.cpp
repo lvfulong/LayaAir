@@ -2,8 +2,8 @@
 #include <binder/JSInterface.h>
 #include <utils/Log.h>
 #include <utils/JCMemorySurvey.h>
-#include "../RenderEngine/WebGLEngine/JSWebGLEngine.h"
-#include "../RenderEngine/WebGLEngine/JSGLBuffer.h"
+#include "../RenderEngine/GLESEngine/JSGLESEngine.h"
+#include "../RenderEngine/GLESEngine/JSGLBuffer.h"
 
 namespace laya
 {
@@ -15,7 +15,7 @@ namespace laya
 	}
 	JSUniformBufferObject::JSUniformBufferObject(JSValueAsParam engine, int glPointer)
 	{
-		JSWebGLEngine* pWebglEngine = (JSWebGLEngine*)Converter<JSWebGLEngine*>::ToCpp(engine);
+		JSGLESEngine* pWebglEngine = (JSGLESEngine*)Converter<JSGLESEngine*>::ToCpp(engine);
 		m_pUniformBufferObject = new UniformBufferObject(pWebglEngine->m_pEngine, glPointer, false);
 		AdjustAmountOfExternalAllocatedMemory(128);
 		JCMemorySurvey::GetInstance()->newClass("conchUniformBufferObject", 128, this);

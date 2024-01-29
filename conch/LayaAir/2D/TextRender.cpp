@@ -26,7 +26,7 @@ namespace laya
 	bool TextRender::simClean = false;				// �����á�ǿ������ռ�õ͵�ͼ��
 	bool TextRender::scaleFontWithCtx = true;
 	bool TextRender::noAtlas = false;
-	TextRender::TextRender(WebGLEngine* pWebglEngine)
+	TextRender::TextRender(GLESEngine* pWebglEngine)
 	{
 		m_pWebglEngine = pWebglEngine;
 		m_charRender = new CharRender();

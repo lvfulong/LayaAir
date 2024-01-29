@@ -7,7 +7,7 @@
 namespace laya
 {
 	int TextAtlas::atlasGridW = 16;
-	TextAtlas::TextAtlas(WebGLEngine* pWebglEngine)
+	TextAtlas::TextAtlas(GLESEngine* pWebglEngine)
 	{
 
 		m_texHeight = m_texWidth = TextRender::atlasWidth;

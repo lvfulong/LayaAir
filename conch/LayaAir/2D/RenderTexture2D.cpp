@@ -9,13 +9,13 @@ namespace laya
 {
 	static Color _clearColor;
 	static Color _clearLinearColor;
-	static WebGLEngine* s_pWebGLEngine = nullptr;
+	static GLESEngine* s_pGLESEngine = nullptr;
 	std::stack<RenderTexture2DStackEntry> RenderTexture2D::m_rtStack;
 	RenderTexture2D* RenderTexture2D::m_currentActive = nullptr;
-	RenderTexture2D::RenderTexture2D(WebGLEngine* pWebGLEngine, int width, int height, RenderTargetFormat format, RenderTargetFormat depthStencilFormat)
+	RenderTexture2D::RenderTexture2D(GLESEngine* pGLESEngine, int width, int height, RenderTargetFormat format, RenderTargetFormat depthStencilFormat)
 	{
 
-		m_pWebGLEngine = s_pWebGLEngine = pWebGLEngine;
+		m_pGLESEngine = s_pGLESEngine = pGLESEngine;
 		m_width = width;
 		m_height = height;
 		m_colorFormat = format;
@@ -32,7 +32,7 @@ namespace laya
 	}
 	void RenderTexture2D::_create(int width, int height)
 	{
-		m_renderTarget = m_pWebGLEngine->getTextureContext()->createRenderTargetInternal(width, height, m_colorFormat, m_depthStencilFormat, false, true, 1);
+		m_renderTarget = m_pGLESEngine->getTextureContext()->createRenderTargetInternal(width, height, m_colorFormat, m_depthStencilFormat, false, true, 1);
 		m_texture = m_renderTarget->m_textures[0];
 	}
 	void RenderTexture2D::pushRT()
@@ -48,20 +48,20 @@ namespace laya
 			RenderTexture2D::m_rtStack.pop();
 			if (RenderTexture2D::m_currentActive != top.rt) 
 			{
-				top.rt ? s_pWebGLEngine->getTextureContext()->bindRenderTarget(top.rt->m_renderTarget, 0) : s_pWebGLEngine->getTextureContext()->bindoutScreenTarget();
+				top.rt ? s_pGLESEngine->getTextureContext()->bindRenderTarget(top.rt->m_renderTarget, 0) : s_pGLESEngine->getTextureContext()->bindoutScreenTarget();
 				RenderTexture2D::m_currentActive = top.rt;
 			}
-			s_pWebGLEngine->viewport(0, 0, top.w, top.h);
+			s_pGLESEngine->viewport(0, 0, top.w, top.h);
 			RenderState2D::width = top.w;
 			RenderState2D::height = top.h;
 		}
 	}
 	void RenderTexture2D::start()
 	{
-		m_pWebGLEngine->getTextureContext()->bindRenderTarget(m_renderTarget, 0);
+		m_pGLESEngine->getTextureContext()->bindRenderTarget(m_renderTarget, 0);
 		m_lastRT = RenderTexture2D::m_currentActive;
 		RenderTexture2D::m_currentActive = this;
-		m_pWebGLEngine->viewport(0, 0, m_width, m_height);//�ⲿ����
+		m_pGLESEngine->viewport(0, 0, m_width, m_height);//�ⲿ����
 		m_lastWidth = RenderState2D::width;
 		m_lastHeight = RenderState2D::height;
 		RenderState2D::width = m_width;
@@ -76,11 +76,11 @@ namespace laya
 		_clearColor.b = b;
 		_clearColor.a = a;
 		_clearColor.toLinear(_clearLinearColor);
-		m_pWebGLEngine->clearRenderTexture((uint32_t)RenderClearFlag::Color | (uint32_t)RenderClearFlag::Depth, &_clearLinearColor, 1.0f);
+		m_pGLESEngine->clearRenderTexture((uint32_t)RenderClearFlag::Color | (uint32_t)RenderClearFlag::Depth, &_clearLinearColor, 1.0f);
 	}
 	void RenderTexture2D::end()
 	{
-		m_pWebGLEngine->getTextureContext()->unbindRenderTarget(m_renderTarget);
+		m_pGLESEngine->getTextureContext()->unbindRenderTarget(m_renderTarget);
 		RenderTexture2D::m_currentActive = nullptr;
 		//m_readyed = true;
 	}
@@ -90,18 +90,18 @@ namespace laya
 		{
 			if (m_lastRT) 
 			{
-				m_pWebGLEngine->getTextureContext()->bindRenderTarget(m_lastRT->m_renderTarget, 0);
+				m_pGLESEngine->getTextureContext()->bindRenderTarget(m_lastRT->m_renderTarget, 0);
 			}
 			else 
 			{
-				m_pWebGLEngine->getTextureContext()->unbindRenderTarget(m_renderTarget);
+				m_pGLESEngine->getTextureContext()->unbindRenderTarget(m_renderTarget);
 			}
 
 			RenderTexture2D::m_currentActive = m_lastRT;
 		}
 		//m_readyed = true;
 
-		m_pWebGLEngine->viewport(0, 0, m_lastWidth, m_lastHeight);
+		m_pGLESEngine->viewport(0, 0, m_lastWidth, m_lastHeight);
 		RenderState2D::width = m_lastWidth;
 		RenderState2D::height = m_lastHeight;
 		//BaseShader.activeShader = null;

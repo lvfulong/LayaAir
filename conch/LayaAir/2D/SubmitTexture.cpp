@@ -18,14 +18,14 @@ namespace laya
 		SubmitTexture* o = nullptr;
 		if (SubmitTexture::POOL.empty())
 		{
-			o = new SubmitTexture(ctx->m_pWebGLEngine);
+			o = new SubmitTexture(ctx->m_pGLESEngine);
 		}
 		else
 		{
 			o = SubmitTexture::POOL.top();
 			SubmitTexture::POOL.pop();
 		}
-		o->m_pWebGLEngine = ctx->m_pWebGLEngine;
+		o->m_pGLESEngine = ctx->m_pGLESEngine;
 		if (o->m_shaderBindAttrib.empty())
 		{
 			o->m_shaderBindAttrib.push_back(std::make_pair("posuv", 0));
@@ -57,7 +57,7 @@ namespace laya
 		}
 		return o;
 	}
-	SubmitTexture::SubmitTexture(WebGLEngine* pWebglEngine) :SubmitBase(pWebglEngine)
+	SubmitTexture::SubmitTexture(GLESEngine* pWebglEngine) :SubmitBase(pWebglEngine)
 	{
 
 	}
@@ -116,7 +116,7 @@ namespace laya
 			m_shaderDefines.remove(Shader2DDefines::GAMMASPACE);
 		}
 
-		Shader2D* shader = Shader2D::withCompile2D(m_pWebGLEngine, Shader2DDefines::TEXTURE2D, m_shaderDefines, m_shaderBindAttrib);
+		Shader2D* shader = Shader2D::withCompile2D(m_pGLESEngine, Shader2DDefines::TEXTURE2D, m_shaderDefines, m_shaderBindAttrib);
 		shader->use(); 
 		// ����о���Ļ��������� WORLDMAT ��
 		if (RenderState2D::worldMatrix4 != RenderState2D::TEMPMAT4_ARRAY)
@@ -136,7 +136,7 @@ namespace laya
   
 		shader->uniform_sampler2D("texture", texture);
 	
-		m_pWebGLEngine->getDrawContext()->drawElements2DTemp(MeshTopology::Triangles, m_elementNum, IndexFormat::UInt16, m_startIndex);
+		m_pGLESEngine->getDrawContext()->drawElements2DTemp(MeshTopology::Triangles, m_elementNum, IndexFormat::UInt16, m_startIndex);
 		return 1;
 	}
 	

@@ -27,7 +27,7 @@ namespace laya
 			destroyUnusedTextureDt = 3000, 	// 长时间不用的纹理删除的时间。单位是ms
 			cleanMem = 100 * 1024 * 1024,		// 多大内存触发清理图集。这时候占用率低的图集会被清理
 		};
-		TextRender(WebGLEngine* pWebglEngine);
+		TextRender(GLESEngine* pWebglEngine);
 		~TextRender();
 		void _drawResortedWords(Context2D* ctx, int startx, int starty, const std::unordered_map<int, TexCacheData*>& samePagesData);
 		void fillWordText(Context2D* ctx, int id, float x, float y, const char* fontStr, int color, int strokeColor, float lineWidth, int textAlign);
@@ -66,7 +66,7 @@ namespace laya
 		CharRender* m_charRender;
 		static bool simClean;				// 测试用。强制清理占用低的图集
 		static bool showLog;
-		WebGLEngine* m_pWebglEngine;
+		GLESEngine* m_pWebglEngine;
 	};
 
 }

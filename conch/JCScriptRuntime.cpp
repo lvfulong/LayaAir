@@ -93,7 +93,7 @@ namespace laya
 
 #endif
 
-	extern WebGLEngine* g_WebGLEngine;
+	extern GLESEngine* g_GLESEngine;
     JCScriptRuntime::JCScriptRuntime()
     {
         m_pScriptThread = new JSMulThread();

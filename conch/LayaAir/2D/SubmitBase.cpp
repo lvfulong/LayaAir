@@ -3,7 +3,7 @@
 namespace laya
 {
 	SubmitBase* SubmitBase::RENDERBASE = new SubmitBase(nullptr);
-	SubmitBase::SubmitBase(WebGLEngine* pWebglEngine) :ISubmit(SubmitType::TwoDimension), m_pWebGLEngine(pWebglEngine)
+	SubmitBase::SubmitBase(GLESEngine* pWebglEngine) :ISubmit(SubmitType::TwoDimension), m_pGLESEngine(pWebglEngine)
 	{}
 	void SubmitBase::_copyClipInfo(bool clipInCache, const Matrix& clipInfo, int clipInfoID)
 	{

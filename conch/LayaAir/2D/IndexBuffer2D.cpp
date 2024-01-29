@@ -4,7 +4,7 @@
 namespace laya
 {
 	//------------------------------------------------------------------------------
-	IndexBuffer2D::IndexBuffer2D(WebGLEngine* engine, BufferUsage bufferUsage):Buffer(engine, BufferTargetType::ELEMENT_ARRAY_BUFFER, bufferUsage)
+	IndexBuffer2D::IndexBuffer2D(GLESEngine* engine, BufferUsage bufferUsage):Buffer(engine, BufferTargetType::ELEMENT_ARRAY_BUFFER, bufferUsage)
 	{
 		m_buffer2D = new Buffer2D(this);
 		//this._bufferUsage = bufferUsage;

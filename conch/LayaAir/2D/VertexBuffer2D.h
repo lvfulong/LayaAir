@@ -11,11 +11,11 @@
 
 namespace laya
 {
-	class WebGLEngine;
+	class GLESEngine;
 	class VertexBuffer2D: public Buffer
 	{	
 	public:
-		VertexBuffer2D(WebGLEngine* engine, int vertexStride, BufferUsage bufferUsage);
+		VertexBuffer2D(GLESEngine* engine, int vertexStride, BufferUsage bufferUsage);
 		~VertexBuffer2D();
 		void _bindForVAO();
 	public:

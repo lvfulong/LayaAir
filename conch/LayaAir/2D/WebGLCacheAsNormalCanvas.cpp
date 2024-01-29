@@ -47,9 +47,9 @@ namespace laya
 			curm->m_canReuse ? curm->recycle() : delete curm;
 		}
 		m_meshlist.clear();
-		m_mesh = MeshQuadTexture::getAMesh(m_context->m_pWebGLEngine, false);
-		m_pathMesh = MeshVG::getAMesh(m_context->m_pWebGLEngine, false);
-		m_triangleMesh = MeshTexture::getAMesh(m_context->m_pWebGLEngine, false);
+		m_mesh = MeshQuadTexture::getAMesh(m_context->m_pGLESEngine, false);
+		m_pathMesh = MeshVG::getAMesh(m_context->m_pGLESEngine, false);
+		m_triangleMesh = MeshTexture::getAMesh(m_context->m_pGLESEngine, false);
 
 		m_meshlist.push_back(m_mesh);
 		m_meshlist.push_back(m_pathMesh);

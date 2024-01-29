@@ -7,7 +7,7 @@
 
 namespace laya
 {
-	UniformBufferObject::UniformBufferObject(WebGLEngine* pEngine, int glPointer, bool bSelfCreateBuffer)
+	UniformBufferObject::UniformBufferObject(GLESEngine* pEngine, int glPointer, bool bSelfCreateBuffer)
 		:ObjectBase(JCConch::s_pConchRender->m_pUniformBufferObjectManager),
 		m_glPointer(glPointer),
 		m_bSelfCreateBuffer(bSelfCreateBuffer)

@@ -7,7 +7,7 @@ namespace laya
 	IndexBuffer2D*					MeshQuadTexture::s_fixib = nullptr;//delete ?
 	std::stack<MeshQuadTexture*>	MeshQuadTexture::_POOL;
 	//------------------------------------------------------------------------------
-	MeshQuadTexture::MeshQuadTexture(WebGLEngine* engine): Mesh2D(engine, MeshQuadTexture::const_stride, 4, 4, false)	//x,y,u,v,rgba
+	MeshQuadTexture::MeshQuadTexture(GLESEngine* engine): Mesh2D(engine, MeshQuadTexture::const_stride, 4, 4, false)	//x,y,u,v,rgba
 	{
 		m_canReuse = true;
 		m_attribInfo.push_back({ GL_FLOAT, 4, 0 });			//pos,uv
@@ -38,7 +38,7 @@ namespace laya
 		}*/
 	}
 	//------------------------------------------------------------------------------
-	MeshQuadTexture* MeshQuadTexture::getAMesh(WebGLEngine* engine, bool mainctx)
+	MeshQuadTexture* MeshQuadTexture::getAMesh(GLESEngine* engine, bool mainctx)
 	{
 		MeshQuadTexture* ret;
 		if (!MeshQuadTexture::_POOL.empty())

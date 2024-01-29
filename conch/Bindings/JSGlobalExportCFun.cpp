@@ -81,12 +81,6 @@
 #include "LayaAir/3D/JSUniformBufferObject.h"
 #include "2D/FontDescriptionParser.h"
 #include "2D/ColorParser.h"
-#include "LayaAir/RenderEngine/WebGLEngine/JSGL2TextureContext.h"
-#include "LayaAir/RenderEngine/WebGLEngine/JSGLTextureContext.h"
-#include "LayaAir/RenderEngine/WebGLEngine/JSWebGLEngine.h"
-#include "LayaAir/RenderEngine/WebGLEngine/JSWebGLInternalTex.h"
-#include "LayaAir/RenderEngine/WebGLEngine/JSWebGLInternalRT.h"
-#include "LayaAir/RenderEngine/WebGLEngine/JSGLRenderDrawContext.h"
 #include "2D/FontManager.h"
 #include <stdarg.h>
 #include <render/3D/RenderBindings.h>
@@ -541,7 +535,7 @@ namespace laya
             JSGLTextureContext::exportJS(context);
             JSGL2TextureContext::exportJS(context);
             JSWebGLInternalTex::exportJS(context);
-            JSWebGLEngine::exportJS(context);
+            JSGLESEngine::exportJS(context);
             JSRenderTexture2D::exportJS(context);
             JSGLVertexState::exportJS(context);
             JSVertexBuffer3D::exportJS(context);

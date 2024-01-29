@@ -8,7 +8,7 @@
 
 namespace laya
 {
-	InstanceRenderElementOBJ::InstanceRenderElementOBJ(WebGLEngine* pWebGLEngine): RenderElement(pWebGLEngine)
+	InstanceRenderElementOBJ::InstanceRenderElementOBJ(GLESEngine* pGLESEngine): RenderElement(pGLESEngine)
 	{
 		m_vertexBuffer3D.reserve(10);
 	}
@@ -55,7 +55,7 @@ namespace laya
 				buffer->setData(data, 0, 0, m_nDrawCount * m_vertexBuffer3D[i].second * 4);
 			}
 		}
-		m_pWebGLEngine->getDrawContext()->drawGeometryElement(m_pGeometry);
+		m_pGLESEngine->getDrawContext()->drawGeometryElement(m_pGeometry);
 	}
 }
 //------------------------------------------------------------------------------

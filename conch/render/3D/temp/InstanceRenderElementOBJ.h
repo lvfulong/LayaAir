@@ -14,11 +14,11 @@
 namespace laya
 {
 	class VertexBuffer3D;
-	class WebGLEngine;
+	class GLESEngine;
 	class InstanceRenderElementOBJ : public RenderElement
 	{
 	public:
-		InstanceRenderElementOBJ(WebGLEngine* pWebGLEngine);
+		InstanceRenderElementOBJ(GLESEngine* pGLESEngine);
 		~InstanceRenderElementOBJ();
 
 		void drawGeometry(ShaderInstance* shaderIns) override;

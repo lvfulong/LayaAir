@@ -15,7 +15,7 @@ namespace laya
 	public:
 		static SubmitVG* create(int submitType, Mesh2D* mesh, BlendMode blendMode, bool renderTarget, Context2D* ctx);
         static void onDestroy();
-		SubmitVG(WebGLEngine* pWebglEngine);
+		SubmitVG(GLESEngine* pWebglEngine);
 		int renderSubmit() override;
 		void recycle() override;
 		float u_TexRange[4];

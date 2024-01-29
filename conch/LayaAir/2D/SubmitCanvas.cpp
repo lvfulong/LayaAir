@@ -36,7 +36,7 @@ namespace laya
 		o->m_shaderDefines.clear();
 		return o;
 	}
-	SubmitCanvas::SubmitCanvas(WebGLEngine* pWebglEngine): SubmitBase(pWebglEngine)
+	SubmitCanvas::SubmitCanvas(GLESEngine* pWebglEngine): SubmitBase(pWebglEngine)
 	{
 
 	}

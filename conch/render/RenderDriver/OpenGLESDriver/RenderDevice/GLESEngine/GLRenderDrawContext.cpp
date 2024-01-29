@@ -8,7 +8,7 @@
 
 namespace laya
 {
-GLRenderDrawContext::GLRenderDrawContext(WebGLEngine *engine) : GLObject(engine)
+GLRenderDrawContext::GLRenderDrawContext(GLESEngine *engine) : GLObject(engine)
 {
     if (!m_engine->isWebGL2())
     {

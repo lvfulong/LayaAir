@@ -10,7 +10,7 @@
 #include <render/3D/temp/UniformBufferObject.h>
 namespace laya
 {
-	GLShaderInstance::GLShaderInstance(WebGLEngine* engine, const char* vs, const char* ps, const std::unordered_map<std::string, int32_t>&  attributeMap): GLObject(engine)
+	GLShaderInstance::GLShaderInstance(GLESEngine* engine, const char* vs, const char* ps, const std::unordered_map<std::string, int32_t>&  attributeMap): GLObject(engine)
 	{
 		m_vs = vs;
 		m_ps = ps;

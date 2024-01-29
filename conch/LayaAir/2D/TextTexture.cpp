@@ -9,7 +9,7 @@
 
 namespace laya
 {
-	TextTexture::TextTexture(WebGLEngine* pWebglEngine, int textureW, int textureH)
+	TextTexture::TextTexture(GLESEngine* pWebglEngine, int textureW, int textureH)
 	{
 		m_pWebglEngine = pWebglEngine;
 		m_texW = textureW/* || TextRender::atlasWidth*/;
@@ -25,7 +25,7 @@ namespace laya
 			destroy();
 		}
 	}
-	TextTexture* TextTexture::getTextTexture(WebGLEngine* pWebglEngine, int w, int h)
+	TextTexture* TextTexture::getTextTexture(GLESEngine* pWebglEngine, int w, int h)
 	{
 		// ���ٻ���
 		return new TextTexture(pWebglEngine, w, h);

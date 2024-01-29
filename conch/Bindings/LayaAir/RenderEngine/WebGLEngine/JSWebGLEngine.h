@@ -1,19 +1,19 @@
-#ifndef __JSWebGLEngine_H__
-#define __JSWebGLEngine_H__
+#ifndef __JSGLESEngine_H__
+#define __JSGLESEngine_H__
 
 #include <binder/JSInterface.h>
 
 namespace laya
 {
-	class WebGLEngine;
-	class JSWebGLEngine
+	class GLESEngine;
+	class JSGLESEngine
 	{
 	public:
 		static void exportJS(Context& context);
-		JSWebGLEngine();
-		JSWebGLEngine(int webglMod);
+		JSGLESEngine();
+		JSGLESEngine(int webglMod);
 		void initRenderEngine();
-		~JSWebGLEngine();
+		~JSGLESEngine();
 		int propertyNameToID(const char* name);
 		bool isWebGL2();
 		int getParams(int type);
@@ -33,7 +33,7 @@ namespace laya
 		void unbindVertexState();
 	public:
 
-		WebGLEngine* m_pEngine;
+		GLESEngine* m_pEngine;
 	};
 }
-#endif //__JSWebGLEngine_H__
+#endif //__JSGLESEngine_H__

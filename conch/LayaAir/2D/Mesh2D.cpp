@@ -6,10 +6,10 @@
 
 namespace laya
 {
-	Mesh2D::Mesh2D(WebGLEngine* engine, int stride, int vballoc, int iballoc, bool createIndexBuffer)
+	Mesh2D::Mesh2D(GLESEngine* engine, int stride, int vballoc, int iballoc, bool createIndexBuffer)
 	{
 		m_createIndexBuffer = createIndexBuffer;
-		m_pWebGLEngine = engine;
+		m_pGLESEngine = engine;
 		m_stride = stride;
 		m_vb = new VertexBuffer2D(engine, stride, BufferUsage::Dynamic);
 		//if (vballoc) 
@@ -54,7 +54,7 @@ namespace laya
 		m_applied = true;
 		if (!m_vao)
 		{
-			m_vao = new BufferStateBase(m_pWebGLEngine);
+			m_vao = new BufferStateBase(m_pGLESEngine);
 		}
 		m_vao->applyState(m_stride, m_attribInfo, m_vb, m_ib);
 	}

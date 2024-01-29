@@ -14,7 +14,7 @@
 
 namespace laya
 {
-	class WebGLEngine;
+	class GLESEngine;
 	class SubmitBase;
 	class WebGLInternalTex;
 	class RenderTexture2D;
@@ -23,7 +23,7 @@ namespace laya
 	class ScreenCanvasContext2D
 	{
 	public:
-		ScreenCanvasContext2D(WebGLEngine* pWebglEngine);
+		ScreenCanvasContext2D(GLESEngine* pWebglEngine);
 		~ScreenCanvasContext2D();
 		void clear();
 		void flush();
@@ -42,7 +42,7 @@ namespace laya
 		std::vector<Mesh2D*>				            m_meshlist;
 		int m_width							            = Context2D::MAXSIZE;
 		int m_height						            = Context2D::MAXSIZE;
-		WebGLEngine*						            m_pWebGLEngine;
+		GLESEngine*						            m_pGLESEngine;
 		std::shared_ptr<WebGLInternalTex>				m_texture = nullptr;
 		WebGLInternalRT*					            m_target = nullptr;
 		std::atomic_bool                                m_requestCaptureScreen{ false };

@@ -7,13 +7,13 @@
 #include "CharRenderInfo.h"
 namespace laya
 {
-	class WebGLEngine;
+	class GLESEngine;
 	class TextTexture;
 	class AtlasGrid;
 	class TextAtlas
 	{	
 	public:
-		TextAtlas(WebGLEngine* pWebglEngine);
+		TextAtlas(GLESEngine* pWebglEngine);
 		~TextAtlas();
 
 		std::shared_ptr<CharRenderInfo> find(const char* key);

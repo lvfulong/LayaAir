@@ -8,7 +8,7 @@ namespace laya
 class LayaGL
 {
   public:
-    static WebGLEngine *m_pWebglEngine;
+    static GLESEngine *m_pWebglEngine;
 };
 } // namespace laya
 #endif

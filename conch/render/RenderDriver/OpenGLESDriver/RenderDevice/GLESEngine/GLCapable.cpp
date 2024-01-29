@@ -35,7 +35,7 @@ namespace laya
 		glBindVertexArray(vao);
 	}
 
-	GLCapable::GLCapable(WebGLEngine* glEngine)
+	GLCapable::GLCapable(GLESEngine* glEngine)
 	{
 		initExtension(glEngine->isWebGL2());
 		initCapable(glEngine->isWebGL2());

@@ -4,7 +4,7 @@
 namespace laya
 {
 	//------------------------------------------------------------------------------
-	VertexBuffer2D::VertexBuffer2D(WebGLEngine* engine, int vertexStride, BufferUsage bufferUsage): Buffer(engine, BufferTargetType::ARRAY_BUFFER, bufferUsage)
+	VertexBuffer2D::VertexBuffer2D(GLESEngine* engine, int vertexStride, BufferUsage bufferUsage): Buffer(engine, BufferTargetType::ARRAY_BUFFER, bufferUsage)
 	{
 		m_buffer2D = new Buffer2D(this);
 		m_vertexStride = vertexStride;

@@ -7,7 +7,7 @@
 
 namespace laya
 {
-	GLParams::GLParams(WebGLEngine* engine)
+	GLParams::GLParams(GLESEngine* engine)
 	{
 		m_engine = engine;
 		_initParams();

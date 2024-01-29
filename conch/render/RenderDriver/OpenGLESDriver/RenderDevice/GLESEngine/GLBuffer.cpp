@@ -6,7 +6,7 @@
 
 namespace laya
 {
-	GLBuffer::GLBuffer(WebGLEngine* engine, BufferTargetType targetType , BufferUsage bufferUsageType): GLObject(engine)
+	GLBuffer::GLBuffer(GLESEngine* engine, BufferTargetType targetType , BufferUsage bufferUsageType): GLObject(engine)
 	{
 		m_targetType = targetType;
 		m_bufferUsageType = bufferUsageType;

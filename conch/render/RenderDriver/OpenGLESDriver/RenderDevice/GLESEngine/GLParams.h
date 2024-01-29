@@ -6,16 +6,16 @@
 
 namespace laya
 {
-	class WebGLEngine;
+	class GLESEngine;
 	class GLParams
 	{
 	public:
-		GLParams(WebGLEngine* engine);
+		GLParams(GLESEngine* engine);
 		int getParams(RenderParams params);
 	private:
 		void _initParams();
 	private:
-		WebGLEngine* m_engine;
+		GLESEngine* m_engine;
 		typedef std::unordered_map<RenderParams, int> ParamsDataMap;
 		std::unordered_map<RenderParams, int> m_glParamsData;
 	};

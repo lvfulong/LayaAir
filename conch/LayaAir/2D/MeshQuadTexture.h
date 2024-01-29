@@ -18,9 +18,9 @@ namespace laya
 			const_stride = 24,
 			MAX_IB = 16 * 1024,
 		};
-		MeshQuadTexture(WebGLEngine* engine);
+		MeshQuadTexture(GLESEngine* engine);
 		~MeshQuadTexture();
-		static MeshQuadTexture* getAMesh(WebGLEngine* engine, bool mainctx);
+		static MeshQuadTexture* getAMesh(GLESEngine* engine, bool mainctx);
         static void onDestroy();
 		void recycle();
 		void addData(float* vertices, int verticesLength, float* uvs, int uvLength, uint16_t* idx, int idxLength, const Matrix& matrix, uint32_t rgba);

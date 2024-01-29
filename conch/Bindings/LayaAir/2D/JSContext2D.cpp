@@ -8,8 +8,8 @@
 #include "../../JSArrayBufferRef.h"
 #include "../3D/JSSubmitScene3D.h"
 #include "JSWebGLCacheAsNormalCanvas.h"
-#include "../RenderEngine/WebGLEngine/JSWebGLEngine.h"
-#include "../RenderEngine/WebGLEngine/JSWebGLInternalRT.h"
+#include "../RenderEngine/GLESEngine/JSGLESEngine.h"
+#include "../RenderEngine/GLESEngine/JSWebGLInternalRT.h"
 
 namespace laya
 {
@@ -22,7 +22,7 @@ namespace laya
 	//------------------------------------------------------------------------------
 	JSContext2D::JSContext2D(JSValueAsParam pEngine)
 	{
-		JSWebGLEngine* pWebglEngine = (JSWebGLEngine*)Converter<JSWebGLEngine*>::ToCpp(pEngine);
+		JSGLESEngine* pWebglEngine = (JSGLESEngine*)Converter<JSGLESEngine*>::ToCpp(pEngine);
 		m_context = new Context2D(pWebglEngine->m_pEngine);
 		AdjustAmountOfExternalAllocatedMemory(4);
 		JCMemorySurvey::GetInstance()->newClass("_conchContext", 4, this);
@@ -174,7 +174,7 @@ namespace laya
 	}
 	JsValue JSContext2D::drawMask(int w, int h)
 	{
-		JSRenderTexture2D* rt = new JSRenderTexture2D(m_context->m_pWebGLEngine, m_context->drawMask(w, h));
+		JSRenderTexture2D* rt = new JSRenderTexture2D(m_context->m_pGLESEngine, m_context->drawMask(w, h));
 		return JSP_TO_JS(JSRenderTexture2D*, rt);
 	}
 	void JSContext2D::drawMasked(float x, float y, float w, float h)
@@ -434,7 +434,7 @@ namespace laya
 		{
 			std::shared_ptr<RenderTexture2D> pRt = m_context->getTarget();
 			if (pRt != nullptr) {
-				m_pJSRT.reset(JSP_TO_JS(JSRenderTexture2D*, new JSRenderTexture2D(m_context->m_pWebGLEngine, pRt)));
+				m_pJSRT.reset(JSP_TO_JS(JSRenderTexture2D*, new JSRenderTexture2D(m_context->m_pGLESEngine, pRt)));
 				return m_pJSRT.toLocal().handle_;
 			}
 			return JSP_TO_JS_NULL;

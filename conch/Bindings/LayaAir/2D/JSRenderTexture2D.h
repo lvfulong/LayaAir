@@ -12,7 +12,7 @@ namespace laya
 	public:
 		static void exportJS(Context& context);
 		JSRenderTexture2D();
-		JSRenderTexture2D(WebGLEngine* pWebGLEngine, std::shared_ptr<RenderTexture2D> renderTexture);
+		JSRenderTexture2D(GLESEngine* pGLESEngine, std::shared_ptr<RenderTexture2D> renderTexture);
 		JSRenderTexture2D(JSValueAsParam pEngine, int width, int height, int format, int depthStencilFormat);
 		~JSRenderTexture2D();
 		void destroy();
@@ -31,7 +31,7 @@ namespace laya
 		void setDeleteRT(bool value);
 		JsValue getRenderTarget();
 	public:
-		WebGLEngine*									m_pWebGLEngine = nullptr;
+		GLESEngine*									m_pGLESEngine = nullptr;
 		std::shared_ptr<RenderTexture2D>				m_renderTexture = nullptr;
 	};
 }

@@ -8,14 +8,14 @@
 
 namespace laya
 {
-	class WebGLEngine;
+	class GLESEngine;
 	class VertexBuffer2D;
 	class IndexBuffer2D;
 	class GLVertexState;
 	class BufferStateBase
 	{	
 	public:
-		BufferStateBase(WebGLEngine* engine);
+		BufferStateBase(GLESEngine* engine);
 		~BufferStateBase();
 		void bind();
 		void unBind();

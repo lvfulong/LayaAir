@@ -12,7 +12,7 @@ namespace laya
 		//private shaderInstance:GLShaderInstance;
 		//private cacheShaderProgram:any;
 	public:
-		GLRender2DContext(WebGLEngine* pEngine) : GLObject(pEngine)
+		GLRender2DContext(GLESEngine* pEngine) : GLObject(pEngine)
 		{
 			//this.shaderInstance = new GLShaderInstance(engine, null, null, null);
 		}

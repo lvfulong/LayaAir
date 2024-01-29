@@ -35,7 +35,7 @@ namespace laya
 		o->m_shaderDefines.clear();*/
 		return o;
 	}
-	SubmitCMD::SubmitCMD(WebGLEngine* pWebglEngine) : SubmitBase(pWebglEngine)
+	SubmitCMD::SubmitCMD(GLESEngine* pWebglEngine) : SubmitBase(pWebglEngine)
 	{
 
 	}

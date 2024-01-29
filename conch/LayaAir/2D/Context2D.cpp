@@ -47,17 +47,17 @@ namespace laya
 	TextRender* Context2D::m_textRender = nullptr;
 	static uint8_t PIXELS[16] = {0}; 
 	//------------------------------------------------------------------------------
-	Context2D::Context2D(WebGLEngine* pWebglEngine)
+	Context2D::Context2D(GLESEngine* pWebglEngine)
 	{
-		m_pWebGLEngine = pWebglEngine;
+		m_pGLESEngine = pWebglEngine;
 		if (m_textRender == nullptr)
 		{
-			m_textRender = new TextRender(m_pWebGLEngine);
+			m_textRender = new TextRender(m_pGLESEngine);
 		}
 		if (!m_defaultTexture)
 		{
-			m_defaultTexture = m_pWebGLEngine->getTextureContext()->createTextureInternal(TextureDimension::Tex2D, 2, 2, TextureFormat::R8G8B8A8, true , false);
-			m_pWebGLEngine->getTextureContext()->setTexturePixelsData(m_defaultTexture, (char*)PIXELS, 16, false, false);
+			m_defaultTexture = m_pGLESEngine->getTextureContext()->createTextureInternal(TextureDimension::Tex2D, 2, 2, TextureFormat::R8G8B8A8, true , false);
+			m_pGLESEngine->getTextureContext()->setTexturePixelsData(m_defaultTexture, (char*)PIXELS, 16, false, false);
 		}
 		m_lastTex = m_defaultTexture;
 		m_pRenderCmd = new JCCommandEncoderBuffer(0, 0);
@@ -300,9 +300,9 @@ namespace laya
 		}
 		m_meshlist.clear();
 
-		m_mesh = MeshQuadTexture::getAMesh(m_pWebGLEngine, this->isMain);	//TODO ��Ҫ������
-		m_pathMesh = MeshVG::getAMesh(m_pWebGLEngine, this->isMain);
-		m_triangleMesh = MeshTexture::getAMesh(m_pWebGLEngine, this->isMain);
+		m_mesh = MeshQuadTexture::getAMesh(m_pGLESEngine, this->isMain);	//TODO ��Ҫ������
+		m_pathMesh = MeshVG::getAMesh(m_pGLESEngine, this->isMain);
+		m_triangleMesh = MeshTexture::getAMesh(m_pGLESEngine, this->isMain);
 		m_meshlist.push_back(m_mesh);
 		m_meshlist.push_back(m_pathMesh);
 		m_meshlist.push_back(m_triangleMesh);
@@ -358,11 +358,11 @@ namespace laya
 				m_stateStack.pop();
 			}
 			m_stateStack.push(ContextState());
-			m_mesh = MeshQuadTexture::getAMesh(m_pWebGLEngine, this->isMain);
-			m_pathMesh = MeshVG::getAMesh(m_pWebGLEngine, this->isMain);
-			m_triangleMesh = MeshTexture::getAMesh(m_pWebGLEngine, this->isMain);
+			m_mesh = MeshQuadTexture::getAMesh(m_pGLESEngine, this->isMain);
+			m_pathMesh = MeshVG::getAMesh(m_pGLESEngine, this->isMain);
+			m_triangleMesh = MeshTexture::getAMesh(m_pGLESEngine, this->isMain);
 			m_meshlist.push_back(m_mesh);
-			m_pathMesh = MeshVG::getAMesh(m_pWebGLEngine, this->isMain);
+			m_pathMesh = MeshVG::getAMesh(m_pGLESEngine, this->isMain);
 			m_meshlist.push_back(m_triangleMesh);
 			m_bInit = true;
 		}
@@ -435,15 +435,15 @@ namespace laya
 	void Context2D::_alpha(Context2D* pContext, JCCommandEncoderBuffer& layaGLCmd)
 	{
 	}
-	extern WebGLEngine* g_WebGLEngine;
+	extern GLESEngine* g_GLESEngine;
 	void Context2D::set2DRenderConfig()
 	{
 		if (RenderTexture2D::m_currentActive != nullptr)
 			RenderTexture2D::m_currentActive->end();
 
-		g_WebGLEngine->viewport(0, 0, RenderState2D::width, RenderState2D::height);//��ԭ2D�ӿ�
-		g_WebGLEngine->scissorTest(true);
-		g_WebGLEngine->scissor(0, 0, RenderState2D::width, RenderState2D::height);
+		g_GLESEngine->viewport(0, 0, RenderState2D::width, RenderState2D::height);//��ԭ2D�ӿ�
+		g_GLESEngine->scissorTest(true);
+		g_GLESEngine->scissor(0, 0, RenderState2D::width, RenderState2D::height);
 	}
 	//------------------------------------------------------------------------------
 	void Context2D::save()
@@ -535,7 +535,7 @@ namespace laya
 		bool sameKey = (key == preKey);
 		if (m_triangleMesh->m_vertNum + verticesLength / 2 > Context2D::MAX_VERTEX_NUM)
 		{
-			this->m_triangleMesh = MeshTexture::getAMesh(m_pWebGLEngine, this->isMain);
+			this->m_triangleMesh = MeshTexture::getAMesh(m_pGLESEngine, this->isMain);
 			this->m_meshlist.push_back(this->m_triangleMesh);
 			sameKey = false;
 		}
@@ -656,7 +656,7 @@ namespace laya
 
 		if (m_mesh->m_vertNum + 4 > Context2D::MAX_VERTEX_NUM)
 		{
-			m_mesh = MeshQuadTexture::getAMesh(m_pWebGLEngine, this->isMain);//�����µ�mesh  TODO ���_mesh���ǳ�����ʽ������Ͳ�����ô���ˡ��Ժ��_mesh������ʾ�ɳ���ģʽ 
+			m_mesh = MeshQuadTexture::getAMesh(m_pGLESEngine, this->isMain);//�����µ�mesh  TODO ���_mesh���ǳ�����ʽ������Ͳ�����ô���ˡ��Ժ��_mesh������ʾ�ɳ���ģʽ 
 			m_meshlist.push_back(m_mesh);
 			sameKey = false;	//�µ�mesh������samekey��
 		}
@@ -708,7 +708,7 @@ namespace laya
 		bool sameKey = false;
 		if (m_mesh->m_vertNum + 4 > Context2D::MAX_VERTEX_NUM)
 		{
-			m_mesh = MeshQuadTexture::getAMesh(m_pWebGLEngine, this->isMain);
+			m_mesh = MeshQuadTexture::getAMesh(m_pGLESEngine, this->isMain);
 			m_meshlist.push_back(m_mesh);
 			sameKey = false;
 		}
@@ -1209,7 +1209,7 @@ namespace laya
 					m_curSubmit->m_elementNum += curEleNum;
 					curEleNum = 0;
 					//Ȼ�����µ�mesh�����µ�submit��
-					m_pathMesh = MeshVG::getAMesh(m_pWebGLEngine, this->isMain);
+					m_pathMesh = MeshVG::getAMesh(m_pGLESEngine, this->isMain);
 					m_meshlist.push_back(m_pathMesh);
 
 					SubmitVG* submit = SubmitVG::create(SubmitBase::KEY_VG, m_pathMesh, this->getCurrentState().blendMode, false, this);
@@ -1360,7 +1360,7 @@ namespace laya
 		bool sameKey = m_curSubmit && (m_curSubmit->m_key.m_submitType == SubmitBase::KEY_DRAWTEXTURE && m_curSubmit->m_key.m_blendMode == this->getCurrentState().blendMode);
 		if (m_mesh->m_vertNum + 4 > Context2D::MAX_VERTEX_NUM)
 		{
-			m_mesh = MeshQuadTexture::getAMesh(m_pWebGLEngine, this->isMain);//�����µ�mesh  TODO ���_mesh���ǳ�����ʽ������Ͳ�����ô���ˡ��Ժ��_mesh������ʾ�ɳ���ģʽ 
+			m_mesh = MeshQuadTexture::getAMesh(m_pGLESEngine, this->isMain);//�����µ�mesh  TODO ���_mesh���ǳ�����ʽ������Ͳ�����ô���ˡ��Ժ��_mesh������ʾ�ɳ���ģʽ 
 			m_meshlist.push_back(m_mesh);
 			sameKey = false;
 		}
@@ -1791,7 +1791,7 @@ namespace laya
 				m_curSubmit->m_elementNum += curEleNum;
 				curEleNum = 0;
 				//Ȼ�����µ�mesh�����µ�submit��
-				m_pathMesh = MeshVG::getAMesh(m_pWebGLEngine, this->isMain);
+				m_pathMesh = MeshVG::getAMesh(m_pGLESEngine, this->isMain);
 				SubmitVG* submit = SubmitVG::create(SubmitBase::KEY_VG, m_pathMesh, this->getCurrentState().blendMode, false, this);
 				m_curSubmit = submit;
 				m_curSubmit->_copyClipInfo(this->getCurrentState().clipInCache, this->getCurrentState().globalClipMatrix, this->getCurrentState().clipInfoID);
@@ -1944,7 +1944,7 @@ namespace laya
 		//if (tRect.width > 0 && tRect.height > 0) {
 			//var w : number = tRect.width;
 			//var h : number = tRect.height;
-		auto maskTarget = std::make_shared<RenderTexture2D>(m_pWebGLEngine, w, h, RenderTargetFormat::R8G8B8A8, RenderTargetFormat::None);
+		auto maskTarget = std::make_shared<RenderTexture2D>(m_pGLESEngine, w, h, RenderTargetFormat::R8G8B8A8, RenderTargetFormat::None);
 		breakNextMerge();
 		//�Ȱ�mask����tmpTarget��
 		pushRT();
@@ -2044,7 +2044,7 @@ namespace laya
 		uint32_t rgba = 0xffffffff;
 		if (m_mesh->m_vertNum + 4 > Context2D::MAX_VERTEX_NUM)
 		{
-			m_mesh = MeshQuadTexture::getAMesh(m_pWebGLEngine, this->isMain);//�����µ�mesh  TODO ���_mesh���ǳ�����ʽ������Ͳ�����ô���ˡ��Ժ��_mesh������ʾ�ɳ���ģʽ 
+			m_mesh = MeshQuadTexture::getAMesh(m_pGLESEngine, this->isMain);//�����µ�mesh  TODO ���_mesh���ǳ�����ʽ������Ͳ�����ô���ˡ��Ժ��_mesh������ʾ�ɳ���ģʽ 
 			m_meshlist.push_back(m_mesh);
 		}
 		float transedPoints[8];
@@ -2149,7 +2149,7 @@ namespace laya
 		//var preworldClipRect:Rectangle = RenderState2D.worldClipRect;
 		//�ü����ÿ��ǣ���������context�ڲ��Լ�ά���������Ҵ�
 		//RenderState2D.worldScissorTest = false;
-		context->m_pWebGLEngine->scissorTest(false);
+		context->m_pGLESEngine->scissorTest(false);
 
 		///var preAlpha : number = RenderState2D.worldAlpha;
 		
@@ -2210,11 +2210,11 @@ namespace laya
 			m_width = w;
 			m_height = h;
 
-			m_target = std::make_shared<RenderTexture2D>(m_pWebGLEngine, w, h, RenderTargetFormat::R8G8B8A8, RenderTargetFormat::None);
+			m_target = std::make_shared<RenderTexture2D>(m_pGLESEngine, w, h, RenderTargetFormat::R8G8B8A8, RenderTargetFormat::None);
 			
 			if (this->isMain)
 			{
-				m_pWebGLEngine->viewport(0, 0, w, h);
+				m_pGLESEngine->viewport(0, 0, w, h);
 				RenderState2D::width = w;
 				RenderState2D::height = h;
 			}
@@ -2247,7 +2247,7 @@ namespace laya
 			//	throw Error("asBitmap no size!");
 			if (!m_target || m_target->getWidth() != m_width || m_target->getHeight() != m_height)
 			{
-				m_target = std::make_shared<RenderTexture2D>(m_pWebGLEngine, m_width, m_height, RenderTargetFormat::R8G8B8A8, RenderTargetFormat::None);
+				m_target = std::make_shared<RenderTexture2D>(m_pGLESEngine, m_width, m_height, RenderTargetFormat::R8G8B8A8, RenderTargetFormat::None);
 			}
 		}
 		else 

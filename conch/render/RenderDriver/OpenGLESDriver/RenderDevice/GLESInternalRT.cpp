@@ -2,7 +2,7 @@
 #include "GLESInternalTex.h"
 namespace laya
 {
-	WebGLInternalRT::WebGLInternalRT(WebGLEngine* engine, RenderTargetFormat colorFormat, RenderTargetFormat depthStencilFormat, bool isCube, bool generateMipmap, int samples): GLObject(engine)
+	WebGLInternalRT::WebGLInternalRT(GLESEngine* engine, RenderTargetFormat colorFormat, RenderTargetFormat depthStencilFormat, bool isCube, bool generateMipmap, int samples): GLObject(engine)
 	{
 		m_colorFormat = colorFormat;
 		m_depthStencilFormat = depthStencilFormat;

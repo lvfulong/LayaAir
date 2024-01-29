@@ -13,7 +13,7 @@ namespace laya
 	class IndexBuffer2D;
 	class VertexBuffer2D;
 	class BufferStateBase;
-	class WebGLEngine;
+	class GLESEngine;
 
 
 	class Mesh2D
@@ -23,7 +23,7 @@ namespace laya
 		{
 			BYTES_PER_INDEX = 2,
 		};
-		Mesh2D(WebGLEngine* engine, int stride, int vballoc, int iballoc, bool createIndexBuffer);
+		Mesh2D(GLESEngine* engine, int stride, int vballoc, int iballoc, bool createIndexBuffer);
 		virtual ~Mesh2D();
 		void configVAO();
 		void useMesh();
@@ -39,7 +39,7 @@ namespace laya
 		IndexBuffer2D*						m_ib = nullptr;
 		bool								m_applied = false;	//�Ƿ��Ѿ����ø�webgl��
 		BufferStateBase*					m_vao = nullptr;
-		WebGLEngine*						m_pWebGLEngine;
+		GLESEngine*						m_pGLESEngine;
 		bool								m_createIndexBuffer = true;
 	};
 }

@@ -10,11 +10,11 @@
 
 namespace laya
 {
-	class WebGLEngine;
+	class GLESEngine;
 	class IndexBuffer2D : public Buffer
 	{	
 	public:
-		IndexBuffer2D(WebGLEngine* engine, BufferUsage bufferUsage);
+		IndexBuffer2D(GLESEngine* engine, BufferUsage bufferUsage);
 		~IndexBuffer2D();
 		void _bindForVAO();
 	public:

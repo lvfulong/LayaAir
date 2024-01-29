@@ -10,7 +10,7 @@
 
 namespace laya
 {
-	class WebGLEngine;
+	class GLESEngine;
 	class IRender2DContext;
 	class Shader;
 	class Shader2DCompile;
@@ -45,13 +45,13 @@ namespace laya
 	class Shader2D
 	{	
 	public:
-		Shader2D(WebGLEngine* pWebGLEngine, const std::string& vs, const std::string& ps, /*const std::map<int, std::string>& nameMap,*/ const std::vector<std::pair<std::string, int> >& bindAttrib);
+		Shader2D(GLESEngine* pGLESEngine, const std::string& vs, const std::string& ps, /*const std::map<int, std::string>& nameMap,*/ const std::vector<std::pair<std::string, int> >& bindAttrib);
 		void recreateResource();
 		void _disposeResource();
 		void _compile();
 		static void preprocess2D(/*int nameID, */int mainID, const char* vs, const char* ps/*, nameMap : any*/);
 		//static Shader* withCompile2D(/*int nameID,*/ int mainID, const std::vector<std::string>& define, const std::string& shaderName, createShaderFunction createShader, const std::vector<std::pair<std::string, int> >& bindAttrib);
-		static Shader2D* withCompile2D(WebGLEngine* pWebGLEngine, int shaderID, const Shader2DDefines& defines, const std::vector<std::pair<std::string, int> >& bindAttrib);
+		static Shader2D* withCompile2D(GLESEngine* pGLESEngine, int shaderID, const Shader2DDefines& defines, const std::vector<std::pair<std::string, int> >& bindAttrib);
 		static GLuint _createShader(const std::string& str, int type);
 		//static Shader* create(const std::string& vs, const std::string& ps, const std::string& saveName, /*const std::map<int, std::string>& nameMap,*/ const std::vector<std::pair<std::string, int> >& bindAttrib);
 		void use();

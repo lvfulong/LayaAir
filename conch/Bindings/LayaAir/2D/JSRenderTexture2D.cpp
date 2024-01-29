@@ -1,10 +1,10 @@
 #include "JSRenderTexture2D.h"
 #include <utils/Log.h>
-#include "../RenderEngine/WebGLEngine/JSWebGLEngine.h"
+#include "../RenderEngine/GLESEngine/JSGLESEngine.h"
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.h>
 #include <render/driver/gles/GLTextureContext.h>
-#include "../RenderEngine/WebGLEngine/JSGLTextureContext.h"
-#include "../RenderEngine/WebGLEngine/JSWebGLInternalRT.h"
+#include "../RenderEngine/GLESEngine/JSGLTextureContext.h"
+#include "../RenderEngine/GLESEngine/JSWebGLInternalRT.h"
 
 namespace laya
 {
@@ -15,9 +15,9 @@ namespace laya
 		JCMemorySurvey::GetInstance()->newClass("conchRenderTexture2D", 4, this);
 	}
 	//------------------------------------------------------------------------------
-	JSRenderTexture2D::JSRenderTexture2D(WebGLEngine* pWebGLEngine, std::shared_ptr<RenderTexture2D> renderTexture)
+	JSRenderTexture2D::JSRenderTexture2D(GLESEngine* pGLESEngine, std::shared_ptr<RenderTexture2D> renderTexture)
 	{
-		m_pWebGLEngine = pWebGLEngine;
+		m_pGLESEngine = pGLESEngine;
 		m_renderTexture = renderTexture;
 		AdjustAmountOfExternalAllocatedMemory(4);
 		JCMemorySurvey::GetInstance()->newClass("conchRenderTexture2D", 4, this);
@@ -25,8 +25,8 @@ namespace laya
 	//------------------------------------------------------------------------------
 	JSRenderTexture2D::JSRenderTexture2D(JSValueAsParam pEngine, int width, int height, int format, int depthStencilFormat)
 	{
-		JSWebGLEngine* pWebglEngine = (JSWebGLEngine*)Converter<JSWebGLEngine*>::ToCpp(pEngine);
-		m_pWebGLEngine = pWebglEngine->m_pEngine;
+		JSGLESEngine* pWebglEngine = (JSGLESEngine*)Converter<JSGLESEngine*>::ToCpp(pEngine);
+		m_pGLESEngine = pWebglEngine->m_pEngine;
 		m_renderTexture = std::make_shared<RenderTexture2D>(pWebglEngine->m_pEngine, width, height, (RenderTargetFormat)format, (RenderTargetFormat)depthStencilFormat);
 		AdjustAmountOfExternalAllocatedMemory(4);
 		JCMemorySurvey::GetInstance()->newClass("conchRenderTexture2D", 4, this);
@@ -84,7 +84,7 @@ namespace laya
 	JsValue JSRenderTexture2D::getData(int x, int y, int width, int height)
 	{
 		std::vector<uint8_t> buffer;
-		m_pWebGLEngine->getTextureContext()->getRenderTextureData(m_renderTexture->m_renderTarget, x, y, width, height, buffer);
+		m_pGLESEngine->getTextureContext()->getRenderTextureData(m_renderTexture->m_renderTarget, x, y, width, height, buffer);
 		return JSGLTextureContext::_getRenderTextureData(buffer, width, height, (int)m_renderTexture->m_colorFormat);
 	}
 	void JSRenderTexture2D::_disposeResource()

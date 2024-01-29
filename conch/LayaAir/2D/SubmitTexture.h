@@ -16,7 +16,7 @@ namespace laya
 	public:
 		static SubmitTexture* create(int submitType, Mesh2D* mesh, Context2D* ctx, WebGLInternalTex* texture);
         static void onDestroy();
-		SubmitTexture(WebGLEngine* pWebglEngine);
+		SubmitTexture(GLESEngine* pWebglEngine);
 		int renderSubmit() override;
 		void recycle() override;
 		float u_TexRange[4];

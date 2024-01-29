@@ -11,7 +11,7 @@
 
 namespace laya
 {
-	class WebGLEngine;
+	class GLESEngine;
 	class SubmitKey
 	{
 	public:
@@ -51,7 +51,7 @@ namespace laya
 			KEY_DRAWTARGET = 6,
 			KEY_DRAWCANVAS = 6,
 		};
-		SubmitBase(WebGLEngine* pWebglEngine);
+		SubmitBase(GLESEngine* pWebglEngine);
 		~SubmitBase() {}
 		int renderSubmit() override { return 1; }
 		void recycle() override {}
@@ -68,7 +68,7 @@ namespace laya
 		float												m_clipMatDir[4] = { (float)Context2D::MAXSIZE, 0, 0, (float)Context2D::MAXSIZE };
 		float												m_clipMatPos[2] = { 0, 0 };
 		float												m_clipOff[2] = { 0, 0 };
-		WebGLEngine*										m_pWebGLEngine;
+		GLESEngine*										m_pGLESEngine;
 	};
 }
 #endif //__SubmitBase_H__

@@ -13,7 +13,7 @@
 
 namespace laya
 {
-	class WebGLEngine;
+	class GLESEngine;
 	class TextRender;
 	class WebGLCacheAsNormalCanvas;
 	class MeshQuadTexture;
@@ -94,7 +94,7 @@ namespace laya
 			}
 		};
 		typedef void(*ProcFunction)(Context2D* pContext, JCCommandEncoderBuffer& layaGLCmd);
-		Context2D(WebGLEngine* pWebglEngine);
+		Context2D(GLESEngine* pWebglEngine);
 		~Context2D();
 		void save();
 		void setGlobalAlpha(float value) { getCurrentState().globalAlpha = value; }
@@ -213,17 +213,17 @@ namespace laya
 		WebGLInternalTex*												m_lastTex = nullptr;
 		WebGLInternalTex*												m_defaultTexture = nullptr;
 		int																m_clipID_Gen = 0;
-		bool															m_incache = false;			// Õý´¦ÔÚcacheas normal¹ý³ÌÖÐ
+		bool															m_incache = false;			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½cacheas normalï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		std::shared_ptr<RenderTexture2D>								m_target;
 		int																m_width = Context2D::MAXSIZE;
 		int																m_height = Context2D::MAXSIZE;
 		static TextRender*												m_textRender;
-		bool															drawTexAlign = false;		// °´ÕÕÏñËØ¶ÔÆë
+		bool															drawTexAlign = false;		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¶ï¿½ï¿½ï¿½
 		int																m_flushCnt = 0;
 		std::vector<std::shared_ptr<CharRenderInfo>>*					m_touches = nullptr;
 		JCContext2DDispatch*											m_pContext2DDispatch;
 		int																m_nSharedCommandBufferID = -1;
-		WebGLEngine*													m_pWebGLEngine;
+		GLESEngine*													m_pGLESEngine;
 		bool															m_bInit = false;
 	};
 }

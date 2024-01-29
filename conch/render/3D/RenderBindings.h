@@ -180,7 +180,7 @@ class RenderBindings
         }
         {
             class_<ShaderInstance> class_binding;
-            class_binding.constructor<WebGLEngine*, const char*, const char*, const std::unordered_map<std::string, int32_t>&>();//todo
+            class_binding.constructor<GLESEngine*, const char*, const char*, const std::unordered_map<std::string, int32_t>&>();//todo
             class_binding.function("destroy", &ShaderInstance::destroy);
             context.class_("conchShaderInstance", class_binding);
         }

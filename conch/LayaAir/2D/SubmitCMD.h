@@ -13,7 +13,7 @@ namespace laya
 	public:
 		static SubmitCMD* create(std::function<void()> func);
         static void onDestroy();
-		SubmitCMD(WebGLEngine* pWebglEngine);
+		SubmitCMD(GLESEngine* pWebglEngine);
 		int renderSubmit() override;
 		void recycle() override;
 		float u_TexRange[4];

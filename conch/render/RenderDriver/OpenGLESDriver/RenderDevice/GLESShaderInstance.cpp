@@ -10,9 +10,9 @@
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLShaderInstance.h"
 namespace laya
 {
-	ShaderInstance::ShaderInstance(WebGLEngine* engine, const char* vs, const char* ps, const std::unordered_map<std::string, int32_t>& attributeMap/*, RenderState* pRenderState*/)// : ResourceBase(JCConch::s_pConchRender->m_pShaderInstanceManager)
+	ShaderInstance::ShaderInstance(GLESEngine* engine, const char* vs, const char* ps, const std::unordered_map<std::string, int32_t>& attributeMap/*, RenderState* pRenderState*/)// : ResourceBase(JCConch::s_pConchRender->m_pShaderInstanceManager)
 	{
-		m_pWebGLEngine = engine;
+		m_pGLESEngine = engine;
 		//m_renderState = pRenderState;
 		m_GLShaderInstance = new GLShaderInstance(engine, vs, ps, attributeMap);
 		_create3D();
@@ -79,11 +79,11 @@ namespace laya
 
 	int ShaderInstance::uploadUniforms(CommandEncoder* shaderUniform, ShaderData* shaderDatas, bool uploadUnTexture)
 	{
-		return m_pWebGLEngine->uploadUniforms(m_GLShaderInstance, shaderUniform, shaderDatas, uploadUnTexture);
+		return m_pGLESEngine->uploadUniforms(m_GLShaderInstance, shaderUniform, shaderDatas, uploadUnTexture);
 	}
 	int ShaderInstance::uploadCustomUniforms(int index, char* data, int byteSize)
 	{
-		return m_pWebGLEngine->uploadCustomUniforms(m_GLShaderInstance, m_customUniformParamsMap, index, data, byteSize);
+		return m_pGLESEngine->uploadCustomUniforms(m_GLShaderInstance, m_customUniformParamsMap, index, data, byteSize);
 	}
 	void ShaderInstance::uploadRenderStateBlendDepth(ShaderData* shaderDatas)
 	{

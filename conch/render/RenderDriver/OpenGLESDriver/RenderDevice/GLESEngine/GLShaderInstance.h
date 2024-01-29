@@ -16,7 +16,7 @@ namespace laya
 	class GLShaderInstance : public GLObject
 	{
 	public:
-		GLShaderInstance(WebGLEngine* engine, const char* vs, const char* ps, const std::unordered_map<std::string, int32_t>& attributeMap);
+		GLShaderInstance(GLESEngine* engine, const char* vs, const char* ps, const std::unordered_map<std::string, int32_t>& attributeMap);
 		~GLShaderInstance();
 		bool bind();
 		bool useProgram();

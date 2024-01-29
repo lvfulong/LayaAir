@@ -21,7 +21,7 @@ struct AttribInfo
 class GLVertexState : public GLObject
 {
   public:
-    GLVertexState(WebGLEngine *engine);
+    GLVertexState(GLESEngine *engine);
     ~GLVertexState();
     void applyVertexBuffer(const std::vector<GLESVertexBuffer *> &vertexBuffers);
 

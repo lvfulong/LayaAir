@@ -12,7 +12,7 @@
 using laya::JCConch;
 namespace laya
 {
-	WebGLInternalTex::WebGLInternalTex(WebGLEngine* engine, int target, int width, int height, TextureDimension dimension, bool mipmap, bool useSRGBLoader, int gammaCorrection) 
+	WebGLInternalTex::WebGLInternalTex(GLESEngine* engine, int target, int width, int height, TextureDimension dimension, bool mipmap, bool useSRGBLoader, int gammaCorrection) 
 		: GLObject(engine),ObjectBase(JCConch::s_pConchRender->m_pWebGLInternalTexManager)
 	{
 		glGenTextures(1, &m_resource);

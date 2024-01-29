@@ -12,11 +12,11 @@
 namespace laya
 {
 	class WebGLInternalTex;
-	class WebGLEngine;
+	class GLESEngine;
 	class WebGLInternalRT : public GLObject
 	{
 	public:
-		WebGLInternalRT(WebGLEngine* engine, RenderTargetFormat colorFormat, RenderTargetFormat depthStencilFormat, bool isCube, bool generateMipmap, int samples);
+		WebGLInternalRT(GLESEngine* engine, RenderTargetFormat colorFormat, RenderTargetFormat depthStencilFormat, bool isCube, bool generateMipmap, int samples);
 		~WebGLInternalRT();
 		void dispose();
 		GLuint getGLFramebuffer()

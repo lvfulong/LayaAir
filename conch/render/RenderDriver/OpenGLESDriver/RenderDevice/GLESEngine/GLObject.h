@@ -9,7 +9,7 @@ namespace laya
 	class GLObject//: public ObjectBase
 	{
 	public:
-		GLObject(WebGLEngine* engine);
+		GLObject(GLESEngine* engine);
 		virtual ~GLObject();
 		/*bool destroyed()
 		{
@@ -24,7 +24,7 @@ namespace laya
 			m_destroyed = true;
 		}*/
 	protected:
-		WebGLEngine* m_engine = nullptr;
+		GLESEngine* m_engine = nullptr;
 		//int m_id;
 		bool m_destroyed = false;
 	};

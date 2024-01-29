@@ -8,12 +8,12 @@
 namespace laya
 {
 class ANGLEInstancedArraysExt;
-class WebGLEngine;
+class GLESEngine;
 class GLESRenderGeometryElement;
 class GLRenderDrawContext : public GLObject
 {
   public:
-    GLRenderDrawContext(WebGLEngine *engine);
+    GLRenderDrawContext(GLESEngine *engine);
     void drawElementsInstanced(int glmode, int count, int gltype, int offset, int instanceCount);
     void drawArraysInstanced(int glmode, int first, int count, int instanceCount);
     void drawArrays(int glmode, int first, int count);

@@ -13,9 +13,9 @@ namespace laya
 	class TextTexture
 	{	
 	public:
-		TextTexture(WebGLEngine* pWebglEngine, int textureW, int textureH);
+		TextTexture(GLESEngine* pWebglEngine, int textureW, int textureH);
 		~TextTexture();
-		static TextTexture * getTextTexture(WebGLEngine* pWebglEngine, int w, int h);
+		static TextTexture * getTextTexture(GLESEngine* pWebglEngine, int w, int h);
 		void addChar(const BitmapData& data, int x, int y, float uv[8]);
 		void destroy();
 		int getID() { return m_source->getID(); }
@@ -34,7 +34,7 @@ namespace laya
 		float m_curUsedCovRate = 0.0f; 	// ��ǰʹ�õ���ʹ���ʡ�����������
 		float m_curUsedCovRateAtlas = 0.0f; 	// ��ͼ���е�ռ���ʡ����ڴ�ͼ���ֱ��ʵͣ����Ի��˷�һЩ�ռ�
 		uint64_t m_lastTouchLoopCount = 0;
-		WebGLEngine*		m_pWebglEngine;
+		GLESEngine*		m_pWebglEngine;
 	};
 }
 #endif //__TextTexture_H__

@@ -14,7 +14,7 @@ namespace laya
 	public:
 		static SubmitCanvas* create(WebGLCacheAsNormalCanvas* context/*, float alpha*/);
         static void onDestroy();
-		SubmitCanvas(WebGLEngine* pWebglEngine);
+		SubmitCanvas(GLESEngine* pWebglEngine);
 		int renderSubmit() override;
 		void recycle() override;
 		float u_TexRange[4];

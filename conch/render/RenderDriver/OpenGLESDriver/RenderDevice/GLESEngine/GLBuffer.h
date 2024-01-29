@@ -6,11 +6,11 @@
 
 namespace laya
 {
-	class WebGLEngine;
+	class GLESEngine;
 	class GLBuffer : public GLObject
 	{
 	public:
-		GLBuffer(WebGLEngine* engine, BufferTargetType targetType, BufferUsage bufferUsageType);
+		GLBuffer(GLESEngine* engine, BufferTargetType targetType, BufferUsage bufferUsageType);
 		~GLBuffer();
 		bool bindBuffer();
 		void unbindBuffer();

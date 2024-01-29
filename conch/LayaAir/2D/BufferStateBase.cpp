@@ -8,7 +8,7 @@
 namespace laya
 {
 	BufferStateBase* BufferStateBase::m_curBindedBufferState = nullptr;
-	BufferStateBase::BufferStateBase(WebGLEngine* engine)
+	BufferStateBase::BufferStateBase(GLESEngine* engine)
 	{
 		m_nativeVertexArrayObject = engine->createVertexState();
 	}

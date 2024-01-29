@@ -2,7 +2,7 @@
 
 namespace laya
 {
-	GLObject::GLObject(WebGLEngine* engine)
+	GLObject::GLObject(GLESEngine* engine)
 	{
 		m_engine = engine;
 		//m_id = m_engine.m_IDCounter++;

@@ -1,5 +1,5 @@
-#ifndef __WebGLEngine_H__
-#define __WebGLEngine_H__
+#ifndef __GLESEngine_H__
+#define __GLESEngine_H__
 
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLCapable.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLEnum/WebGLExtension.h"
@@ -34,11 +34,11 @@ class WebGLInternalTex;
 class GLRender2DContext;
 class IRender2DContext;
 class ShaderDefine;
-class WebGLEngine
+class GLESEngine
 {
   public:
-    WebGLEngine(WebGLMode webglMode);
-    ~WebGLEngine();
+    GLESEngine(WebGLMode webglMode);
+    ~GLESEngine();
     bool isWebGL2()
     {
         return m_isWebGL2;

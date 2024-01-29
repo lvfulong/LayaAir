@@ -14,7 +14,7 @@
 
 namespace laya
 {
-	class WebGLEngine;
+	class GLESEngine;
 	class GLRenderState
 	{
 	private:
@@ -41,9 +41,9 @@ namespace laya
 		bool m_cullFace = false;
 		GLenum m_frontFace;
 
-		WebGLEngine* m_engine;
+		GLESEngine* m_engine;
 	public:
-		GLRenderState(WebGLEngine* engine)
+		GLRenderState(GLESEngine* engine)
 		{
 			m_engine = engine;
 			_initState();

@@ -20,11 +20,11 @@
 
 namespace laya
 {
-WebGLEngine *g_WebGLEngine = nullptr;
-WebGLEngine::WebGLEngine(WebGLMode webglMode)
+GLESEngine *g_GLESEngine = nullptr;
+GLESEngine::GLESEngine(WebGLMode webglMode)
 {
-    assert(g_WebGLEngine == nullptr);
-    g_WebGLEngine = this;
+    assert(g_GLESEngine == nullptr);
+    g_GLESEngine = this;
 
     std::vector<std::string> names;
     switch (webglMode)
@@ -53,9 +53,9 @@ WebGLEngine::WebGLEngine(WebGLMode webglMode)
     }
     _initStatisticsInfo();
 }
-WebGLEngine::~WebGLEngine()
+GLESEngine::~GLESEngine()
 {
-    g_WebGLEngine = nullptr;
+    g_GLESEngine = nullptr;
     if (m_textureContext)
     {
         delete m_textureContext;
@@ -88,7 +88,7 @@ WebGLEngine::~WebGLEngine()
         m_GL2DRenderContext = nullptr;
     }
 }
-void WebGLEngine::initRenderEngine()
+void GLESEngine::initRenderEngine()
 {
 
     m_lastViewport = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
@@ -113,7 +113,7 @@ void WebGLEngine::initRenderEngine()
     m_GL2DRenderContext = new GLRender2DContext(this);
 }
 
-void WebGLEngine::_initBindBufferMap()
+void GLESEngine::_initBindBufferMap()
 {
     m_GLBufferBindMap.resize(3);
     m_GLBufferBindMap[(int)BufferTargetType::ARRAY_BUFFER] = nullptr;
@@ -121,7 +121,7 @@ void WebGLEngine::_initBindBufferMap()
     m_GLBufferBindMap[(int)BufferTargetType::UNIFORM_BUFFER] = nullptr;
 }
 
-void WebGLEngine::_initStatisticsInfo()
+void GLESEngine::_initStatisticsInfo()
 {
     m_GLStatisticsInfo.insert(std::make_pair(RenderStatisticsInfo::DrawCall, 0));
     m_GLStatisticsInfo.insert(std::make_pair(RenderStatisticsInfo::InstanceDrawCall, 0));
@@ -132,18 +132,18 @@ void WebGLEngine::_initStatisticsInfo()
     m_GLStatisticsInfo.insert(std::make_pair(RenderStatisticsInfo::RenderTextureMemory, 0));
     m_GLStatisticsInfo.insert(std::make_pair(RenderStatisticsInfo::BufferMemory, 0));
 }
-void WebGLEngine::_addStatisticsInfo(RenderStatisticsInfo info, int value)
+void GLESEngine::_addStatisticsInfo(RenderStatisticsInfo info, int value)
 {
     int newValue = getStatisticsInfo(info) + value;
     m_GLStatisticsInfo[info] = newValue;
 }
 
-void WebGLEngine::clearStatisticsInfo(RenderStatisticsInfo info)
+void GLESEngine::clearStatisticsInfo(RenderStatisticsInfo info)
 {
     m_GLStatisticsInfo[info] = 0;
 }
 
-int WebGLEngine::getStatisticsInfo(RenderStatisticsInfo info)
+int GLESEngine::getStatisticsInfo(RenderStatisticsInfo info)
 {
     RenderStatisticsInfoMapType::iterator it = m_GLStatisticsInfo.find(info);
     if (it == m_GLStatisticsInfo.end())
@@ -152,16 +152,16 @@ int WebGLEngine::getStatisticsInfo(RenderStatisticsInfo info)
     }
     return it->second;
 }
-GLBuffer *WebGLEngine::_getbindBuffer(BufferTargetType target)
+GLBuffer *GLESEngine::_getbindBuffer(BufferTargetType target)
 {
     return m_GLBufferBindMap[(int)target];
 }
 
-void WebGLEngine::_setbindBuffer(BufferTargetType target, GLBuffer *buffer)
+void GLESEngine::_setbindBuffer(BufferTargetType target, GLBuffer *buffer)
 {
     m_GLBufferBindMap[(int)target] = buffer;
 }
-void WebGLEngine::_bindTexture(GLenum target, WebGLInternalTex *texture)
+void GLESEngine::_bindTexture(GLenum target, WebGLInternalTex *texture)
 {
     if (g_kSystemConfig.m_bConchWebGL)
     {
@@ -177,11 +177,11 @@ void WebGLEngine::_bindTexture(GLenum target, WebGLInternalTex *texture)
         }
     }
 }
-int WebGLEngine::getParams(RenderParams type)
+int GLESEngine::getParams(RenderParams type)
 {
     return m_params->getParams(type);
 }
-void WebGLEngine::viewport(int x, int y, int width, int height)
+void GLESEngine::viewport(int x, int y, int width, int height)
 {
     // gl.enable(gl.SCISSOR_TEST);
     // gl.scissor(x, transformY, width, height);
@@ -200,7 +200,7 @@ void WebGLEngine::viewport(int x, int y, int width, int height)
     }
 }
 
-void WebGLEngine::scissor(int x, int y, int width, int height)
+void GLESEngine::scissor(int x, int y, int width, int height)
 {
     if (g_kSystemConfig.m_bConchWebGL)
     {
@@ -217,7 +217,7 @@ void WebGLEngine::scissor(int x, int y, int width, int height)
     }
 }
 
-void WebGLEngine::scissorTest(bool value)
+void GLESEngine::scissorTest(bool value)
 {
     if (value)
         glEnable(GL_SCISSOR_TEST);
@@ -225,11 +225,11 @@ void WebGLEngine::scissorTest(bool value)
         glDisable(GL_SCISSOR_TEST);
 }
 
-void WebGLEngine::colorMask(bool r, bool g, bool b, bool a)
+void GLESEngine::colorMask(bool r, bool g, bool b, bool a)
 {
     glColorMask(r, g, b, a);
 }
-void WebGLEngine::clearRenderTexture(uint32_t clearFlag, Color *clearcolor, float clearDepth)
+void GLESEngine::clearRenderTexture(uint32_t clearFlag, Color *clearcolor, float clearDepth)
 {
     uint32_t flag = 0;
     // glEnable(GL_SCISSOR_TEST);
@@ -265,7 +265,7 @@ void WebGLEngine::clearRenderTexture(uint32_t clearFlag, Color *clearcolor, floa
     }
     // glDisable(GL_SCISSOR_TEST);
 }
-GLTextureContext *WebGLEngine::createTextureContext(bool isWebGL2)
+GLTextureContext *GLESEngine::createTextureContext(bool isWebGL2)
 {
     assert(m_textureContext == nullptr);
     if (isWebGL2)
@@ -278,7 +278,7 @@ GLTextureContext *WebGLEngine::createTextureContext(bool isWebGL2)
     }
     return m_textureContext;
 }
-GLBuffer *WebGLEngine::createBuffer(BufferTargetType targetType, BufferUsage bufferUsageType)
+GLBuffer *GLESEngine::createBuffer(BufferTargetType targetType, BufferUsage bufferUsageType)
 {
     // TODO SourceManager
     return new GLBuffer(this, targetType, bufferUsageType);
@@ -308,7 +308,7 @@ static bool isGLES3Disbaled()
 #endif
     return false;
 }
-bool WebGLEngine::getContext(const char *contextType)
+bool GLESEngine::getContext(const char *contextType)
 {
     const char *version = (const char *)glGetString(GL_VERSION);
 
@@ -338,7 +338,7 @@ bool WebGLEngine::getContext(const char *contextType)
     }
     return false;
 }
-int WebGLEngine::propertyNameToID(const char *name)
+int GLESEngine::propertyNameToID(const char *name)
 {
     PropertyNameMapType::iterator it = m_propertyNameMap.find(name);
     if (m_propertyNameMap.end() != it)
@@ -353,27 +353,27 @@ int WebGLEngine::propertyNameToID(const char *name)
         return id;
     }
 }
-ShaderDefine *WebGLEngine::getDefineByName(const char *name)
+ShaderDefine *GLESEngine::getDefineByName(const char *name)
 {
     return nullptr; // TODO
 }
-GLRenderState *WebGLEngine::getRenderState()
+GLRenderState *GLESEngine::getRenderState()
 {
     return m_renderState;
 }
-GLVertexState *WebGLEngine::createVertexState()
+GLVertexState *GLESEngine::createVertexState()
 {
     return new GLVertexState(this);
 }
-GLRenderDrawContext *WebGLEngine::getDrawContext()
+GLRenderDrawContext *GLESEngine::getDrawContext()
 {
     return m_GLRenderDrawContext;
 }
-IRender2DContext *WebGLEngine::get2DRenderContext()
+IRender2DContext *GLESEngine::get2DRenderContext()
 {
     return (IRender2DContext *)m_GL2DRenderContext;
 }
-int WebGLEngine::uploadUniforms(GLShaderInstance *shader, CommandEncoder *commandEncoder, ShaderData *shaderData,
+int GLESEngine::uploadUniforms(GLShaderInstance *shader, CommandEncoder *commandEncoder, ShaderData *shaderData,
                                 bool uploadUnTexture)
 {
     assert(shaderData != nullptr);
@@ -397,7 +397,7 @@ int WebGLEngine::uploadUniforms(GLShaderInstance *shader, CommandEncoder *comman
     }
     return shaderCall;
 }
-int WebGLEngine::uploadCustomUniforms(GLShaderInstance *shader, const std::unordered_map<int, ShaderVariable *> &custom,
+int GLESEngine::uploadCustomUniforms(GLShaderInstance *shader, const std::unordered_map<int, ShaderVariable *> &custom,
                                       int index, char *data, int byteSize)
 {
     shader->bind();
@@ -418,7 +418,7 @@ int WebGLEngine::uploadCustomUniforms(GLShaderInstance *shader, const std::unord
     }*/
     return shaderCall;
 }
-GLBuffer *WebGLEngine::_getBindUBOBuffer(int glPointer)
+GLBuffer *GLESEngine::_getBindUBOBuffer(int glPointer)
 {
 
     std::unordered_map<int, GLBuffer *>:: iterator it = _GLBindPointerUBOMap.find(glPointer);
@@ -429,11 +429,11 @@ GLBuffer *WebGLEngine::_getBindUBOBuffer(int glPointer)
     return it->second;
 }
 
-void WebGLEngine::_setBindUBOBuffer(int glPointer, GLBuffer *buffer)
+void GLESEngine::_setBindUBOBuffer(int glPointer, GLBuffer *buffer)
 {
     this->_GLBindPointerUBOMap[glPointer] = buffer;
 }
-int WebGLEngine::getUBOPointer(const char *name)
+int GLESEngine::getUBOPointer(const char *name)
 {
     std::unordered_map<std::string, int>::iterator it = m_GLUBOPointerMap.find(name);
     if (it == m_GLUBOPointerMap.end())
@@ -445,13 +445,13 @@ int WebGLEngine::getUBOPointer(const char *name)
     }
     return it->second;
 }
-void WebGLEngine::copySubFrameBuffertoTex(WebGLInternalTex *texture, int level, int xoffset, int yoffset, int x, int y,
+void GLESEngine::copySubFrameBuffertoTex(WebGLInternalTex *texture, int level, int xoffset, int yoffset, int x, int y,
                                           int width, int height)
 {
     _bindTexture(texture->m_target, texture);
     glCopyTexSubImage2D(texture->m_target, level, xoffset, yoffset, x, y, width, height);
 }
-void WebGLEngine::unbindVertexState()
+void GLESEngine::unbindVertexState()
 {
     if (BufferStateBase::m_curBindedBufferState != nullptr)
     {

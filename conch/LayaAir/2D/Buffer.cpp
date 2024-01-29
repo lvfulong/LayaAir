@@ -4,7 +4,7 @@
 
 namespace laya
 {
-	Buffer::Buffer(WebGLEngine* engine, BufferTargetType targetType, BufferUsage bufferUsageType)
+	Buffer::Buffer(GLESEngine* engine, BufferTargetType targetType, BufferUsage bufferUsageType)
 	{
 		m_glBuffer = engine->createBuffer(targetType, bufferUsageType);
 		m_bufferType = targetType;

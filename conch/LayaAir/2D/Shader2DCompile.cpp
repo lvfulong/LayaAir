@@ -247,7 +247,7 @@ namespace laya
 			out.push_back(word);
 		}
 	}
-	Shader2D* Shader2DCompile::createShader(WebGLEngine* pWebGLEngine, const std::vector<std::string>& define, const std::vector<std::pair<std::string, int> >& bindAttrib)
+	Shader2D* Shader2DCompile::createShader(GLESEngine* pGLESEngine, const std::vector<std::string>& define, const std::vector<std::pair<std::string, int> >& bindAttrib)
 	{
 		std::map<std::string, bool> defMap;
 		std::string defineStr = "";
@@ -273,6 +273,6 @@ namespace laya
 		{
 			strPs += (ps[i] + "\n");
 		}
-		return new Shader2D(pWebGLEngine, defineStr + strVs, defineStr + strPs/*, this->_nameMap*/, bindAttrib);
+		return new Shader2D(pGLESEngine, defineStr + strVs, defineStr + strPs/*, this->_nameMap*/, bindAttrib);
 	}
 }

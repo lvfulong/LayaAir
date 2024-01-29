@@ -14,7 +14,7 @@ namespace laya
 		SubmitVG* o = nullptr;
 		if (SubmitVG::POOL.empty())
 		{
-			o = new SubmitVG(ctx->m_pWebGLEngine);
+			o = new SubmitVG(ctx->m_pGLESEngine);
 		}
 		else
 		{
@@ -44,7 +44,7 @@ namespace laya
 		o->m_clipOff[0] = o->m_clipOff[1] = 0;
 		return o;
 	}
-	SubmitVG::SubmitVG(WebGLEngine* pWebglEngine): SubmitBase(pWebglEngine)
+	SubmitVG::SubmitVG(GLESEngine* pWebglEngine): SubmitBase(pWebglEngine)
 	{
 
 	}
@@ -86,7 +86,7 @@ namespace laya
 		{
 			m_shaderDefines.add(Shader2DDefines::WORLDMAT);
 		}
-		Shader2D* shader = Shader2D::withCompile2D(m_pWebGLEngine, Shader2DDefines::PRIMITIVE, m_shaderDefines, m_shaderBindAttrib);
+		Shader2D* shader = Shader2D::withCompile2D(m_pGLESEngine, Shader2DDefines::PRIMITIVE, m_shaderDefines, m_shaderBindAttrib);
 		shader->use(); 
 		// ����о���Ļ��������� WORLDMAT ��
 		if (RenderState2D::worldMatrix4 != RenderState2D::TEMPMAT4_ARRAY)
@@ -97,7 +97,7 @@ namespace laya
 		shader->uniform2f("clipMatPos", m_clipMatPos[0], m_clipMatPos[1]);
 		shader->uniform2f("clipOff", m_clipOff[0], m_clipOff[1]);
 		shader->uniform2f("size", RenderState2D::width, RenderState2D::height);
-		m_pWebGLEngine->getDrawContext()->drawElements2DTemp(MeshTopology::Triangles, m_elementNum, IndexFormat::UInt16, m_startIndex);
+		m_pGLESEngine->getDrawContext()->drawElements2DTemp(MeshTopology::Triangles, m_elementNum, IndexFormat::UInt16, m_startIndex);
 		return 1;
 	}
 	

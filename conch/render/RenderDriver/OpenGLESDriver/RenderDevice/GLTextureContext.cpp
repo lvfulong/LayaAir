@@ -33,7 +33,7 @@ namespace laya
 		}
 	}
 	extern int g_nMainFrameBuffer;
-	GLTextureContext::GLTextureContext(WebGLEngine* engine): GLObject(engine)
+	GLTextureContext::GLTextureContext(GLESEngine* engine): GLObject(engine)
 	{
 		m_sRGB = (sRGBExt*)m_engine->getExtension(WebGLExtension::EXT_sRGB);
 		m_oesTextureHalfFloat = (OESTextureHalfFloatExt*)m_engine->getExtension(WebGLExtension::OES_texture_half_float);

@@ -15,7 +15,7 @@ namespace laya
 	class ShaderInstance//: public ResourceBase<ShaderInstance>
 	{
 	public:
-		ShaderInstance(WebGLEngine* engine, const char* vs, const char* ps, const std::unordered_map<std::string, int32_t>& attributeMap/*, RenderState* pRenderState*/);
+		ShaderInstance(GLESEngine* engine, const char* vs, const char* ps, const std::unordered_map<std::string, int32_t>& attributeMap/*, RenderState* pRenderState*/);
 		~ShaderInstance();
 		//static ShaderInstance* getShaderInstance(uint32_t id);
 		bool bind();
@@ -40,7 +40,7 @@ namespace laya
 		ShaderData*										m_uploadRender = 0;
 		ShaderData*										m_uploadCameraShaderValue = 0;
 		ShaderData*										m_uploadMaterial = 0;
-		WebGLEngine*									m_pWebGLEngine = nullptr;
+		GLESEngine*									m_pGLESEngine = nullptr;
 		//RenderStateCommand								m_cullStateCMD;
 		std::unordered_map<int, ShaderVariable*>		m_customUniformParamsMap;
 		RTShaderPass*										_shaderPass = nullptr;

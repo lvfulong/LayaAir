@@ -41,17 +41,17 @@ namespace laya
 	extern int g_nMainFrameBuffer;
 	static float INV_UV[8] = { 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f };
 	//------------------------------------------------------------------------------
-	ScreenCanvasContext2D::ScreenCanvasContext2D(WebGLEngine* pWebGLEngine)
+	ScreenCanvasContext2D::ScreenCanvasContext2D(GLESEngine* pGLESEngine)
 	{
-		m_pWebGLEngine = pWebGLEngine;
+		m_pGLESEngine = pGLESEngine;
 		m_width = g_nInnerWidth;
 		m_height = g_nInnerHeight;
-		m_target = m_pWebGLEngine->getTextureContext()->createRenderTargetInternal(m_width, m_height, RenderTargetFormat::R8G8B8A8, RenderTargetFormat::None, false, false, 1);
+		m_target = m_pGLESEngine->getTextureContext()->createRenderTargetInternal(m_width, m_height, RenderTargetFormat::R8G8B8A8, RenderTargetFormat::None, false, false, 1);
 		m_texture = m_target->m_textures[0];
 		
 
 		m_submits.reserve(8);
-		m_mesh = MeshQuadTexture::getAMesh(m_pWebGLEngine, false);
+		m_mesh = MeshQuadTexture::getAMesh(m_pGLESEngine, false);
 		m_meshlist.push_back(m_mesh);
         if (g_kSystemConfig.m_bConchWebGL) {
             Shader2D::preprocess2D(Shader2DDefines::TEXTURE2D, texture_vs.c_str(), texture_ps.c_str());
@@ -141,7 +141,7 @@ namespace laya
 		}
 		m_meshlist.clear();
 
-		m_mesh = MeshQuadTexture::getAMesh(m_pWebGLEngine, false);
+		m_mesh = MeshQuadTexture::getAMesh(m_pGLESEngine, false);
 		m_meshlist.push_back(m_mesh);
 
 		if (BufferStateBase::m_curBindedBufferState != nullptr)
@@ -181,7 +181,7 @@ namespace laya
 	{
 		if (m_target)
 		{
-			m_pWebGLEngine->getTextureContext()->bindRenderTarget(m_target, 0);
+			m_pGLESEngine->getTextureContext()->bindRenderTarget(m_target, 0);
 			g_nMainFrameBuffer = m_target->getGLFramebuffer();
 		}
 	}
@@ -194,7 +194,7 @@ namespace laya
                 captureScreen();
                 m_requestCaptureScreen = false;
             }
-			m_pWebGLEngine->getTextureContext()->unbindRenderTarget(m_target);
+			m_pGLESEngine->getTextureContext()->unbindRenderTarget(m_target);
 		}
 	}
 	void ScreenCanvasContext2D::drawToScreen(const Matrix& m)
@@ -206,14 +206,14 @@ namespace laya
 		uint32_t rgba = 0xffffffff;
 		if (m_mesh->m_vertNum + 4 > Context2D::MAX_VERTEX_NUM)
 		{
-			m_mesh = MeshQuadTexture::getAMesh(m_pWebGLEngine, false);
+			m_mesh = MeshQuadTexture::getAMesh(m_pGLESEngine, false);
 			m_meshlist.push_back(m_mesh);
 		}
 		static Matrix globalClipMatrix(Context2D::MAXSIZE, 0, 0, Context2D::MAXSIZE, 0, 0);
 		float transedPoints[8];
 		transformQuad(x, y, width, height, 0, m, transedPoints);
 		m_mesh->addQuad(transedPoints, uv, 0xffffffff, true);
-		SubmitTarget* submit = SubmitTarget::create(m_mesh, (BlendMode)blend, rt, m_pWebGLEngine, false);
+		SubmitTarget* submit = SubmitTarget::create(m_mesh, (BlendMode)blend, rt, m_pGLESEngine, false);
 		m_curSubmit = submit;
 		m_curSubmit->_copyClipInfo(false, globalClipMatrix, -1);
 		m_curSubmit->m_elementNum += 6;
@@ -234,7 +234,7 @@ namespace laya
 			{
 				delete m_target;
 				m_target = nullptr;
-				m_target = m_pWebGLEngine->getTextureContext()->createRenderTargetInternal(w, h, RenderTargetFormat::R8G8B8A8, RenderTargetFormat::None, false, false, 1);
+				m_target = m_pGLESEngine->getTextureContext()->createRenderTargetInternal(w, h, RenderTargetFormat::R8G8B8A8, RenderTargetFormat::None, false, false, 1);
 				m_texture = m_target->m_textures[0];
 				g_nMainFrameBuffer = m_target->getGLFramebuffer();
 			}

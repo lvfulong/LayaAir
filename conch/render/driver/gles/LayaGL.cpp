@@ -2,5 +2,5 @@
 
 namespace laya
 {
-WebGLEngine *LayaGL::m_pWebglEngine = nullptr;
+GLESEngine *LayaGL::m_pWebglEngine = nullptr;
 }

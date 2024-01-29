@@ -9,7 +9,7 @@
 
 namespace laya
 {
-	class WebGLEngine;
+	class GLESEngine;
 	class ShaderNode;
 	class InlcudeFile;
 	class Shader2DCompile
@@ -24,7 +24,7 @@ namespace laya
 		};
 		Shader2DCompile(const std::string& vs, const std::string& ps/*, nameMap : any*/);
 		void _compileToTree(ShaderNode* parent, std::vector<std::string>& lines, int start/*, includefiles : any[]*/, std::unordered_map<std::string, bool>& defs);
-		Shader2D* createShader(WebGLEngine* pWebGLEngine, const std::vector<std::string>& define, const std::vector<std::pair<std::string, int> >& bindAttrib);
+		Shader2D* createShader(GLESEngine* pGLESEngine, const std::vector<std::string>& define, const std::vector<std::pair<std::string, int> >& bindAttrib);
 		static void splitToWords(const std::string& str, ShaderNode* block, std::vector<std::string>& out);
 	protected:
 		ShaderNode* _compile(const std::string& script);

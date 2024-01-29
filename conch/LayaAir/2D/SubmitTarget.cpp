@@ -17,14 +17,14 @@ namespace laya
 		SubmitTarget* o = nullptr;
 		if (SubmitTarget::POOL.empty())
 		{
-			o = new SubmitTarget(ctx->m_pWebGLEngine);
+			o = new SubmitTarget(ctx->m_pGLESEngine);
 		}
 		else
 		{
 			o = SubmitTarget::POOL.top();
 			SubmitTarget::POOL.pop();
 		}
-		o->m_pWebGLEngine = ctx->m_pWebGLEngine;
+		o->m_pGLESEngine = ctx->m_pGLESEngine;
 		if (o->m_shaderBindAttrib.empty())
 		{
 			o->m_shaderBindAttrib.push_back(std::make_pair("posuv", 0));
@@ -59,19 +59,19 @@ namespace laya
 		o->m_bGamma = true;
 		return o;
 	}
-	SubmitTarget* SubmitTarget::create(Mesh2D* mesh, BlendMode blendMode, WebGLInternalTex* pTexture, WebGLEngine* pWebGLEngine, bool gamma)
+	SubmitTarget* SubmitTarget::create(Mesh2D* mesh, BlendMode blendMode, WebGLInternalTex* pTexture, GLESEngine* pGLESEngine, bool gamma)
 	{
 		SubmitTarget* o = nullptr;
 		if (SubmitTarget::POOL.empty())
 		{
-			o = new SubmitTarget(pWebGLEngine);
+			o = new SubmitTarget(pGLESEngine);
 		}
 		else
 		{
 			o = SubmitTarget::POOL.top();
 			SubmitTarget::POOL.pop();
 		}
-		o->m_pWebGLEngine = pWebGLEngine;
+		o->m_pGLESEngine = pGLESEngine;
 		if (o->m_shaderBindAttrib.empty())
 		{
 			o->m_shaderBindAttrib.push_back(std::make_pair("posuv", 0));
@@ -99,7 +99,7 @@ namespace laya
 		o->m_bGamma = gamma;
 		return o;
 	}
-	SubmitTarget::SubmitTarget(WebGLEngine* pWebglEngine):SubmitBase(pWebglEngine)
+	SubmitTarget::SubmitTarget(GLESEngine* pWebglEngine):SubmitBase(pWebglEngine)
 	{
 		
 	}
@@ -156,7 +156,7 @@ namespace laya
 			m_shaderDefines.remove(Shader2DDefines::GAMMASPACE);
 		}
 
-		Shader2D* shader = Shader2D::withCompile2D(m_pWebGLEngine, Shader2DDefines::TEXTURE2D, m_shaderDefines, m_shaderBindAttrib);
+		Shader2D* shader = Shader2D::withCompile2D(m_pGLESEngine, Shader2DDefines::TEXTURE2D, m_shaderDefines, m_shaderBindAttrib);
 		if (!shader)
 		{
 			return 1;
@@ -182,7 +182,7 @@ namespace laya
 		shader->uniform2f("clipOff", m_clipOff[0], m_clipOff[1]);
 		shader->uniform2f("size", RenderState2D::width, RenderState2D::height);
 		shader->uniform_sampler2D("texture", texture);
-		m_pWebGLEngine->getDrawContext()->drawElements2DTemp(MeshTopology::Triangles, m_elementNum, IndexFormat::UInt16, m_startIndex);
+		m_pGLESEngine->getDrawContext()->drawElements2DTemp(MeshTopology::Triangles, m_elementNum, IndexFormat::UInt16, m_startIndex);
 		return 1;
 	}
 	

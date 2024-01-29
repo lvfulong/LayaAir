@@ -4,7 +4,7 @@
 #include "JCConch.h"
 #include "JSWebGLInternalTex.h"
 #include "JSWebGLInternalRT.h"
-#include "JSWebGLEngine.h"
+#include "JSGLESEngine.h"
 #include <render/driver/gles/WebGLInternalRT.h>
 #include <render/driver/gles/GL2TextureContext.h>
 
@@ -19,7 +19,7 @@ namespace laya
 	}
 	JSGLTextureContext::JSGLTextureContext(JSValueAsParam pEngine)
 	{
-		JSWebGLEngine* pWebglEngine = (JSWebGLEngine*)Converter<JSWebGLEngine*>::ToCpp(pEngine);
+		JSGLESEngine* pWebglEngine = (JSGLESEngine*)Converter<JSGLESEngine*>::ToCpp(pEngine);
 		m_textureContext = pWebglEngine->m_pEngine->createTextureContext(false);
 		AdjustAmountOfExternalAllocatedMemory(4);
 		JCMemorySurvey::GetInstance()->newClass("conchGLTextureContext", 4, this);
