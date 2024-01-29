@@ -21,7 +21,7 @@
 namespace laya
 {
 GLESEngine *g_GLESEngine = nullptr;
-GLESEngine::GLESEngine(WebGLMode webglMode)
+GLESEngine::GLESEngine(WebGLConfig config, WebGLMode webglMode)
 {
     assert(g_GLESEngine == nullptr);
     g_GLESEngine = this;
@@ -340,18 +340,27 @@ bool GLESEngine::getContext(const char *contextType)
 }
 int GLESEngine::propertyNameToID(const char *name)
 {
-    PropertyNameMapType::iterator it = m_propertyNameMap.find(name);
-    if (m_propertyNameMap.end() != it)
+    PropertyNameIDMapType::iterator it = m_propertyNameIDMap.find(name);
+    if (m_propertyNameIDMap.end() != it)
     {
         return it->second;
     }
     else
     {
         int id = m_propertyNameCounter++;
-        m_propertyNameMap[name] = id;
-        // m_propertyNameMap[id] = name;
+        m_propertyNameIDMap[name] = id;
+        m_propertyIDNameMap[id] = name;
         return id;
     }
+}
+const std::string &GLESEngine::propertyIDToName(int id)
+{
+    PropertyIDNameMapType::iterator it = m_propertyIDNameMap.find(id);
+    if (m_propertyIDNameMap.end() != it)
+    {
+        return it->second;
+    }
+    return "";
 }
 ShaderDefine *GLESEngine::getDefineByName(const char *name)
 {
@@ -374,7 +383,7 @@ IRender2DContext *GLESEngine::get2DRenderContext()
     return (IRender2DContext *)m_GL2DRenderContext;
 }
 int GLESEngine::uploadUniforms(GLShaderInstance *shader, CommandEncoder *commandEncoder, ShaderData *shaderData,
-                                bool uploadUnTexture)
+                               bool uploadUnTexture)
 {
     assert(shaderData != nullptr);
     shader->bind();
@@ -398,7 +407,7 @@ int GLESEngine::uploadUniforms(GLShaderInstance *shader, CommandEncoder *command
     return shaderCall;
 }
 int GLESEngine::uploadCustomUniforms(GLShaderInstance *shader, const std::unordered_map<int, ShaderVariable *> &custom,
-                                      int index, char *data, int byteSize)
+                                     int index, char *data, int byteSize)
 {
     shader->bind();
     int shaderCall = 0;
@@ -421,7 +430,7 @@ int GLESEngine::uploadCustomUniforms(GLShaderInstance *shader, const std::unorde
 GLBuffer *GLESEngine::_getBindUBOBuffer(int glPointer)
 {
 
-    std::unordered_map<int, GLBuffer *>:: iterator it = _GLBindPointerUBOMap.find(glPointer);
+    std::unordered_map<int, GLBuffer *>::iterator it = _GLBindPointerUBOMap.find(glPointer);
     if (it == _GLBindPointerUBOMap.end())
     {
         return nullptr;
@@ -446,7 +455,7 @@ int GLESEngine::getUBOPointer(const char *name)
     return it->second;
 }
 void GLESEngine::copySubFrameBuffertoTex(WebGLInternalTex *texture, int level, int xoffset, int yoffset, int x, int y,
-                                          int width, int height)
+                                         int width, int height)
 {
     _bindTexture(texture->m_target, texture);
     glCopyTexSubImage2D(texture->m_target, level, xoffset, yoffset, x, y, width, height);

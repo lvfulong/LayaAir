@@ -5,6 +5,7 @@
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLEnum/WebGLExtension.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLEnum/WebGLMode.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLRenderState.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/WebGLConfig.h"
 #include <core/math/Color.h>
 #include <core/math/Vector4.h>
 #include <render/3D/design/renderEnum/BufferTargetType.h>
@@ -37,7 +38,7 @@ class ShaderDefine;
 class GLESEngine
 {
   public:
-    GLESEngine(WebGLMode webglMode);
+    GLESEngine(WebGLConfig config, WebGLMode webglMode);
     ~GLESEngine();
     bool isWebGL2()
     {
@@ -68,6 +69,7 @@ class GLESEngine
     void colorMask(bool r, bool g, bool b, bool a);
     void clearRenderTexture(uint32_t clearFlag, Color *clearcolor, float clearDepth);
     int propertyNameToID(const char *name);
+    const std::string& propertyIDToName(int id);
     ShaderDefine *getDefineByName(const char *name);
     GLRenderState *getRenderState();
     GLVertexState *createVertexState();
@@ -110,8 +112,10 @@ class GLESEngine
     float m_lastClearDepth = 1.0f;
     GLTextureContext *m_textureContext = nullptr;
     bool m_isWebGL2 = false;
-    typedef std::unordered_map<std::string, int> PropertyNameMapType;
-    PropertyNameMapType m_propertyNameMap;
+    typedef std::unordered_map<std::string, int> PropertyNameIDMapType;
+    PropertyNameIDMapType m_propertyNameIDMap;
+    typedef std::unordered_map<int, std::string> PropertyIDNameMapType;
+    PropertyIDNameMapType m_propertyIDNameMap;
     int m_propertyNameCounter = 0;
     GLRenderDrawContext *m_GLRenderDrawContext;
     GLRender2DContext *m_GL2DRenderContext;
