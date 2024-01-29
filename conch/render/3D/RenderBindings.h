@@ -1,10 +1,10 @@
 #ifndef __RenderBindings_H__
 #define __RenderBindings_H__
 
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESBufferState.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/WebGLConfig.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderGeometryElement.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderInstance.h"
-#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESBufferState.h"
 #include "render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTSubShader.h"
 #include <binder/JSInterface.h>
 #include <core/math/Color.h>
@@ -147,8 +147,8 @@ class RenderBindings
             class_<GLESEngine> class_binding;
             class_binding.constructor<WebGLConfig, WebGLMode>();
             class_binding.function("initRenderEngine", &GLESEngine::initRenderEngine);
-            //todo class_binding.function("copySubFrameBuffertoTex", &GLESEngine::copySubFrameBuffertoTex);
-            //todo class_binding.function("getTextureContext", &GLESEngine::getTextureContext);
+            // todo class_binding.function("copySubFrameBuffertoTex", &GLESEngine::copySubFrameBuffertoTex);
+            // todo class_binding.function("getTextureContext", &GLESEngine::getTextureContext);
             class_binding.function("getParams", &GLESEngine::getParams);
             class_binding.function("getCapable", &GLESEngine::getCapable);
             class_binding.function("propertyNameToID", &GLESEngine::propertyNameToID);
@@ -158,13 +158,12 @@ class RenderBindings
             context.class_("conchGLESEngine", class_binding);
         }
         {
-            
+
             class_<GLESBufferState> class_binding;
             class_binding.constructor<>();
             class_binding.function("applyState", &GLESBufferState::applyState);
             class_binding.function("destroy", &GLESBufferState::destroy);
             context.class_("conchGLESBufferState", class_binding);
-
         }
         {
             class_<RenderState> class_binding;
@@ -241,11 +240,11 @@ class RenderBindings
             context.class_("conchRenderGeometryElementOBJ", class_binding);
         }
         {
-            class_<ShaderInstance> class_binding;
-            class_binding.constructor<GLESEngine *, const char *, const char *,
-                                      const std::unordered_map<std::string, int32_t> &>(); // todo
-            class_binding.function("destroy", &ShaderInstance::destroy);
-            context.class_("conchShaderInstance", class_binding);
+            class_<GLESShaderInstance> class_binding;
+            class_binding.constructor<bool, const char *, const char *,
+                                      const std::unordered_map<std::string, int32_t> &, RTShaderPass *>();
+            class_binding.function("destroy", &GLESShaderInstance::destroy);
+            context.class_("conchGLESShaderInstance", class_binding);
         }
         {
             class_<RTShaderPass> class_binding;

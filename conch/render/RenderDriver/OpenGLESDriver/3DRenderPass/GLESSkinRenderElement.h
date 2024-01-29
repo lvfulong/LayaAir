@@ -20,7 +20,7 @@ class GLESSkinRenderElement : public GLESRenderElement3D
     GLESSkinRenderElement();
     ~GLESSkinRenderElement();
 
-    void drawGeometry(ShaderInstance *shaderIns) override;
+    void drawGeometry(GLESShaderInstance *shaderIns) override;
     void setSkinnedData(JSValueAsParam pData);
 
   public:

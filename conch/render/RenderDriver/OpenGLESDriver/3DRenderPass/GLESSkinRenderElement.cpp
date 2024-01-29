@@ -14,7 +14,7 @@ GLESSkinRenderElement::~GLESSkinRenderElement()
 {
 }
 
-void GLESSkinRenderElement::drawGeometry(ShaderInstance *shaderIns)
+void GLESSkinRenderElement::drawGeometry(GLESShaderInstance *shaderIns)
 {
     int length = _shaderInstances.getLength();
 

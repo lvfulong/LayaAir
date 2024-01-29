@@ -15,8 +15,8 @@ class RTShaderPass
   public:
     RTShaderPass();
     ~RTShaderPass();
-    void setCacheShader(DefineDatas *compileDefine, ShaderInstance *shader);
-    ShaderInstance *getCacheShader(DefineDatas *compileDefine);
+    void setCacheShader(DefineDatas *compileDefine, GLESShaderInstance *shader);
+    GLESShaderInstance *getCacheShader(DefineDatas *compileDefine);
     void callCreateShaderInstanceFunction();
     void setRenderState(RenderState *value)
     {

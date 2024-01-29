@@ -11,7 +11,7 @@ RTShaderPass::~RTShaderPass()
     // TODO
 }
 
-void RTShaderPass::setCacheShader(DefineDatas *compileDefine, ShaderInstance *shader)
+void RTShaderPass::setCacheShader(DefineDatas *compileDefine, GLESShaderInstance *shader)
 {
     void *cacheShaders = &_cacheSharders;
     // var mask : Array<number> = compileDefine._mask;
@@ -31,13 +31,13 @@ void RTShaderPass::setCacheShader(DefineDatas *compileDefine, ShaderInstance *sh
         cacheShaders = maped->at(subMask);
     }
     uint32_t cacheKey = endIndex < maxEndIndex ? 0 : compileDefine->_mask[maxEndIndex];
-    std::unordered_map<uint32_t, ShaderInstance *> *shaderinstanceMap =
-        (std::unordered_map<uint32_t, ShaderInstance *> *)cacheShaders;
-    std::pair<uint32_t, ShaderInstance *> part(cacheKey, shader);
+    std::unordered_map<uint32_t, GLESShaderInstance *> *shaderinstanceMap =
+        (std::unordered_map<uint32_t, GLESShaderInstance *> *)cacheShaders;
+    std::pair<uint32_t, GLESShaderInstance *> part(cacheKey, shader);
     shaderinstanceMap->insert(part);
 }
 
-ShaderInstance *RTShaderPass::getCacheShader(DefineDatas *compileDefine)
+GLESShaderInstance *RTShaderPass::getCacheShader(DefineDatas *compileDefine)
 {
     compileDefine->_intersectionDefineDatas(&validDefine); // ȥ��û���õ��ĺ�Ա�����Ӱ��
     void *cacheShaders = &_cacheSharders;
@@ -65,9 +65,9 @@ ShaderInstance *RTShaderPass::getCacheShader(DefineDatas *compileDefine)
     }
 
     uint32_t cacheKey = endIndex < maxEndIndex ? 0 : compileDefine->_mask[maxEndIndex];
-    std::unordered_map<uint32_t, ShaderInstance *> *shaderinstanceMap =
-        (std::unordered_map<uint32_t, ShaderInstance *> *)cacheShaders;
-    // ShaderInstance* shader;
+    std::unordered_map<uint32_t, GLESShaderInstance *> *shaderinstanceMap =
+        (std::unordered_map<uint32_t, GLESShaderInstance *> *)cacheShaders;
+    // GLESShaderInstance* shader;
     if (shaderinstanceMap->find(cacheKey) != shaderinstanceMap->end())
     {
         return shaderinstanceMap->at(cacheKey);
@@ -80,11 +80,11 @@ void RTShaderPass::_resizeCacheShaderMap(void *cacheMap, uint32_t hierarchy, uin
     uint32_t end = _cacheShaderHierarchy - 1;
     if (hierarchy == end)
     {
-        std::unordered_map<uint32_t, ShaderInstance *> *shaderinstanceMap =
-            (std::unordered_map<uint32_t, ShaderInstance *> *)cacheMap;
-        for (std::pair<uint32_t, ShaderInstance *> kv : *shaderinstanceMap)
+        std::unordered_map<uint32_t, GLESShaderInstance *> *shaderinstanceMap =
+            (std::unordered_map<uint32_t, GLESShaderInstance *> *)cacheMap;
+        for (std::pair<uint32_t, GLESShaderInstance *> kv : *shaderinstanceMap)
         {
-            ShaderInstance *shader = kv.second;
+            GLESShaderInstance *shader = kv.second;
             uint32_t i = 0;
             uint32_t n = resizeLength - end;
             std::unordered_map<uint32_t, void *> *cacheMapdata = (std::unordered_map<uint32_t, void *> *)cacheMap;
@@ -93,7 +93,7 @@ void RTShaderPass::_resizeCacheShaderMap(void *cacheMap, uint32_t hierarchy, uin
             {
                 if (i == n - 1)
                 {
-                    std::pair<uint32_t, ShaderInstance *> shaderpart(0, shader);
+                    std::pair<uint32_t, GLESShaderInstance *> shaderpart(0, shader);
                     cacheMapdata->insert(shaderpart);
                 }
                 else

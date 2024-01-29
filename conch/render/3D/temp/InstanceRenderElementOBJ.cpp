@@ -37,7 +37,7 @@ namespace laya
 			m_updateData.resize(index + 1);
 		m_updateData[index] = pData;
 	}
-	void InstanceRenderElementOBJ::drawGeometry(ShaderInstance* shaderIns)
+	void InstanceRenderElementOBJ::drawGeometry(GLESShaderInstance* shaderIns)
 	{
 		//��instance�����ر��ʱ������Ҫһ��һ����������,������Ҫ���¶�������
 		const char* data = nullptr;

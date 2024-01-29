@@ -7,7 +7,7 @@
 #include <utils/JCSingletonList.h>
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLShaderInstance.h"
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTShaderData.h>
-#include "ShaderInstance.h"
+#include "GLESShaderInstance.h"
 #include "RenderElement.h"
 #include  <vector>
 
@@ -21,7 +21,7 @@ namespace laya
 		InstanceRenderElementOBJ(GLESEngine* pGLESEngine);
 		~InstanceRenderElementOBJ();
 
-		void drawGeometry(ShaderInstance* shaderIns) override;
+		void drawGeometry(GLESShaderInstance* shaderIns) override;
 
 		void clear();
 
