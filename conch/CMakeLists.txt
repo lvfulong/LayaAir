@@ -7,8 +7,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-
-
 set(CONCH_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
 include(${CONCH_ROOT_DIR}/cmake/preprocessor.cmake)
 
@@ -17,9 +15,10 @@ option(USE_DOUBLE_PRECISION "Use double" OFF)
 
 if(USE_JS_V8_DEBUGGER)
 	if(ANDROID OR MSVC)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DJS_V8_DEBUGGER")
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DJS_V8_DEBUGGER")
 	endif()
 endif()
+
 if(USE_DOUBLE_PRECISION)
 	add_definitions(-DUSE_DOUBLE_PRECISION)
 endif()
@@ -48,15 +47,15 @@ if(CONCH_USE_CURL_DOWNLOAD)
 endif()
 
 if(MSVC)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_FORTIFY_SOURCE=2")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_FORTIFY_SOURCE=2")
-	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG")
-	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG")
+	# set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++latest /W0 /Zc:__cplusplus")
+	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -std=c++17")
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG -std=c++17")
 else()
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-rtti -fno-exceptions -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}   -fno-rtti -fno-exceptions -fvisibility-inlines-hidden -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security")
-	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG")
-	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG")
+	# set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -fno-exceptions -std=c++17")
+	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -std=c++17")
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG -std=c++17")
 endif()
 
 SET(CONCH_PLATFORM_LINK_FLAGS " ")
@@ -85,7 +84,8 @@ if(CONCH_USE_CURL_DOWNLOAD)
 endif()
 
 list(APPEND CONCH_SRC
-	#分开数据库类core/Math 和相关方法类core/Util
+
+	# 分开数据库类core/Math 和相关方法类core/Util
 	core/math/Matrix3x3.h
 	core/math/Matrix3x3.cpp
 	core/math/Matrix4x4.h
@@ -139,13 +139,12 @@ list(APPEND CONCH_SRC
 	render/3D/DepthPassProperty.cpp
 	render/3D/Shader3D.h
 	render/3D/Shader3D.cpp
-	
-	#渲染节点类
+
+	# 渲染节点类
 	render/3D/renderInstance/MeshRenderNode.h
 	render/3D/renderInstance/MeshRenderNode.cpp
 	render/3D/renderInstance/RenderModuleData.h
 	render/3D/renderInstance/RenderModuleData.cpp
-
 
 	render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.h
 	render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.cpp
@@ -186,7 +185,7 @@ list(APPEND CONCH_SRC
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLCapable.h
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLCapable.cpp
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLParams.h
-	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLParams.cpp	
+	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLParams.cpp
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLShaderInstance.h
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLShaderInstance.cpp
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLObject.h
@@ -194,7 +193,7 @@ list(APPEND CONCH_SRC
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLEnum/WebGLExtension.h
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLEnum/WebGLMode.h
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLBuffer.h
-	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLBuffer.cpp	
+	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLBuffer.cpp
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLVertexState.h
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLVertexState.cpp
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLRender2DContext.h
@@ -231,16 +230,14 @@ list(APPEND CONCH_SRC
 	render/3D/design/renderEnum/TextureFormat.h
 	render/3D/design/renderEnum/WrapMode.h
 	render/3D/design/renderEnum/MemoryDataType.h
-	render/3D/design/renderEnum/RenderStatInfo.h	
+	render/3D/design/renderEnum/RenderStatInfo.h
 	render/3D/design/renderShader/ShaderVariable.h
 
 	render/3D/temp/RenderStateContext.h
 	render/3D/temp/RenderStateContext.cpp
 	render/3D/temp/ObjectBase.h
 	render/3D/temp/ObjectBase.cpp
-	
-	
-	
+
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderInstance.h
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderInstance.cpp
 	render/3D/temp/CommandUniformMap.h
@@ -250,8 +247,9 @@ list(APPEND CONCH_SRC
 	render/3D/temp/RenderState.cpp
 	render/3D/temp/Transform3D.h
 	render/3D/temp/Transform3D.cpp
-	#render/3D/temp/InstanceRenderElementOBJ.h
-	#render/3D/temp/InstanceRenderElementOBJ.cpp
+
+	# render/3D/temp/InstanceRenderElementOBJ.h
+	# render/3D/temp/InstanceRenderElementOBJ.cpp
 	render/3D/temp/UniformBufferObject.h
 	render/3D/temp/UniformBufferObject.cpp
 	render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderElement3D.h
@@ -261,7 +259,7 @@ list(APPEND CONCH_SRC
 	render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESCullUtil.h
 	render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESCullUtil.cpp
 	render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESQuickSort.h
-	render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESQuickSort.cpp	
+	render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESQuickSort.cpp
 	render/RenderDriver/RenderModuleData/RuntimeModuleData/RTShaderData.cpp
 	render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h
 	render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.cpp
@@ -269,7 +267,6 @@ list(APPEND CONCH_SRC
 	render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTSubShader.h
 	render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTShaderPass.cpp
 	render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTShaderPass.h
-
 
 	Audio/JCAudioManager.cpp
 	Audio/JCAudioManager.h
@@ -393,7 +390,6 @@ list(APPEND CONCH_SRC
 	LayaAir/2D/Buffer.h
 	LayaAir/2D/Buffer.cpp
 
-
 	2D/CanvasRenderingContext2D.h
 	2D/CanvasRenderingContext2D.cpp
 	2D/FontDescription.h
@@ -480,7 +476,6 @@ list(APPEND CONCH_SRC
 	Bindings/JSPromiseRejectionEvent.cpp
 	Bindings/JSCanvasRenderingContext2D.cpp
 
-
 	OpenAL/
 	LayaGL/JCIDGenerator.h
 	LayaGL/JCIDGenerator.cpp
@@ -490,10 +485,11 @@ list(APPEND CONCH_SRC
 	LayaGL/JCLayaGLDispatch.cpp
 	manager/JCArrayBufferManager.h
 	manager/JCArrayBufferManager.cpp
-	#Performance/JCPerfHUD.h
-	#Performance/JCPerfHUD.cpp
-	#Performance/JCVBOManager.h
-	#Performance/JCVBOManager.cpp
+
+	# Performance/JCPerfHUD.h
+	# Performance/JCPerfHUD.cpp
+	# Performance/JCVBOManager.h
+	# Performance/JCVBOManager.cpp
 	resource/JCResource.h
 	resource/JCResource.cpp
 	resource/JCResManager.h
@@ -801,7 +797,8 @@ elseif(IOS)
 		png
 		jpeg
 		jpeg-turbo
-		#openal
+
+		# openal
 		vorbisfile
 		vorbis
 		ogg
@@ -831,7 +828,7 @@ elseif(MSVC)
 	target_link_libraries(${PROJECT_NAME} PUBLIC
 		version.lib
 		Setupapi.lib
-		imm32.lib 
+		imm32.lib
 		winmm.lib
 		strmiids.lib
 		shlwapi.lib
@@ -894,7 +891,8 @@ elseif(LINUX)
 		BulletDynamics
 		BulletCollision
 		LinearMath
-		#BulletSoftBody
+
+		# BulletSoftBody
 		glad
 		ssl
 		crypto
@@ -904,8 +902,9 @@ endif()
 
 if(MSVC)
 	set(WARNINGS
-	/wd4819 # 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失	
+		/wd4819 # 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
 	)
+
 # set(WARNINGS /W3)
 else()
 	set(WARNINGS
@@ -921,8 +920,6 @@ target_compile_options(${PROJECT_NAME} PRIVATE
 # target_link_libraries(${PROJECT_NAME} PUBLIC binder)
 add_subdirectory(utils)
 add_subdirectory(binder)
-
-
 
 add_subdirectory(../third_party/zlib zlib)
 add_subdirectory(../third_party/zip zip)
@@ -943,14 +940,19 @@ add_subdirectory(../third_party/bullet bullet)
 add_subdirectory(../third_party/physx physx)
 add_subdirectory(../third_party/sdl sdl)
 add_subdirectory(../third_party/benchmark benchmark)
+
 if(MSVC)
 	add_subdirectory(../third_party/boost boost_regex)
 endif()
+
 if(MSVC OR LINUX)
 	add_subdirectory(app)
 endif()
+
 message("CMAKE_BUILD_TYPE:${CMAKE_BUILD_TYPE}")
 message("CMAKE_C_FLAGS:${CMAKE_C_FLAGS}")
 message("CMAKE_CXX_FLAGS:${CMAKE_CXX_FLAGS}")
 message("CMAKE_C_FLAGS_RELEASE:${CMAKE_C_FLAGS_RELEASE}")
 message("CMAKE_CXX_FLAGS_RELEASE:${CMAKE_CXX_FLAGS_RELEASE}")
+message("CMAKE_C_FLAGS_DEBUG:${CMAKE_C_FLAGS_DEBUG}")
+message("CMAKE_CXX_FLAGS_DEBUG:${CMAKE_CXX_FLAGS_DEBUG}")
