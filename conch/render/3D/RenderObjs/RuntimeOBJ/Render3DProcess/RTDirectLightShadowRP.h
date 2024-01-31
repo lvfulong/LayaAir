@@ -15,7 +15,7 @@ constexpr size_t _maxCascades = 4;
 class ShaderData;
 
 
-class WebGLInternalRT;
+class GLESInternalRT;
 class GLESRenderContext3D;
 class RTBaseRenderNode;
 class RTCameraNodeData;
@@ -30,7 +30,7 @@ class RTDirectLightShadowRP : public IDirectLightShadowRP
 
 public:
     //js bindings
-    void setRenderTarget(WebGLInternalRT* value) { destTarget = value; }
+    void setRenderTarget(GLESInternalRT* value) { destTarget = value; }
     void setLight(RTDirectLight* light);
     void setCameraNodeData(RTCameraNodeData* value) { camera = value; }
   private:
@@ -45,7 +45,7 @@ public:
     Vector3 _lightForward;
     ShadowCascadesMode shadowCastMode;
     RTCameraNodeData* camera = nullptr;
-    WebGLInternalRT* destTarget;
+    GLESInternalRT* destTarget;
     std::array<F32, 16 * _maxCascades> _shadowMatrices;
     std::array<F32, 4 * _maxCascades> _splitBoundSpheres;
     std::vector<Real> _cascadesSplitDistance;

@@ -41,7 +41,7 @@ namespace laya
 	class InternalTexture;
 	class JCImage;
 	class WebGLInternalTex;
-	class WebGLInternalRT;
+	class GLESInternalRT;
 	class GLTextureContext : public GLObject
 	{
 	public:
@@ -65,16 +65,16 @@ namespace laya
         virtual void setTexture3DSubPixelsData(WebGLInternalTex* texture, char* source, int mipmapLevel, bool generateMipmap, int xOffset, int yOffset, int zOffset, int width, int height, int depth, bool premultiplyAlpha, bool invertY) { assert(0);};
         virtual void initVideoTextureData(WebGLInternalTex* texture);
 		virtual void setTextureSubPixelsData(WebGLInternalTex* texture, char* source, int mipmapLevel, bool generateMipmap, int xOffset, int yOffset, int width, int height, bool premultiplyAlpha, bool invertY);
-		virtual void bindRenderTarget(WebGLInternalRT* renderTarget, int faceIndex);
+		virtual void bindRenderTarget(GLESInternalRT* renderTarget, int faceIndex);
 		virtual TextureCompareMode setTextureCompareMode(WebGLInternalTex* texture, TextureCompareMode compareMode);
-        virtual void setupRendertargetTextureAttachment(WebGLInternalRT* renderTarget, std::shared_ptr<WebGLInternalTex> texture);
+        virtual void setupRendertargetTextureAttachment(GLESInternalRT* renderTarget, std::shared_ptr<WebGLInternalTex> texture);
 		virtual void bindoutScreenTarget();
-		virtual void unbindRenderTarget(WebGLInternalRT* renderTarget);
+		virtual void unbindRenderTarget(GLESInternalRT* renderTarget);
 		virtual WebGLInternalTex* createRenderTextureInternal(TextureDimension dimension, int width, int height, RenderTargetFormat format, bool generateMipmap, bool sRGB);
 		virtual WebGLInternalTex* createRenderTextureCubeInternal(TextureDimension dimension, int size, RenderTargetFormat format, bool generateMipmap, bool sRGB);
 		virtual GLuint createRenderbuffer(int width, int height, int internalFormat, int samples);
-		virtual WebGLInternalRT* createRenderTargetInternal(int width, int height, RenderTargetFormat colorFormat, RenderTargetFormat depthStencilFormat, bool generateMipmap, bool sRGB, int multiSamples);
-		virtual WebGLInternalRT* createRenderTargetCubeInternal(int size, RenderTargetFormat colorFormat, RenderTargetFormat depthStencilFormat, bool generateMipmap, bool sRGB, int multiSamples);
+		virtual GLESInternalRT* createRenderTargetInternal(int width, int height, RenderTargetFormat colorFormat, RenderTargetFormat depthStencilFormat, bool generateMipmap, bool sRGB, int multiSamples);
+		virtual GLESInternalRT* createRenderTargetCubeInternal(int size, RenderTargetFormat colorFormat, RenderTargetFormat depthStencilFormat, bool generateMipmap, bool sRGB, int multiSamples);
         virtual void setTextureDDSData(WebGLInternalTex* texture, const DDSTextureInfo &ddsInfo);
         virtual void setTextureKTXData(WebGLInternalTex* texture, const KTXTextureInfo &ktxInfo);
 		virtual void setCubeImageData(WebGLInternalTex* texture, const std::vector<JSImage*>& sources, bool premultiplyAlpha, bool invertY);
@@ -82,8 +82,8 @@ namespace laya
 		virtual void setCubeSubPixelData(WebGLInternalTex* texture, const std::vector<char*>& source, int mipmapLevel, bool generateMipmap, int xOffset, int yOffset, int width, int height, bool premultiplyAlpha, bool invertY);
         virtual void setCubeDDSData(WebGLInternalTex* texture, const DDSTextureInfo &ddsInfo);
         virtual void setCubeKTXData(WebGLInternalTex* texture, const KTXTextureInfo &ktxInfo);
-		virtual void readRenderTargetPixelData(WebGLInternalRT* renderTarget, int xOffset, int yOffset, int width, int height, std::vector<uint8_t>& out);
-		virtual void getRenderTextureData(WebGLInternalRT* internalTex, int x, int y, int width, int height, std::vector<uint8_t>& out);
+		virtual void readRenderTargetPixelData(GLESInternalRT* renderTarget, int xOffset, int yOffset, int width, int height, std::vector<uint8_t>& out);
+		virtual void getRenderTextureData(GLESInternalRT* internalTex, int x, int y, int width, int height, std::vector<uint8_t>& out);
 		virtual void updateVideoTexture(WebGLInternalTex* texture, JCImage* video, bool premultiplyAlpha, bool invertY);
 	protected:
 		virtual int getGLtexMemory(WebGLInternalTex* tex, int depth = 1);

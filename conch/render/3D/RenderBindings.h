@@ -131,7 +131,20 @@ class RenderBindings
             // todo Bounds
         }
         {
-            // todo conchWebGLInternalRT
+            class_<GLESInternalRT> class_binding;
+            class_binding.constructor<RenderTargetFormat, RenderTargetFormat, bool, bool, int>();
+            class_binding.property_field("_isCube", &GLESInternalRT::m_isCube);
+            class_binding.property_field("_samples", &GLESInternalRT::m_samples);
+            class_binding.property_field("_generateMipmap", &GLESInternalRT::m_generateMipmap);
+            class_binding.property_field("_colorFormat", &GLESInternalRT::m_colorFormat);
+            class_binding.property_field("_depthStencilFormat", &GLESInternalRT::m_depthStencilFormat);
+            class_binding.property_field("_isSRGB", &GLESInternalRT::_isSRGB);
+            class_binding.property_field("_gpuMemory", &GLESInternalRT::m_gpuMemory);
+            class_binding.function("dispose", &GLESInternalRT::dispose);
+
+            // todo class_binding.property("_textures", &GLESInternalRT::getTextures);
+            class_binding.property("_depthTexture", &GLESInternalRT::getDepthTexture);
+            context.class_("conchGLESInternalRT", class_binding);
         }
         {
             // todo WebGLInternalTex
@@ -153,12 +166,12 @@ class RenderBindings
             class_<GLESVertexBuffer> class_binding;
             class_binding.constructor<BufferTargetType, BufferUsage>();
             ///*class_binding.function_optional_override(
-               // "setData",
-               // optional_override(
-                    //[](GLESVertexBuffer &self, const char *buffer, int bufferOffset /* = 0*/, int dataStartIndex /* = 0*/,
-                            //   int dataCount ) {
-                        //self.setData(list);
-                   // }));*/
+            // "setData",
+            // optional_override(
+            //[](GLESVertexBuffer &self, const char *buffer, int bufferOffset /* = 0*/, int dataStartIndex /* = 0*/,
+            //   int dataCount ) {
+            // self.setData(list);
+            // }));*/
             class_binding.function("setDataLength", &GLESVertexBuffer::setDataLength);
             class_binding.function("destroy", &GLESVertexBuffer::destroy);
             context.class_("conchGLESVertexBuffer", class_binding);

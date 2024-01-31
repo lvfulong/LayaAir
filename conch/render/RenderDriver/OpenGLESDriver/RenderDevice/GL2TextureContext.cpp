@@ -1039,11 +1039,11 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
         return internalTex;
     }
 
-	WebGLInternalRT* GL2TextureContext::createRenderTargetInternal(int width, int height, RenderTargetFormat colorFormat, RenderTargetFormat depthStencilFormat, bool generateMipmap, bool sRGB, int multiSamples)
+	GLESInternalRT* GL2TextureContext::createRenderTargetInternal(int width, int height, RenderTargetFormat colorFormat, RenderTargetFormat depthStencilFormat, bool generateMipmap, bool sRGB, int multiSamples)
 	{
 		WebGLInternalTex* texture = createRenderTextureInternal(TextureDimension::Tex2D, width, height, colorFormat, generateMipmap, sRGB);
 
-		WebGLInternalRT* renderTarget = new WebGLInternalRT(m_engine, colorFormat, depthStencilFormat, false, texture->mipmap(), multiSamples);
+		GLESInternalRT* renderTarget = new GLESInternalRT(colorFormat, depthStencilFormat, false, texture->mipmap(), multiSamples);
 		renderTarget->setGpuMemory(getGLRTTexMemory(width, height, colorFormat, depthStencilFormat, generateMipmap, multiSamples, false));
         std::shared_ptr<WebGLInternalTex> p;
         p.reset(texture);
@@ -1096,11 +1096,11 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
 
     }
 
-	WebGLInternalRT* GL2TextureContext::createRenderTargetCubeInternal(int size, RenderTargetFormat colorFormat, RenderTargetFormat depthStencilFormat, bool generateMipmap, bool sRGB, int multiSamples)
+	GLESInternalRT* GL2TextureContext::createRenderTargetCubeInternal(int size, RenderTargetFormat colorFormat, RenderTargetFormat depthStencilFormat, bool generateMipmap, bool sRGB, int multiSamples)
 	{
 		WebGLInternalTex* texture = createRenderTextureCubeInternal(TextureDimension::Cube, size, colorFormat, generateMipmap, sRGB);
 
-		WebGLInternalRT* renderTarget = new WebGLInternalRT(m_engine, colorFormat, depthStencilFormat, true, texture->mipmap(), multiSamples);
+		GLESInternalRT* renderTarget = new GLESInternalRT(colorFormat, depthStencilFormat, true, texture->mipmap(), multiSamples);
 		renderTarget->setGpuMemory(getGLRTTexMemory(size, size, colorFormat, depthStencilFormat, generateMipmap, multiSamples, true));
         renderTarget->m_colorFormat = colorFormat;
         renderTarget->m_depthStencilFormat = depthStencilFormat;
@@ -1184,7 +1184,7 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
 
     }
 
-    void GL2TextureContext::bindRenderTarget(WebGLInternalRT* renderTarget, int faceIndex)
+    void GL2TextureContext::bindRenderTarget(GLESInternalRT* renderTarget, int faceIndex)
 	{
         if (renderTarget->m_isCube) 
 		{
@@ -1204,7 +1204,7 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
         }
     }
 
-	void GL2TextureContext::unbindRenderTarget(WebGLInternalRT* renderTarget)
+	void GL2TextureContext::unbindRenderTarget(GLESInternalRT* renderTarget)
 	{
         if (renderTarget->m_samples > 1)
 		{
@@ -1231,7 +1231,7 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
         if (renderTarget->m_generateMipmap) 
 		{
 
-			for (WebGLInternalRT::TexturesVec::iterator it = renderTarget->m_textures.begin(); it != renderTarget->m_textures.end(); it++)
+			for (GLESInternalRT::TexturesVec::iterator it = renderTarget->m_textures.begin(); it != renderTarget->m_textures.end(); it++)
 			{
 				WebGLInternalTex* tex = it->get();
 				if (tex)

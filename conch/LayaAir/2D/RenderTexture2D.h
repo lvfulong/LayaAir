@@ -24,7 +24,7 @@ namespace laya
 		}
 	};
 	class JCImage;
-	class WebGLInternalRT;
+	class GLESInternalRT;
 	class RenderTexture2D
 	{
 	public:
@@ -47,7 +47,7 @@ namespace laya
 		RenderTargetFormat                                  m_colorFormat;
 		RenderTargetFormat                                  m_depthStencilFormat;
 		std::shared_ptr<WebGLInternalTex>                   m_texture;
-		WebGLInternalRT*                                    m_renderTarget;
+		GLESInternalRT*                                    m_renderTarget;
 		static RenderTexture2D*                             m_currentActive;
 		RenderTexture2D*                                    m_lastRT = nullptr;
 		int                                                 m_lastWidth = 0;

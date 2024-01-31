@@ -1269,7 +1269,7 @@ namespace laya
         return TextureCompareMode::None;
     }
 
-    void GLTextureContext::bindRenderTarget(WebGLInternalRT* renderTarget, int faceIndex)
+    void GLTextureContext::bindRenderTarget(GLESInternalRT* renderTarget, int faceIndex)
 	{
         auto framebuffer = renderTarget->m_framebuffer;
 
@@ -1288,11 +1288,11 @@ namespace laya
         glBindFramebuffer(GL_FRAMEBUFFER, g_nMainFrameBuffer);
     }
 
-	void GLTextureContext::unbindRenderTarget(WebGLInternalRT* renderTarget)
+	void GLTextureContext::unbindRenderTarget(GLESInternalRT* renderTarget)
 	{
         if (renderTarget->m_generateMipmap) 
 		{
-			for (WebGLInternalRT::TexturesVec::iterator it = renderTarget->m_textures.begin(); it != renderTarget->m_textures.end(); it++)
+			for (GLESInternalRT::TexturesVec::iterator it = renderTarget->m_textures.begin(); it != renderTarget->m_textures.end(); it++)
 			{
 				WebGLInternalTex* tex = it->get();
 				if (tex)
@@ -1398,13 +1398,13 @@ namespace laya
         return internalTex;
     }
 
-	WebGLInternalRT* GLTextureContext::createRenderTargetInternal(int width, int height, RenderTargetFormat colorFormat, RenderTargetFormat depthStencilFormat, bool generateMipmap, bool sRGB, int multiSamples)
+	GLESInternalRT* GLTextureContext::createRenderTargetInternal(int width, int height, RenderTargetFormat colorFormat, RenderTargetFormat depthStencilFormat, bool generateMipmap, bool sRGB, int multiSamples)
 	{
         multiSamples = 1;
 
 		WebGLInternalTex* texture = createRenderTextureInternal(TextureDimension::Tex2D, width, height, colorFormat, generateMipmap, sRGB);
 
-		WebGLInternalRT* renderTarget = new WebGLInternalRT(m_engine, colorFormat, depthStencilFormat, false, texture->mipmap(), multiSamples);
+		GLESInternalRT* renderTarget = new GLESInternalRT(colorFormat, depthStencilFormat, false, texture->mipmap(), multiSamples);
 		renderTarget->setGpuMemory(getGLRTTexMemory(width, height, colorFormat, depthStencilFormat, generateMipmap, multiSamples, true));
         renderTarget->m_colorFormat = colorFormat;
         renderTarget->m_depthStencilFormat = depthStencilFormat;
@@ -1431,14 +1431,14 @@ namespace laya
         return renderTarget;
     }
 
-	WebGLInternalRT* GLTextureContext::createRenderTargetCubeInternal(int size, RenderTargetFormat colorFormat, RenderTargetFormat depthStencilFormat, bool generateMipmap, bool sRGB, int multiSamples)
+	GLESInternalRT* GLTextureContext::createRenderTargetCubeInternal(int size, RenderTargetFormat colorFormat, RenderTargetFormat depthStencilFormat, bool generateMipmap, bool sRGB, int multiSamples)
 	{
         multiSamples = 1;
 
         // let texture = this.createRenderTextureInternal(dimension, size, size, colorFormat, gengerateMipmap, sRGB);
 		WebGLInternalTex* texture = createRenderTextureCubeInternal(TextureDimension::Cube, size, colorFormat, generateMipmap, sRGB);
 
-		WebGLInternalRT* renderTarget = new WebGLInternalRT(m_engine, colorFormat, depthStencilFormat, true, texture->mipmap(), multiSamples);
+		GLESInternalRT* renderTarget = new GLESInternalRT(colorFormat, depthStencilFormat, true, texture->mipmap(), multiSamples);
 		renderTarget->setGpuMemory(getGLRTTexMemory(size, size, colorFormat, depthStencilFormat, generateMipmap, multiSamples, true));
         std::shared_ptr<WebGLInternalTex> p;
         p.reset(texture);
@@ -1478,7 +1478,7 @@ namespace laya
     }
 
     // todo  color 0, 1, 2, 3 ?
-    void GLTextureContext::setupRendertargetTextureAttachment(WebGLInternalRT* renderTarget, std::shared_ptr<WebGLInternalTex> texture)
+    void GLTextureContext::setupRendertargetTextureAttachment(GLESInternalRT* renderTarget, std::shared_ptr<WebGLInternalTex> texture)
 	{
         renderTarget->m_depthTexture = texture;
 
@@ -1498,7 +1498,7 @@ namespace laya
         glBindFramebuffer(GL_FRAMEBUFFER, g_nMainFrameBuffer);
     }
 
-	void GLTextureContext::readRenderTargetPixelData(WebGLInternalRT* renderTarget, int xOffset, int yOffset, int width, int height, std::vector<uint8_t>& out)
+	void GLTextureContext::readRenderTargetPixelData(GLESInternalRT* renderTarget, int xOffset, int yOffset, int width, int height, std::vector<uint8_t>& out)
 	{
 		out.clear();
 		bindRenderTarget(renderTarget, 0);
@@ -1589,7 +1589,7 @@ namespace laya
 
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
     }
-	void GLTextureContext::getRenderTextureData(WebGLInternalRT* internalTex, int x, int y, int width, int height, std::vector<uint8_t>& pixels)
+	void GLTextureContext::getRenderTextureData(GLESInternalRT* internalTex, int x, int y, int width, int height, std::vector<uint8_t>& pixels)
 	{
 		pixels.clear();
 		if (internalTex->m_colorFormat == RenderTargetFormat::None)

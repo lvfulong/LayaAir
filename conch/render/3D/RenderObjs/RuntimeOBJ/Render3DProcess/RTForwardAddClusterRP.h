@@ -54,19 +54,19 @@ class RTForwardAddClusterRP
     {
         value.cloneTo(this->viewPort);
     }
-    void setOpaqueTexture(WebGLInternalRT *value)
+    void setOpaqueTexture(GLESInternalRT *value)
     {
         opaqueTexture = value;
     }
-    void setDepthNormalTarget(WebGLInternalRT *value)
+    void setDepthNormalTarget(GLESInternalRT *value)
     {
         depthNormalTarget = value;
     }
-    void setDepthTarget(WebGLInternalRT *value)
+    void setDepthTarget(GLESInternalRT *value)
     {
         depthTarget = value;
     }
-    void setDestTarget(WebGLInternalRT *value)
+    void setDestTarget(GLESInternalRT *value)
     {
         destTarget = value;
     }
@@ -88,10 +88,10 @@ class RTForwardAddClusterRP
     std::vector<uint32_t> beforeSkyboxCmds;
     std::vector<uint32_t> beforeTransparentCmds;
     RTCameraNodeData *camera;
-    WebGLInternalRT *opaqueTexture;
-    WebGLInternalRT *destTarget;
-    WebGLInternalRT *depthTarget;
-    WebGLInternalRT *depthNormalTarget;
+    GLESInternalRT *opaqueTexture;
+    GLESInternalRT *destTarget;
+    GLESInternalRT *depthTarget;
+    GLESInternalRT *depthNormalTarget;
     RTBaseRenderNode *skyRenderNode;
     DepthTextureMode renderpassNode;
     static Viewport _context3DViewPortCatch;

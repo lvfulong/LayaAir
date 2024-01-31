@@ -11,7 +11,7 @@ namespace laya
 {
     class RTRenderContext3D;
     class RTBaseRenderNode;
-    class WebGLInternalRT;
+    class GLESInternalRT;
     class ShadowSpotData
     {
     public:
@@ -34,7 +34,7 @@ class RTSpotLightShadowRP
     void render(RTRenderContext3D* context, std::vector<RTBaseRenderNode*>& list, uint32_t count);
     void _applyRenderData(ShaderData* sceneData, ShaderData* cameraData);
     void _setupShadowCasterShaderValues(ShaderData* shaderValues, ShadowSpotData* shadowSliceData, const Vector4& shadowparams, const Vector4& shadowBias);
-    void setRenderTarget(WebGLInternalRT* value) { destTarget = value; }
+    void setRenderTarget(GLESInternalRT* value) { destTarget = value; }
     void setLight(RTSpotLight* value);
     /*void set_position(Vector3 value);
     void set_lightforward(Vector3 value);
@@ -75,7 +75,7 @@ class RTSpotLightShadowRP
     Real _shadowStrength;
     ShadowSpotData _shadowSpotData;
     GLESRenderListQueue _renderQueue;
-    WebGLInternalRT* destTarget;
+    GLESInternalRT* destTarget;
 };
 } // namespace laya
 #endif

@@ -14,7 +14,7 @@ namespace laya
 {
 class GLESRenderElement3D;
 class ShaderData;
-class WebGLInternalRT;
+class GLESInternalRT;
 class RTSceneNodeData;
 class RTCameraModuleData;
 class RTRenderContext3D
@@ -24,7 +24,7 @@ class RTRenderContext3D
     ~RTRenderContext3D();
     uint32_t drawRenderElementList(const JCSingletonList<GLESRenderElement3D *> &list);
     uint32_t drawRenderElementOne(GLESRenderElement3D *node);
-    void setRenderTarget(WebGLInternalRT *renderTarget)
+    void setRenderTarget(GLESInternalRT *renderTarget)
     {
         this->_renderTarget = renderTarget;
     }
@@ -77,7 +77,7 @@ class RTRenderContext3D
   public:
     ShaderData *globalShaderData = nullptr;
     DefineDatas *globalConfigShaderData = nullptr;
-    WebGLInternalRT *_renderTarget = nullptr;
+    GLESInternalRT *_renderTarget = nullptr;
     Viewport viewPort;
     Vector4 scissor;
     bool invertY;

@@ -24,7 +24,7 @@ namespace laya
 	class RenderTexture2D;
 	class JCContext2DDispatch;
 	class ISubmit;
-	class WebGLInternalRT;
+	class GLESInternalRT;
 	class ContextParams
 	{
 	public:

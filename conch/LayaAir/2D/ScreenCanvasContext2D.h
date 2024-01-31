@@ -19,7 +19,7 @@ namespace laya
 	class WebGLInternalTex;
 	class RenderTexture2D;
 	class ISubmit;
-	class WebGLInternalRT;
+	class GLESInternalRT;
 	class ScreenCanvasContext2D
 	{
 	public:
@@ -44,7 +44,7 @@ namespace laya
 		int m_height						            = Context2D::MAXSIZE;
 		GLESEngine*						            m_pGLESEngine;
 		std::shared_ptr<WebGLInternalTex>				m_texture = nullptr;
-		WebGLInternalRT*					            m_target = nullptr;
+		GLESInternalRT*					            m_target = nullptr;
 		std::atomic_bool                                m_requestCaptureScreen{ false };
 	};
 }
