@@ -1,7 +1,7 @@
 #ifndef __FrustumCulling_H_
 #define __FrustumCulling_H_
 
-#include "render/tempbase.h"
+#include "render/ShadowCullInfo.h"
 #include <core/math/Bounds.h>
 
 namespace laya
@@ -9,29 +9,31 @@ namespace laya
 class FrustumCulling
 {
   public:
-	static bool cullingRenderBounds(Bounds* bounds, const ShadowCullInfo& cullInfo)
+    static bool cullingRenderBounds(Bounds *bounds, const ShadowCullInfo &cullInfo)
     {
         int cullPlaneCount = cullInfo.cullPlaneCount;
-        const std::array<Plane, 10>& cullPlanes = cullInfo.cullPlanes;
+        const std::array<Plane, 10> &cullPlanes = cullInfo.cullPlanes;
 
-        const Vector3& min = bounds->getMin();
-        const Vector3& max = bounds->getMax();
+        const Vector3 &min = bounds->getMin();
+        const Vector3 &max = bounds->getMax();
         float minX = min.x;
         float minY = min.y;
         float minZ = min.z;
         float maxX = max.x;
         float maxY = max.y;
         float maxZ = max.z;
-        //TODO:ͨ������ü�ֱ��pass
+        // TODO:ͨ������ü�ֱ��pass
 
         bool pass = true;
         // cull by planes
         // Improve:Maybe use sphre and direction cull can savle the far plane cull
-        for (int j = 0; j < cullPlaneCount; j++) 
+        for (int j = 0; j < cullPlaneCount; j++)
         {
-            const Plane& plane = cullPlanes[j];
-            const Vector3& normal = plane.normal;
-            if (plane.distance + (normal.x * (normal.x < 0.0 ? minX : maxX)) + (normal.y * (normal.y < 0.0 ? minY : maxY)) + (normal.z * (normal.z < 0.0 ? minZ : maxZ)) < 0.0)
+            const Plane &plane = cullPlanes[j];
+            const Vector3 &normal = plane.normal;
+            if (plane.distance + (normal.x * (normal.x < 0.0 ? minX : maxX)) +
+                    (normal.y * (normal.y < 0.0 ? minY : maxY)) + (normal.z * (normal.z < 0.0 ? minZ : maxZ)) <
+                0.0)
             {
                 pass = false;
                 break;

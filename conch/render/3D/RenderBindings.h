@@ -3,8 +3,10 @@
 
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESBufferState.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/WebGLConfig.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESIndexBuffer.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderGeometryElement.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderInstance.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESVertexBuffer.h"
 #include "render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTSubShader.h"
 #include <binder/JSInterface.h>
 #include <core/math/Color.h>
@@ -138,10 +140,28 @@ class RenderBindings
             // todo UniformBufferObject
         }
         {
-            // GLESIndexBuffer.h
+            class_<GLESIndexBuffer> class_binding;
+            class_binding.constructor<BufferTargetType, BufferUsage>();
+            class_binding.property_field("_indexCount", &GLESIndexBuffer::_indexCount);
+            class_binding.property_field("_indexType", &GLESIndexBuffer::_indexType);
+            class_binding.function("_setIndexDataLength", &GLESIndexBuffer::_setIndexDataLength);
+            // todo class_binding.function("_setIndexData", &GLESIndexBuffer::_setIndexData);
+            class_binding.function("destroy", &GLESIndexBuffer::destroy);
+            context.class_("conchGLESIndexBuffer", class_binding);
         }
         {
-            // GLESVertexBuffer
+            class_<GLESVertexBuffer> class_binding;
+            class_binding.constructor<BufferTargetType, BufferUsage>();
+            ///*class_binding.function_optional_override(
+               // "setData",
+               // optional_override(
+                    //[](GLESVertexBuffer &self, const char *buffer, int bufferOffset /* = 0*/, int dataStartIndex /* = 0*/,
+                            //   int dataCount ) {
+                        //self.setData(list);
+                   // }));*/
+            class_binding.function("setDataLength", &GLESVertexBuffer::setDataLength);
+            class_binding.function("destroy", &GLESVertexBuffer::destroy);
+            context.class_("conchGLESVertexBuffer", class_binding);
         }
         {
             class_<GLESEngine> class_binding;
@@ -320,7 +340,6 @@ class RenderBindings
         }
         {
             class_<RTRenderContext3D> class_binding;
-            class_binding.constructor<>();
             class_binding.function("setClearData", &RTRenderContext3D::setClearData);
             class_binding.function("setSceneData", &RTRenderContext3D::setSceneData);
             class_binding.function("setCameraData", &RTRenderContext3D::setCameraData);

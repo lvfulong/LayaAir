@@ -1,6 +1,6 @@
 
-#ifndef __tempbase_h_
-#define __tempbase_h_
+#ifndef __ShadowCullInfo_h_
+#define __ShadowCullInfo_h_
 
 #include <core/math/BoundFrustum.h>
 #include <core/math/BoundSphere.h>

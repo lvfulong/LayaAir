@@ -161,7 +161,7 @@ list(APPEND CONCH_SRC
 	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTForwardAddClusterRP.cpp
 	render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.h
 	render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.cpp
-	render/tempbase.h
+	render/ShadowCullInfo.h
 	render/RenderDriver/OpenGLESDriver/RenderDevice/KTXTextureInfo.h
 	render/RenderDriver/OpenGLESDriver/RenderDevice/KTXTextureInfo.cpp
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESBufferState.h

@@ -1,17 +1,14 @@
 #ifndef __RTRenderContext3D_H_
 #define __RTRenderContext3D_H_
 
-
-#include <render/3D/design/renderEnum/RenderClearFlag.h>
-#include <utils/JCSingletonList.h>
-#include <functional>
-#include <core/math/Viewport.h>
-#include <core/math/Vector4.h>
+#include "render/ShadowCullInfo.h"
 #include <core/math/Color.h>
-#include "render/tempbase.h"
-#include <utils/JCSingletonList.h>
+#include <core/math/Vector4.h>
+#include <core/math/Viewport.h>
+#include <functional>
 #include <render/3D/design/renderEnum/RenderClearFlag.h>
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h>
+#include <utils/JCSingletonList.h>
 
 namespace laya
 {
@@ -25,8 +22,8 @@ class RTRenderContext3D
   public:
     RTRenderContext3D();
     ~RTRenderContext3D();
-    uint32_t drawRenderElementList(const JCSingletonList<GLESRenderElement3D*> &list);
-    uint32_t drawRenderElementOne(GLESRenderElement3D*node);
+    uint32_t drawRenderElementList(const JCSingletonList<GLESRenderElement3D *> &list);
+    uint32_t drawRenderElementOne(GLESRenderElement3D *node);
     void setRenderTarget(WebGLInternalRT *renderTarget)
     {
         this->_renderTarget = renderTarget;
