@@ -13,8 +13,8 @@ class Transform3D;
 class RTVolumetricGI
 {
   public:
-      WebGLInternalTex* irradiance;
-      WebGLInternalTex* distance;
+      GLESInternalTex* irradiance;
+      GLESInternalTex* distance;
       Bounds* bound;
       Real intensity;
       uint32_t  updateMark;
@@ -22,8 +22,8 @@ class RTVolumetricGI
       Vector3 probeStep;
       Vector4 params;
 
-      void setIrradiance(WebGLInternalTex* value) { irradiance = value; }
-      void setDistance(WebGLInternalTex* value) { distance = value; }
+      void setIrradiance(GLESInternalTex* value) { irradiance = value; }
+      void setDistance(GLESInternalTex* value) { distance = value; }
       void setBounds(Bounds* value) { bound = value; }
       void setParams(Vector4 value)
       {

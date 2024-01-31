@@ -58,7 +58,7 @@ class GLShaderInstance : public GLObject
     int _uniform_samplerCube(ShaderVariable *one, const std::any &dataInfo);
     int _uniform_UniformBuffer(ShaderVariable *one, const std::any &dataInfo);
 
-    void _bindTexture(int textureID, GLenum target, WebGLInternalTex *texture);
+    void _bindTexture(int textureID, GLenum target, GLESInternalTex *texture);
 
   private:
     std::string m_vs;

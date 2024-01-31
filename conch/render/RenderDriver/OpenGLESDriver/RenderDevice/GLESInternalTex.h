@@ -1,5 +1,5 @@
-#ifndef __WebGLInternalTex_H__
-#define __WebGLInternalTex_H__
+#ifndef __GLESInternalTex_H__
+#define __GLESInternalTex_H__
 
 #include <math.h>
 #include <render/3D/temp/ObjectBase.h>
@@ -22,11 +22,11 @@
 
 namespace laya
 {
-	class WebGLInternalTex : public GLObject, public ObjectBase<WebGLInternalTex>
+	class GLESInternalTex : public GLObject, public ObjectBase<GLESInternalTex>
 	{
 	public:
-		WebGLInternalTex(GLESEngine* engine, int target, int width, int height, TextureDimension dimension, bool mipmap, bool useSRGBLoader, int gammaCorrection);
-		~WebGLInternalTex()
+		GLESInternalTex(GLESEngine* engine, int target, int width, int height, TextureDimension dimension, bool mipmap, bool useSRGBLoader, int gammaCorrection);
+		~GLESInternalTex()
 		{
 			dispose();
 		}

@@ -13,7 +13,7 @@
 namespace laya
 {
 	std::stack<SubmitTexture*> SubmitTexture::POOL;
-	SubmitTexture* SubmitTexture::create(int submitType, Mesh2D* mesh, Context2D* ctx, WebGLInternalTex* texture)
+	SubmitTexture* SubmitTexture::create(int submitType, Mesh2D* mesh, Context2D* ctx, GLESInternalTex* texture)
 	{
 		SubmitTexture* o = nullptr;
 		if (SubmitTexture::POOL.empty())
@@ -83,7 +83,7 @@ namespace laya
 			return 1;
 		}
 
-        WebGLInternalTex* texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(m_textureID);
+        GLESInternalTex* texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(m_textureID);
         if (texture == nullptr)
             return 1;
         

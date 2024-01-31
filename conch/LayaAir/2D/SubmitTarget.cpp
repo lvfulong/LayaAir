@@ -59,7 +59,7 @@ namespace laya
 		o->m_bGamma = true;
 		return o;
 	}
-	SubmitTarget* SubmitTarget::create(Mesh2D* mesh, BlendMode blendMode, WebGLInternalTex* pTexture, GLESEngine* pGLESEngine, bool gamma)
+	SubmitTarget* SubmitTarget::create(Mesh2D* mesh, BlendMode blendMode, GLESInternalTex* pTexture, GLESEngine* pGLESEngine, bool gamma)
 	{
 		SubmitTarget* o = nullptr;
 		if (SubmitTarget::POOL.empty())
@@ -125,7 +125,7 @@ namespace laya
 			return 1;
 		}
 
-        WebGLInternalTex* texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(m_textureID);
+        GLESInternalTex* texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(m_textureID);
         if (texture == nullptr)
             return 1;
         

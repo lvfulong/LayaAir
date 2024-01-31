@@ -32,19 +32,19 @@ class RTReflectionProb
 
     Real reflectionIntensity;
 
-    WebGLInternalTex *reflectionTexture = nullptr;
+    GLESInternalTex *reflectionTexture = nullptr;
 
-    WebGLInternalTex *iblTex = nullptr;
+    GLESInternalTex *iblTex = nullptr;
     uint32_t updateMark = 0;
     bool iblTexRGBD;
     Vector3 probePosition;
     Color ambientColor;
 
-    void setReflectionTexture(WebGLInternalTex *value)
+    void setReflectionTexture(GLESInternalTex *value)
     {
         reflectionTexture = value;
     }
-    void setIblTex(WebGLInternalTex *value)
+    void setIblTex(GLESInternalTex *value)
     {
         iblTex = value;
     }

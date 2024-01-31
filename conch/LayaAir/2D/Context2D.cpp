@@ -518,7 +518,7 @@ namespace laya
 	//------------------------------------------------------------------------------
 	void Context2D::drawTriangles(int textureID, float x, float y, float* vertices, int verticesLength, float* uvs, int uvsLength, uint16_t* indices, int indicesLength, const Matrix& matrix, float alpha/*, const std::string& blendMode*/, uint32_t color /*= 0xffffffff*/)
 	{
-		WebGLInternalTex* texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(textureID);
+		GLESInternalTex* texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(textureID);
 		if (texture == nullptr)
 			return;
 		/*std::string oldcomp;//TODO
@@ -601,14 +601,14 @@ namespace laya
 	//void Context2D::drawTexture(Texture2D* texture, float x, float y, float width, float height, float uv0, float uv1, float uv2, float uv3, float uv4, float uv5, float uv6, float uv7)
 	{
 		//float uv[8] = { uv0, uv1, uv2, uv3, uv4, uv5, uv6, uv7 };
-		WebGLInternalTex* texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(textureID);
+		GLESInternalTex* texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(textureID);
 		if (texture != nullptr)
 		{
 			_inner_drawTexture(texture, x, y, width, height, this->getCurrentState().matrix, uv, 1.0f, false, color);
 		}
 		//this._drawTextureM(tex, x, y, width, height, null, 1, null);
 	}
-	bool Context2D::_inner_drawTexture(WebGLInternalTex* texture/*, imgid : number*/, float x , float y , float width , float height, const Matrix& m, float uv[8], float alpha, bool lastRender, int color)
+	bool Context2D::_inner_drawTexture(GLESInternalTex* texture/*, imgid : number*/, float x , float y , float width , float height, const Matrix& m, float uv[8], float alpha, bool lastRender, int color)
 	{
 		if (width <= 0 || height <= 0) 
 		{
@@ -695,14 +695,14 @@ namespace laya
 	//------------------------------------------------------------------------------
 	void Context2D::fillTexture(int textureID, float x, float y, float width, float height, RepeatMode type, float offsetX, float offsetY/*, other : any*/, float uvrect[4])
 	{
-		WebGLInternalTex* texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(textureID);
+		GLESInternalTex* texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(textureID);
 		if (texture != nullptr)
 		{
 			_fillTexture(texture, texture->getWidth(), texture->getHeight(), uvrect, x, y, width, height, type, offsetX, offsetY, 0xffffffff);
 		}
 	}
 	//------------------------------------------------------------------------------
-	void Context2D::_fillTexture(WebGLInternalTex* texture, float texw, float texh, float texuvRect[4], float x, float y, float width, float height, RepeatMode type, float offsetx, float offsety, int color)
+	void Context2D::_fillTexture(GLESInternalTex* texture, float texw, float texh, float texuvRect[4], float x, float y, float width, float height, RepeatMode type, float offsetx, float offsety, int color)
 	{
 		//var submit : Submit = this._curSubmit;
 		bool sameKey = false;
@@ -805,7 +805,7 @@ namespace laya
 		m_curSubmit = SubmitBase::RENDERBASE;
 	}
 	//------------------------------------------------------------------------------
-	void Context2D::_fillTexture_h(WebGLInternalTex* texture,/* imgid : number,*/ float uv[8], float oriw, float orih, float x, float y, float w, int color)
+	void Context2D::_fillTexture_h(GLESInternalTex* texture,/* imgid : number,*/ float uv[8], float oriw, float orih, float x, float y, float w, int color)
 	{
 		if (oriw <= 0)
 			LOGE("_fillTexture_h error: oriw must>0");
@@ -830,7 +830,7 @@ namespace laya
 		}
 	}
 	//------------------------------------------------------------------------------
-	void Context2D::_fillTexture_v(WebGLInternalTex* texture,/* imgid : number,*/ float uv[8], float oriw, float orih, float x, float y, float h, int color)
+	void Context2D::_fillTexture_v(GLESInternalTex* texture,/* imgid : number,*/ float uv[8], float oriw, float orih, float x, float y, float h, int color)
 	{
 		if (orih <= 0)
 			LOGE("_fillTexture_v error: orih must>0");
@@ -858,7 +858,7 @@ namespace laya
 	//------------------------------------------------------------------------------
 	void Context2D::drawTextureWithSizeGrid(int textureID, float tx, float ty, float width, float height, float sizeGridTop, float sizeGridRight, float sizeGridBottom, float sizeGridLeft, bool sizeGridRepeat, float gx, float gy, float uv[8], int color)
 	{
-		WebGLInternalTex* texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(textureID);
+		GLESInternalTex* texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(textureID);
 		if (texture == nullptr)
 		{
 			return;
@@ -1316,7 +1316,7 @@ namespace laya
     void Context2D::fillTexture(int textureID, float x, float y, float width, float height, RepeatMode type, float offsetX, float offsetY, int color)
     {
 
-        WebGLInternalTex* texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(textureID);
+        GLESInternalTex* texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(textureID);
         if (!texture) {
             return;
         }

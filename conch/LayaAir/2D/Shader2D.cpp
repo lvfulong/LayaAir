@@ -254,7 +254,7 @@ namespace laya
 		}
 		return 0;
 	}
-	int Shader2D::uniform_sampler2D(const char* name, WebGLInternalTex* value)
+	int Shader2D::uniform_sampler2D(const char* name, GLESInternalTex* value)
 	{
 		std::unordered_map<std::string, UniformInfo*>::iterator it = m_uniformInfoMap.find(name);
 		if (it != m_uniformInfoMap.end())

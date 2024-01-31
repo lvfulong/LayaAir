@@ -20,7 +20,7 @@ namespace laya
 		void destroy();
 		int getID() { return m_source->getID(); }
 		void recreateResource();
-		WebGLInternalTex* getSource() { return m_source; }
+		GLESInternalTex* getSource() { return m_source; }
 		bool __destroyed = false;
 		void touchRect(CharRenderInfo* ri, uint64_t curloop);
 		std::shared_ptr<CharRenderInfo> ri; 		// ����Ƕ���������ͼ�Ļ����������Ϣ
@@ -30,7 +30,7 @@ namespace laya
 		int m_texW = 0;
 		int m_texH = 0;
 		
-		WebGLInternalTex*  m_source = nullptr;
+		GLESInternalTex*  m_source = nullptr;
 		float m_curUsedCovRate = 0.0f; 	// ��ǰʹ�õ���ʹ���ʡ�����������
 		float m_curUsedCovRateAtlas = 0.0f; 	// ��ͼ���е�ռ���ʡ����ڴ�ͼ���ֱ��ʵͣ����Ի��˷�һЩ�ռ�
 		uint64_t m_lastTouchLoopCount = 0;

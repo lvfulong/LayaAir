@@ -201,7 +201,7 @@ namespace laya
 	{
 		drawTarget(m_texture.get(), 0, 0, m_width, m_height, m, INV_UV, BlendMode::disable);
 	}
-	bool ScreenCanvasContext2D::drawTarget(WebGLInternalTex* rt, float x, float y, float width, float height, const Matrix& m, /*shaderValue : Value2D,*/ float uv[4], BlendMode blend /*BlendMode::invalid*/)
+	bool ScreenCanvasContext2D::drawTarget(GLESInternalTex* rt, float x, float y, float width, float height, const Matrix& m, /*shaderValue : Value2D,*/ float uv[4], BlendMode blend /*BlendMode::invalid*/)
 	{
 		uint32_t rgba = 0xffffffff;
 		if (m_mesh->m_vertNum + 4 > Context2D::MAX_VERTEX_NUM)

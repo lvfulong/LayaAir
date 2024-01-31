@@ -19,7 +19,7 @@ namespace laya
 	class MeshQuadTexture;
 	class JCCommandEncoderBuffer;
 	class SubmitBase;
-	class WebGLInternalTex;
+	class GLESInternalTex;
 	class MeshVG;
 	class RenderTexture2D;
 	class JCContext2DDispatch;
@@ -162,7 +162,7 @@ namespace laya
 		void drawMaskComposite(std::shared_ptr<RenderTexture2D> target, float x, float y, float w, float h);
 		float getMatScaleX();
 		float getMatScaleY();
-		bool _inner_drawTexture(WebGLInternalTex* texture/*, imgid : number*/, float x, float y, float width, float height, const Matrix& m, float uv[8], float alpha, bool lastRender, int color);
+		bool _inner_drawTexture(GLESInternalTex* texture/*, imgid : number*/, float x, float y, float width, float height, const Matrix& m, float uv[8], float alpha, bool lastRender, int color);
 		void fillWords(const char* data, float x, float y, const char* fontStr, int color, int strokeColor, float lineWidth, int textAlign);
 		void fillWordText(int id, float x, float y, const char* fontStr, int color, int strokeColor, float lineWidth, int textAlign);
 		void quadraticCurveTo(float cpx, float cpy, float x, float y);
@@ -176,9 +176,9 @@ namespace laya
 	private:
 		void addPath(std::vector<float>& points, bool close, bool convex, float dx, float dy);
 		bool clipedOff(float pt[8]);
-		void _fillTexture(WebGLInternalTex* texture, float texw, float texh, float texuvRect[4], float x, float y, float width, float height, RepeatMode, float offsetx, float offsety, int color);
-		void _fillTexture_h(WebGLInternalTex* texture,/* imgid : number,*/ float uv[8], float oriw, float orih, float x, float y, float w, int color);
-		void _fillTexture_v(WebGLInternalTex* texture,/* imgid : number,*/ float uv[8], float oriw, float orih, float x, float y, float h, int color);
+		void _fillTexture(GLESInternalTex* texture, float texw, float texh, float texuvRect[4], float x, float y, float width, float height, RepeatMode, float offsetx, float offsety, int color);
+		void _fillTexture_h(GLESInternalTex* texture,/* imgid : number,*/ float uv[8], float oriw, float orih, float x, float y, float w, int color);
+		void _fillTexture_v(GLESInternalTex* texture,/* imgid : number,*/ float uv[8], float oriw, float orih, float x, float y, float h, int color);
 		//void setCmdBuffer(JSValueAsParam pArrayBuffer);
 		void dispatchBuffer();
 		bool dispatchAllCmds(JCCommandEncoderBuffer& pRenderCmd);
@@ -210,8 +210,8 @@ namespace laya
 		MeshQuadTexture*												m_mesh;
 		Path															m_path;
 		MeshVG*															m_pathMesh;
-		WebGLInternalTex*												m_lastTex = nullptr;
-		WebGLInternalTex*												m_defaultTexture = nullptr;
+		GLESInternalTex*												m_lastTex = nullptr;
+		GLESInternalTex*												m_defaultTexture = nullptr;
 		int																m_clipID_Gen = 0;
 		bool															m_incache = false;			// ������cacheas normal������
 		std::shared_ptr<RenderTexture2D>								m_target;

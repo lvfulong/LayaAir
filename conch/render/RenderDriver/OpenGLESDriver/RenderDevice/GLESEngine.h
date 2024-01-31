@@ -31,7 +31,7 @@ class GLVertexState;
 class ShaderData;
 class ShaderVariable;
 class CommandEncoder;
-class WebGLInternalTex;
+class GLESInternalTex;
 class GLRender2DContext;
 class IRender2DContext;
 class ShaderDefine;
@@ -61,7 +61,7 @@ class GLESEngine
     GLBuffer *createBuffer(BufferTargetType targetType, BufferUsage bufferUsageType);
     GLBuffer *_getbindBuffer(BufferTargetType target);
     void _setbindBuffer(BufferTargetType target, GLBuffer *buffer);
-    void _bindTexture(GLenum target, WebGLInternalTex *texture);
+    void _bindTexture(GLenum target, GLESInternalTex *texture);
     int getParams(RenderParams type);
     void viewport(int x, int y, int width, int height);
     void scissor(int x, int y, int width, int height);
@@ -81,7 +81,7 @@ class GLESEngine
                              int index, char *data, int byteSize);
     GLVertexState *m_GLBindVertexArray = nullptr;
     int getUBOPointer(const char *name);
-    void copySubFrameBuffertoTex(WebGLInternalTex *texture, int level, int xoffset, int yoffset, int x, int y,
+    void copySubFrameBuffertoTex(GLESInternalTex*texture, int level, int xoffset, int yoffset, int x, int y,
                                  int width, int height);
     GLBuffer *_getBindUBOBuffer(int glPointer);
     void _setBindUBOBuffer(int glPointer, GLBuffer *buffer);
@@ -102,7 +102,7 @@ class GLESEngine
     bool m_isShaderDebugMode = true;
     std::vector<GLBuffer *> m_GLBufferBindMap;
     int m_activedTextureID;
-    std::vector<WebGLInternalTex *> m_activeTextures;
+    std::vector<GLESInternalTex *> m_activeTextures;
     GLParams *m_params;
     GLCapable *m_supportCapatable;
     GLRenderState *m_renderState;

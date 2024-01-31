@@ -161,7 +161,7 @@ void GLESEngine::_setbindBuffer(BufferTargetType target, GLBuffer *buffer)
 {
     m_GLBufferBindMap[(int)target] = buffer;
 }
-void GLESEngine::_bindTexture(GLenum target, WebGLInternalTex *texture)
+void GLESEngine::_bindTexture(GLenum target, GLESInternalTex *texture)
 {
     if (g_kSystemConfig.m_bConchWebGL)
     {
@@ -454,7 +454,7 @@ int GLESEngine::getUBOPointer(const char *name)
     }
     return it->second;
 }
-void GLESEngine::copySubFrameBuffertoTex(WebGLInternalTex *texture, int level, int xoffset, int yoffset, int x, int y,
+void GLESEngine::copySubFrameBuffertoTex(GLESInternalTex *texture, int level, int xoffset, int yoffset, int x, int y,
                                          int width, int height)
 {
     _bindTexture(texture->m_target, texture);

@@ -16,7 +16,7 @@ namespace laya
 {
 	class GLESEngine;
 	class SubmitBase;
-	class WebGLInternalTex;
+	class GLESInternalTex;
 	class RenderTexture2D;
 	class ISubmit;
 	class GLESInternalRT;
@@ -30,7 +30,7 @@ namespace laya
 		void drawToScreen(const Matrix& m);
 		void startForMainCanvas();
 		void endForMainCanvas();
-		bool drawTarget(WebGLInternalTex* rt, float x, float y, float width, float height, const Matrix& m, /*shaderValue : Value2D,*/ float uv[4], BlendMode blend = BlendMode::invalid);
+		bool drawTarget(GLESInternalTex* rt, float x, float y, float width, float height, const Matrix& m, /*shaderValue : Value2D,*/ float uv[4], BlendMode blend = BlendMode::invalid);
 		void size(int w, int h);
 		void submitElement(int start, int end);
         void captureScreen();
@@ -43,7 +43,7 @@ namespace laya
 		int m_width							            = Context2D::MAXSIZE;
 		int m_height						            = Context2D::MAXSIZE;
 		GLESEngine*						            m_pGLESEngine;
-		std::shared_ptr<WebGLInternalTex>				m_texture = nullptr;
+		std::shared_ptr<GLESInternalTex>				m_texture = nullptr;
 		GLESInternalRT*					            m_target = nullptr;
 		std::atomic_bool                                m_requestCaptureScreen{ false };
 	};

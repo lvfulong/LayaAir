@@ -13,11 +13,11 @@ class Transform3D;
 class RTLightmapData
 {
   public:
-	  WebGLInternalTex* lightmapColor;// InternalTexture;
-	  WebGLInternalTex* lightmapDirection;// InternalTexture;
+	  GLESInternalTex* lightmapColor;// InternalTexture;
+	  GLESInternalTex* lightmapDirection;// InternalTexture;
 
-	  void setLightmapColor(WebGLInternalTex* value) { lightmapColor = value; }
-	  void setLightmapDirection(WebGLInternalTex* value) { lightmapDirection = value; }
+	  void setLightmapColor(GLESInternalTex* value) { lightmapColor = value; }
+	  void setLightmapDirection(GLESInternalTex* value) { lightmapDirection = value; }
 	  void destroy()
 	  {
 		  lightmapColor = nullptr;

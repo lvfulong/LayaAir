@@ -58,7 +58,7 @@ namespace laya
         JCLayaGLDispatch::ms_pLayaGL = m_pLayaGL;
         
 
-        m_pWebGLInternalTexManager = new ObjectManager<WebGLInternalTex>();
+        m_pWebGLInternalTexManager = new ObjectManager<GLESInternalTex>();
         //m_pShaderDataManager = new ResourceManager<ShaderData>();
         //m_pShaderInstanceManager = new ResourceManager<ShaderInstance>();
         //m_pRenderGeometryElementManager = new ResourceManager<RenderGeometryElement>();

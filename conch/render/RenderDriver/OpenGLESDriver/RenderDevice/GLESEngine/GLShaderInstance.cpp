@@ -518,7 +518,7 @@ int GLShaderInstance::_uniform_sampler2D(ShaderVariable *one, const std::any &da
 {
     assert(dataInfo.type == std::typeid(uint32_t));
     uint32_t id = std::any_cast<uint32_t>(dataInfo);
-    WebGLInternalTex *texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(id);
+    GLESInternalTex *texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(id);
     if (texture != nullptr)
     {
         _bindTexture(one->textureID, GL_TEXTURE_2D, texture);
@@ -533,7 +533,7 @@ int GLShaderInstance::_uniform_sampler2DArray(ShaderVariable *one, const std::an
 {
     assert(dataInfo.type == std::typeid(uint32_t));
     uint32_t id = std::any_cast<uint32_t>(dataInfo);
-    WebGLInternalTex *texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(id);
+    GLESInternalTex *texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(id);
     if (texture != nullptr)
     {
         _bindTexture(one->textureID, GL_TEXTURE_2D_ARRAY, texture);
@@ -548,7 +548,7 @@ int GLShaderInstance::_uniform_sampler3D(ShaderVariable *one, const std::any &da
 {
     assert(dataInfo.type == std::typeid(uint32_t));
     uint32_t id = std::any_cast<uint32_t>(dataInfo);
-    WebGLInternalTex *texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(id);
+    GLESInternalTex *texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(id);
     if (texture != nullptr)
     {
         _bindTexture(one->textureID, GL_TEXTURE_3D, texture);
@@ -560,7 +560,7 @@ int GLShaderInstance::_uniform_samplerCube(ShaderVariable *one, const std::any &
 {
     assert(dataInfo.type == std::typeid(uint32_t));
     uint32_t id = std::any_cast<uint32_t>(dataInfo);
-    WebGLInternalTex *texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(id);
+    GLESInternalTex *texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(id);
     if (texture != nullptr)
     {
         _bindTexture(one->textureID, GL_TEXTURE_CUBE_MAP, texture);
@@ -579,7 +579,7 @@ int GLShaderInstance::_uniform_UniformBuffer(ShaderVariable *one, const std::any
 
     return 0;
 }
-void GLShaderInstance::_bindTexture(int textureID, GLenum target, WebGLInternalTex *texture)
+void GLShaderInstance::_bindTexture(int textureID, GLenum target, GLESInternalTex *texture)
 {
     if (g_kSystemConfig.m_bConchWebGL)
     {

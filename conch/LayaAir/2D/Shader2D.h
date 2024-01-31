@@ -14,7 +14,7 @@ namespace laya
 	class IRender2DContext;
 	class Shader;
 	class Shader2DCompile;
-	class WebGLInternalTex;
+	class GLESInternalTex;
 	struct UniformInfo
 	{
 		std::string name;
@@ -60,7 +60,7 @@ namespace laya
 		int uniform2f(const char* name, float value0, float value1);
 		int uniform3f(const char* name, float value0, float value1, float value2);
 		int uniform4f(const char* name, float value0, float value1, float value2, float value3);
-		int uniform_sampler2D(const char* name, WebGLInternalTex* value);
+		int uniform_sampler2D(const char* name, GLESInternalTex* value);
 		int uniformMatrix4fv(const char* name, float* value);
         static void onDestroy();
 	public:

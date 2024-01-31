@@ -9,12 +9,12 @@
 namespace laya
 {
 	class Mesh2D;
-	class WebGLInternalTex;
+	class GLESInternalTex;
 	class Context2D;
 	class SubmitTexture: public SubmitBase
 	{	
 	public:
-		static SubmitTexture* create(int submitType, Mesh2D* mesh, Context2D* ctx, WebGLInternalTex* texture);
+		static SubmitTexture* create(int submitType, Mesh2D* mesh, Context2D* ctx, GLESInternalTex* texture);
         static void onDestroy();
 		SubmitTexture(GLESEngine* pWebglEngine);
 		int renderSubmit() override;

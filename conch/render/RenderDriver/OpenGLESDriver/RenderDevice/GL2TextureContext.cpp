@@ -341,7 +341,7 @@ namespace laya
 
         return m_glParam;
     }
-	int GL2TextureContext::getGLtexMemory(WebGLInternalTex* tex, int depth)
+	int GL2TextureContext::getGLtexMemory(GLESInternalTex* tex, int depth)
 	{
 		int channels = 0;
 		int singlebyte = 0;
@@ -416,7 +416,7 @@ namespace laya
 			return false;
 		}
 	}
-	void GL2TextureContext::setTextureImageData(WebGLInternalTex* texture, JCImage* source/*HTMLImageElement | HTMLCanvasElement | ImageBitmap*/, bool premultiplyAlpha, bool invertY)
+	void GL2TextureContext::setTextureImageData(GLESInternalTex* texture, JCImage* source/*HTMLImageElement | HTMLCanvasElement | ImageBitmap*/, bool premultiplyAlpha, bool invertY)
 	{	
 		source->enableImage();
 		source->updateTexImage();
@@ -468,7 +468,7 @@ namespace laya
 
         m_engine->_bindTexture(texture->m_target, 0);
     }
-	/*setTextureSubImageData(texture: WebGLInternalTex, source: HTMLImageElement | HTMLCanvasElement | ImageBitmap, x: number, y: number, premultiplyAlpha: boolean, invertY: boolean) {
+	/*setTextureSubImageData(texture: GLESInternalTex, source: HTMLImageElement | HTMLCanvasElement | ImageBitmap, x: number, y: number, premultiplyAlpha: boolean, invertY: boolean) {
 	let target = texture.target;
 	let internalFormat = texture.internalFormat;
 	let format = texture.format;
@@ -495,7 +495,7 @@ this._engine._bindTexture(texture.target, null);
 premultiplyAlpha && gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
 invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
 }*/
-    void GL2TextureContext::setTexturePixelsData(WebGLInternalTex* texture, char* source, int sourceBytes, bool premultiplyAlpha, bool invertY)
+    void GL2TextureContext::setTexturePixelsData(GLESInternalTex* texture, char* source, int sourceBytes, bool premultiplyAlpha, bool invertY)
 	{
 
 		int target = texture->m_target;
@@ -539,7 +539,7 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
 		}
     }
 
-    void GL2TextureContext::setTexture3DImageData(WebGLInternalTex *texture, const std::vector<JSImage *>& sources, int depth, bool premultiplyAlpha, bool invertY)
+    void GL2TextureContext::setTexture3DImageData(GLESInternalTex *texture, const std::vector<JSImage *>& sources, int depth, bool premultiplyAlpha, bool invertY)
     {
         
         int target = texture->m_target;
@@ -590,7 +590,7 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
         m_engine->_bindTexture(texture->m_target, 0);
     }
 
-    void GL2TextureContext::setTexture3DPixelsData(WebGLInternalTex *texture, char *source, int sourceBytes, int depth, bool premultiplyAlpha, bool invertY)
+    void GL2TextureContext::setTexture3DPixelsData(GLESInternalTex *texture, char *source, int sourceBytes, int depth, bool premultiplyAlpha, bool invertY)
     {
         int target = texture->m_target;
         int internalFormat = texture->m_internalFormat;
@@ -633,7 +633,7 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
         }
     }
 
-    void GL2TextureContext::setTexture3DSubPixelsData(WebGLInternalTex *texture, char *source, int mipmapLevel, bool generateMipmap, int xOffset, int yOffset, int zOffset, int width, int height, int depth, bool premultiplyAlpha, bool invertY)
+    void GL2TextureContext::setTexture3DSubPixelsData(GLESInternalTex *texture, char *source, int mipmapLevel, bool generateMipmap, int xOffset, int yOffset, int zOffset, int width, int height, int depth, bool premultiplyAlpha, bool invertY)
     {
         generateMipmap = generateMipmap && mipmapLevel == 0;
 
@@ -673,7 +673,7 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
         }
     }
 
-    void GL2TextureContext::setTextureKTXData(WebGLInternalTex *texture, const KTXTextureInfo &ktxInfo)
+    void GL2TextureContext::setTextureKTXData(GLESInternalTex *texture, const KTXTextureInfo &ktxInfo)
     {
         int width = texture->m_width;
         int height = texture->m_height;
@@ -725,7 +725,7 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
         }
     }
 
-    void GL2TextureContext::setCubeImageData(WebGLInternalTex* texture, const std::vector<JSImage*>& sources, bool premultiplyAlpha, bool invertY)
+    void GL2TextureContext::setCubeImageData(GLESInternalTex* texture, const std::vector<JSImage*>& sources, bool premultiplyAlpha, bool invertY)
 	{
 		const GLenum cubeFace[6] = {
 			GL_TEXTURE_CUBE_MAP_POSITIVE_Z, // back
@@ -787,7 +787,7 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
         m_engine->_bindTexture(texture->m_target, 0);
     }
 
-	void GL2TextureContext::setCubePixelsData(WebGLInternalTex* texture, const std::vector<char*>& source, bool premultiplyAlpha, bool invertY)
+	void GL2TextureContext::setCubePixelsData(GLESInternalTex* texture, const std::vector<char*>& source, bool premultiplyAlpha, bool invertY)
 	{
 		const GLenum cubeFace[6] = {
 			GL_TEXTURE_CUBE_MAP_POSITIVE_Z, // back
@@ -845,7 +845,7 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
 		}
     }
 
-    void GL2TextureContext::setCubeKTXData(WebGLInternalTex *texture, const KTXTextureInfo &ktxInfo)
+    void GL2TextureContext::setCubeKTXData(GLESInternalTex *texture, const KTXTextureInfo &ktxInfo)
     {
         const GLenum cubeFace[6] = {
             GL_TEXTURE_CUBE_MAP_POSITIVE_X,
@@ -933,7 +933,7 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
         }
     }
 
-    TextureCompareMode GL2TextureContext::setTextureCompareMode(WebGLInternalTex* texture, TextureCompareMode compareMode)
+    TextureCompareMode GL2TextureContext::setTextureCompareMode(GLESInternalTex* texture, TextureCompareMode compareMode)
 	{
         switch (compareMode)
 		{
@@ -999,7 +999,7 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
         return renderbuffer;
     }
 
-    WebGLInternalTex* GL2TextureContext::createRenderTextureInternal(TextureDimension dimension, int width, int height, RenderTargetFormat format, bool generateMipmap, bool sRGB)
+    GLESInternalTex* GL2TextureContext::createRenderTextureInternal(TextureDimension dimension, int width, int height, RenderTargetFormat format, bool generateMipmap, bool sRGB)
 	{
 		generateMipmap = generateMipmap && supportGenerateMipmap((int)format);
 
@@ -1012,7 +1012,7 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
         }
 
 		GLenum target = getTarget(dimension);
-		WebGLInternalTex* internalTex = new WebGLInternalTex(m_engine,target, width, height, dimension, generateMipmap, useSRGBExt, gammaCorrection);
+		GLESInternalTex* internalTex = new GLESInternalTex(m_engine,target, width, height, dimension, generateMipmap, useSRGBExt, gammaCorrection);
         
 		const GLParam& glParam = glRenderTextureParam(format, useSRGBExt);
 
@@ -1041,11 +1041,11 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
 
 	GLESInternalRT* GL2TextureContext::createRenderTargetInternal(int width, int height, RenderTargetFormat colorFormat, RenderTargetFormat depthStencilFormat, bool generateMipmap, bool sRGB, int multiSamples)
 	{
-		WebGLInternalTex* texture = createRenderTextureInternal(TextureDimension::Tex2D, width, height, colorFormat, generateMipmap, sRGB);
+		GLESInternalTex* texture = createRenderTextureInternal(TextureDimension::Tex2D, width, height, colorFormat, generateMipmap, sRGB);
 
 		GLESInternalRT* renderTarget = new GLESInternalRT(colorFormat, depthStencilFormat, false, texture->mipmap(), multiSamples);
 		renderTarget->setGpuMemory(getGLRTTexMemory(width, height, colorFormat, depthStencilFormat, generateMipmap, multiSamples, false));
-        std::shared_ptr<WebGLInternalTex> p;
+        std::shared_ptr<GLESInternalTex> p;
         p.reset(texture);
         renderTarget->m_textures.push_back(p);
 
@@ -1098,14 +1098,14 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
 
 	GLESInternalRT* GL2TextureContext::createRenderTargetCubeInternal(int size, RenderTargetFormat colorFormat, RenderTargetFormat depthStencilFormat, bool generateMipmap, bool sRGB, int multiSamples)
 	{
-		WebGLInternalTex* texture = createRenderTextureCubeInternal(TextureDimension::Cube, size, colorFormat, generateMipmap, sRGB);
+		GLESInternalTex* texture = createRenderTextureCubeInternal(TextureDimension::Cube, size, colorFormat, generateMipmap, sRGB);
 
 		GLESInternalRT* renderTarget = new GLESInternalRT(colorFormat, depthStencilFormat, true, texture->mipmap(), multiSamples);
 		renderTarget->setGpuMemory(getGLRTTexMemory(size, size, colorFormat, depthStencilFormat, generateMipmap, multiSamples, true));
         renderTarget->m_colorFormat = colorFormat;
         renderTarget->m_depthStencilFormat = depthStencilFormat;
         
-        std::shared_ptr<WebGLInternalTex> p;
+        std::shared_ptr<GLESInternalTex> p;
         p.reset(texture);
         renderTarget->m_textures.push_back(p);
 
@@ -1147,7 +1147,7 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
         return renderTarget;
     }
 
-	WebGLInternalTex* GL2TextureContext::createRenderTextureCubeInternal(TextureDimension dimension, int size, RenderTargetFormat format, bool generateMipmap, bool sRGB)
+	GLESInternalTex* GL2TextureContext::createRenderTextureCubeInternal(TextureDimension dimension, int size, RenderTargetFormat format, bool generateMipmap, bool sRGB)
 	{
 
         generateMipmap = generateMipmap && supportGenerateMipmap((int)format);
@@ -1161,7 +1161,7 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
         }
 
 		GLenum target = getTarget(dimension);
-		WebGLInternalTex* internalTex = new WebGLInternalTex(m_engine,target, size, size, dimension, generateMipmap, useSRGBExt, gammaCorrection);
+		GLESInternalTex* internalTex = new GLESInternalTex(m_engine,target, size, size, dimension, generateMipmap, useSRGBExt, gammaCorrection);
 
 		const GLParam& glParam = glRenderTextureParam(format, useSRGBExt);
 
@@ -1189,7 +1189,7 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
         if (renderTarget->m_isCube) 
 		{
             glBindFramebuffer(GL_FRAMEBUFFER, renderTarget->m_framebuffer);
-			WebGLInternalTex* texture = renderTarget->m_textures[0].get();
+			GLESInternalTex* texture = renderTarget->m_textures[0].get();
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + faceIndex, texture->m_resource, 0);
         }
 
@@ -1212,7 +1212,7 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
             glBindFramebuffer(GL_READ_FRAMEBUFFER, renderTarget->m_msaaFramebuffer);
             glBindFramebuffer(GL_DRAW_FRAMEBUFFER, renderTarget->m_framebuffer);
 
-			WebGLInternalTex* texture = renderTarget->m_textures[0].get();
+			GLESInternalTex* texture = renderTarget->m_textures[0].get();
 
             // todo 不用clear ?
             // gl.clearBufferfv(gl.COLOR, 0, [0, 0, 0, 0]);
@@ -1233,7 +1233,7 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
 
 			for (GLESInternalRT::TexturesVec::iterator it = renderTarget->m_textures.begin(); it != renderTarget->m_textures.end(); it++)
 			{
-				WebGLInternalTex* tex = it->get();
+				GLESInternalTex* tex = it->get();
 				if (tex)
 				{
 					m_engine->_bindTexture(tex->m_target, tex);

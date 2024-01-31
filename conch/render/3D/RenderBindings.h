@@ -147,7 +147,7 @@ class RenderBindings
             context.class_("conchGLESInternalRT", class_binding);
         }
         {
-            // todo WebGLInternalTex
+            // todo GLESInternalTex
         }
         {
             // todo UniformBufferObject

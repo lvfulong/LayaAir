@@ -82,7 +82,7 @@ namespace laya
         JCLayaGL*                               m_pLayaGL;                      ///<layaGL
         JCFileResManager*                       m_pFileResManager;              ///<FileResManager 外部设置的
         //JCPerfDataRender                        m_kPerfRender;                  ///<性能测试
-		ObjectManager<WebGLInternalTex>*		m_pWebGLInternalTexManager;
+		ObjectManager<GLESInternalTex>*		m_pWebGLInternalTexManager;
 		//ResourceManager<ShaderData>*			m_pShaderDataManager;
         //ResourceManager<ShaderInstance>*		m_pShaderInstanceManager;
         //ResourceManager<RenderGeometryElement>* m_pRenderGeometryElementManager;

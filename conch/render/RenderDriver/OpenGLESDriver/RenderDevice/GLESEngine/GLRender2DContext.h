@@ -35,7 +35,7 @@ namespace laya
 
 		void bindTexture(int target, void* texture) override
 		{
-			m_engine->_bindTexture(target, (WebGLInternalTex*)texture);
+			m_engine->_bindTexture(target, (GLESInternalTex*)texture);
 		}
 
 		bool bindUseProgram(int webglProgram) override

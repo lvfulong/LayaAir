@@ -11,7 +11,7 @@
 #include <binder/JSInterface.h>
 namespace laya
 {
-class WebGLInternalTex;
+class GLESInternalTex;
 class GLESEngine;
 class GLESInternalRT : public GLObject
 {
@@ -44,9 +44,9 @@ class GLESInternalRT : public GLObject
     bool m_isCube;
     int m_samples;
     bool m_generateMipmap;
-    typedef std::vector<std::shared_ptr<WebGLInternalTex>> TexturesVec;
-    std::vector<std::shared_ptr<WebGLInternalTex>> m_textures;
-    std::shared_ptr<WebGLInternalTex> m_depthTexture;
+    typedef std::vector<std::shared_ptr<GLESInternalTex>> TexturesVec;
+    std::vector<std::shared_ptr<GLESInternalTex>> m_textures;
+    std::shared_ptr<GLESInternalTex> m_depthTexture;
     RenderTargetFormat m_colorFormat;
     RenderTargetFormat m_depthStencilFormat;
     int m_gpuMemory = 0;
