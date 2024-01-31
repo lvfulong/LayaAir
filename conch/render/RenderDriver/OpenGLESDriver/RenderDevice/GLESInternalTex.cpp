@@ -1,6 +1,7 @@
 #include "GLESInternalTex.h"
 #include "JCConch.h"
 #include "JCConchRender.h"
+#include "render/driver/gles/LayaGL.h"
 #ifdef WIN32
 #ifdef min
 #undef min
@@ -12,9 +13,9 @@
 using laya::JCConch;
 namespace laya
 {
-GLESInternalTex::GLESInternalTex(GLESEngine *engine, int target, int width, int height, TextureDimension dimension,
-                                 bool mipmap, bool useSRGBLoader, int gammaCorrection)
-    : GLObject(engine), ObjectBase(JCConch::s_pConchRender->m_pWebGLInternalTexManager)
+GLESInternalTex::GLESInternalTex(int target, int width, int height, int depth, TextureDimension dimension, bool mipmap,
+                                 bool useSRGBLoader, int gammaCorrection)
+    : GLObject(LayaGL::m_pWebglEngine), ObjectBase(JCConch::s_pConchRender->m_pWebGLInternalTexManager)
 {
     glGenTextures(1, &m_resource);
     m_width = width;

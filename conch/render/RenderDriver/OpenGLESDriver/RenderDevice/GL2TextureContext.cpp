@@ -1006,13 +1006,13 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
 		bool useSRGBExt = isSRGBFormat((int)format) || (sRGB && supportSRGB((int)format, generateMipmap));
 
         float gammaCorrection = 1.0f;
-        if (!useSRGBExt && sRGB)
-		{
-            gammaCorrection = 2.2f;
-        }
+        //if (!useSRGBExt && sRGB)
+		//{
+        //    gammaCorrection = 2.2f;
+        //}
 
 		GLenum target = getTarget(dimension);
-		GLESInternalTex* internalTex = new GLESInternalTex(m_engine,target, width, height, dimension, generateMipmap, useSRGBExt, gammaCorrection);
+		GLESInternalTex* internalTex = new GLESInternalTex(target, width, height, 1, dimension, generateMipmap, useSRGBExt, gammaCorrection);
         
 		const GLParam& glParam = glRenderTextureParam(format, useSRGBExt);
 
@@ -1155,13 +1155,13 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
 		bool useSRGBExt = isSRGBFormat((int)format) || (sRGB && supportSRGB((int)format, generateMipmap));
 
         float gammaCorrection = 1.0f;
-        if (!useSRGBExt && sRGB) 
-		{
-            gammaCorrection = 2.2f;
-        }
+        //if (!useSRGBExt && sRGB) 
+		//{
+        //    gammaCorrection = 2.2f;
+        //}
 
 		GLenum target = getTarget(dimension);
-		GLESInternalTex* internalTex = new GLESInternalTex(m_engine,target, size, size, dimension, generateMipmap, useSRGBExt, gammaCorrection);
+		GLESInternalTex* internalTex = new GLESInternalTex(target, size, size, 1, dimension, generateMipmap, useSRGBExt, gammaCorrection);
 
 		const GLParam& glParam = glRenderTextureParam(format, useSRGBExt);
 

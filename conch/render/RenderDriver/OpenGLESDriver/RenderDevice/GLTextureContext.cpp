@@ -628,7 +628,7 @@ namespace laya
 
         // let dimension = TextureDimension.Tex2D;
 		GLenum target = getTarget(dimension);
-		GLESInternalTex* internalTex = new GLESInternalTex(m_engine, target, width, height, dimension, gengerateMipmap, useSRGBExt, gammaCorrection);
+		GLESInternalTex* internalTex = new GLESInternalTex(target, width, height, 1, dimension, gengerateMipmap, useSRGBExt, gammaCorrection);
 
 		const GLParam& glParam = glTextureParam(format, useSRGBExt);
 
@@ -1314,13 +1314,13 @@ namespace laya
         generateMipmap = generateMipmap && supportGenerateMipmap((int)format);
 
         float gammaCorrection = 1.0f;
-        if (!useSRGBExt && sRGB) {
-            gammaCorrection = 2.2f;
-        }
+        //if (!useSRGBExt && sRGB) {
+        //    gammaCorrection = 2.2f;
+       // }
 
         // let dimension = TextureDimension.Tex2D;
         int target = getTarget(dimension);
-		GLESInternalTex* internalTex = new GLESInternalTex(m_engine, target, width, height, dimension, generateMipmap, useSRGBExt, gammaCorrection);
+		GLESInternalTex* internalTex = new GLESInternalTex(target, width, height, 1, dimension, generateMipmap, useSRGBExt, gammaCorrection);
 
 		const GLParam& glParam = glRenderTextureParam(format, useSRGBExt);
 
@@ -1352,13 +1352,13 @@ namespace laya
         generateMipmap = generateMipmap && supportGenerateMipmap((int)format);
 
         float gammaCorrection = 1.0f;
-        if (!useSRGBExt && sRGB)
-		{
-            gammaCorrection = 2.2f;
-        }
+        //if (!useSRGBExt && sRGB)
+		//{
+        //    gammaCorrection = 2.2f;
+        //}
 
 		GLenum target = getTarget(dimension);
-		GLESInternalTex* internalTex = new GLESInternalTex(m_engine, target, size, size, dimension, generateMipmap, useSRGBExt, gammaCorrection);
+		GLESInternalTex* internalTex = new GLESInternalTex(target, size, size, 1, dimension, generateMipmap, useSRGBExt, gammaCorrection);
 
 		const GLParam& glParam = glRenderTextureParam(format, useSRGBExt);
 

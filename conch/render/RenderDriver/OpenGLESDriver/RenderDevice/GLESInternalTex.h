@@ -1,188 +1,195 @@
 #ifndef __GLESInternalTex_H__
 #define __GLESInternalTex_H__
 
+#include "GLESEngine.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLEnum/WebGLExtension.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLObject.h"
+#include <algorithm>
 #include <math.h>
-#include <render/3D/temp/ObjectBase.h>
-#include <render/3D/design/renderEnum/RenderPologyMode.h>
-#include <render/3D/design/renderEnum/IndexFormat.h>
 #include <render/3D/design/renderEnum/FilterMode.h>
+#include <render/3D/design/renderEnum/IndexFormat.h>
+#include <render/3D/design/renderEnum/RenderPologyMode.h>
+#include <render/3D/design/renderEnum/RenderTargetFormat.h>
 #include <render/3D/design/renderEnum/TextureCompareMode.h>
 #include <render/3D/design/renderEnum/TextureDimension.h>
 #include <render/3D/design/renderEnum/WrapMode.h>
-#include <render/3D/design/renderEnum/RenderTargetFormat.h>
-#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLEnum/WebGLExtension.h"
-#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLObject.h"
-#include "GLESEngine.h"
-#include <math.h>
-#include <algorithm>
+#include <render/3D/temp/ObjectBase.h>
 #include <utils/Preprocessor.h>
 #ifdef LINUX
-#define GL_TEXTURE_WRAP_R                 0x8072
+#define GL_TEXTURE_WRAP_R 0x8072
 #endif
 
 namespace laya
 {
-	class GLESInternalTex : public GLObject, public ObjectBase<GLESInternalTex>
-	{
-	public:
-		GLESInternalTex(GLESEngine* engine, int target, int width, int height, TextureDimension dimension, bool mipmap, bool useSRGBLoader, int gammaCorrection);
-		~GLESInternalTex()
-		{
-			dispose();
-		}
-		bool isPot(int value)
-		{
-			return (value & (value - 1)) == 0;
-		}
-		bool mipmap()
-		{
-			return m_mipmap;
-		}
-		int mipmapCount()
-		{
-			return m_mipmapCount;
-		}
-		FilterMode getFilterMode()
-		{
-			return m_filterMode;
-		}
-		void setFilterMode(FilterMode value);
+class GLESInternalTex : public GLObject, public ObjectBase<GLESInternalTex>
+{
+  public:
+    GLESInternalTex(int target, int width, int height, int depth, TextureDimension dimension, bool mipmap,
+                    bool useSRGBLoader, int gammaCorrection);
+    ~GLESInternalTex()
+    {
+        dispose();
+    }
+    bool isPot(int value)
+    {
+        return (value & (value - 1)) == 0;
+    }
+    bool mipmap()
+    {
+        return m_mipmap;
+    }
+    int mipmapCount()
+    {
+        return m_mipmapCount;
+    }
+    FilterMode getFilterMode()
+    {
+        return m_filterMode;
+    }
+    void setFilterMode(FilterMode value);
 
+    WarpMode getWrapU()
+    {
+        return m_warpU;
+    }
+    void setWrapU(WarpMode value)
+    {
+        if (m_warpU != value && m_resource)
+        {
+            GLenum warpParam = getWarpParam(value);
+            _setWarpMode(GL_TEXTURE_WRAP_S, warpParam);
+            m_warpU = value;
+        }
+    }
 
-		WarpMode getWrapU()
-		{
-			return m_warpU;
-		}
-		void setWrapU(WarpMode value) 
-		{
-			if (m_warpU != value && m_resource)
-			{
-				GLenum warpParam = getWarpParam(value);
-				_setWarpMode(GL_TEXTURE_WRAP_S, warpParam);
-				m_warpU = value;
-			}
-		}		
+    WarpMode getWrapV()
+    {
+        return m_warpV;
+    }
+    void setWrapV(WarpMode value)
+    {
+        if (m_warpV != value && m_resource)
+        {
+            GLenum warpParam = getWarpParam(value);
+            _setWarpMode(GL_TEXTURE_WRAP_T, warpParam);
+            m_warpV = value;
+        }
+    }
 
-		WarpMode getWrapV()
-		{
-			return m_warpV;
-		}
-		void setWrapV(WarpMode value)
-		{
-			if (m_warpV != value && m_resource) 
-			{
-				GLenum warpParam = getWarpParam(value);
-				_setWarpMode(GL_TEXTURE_WRAP_T, warpParam);
-				m_warpV = value;
-			}
-		}
+    WarpMode getWrapW()
+    {
+        return m_warpW;
+    }
+    void setWrapW(WarpMode value)
+    {
+        if (m_warpW != value && m_resource)
+        {
+            if (m_engine->getCapable(RenderCapable::Texture3D))
+            {
+                GLenum warpParam = getWarpParam(value);
+                _setWarpMode(GL_TEXTURE_WRAP_R, warpParam);
+            }
+            m_warpW = value;
+        }
+    }
 
+    float getAnisoLevel()
+    {
+        return m_anisoLevel;
+    }
+    void setAnisoLevel(float value);
 
-		WarpMode getWrapW()
-		{
-			return m_warpW;
-		}
-		void setWrapW(WarpMode value) 
-		{
-			if (m_warpW != value && m_resource) {
-				if (m_engine->getCapable(RenderCapable::Texture3D)) {
-					GLenum warpParam = getWarpParam(value);
-					_setWarpMode(GL_TEXTURE_WRAP_R, warpParam);
-				}
-				m_warpW = value;
-			}
-		}
+    TextureCompareMode getCompareMode()
+    {
+        return m_compareMode;
+    }
+    void setCompareMode(TextureCompareMode value)
+    {
+        m_compareMode = value;
+    }
 
-		float getAnisoLevel()
-		{
-			return m_anisoLevel;
-		}
-		void setAnisoLevel(float value);
+    // todo 设置参数函数 放在 context 里面?
+    void _setTexParameteri(GLenum pname, GLint param);
 
-		TextureCompareMode getCompareMode()
-		{
-			return m_compareMode;
-		}
-		void setCompareMode(TextureCompareMode value)
-		{
-			m_compareMode = value;
-		}
+    void _setTexParametexf(GLenum pname, GLfloat param);
 
-		// todo 设置参数函数 放在 context 里面? 
-		void _setTexParameteri(GLenum pname, GLint param);
+    int getWidth()
+    {
+        return m_width;
+    }
+    int getHeight()
+    {
+        return m_height;
+    }
+    void dispose();
 
-		void _setTexParametexf(GLenum pname, GLfloat param);
+    GLuint getResource()
+    {
+        return m_resource;
+    }
 
-		int getWidth() { return m_width; }
-		int getHeight() { return m_height; }
-		void dispose();
+    void setBaseMipmapLevel(int value);
 
-		GLuint getResource() { return m_resource; }
+    int getBaseMipmapLevel();
 
-		void setBaseMipmapLevel(int value);
+    void setMaxMipmapLevel(int value);
 
-		int getBaseMipmapLevel();
+    int getMaxMipmapLevel();
 
-		void setMaxMipmapLevel(int value);
+    int getGpuMemory();
 
-		int getMaxMipmapLevel();
+    void setGpuMemory(int value);
 
-		int getGpuMemory();
+    int getInternalFormat();
 
-		void setGpuMemory(int value);
+    void setInternalFormat(int value);
 
-        int getInternalFormat();
-        
-        void setInternalFormat(int value);
-        
-	protected:
+  protected:
+    GLenum getFilteMinrParam(FilterMode filterMode, bool mipmap);
 
-		GLenum getFilteMinrParam(FilterMode filterMode, bool mipmap);
+    GLenum getFilterMagParam(FilterMode filterMode);
 
-		GLenum getFilterMagParam(FilterMode filterMode);
+    GLenum getWarpParam(WarpMode warpMode);
 
-		GLenum getWarpParam(WarpMode warpMode);
+    void _setWarpMode(int pname, int param)
+    {
+        if (!m_isPotSize)
+        {
+            param = GL_CLAMP_TO_EDGE;
+        }
+        _setTexParameteri(pname, param);
+    }
 
-		void _setWarpMode(int pname, int param)
-		{
-			if (!m_isPotSize)
-			{
-				param = GL_CLAMP_TO_EDGE;
-			}
-			_setTexParameteri(pname, param);
-		}
-		
+  public:
+    GLuint m_resource = 0;
+    int m_resourceTarget;
 
-	public:
+    int m_width;
+    int m_height;
+    bool m_isPotSize;
 
-		GLuint				m_resource = 0;
-		int					m_resourceTarget;
+    bool m_mipmap;
 
-		int					m_width;
-		int					m_height;
-		bool				m_isPotSize;
+    int m_mipmapCount;
+    bool m_useSRGBLoad;
+    int m_gammaCorrection;
 
-		bool				m_mipmap;
-
-		int					m_mipmapCount;
-		bool				m_useSRGBLoad;
-		int					m_gammaCorrection;
-
-		// webgl param
-		int					m_target;
-		int					m_internalFormat;
-		int					m_format;
-		int					m_type;
-		TextureCompareMode	m_compareMode;
-		FilterMode			m_filterMode = FilterMode::None;
-		WarpMode			m_warpU = WarpMode::None;
-		float				m_anisoLevel;
-		WarpMode			m_warpW = WarpMode::None;
-		WarpMode			m_warpV = WarpMode::None;
-		int					m_baseMipmapLevel = 0;
-		int					m_maxMipmapLevel = 0;
-		int					m_gpuMemory = 0;
-        float               uvrect[4]{0.0,0.0,1.0,1.0};
-	};
-}
+    // webgl param
+    int m_target;
+    int m_internalFormat;
+    int m_format;
+    int m_type;
+    TextureCompareMode m_compareMode;
+    FilterMode m_filterMode = FilterMode::None;
+    WarpMode m_warpU = WarpMode::None;
+    float m_anisoLevel;
+    WarpMode m_warpW = WarpMode::None;
+    WarpMode m_warpV = WarpMode::None;
+    int m_baseMipmapLevel = 0;
+    int m_maxMipmapLevel = 0;
+    int m_gpuMemory = 0;
+    float uvrect[4]{0.0, 0.0, 1.0, 1.0};
+	 int depth = 0;//TODO
+};
+} // namespace laya
 #endif

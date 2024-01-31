@@ -147,7 +147,33 @@ class RenderBindings
             context.class_("conchGLESInternalRT", class_binding);
         }
         {
-            // todo GLESInternalTex
+            class_<GLESInternalTex> class_binding;
+            class_binding.constructor<int, int, int, int, TextureDimension, bool, bool, int>();
+            class_binding.function("dispose", &GLESInternalTex::dispose);
+            /*class_binding.property("mipmapCount", &GLESInternalTex::getMipmapCount);
+            class_binding.property("mipmap", &JSWebGLInternalTex::getMipmap);
+            class_binding.property("useSRGBLoad", &JSWebGLInternalTex::getUseSRGBLoad);
+            class_binding.property("gammaCorrection", &JSWebGLInternalTex::getGammaCorrection,
+                                   &JSWebGLInternalTex::setGammaCorrection);
+            class_binding.property("resource", &JSWebGLInternalTex::getResource);
+            class_binding.property("id", &JSWebGLInternalTex::getID);
+            class_binding.property("filterMode", &JSWebGLInternalTex::getFilterMode,
+                                   &JSWebGLInternalTex::setFilterMode);
+            class_binding.property("wrapU", &JSWebGLInternalTex::getWrapU, &JSWebGLInternalTex::setWrapU);
+            class_binding.property("wrapV", &JSWebGLInternalTex::getWrapV, &JSWebGLInternalTex::setWrapV);
+            class_binding.property("wrapW", &JSWebGLInternalTex::getWrapW, &JSWebGLInternalTex::setWrapW);
+            class_binding.property("anisoLevel", &JSWebGLInternalTex::getAnisoLevel,
+                                   &JSWebGLInternalTex::setAnisoLevel);
+            class_binding.property("compareMode", &JSWebGLInternalTex::getCompareMode,
+                                   &JSWebGLInternalTex::setCompareMode);
+
+            class_binding.property("maxMipmapLevel", &JSWebGLInternalTex::getMaxMipmapLevel,
+                                   &JSWebGLInternalTex::setMaxMipmapLevel);
+            class_binding.property("baseMipmapLevel", &JSWebGLInternalTex::getBaseMipmapLevel,
+                                   &JSWebGLInternalTex::setBaseMipmapLevel);
+            class_binding.property("internalFormat", &JSWebGLInternalTex::getInternalFormat,
+                                   &JSWebGLInternalTex::setInternalFormat);*/
+            context.class_("conchGLESInternalTex", class_binding);
         }
         {
             // todo UniformBufferObject
