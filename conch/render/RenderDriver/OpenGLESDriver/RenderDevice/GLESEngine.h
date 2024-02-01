@@ -38,6 +38,8 @@ class IRender2DContext;
 class ShaderDefine;
 class GLESEngine
 {
+public:
+    static std::unordered_map<uint32_t, ShaderDefine> _texGammaDefine;
   public:
     GLESEngine(WebGLConfig config, WebGLMode webglMode);
     ~GLESEngine();
@@ -61,6 +63,7 @@ class GLESEngine
     GLTextureContext *createTextureContext(bool isWebGL2);
     GLBuffer *createBuffer(BufferTargetType targetType, BufferUsage bufferUsageType);
     GLBuffer *_getbindBuffer(BufferTargetType target);
+    void addTexGammaDefine(uint32_t key, ShaderDefine value);
     void _setbindBuffer(BufferTargetType target, GLBuffer *buffer);
     void _bindTexture(GLenum target, GLESInternalTex *texture);
     int getParams(RenderParams type);

@@ -21,6 +21,7 @@
 namespace laya
 {
 GLESEngine *g_GLESEngine = nullptr;
+std::unordered_map<uint32_t, ShaderDefine> GLESEngine::_texGammaDefine = {};
 GLESEngine::GLESEngine(WebGLConfig config, WebGLMode webglMode)
 {
     assert(g_GLESEngine == nullptr);
@@ -163,6 +164,11 @@ int GLESEngine::getStatisticsInfo(RenderStatisticsInfo info)
 GLBuffer *GLESEngine::_getbindBuffer(BufferTargetType target)
 {
     return m_GLBufferBindMap[(int)target];
+}
+
+void GLESEngine::addTexGammaDefine(uint32_t key, ShaderDefine value)
+{
+    GLESEngine::_texGammaDefine[key] = value;
 }
 
 void GLESEngine::_setbindBuffer(BufferTargetType target, GLBuffer *buffer)

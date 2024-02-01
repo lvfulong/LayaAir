@@ -301,8 +301,8 @@ int GLShaderInstance::_uniform1f(ShaderVariable *one, const std::any &dataInfo)
 }
 int GLShaderInstance::_uniform1fv(ShaderVariable *one, const std::any &dataInfo)
 {
-    assert(dataInfo.type == std::typeid(ShaderData::BufferDataInfo));
-    ShaderData::BufferDataInfo info = std::any_cast<ShaderData::BufferDataInfo>(dataInfo);
+    assert(dataInfo.type == std::typeid(laya::BufferDataInfo));
+    laya::BufferDataInfo info = std::any_cast<laya::BufferDataInfo>(dataInfo);
     GLfloat *value = (GLfloat *)info.m_data;
     int count = info.m_lengthInBytes / sizeof(GLfloat);
     /*if (count < 4)
@@ -340,8 +340,8 @@ int GLShaderInstance::_uniform_vec2(ShaderVariable *one, const std::any &dataInf
 }
 int GLShaderInstance::_uniform_vec2v(ShaderVariable *one, const std::any &dataInfo)
 {
-    assert(dataInfo.type == std::typeid(ShaderData::BufferDataInfo));
-    ShaderData::BufferDataInfo info = std::any_cast<ShaderData::BufferDataInfo>(dataInfo);
+    assert(dataInfo.type == std::typeid(laya::BufferDataInfo));
+    laya::BufferDataInfo info = std::any_cast<laya::BufferDataInfo>(dataInfo);
     GLfloat *value = (GLfloat *)info.m_data;
     int count = info.m_lengthInBytes / (sizeof(GLfloat) * 2);
     /*if (count < 2)
@@ -380,8 +380,8 @@ int GLShaderInstance::_uniform_vec3(ShaderVariable *one, const std::any &dataInf
 
 int GLShaderInstance::_uniform_vec3v(ShaderVariable *one, const std::any &dataInfo)
 {
-    assert(dataInfo.type == std::typeid(ShaderData::BufferDataInfo));
-    ShaderData::BufferDataInfo info = std::any_cast<ShaderData::BufferDataInfo>(dataInfo);
+    assert(dataInfo.type == std::typeid(laya::BufferDataInfo));
+    laya::BufferDataInfo info = std::any_cast<laya::BufferDataInfo>(dataInfo);
     GLfloat *pData = (GLfloat *)info.m_data;
     glUniform3fv(one->location, info.m_lengthInBytes / (sizeof(GLfloat) * 3), pData);
     return 0;
@@ -400,8 +400,8 @@ int GLShaderInstance::_uniform_vec4(ShaderVariable *one, const std::any &dataInf
 }
 int GLShaderInstance::_uniform_vec4v(ShaderVariable *one, const std::any &dataInfo)
 {
-    assert(dataInfo.type == std::typeid(ShaderData::BufferDataInfo));
-    ShaderData::BufferDataInfo info = std::any_cast<ShaderData::BufferDataInfo>(dataInfo);
+    assert(dataInfo.type == std::typeid(laya::BufferDataInfo));
+    laya::BufferDataInfo info = std::any_cast<laya::BufferDataInfo>(dataInfo);
     GLfloat *pData = (GLfloat *)info.m_data;
     glUniform4fv(one->location, info.m_lengthInBytes / (sizeof(GLfloat) * 4), pData);
     return 1;
@@ -409,8 +409,8 @@ int GLShaderInstance::_uniform_vec4v(ShaderVariable *one, const std::any &dataIn
 
 int GLShaderInstance::_uniformMatrix2fv(ShaderVariable *one, const std::any &dataInfo)
 {
-    assert(dataInfo.type == std::typeid(ShaderData::BufferDataInfo));
-    ShaderData::BufferDataInfo info = std::any_cast<ShaderData::BufferDataInfo>(dataInfo);
+    assert(dataInfo.type == std::typeid(laya::BufferDataInfo));
+    laya::BufferDataInfo info = std::any_cast<laya::BufferDataInfo>(dataInfo);
     GLfloat *pData = (GLfloat *)info.m_data;
     glUniformMatrix2fv(one->location, false, info.m_lengthInBytes / (4 * sizeof(float)), pData);
     return 1;
@@ -418,8 +418,8 @@ int GLShaderInstance::_uniformMatrix2fv(ShaderVariable *one, const std::any &dat
 
 int GLShaderInstance::_uniformMatrix3fv(ShaderVariable *one, const std::any &dataInfo)
 {
-    assert(dataInfo.type == std::typeid(ShaderData::BufferDataInfo));
-    ShaderData::BufferDataInfo info = std::any_cast<ShaderData::BufferDataInfo>(dataInfo);
+    assert(dataInfo.type == std::typeid(laya::BufferDataInfo));
+    laya::BufferDataInfo info = std::any_cast<laya::BufferDataInfo>(dataInfo);
     GLfloat *pData = (GLfloat *)info.m_data;
     glUniformMatrix3fv(one->location, false, info.m_lengthInBytes / (9 * sizeof(float)), pData);
     return 1;
@@ -427,7 +427,7 @@ int GLShaderInstance::_uniformMatrix3fv(ShaderVariable *one, const std::any &dat
 int GLShaderInstance::_uniformMatrix4f(ShaderVariable *one, const std::any &dataInfo)
 {
     assert(dataInfo.type == std::typeid(ShaderData::BufferDataInfo));
-    ShaderData::BufferDataInfo info = std::any_cast<ShaderData::BufferDataInfo>(dataInfo);
+    laya::BufferDataInfo info = std::any_cast<laya::BufferDataInfo>(dataInfo);
     assert(info.m_lengthInBytes >= 16 * sizeof(float));
     GLfloat *pData = (GLfloat *)info.m_data;
     glUniformMatrix4fv(one->location, 1, false, pData);
@@ -436,7 +436,7 @@ int GLShaderInstance::_uniformMatrix4f(ShaderVariable *one, const std::any &data
 int GLShaderInstance::_uniformMatrix4fv(ShaderVariable *one, const std::any &dataInfo)
 {
     assert(dataInfo.type == std::typeid(ShaderData::BufferDataInfo));
-    ShaderData::BufferDataInfo info = std::any_cast<ShaderData::BufferDataInfo>(dataInfo);
+    laya::BufferDataInfo info = std::any_cast<laya::BufferDataInfo>(dataInfo);
     GLfloat *pData = (GLfloat *)(GLfloat *)info.m_data;
     glUniformMatrix4fv(one->location, info.m_lengthInBytes / (16 * sizeof(float)), false, pData);
     return 1;
@@ -457,8 +457,8 @@ int GLShaderInstance::_uniform1i(ShaderVariable *one, const std::any &dataInfo)
 
 int GLShaderInstance::_uniform1iv(ShaderVariable *one, const std::any &dataInfo)
 {
-    assert(dataInfo.type == std::typeid(ShaderData::BufferDataInfo));
-    ShaderData::BufferDataInfo info = std::any_cast<ShaderData::BufferDataInfo>(dataInfo);
+    assert(dataInfo.type == std::typeid(laya::BufferDataInfo));
+    laya::BufferDataInfo info = std::any_cast<laya::BufferDataInfo>(dataInfo);
     // 当前引擎未使用 需要用int32Array
     GLint *pData = (GLint *)info.m_data;
     glUniform1iv(one->location, info.m_lengthInBytes / sizeof(GLint), pData);

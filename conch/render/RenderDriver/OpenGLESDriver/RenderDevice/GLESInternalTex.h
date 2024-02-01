@@ -190,6 +190,7 @@ class GLESInternalTex : public GLObject, public ObjectBase<GLESInternalTex>
     int m_gpuMemory = 0;
     float uvrect[4]{0.0, 0.0, 1.0, 1.0};
 	 int depth = 0;//TODO
+     float gammaCorrection;
 };
 } // namespace laya
 #endif
