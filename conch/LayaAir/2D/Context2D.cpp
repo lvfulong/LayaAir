@@ -56,7 +56,7 @@ namespace laya
 		}
 		if (!m_defaultTexture)
 		{
-			m_defaultTexture = m_pGLESEngine->getTextureContext()->createTextureInternal(TextureDimension::Tex2D, 2, 2, TextureFormat::R8G8B8A8, true , false);
+			m_defaultTexture = m_pGLESEngine->getTextureContext()->createTextureInternal(TextureDimension::Tex2D, 2, 2, TextureFormat::R8G8B8A8, true , false, false);//TODO check js
 			m_pGLESEngine->getTextureContext()->setTexturePixelsData(m_defaultTexture, (char*)PIXELS, 16, false, false);
 		}
 		m_lastTex = m_defaultTexture;

@@ -34,7 +34,7 @@ namespace laya
 	{
 		if (m_source)
 			return;
-		m_source = m_pWebglEngine->getTextureContext()->createTextureInternal(TextureDimension::Tex2D, m_texW, m_texH, TextureFormat::R8G8B8A8, false, true);
+		m_source = m_pWebglEngine->getTextureContext()->createTextureInternal(TextureDimension::Tex2D, m_texW, m_texH, TextureFormat::R8G8B8A8, false, true, false);//todo check
 		m_pWebglEngine->getTextureContext()->setTexturePixelsData(m_source, (char*)nullptr, 0, true, false);
 
 		m_source->setFilterMode(FilterMode::Bilinear);
