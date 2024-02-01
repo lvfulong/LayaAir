@@ -1,6 +1,7 @@
 #ifndef __RenderBindings_H__
 #define __RenderBindings_H__
 
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GL2TextureContext.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESBufferState.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/WebGLConfig.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESIndexBuffer.h"
@@ -8,7 +9,6 @@
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderInstance.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESVertexBuffer.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLTextureContext.h"
-#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GL2TextureContext.h"
 #include "render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTSubShader.h"
 #include <binder/JSInterface.h>
 #include <core/math/Color.h>
@@ -135,67 +135,46 @@ class RenderBindings
         {
             class_<GLTextureContext> class_binding;
             class_binding.constructor<>();
-            // class_binding.constructor<JSValueAsParam>();
-            /*class_binding.function("createTextureInternal", &GLTextureContext::createTextureInternal);
-            class_binding.function("setTexturePixelsData", &GLTextureContext::setTexturePixelsData);
-            class_binding.function("setTextureImageData", &GLTextureContext::setTextureImageData);
-            class_binding.function("initVideoTextureData", &GLTextureContext::initVideoTextureData);
-            class_binding.function("createRenderTargetInternal", &GLTextureContext::createRenderTargetInternal);
-            class_binding.function("unbindRenderTarget", &GLTextureContext::unbindRenderTarget);
-            class_binding.function("bindRenderTarget", &GLTextureContext::bindRenderTarget);
+            class_binding.function("createTextureInternal", &GLTextureContext::createTextureInternal);
+            class_binding.function("setTexturePixelsData", &GLTextureContext::setTexturePixelsDataJS);
+            class_binding.function("setTextureImageData", &GLTextureContext::setTextureImageDataJS);
+            class_binding.function("setTextureSubPixelsData", &GLTextureContext::setTextureSubPixelsDataJS);
+            class_binding.function("setCubeImageData", &GLTextureContext::setCubeImageData);
+            class_binding.function("setCubePixelsData", &GLTextureContext::setCubePixelsDataJS);
+            class_binding.function("setCubeSubPixelData", &GLTextureContext::setCubeSubPixelDataJS);
             class_binding.function("setTextureCompareMode", &GLTextureContext::setTextureCompareMode);
-            class_binding.function("setTextureSubPixelsData", &GLTextureContext::setTextureSubPixelsData);
+            class_binding.function("bindRenderTarget", &GLTextureContext::bindRenderTarget);
+            class_binding.function("unbindRenderTarget", &GLTextureContext::unbindRenderTarget);
+            class_binding.function("bindoutScreenTarget", &GLTextureContext::bindoutScreenTarget);
+            class_binding.function("createRenderTextureInternal", &GLTextureContext::createRenderTextureInternal);
+            class_binding.function("createRenderTextureCubeInternal",
+                                   &GLTextureContext::createRenderTextureCubeInternal);
+            class_binding.function("createRenderTargetInternal", &GLTextureContext::createRenderTargetInternal);
+            class_binding.function("createRenderTargetCubeInternal", &GLTextureContext::createRenderTargetCubeInternal);
+            class_binding.function("setupRendertargetTextureAttachment",
+                                   &GLTextureContext::setupRendertargetTextureAttachment);
+            // class_binding.function("initVideoTextureData", &GLTextureContext::initVideoTextureData);
+            // class_binding.function("updateVideoTexture", &GLTextureContext::updateVideoTexture);
+            // setTextureSubImageData todo
+            /*
             class_binding.function("setTextureDDSData", &GLTextureContext::setTextureDDSData);
             class_binding.function("setTextureKTXData", &GLTextureContext::setTextureKTXData);
-            class_binding.function("setCubeImageData", &GLTextureContext::setCubeImageData);
-            class_binding.function("setCubePixelsData", &GLTextureContext::setCubePixelsData);
-            class_binding.function("setCubeSubPixelData", &GLTextureContext::setCubeSubPixelData);
             class_binding.function("setCubeDDSData", &GLTextureContext::setCubeDDSData);
             class_binding.function("setCubeKTXData", &GLTextureContext::setCubeKTXData);
             class_binding.function("readRenderTargetPixelData", &GLTextureContext::readRenderTargetPixelData);
-            class_binding.function("setupRendertargetTextureAttachment",
-                                   &GLTextureContext::setupRendertargetTextureAttachment);
-            class_binding.function("bindoutScreenTarget", &GLTextureContext::bindoutScreenTarget);
-            class_binding.function("createRenderTextureInternal", &GLTextureContext::createRenderTextureInternal);
-            class_binding.function("createRenderTargetCubeInternal", &GLTextureContext::createRenderTargetCubeInternal);
             class_binding.function("getRenderTextureData", &GLTextureContext::getRenderTextureData);
-            class_binding.function("updateVideoTexture", &GLTextureContext::updateVideoTexture);*/
+            */
             context.class_("conchGLESTextureContext", class_binding);
         }
         {
-            
+
             class_<GL2TextureContext> class_binding;
             class_binding.inherit<GLTextureContext>();
             class_binding.constructor<>();
-            /*class_binding.constructor<JSValueAsParam>();
-            class_binding.function("createTextureInternal", &JSGL2TextureContext::createTextureInternal);
-            class_binding.function("setTexturePixelsData", &JSGL2TextureContext::setTexturePixelsData);
-            class_binding.function("setTextureImageData", &JSGL2TextureContext::setTextureImageData);
+            /*
             class_binding.function("setTexture3DImageData", &JSGL2TextureContext::setTexture3DImageData);
             class_binding.function("setTexture3DPixelsData", &JSGL2TextureContext::setTexture3DPixelsData);
-            class_binding.function("setTexture3DSubPixelsData", &JSGL2TextureContext::setTexture3DSubPixelsData);
-            class_binding.function("initVideoTextureData", &JSGL2TextureContext::initVideoTextureData);
-            class_binding.function("createRenderTargetInternal", &JSGL2TextureContext::createRenderTargetInternal);
-            class_binding.function("unbindRenderTarget", &JSGL2TextureContext::unbindRenderTarget);
-            class_binding.function("bindRenderTarget", &JSGL2TextureContext::bindRenderTarget);
-            class_binding.function("setTextureCompareMode", &JSGL2TextureContext::setTextureCompareMode);
-            class_binding.function("setTextureSubPixelsData", &JSGL2TextureContext::setTextureSubPixelsData);
-            class_binding.function("setTextureDDSData", &JSGL2TextureContext::setTextureDDSData);
-            class_binding.function("setTextureKTXData", &JSGL2TextureContext::setTextureKTXData);
-            class_binding.function("setCubeImageData", &JSGL2TextureContext::setCubeImageData);
-            class_binding.function("setCubePixelsData", &JSGL2TextureContext::setCubePixelsData);
-            class_binding.function("setCubeSubPixelData", &JSGL2TextureContext::setCubeSubPixelData);
-            class_binding.function("setCubeDDSData", &JSGL2TextureContext::setCubeDDSData);
-            class_binding.function("setCubeKTXData", &JSGL2TextureContext::setCubeKTXData);
-            class_binding.function("readRenderTargetPixelData", &JSGL2TextureContext::readRenderTargetPixelData);
-            class_binding.function("setupRendertargetTextureAttachment",
-                                   &JSGL2TextureContext::setupRendertargetTextureAttachment);
-            class_binding.function("bindoutScreenTarget", &JSGL2TextureContext::bindoutScreenTarget);
-            class_binding.function("createRenderTextureInternal", &JSGL2TextureContext::createRenderTextureInternal);
-            class_binding.function("createRenderTargetCubeInternal",
-                                   &JSGL2TextureContext::createRenderTargetCubeInternal);
-            class_binding.function("getRenderTextureData", &JSGL2TextureContext::getRenderTextureData);
-            class_binding.function("updateVideoTexture", &JSGL2TextureContext::updateVideoTexture);*/
+            class_binding.function("setTexture3DSubPixelsData", &JSGL2TextureContext::setTexture3DSubPixelsData);*/
             context.class_("conchGLES2TextureContext", class_binding);
         }
         {
@@ -274,6 +253,7 @@ class RenderBindings
             class_<GLESEngine> class_binding;
             class_binding.constructor<WebGLConfig, WebGLMode>();
             class_binding.function("initRenderEngine", &GLESEngine::initRenderEngine);
+            class_binding.function("getTextureContext", &GLESEngine::getTextureContextJS);
             // todo class_binding.function("copySubFrameBuffertoTex", &GLESEngine::copySubFrameBuffertoTex);
             // todo class_binding.function("getTextureContext", &GLESEngine::getTextureContext);
             class_binding.function("getParams", &GLESEngine::getParams);
