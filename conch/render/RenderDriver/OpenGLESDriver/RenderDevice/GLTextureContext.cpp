@@ -1335,9 +1335,9 @@ void GLTextureContext::bindRenderTarget(GLESInternalRT *renderTarget, int faceIn
 
     if (renderTarget->m_isCube)
     {
-        std::shared_ptr<GLESInternalTex> texture = renderTarget->m_textures[0];
+        GLESInternalTex* texture = renderTarget->m_textures[0];
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + faceIndex,
-                               texture.get()->m_resource, 0);
+                               texture->m_resource, 0);
     }
 }
 
@@ -1353,7 +1353,7 @@ void GLTextureContext::unbindRenderTarget(GLESInternalRT *renderTarget)
         for (GLESInternalRT::TexturesVec::iterator it = renderTarget->m_textures.begin();
              it != renderTarget->m_textures.end(); it++)
         {
-            GLESInternalTex *tex = it->get();
+            GLESInternalTex *tex = *it;
             if (tex)
             {
                 m_engine->_bindTexture(tex->m_target, tex);
@@ -1479,9 +1479,7 @@ GLESInternalRT *GLTextureContext::createRenderTargetInternal(int width, int heig
         getGLRTTexMemory(width, height, colorFormat, depthStencilFormat, generateMipmap, multiSamples, true));
     renderTarget->m_colorFormat = colorFormat;
     renderTarget->m_depthStencilFormat = depthStencilFormat;
-    std::shared_ptr<GLESInternalTex> p;
-    p.reset(texture);
-    renderTarget->m_textures.push_back(p);
+    renderTarget->m_textures.push_back(texture);
 
     GLuint framebuffer = renderTarget->m_framebuffer;
 
@@ -1517,9 +1515,7 @@ GLESInternalRT *GLTextureContext::createRenderTargetCubeInternal(int size, Rende
         new GLESInternalRT(colorFormat, depthStencilFormat, true, texture->mipmap(), multiSamples);
     renderTarget->setGpuMemory(
         getGLRTTexMemory(size, size, colorFormat, depthStencilFormat, generateMipmap, multiSamples, true));
-    std::shared_ptr<GLESInternalTex> p;
-    p.reset(texture);
-    renderTarget->m_textures.push_back(p);
+    renderTarget->m_textures.push_back(texture);
 
     GLuint framebuffer = renderTarget->m_framebuffer;
 
@@ -1555,8 +1551,7 @@ GLuint GLTextureContext::createRenderbuffer(int width, int height, int internalF
 }
 
 // todo  color 0, 1, 2, 3 ?
-void GLTextureContext::setupRendertargetTextureAttachment(GLESInternalRT *renderTarget,
-                                                          std::shared_ptr<GLESInternalTex> texture)
+void GLTextureContext::setupRendertargetTextureAttachment(GLESInternalRT *renderTarget, GLESInternalTex *texture)
 {
     renderTarget->m_depthTexture = texture;
 

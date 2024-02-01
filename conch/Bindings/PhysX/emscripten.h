@@ -224,7 +224,7 @@ template <typename ClassType, typename BaseSpecifier> Class_<ClassType, BaseSpec
     }
 
     mclass_->function_optional_override("delete",
-                                        optional_override([](ClassType &THIS) { ClassRegistryManager::removeObject<ClassType>(&THIS); }));
+                                        optional_override([](ClassType &THIS) { ClassRegistryManager::removeObject<ClassType>(&THIS, false); }));
 
     ClassRegistry<ClassType> &classRegistry = ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
 

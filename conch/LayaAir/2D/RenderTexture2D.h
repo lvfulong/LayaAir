@@ -46,7 +46,7 @@ namespace laya
 		int                                                 m_height;
 		RenderTargetFormat                                  m_colorFormat;
 		RenderTargetFormat                                  m_depthStencilFormat;
-		std::shared_ptr<GLESInternalTex>                   m_texture;
+		GLESInternalTex*                   m_texture;
 		GLESInternalRT*                                    m_renderTarget;
 		static RenderTexture2D*                             m_currentActive;
 		RenderTexture2D*                                    m_lastRT = nullptr;

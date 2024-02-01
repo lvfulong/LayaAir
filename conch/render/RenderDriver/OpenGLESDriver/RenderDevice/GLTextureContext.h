@@ -84,8 +84,7 @@ class GLTextureContext : public GLObject
                                          bool invertY);
     virtual void bindRenderTarget(GLESInternalRT *renderTarget, int faceIndex);
     virtual TextureCompareMode setTextureCompareMode(GLESInternalTex *texture, TextureCompareMode compareMode);
-    virtual void setupRendertargetTextureAttachment(GLESInternalRT *renderTarget,
-                                                    std::shared_ptr<GLESInternalTex> texture);
+    virtual void setupRendertargetTextureAttachment(GLESInternalRT *renderTarget, GLESInternalTex *texture);
     virtual void bindoutScreenTarget();
     virtual void unbindRenderTarget(GLESInternalRT *renderTarget);
     virtual GLESInternalTex *createRenderTextureInternal(TextureDimension dimension, int width, int height,

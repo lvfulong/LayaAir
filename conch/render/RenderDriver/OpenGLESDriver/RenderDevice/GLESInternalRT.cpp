@@ -15,7 +15,6 @@ GLESInternalRT::GLESInternalRT(RenderTargetFormat colorFormat, RenderTargetForma
     m_samples = samples;
 
     m_textures.clear();
-    m_depthTexture.reset();
 
     glGenFramebuffers(1, &m_framebuffer);
     if (samples > 1)
@@ -47,11 +46,14 @@ void GLESInternalRT::dispose()
 {
     for (TexturesVec::iterator it = m_textures.begin(); it != m_textures.end(); it++)
     {
-        it->reset();
+        delete *it;
     }
     m_textures.clear();
 
-    m_depthTexture.reset();
+    //if (m_depthTexture)
+    //{
+    //    delete m_depthTexture;
+    //}
 
     if (m_framebuffer)
     {
@@ -91,23 +93,23 @@ JsValue GLESInternalRT::getDepthTexture()
         return m_pJSDepthTexture.toLocal().handle_;
     }
 }
-/*JsValue GLESInternalRT::getTextures()
+JsValue GLESInternalRT::getTextures()
 {
     if (m_pJSTextures.isEmpty())
     {
-        int size = m_pRenderTexture->m_textures.size();
-        std::vector<JSWebGLInternalTex*> vec;
+        int size = this->m_textures.size();
+        std::vector<GLESInternalTex*> vec;
         vec.reserve(size);
         for (int i = 0; i < size; i++)
         {
-            vec.push_back(new JSWebGLInternalTex(m_pRenderTexture->m_textures[i]));
+            vec.push_back(this->m_textures[i]);
         }
-        m_pJSTextures.reset(Converter<std::vector<JSWebGLInternalTex*>>::ToJs(vec));
+        m_pJSTextures.reset(Converter<std::vector<GLESInternalTex*>>::ToJs(vec));
         return m_pJSTextures.toLocal().handle_;
     }
     else
     {
         return m_pJSTextures.toLocal().handle_;
     }
-}*/
+}
 } // namespace laya

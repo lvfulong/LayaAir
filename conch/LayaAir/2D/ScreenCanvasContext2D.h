@@ -43,7 +43,7 @@ namespace laya
 		int m_width							            = Context2D::MAXSIZE;
 		int m_height						            = Context2D::MAXSIZE;
 		GLESEngine*						            m_pGLESEngine;
-		std::shared_ptr<GLESInternalTex>				m_texture = nullptr;
+		GLESInternalTex*				m_texture = nullptr;
 		GLESInternalRT*					            m_target = nullptr;
 		std::atomic_bool                                m_requestCaptureScreen{ false };
 	};

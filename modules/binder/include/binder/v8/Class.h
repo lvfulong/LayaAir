@@ -1,16 +1,16 @@
 #ifndef __V8_CLASS_H__
 #define __V8_CLASS_H__
 
-#include <utils/RTTI.h>
 #include "Invocation.h"
 #include "Utility.h"
 #include "Value.h"
 #include <assert.h>
+#include <functional>
 #include <map>
 #include <string>
 #include <utils/Log.h>
+#include <utils/RTTI.h>
 #include <v8.h>
-#include <functional>
 
 namespace laya
 {
@@ -67,6 +67,7 @@ template <typename ClassType> static void WeakCallback(const v8::WeakCallbackInf
 struct ObjectRegistry
 {
     v8::Global<v8::Object> pobj;
+    bool callDestructor = true;
 };
 class ClassRegistryBase
 {
@@ -105,7 +106,7 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
         auto it = objects_.begin();
         for (; it != objects_.end(); it++)
         {
-            removeObject((ClassType *)it->first, false);
+            removeObject((ClassType *)it->first, it->second.callDestructor);
         }
         objects_.clear();
 
@@ -141,7 +142,7 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
         return nullptr;
     }
 
-    v8::Local<v8::Object> wrapCppObject(ClassType *objectPointer)
+    v8::Local<v8::Object> wrapCppObject(ClassType *objectPointer, bool callDestructor = true)
     {
         /*auto it = objects_.find((void *)objectPointer);
         if (it != objects_.end())
@@ -162,7 +163,7 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
             v8::Global<v8::Object> pobj(isolate_, obj);
 
             pobj.SetWeak(this, WeakCallback<ClassType>, v8::WeakCallbackType::kInternalFields);
-            this->objects_.emplace(objectPointer, ObjectRegistry{std::move(pobj)});
+            this->objects_.emplace(objectPointer, ObjectRegistry{std::move(pobj), callDestructor});
             return scope.Escape(obj);
         }
 
@@ -180,7 +181,7 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
         info->derivatives_.emplace_back(this);
     }
 
-    void removeObject(ClassType *objectPointer, bool erase = true);
+    void removeObject(ClassType *objectPointer, bool callDestructor);
     // ObjectRegistry *getObjectRegistry(ClassType *objectPointer);
 
     std::map<uint32_t, ConstructorFunctionType> constructorFunctionMap_;
@@ -222,10 +223,10 @@ class ClassRegistryManager
         ClassRegistry<ClassType> &classRegistry = getClassRegistry<ClassType>(type_id<ClassType>());
         return classRegistry.wrapCppObject(objectPointer);
     }
-    template <typename ClassType> static void removeObject(ClassType *objectPointer)
+    template <typename ClassType> static void removeObject(ClassType *objectPointer, bool callDestructor)
     {
         ClassRegistry<ClassType> &classRegistry = getClassRegistry<ClassType>(type_id<ClassType>());
-        classRegistry.removeObject(objectPointer);
+        classRegistry.removeObject(objectPointer, callDestructor);
     }
     template <typename ClassType> static bool isWrappedClassOf()
     {
@@ -409,8 +410,7 @@ template <typename ClassType> class class_
         internal::addDeinitializer([info]() { delete info; });
         classRegistry_.class_function_template()->PrototypeTemplate()->SetAccessor(
             Js_Str(isolate_, name.data()), internal::InvokeGetPropertyField<ClassType, PropertyType>,
-            internal::InvokeSetPropertyField<ClassType, PropertyType>,
-            v8::External::New(isolate_, (void *)info));
+            internal::InvokeSetPropertyField<ClassType, PropertyType>, v8::External::New(isolate_, (void *)info));
         return *this;
     }
     template <typename PropertyType>
@@ -448,7 +448,7 @@ template <typename ClassType> void raw_destructor(ClassType *pointer)
     delete pointer;
 }
 } // namespace internal
-template <typename ClassType> void ClassRegistry<ClassType>::removeObject(ClassType *objectPointer, bool erase/* = true*/)
+template <typename ClassType> void ClassRegistry<ClassType>::removeObject(ClassType *objectPointer, bool callDestructor)
 {
     auto it = objects_.find((void *)objectPointer);
     // assert(it != objects_.end());
@@ -456,14 +456,17 @@ template <typename ClassType> void ClassRegistry<ClassType>::removeObject(ClassT
     {
         v8::HandleScope scope(isolate_);
 
-        internal::raw_destructor(objectPointer);
+        if (callDestructor)
+        {
+            internal::raw_destructor(objectPointer);
+        }
 
         it->second.pobj.ClearWeak();
         it->second.pobj.Reset();
-        if (erase)
-        {
-            objects_.erase(it);
-        }
+        // if (erase)
+        //{
+        objects_.erase(it);
+        // }
     }
 }
 
@@ -489,9 +492,10 @@ template <typename ClassType> static void WeakCallback(const v8::WeakCallbackInf
 {
     ClassType *object = static_cast<ClassType *>(data.GetInternalField(0));
     ClassRegistry<ClassType> *this_ = static_cast<ClassRegistry<ClassType> *>(data.GetInternalField(1));
+    ObjectRegistry* objectRegistry = this_->getObjectRegistry(object);
     assert(object != nullptr);
     assert(this_ != nullptr);
-    this_->removeObject(object);
+    this_->removeObject(object, objectRegistry->callDestructor);
 }
 
 template <typename ClassType> ClassRegistry<ClassType>::ClassRegistry() : isolate_(v8::Isolate::GetCurrent())

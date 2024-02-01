@@ -1045,9 +1045,7 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
 
 		GLESInternalRT* renderTarget = new GLESInternalRT(colorFormat, depthStencilFormat, false, texture->mipmap(), multiSamples);
 		renderTarget->setGpuMemory(getGLRTTexMemory(width, height, colorFormat, depthStencilFormat, generateMipmap, multiSamples, false));
-        std::shared_ptr<GLESInternalTex> p;
-        p.reset(texture);
-        renderTarget->m_textures.push_back(p);
+        renderTarget->m_textures.push_back(texture);
 
         if (renderTarget->m_samples > 1)
 		{
@@ -1105,9 +1103,7 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
         renderTarget->m_colorFormat = colorFormat;
         renderTarget->m_depthStencilFormat = depthStencilFormat;
         
-        std::shared_ptr<GLESInternalTex> p;
-        p.reset(texture);
-        renderTarget->m_textures.push_back(p);
+        renderTarget->m_textures.push_back(texture);
 
         if (renderTarget->m_samples > 1)
 		{
@@ -1189,7 +1185,7 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
         if (renderTarget->m_isCube) 
 		{
             glBindFramebuffer(GL_FRAMEBUFFER, renderTarget->m_framebuffer);
-			GLESInternalTex* texture = renderTarget->m_textures[0].get();
+			GLESInternalTex* texture = renderTarget->m_textures[0];
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + faceIndex, texture->m_resource, 0);
         }
 
@@ -1212,7 +1208,7 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
             glBindFramebuffer(GL_READ_FRAMEBUFFER, renderTarget->m_msaaFramebuffer);
             glBindFramebuffer(GL_DRAW_FRAMEBUFFER, renderTarget->m_framebuffer);
 
-			GLESInternalTex* texture = renderTarget->m_textures[0].get();
+			GLESInternalTex* texture = renderTarget->m_textures[0];
 
             // todo 不用clear ?
             // gl.clearBufferfv(gl.COLOR, 0, [0, 0, 0, 0]);
@@ -1233,7 +1229,7 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
 
 			for (GLESInternalRT::TexturesVec::iterator it = renderTarget->m_textures.begin(); it != renderTarget->m_textures.end(); it++)
 			{
-				GLESInternalTex* tex = it->get();
+				GLESInternalTex* tex = *it;
 				if (tex)
 				{
 					m_engine->_bindTexture(tex->m_target, tex);

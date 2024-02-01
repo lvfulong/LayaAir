@@ -2129,7 +2129,7 @@ namespace laya
 	}
 	void Context2D::_drawRenderTexture(RenderTexture2D* tex, float x, float y, float width, float height, const Matrix& m, float alpha, float uv[8], int color)
 	{
-		_inner_drawTexture(tex->m_texture.get(), x, y, width, height, m, uv, 1.0, false, color);
+		_inner_drawTexture(tex->m_texture, x, y, width, height, m, uv, 1.0, false, color);
 	}
 	void Context2D::fillWords(const char* data, float x, float y, const char* fontStr, int color, int strokeColor, float lineWidth, int textAlign)
 	{

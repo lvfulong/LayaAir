@@ -199,7 +199,7 @@ namespace laya
 	}
 	void ScreenCanvasContext2D::drawToScreen(const Matrix& m)
 	{
-		drawTarget(m_texture.get(), 0, 0, m_width, m_height, m, INV_UV, BlendMode::disable);
+		drawTarget(m_texture, 0, 0, m_width, m_height, m, INV_UV, BlendMode::disable);
 	}
 	bool ScreenCanvasContext2D::drawTarget(GLESInternalTex* rt, float x, float y, float width, float height, const Matrix& m, /*shaderValue : Value2D,*/ float uv[4], BlendMode blend /*BlendMode::invalid*/)
 	{

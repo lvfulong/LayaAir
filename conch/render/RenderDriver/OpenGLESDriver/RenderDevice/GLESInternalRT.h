@@ -35,7 +35,7 @@ class GLESInternalRT : public GLObject
         return -m_isCube;
     }
     JsValue getDepthTexture();
-    // TODO JsValue getTextures();
+    JsValue getTextures();
   public:
     GLuint m_framebuffer = 0;
     GLuint m_depthbuffer = 0;
@@ -44,9 +44,9 @@ class GLESInternalRT : public GLObject
     bool m_isCube;
     int m_samples;
     bool m_generateMipmap;
-    typedef std::vector<std::shared_ptr<GLESInternalTex>> TexturesVec;
-    std::vector<std::shared_ptr<GLESInternalTex>> m_textures;
-    std::shared_ptr<GLESInternalTex> m_depthTexture;
+    typedef std::vector<GLESInternalTex*> TexturesVec;
+    TexturesVec m_textures;
+    GLESInternalTex* m_depthTexture = nullptr;
     RenderTargetFormat m_colorFormat;
     RenderTargetFormat m_depthStencilFormat;
     int m_gpuMemory = 0;
