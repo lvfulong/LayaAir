@@ -56,10 +56,17 @@ GLESEngine::GLESEngine(WebGLConfig config, WebGLMode webglMode)
 GLESEngine::~GLESEngine()
 {
     g_GLESEngine = nullptr;
-    if (m_textureContext)
+    if (!m_pJSTextureContext.isEmpty())
     {
-        delete m_textureContext;
-        m_textureContext = nullptr;
+        m_pJSTextureContext.reset();
+    }
+    else
+    {
+        if (m_textureContext)
+        {
+            delete m_textureContext;
+            m_textureContext = nullptr;
+        }
     }
     if (m_supportCapatable)
     {
@@ -111,6 +118,7 @@ void GLESEngine::initRenderEngine()
     m_renderState = new GLRenderState(this);
     m_GLRenderDrawContext = new GLRenderDrawContext(this);
     m_GL2DRenderContext = new GLRender2DContext(this);
+    createTextureContext(m_isWebGL2);
 }
 
 void GLESEngine::_initBindBufferMap()
@@ -270,11 +278,11 @@ GLTextureContext *GLESEngine::createTextureContext(bool isWebGL2)
     assert(m_textureContext == nullptr);
     if (isWebGL2)
     {
-        m_textureContext = new GL2TextureContext(this);
+        m_textureContext = new GL2TextureContext();
     }
     else
     {
-        m_textureContext = new GLTextureContext(this);
+        m_textureContext = new GLTextureContext();
     }
     return m_textureContext;
 }
@@ -472,5 +480,17 @@ void GLESEngine::unbindVertexState()
     else
         ((OESVertexArrayObjectExt *)getExtension(WebGLExtension::OES_vertex_array_object))->bindVertexArrayOES(0);
     m_GLBindVertexArray = nullptr;
+}
+JsValue GLESEngine::getTextureContextJS()
+{
+    if (m_pJSTextureContext.isEmpty())
+    {
+        m_pJSTextureContext.reset(JSP_TO_JS(GLTextureContext *, m_textureContext));
+        return m_pJSTextureContext.toLocal().handle_;
+    }
+    else
+    {
+        return m_pJSTextureContext.toLocal().handle_;
+    }
 }
 } // namespace laya

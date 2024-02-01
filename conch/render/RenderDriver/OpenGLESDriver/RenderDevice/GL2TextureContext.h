@@ -17,7 +17,7 @@ namespace laya
 	class GL2TextureContext : public GLTextureContext
 	{
 	public:
-		GL2TextureContext(GLESEngine* engine);
+		GL2TextureContext();
 		~GL2TextureContext();
 		GLenum getTarget(TextureDimension dimension) override;
 		const GLParam& glTextureParam(TextureFormat format, bool useSRGB) override;

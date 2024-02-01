@@ -6,6 +6,7 @@
 #include <Bindings/JSImage.h>
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLUtils.h"
 #include "LayaGL/JCLayaGL.h"
+#include "render/driver/gles/LayaGL.h"
 #ifdef WIN32
 #ifdef min
 #undef min
@@ -33,7 +34,7 @@ namespace laya
 		}
 	}
 	extern int g_nMainFrameBuffer;
-	GLTextureContext::GLTextureContext(GLESEngine* engine): GLObject(engine)
+	GLTextureContext::GLTextureContext(): GLObject(LayaGL::m_pWebglEngine)
 	{
 		m_sRGB = (sRGBExt*)m_engine->getExtension(WebGLExtension::EXT_sRGB);
 		m_oesTextureHalfFloat = (OESTextureHalfFloatExt*)m_engine->getExtension(WebGLExtension::OES_texture_half_float);

@@ -4,11 +4,11 @@
 #include "../../Image/JCImage.h"
 #include "GLESInternalRT.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLUtils.h"
-
+#include "render/driver/gles/LayaGL.h"
 namespace laya
 {
 	extern int g_nMainFrameBuffer;
-	GL2TextureContext::GL2TextureContext(GLESEngine* engine): GLTextureContext(engine)
+	GL2TextureContext::GL2TextureContext(): GLTextureContext()
 	{
     }
 	GL2TextureContext::~GL2TextureContext()

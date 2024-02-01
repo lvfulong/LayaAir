@@ -16,6 +16,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <binder/JSInterface.h>
 
 namespace laya
 {
@@ -90,7 +91,7 @@ class GLESEngine
     void clearStatisticsInfo(RenderStatisticsInfo info);
     int getStatisticsInfo(RenderStatisticsInfo info);
     void unbindVertexState();
-
+    JsValue getTextureContextJS();
   private:
     bool getContext(const char *contextType);
     void _initBindBufferMap();
@@ -132,6 +133,7 @@ class GLESEngine
     typedef std::unordered_map<RenderStatisticsInfo, int> RenderStatisticsInfoMapType;
     RenderStatisticsInfoMapType m_GLStatisticsInfo;
     std::unordered_map<int, GLBuffer *> _GLBindPointerUBOMap;
+    Persistent m_pJSTextureContext;
 };
 } // namespace laya
 

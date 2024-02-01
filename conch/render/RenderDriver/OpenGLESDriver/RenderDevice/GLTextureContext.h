@@ -46,7 +46,7 @@ namespace laya
 	{
 	public:
 
-		GLTextureContext(GLESEngine* engine);
+		GLTextureContext();
 		~GLTextureContext();
 		FormatPixelsParams& getFormatPixelsParams(TextureFormat format, FormatPixelsParams& formatParams);	
 		virtual const GLParam& glTextureParam(TextureFormat format, bool useSRGB);

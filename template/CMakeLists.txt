@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-set(PROJECT_NAME LayaNative3.0)
+set(PROJECT_NAME launcher)
 project(${PROJECT_NAME})
 
 set(CMAKE_C_STANDARD 99)
@@ -10,8 +10,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 
-set(CONCH_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../conch)
-include(${CMAKE_CURRENT_SOURCE_DIR}/../cmake/preprocessor.cmake)
+set(CONCH_PATH ${CONCH_ROOT_DIR}/conch)
+include(${CONCH_ROOT_DIR}/cmake/preprocessor.cmake)
 
 set(PROJECT_SOURCES)
 set(PROJECT_RESOURCES)
@@ -120,7 +120,7 @@ if(IOS)
 		"-framework Accelerate"
 		"-framework AVFoundation"
 	)
-	target_link_libraries(${PROJECT_NAME} conch)
+	target_link_libraries(${PROJECT_NAME} PRIVATE app conch)
 elseif(MSVC)
 	list(APPEND PROJECT_SOURCES
 		proj.win64/AppMessage.h
@@ -128,7 +128,7 @@ elseif(MSVC)
 		proj.win64/stdafx.h
 		proj.win64/stdafx.cpp
 	)
-	add_subdirectory(${CONCH_PATH} ${PROJECT_BINARY_DIR}/conch)
+	#add_subdirectory(${CONCH_PATH} ${PROJECT_BINARY_DIR}/conch)
 	add_executable(${PROJECT_NAME}
 		${PROJECT_SOURCES}
 	)
@@ -156,16 +156,16 @@ elseif(MSVC)
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${file} $<TARGET_FILE_DIR:${PROJECT_NAME}>/${relative_path}
 		)
 	endforeach()
-	target_link_libraries(${PROJECT_NAME} app)
+	target_link_libraries(${PROJECT_NAME} PRIVATE app conch)
 elseif(LINUX)
 	list(APPEND PROJECT_SOURCES
 		proj.linux/Conch6.cpp
 	)
-	add_subdirectory(${CONCH_PATH} ${PROJECT_BINARY_DIR}/conch)
+	#add_subdirectory(${CONCH_PATH} ${PROJECT_BINARY_DIR}/conch)
 	add_executable(${PROJECT_NAME}
 		${PROJECT_SOURCES}
 	)
-	target_link_libraries(${PROJECT_NAME} app)
+	target_link_libraries(${PROJECT_NAME} PRIVATE app conch)
 endif()
 
 # target_include_directories(${PROJECT_NAME})
@@ -178,7 +178,7 @@ if(IOS)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fobjc-arc")
 	set(CMAKE_XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_ARC "YES" CACHE INTERNAL "")
 	SET (CMAKE_XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET 12.0)
-	add_subdirectory(${CONCH_PATH} ${PROJECT_BINARY_DIR}/conch)
+	#add_subdirectory(${CONCH_PATH} ${PROJECT_BINARY_DIR}/conch)
 	#set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/${app_name}")
     set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE 1)
     #cocos_mark_code_files(${app_name})
@@ -197,5 +197,4 @@ if(IOS)
 	set_xcode_property(${PROJECT_NAME} PRODUCT_BUNDLE_IDENTIFIER "com.layabox.conch6")
 endif()
 
-
-message("main: ${LINUX}")
+message("main: ${LINUX} ${CONCH_ROOT_DIR}")

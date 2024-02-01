@@ -1,3 +1,3 @@
 #!/bin/sh
 cd build
-cmake .. -G"Visual Studio 17 2022"  -A x64
+cmake ../.. -G"Visual Studio 17 2022"  -A x64
