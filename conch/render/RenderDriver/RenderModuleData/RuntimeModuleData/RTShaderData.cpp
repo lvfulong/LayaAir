@@ -108,11 +108,11 @@ namespace laya
 		}
 		if (m_data.find(index)!=m_data.end()) {
 			m_gammaColorMap[index] = value;
-			Vector4* linearColor = &std::any_cast<Vector4>(m_data[index]);
-			linearColor->x = Color::gammaToLinearSpace(value.r);
-			linearColor->y = Color::gammaToLinearSpace(value.g);
-			linearColor->z = Color::gammaToLinearSpace(value.b);
-			linearColor->w = value.a;
+			Vector4& linearColor = std::any_cast<Vector4&>(m_data[index]);
+			linearColor.x = Color::gammaToLinearSpace(value.r);
+			linearColor.y = Color::gammaToLinearSpace(value.g);
+			linearColor.z = Color::gammaToLinearSpace(value.b);
+			linearColor.w = value.a;
 		}
 		else {
 			Vector4 linearColor = Vector4();
