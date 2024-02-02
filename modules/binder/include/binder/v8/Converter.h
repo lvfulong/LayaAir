@@ -36,7 +36,7 @@ struct is_wrapped_class : std::conjunction<std::is_class<T>, std::negation<inter
 
 template <typename ClassType> bool isWrappedClassOf();
 
-template <typename ClassType> v8::Local<v8::Object> wrapCppObject(ClassType *objectPointer);
+template <typename ClassType> v8::Local<v8::Object> wrapCppObject(ClassType *objectPointer, bool callDestructor/* = true*/);
 
 template <typename T, typename Enable = void> class Converter;
 
@@ -45,7 +45,7 @@ template <typename T> class value_object;
 template <typename T> class Converter<T, std::enable_if_t<internal::is_value_object<T>::value>>
 {
   public:
-    static v8::Local<v8::Value> ToJs(T value)
+    static v8::Local<v8::Value> ToJs(T value, bool callDestructor = true)
     {
         return internal::convert_value_object_to_v8(value);
     }
@@ -63,7 +63,7 @@ public:
         return static_cast<T>(p_vl.As<v8::Uint32>()->Value());
         // return p_vl->Uint32Value();
     }
-    static v8::Local<v8::Value> ToJs(T p_vl)
+    static v8::Local<v8::Value> ToJs(T p_vl, bool callDestructor = true)
     {
         return v8::Uint32::NewFromUnsigned(v8::Isolate::GetCurrent(), static_cast<uint32_t>(p_vl));
     }
@@ -77,10 +77,10 @@ public:
 template <typename T> class Converter<T, std::enable_if_t<internal::is_wrapped_class<T>::value>>
 {
   public:
-    static v8::Local<v8::Value> ToJs(T value)
+    static v8::Local<v8::Value> ToJs(T value, bool callDestructor = true)
     {
         T *object = new T(value);//copy construct to avoid life cycle issues
-        return wrapCppObject<T>(object);
+        return wrapCppObject<T>(object, callDestructor);
     }
 
     static T &ToCpp(v8::Local<v8::Value> value)
@@ -98,9 +98,9 @@ template <typename T> class Converter<T, std::enable_if_t<internal::is_wrapped_c
 template <typename T> class Converter<T *, std::enable_if_t<internal::is_wrapped_class<T>::value>>
 {
   public:
-    static v8::Local<v8::Value> ToJs(T *value)
+    static v8::Local<v8::Value> ToJs(T *value, bool callDestructor = true)
     {
-        return wrapCppObject<T>(value);
+        return wrapCppObject<T>(value, callDestructor);
     }
 
     static T *ToCpp(v8::Local<v8::Value> value)
@@ -138,7 +138,7 @@ template <> class Converter<int32_t>
         return p_vl.As<v8::Int32>()->Value();
         // return p_vl->Int32Value(isolate->GetCurrentContext()).ToChecked();
     }
-    static v8::Local<v8::Value> ToJs(int32_t p_vl)
+    static v8::Local<v8::Value> ToJs(int32_t p_vl, bool callDestructor = true)
     {
         return v8::Int32::New(v8::Isolate::GetCurrent(), p_vl);
     }
@@ -160,7 +160,7 @@ template <> class Converter<const int32_t &> : public Converter<int32_t>
 template <> class Converter<long>
 {
   public:
-    static v8::Local<v8::Value> ToJs(long p_vl)
+    static v8::Local<v8::Value> ToJs(long p_vl, bool callDestructor = true)
     {
         return v8::Number::New(v8::Isolate::GetCurrent(), *reinterpret_cast<double *>(&p_vl));
     }
@@ -197,7 +197,7 @@ template <> class Converter<int64_t>
         double v = value->NumberValue(v8::Isolate::GetCurrent()->GetCurrentContext()).ToChecked();
         return *reinterpret_cast<int64_t *>(&v);
     }
-    static v8::Local<v8::Value> ToJs(int64_t p_vl)
+    static v8::Local<v8::Value> ToJs(int64_t p_vl, bool callDestructor = true)
     {
         return v8::Number::New(v8::Isolate::GetCurrent(), *reinterpret_cast<double *>(&p_vl));
     }
@@ -221,7 +221,7 @@ template <> class Converter<uint32_t>
         return p_vl.As<v8::Uint32>()->Value();
         // return p_vl->Uint32Value();
     }
-    static v8::Local<v8::Value> ToJs(uint32_t p_vl)
+    static v8::Local<v8::Value> ToJs(uint32_t p_vl, bool callDestructor = true)
     {
         return v8::Uint32::NewFromUnsigned(v8::Isolate::GetCurrent(), p_vl);
     }
@@ -238,7 +238,7 @@ template <> class Converter<uint8_t>
     {
         return p_vl.As<v8::Uint32>()->Value();
     }
-    static v8::Local<v8::Value> ToJs(uint8_t p_vl)
+    static v8::Local<v8::Value> ToJs(uint8_t p_vl, bool callDestructor = true)
     {
         return v8::Uint32::NewFromUnsigned(v8::Isolate::GetCurrent(), p_vl);
     }
@@ -263,7 +263,7 @@ template <> class Converter<uint64_t>
         double v = value->NumberValue(v8::Isolate::GetCurrent()->GetCurrentContext()).ToChecked();
         return *reinterpret_cast<uint64_t *>(&v);
     }
-    static v8::Local<v8::Value> ToJs(uint64_t p_vl)
+    static v8::Local<v8::Value> ToJs(uint64_t p_vl, bool callDestructor = true)
     {
         return v8::Number::New(v8::Isolate::GetCurrent(), *reinterpret_cast<double *>(&p_vl));
     }
@@ -284,7 +284,7 @@ template <> class Converter<bool>
     {
         return p_vl->BooleanValue(v8::Isolate::GetCurrent());
     }
-    static v8::Local<v8::Value> ToJs(bool p_vl)
+    static v8::Local<v8::Value> ToJs(bool p_vl, bool callDestructor = true)
     {
         return v8::Boolean::New(v8::Isolate::GetCurrent(), p_vl);
     }
@@ -302,7 +302,7 @@ template <> class Converter<float>
         return static_cast<float>(p_vl->NumberValue(v8::Isolate::GetCurrent()->GetCurrentContext()).ToChecked());
         // return static_cast<float>(val.As<Number>()->Value());
     }
-    static v8::Local<v8::Value> ToJs(float p_vl)
+    static v8::Local<v8::Value> ToJs(float p_vl, bool callDestructor = true)
     {
         return v8::Number::New(v8::Isolate::GetCurrent(), p_vl);
     }
@@ -319,7 +319,7 @@ template <> class Converter<double>
     {
         return p_vl->NumberValue(v8::Isolate::GetCurrent()->GetCurrentContext()).ToChecked();
     }
-    static v8::Local<v8::Value> ToJs(double p_vl)
+    static v8::Local<v8::Value> ToJs(double p_vl, bool callDestructor = true)
     {
         return v8::Number::New(v8::Isolate::GetCurrent(), p_vl);
     }
@@ -341,7 +341,7 @@ template <> class Converter<v8::Local<v8::Value>>
     {
         return p_vl;
     }
-    static v8::Local<v8::Value> ToJs(v8::Local<v8::Value> p_vl)
+    static v8::Local<v8::Value> ToJs(v8::Local<v8::Value> p_vl, bool callDestructor = true)
     {
         return p_vl;
     }
@@ -358,7 +358,7 @@ template <> class Converter<v8::Local<v8::ArrayBuffer>>
     {
         return p_vl.As<v8::ArrayBuffer>();
     }
-    static v8::Local<v8::Value> ToJs(v8::Local<v8::ArrayBuffer> p_vl)
+    static v8::Local<v8::Value> ToJs(v8::Local<v8::ArrayBuffer> p_vl, bool callDestructor = true)
     {
         return p_vl.As<v8::Value>();
     }
@@ -375,7 +375,7 @@ template <> class Converter<void>
     {
         return;
     }
-    static v8::Local<v8::Value> ToJs(int p_vl)
+    static v8::Local<v8::Value> ToJs(int p_vl, bool callDestructor = true)
     {
         if (0 == p_vl)
             return Undefined(v8::Isolate::GetCurrent());
@@ -406,7 +406,7 @@ template <> class Converter<const char *>
         v8::String::Utf8Value const str(v8::Isolate::GetCurrent(), value);
         return from_type(reinterpret_cast<char const *>(*str), str.length());
     }
-    static v8::Local<v8::Value> ToJs(std::string_view p_vl)
+    static v8::Local<v8::Value> ToJs(std::string_view p_vl, bool callDestructor = true)
     {
         return v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), p_vl.data(), v8::NewStringType::kNormal, p_vl.size())
             .ToLocalChecked();
@@ -426,7 +426,7 @@ template <> class Converter<std::string>
                                   p_vl->ToString(v8::Isolate::GetCurrent()->GetCurrentContext()).ToLocalChecked());
         return std::string(*utf8str);
     }
-    static v8::Local<v8::Value> ToJs(std::string p_vl)
+    static v8::Local<v8::Value> ToJs(std::string p_vl, bool callDestructor = true)
     {
         return v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), p_vl.c_str(), v8::NewStringType::kNormal,
                                    static_cast<uint32_t>(p_vl.length()))
@@ -446,7 +446,7 @@ template <> class Converter<std::string>
 template <> class Converter<v8::Local<v8::Primitive>>
 {
   public:
-    static v8::Local<v8::Value> ToJs(v8::Local<v8::Primitive> p_vl)
+    static v8::Local<v8::Value> ToJs(v8::Local<v8::Primitive> p_vl, bool callDestructor = true)
     {
         return p_vl;
     }
@@ -455,7 +455,7 @@ template <> class Converter<v8::Local<v8::Primitive>>
 template <> class Converter<v8::Local<v8::Object>>
 {
   public:
-    static v8::Local<v8::Value> ToJs(v8::Local<v8::Object> p_vl)
+    static v8::Local<v8::Value> ToJs(v8::Local<v8::Object> p_vl, bool callDestructor = true)
     {
         return p_vl;
     }
@@ -467,7 +467,7 @@ template <> class Converter<v8::Local<v8::Object>>
 template <typename T> class __JsArray
 {
   public:
-    static v8::Local<v8::Value> ToJsArray(const std::vector<T *> &p_v1)
+    static v8::Local<v8::Value> ToJsArray(const std::vector<T *> &p_v1, bool callDestructor = true)
     {
         v8::Isolate *isolate = v8::Isolate::GetCurrent();
         v8::Local<v8::Context> context = isolate->GetCurrentContext();
@@ -483,12 +483,12 @@ template <typename T> class __JsArray
             for (int i = 0; i < size; i++)
             {
                 //__array->Set(i, __JSCProxy_class<T>::GetInstance()->TransferObjPtrToJS(p_v1.at(i)));
-                __array->Set(context, i, Converter<T *>::ToJs(p_v1.at(i)));
+                __array->Set(context, i, Converter<T *>::ToJs(p_v1.at(i), callDestructor));
             }
             return __array;
         }
     }
-    static v8::Local<v8::Value> ToJsArray(const std::vector<T> &p_v1)
+    static v8::Local<v8::Value> ToJsArray(const std::vector<T> &p_v1, bool callDestructor = true)
     {
         v8::Isolate *isolate = v8::Isolate::GetCurrent();
         v8::Local<v8::Context> context = isolate->GetCurrentContext();
@@ -504,7 +504,7 @@ template <typename T> class __JsArray
             for (int i = 0; i < size; i++)
             {
                 //__array->Set(i, __JSCProxy_class<T>::GetInstance()->TransferObjPtrToJS(p_v1.at(i)));
-                __array->Set(context, i, Converter<T>::ToJs(p_v1.at(i)));
+                __array->Set(context, i, Converter<T>::ToJs(p_v1.at(i), callDestructor));
             }
             return __array;
         }
@@ -624,7 +624,7 @@ template <typename T> class Converter<std::vector<T>>
          __JsArray<T>::FromJsArray(p_vl, vec);
          return vec;
      }
-    static v8::Local<v8::Value> ToJs(const std::vector<T> &p_vl)
+    static v8::Local<v8::Value> ToJs(const std::vector<T> &p_vl, bool callDestructor = true)
     {
         return __JsArray<T>::ToJsArray(p_vl);
     }
@@ -638,9 +638,9 @@ template <typename T> class Converter<std::vector<T *>>
         __JsArray<T>::FromJsArray(p_vl, vec);
         return vec;
     }
-    static v8::Local<v8::Value> ToJs(const std::vector<T *> &p_vl)
+    static v8::Local<v8::Value> ToJs(const std::vector<T *> &p_vl, bool callDestructor = true)
     {
-        return __JsArray<T>::ToJsArray(p_vl);
+        return __JsArray<T>::ToJsArray(p_vl, callDestructor);
     }
     /*static void ToCpp(v8::Local<v8::Value> p_vl, std::vector<T*>& vec)
     {
@@ -671,7 +671,7 @@ template <typename T, typename R> class Converter<std::unordered_map<T, R>>
         __JsMap<T, R>::FromJsMap(p_vl, map);
         return map;
     }
-    static v8::Local<v8::Value> ToJs(const std::vector<T> &p_vl)
+    static v8::Local<v8::Value> ToJs(const std::vector<T> &p_vl, bool callDestructor = true)
     {
         assert("to do");
         return Undefined(v8::Isolate::GetCurrent());
@@ -688,7 +688,7 @@ public:
         __JsMap<T, R>::FromJsMap(p_vl, map);
         return map;
     }
-    static v8::Local<v8::Value> ToJs(const std::vector<T>& p_vl)
+    static v8::Local<v8::Value> ToJs(const std::vector<T>& p_vl, bool callDestructor = true)
     {
         assert("to do");
         return Undefined(v8::Isolate::GetCurrent());
@@ -700,9 +700,9 @@ inline v8::Local<v8::String> Js_Str(v8::Isolate *pIso, const char *str)
     return v8::String::NewFromUtf8(pIso, str).ToLocalChecked();
 }
 
-template <class T> v8::Local<v8::Value> ToJSValue(T t)
+template <class T> v8::Local<v8::Value> ToJSValue(T t, bool callDestructor = true)
 {
-    return Converter<T>::ToJs(t);
+    return Converter<T>::ToJs(t, callDestructor);
 }
 } // namespace laya
 

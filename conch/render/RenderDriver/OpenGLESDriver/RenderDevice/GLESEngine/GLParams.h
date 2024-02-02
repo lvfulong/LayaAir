@@ -3,7 +3,7 @@
 
 #include <unordered_map>
 #include <render/3D/design/renderEnum/RenderParams.h>
-
+#include <utils/Preprocessor.h>
 namespace laya
 {
 	class GLESEngine;
@@ -16,8 +16,8 @@ namespace laya
 		void _initParams();
 	private:
 		GLESEngine* m_engine;
-		typedef std::unordered_map<RenderParams, int> ParamsDataMap;
-		std::unordered_map<RenderParams, int> m_glParamsData;
+		typedef std::unordered_map<RenderParams, GLfloat> ParamsDataMap;
+		ParamsDataMap m_glParamsData;
 	};
 }
 #endif

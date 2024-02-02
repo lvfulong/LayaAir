@@ -84,8 +84,7 @@ JsValue GLESInternalRT::getDepthTexture()
 {
     if (m_pJSDepthTexture.isEmpty())
     {
-        //JSWebGLInternalTex *pTex = new JSWebGLInternalTex(m_pRenderTexture->m_depthTexture);
-       // m_pJSDepthTexture.reset(JSP_TO_JS(JSWebGLInternalTex *, pTex));
+        m_pJSDepthTexture.reset(Converter<GLESInternalTex*>::ToJs(m_depthTexture, false));
         return m_pJSDepthTexture.toLocal().handle_;
     }
     else
@@ -104,7 +103,7 @@ JsValue GLESInternalRT::getTextures()
         {
             vec.push_back(this->m_textures[i]);
         }
-        m_pJSTextures.reset(Converter<std::vector<GLESInternalTex*>>::ToJs(vec));
+        m_pJSTextures.reset(Converter<std::vector<GLESInternalTex*>>::ToJs(vec, false));
         return m_pJSTextures.toLocal().handle_;
     }
     else

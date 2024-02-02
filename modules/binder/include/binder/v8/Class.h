@@ -218,10 +218,10 @@ class ClassRegistryManager
         assert(objectRegistry != nullptr);
         objectRegistry->pobj.SetWeak(&classRegistry, WeakCallback, v8::WeakCallbackType::kInternalFields);
     }
-    template <typename ClassType> static v8::Local<v8::Object> wrapCppObject(ClassType *objectPointer)
+    template <typename ClassType> static v8::Local<v8::Object> wrapCppObject(ClassType *objectPointer, bool callDestructor = true)
     {
         ClassRegistry<ClassType> &classRegistry = getClassRegistry<ClassType>(type_id<ClassType>());
-        return classRegistry.wrapCppObject(objectPointer);
+        return classRegistry.wrapCppObject(objectPointer, callDestructor);
     }
     template <typename ClassType> static void removeObject(ClassType *objectPointer, bool callDestructor)
     {
@@ -535,9 +535,9 @@ template <typename ClassType> ClassRegistry<ClassType>::ClassRegistry() : isolat
     func->InstanceTemplate()->SetInternalFieldCount(2);
     func->Inherit(js_func);
 }
-template <typename ClassType> v8::Local<v8::Object> wrapCppObject(ClassType *objectPointer)
+template <typename ClassType> v8::Local<v8::Object> wrapCppObject(ClassType *objectPointer, bool callDestructor = true)
 {
-    return ClassRegistryManager::wrapCppObject<ClassType>(objectPointer);
+    return ClassRegistryManager::wrapCppObject<ClassType>(objectPointer, callDestructor);
 }
 template <typename ClassType> bool isWrappedClassOf()
 {
