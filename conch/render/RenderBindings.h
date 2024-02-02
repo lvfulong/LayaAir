@@ -207,7 +207,6 @@ class RenderBindings
             class_binding.property_field("useSRGBLoad", &GLESInternalTex::m_useSRGBLoad);
             class_binding.property_field("gammaCorrection", &GLESInternalTex::m_gammaCorrection);
             class_binding.property("resource", &GLESInternalTex::getResource);
-            class_binding.property("id", &GLESInternalTex::getID);
             class_binding.property("filterMode", &GLESInternalTex::getFilterMode, &GLESInternalTex::setFilterMode);
             class_binding.property("wrapU", &GLESInternalTex::getWrapU, &GLESInternalTex::setWrapU);
             class_binding.property("wrapV", &GLESInternalTex::getWrapV, &GLESInternalTex::setWrapV);
