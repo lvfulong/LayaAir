@@ -55,7 +55,7 @@ class ShaderData //: public ResourceBase<ShaderData>
         std::unordered_map<uint32_t, std::any>::iterator it = m_data.find(key);
         if (it != m_data.end())
         {
-            assert(it->second.type == std::typeid(T));
+            //assert(it->second.type == std::typeid(T));
             return std::any_cast<T>(&it->second);
         }
         return nullptr;
