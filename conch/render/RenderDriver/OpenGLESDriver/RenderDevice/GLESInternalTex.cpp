@@ -1,7 +1,7 @@
 #include "GLESInternalTex.h"
 #include "JCConch.h"
 #include "JCConchRender.h"
-#include "render/driver/gles/LayaGL.h"
+#include "render/LayaGL.h"
 #ifdef WIN32
 #ifdef min
 #undef min

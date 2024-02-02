@@ -9,7 +9,7 @@
 #include <render/3D/design/renderEnum/RenderStateType.h>
 #include <render/3D/design/renderEnum/StencilOperation.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.h>
-#include "render/driver/gles/LayaGL.h"
+#include "render/LayaGL.h"
 
 namespace laya
 {

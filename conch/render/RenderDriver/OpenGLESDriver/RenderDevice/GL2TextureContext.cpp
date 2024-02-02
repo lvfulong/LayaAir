@@ -4,7 +4,7 @@
 #include "../../Image/JCImage.h"
 #include "GLESInternalRT.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLUtils.h"
-#include "render/driver/gles/LayaGL.h"
+#include "render/LayaGL.h"
 namespace laya
 {
 	extern int g_nMainFrameBuffer;

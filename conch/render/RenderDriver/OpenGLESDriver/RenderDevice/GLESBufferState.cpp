@@ -2,7 +2,7 @@
 #include "GLESIndexBuffer.h"
 #include "GLESVertexBuffer.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLVertexState.h"
-#include "render/driver/gles/LayaGL.h"
+#include "render/LayaGL.h"
 
 namespace laya
 {

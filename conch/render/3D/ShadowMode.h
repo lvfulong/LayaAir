@@ -1,7 +1,7 @@
 #ifndef __ShadowMode_H__
 #define __ShadowMode_H__
 
-#include "render/driver/gles/LayaGL.h"
+#include "render/LayaGL.h"
 
 namespace laya
 {

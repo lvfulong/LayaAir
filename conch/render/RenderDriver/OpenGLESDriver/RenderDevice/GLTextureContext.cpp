@@ -5,7 +5,7 @@
 #include "JCConch.h"
 #include "LayaGL/JCLayaGL.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLUtils.h"
-#include "render/driver/gles/LayaGL.h"
+#include "render/LayaGL.h"
 #include <Bindings/JSImage.h>
 #include <assert.h>
 #ifdef WIN32

@@ -150,8 +150,8 @@ list(APPEND CONCH_SRC
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLRender2DContext.cpp
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLUtils.h
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLUtils.cpp
-	render/driver/gles/LayaGL.h
-	render/driver/gles/LayaGL.cpp
+	render/LayaGL.h
+	render/LayaGL.cpp
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESIndexBuffer.h
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESIndexBuffer.cpp
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESVertexBuffer.h

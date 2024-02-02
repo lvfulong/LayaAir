@@ -6,7 +6,7 @@
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderInstance.h"
 #include "render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTSubShader.h"
 #include "render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h"
-#include "render/driver/gles/LayaGL.h"
+#include "render/LayaGL.h"
 #include <render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.h>
 namespace laya
 {

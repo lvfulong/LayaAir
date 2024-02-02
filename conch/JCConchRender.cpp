@@ -29,7 +29,7 @@
 #elif _WIN32
 #include "OpenGLBackendWinEGL.h"
 #endif
-#include "render/driver/gles/LayaGL.h"
+#include "render/LayaGL.h"
 extern int g_nInnerHeight;
 extern int g_nInnerWidth;
 

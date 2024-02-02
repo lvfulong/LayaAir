@@ -1,5 +1,5 @@
 #include "Scene3DShaderDeclaration.h"
-#include "render/driver/gles/LayaGL.h"
+#include "render/LayaGL.h"
 namespace laya
 {
 ShaderDefine* Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_CASCADE = nullptr;

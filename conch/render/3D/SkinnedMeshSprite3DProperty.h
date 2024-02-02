@@ -1,7 +1,7 @@
 #ifndef __SkinnedMeshSprite3DProperty_H__
 #define __SkinnedMeshSprite3DProperty_H__
 
-#include "render/driver/gles/LayaGL.h"
+#include "render/LayaGL.h"
 
 namespace laya
 {

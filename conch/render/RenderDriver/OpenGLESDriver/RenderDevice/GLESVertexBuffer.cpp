@@ -1,5 +1,5 @@
 #include "GLESVertexBuffer.h"
-#include "render/driver/gles/LayaGL.h"
+#include "render/LayaGL.h"
 
 namespace laya
 {

@@ -1,7 +1,7 @@
 #ifndef __ShadowCasterPassProperty_H__
 #define __ShadowCasterPassProperty_H__
 
-#include "render/driver/gles/LayaGL.h"
+#include "render/LayaGL.h"
 
 namespace laya
 {

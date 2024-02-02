@@ -1,7 +1,7 @@
 #ifndef __Sprite3DRenderDeclarationProperty_H__
 #define __Sprite3DRenderDeclarationProperty_H__
 
-#include "render/driver/gles/LayaGL.h"
+#include "render/LayaGL.h"
 
 namespace laya
 {

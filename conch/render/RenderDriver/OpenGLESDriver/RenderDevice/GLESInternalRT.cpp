@@ -1,6 +1,6 @@
 #include "GLESInternalRT.h"
 #include "GLESInternalTex.h"
-#include "render/driver/gles/LayaGL.h"
+#include "render/LayaGL.h"
 
 namespace laya
 {

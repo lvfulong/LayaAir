@@ -1,6 +1,6 @@
 #ifndef __GLESRenderGeometryElement_H__
 #define __GLESRenderGeometryElement_H__
-#include "render/driver/gles/LayaGL.h"
+#include "render/LayaGL.h"
 #include <render/3D/design/renderEnum/DrawType.h>
 #include <render/3D/design/renderEnum/IndexFormat.h>
 #include <render/3D/design/renderEnum/RenderPologyMode.h>
