@@ -9,12 +9,6 @@ GLESVertexBuffer::GLESVertexBuffer(BufferTargetType targetType, BufferUsage buff
 }
 GLESVertexBuffer::~GLESVertexBuffer()
 {
-    if (m_pVertextDeclaration)
-    {
-        delete[] m_pVertextDeclaration;
-        m_pVertextDeclaration = NULL;
-    }
-
     if (this->_glBuffer != nullptr)
     {
         delete this->_glBuffer;
@@ -24,7 +18,6 @@ GLESVertexBuffer::~GLESVertexBuffer()
 void GLESVertexBuffer::destroy()
 {
     this->_glBuffer->destroy();
-    // this._vertexDeclaration = null
 }
 void GLESVertexBuffer::setDataLength(int byteLength)
 {
@@ -58,33 +51,15 @@ void GLESVertexBuffer::orphanStorage()
     bind();
     this->_glBuffer->setDataLength(this->_glBuffer->m_byteLength);
 }
-
-void GLESVertexBuffer::setVertexDeclaration(int *declaration, int intLength)
+void GLESVertexBuffer::setDataJS(JSValueAsParam data, int bufferOffset /* = 0*/, int dataStartIndex /* = 0*/,
+                                 int dataCount /*= Number.MAX_SAFE_INTEGER*/)
 {
-    if (m_pVertextDeclaration != NULL)
+    char *pArrayBufferPtr = NULL;
+    int nABLen = 0;
+    bool bIsArrayBuffer = extractJSAB(data, pArrayBufferPtr, nABLen);
+    if (bIsArrayBuffer)
     {
-        delete[] m_pVertextDeclaration;
-        m_pVertextDeclaration = NULL;
-    }
-    // TEST
-    int n = m_nVertextDeclarationNum = intLength / sizeof(VertexDeclaration);
-    m_pVertextDeclaration = new VertexDeclaration[n];
-    int num = 0;
-    for (int i = 0; i < n; i++)
-    {
-        m_pVertextDeclaration[i].location = declaration[num];
-        num++;
-        m_pVertextDeclaration[i].size = declaration[num];
-        num++;
-        m_pVertextDeclaration[i].type = declaration[num];
-        num++;
-        m_pVertextDeclaration[i].normalize = declaration[num];
-        num++;
-        m_pVertextDeclaration[i].stride = declaration[num];
-        num++;
-        m_pVertextDeclaration[i].offset = declaration[num];
-        num++;
+        setData(pArrayBufferPtr, bufferOffset, dataStartIndex, dataCount);
     }
 }
 } // namespace laya
-//------------------------------------------------------------------------------

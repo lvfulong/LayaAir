@@ -4,18 +4,19 @@
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLBuffer.h>
 #include <stdio.h>
 #include <utils/Preprocessor.h>
+#include <binder/JSInterface.h>
 
 namespace laya
 {
-struct VertexDeclaration
+struct VertexStateContext
 {
-    int location;
-    int size;
-    int type;
-    int normalize;
-    int stride;
-    int offset;
+    int32_t elementCount; // 0-4
+    int32_t elementType;  // LayaGL.renderEngine.getParams(RenderParams.FLOAT)
+    int32_t normalized;   // 0 or 1
+    int32_t vertexStride;
+    int32_t elementOffset;
 };
+
 class GLESVertexBuffer // : public VertexBuffer
 {
   public:
@@ -26,18 +27,21 @@ class GLESVertexBuffer // : public VertexBuffer
 
     void setData(const char *buffer, int bufferOffset /* = 0*/, int dataStartIndex /* = 0*/,
                  int dataCount /*= Number.MAX_SAFE_INTEGER*/);
+    void setDataJS(JSValueAsParam data, int bufferOffset /* = 0*/, int dataStartIndex /* = 0*/,
+                   int dataCount /*= Number.MAX_SAFE_INTEGER*/);
     void bind();
     void unbind();
     void orphanStorage();
 
-    void setVertexDeclaration(int *declaration, int intLength);
+    void setVertexDeclaration(const std::map<int32_t, VertexStateContext> &declarations)
+    {
+        this->_shaderValues = declarations;
+    }
 
   public:
     GLBuffer *_glBuffer;
-    VertexDeclaration *m_pVertextDeclaration = nullptr;
-    int m_nVertextDeclarationNum = 0;
-    ;
     bool _instanceBuffer = false;
+    std::map<int32_t, VertexStateContext> _shaderValues; // declarations;
 };
 } // namespace laya
 #endif //__GLESVertexBuffer_H__

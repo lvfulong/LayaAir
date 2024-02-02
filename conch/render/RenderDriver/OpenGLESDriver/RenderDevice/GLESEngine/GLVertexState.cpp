@@ -56,20 +56,23 @@ void GLVertexState::applyVertexBuffer(const std::vector<GLESVertexBuffer *> &ver
     // this->_vertexBuffers = vertexBuffer;
     if (m_engine->m_GLBindVertexArray == this)
     {
+        _vertexDeclaration.resize(vertexBuffers.size());
         for (int i = 0, size = vertexBuffers.size(); i < size; i++)
         {
             GLESVertexBuffer *element = vertexBuffers[i];
-            int n = element->m_nVertextDeclarationNum;
+            std::map<int32_t, VertexStateContext> &verDec = element->_shaderValues;
+            _vertexDeclaration[i] = verDec;
             element->bind();
-            for (int j = 0; j < n; j++)
+            for (std::map<int32_t, VertexStateContext>::iterator it = verDec.begin(); it != verDec.end(); it++)
             {
-                VertexDeclaration *verDec = &(element->m_pVertextDeclaration[j]);
-                glEnableVertexAttribArray(verDec->location);
-                glVertexAttribPointer(verDec->location, verDec->size, verDec->type,
-                                      (verDec->normalize > 0) ? GL_TRUE : GL_FALSE, verDec->stride,
-                                      ((const void *)verDec->offset));
+                GLuint loc = it->first;
+                VertexStateContext &attribute = it->second;
+                glEnableVertexAttribArray(loc);
+                glVertexAttribPointer(loc, attribute.elementCount, attribute.elementType,
+                                      (attribute.normalized > 0) ? GL_TRUE : GL_FALSE, attribute.vertexStride,
+                                      ((const void *)attribute.elementOffset));
                 if (element->_instanceBuffer)
-                    this->vertexAttribDivisor(verDec->location, 1);
+                    this->vertexAttribDivisor(loc, 1);
             }
         }
     }
@@ -82,8 +85,11 @@ void GLVertexState::clearVAO()
 {
     for (int i = 0, n = this->_vertexDeclaration.size(); i < n; i++)
     {
-        VertexDeclaration *verDec = &this->_vertexDeclaration[i];
-        glDisableVertexAttribArray(verDec->location);
+        std::map<int32_t, VertexStateContext> &verDec = this->_vertexDeclaration[i];
+        for (std::map<int32_t, VertexStateContext>::iterator it = verDec.begin(); it != verDec.end(); it++)
+        {
+            glDisableVertexAttribArray(it->first);
+        }
     }
 }
 void GLVertexState::applyIndexBuffer(GLESIndexBuffer *indexBuffer)
