@@ -535,7 +535,7 @@ template <typename ClassType> ClassRegistry<ClassType>::ClassRegistry() : isolat
     func->InstanceTemplate()->SetInternalFieldCount(2);
     func->Inherit(js_func);
 }
-template <typename ClassType> v8::Local<v8::Object> wrapCppObject(ClassType *objectPointer, bool callDestructor = true)
+template <typename ClassType> v8::Local<v8::Object> wrapCppObject(ClassType *objectPointer, bool callDestructor)
 {
     return ClassRegistryManager::wrapCppObject<ClassType>(objectPointer, callDestructor);
 }

@@ -90,7 +90,7 @@ namespace laya
 
 		void onSocketOpenCallJSFunction( std::string p_sEvent, std::weak_ptr<int> cbref);
 
-		void onSocketCloseCallJSFunction( std::string p_sEvent, int64_t closetm, std::weak_ptr<int> cbref);
+		void onSocketCloseCallJSFunction( std::string p_sEvent, double closetm, std::weak_ptr<int> cbref);
 		
 		//void onSocketMessageCallJSFunction( std::string p_sEvent );
 		//接收到二进制。要求用完以后把pBuf删除

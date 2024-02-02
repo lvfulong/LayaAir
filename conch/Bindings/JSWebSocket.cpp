@@ -99,7 +99,7 @@ namespace laya
         m_pJSFunctionOnOpen.call<void>(toLocal(this), p_sEvent.c_str());
     }
     //------------------------------------------------------------------------------
-    void JSWebSocket::onSocketCloseCallJSFunction(std::string p_sEvent, int64_t closetm, std::weak_ptr<int> cbref)
+    void JSWebSocket::onSocketCloseCallJSFunction(std::string p_sEvent, double closetm, std::weak_ptr<int> cbref)
     {
         if (!cbref.lock())return;
         closeTime = closetm;

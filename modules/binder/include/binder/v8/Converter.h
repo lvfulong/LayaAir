@@ -36,7 +36,7 @@ struct is_wrapped_class : std::conjunction<std::is_class<T>, std::negation<inter
 
 template <typename ClassType> bool isWrappedClassOf();
 
-template <typename ClassType> v8::Local<v8::Object> wrapCppObject(ClassType *objectPointer, bool callDestructor/* = true*/);
+template <typename ClassType> v8::Local<v8::Object> wrapCppObject(ClassType *objectPointer, bool callDestructor);
 
 template <typename T, typename Enable = void> class Converter;
 
