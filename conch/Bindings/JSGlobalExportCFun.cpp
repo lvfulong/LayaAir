@@ -74,7 +74,6 @@
 #include "LayaAir/2D/JSWebGLCacheAsNormalCanvas.h"
 #include "LayaAir/2D/JSWordText.h"
 #include "LayaAir/2D/JSRenderTexture2D.h"
-#include "LayaAir/3D/JSCommandUniformMap.h"
 #include "LayaAir/3D/JSTransform.h"
 #include "LayaAir/3D/JSSubmitScene3D.h"
 #include "LayaAir/3D/JSBounds.h"

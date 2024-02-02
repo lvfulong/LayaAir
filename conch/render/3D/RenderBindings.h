@@ -1,6 +1,14 @@
 #ifndef __RenderBindings_H__
 #define __RenderBindings_H__
 
+
+#include <binder/JSInterface.h>
+#include <core/math/Color.h>
+#include <core/math/Matrix3x3.h>
+#include <core/math/Matrix4x4.h>
+#include <core/math/Vector2.h>
+#include <core/math/Vector3.h>
+#include <core/math/Vector4.h>
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GL2TextureContext.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESBufferState.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/WebGLConfig.h"
@@ -9,14 +17,13 @@
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderInstance.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESVertexBuffer.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLTextureContext.h"
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESCommandUniformMap.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.h>
+#include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESSkinRenderElement.h>
 #include "render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTSubShader.h"
-#include <binder/JSInterface.h>
-#include <core/math/Color.h>
-#include <core/math/Matrix3x3.h>
-#include <core/math/Matrix4x4.h>
-#include <core/math/Vector2.h>
-#include <core/math/Vector3.h>
-#include <core/math/Vector4.h>
+#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTShaderPass.h>
+#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h>
+#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTShaderData.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTDirectLightShadowRP.h>
@@ -31,11 +38,6 @@
 #include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTSpotLight.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTVolumetricGI.h>
 #include <render/3D/temp/RenderState.h>
-#include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESSkinRenderElement.h>
-#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.h>
-#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTShaderPass.h>
-#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h>
-#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTShaderData.h>
 
 namespace laya
 {
@@ -266,6 +268,15 @@ class RenderBindings
             class_binding.function("applyState", &GLESBufferState::applyState);
             class_binding.function("destroy", &GLESBufferState::destroy);
             context.class_("conchGLESBufferState", class_binding);
+        }
+        {
+
+            class_<GLESCommandUniformMap> class_binding;
+            class_binding.constructor<>();
+            //class_binding.function("hasPtrID", &JSCommandUniformMap::hasPtrID);
+            class_binding.function("addShaderUniform", &GLESCommandUniformMap::addShaderUniform);
+            class_binding.class_function("create", &GLESCommandUniformMap::createGlobalUniformMapJS);
+            context.class_("conchGLESCommandUniformMap", class_binding);
         }
         {
             class_<RenderState> class_binding;

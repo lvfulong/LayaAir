@@ -69,6 +69,9 @@ list(APPEND CONCH_SRC
 	core/math/Viewport.h
 	core/math/Viewport.cpp
 
+	render/ShadowCullInfo.h
+	render/LayaGL.h
+	render/LayaGL.cpp
 	render/3D/design/Render3DProcess.cpp
 	render/3D/design/Render3DProcess.h
 	render/3D/RenderableSprite3DProperty.h
@@ -89,16 +92,12 @@ list(APPEND CONCH_SRC
 	render/3D/DepthPassProperty.cpp
 	render/3D/Shader3D.h
 	render/3D/Shader3D.cpp
-
-	# 渲染节点类
 	render/3D/renderInstance/MeshRenderNode.h
 	render/3D/renderInstance/MeshRenderNode.cpp
 	render/3D/renderInstance/RenderModuleData.h
 	render/3D/renderInstance/RenderModuleData.cpp
-
 	render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.h
 	render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.cpp
-
 	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTRender3DProcess.h
 	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTRender3DProcess.cpp
 	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTForwardAddRP.h
@@ -111,7 +110,6 @@ list(APPEND CONCH_SRC
 	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTForwardAddClusterRP.cpp
 	render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.h
 	render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.cpp
-	render/ShadowCullInfo.h
 	render/RenderDriver/OpenGLESDriver/RenderDevice/KTXTextureInfo.h
 	render/RenderDriver/OpenGLESDriver/RenderDevice/KTXTextureInfo.cpp
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESBufferState.h
@@ -148,10 +146,12 @@ list(APPEND CONCH_SRC
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLVertexState.cpp
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLRender2DContext.h
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLRender2DContext.cpp
+	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderInstance.h
+	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderInstance.cpp
+	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESCommandUniformMap.h
+	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESCommandUniformMap.cpp
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLUtils.h
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLUtils.cpp
-	render/LayaGL.h
-	render/LayaGL.cpp
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESIndexBuffer.h
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESIndexBuffer.cpp
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESVertexBuffer.h
@@ -187,11 +187,6 @@ list(APPEND CONCH_SRC
 	render/3D/temp/RenderStateContext.cpp
 	render/3D/temp/ObjectBase.h
 	render/3D/temp/ObjectBase.cpp
-
-	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderInstance.h
-	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderInstance.cpp
-	render/3D/temp/CommandUniformMap.h
-	render/3D/temp/CommandUniformMap.cpp
 	render/3D/temp/CommandEncoder.h
 	render/3D/temp/RenderState.h
 	render/3D/temp/RenderState.cpp

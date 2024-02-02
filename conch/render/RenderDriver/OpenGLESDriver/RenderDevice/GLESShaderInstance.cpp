@@ -1,7 +1,7 @@
 #include "GLESShaderInstance.h"
 #include "JCConch.h"
 #include "JCConchRender.h"
-#include "render/3D/temp/CommandUniformMap.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESCommandUniformMap.h"
 #include "render/3D/temp/RenderState.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLShaderInstance.h"
 #include "render/LayaGL.h"
@@ -52,10 +52,10 @@ void GLESShaderInstance::destroy()
 }
 void GLESShaderInstance::_create3D()
 {
-    CommandUniformMap *sceneParams = CommandUniformMap::createGlobalUniformMap("Scene3D");
-    // CommandUniformMap* spriteParms = CommandUniformMap::createGlobalUniformMap("Sprite3D");
-    CommandUniformMap *cameraParams = CommandUniformMap::createGlobalUniformMap("BaseCamera");
-    CommandUniformMap *customParams = CommandUniformMap::createGlobalUniformMap("Custom");
+    GLESCommandUniformMap *sceneParams = GLESCommandUniformMap::createGlobalUniformMap("Scene3D");
+    // GLESCommandUniformMap* spriteParms = GLESCommandUniformMap::createGlobalUniformMap("Sprite3D");
+    GLESCommandUniformMap*cameraParams = GLESCommandUniformMap::createGlobalUniformMap("BaseCamera");
+    GLESCommandUniformMap*customParams = GLESCommandUniformMap::createGlobalUniformMap("Custom");
 
     std::vector<ShaderVariable *> &data = m_GLShaderInstance->getUniformMap();
     for (int i = 0, n = data.size(); i < n; i++)
