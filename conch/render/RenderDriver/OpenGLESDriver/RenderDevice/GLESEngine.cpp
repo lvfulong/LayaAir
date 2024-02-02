@@ -21,7 +21,7 @@
 namespace laya
 {
 GLESEngine *g_GLESEngine = nullptr;
-std::unordered_map<uint32_t, ShaderDefine> GLESEngine::_texGammaDefine = {};
+std::unordered_map<uint32_t, ShaderDefine> GLESEngine::_texGammaDefine;
 GLESEngine::GLESEngine(WebGLConfig config, WebGLMode webglMode)
 {
     assert(g_GLESEngine == nullptr);
