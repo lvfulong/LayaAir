@@ -38,7 +38,7 @@ JsValue GLESCommandUniformMap::createGlobalUniformMapJS(const char* blockName)
 }
 bool GLESCommandUniformMap::hasPtrID(int propertyID)
 {
-    std::unordered_map<int, std::string>::iterator it = m_vData.find(propertyID);
+    std::unordered_map<int, CommandUniformData>::iterator it = m_vData.find(propertyID);
     if (it != m_vData.end())
     {
         return true;

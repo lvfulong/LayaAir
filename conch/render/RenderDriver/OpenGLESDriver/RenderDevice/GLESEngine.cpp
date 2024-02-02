@@ -425,7 +425,7 @@ int GLESEngine::uploadCustomUniforms(GLShaderInstance *shader, const std::unorde
 {
     shader->bind();
     int shaderCall = 0;
-    /*static ShaderData::DataInfo tempData;
+    /* todo static ShaderData::DataInfo tempData;
     tempData.type = ShaderDataType::Number32Array;
     tempData.data = (unsigned char*)data;
     tempData.size = byteSize / sizeof(GLfloat);

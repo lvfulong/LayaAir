@@ -1,6 +1,6 @@
 #include "GLESSkinRenderElement.h"
 #include <Bindings/LayaAir/3D/JSTransform.h>
-#include <render/3D/SkinnedMeshSprite3DProperty.h>
+#include <render/Property.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESBufferState.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLRenderDrawContext.h>

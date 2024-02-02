@@ -129,7 +129,12 @@ class RenderBindings
             .field("failIfMajorPerformanceCaveat", &WebGLConfig::failIfMajorPerformanceCaveat)
             .field("premultipliedAlpha", &WebGLConfig::premultipliedAlpha)
             .field("posipreserveDrawingBuffertion", &WebGLConfig::preserveDrawingBuffer);
-
+        value_object<VertexStateContext>("conchVertexStateContext")
+            .field("elementCount", &VertexStateContext::elementCount)
+            .field("elementType", &VertexStateContext::elementType)
+            .field("normalized", &VertexStateContext::normalized)
+            .field("vertexStride", &VertexStateContext::vertexStride)
+            .field("elementOffset", &VertexStateContext::elementOffset);
         {
             // todo Bounds
         }
@@ -269,6 +274,7 @@ class RenderBindings
             class_<GLESCommandUniformMap> class_binding;
             class_binding.constructor<>();
             // class_binding.function("hasPtrID", &JSCommandUniformMap::hasPtrID);
+            class_binding.function("addShaderBlockUniform", &GLESCommandUniformMap::addShaderBlockUniform);
             class_binding.function("addShaderUniform", &GLESCommandUniformMap::addShaderUniform);
             class_binding.class_function("create", &GLESCommandUniformMap::createGlobalUniformMapJS);
             context.class_("conchGLESCommandUniformMap", class_binding);
@@ -681,6 +687,18 @@ template <> struct is_value_object<WebGLConfig> : std::true_type
 {
 };
 template <> struct is_wrapped_class<WebGLConfig> : std::false_type
+{
+};
+template <> struct is_value_object<VertexStateContext> : std::true_type
+{
+};
+template <> struct is_wrapped_class<VertexStateContext> : std::false_type
+{
+};
+template <> struct is_value_object<UniformProperty> : std::true_type
+{
+};
+template <> struct is_wrapped_class<UniformProperty> : std::false_type
 {
 };
 } // namespace internal
