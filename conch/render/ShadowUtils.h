@@ -2,7 +2,7 @@
 #define __ShadowUtils_H_
 
 #include "Utils3D.h"
-#include "render/3D/ShadowSliceData.h"
+#include "render/ShadowSliceData.h"
 #include <core/math/BoundFrustum.h>
 #include <core/math/Matrix4x4.h>
 #include <core/math/Types.h>

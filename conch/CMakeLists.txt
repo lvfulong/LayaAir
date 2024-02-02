@@ -74,24 +74,8 @@ list(APPEND CONCH_SRC
 	render/LayaGL.cpp
 	render/3D/design/Render3DProcess.cpp
 	render/3D/design/Render3DProcess.h
-	render/3D/RenderableSprite3DProperty.h
-	render/3D/RenderableSprite3DProperty.cpp
-	render/3D/Sprite3DRenderDeclarationProperty.h
-	render/3D/Sprite3DRenderDeclarationProperty.cpp
-	render/3D/Sprite3DProperty.h
-	render/3D/Sprite3DProperty.cpp
-	render/3D/ShadowCasterPassProperty.h
-	render/3D/ShadowCasterPassProperty.cpp
-	render/3D/BaseCameraProperty.h
-	render/3D/BaseCameraProperty.cpp
-	render/3D/Scene3DShaderDeclaration.h
-	render/3D/Scene3DShaderDeclaration.cpp
-	render/3D/SkinnedMeshSprite3DProperty.h
-	render/3D/SkinnedMeshSprite3DProperty.cpp
-	render/3D/DepthPassProperty.h
-	render/3D/DepthPassProperty.cpp
-	render/3D/Shader3D.h
-	render/3D/Shader3D.cpp
+	render/Property.h
+	render/Property.cpp
 	render/3D/renderInstance/MeshRenderNode.h
 	render/3D/renderInstance/MeshRenderNode.cpp
 	render/3D/renderInstance/RenderModuleData.h

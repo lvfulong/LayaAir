@@ -5,7 +5,7 @@
 #include "render/3D/temp/RenderState.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLShaderInstance.h"
 #include "render/LayaGL.h"
-#include <render/3D/Shader3D.h>
+#include <render/Property.h>
 #include <render/3D/temp/RenderStateContext.h>
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTShaderPass.h>
 #include <utils/Log.h>

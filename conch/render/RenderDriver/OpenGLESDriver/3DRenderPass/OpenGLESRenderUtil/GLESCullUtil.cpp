@@ -1,5 +1,5 @@
 #include "GLESCullUtil.h"
-#include "render/3D/FrustumCulling.h"
+#include "render/FrustumCulling.h"
 
 namespace laya
 {

@@ -2,7 +2,7 @@
 #define __RTDirectLightShadowRP_H_
 
 #include "render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTDirectLight.h"
-#include "render/3D/ShadowSliceData.h"
+#include "render/ShadowSliceData.h"
 #include "render/3D/design/Render3DProcess.h"
 #include <vector>
 #include "render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESRenderListQueue.h"

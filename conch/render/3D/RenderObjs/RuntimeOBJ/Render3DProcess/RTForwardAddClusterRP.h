@@ -1,7 +1,7 @@
 #ifndef __RTForwardAddClusterRP_H_
 #define __RTForwardAddClusterRP_H_
 
-#include "render/3D/ShadowSliceData.h"
+#include "render/ShadowSliceData.h"
 #include "render/3D/design/Render3DProcess.h"
 #include "render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESRenderListQueue.h"
 #include "render/ShadowCullInfo.h"

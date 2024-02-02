@@ -82,7 +82,7 @@
 #include "2D/ColorParser.h"
 #include "2D/FontManager.h"
 #include <stdarg.h>
-#include <render/3D/RenderBindings.h>
+#include <render/RenderBindings.h>
 
 extern int g_nInnerWidth ;
 extern int g_nInnerHeight ;

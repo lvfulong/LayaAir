@@ -5,7 +5,7 @@
 #include <vector>
 #include "render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTSpotLight.h"
 #include "render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESRenderListQueue.h"
-#include "render/3D/ShadowSliceData.h"
+#include "render/ShadowSliceData.h"
 
 namespace laya
 {

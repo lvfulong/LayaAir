@@ -1,5 +1,5 @@
 #include "RTBaseRenderNode.h"
-#include "render/3D/RenderableSprite3DProperty.h"
+#include <render/Property.h>
 
 namespace laya
 {

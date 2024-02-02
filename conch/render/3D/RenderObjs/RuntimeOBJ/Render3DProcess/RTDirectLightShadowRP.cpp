@@ -1,10 +1,8 @@
 #include "RTDirectLightShadowRP.h"
 #include "render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESCullUtil.h"
-#include "render/3D/BaseCameraProperty.h"
-#include "render/3D/Scene3DShaderDeclaration.h"
-#include "render/3D/ShadowCasterPassProperty.h"
-#include <render/3D/ShadowMode.h>
-#include <render/3D/ShadowUtils.h>
+#include <render/Property.h>
+#include <render/ShadowMode.h>
+#include <render/ShadowUtils.h>
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTShaderData.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTModuleData.h>
 namespace laya

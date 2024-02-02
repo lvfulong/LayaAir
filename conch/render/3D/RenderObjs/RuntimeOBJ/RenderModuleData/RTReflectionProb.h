@@ -6,7 +6,7 @@
 #include <core/math/Types.h>
 #include <core/math/Vector3.h>
 #include <core/math/Vector4.h>
-#include <render/3D/ShadowMode.h>
+#include <render/ShadowMode.h>
 
 namespace laya
 {
