@@ -3,6 +3,7 @@
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLRenderDrawContext.h>
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTShaderPass.h>
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTShaderData.h>
+#include "Bindings/LayaAir/3D/JSTransform.h"
 namespace laya
 {
 GLESRenderElement3D::GLESRenderElement3D()

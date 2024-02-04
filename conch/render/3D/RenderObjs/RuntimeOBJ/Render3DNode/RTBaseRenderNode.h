@@ -18,6 +18,7 @@ enum class IrradianceMode
 class Bounds;
 class ShaderData;
 class GLESRenderElement3D;
+class JSTransform;
 class RTBaseRenderNode
 {
   public:
@@ -46,7 +47,7 @@ class RTBaseRenderNode
 
     // Logic Property
     JSBounds* baseGeometryBounds = nullptr;
-    Transform3D *transform = nullptr;
+    JSTransform *transform = nullptr;
 
     // other resource
     uint32_t reflectionMode = 0;
@@ -102,7 +103,7 @@ public:
     void setSortingFudge(Real value) { sortingFudge = value; }
     Real getSortingFudge() { return sortingFudge; }
 
-    void setTransform(laya::Transform3D* value) { transform = value; }
+    void setTransform(laya::JSTransform* value) { transform = value; }
 
     bool getCastShadow() { return castShadow; }
     void setCastShadow(bool value) { castShadow = value; }

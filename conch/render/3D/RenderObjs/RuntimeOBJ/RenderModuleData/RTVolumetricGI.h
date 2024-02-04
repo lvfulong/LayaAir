@@ -6,10 +6,10 @@
 #include <core/math/Vector4.h>
 #include <render/ShadowMode.h>
 #include <core/math/Types.h>
-#include "LayaAir/3D/JSBounds.h"
+
 namespace laya
 {
-class Transform3D;
+class JSBounds;
 class RTVolumetricGI
 {
   public:

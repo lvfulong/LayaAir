@@ -13,6 +13,7 @@ namespace laya
 class ComposeData;
 class RenderInstanceData;
 class RTBaseRenderNode;
+class JSTransform;
 class GLESRenderElement3D
 {
   public:
@@ -28,7 +29,7 @@ class GLESRenderElement3D
     {
         materialShaderData = value;
     }
-    void setTransform(Transform3D *value)
+    void setTransform(JSTransform *value)
     {
         transform = value;
     }
@@ -61,7 +62,7 @@ class GLESRenderElement3D
     ShaderData *materialShaderData = nullptr;
     uint32_t materialRenderQueue;
     ShaderData *renderShaderData = nullptr;
-    Transform3D *transform = nullptr;
+    JSTransform *transform = nullptr;
     RTBaseRenderNode *owner = nullptr;
     bool isRender;
 

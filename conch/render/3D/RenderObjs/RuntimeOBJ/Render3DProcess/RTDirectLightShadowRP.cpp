@@ -5,6 +5,8 @@
 #include <render/ShadowUtils.h>
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTShaderData.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTModuleData.h>
+#include "Bindings/LayaAir/3D/JSTransform.h"
+
 namespace laya
 {
     RTDirectLightShadowRP::RTDirectLightShadowRP() : _renderQueue(false)

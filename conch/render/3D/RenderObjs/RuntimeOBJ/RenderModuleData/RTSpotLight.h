@@ -7,13 +7,14 @@
 #include <core/math/Vector4.h>
 #include <render/ShadowMode.h>
 #include "render/3D/temp/Transform3D.h"
+#include "Bindings/LayaAir/3D/JSTransform.h"
 namespace laya
 {
-class Transform3D;
+class JSTransform;
 class RTSpotLight
 {
   public:
-    Transform3D* transform;
+    JSTransform* transform;
     Real shadowResolution;
     Real shadowDistance;
     ShadowMode shadowMode;
@@ -24,7 +25,7 @@ class RTSpotLight
     Real spotRange;
     Real spotAngle;
     Vector3 _direction;
-    void setTransform(Transform3D* value)
+    void setTransform(JSTransform* value)
     {
         this->transform = value;
     }

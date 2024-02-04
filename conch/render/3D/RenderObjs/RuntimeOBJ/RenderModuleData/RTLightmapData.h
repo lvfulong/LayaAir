@@ -9,7 +9,6 @@
 
 namespace laya
 {
-class Transform3D;
 class RTLightmapData
 {
   public:

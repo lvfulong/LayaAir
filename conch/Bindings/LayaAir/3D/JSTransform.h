@@ -31,12 +31,15 @@ namespace laya
 		bool _getLocalMatrix();
 		void setLocalMatrix();
 		bool _getPosition();
+		const Vector3& getPosition();
 		void setPosition();
 		bool _getRotation();
+		const Quaternion& getRotation();
 		void setRotation();
 		bool _getRotationEuler();
 		void setRotationEuler();
 		bool _getWorldMatrix();
+		const Matrix4x4& getWorldMatrix();
 		void setWorldMatrix();
 		bool _getWorldLossyScale();
 		void setWorldLossyScale();
@@ -45,6 +48,9 @@ namespace laya
 		void rotate();
 		void _setTransformFlag(uint32_t type, bool value);
 		bool _getTransformFlag(uint32_t type);
+		void getForward(Vector3& forward) {
+			m_pTransform3D->getForward(forward);
+		}
 	public:
 		Vector3						m_localPosition = Vector3(0.0f, 0.0f, 0.0f);
 		Quaternion					m_localRotation = Quaternion(0.0f, 0.0f, 0.0f, 1.0f);

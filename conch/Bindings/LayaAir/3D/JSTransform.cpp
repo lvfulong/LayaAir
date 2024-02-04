@@ -177,6 +177,20 @@ namespace laya
 		}
 		return false;
 	}
+	const Quaternion& JSTransform::getRotation()
+	{
+		const Quaternion& rotation = m_pTransform3D->getRotation();
+		if (m_pTransform3D->m_bRotationNeedSync)
+		{
+			m_float64Array[0] = rotation.x;
+			m_float64Array[1] = rotation.y;
+			m_float64Array[2] = rotation.z;
+			m_float64Array[3] = rotation.w;
+			m_pTransform3D->m_bRotationNeedSync = false;
+			return rotation;
+		}
+		return rotation;
+	}
 	void JSTransform::setRotation()
 	{
 		Quaternion rotation;
@@ -198,6 +212,19 @@ namespace laya
 			return true;
 		}
 		return false;
+	}
+	const Vector3& JSTransform::getPosition()
+	{
+		const Vector3& position = m_pTransform3D->getPosition();
+		if (m_pTransform3D->m_bPositionNeedSync)
+		{
+			m_float64Array[0] = position.x;
+			m_float64Array[1] = position.y;
+			m_float64Array[2] = position.z;
+			m_pTransform3D->m_bPositionNeedSync = false;
+			return position;
+		}
+		return position;
 	}
 	void JSTransform::setPosition()
 	{
@@ -238,6 +265,17 @@ namespace laya
 			return true;
 		}
 		return false;
+	}
+	const Matrix4x4& JSTransform::getWorldMatrix()
+	{
+		const Matrix4x4& matrix = m_pTransform3D->getWorldMatrix();
+		if (m_pTransform3D->m_bWorldMatrixNeedSync)
+		{
+			memcpy(m_float32Array, matrix.elements, sizeof(float) * 16);
+			m_pTransform3D->m_bWorldMatrixNeedSync = false;
+			return matrix;
+		}
+		return matrix;
 	}
 	void JSTransform::setWorldMatrix()
 	{

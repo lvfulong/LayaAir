@@ -1,6 +1,6 @@
 #include "RTBaseRenderNode.h"
 #include <render/Property.h>
-
+#include "Bindings/LayaAir/3D/JSTransform.h"
 namespace laya
 {
 

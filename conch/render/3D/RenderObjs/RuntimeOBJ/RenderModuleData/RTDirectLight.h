@@ -9,13 +9,13 @@
 
 namespace laya
 {
-class Transform3D;
+class JSTransform;
 class RTDirectLight
 {
   public:
     Real shadowNearPlane; 
     ShadowCascadesMode shadowCascadesMode;
-    Transform3D *transform;
+    JSTransform *transform;
     int32_t shadowResolution;
     Real shadowDistance;
     ShadowMode shadowMode;
@@ -36,7 +36,7 @@ class RTDirectLight
     {
         this->_direction = value;// value.cloneTo(this->_direction)
     }
-    void setTransform(Transform3D* transform)
+    void setTransform(JSTransform* transform)
     {
         this->transform = transform;
     }

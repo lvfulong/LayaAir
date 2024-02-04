@@ -525,7 +525,7 @@ namespace laya
         //JSTextMemoryCanvas::getInstance()->exportJS(context);
         JSArrayBufferRef::exportJS(context);
         /*if (!g_kSystemConfig.m_bConchWebGL) {
-            JSTransform::exportJS(context);
+         
             JSRenderStateCommand::exportJS(context);
             JSRenderState::exportJS(context);
             JSGLRenderDrawContext::exportJS(context);
@@ -583,6 +583,7 @@ namespace laya
 
         JSSubmitScene3D::exportJS(context);
         JSBounds::exportJS(context);
+        JSTransform::exportJS(context);
         RenderBindings::exportJS(context);    
         //以下是全局函数
         //------------------------------------------------------------------------------

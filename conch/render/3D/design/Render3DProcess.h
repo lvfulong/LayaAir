@@ -11,15 +11,15 @@ namespace laya
 {
 
 class GLESBaseRenderNode;
-class Transform3D;
-class CameraNode
+class JSTransform;
+/*class CameraNode
 {
   public:
     CameraNode();
     ~CameraNode();
 
   public:
-    Transform3D *transform;
+    JSTransform *transform;
     float farplane;
     float nearplane;
     Matrix4x4 projectionViewMatrix;
@@ -27,7 +27,7 @@ class CameraNode
     float aspectRatio;
 
   private:
-};
+};*/
 
 class IDirectLightShadowRP
 {
