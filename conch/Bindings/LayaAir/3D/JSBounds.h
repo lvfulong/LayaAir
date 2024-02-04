@@ -16,14 +16,18 @@ namespace laya
 		JSBounds(JSValueAsParam pSharedData);
 		~JSBounds();
 		void setMin();
-		void getMin();
+		const Vector3& getMin();
+		void getMinJS();
 		void setMax();
-		void getMax();
+		void getMaxJS();
+		const Vector3& getMax();
 		void setCenter();
-		void getCenter();
+		void getCenterJS();
+		const Vector3& getCenter();
 		void setExtent();
 		void getExtent();
-		void _tranform(JSValueAsParam out);
+		void _tranformJS(JSValueAsParam out);
+		void _tranform(const Matrix4x4& matrix, JSBounds& out);
 		void cloneTo(JSValueAsParam destBounds);
 		void getBoundBox();
 	public:

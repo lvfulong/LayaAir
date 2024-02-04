@@ -7,7 +7,7 @@
 #include <core/math/Vector3.h>
 #include <core/math/Vector4.h>
 #include <render/ShadowMode.h>
-
+#include "LayaAir/3D/JSBounds.h"
 namespace laya
 {
 enum class AmbientMode
@@ -23,7 +23,7 @@ class RTReflectionProb
   public:
     bool boxProjection;
 
-    Bounds *bound = nullptr;
+    JSBounds *bound = nullptr;
     AmbientMode ambientMode;
 
     float *ambientSH = nullptr;
@@ -60,7 +60,7 @@ class RTReflectionProb
     {
         ambientSH = value;
     }
-    void setBounds(Bounds *value)
+    void setBounds(JSBounds *value)
     {
         this->bound = value;
     }

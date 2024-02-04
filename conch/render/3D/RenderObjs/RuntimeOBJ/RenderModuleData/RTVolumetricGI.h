@@ -6,7 +6,7 @@
 #include <core/math/Vector4.h>
 #include <render/ShadowMode.h>
 #include <core/math/Types.h>
-
+#include "LayaAir/3D/JSBounds.h"
 namespace laya
 {
 class Transform3D;
@@ -15,7 +15,7 @@ class RTVolumetricGI
   public:
       GLESInternalTex* irradiance;
       GLESInternalTex* distance;
-      Bounds* bound;
+      JSBounds* bound;
       Real intensity;
       uint32_t  updateMark;
       Vector3 probeCounts;
@@ -24,7 +24,7 @@ class RTVolumetricGI
 
       void setIrradiance(GLESInternalTex* value) { irradiance = value; }
       void setDistance(GLESInternalTex* value) { distance = value; }
-      void setBounds(Bounds* value) { bound = value; }
+      void setBounds(JSBounds* value) { bound = value; }
       void setParams(Vector4 value)
       {
           params = value;

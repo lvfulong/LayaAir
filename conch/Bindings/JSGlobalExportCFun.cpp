@@ -558,8 +558,7 @@ namespace laya
             JSWordText::exportJS(context);
             JSCameraCullInfo::exportJS(context);
             JSShadowCullInfo::exportJS(context);
-            JSSubmitScene3D::exportJS(context);
-            JSBounds::exportJS(context);
+          
             JSUniformBufferObject::exportJS(context);
         }*/
         Module layaNative(context.isolate());
@@ -581,6 +580,9 @@ namespace laya
 
 		JSVideo::exportJS(context);   
 
+
+        JSSubmitScene3D::exportJS(context);
+        JSBounds::exportJS(context);
         RenderBindings::exportJS(context);    
         //以下是全局函数
         //------------------------------------------------------------------------------

@@ -318,7 +318,7 @@ list(APPEND CONCH_SRC
 	LayaAir/2D/ScreenCanvasContext2D.cpp
 	LayaAir/2D/Buffer.h
 	LayaAir/2D/Buffer.cpp
-
+   
 	2D/CanvasRenderingContext2D.h
 	2D/CanvasRenderingContext2D.cpp
 	2D/FontDescription.h
@@ -386,7 +386,10 @@ list(APPEND CONCH_SRC
 	Bindings/JSShaderPrecisionFormat.cpp
 	Bindings/JSStat.h
 	Bindings/JSStat.cpp
-
+	Bindings/LayaAir/3D/JSBounds.h
+	Bindings/LayaAir/3D/JSBounds.cpp
+	Bindings/LayaAir/3D/JSSubmitScene3D.h
+	Bindings/LayaAir/3D/JSSubmitScene3D.cpp
 	# Bindings/JSTextBitmapInfo.h
 	# Bindings/JSTextBitmapInfo.cpp
 	# Bindings/JSTextMemoryCanvas.h
@@ -404,7 +407,7 @@ list(APPEND CONCH_SRC
 	Bindings/JSPromiseRejectionEvent.h
 	Bindings/JSPromiseRejectionEvent.cpp
 	Bindings/JSCanvasRenderingContext2D.cpp
-
+	
 	OpenAL/
 	LayaGL/JCIDGenerator.h
 	LayaGL/JCIDGenerator.cpp

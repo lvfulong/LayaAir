@@ -9,7 +9,7 @@ namespace laya
 class FrustumCulling
 {
   public:
-    static bool cullingRenderBounds(Bounds *bounds, const ShadowCullInfo &cullInfo)
+    static bool cullingRenderBounds(JSBounds *bounds, const ShadowCullInfo &cullInfo)
     {
         int cullPlaneCount = cullInfo.cullPlaneCount;
         const std::array<Plane, 10> &cullPlanes = cullInfo.cullPlanes;

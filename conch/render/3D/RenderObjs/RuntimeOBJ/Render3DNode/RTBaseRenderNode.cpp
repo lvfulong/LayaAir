@@ -9,7 +9,7 @@ bool RTBaseRenderNode::shadowCullPass()
     // todo
     return true;
 }
-Bounds *RTBaseRenderNode::getBounds()
+JSBounds *RTBaseRenderNode::getBounds()
 {
     if (this->boundsChange)
 	{
@@ -18,7 +18,7 @@ Bounds *RTBaseRenderNode::getBounds()
 	}
     return this->bounds;
 }
-void RTBaseRenderNode::setBounds(Bounds* bounds)
+void RTBaseRenderNode::setBounds(JSBounds* bounds)
 {
     this->bounds = bounds;
 }
@@ -34,7 +34,7 @@ void RTBaseRenderNode::_calculateBoundingBox()
 		this->baseGeometryBounds->_tranform(worldMat, *this->bounds);
     }
 }
-void RTBaseRenderNode::setBaseGeometryBounds(Bounds* bounds)
+void RTBaseRenderNode::setBaseGeometryBounds(JSBounds* bounds)
 {
     baseGeometryBounds = bounds;
 }

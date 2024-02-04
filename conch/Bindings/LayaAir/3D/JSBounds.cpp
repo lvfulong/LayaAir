@@ -36,12 +36,16 @@ namespace laya
 		min.z = m_float64Array[2];
 		m_bounds.setMin(min);
 	}
-	void JSBounds::getMin()
+	void JSBounds::getMinJS()
 	{
 		const Vector3& min = m_bounds.getMin();
 		m_float64Array[0] = min.x;
 		m_float64Array[1] = min.y;
 		m_float64Array[2] = min.z;
+	}
+	const Vector3& JSBounds::getMin()
+	{
+		return m_bounds.getMin();
 	}
 	void JSBounds::setMax()
 	{
@@ -51,12 +55,16 @@ namespace laya
 		max.z = m_float64Array[2];
 		m_bounds.setMax(max);
 	}
-	void JSBounds::getMax()
+	void JSBounds::getMaxJS()
 	{
 		const Vector3& max = m_bounds.getMax();
 		m_float64Array[0] = max.x;
 		m_float64Array[1] = max.y;
 		m_float64Array[2] = max.z;
+	}
+	const Vector3& JSBounds::getMax()
+	{
+		return m_bounds.getMax();
 	}
 	void JSBounds::setCenter()
 	{
@@ -66,12 +74,16 @@ namespace laya
 		center.z = m_float64Array[2];
 		m_bounds.setCenter(center);
 	}
-	void JSBounds::getCenter()
+	void JSBounds::getCenterJS()
 	{
 		const Vector3& center = m_bounds.getCenter();
 		m_float64Array[0] = center.x;
 		m_float64Array[1] = center.y;
 		m_float64Array[2] = center.z;
+	}
+	const Vector3& JSBounds::getCenter()
+	{
+		return m_bounds.getCenter();
 	}
 	void JSBounds::setExtent()
 	{
@@ -92,12 +104,16 @@ namespace laya
 	{
 		return m_bounds._getBoundBox();
 	}
-	void JSBounds::_tranform(JSValueAsParam out)
+	void JSBounds::_tranformJS(JSValueAsParam out)
 	{
 		Matrix4x4 matrix;
 		memcpy(matrix.elements, m_float32Array, sizeof(float) * 16);
 		JSBounds* pBounds = Converter<JSBounds*>::ToCpp(out);
 		m_bounds._tranform(matrix, pBounds->m_bounds);
+	}
+	void JSBounds::_tranform(const Matrix4x4& matrix, JSBounds& out)
+	{
+		m_bounds._tranform(matrix, out.m_bounds);
 	}
 	void JSBounds::cloneTo(JSValueAsParam destBounds)
 	{
@@ -121,11 +137,11 @@ namespace laya
 		class_binding.constructor<>();
 		class_binding.constructor<JSValueAsParam>();
 		class_binding.function("setMin", &JSBounds::setMin);
-		class_binding.function("getMin", &JSBounds::getMin);
+		class_binding.function("getMin", &JSBounds::getMinJS);
 		class_binding.function("setMax", &JSBounds::setMax);
-		class_binding.function("getMax", &JSBounds::getMax);
+		class_binding.function("getMax", &JSBounds::getMaxJS);
 		class_binding.function("setCenter", &JSBounds::setCenter);
-		class_binding.function("getCenter", &JSBounds::getCenter);
+		class_binding.function("getCenter", &JSBounds::getCenterJS);
 		class_binding.function("setExtent", &JSBounds::setExtent);
 		class_binding.function("getExtent", &JSBounds::getExtent);
 		class_binding.function("_tranform", &JSBounds::_tranform);

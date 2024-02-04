@@ -6,7 +6,7 @@
 #include "render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.h"
 #include <core/math/Types.h>
 #include <binder/JSInterface.h>
-
+#include "Bindings/LayaAir/3D/JSBounds.h"
 namespace laya
 {
 enum class IrradianceMode
@@ -45,7 +45,7 @@ class RTBaseRenderNode
     //bool nativeUpdateData = false;
 
     // Logic Property
-    Bounds* baseGeometryBounds = nullptr;
+    JSBounds* baseGeometryBounds = nullptr;
     Transform3D *transform = nullptr;
 
     // other resource
@@ -65,7 +65,7 @@ class RTBaseRenderNode
     bool customCull = false;
     bool customCullResoult = false;
     bool boundsChange = false;
-    Bounds* bounds = nullptr;
+    JSBounds* bounds = nullptr;
     Vector4 worldParams;
 
     std::vector<std::string> commonUniformMap;
@@ -128,10 +128,10 @@ public:
     bool getBoundsChange() { return boundsChange; }
     void setBoundsChange(bool value) { boundsChange = value; }
 
-    Bounds* getBounds();
-    void setBounds(Bounds*);
+    JSBounds* getBounds();
+    void setBounds(JSBounds*);
 
-    void setBaseGeometryBounds(Bounds* bounds);
+    void setBaseGeometryBounds(JSBounds* bounds);
     void setShaderData(ShaderData* data);
 
     uint32_t getLightmapIndex() { return lightmapdata.lightmapIndex; }
