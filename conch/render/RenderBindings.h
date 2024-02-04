@@ -36,7 +36,7 @@
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.h>
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTShaderPass.h>
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h>
-#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTShaderData.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 
 namespace laya
 {
@@ -620,21 +620,21 @@ class RenderBindings
             context.class_("conchRTDirectLight", class_binding);
         }
         {
-            class_<ShaderData> class_binding;
+            class_<GLESShaderData> class_binding;
             class_binding.constructor<>();
-            class_binding.function("setBool", &ShaderData::setBool);
-            class_binding.function("setInt", &ShaderData::setInt);
-            class_binding.function("setNumber", &ShaderData::setNumber);
-            class_binding.function("setVector2", &ShaderData::setVector2);
-            class_binding.function("setVector3", &ShaderData::setVector3);
-            class_binding.function("setVector", &ShaderData::setVector);
-            class_binding.function("setColor", &ShaderData::setColor);
-            class_binding.function("setMatrix4x4", &ShaderData::setMatrix4x4);
-            class_binding.function("setMatrix3x3", &ShaderData::setMatrix3x3);
-            // class_binding.function("setBuffer", &ShaderData::setBufferJS);
-            class_binding.function("cloneTo", &ShaderData::cloneTo);
-            class_binding.function("destroy", &ShaderData::destroy);
-            context.class_("conchRTShaderData", class_binding);
+            class_binding.function("setBool", &GLESShaderData::setBool);
+            class_binding.function("setInt", &GLESShaderData::setInt);
+            class_binding.function("setNumber", &GLESShaderData::setNumber);
+            class_binding.function("setVector2", &GLESShaderData::setVector2);
+            class_binding.function("setVector3", &GLESShaderData::setVector3);
+            class_binding.function("setVector", &GLESShaderData::setVector);
+            class_binding.function("setColor", &GLESShaderData::setColor);
+            class_binding.function("setMatrix4x4", &GLESShaderData::setMatrix4x4);
+            class_binding.function("setMatrix3x3", &GLESShaderData::setMatrix3x3);
+            // class_binding.function("setBuffer", &GLESShaderData::setBufferJS);
+            class_binding.function("cloneTo", &GLESShaderData::cloneTo);
+            class_binding.function("destroy", &GLESShaderData::destroy);
+            context.class_("conchGLESShaderData", class_binding);
         }
     }
 };

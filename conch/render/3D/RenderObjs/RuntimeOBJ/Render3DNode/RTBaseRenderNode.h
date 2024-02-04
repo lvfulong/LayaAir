@@ -16,7 +16,7 @@ enum class IrradianceMode
     Common
 };
 class Bounds;
-class ShaderData;
+class GLESShaderData;
 class GLESRenderElement3D;
 class JSTransform;
 class RTBaseRenderNode
@@ -53,7 +53,7 @@ class RTBaseRenderNode
     uint32_t reflectionMode = 0;
     uint32_t volumetricGIProbe = 0;
 
-    ShaderData* shaderData;
+    GLESShaderData* shaderData;
     IrradianceMode irradianceMode;
     uint32_t renderbitFlag;
     uint32_t layer;
@@ -133,7 +133,7 @@ public:
     void setBounds(JSBounds*);
 
     void setBaseGeometryBounds(JSBounds* bounds);
-    void setShaderData(ShaderData* data);
+    void setShaderData(GLESShaderData* data);
 
     uint32_t getLightmapIndex() { return lightmapdata.lightmapIndex; }
     void setLightmapIndex(uint32_t value) { lightmapdata.lightmapIndex = value; }

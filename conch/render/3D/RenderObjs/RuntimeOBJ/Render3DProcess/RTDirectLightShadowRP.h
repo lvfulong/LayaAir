@@ -12,7 +12,7 @@
 namespace laya
 {
 constexpr size_t _maxCascades = 4;
-class ShaderData;
+class GLESShaderData;
 
 
 class GLESInternalRT;
@@ -34,10 +34,10 @@ public:
     void setLight(RTDirectLight* light);
     void setCameraNodeData(RTCameraNodeData* value) { camera = value; }
   private:
-    void _setupShadowCasterShaderValues(ShaderData *shaderValues, const ShadowSliceData &shadowSliceData,
+    void _setupShadowCasterShaderValues(GLESShaderData *shaderValues, const ShadowSliceData &shadowSliceData,
                                         const Vector3 &LightParam, const Vector4 &shadowBias);
     void getShadowBias(const Matrix4x4 &shadowProjectionMatrix, double shadowResolution, Vector4 &out);
-    void _applyRenderData(ShaderData *scene, ShaderData *camera);
+    void _applyRenderData(GLESShaderData *scene, GLESShaderData *camera);
 
   public:
     Vector3 _lightUp;

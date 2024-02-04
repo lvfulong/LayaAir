@@ -29,7 +29,7 @@ class GLBuffer;
 class GLShaderInstance;
 class IRenderState;
 class GLVertexState;
-class ShaderData;
+class GLESShaderData;
 class ShaderVariable;
 class CommandEncoder;
 class GLESInternalTex;
@@ -79,7 +79,7 @@ public:
     GLVertexState *createVertexState();
     GLRenderDrawContext *getDrawContext();
     IRender2DContext *get2DRenderContext();
-    int uploadUniforms(GLShaderInstance *shader, CommandEncoder *commandEncoder, ShaderData *shaderData,
+    int uploadUniforms(GLShaderInstance *shader, CommandEncoder *commandEncoder, GLESShaderData *shaderData,
                        bool uploadUnTexture);
     int uploadCustomUniforms(GLShaderInstance *shader, const std::unordered_map<int, ShaderVariable *> &custom,
                              int index, char *data, int byteSize);

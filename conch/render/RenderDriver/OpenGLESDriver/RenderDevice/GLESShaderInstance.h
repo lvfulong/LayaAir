@@ -22,12 +22,12 @@ class GLESShaderInstance //: public ResourceBase<GLESShaderInstance>
     bool bind();
     void destroy();
     void _disposeResource();
-    int uploadUniforms(CommandEncoder *shaderUniform, ShaderData *shaderDatas, bool uploadUnTexture);
+    int uploadUniforms(CommandEncoder *shaderUniform, GLESShaderData *shaderDatas, bool uploadUnTexture);
     int uploadCustomUniforms(int index, char *data, int byteSize);
-    void uploadRenderStateFrontFace(ShaderData *shaderDatas, bool isTarget, bool invertFront);
-    void uploadRenderStateBlendDepth(ShaderData *shaderDatas);
-    void uploadRenderStateBlendDepthByMaterial(ShaderData *shaderDatas);
-    void uploadRenderStateBlendDepthByShader(ShaderData *shaderDatas);
+    void uploadRenderStateFrontFace(GLESShaderData *shaderDatas, bool isTarget, bool invertFront);
+    void uploadRenderStateBlendDepth(GLESShaderData *shaderDatas);
+    void uploadRenderStateBlendDepthByMaterial(GLESShaderData *shaderDatas);
+    void uploadRenderStateBlendDepthByShader(GLESShaderData *shaderDatas);
     bool complete();
 
   private:
@@ -40,10 +40,10 @@ class GLESShaderInstance //: public ResourceBase<GLESShaderInstance>
     CommandEncoder m_materialUniformParamsMap;
     GLShaderInstance *m_GLShaderInstance;
     uint32_t m_uploadMark = 0;
-    ShaderData *m_uploadScene = 0;
-    ShaderData *m_uploadRender = 0;
-    ShaderData *m_uploadCameraShaderValue = 0;
-    ShaderData *m_uploadMaterial = 0;
+    GLESShaderData *m_uploadScene = 0;
+    GLESShaderData *m_uploadRender = 0;
+    GLESShaderData *m_uploadCameraShaderValue = 0;
+    GLESShaderData *m_uploadMaterial = 0;
     GLESEngine *m_pGLESEngine = nullptr;
     // RenderStateCommand								m_cullStateCMD;
     std::unordered_map<int, ShaderVariable *> m_customUniformParamsMap;

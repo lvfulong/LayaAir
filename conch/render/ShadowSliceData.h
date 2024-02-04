@@ -10,7 +10,7 @@
 
 namespace laya
 {
-class ShaderData;
+class GLESShaderData;
 struct CameraCullInfo
 {
     Vector3 _position;
@@ -22,7 +22,7 @@ struct CameraCullInfo
 class ShadowSliceData
 {
   public:
-    ShaderData *cameraShaderValue; // todo LayaGL.renderOBJCreate.createShaderData(null);
+    GLESShaderData *cameraShaderValue; // todo LayaGL.renderOBJCreate.createShaderData(null);
     Vector3 position;
     double offsetX;    // todo type
     double offsetY;    // todo type

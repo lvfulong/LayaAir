@@ -2,7 +2,7 @@
 #define __GLESSkinRenderElement_H__
 
 #include "GLESRenderElement3D.h"
-#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTShaderData.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderGeometryElement.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderInstance.h"
 #include <binder/JSInterface.h>

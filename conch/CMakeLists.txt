@@ -140,6 +140,8 @@ list(APPEND CONCH_SRC
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESIndexBuffer.cpp
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESVertexBuffer.h
 	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESVertexBuffer.cpp
+	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h
+	render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.cpp
 	render/3D/design/renderEnum/RenderPologyMode.h
 	render/3D/design/renderEnum/DrawType.h
 	render/3D/design/renderEnum/IndexFormat.h
@@ -189,7 +191,6 @@ list(APPEND CONCH_SRC
 	render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESCullUtil.cpp
 	render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESQuickSort.h
 	render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESQuickSort.cpp
-	render/RenderDriver/RenderModuleData/RuntimeModuleData/RTShaderData.cpp
 	render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h
 	render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.cpp
 	render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTSubShader.cpp

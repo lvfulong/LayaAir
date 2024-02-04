@@ -1,5 +1,5 @@
-#ifndef __ShaderData_H__
-#define __ShaderData_H__
+#ifndef __GLESShaderData_H__
+#define __GLESShaderData_H__
 #include <any>
 #include <binder/JSInterface.h>
 #include <core/math/Color.h>
@@ -41,21 +41,21 @@ enum class ShaderDataType
 class ShaderDefine;
 class UniformBufferObject;
 class GLESInternalTex;
-class ShaderData //: public ResourceBase<ShaderData>
+class GLESShaderData //: public ResourceBase<ShaderData>
 {
   public:
   public:
   public:
-    ShaderData();
+    GLESShaderData();
 
-    ~ShaderData();
+    ~GLESShaderData();
 
     template <typename T> T *getData(uint32_t key)
     {
         std::unordered_map<uint32_t, std::any>::iterator it = m_data.find(key);
         if (it != m_data.end())
         {
-            //assert(it->second.type == std::typeid(T));
+            // assert(it->second.type == std::typeid(T));
             return std::any_cast<T>(&it->second);
         }
         return nullptr;
@@ -93,7 +93,7 @@ class ShaderData //: public ResourceBase<ShaderData>
     void setInternalTexture(int32_t index, GLESInternalTex *value);
     GLESInternalTex *getInternalTexture(int32_t index);
 
-    void cloneTo(ShaderData *destObject);
+    void cloneTo(GLESShaderData *destObject);
 
   private:
     bool isDestroy{false};
@@ -104,4 +104,4 @@ class ShaderData //: public ResourceBase<ShaderData>
     DefineDatas *_defineDatas; // todo
 };
 } // namespace laya
-#endif //__ShaderData_H__
+#endif //__GLESShaderData_H__

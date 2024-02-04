@@ -14,7 +14,7 @@
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLVertexState.h"
 #include <regex>
 #include <render/3D/temp/CommandEncoder.h>
-#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTShaderData.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 #include <utils/Log.h>
 #include <utils/Preprocessor.h>
 
@@ -396,7 +396,7 @@ IRender2DContext *GLESEngine::get2DRenderContext()
 {
     return (IRender2DContext *)m_GL2DRenderContext;
 }
-int GLESEngine::uploadUniforms(GLShaderInstance *shader, CommandEncoder *commandEncoder, ShaderData *shaderData,
+int GLESEngine::uploadUniforms(GLShaderInstance *shader, CommandEncoder *commandEncoder, GLESShaderData *shaderData,
                                bool uploadUnTexture)
 {
     assert(shaderData != nullptr);

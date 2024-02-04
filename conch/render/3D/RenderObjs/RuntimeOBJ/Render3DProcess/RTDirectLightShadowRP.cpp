@@ -3,7 +3,7 @@
 #include <render/Property.h>
 #include <render/ShadowMode.h>
 #include <render/ShadowUtils.h>
-#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTShaderData.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTModuleData.h>
 #include "Bindings/LayaAir/3D/JSTransform.h"
 
@@ -85,7 +85,7 @@ void RTDirectLightShadowRP::update(RTRenderContext3D*context)
 void RTDirectLightShadowRP::render(RTRenderContext3D* context, std::vector<RTBaseRenderNode*> &list,
                                          uint32_t count)
 {
-    ShaderData *shaderValues = context->sceneData;
+    GLESShaderData *shaderValues = context->sceneData;
     context->pipelineMode = "ShadowCaster";
     auto shadowMap = this->destTarget;
     context->setRenderTarget(shadowMap);
@@ -132,7 +132,7 @@ void RTDirectLightShadowRP::render(RTRenderContext3D* context, std::vector<RTBas
     }
     this->_applyRenderData(context->sceneData, context->cameraData);
 }
-void RTDirectLightShadowRP::_applyRenderData(ShaderData *scene, ShaderData *camera)
+void RTDirectLightShadowRP::_applyRenderData(GLESShaderData *scene, GLESShaderData *camera)
 {
     const RTDirectLight&light = *this->_light;
     if (light.shadowCascadesMode != ShadowCascadesMode::NoCascades)
@@ -187,7 +187,7 @@ void RTDirectLightShadowRP::getShadowBias(const Matrix4x4 &shadowProjectionMatri
     }
     out.setValue(depthBias, normalBias, 0.0, 0.0);
 }
-void RTDirectLightShadowRP::_setupShadowCasterShaderValues(ShaderData *shaderValues,
+void RTDirectLightShadowRP::_setupShadowCasterShaderValues(GLESShaderData *shaderValues,
                                                                  const ShadowSliceData &shadowSliceData,
                                                                  const Vector3 &LightParam, const Vector4 &shadowBias)
 {

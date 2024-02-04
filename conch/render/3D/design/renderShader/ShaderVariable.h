@@ -4,7 +4,7 @@
 #include <string>
 #include <utils/Preprocessor.h>
 #include <functional>
-#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTShaderData.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 namespace laya
 {
 	class ShaderVariable

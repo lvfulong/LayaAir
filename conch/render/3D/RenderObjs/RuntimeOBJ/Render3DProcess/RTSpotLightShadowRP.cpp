@@ -1,6 +1,6 @@
 #include "RTSpotLightShadowRP.h"
 #include <render/Property.h>
-#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTShaderData.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 #include "render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.h"
 #include "render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESCullUtil.h"
 
@@ -34,7 +34,7 @@ void RTSpotLightShadowRP::update(RTRenderContext3D* context)
 
 void RTSpotLightShadowRP::render(RTRenderContext3D* context, std::vector<RTBaseRenderNode*>& list, uint32_t count)
 {
-    ShaderData* shaderValues = context->sceneData;
+    GLESShaderData* shaderValues = context->sceneData;
     context->pipelineMode = "ShadowCaster";
     context->setRenderTarget(destTarget);
 
@@ -103,19 +103,19 @@ void RTSpotLightShadowRP::_getSpotLightShadowData(ShadowSpotData& shadowSpotData
     shadowSpotData.cameraCullInfo._position = out;
 }
 
-void RTSpotLightShadowRP::_setupShadowCasterShaderValues(ShaderData* shaderValues, ShadowSpotData* shadowSliceData, const Vector4& shadowparams, const Vector4& shadowBias) {
+void RTSpotLightShadowRP::_setupShadowCasterShaderValues(GLESShaderData* shaderValues, ShadowSpotData* shadowSliceData, const Vector4& shadowparams, const Vector4& shadowBias) {
     shaderValues->setVector(ShadowCasterPassProperty::SHADOW_BIAS, shadowBias);
     shaderValues->setVector(ShadowCasterPassProperty::SHADOW_PARAMS, shadowparams);
 
     // 由于 shadowSliceData 现在是一个指针，我们需要使用 -> 运算符来访问成员
-    ShaderData* cameraSV = shadowSliceData->cameraShaderValue; // 如果 cameraShaderValue 是对象的话，用引用来避免拷贝
+    GLESShaderData* cameraSV = shadowSliceData->cameraShaderValue; // 如果 cameraShaderValue 是对象的话，用引用来避免拷贝
     cameraSV->setMatrix4x4(BaseCameraProperty::VIEWMATRIX, shadowSliceData->viewMatrix);
     cameraSV->setMatrix4x4(BaseCameraProperty::PROJECTMATRIX, shadowSliceData->projectionMatrix);
     cameraSV->setMatrix4x4(BaseCameraProperty::VIEWPROJECTMATRIX, shadowSliceData->viewProjectMatrix);
 
     shaderValues->setMatrix4x4(BaseCameraProperty::VIEWPROJECTMATRIX, shadowSliceData->viewProjectMatrix);
 }
-void RTSpotLightShadowRP::_applyRenderData(ShaderData* sceneData, ShaderData* cameraData)
+void RTSpotLightShadowRP::_applyRenderData(GLESShaderData* sceneData, GLESShaderData* cameraData)
 {
     const RTSpotLight* spotLight = this->light;
     switch (spotLight->shadowMode) {

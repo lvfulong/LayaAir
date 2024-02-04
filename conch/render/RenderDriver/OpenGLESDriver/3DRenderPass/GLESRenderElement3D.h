@@ -21,11 +21,11 @@ class GLESRenderElement3D
     virtual ~GLESRenderElement3D();
     void _render(RTRenderContext3D *context);
     void _preUpdatePre(RTRenderContext3D *context);
-    void setRenderShaderData(ShaderData *value)
+    void setRenderShaderData(GLESShaderData *value)
     {
         renderShaderData = value;
     }
-    void setMaterialShaderData(ShaderData *value)
+    void setMaterialShaderData(GLESShaderData *value)
     {
         materialShaderData = value;
     }
@@ -59,9 +59,9 @@ class GLESRenderElement3D
   public:
     GLESRenderGeometryElement *geometry = nullptr;
     RTSubShader *subshader = nullptr;
-    ShaderData *materialShaderData = nullptr;
+    GLESShaderData *materialShaderData = nullptr;
     uint32_t materialRenderQueue;
-    ShaderData *renderShaderData = nullptr;
+    GLESShaderData *renderShaderData = nullptr;
     JSTransform *transform = nullptr;
     RTBaseRenderNode *owner = nullptr;
     bool isRender;

@@ -38,7 +38,7 @@ void RTBaseRenderNode::setBaseGeometryBounds(JSBounds* bounds)
 {
     baseGeometryBounds = bounds;
 }
-void RTBaseRenderNode::setShaderData(ShaderData* data)
+void RTBaseRenderNode::setShaderData(GLESShaderData* data)
 {
     this->shaderData = data;
 }

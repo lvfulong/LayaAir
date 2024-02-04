@@ -13,7 +13,7 @@
 namespace laya
 {
 class GLESRenderElement3D;
-class ShaderData;
+class GLESShaderData;
 class GLESInternalRT;
 class RTSceneNodeData;
 class RTCameraModuleData;
@@ -28,11 +28,11 @@ class RTRenderContext3D
     {
         this->_renderTarget = renderTarget;
     }
-    void setCameraData(ShaderData *shaderData)
+    void setCameraData(GLESShaderData *shaderData)
     {
         this->cameraData = shaderData;
     }
-    void setSceneData(ShaderData *sceneData)
+    void setSceneData(GLESShaderData *sceneData)
     {
         this->sceneData = sceneData;
     }
@@ -60,7 +60,7 @@ class RTRenderContext3D
     {
         cameraNodeData = value;
     }
-    void setGlobalShaderData(ShaderData *value)
+    void setGlobalShaderData(GLESShaderData *value)
     {
         this->globalShaderData = value;
     }
@@ -75,7 +75,7 @@ class RTRenderContext3D
     void _end();
 
   public:
-    ShaderData *globalShaderData = nullptr;
+    GLESShaderData *globalShaderData = nullptr;
     DefineDatas *globalConfigShaderData = nullptr;
     GLESInternalRT *_renderTarget = nullptr;
     Viewport viewPort;
@@ -89,8 +89,8 @@ class RTRenderContext3D
     Color clearColor;
 
     // data
-    ShaderData *cameraData = nullptr;
-    ShaderData *sceneData = nullptr;
+    GLESShaderData *cameraData = nullptr;
+    GLESShaderData *sceneData = nullptr;
 
     // upload flag
     uint32_t _sceneUpdateMask = 0;

@@ -99,7 +99,7 @@ void GLESShaderInstance::_disposeResource()
     // m_renderState = nullptr;
 }
 
-int GLESShaderInstance::uploadUniforms(CommandEncoder *shaderUniform, ShaderData *shaderDatas, bool uploadUnTexture)
+int GLESShaderInstance::uploadUniforms(CommandEncoder *shaderUniform, GLESShaderData *shaderDatas, bool uploadUnTexture)
 {
     return m_pGLESEngine->uploadUniforms(m_GLShaderInstance, shaderUniform, shaderDatas, uploadUnTexture);
 }
@@ -107,14 +107,14 @@ int GLESShaderInstance::uploadCustomUniforms(int index, char *data, int byteSize
 {
     return m_pGLESEngine->uploadCustomUniforms(m_GLShaderInstance, m_customUniformParamsMap, index, data, byteSize);
 }
-void GLESShaderInstance::uploadRenderStateBlendDepth(ShaderData *shaderDatas)
+void GLESShaderInstance::uploadRenderStateBlendDepth(GLESShaderData *shaderDatas)
 {
     if (this->_shaderPass->statefirst)
         this->uploadRenderStateBlendDepthByShader(shaderDatas);
     else
         this->uploadRenderStateBlendDepthByMaterial(shaderDatas);
 }
-void GLESShaderInstance::uploadRenderStateBlendDepthByShader(ShaderData *shaderDatas)
+void GLESShaderInstance::uploadRenderStateBlendDepthByShader(GLESShaderData *shaderDatas)
 {
     RenderState *renderState = this->_shaderPass->renderState;
     bool *a = renderState->depthWrite != nullptr ? renderState->depthWrite
@@ -221,7 +221,7 @@ void GLESShaderInstance::uploadRenderStateBlendDepthByShader(ShaderData *shaderD
     break;
     }
 }
-void GLESShaderInstance::uploadRenderStateBlendDepthByMaterial(ShaderData *shaderDatas)
+void GLESShaderInstance::uploadRenderStateBlendDepthByMaterial(GLESShaderData *shaderDatas)
 {
 
     bool *depthWrite = (bool *)shaderDatas->getData<int32_t>(Shader3D::DEPTH_WRITE);
@@ -307,7 +307,7 @@ void GLESShaderInstance::uploadRenderStateBlendDepthByMaterial(ShaderData *shade
         break;
     };
 }
-void GLESShaderInstance::uploadRenderStateFrontFace(ShaderData *shaderDatas, bool isTarget, bool invertFront)
+void GLESShaderInstance::uploadRenderStateFrontFace(GLESShaderData *shaderDatas, bool isTarget, bool invertFront)
 {
     RenderState *renderState = this->_shaderPass->renderState;
 

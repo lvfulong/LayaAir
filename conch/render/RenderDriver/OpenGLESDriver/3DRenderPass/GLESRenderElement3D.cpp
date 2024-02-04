@@ -2,7 +2,7 @@
 #include <render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLRenderDrawContext.h>
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTShaderPass.h>
-#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTShaderData.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 #include "Bindings/LayaAir/3D/JSTransform.h"
 namespace laya
 {
@@ -16,8 +16,8 @@ void GLESRenderElement3D::_render(RTRenderContext3D *context)
 {
     bool forceInvertFace = context->invertY;
     uint32_t updateMark = context->_cameraUpdateMask;
-    ShaderData *sceneShaderData = context->sceneData;
-    ShaderData *cameraShaderData = context->cameraData;
+    GLESShaderData *sceneShaderData = context->sceneData;
+    GLESShaderData *cameraShaderData = context->cameraData;
     if (isRender)
     {
         for (uint32_t j = 0, m = _shaderInstances.getLength(); j < m; j++)

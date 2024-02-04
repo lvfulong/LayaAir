@@ -1,7 +1,7 @@
 #include "RTForwardAddClusterRP.h"
 #include "render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.h"
 #include <render/Property.h>
-#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTShaderData.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 #include "render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESCullUtil.h"
 #include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTModuleData.h>
 
@@ -36,7 +36,7 @@ namespace laya
     void RTForwardAddClusterRP::_renderDepthPass(RTRenderContext3D* context){
         context->pipelineMode = this->depthPipelineMode;
         Viewport& viewport = this->viewPort;
-        ShaderData* shadervalue = context->sceneData;
+        GLESShaderData* shadervalue = context->sceneData;
         shadervalue->addDefine(DepthPassProperty::DEPTHPASS);
         shadervalue->setVector(DepthPassProperty::DEFINE_SHADOW_BIAS, Vector4::ZERO);
         Viewport _tempViewport(viewport.x, viewport.y, viewport.width, viewport.height);
