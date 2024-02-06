@@ -630,9 +630,12 @@ class RenderBindings
             class_binding.function("setBool", &GLESShaderData::setBool);
             class_binding.function("setInt", &GLESShaderData::setInt);
             class_binding.function("setNumber", &GLESShaderData::setNumber);
+            class_binding.function("getVector2", &GLESShaderData::getVector2);
             class_binding.function("setVector2", &GLESShaderData::setVector2);
             class_binding.function("setVector3", &GLESShaderData::setVector3);
+            class_binding.function("getVector3", &GLESShaderData::getVector3);
             class_binding.function("setVector", &GLESShaderData::setVector);
+            class_binding.function("getVector", &GLESShaderData::getVector);
             class_binding.function("setColor", &GLESShaderData::setColor);
             class_binding.function("setMatrix4x4", &GLESShaderData::setMatrix4x4);
             class_binding.function("setMatrix3x3", &GLESShaderData::setMatrix3x3);
