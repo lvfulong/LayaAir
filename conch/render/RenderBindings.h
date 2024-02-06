@@ -202,10 +202,14 @@ class RenderBindings
             class_<GLESInternalTex> class_binding;
             class_binding.constructor<int, int, int, int, TextureDimension, bool, bool, int>();
             class_binding.function("dispose", &GLESInternalTex::dispose);
+            class_binding.function("getWidth", &GLESInternalTex::getWidth);
+            class_binding.function("getHeight", &GLESInternalTex::getHeight);
+            class_binding.property_field("target", &GLESInternalTex::m_target);
             class_binding.property_field("mipmapCount", &GLESInternalTex::m_mipmapCount);
             class_binding.property_field("mipmap", &GLESInternalTex::m_mipmap);
             class_binding.property_field("useSRGBLoad", &GLESInternalTex::m_useSRGBLoad);
             class_binding.property_field("gammaCorrection", &GLESInternalTex::m_gammaCorrection);
+            class_binding.property("gpuMemory", &GLESInternalTex::getGpuMemory, &GLESInternalTex::setGpuMemory);
             class_binding.property("resource", &GLESInternalTex::getResource);
             class_binding.property("filterMode", &GLESInternalTex::getFilterMode, &GLESInternalTex::setFilterMode);
             class_binding.property("wrapU", &GLESInternalTex::getWrapU, &GLESInternalTex::setWrapU);
@@ -231,7 +235,7 @@ class RenderBindings
             class_binding.property_field("_indexCount", &GLESIndexBuffer::_indexCount);
             class_binding.property_field("_indexType", &GLESIndexBuffer::_indexType);
             class_binding.function("_setIndexDataLength", &GLESIndexBuffer::_setIndexDataLength);
-            // todo class_binding.function("_setIndexData", &GLESIndexBuffer::_setIndexData);
+            class_binding.function("_setIndexData", &GLESIndexBuffer::_setIndexDataJS);
             class_binding.function("destroy", &GLESIndexBuffer::destroy);
             context.class_("conchGLESIndexBuffer", class_binding);
         }
@@ -622,6 +626,7 @@ class RenderBindings
         {
             class_<GLESShaderData> class_binding;
             class_binding.constructor<>();
+            class_binding.function("getOwnerDefineData", &GLESShaderData::getOwnerDefineDataJS);
             class_binding.function("setBool", &GLESShaderData::setBool);
             class_binding.function("setInt", &GLESShaderData::setInt);
             class_binding.function("setNumber", &GLESShaderData::setNumber);

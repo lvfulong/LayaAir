@@ -80,7 +80,7 @@ namespace laya {
 		* ����js�߳��ˣ�����һ���µ�jsid���Ժ�js��ص���Ϣ����ʹ�����jsid��
 		* �ṩһ��������ϣ��js�߳���ѭ���е�������
 		*/
-		void onJSStart(JSThreadInterface* pJSThread,bool bDebugWait);
+		void onJSStart(JSThreadInterface* pJSThread,bool bDebugWait, std::function<void()> onAcceptNewFrontend, std::function<void()> onFrontEndClose);
 		/**
 		* js�߳̽����ˣ���ǰ��jsid��ʧЧ�ˣ��Ժ���յ��Ĵ�id����Ϣ�����ԡ�
 		*/
@@ -113,6 +113,10 @@ namespace laya {
         std::unique_ptr<v8_inspector::V8InspectorSession> _dbg_session_; //new debugger
         v8_inspector::V8InspectorClient*    m_pInspectorClient=nullptr;
         InspectorFrontend*                  m_pInspectorChannel = nullptr;
+
+        std::function<void()> onAcceptNewFrontend_;
+        std::function<void()> onFrontEndClose_;
+
 	};
 }
 #endif  // V8_DEBUG_AGENT_H_

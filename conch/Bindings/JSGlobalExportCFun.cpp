@@ -76,7 +76,7 @@
 #include "LayaAir/2D/JSRenderTexture2D.h"
 #include "LayaAir/3D/JSTransform.h"
 #include "LayaAir/3D/JSSubmitScene3D.h"
-#include "LayaAir/3D/JSBounds.h"
+#include "Bindings/LayaAir/3D/JSBounds.h"
 #include "LayaAir/3D/JSUniformBufferObject.h"
 #include "2D/FontDescriptionParser.h"
 #include "2D/ColorParser.h"

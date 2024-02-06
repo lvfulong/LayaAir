@@ -35,8 +35,6 @@ extern int g_nInnerWidth;
 
 namespace laya
 {
-   
-    extern GLESEngine* g_GLESEngine;
     extern int g_nMainFrameBuffer;
     extern int g_nRealMainFrameBuffer;
 
@@ -144,8 +142,11 @@ namespace laya
                 delete m_pUniformBufferObjectManager;
                 m_pUniformBufferObjectManager = NULL;
             }
-            delete g_GLESEngine;
-            g_GLESEngine = nullptr;
+            if (LayaGL::m_pWebglEngine)
+            {   
+                delete LayaGL::m_pWebglEngine;
+                LayaGL::m_pWebglEngine = nullptr;
+            }
 
             delete m_GfxBackend;
             m_GfxBackend = nullptr;
@@ -191,14 +192,14 @@ void JCConchRender::setMainContextSize(int width,int height)
 }
 void JCConchRender::start()
 {
-    if (!g_GLESEngine)
+    if (!LayaGL::m_pWebglEngine)
     {
         return;
     }
     //webgl mode need restore gl state
     if (m_pScreenContext == nullptr)
     {
-        m_pScreenContext = new ScreenCanvasContext2D(g_GLESEngine);
+        m_pScreenContext = new ScreenCanvasContext2D(LayaGL::m_pWebglEngine);
     }
     //m_pMainContext->m_target->start();
     m_pScreenContext->startForMainCanvas();
@@ -206,7 +207,7 @@ void JCConchRender::start()
 }
 void JCConchRender::end()
 {
-    if (!g_GLESEngine)
+    if (!LayaGL::m_pWebglEngine)
     {
         return;
     }
@@ -265,8 +266,8 @@ void JCConchRender::end()
     //int height = m_pScreenContext->m_target->getHeight();
     Matrix m(JCLayaGL::s_fMainCanvasScaleX, 0.0f, 0.0f, JCLayaGL::s_fMainCanvasScaleY, JCLayaGL::s_fMainCanvasTX, JCLayaGL::s_fMainCanvasTY);
     static float INV_UV[8] = { 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f };
-    g_GLESEngine->viewport(0, 0, g_nInnerWidth, g_nInnerHeight);
-    g_GLESEngine->scissor(0, 0, g_nInnerWidth, g_nInnerHeight);
+    LayaGL::m_pWebglEngine->viewport(0, 0, g_nInnerWidth, g_nInnerHeight);
+    LayaGL::m_pWebglEngine->scissor(0, 0, g_nInnerWidth, g_nInnerHeight);
     //glClearColor(1, 1, 1, 1);
     //glClear(GL_COLOR_BUFFER_BIT);
     RenderState2D::width = g_nInnerWidth;
@@ -293,8 +294,8 @@ void JCConchRender::end()
         if (last_enable_depth_test) glEnable(GL_DEPTH_TEST); else glDisable(GL_DEPTH_TEST);
         if (last_enable_scissor_test) glEnable(GL_SCISSOR_TEST); else glDisable(GL_SCISSOR_TEST);
         //glPolygonMode(GL_FRONT_AND_BACK, (GLenum)last_polygon_mode[0]);
-        g_GLESEngine->viewport(last_viewport[0], last_viewport[1], (GLsizei)last_viewport[2], (GLsizei)last_viewport[3]);
-        g_GLESEngine->scissor(last_scissor_box[0], last_scissor_box[1], (GLsizei)last_scissor_box[2], (GLsizei)last_scissor_box[3]);
+        LayaGL::m_pWebglEngine->viewport(last_viewport[0], last_viewport[1], (GLsizei)last_viewport[2], (GLsizei)last_viewport[3]);
+        LayaGL::m_pWebglEngine->scissor(last_scissor_box[0], last_scissor_box[1], (GLsizei)last_scissor_box[2], (GLsizei)last_scissor_box[3]);
         
     }
     g_nMainFrameBuffer = last_main_frame_buffer;
@@ -321,12 +322,12 @@ void JCConchRender::requestCaptureScreen()
 #endif
             m_GfxBackend->createScreenSurface(nativeHandle);
             m_GfxBackend->makeCurrent();
-            if (g_kSystemConfig.m_bConchWebGL && g_GLESEngine == nullptr)
+            if (g_kSystemConfig.m_bConchWebGL && LayaGL::m_pWebglEngine == nullptr)
             {
                 WebGLConfig config;
-                LayaGL::m_pWebglEngine = g_GLESEngine = new GLESEngine(config, WebGLMode::Auto);
-                g_GLESEngine->initRenderEngine();
-                g_GLESEngine->createTextureContext(g_GLESEngine->isWebGL2());
+                LayaGL::m_pWebglEngine = new GLESEngine(config, WebGLMode::Auto);
+                LayaGL::m_pWebglEngine->initRenderEngine();
+                LayaGL::m_pWebglEngine->createTextureContext(LayaGL::m_pWebglEngine->isWebGL2());
             }
         });
     }

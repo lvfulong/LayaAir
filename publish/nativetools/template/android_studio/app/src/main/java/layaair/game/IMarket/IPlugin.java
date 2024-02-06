@@ -22,7 +22,7 @@ public abstract interface IPlugin {
 	//	退出游戏时调用
 	public abstract void game_plugin_onStop();
 	//	退出游戏时 销毁
-	public abstract void game_plugin_onDestroy);
+	public abstract void game_plugin_onDestroy();
 	//	向游戏引擎传递参数
 	public abstract void game_plugin_set_option(String key, String value);
     //  设置代理对象

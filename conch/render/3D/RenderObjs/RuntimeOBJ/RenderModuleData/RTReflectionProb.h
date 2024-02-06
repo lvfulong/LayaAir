@@ -7,7 +7,7 @@
 #include <core/math/Vector3.h>
 #include <core/math/Vector4.h>
 #include <render/ShadowMode.h>
-#include "LayaAir/3D/JSBounds.h"
+#include "Bindings/LayaAir/3D/JSBounds.h"
 namespace laya
 {
 enum class AmbientMode

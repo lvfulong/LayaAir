@@ -53,6 +53,8 @@ int GLESInternalTex::getGpuMemory()
 }
 void GLESInternalTex::setGpuMemory(int value)
 {
+    m_engine->_addStatisticsInfo(RenderStatisticsInfo::GPUMemory, -m_gpuMemory);
+    m_engine->_addStatisticsInfo(RenderStatisticsInfo::TextureMemeory, -m_gpuMemory);
     m_gpuMemory = value;
     m_engine->_addStatisticsInfo(RenderStatisticsInfo::GPUMemory, m_gpuMemory);
     m_engine->_addStatisticsInfo(RenderStatisticsInfo::TextureMemeory, m_gpuMemory);

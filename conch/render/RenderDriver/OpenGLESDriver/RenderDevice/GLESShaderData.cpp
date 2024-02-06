@@ -20,11 +20,29 @@ void GLESShaderData::destroy()
 {
     isDestroy = true;
     m_data.clear();
+    if (_defineDatas != nullptr)
+    {
+        delete _defineDatas;
+        _defineDatas = nullptr;
+    }
 }
 
 DefineDatas *GLESShaderData::getOwnerDefineData()
 {
     return _defineDatas;
+}
+
+JsValue GLESShaderData::getOwnerDefineDataJS()
+{
+    if (m_pJSDefineDatas.isEmpty())
+    {
+        m_pJSDefineDatas.reset(Converter<DefineDatas*>::ToJs(_defineDatas, false));
+        return m_pJSDefineDatas.toLocal().handle_;
+    }
+    else
+    {
+        return m_pJSDefineDatas.toLocal().handle_;
+    }
 }
 
 void GLESShaderData::addDefine(ShaderDefine *define)

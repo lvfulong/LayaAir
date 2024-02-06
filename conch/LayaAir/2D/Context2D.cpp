@@ -435,15 +435,14 @@ namespace laya
 	void Context2D::_alpha(Context2D* pContext, JCCommandEncoderBuffer& layaGLCmd)
 	{
 	}
-	extern GLESEngine* g_GLESEngine;
 	void Context2D::set2DRenderConfig()
 	{
 		if (RenderTexture2D::m_currentActive != nullptr)
 			RenderTexture2D::m_currentActive->end();
 
-		g_GLESEngine->viewport(0, 0, RenderState2D::width, RenderState2D::height);//��ԭ2D�ӿ�
-		g_GLESEngine->scissorTest(true);
-		g_GLESEngine->scissor(0, 0, RenderState2D::width, RenderState2D::height);
+		LayaGL::m_pWebglEngine->viewport(0, 0, RenderState2D::width, RenderState2D::height);//��ԭ2D�ӿ�
+		LayaGL::m_pWebglEngine->scissorTest(true);
+		LayaGL::m_pWebglEngine->scissor(0, 0, RenderState2D::width, RenderState2D::height);
 	}
 	//------------------------------------------------------------------------------
 	void Context2D::save()

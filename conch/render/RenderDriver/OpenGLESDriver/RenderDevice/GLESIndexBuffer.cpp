@@ -3,6 +3,7 @@
 #include <cassert>
 #include <render/3D/design/renderEnum/BufferTargetType.h>
 #include <render/3D/design/renderEnum/IndexFormat.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESBufferState.h>
 
 namespace laya
 {
@@ -16,46 +17,63 @@ GLESIndexBuffer::~GLESIndexBuffer()
 }
 void GLESIndexBuffer::_setIndexDataLength(uint32_t data)
 {
-    /*todovar curBufSta = WebGLBufferState._curBindedBufferState;
+    GLESBufferState *curBufSta = GLESBufferState::_curBindedBufferState;
 
-    if (curBufSta) {
-        if (curBufSta._bindedIndexBuffer == = this) {
-            this._glBuffer.setDataLength(0);
+    if (curBufSta)
+    {
+        if (curBufSta->_bindedIndexBuffer == this)
+        {
+            this->_glBuffer->setDataLength(0);
         }
-        else {
-            curBufSta.unBind();//����Ӱ��VAO
-            this._glBuffer.bindBuffer()
-                this._glBuffer.setDataLength(data);
-            curBufSta.bind();
+        else
+        {
+            curBufSta->unBind();
+            this->_glBuffer->bindBuffer();
+            this->_glBuffer->setDataLength(data);
+            curBufSta->bind();
         }
     }
-    else {
-        this._glBuffer.bindBuffer()
-            this._glBuffer.setDataLength(data);
-    }*/
+    else
+    {
+        this->_glBuffer->bindBuffer();
+        this->_glBuffer->setDataLength(data);
+    }
 }
-void GLESIndexBuffer::_setIndexData(uint8_t *data, uint32_t bufferOffset)
+void GLESIndexBuffer::_setIndexData(char *data, uint32_t byteLength, uint32_t bufferOffset)
 {
 
-    /*todovar curBufSta = WebGLBufferState._curBindedBufferState;
+    GLESBufferState *curBufSta = GLESBufferState::_curBindedBufferState;
 
-    if (curBufSta) {
-        if (curBufSta._bindedIndexBuffer == = this) {
-            this._glBuffer.setDataLength(0);
+    if (curBufSta)
+    {
+        if (curBufSta->_bindedIndexBuffer == this)
+        {
+            this->_glBuffer->setDataLength(0);
         }
-        else {
-            curBufSta.unBind();//����Ӱ��VAO
-            this._glBuffer.bindBuffer()
-                this._glBuffer.setData(data, bufferOffset);
-            curBufSta.bind();
+        else
+        {
+            curBufSta->unBind();
+            this->_glBuffer->bindBuffer();
+            this->_glBuffer->setData(data, byteLength, bufferOffset);
+            curBufSta->bind();
         }
     }
-    else {
-        this._glBuffer.bindBuffer()
-            this._glBuffer.setData(data, bufferOffset)
-    }*/
+    else
+    {
+        this->_glBuffer->bindBuffer();
+        this->_glBuffer->setData(data, byteLength, bufferOffset);
+    }
 }
-
+void GLESIndexBuffer::_setIndexDataJS(JSValueAsParam buffer, uint32_t bufferOffset)
+{
+    char *data = NULL;
+    int dataLength = 0;
+    bool bIsArrayBuffer = extractJSAB(buffer, data, dataLength);
+    if (bIsArrayBuffer)
+    {
+        this->_setIndexData(data, dataLength, bufferOffset);
+    }
+}
 void GLESIndexBuffer::destroy()
 {
     if (_glBuffer != nullptr)

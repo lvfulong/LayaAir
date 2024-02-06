@@ -17,15 +17,14 @@
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 #include <utils/Log.h>
 #include <utils/Preprocessor.h>
-
+#include "render/LayaGL.h"
 namespace laya
 {
-GLESEngine *g_GLESEngine = nullptr;
 std::unordered_map<uint32_t, ShaderDefine> GLESEngine::_texGammaDefine;
 GLESEngine::GLESEngine(WebGLConfig config, WebGLMode webglMode)
 {
-    assert(g_GLESEngine == nullptr);
-    g_GLESEngine = this;
+    assert(LayaGL::m_pWebglEngine == nullptr);
+    LayaGL::m_pWebglEngine = this;
 
     std::vector<std::string> names;
     switch (webglMode)
@@ -56,7 +55,7 @@ GLESEngine::GLESEngine(WebGLConfig config, WebGLMode webglMode)
 }
 GLESEngine::~GLESEngine()
 {
-    g_GLESEngine = nullptr;
+    LayaGL::m_pWebglEngine = nullptr;
     if (!m_pJSTextureContext.isEmpty())
     {
         m_pJSTextureContext.reset();

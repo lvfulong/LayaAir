@@ -14,7 +14,8 @@ class GLESIndexBuffer // : public IIndexBuffer
     GLESIndexBuffer(BufferTargetType targetType, BufferUsage bufferUsageType);
     ~GLESIndexBuffer();
     void _setIndexDataLength(uint32_t data);
-    void _setIndexData(uint8_t *data, uint32_t bufferOffset);
+    void _setIndexData(char *data, uint32_t byteLength, uint32_t bufferOffset);
+    void _setIndexDataJS(JSValueAsParam buffer, uint32_t bufferOffset);
     void destroy();
 
   public:

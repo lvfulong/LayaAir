@@ -210,6 +210,7 @@ namespace laya {
         pWsSessionData = pData;
         //gLayaLog = mygLayaLog;
         //gLayaLogNoParam = mygLayaLogSimp;
+        onAcceptNewFrontend_();
         m_pInspectorChannel->pAgent = this;
         /*
         if (bFirst) {
@@ -222,6 +223,7 @@ namespace laya {
     void DebuggerAgent::onFrontEndClose() {//TODO ��û�е���
         //gLayaLog = nullptr;
         //gLayaLogNoParam = nullptr;
+        onFrontEndClose_();
     }
 
     void dispatchProtocolMsg_inJSThread(DebuggerAgent* pAgent, v8_inspector::StringView msg, int msgid) {
@@ -378,7 +380,9 @@ namespace laya {
         return view;
     }
 
-	void DebuggerAgent::onJSStart(JSThreadInterface* pJSThread,bool bDebugWait) {
+	void DebuggerAgent::onJSStart(JSThreadInterface* pJSThread,bool bDebugWait, std::function<void()> onAcceptNewFrontend, std::function<void()> onFrontEndClose) {
+        onAcceptNewFrontend_ = onAcceptNewFrontend;
+        onFrontEndClose_ = onFrontEndClose;
 		pJSThread_ = pJSThread;
         isolate_ = (v8::Isolate::GetCurrent());
 		v8::HandleScope handle_scope(isolate_);

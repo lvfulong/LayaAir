@@ -92,8 +92,6 @@ namespace laya
     }
 
 #endif
-
-	extern GLESEngine* g_GLESEngine;
     JCScriptRuntime::JCScriptRuntime()
     {
         m_pScriptThread = new JSMulThread();
@@ -199,6 +197,7 @@ namespace laya
     void JCScriptRuntime::onThreadInit(JCEventEmitter::evtPtr evt) 
     {
         LOGI("js thread started.");
+
         //m_nThreadState = 2;
         //JCPerfHUD::resetFrame();
 #ifdef JS_V8
@@ -206,7 +205,13 @@ namespace laya
 #ifdef JS_V8_DEBUGGER
         if (m_pDbgAgent) 
         {
-            m_pDbgAgent->onJSStart(m_pScriptThread,(JCConch::s_pConch->m_nJSDebugMode == JS_DEBUG_MODE_WAIT) ? true : false);
+            m_pDbgAgent->onJSStart(m_pScriptThread,(JCConch::s_pConch->m_nJSDebugMode == JS_DEBUG_MODE_WAIT) ? true : false,[]{
+                //gLayaLog = mygLayaLog;
+                //gLayaLogNoParam = mygLayaLogSimp;
+            },[]{
+                //gLayaLog = nullptr;
+                //gLayaLogNoParam = nullptr;
+            });
             LOGI("js debug open mode: %d port %d", JCConch::s_pConch->m_nJSDebugMode, JCConch::s_pConch->m_nJSDebugPort);
 
             gLayaLog = mygLayaLog;

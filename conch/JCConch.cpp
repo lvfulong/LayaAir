@@ -67,7 +67,6 @@ namespace laya
     JCFileSource* JCConch::s_pAssetsFiles = NULL;
     std::shared_ptr<JCConchRender> JCConch::s_pConchRender;
     std::shared_ptr<JCScriptRuntime> JCConch::s_pScriptRuntime;
-    extern GLESEngine* g_GLESEngine;
     void _vibrate()
     {
 #ifdef ANDROID
