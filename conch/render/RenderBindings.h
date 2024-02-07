@@ -34,9 +34,9 @@
 #include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESSkinRenderElement.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESCommandUniformMap.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTShaderPass.h>
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h>
-#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 
 namespace laya
 {
@@ -135,6 +135,9 @@ class RenderBindings
             .field("normalized", &VertexStateContext::normalized)
             .field("vertexStride", &VertexStateContext::vertexStride)
             .field("elementOffset", &VertexStateContext::elementOffset);
+        value_object<RTShaderDefine>("conchRTShaderDefine")
+            .field("_index", &RTShaderDefine::_index)
+            .field("_value", &RTShaderDefine::_value);
         {
             // todo Bounds
         }
@@ -260,6 +263,8 @@ class RenderBindings
             class_binding.function("getCapable", &GLESEngine::getCapable);
             class_binding.function("propertyNameToID", &GLESEngine::propertyNameToID);
             class_binding.function("propertyIDToName", &GLESEngine::propertyIDToName);
+            class_binding.function("getDefineByName", &GLESEngine::getDefineByName);
+            // class_binding.function("propertyIDToName", &GLESEngine::propertyIDToName);
             class_binding.function("clearStatisticsInfo", &GLESEngine::clearStatisticsInfo);
             class_binding.function("getStatisticsInfo", &GLESEngine::getStatisticsInfo);
             context.class_("conchGLESEngine", class_binding);
@@ -309,24 +314,19 @@ class RenderBindings
             context.class_("conchRenderState", class_binding);
         }
         {
-            class_<ShaderDefine> class_binding;
-            class_binding.constructor<int32_t, int32_t>();
-            context.class_("conchRTShaderDefine", class_binding);
-        }
-        {
-            class_<DefineDatas> class_binding;
+            class_<RTDefineDatas> class_binding;
             class_binding.constructor<>();
-            class_binding.function("clone", &DefineDatas::clone);
-            class_binding.function("cloneTo", &DefineDatas::cloneTo);
-            class_binding.function("add", &DefineDatas::add);
-            class_binding.function("remove", &DefineDatas::remove);
-            class_binding.function("addDefineDatas", &DefineDatas::addDefineDatas);
-            class_binding.function("removeDefineDatas", &DefineDatas::removeDefineDatas);
-            class_binding.function("has", &DefineDatas::has);
-            class_binding.function("clear", &DefineDatas::clear);
-            class_binding.function("destroy", &DefineDatas::destroy);
-            class_binding.property_field("_length", &DefineDatas::_length);
-            class_binding.property_field("_mask", &DefineDatas::_mask);
+            class_binding.function("clone", &RTDefineDatas::clone);
+            class_binding.function("cloneTo", &RTDefineDatas::cloneTo);
+            class_binding.function("add", &RTDefineDatas::add);
+            class_binding.function("remove", &RTDefineDatas::remove);
+            class_binding.function("addDefineDatas", &RTDefineDatas::addDefineDatas);
+            class_binding.function("removeDefineDatas", &RTDefineDatas::removeDefineDatas);
+            class_binding.function("has", &RTDefineDatas::has);
+            class_binding.function("clear", &RTDefineDatas::clear);
+            class_binding.function("destroy", &RTDefineDatas::destroy);
+            class_binding.property_field("_length", &RTDefineDatas::_length);
+            class_binding.property_field("_mask", &RTDefineDatas::_mask);
             context.class_("conchRTDefineDatas", class_binding);
         }
         {
@@ -354,7 +354,7 @@ class RenderBindings
             class_binding.function("setDrawElementParams", &GLESRenderGeometryElement::setDrawElementParams);
             class_binding.function("clearRenderParams", &GLESRenderGeometryElement::clearRenderParams);
             class_binding.function("destroy", &GLESRenderGeometryElement::destroy);
-            context.class_("conchRenderGeometryElementOBJ", class_binding);
+            context.class_("conchGLESRenderGeometryElement", class_binding);
         }
         {
             class_<GLESShaderInstance> class_binding;
@@ -706,6 +706,12 @@ template <> struct is_value_object<UniformProperty> : std::true_type
 {
 };
 template <> struct is_wrapped_class<UniformProperty> : std::false_type
+{
+};
+template <> struct is_value_object<RTShaderDefine> : std::true_type
+{
+};
+template <> struct is_wrapped_class<RTShaderDefine> : std::false_type
 {
 };
 } // namespace internal

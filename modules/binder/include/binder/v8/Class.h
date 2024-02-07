@@ -302,9 +302,7 @@ template <typename ClassType> class class_
 
         FuncInfo<decltype(func)> *info = new FuncInfo<decltype(func)>(func);
         internal::addDeinitializer([info]() { delete info; });
-#if 0
         info->name = name;
-#endif
         v8::Local<v8::Value> data = v8::External::New(isolate_, info);
 
         v8::Local<v8::FunctionTemplate> t =
@@ -322,9 +320,7 @@ template <typename ClassType> class class_
 
         FuncInfo<decltype(func)> *info = new FuncInfo<decltype(func)>(func);
         internal::addDeinitializer([info]() { delete info; });
-#if 0
         info->name = name;
-#endif
         v8::Local<v8::Value> data = v8::External::New(isolate_, info);
 
         v8::Local<v8::FunctionTemplate> t =
@@ -342,9 +338,7 @@ template <typename ClassType> class class_
 
         FuncInfo<decltype(func)> *info = new FuncInfo<decltype(func)>(func);
         internal::addDeinitializer([info]() { delete info; });
-#if 0
         info->name = name;
-#endif
         v8::Local<v8::Value> data = v8::External::New(isolate_, info);
 
         v8::Local<v8::FunctionTemplate> t = v8::FunctionTemplate::New(

@@ -67,7 +67,7 @@ class GLESRenderElement3D
     bool isRender;
 
   protected:
-    DefineDatas _compileDefines;
+    RTDefineDatas _compileDefines;
     JCSingletonList<GLESShaderInstance *> _shaderInstances = JCSingletonList<GLESShaderInstance *>(false);
     bool _invertFront;
 };

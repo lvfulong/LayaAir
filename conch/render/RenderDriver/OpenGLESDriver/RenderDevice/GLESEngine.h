@@ -6,6 +6,7 @@
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLEnum/WebGLMode.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLRenderState.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/WebGLConfig.h"
+#include <binder/JSInterface.h>
 #include <core/math/Color.h>
 #include <core/math/Vector4.h>
 #include <render/3D/design/renderEnum/BufferTargetType.h>
@@ -16,7 +17,6 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include <binder/JSInterface.h>
 
 namespace laya
 {
@@ -35,11 +35,13 @@ class CommandEncoder;
 class GLESInternalTex;
 class GLRender2DContext;
 class IRender2DContext;
-class ShaderDefine;
+class RTShaderDefine;
+class RTDefineDatas;
 class GLESEngine
 {
-public:
-    static std::unordered_map<uint32_t, ShaderDefine> _texGammaDefine;
+  public:
+    static std::unordered_map<uint32_t, RTShaderDefine> _texGammaDefine;
+
   public:
     GLESEngine(WebGLConfig config, WebGLMode webglMode);
     ~GLESEngine();
@@ -63,7 +65,7 @@ public:
     GLTextureContext *createTextureContext(bool isWebGL2);
     GLBuffer *createBuffer(BufferTargetType targetType, BufferUsage bufferUsageType);
     GLBuffer *_getbindBuffer(BufferTargetType target);
-    void addTexGammaDefine(uint32_t key, ShaderDefine value);
+    void addTexGammaDefine(uint32_t key, RTShaderDefine value);
     void _setbindBuffer(BufferTargetType target, GLBuffer *buffer);
     void _bindTexture(GLenum target, GLESInternalTex *texture);
     int getParams(RenderParams type);
@@ -73,8 +75,9 @@ public:
     void colorMask(bool r, bool g, bool b, bool a);
     void clearRenderTexture(uint32_t clearFlag, Color *clearcolor, float clearDepth);
     int propertyNameToID(const char *name);
-    const std::string& propertyIDToName(int id);
-    ShaderDefine *getDefineByName(const char *name);
+    const std::string &propertyIDToName(int id);
+    void getNamesByDefineData(RTDefineDatas *defineData, std::vector<std::string> &out);
+    RTShaderDefine getDefineByName(const char *name);
     GLRenderState *getRenderState();
     GLVertexState *createVertexState();
     GLRenderDrawContext *getDrawContext();
@@ -85,8 +88,8 @@ public:
                              int index, char *data, int byteSize);
     GLVertexState *m_GLBindVertexArray = nullptr;
     int getUBOPointer(const char *name);
-    void copySubFrameBuffertoTex(GLESInternalTex*texture, int level, int xoffset, int yoffset, int x, int y,
-                                 int width, int height);
+    void copySubFrameBuffertoTex(GLESInternalTex *texture, int level, int xoffset, int yoffset, int x, int y, int width,
+                                 int height);
     GLBuffer *_getBindUBOBuffer(int glPointer);
     void _setBindUBOBuffer(int glPointer, GLBuffer *buffer);
     void _initStatisticsInfo();
@@ -95,6 +98,7 @@ public:
     int getStatisticsInfo(RenderStatisticsInfo info);
     void unbindVertexState();
     JsValue getTextureContextJS();
+
   private:
     bool getContext(const char *contextType);
     void _initBindBufferMap();
@@ -137,6 +141,9 @@ public:
     RenderStatisticsInfoMapType m_GLStatisticsInfo;
     std::unordered_map<int, GLBuffer *> _GLBindPointerUBOMap;
     Persistent m_pJSTextureContext;
+    static std::unordered_map<std::string, RTShaderDefine> _defineMap;
+    static uint32_t _defineCounter;
+    static std::vector<std::unordered_map<uint32_t, std::string>> _maskMap;
 };
 } // namespace laya
 

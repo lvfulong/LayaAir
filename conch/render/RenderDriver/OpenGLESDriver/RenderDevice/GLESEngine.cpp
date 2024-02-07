@@ -4,6 +4,7 @@
 #include "GLTextureContext.h"
 #include "JCSystemConfig.h"
 #include "LayaAir/2D/BufferStateBase.h"
+#include "render/LayaGL.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLBuffer.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLCapable.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLEnum/WebGLExtension.h"
@@ -17,10 +18,12 @@
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 #include <utils/Log.h>
 #include <utils/Preprocessor.h>
-#include "render/LayaGL.h"
 namespace laya
 {
-std::unordered_map<uint32_t, ShaderDefine> GLESEngine::_texGammaDefine;
+std::unordered_map<std::string, RTShaderDefine> GLESEngine::_defineMap;
+uint32_t GLESEngine::_defineCounter = 0;
+std::vector<std::unordered_map<uint32_t, std::string>> GLESEngine::_maskMap;
+std::unordered_map<uint32_t, RTShaderDefine> GLESEngine::_texGammaDefine;
 GLESEngine::GLESEngine(WebGLConfig config, WebGLMode webglMode)
 {
     assert(LayaGL::m_pWebglEngine == nullptr);
@@ -165,7 +168,7 @@ GLBuffer *GLESEngine::_getbindBuffer(BufferTargetType target)
     return m_GLBufferBindMap[(int)target];
 }
 
-void GLESEngine::addTexGammaDefine(uint32_t key, ShaderDefine value)
+void GLESEngine::addTexGammaDefine(uint32_t key, RTShaderDefine value)
 {
     GLESEngine::_texGammaDefine[key] = value;
 }
@@ -375,9 +378,47 @@ const std::string &GLESEngine::propertyIDToName(int id)
     }
     return "";
 }
-ShaderDefine *GLESEngine::getDefineByName(const char *name)
+void GLESEngine::getNamesByDefineData(RTDefineDatas *defineData, std::vector<std::string> &out)
 {
-    return nullptr; // TODO
+    std::vector<std::unordered_map<uint32_t, std::string>> &maskMap = GLESEngine::_maskMap;
+    std::vector<uint32_t> &mask = defineData->_mask;
+    out.resize(0);
+    for (uint32_t i = 0, n = defineData->_length; i < n; i++)
+    {
+        std::unordered_map<uint32_t, std::string> &subMaskMap = maskMap[i];
+        uint32_t subMask = mask[i];
+        for (uint32_t j = 0; j < 32; j++)
+        {
+            int32_t d = 1 << j;
+            if (subMask > 0 && d > subMask) // 如果31位存在subMask为负数,避免break
+                break;
+            if (subMask & d)
+                out.push_back(subMaskMap[d]);
+        }
+    }
+}
+RTShaderDefine GLESEngine::getDefineByName(const char *name)
+{
+    std::unordered_map<std::string, RTShaderDefine>::iterator it = GLESEngine::_defineMap.find(name);
+    if (it == GLESEngine::_defineMap.end())
+    {
+        std::vector<std::unordered_map<uint32_t, std::string>> &maskMap = GLESEngine::_maskMap;
+        uint32_t counter = GLESEngine::_defineCounter;
+        uint32_t index = floorf(counter / 32.0f);
+        uint32_t value = 1 << counter % 32;
+        RTShaderDefine define(index, value);
+        GLESEngine::_defineMap[name] = define;
+
+        uint32_t size = maskMap.size();
+        if (index == size)
+        {
+            maskMap.resize(size + 1);
+            // maskMap[index] = {};
+        }
+        maskMap[index][value] = name;
+        GLESEngine::_defineCounter++;
+    }
+    return it->second;
 }
 GLRenderState *GLESEngine::getRenderState()
 {

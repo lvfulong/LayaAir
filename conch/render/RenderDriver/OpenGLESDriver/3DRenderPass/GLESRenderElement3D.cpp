@@ -105,7 +105,7 @@ void GLESRenderElement3D::_compileShader(RTRenderContext3D *context)
         if (pass->pipelineMode != context->pipelineMode)
             continue;
 
-        DefineDatas *comDef = &_compileDefines;
+        RTDefineDatas*comDef = &_compileDefines;
         if (context->sceneData)
         {
             context->sceneData->_defineDatas->cloneTo(comDef);

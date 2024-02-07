@@ -8,7 +8,7 @@ namespace laya
 {
 GLESShaderData::GLESShaderData() //: ResourceBase(JCConch::s_pConchRender->m_pShaderDataManager)
 {
-    _defineDatas = new DefineDatas();
+    _defineDatas = new RTDefineDatas();
 }
 
 GLESShaderData::~GLESShaderData()
@@ -27,7 +27,7 @@ void GLESShaderData::destroy()
     }
 }
 
-DefineDatas *GLESShaderData::getOwnerDefineData()
+RTDefineDatas*GLESShaderData::getOwnerDefineData()
 {
     return _defineDatas;
 }
@@ -36,7 +36,7 @@ JsValue GLESShaderData::getOwnerDefineDataJS()
 {
     if (m_pJSDefineDatas.isEmpty())
     {
-        m_pJSDefineDatas.reset(Converter<DefineDatas*>::ToJs(_defineDatas, false));
+        m_pJSDefineDatas.reset(Converter<RTDefineDatas*>::ToJs(_defineDatas, false));
         return m_pJSDefineDatas.toLocal().handle_;
     }
     else
@@ -45,22 +45,22 @@ JsValue GLESShaderData::getOwnerDefineDataJS()
     }
 }
 
-void GLESShaderData::addDefine(ShaderDefine *define)
+void GLESShaderData::addDefine(RTShaderDefine define)
 {
     _defineDatas->add(define);
 }
 
-void GLESShaderData::addDefines(DefineDatas *defines)
+void GLESShaderData::addDefines(RTDefineDatas* defines)
 {
     _defineDatas->addDefineDatas(defines);
 }
 
-void GLESShaderData::removeDefine(ShaderDefine *define)
+void GLESShaderData::removeDefine(RTShaderDefine define)
 {
     _defineDatas->remove(define);
 }
 
-void GLESShaderData::hasDefine(ShaderDefine *define)
+void GLESShaderData::hasDefine(RTShaderDefine define)
 {
     _defineDatas->has(define);
 }
@@ -202,12 +202,12 @@ void GLESShaderData::setInternalTexture(int32_t index, GLESInternalTex *value)
         bool data = GLESEngine::_texGammaDefine.find(index) != GLESEngine::_texGammaDefine.end();
         if (data && value->gammaCorrection > 1)
         {
-            addDefine(&GLESEngine::_texGammaDefine[index]);
+            addDefine(GLESEngine::_texGammaDefine[index]);
         }
         else
         {
             if (data)
-                removeDefine(&GLESEngine::_texGammaDefine[index]);
+                removeDefine(GLESEngine::_texGammaDefine[index]);
         }
     }
     m_data[index] = value;

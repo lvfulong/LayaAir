@@ -19,7 +19,7 @@ class BaseCameraProperty
 class DepthPassProperty
 {
   public:
-    static ShaderDefine *DEPTHPASS;
+    static RTShaderDefine DEPTHPASS;
     static uint32_t DEFINE_SHADOW_BIAS;
     static Vector4 SHADOW_BIAS;
     static uint32_t DEPTHZBUFFERPARAMS;
@@ -113,14 +113,14 @@ class Scene3DShaderDeclaration
     /**@internal */
     // static SHADERDEFINE_SHADOW : ShaderDefine;
 
-    static ShaderDefine *SHADERDEFINE_SHADOW_CASCADE;
-    static ShaderDefine *SHADERDEFINE_SHADOW_SOFT_SHADOW_LOW;
-    static ShaderDefine *SHADERDEFINE_SHADOW_SOFT_SHADOW_HIGH;
+    static RTShaderDefine SHADERDEFINE_SHADOW_CASCADE;
+    static RTShaderDefine SHADERDEFINE_SHADOW_SOFT_SHADOW_LOW;
+    static RTShaderDefine SHADERDEFINE_SHADOW_SOFT_SHADOW_HIGH;
     /**@internal */
     // static SHADERDEFINE_SHADOW_SPOT : ShaderDefine;
     /**@internal */
-    static ShaderDefine *SHADERDEFINE_SHADOW_SPOT_SOFT_SHADOW_LOW;
-    static ShaderDefine *SHADERDEFINE_SHADOW_SPOT_SOFT_SHADOW_HIGH;
+    static RTShaderDefine SHADERDEFINE_SHADOW_SPOT_SOFT_SHADOW_LOW;
+    static RTShaderDefine SHADERDEFINE_SHADOW_SPOT_SOFT_SHADOW_HIGH;
     static void __init__();
 };
 class SkinnedMeshSprite3DProperty
@@ -139,11 +139,11 @@ class Sprite3DProperty
 class Sprite3DRenderDeclarationProperty
 {
   public:
-    static ShaderDefine *SHADERDEFINE_SPECCUBE_BOX_PROJECTION;
-    static ShaderDefine *SHADERDEFINE_GI_LEGACYIBL;
-    static ShaderDefine *SHADERDEFINE_GI_IBL;
-    static ShaderDefine *SHADERDEFINE_IBL_RGBD;
-    static ShaderDefine *SHADERDEFINE_VOLUMETRICGI;
+    static RTShaderDefine SHADERDEFINE_SPECCUBE_BOX_PROJECTION;
+    static RTShaderDefine SHADERDEFINE_GI_LEGACYIBL;
+    static RTShaderDefine SHADERDEFINE_GI_IBL;
+    static RTShaderDefine SHADERDEFINE_IBL_RGBD;
+    static RTShaderDefine SHADERDEFINE_VOLUMETRICGI;
     static void __init__();
 };
 } // namespace laya

@@ -26,9 +26,7 @@ template <class G, class S> struct PropFuncInfo
 template <typename T> struct FuncInfo
 {
     T func;
-#if 0
     std::string name;
-#endif
     FuncInfo(T f)
     {
         func = f;

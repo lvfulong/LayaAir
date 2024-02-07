@@ -63,9 +63,7 @@ class Context
 
         FuncInfo<decltype(func)> *info = new FuncInfo<decltype(func)>(func);
         internal::addDeinitializer([info]() { delete info; });
-#if 0
         info->name = name;
-#endif
         v8::Local<v8::Value> data = v8::External::New(isolate(), info);
 
         v8::Local<v8::FunctionTemplate> t =

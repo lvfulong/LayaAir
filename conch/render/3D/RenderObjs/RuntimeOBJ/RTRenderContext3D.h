@@ -64,7 +64,7 @@ class RTRenderContext3D
     {
         this->globalShaderData = value;
     }
-    void setGlobalConfigShaderData(DefineDatas *value)
+    void setGlobalConfigShaderData(RTDefineDatas*value)
     {
         globalConfigShaderData = value;
     }
@@ -76,7 +76,7 @@ class RTRenderContext3D
 
   public:
     GLESShaderData *globalShaderData = nullptr;
-    DefineDatas *globalConfigShaderData = nullptr;
+    RTDefineDatas*globalConfigShaderData = nullptr;
     GLESInternalRT *_renderTarget = nullptr;
     Viewport viewPort;
     Vector4 scissor;

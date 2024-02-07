@@ -1,27 +1,30 @@
-#ifndef __DefineDatas_H__
-#define __DefineDatas_H__
-#include <vector>
+#ifndef __RTDefineDatas_H__
+#define __RTDefineDatas_H__
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTShaderDefine.h>
-namespace laya{
+#include <vector>
+namespace laya
+{
 
-    class DefineDatas {
-    public:
-        DefineDatas();
-        ~DefineDatas();
-        void _intersectionDefineDatas(DefineDatas* define);
-        void add(ShaderDefine* define);
-        void remove(ShaderDefine* define);
-        bool has(ShaderDefine* define);
-        void clear();
-        void addDefineDatas(DefineDatas* defines);
-        void removeDefineDatas(DefineDatas* defines);
-        void cloneTo(DefineDatas* defines);
-        DefineDatas* clone();
-        void destroy();
-    public:
-        std::vector<uint32_t> _mask{};
-        uint32_t _length = 0;
-    };
-}
+class RTDefineDatas
+{
+  public:
+    RTDefineDatas();
+    ~RTDefineDatas();
+    void _intersectionDefineDatas(RTDefineDatas *define);
+    void add(RTShaderDefine define);
+    void remove(RTShaderDefine define);
+    bool has(RTShaderDefine define);
+    void clear();
+    void addDefineDatas(RTDefineDatas *defines);
+    void removeDefineDatas(RTDefineDatas *defines);
+    void cloneTo(RTDefineDatas *defines);
+    RTDefineDatas *clone();
+    void destroy();
 
-#endif//__DefineDatas_H__
+  public:
+    std::vector<uint32_t> _mask{};
+    uint32_t _length = 0;
+};
+} // namespace laya
+
+#endif //__RTDefineDatas_H__

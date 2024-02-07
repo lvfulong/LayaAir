@@ -11,7 +11,7 @@ void BaseCameraProperty::__init__()
     BaseCameraProperty::VIEWPROJECTMATRIX = LayaGL::m_pWebglEngine->propertyNameToID("u_ViewProjection");
 }
 
-ShaderDefine *DepthPassProperty::DEPTHPASS = nullptr;
+RTShaderDefine DepthPassProperty::DEPTHPASS;
 uint32_t DepthPassProperty::DEFINE_SHADOW_BIAS = 0;
 uint32_t DepthPassProperty::DEPTHZBUFFERPARAMS = 0;
 Vector4 DepthPassProperty::SHADOW_BIAS;
@@ -148,11 +148,11 @@ void ShadowCasterPassProperty::__init__()
     ShadowCasterPassProperty::SHADOW_MATRICES = LayaGL::m_pWebglEngine->propertyNameToID("u_ShadowMatrices");
     ShadowCasterPassProperty::SHADOW_SPLIT_SPHERES = LayaGL::m_pWebglEngine->propertyNameToID("u_ShadowSplitSpheres");
 }
-ShaderDefine *Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_CASCADE = nullptr;
-ShaderDefine *Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SOFT_SHADOW_LOW = nullptr;
-ShaderDefine *Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SOFT_SHADOW_HIGH = nullptr;
-ShaderDefine *Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT_SOFT_SHADOW_LOW = nullptr;
-ShaderDefine *Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT_SOFT_SHADOW_HIGH = nullptr;
+RTShaderDefine Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_CASCADE;
+RTShaderDefine Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SOFT_SHADOW_LOW;
+RTShaderDefine Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SOFT_SHADOW_HIGH;
+RTShaderDefine Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT_SOFT_SHADOW_LOW;
+RTShaderDefine Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT_SOFT_SHADOW_HIGH;
 void Scene3DShaderDeclaration::__init__()
 {
     Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_CASCADE = LayaGL::m_pWebglEngine->getDefineByName("SHADOW_CASCADE");
@@ -178,11 +178,11 @@ void Sprite3DProperty::__init__()
     Sprite3DProperty::WORLDMATRIX = LayaGL::m_pWebglEngine->propertyNameToID("u_WorldMat");
     Sprite3DProperty::WORLDINVERTFRONT = LayaGL::m_pWebglEngine->propertyNameToID("u_WroldInvertFront");
 }
-ShaderDefine *Sprite3DRenderDeclarationProperty::SHADERDEFINE_SPECCUBE_BOX_PROJECTION = nullptr;
-ShaderDefine *Sprite3DRenderDeclarationProperty::SHADERDEFINE_GI_LEGACYIBL = nullptr;
-ShaderDefine *Sprite3DRenderDeclarationProperty::SHADERDEFINE_GI_IBL = nullptr;
-ShaderDefine *Sprite3DRenderDeclarationProperty::SHADERDEFINE_IBL_RGBD = nullptr;
-ShaderDefine *Sprite3DRenderDeclarationProperty::SHADERDEFINE_VOLUMETRICGI = nullptr;
+RTShaderDefine Sprite3DRenderDeclarationProperty::SHADERDEFINE_SPECCUBE_BOX_PROJECTION;
+RTShaderDefine Sprite3DRenderDeclarationProperty::SHADERDEFINE_GI_LEGACYIBL;
+RTShaderDefine Sprite3DRenderDeclarationProperty::SHADERDEFINE_GI_IBL;
+RTShaderDefine Sprite3DRenderDeclarationProperty::SHADERDEFINE_IBL_RGBD;
+RTShaderDefine Sprite3DRenderDeclarationProperty::SHADERDEFINE_VOLUMETRICGI;
 
 void Sprite3DRenderDeclarationProperty::__init__()
 {

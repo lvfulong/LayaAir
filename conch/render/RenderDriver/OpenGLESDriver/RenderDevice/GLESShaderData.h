@@ -38,7 +38,7 @@ enum class ShaderDataType
     Matrix3x3,
 };
 
-class ShaderDefine;
+class RTShaderDefine;
 class UniformBufferObject;
 class GLESInternalTex;
 class GLESShaderData //: public ResourceBase<ShaderData>
@@ -63,12 +63,12 @@ class GLESShaderData //: public ResourceBase<ShaderData>
 
     void destroy();
 
-    DefineDatas *getOwnerDefineData();
+    RTDefineDatas*getOwnerDefineData();
     JsValue getOwnerDefineDataJS();
-    void addDefine(ShaderDefine *define);
-    void addDefines(DefineDatas *defines);
-    void removeDefine(ShaderDefine *define);
-    void hasDefine(ShaderDefine *define);
+    void addDefine(RTShaderDefine define);
+    void addDefines(RTDefineDatas* defines);
+    void removeDefine(RTShaderDefine define);
+    void hasDefine(RTShaderDefine define);
     void clearDefine();
 
     void setBool(int32_t index, bool value);
@@ -102,7 +102,7 @@ class GLESShaderData //: public ResourceBase<ShaderData>
 
   public:
     std::unordered_map<uint32_t, std::any> m_data;
-    DefineDatas *_defineDatas; // todo
+    RTDefineDatas*_defineDatas; // todo
     Persistent m_pJSDefineDatas;
 };
 } // namespace laya

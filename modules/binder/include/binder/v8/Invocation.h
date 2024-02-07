@@ -1,11 +1,11 @@
 #ifndef __V8_INVOCATION_H__
 #define __V8_INVOCATION_H__
 
-#include <utils/FunctionTraits.h>
 #include "Converter.h"
 #include <map>
 #include <string>
 #include <type_traits>
+#include <utils/FunctionTraits.h>
 #include <v8.h>
 namespace laya
 {
@@ -67,7 +67,13 @@ template <typename ReturnType, typename... Args> void InvokeFunction(const v8::F
     void *data = args.Data().As<v8::External>()->Value();
     typedef ReturnType (*FunctorType)(Args...);
     FuncInfo<FunctorType> *funcInfo = (FuncInfo<FunctorType> *)data;
-    assert((unsigned long)args.Length() >= sizeof...(Args) && "Not enough arguments for function.");
+    if ((unsigned long)args.Length() < sizeof...(Args))
+    {
+        LOGE("Not enough arguments for function  %s", funcInfo->name.c_str());
+        args.GetIsolate()->ThrowException(
+            v8::String::NewFromUtf8(args.GetIsolate(), "Not enough arguments for function.").ToLocalChecked());
+        return;
+    }
 
     tuple_call<std::tuple<Args...>>(funcInfo->func, args, std::make_index_sequence<sizeof...(Args)>());
 }
@@ -80,10 +86,13 @@ void InvokeClassMethod(const v8::FunctionCallbackInfo<v8::Value> &args)
     FuncInfo<FunctorType> *funcInfo = (FuncInfo<FunctorType> *)data;
     v8::Local<v8::Object> pthis = args.This();
     ClassType *pObj = (ClassType *)pthis->GetAlignedPointerFromInternalField(0);
-    assert((unsigned long)args.Length() >= sizeof...(Args) && "Not enough arguments for function.");
-#if 0
-    LOGI("debug InvokeClassMethod %s", funcInfo->name.c_str());
-#endif
+    if ((unsigned long)args.Length() < sizeof...(Args))
+    {
+        LOGE("Not enough arguments for function  %s", funcInfo->name.c_str());
+        args.GetIsolate()->ThrowException(
+            v8::String::NewFromUtf8(args.GetIsolate(), "Not enough arguments for function.").ToLocalChecked());
+        return;
+    }
     tuple_call_with_this<ClassType, std::tuple<Args...>>(pObj, funcInfo->func, args,
                                                          std::make_index_sequence<sizeof...(Args)>());
 }
@@ -96,7 +105,13 @@ void InvokeClassMethodOptionalOverride(const v8::FunctionCallbackInfo<v8::Value>
     FuncInfo<FunctorType> *funcInfo = (FuncInfo<FunctorType> *)data;
     v8::Local<v8::Object> pthis = args.This();
     ClassType *pObj = (ClassType *)pthis->GetAlignedPointerFromInternalField(0);
-    assert((unsigned long)args.Length() >= sizeof...(Args) && "Not enough arguments for function.");
+    if ((unsigned long)args.Length() < sizeof...(Args))
+    {
+        LOGE("Not enough arguments for function  %s", funcInfo->name.c_str());
+        args.GetIsolate()->ThrowException(
+            v8::String::NewFromUtf8(args.GetIsolate(), "Not enough arguments for function.").ToLocalChecked());
+        return;
+    }
 
     tuple_call_optional_override<ClassType, std::tuple<Args...>>(pObj, funcInfo->func, args,
                                                                  std::make_index_sequence<sizeof...(Args)>());

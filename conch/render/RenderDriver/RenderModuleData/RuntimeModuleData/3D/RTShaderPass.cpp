@@ -11,7 +11,7 @@ RTShaderPass::~RTShaderPass()
     // TODO
 }
 
-void RTShaderPass::setCacheShader(DefineDatas *compileDefine, GLESShaderInstance *shader)
+void RTShaderPass::setCacheShader(RTDefineDatas* compileDefine, GLESShaderInstance *shader)
 {
     void *cacheShaders = &_cacheSharders;
     // var mask : Array<number> = compileDefine._mask;
@@ -37,7 +37,7 @@ void RTShaderPass::setCacheShader(DefineDatas *compileDefine, GLESShaderInstance
     shaderinstanceMap->insert(part);
 }
 
-GLESShaderInstance *RTShaderPass::getCacheShader(DefineDatas *compileDefine)
+GLESShaderInstance *RTShaderPass::getCacheShader(RTDefineDatas*compileDefine)
 {
     compileDefine->_intersectionDefineDatas(&validDefine); // ȥ��û���õ��ĺ�Ա�����Ӱ��
     void *cacheShaders = &_cacheSharders;
@@ -116,7 +116,7 @@ void RTShaderPass::_resizeCacheShaderMap(void *cacheMap, uint32_t hierarchy, uin
     }
 }
 
-void RTShaderPass::createShaderInstance(DefineDatas *compileDefine)
+void RTShaderPass::createShaderInstance(RTDefineDatas*compileDefine)
 {
     // ͬ��compiDefine��ȫ�ֵĺ� ���ýű��㴦��shader string
     // ���ð󶨺õ�����shaderInstance�ķ���
