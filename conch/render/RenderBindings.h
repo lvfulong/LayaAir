@@ -138,6 +138,27 @@ class RenderBindings
         value_object<RTShaderDefine>("conchRTShaderDefine")
             .field("_index", &RTShaderDefine::_index)
             .field("_value", &RTShaderDefine::_value);
+        value_object<DDSTextureInfoJS>("conchDDSTextureInfo")
+            .field("source", &DDSTextureInfoJS::sourceAB)
+            .field("compressed", &DDSTextureInfoJS::compressed)
+            .field("dataOffset", &DDSTextureInfoJS::dataOffset)
+            .field("blockBytes", &DDSTextureInfoJS::blockBytes)
+            .field("mipmapCount", &DDSTextureInfoJS::mipmapCount)
+            .field("bpp", &DDSTextureInfoJS::bpp)
+            .field("isCube", &DDSTextureInfoJS::isCube)
+            .field("width", &DDSTextureInfoJS::width)
+            .field("height", &DDSTextureInfoJS::height)
+            .field("format", &DDSTextureInfoJS::format);
+        value_object<KTXTextureInfoJS>("conchKTXTextureInfo")
+            .field("source", &KTXTextureInfoJS::sourceAB)
+            .field("compress", &KTXTextureInfoJS::compress)
+            .field("sRGB", &KTXTextureInfoJS::sRGB)
+            .field("dimension", &KTXTextureInfoJS::dimension)
+            .field("width", &KTXTextureInfoJS::width)
+            .field("height", &KTXTextureInfoJS::height)
+            .field("mipmapCount", &KTXTextureInfoJS::mipmapCount)
+            .field("bytesOfKeyValueData", &KTXTextureInfoJS::bytesOfKeyValueData)
+            .field("headerOffset", &KTXTextureInfoJS::headerOffset);
         {
             // todo Bounds
         }
@@ -165,14 +186,56 @@ class RenderBindings
             // class_binding.function("initVideoTextureData", &GLTextureContext::initVideoTextureData);
             // class_binding.function("updateVideoTexture", &GLTextureContext::updateVideoTexture);
             // setTextureSubImageData todo
-          
-            class_binding.function("setTextureDDSData", &GLTextureContext::setTextureDDSData);
-            class_binding.function("setTextureKTXData", &GLTextureContext::setTextureKTXData);
-              /*class_binding.function("setCubeDDSData", &GLTextureContext::setCubeDDSData);
-            class_binding.function("setCubeKTXData", &GLTextureContext::setCubeKTXData);
-            class_binding.function("readRenderTargetPixelData", &GLTextureContext::readRenderTargetPixelData);
-            class_binding.function("getRenderTextureData", &GLTextureContext::getRenderTextureData);
-            */
+
+            class_binding.function_optional_override(
+                "setTextureDDSData",
+                optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, const DDSTextureInfoJS &ddsInfo) {
+                    char *pArrayBufferPtr = NULL;
+                    int nABLen = 0;
+                    bool bIsArrayBuffer = extractJSAB(ddsInfo.sourceAB, pArrayBufferPtr, nABLen);
+                    if (bIsArrayBuffer)
+                    {
+                        DDSTextureInfo info;
+                        info.compressed = ddsInfo.compressed;
+                        info.dataOffset = ddsInfo.dataOffset;
+                        info.blockBytes = ddsInfo.blockBytes;
+                        info.mipmapCount = ddsInfo.mipmapCount;
+                        info.bpp = ddsInfo.bpp;
+                        info.format = ddsInfo.format;
+                        info.bpp = ddsInfo.bpp;
+                        info.isCube = ddsInfo.isCube;
+                        info.width = ddsInfo.width;
+                        info.height = ddsInfo.height;
+                        ctx.setTextureDDSData(texture, info);
+                    }
+                }));
+            class_binding.function_optional_override(
+                "setTextureKTXData",
+                optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, const KTXTextureInfoJS &ktxInfo) {
+                    char *pArrayBufferPtr = NULL;
+                    int nABLen = 0;
+                    bool bIsArrayBuffer = extractJSAB(ktxInfo.sourceAB, pArrayBufferPtr, nABLen);
+                    if (bIsArrayBuffer)
+                    {
+                        KTXTextureInfo info;
+                        info.compress = ktxInfo.compress;
+                        info.sRGB = ktxInfo.sRGB;
+                        info.dimension = ktxInfo.dimension;
+                        info.mipmapCount = ktxInfo.mipmapCount;
+                        info.width = ktxInfo.width;
+                        info.height = ktxInfo.height;
+                        info.format = ktxInfo.format;
+                        info.mipmapCount = ktxInfo.mipmapCount;
+                        info.bytesOfKeyValueData = ktxInfo.bytesOfKeyValueData;
+                        info.headerOffset = ktxInfo.headerOffset;
+                        ctx.setTextureKTXData(texture, info);
+                    }
+                }));
+            /*class_binding.function("setCubeDDSData", &GLTextureContext::setCubeDDSData);
+          class_binding.function("setCubeKTXData", &GLTextureContext::setCubeKTXData);
+          class_binding.function("readRenderTargetPixelData", &GLTextureContext::readRenderTargetPixelData);
+          class_binding.function("getRenderTextureData", &GLTextureContext::getRenderTextureData);
+          */
             context.class_("conchGLESTextureContext", class_binding);
         }
         {
@@ -715,6 +778,18 @@ template <> struct is_value_object<RTShaderDefine> : std::true_type
 {
 };
 template <> struct is_wrapped_class<RTShaderDefine> : std::false_type
+{
+};
+template <> struct is_value_object<DDSTextureInfoJS> : std::true_type
+{
+};
+template <> struct is_wrapped_class<DDSTextureInfoJS> : std::false_type
+{
+};
+template <> struct is_value_object<KTXTextureInfoJS> : std::true_type
+{
+};
+template <> struct is_wrapped_class<KTXTextureInfoJS> : std::false_type
 {
 };
 } // namespace internal
