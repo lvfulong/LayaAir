@@ -106,6 +106,13 @@ class RenderBindings
             .field("g", &Color::g)
             .field("b", &Color::b)
             .field("a", &Color::a);
+        value_object<Viewport>("conchViewport")
+            .field("x", &Viewport::x)
+            .field("y", &Viewport::y)
+            .field("width", &Viewport::width)
+            .field("height", &Viewport::height)
+            .field("minDepth", &Viewport::minDepth)
+            .field("maxDepth", &Viewport::maxDepth);
         value_object<Plane>("conchPlane").field("_normal", &Plane::normal).field("_distance", &Plane::distance);
         value_object<BoundFrustum>("conchBoundFrustum")
             .field("_matrix", &BoundFrustum::_matrix)
@@ -331,6 +338,8 @@ class RenderBindings
             // class_binding.function("propertyIDToName", &GLESEngine::propertyIDToName);
             class_binding.function("clearStatisticsInfo", &GLESEngine::clearStatisticsInfo);
             class_binding.function("getStatisticsInfo", &GLESEngine::getStatisticsInfo);
+            class_binding.function("viewport", &GLESEngine::viewport);
+            class_binding.function("scissor", &GLESEngine::scissor);
             context.class_("conchGLESEngine", class_binding);
         }
         {
@@ -790,6 +799,12 @@ template <> struct is_value_object<KTXTextureInfoJS> : std::true_type
 {
 };
 template <> struct is_wrapped_class<KTXTextureInfoJS> : std::false_type
+{
+};
+template <> struct is_value_object<Viewport> : std::true_type
+{
+};
+template <> struct is_wrapped_class<Viewport> : std::false_type
 {
 };
 } // namespace internal

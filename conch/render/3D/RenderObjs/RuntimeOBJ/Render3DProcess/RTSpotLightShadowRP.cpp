@@ -34,6 +34,7 @@ void RTSpotLightShadowRP::update(RTRenderContext3D* context)
 
 void RTSpotLightShadowRP::render(RTRenderContext3D* context, std::vector<RTBaseRenderNode*>& list, uint32_t count)
 {
+    GLESShaderData* originCameraData = context->cameraData;
     GLESShaderData* shaderValues = context->sceneData;
     context->pipelineMode = "ShadowCaster";
     context->setRenderTarget(destTarget);
@@ -45,8 +46,7 @@ void RTSpotLightShadowRP::render(RTRenderContext3D* context, std::vector<RTBaseR
     // Culling
     GLESCullUtil::cullingSpotShadow(shadowSpotData.cameraCullInfo, list, count, this->_renderQueue, context);
     context->cameraData = shadowSpotData.cameraShaderValue;
-    // TODOCamera::_updateMark++;
-    // TODOcontext->cameraUpdateMask = Camera::_updateMark;
+    context->_cameraUpdateMask++;
 
     //if (_renderQueue._elements.getLength() > 0) {
         Viewport _tempViewport(shadowSpotData.offsetX, shadowSpotData.offsetY, shadowSpotData.resolution, shadowSpotData.resolution);
@@ -62,6 +62,9 @@ void RTSpotLightShadowRP::render(RTRenderContext3D* context, std::vector<RTBaseR
     _renderQueue.renderQueue(context);
     // TODOthis->_applyCasterPassCommandBuffer(context);
     this->_applyRenderData(context->sceneData, context->cameraData);
+
+    context->cameraData = originCameraData;
+    context->_cameraUpdateMask++;
 }
 
 void RTSpotLightShadowRP::_getShadowBias(Real shadowResolution, Vector4& out)

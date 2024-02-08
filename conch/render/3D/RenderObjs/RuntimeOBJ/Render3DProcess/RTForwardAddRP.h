@@ -19,13 +19,13 @@ namespace laya {
 		void setForwardAddClusterRP(RTForwardAddClusterRP* value) { renderpass = value; }
 		void set_afterEverything(std::vector<uint32_t> value);
 	public:
-		bool shadowCastPass;
+		bool shadowCastPass = false;
 		//directLightPass
 		RTDirectLightShadowRP* directLightShadowPass;
-		bool enableDirectLightShadow;
+		bool enableDirectLightShadow = false;
 		//spotLightPass
 		RTSpotLightShadowRP* spotLightShadowPass;
-		bool enableSpotLightShadowPass;
+		bool enableSpotLightShadowPass = false;
 		RTForwardAddClusterRP* renderpass;
 		// TODO
 		//PostProcessPass postprecessPass;

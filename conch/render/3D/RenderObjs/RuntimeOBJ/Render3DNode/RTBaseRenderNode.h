@@ -72,7 +72,7 @@ class RTBaseRenderNode
     std::vector<std::string> commonUniformMap;
     struct LightmapData
     {
-        uint32_t lightmapIndex = 0;
+        int32_t lightmapIndex = -1;
         Vector4 lightmapScaleOffset = 0;
         uint32_t lightmapDirtyFlag = 0;
     } lightmapdata;
@@ -135,8 +135,8 @@ public:
     void setBaseGeometryBounds(JSBounds* bounds);
     void setShaderData(GLESShaderData* data);
 
-    uint32_t getLightmapIndex() { return lightmapdata.lightmapIndex; }
-    void setLightmapIndex(uint32_t value) { lightmapdata.lightmapIndex = value; }
+    int32_t getLightmapIndex() { return lightmapdata.lightmapIndex; }
+    void setLightmapIndex(int32_t value) { lightmapdata.lightmapIndex = value; }
 
     uint32_t getProbeReflectionUpdateMark() { return probflection.probeReflectionUpdateMark; }
     void setProbeReflectionUpdateMark(uint32_t value) { probflection.probeReflectionUpdateMark = value; }
