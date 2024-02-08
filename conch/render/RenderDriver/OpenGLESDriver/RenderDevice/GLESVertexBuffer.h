@@ -33,7 +33,7 @@ class GLESVertexBuffer // : public VertexBuffer
     void unbind();
     void orphanStorage();
 
-    void setVertexDeclaration(const std::map<int32_t, VertexStateContext> &declarations)
+    void setVertexDeclaration(const std::unordered_map<int32_t, VertexStateContext> &declarations)
     {
         this->_shaderValues = declarations;
     }
@@ -41,7 +41,7 @@ class GLESVertexBuffer // : public VertexBuffer
   public:
     GLBuffer *_glBuffer;
     bool _instanceBuffer = false;
-    std::map<int32_t, VertexStateContext> _shaderValues; // declarations;
+    std::unordered_map<int32_t, VertexStateContext> _shaderValues; // declarations;
 };
 } // namespace laya
 #endif //__GLESVertexBuffer_H__

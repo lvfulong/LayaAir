@@ -165,10 +165,10 @@ class RenderBindings
             // class_binding.function("initVideoTextureData", &GLTextureContext::initVideoTextureData);
             // class_binding.function("updateVideoTexture", &GLTextureContext::updateVideoTexture);
             // setTextureSubImageData todo
-            /*
+          
             class_binding.function("setTextureDDSData", &GLTextureContext::setTextureDDSData);
             class_binding.function("setTextureKTXData", &GLTextureContext::setTextureKTXData);
-            class_binding.function("setCubeDDSData", &GLTextureContext::setCubeDDSData);
+              /*class_binding.function("setCubeDDSData", &GLTextureContext::setCubeDDSData);
             class_binding.function("setCubeKTXData", &GLTextureContext::setCubeKTXData);
             class_binding.function("readRenderTargetPixelData", &GLTextureContext::readRenderTargetPixelData);
             class_binding.function("getRenderTextureData", &GLTextureContext::getRenderTextureData);
@@ -264,6 +264,7 @@ class RenderBindings
             class_binding.function("propertyNameToID", &GLESEngine::propertyNameToID);
             class_binding.function("propertyIDToName", &GLESEngine::propertyIDToName);
             class_binding.function("getDefineByName", &GLESEngine::getDefineByName);
+            class_binding.function("addTexGammaDefine", &GLESEngine::addTexGammaDefine);
             // class_binding.function("propertyIDToName", &GLESEngine::propertyIDToName);
             class_binding.function("clearStatisticsInfo", &GLESEngine::clearStatisticsInfo);
             class_binding.function("getStatisticsInfo", &GLESEngine::getStatisticsInfo);
@@ -637,8 +638,10 @@ class RenderBindings
             class_binding.function("setVector", &GLESShaderData::setVector);
             class_binding.function("getVector", &GLESShaderData::getVector);
             class_binding.function("setColor", &GLESShaderData::setColor);
+            class_binding.function("getColor", &GLESShaderData::getColor);
             class_binding.function("setMatrix4x4", &GLESShaderData::setMatrix4x4);
             class_binding.function("setMatrix3x3", &GLESShaderData::setMatrix3x3);
+            class_binding.function("_setInternalTexture", &GLESShaderData::setInternalTexture);
             // class_binding.function("setBuffer", &GLESShaderData::setBufferJS);
             class_binding.function("cloneTo", &GLESShaderData::cloneTo);
             class_binding.function("destroy", &GLESShaderData::destroy);

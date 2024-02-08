@@ -57,7 +57,7 @@ class GLVertexState : public GLObject
     ANGLEInstancedArraysExt *m_angleInstancedArrays;
     OESVertexArrayObjectExt *m_vaoExt;
     GLenum m_vao;
-    std::vector<std::map<int32_t, VertexStateContext>> _vertexDeclaration;
+    std::vector<std::unordered_map<int32_t, VertexStateContext>> _vertexDeclaration;
     // IndexBuffer* m_bindedIndexBuffer;
     //_vertexBuffers: VertexBuffer[];
     GLESIndexBuffer *_bindedIndexBuffer = nullptr;

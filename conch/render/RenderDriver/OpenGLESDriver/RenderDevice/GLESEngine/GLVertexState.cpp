@@ -60,10 +60,10 @@ void GLVertexState::applyVertexBuffer(const std::vector<GLESVertexBuffer *> &ver
         for (int i = 0, size = vertexBuffers.size(); i < size; i++)
         {
             GLESVertexBuffer *element = vertexBuffers[i];
-            std::map<int32_t, VertexStateContext> &verDec = element->_shaderValues;
+            std::unordered_map<int32_t, VertexStateContext> &verDec = element->_shaderValues;
             _vertexDeclaration[i] = verDec;
             element->bind();
-            for (std::map<int32_t, VertexStateContext>::iterator it = verDec.begin(); it != verDec.end(); it++)
+            for (std::unordered_map<int32_t, VertexStateContext>::iterator it = verDec.begin(); it != verDec.end(); it++)
             {
                 GLuint loc = it->first;
                 VertexStateContext &attribute = it->second;
@@ -85,8 +85,8 @@ void GLVertexState::clearVAO()
 {
     for (int i = 0, n = this->_vertexDeclaration.size(); i < n; i++)
     {
-        std::map<int32_t, VertexStateContext> &verDec = this->_vertexDeclaration[i];
-        for (std::map<int32_t, VertexStateContext>::iterator it = verDec.begin(); it != verDec.end(); it++)
+        std::unordered_map<int32_t, VertexStateContext> &verDec = this->_vertexDeclaration[i];
+        for (std::unordered_map<int32_t, VertexStateContext>::iterator it = verDec.begin(); it != verDec.end(); it++)
         {
             glDisableVertexAttribArray(it->first);
         }

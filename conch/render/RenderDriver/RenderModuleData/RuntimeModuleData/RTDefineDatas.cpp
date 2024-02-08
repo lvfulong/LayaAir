@@ -48,11 +48,12 @@ void RTDefineDatas::add(RTShaderDefine define)
 
 void RTDefineDatas::remove(RTShaderDefine define)
 {
-    uint32_t index = define._index;
+    int32_t index = define._index;
     // var mask : Array<number> = this._mask;
-    uint32_t endIndex = _length - 1;
+    int32_t endIndex = _length - 1;
     if (index > endIndex) // ������Length,���⾭������
         return;
+    printf("cnm %d %d", index, endIndex);
     uint32_t newValue = _mask[index] & ~define._value;
     if (index == endIndex && newValue == 0)
         _length--;
@@ -102,8 +103,8 @@ void RTDefineDatas::removeDefineDatas(RTDefineDatas *defines)
 {
     // var removeMask : Array<number> = define._mask;
     // var mask : Array<number> = this._mask;
-    uint32_t endIndex = _length - 1;
-    uint32_t i = std::min(defines->_length, endIndex);
+    int32_t endIndex = _length - 1;
+    int32_t i = std::min(defines->_length, endIndex);
     for (; i >= 0; i--)
     {
         uint32_t newValue = _mask[i] & ~defines->_mask[i];

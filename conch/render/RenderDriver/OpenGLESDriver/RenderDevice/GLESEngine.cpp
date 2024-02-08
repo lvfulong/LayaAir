@@ -417,6 +417,7 @@ RTShaderDefine GLESEngine::getDefineByName(const char *name)
         }
         maskMap[index][value] = name;
         GLESEngine::_defineCounter++;
+        return define;
     }
     return it->second;
 }

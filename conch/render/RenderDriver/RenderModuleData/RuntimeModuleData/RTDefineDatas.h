@@ -23,7 +23,7 @@ class RTDefineDatas
 
   public:
     std::vector<uint32_t> _mask{};
-    uint32_t _length = 0;
+    int32_t _length = 0;
 };
 } // namespace laya
 
