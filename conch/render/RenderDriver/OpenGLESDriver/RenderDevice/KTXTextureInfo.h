@@ -20,9 +20,21 @@ struct KTXTextureInfo
     int mipmapCount;
     int bytesOfKeyValueData;
     int headerOffset;
-
-    //static KTXTextureInfo parseJS(JSValueAsParam jsKTXInfo);
 };
+struct KTXTextureInfoJS
+{
+    JsValue sourceAB;
+    bool compress;
+    bool sRGB;
+    TextureDimension dimension;
+    int width;
+    int height;
+    TextureFormat format;
+    int mipmapCount;
+    int bytesOfKeyValueData;
+    int headerOffset;
+};
+
 struct DDSTextureInfo
 {
     char *source;
@@ -30,12 +42,25 @@ struct DDSTextureInfo
     int dataOffset;
     int blockBytes;
     int mipmapCount;
-    int bbp;
+    int bpp;
+    bool isCube;
+    int width;
+    int height;
     TextureFormat format;
-
-    //static DDSTextureInfo parseJS(JSValueAsParam jsDDSInfo);
 };
-
+struct DDSTextureInfoJS
+{
+    JsValue sourceAB;
+    bool compressed;
+    int dataOffset;
+    int blockBytes;
+    int mipmapCount;
+    int bpp;
+    bool isCube;
+    int width;
+    int height;
+    TextureFormat format;
+};
 struct FormatParam
 {
     int channels;

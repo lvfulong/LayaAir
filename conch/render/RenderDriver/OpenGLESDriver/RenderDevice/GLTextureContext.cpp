@@ -849,7 +849,7 @@ void GLTextureContext::setTextureDDSData(GLESInternalTex *texture, const DDSText
 
     char *source = ddsInfo.source;
     int dataOffsett = ddsInfo.dataOffset;
-    int bpp = ddsInfo.bbp;
+    int bpp = ddsInfo.bpp;
     int blocksBytes = ddsInfo.blockBytes;
     int mipmapCount = ddsInfo.mipmapCount;
 
@@ -1184,7 +1184,7 @@ void GLTextureContext::setCubeDDSData(GLESInternalTex *texture, const DDSTexture
 
     char *source = ddsInfo.source;
     int dataOffset = ddsInfo.dataOffset;
-    int bpp = ddsInfo.bbp;
+    int bpp = ddsInfo.bpp;
     int blockBytes = ddsInfo.blockBytes;
     int mipmapCount = texture->m_mipmapCount;
 

@@ -32,7 +32,10 @@ CanvasRenderingContext2DWin::CanvasRenderingContext2DWin(int width, int height)
     m_bitmapData.m_nWidth = width;
     m_bitmapData.m_nHeight = height;
     m_bitmapData.m_pImageData = new char[width * height * 4];
-
+    Gdiplus::Matrix matrix;
+    //matrix.Translate(0.0f, height);//CGContextTranslateCTM(m_context, 0.0f, height);
+    matrix.Scale(1.0f, -1.0f);// CGContextScaleCTM(m_context, 1.0f, -1.0f);
+    m_gdiGraphics->SetTransform(&matrix);
     setDefault();
 }
 CanvasRenderingContext2DWin::~CanvasRenderingContext2DWin()
@@ -127,6 +130,8 @@ void CanvasRenderingContext2DWin::clearRect(double x, double y, double width, do
     {
         return;
     }
+    Gdiplus::SolidBrush brush(Gdiplus::Color(1, 1, 0, 0));
+    m_gdiGraphics->FillRectangle(&brush, (Gdiplus::REAL)x, (Gdiplus::REAL)y, (Gdiplus::REAL)width, (Gdiplus::REAL)height);
 }
 void CanvasRenderingContext2DWin::save()
 {
