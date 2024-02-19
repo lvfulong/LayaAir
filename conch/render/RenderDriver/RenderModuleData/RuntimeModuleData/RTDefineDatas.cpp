@@ -53,7 +53,6 @@ void RTDefineDatas::remove(RTShaderDefine define)
     int32_t endIndex = _length - 1;
     if (index > endIndex) // ������Length,���⾭������
         return;
-    printf("cnm %d %d", index, endIndex);
     uint32_t newValue = _mask[index] & ~define._value;
     if (index == endIndex && newValue == 0)
         _length--;

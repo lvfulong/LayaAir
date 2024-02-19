@@ -21,12 +21,12 @@ namespace laya {
 	public:
 		bool shadowCastPass = false;
 		//directLightPass
-		RTDirectLightShadowRP* directLightShadowPass;
+		RTDirectLightShadowRP* directLightShadowPass = nullptr;
 		bool enableDirectLightShadow = false;
 		//spotLightPass
-		RTSpotLightShadowRP* spotLightShadowPass;
+		RTSpotLightShadowRP* spotLightShadowPass = nullptr;
 		bool enableSpotLightShadowPass = false;
-		RTForwardAddClusterRP* renderpass;
+		RTForwardAddClusterRP* renderpass = nullptr;
 		// TODO
 		//PostProcessPass postprecessPass;
 		std::vector<uint32_t> afterEverything;//cmd buffer

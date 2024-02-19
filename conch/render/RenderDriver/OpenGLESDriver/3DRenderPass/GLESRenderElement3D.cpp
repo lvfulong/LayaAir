@@ -90,7 +90,7 @@ void GLESRenderElement3D::_clearShaderInstance()
 
 bool GLESRenderElement3D::_getInvertFront()
 {
-    return (owner == nullptr) ? (owner->transform->_isFrontFaceInvert()) : false;
+    return (owner != nullptr && owner->transform != nullptr) ? (owner->transform->_isFrontFaceInvert()) : false;
 }
 
 void GLESRenderElement3D::_compileShader(RTRenderContext3D *context)
