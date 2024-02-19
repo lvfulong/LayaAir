@@ -47,8 +47,8 @@ class GLESRenderElement3D
     }
     void destroy();
 
-  private:
-    void _addShaderInstance(GLESShaderInstance *shader);
+    void _addShaderInstance(GLESShaderInstance *shader); 
+private:
     void _clearShaderInstance();
     bool _getInvertFront();
     void _compileShader(RTRenderContext3D *context);
@@ -67,7 +67,7 @@ class GLESRenderElement3D
     bool isRender;
 
   protected:
-    RTDefineDatas _compileDefines;
+   
     JCSingletonList<GLESShaderInstance *> _shaderInstances = JCSingletonList<GLESShaderInstance *>(false);
     bool _invertFront;
 };

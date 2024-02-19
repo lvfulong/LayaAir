@@ -31,7 +31,7 @@ void RTBaseRenderNode::_calculateBoundingBox()
 	else
     {
         const Matrix4x4& worldMat = this->transform->getWorldMatrix();
-		this->baseGeometryBounds->_tranform(worldMat, *this->bounds);
+		//todo this->baseGeometryBounds->_tranform(worldMat, *this->bounds);
     }
 }
 void RTBaseRenderNode::setBaseGeometryBounds(JSBounds* bounds)
@@ -87,14 +87,18 @@ void RTBaseRenderNode::_applyLightProb()
 }
 void RTBaseRenderNode::_renderUpdatePre(RTRenderContext3D* context3D)
 {
-    // TODO
+    if (!m_JSFunctionRenderUpdatePre.isEmpty())
+    {
+        m_JSFunctionRenderUpdatePre.call<void>(getCurrentContext().global());
+    }
 }
 bool RTBaseRenderNode::_needRender(BoundFrustum* pBoundFrustum)
 {
-    if (pBoundFrustum)
+    return true;
+    /*//todoif (pBoundFrustum)
 			return pBoundFrustum->intersects(getBounds()->_getBoundBox());
 		else
-			return true;
+			return true;*/
 }
 void RTBaseRenderNode::setRenderUpdatePre(JSValueAsParam function)
 {
@@ -106,7 +110,11 @@ void RTBaseRenderNode::setCalculateBoundingBox(JSValueAsParam function)
 }
 void RTBaseRenderNode::setCommonUniformMap(const std::vector<std::string>& value)
 {
-    // TODO
+    this->commonUniformMap = value;
+}
+void RTBaseRenderNode::setRenderElements(const std::vector<GLESRenderElement3D*>& value)
+{
+    this->renderelements = value;
 }
 void RTBaseRenderNode::destroy()
 {

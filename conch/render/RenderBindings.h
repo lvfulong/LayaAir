@@ -439,6 +439,8 @@ class RenderBindings
         {
             class_<RTShaderPass> class_binding;
             class_binding.constructor<>();
+            class_binding.function("setCompileDefine", &RTShaderPass::setCompileDefine);
+            class_binding.function("setValidDefine", &RTShaderPass::setValidDefine);
             class_binding.function("setCreateShaderInstanceFunction", &RTShaderPass::setCreateShaderInstanceFunction);
             class_binding.function("setCacheShader", &RTShaderPass::setCacheShader);
             // class_binding.function("getCacheShader", &RTShaderPass::getCacheShader);//todo
@@ -451,6 +453,7 @@ class RenderBindings
             class_<GLESRenderElement3D> class_binding;
             class_binding.constructor<>();
             class_binding.function("destroy", &GLESRenderElement3D::destroy);
+            class_binding.function("_addShaderInstance", &GLESRenderElement3D::_addShaderInstance);
             class_binding.function("setTransform", &GLESRenderElement3D::setTransform);
             class_binding.function("setMaterialShaderData", &GLESRenderElement3D::setMaterialShaderData);
             class_binding.function("setRenderShaderData", &GLESRenderElement3D::setRenderShaderData);
@@ -481,6 +484,7 @@ class RenderBindings
                                    &RTBaseRenderNode::setProbeReflectionUpdateMark);
             class_binding.property("_lightmapIndex", &RTBaseRenderNode::getLightmapIndex,
                                    &RTBaseRenderNode::setLightmapIndex);
+            class_binding.function("setRenderElements", &RTBaseRenderNode::setRenderElements);
             class_binding.function("setCommonUniformMap", &RTBaseRenderNode::setCommonUniformMap);
             class_binding.function("setLightmapScaleOffset", &RTBaseRenderNode::setLightmapScaleOffset);
             class_binding.function("setWorldParams", &RTBaseRenderNode::setWorldParams);

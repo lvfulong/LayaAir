@@ -1,9 +1,9 @@
 #include "GLESRenderElement3D.h"
+#include "Bindings/LayaAir/3D/JSTransform.h"
 #include <render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLRenderDrawContext.h>
-#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTShaderPass.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
-#include "Bindings/LayaAir/3D/JSTransform.h"
+#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTShaderPass.h>
 namespace laya
 {
 GLESRenderElement3D::GLESRenderElement3D()
@@ -105,7 +105,7 @@ void GLESRenderElement3D::_compileShader(RTRenderContext3D *context)
         if (pass->pipelineMode != context->pipelineMode)
             continue;
 
-        RTDefineDatas*comDef = &_compileDefines;
+        RTDefineDatas *comDef = pass->_compileDefines;
         if (context->sceneData)
         {
             context->sceneData->_defineDatas->cloneTo(comDef);
@@ -128,12 +128,22 @@ void GLESRenderElement3D::_compileShader(RTRenderContext3D *context)
         }
         comDef->addDefineDatas(materialShaderData->_defineDatas);
 
-        GLESShaderInstance *shader = pass->getCacheShader(comDef);
+        /// var shaderIns = pass.withCompile(comDef) as WebGLShaderInstance;
+
+        // get shaderInstance
+        // create ShaderInstance
+
+        // this._addShaderInstance(shaderIns);
+
+        /*GLESShaderInstance* shader = pass->getCacheShader(comDef);
         if (shader == nullptr)
         {
             pass->createShaderInstance(comDef);
             shader = pass->getCacheShader(comDef);
         }
+        _addShaderInstance(shader);*/
+
+        GLESShaderInstance* shader = pass->callCreateShaderInstanceFunction();
         _addShaderInstance(shader);
     }
 }
@@ -145,5 +155,6 @@ void GLESRenderElement3D::destroy()
 {
     // todo
 }
+
 } // namespace laya
 // namespace laya

@@ -17,17 +17,25 @@ class RTShaderPass
     ~RTShaderPass();
     void setCacheShader(RTDefineDatas *compileDefine, GLESShaderInstance *shader);
     GLESShaderInstance *getCacheShader(RTDefineDatas *compileDefine);
-    void callCreateShaderInstanceFunction();
+    GLESShaderInstance* callCreateShaderInstanceFunction();
     void setRenderState(RenderState *value)
     {
         renderState = value;
     }
+    void setValidDefine(RTDefineDatas *value)
+    {
+        validDefine = value;
+    }
     void destroy();
+    void setCompileDefine(RTDefineDatas *value)
+    {
+        _compileDefines = value;
+    }
 
   public:
     // binds
-    void setCreateShaderInstanceFunction(JSValueAsParam value);
-    void createShaderInstance(RTDefineDatas *compileDefine);
+      void setCreateShaderInstanceFunction(JSValueAsParam value);
+    // void createShaderInstance(RTDefineDatas *compileDefine);
 
   private:
     void _resizeCacheShaderMap(void *cacheMap, uint32_t hierarchy, uint32_t resizeLength);
@@ -35,10 +43,10 @@ class RTShaderPass
   public:
     std::string pipelineMode;
     bool statefirst = false;
-    RTDefineDatas validDefine;
+    RTDefineDatas *validDefine = nullptr;
     RenderState *renderState = nullptr;
     std::vector<std::string> nodeCommonMap;
-
+    RTDefineDatas* _compileDefines = nullptr;
   private:
     std::unordered_map<uint32_t, void *> _cacheSharders{};
     uint32_t _cacheShaderHierarchy = 1;

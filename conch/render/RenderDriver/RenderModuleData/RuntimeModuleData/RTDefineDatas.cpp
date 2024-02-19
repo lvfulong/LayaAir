@@ -14,9 +14,9 @@ RTDefineDatas::~RTDefineDatas()
 
 void RTDefineDatas::_intersectionDefineDatas(RTDefineDatas *define)
 {
-    for (uint32_t i = _length - 1; i >= 0; i--)
+    for (int32_t i = _length - 1; i >= 0; i--)
     {
-        uint32_t value = _mask[i] & define->_mask[i];
+        int32_t value = _mask[i] & define->_mask[i];
         if (value == 0 && i == _length - 1)
             _length--;
         else

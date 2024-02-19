@@ -39,7 +39,7 @@ void RTShaderPass::setCacheShader(RTDefineDatas* compileDefine, GLESShaderInstan
 
 GLESShaderInstance *RTShaderPass::getCacheShader(RTDefineDatas*compileDefine)
 {
-    compileDefine->_intersectionDefineDatas(&validDefine); // ȥ��û���õ��ĺ�Ա�����Ӱ��
+    compileDefine->_intersectionDefineDatas(validDefine); // ȥ��û���õ��ĺ�Ա�����Ӱ��
     void *cacheShaders = &_cacheSharders;
     uint32_t maskLength = compileDefine->_length;
     if (maskLength > _cacheShaderHierarchy)
@@ -116,19 +116,16 @@ void RTShaderPass::_resizeCacheShaderMap(void *cacheMap, uint32_t hierarchy, uin
     }
 }
 
-void RTShaderPass::createShaderInstance(RTDefineDatas*compileDefine)
-{
-    // ͬ��compiDefine��ȫ�ֵĺ� ���ýű��㴦��shader string
-    // ���ð󶨺õ�����shaderInstance�ķ���
-    // TODO
-}
+//void RTShaderPass::createShaderInstance(RTDefineDatas*compileDefine)
+//{
+//}
 void RTShaderPass::setCreateShaderInstanceFunction(JSValueAsParam value)
 {
     m_createShaderInstanceFunctionJS.reset(value);
 }
-void RTShaderPass::callCreateShaderInstanceFunction()
+GLESShaderInstance* RTShaderPass::callCreateShaderInstanceFunction()
 {
-    m_createShaderInstanceFunctionJS.call<void>(getCurrentContext().global());
+    return m_createShaderInstanceFunctionJS.call<GLESShaderInstance*>(getCurrentContext().global());
 }
 void RTShaderPass::destroy()
 {

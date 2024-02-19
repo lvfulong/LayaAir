@@ -36,6 +36,8 @@ class RTBaseRenderNode
     
     void _renderUpdatePre(RTRenderContext3D* context3D);
     bool _needRender(BoundFrustum* pBoundFrustum);
+    void setRenderElements(const std::vector<GLESRenderElement3D*>& value);
+
   public:
     void _calculateBoundingBox();
     // 排版数据 用于renderqueuelist
