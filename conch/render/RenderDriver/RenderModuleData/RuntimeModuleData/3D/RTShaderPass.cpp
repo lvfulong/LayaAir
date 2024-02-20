@@ -10,10 +10,9 @@ RTShaderPass::~RTShaderPass()
 {
     // TODO
 }
-void RTShaderPass::setCacheShaderJS(RTDefineDatas *compileDefine, JSValueAsParam jsShaderInstance)
+void RTShaderPass::setCacheShaderJS(RTDefineDatas *compileDefine, GLESShaderInstance* shader, JSValueAsParam jsShaderInstanceWrapper)
 {
-    GLESShaderInstance *shader = Converter<GLESShaderInstance *>::ToCpp(jsShaderInstance);
-    setCacheShader(compileDefine, shader, Persistent(jsShaderInstance));
+    setCacheShader(compileDefine, shader, Persistent(jsShaderInstanceWrapper));
 }
 JsValue RTShaderPass::getCacheShaderJS(RTDefineDatas *compileDefine)
 {

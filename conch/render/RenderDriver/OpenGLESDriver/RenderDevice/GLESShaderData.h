@@ -63,10 +63,10 @@ class GLESShaderData //: public ResourceBase<ShaderData>
 
     void destroy();
 
-    RTDefineDatas*getOwnerDefineData();
+    RTDefineDatas *getOwnerDefineData();
     JsValue getOwnerDefineDataJS();
     void addDefine(RTShaderDefine define);
-    void addDefines(RTDefineDatas* defines);
+    void addDefines(RTDefineDatas *defines);
     void removeDefine(RTShaderDefine define);
     void hasDefine(RTShaderDefine define);
     void clearDefine();
@@ -77,20 +77,20 @@ class GLESShaderData //: public ResourceBase<ShaderData>
     int32_t getInt(int32_t index);
     void setNumber(int32_t index, float value);
     float getNumber(int32_t index);
-    void setVector2(int32_t index, const Vector2 value);
-    Vector2 getVector2(int32_t index);
-    void setVector(int32_t index, const Vector4 value);
-    Vector4 getVector(int32_t index);
-    void setVector3(int32_t index, const Vector3 value);
-    Vector3 getVector3(int32_t index);
-    void setColor(int32_t index, const Color value);
-    Color getColor(int32_t index);
-    void setMatrix4x4(int32_t index, const Matrix4x4 value);
-    Matrix4x4 getMatrix4x4(int32_t index);
-    void setMatrix3x3(int32_t index, const Matrix3x3 value);
-    Matrix3x3 getMatrix3x3(int32_t index);
+    void setVector2(int32_t index, const Vector2 &value);
+    const Vector2 &getVector2(int32_t index);
+    void setVector(int32_t index, const Vector4 &value);
+    const Vector4 &getVector(int32_t index);
+    void setVector3(int32_t index, const Vector3 &value);
+    const Vector3 &getVector3(int32_t index);
+    void setColor(int32_t index, const Color &value);
+    const Color &getColor(int32_t index);
+    void setMatrix4x4(int32_t index, const Matrix4x4 &value);
+    const Matrix4x4 &getMatrix4x4(int32_t index);
+    void setMatrix3x3(int32_t index, const Matrix3x3 &value);
+    const Matrix3x3 &getMatrix3x3(int32_t index);
     void setBuffer(int32_t index, uint8_t *data, uint32_t lengthInBytes);
-    BufferDataInfo getBuffer(int32_t index);
+    const BufferDataInfo &getBuffer(int32_t index);
     void setInternalTexture(int32_t index, GLESInternalTex *value);
     GLESInternalTex *getInternalTexture(int32_t index);
 
@@ -102,7 +102,7 @@ class GLESShaderData //: public ResourceBase<ShaderData>
 
   public:
     std::unordered_map<uint32_t, std::any> m_data;
-    RTDefineDatas*_defineDatas; // todo
+    RTDefineDatas *_defineDatas; // todo
     Persistent m_pJSDefineDatas;
 };
 } // namespace laya

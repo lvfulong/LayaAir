@@ -455,7 +455,7 @@ int GLESEngine::uploadUniforms(GLShaderInstance *shader, CommandEncoder *command
             std::unordered_map<uint32_t, std::any>::iterator it = data.find(one->dataOffset);
             if (it != data.end())
             {
-                shaderCall += one->fun(one, &it->second);
+                shaderCall += one->fun(one, it->second);
             }
         }
     }

@@ -27,7 +27,7 @@ void GLESShaderData::destroy()
     }
 }
 
-RTDefineDatas*GLESShaderData::getOwnerDefineData()
+RTDefineDatas *GLESShaderData::getOwnerDefineData()
 {
     return _defineDatas;
 }
@@ -36,7 +36,7 @@ JsValue GLESShaderData::getOwnerDefineDataJS()
 {
     if (m_pJSDefineDatas.isEmpty())
     {
-        m_pJSDefineDatas.reset(Converter<RTDefineDatas*>::ToJs(_defineDatas, false));
+        m_pJSDefineDatas.reset(Converter<RTDefineDatas *>::ToJs(_defineDatas, false));
         return m_pJSDefineDatas.toLocal().handle_;
     }
     else
@@ -50,7 +50,7 @@ void GLESShaderData::addDefine(RTShaderDefine define)
     _defineDatas->add(define);
 }
 
-void GLESShaderData::addDefines(RTDefineDatas* defines)
+void GLESShaderData::addDefines(RTDefineDatas *defines)
 {
     _defineDatas->addDefineDatas(defines);
 }
@@ -100,37 +100,37 @@ float GLESShaderData::getNumber(int32_t index)
     return std::any_cast<float>(m_data[index]);
 }
 
-void GLESShaderData::setVector2(int32_t index, const Vector2 value)
+void GLESShaderData::setVector2(int32_t index, const Vector2 &value)
 {
     m_data[index] = value;
 }
 
-Vector2 GLESShaderData::getVector2(int32_t index)
+const Vector2 &GLESShaderData::getVector2(int32_t index)
 {
-    return std::any_cast<Vector2>(m_data[index]);
+    return std::any_cast<const Vector2 &>(m_data[index]);
 }
 
-void GLESShaderData::setVector(int32_t index, const Vector4 value)
-{
-    m_data[index] = value;
-}
-
-Vector4 GLESShaderData::getVector(int32_t index)
-{
-    return std::any_cast<Vector4>(m_data[index]);
-}
-
-void GLESShaderData::setVector3(int32_t index, const Vector3 value)
+void GLESShaderData::setVector(int32_t index, const Vector4 &value)
 {
     m_data[index] = value;
 }
 
-Vector3 GLESShaderData::getVector3(int32_t index)
+const Vector4 &GLESShaderData::getVector(int32_t index)
 {
-    return std::any_cast<Vector3>(m_data[index]);
+    return std::any_cast<const Vector4 &>(m_data[index]);
 }
 
-void GLESShaderData::setColor(int32_t index, const Color value)
+void GLESShaderData::setVector3(int32_t index, const Vector3 &value)
+{
+    m_data[index] = value;
+}
+
+const Vector3 &GLESShaderData::getVector3(int32_t index)
+{
+    return std::any_cast<const Vector3 &>(m_data[index]);
+}
+
+void GLESShaderData::setColor(int32_t index, const Color &value)
 {
     if (&value == nullptr)
     {
@@ -157,29 +157,29 @@ void GLESShaderData::setColor(int32_t index, const Color value)
     }
 }
 
-Color GLESShaderData::getColor(int32_t index)
+const Color &GLESShaderData::getColor(int32_t index)
 {
     return m_gammaColorMap[index];
 }
 
-void GLESShaderData::setMatrix3x3(int32_t index, const Matrix3x3 value)
+void GLESShaderData::setMatrix3x3(int32_t index, const Matrix3x3 &value)
 {
     m_data[index] = value;
 }
 
-Matrix3x3 GLESShaderData::getMatrix3x3(int32_t index)
+const Matrix3x3 &GLESShaderData::getMatrix3x3(int32_t index)
 {
-    return std::any_cast<Matrix3x3>(m_data[index]);
+    return std::any_cast<const Matrix3x3 &>(m_data[index]);
 }
 
-void GLESShaderData::setMatrix4x4(int32_t index, const Matrix4x4 value)
+void GLESShaderData::setMatrix4x4(int32_t index, const Matrix4x4 &value)
 {
     m_data[index] = value;
 }
 
-Matrix4x4 GLESShaderData::getMatrix4x4(int32_t index)
+const Matrix4x4 &GLESShaderData::getMatrix4x4(int32_t index)
 {
-    return std::any_cast<Matrix4x4>(m_data[index]);
+    return std::any_cast<const Matrix4x4 &>(m_data[index]);
 }
 
 void GLESShaderData::setBuffer(int32_t index, uint8_t *data, uint32_t lengthInBytes)
@@ -190,9 +190,9 @@ void GLESShaderData::setBuffer(int32_t index, uint8_t *data, uint32_t lengthInBy
     m_data[index] = info;
 }
 
-BufferDataInfo GLESShaderData::getBuffer(int32_t index)
+const BufferDataInfo &GLESShaderData::getBuffer(int32_t index)
 {
-    return std::any_cast<BufferDataInfo>(m_data[index]);
+    return std::any_cast<const BufferDataInfo &>(m_data[index]);
 }
 
 void GLESShaderData::setInternalTexture(int32_t index, GLESInternalTex *value)
@@ -222,4 +222,3 @@ void GLESShaderData::cloneTo(GLESShaderData *destObject)
 {
 }
 } // namespace laya
-//------------------------------------------------------------------------------

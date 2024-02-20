@@ -427,10 +427,8 @@ int GLShaderInstance::_uniformMatrix3fv(ShaderVariable *one, const std::any &dat
 int GLShaderInstance::_uniformMatrix4f(ShaderVariable *one, const std::any &dataInfo)
 {
     //linux compile error assert(dataInfo.type == std::typeid(ShaderData::BufferDataInfo));
-    laya::BufferDataInfo info = std::any_cast<laya::BufferDataInfo>(dataInfo);
-    assert(info.m_lengthInBytes >= 16 * sizeof(float));
-    GLfloat *pData = (GLfloat *)info.m_data;
-    glUniformMatrix4fv(one->location, 1, false, pData);
+    const laya::Matrix4x4& info = std::any_cast<const laya::Matrix4x4&>(dataInfo);
+    glUniformMatrix4fv(one->location, 1, false, info.elements);
     return 1;
 }
 int GLShaderInstance::_uniformMatrix4fv(ShaderVariable *one, const std::any &dataInfo)
@@ -516,9 +514,7 @@ int _uniform_vec4vi(one: any, value : any)
 
 int GLShaderInstance::_uniform_sampler2D(ShaderVariable *one, const std::any &dataInfo)
 {
-    //linux compile error assert(dataInfo.type == std::typeid(uint32_t));
-    uint32_t id = std::any_cast<uint32_t>(dataInfo);
-    GLESInternalTex *texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(id);
+    GLESInternalTex* texture = std::any_cast<GLESInternalTex*>(dataInfo);
     if (texture != nullptr)
     {
         _bindTexture(one->textureID, GL_TEXTURE_2D, texture);

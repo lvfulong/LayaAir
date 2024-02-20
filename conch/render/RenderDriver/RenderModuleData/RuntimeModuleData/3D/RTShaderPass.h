@@ -21,7 +21,7 @@ class RTShaderPass
     RTShaderPass();
     ~RTShaderPass();
     void setCacheShader(RTDefineDatas *compileDefine, GLESShaderInstance *shader, Persistent jsShaderInstance);
-    void setCacheShaderJS(RTDefineDatas *compileDefine, JSValueAsParam jsShaderInstance);
+    void setCacheShaderJS(RTDefineDatas* compileDefine, GLESShaderInstance* shader, JSValueAsParam jsShaderInstanceWrapper);
     RTShaderPass::CacheShaderItem *getCacheShader(RTDefineDatas *compileDefine);
     JsValue getCacheShaderJS(RTDefineDatas *compileDefine);
     GLESShaderInstance *callCreateShaderInstanceFunction();

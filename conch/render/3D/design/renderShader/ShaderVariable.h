@@ -19,7 +19,7 @@ namespace laya
 		int count;
 		//caller:any;
 		int byteSize = 0;
-		std::function<int(ShaderVariable*, std::any*)> fun;
+		std::function<int(ShaderVariable*, const std::any&)> fun;
 		std::vector<uint8_t> uploadedValue;
 		ShaderVariable()
 		{
