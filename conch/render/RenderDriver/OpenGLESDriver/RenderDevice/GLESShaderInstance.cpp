@@ -1,12 +1,12 @@
 #include "GLESShaderInstance.h"
 #include "JCConch.h"
 #include "JCConchRender.h"
-#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESCommandUniformMap.h"
 #include "render/3D/temp/RenderState.h"
-#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLShaderInstance.h"
 #include "render/LayaGL.h"
-#include <render/Property.h>
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESCommandUniformMap.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLShaderInstance.h"
 #include <render/3D/temp/RenderStateContext.h>
+#include <render/Property.h>
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTShaderPass.h>
 #include <utils/Log.h>
 namespace laya
@@ -54,8 +54,8 @@ void GLESShaderInstance::_create3D()
 {
     GLESCommandUniformMap *sceneParams = GLESCommandUniformMap::createGlobalUniformMap("Scene3D");
     // GLESCommandUniformMap* spriteParms = GLESCommandUniformMap::createGlobalUniformMap("Sprite3D");
-    GLESCommandUniformMap*cameraParams = GLESCommandUniformMap::createGlobalUniformMap("BaseCamera");
-    GLESCommandUniformMap*customParams = GLESCommandUniformMap::createGlobalUniformMap("Custom");
+    GLESCommandUniformMap *cameraParams = GLESCommandUniformMap::createGlobalUniformMap("BaseCamera");
+    GLESCommandUniformMap *customParams = GLESCommandUniformMap::createGlobalUniformMap("Custom");
 
     std::vector<ShaderVariable *> &data = m_GLShaderInstance->getUniformMap();
     for (int i = 0, n = data.size(); i < n; i++)
@@ -86,7 +86,7 @@ void GLESShaderInstance::_create3D()
 void GLESShaderInstance::_create2D()
 {
 
-//TODO
+    // TODO
 }
 void GLESShaderInstance::_disposeResource()
 {

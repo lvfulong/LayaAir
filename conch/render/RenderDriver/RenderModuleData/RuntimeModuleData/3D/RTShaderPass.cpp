@@ -10,8 +10,24 @@ RTShaderPass::~RTShaderPass()
 {
     // TODO
 }
-
-void RTShaderPass::setCacheShader(RTDefineDatas* compileDefine, GLESShaderInstance *shader)
+void RTShaderPass::setCacheShaderJS(RTDefineDatas *compileDefine, JSValueAsParam jsShaderInstance)
+{
+    GLESShaderInstance *shader = Converter<GLESShaderInstance *>::ToCpp(jsShaderInstance);
+    setCacheShader(compileDefine, shader, Persistent(jsShaderInstance));
+}
+JsValue RTShaderPass::getCacheShaderJS(RTDefineDatas *compileDefine)
+{
+    RTShaderPass::CacheShaderItem *item = getCacheShader(compileDefine);
+    if (item != nullptr)
+    {
+        return item->_jsShaderInstance.toLocal().handle_;
+    }
+    else
+    {
+        return JSP_TO_JS_NULL;
+    }
+}
+void RTShaderPass::setCacheShader(RTDefineDatas *compileDefine, GLESShaderInstance *shader, Persistent jsShaderInstance)
 {
     void *cacheShaders = &_cacheSharders;
     // var mask : Array<number> = compileDefine._mask;
@@ -31,13 +47,14 @@ void RTShaderPass::setCacheShader(RTDefineDatas* compileDefine, GLESShaderInstan
         cacheShaders = maped->at(subMask);
     }
     uint32_t cacheKey = endIndex < maxEndIndex ? 0 : compileDefine->_mask[maxEndIndex];
-    std::unordered_map<uint32_t, GLESShaderInstance *> *shaderinstanceMap =
-        (std::unordered_map<uint32_t, GLESShaderInstance *> *)cacheShaders;
-    std::pair<uint32_t, GLESShaderInstance *> part(cacheKey, shader);
+    std::unordered_map<uint32_t, RTShaderPass::CacheShaderItem> *shaderinstanceMap =
+        (std::unordered_map<uint32_t, RTShaderPass::CacheShaderItem> *)cacheShaders;
+    std::pair<uint32_t, RTShaderPass::CacheShaderItem> part(cacheKey,
+                                                            RTShaderPass::CacheShaderItem{shader, jsShaderInstance});
     shaderinstanceMap->insert(part);
 }
 
-GLESShaderInstance *RTShaderPass::getCacheShader(RTDefineDatas*compileDefine)
+RTShaderPass::CacheShaderItem *RTShaderPass::getCacheShader(RTDefineDatas *compileDefine)
 {
     compileDefine->_intersectionDefineDatas(validDefine); // ȥ��û���õ��ĺ�Ա�����Ӱ��
     void *cacheShaders = &_cacheSharders;
@@ -65,12 +82,12 @@ GLESShaderInstance *RTShaderPass::getCacheShader(RTDefineDatas*compileDefine)
     }
 
     uint32_t cacheKey = endIndex < maxEndIndex ? 0 : compileDefine->_mask[maxEndIndex];
-    std::unordered_map<uint32_t, GLESShaderInstance *> *shaderinstanceMap =
-        (std::unordered_map<uint32_t, GLESShaderInstance *> *)cacheShaders;
+    std::unordered_map<uint32_t, RTShaderPass::CacheShaderItem> *shaderinstanceMap =
+        (std::unordered_map<uint32_t, RTShaderPass::CacheShaderItem> *)cacheShaders;
     // GLESShaderInstance* shader;
     if (shaderinstanceMap->find(cacheKey) != shaderinstanceMap->end())
     {
-        return shaderinstanceMap->at(cacheKey);
+        return &shaderinstanceMap->at(cacheKey);
     }
     return nullptr;
 }
@@ -116,16 +133,16 @@ void RTShaderPass::_resizeCacheShaderMap(void *cacheMap, uint32_t hierarchy, uin
     }
 }
 
-//void RTShaderPass::createShaderInstance(RTDefineDatas*compileDefine)
+// void RTShaderPass::createShaderInstance(RTDefineDatas*compileDefine)
 //{
-//}
+// }
 void RTShaderPass::setCreateShaderInstanceFunction(JSValueAsParam value)
 {
     m_createShaderInstanceFunctionJS.reset(value);
 }
-GLESShaderInstance* RTShaderPass::callCreateShaderInstanceFunction()
+GLESShaderInstance *RTShaderPass::callCreateShaderInstanceFunction()
 {
-    return m_createShaderInstanceFunctionJS.call<GLESShaderInstance*>(getCurrentContext().global());
+    return m_createShaderInstanceFunctionJS.call<GLESShaderInstance *>(getCurrentContext().global());
 }
 void RTShaderPass::destroy()
 {

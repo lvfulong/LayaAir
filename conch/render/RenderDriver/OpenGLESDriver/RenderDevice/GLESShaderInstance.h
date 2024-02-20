@@ -33,6 +33,7 @@ class GLESShaderInstance //: public ResourceBase<GLESShaderInstance>
   private:
     void _create3D();
     void _create2D();
+
   public:
     CommandEncoder m_sceneUniformParamsMap;
     CommandEncoder m_cameraUniformParamsMap;

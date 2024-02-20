@@ -111,11 +111,11 @@ class Persistent
         reset(local);
     }
 
-    Persistent(Persistent const &) = delete;
-    Persistent &operator=(Persistent const &) = delete;
+    //Persistent(Persistent const &) = delete;
+    //Persistent &operator=(Persistent const &) = delete;
 
-    Persistent(Persistent &&) = delete;
-    Persistent &operator=(Persistent &&) = delete;
+    //Persistent(Persistent &&) = delete;
+    //Persistent &operator=(Persistent &&) = delete;
 
     void reset()
     {

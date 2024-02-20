@@ -13,11 +13,18 @@ class RenderState;
 class RTShaderPass
 {
   public:
+    struct CacheShaderItem
+    {
+        GLESShaderInstance *_glesShaderInstance;
+        Persistent _jsShaderInstance;
+    };
     RTShaderPass();
     ~RTShaderPass();
-    void setCacheShader(RTDefineDatas *compileDefine, GLESShaderInstance *shader);
-    GLESShaderInstance *getCacheShader(RTDefineDatas *compileDefine);
-    GLESShaderInstance* callCreateShaderInstanceFunction();
+    void setCacheShader(RTDefineDatas *compileDefine, GLESShaderInstance *shader, Persistent jsShaderInstance);
+    void setCacheShaderJS(RTDefineDatas *compileDefine, JSValueAsParam jsShaderInstance);
+    RTShaderPass::CacheShaderItem *getCacheShader(RTDefineDatas *compileDefine);
+    JsValue getCacheShaderJS(RTDefineDatas *compileDefine);
+    GLESShaderInstance *callCreateShaderInstanceFunction();
     void setRenderState(RenderState *value)
     {
         renderState = value;
@@ -34,7 +41,7 @@ class RTShaderPass
 
   public:
     // binds
-      void setCreateShaderInstanceFunction(JSValueAsParam value);
+    void setCreateShaderInstanceFunction(JSValueAsParam value);
     // void createShaderInstance(RTDefineDatas *compileDefine);
 
   private:
@@ -46,7 +53,8 @@ class RTShaderPass
     RTDefineDatas *validDefine = nullptr;
     RenderState *renderState = nullptr;
     std::vector<std::string> nodeCommonMap;
-    RTDefineDatas* _compileDefines = nullptr;
+    RTDefineDatas *_compileDefines = nullptr;
+
   private:
     std::unordered_map<uint32_t, void *> _cacheSharders{};
     uint32_t _cacheShaderHierarchy = 1;

@@ -442,8 +442,8 @@ class RenderBindings
             class_binding.function("setCompileDefine", &RTShaderPass::setCompileDefine);
             class_binding.function("setValidDefine", &RTShaderPass::setValidDefine);
             class_binding.function("setCreateShaderInstanceFunction", &RTShaderPass::setCreateShaderInstanceFunction);
-            class_binding.function("setCacheShader", &RTShaderPass::setCacheShader);
-            // class_binding.function("getCacheShader", &RTShaderPass::getCacheShader);//todo
+            class_binding.function("setCacheShader", &RTShaderPass::setCacheShaderJS);
+            class_binding.function("getCacheShader", &RTShaderPass::getCacheShaderJS);
             class_binding.function("destroy", &RTShaderPass::destroy);
             class_binding.property_field("_pipelineMode", &RTShaderPass::pipelineMode);
             class_binding.property_field("_statefirst", &RTShaderPass::statefirst);
