@@ -76,6 +76,7 @@ class GLESEngine
     void clearRenderTexture(uint32_t clearFlag, Color *clearcolor, float clearDepth);
     int propertyNameToID(const char *name);
     const std::string &propertyIDToName(int id);
+    void getNamesByDefineDataJS(RTDefineDatas* defineData, JSValueAsParam out);
     void getNamesByDefineData(RTDefineDatas *defineData, std::vector<std::string> &out);
     RTShaderDefine getDefineByName(const char *name);
     GLRenderState *getRenderState();
@@ -142,8 +143,8 @@ class GLESEngine
     std::unordered_map<int, GLBuffer *> _GLBindPointerUBOMap;
     Persistent m_pJSTextureContext;
     static std::unordered_map<std::string, RTShaderDefine> _defineMap;
-    static uint32_t _defineCounter;
-    static std::vector<std::unordered_map<uint32_t, std::string>> _maskMap;
+    static int64_t _defineCounter;
+    static std::vector<std::unordered_map<int64_t, std::string>> _maskMap;
 };
 } // namespace laya
 

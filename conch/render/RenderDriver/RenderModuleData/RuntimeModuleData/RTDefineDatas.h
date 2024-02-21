@@ -22,7 +22,7 @@ class RTDefineDatas
     void destroy();
 
   public:
-    std::vector<uint32_t> _mask{};
+    std::vector<int64_t> _mask{};
     int32_t _length = 0;
 };
 } // namespace laya

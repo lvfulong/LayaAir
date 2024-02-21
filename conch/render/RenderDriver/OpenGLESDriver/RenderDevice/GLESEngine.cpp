@@ -21,8 +21,8 @@
 namespace laya
 {
 std::unordered_map<std::string, RTShaderDefine> GLESEngine::_defineMap;
-uint32_t GLESEngine::_defineCounter = 0;
-std::vector<std::unordered_map<uint32_t, std::string>> GLESEngine::_maskMap;
+int64_t GLESEngine::_defineCounter = 0;
+std::vector<std::unordered_map<int64_t, std::string>> GLESEngine::_maskMap;
 std::unordered_map<uint32_t, RTShaderDefine> GLESEngine::_texGammaDefine;
 GLESEngine::GLESEngine(WebGLConfig config, WebGLMode webglMode)
 {
@@ -378,18 +378,24 @@ const std::string &GLESEngine::propertyIDToName(int id)
     }
     return "";
 }
+void GLESEngine::getNamesByDefineDataJS(RTDefineDatas* defineData, JSValueAsParam out)
+{
+    std::vector<std::string> outVec;
+    getNamesByDefineData(defineData, outVec);
+    __JsArray<std::string>::FillJsArray(outVec, out);
+}
 void GLESEngine::getNamesByDefineData(RTDefineDatas *defineData, std::vector<std::string> &out)
 {
-    std::vector<std::unordered_map<uint32_t, std::string>> &maskMap = GLESEngine::_maskMap;
-    std::vector<uint32_t> &mask = defineData->_mask;
+    std::vector<std::unordered_map<int64_t, std::string>> &maskMap = GLESEngine::_maskMap;
+    std::vector<int64_t> &mask = defineData->_mask;
     out.resize(0);
     for (uint32_t i = 0, n = defineData->_length; i < n; i++)
     {
-        std::unordered_map<uint32_t, std::string> &subMaskMap = maskMap[i];
-        uint32_t subMask = mask[i];
+        std::unordered_map<int64_t, std::string> &subMaskMap = maskMap[i];
+        int64_t subMask = mask[i];
         for (uint32_t j = 0; j < 32; j++)
         {
-            int32_t d = 1 << j;
+            int64_t d = 1 << j;
             if (subMask > 0 && d > subMask) // 如果31位存在subMask为负数,避免break
                 break;
             if (subMask & d)
@@ -402,14 +408,14 @@ RTShaderDefine GLESEngine::getDefineByName(const char *name)
     std::unordered_map<std::string, RTShaderDefine>::iterator it = GLESEngine::_defineMap.find(name);
     if (it == GLESEngine::_defineMap.end())
     {
-        std::vector<std::unordered_map<uint32_t, std::string>> &maskMap = GLESEngine::_maskMap;
-        uint32_t counter = GLESEngine::_defineCounter;
-        uint32_t index = floorf(counter / 32.0f);
-        uint32_t value = 1 << counter % 32;
+        std::vector<std::unordered_map<int64_t, std::string>> &maskMap = GLESEngine::_maskMap;
+        int64_t counter = GLESEngine::_defineCounter;
+        int64_t index = floorf(counter / 32.0f);
+        int64_t value = static_cast< int64_t>(1) << counter % 32;
         RTShaderDefine define(index, value);
         GLESEngine::_defineMap[name] = define;
 
-        uint32_t size = maskMap.size();
+        int64_t size = maskMap.size();
         if (index == size)
         {
             maskMap.resize(size + 1);

@@ -334,6 +334,7 @@ class RenderBindings
             class_binding.function("propertyNameToID", &GLESEngine::propertyNameToID);
             class_binding.function("propertyIDToName", &GLESEngine::propertyIDToName);
             class_binding.function("getDefineByName", &GLESEngine::getDefineByName);
+            class_binding.function("getNamesByDefineData", &GLESEngine::getNamesByDefineDataJS);
             class_binding.function("addTexGammaDefine", &GLESEngine::addTexGammaDefine);
             // class_binding.function("propertyIDToName", &GLESEngine::propertyIDToName);
             class_binding.function("clearStatisticsInfo", &GLESEngine::clearStatisticsInfo);
