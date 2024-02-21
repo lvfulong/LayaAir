@@ -466,20 +466,21 @@ int GLESEngine::uploadCustomUniforms(GLShaderInstance *shader, const std::unorde
 {
     shader->bind();
     int shaderCall = 0;
-    /* todo static ShaderData::DataInfo tempData;
-    tempData.type = ShaderDataType::Number32Array;
-    tempData.data = (unsigned char*)data;
-    tempData.size = byteSize / sizeof(GLfloat);
-    tempData.byteSize = byteSize;
+
+    static BufferDataInfo tempData;
+    tempData.m_data = (uint8_t*)data;
+    tempData.m_lengthInBytes = byteSize;
+    static std::any tempAny;
+    tempAny = tempData;
 
     std::unordered_map<int, ShaderVariable*>::const_iterator it = custom.find(index);
     if (it != custom.end())
     {
         ShaderVariable* one = it->second;
         if (one && data != nullptr)
-            shaderCall += one->fun(one, &tempData);
-        tempData.data = nullptr;
-    }*/
+            shaderCall += one->fun(one, &tempAny);
+        tempData.m_data = nullptr;
+    }
     return shaderCall;
 }
 GLBuffer *GLESEngine::_getBindUBOBuffer(int glPointer)

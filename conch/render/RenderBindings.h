@@ -413,8 +413,6 @@ class RenderBindings
             class_<GLESRenderGeometryElement> class_binding;
             // class_binding.constructor<>();
             class_binding.constructor<MeshTopology, DrawType>();
-            // todo class_binding.property("bufferState", &GLESRenderGeometryElement::getBufferState3D,
-            // &GLESRenderGeometryElement::setBufferState3D);
             class_binding.property("mode", &GLESRenderGeometryElement::getMeshTopology,
                                    &GLESRenderGeometryElement::setMeshTopology);
             class_binding.property("drawType", &GLESRenderGeometryElement::getDrawType,
@@ -426,6 +424,7 @@ class RenderBindings
             class_binding.function("setDrawArrayParams", &GLESRenderGeometryElement::setDrawArrayParams);
             class_binding.function("setDrawElementParams", &GLESRenderGeometryElement::setDrawElementParams);
             class_binding.function("clearRenderParams", &GLESRenderGeometryElement::clearRenderParams);
+            class_binding.function("setBufferState", &GLESRenderGeometryElement::setBufferState);
             class_binding.function("destroy", &GLESRenderGeometryElement::destroy);
             context.class_("conchGLESRenderGeometryElement", class_binding);
         }

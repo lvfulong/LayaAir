@@ -62,7 +62,7 @@ class GLESRenderGeometryElement // : public ResourceBase<GLESRenderGeometryEleme
     }
 
   public:
-    GLESBufferState *_bufferState;
+    GLESBufferState *_bufferState = nullptr;
     MeshTopology _mode;
     DrawType m_nDrawType;
     IndexFormat _indexFormat;

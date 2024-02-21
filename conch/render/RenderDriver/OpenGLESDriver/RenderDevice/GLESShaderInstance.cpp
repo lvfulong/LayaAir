@@ -20,6 +20,7 @@ GLESShaderInstance::GLESShaderInstance(
     _shaderPass = shaderPass;
     m_GLShaderInstance = new GLShaderInstance(m_pGLESEngine, vs, ps, attributeMap);
     if (m_GLShaderInstance->_complete)
+    {
         if (is2D)
         {
             _create2D();
@@ -28,6 +29,7 @@ GLESShaderInstance::GLESShaderInstance(
         {
             _create3D();
         }
+    }
 }
 GLESShaderInstance::~GLESShaderInstance()
 {
