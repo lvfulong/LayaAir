@@ -143,8 +143,8 @@ class GLESEngine
     std::unordered_map<int, GLBuffer *> _GLBindPointerUBOMap;
     Persistent m_pJSTextureContext;
     static std::unordered_map<std::string, RTShaderDefine> _defineMap;
-    static int64_t _defineCounter;
-    static std::vector<std::unordered_map<int64_t, std::string>> _maskMap;
+    static int32_t _defineCounter;
+    static std::vector<std::unordered_map<int32_t, std::string>> _maskMap;
 };
 } // namespace laya
 

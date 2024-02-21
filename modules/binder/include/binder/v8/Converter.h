@@ -511,6 +511,7 @@ template <typename T> class __JsArray
         v8::Local<v8::Context> context = isolate->GetCurrentContext();
         int size = p_v1.size();
         v8::Local<v8::Array> __array = array.As<v8::Array>();
+        //__array length = 0 ???
         for (int i = 0; i < size; i++)
         {
             __array->Set(context, i, Converter<T>::ToJs(p_v1.at(i), callDestructor));

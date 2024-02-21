@@ -46,7 +46,7 @@ class GLESShaderData //: public ResourceBase<ShaderData>
   public:
   public:
   public:
-    GLESShaderData();
+    GLESShaderData(RTDefineDatas* defineDatas);
 
     ~GLESShaderData();
 
@@ -63,8 +63,8 @@ class GLESShaderData //: public ResourceBase<ShaderData>
 
     void destroy();
 
-    RTDefineDatas *getOwnerDefineData();
-    JsValue getOwnerDefineDataJS();
+    //RTDefineDatas *getOwnerDefineData();
+    //JsValue getOwnerDefineDataJS();
     void addDefine(RTShaderDefine define);
     void addDefines(RTDefineDatas *defines);
     void removeDefine(RTShaderDefine define);
@@ -102,8 +102,8 @@ class GLESShaderData //: public ResourceBase<ShaderData>
 
   public:
     std::unordered_map<uint32_t, std::any> m_data;
-    RTDefineDatas *_defineDatas; // todo
-    Persistent m_pJSDefineDatas;
+    RTDefineDatas *_defineDatas = nullptr;
+    //Persistent m_pJSDefineDatas;
 };
 } // namespace laya
 #endif //__GLESShaderData_H__

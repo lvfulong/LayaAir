@@ -6,9 +6,9 @@
 
 namespace laya
 {
-GLESShaderData::GLESShaderData() //: ResourceBase(JCConch::s_pConchRender->m_pShaderDataManager)
+GLESShaderData::GLESShaderData(RTDefineDatas* defineDatas) //: ResourceBase(JCConch::s_pConchRender->m_pShaderDataManager)
 {
-    _defineDatas = new RTDefineDatas();
+    _defineDatas = defineDatas;
 }
 
 GLESShaderData::~GLESShaderData()
@@ -20,14 +20,9 @@ void GLESShaderData::destroy()
 {
     isDestroy = true;
     m_data.clear();
-    if (_defineDatas != nullptr)
-    {
-        delete _defineDatas;
-        _defineDatas = nullptr;
-    }
 }
 
-RTDefineDatas *GLESShaderData::getOwnerDefineData()
+/*RTDefineDatas* GLESShaderData::getOwnerDefineData()
 {
     return _defineDatas;
 }
@@ -43,7 +38,7 @@ JsValue GLESShaderData::getOwnerDefineDataJS()
     {
         return m_pJSDefineDatas.toLocal().handle_;
     }
-}
+}*/
 
 void GLESShaderData::addDefine(RTShaderDefine define)
 {
@@ -112,7 +107,7 @@ const Vector2 &GLESShaderData::getVector2(int32_t index)
 
 void GLESShaderData::setVector(int32_t index, const Vector4 &value)
 {
-    m_data[index] = value;
+    this->m_data[index] = value;
 }
 
 const Vector4 &GLESShaderData::getVector(int32_t index)
@@ -122,7 +117,7 @@ const Vector4 &GLESShaderData::getVector(int32_t index)
 
 void GLESShaderData::setVector3(int32_t index, const Vector3 &value)
 {
-    m_data[index] = value;
+    this->m_data[index] = value;
 }
 
 const Vector3 &GLESShaderData::getVector3(int32_t index)

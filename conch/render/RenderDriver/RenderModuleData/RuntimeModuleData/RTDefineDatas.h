@@ -18,11 +18,10 @@ class RTDefineDatas
     void addDefineDatas(RTDefineDatas *defines);
     void removeDefineDatas(RTDefineDatas *defines);
     void cloneTo(RTDefineDatas *defines);
-    RTDefineDatas *clone();
     void destroy();
 
   public:
-    std::vector<int64_t> _mask{};
+    std::vector<int32_t> _mask{};
     int32_t _length = 0;
 };
 } // namespace laya

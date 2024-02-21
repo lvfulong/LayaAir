@@ -390,7 +390,6 @@ class RenderBindings
         {
             class_<RTDefineDatas> class_binding;
             class_binding.constructor<>();
-            class_binding.function("clone", &RTDefineDatas::clone);
             class_binding.function("cloneTo", &RTDefineDatas::cloneTo);
             class_binding.function("add", &RTDefineDatas::add);
             class_binding.function("remove", &RTDefineDatas::remove);
@@ -702,8 +701,8 @@ class RenderBindings
         }
         {
             class_<GLESShaderData> class_binding;
-            class_binding.constructor<>();
-            class_binding.function("getOwnerDefineData", &GLESShaderData::getOwnerDefineDataJS);
+            class_binding.constructor<RTDefineDatas*>();
+            //class_binding.function("getOwnerDefineData", &GLESShaderData::getOwnerDefineDataJS);
             class_binding.function("setBool", &GLESShaderData::setBool);
             class_binding.function("setInt", &GLESShaderData::setInt);
             class_binding.function("setNumber", &GLESShaderData::setNumber);
