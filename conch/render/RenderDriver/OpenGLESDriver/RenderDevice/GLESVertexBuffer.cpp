@@ -25,10 +25,10 @@ void GLESVertexBuffer::setDataLength(int byteLength)
 }
 
 void GLESVertexBuffer::setData(const char *buffer, int bufferOffset /* = 0*/, int dataStartIndex /* = 0*/,
-                               int dataCount /*= Number.MAX_SAFE_INTEGER*/)
+    double dataCount /*= Number.MAX_SAFE_INTEGER*/)
 {
     bind();
-    bool needSubData = dataStartIndex != 0 /* || dataCount != Number.MAX_SAFE_INTEGER*/;
+    bool needSubData = dataStartIndex != 0 || static_cast<int64_t>(dataCount) != 9007199254740991; /* || dataCount != Number.MAX_SAFE_INTEGER*/;
     if (needSubData)
     {
         this->_glBuffer->setData((const char *)(buffer + dataStartIndex), dataCount, bufferOffset);
@@ -52,7 +52,7 @@ void GLESVertexBuffer::orphanStorage()
     this->_glBuffer->setDataLength(this->_glBuffer->m_byteLength);
 }
 void GLESVertexBuffer::setDataJS(JSValueAsParam data, int bufferOffset /* = 0*/, int dataStartIndex /* = 0*/,
-                                 int dataCount /*= Number.MAX_SAFE_INTEGER*/)
+                                 double dataCount /*= Number.MAX_SAFE_INTEGER*/)
 {
     char *pArrayBufferPtr = NULL;
     int nABLen = 0;
