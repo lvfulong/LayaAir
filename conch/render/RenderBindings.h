@@ -438,7 +438,7 @@ class RenderBindings
         {
             class_<RTShaderPass> class_binding;
             class_binding.constructor<>();
-            class_binding.function("setCompileDefine", &RTShaderPass::setCompileDefine);
+            // class_binding.function("setCompileDefine", &RTShaderPass::setCompileDefine);
             class_binding.function("setValidDefine", &RTShaderPass::setValidDefine);
             class_binding.function("setCreateShaderInstanceFunction", &RTShaderPass::setCreateShaderInstanceFunction);
             class_binding.function("setCacheShader", &RTShaderPass::setCacheShaderJS);
@@ -460,6 +460,7 @@ class RenderBindings
             class_binding.function("setGeometry", &GLESRenderElement3D::setGeometry);
             class_binding.function("setSubShader", &GLESRenderElement3D::setSubShader);
             class_binding.property_field("_isRender", &GLESRenderElement3D::isRender);
+            class_binding.class_function("setCompileDefine", &GLESRenderElement3D::setCompileDefine);
             class_binding.property_field("_materialRenderQueue", &GLESRenderElement3D::materialRenderQueue);
             context.class_("conchGLESRenderElement3D", class_binding);
         }
@@ -701,8 +702,8 @@ class RenderBindings
         }
         {
             class_<GLESShaderData> class_binding;
-            class_binding.constructor<RTDefineDatas*>();
-            //class_binding.function("getOwnerDefineData", &GLESShaderData::getOwnerDefineDataJS);
+            class_binding.constructor<RTDefineDatas *>();
+            // class_binding.function("getOwnerDefineData", &GLESShaderData::getOwnerDefineDataJS);
             class_binding.function("setBool", &GLESShaderData::setBool);
             class_binding.function("setInt", &GLESShaderData::setInt);
             class_binding.function("setNumber", &GLESShaderData::setNumber);

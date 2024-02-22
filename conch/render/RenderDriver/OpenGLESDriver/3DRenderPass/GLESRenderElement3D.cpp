@@ -6,6 +6,7 @@
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTShaderPass.h>
 namespace laya
 {
+RTDefineDatas *GLESRenderElement3D::_compileDefines = nullptr;
 GLESRenderElement3D::GLESRenderElement3D()
 {
 }
@@ -105,7 +106,7 @@ void GLESRenderElement3D::_compileShader(RTRenderContext3D *context)
         if (pass->pipelineMode != context->pipelineMode)
             continue;
 
-        RTDefineDatas *comDef = pass->_compileDefines;
+        RTDefineDatas *comDef = GLESRenderElement3D::_compileDefines;
         if (context->sceneData)
         {
             context->sceneData->_defineDatas->cloneTo(comDef);
@@ -128,22 +129,7 @@ void GLESRenderElement3D::_compileShader(RTRenderContext3D *context)
         }
         comDef->addDefineDatas(materialShaderData->_defineDatas);
 
-        /// var shaderIns = pass.withCompile(comDef) as WebGLShaderInstance;
-
-        // get shaderInstance
-        // create ShaderInstance
-
-        // this._addShaderInstance(shaderIns);
-
-        /*GLESShaderInstance* shader = pass->getCacheShader(comDef);
-        if (shader == nullptr)
-        {
-            pass->createShaderInstance(comDef);
-            shader = pass->getCacheShader(comDef);
-        }
-        _addShaderInstance(shader);*/
-
-        GLESShaderInstance* shader = pass->callCreateShaderInstanceFunction();
+        GLESShaderInstance *shader = pass->callCreateShaderInstanceFunction();
         assert(shader != nullptr);
         _addShaderInstance(shader);
     }
@@ -151,6 +137,10 @@ void GLESRenderElement3D::_compileShader(RTRenderContext3D *context)
 void GLESRenderElement3D::drawGeometry(GLESShaderInstance *shaderIns)
 {
     LayaGL::m_pWebglEngine->getDrawContext()->drawGeometryElement(geometry);
+}
+void GLESRenderElement3D::setCompileDefine(RTDefineDatas *value)
+{
+    GLESRenderElement3D::_compileDefines = value;
 }
 void GLESRenderElement3D::destroy()
 {

@@ -34,10 +34,10 @@ class RTShaderPass
         validDefine = value;
     }
     void destroy();
-    void setCompileDefine(RTDefineDatas *value)
-    {
-        _compileDefines = value;
-    }
+    //void setCompileDefine(RTDefineDatas *value)
+    //{
+    //    _compileDefines = value;
+    //}
 
   public:
     // binds
@@ -53,7 +53,7 @@ class RTShaderPass
     RTDefineDatas *validDefine = nullptr;
     RenderState *renderState = nullptr;
     std::vector<std::string> nodeCommonMap;
-    RTDefineDatas *_compileDefines = nullptr;
+    //RTDefineDatas *_compileDefines = nullptr;
 
   private:
     std::unordered_map<uint32_t, void *> _cacheSharders{};
