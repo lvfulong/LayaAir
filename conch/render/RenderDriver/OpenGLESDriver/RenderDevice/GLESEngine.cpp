@@ -389,17 +389,19 @@ void GLESEngine::getNamesByDefineData(RTDefineDatas *defineData, std::vector<std
     std::vector<std::unordered_map<int32_t, std::string>> &maskMap = GLESEngine::_maskMap;
     std::vector<int32_t> &mask = defineData->_mask;
     out.resize(0);
-    for (uint32_t i = 0, n = defineData->_length; i < n; i++)
+    for (int32_t i = 0, n = defineData->_length; i < n; i++)
     {
         std::unordered_map<int32_t, std::string> &subMaskMap = maskMap[i];
         int64_t subMask = mask[i];
-        for (uint32_t j = 0; j < 32; j++)
+        for (int32_t j = 0; j < 32; j++)
         {
-            int64_t d = 1 << j;
+            int32_t d = 1 << j;
             if (subMask > 0 && d > subMask) // 如果31位存在subMask为负数,避免break
                 break;
             if (subMask & d)
+            {
                 out.push_back(subMaskMap[d]);
+            }
         }
     }
 }

@@ -18,9 +18,17 @@ void RTDefineDatas::_intersectionDefineDatas(RTDefineDatas *define)
 {
     for (int32_t i = _length - 1; i >= 0; i--)
     {
-        int32_t value = _mask[i] & define->_mask[i];
-        if (value == 0 && i == _length - 1)
+        int64_t value = 0;
+        //神坑 JS与C++差别导致
+        if (i < define->_mask.size())
+            value = _mask[i] & define->_mask[i];
+        else
+            value = _mask[i] & 0;
+
+        if (value == 0 && i == (_length - 1))
+        {
             _length--;
+        }
         else
             _mask[i] = value;
     }
@@ -55,7 +63,7 @@ void RTDefineDatas::remove(RTShaderDefine define)
     int32_t endIndex = _length - 1;
     if (index > endIndex) // ������Length,���⾭������
         return;
-    int32_t newValue = _mask[index] & ~define._value;
+    int64_t newValue = _mask[index] & ~define._value;
     if (index == endIndex && newValue == 0)
         _length--;
     else
@@ -109,7 +117,7 @@ void RTDefineDatas::removeDefineDatas(RTDefineDatas *defines)
     int32_t i = std::min(defines->_length, endIndex);
     for (; i >= 0; i--)
     {
-        int32_t newValue = _mask[i] & ~defines->_mask[i];
+        int64_t newValue = _mask[i] & ~defines->_mask[i];
         if (i == endIndex && newValue == 0)
         {
             endIndex--;
