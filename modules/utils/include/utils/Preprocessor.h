@@ -2,8 +2,8 @@
 #define __LAYA_PREPROCESSOR_H__
 #ifdef __APPLE__
 #define GLES_SILENCE_DEPRECATION
-#include <OpenGLES/EAGL.h>
-#include <OpenGLES/EAGLDrawable.h>
+#include <OpenGLES/ES2/gl.h>
+#include <OpenGLES/ES2/glext.h>
 #include <OpenGLES/ES3/gl.h>
 #include <OpenGLES/ES3/glext.h>
 #elif LINUX

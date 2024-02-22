@@ -2,7 +2,8 @@
 #import <GLKit/GLKit.h>
 #include <utils/Preprocessor.h>
 #include <utils/Log.h>
-
+#include <OpenGLES/EAGL.h>
+#include <OpenGLES/EAGLDrawable.h>
 namespace laya {
 extern int g_nRealMainFrameBuffer;
 struct OpenGLBackendiOSImpl {

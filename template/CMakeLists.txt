@@ -119,8 +119,8 @@ if(IOS)
 		"-framework Accounts"
 		"-framework Accelerate"
 		"-framework AVFoundation"
+		conch
 	)
-	target_link_libraries(${PROJECT_NAME} PRIVATE app conch)
 elseif(MSVC)
 	list(APPEND PROJECT_SOURCES
 		proj.win64/AppMessage.h
