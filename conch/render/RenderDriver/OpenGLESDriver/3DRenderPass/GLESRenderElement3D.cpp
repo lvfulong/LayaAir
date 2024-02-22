@@ -144,6 +144,7 @@ void GLESRenderElement3D::_compileShader(RTRenderContext3D *context)
         _addShaderInstance(shader);*/
 
         GLESShaderInstance* shader = pass->callCreateShaderInstanceFunction();
+        assert(shader != nullptr);
         _addShaderInstance(shader);
     }
 }

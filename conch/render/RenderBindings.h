@@ -519,7 +519,7 @@ class RenderBindings
             class_binding.function("setSceneNodeData", &RTRenderContext3D::setSceneNodeData);
             class_binding.function("setCameraNodeData", &RTRenderContext3D::setCameraNodeData);
             class_binding.function("setGlobalShaderData", &RTRenderContext3D::setGlobalShaderData);
-
+            class_binding.function("setGlobalConfigShaderData", &RTRenderContext3D::setGlobalConfigShaderData);
             class_binding.function("setRenderTarget", &RTRenderContext3D::setRenderTarget);
             class_binding.function("setViewport", &RTRenderContext3D::setViewport);
             class_binding.function("setScissor", &RTRenderContext3D::setScissor);
