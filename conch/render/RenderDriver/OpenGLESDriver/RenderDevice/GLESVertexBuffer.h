@@ -25,7 +25,7 @@ class GLESVertexBuffer // : public VertexBuffer
     void destroy();
     void setDataLength(int byteLength);
 
-    void setData(const char *buffer, int bufferOffset /* = 0*/, int dataStartIndex /* = 0*/,
+    void setData(const char *buffer, int bufferBytes, int bufferOffset /* = 0*/, int dataStartIndex /* = 0*/,
         double dataCount /*= Number.MAX_SAFE_INTEGER*/);
     void setDataJS(JSValueAsParam data, int bufferOffset /* = 0*/, int dataStartIndex /* = 0*/,
         double dataCount /*= Number.MAX_SAFE_INTEGER*/);
