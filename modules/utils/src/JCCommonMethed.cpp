@@ -70,8 +70,10 @@ namespace laya
 				ret+=(c<<off);
 				off+=4;
 			}
-            //if ((long)pCur>(long)str)
+            if ((long)pCur>(long)str)
                 c=*(--pCur);
+            else
+                --pCur;
 		}
 		return ret;
 	}
