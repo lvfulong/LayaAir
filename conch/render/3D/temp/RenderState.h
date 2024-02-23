@@ -161,7 +161,7 @@ namespace laya
 		Vector3*			stencilOp;
 		//double*				stencilOpX;
 		//double*				stencilOpY;
-		//double*				stencilOpZ;//double? todo
+		//double*				stencilOpZ;//double? 
 
 
 

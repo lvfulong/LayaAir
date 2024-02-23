@@ -52,6 +52,7 @@ template <> class Converter<Matrix3x3>
         {
             Matrix3x3 mat;
             memcpy(mat.elements, pArrayBufferPtr, sizeof(float) * 9);
+            return mat;
         }
         else
         {
@@ -76,6 +77,7 @@ template <> class Converter<Matrix4x4>
         {
             Matrix4x4 mat;
             memcpy(mat.elements, pArrayBufferPtr, sizeof(float) * 16);
+            return mat;
         }
         else
         {
