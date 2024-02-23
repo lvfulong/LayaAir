@@ -39,7 +39,8 @@ void FontDescriptionParser::parse(const std::string &fontStr, FontDescription &o
         if (!results[4].str().empty())
         {
             std::vector<char *> temp;
-            splitString(temp, (char *)results[5].str().c_str(), ',');
+            std::string tempString = results[5].str();
+            splitString(temp, (char *)tempString.c_str(), ',');
             // replace(/["']/g, '').trim()
             out.m_family = temp[0];
         }

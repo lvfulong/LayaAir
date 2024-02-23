@@ -283,7 +283,7 @@ void GLESEngine::clearRenderTexture(uint32_t clearFlag, Color *clearcolor, float
 }
 GLTextureContext *GLESEngine::createTextureContext(bool isWebGL2)
 {
-    assert(m_textureContext == nullptr);
+    //assert(m_textureContext == nullptr);
     if (isWebGL2)
     {
         m_textureContext = new GL2TextureContext();

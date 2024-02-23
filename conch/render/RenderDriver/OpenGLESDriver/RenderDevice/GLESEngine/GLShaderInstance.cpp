@@ -291,10 +291,10 @@ int GLShaderInstance::_uniform1f(ShaderVariable *one, const std::any &dataInfo)
     //linux compile error assert(dataInfo.type == std::typeid(float));
     float data = std::any_cast<float>(dataInfo);
 
-    if (memcmp(one->uploadedValue.data(), &data, sizeof(float)) != 0)
+    //if (memcmp(one->uploadedValue.data(), &data, sizeof(float)) != 0)
     {
         glUniform1f(one->location, data);
-        memcpy(one->uploadedValue.data(), &data, sizeof(float));
+        //memcpy(one->uploadedValue.data(), &data, sizeof(float));
         return 1;
     }
     return 0;
@@ -330,10 +330,10 @@ int GLShaderInstance::_uniform_vec2(ShaderVariable *one, const std::any &dataInf
 {
     //linux compile error assert(dataInfo.type == std::typeid(Vector2));
     Vector2 data = std::any_cast<Vector2>(dataInfo);
-    if (memcmp(one->uploadedValue.data(), &data, sizeof(Vector2)) != 0)
+    //if (memcmp(one->uploadedValue.data(), &data, sizeof(Vector2)) != 0)
     {
         glUniform2f(one->location, data.x, data.y);
-        memcpy(one->uploadedValue.data(), &data, sizeof(Vector2));
+        //memcpy(one->uploadedValue.data(), &data, sizeof(Vector2));
         return 1;
     }
     return 0;
@@ -369,10 +369,10 @@ int GLShaderInstance::_uniform_vec3(ShaderVariable *one, const std::any &dataInf
 {
     //linux compile error assert(dataInfo.type == std::typeid(Vector3));
     Vector3 data = std::any_cast<Vector3>(dataInfo);
-    if (memcmp(one->uploadedValue.data(), &data, sizeof(Vector3)) != 0)
+    //if (memcmp(one->uploadedValue.data(), &data, sizeof(Vector3)) != 0)
     {
         glUniform3f(one->location, data.x, data.y, data.z);
-        memcpy(one->uploadedValue.data(), &data, sizeof(Vector3));
+        //memcpy(one->uploadedValue.data(), &data, sizeof(Vector3));
         return 1;
     }
     return 0;
@@ -390,10 +390,10 @@ int GLShaderInstance::_uniform_vec4(ShaderVariable *one, const std::any &dataInf
 {
     //linux compile error assert(dataInfo.type == std::typeid(Vector4));
     Vector4 data = std::any_cast<Vector4>(dataInfo);
-    if (memcmp(one->uploadedValue.data(), &data, sizeof(Vector4)) != 0)
+    //if (memcmp(one->uploadedValue.data(), &data, sizeof(Vector4)) != 0)
     {
         glUniform4f(one->location, data.x, data.y, data.z, data.w);
-        memcpy(one->uploadedValue.data(), &data, sizeof(Vector4));
+        //memcpy(one->uploadedValue.data(), &data, sizeof(Vector4));
         return 1;
     }
     return 0;
@@ -444,10 +444,10 @@ int GLShaderInstance::_uniform1i(ShaderVariable *one, const std::any &dataInfo)
 {
     //linux compile error assert(dataInfo.type == std::typeid(int32_t));
     int32_t data = std::any_cast<int32_t>(dataInfo);
-    if (memcmp(one->uploadedValue.data(), &data, sizeof(int32_t)) != 0)
+    //if (memcmp(one->uploadedValue.data(), &data, sizeof(int32_t)) != 0)
     {
         glUniform1i(one->location, data);
-        memcpy(one->uploadedValue.data(), &data, sizeof(GLint));
+        //memcpy(one->uploadedValue.data(), &data, sizeof(GLint));
         return 1;
     }
     return 0;
