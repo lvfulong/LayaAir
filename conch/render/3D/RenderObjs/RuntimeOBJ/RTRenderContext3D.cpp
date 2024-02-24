@@ -12,32 +12,34 @@ RTRenderContext3D::~RTRenderContext3D(){
 };
 uint32_t RTRenderContext3D::drawRenderElementList(const JCSingletonList<GLESRenderElement3D*> &list)
 {
-    _bindRenderTarget();
-    _start();
-    // if (preUpdate) preUpdate(list);
+    if (this->_needStart)
+    {
+        _bindRenderTarget();
+        _start();
+        this->_needStart = false;
+    }
     for (uint32_t i = 0, n = list.getLength(); i < n; i++)
     {
         list.m_vElements[i]->_preUpdatePre(this);
     }
-    // if (afterUpdate)  afterUpdate(list);
-    // if (preRender) preRender(list);
     for (uint32_t i = 0, n = list.getLength(); i < n; i++)
     {
         list.m_vElements[i]->_render(this);
     }
-    // if (preRender) afterRender(list);
-    _end();
 
     return 0;
 }
 
 uint32_t RTRenderContext3D::drawRenderElementOne(GLESRenderElement3D*node)
 {
-    _bindRenderTarget();
-    _start();
+    if (this->_needStart)
+    {
+        _bindRenderTarget();
+        _start();
+        this->_needStart = false;
+    }
     node->_preUpdatePre(this);
     node->_render(this);
-    _end();
     return 0;
 }
 
@@ -55,11 +57,12 @@ void RTRenderContext3D::_bindRenderTarget()
 
 void RTRenderContext3D::_start()
 {
+    LayaGL::m_pWebglEngine->scissorTest(true);
     LayaGL::m_pWebglEngine->viewport(viewPort.x, viewPort.y, viewPort.width, viewPort.height);
     LayaGL::m_pWebglEngine->scissor(scissor.x, scissor.y, scissor.z, scissor.w);
-    if (this->clearFlag != static_cast<RenderClearFlagBits>(RenderClearFlag::Nothing))
+    if (this->_clearFlag != static_cast<RenderClearFlagBits>(RenderClearFlag::Nothing))
     {
-        LayaGL::m_pWebglEngine->clearRenderTexture(clearFlag, &clearColor, clearDepth);
+        LayaGL::m_pWebglEngine->clearRenderTexture(_clearFlag, &clearColor, clearDepth);
     }
 }
 void RTRenderContext3D::_end()

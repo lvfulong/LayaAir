@@ -94,7 +94,10 @@ namespace laya
         }
         //todo this._rendercmd(this.beforeTransparentCmds, context);
         this->_recoverRenderContext3D(context);
-        //this.transparent &&this.transparent.render;
+        //if (this->transparent) 
+        {
+            this->transparent.renderQueue((RTRenderContext3D*)context);
+        }
     }
 
     void RTForwardAddClusterRP::_recoverRenderContext3D(RTRenderContext3D* context)

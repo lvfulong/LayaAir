@@ -24,9 +24,13 @@ class RTRenderContext3D
     ~RTRenderContext3D();
     uint32_t drawRenderElementList(const JCSingletonList<GLESRenderElement3D *> &list);
     uint32_t drawRenderElementOne(GLESRenderElement3D *node);
-    void setRenderTarget(GLESInternalRT *renderTarget)
+    void setRenderTarget(GLESInternalRT * value, uint32_t clearFlag = (uint32_t)RenderClearFlag::Nothing)
     {
-        this->_renderTarget = renderTarget;
+        this->_clearFlag = clearFlag;
+        if (value == this->_renderTarget)
+            return;
+        this->_renderTarget = value;
+        this->_needStart = true;
     }
     void setCameraData(GLESShaderData *shaderData)
     {
@@ -39,14 +43,16 @@ class RTRenderContext3D
     void setViewport(const Viewport &value)
     {
         this->viewPort = value;
+        this->_needStart = true;
     }
     void setScissor(const Vector4 &value)
     {
         this->scissor = value;
+        this->_needStart = true;
     }
-    uint32_t setClearData(RenderClearFlagBits flag, Color color, float depthValue, uint8_t stencilValue)
+    uint32_t setClearData(uint32_t flag, Color color, float depthValue, uint8_t stencilValue)
     {
-        clearFlag = flag;
+        _clearFlag = flag;
         clearColor = color;
         clearDepth = depthValue;
         clearStencil = stencilValue;
@@ -83,7 +89,7 @@ class RTRenderContext3D
     bool invertY;
     // pipelineMode
     std::string pipelineMode;
-    RenderClearFlagBits clearFlag{0};
+    uint32_t _clearFlag{0};
     float clearDepth;
     uint8_t clearStencil;
     Color clearColor;
@@ -97,6 +103,7 @@ class RTRenderContext3D
     uint32_t _cameraUpdateMask = 0;
     RTSceneNodeData *sceneNodeData = nullptr;
     RTCameraModuleData *cameraNodeData = nullptr;
+    bool _needStart = true;
 };
 } // namespace laya
 #endif
