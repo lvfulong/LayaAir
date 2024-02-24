@@ -85,7 +85,7 @@ void RTBaseRenderNode::_applyLightProb()
         this._lightProb.applyVolumetricGI(this._shaderValues);
     }*/
 }
-void RTBaseRenderNode::_renderUpdatePre(RTRenderContext3D* context3D)
+void RTBaseRenderNode::_renderUpdatePre(GLESRenderContext3D* context3D)
 {
     if (!m_JSFunctionRenderUpdatePre.isEmpty())
     {

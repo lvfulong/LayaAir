@@ -34,7 +34,7 @@ class RTBaseRenderNode
     //virtual void _calculateGeometryBoundingBox(){};
     //virtual Bounds *get_BoundBox();
     
-    void _renderUpdatePre(RTRenderContext3D* context3D);
+    void _renderUpdatePre(GLESRenderContext3D* context3D);
     bool _needRender(BoundFrustum* pBoundFrustum);
     void setRenderElements(const std::vector<GLESRenderElement3D*>& value);
 

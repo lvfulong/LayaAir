@@ -25,8 +25,8 @@ class RTDirectLightShadowRP : public IDirectLightShadowRP
       RTDirectLightShadowRP();
     ~RTDirectLightShadowRP();
 
-    void update(RTRenderContext3D* context);
-    void render(RTRenderContext3D* context, std::vector<RTBaseRenderNode*>& list, uint32_t count);
+    void update(GLESRenderContext3D* context);
+    void render(GLESRenderContext3D* context, std::vector<RTBaseRenderNode*>& list, uint32_t count);
 
 public:
     //js bindings

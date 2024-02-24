@@ -26,7 +26,7 @@ class GLESRenderListQueue
         this->_elements.add(renderelement);
     }
 
-    void renderQueue(RTRenderContext3D *context)
+    void renderQueue(GLESRenderContext3D *context)
     {
         // this._batchQueue();//合并的地方
         uint32_t count = this->_elements.getLength();

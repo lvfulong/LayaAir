@@ -3,14 +3,14 @@
 #include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderElement3D.h>
 namespace laya
 {
-RTRenderContext3D::RTRenderContext3D(){
+GLESRenderContext3D::GLESRenderContext3D(){
 
 };
 
-RTRenderContext3D::~RTRenderContext3D(){
+GLESRenderContext3D::~GLESRenderContext3D(){
 
 };
-uint32_t RTRenderContext3D::drawRenderElementList(const JCSingletonList<GLESRenderElement3D*> &list)
+uint32_t GLESRenderContext3D::drawRenderElementList(const JCSingletonList<GLESRenderElement3D*> &list)
 {
     if (this->_needStart)
     {
@@ -30,7 +30,7 @@ uint32_t RTRenderContext3D::drawRenderElementList(const JCSingletonList<GLESRend
     return 0;
 }
 
-uint32_t RTRenderContext3D::drawRenderElementOne(GLESRenderElement3D*node)
+uint32_t GLESRenderContext3D::drawRenderElementOne(GLESRenderElement3D*node)
 {
     if (this->_needStart)
     {
@@ -43,7 +43,7 @@ uint32_t RTRenderContext3D::drawRenderElementOne(GLESRenderElement3D*node)
     return 0;
 }
 
-void RTRenderContext3D::_bindRenderTarget()
+void GLESRenderContext3D::_bindRenderTarget()
 {
     if (this->_renderTarget)
     {
@@ -55,7 +55,7 @@ void RTRenderContext3D::_bindRenderTarget()
     }
 }
 
-void RTRenderContext3D::_start()
+void GLESRenderContext3D::_start()
 {
     LayaGL::m_pWebglEngine->scissorTest(true);
     LayaGL::m_pWebglEngine->viewport(viewPort.x, viewPort.y, viewPort.width, viewPort.height);
@@ -65,7 +65,7 @@ void RTRenderContext3D::_start()
         LayaGL::m_pWebglEngine->clearRenderTexture(_clearFlag, &clearColor, clearDepth);
     }
 }
-void RTRenderContext3D::_end()
+void GLESRenderContext3D::_end()
 {
 }
 } // namespace laya

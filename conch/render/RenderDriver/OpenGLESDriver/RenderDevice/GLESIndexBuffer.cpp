@@ -21,17 +21,10 @@ void GLESIndexBuffer::_setIndexDataLength(uint32_t data)
 
     if (curBufSta)
     {
-        if (curBufSta->_bindedIndexBuffer == this)
-        {
-            this->_glBuffer->setDataLength(0);
-        }
-        else
-        {
-            curBufSta->unBind();
-            this->_glBuffer->bindBuffer();
-            this->_glBuffer->setDataLength(data);
-            curBufSta->bind();
-        }
+        curBufSta->unBind();
+        this->_glBuffer->bindBuffer();
+        this->_glBuffer->setDataLength(data);
+        curBufSta->bind();
     }
     else
     {
@@ -46,17 +39,10 @@ void GLESIndexBuffer::_setIndexData(char *data, uint32_t byteLength, uint32_t bu
 
     if (curBufSta)
     {
-        if (curBufSta->_bindedIndexBuffer == this)
-        {
-            this->_glBuffer->setDataLength(0);
-        }
-        else
-        {
-            curBufSta->unBind();
-            this->_glBuffer->bindBuffer();
-            this->_glBuffer->setData(data, byteLength, bufferOffset);
-            curBufSta->bind();
-        }
+        curBufSta->unBind();
+        this->_glBuffer->bindBuffer();
+        this->_glBuffer->setData(data, byteLength, bufferOffset);
+        curBufSta->bind();
     }
     else
     {

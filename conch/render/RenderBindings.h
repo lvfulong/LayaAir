@@ -515,36 +515,36 @@ class RenderBindings
             context.class_("conchRTBaseRenderNode", class_binding);
         }
         {
-            class_<RTRenderContext3D> class_binding;
-            class_binding.function("setClearData", &RTRenderContext3D::setClearData);
-            class_binding.function("setSceneData", &RTRenderContext3D::setSceneData);
-            class_binding.function("setCameraData", &RTRenderContext3D::setCameraData);
-            class_binding.function("setSceneNodeData", &RTRenderContext3D::setSceneNodeData);
-            class_binding.function("setCameraNodeData", &RTRenderContext3D::setCameraNodeData);
-            class_binding.function("setGlobalShaderData", &RTRenderContext3D::setGlobalShaderData);
-            class_binding.function("setGlobalConfigShaderData", &RTRenderContext3D::setGlobalConfigShaderData);
-            class_binding.function("setRenderTarget", &RTRenderContext3D::setRenderTarget);
-            class_binding.function("setViewport", &RTRenderContext3D::setViewport);
-            class_binding.function("setScissor", &RTRenderContext3D::setScissor);
+            class_<GLESRenderContext3D> class_binding;
+            class_binding.function("setClearData", &GLESRenderContext3D::setClearData);
+            class_binding.function("setSceneData", &GLESRenderContext3D::setSceneData);
+            class_binding.function("setCameraData", &GLESRenderContext3D::setCameraData);
+            class_binding.function("setSceneNodeData", &GLESRenderContext3D::setSceneNodeData);
+            class_binding.function("setCameraNodeData", &GLESRenderContext3D::setCameraNodeData);
+            class_binding.function("setGlobalShaderData", &GLESRenderContext3D::setGlobalShaderData);
+            class_binding.function("setGlobalConfigShaderData", &GLESRenderContext3D::setGlobalConfigShaderData);
+            class_binding.function("setRenderTarget", &GLESRenderContext3D::setRenderTarget);
+            class_binding.function("setViewport", &GLESRenderContext3D::setViewport);
+            class_binding.function("setScissor", &GLESRenderContext3D::setScissor);
             /*class_binding.function_optional_override("setScissor", optional_override([](GLESRenderContext3D& ctx,
                const Vector4& value) { ctx.setScissor(value);
                 }));*/
-            class_binding.property_field("_cameraUpdateMask", &RTRenderContext3D::_cameraUpdateMask);
-            class_binding.property_field("_sceneUpdateMask", &RTRenderContext3D::_sceneUpdateMask);
-            class_binding.property_field("_invertY", &RTRenderContext3D::invertY);
-            class_binding.property_field("_pipelineMode", &RTRenderContext3D::pipelineMode);
-            class_binding.function("drawRenderElementOne", &RTRenderContext3D::drawRenderElementOne);
+            class_binding.property_field("_cameraUpdateMask", &GLESRenderContext3D::_cameraUpdateMask);
+            class_binding.property_field("_sceneUpdateMask", &GLESRenderContext3D::_sceneUpdateMask);
+            class_binding.property_field("_invertY", &GLESRenderContext3D::invertY);
+            class_binding.property_field("_pipelineMode", &GLESRenderContext3D::pipelineMode);
+            class_binding.function("drawRenderElementOne", &GLESRenderContext3D::drawRenderElementOne);
             class_binding.function_optional_override(
                 "drawRenderElementList",
                 optional_override(
-                    [](RTRenderContext3D &ctx, const std::vector<GLESRenderElement3D *> elements, uint32_t length) {
+                    [](GLESRenderContext3D &ctx, const std::vector<GLESRenderElement3D *> elements, uint32_t length) {
                         JCSingletonList<GLESRenderElement3D *> list(false);
                         list.m_vElements = elements;
                         list.setLength(length);
                         ctx.drawRenderElementList(list);
                     }));
             class_binding.constructor<>();
-            context.class_("conchRTRenderContext3D", class_binding);
+            context.class_("conchGLESRenderContext3D", class_binding);
         }
         {
             class_<RTRender3DProcess> class_binding;

@@ -12,7 +12,7 @@
 namespace laya
 {
 class RTCameraNodeData;
-class RTRenderContext3D;
+class GLESRenderContext3D;
 class RTBaseRenderNode;
 class RTForwardAddClusterRP
 {
@@ -29,7 +29,7 @@ class RTForwardAddClusterRP
   public:
     RTForwardAddClusterRP();
     ~RTForwardAddClusterRP();
-    void render(RTRenderContext3D *context, std::vector<RTBaseRenderNode *> renderNodeList, uint32_t count);
+    void render(GLESRenderContext3D *context, std::vector<RTBaseRenderNode *> renderNodeList, uint32_t count);
 
     // void set_beforeForwardCmds(std::vector<uint32_t> value);
     // void set_beforeSkybox(std::vector<uint32_t> value);
@@ -76,11 +76,11 @@ class RTForwardAddClusterRP
     }
 
   private:
-    void _recoverRenderContext3D(RTRenderContext3D *context);
-    void _mainPass(RTRenderContext3D *context);
+    void _recoverRenderContext3D(GLESRenderContext3D *context);
+    void _mainPass(GLESRenderContext3D *context);
     void opaqueTexturePass();
-    void _renderDepthPass(RTRenderContext3D *context);
-    void _renderDepthNormalPass(RTRenderContext3D *context);
+    void _renderDepthPass(GLESRenderContext3D *context);
+    void _renderDepthNormalPass(GLESRenderContext3D *context);
 
   public:
     CameraCullInfo cameraCullInfo;

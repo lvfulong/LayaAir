@@ -7,7 +7,7 @@
 
 namespace laya {
 
-    void RTRender3DProcess::renderFowarAddCameraPass(RTRenderContext3D* context, RTForwardAddRP* passInfo, std::vector<RTBaseRenderNode*> renderNodeList, uint32_t count){
+    void RTRender3DProcess::renderFowarAddCameraPass(GLESRenderContext3D* context, RTForwardAddRP* passInfo, std::vector<RTBaseRenderNode*> renderNodeList, uint32_t count){
         //先渲染ShadowTexture
         if (passInfo->shadowCastPass) {
             if (passInfo->enableDirectLightShadow) {

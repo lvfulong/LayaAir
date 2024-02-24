@@ -51,7 +51,7 @@ void RTDirectLightShadowRP::setLight(RTDirectLight *light)
             cascadesMode == ShadowCascadesMode::TwoCascades ? shadowTileResolution : shadowTileResolution * 2;
     }
 }
-void RTDirectLightShadowRP::update(RTRenderContext3D *context)
+void RTDirectLightShadowRP::update(GLESRenderContext3D *context)
 {
     std::vector<F32> &splitDistance = this->_cascadesSplitDistance;
     std::vector<Plane> &frustumPlanes = this->_frustumPlanes;
@@ -86,7 +86,7 @@ void RTDirectLightShadowRP::update(RTRenderContext3D *context)
                                                    this->_cascadeCount, this->_shadowMapSize, this->_shadowParams,
                                                    this->_shadowMatrices.data(), this->_splitBoundSpheres.data());
 }
-void RTDirectLightShadowRP::render(RTRenderContext3D *context, std::vector<RTBaseRenderNode *> &list, uint32_t count)
+void RTDirectLightShadowRP::render(GLESRenderContext3D *context, std::vector<RTBaseRenderNode *> &list, uint32_t count)
 {
     GLESShaderData *shaderValues = context->sceneData;
     context->pipelineMode = "ShadowCaster";
@@ -106,7 +106,7 @@ void RTDirectLightShadowRP::render(RTRenderContext3D *context, std::vector<RTBas
         shadowCullInfo.direction = this->_lightForward;
         // cull
         GLESCullUtil::culldirectLightShadow(shadowCullInfo, list, count, this->_renderQueue,
-                                            (RTRenderContext3D *)context);
+                                            (GLESRenderContext3D *)context);
 
         context->cameraData = sliceData.cameraShaderValue;
         context->_cameraUpdateMask++;
@@ -130,7 +130,7 @@ void RTDirectLightShadowRP::render(RTRenderContext3D *context, std::vector<RTBas
             context->setScissor(tempVec4);
         }
         context->setClearData((RenderClearFlagBits)RenderClearFlag::Depth, Color::BLACK, 1, 0);
-        this->_renderQueue.renderQueue((RTRenderContext3D *)context);
+        this->_renderQueue.renderQueue((GLESRenderContext3D *)context);
         // todo this._applyCasterPassCommandBuffer(context);
     }
     this->_applyRenderData(context->sceneData, context->cameraData);

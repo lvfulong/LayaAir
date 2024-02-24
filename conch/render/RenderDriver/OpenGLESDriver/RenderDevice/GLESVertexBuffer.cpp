@@ -30,12 +30,13 @@ void GLESVertexBuffer::setData(const char *buffer, int bufferBytes, int bufferOf
     bind();
     bool needSubData = dataStartIndex != 0 || static_cast<int64_t>(dataCount) != 9007199254740991; /* || dataCount != Number.MAX_SAFE_INTEGER*/;
 
-    if (static_cast<int64_t>(dataCount) == 9007199254740991)
-    {
-        dataCount = bufferBytes;
-    }
+    
     if (needSubData)
     {
+        if (static_cast<int64_t>(dataCount) == 9007199254740991)
+        {
+            dataCount = bufferBytes;
+        }
         this->_glBuffer->setData((const char *)(buffer + dataStartIndex), dataCount, bufferOffset);
     }
     else

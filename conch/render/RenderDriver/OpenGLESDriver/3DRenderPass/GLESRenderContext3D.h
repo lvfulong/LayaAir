@@ -1,5 +1,5 @@
-#ifndef __RTRenderContext3D_H_
-#define __RTRenderContext3D_H_
+#ifndef __GLESRenderContext3D_H_
+#define __GLESRenderContext3D_H_
 
 #include "render/ShadowCullInfo.h"
 #include <core/math/Color.h>
@@ -17,11 +17,11 @@ class GLESShaderData;
 class GLESInternalRT;
 class RTSceneNodeData;
 class RTCameraModuleData;
-class RTRenderContext3D
+class GLESRenderContext3D
 {
   public:
-    RTRenderContext3D();
-    ~RTRenderContext3D();
+    GLESRenderContext3D();
+    ~GLESRenderContext3D();
     uint32_t drawRenderElementList(const JCSingletonList<GLESRenderElement3D *> &list);
     uint32_t drawRenderElementOne(GLESRenderElement3D *node);
     void setRenderTarget(GLESInternalRT * value, uint32_t clearFlag = (uint32_t)RenderClearFlag::Nothing)

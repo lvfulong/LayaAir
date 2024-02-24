@@ -16,7 +16,7 @@ namespace laya
     RTForwardAddClusterRP::~RTForwardAddClusterRP(){
         
     }
-    void RTForwardAddClusterRP::render(RTRenderContext3D* context, std::vector<RTBaseRenderNode*> list, uint32_t count){
+    void RTForwardAddClusterRP::render(GLESRenderContext3D* context, std::vector<RTBaseRenderNode*> list, uint32_t count){
         context->_cameraUpdateMask++;
         this->opaqueList.clear();
         this->transparent.clear();
@@ -33,7 +33,7 @@ namespace laya
         this->scissor.cloneTo(RTForwardAddClusterRP::_contextScissorPortCatch);
         this->_mainPass(context);
     }
-    void RTForwardAddClusterRP::_renderDepthPass(RTRenderContext3D* context){
+    void RTForwardAddClusterRP::_renderDepthPass(GLESRenderContext3D* context){
         context->pipelineMode = this->depthPipelineMode;
         Viewport& viewport = this->viewPort;
         GLESShaderData* shadervalue = context->sceneData;
@@ -45,7 +45,7 @@ namespace laya
         context->setScissor(tempVec4);
         context->setClearData(static_cast<RenderClearFlagBits>(RenderClearFlag::Depth), Color::BLACK, 1, 0);
         context->setRenderTarget(this->depthTarget);
-        this->opaqueList.renderQueue((RTRenderContext3D*)context);
+        this->opaqueList.renderQueue((GLESRenderContext3D*)context);
         //渲染完后传入使用的参数
         Real far_ = this->camera->farplane;
         Real near_ = this->camera->nearplane;
@@ -55,7 +55,7 @@ namespace laya
         context->cameraData->setVector(DepthPassProperty::DEPTHZBUFFERPARAMS, this->_zBufferParams);
         shadervalue->removeDefine(DepthPassProperty::DEPTHPASS);
     }
-    void RTForwardAddClusterRP::_renderDepthNormalPass(RTRenderContext3D* context){
+    void RTForwardAddClusterRP::_renderDepthNormalPass(GLESRenderContext3D* context){
         context->pipelineMode = this->depthNormalPipelineMode;
         //传入shader该传的值
         Viewport& viewport = this->viewPort;
@@ -65,7 +65,7 @@ namespace laya
         context->setScissor(tempVec4);
         context->setClearData(static_cast<uint32_t>(RenderClearFlag::Color) | static_cast<uint32_t>(RenderClearFlag::Depth), this->_defaultNormalDepthColor, 1, 0);
         context->setRenderTarget(this->depthNormalTarget);
-        this->opaqueList.renderQueue((RTRenderContext3D*)context);
+        this->opaqueList.renderQueue((GLESRenderContext3D*)context);
     }
 
     void RTForwardAddClusterRP::opaqueTexturePass()
@@ -76,7 +76,7 @@ namespace laya
         // blit.run();
         // blit.recover();
     }
-    void RTForwardAddClusterRP::_mainPass(RTRenderContext3D* context)
+    void RTForwardAddClusterRP::_mainPass(GLESRenderContext3D* context)
     {
         context->pipelineMode = this->pipelineMode;
         //todo this._rendercmd(this.beforeForwardCmds, context);
@@ -84,7 +84,7 @@ namespace laya
         context->setClearData(this->clearFlag, this->clearColor, 1, 0);
         if (this->enableOpaque)
         {
-            this->opaqueList.renderQueue((RTRenderContext3D*)context);
+            this->opaqueList.renderQueue((GLESRenderContext3D*)context);
         }
         //todo this._rendercmd(this.beforeSkyboxCmds, context);
         //context.drawRenderElementOne(this.skyRenderNode);
@@ -96,11 +96,11 @@ namespace laya
         this->_recoverRenderContext3D(context);
         //if (this->transparent) 
         {
-            this->transparent.renderQueue((RTRenderContext3D*)context);
+            this->transparent.renderQueue((GLESRenderContext3D*)context);
         }
     }
 
-    void RTForwardAddClusterRP::_recoverRenderContext3D(RTRenderContext3D* context)
+    void RTForwardAddClusterRP::_recoverRenderContext3D(GLESRenderContext3D* context)
     {
         const Viewport& cacheViewPor = RTForwardAddClusterRP::_context3DViewPortCatch;
         const Vector4& cacheScissor = RTForwardAddClusterRP::_contextScissorPortCatch;

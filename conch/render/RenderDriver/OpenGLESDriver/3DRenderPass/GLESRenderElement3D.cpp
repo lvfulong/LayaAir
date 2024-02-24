@@ -13,7 +13,7 @@ GLESRenderElement3D::GLESRenderElement3D()
 GLESRenderElement3D::~GLESRenderElement3D()
 {
 }
-void GLESRenderElement3D::_render(RTRenderContext3D *context)
+void GLESRenderElement3D::_render(GLESRenderContext3D *context)
 {
     bool forceInvertFace = context->invertY;
     uint32_t updateMark = context->_cameraUpdateMask;
@@ -73,7 +73,7 @@ void GLESRenderElement3D::_render(RTRenderContext3D *context)
         }
     }
 }
-void GLESRenderElement3D::_preUpdatePre(RTRenderContext3D *context)
+void GLESRenderElement3D::_preUpdatePre(GLESRenderContext3D *context)
 {
     _compileShader(context);
     _invertFront = _getInvertFront();
@@ -94,7 +94,7 @@ bool GLESRenderElement3D::_getInvertFront()
     return (owner != nullptr && owner->transform != nullptr) ? (owner->transform->_isFrontFaceInvert()) : false;
 }
 
-void GLESRenderElement3D::_compileShader(RTRenderContext3D *context)
+void GLESRenderElement3D::_compileShader(GLESRenderContext3D *context)
 {
     std::vector<RTShaderPass *> passes = subshader->shaderpasses;
     _clearShaderInstance();
