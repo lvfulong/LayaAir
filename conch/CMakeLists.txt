@@ -80,8 +80,6 @@ list(APPEND CONCH_SRC
 	render/3D/renderInstance/MeshRenderNode.cpp
 	render/3D/renderInstance/RenderModuleData.h
 	render/3D/renderInstance/RenderModuleData.cpp
-	render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.h
-	render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.cpp
 	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTRender3DProcess.h
 	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTRender3DProcess.cpp
 	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTForwardAddRP.h
@@ -182,6 +180,8 @@ list(APPEND CONCH_SRC
 	# render/3D/temp/InstanceRenderElementOBJ.cpp
 	render/3D/temp/UniformBufferObject.h
 	render/3D/temp/UniformBufferObject.cpp
+	render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderContext3D.h
+	render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderContext3D.cpp
 	render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderElement3D.h
 	render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderElement3D.cpp
 	render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESSkinRenderElement.h

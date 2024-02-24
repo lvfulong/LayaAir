@@ -7,7 +7,7 @@
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderInstance.h"
 #include "render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTSubShader.h"
 #include "render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h"
-#include <render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.h>
+#include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderContext3D.h>
 namespace laya
 {
 class ComposeData;
