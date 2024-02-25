@@ -18,6 +18,7 @@
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 #include <utils/Log.h>
 #include <utils/Preprocessor.h>
+#include <render/Property.h>
 namespace laya
 {
 std::unordered_map<std::string, RTShaderDefine> GLESEngine::_defineMap;
@@ -28,7 +29,19 @@ GLESEngine::GLESEngine(WebGLConfig config, WebGLMode webglMode)
 {
     assert(LayaGL::m_pWebglEngine == nullptr);
     LayaGL::m_pWebglEngine = this;
+    if (!g_kSystemConfig.m_bConchWebGL)
+    {
 
+        BaseCameraProperty::__init__();
+        DepthPassProperty::__init__();
+        RenderableSprite3DProperty::__init__();
+        Shader3D::__init__();
+        ShadowCasterPassProperty::__init__();
+        Scene3DShaderDeclaration::__init__();
+        SkinnedMeshSprite3DProperty::__init__();
+        Sprite3DProperty::__init__();
+        Sprite3DRenderDeclarationProperty::__init__();
+    }
     std::vector<std::string> names;
     switch (webglMode)
     {
