@@ -318,6 +318,7 @@ class RenderBindings
             class_<GLESVertexBuffer> class_binding;
             class_binding.constructor<BufferTargetType, BufferUsage>();
             class_binding.property_field("_instanceBuffer", &GLESVertexBuffer::_instanceBuffer);
+            class_binding.function("clearVertexDeclaration", &GLESVertexBuffer::clearVertexDeclaration);
             class_binding.function("setVertexDeclaration", &GLESVertexBuffer::setVertexDeclaration);
             class_binding.function("setData", &GLESVertexBuffer::setDataJS);
             class_binding.function("setDataLength", &GLESVertexBuffer::setDataLength);

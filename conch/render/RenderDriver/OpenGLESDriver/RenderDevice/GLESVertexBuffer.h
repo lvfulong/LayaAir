@@ -33,11 +33,19 @@ class GLESVertexBuffer // : public VertexBuffer
     void unbind();
     void orphanStorage();
 
-    void setVertexDeclaration(const std::unordered_map<int32_t, VertexStateContext> &declarations)
+    // windows android crash ios ok todo
+    /*void setVertexDeclaration(const std::unordered_map<int32_t, VertexStateContext>& declarations)
     {
         this->_shaderValues = declarations;
+    }*/
+    void clearVertexDeclaration()
+    {
+        _shaderValues.clear();
     }
-
+    void setVertexDeclaration(int32_t key, const VertexStateContext& declarations)
+    {
+        _shaderValues[key] = declarations;
+    }
   public:
     GLBuffer *_glBuffer;
     bool _instanceBuffer = false;
