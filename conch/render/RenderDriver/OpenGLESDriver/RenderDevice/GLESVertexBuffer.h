@@ -25,7 +25,7 @@ class GLESVertexBuffer // : public VertexBuffer
     void destroy();
     void setDataLength(int byteLength);
 
-    void setData(const char *buffer, int bufferOffset /* = 0*/, int dataStartIndex /* = 0*/,
+    void setData(const char *buffer, int bufferBytes, int bufferOffset /* = 0*/, int dataStartIndex /* = 0*/,
         double dataCount /*= Number.MAX_SAFE_INTEGER*/);
     void setDataJS(JSValueAsParam data, int bufferOffset /* = 0*/, int dataStartIndex /* = 0*/,
         double dataCount /*= Number.MAX_SAFE_INTEGER*/);
@@ -33,11 +33,19 @@ class GLESVertexBuffer // : public VertexBuffer
     void unbind();
     void orphanStorage();
 
-    void setVertexDeclaration(const std::unordered_map<int32_t, VertexStateContext> &declarations)
+    // windows android crash ios ok todo
+    /*void setVertexDeclaration(const std::unordered_map<int32_t, VertexStateContext>& declarations)
     {
         this->_shaderValues = declarations;
+    }*/
+    void clearVertexDeclaration()
+    {
+        _shaderValues.clear();
     }
-
+    void setVertexDeclaration(int32_t key, const VertexStateContext& declarations)
+    {
+        _shaderValues[key] = declarations;
+    }
   public:
     GLBuffer *_glBuffer;
     bool _instanceBuffer = false;

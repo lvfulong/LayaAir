@@ -20,7 +20,7 @@ namespace laya
 		Shader2DCompile* pre = Shader2D::_preCompileShader[shaderID];
 		if (!pre)
 		{
-			//LOGE("withCompile shader err!");
+			LOGE("withCompile shader err!");
 			return nullptr;
 		}
 		Shader2D* shader = pre->createShader(pGLESEngine, defines.toNameDic(), bindAttrib);

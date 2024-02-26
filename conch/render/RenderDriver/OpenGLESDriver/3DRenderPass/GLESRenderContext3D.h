@@ -1,5 +1,5 @@
-#ifndef __RTRenderContext3D_H_
-#define __RTRenderContext3D_H_
+#ifndef __GLESRenderContext3D_H_
+#define __GLESRenderContext3D_H_
 
 #include "render/ShadowCullInfo.h"
 #include <core/math/Color.h>
@@ -18,11 +18,11 @@ class GLESShaderData;
 class GLESInternalRT;
 class RTSceneNodeData;
 class RTCameraModuleData;
-class RTRenderContext3D
+class GLESRenderContext3D
 {
   public:
-    RTRenderContext3D();
-    ~RTRenderContext3D();
+    GLESRenderContext3D();
+    ~GLESRenderContext3D();
     uint32_t drawRenderElementList(const JCSingletonList<GLESRenderElement3D *> &list);
     uint32_t drawRenderElementOne(GLESRenderElement3D *node);
     void runOneCMD(GLESRenderCMD* cmd);
@@ -55,9 +55,9 @@ class RTRenderContext3D
         this->scissor = value;
         _needStart = true;
     }
-    uint32_t setClearData(RenderClearFlagBits flag, Color color, float depthValue, uint8_t stencilValue)
+    uint32_t setClearData(uint32_t flag, Color color, float depthValue, uint8_t stencilValue)
     {
-        clearFlag = flag;
+        _clearFlag = flag;
         clearColor = color;
         clearDepth = depthValue;
         clearStencil = stencilValue;
@@ -94,7 +94,7 @@ class RTRenderContext3D
     bool invertY;
     // pipelineMode
     std::string pipelineMode;
-    RenderClearFlagBits clearFlag{0};
+    uint32_t _clearFlag{0};
     float clearDepth;
     uint8_t clearStencil;
     Color clearColor;

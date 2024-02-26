@@ -1,7 +1,7 @@
 #include "RTSpotLightShadowRP.h"
 #include <render/Property.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
-#include "render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.h"
+#include "render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderContext3D.h"
 #include "render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESCullUtil.h"
 
 namespace laya
@@ -26,13 +26,13 @@ void RTSpotLightShadowRP::setLight(RTSpotLight* value)
     // this.destTarget && RenderTexture.recoverToPool(this.destTarget);// TODO 优化
     //this.destTarget = ShadowUtils.getTemporaryShadowTexture(this._shadowResolution, this._shadowResolution, ShadowMapFormat.bit16);
 }
-void RTSpotLightShadowRP::update(RTRenderContext3D* context)
+void RTSpotLightShadowRP::update(GLESRenderContext3D* context)
 {
     ShadowSpotData& shadowSpotData = this->_shadowSpotData;
     this->_getSpotLightShadowData(shadowSpotData, this->_shadowResolution, this->_shadowParams, this->_shadowSpotMatrices, this->_shadowSpotMapSize);
 }
 
-void RTSpotLightShadowRP::render(RTRenderContext3D* context, std::vector<RTBaseRenderNode*>& list, uint32_t count)
+void RTSpotLightShadowRP::render(GLESRenderContext3D* context, std::vector<RTBaseRenderNode*>& list, uint32_t count)
 {
     GLESShaderData* originCameraData = context->cameraData;
     GLESShaderData* shaderValues = context->sceneData;

@@ -389,11 +389,11 @@ int GLShaderInstance::_uniform_vec3v(ShaderVariable *one, const std::any &dataIn
 int GLShaderInstance::_uniform_vec4(ShaderVariable *one, const std::any &dataInfo)
 {
     //linux compile error assert(dataInfo.type == std::typeid(Vector4));
-    Vector4 data = std::any_cast<Vector4>(dataInfo);
+    const Vector4& data = std::any_cast<const Vector4&>(dataInfo);
     //if (memcmp(one->uploadedValue.data(), &data, sizeof(Vector4)) != 0)
     {
         glUniform4f(one->location, data.x, data.y, data.z, data.w);
-        //memcpy(one->uploadedValue.data(), &data, sizeof(Vector4));
+        //memcpy(one->uploa%fdedValue.data(), &data, sizeof(Vector4));
         return 1;
     }
     return 0;

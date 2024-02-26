@@ -3,7 +3,7 @@
 
 #include "render/3D/temp/Transform3D.h"
 #include <vector>
-#include "render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.h"
+#include "render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderContext3D.h"
 #include <core/math/Types.h>
 #include <binder/JSInterface.h>
 #include "Bindings/LayaAir/3D/JSBounds.h"
@@ -35,7 +35,7 @@ class RTBaseRenderNode
     //virtual void _calculateGeometryBoundingBox(){};
     //virtual Bounds *get_BoundBox();
     
-    void _renderUpdatePre(RTRenderContext3D* context3D);
+    void _renderUpdatePre(GLESRenderContext3D* context3D);
     bool _needRender(BoundFrustum* pBoundFrustum);
     void setRenderElements(const std::vector<GLESRenderElement3D*>& value);
 

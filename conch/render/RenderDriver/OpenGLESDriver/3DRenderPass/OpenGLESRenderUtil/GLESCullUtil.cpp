@@ -5,7 +5,7 @@ namespace laya
 {
 void GLESCullUtil::cullByCameraCullInfo(CameraCullInfo &cameraCullInfo, std::vector<RTBaseRenderNode *> &list,
                                         uint32_t count, GLESRenderListQueue &opaqueList,
-                                        GLESRenderListQueue &transparent, RTRenderContext3D *context)
+                                        GLESRenderListQueue &transparent, GLESRenderContext3D *context)
 {
     std::vector<RTBaseRenderNode *> &renders = list;
     BoundFrustum &boundFrustum = cameraCullInfo._boundFrustum;
@@ -18,7 +18,7 @@ void GLESCullUtil::cullByCameraCullInfo(CameraCullInfo &cameraCullInfo, std::vec
         canPass = (static_cast<uint32_t>(pow(static_cast<uint32_t>(2), render->layer)) & cullMask) != 0 &&
                   (render->renderbitFlag == 0);
         canPass = canPass && ((render->staticMask & staticMask) != 0);
-        if (canPass)
+        if (true)//TODO if (canPass)
         {
             // Stat.frustumCulling++;todo
             //  needRender 方案有问题 会造成native和js的差异
@@ -51,7 +51,7 @@ void GLESCullUtil::cullByCameraCullInfo(CameraCullInfo &cameraCullInfo, std::vec
 }
 
 void GLESCullUtil::culldirectLightShadow(const ShadowCullInfo &shadowCullInfo, std::vector<RTBaseRenderNode *> &list,
-                                         uint32_t count, GLESRenderListQueue &opaqueList, RTRenderContext3D *context)
+                                         uint32_t count, GLESRenderListQueue &opaqueList, GLESRenderContext3D *context)
 {
     opaqueList.clear();
     std::vector<RTBaseRenderNode *> &renders = list;
@@ -81,7 +81,7 @@ void GLESCullUtil::culldirectLightShadow(const ShadowCullInfo &shadowCullInfo, s
 }
 
 void GLESCullUtil::cullingSpotShadow(CameraCullInfo &cameraCullInfo, std::vector<RTBaseRenderNode *> &list,
-                                     uint32_t count, GLESRenderListQueue &opaqueList, RTRenderContext3D *context)
+                                     uint32_t count, GLESRenderListQueue &opaqueList, GLESRenderContext3D *context)
 {
     opaqueList.clear();
     std::vector<RTBaseRenderNode *> &renders = list;

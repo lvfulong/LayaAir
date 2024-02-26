@@ -7,7 +7,7 @@
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderInstance.h"
 #include "render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTSubShader.h"
 #include "render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h"
-#include <render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.h>
+#include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderContext3D.h>
 namespace laya
 {
 class ComposeData;
@@ -19,8 +19,8 @@ class GLESRenderElement3D
   public:
     GLESRenderElement3D();
     virtual ~GLESRenderElement3D();
-    void _render(RTRenderContext3D *context);
-    void _preUpdatePre(RTRenderContext3D *context);
+    void _render(GLESRenderContext3D *context);
+    void _preUpdatePre(GLESRenderContext3D *context);
     void setRenderShaderData(GLESShaderData *value)
     {
         renderShaderData = value;
@@ -53,7 +53,7 @@ class GLESRenderElement3D
   private:
     void _clearShaderInstance();
     bool _getInvertFront();
-    void _compileShader(RTRenderContext3D *context);
+    void _compileShader(GLESRenderContext3D *context);
 
   protected:
     virtual void drawGeometry(GLESShaderInstance *shaderIns);

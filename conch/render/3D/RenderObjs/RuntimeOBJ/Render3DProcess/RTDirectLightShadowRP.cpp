@@ -88,7 +88,8 @@ void RTDirectLightShadowRP::update(RTRenderContext3D *context)
                                                    this->_shadowMatrices.data(), this->_splitBoundSpheres.data());
 }
 
-void RTDirectLightShadowRP::render(RTRenderContext3D *context, std::vector<RTBaseRenderNode *> &list, uint32_t count)
+void RTDirectLightShadowRP::render(GLESRenderContext3D *context, std::vector<RTBaseRenderNode *> &list, uint32_t count)
+
 {
     GLESShaderData *shaderValues = context->sceneData;
     context->pipelineMode = "ShadowCaster";
@@ -108,7 +109,7 @@ void RTDirectLightShadowRP::render(RTRenderContext3D *context, std::vector<RTBas
         shadowCullInfo.direction = this->_lightForward;
         // cull
         GLESCullUtil::culldirectLightShadow(shadowCullInfo, list, count, this->_renderQueue,
-                                            (RTRenderContext3D *)context);
+                                            (GLESRenderContext3D *)context);
 
         context->cameraData = sliceData.cameraShaderValue;
         context->_cameraUpdateMask++;
@@ -132,7 +133,7 @@ void RTDirectLightShadowRP::render(RTRenderContext3D *context, std::vector<RTBas
             context->setScissor(tempVec4);
         }
         context->setClearData((RenderClearFlagBits)RenderClearFlag::Depth, Color::BLACK, 1, 0);
-        this->_renderQueue.renderQueue((RTRenderContext3D *)context);
+        this->_renderQueue.renderQueue((GLESRenderContext3D *)context);
         GLESRenderCMD::applyCommandBuffers(context, _shadowCastCMDS);
     }
     this->_applyRenderData(context->sceneData, context->cameraData);

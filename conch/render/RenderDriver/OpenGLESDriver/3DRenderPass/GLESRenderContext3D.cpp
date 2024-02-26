@@ -1,16 +1,16 @@
-#include "RTRenderContext3D.h"
+#include "GLESRenderContext3D.h"
 #include "render/LayaGL.h"
 #include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderElement3D.h>
 namespace laya
 {
-RTRenderContext3D::RTRenderContext3D(){
+GLESRenderContext3D::GLESRenderContext3D(){
 
 };
 
-RTRenderContext3D::~RTRenderContext3D(){
+GLESRenderContext3D::~GLESRenderContext3D(){
 
 };
-uint32_t RTRenderContext3D::drawRenderElementList(const JCSingletonList<GLESRenderElement3D*> &list)
+uint32_t GLESRenderContext3D::drawRenderElementList(const JCSingletonList<GLESRenderElement3D*> &list)
 {
     if (_needStart) {
         _bindRenderTarget();
@@ -23,19 +23,15 @@ uint32_t RTRenderContext3D::drawRenderElementList(const JCSingletonList<GLESRend
     {
         list.m_vElements[i]->_preUpdatePre(this);
     }
-    // if (afterUpdate)  afterUpdate(list);
-    // if (preRender) preRender(list);
     for (uint32_t i = 0, n = list.getLength(); i < n; i++)
     {
         list.m_vElements[i]->_render(this);
     }
-    // if (preRender) afterRender(list);
-    _end();
 
     return 0;
 }
 
-uint32_t RTRenderContext3D::drawRenderElementOne(GLESRenderElement3D*node)
+uint32_t GLESRenderContext3D::drawRenderElementOne(GLESRenderElement3D*node)
 {
     if (_needStart) {
         _bindRenderTarget();
@@ -44,7 +40,6 @@ uint32_t RTRenderContext3D::drawRenderElementOne(GLESRenderElement3D*node)
     }
     node->_preUpdatePre(this);
     node->_render(this);
-    _end();
     return 0;
 }
 
@@ -69,16 +64,17 @@ void RTRenderContext3D::_bindRenderTarget()
     }
 }
 
-void RTRenderContext3D::_start()
+void GLESRenderContext3D::_start()
 {
+    LayaGL::m_pWebglEngine->scissorTest(true);
     LayaGL::m_pWebglEngine->viewport(viewPort.x, viewPort.y, viewPort.width, viewPort.height);
     LayaGL::m_pWebglEngine->scissor(scissor.x, scissor.y, scissor.z, scissor.w);
-    if (this->clearFlag != static_cast<RenderClearFlagBits>(RenderClearFlag::Nothing))
+    if (this->_clearFlag != static_cast<RenderClearFlagBits>(RenderClearFlag::Nothing))
     {
-        LayaGL::m_pWebglEngine->clearRenderTexture(clearFlag, &clearColor, clearDepth);
+        LayaGL::m_pWebglEngine->clearRenderTexture(_clearFlag, &clearColor, clearDepth);
     }
 }
-void RTRenderContext3D::_end()
+void GLESRenderContext3D::_end()
 {
 }
 } // namespace laya

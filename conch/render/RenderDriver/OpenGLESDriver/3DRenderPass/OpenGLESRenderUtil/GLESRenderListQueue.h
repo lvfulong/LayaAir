@@ -1,7 +1,7 @@
 #ifndef __GLESRenderListQueue_H_
 #define __GLESRenderListQueue_H_
 
-#include "render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.h"
+#include "render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderContext3D.h"
 #include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderElement3D.h>
 #include <render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESQuickSort.h>
 #include <utils/JCSingletonList.h>
@@ -26,7 +26,7 @@ class GLESRenderListQueue
         this->_elements.add(renderelement);
     }
 
-    void renderQueue(RTRenderContext3D *context)
+    void renderQueue(GLESRenderContext3D *context)
     {
         // this._batchQueue();//合并的地方
         uint32_t count = this->_elements.getLength();
