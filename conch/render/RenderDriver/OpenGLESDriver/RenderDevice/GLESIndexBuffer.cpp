@@ -7,31 +7,26 @@
 
 namespace laya
 {
+
 GLESIndexBuffer::GLESIndexBuffer(BufferTargetType targetType, BufferUsage bufferUsageType)
 {
     this->_glBuffer = (GLBuffer *)LayaGL::m_pWebglEngine->createBuffer(targetType, bufferUsageType);
 }
+
 GLESIndexBuffer::~GLESIndexBuffer()
 {
     destroy();
 }
+
 void GLESIndexBuffer::_setIndexDataLength(uint32_t data)
 {
     GLESBufferState *curBufSta = GLESBufferState::_curBindedBufferState;
-
     if (curBufSta)
     {
-        if (curBufSta->_bindedIndexBuffer == this)
-        {
-            this->_glBuffer->setDataLength(0);
-        }
-        else
-        {
-            curBufSta->unBind();
-            this->_glBuffer->bindBuffer();
-            this->_glBuffer->setDataLength(data);
-            curBufSta->bind();
-        }
+        curBufSta->unBind();
+        this->_glBuffer->bindBuffer();
+        this->_glBuffer->setDataLength(data);
+        curBufSta->bind();
     }
     else
     {
@@ -39,6 +34,7 @@ void GLESIndexBuffer::_setIndexDataLength(uint32_t data)
         this->_glBuffer->setDataLength(data);
     }
 }
+
 void GLESIndexBuffer::_setIndexData(char *data, uint32_t byteLength, uint32_t bufferOffset)
 {
 
@@ -46,17 +42,10 @@ void GLESIndexBuffer::_setIndexData(char *data, uint32_t byteLength, uint32_t bu
 
     if (curBufSta)
     {
-        if (curBufSta->_bindedIndexBuffer == this)
-        {
-            this->_glBuffer->setDataLength(0);
-        }
-        else
-        {
-            curBufSta->unBind();
-            this->_glBuffer->bindBuffer();
-            this->_glBuffer->setData(data, byteLength, bufferOffset);
-            curBufSta->bind();
-        }
+        curBufSta->unBind();
+        this->_glBuffer->bindBuffer();
+        this->_glBuffer->setData(data, byteLength, bufferOffset);
+        curBufSta->bind();
     }
     else
     {
@@ -64,6 +53,7 @@ void GLESIndexBuffer::_setIndexData(char *data, uint32_t byteLength, uint32_t bu
         this->_glBuffer->setData(data, byteLength, bufferOffset);
     }
 }
+
 void GLESIndexBuffer::_setIndexDataJS(JSValueAsParam buffer, uint32_t bufferOffset)
 {
     char *data = NULL;
@@ -74,6 +64,7 @@ void GLESIndexBuffer::_setIndexDataJS(JSValueAsParam buffer, uint32_t bufferOffs
         this->_setIndexData(data, dataLength, bufferOffset);
     }
 }
+
 void GLESIndexBuffer::destroy()
 {
     if (_glBuffer != nullptr)

@@ -51,6 +51,7 @@ void RTDirectLightShadowRP::setLight(RTDirectLight *light)
             cascadesMode == ShadowCascadesMode::TwoCascades ? shadowTileResolution : shadowTileResolution * 2;
     }
 }
+
 void RTDirectLightShadowRP::update(RTRenderContext3D *context)
 {
     std::vector<F32> &splitDistance = this->_cascadesSplitDistance;
@@ -86,6 +87,7 @@ void RTDirectLightShadowRP::update(RTRenderContext3D *context)
                                                    this->_cascadeCount, this->_shadowMapSize, this->_shadowParams,
                                                    this->_shadowMatrices.data(), this->_splitBoundSpheres.data());
 }
+
 void RTDirectLightShadowRP::render(RTRenderContext3D *context, std::vector<RTBaseRenderNode *> &list, uint32_t count)
 {
     GLESShaderData *shaderValues = context->sceneData;
@@ -131,10 +133,11 @@ void RTDirectLightShadowRP::render(RTRenderContext3D *context, std::vector<RTBas
         }
         context->setClearData((RenderClearFlagBits)RenderClearFlag::Depth, Color::BLACK, 1, 0);
         this->_renderQueue.renderQueue((RTRenderContext3D *)context);
-        // todo this._applyCasterPassCommandBuffer(context);
+        GLESRenderCMD::applyCommandBuffers(context, _shadowCastCMDS);
     }
     this->_applyRenderData(context->sceneData, context->cameraData);
 }
+
 void RTDirectLightShadowRP::_applyRenderData(GLESShaderData *scene, GLESShaderData *camera)
 {
     const RTDirectLight &light = *this->_light;
@@ -165,6 +168,7 @@ void RTDirectLightShadowRP::_applyRenderData(GLESShaderData *scene, GLESShaderDa
     scene->setBuffer(ShadowCasterPassProperty::SHADOW_SPLIT_SPHERES, (uint8_t *)this->_splitBoundSpheres.data(),
                      this->_splitBoundSpheres.size() * sizeof(F32));
 }
+
 void RTDirectLightShadowRP::getShadowBias(const Matrix4x4 &shadowProjectionMatrix, double shadowResolution,
                                           Vector4 &out)
 {
@@ -204,4 +208,14 @@ void RTDirectLightShadowRP::_setupShadowCasterShaderValues(GLESShaderData *shade
     cameraSV->setMatrix4x4(BaseCameraProperty::VIEWPROJECTMATRIX, shadowSliceData.viewProjectMatrix);
     shaderValues->setMatrix4x4(BaseCameraProperty::VIEWPROJECTMATRIX, shadowSliceData.viewProjectMatrix);
 }
+
+
+void RTDirectLightShadowRP::clearShadowCasterCommandBuffer() {
+    _shadowCastCMDS.clear();
+}
+
+void RTDirectLightShadowRP::addShadowCasterCommandBuffers(const std::vector<GLESRenderCMD*>& cmds) {
+    _shadowCastCMDS.push_back(cmds);
+}
+
 } // namespace laya

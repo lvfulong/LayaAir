@@ -12,8 +12,12 @@ RTRenderContext3D::~RTRenderContext3D(){
 };
 uint32_t RTRenderContext3D::drawRenderElementList(const JCSingletonList<GLESRenderElement3D*> &list)
 {
-    _bindRenderTarget();
-    _start();
+    if (_needStart) {
+        _bindRenderTarget();
+        _start();
+        _needStart = false;
+    }
+  
     // if (preUpdate) preUpdate(list);
     for (uint32_t i = 0, n = list.getLength(); i < n; i++)
     {
@@ -33,14 +37,26 @@ uint32_t RTRenderContext3D::drawRenderElementList(const JCSingletonList<GLESRend
 
 uint32_t RTRenderContext3D::drawRenderElementOne(GLESRenderElement3D*node)
 {
-    _bindRenderTarget();
-    _start();
+    if (_needStart) {
+        _bindRenderTarget();
+        _start();
+        _needStart = false;
+    }
     node->_preUpdatePre(this);
     node->_render(this);
     _end();
     return 0;
 }
 
+void RTRenderContext3D::runOneCMD(GLESRenderCMD* cmd) {
+    cmd->apply(this);
+}
+
+void RTRenderContext3D::runCMDList(const std::vector<GLESRenderCMD*>& cmds) {
+    for (GLESRenderCMD* i : cmds) {
+        i->apply(this);
+    }
+}
 void RTRenderContext3D::_bindRenderTarget()
 {
     if (this->_renderTarget)

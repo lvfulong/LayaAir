@@ -79,22 +79,24 @@ namespace laya
     void RTForwardAddClusterRP::_mainPass(RTRenderContext3D* context)
     {
         context->pipelineMode = this->pipelineMode;
-        //todo this._rendercmd(this.beforeForwardCmds, context);
-        this->_recoverRenderContext3D(context);
+        if(enableCMD) GLESRenderCMD::applyCommandBuffers(context, _beforeForwardCmds);
+        _recoverRenderContext3D(context);
         context->setClearData(this->clearFlag, this->clearColor, 1, 0);
-        if (this->enableOpaque)
+        if (enableOpaque)
         {
-            this->opaqueList.renderQueue((RTRenderContext3D*)context);
+            opaqueList.renderQueue(context);
         }
-        //todo this._rendercmd(this.beforeSkyboxCmds, context);
+        if (enableCMD) GLESRenderCMD::applyCommandBuffers(context, _beforeSkyboxCmds);
         //context.drawRenderElementOne(this.skyRenderNode);
-        if (this->enableOpaque) 
+        if (enableOpaque) 
         {
-            this->opaqueTexturePass();
+            opaqueTexturePass();
         }
-        //todo this._rendercmd(this.beforeTransparentCmds, context);
+        if (enableCMD) GLESRenderCMD::applyCommandBuffers(context, _beforeTransparentCmds);
         this->_recoverRenderContext3D(context);
-        //this.transparent &&this.transparent.render;
+        if (enableTransparent) {
+            transparent.renderQueue(context);
+        }
     }
 
     void RTForwardAddClusterRP::_recoverRenderContext3D(RTRenderContext3D* context)
@@ -104,5 +106,29 @@ namespace laya
         context->setViewport(cacheViewPor);
         context->setScissor(cacheScissor);
         context->setRenderTarget(this->destTarget);
+    }
+
+    void RTForwardAddClusterRP::clearBeforeForwardCmds() {
+        _beforeForwardCmds.clear();
+    }
+
+    void RTForwardAddClusterRP::addBeforeForwardCmds(const std::vector<GLESRenderCMD*>& cmds) {
+        _beforeForwardCmds.push_back(cmds);
+    }
+
+    void RTForwardAddClusterRP::clearBeforeSkyboxCmds() {
+        _beforeSkyboxCmds.clear();
+    }
+
+    void RTForwardAddClusterRP::addBeforeSkyboxCmds(const std::vector<GLESRenderCMD*>& cmds) {
+        _beforeSkyboxCmds.push_back(cmds);
+    }
+
+    void RTForwardAddClusterRP::clearBeforeTransparentCmds() {
+        _beforeTransparentCmds.clear();
+    }
+
+    void RTForwardAddClusterRP::addBeforeTransparentCmds(const std::vector<GLESRenderCMD*>& cmds) {
+        _beforeTransparentCmds.push_back(cmds);
     }
 } // namespace laya

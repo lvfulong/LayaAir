@@ -82,6 +82,8 @@ list(APPEND CONCH_SRC
 	render/3D/renderInstance/RenderModuleData.cpp
 	render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.h
 	render/3D/RenderObjs/RuntimeOBJ/RTRenderContext3D.cpp
+	render/3D/RenderObjs/RuntimeOBJ/GLESRenderCMD.h
+	render/3D/RenderObjs/RuntimeOBJ/GLESRenderCMD.cpp
 	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTRender3DProcess.h
 	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTRender3DProcess.cpp
 	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTForwardAddRP.h

@@ -9,6 +9,7 @@
 #include <render/3D/design/renderEnum/RenderClearFlag.h>
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h>
 #include <utils/JCSingletonList.h>
+#include "GLESRenderCMD.h"
 
 namespace laya
 {
@@ -24,9 +25,17 @@ class RTRenderContext3D
     ~RTRenderContext3D();
     uint32_t drawRenderElementList(const JCSingletonList<GLESRenderElement3D *> &list);
     uint32_t drawRenderElementOne(GLESRenderElement3D *node);
-    void setRenderTarget(GLESInternalRT *renderTarget)
+    void runOneCMD(GLESRenderCMD* cmd);
+    void runCMDList(const std::vector<GLESRenderCMD*>& cmds);
+    void setRenderTarget(GLESInternalRT* renderTarget, RenderClearFlagBits flag = 0)
     {
-        this->_renderTarget = renderTarget;
+        clearFlag = flag;
+        if (_renderTarget == renderTarget) {
+            return;
+        }
+        _renderTarget = renderTarget;
+        _needStart = true;
+      ;
     }
     void setCameraData(GLESShaderData *shaderData)
     {
@@ -39,10 +48,12 @@ class RTRenderContext3D
     void setViewport(const Viewport &value)
     {
         this->viewPort = value;
+        _needStart = true;
     }
     void setScissor(const Vector4 &value)
     {
         this->scissor = value;
+        _needStart = true;
     }
     uint32_t setClearData(RenderClearFlagBits flag, Color color, float depthValue, uint8_t stencilValue)
     {
@@ -97,6 +108,8 @@ class RTRenderContext3D
     uint32_t _cameraUpdateMask = 0;
     RTSceneNodeData *sceneNodeData = nullptr;
     RTCameraModuleData *cameraNodeData = nullptr;
+private:
+    bool _needStart = true;
 };
 } // namespace laya
 #endif

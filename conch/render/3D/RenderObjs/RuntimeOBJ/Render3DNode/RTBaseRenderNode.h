@@ -19,6 +19,7 @@ class Bounds;
 class GLESShaderData;
 class GLESRenderElement3D;
 class JSTransform;
+class RTRenderContext3D;
 class RTBaseRenderNode
 {
   public:

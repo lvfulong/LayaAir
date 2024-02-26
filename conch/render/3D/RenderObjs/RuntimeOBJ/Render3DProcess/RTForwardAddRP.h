@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <stdint.h>
+#include <render/3D/RenderObjs/RuntimeOBJ/GLESRenderCMD.h>
 
 namespace laya {
 	class RTDirectLightShadowRP;
@@ -17,7 +18,11 @@ namespace laya {
 		void setDirectLightShadowPass(RTDirectLightShadowRP* value) { directLightShadowPass = value; }
 		void setSpotLightShadowPass(RTSpotLightShadowRP* value) { spotLightShadowPass = value; }
 		void setForwardAddClusterRP(RTForwardAddClusterRP* value) { renderpass = value; }
-		void set_afterEverything(std::vector<uint32_t> value);
+		
+		void clearBeforeImageEffectCmds();
+		void addBeforeImageEffectCmds(const std::vector<GLESRenderCMD*>& cmds);
+		void clearAfterAllRenderCmds();
+		void addAfterAllRenderCmds(const std::vector<GLESRenderCMD*>& cmds);
 	public:
 		bool shadowCastPass = false;
 		//directLightPass
@@ -29,7 +34,8 @@ namespace laya {
 		RTForwardAddClusterRP* renderpass = nullptr;
 		// TODO
 		//PostProcessPass postprecessPass;
-		std::vector<uint32_t> afterEverything;//cmd buffer
+		std::vector<std::vector<GLESRenderCMD*>> _beforeImageEffectCMDS;
+		std::vector<std::vector<GLESRenderCMD*>> _afterAllRenderCMDS;
 	};
 }
 #endif

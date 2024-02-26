@@ -31,9 +31,6 @@ class RTForwardAddClusterRP
     ~RTForwardAddClusterRP();
     void render(RTRenderContext3D *context, std::vector<RTBaseRenderNode *> renderNodeList, uint32_t count);
 
-    // void set_beforeForwardCmds(std::vector<uint32_t> value);
-    // void set_beforeSkybox(std::vector<uint32_t> value);
-    // void set_beforeTransparent(std::vector<uint32_t> value);
     void setCameraCullInfo(const CameraCullInfo &value)
     {
         cameraCullInfo = value;
@@ -74,7 +71,12 @@ class RTForwardAddClusterRP
     {
         camera = value;
     }
-
+    void clearBeforeForwardCmds();
+    void addBeforeForwardCmds(const std::vector<GLESRenderCMD*>& cmds);
+    void clearBeforeSkyboxCmds();
+    void addBeforeSkyboxCmds(const std::vector<GLESRenderCMD*>& cmds);
+    void clearBeforeTransparentCmds();
+    void addBeforeTransparentCmds(const std::vector<GLESRenderCMD*>& cmds);
   private:
     void _recoverRenderContext3D(RTRenderContext3D *context);
     void _mainPass(RTRenderContext3D *context);
@@ -84,9 +86,6 @@ class RTForwardAddClusterRP
 
   public:
     CameraCullInfo cameraCullInfo;
-    std::vector<uint32_t> beforeForwardCmds;
-    std::vector<uint32_t> beforeSkyboxCmds;
-    std::vector<uint32_t> beforeTransparentCmds;
     RTCameraNodeData *camera;
     GLESInternalRT *opaqueTexture;
     GLESInternalRT *destTarget;
@@ -112,6 +111,10 @@ class RTForwardAddClusterRP
     bool enableCMD;
     bool enableTransparent;
     bool enableOpaqueTexture;
+    //cmd
+    std::vector<std::vector<GLESRenderCMD*>> _beforeForwardCmds;
+    std::vector<std::vector<GLESRenderCMD*>> _beforeSkyboxCmds;
+    std::vector<std::vector<GLESRenderCMD*>> _beforeTransparentCmds;
 };
 } // namespace laya
 #endif

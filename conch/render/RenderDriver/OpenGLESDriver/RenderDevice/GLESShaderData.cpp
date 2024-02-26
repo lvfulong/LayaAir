@@ -185,6 +185,11 @@ void GLESShaderData::setBuffer(int32_t index, uint8_t *data, uint32_t lengthInBy
     m_data[index] = info;
 }
 
+void GLESShaderData::setBuffer(int32_t index, BufferDataInfo& data)
+{
+    m_data[index] = data;
+}
+
 const BufferDataInfo &GLESShaderData::getBuffer(int32_t index)
 {
     return std::any_cast<const BufferDataInfo &>(m_data[index]);

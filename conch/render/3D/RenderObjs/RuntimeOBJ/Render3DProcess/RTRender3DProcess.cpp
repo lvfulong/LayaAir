@@ -23,6 +23,8 @@ namespace laya {
         //postProcess TODO
         passInfo->renderpass->render(context, renderNodeList, count);
 
+        GLESRenderCMD::applyCommandBuffers(context, passInfo->_beforeImageEffectCMDS);
+        GLESRenderCMD::applyCommandBuffers(context, passInfo->_afterAllRenderCMDS);
         //PostProcess
         
         //afterEverything cmd
