@@ -52,7 +52,7 @@ void RTDirectLightShadowRP::setLight(RTDirectLight *light)
     }
 }
 
-void RTDirectLightShadowRP::update(RTRenderContext3D *context)
+void RTDirectLightShadowRP::update(GLESRenderContext3D *context)
 {
     std::vector<F32> &splitDistance = this->_cascadesSplitDistance;
     std::vector<Plane> &frustumPlanes = this->_frustumPlanes;

@@ -1,6 +1,7 @@
 #include "GLESRenderContext3D.h"
 #include "render/LayaGL.h"
 #include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderElement3D.h>
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.h"
 namespace laya
 {
 GLESRenderContext3D::GLESRenderContext3D(){
@@ -43,16 +44,16 @@ uint32_t GLESRenderContext3D::drawRenderElementOne(GLESRenderElement3D*node)
     return 0;
 }
 
-void RTRenderContext3D::runOneCMD(GLESRenderCMD* cmd) {
+void GLESRenderContext3D::runOneCMD(GLESRenderCMD* cmd) {
     cmd->apply(this);
 }
 
-void RTRenderContext3D::runCMDList(const std::vector<GLESRenderCMD*>& cmds) {
+void GLESRenderContext3D::runCMDList(const std::vector<GLESRenderCMD*>& cmds) {
     for (GLESRenderCMD* i : cmds) {
         i->apply(this);
     }
 }
-void RTRenderContext3D::_bindRenderTarget()
+void GLESRenderContext3D::_bindRenderTarget()
 {
     if (this->_renderTarget)
     {

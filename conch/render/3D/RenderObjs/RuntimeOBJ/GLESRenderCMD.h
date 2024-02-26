@@ -1,25 +1,25 @@
-#include "RTRenderContext3D.h"
+#ifndef __GLESRenderCMD_H_
+#define __GLESRenderCMD_H_
 #include "Render3DNode/RTBaseRenderNode.h"
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTSubShader.h>
 #include <any>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
-#ifndef __GLESRenderCMD_H_
-#define __GLESRenderCMD_H_
+
 
 
 namespace laya
 {
 
-    class RTRenderContext3D;
     class GLESRenderElement3D;
     class GLESInternalRT;
     class RTBaseRenderNode;
+    class GLESRenderContext3D;
     class GLESRenderCMD {
     public:
-        static void applyCommandBuffers(RTRenderContext3D* context, std::vector<std::vector<GLESRenderCMD*>>& commandbuffers);
+        static void applyCommandBuffers(GLESRenderContext3D* context, std::vector<std::vector<GLESRenderCMD*>>& commandbuffers);
     public:
         virtual ~GLESRenderCMD() {};
-        virtual void apply(RTRenderContext3D* context) = 0;
+        virtual void apply(GLESRenderContext3D* context) = 0;
         
     };
 
@@ -27,7 +27,7 @@ namespace laya
     public:
         GLESDrawNodeCMDData();
         ~GLESDrawNodeCMDData();
-        void apply(RTRenderContext3D* context) override;
+        void apply(GLESRenderContext3D* context) override;
     public:
         void setBaseRenderNode(RTBaseRenderNode* node);
         void setShaderData(GLESShaderData* shaderData);
@@ -42,7 +42,7 @@ namespace laya
     public:
         GLESBlitQuadCMDData();
         ~GLESBlitQuadCMDData();
-        void apply(RTRenderContext3D* context) override;
+        void apply(GLESRenderContext3D* context) override;
     public:
         void setViewport(const Viewport& viewport) { _viewport = viewport; };
         void setSciccor(const Vector4& sciccor) { _sciccor = sciccor; };
@@ -66,7 +66,7 @@ namespace laya
     public:
         GLESDrawElementCMDData();
         ~GLESDrawElementCMDData();
-        void apply(RTRenderContext3D* context) override;
+        void apply(GLESRenderContext3D* context) override;
         void clearElement();
         void addOneElement(GLESRenderElement3D* element);
     private:
@@ -77,7 +77,7 @@ namespace laya
     public:
         GLESSetViewportCMD();
         ~GLESSetViewportCMD();
-        void apply(RTRenderContext3D* context) override;
+        void apply(GLESRenderContext3D* context) override;
         void setViewport(Viewport& view) { _viewport = view; };
         void setSciccor(Vector4& v4) { _sciccor = v4; };
     private:
@@ -89,7 +89,7 @@ namespace laya
     public:
         GLESSetRenderTargetCMD();
         ~GLESSetRenderTargetCMD();
-        void apply(RTRenderContext3D* context) override;
+        void apply(GLESRenderContext3D* context) override;
         void setRT(GLESInternalRT* rt) { _rt = rt; };
         void clearFlag(uint32_t flag) { _flag = flag; };
         void clearColorValue(Color& color) { _clearColor = color; };
@@ -108,7 +108,7 @@ namespace laya
     public:
         GLESSetRenderData();
         ~GLESSetRenderData();
-        void apply(RTRenderContext3D* context) override;
+        void apply(GLESRenderContext3D* context) override;
         void setValue(std::any& value) { _value = value; };
         void setBufferValue(uint8_t* data, uint32_t lengthInBytes);
         void setDataType(ShaderDataType type) { _type = type; };
@@ -125,7 +125,7 @@ namespace laya
     public:
         GLESSetShaderDefine();
         ~GLESSetShaderDefine();
-        void apply(RTRenderContext3D* context) override;
+        void apply(GLESRenderContext3D* context) override;
         void setDefine(RTShaderDefine& define) { _define = define; };
         void setDest(GLESShaderData* dest) { _dest = dest; };
         void setAdd(bool value) { _add = value; };

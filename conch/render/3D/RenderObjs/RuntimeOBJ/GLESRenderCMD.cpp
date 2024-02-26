@@ -5,7 +5,7 @@
 #include "Render3DNode/RTBaseRenderNode.h"
 #include <render/Property.h>
 namespace laya{
-	void GLESRenderCMD::applyCommandBuffers(RTRenderContext3D* context,std::vector<std::vector<GLESRenderCMD*>>& commandbuffers) {
+	void GLESRenderCMD::applyCommandBuffers(GLESRenderContext3D* context,std::vector<std::vector<GLESRenderCMD*>>& commandbuffers) {
 		if (commandbuffers.size() > 0) {
 			for (auto i : commandbuffers) {
 				context->runCMDList(i);
@@ -23,7 +23,7 @@ namespace laya{
 		_shaderData = nullptr;
 		_subShader = nullptr;
 	}
-	void GLESDrawNodeCMDData::apply(RTRenderContext3D* context)
+	void GLESDrawNodeCMDData::apply(GLESRenderContext3D* context)
 	{
 		_node->_renderUpdatePre(context);
 		for (auto element : _node->renderelements) {
@@ -62,7 +62,7 @@ namespace laya{
 		_element = nullptr;
 	}
 
-	void GLESBlitQuadCMDData::apply(RTRenderContext3D* context)
+	void GLESBlitQuadCMDData::apply(GLESRenderContext3D* context)
 	{
 		_element->materialShaderData->setInternalTexture(CommandProperty::SCREENTEXTURE_ID, _source);
 		_element->materialShaderData->setVector(CommandProperty::SCREENTEXTUREOFFSETSCALE_ID, _offsetScale);
@@ -85,7 +85,7 @@ namespace laya{
 		_elements.clear();
 	}
 
-	void GLESDrawElementCMDData::apply(RTRenderContext3D* context) {
+	void GLESDrawElementCMDData::apply(GLESRenderContext3D* context) {
 		for (auto element : _elements) {
 			context->drawRenderElementOne(element);
 		}
@@ -108,7 +108,7 @@ namespace laya{
 	GLESSetViewportCMD::~GLESSetViewportCMD() {
 	}
 
-	void GLESSetViewportCMD::apply(RTRenderContext3D* context) {
+	void GLESSetViewportCMD::apply(GLESRenderContext3D* context) {
 		context->setViewport(_viewport);
 		context->setScissor(_sciccor);
 	}
@@ -121,7 +121,7 @@ namespace laya{
 
 	}
 
-	void GLESSetRenderTargetCMD::apply(RTRenderContext3D* context) {
+	void GLESSetRenderTargetCMD::apply(GLESRenderContext3D* context) {
 		context->setRenderTarget(_rt);
 		context->setClearData(_flag,_clearColor, _clearDepth, _clearStencilValue);
 	}
@@ -137,7 +137,7 @@ namespace laya{
 		info.m_lengthInBytes = lengthInBytes;
 		_value = info;
 	};
-	void GLESSetRenderData::apply(RTRenderContext3D* context) {
+	void GLESSetRenderData::apply(GLESRenderContext3D* context) {
 		switch (_type) {
 		case ShaderDataType::Int:
 			_dest->setInt(_propertyID, std::any_cast<int32_t>(_value));
@@ -184,7 +184,7 @@ namespace laya{
 		_dest = nullptr;
 	}
 
-	void GLESSetShaderDefine::apply(RTRenderContext3D* context)
+	void GLESSetShaderDefine::apply(GLESRenderContext3D* context)
 	{
 		if (_add) {
 			_dest->addDefine(_define);

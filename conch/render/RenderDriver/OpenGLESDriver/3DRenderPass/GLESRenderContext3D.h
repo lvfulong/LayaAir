@@ -9,7 +9,7 @@
 #include <render/3D/design/renderEnum/RenderClearFlag.h>
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h>
 #include <utils/JCSingletonList.h>
-#include "GLESRenderCMD.h"
+#include <render/3D/RenderObjs/RuntimeOBJ/GLESRenderCMD.h>
 
 namespace laya
 {
@@ -18,6 +18,7 @@ class GLESShaderData;
 class GLESInternalRT;
 class RTSceneNodeData;
 class RTCameraModuleData;
+class GLESRenderCMD;
 class GLESRenderContext3D
 {
   public:
@@ -29,7 +30,7 @@ class GLESRenderContext3D
     void runCMDList(const std::vector<GLESRenderCMD*>& cmds);
     void setRenderTarget(GLESInternalRT* renderTarget, RenderClearFlagBits flag = 0)
     {
-        clearFlag = flag;
+        _clearFlag = flag;
         if (_renderTarget == renderTarget) {
             return;
         }
