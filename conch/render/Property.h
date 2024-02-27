@@ -146,5 +146,13 @@ class Sprite3DRenderDeclarationProperty
     static RTShaderDefine SHADERDEFINE_VOLUMETRICGI;
     static void __init__();
 };
+
+class CommandProperty {
+public:
+    static uint32_t SCREENTEXTURE_ID;
+    static uint32_t SCREENTEXTUREOFFSETSCALE_ID;
+    static uint32_t MAINTEXTURE_TEXELSIZE_ID;
+    static void __init__();
+};
 } // namespace laya
 #endif

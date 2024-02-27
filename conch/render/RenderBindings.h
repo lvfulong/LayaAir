@@ -540,6 +540,8 @@ class RenderBindings
             class_binding.property_field("_invertY", &GLESRenderContext3D::invertY);
             class_binding.property_field("_pipelineMode", &GLESRenderContext3D::pipelineMode);
             class_binding.function("drawRenderElementOne", &GLESRenderContext3D::drawRenderElementOne);
+            class_binding.function("runOneCMD", &GLESRenderContext3D::runOneCMD);
+            class_binding.function("runCMDList", &GLESRenderContext3D::runCMDList);
             class_binding.function_optional_override(
                 "drawRenderElementList",
                 optional_override(
@@ -567,6 +569,10 @@ class RenderBindings
             class_binding.function("setForwardAddClusterRP", &RTForwardAddRP::setForwardAddClusterRP);
             class_binding.function("setDirectLightShadowPass", &RTForwardAddRP::setDirectLightShadowPass);
             class_binding.function("setSpotLightShadowPass", &RTForwardAddRP::setSpotLightShadowPass);
+            class_binding.function("clearBeforeImageEffectCmds", &RTForwardAddRP::clearBeforeImageEffectCmds);
+            class_binding.function("addBeforeImageEffectCmds", &RTForwardAddRP::addBeforeImageEffectCmds);
+            class_binding.function("clearAfterAllRenderCmds", &RTForwardAddRP::clearAfterAllRenderCmds);
+            class_binding.function("addAfterAllRenderCmds", &RTForwardAddRP::addAfterAllRenderCmds);
             context.class_("conchRTForwardAddRP", class_binding);
         }
         {
@@ -575,6 +581,10 @@ class RenderBindings
             class_binding.function("setCameraNodeData", &RTDirectLightShadowRP::setCameraNodeData);
             class_binding.function("setRenderTarget", &RTDirectLightShadowRP::setRenderTarget);
             class_binding.function("setLight", &RTDirectLightShadowRP::setLight);
+            class_binding.function("clearShadowCasterCommandBuffer", &RTDirectLightShadowRP::clearShadowCasterCommandBuffer);
+            class_binding.function("addShadowCasterCommandBuffers", &RTDirectLightShadowRP::addShadowCasterCommandBuffers);
+            class_binding.function("clearShadowCasterCommandBuffer", &RTDirectLightShadowRP::clearShadowCasterCommandBuffer);
+            class_binding.function("addShadowCasterCommandBuffers", &RTDirectLightShadowRP::addShadowCasterCommandBuffers);
             context.class_("conchRTDirectLightShadowCastRP", class_binding);
         }
         {
@@ -607,6 +617,12 @@ class RenderBindings
             class_binding.function("setViewport", &RTForwardAddClusterRP::setViewport);
             class_binding.function("setScissor", &RTForwardAddClusterRP::setScissor);
             class_binding.function("setSkyRenderNode", &RTForwardAddClusterRP::setSkyRenderNode);
+            class_binding.function("clearBeforeForwardCmds", &RTForwardAddClusterRP::clearBeforeForwardCmds);
+            class_binding.function("addBeforeForwardCmds", &RTForwardAddClusterRP::addBeforeForwardCmds);
+            class_binding.function("clearBeforeSkyboxCmds", &RTForwardAddClusterRP::clearBeforeSkyboxCmds);
+            class_binding.function("addBeforeSkyboxCmds", &RTForwardAddClusterRP::addBeforeSkyboxCmds);
+            class_binding.function("clearBeforeTransparentCmds", &RTForwardAddClusterRP::clearBeforeTransparentCmds);
+            class_binding.function("addBeforeTransparentCmds", &RTForwardAddClusterRP::addBeforeTransparentCmds);
             context.class_("conchRTForwardAddClusterRP", class_binding);
         }
         {
@@ -730,6 +746,68 @@ class RenderBindings
             class_binding.function("cloneTo", &GLESShaderData::cloneTo);
             class_binding.function("destroy", &GLESShaderData::destroy);
             context.class_("conchGLESShaderData", class_binding);
+        }
+
+        {
+            class_<GLESDrawNodeCMDData> class_binding;
+            class_binding.function("setBaseRenderNode", &GLESDrawNodeCMDData::setBaseRenderNode);
+            class_binding.function("setShaderData", &GLESDrawNodeCMDData::setShaderData);
+            class_binding.function("setSubShader", &GLESDrawNodeCMDData::setSubShader);
+            context.class_("conchGLESDrawNodeCMDData", class_binding);
+        }
+
+        {
+            class_<GLESBlitQuadCMDData> class_binding;
+            class_binding.function("setDest", &GLESBlitQuadCMDData::setDest);
+            class_binding.function("setViewport", &GLESBlitQuadCMDData::setViewport);
+            class_binding.function("setSciccor", &GLESBlitQuadCMDData::setSciccor);
+            class_binding.function("setSource", &GLESBlitQuadCMDData::setSource);
+            class_binding.function("setSourceTexelSize", &GLESBlitQuadCMDData::setSourceTexelSize);
+            class_binding.function("setOffsetScale", &GLESBlitQuadCMDData::setOffsetScale);
+            class_binding.function("setRenderElement", &GLESBlitQuadCMDData::setRenderElement);
+            context.class_("conchGLESBlitQuadCMDData", class_binding);
+        }
+
+        {
+            class_<GLESDrawElementCMDData> class_binding;
+            class_binding.function("clearElement", &GLESDrawElementCMDData::clearElement);
+            class_binding.function("addOneElement", &GLESDrawElementCMDData::addOneElement);
+            context.class_("conchGLESDrawElementCMDData", class_binding);
+        }
+
+        {
+            class_<GLESSetViewportCMD> class_binding;
+            class_binding.function("setViewport", &GLESSetViewportCMD::setViewport);
+            class_binding.function("setSciccor", &GLESSetViewportCMD::setSciccor);
+            context.class_("conchGLESSetViewportCMD", class_binding);
+        }
+
+        {
+            class_<GLESSetRenderTargetCMD> class_binding;
+            class_binding.function("setRT", &GLESSetRenderTargetCMD::setRT);
+            class_binding.function("setClearFlag", &GLESSetRenderTargetCMD::clearFlag);
+            class_binding.function("clearColorValue", &GLESSetRenderTargetCMD::clearColorValue);
+            class_binding.function("clearDepthValue", &GLESSetRenderTargetCMD::clearDepthValue);
+            class_binding.function("clearStencilValue", &GLESSetRenderTargetCMD::clearStencilValue);
+            context.class_("conchGLESSetRenderTargetCMD", class_binding);
+        }
+
+        {
+            class_<GLESSetRenderData> class_binding;
+            class_binding.function("setDataType", &GLESSetRenderData::setDataType);
+            class_binding.function("setPropertyID", &GLESSetRenderData::setPropertyID);
+            class_binding.function("setDest", &GLESSetRenderData::setDest);
+            class_binding.function("setValue", &GLESSetRenderData::setValue);
+            class_binding.function("setBufferValue", &GLESSetRenderData::setBufferValue);
+            context.class_("conchGLESSetRenderData", class_binding);
+        }
+
+        {
+            class_<GLESSetShaderDefine> class_binding;
+            class_binding.function("setAdd", &GLESSetShaderDefine::setAdd);
+            class_binding.function("setDest", &GLESSetShaderDefine::setDest);
+            class_binding.function("setDefine", &GLESSetShaderDefine::setDefine);
+            context.class_("conchGLESSetShaderDefine", class_binding);
         }
     }
 };

@@ -1,6 +1,7 @@
 #include "GLESRenderContext3D.h"
 #include "render/LayaGL.h"
 #include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderElement3D.h>
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.h"
 namespace laya
 {
 GLESRenderContext3D::GLESRenderContext3D(){
@@ -12,12 +13,13 @@ GLESRenderContext3D::~GLESRenderContext3D(){
 };
 uint32_t GLESRenderContext3D::drawRenderElementList(const JCSingletonList<GLESRenderElement3D*> &list)
 {
-    if (this->_needStart)
-    {
+    if (_needStart) {
         _bindRenderTarget();
         _start();
-        this->_needStart = false;
+        _needStart = false;
     }
+  
+    // if (preUpdate) preUpdate(list);
     for (uint32_t i = 0, n = list.getLength(); i < n; i++)
     {
         list.m_vElements[i]->_preUpdatePre(this);
@@ -32,17 +34,25 @@ uint32_t GLESRenderContext3D::drawRenderElementList(const JCSingletonList<GLESRe
 
 uint32_t GLESRenderContext3D::drawRenderElementOne(GLESRenderElement3D*node)
 {
-    if (this->_needStart)
-    {
+    if (_needStart) {
         _bindRenderTarget();
         _start();
-        this->_needStart = false;
+        _needStart = false;
     }
     node->_preUpdatePre(this);
     node->_render(this);
     return 0;
 }
 
+void GLESRenderContext3D::runOneCMD(GLESRenderCMD* cmd) {
+    cmd->apply(this);
+}
+
+void GLESRenderContext3D::runCMDList(const std::vector<GLESRenderCMD*>& cmds) {
+    for (GLESRenderCMD* i : cmds) {
+        i->apply(this);
+    }
+}
 void GLESRenderContext3D::_bindRenderTarget()
 {
     if (this->_renderTarget)

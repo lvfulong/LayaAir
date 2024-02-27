@@ -8,6 +8,7 @@
 #include "render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESRenderListQueue.h"
 #include <array>
 #include <core/math/Types.h>
+#include <render/3D/RenderObjs/RuntimeOBJ/GLESRenderCMD.h>
 
 namespace laya
 {
@@ -29,16 +30,17 @@ class RTDirectLightShadowRP : public IDirectLightShadowRP
     void render(GLESRenderContext3D* context, std::vector<RTBaseRenderNode*>& list, uint32_t count);
 
 public:
-    //js bindings
     void setRenderTarget(GLESInternalRT* value) { destTarget = value; }
     void setLight(RTDirectLight* light);
     void setCameraNodeData(RTCameraNodeData* value) { camera = value; }
+    //cmds
+    void clearShadowCasterCommandBuffer();
+    void addShadowCasterCommandBuffers(const std::vector<GLESRenderCMD*>& cmds);
   private:
     void _setupShadowCasterShaderValues(GLESShaderData *shaderValues, const ShadowSliceData &shadowSliceData,
                                         const Vector3 &LightParam, const Vector4 &shadowBias);
     void getShadowBias(const Matrix4x4 &shadowProjectionMatrix, double shadowResolution, Vector4 &out);
     void _applyRenderData(GLESShaderData *scene, GLESShaderData *camera);
-
   public:
     Vector3 _lightUp;
     Vector3 _lightSide;
@@ -62,6 +64,9 @@ public:
     uint32_t _shadowMapWidth = 0;
     uint32_t _shadowMapHeight = 0;
     Real _shadowTileResolution = 0;
+
+    //cmd
+    std::vector<std::vector<GLESRenderCMD*>> _shadowCastCMDS;
 };
 } // namespace laya
 #endif

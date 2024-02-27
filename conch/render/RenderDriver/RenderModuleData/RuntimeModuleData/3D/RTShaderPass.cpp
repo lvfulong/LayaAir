@@ -55,7 +55,7 @@ void RTShaderPass::setCacheShader(RTDefineDatas *compileDefine, GLESShaderInstan
 
 RTShaderPass::CacheShaderItem *RTShaderPass::getCacheShader(RTDefineDatas *compileDefine)
 {
-    compileDefine->_intersectionDefineDatas(validDefine); // ȥ��û���õ��ĺ�Ա�����Ӱ��
+    compileDefine->_intersectionDefineDatas(validDefine); 
     void *cacheShaders = &_cacheSharders;
     uint32_t maskLength = compileDefine->_length;
     if (maskLength > _cacheShaderHierarchy)

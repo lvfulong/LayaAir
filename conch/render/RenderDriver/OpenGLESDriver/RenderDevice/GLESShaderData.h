@@ -90,6 +90,7 @@ class GLESShaderData //: public ResourceBase<ShaderData>
     void setMatrix3x3(int32_t index, const Matrix3x3 &value);
     const Matrix3x3 &getMatrix3x3(int32_t index);
     void setBuffer(int32_t index, uint8_t *data, uint32_t lengthInBytes);
+    void setBuffer(int32_t index, BufferDataInfo& data);
     const BufferDataInfo &getBuffer(int32_t index);
     void setInternalTexture(int32_t index, GLESInternalTex *value);
     GLESInternalTex *getInternalTexture(int32_t index);
