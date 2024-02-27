@@ -15,7 +15,7 @@ class GLESBufferState;
 class GLESRenderGeometryElement // : public ResourceBase<GLESRenderGeometryElement>
 {
   public:
-    GLESRenderGeometryElement(MeshTopology mode, DrawType drawType);
+    GLESRenderGeometryElement();
     ~GLESRenderGeometryElement();
     void setDrawArrayParams(int first, int count);
     void setDrawElementParams(int count, int offset);

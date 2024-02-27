@@ -54,6 +54,8 @@ namespace laya
 		bool m_isDefaultMatrix = false;
 		Transform3D* m_parent = nullptr;
 		uint32_t m_transformFlag = 0;
+		bool _faceInvert = false;
+		int32_t _frontFaceValue = 1;
 
 		bool isDefaultMatrix();
 		bool _isFrontFaceInvert();
@@ -149,7 +151,8 @@ namespace laya
 		void _setTransformFlag(uint32_t type, bool value);
 		bool _getTransformFlag(uint32_t type);
 		
-		
+		int32_t getFrontFaceValue();
+
 		bool        m_bLocalPositionNeedSync = false;
 		bool        m_bLocalRotationtionNeedSync = false;
 		bool        m_bLocalScaleNeedSync = false;
@@ -162,6 +165,7 @@ namespace laya
 		bool        m_bWorldMatrixNeedSync = false;
 
 		bool		m_bWorldLossyScaleNeedSync = false;
+
 private:
 private:
 		Listener* m_pListener;

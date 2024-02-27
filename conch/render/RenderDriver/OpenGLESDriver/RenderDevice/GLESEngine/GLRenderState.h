@@ -11,7 +11,7 @@
 #include <cassert>
 #include <utils/Preprocessor.h>
 #include "JCSystemConfig.h"
-
+#include <utils/Log.h>
 namespace laya
 {
 	class GLESEngine;
@@ -20,26 +20,26 @@ namespace laya
 	private:
 		bool m_depthTest = true;
 		bool m_depthMask = true;
-		GLenum m_depthFunc;
+		GLenum m_depthFunc = 0;
 		bool m_stencilTest = false;
-		GLenum m_stencilFunc;
+		GLenum m_stencilFunc = 0;
 		bool m_stencilMask = false;
-		GLint m_stencilRef;
-		GLenum m_stencilOp_fail;
-		GLenum m_stencilOp_zfail;
-		GLenum m_stencilOp_zpass;
+		GLint m_stencilRef = 0;
+		GLenum m_stencilOp_fail = 0;
+		GLenum m_stencilOp_zfail = 0;
+		GLenum m_stencilOp_zpass = 0;
 		bool m_blend = false;
-		GLenum m_blendEquation;
-		GLenum m_blendEquationRGB;
-		GLenum m_blendEquationAlpha;
-		GLenum m_sFactor;
-		GLenum m_dFactor;
-		GLenum m_sFactorRGB;
-		GLenum m_dFactorRGB;
-		GLenum m_sFactorAlpha;
-		GLenum m_dFactorAlpha;
+		GLenum m_blendEquation = 0;
+		GLenum m_blendEquationRGB = 0;
+		GLenum m_blendEquationAlpha = 0;
+		GLenum m_sFactor = 0;
+		GLenum m_dFactor = 0;
+		GLenum m_sFactorRGB = 0;
+		GLenum m_dFactorRGB = 0;
+		GLenum m_sFactorAlpha = 0;
+		GLenum m_dFactorAlpha = 0;
 		bool m_cullFace = false;
-		GLenum m_frontFace;
+		GLenum m_frontFace = 0;
 
 		GLESEngine* m_engine;
 	public:
@@ -51,6 +51,12 @@ namespace laya
 
 		void _initState() 
 		{
+			glEnable(GL_DEPTH_TEST);// setDepthTest(true);
+			glDepthMask(true);//setDepthMask(true);
+			glDisable(GL_STENCIL_TEST);// setStencilTest(false);
+			glStencilMask(0x00);// setStencilMask(false);
+			glDisable(GL_BLEND);//setBlend(false);
+			glDisable(GL_CULL_FACE);// setCullFace(false);
 			//TODO:������ȫ
 			setDepthFunc(CompareFunction::Less);
 			setBlendEquationSeparate(BlendEquationSeparate::ADD, BlendEquationSeparate::ADD);

@@ -1,6 +1,8 @@
 #include "RTBaseRenderNode.h"
-#include <render/Property.h>
 #include "Bindings/LayaAir/3D/JSTransform.h"
+#include <render/Property.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
+
 namespace laya
 {
 
@@ -12,44 +14,44 @@ bool RTBaseRenderNode::shadowCullPass()
 JSBounds *RTBaseRenderNode::getBounds()
 {
     if (this->boundsChange)
-	{
+    {
         this->_calculateBoundingBox();
-		this->boundsChange = false;
-	}
+        this->boundsChange = false;
+    }
     return this->bounds;
 }
-void RTBaseRenderNode::setBounds(JSBounds* bounds)
+void RTBaseRenderNode::setBounds(JSBounds *bounds)
 {
     this->bounds = bounds;
 }
 void RTBaseRenderNode::_calculateBoundingBox()
 {
     if (customCull)
-	{
-	    //todo 
-	}
-	else
     {
-        const Matrix4x4& worldMat = this->transform->getWorldMatrix();
-		//todo this->baseGeometryBounds->_tranform(worldMat, *this->bounds);
+        // todo
+    }
+    else
+    {
+        const Matrix4x4 &worldMat = this->transform->getWorldMatrix();
+        this->baseGeometryBounds->_tranform(worldMat, *this->bounds);
     }
 }
-void RTBaseRenderNode::setBaseGeometryBounds(JSBounds* bounds)
+void RTBaseRenderNode::setBaseGeometryBounds(JSBounds *bounds)
 {
     baseGeometryBounds = bounds;
 }
-void RTBaseRenderNode::setShaderData(GLESShaderData* data)
+void RTBaseRenderNode::setShaderData(GLESShaderData *data)
 {
     this->shaderData = data;
 }
 void RTBaseRenderNode::_applyReflection()
 {
     // TODO
-    /* if (!this._probReflection) return;
-     if (this._probReflection._updateMark != this._probeReflectionUpdateMark) {
-         this._probeReflectionUpdateMark = this._probReflection._updateMark;
-         this._probReflection.applyReflectionShaderData(this._shaderValues);
-     }*/
+    // if (!this.probeReflection || this.reflectionMode == ReflectionProbeMode.off) return;
+    // if (this.probeReflection.updateMark != this.probeReflectionUpdateMark) {
+    //    this.probeReflectionUpdateMark = this.probeReflection.updateMark;
+    //    this.probeReflection.applyRenderData(this.shaderData);
+    //}
 }
 
 void RTBaseRenderNode::_applyLightmap()
@@ -75,30 +77,48 @@ void RTBaseRenderNode::_applyLightmap()
          shaderValues.removeDefine(RenderableSprite3DProperty::SHADERDEFINE_LIGHTMAP_DIRECTIONAL);
      }*/
 }
-
+void RTBaseRenderNode::_renderUpdate(GLESRenderContext3D *context)
+{
+    // if (this->lightmapDirtyFlag) {
+    //     (this->lightmapDirtyFlag == context->sceneModuleData ? .lightmapDirtyFlag) && this._applyLightMapParams();
+    // }
+    // this->_applyReflection();
+    // this->_applyLightProb();
+    auto trans = this->transform;
+    this->shaderData->setMatrix4x4(Sprite3DProperty::WORLDMATRIX, trans->getWorldMatrix());
+    this->worldParams.x = trans->getFrontFaceValue();
+    this->shaderData->setVector(Sprite3DProperty::WORLDINVERTFRONT, this->worldParams);
+}
 void RTBaseRenderNode::_applyLightProb()
 {
     // TODO
-    /*if (this.lightmapIndex >= 0 || !this._lightProb) return;
-    if (this._lightProb._updateMark != this._lightProbUpdateMark) {
-        this._lightProbUpdateMark = this._lightProb._updateMark;
-        this._lightProb.applyVolumetricGI(this._shaderValues);
-    }*/
+    // if (this.lightmapIndex >= 0 || !this.volumetricGI) return;
+    // if (this.volumetricGI.updateMark != this.lightProbUpdateMark) {
+    //    this.lightProbUpdateMark = this.volumetricGI.updateMark;
+    //    this.volumetricGI.applyRenderData(this.shaderData);
+    //}
 }
-void RTBaseRenderNode::_renderUpdatePre(GLESRenderContext3D* context3D)
+void RTBaseRenderNode::_renderUpdatePre(GLESRenderContext3D *context3D)
 {
+    if (this->_updateMark == context3D->_cameraUpdateMask)
+        return;
     if (!m_JSFunctionRenderUpdatePre.isEmpty())
     {
         m_JSFunctionRenderUpdatePre.call<void>(getCurrentContext().global());
     }
+    else
+    {
+        _renderUpdate(context3D);
+    }
+    this->_updateMark = context3D->_cameraUpdateMask;
 }
-bool RTBaseRenderNode::_needRender(BoundFrustum* pBoundFrustum)
+bool RTBaseRenderNode::_needRender(BoundFrustum *pBoundFrustum)
 {
-    return true;
-    /*//todoif (pBoundFrustum)
-			return pBoundFrustum->intersects(getBounds()->_getBoundBox());
-		else
-			return true;*/
+    if (pBoundFrustum)
+        return pBoundFrustum->intersects(getBounds()->_getBoundBox());
+    else
+
+        return true;
 }
 void RTBaseRenderNode::setRenderUpdatePre(JSValueAsParam function)
 {
@@ -108,16 +128,16 @@ void RTBaseRenderNode::setCalculateBoundingBox(JSValueAsParam function)
 {
     m_JSFunctionCalculateBoundingBox.reset(function);
 }
-void RTBaseRenderNode::setCommonUniformMap(const std::vector<std::string>& value)
+void RTBaseRenderNode::setCommonUniformMap(const std::vector<std::string> &value)
 {
     this->commonUniformMap = value;
 }
-void RTBaseRenderNode::setRenderElements(const std::vector<GLESRenderElement3D*>& value)
+void RTBaseRenderNode::setRenderElements(const std::vector<GLESRenderElement3D *> &value)
 {
     this->renderelements = value;
 }
 void RTBaseRenderNode::destroy()
 {
-    //TODO
+    // TODO
 }
 } // namespace laya

@@ -500,7 +500,7 @@ int GLESEngine::uploadCustomUniforms(GLShaderInstance *shader, const std::unorde
     {
         ShaderVariable* one = it->second;
         if (one && data != nullptr)
-            shaderCall += one->fun(one, &tempAny);
+            shaderCall += one->fun(one, tempAny);
         tempData.m_data = nullptr;
     }
     return shaderCall;

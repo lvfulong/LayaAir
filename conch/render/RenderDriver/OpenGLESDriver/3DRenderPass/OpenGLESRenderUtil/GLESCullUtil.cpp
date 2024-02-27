@@ -18,7 +18,7 @@ void GLESCullUtil::cullByCameraCullInfo(CameraCullInfo &cameraCullInfo, std::vec
         canPass = (static_cast<uint32_t>(pow(static_cast<uint32_t>(2), render->layer)) & cullMask) != 0 &&
                   (render->renderbitFlag == 0);
         canPass = canPass && ((render->staticMask & staticMask) != 0);
-        if (true)//TODO if (canPass)
+        if (canPass)
         {
             // Stat.frustumCulling++;todo
             //  needRender 方案有问题 会造成native和js的差异

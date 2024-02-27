@@ -61,7 +61,7 @@ namespace laya
 			DEPTHTEST_ALWAYS = (int32_t)CompareFunction::Always/*WebGLContext.ALWAYS*/,
 
 
-			STENCILTEST_OFF = 0,
+			STENCILTEST_OFF = (int32_t)CompareFunction::Off,
 			STENCILTEST_NEVER = (int32_t)CompareFunction::Never/*WebGLContext.NEVER*/,
 			STENCILTEST_LESS = (int32_t)CompareFunction::Less/*WebGLContext.LESS*/,
 			STENCILTEST_EQUAL = (int32_t)CompareFunction::Equal/*WebGLContext.EQUAL*/,

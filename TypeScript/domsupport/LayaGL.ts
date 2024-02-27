@@ -1306,10 +1306,11 @@ class GLCommandEncoder
             result.push("EXT_disjoint_timer_query");
         if (supports("GL_OES_compressed_ETC1_RGB8_texture"))
             result.push("WEBGL_compressed_texture_etc1");
-        if (supports("GL_EXT_texture_compression_s3tc"))
+        if (supports("GL_EXT_texture_compression_s3tc") || supports("GL_EXT_texture_compression_s3tc_srgb"))
+        {
             result.push("WEBGL_compressed_texture_s3tc");
-        if (supports("GL_EXT_texture_compression_s3tc_srgb"))
             result.push("WEBGL_compressed_texture_s3tc_srgb");
+        }
         if (supports("GL_OES_texture_compression_astc"))
             result.push("WEBGL_compressed_texture_astc");
         /*if (supports("???"))
@@ -1386,7 +1387,7 @@ class GLCommandEncoder
             return {COMPRESSED_RGB_ETC1_WEBGL : 36196};
         }
         else if (name === 'WEBGL_compressed_texture_s3tc' 
-                && supports('GL_EXT_texture_compression_s3tc'))//和下面易混淆，所以用supports
+                && extention.indexOf('GL_EXT_texture_compression_s3tc'))
         {
             return { 
                 COMPRESSED_RGBA_S3TC_DXT1_EXT : 33777,

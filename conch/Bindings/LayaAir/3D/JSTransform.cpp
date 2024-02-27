@@ -361,7 +361,14 @@ namespace laya
 	{
 		return m_pTransform3D->_getTransformFlag(type);
 	}
-
+	int32_t JSTransform::getFrontFaceValue()
+	{
+		return m_pTransform3D->getFrontFaceValue();
+	}
+	void  JSTransform::getForward(Vector3& forward)
+	{
+		m_pTransform3D->getForward(forward);
+	}
 	//------------------------------------------------------------------------------
 	void JSTransform::exportJS(Context& context)
 	{

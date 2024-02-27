@@ -29,12 +29,12 @@ class GLESShaderInstance //: public ResourceBase<GLESShaderInstance>
     void uploadRenderStateBlendDepthByMaterial(GLESShaderData *shaderDatas);
     void uploadRenderStateBlendDepthByShader(GLESShaderData *shaderDatas);
     bool complete();
-
+  	
   private:
     void _create3D();
     void _create2D();
-
-  public:
+    bool hasSpritePtrID(int32_t dataOffset);
+  public: 
     CommandEncoder m_sceneUniformParamsMap;
     CommandEncoder m_cameraUniformParamsMap;
     CommandEncoder m_spriteUniformParamsMap;

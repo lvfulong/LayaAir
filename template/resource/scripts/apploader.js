@@ -2864,10 +2864,10 @@ class GLCommandEncoder {
             result.push("EXT_disjoint_timer_query");
         if (supports("GL_OES_compressed_ETC1_RGB8_texture"))
             result.push("WEBGL_compressed_texture_etc1");
-        if (supports("GL_EXT_texture_compression_s3tc"))
+        if (supports("GL_EXT_texture_compression_s3tc") || supports("GL_EXT_texture_compression_s3tc_srgb")) {
             result.push("WEBGL_compressed_texture_s3tc");
-        if (supports("GL_EXT_texture_compression_s3tc_srgb"))
             result.push("WEBGL_compressed_texture_s3tc_srgb");
+        }
         if (supports("GL_OES_texture_compression_astc"))
             result.push("WEBGL_compressed_texture_astc");
         result.push("WEBGL_debug_renderer_info");
@@ -2927,7 +2927,7 @@ class GLCommandEncoder {
             return { COMPRESSED_RGB_ETC1_WEBGL: 36196 };
         }
         else if (name === 'WEBGL_compressed_texture_s3tc'
-            && supports('GL_EXT_texture_compression_s3tc')) {
+            && extention.indexOf('GL_EXT_texture_compression_s3tc')) {
             return {
                 COMPRESSED_RGBA_S3TC_DXT1_EXT: 33777,
                 COMPRESSED_RGBA_S3TC_DXT3_EXT: 33778,
@@ -6868,62 +6868,61 @@ window["createImageBitmap"] = function (imageSource, options) {
     });
 };
 if (window["physx"]) {
-window["physx"]["_HEAP_ARRAYBUFFER"] = new ArrayBuffer(1024 * 1024);
-window["physx"]["HEAPU32"] = new Uint32Array(window["physx"]["_HEAP_ARRAYBUFFER"]);
-window["physx"]["HEAPU32"] = new Int32Array(window["physx"]["_HEAP_ARRAYBUFFER"]);
-window["physx"]["HEAPF32"] = new Float32Array(window["physx"]["_HEAP_ARRAYBUFFER"]);
-window["physx"]["HEAPU8"] = new Uint8Array(window["physx"]["_HEAP_ARRAYBUFFER"]);
-window["physx"]["HEAPU16"] = new Uint16Array(window["physx"]["_HEAP_ARRAYBUFFER"]);
-window["physx"]["BLOCK_RECORDS"] = [{ offset: 0, bytes: window["physx"]["_HEAP_ARRAYBUFFER"].byteLength, state: "free" }];
-window["physx"]["_malloc"] = function (bytes) {
-    let found = false;
-    for (var i = 0; i < window["physx"]["BLOCK_RECORDS"].length; i++) {
-        let record = window["physx"]["BLOCK_RECORDS"][i];
-        if (record.state === "free") {
-            if (bytes <= record.bytes) {
-                let offset = record.offset;
-                record.bytes -= bytes;
-                record.offset += bytes;
-                window["physx"]["onMalloc"](window["physx"]["_HEAP_ARRAYBUFFER"]);
-                window["physx"]["BLOCK_RECORDS"].splice(i, 0, { offset: offset, bytes: bytes, state: "malloc" });
-                return offset;
-            }
-        }
-    }
-    if (!found) {
-        let size = window["physx"]["_HEAP_ARRAYBUFFER"].byteLength;
-        window["physx"]["_HEAP_ARRAYBUFFER"].resize(size * 2);
-        return window["physx"]["_malloc"](bytes);
-    }
-};
-
-window["physx"]["_free"] = function (offset) {
-    for (var i = 0; i < window["physx"]["BLOCK_RECORDS"].length; i++) {
-        let record = window["physx"]["BLOCK_RECORDS"][i];
-        if (record.state === "malloc" && record.offset == offset) {
-            if (i > 0) {
-                let recordPre = window["physx"]["BLOCK_RECORDS"][i - 1];
-                if (recordPre.state === "free") {
-                    recordPre.bytes += record.bytes;
-                    window["physx"]["BLOCK_RECORDS"].splice(i, 1);
-                    return;
+    window["physx"]["_HEAP_ARRAYBUFFER"] = new ArrayBuffer(1024 * 1024);
+    window["physx"]["HEAPU32"] = new Uint32Array(window["physx"]["_HEAP_ARRAYBUFFER"]);
+    window["physx"]["HEAPU32"] = new Int32Array(window["physx"]["_HEAP_ARRAYBUFFER"]);
+    window["physx"]["HEAPF32"] = new Float32Array(window["physx"]["_HEAP_ARRAYBUFFER"]);
+    window["physx"]["HEAPU8"] = new Uint8Array(window["physx"]["_HEAP_ARRAYBUFFER"]);
+    window["physx"]["HEAPU16"] = new Uint16Array(window["physx"]["_HEAP_ARRAYBUFFER"]);
+    window["physx"]["BLOCK_RECORDS"] = [{ offset: 0, bytes: window["physx"]["_HEAP_ARRAYBUFFER"].byteLength, state: "free" }];
+    window["physx"]["_malloc"] = function (bytes) {
+        let found = false;
+        for (var i = 0; i < window["physx"]["BLOCK_RECORDS"].length; i++) {
+            let record = window["physx"]["BLOCK_RECORDS"][i];
+            if (record.state === "free") {
+                if (bytes <= record.bytes) {
+                    let offset = record.offset;
+                    record.bytes -= bytes;
+                    record.offset += bytes;
+                    window["physx"]["onMalloc"](window["physx"]["_HEAP_ARRAYBUFFER"]);
+                    window["physx"]["BLOCK_RECORDS"].splice(i, 0, { offset: offset, bytes: bytes, state: "malloc" });
+                    return offset;
                 }
             }
-            else if (i < window["physx"]["BLOCK_RECORDS"].length - 1) {
-                let recordNext = window["physx"]["BLOCK_RECORDS"][i + 1];
-                if (recordNext.state === "free") {
-                    recordNext.bytes += record.bytes;
-                    recordNext.offset = record.offset;
-                    window["physx"]["BLOCK_RECORDS"].splice(i, 1);
-                    return;
+        }
+        if (!found) {
+            let size = window["physx"]["_HEAP_ARRAYBUFFER"].byteLength;
+            window["physx"]["_HEAP_ARRAYBUFFER"].resize(size * 2);
+            return window["physx"]["_malloc"](bytes);
+        }
+    };
+    window["physx"]["_free"] = function (offset) {
+        for (var i = 0; i < window["physx"]["BLOCK_RECORDS"].length; i++) {
+            let record = window["physx"]["BLOCK_RECORDS"][i];
+            if (record.state === "malloc" && record.offset == offset) {
+                if (i > 0) {
+                    let recordPre = window["physx"]["BLOCK_RECORDS"][i - 1];
+                    if (recordPre.state === "free") {
+                        recordPre.bytes += record.bytes;
+                        window["physx"]["BLOCK_RECORDS"].splice(i, 1);
+                        return;
+                    }
+                }
+                else if (i < window["physx"]["BLOCK_RECORDS"].length - 1) {
+                    let recordNext = window["physx"]["BLOCK_RECORDS"][i + 1];
+                    if (recordNext.state === "free") {
+                        recordNext.bytes += record.bytes;
+                        recordNext.offset = record.offset;
+                        window["physx"]["BLOCK_RECORDS"].splice(i, 1);
+                        return;
+                    }
+                }
+                else {
+                    record.state == "free";
                 }
             }
-            else {
-                record.state == "free";
-            }
         }
-    }
-};
+    };
 }
 (function () {
     'use strict';

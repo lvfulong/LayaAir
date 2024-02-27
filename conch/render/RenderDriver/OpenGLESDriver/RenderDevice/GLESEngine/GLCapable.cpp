@@ -101,12 +101,20 @@ namespace laya
 		}
 
 		auto _compressedTextureS3tc = _getExtension("WEBGL_compressed_texture_s3tc");
-		if (_compressedTextureS3tc != nullptr)
+		auto _compressdTextureS3tc_srgb = _getExtension("WEBGL_compressed_texture_s3tc_srgb");
+		if (_compressedTextureS3tc != nullptr || _compressdTextureS3tc_srgb != nullptr)
 		{
-			m_extensionMap[WebGLExtension::WEBGL_compressed_texture_s3tc] = _compressedTextureS3tc;
+			if (_compressedTextureS3tc != nullptr)
+			{
+				m_extensionMap[WebGLExtension::WEBGL_compressed_texture_s3tc] = _compressedTextureS3tc;
+			}
+
+			if (_compressdTextureS3tc_srgb != nullptr)
+			{
+				m_extensionMap[WebGLExtension::WEBGL_compressed_texture_s3tc_srgb] = _compressdTextureS3tc_srgb;
+			}
 		}
 
-		auto _compressdTextureS3tc_srgb = _getExtension("WEBGL_compressed_texture_s3tc_srgb");
 		if (_compressdTextureS3tc_srgb != nullptr)
 		{
 			m_extensionMap[WebGLExtension::WEBGL_compressed_texture_s3tc_srgb] = _compressdTextureS3tc_srgb;
@@ -245,7 +253,7 @@ namespace laya
 			return &m_textureFilterAnisotropicExt;
 		}
 		else if (strcmp(name, "WEBGL_compressed_texture_s3tc") == 0
-			&& strstr(extention, "GL_EXT_texture_compression_s3tc ") != nullptr)//和下面易混淆，所以用GL_EXT_texture_compression_s3tc空格
+			&& strstr(extention, "GL_EXT_texture_compression_s3tc") != nullptr)
 		{
 			return &m_compressedTextureS3tcExt;
 		}

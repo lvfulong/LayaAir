@@ -48,9 +48,8 @@ namespace laya
 		void rotate();
 		void _setTransformFlag(uint32_t type, bool value);
 		bool _getTransformFlag(uint32_t type);
-		void getForward(Vector3& forward) {
-			m_pTransform3D->getForward(forward);
-		}
+		int32_t getFrontFaceValue();
+		void  getForward(Vector3& forward);
 	public:
 		Vector3						m_localPosition = Vector3(0.0f, 0.0f, 0.0f);
 		Quaternion					m_localRotation = Quaternion(0.0f, 0.0f, 0.0f, 1.0f);

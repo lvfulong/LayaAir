@@ -27,13 +27,23 @@ namespace laya
 
 	bool Transform3D::_isFrontFaceInvert()
 	{
-		const Vector3& scale = getWorldLossyScale();
-		bool isInvert = scale.x < 0.0f;
-		(scale.y < 0.0f) && (isInvert = !isInvert);
-		(scale.z < 0.0f) && (isInvert = !isInvert);
-		return isInvert;
+		if (this->_getTransformFlag(Transform3D::TRANSFORM_WORLDSCALE)) {
+			const Vector3& scale = getWorldLossyScale();
+			bool isInvert = scale.x < 0.0f;
+			(scale.y < 0.0f) && (isInvert = !isInvert);
+			(scale.z < 0.0f) && (isInvert = !isInvert);
+			this->_faceInvert = isInvert;
+			this->_frontFaceValue = this->_faceInvert ? -1 : 1;
+		}
+		return this->_faceInvert;
 	}
-
+	int32_t Transform3D::getFrontFaceValue()
+	{
+		if (_getTransformFlag(Transform3D::TRANSFORM_WORLDSCALE)) {
+			bool value = this->_isFrontFaceInvert();
+		}
+		return this->_frontFaceValue;
+	}
 	/**
 	* ��������Ƿ���Ҫ���¡�
 	*/

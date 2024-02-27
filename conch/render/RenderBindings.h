@@ -17,7 +17,6 @@
 #include <core/math/Vector2.h>
 #include <core/math/Vector3.h>
 #include <core/math/Vector4.h>
-#include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderContext3D.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTDirectLightShadowRP.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTForwardAddClusterRP.h>
@@ -31,6 +30,7 @@
 #include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTSpotLight.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTVolumetricGI.h>
 #include <render/3D/temp/RenderState.h>
+#include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderContext3D.h>
 #include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESSkinRenderElement.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESCommandUniformMap.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.h>
@@ -43,11 +43,12 @@ namespace laya
 template <> class Converter<Matrix3x3>
 {
   public:
-    static Matrix3x3 ToCpp(JSValueAsParam ab)
+    static Matrix3x3 ToCpp(JSValueAsParam obj)
     {
+        Local value(obj);
         char *pArrayBufferPtr = NULL;
         int nABLen = 0;
-        bool bIsArrayBuffer = extractJSAB(ab, pArrayBufferPtr, nABLen);
+        bool bIsArrayBuffer = extractJSAB(value[std::string("elements")].handle_, pArrayBufferPtr, nABLen);
         if (bIsArrayBuffer)
         {
             Matrix3x3 mat;
@@ -68,11 +69,13 @@ template <> class Converter<Matrix3x3>
 template <> class Converter<Matrix4x4>
 {
   public:
-    static Matrix4x4 ToCpp(JSValueAsParam ab)
+    static Matrix4x4 ToCpp(JSValueAsParam obj)
     {
+        Local value(obj);
+
         char *pArrayBufferPtr = NULL;
         int nABLen = 0;
-        bool bIsArrayBuffer = extractJSAB(ab, pArrayBufferPtr, nABLen);
+        bool bIsArrayBuffer = extractJSAB(value[std::string("elements")].handle_, pArrayBufferPtr, nABLen);
         if (bIsArrayBuffer)
         {
             Matrix4x4 mat;
@@ -386,7 +389,7 @@ class RenderBindings
             class_binding.property("stencilWrite", &RenderState::getStencilWrite, &RenderState::setStencilWrite);
             class_binding.property("stencilTest", &RenderState::getStencilTest, &RenderState::setStencilTest);
             class_binding.property("stencilRef", &RenderState::getStencilRef, &RenderState::setStencilRef);
-            class_binding.function("stencilOp", &RenderState::setStencilOp);
+            class_binding.function("setStencilOp", &RenderState::setStencilOp);
             class_binding.function("setNull", &RenderState::setNull);
             context.class_("conchRenderState", class_binding);
         }
@@ -414,8 +417,7 @@ class RenderBindings
         }
         {
             class_<GLESRenderGeometryElement> class_binding;
-            // class_binding.constructor<>();
-            class_binding.constructor<MeshTopology, DrawType>();
+            class_binding.constructor<>();
             class_binding.property("mode", &GLESRenderGeometryElement::getMeshTopology,
                                    &GLESRenderGeometryElement::setMeshTopology);
             class_binding.property("drawType", &GLESRenderGeometryElement::getDrawType,
@@ -442,6 +444,7 @@ class RenderBindings
             class_<RTShaderPass> class_binding;
             class_binding.constructor<>();
             // class_binding.function("setCompileDefine", &RTShaderPass::setCompileDefine);
+            class_binding.function("setRenderState", &RTShaderPass::setRenderState);
             class_binding.function("setValidDefine", &RTShaderPass::setValidDefine);
             class_binding.function("setCreateShaderInstanceFunction", &RTShaderPass::setCreateShaderInstanceFunction);
             class_binding.function("setCacheShader", &RTShaderPass::setCacheShaderJS);
@@ -487,6 +490,8 @@ class RenderBindings
                                    &RTBaseRenderNode::setProbeReflectionUpdateMark);
             class_binding.property("_lightmapIndex", &RTBaseRenderNode::getLightmapIndex,
                                    &RTBaseRenderNode::setLightmapIndex);
+            class_binding.function("_applyLightProb", &RTBaseRenderNode::_applyLightProb);
+            class_binding.function("_applyReflection", &RTBaseRenderNode::_applyReflection);
             class_binding.function("setRenderElements", &RTBaseRenderNode::setRenderElements);
             class_binding.function("setCommonUniformMap", &RTBaseRenderNode::setCommonUniformMap);
             class_binding.function("setLightmapScaleOffset", &RTBaseRenderNode::setLightmapScaleOffset);

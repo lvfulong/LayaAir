@@ -84,6 +84,7 @@ namespace laya
 				m_glParam.internalFormat = useSRGB ? m_compressdTextureS3tc_srgb->COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT : m_compressedTextureS3tc->COMPRESSED_RGBA_S3TC_DXT1_EXT;
 				// this._glParam.format = gl.RGBA;
 				// this._glParam.type = gl.UNSIGNED_BYTE;
+
 			}
             break;
         case TextureFormat::DXT3:
@@ -682,7 +683,10 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
         int internalFormat = texture->m_internalFormat;
         int format = texture->m_format;
         int type = texture->m_type;
-        
+        int mipmapCount = texture->m_mipmapCount;
+
+        texture->setMaxMipmapLevel(mipmapCount - 1.0);
+
         char* source = ktxInfo.source;
         bool compressd = ktxInfo.compress;
         bool fourSize = width % 4 == 0 && height % 4 == 0;
@@ -701,19 +705,42 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
         int dataOffset = ktxInfo.headerOffset + ktxInfo.bytesOfKeyValueData;
         int memory = 0;
         
-        source += dataOffset;
+        //source += dataOffset;
         for (int index = 0; index < ktxInfo.mipmapCount; index++) {
-            int32_t imageSize = static_cast<int32_t*>((void*)(source))[0];
-            source += 4;
+            int32_t imageSize = static_cast<int32_t*>((void*)(source + dataOffset))[0];
+            dataOffset += 4;
             if (compressd) {
-                glCompressedTexImage2D(target, index, internalFormat, mipmapWidth, mipmapHeight, 0, imageSize, source);
+                glCompressedTexImage2D(target, index, internalFormat, mipmapWidth, mipmapHeight, 0, imageSize, source + dataOffset);
+                memory += imageSize;
             } else {
-                glTexSubImage2D(target, index, 0, 0, mipmapWidth, mipmapHeight, format, type, source);
+                FormatPixelsParams pixelParams;
+                getFormatPixelsParams(ktxInfo.format, pixelParams);
+                int typedSize = imageSize / pixelParams.typedSize;
+
+                uint8_t* sourceData = nullptr;
+                //switch (pixelParams.typedSize)
+                //{
+                //case 1:
+                    sourceData = (uint8_t*)((uint8_t*)source + dataOffset);
+                    glTexSubImage2D(target, index, 0, 0, mipmapWidth, mipmapHeight, format, type, sourceData);
+                //    break;
+                //case 2:
+                //    sourceData = (uint8_t*)((uint8_t*)source + dataOffset);
+                //    glTexSubImage2D(target, index, 0, 0, mipmapWidth, mipmapHeight, format, type, sourceData);
+                //    break;
+               //case 4:
+               //     sourceData = (uint8_t*)((uint8_t*)source + dataOffset);
+               //     glTexSubImage2D(target, index, 0, 0, mipmapWidth, mipmapHeight, format, type, sourceData);
+               //     break;
+                //default:
+                //    break;
+                //}
+                memory += imageSize;
             }
             
-            memory += imageSize;
-            source += imageSize;
-            source += 3 - (imageSize + 3) % 4;
+           
+            dataOffset += imageSize;
+            dataOffset += 3 - (imageSize + 3) % 4;
             mipmapWidth = std::max(1, (int)(mipmapWidth * 0.5));
             mipmapHeight = std::max(1, (int)(mipmapHeight * 0.5));
         }
@@ -898,23 +925,23 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
                     int typedSize = imageSize / pixelParams.typedSize; 
                     
                     uint8_t* sourceData = nullptr;
-                    switch(pixelParams.typedSize)
-                    {
-                        case 1:
+                    //switch(pixelParams.typedSize)
+                    //{
+                    //    case 1:
                             sourceData = (uint8_t*)((uint8_t*)source + dataOffset);
                             glTexSubImage2D(t, index, 0, 0, mipmapWidth, mipmapHeight, format, type, sourceData);
-                            break;
-                        case 2:
-                            sourceData = (uint8_t*)((uint8_t*)source + dataOffset);
-                            glTexSubImage2D(t, index, 0, 0, mipmapWidth, mipmapHeight, format, type, sourceData);
-                            break;
-                        case 4:
-                            sourceData = (uint8_t*)((uint8_t*)source + dataOffset);
-                            glTexSubImage2D(t, index, 0, 0, mipmapWidth, mipmapHeight, format, type, sourceData);
-                            break;
-                            default:
-                        break;
-                    }
+                    //        break;
+                    //    case 2:
+                    //        sourceData = (uint8_t*)((uint8_t*)source + dataOffset);
+                    //        glTexSubImage2D(t, index, 0, 0, mipmapWidth, mipmapHeight, format, type, sourceData);
+                    //        break;
+                    //    case 4:
+                    //        sourceData = (uint8_t*)((uint8_t*)source + dataOffset);
+                    //        glTexSubImage2D(t, index, 0, 0, mipmapWidth, mipmapHeight, format, type, sourceData);
+                    //        break;
+                    //        default:
+                    //    break;
+                    //}
                     memory += imageSize;
                 }
                 dataOffset += imageSize;

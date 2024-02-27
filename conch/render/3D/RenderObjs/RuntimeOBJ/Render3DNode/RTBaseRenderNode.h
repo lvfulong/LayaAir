@@ -26,14 +26,10 @@ class RTBaseRenderNode
     ~RTBaseRenderNode(){};
 
     bool shadowCullPass();
-   
-   
-
-    //todo virtual void _renderUpdate(NodeContext3DData data){};
     //todo virtual void _renderupdatebyCamera(NodeContext3DData data){};
     //virtual void _calculateGeometryBoundingBox(){};
     //virtual Bounds *get_BoundBox();
-    
+    void _renderUpdate(GLESRenderContext3D* context);
     void _renderUpdatePre(GLESRenderContext3D* context3D);
     bool _needRender(BoundFrustum* pBoundFrustum);
     void setRenderElements(const std::vector<GLESRenderElement3D*>& value);
@@ -54,7 +50,7 @@ class RTBaseRenderNode
     // other resource
     uint32_t reflectionMode = 0;
     uint32_t volumetricGIProbe = 0;
-
+    uint32_t _updateMark = 0;
     GLESShaderData* shaderData;
     IrradianceMode irradianceMode;
     uint32_t renderbitFlag;
@@ -92,8 +88,7 @@ class RTBaseRenderNode
     } lightprob;
     Persistent			    m_JSFunctionRenderUpdatePre;
     Persistent			    m_JSFunctionCalculateBoundingBox;
-  private:
-  protected:
+
     void _applyReflection();
     void _applyLightmap();
     void _applyLightProb();

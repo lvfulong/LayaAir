@@ -4,8 +4,8 @@
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESBufferState.h"
 namespace laya
 {
-GLESRenderGeometryElement::GLESRenderGeometryElement(MeshTopology mode, DrawType drawType)
-    : /*ResourceBase(JCConch::s_pConchRender->m_pRenderGeometryElementManager), */ _mode(mode), m_nDrawType(drawType)
+GLESRenderGeometryElement::GLESRenderGeometryElement()
+    /*: ResourceBase(JCConch::s_pConchRender->m_pRenderGeometryElementManager), */
 {
     m_pDrawParams = new laya::JCSingletonList<int>(false);
 }

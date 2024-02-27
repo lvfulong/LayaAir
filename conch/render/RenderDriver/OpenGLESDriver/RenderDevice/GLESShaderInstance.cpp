@@ -71,10 +71,10 @@ void GLESShaderInstance::_create3D()
         {
             m_cameraUniformParamsMap.addShaderUniform(one);
         }
-        // else if (spriteParms->hasPtrID(one->dataOffset))
-        //{
-        //	m_spriteUniformParamsMap.addShaderUniform(one);
-        // }
+        else if (hasSpritePtrID(one->dataOffset))
+        {
+        	m_spriteUniformParamsMap.addShaderUniform(one);
+        }
         else if (customParams->hasPtrID(one->dataOffset))
         {
             m_customUniformParamsMap[one->dataOffset] = one;
@@ -90,6 +90,21 @@ void GLESShaderInstance::_create2D()
 
     // TODO
 }
+	bool GLESShaderInstance::hasSpritePtrID(int32_t dataOffset)
+     {
+		std::vector<std::string>& commap = this->_shaderPass->nodeCommonMap;
+		if (commap.empty()) 
+        {
+			return false;
+		} else 
+        {
+			for (int i = 0, n = commap.size(); i < n; i++) {
+				if (GLESCommandUniformMap::createGlobalUniformMap(commap[i].c_str())->hasPtrID(dataOffset))
+					return true;
+			}
+			return false;
+		}
+	}
 void GLESShaderInstance::_disposeResource()
 {
     // this._renderShaderInstance.destroy();
@@ -127,9 +142,13 @@ void GLESShaderInstance::uploadRenderStateBlendDepthByShader(GLESShaderData *sha
                                                    : shaderDatas->getData<int32_t>(Shader3D::DEPTH_TEST);
     int32_t *depthTest = b != nullptr ? b : RenderState::Default.depthTest;
     if (*depthTest == RenderState::DEPTHTEST_OFF)
+    {
         RenderStateContext::setDepthTest(false);
+        LOGI("cnm false");
+    }
     else
     {
+        LOGI("cnm trye"); glEnable(GL_DEPTH_TEST);
         RenderStateContext::setDepthTest(true);
         RenderStateContext::setDepthFunc((CompareFunction)*depthTest);
     }
@@ -140,7 +159,7 @@ void GLESShaderInstance::uploadRenderStateBlendDepthByShader(GLESShaderData *sha
     int32_t *d = renderState->stencilTest != nullptr ? renderState->stencilTest
                                                      : shaderDatas->getData<int32_t>(Shader3D::STENCIL_TEST);
     int32_t *stencilTest = d != nullptr ? d : RenderState::Default.stencilTest;
-    RenderStateContext::setStencilMask(stencilWrite);
+    RenderStateContext::setStencilMask(*stencilWrite);
     if (stencilWrite)
     {
         Vector3 *e = renderState->stencilOp != nullptr ? renderState->stencilOp
@@ -228,7 +247,7 @@ void GLESShaderInstance::uploadRenderStateBlendDepthByMaterial(GLESShaderData *s
 
     bool *depthWrite = (bool *)shaderDatas->getData<int32_t>(Shader3D::DEPTH_WRITE);
     depthWrite = depthWrite != nullptr ? depthWrite : RenderState::Default.depthWrite;
-    RenderStateContext::setDepthMask(depthWrite);
+    RenderStateContext::setDepthMask(*depthWrite);
 
     int32_t *depthTest = shaderDatas->getData<int32_t>(Shader3D::DEPTH_TEST);
 
@@ -245,8 +264,8 @@ void GLESShaderInstance::uploadRenderStateBlendDepthByMaterial(GLESShaderData *s
     bool *stencilWrite = (bool *)shaderDatas->getData<int32_t>(Shader3D::STENCIL_WRITE);
 
     stencilWrite = stencilWrite != nullptr ? stencilWrite : RenderState::Default.stencilWrite;
-    RenderStateContext::setStencilMask(stencilWrite);
-    if (stencilWrite)
+    RenderStateContext::setStencilMask(*stencilWrite);
+    if (*stencilWrite)
     {
         Vector3 *stencilOp = shaderDatas->getData<Vector3>(Shader3D::STENCIL_Op);
         stencilOp = stencilOp != nullptr ? stencilOp : RenderState::Default.stencilOp;
