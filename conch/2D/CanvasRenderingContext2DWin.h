@@ -29,12 +29,11 @@ class CanvasRenderingContext2DWin : public CanvasRenderingContext2D
     void setFont(const char *font) override;
     void setTextAlign(const char *textAlign) override;
     void setTextBaseline(const char *textBaseline) override;
-    void setFillStyle(const char *color) override;
-    void setStrokeStyle(const char *color) override;
     void setLineWidth(double lineWidth) override;
     void setLineJoin(const char *lineJoin) override;
      static bool registerFontFromPath(const std::string &fontName, const std::string &path);
   protected:
+    TextMetrics measureTextUtf16(wchar_t* pwszBuffer, int bufferLen);
     BitmapData m_bitmapData;
     Gdiplus::Bitmap* m_gdiBitmap;
     Gdiplus::Graphics* m_gdiGraphics;

@@ -32,10 +32,10 @@ CanvasRenderingContext2DWin::CanvasRenderingContext2DWin(int width, int height)
     m_bitmapData.m_nWidth = width;
     m_bitmapData.m_nHeight = height;
     m_bitmapData.m_pImageData = new char[width * height * 4];
-    Gdiplus::Matrix matrix;
+    //Gdiplus::Matrix matrix;
     //matrix.Translate(0.0f, height);//CGContextTranslateCTM(m_context, 0.0f, height);
-    matrix.Scale(1.0f, -1.0f);// CGContextScaleCTM(m_context, 1.0f, -1.0f);
-    m_gdiGraphics->SetTransform(&matrix);
+    //matrix.Scale(1.0f, -1.0f);// CGContextScaleCTM(m_context, 1.0f, -1.0f);
+    //m_gdiGraphics->SetTransform(&matrix);
     setDefault();
 }
 CanvasRenderingContext2DWin::~CanvasRenderingContext2DWin()
@@ -75,11 +75,12 @@ void CanvasRenderingContext2DWin::fillText(const std::string &text, double x, do
     if (m_width <= 0 || m_height <= 0)
     {
         return;
-    }
+    } 
     int bufferLen = 0;
     wchar_t *pwszBuffer = utf8ToUtf16(text, &bufferLen);
-    m_gdiGraphics->DrawString(pwszBuffer, bufferLen, m_font, Gdiplus::PointF(x, y), &m_stringFormat,
-                              &Gdiplus::SolidBrush(Gdiplus::Color::Black));
+    TextMetrics matrics = measureTextUtf16(pwszBuffer, bufferLen);
+    m_gdiGraphics->DrawString(pwszBuffer, bufferLen, m_font, Gdiplus::PointF(x, y + matrics.m_height * 0.5f), &m_stringFormat,
+                              &Gdiplus::SolidBrush(Gdiplus::Color(m_fillColorA, m_fillColorR, m_fillColorG, m_fillColorB)));
 }
 
 void CanvasRenderingContext2DWin::strokeText(const std::string &text, double x, double y,
@@ -89,26 +90,23 @@ void CanvasRenderingContext2DWin::strokeText(const std::string &text, double x, 
     {
         return;
     }
+   
     int bufferLen = 0;
-    wchar_t *pwszBuffer = utf8ToUtf16(text, &bufferLen);
-    m_gdiGraphics->DrawString(pwszBuffer, bufferLen, m_font, Gdiplus::PointF(x, y), &m_stringFormat,
-                              &Gdiplus::SolidBrush(Gdiplus::Color::Black));
+    wchar_t *pwszBuffer = utf8ToUtf16(text, &bufferLen); 
+    TextMetrics matrics = measureTextUtf16(pwszBuffer, bufferLen);
+    m_gdiGraphics->DrawString(pwszBuffer, bufferLen, m_font, Gdiplus::PointF(x, y + matrics.m_height * 0.5f), &m_stringFormat,
+                              &Gdiplus::SolidBrush(Gdiplus::SolidBrush(Gdiplus::Color(m_strokeColorA, m_strokeColorR, m_strokeColorG, m_strokeColorB))));
 }
-
-TextMetrics CanvasRenderingContext2DWin::measureText(const std::string &text)
+TextMetrics CanvasRenderingContext2DWin::measureTextUtf16(wchar_t* pwszBuffer, int bufferLen)
 {
-
     TextMetrics metrics;
 
     Gdiplus::GraphicsPath graphicsPathObj;
     Gdiplus::FontFamily fontFamily;
     m_font->GetFamily(&fontFamily);
 
-    int bufferLen = 0;
-    wchar_t *pwszBuffer = utf8ToUtf16(text, &bufferLen);
-
     graphicsPathObj.AddString(pwszBuffer, bufferLen /* -1 */, &fontFamily, m_font->GetStyle(), m_font->GetSize(),
-                              Gdiplus::PointF(0, 0), &m_stringFormat);
+        Gdiplus::PointF(0, 0), &m_stringFormat);
     Gdiplus::RectF rcBound;
     graphicsPathObj.GetBounds(&rcBound);
 
@@ -124,14 +122,19 @@ TextMetrics CanvasRenderingContext2DWin::measureText(const std::string &text)
     //LOGI("measureText %f %f", rcBound.Width, rcBound.Height);
     return metrics;
 }
+TextMetrics CanvasRenderingContext2DWin::measureText(const std::string &text)
+{
+    int bufferLen = 0;
+    wchar_t* pwszBuffer = utf8ToUtf16(text, &bufferLen);
+    return measureTextUtf16(pwszBuffer, bufferLen);
+}
 void CanvasRenderingContext2DWin::clearRect(double x, double y, double width, double height)
 {
     if (m_width <= 0 || m_height <= 0)
     {
         return;
     }
-    Gdiplus::SolidBrush brush(Gdiplus::Color(1, 1, 0, 0));
-    m_gdiGraphics->FillRectangle(&brush, (Gdiplus::REAL)x, (Gdiplus::REAL)y, (Gdiplus::REAL)width, (Gdiplus::REAL)height);
+    m_gdiGraphics->Clear(Gdiplus::Color(1, 1, 0, 0));
 }
 void CanvasRenderingContext2DWin::save()
 {
@@ -155,69 +158,25 @@ ImageData CanvasRenderingContext2DWin::getImageData(double x, double y, double w
     int clampedW = std::clamp(width, 0.0, static_cast<double>(m_width));
     int clampedH = std::clamp(height, 0.0, static_cast<double>(m_height));
 
-    Gdiplus::Rect bitmapArea(clampedX, clampedY, clampedW, clampedH);
-    Gdiplus::BitmapData bitmapData;
-    m_gdiBitmap->LockBits(&bitmapArea, Gdiplus::ImageLockModeRead, m_gdiBitmap->GetPixelFormat(), &bitmapData);
-
-    const BYTE *imageData = (BYTE *)bitmapData.Scan0;
-    int stride = bitmapData.Stride;
-    unsigned char *glImageData = NULL;
-    if (clampedW > 0 && clampedH > 0 && imageData != 0)
+    if (clampedW > 0 && clampedH > 0)
     {
-#define CUR_LINE ((clampedH - 1 - y) * stride)
-#define CUR_POS (y * clampedW + x)
-
         ImageData data;
         data.m_width = clampedW;
         data.m_height = clampedH;
         data.m_data.resize(clampedW * clampedH * 4);
-        COLORREF *pImage = nullptr;
-
-        unsigned char *glImageData = &data.m_data[0];
-        const int destR = 0, destG = 1, destB = 2, destA = 3;
-        int srcR, srcG, srcB, srcA, bytesPerPixel;
-
-        // 根据像素格式设置初始值
-        switch (bitmapData.PixelFormat)
+        unsigned char* glImageData = &data.m_data[0];
+        for (auto y = 0; y < clampedH; y++)
         {
-        case PixelFormat24bppRGB:
-            srcR = 2;
-            srcG = 1;
-            srcB = 0;
-            bytesPerPixel = 3;
-            break;
-        case PixelFormat32bppARGB:
-            srcA = 3;
-            srcR = 2;
-            srcG = 1;
-            srcB = 0;
-            bytesPerPixel = 4;
-            break;
-        default: // 图片的像素格式不支持
-            // delete[] glImageData;
-            m_gdiBitmap->UnlockBits(&bitmapData);
-            // delete pBitmap;
-            LOGE("");
-            return ImageData();
-        }
-
-        // 复制及转换图像数据
-        for (unsigned int y = 0; y < clampedH; ++y)
-        {
-            for (unsigned int x = 0; x < clampedW; ++x)
+            for (auto x = 0; x < clampedW; x++)
             {
-                glImageData[CUR_POS * 4 + destR] = imageData[CUR_LINE + x * bytesPerPixel + srcR];
-                glImageData[CUR_POS * 4 + destG] = imageData[CUR_LINE + x * bytesPerPixel + srcG];
-                glImageData[CUR_POS * 4 + destB] = imageData[CUR_LINE + x * bytesPerPixel + srcB];
-                if (bytesPerPixel == 4)
-                    glImageData[CUR_POS * 4 + destA] = imageData[CUR_LINE + x * bytesPerPixel + srcA];
-                else
-                    glImageData[CUR_POS * 4 + destA] = 255;
+                Gdiplus::Color  color;
+                m_gdiBitmap->GetPixel(x, y, &color);//m_gdiBitmap->GetPixel(x, clampedH - y - 1, &color);
+                glImageData[(x + y * clampedW) * 4 + 0] = color.GetR();
+                glImageData[(x + y * clampedW) * 4 + 1] = color.GetG();
+                glImageData[(x + y * clampedW) * 4 + 2] = color.GetB();
+                glImageData[(x + y * clampedW) * 4 + 3] = color.GetA();
             }
         }
-        m_gdiBitmap->UnlockBits(&bitmapData);
-        // delete pBitmap;
-
         return data;
     }
     else
@@ -272,12 +231,34 @@ void CanvasRenderingContext2DWin::setTextAlign(const char *textAlign)
 }
 void CanvasRenderingContext2DWin::setTextBaseline(const char *textBaseline)
 {
-}
-void CanvasRenderingContext2DWin::setFillStyle(const char *color)
-{
-}
-void CanvasRenderingContext2DWin::setStrokeStyle(const char *color)
-{
+    CanvasRenderingContext2D::setTextBaseline(textBaseline);
+    if (m_textBaseline == TextBaseline::Alphabetic)
+    {
+    }
+    else if (m_textBaseline == TextBaseline::Top)
+    {
+
+    }
+    else if (m_textBaseline == TextBaseline::Hanging)
+    {
+
+    }
+    else if (m_textBaseline == TextBaseline::Middle)
+    {
+
+    }
+    else if (m_textBaseline == TextBaseline::Ideographic)
+    {
+
+    }
+    else if (m_textBaseline == TextBaseline::Bottom)
+    {
+
+    }
+    else
+    {
+        LOGE("textBaseline invalid");
+    }
 }
 void CanvasRenderingContext2DWin::setFont(const char *font)
 {
@@ -308,7 +289,7 @@ void CanvasRenderingContext2DWin::setFont(const char *font)
     {
         delete m_font;
     }
-    m_font = new Gdiplus::Font(&fontfamily, m_fontDescription.m_size, m_fontStyle, Gdiplus::UnitPixel);
+    m_font = new Gdiplus::Font(&fontfamily, m_fontDescription.m_size, m_fontStyle, Gdiplus::UnitPoint);
     // LOGI("setFont %s %f", font, m_fontDescription.m_size);
 }
 bool CanvasRenderingContext2DWin::registerFontFromPath(const std::string &fontName, const std::string &path)
