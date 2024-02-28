@@ -110,6 +110,7 @@ namespace laya
         ~GLESSetRenderData();
         void apply(GLESRenderContext3D* context) override;
         void setValue(std::any& value) { _value = value; };
+        void setBufferValueJS(JSValueAsParam value);
         void setBufferValue(uint8_t* data, uint32_t lengthInBytes);
         void setDataType(ShaderDataType type) { _type = type; };
         void setPropertyID(uint32_t value) { _propertyID = value; };

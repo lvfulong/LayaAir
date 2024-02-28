@@ -798,7 +798,7 @@ class RenderBindings
             class_binding.function("setPropertyID", &GLESSetRenderData::setPropertyID);
             class_binding.function("setDest", &GLESSetRenderData::setDest);
             class_binding.function("setValue", &GLESSetRenderData::setValue);
-            class_binding.function("setBufferValue", &GLESSetRenderData::setBufferValue);
+            class_binding.function("setBufferValue", &GLESSetRenderData::setBufferValueJS);
             context.class_("conchGLESSetRenderData", class_binding);
         }
 

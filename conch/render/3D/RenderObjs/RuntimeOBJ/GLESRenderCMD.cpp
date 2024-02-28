@@ -131,12 +131,22 @@ namespace laya{
 
 	GLESSetRenderData::~GLESSetRenderData(){
 	}
+	void GLESSetRenderData::setBufferValueJS(JSValueAsParam value) 
+	{
+		char* pArrayBufferPtr = NULL;
+		int nABLen = 0;
+		bool bIsArrayBuffer = extractJSAB(value, pArrayBufferPtr, nABLen);
+		if (bIsArrayBuffer)
+		{
+			setBufferValue((uint8_t*)pArrayBufferPtr, nABLen);
+		}
+	}
 	void GLESSetRenderData::setBufferValue(uint8_t* data, uint32_t lengthInBytes) {
 		BufferDataInfo info;
 		info.m_data = data;
 		info.m_lengthInBytes = lengthInBytes;
 		_value = info;
-	};
+	}
 	void GLESSetRenderData::apply(GLESRenderContext3D* context) {
 		switch (_type) {
 		case ShaderDataType::Int:
