@@ -78,8 +78,8 @@ namespace laya
         GLESSetViewportCMD();
         ~GLESSetViewportCMD();
         void apply(GLESRenderContext3D* context) override;
-        void setViewport(Viewport& view) { _viewport = view; };
-        void setSciccor(Vector4& v4) { _sciccor = v4; };
+        void setViewport(const Viewport& view) { _viewport = view; };
+        void setSciccor(const Vector4& v4) { _sciccor = v4; };
     private:
         Viewport _viewport;
         Vector4 _sciccor;
@@ -92,7 +92,7 @@ namespace laya
         void apply(GLESRenderContext3D* context) override;
         void setRT(GLESInternalRT* rt) { _rt = rt; };
         void clearFlag(uint32_t flag) { _flag = flag; };
-        void clearColorValue(Color& color) { _clearColor = color; };
+        void clearColorValue(const Color& color) { _clearColor = color; };
         void clearDepthValue(uint32_t value) { _clearDepth = value; };
         void clearStencilValue(uint32_t value) { _clearStencilValue = value; };
     private:
@@ -127,7 +127,7 @@ namespace laya
         GLESSetShaderDefine();
         ~GLESSetShaderDefine();
         void apply(GLESRenderContext3D* context) override;
-        void setDefine(RTShaderDefine& define) { _define = define; };
+        void setDefine(const RTShaderDefine& define) { _define = define; };
         void setDest(GLESShaderData* dest) { _dest = dest; };
         void setAdd(bool value) { _add = value; };
     private:
