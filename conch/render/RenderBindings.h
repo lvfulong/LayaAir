@@ -760,7 +760,7 @@ class RenderBindings
             class_<GLESBlitQuadCMDData> class_binding;
             class_binding.function("setDest", &GLESBlitQuadCMDData::setDest);
             class_binding.function("setViewport", &GLESBlitQuadCMDData::setViewport);
-            class_binding.function("setSciccor", &GLESBlitQuadCMDData::setSciccor);
+            class_binding.function("setScissor", &GLESBlitQuadCMDData::setScissor);
             class_binding.function("setSource", &GLESBlitQuadCMDData::setSource);
             class_binding.function("setSourceTexelSize", &GLESBlitQuadCMDData::setSourceTexelSize);
             class_binding.function("setOffsetScale", &GLESBlitQuadCMDData::setOffsetScale);
@@ -778,7 +778,7 @@ class RenderBindings
         {
             class_<GLESSetViewportCMD> class_binding;
             class_binding.function("setViewport", &GLESSetViewportCMD::setViewport);
-            class_binding.function("setSciccor", &GLESSetViewportCMD::setSciccor);
+            class_binding.function("setScissor", &GLESSetViewportCMD::setScissor);
             context.class_("conchGLESSetViewportCMD", class_binding);
         }
 

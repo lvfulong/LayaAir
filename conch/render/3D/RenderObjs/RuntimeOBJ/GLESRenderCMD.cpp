@@ -68,7 +68,7 @@ namespace laya{
 		_element->materialShaderData->setVector(CommandProperty::SCREENTEXTUREOFFSETSCALE_ID, _offsetScale);
 		_element->materialShaderData->setVector(CommandProperty::MAINTEXTURE_TEXELSIZE_ID, _sourceTexelSize);
 		context->setViewport(_viewport);
-		context->setScissor(_sciccor);
+		context->setScissor(_scissor);
 		context->setRenderTarget(_dest);
 		context->drawRenderElementOne(_element);
 	}
@@ -110,7 +110,7 @@ namespace laya{
 
 	void GLESSetViewportCMD::apply(GLESRenderContext3D* context) {
 		context->setViewport(_viewport);
-		context->setScissor(_sciccor);
+		context->setScissor(_scissor);
 	}
 
 	//GLESSetRenderTargetCMD

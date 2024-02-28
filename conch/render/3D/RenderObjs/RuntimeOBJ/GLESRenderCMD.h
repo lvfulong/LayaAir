@@ -45,7 +45,7 @@ namespace laya
         void apply(GLESRenderContext3D* context) override;
     public:
         void setViewport(const Viewport& viewport) { _viewport = viewport; };
-        void setSciccor(const Vector4& sciccor) { _sciccor = sciccor; };
+        void setScissor(const Vector4& scissor) { _scissor = scissor; };
         void setDest(GLESInternalRT* dest) { _dest = dest; };
         void setSource(GLESInternalTex* source) { _source = source; };
         void setSourceTexelSize(const Vector4& v4) { _sourceTexelSize = v4; };
@@ -54,7 +54,7 @@ namespace laya
     private:
         Vector4 _sourceTexelSize;
         Vector4 _offsetScale;
-        Vector4 _sciccor;
+        Vector4 _scissor;
         Viewport _viewport;
         GLESInternalRT* _dest = nullptr;
         GLESInternalTex* _source = nullptr;
@@ -79,10 +79,10 @@ namespace laya
         ~GLESSetViewportCMD();
         void apply(GLESRenderContext3D* context) override;
         void setViewport(const Viewport& view) { _viewport = view; };
-        void setSciccor(const Vector4& v4) { _sciccor = v4; };
+        void setScissor(const Vector4& v4) { _scissor = v4; };
     private:
         Viewport _viewport;
-        Vector4 _sciccor;
+        Vector4 _scissor;
     };
 
     class GLESSetRenderTargetCMD :GLESRenderCMD {
