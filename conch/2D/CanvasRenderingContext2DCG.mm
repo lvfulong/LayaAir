@@ -95,10 +95,13 @@ void CanvasRenderingContext2DCG::fillText(const std::string &text, double x, dou
     CGContextSetTextDrawingMode(m_impl->m_context, kCGTextFill);
     CGContextSetRGBFillColor(m_impl->m_context, m_fillColorR / 255.0f, m_fillColorG / 255.0f, m_fillColorB / 255.0f, m_fillColorA / 255.0f);
     CGContextSetLineWidth(m_impl->m_context, m_lineWidth);
-    NSAttributedString *attributedString =
+    if (nsText != nil)
+    {
+        NSAttributedString *attributedString =
         [[NSAttributedString alloc] initWithString:nsText attributes:m_impl->_attributesDict];
-
-    [attributedString drawAtPoint:CGPointMake(outX, outY)];
+        
+        [attributedString drawAtPoint:CGPointMake(outX, outY)];
+    }
     restore();
    
 }
@@ -140,10 +143,13 @@ void CanvasRenderingContext2DCG::strokeText(const std::string &text, double x, d
         default:
             break;
     }
-    NSAttributedString *attributedString =
+    if (nsText != nil)
+    {
+        NSAttributedString *attributedString =
         [[NSAttributedString alloc] initWithString:nsText attributes:m_impl->_attributesDict];
-
-    [attributedString drawAtPoint:CGPointMake(outX, outY)];
+        
+        [attributedString drawAtPoint:CGPointMake(outX, outY)];
+    }
     restore();
 }
 TextMetrics CanvasRenderingContext2DCG::measureText(const std::string &text)
