@@ -1,33 +1,53 @@
 #include "CanvasRenderingContext2DLinux.h"
+#include <X11/Xlib.h>
+#include <X11/Xos.h>
+#include <X11/Xutil.h>
 #include <utils/Log.h>
 extern Display *g_X11_display;
 extern Window g_X11_window;
 namespace laya
 {
 #define RGBA(r, g, b, a) (int)((int)r | (((int)g) << 8) | (((int)b) << 16) | (((int)a) << 24))
+class CanvasRenderingContext2DLinuxImpl
+{
+  public:
+    Display *m_display{nullptr};
+    // int _screen{0};
+    Drawable m_window{0};
+    Drawable m_pixmap{0};
+    GC m_gc;
+    XFontStruct *m_font{0};
+};
+};
 CanvasRenderingContext2DLinux::CanvasRenderingContext2DLinux(int width, int height)
-    : CanvasRenderingContext2D(width, height)
+    : CanvasRenderingContext2D(width, height), m_impl(new CanvasRenderingContext2DLinuxImpl())
 {
     if (m_width <= 0 || m_height <= 0)
     {
         return;
     }
-    m_display = g_X11_display;
-    m_window = g_X11_window;
+    m_impl->m_display = g_X11_display;
+    m_impl->m_window = g_X11_window;
 
     m_bitmapData.m_nWidth = width;
     m_bitmapData.m_nHeight = height;
     m_bitmapData.m_pImageData = new char[width * height * 4];
 
-    m_pixmap = XCreatePixmap(m_display, m_window, m_width, m_height, 32);
-    m_gc = XCreateGC(m_display, m_pixmap, 0, 0);
+    m_impl->m_pixmap = XCreatePixmap(m_impl->m_display, m_impl->m_window, m_width, m_height, 32);
+    m_impl->m_gc = XCreateGC(m_impl->m_display, m_impl->m_pixmap, 0, 0);
     setDefault();
 }
 CanvasRenderingContext2DLinux::~CanvasRenderingContext2DLinux()
 {
-    XFreePixmap(m_display, m_pixmap);
-    XFreeGC(m_display, m_gc);
+
+    if (m_impl != nullptr)
+    {
+        XFreePixmap(m_impl->m_display, m_impl->m_pixmap);
+        XFreeGC(m_impl->m_display, m_impl->m_gc);
+        delete m_impl;
+    }
 }
+
 void CanvasRenderingContext2DLinux::setLineWidth(double lineWidth)
 {
 }
@@ -41,10 +61,12 @@ void CanvasRenderingContext2DLinux::fillText(const std::string &text, double x, 
     {
         return;
     }
-    Point offsetPoint = convertDrawPoint(Point{x, y}, text);
-    XSetForeground(m_display, m_gc, RGBA( m_fillColorR, m_fillColorG, m_fillColorB, m_fillColorA);
-    XSetFont(m_display, m_gc, m_font->fid);
-    XDrawString(m_display, m_pixmap, m_gc, offsetPoint[0], offsetPoint[1], text.c_str(), (int)(text.length()));
+    double outX;
+    double outY;
+    getTextPosition(text, x, y, outX, outY);
+    XSetForeground(m_impl->m_display, m_impl->m_gc, RGBA(m_fillColorR, m_fillColorG, m_fillColorB, m_fillColorA));
+    XSetFont(m_impl->m_display, m_impl->m_gc, m_impl->m_font->fid);
+    XDrawString(m_impl->m_display, m_impl->m_pixmap, m_impl->m_gc, outX, outY, text.c_str(), (int)(text.length()));
 }
 void CanvasRenderingContext2DLinux::strokeText(const std::string &text, double x, double y,
                                                std::optional<double> maxWidth)
@@ -63,7 +85,8 @@ TextMetrics CanvasRenderingContext2DLinux::measureText(const std::string &text)
     int descent = 0;
     int direction = 0;
     XCharStruct overall;
-    XQueryTextExtents(m_display, m_font->fid, text.c_str(), text.length(), &direction, &ascent, &descent, &overall);
+    XQueryTextExtents(m_impl->m_display, m_impl->m_font->fid, text.c_str(), text.length(), &direction, &ascent,
+                      &descent, &overall);
 
     metrics.m_width = overall.width;
     metrics.m_height = overall.ascent + overall.descent;
@@ -77,8 +100,8 @@ void CanvasRenderingContext2DLinux::clearRect(double x, double y, double width, 
     {
         return;
     }
-    XSetForeground(m_display, m_gc, 0xFF000000);
-    XFillRectangle(m_display, m_pixmap, m_gc, x, y, width, height);
+    XSetForeground(m_impl->m_display, m_impl->m_gc, 0xFF000000);
+    XFillRectangle(m_impl->m_display, m_impl->m_pixmap, m_impl->m_gc, x, y, width, height);
 }
 void CanvasRenderingContext2DLinux::save()
 {
@@ -108,7 +131,7 @@ ImageData CanvasRenderingContext2DLinux::getImageData(double x, double y, double
         data.m_height = clampedH;
         data.m_data.resize(clampedW * clampedH * 4);
 
-        XImage *image = XGetImage(m_display, m_pixmap, 0, 0, clampedW, clampedH, AllPlanes, ZPixmap);
+        XImage *image = XGetImage(m_impl->m_display, m_impl->m_pixmap, 0, 0, clampedW, clampedH, AllPlanes, ZPixmap);
         int width = image->width;
         int height = image->height;
         unsigned char *glImageData = &data.m_data[0];
@@ -154,8 +177,8 @@ void CanvasRenderingContext2DLinux::setFont(const char *font)
              isItalic ? "*I" : "", m_fontDescription.m_size);
     if (m_bitmapData)
     {
-        XFreeFont(_dis, m_font);
-        m_font = 0;
+        XFreeFont(m_impl->_display, m_impl->m_font);
+        m_impl->m_font = 0;
     }
 
     m_font = XLoadQueryFont(_dis, serv);
@@ -178,7 +201,8 @@ void CanvasRenderingContext2DLinux::getTextPosition(const std::string &text, dou
     int descent = 0;
     int direction = 0;
     XCharStruct overall;
-    XQueryTextExtents(_dis, _font->fid, text.c_str(), text.length(), &direction, &ascent, &descent, &overall);
+    XQueryTextExtents(m_impl->m_display, m_impl->m_font->fid, text.c_str(), text.length(), &direction, &ascent,
+                      &descent, &overall);
     int width = overall.width;
 
     if (m_textAlign == TextAlign::Center)
