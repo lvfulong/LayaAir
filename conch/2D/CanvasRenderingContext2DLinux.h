@@ -2,14 +2,12 @@
 #define __CanvasRenderingContext2DLinux_H__
 
 #include "CanvasRenderingContext2D.h"
-#include <X11/Xlib.h>
-#include <X11/Xos.h>
-#include <X11/Xutil.h>
 #include <optional>
 #include <string>
 
 namespace laya
 {
+class CanvasRenderingContext2DLinuxImpl;
 class CanvasRenderingContext2DLinux : public CanvasRenderingContext2D
 {
   public:
@@ -32,14 +30,9 @@ class CanvasRenderingContext2DLinux : public CanvasRenderingContext2D
     static bool registerFontFromPath(const std::string &fontName, const std::string &path);
 
   protected:
-    void getTextPosition(const std::string &text, double x, double y, double &outX, double &outY) override;
+    void getTextPosition(const std::string &text, double x, double y, double &outX, double &outY);
+    CanvasRenderingContext2DLinuxImpl *m_impl = {nullptr};
     BitmapData m_bitmapData;
-    Display *m_display{nullptr};
-    // int _screen{0};
-    Drawable m_window{0};
-    Drawable m_pixmap{0};
-    GC m_gc;
-    XFontStruct *m_font{0};
 };
 } // namespace laya
 #endif

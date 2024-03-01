@@ -18,7 +18,6 @@ class CanvasRenderingContext2DLinuxImpl
     GC m_gc;
     XFontStruct *m_font{0};
 };
-};
 CanvasRenderingContext2DLinux::CanvasRenderingContext2DLinux(int width, int height)
     : CanvasRenderingContext2D(width, height), m_impl(new CanvasRenderingContext2DLinuxImpl())
 {
