@@ -137,7 +137,7 @@ ImageData CanvasRenderingContext2DLinux::getImageData(double x, double y, double
         {
             for (int x = 0; x < width; x++)
             {
-                *(((int *)data + (y * width) + x)) = static_cast<int>(XGetPixel(image, x, y));
+                *(((int *)glImageData + (y * width) + x)) = static_cast<int>(XGetPixel(image, x, y));
             }
         }
 
@@ -175,7 +175,7 @@ void CanvasRenderingContext2DLinux::setFont(const char *font)
              isItalic ? "*I" : "", (int)m_fontDescription.m_size);
     if (m_impl->m_font)
     {
-        XFreeFont(m_impl->_display, m_impl->m_font);
+        XFreeFont(m_impl->m_display, m_impl->m_font);
         m_impl->m_font = 0;
     }
 
@@ -187,7 +187,7 @@ void CanvasRenderingContext2DLinux::setFont(const char *font)
         char buffer[1024] = {0};
         snprintf(buffer, sizeof(buffer) - 1, "*%s%s%s*--%d*", fontName.c_str(), isBold ? "*Bold" : "",
                  isItalic ? "*I" : "", (int)m_fontDescription.m_size);
-        m_impl->m_font = XLoadQueryFont(_impl->_disply, buffer);
+        m_impl->m_font = XLoadQueryFont(_impl->m_display, buffer);
         LOGI("use default font %s", fontName.c_str());
     }
 }
