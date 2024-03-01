@@ -21,7 +21,7 @@ CanvasRenderingContext2DLinux::CanvasRenderingContext2DLinux(int width, int heig
 
     m_pixmap = XCreatePixmap(m_display, m_window, m_width, m_height, 32);
     m_gc = XCreateGC(m_display, m_pixmap, 0, 0);
-    42 setDefault();
+    setDefault();
 }
 CanvasRenderingContext2DLinux::~CanvasRenderingContext2DLinux()
 {
