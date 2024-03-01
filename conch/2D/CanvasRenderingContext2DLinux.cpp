@@ -179,7 +179,7 @@ void CanvasRenderingContext2DLinux::setFont(const char *font)
         m_impl->m_font = 0;
     }
 
-    m_impl->m_font = XLoadQueryFont(_impl->_disply, buffer);
+    m_impl->m_font = XLoadQueryFont(m_impl->m_display, buffer);
     if (!m_impl->m_font)
     {
 
@@ -187,7 +187,7 @@ void CanvasRenderingContext2DLinux::setFont(const char *font)
         char buffer[1024] = {0};
         snprintf(buffer, sizeof(buffer) - 1, "*%s%s%s*--%d*", fontName.c_str(), isBold ? "*Bold" : "",
                  isItalic ? "*I" : "", (int)m_fontDescription.m_size);
-        m_impl->m_font = XLoadQueryFont(_impl->m_display, buffer);
+        m_impl->m_font = XLoadQueryFont(m_impl->m_display, buffer);
         LOGI("use default font %s", fontName.c_str());
     }
 }
