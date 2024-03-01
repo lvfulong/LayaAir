@@ -12,7 +12,6 @@ class CanvasRenderingContext2DLinuxImpl
 {
   public:
     Display *m_display{nullptr};
-    // int _screen{0};
     Drawable m_window{0};
     Drawable m_pixmap{0};
     GC m_gc;
@@ -173,22 +172,22 @@ void CanvasRenderingContext2DLinux::setFont(const char *font)
 
     char buffer[1024] = {0};
     snprintf(buffer, sizeof(buffer) - 1, "*%s%s%s*--%d*", m_fontDescription.m_family.c_str(), isBold ? "*Bold" : "",
-             isItalic ? "*I" : "", m_fontDescription.m_size);
-    if (m_bitmapData)
+             isItalic ? "*I" : "", (int)m_fontDescription.m_size);
+    if (m_impl->m_font)
     {
         XFreeFont(m_impl->_display, m_impl->m_font);
         m_impl->m_font = 0;
     }
 
-    m_font = XLoadQueryFont(_dis, serv);
-    if (!m_font)
+    m_impl->m_font = XLoadQueryFont(_impl->_disply, buffer);
+    if (!m_impl->m_font)
     {
 
         std::string fontName = "helvetica";
         char buffer[1024] = {0};
         snprintf(buffer, sizeof(buffer) - 1, "*%s%s%s*--%d*", fontName.c_str(), isBold ? "*Bold" : "",
-                 isItalic ? "*I" : "", m_fontDescription.m_size);
-        m_font = XLoadQueryFont(_dis, serv);
+                 isItalic ? "*I" : "", (int)m_fontDescription.m_size);
+        m_impl->m_font = XLoadQueryFont(_impl->_disply, buffer);
         LOGI("use default font %s", fontName.c_str());
     }
 }
