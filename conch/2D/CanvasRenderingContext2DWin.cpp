@@ -32,10 +32,12 @@ CanvasRenderingContext2DWin::CanvasRenderingContext2DWin(int width, int height)
     m_bitmapData.m_nWidth = width;
     m_bitmapData.m_nHeight = height;
     m_bitmapData.m_pImageData = new char[width * height * 4];
-    //Gdiplus::Matrix matrix;
-    //matrix.Translate(0.0f, height);//CGContextTranslateCTM(m_context, 0.0f, height);
-    //matrix.Scale(1.0f, -1.0f);// CGContextScaleCTM(m_context, 1.0f, -1.0f);
-    //m_gdiGraphics->SetTransform(&matrix);
+    // Gdiplus::Matrix matrix;
+    // matrix.Translate(0.0f, height);
+    // matrix.Scale(1.0f, -1.0f);
+    // m_gdiGraphics->SetTransform(&matrix);
+    m_stringFormat.SetAlignment(Gdiplus::StringAlignmentNear);       // 水平
+    m_stringFormat.SetLineAlignment(Gdiplus::StringAlignmentCenter); // 垂直
     setDefault();
 }
 CanvasRenderingContext2DWin::~CanvasRenderingContext2DWin()
@@ -75,12 +77,16 @@ void CanvasRenderingContext2DWin::fillText(const std::string &text, double x, do
     if (m_width <= 0 || m_height <= 0)
     {
         return;
-    } 
+    }
     int bufferLen = 0;
     wchar_t *pwszBuffer = utf8ToUtf16(text, &bufferLen);
     TextMetrics matrics = measureTextUtf16(pwszBuffer, bufferLen);
-    m_gdiGraphics->DrawString(pwszBuffer, bufferLen, m_font, Gdiplus::PointF(x, y + matrics.m_height * 0.5f), &m_stringFormat,
-                              &Gdiplus::SolidBrush(Gdiplus::Color(m_fillColorA, m_fillColorR, m_fillColorG, m_fillColorB)));
+    double outX;
+    double outY;
+    getTextPosition(text, x, y, outX, outY);
+    m_gdiGraphics->DrawString(
+        pwszBuffer, bufferLen, m_font, Gdiplus::PointF(outX, outY), &m_stringFormat,
+        &Gdiplus::SolidBrush(Gdiplus::Color(m_fillColorA, m_fillColorR, m_fillColorG, m_fillColorB)));
 }
 
 void CanvasRenderingContext2DWin::strokeText(const std::string &text, double x, double y,
@@ -90,14 +96,18 @@ void CanvasRenderingContext2DWin::strokeText(const std::string &text, double x, 
     {
         return;
     }
-   
+
     int bufferLen = 0;
-    wchar_t *pwszBuffer = utf8ToUtf16(text, &bufferLen); 
+    wchar_t *pwszBuffer = utf8ToUtf16(text, &bufferLen);
     TextMetrics matrics = measureTextUtf16(pwszBuffer, bufferLen);
-    m_gdiGraphics->DrawString(pwszBuffer, bufferLen, m_font, Gdiplus::PointF(x, y + matrics.m_height * 0.5f), &m_stringFormat,
-                              &Gdiplus::SolidBrush(Gdiplus::SolidBrush(Gdiplus::Color(m_strokeColorA, m_strokeColorR, m_strokeColorG, m_strokeColorB))));
+    double outX;
+    double outY;
+    getTextPosition(text, x, y, outX, outY);
+    m_gdiGraphics->DrawString(pwszBuffer, bufferLen, m_font, Gdiplus::PointF(outX, outY), &m_stringFormat,
+                              &Gdiplus::SolidBrush(Gdiplus::SolidBrush(
+                                  Gdiplus::Color(m_strokeColorA, m_strokeColorR, m_strokeColorG, m_strokeColorB))));
 }
-TextMetrics CanvasRenderingContext2DWin::measureTextUtf16(wchar_t* pwszBuffer, int bufferLen)
+TextMetrics CanvasRenderingContext2DWin::measureTextUtf16(wchar_t *pwszBuffer, int bufferLen)
 {
     TextMetrics metrics;
 
@@ -106,7 +116,7 @@ TextMetrics CanvasRenderingContext2DWin::measureTextUtf16(wchar_t* pwszBuffer, i
     m_font->GetFamily(&fontFamily);
 
     graphicsPathObj.AddString(pwszBuffer, bufferLen /* -1 */, &fontFamily, m_font->GetStyle(), m_font->GetSize(),
-        Gdiplus::PointF(0, 0), &m_stringFormat);
+                              Gdiplus::PointF(0, 0), &m_stringFormat);
     Gdiplus::RectF rcBound;
     graphicsPathObj.GetBounds(&rcBound);
 
@@ -114,18 +124,18 @@ TextMetrics CanvasRenderingContext2DWin::measureTextUtf16(wchar_t* pwszBuffer, i
     m_gdiGraphics->MeasureString(pwszBuffer, bufferLen, m_font, layoutRect, &m_stringFormat, &rcBound);
     metrics.m_width = rcBound.Width;
     metrics.m_height = rcBound.Height;
-    //UINT16 desent = fontFamily.GetCellDescent(m_fontStyle);
-    //UINT16 descentPixel = m_font->GetSize() * desent / fontFamily.GetEmHeight(m_fontStyle);
+    // UINT16 desent = fontFamily.GetCellDescent(m_fontStyle);
+    // UINT16 descentPixel = m_font->GetSize() * desent / fontFamily.GetEmHeight(m_fontStyle);
     UINT16 ascender = fontFamily.GetCellAscent(m_fontStyle);
     UINT16 ascenderPixel = m_font->GetSize() * ascender / fontFamily.GetEmHeight(m_fontStyle);
     metrics.m_ascender = ascenderPixel;
-    //LOGI("measureText %f %f", rcBound.Width, rcBound.Height);
+    // LOGI("measureText %f %f", rcBound.Width, rcBound.Height);
     return metrics;
 }
 TextMetrics CanvasRenderingContext2DWin::measureText(const std::string &text)
 {
     int bufferLen = 0;
-    wchar_t* pwszBuffer = utf8ToUtf16(text, &bufferLen);
+    wchar_t *pwszBuffer = utf8ToUtf16(text, &bufferLen);
     return measureTextUtf16(pwszBuffer, bufferLen);
 }
 void CanvasRenderingContext2DWin::clearRect(double x, double y, double width, double height)
@@ -134,7 +144,7 @@ void CanvasRenderingContext2DWin::clearRect(double x, double y, double width, do
     {
         return;
     }
-    m_gdiGraphics->Clear(Gdiplus::Color(1, 1, 0, 0));
+    m_gdiGraphics->Clear(Gdiplus::Color(1, 0, 0, 0));
 }
 void CanvasRenderingContext2DWin::save()
 {
@@ -164,13 +174,13 @@ ImageData CanvasRenderingContext2DWin::getImageData(double x, double y, double w
         data.m_width = clampedW;
         data.m_height = clampedH;
         data.m_data.resize(clampedW * clampedH * 4);
-        unsigned char* glImageData = &data.m_data[0];
+        unsigned char *glImageData = &data.m_data[0];
         for (auto y = 0; y < clampedH; y++)
         {
             for (auto x = 0; x < clampedW; x++)
             {
-                Gdiplus::Color  color;
-                m_gdiBitmap->GetPixel(x, y, &color);//m_gdiBitmap->GetPixel(x, clampedH - y - 1, &color);
+                Gdiplus::Color color;
+                m_gdiBitmap->GetPixel(x, y, &color); // m_gdiBitmap->GetPixel(x, clampedH - y - 1, &color);
                 glImageData[(x + y * clampedW) * 4 + 0] = color.GetR();
                 glImageData[(x + y * clampedW) * 4 + 1] = color.GetG();
                 glImageData[(x + y * clampedW) * 4 + 2] = color.GetB();
@@ -204,7 +214,7 @@ void CanvasRenderingContext2DWin::scale(double x, double y)
         return;
     }
 }
-void CanvasRenderingContext2DWin::setTextAlign(const char *textAlign)
+/*void CanvasRenderingContext2DWin::setTextAlign(const char* textAlign)
 {
     if (strcmp(textAlign, "left") == 0)
     {
@@ -258,6 +268,40 @@ void CanvasRenderingContext2DWin::setTextBaseline(const char *textBaseline)
     else
     {
         LOGE("textBaseline invalid");
+    }
+}*/
+void CanvasRenderingContext2DWin::getTextPosition(const std::string &text, double x, double y, double &outX,
+                                                  double &outY)
+{
+    TextMetrics textMetrics = measureText(text);
+    outX = x;
+    outY = y;
+    if (m_textAlign == TextAlign::Center)
+    {
+        outX = x - textMetrics.m_width / 2.0f;
+    }
+    else if (m_textAlign == TextAlign::Left)
+    {
+    }
+    else if (m_textAlign == TextAlign::Right)
+    {
+        outX = x - textMetrics.m_width;
+    }
+
+    if (m_textBaseline == TextBaseline::Top)
+    {
+    }
+    else if (m_textBaseline == TextBaseline::Middle)
+    {
+        outY = y + textMetrics.m_height / 2.0f;
+    }
+    else if (m_textBaseline == TextBaseline::Bottom)
+    {
+        outY = y + textMetrics.m_height;
+    }
+    else if (m_textBaseline == TextBaseline::Alphabetic)
+    {
+        outY = y + textMetrics.m_ascender;
     }
 }
 void CanvasRenderingContext2DWin::setFont(const char *font)

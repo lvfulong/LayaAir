@@ -9,6 +9,9 @@ extern int g_nInnerWidth;
 extern int g_nInnerHeight;
 #ifdef WIN32
 HWND g_hWnd;
+#elif LINUX
+Display *g_X11_display;
+Window g_X11_window;
 #endif
 
 namespace laya
@@ -39,25 +42,29 @@ void App::run(const Config &config, size_t width, size_t height, int nJSDebugMod
     g_nInnerWidth = width;
     g_nInnerHeight = height;
     m_sdlWindow = SDL_CreateWindow(config.title.c_str(), x, y, (int)width, (int)height, windowFlags);
-#ifdef WIN32
+
     SDL_SysWMinfo sys;
     SDL_VERSION(&sys.version);
     if (SDL_FALSE != SDL_GetWindowWMInfo(m_sdlWindow, &sys))
     {
+#ifdef WIN32
         g_hWnd = sys.info.win.window;
         // HINSTANCE hInstance = sys.info.win.hinstance;
+#elif LINUX
+        g_X11_display = sys.info.x11.display;
+        g_X11_window = sys.info.x11.window;
+#endif
     }
     else
     {
         assert(true && "get hWnd failed");
     }
-#endif
 
     laya::BackendOptions options;
 #ifdef WIN32
     options.nativeLayer = g_hWnd;
 #else LINUX
-    options.nativeLayer = m_sdlWindow;   
+    options.nativeLayer = m_sdlWindow;
 #endif
     laya::JCConch::s_pConch.reset(new laya::JCConch((laya::JS_DEBUG_MODE)nJSDebugMode, nJSDebugPort));
     laya::JCConch::s_pConchRender->createBackend(options);
@@ -77,8 +84,7 @@ void App::run(const Config &config, size_t width, size_t height, int nJSDebugMod
             case SDL_QUIT:
                 m_closed = true;
                 break;
-            case SDL_KEYDOWN:
-            {
+            case SDL_KEYDOWN: {
                 if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
                 {
                     m_closed = true;
@@ -89,10 +95,9 @@ void App::run(const Config &config, size_t width, size_t height, int nJSDebugMod
                 e.keyCode = event.key.keysym.scancode;
 
                 JCConch::s_pConch->dispatchInputEvent(e);
-               }
-                break;
-            case SDL_KEYUP:
-            {
+            }
+            break;
+            case SDL_KEYUP: {
                 inputEvent e;
                 e.nTouchType = e.nType = E_ONKEYUP;
                 strncpy(e.type, "keyup", 256);
@@ -100,9 +105,8 @@ void App::run(const Config &config, size_t width, size_t height, int nJSDebugMod
 
                 JCConch::s_pConch->dispatchInputEvent(e);
             }
-                break;
-            case SDL_MOUSEWHEEL:
-            {
+            break;
+            case SDL_MOUSEWHEEL: {
                 inputEvent e;
                 e.nTouchType = e.nType = E_ONMOUSEWHEEL;
                 strncpy(e.type, "mousewheel", 256);
@@ -114,8 +118,7 @@ void App::run(const Config &config, size_t width, size_t height, int nJSDebugMod
                 break;
             }
 
-            case SDL_MOUSEBUTTONDOWN:
-            {
+            case SDL_MOUSEBUTTONDOWN: {
                 inputEvent e;
                 if (SDL_BUTTON_LEFT == event.button.button)
                 {
@@ -136,11 +139,10 @@ void App::run(const Config &config, size_t width, size_t height, int nJSDebugMod
 
                     JCConch::s_pConch->dispatchInputEvent(e);
                 }
-               
+
                 break;
             }
-            case SDL_MOUSEBUTTONUP:
-            {
+            case SDL_MOUSEBUTTONUP: {
                 inputEvent e;
                 if (SDL_BUTTON_LEFT == event.button.button)
                 {
@@ -165,8 +167,7 @@ void App::run(const Config &config, size_t width, size_t height, int nJSDebugMod
 
                 break;
             }
-            case SDL_MOUSEMOTION:
-            {
+            case SDL_MOUSEMOTION: {
                 inputEvent e;
                 e.nTouchType = e.nType = E_ONMOUSEMOVE;
                 strncpy(e.type, "mousemove", 256);
@@ -188,7 +189,7 @@ void App::run(const Config &config, size_t width, size_t height, int nJSDebugMod
                 break;
             default:
                 break;
-            }  
+            }
         }
         laya::JCConch::s_pConch->update();
     }

@@ -1,12 +1,11 @@
 #ifndef __CanvasRenderingContext2DWin_H__
 #define __CanvasRenderingContext2DWin_H__
 
-#include <windows.h>
-#include <gdiplus.h>
 #include "CanvasRenderingContext2D.h"
+#include <gdiplus.h>
 #include <optional>
 #include <string>
-
+#include <windows.h>
 
 namespace laya
 {
@@ -27,19 +26,21 @@ class CanvasRenderingContext2DWin : public CanvasRenderingContext2D
     void scale(double x, double y) override;
     const BitmapData &getBitmapData() const override;
     void setFont(const char *font) override;
-    void setTextAlign(const char *textAlign) override;
-    void setTextBaseline(const char *textBaseline) override;
+    // void setTextAlign(const char *textAlign) override;
+    // void setTextBaseline(const char *textBaseline) override;
     void setLineWidth(double lineWidth) override;
     void setLineJoin(const char *lineJoin) override;
-     static bool registerFontFromPath(const std::string &fontName, const std::string &path);
+    static bool registerFontFromPath(const std::string &fontName, const std::string &path);
+
   protected:
-    TextMetrics measureTextUtf16(wchar_t* pwszBuffer, int bufferLen);
+    void getTextPosition(const std::string &text, double x, double y, double &outX, double &outY);
+    TextMetrics measureTextUtf16(wchar_t *pwszBuffer, int bufferLen);
     BitmapData m_bitmapData;
-    Gdiplus::Bitmap* m_gdiBitmap;
-    Gdiplus::Graphics* m_gdiGraphics;
-    Gdiplus::Font* m_font = nullptr;
+    Gdiplus::Bitmap *m_gdiBitmap;
+    Gdiplus::Graphics *m_gdiGraphics;
+    Gdiplus::Font *m_font = nullptr;
     Gdiplus::StringFormat m_stringFormat;
-    Gdiplus::FontStyle  m_fontStyle;
+    Gdiplus::FontStyle m_fontStyle;
 };
 } // namespace laya
 #endif
