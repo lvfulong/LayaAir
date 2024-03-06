@@ -475,7 +475,6 @@ namespace laya
 		int batchIndex;
 		int batchBoneIndex;
 	};
-	
 	/*void JSRuntime::computeSubSkinnedDataForNative(JSValueAsParam inverseBindPosesBuffer, JSValueAsParam boneIndices, JSValueAsParam subData, JSValueAsParam skinnedMatrixCaches, JSValueAsParam bonesTransform, JSValueAsParam skinnedDataLoopMarks, JSValueAsParam skinnedData)
 	{
 		char* pInverseBindPosesBuffer = NULL;
@@ -585,15 +584,21 @@ namespace laya
         if (value.isString())
         {
             std::string path = value.as<std::string>();
-            return FontManager::getInstance()->registerFont(Converter<std::string>::ToCpp(jsFamily), path);
+            std::string family = Converter<std::string>::ToCpp(jsFamily);
+            return FontManager::getInstance()->registerFont(family, path);
         }
         else if (value.isArrayBuffer())
         {
             char* ab = NULL;
             int byte = 0;
             bool isab = extractJSAB(pathOrArrayBuffer, ab, byte);
-            return FontManager::getInstance()->registerFont(Converter<std::string>::ToCpp(jsFamily), (uint8_t*)ab, byte);
+            if (isab)
+            {
+                std::string family = Converter<std::string>::ToCpp(jsFamily);
+                return FontManager::getInstance()->registerFont(family, (uint8_t*)ab, byte);
+            }
         }
+        LOIG("registerFont failed");
         return false;
     }
     void JSRuntime::exportJS(Context& context)

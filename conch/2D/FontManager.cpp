@@ -1,8 +1,8 @@
 #include "FontManager.h"
 #include <utils/Log.h>
+#include <utils/JCFileSystem.h>
 #ifdef ANDROID
 #include "CanvasRenderingContext2DAndroid.h"
-#include <utils/JCFileSystem.h>
 #elif __APPLE__
 #include <CoreGraphics/CGDataProvider.h>
 #include <CoreGraphics/CGFont.h>
@@ -21,7 +21,6 @@ static bool registerFontIOS(const std::string &family, CGDataProviderRef fontDat
 {
     CGFontRef registerfont = CGFontCreateWithDataProvider(fontDataProvider);
 
-    CGDataProviderRelease(fontDataProvider);
 
     CFStringRef fontName = CGFontCopyFullName(registerfont);
 
@@ -58,6 +57,7 @@ static bool registerFontIOS(const std::string &family, CGDataProviderRef fontDat
     }
     CGFontRelease(registerfont);
     FontManager::getInstance()->m_fontName2RealName.insert(std::make_pair(family, strRealFontName));
+    LOGE("registerFont succeed: %s", family.c_str());
     return true;
 }
 #endif
@@ -91,6 +91,7 @@ bool FontManager::registerFont(const std::string &family, const std::string &pat
     CGDataProviderRef fontDataProvider = CGDataProviderCreateWithFilename(path.c_str());
     if (fontDataProvider == nullptr)
     {
+        LOGI("registerFont failes fontDataProvider == nullptr");
         return false;
     }
     return registerFontIOS(family, fontDataProvider);
@@ -106,12 +107,19 @@ bool FontManager::registerFont(const std::string &family, const uint8_t *data, i
     writeFileSync(tempFilePath.c_str(), buf);
     return CanvasRenderingContext2DAndroid::registerFontFromPath(family, tempFilePath);
 #elif __APPLE__
-    CGDataProviderRef fontDataProvider = CGDataProviderCreateWithData(nullptr, data, byteLength, nullptr);
+    JCBuffer buf((char *)data, byteLength, false, false);
+    std::string tempFilePath = gRedistPath + "/appCache" +  std::string("/tmp_") + family;
+    writeFileSync(tempFilePath.c_str(), buf);
+    CGDataProviderRef fontDataProvider = CGDataProviderCreateWithFilename(tempFilePath.c_str());
+    //CGDataProviderRef fontDataProvider = CGDataProviderCreateWithData(nullptr, data, byteLength, nullptr);
     if (fontDataProvider == nullptr)
     {
-        return true;
+        LOGI("registerFont failes fontDataProvider == nullptr");
+        return false;
     }
-    return registerFontIOS(family, fontDataProvider);
+    bool ret = registerFontIOS(family, fontDataProvider);
+    CGDataProviderRelease(fontDataProvider);
+    return ret;
 #else
     return true;
 #endif
