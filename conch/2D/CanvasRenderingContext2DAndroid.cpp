@@ -195,7 +195,7 @@ TextMetrics CanvasRenderingContext2DAndroid::measureText(const std::string &text
     float height = arrayBody[1];
     float ascent = arrayBody[2];
     env->ReleaseFloatArrayElements(returnArray, arrayBody, 0);
-
+    env->DeleteLocalRef(returnArray);
     env->DeleteLocalRef(jText);
 
     TextMetrics metrics;
