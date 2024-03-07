@@ -4,17 +4,11 @@
 #include <utils/JCCommonMethod.h>
 #include <utils/Log.h>
 
-#if WIN32
-#include <boost/regex.hpp>
-using boost::regex;
-using boost::regex_search;
-using boost::smatch;
-#else
 #include <regex>
-using std::regex;
-using std::regex_search;
-using std::smatch;
-#endif
+#include <string>
+#include <codecvt>
+#include <locale>
+
 
 namespace laya
 {
@@ -24,22 +18,25 @@ FontDescriptionParser::~FontDescriptionParser()
 // TODO default value check
 void FontDescriptionParser::parse(const std::string &fontStr, FontDescription &out, int32_t dpi /*= 96*/)
 {
-    regex fontRegex(
-        "^ *(?:(normal|bold|bolder|lighter|[1-9]00) *)?(?:(normal|italic|oblique) *)?([\\d\\.]+)(px|pt|pc|in|cm|mm|%) "
+    std::wregex fontRegex(
+        L"^ *(?:(normal|bold|bolder|lighter|[1-9]00) *)?(?:(normal|italic|oblique) *)?([\\d\\.]+)(px|pt|pc|in|cm|mm|%) "
         "*((?:\'([^\']+)\'|\"([^\"]+)\"|[\\w\\s\\u4e00-\\u9fff-]+)( *, "
         "*(?:\'([^\']+)\'|\"([^\"]+)\"|[\\w\\s\\u4e00-\\u9fff-]+))*)");
-    smatch results;
-    if (regex_search(fontStr.begin(), fontStr.end(), results, fontRegex))
-    {
-        out.m_weight = !results[1].str().empty() ? results[1].str() : "normal";
-        out.m_style = !results[2].str().empty() ? results[2].str() : "normal";
-        out.m_size = !results[3].str().empty() ? atof(results[3].str().c_str()) : 30.0;
-        out.m_unit = !results[4].str().empty() ? results[4].str() : "px";
 
-        if (!results[4].str().empty())
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+    std::wstring wideFontStr = converter.from_bytes(fontStr);
+    std::wsmatch results;
+    if (std::regex_search(wideFontStr, results, fontRegex))
+    {
+        out.m_weight = !results[1].str().empty() ? converter.to_bytes(results[1].str()) : "normal";
+        out.m_style = !results[2].str().empty() ? converter.to_bytes(results[2].str()) : "normal";
+        out.m_size = !results[3].str().empty() ? atof(converter.to_bytes(results[3].str()).c_str()) : 30.0;
+        out.m_unit = !results[4].str().empty() ? converter.to_bytes(results[4].str()) : "px";
+
+        if (!results[5].str().empty())
         {
             std::vector<char *> temp;
-            std::string tempString = results[5].str();
+            std::string tempString = converter.to_bytes(results[5].str());
             splitString(temp, (char *)tempString.c_str(), ',');
             // replace(/["']/g, '').trim()
             out.m_family = temp[0];
@@ -90,7 +87,12 @@ void FontDescriptionParser::test()
     {
         FontDescriptionParser parser;
         FontDescription out;
-        parser.parse("20px 微软雅黑", out);
+
+        std::wstring testStr = L"20px 微软雅黑";
+        std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+
+
+        parser.parse(converter.to_bytes(testStr), out);
         LOGI("[weight %s] [style %s] [size %f] [unit %s] [family %s]", out.m_weight.c_str(), out.m_style.c_str(),
              out.m_size, out.m_unit.c_str(), out.m_family.c_str());
     }
