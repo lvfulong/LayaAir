@@ -598,7 +598,7 @@ namespace laya
                 return FontManager::getInstance()->registerFont(family, (uint8_t*)ab, byte);
             }
         }
-        LOIG("registerFont failed");
+        LOGI("registerFont failed");
         return false;
     }
     void JSRuntime::exportJS(Context& context)
