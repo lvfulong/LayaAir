@@ -244,9 +244,6 @@ namespace laya
     void JCScriptRuntime::loadJSScript() {
         postToJS([this](){
         //设置js的一些环境。必须在所有导出之后，执行其他脚本之前。
-#ifndef WIN32
-        JSP_RUN_SCRIPT((const char*)"function getExePath(){return null;}");
-#endif
         {
             char* sJSRuntime = NULL;
             int nSize = 0;
