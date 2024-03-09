@@ -7,6 +7,12 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(LINUX TRUE)
+else()
+    set(LINUX FALSE)
+endif()
+
 set(CONCH_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
 include(${CONCH_ROOT_DIR}/cmake/preprocessor.cmake)
 
@@ -14,7 +20,7 @@ option(USE_JS_V8_DEBUGGER "Use v8 debugger" ON)
 option(USE_DOUBLE_PRECISION "Use double" OFF)
 
 if(USE_JS_V8_DEBUGGER)
-	if(ANDROID OR MSVC)
+	if(ANDROID OR MSVC OR LINUX)
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DJS_V8_DEBUGGER")
 	endif()
 endif()
