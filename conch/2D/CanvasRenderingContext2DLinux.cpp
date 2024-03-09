@@ -98,7 +98,7 @@ void CanvasRenderingContext2DLinux::clearRect(double x, double y, double width, 
     {
         return;
     }
-    XSetForeground(m_impl->m_display, m_impl->m_gc, 0xFF000000);
+    XSetForeground(m_impl->m_display, m_impl->m_gc, 0x00000000);
     XFillRectangle(m_impl->m_display, m_impl->m_pixmap, m_impl->m_gc, x, y, width, height);
 }
 void CanvasRenderingContext2DLinux::save()
@@ -183,18 +183,63 @@ void CanvasRenderingContext2DLinux::setFont(const char *font)
     if (!m_impl->m_font)
     {
 
-        std::string fontName = "helvetica";
-        char buffer[1024] = {0};
-        snprintf(buffer, sizeof(buffer) - 1, "*%s%s%s*--%d*", fontName.c_str(), isBold ? "*Bold" : "",
-                 isItalic ? "*I" : "", (int)m_fontDescription.m_size);
+        // std::string fontName = "helvetica";
+        // char buffer[1024] = {0};
+        // snprintf(buffer, sizeof(buffer) - 1, "*%s%s%s*--%d*", fontName.c_str(), isBold ? "*Bold" : "",
+        //         isItalic ? "*I" : "", (int)m_fontDescription.m_size);
+        // m_impl->m_font = XLoadQueryFont(m_impl->m_display, buffer);
+        // LOGI("use default font %s %p", fontName.c_str(), m_impl->m_font);
+
+        int _fontSize;
+        static int fontSizes[] = {8, 10, 12, 14, 18, 24};
+        int i = 0;
+        int size = sizeof(fontSizes) / sizeof(fontSizes[0]);
+        for (i = 0; i < size; ++i)
+        {
+            if (_fontSize < fontSizes[i])
+            {
+                break;
+            }
+        }
+        if (i == 0)
+        {
+            _fontSize = fontSizes[0];
+        }
+        else if (i > 1 && i < size)
+        {
+            _fontSize = fontSizes[i - 1];
+        }
+        else
+        {
+            _fontSize = fontSizes[size - 1];
+        }
+        snprintf(buffer, sizeof(buffer) - 1, "*%s*%d*", "lucidasans", _fontSize);
         m_impl->m_font = XLoadQueryFont(m_impl->m_display, buffer);
-        LOGI("use default font %s", fontName.c_str());
+        if (!m_impl->m_font)
+        {
+            m_impl->m_font = XLoadQueryFont(m_impl->m_display, buffer);
+        }
+        LOGI("use default font %s %p", "lucidasans", m_impl->m_font);
+    }
+
+    {
+        const char *fontname = "-*-fixed-*-r-*-*-20-*-*-*-*-*-*-*";
+        m_impl->m_font = XLoadQueryFont(m_impl->m_display, fontname);
+        if (!m_impl->m_font)
+        {
+            fprintf(stderr, "unable to load font %s: using fixed\n", fontname);
+
+            m_impl->m_font = XLoadQueryFont(m_impl->m_display, fontname);
+        }
+        else
+        {
+            LOGI("use default font %s %p", fontname, m_impl->m_font);
+        }
     }
 }
 void CanvasRenderingContext2DLinux::getTextPosition(const std::string &text, double x, double y, double &outX,
                                                     double &outY)
 {
-
     int ascent = 0;
     int descent = 0;
     int direction = 0;

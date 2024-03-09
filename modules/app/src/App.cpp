@@ -1,15 +1,16 @@
-#include "JCConch.h"
 #include <app/App.h>
-#ifdef WIN32
-#include <SDL2/SDL_syswm.h>
-#include <Windows.h>
-#endif
+#include "JCConch.h"
 #include <assert.h>
+#include <SDL2/SDL_syswm.h>
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
 #ifdef WIN32
+#include <Windows.h>
 HWND g_hWnd;
 #elif LINUX
+#include <X11/Xlib.h>
+#include <X11/Xos.h>
+#include <X11/Xutil.h>
 Display *g_X11_display;
 Window g_X11_window;
 #endif
