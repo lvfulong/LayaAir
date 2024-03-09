@@ -796,7 +796,6 @@ elseif(MSVC)
 		linearmath
 		BulletSoftBody
 		gdiplus
-		boost_regex
 	)
 elseif(LINUX)
 	find_package(X11 REQUIRED)
