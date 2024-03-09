@@ -2,6 +2,8 @@
 #include "render/LayaGL.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalTex.h"
 #include "render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.h"
+#include "GLESRenderElement2D.h"
+
 namespace laya
 {
 	GLESRenderContext2D::GLESRenderContext2D() {

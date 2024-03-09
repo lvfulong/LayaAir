@@ -4,6 +4,7 @@
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalTex.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalRT.h>
 #include "render/Property.h"
+#include "GLESRenderContext2D.h"
 namespace laya
 {
 	GLESRenderElement2D::GLESRenderElement2D()

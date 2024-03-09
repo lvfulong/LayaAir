@@ -1,7 +1,6 @@
 #ifndef __GLESRenderElement2D_H_
 #define __GLESRenderElement2D_H_
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTSubShader.h>
-#include "GLESRenderContext2D.h"
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderGeometryElement.h>
 
 
