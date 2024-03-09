@@ -1,15 +1,15 @@
-#include "JCConch.h"
 #include <app/App.h>
-#ifdef WIN32
-#include <SDL2/SDL_syswm.h>
-#include <Windows.h>
-#endif
+#include "JCConch.h"
 #include <assert.h>
+#include <SDL2/SDL_syswm.h>
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
 #ifdef WIN32
+#include <Windows.h>
 HWND g_hWnd;
 #elif LINUX
+#include <X11/Xlib.h>
+#include <SDL2/SDL_syswm.h>
 Display *g_X11_display;
 Window g_X11_window;
 #endif
@@ -63,7 +63,7 @@ void App::run(const Config &config, size_t width, size_t height, int nJSDebugMod
     laya::BackendOptions options;
 #ifdef WIN32
     options.nativeLayer = g_hWnd;
-#else LINUX
+#elif LINUX
     options.nativeLayer = m_sdlWindow;
 #endif
     laya::JCConch::s_pConch.reset(new laya::JCConch((laya::JS_DEBUG_MODE)nJSDebugMode, nJSDebugPort));

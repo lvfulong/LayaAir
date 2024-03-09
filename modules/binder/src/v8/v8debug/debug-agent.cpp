@@ -82,19 +82,19 @@ namespace laya {
                 int uniNum = 0, buffUsed = 0;
                 char* ret = UnicodeStrToUTF8Str((short*)str.characters16(), pUTF8Buff, unicodeLen * 4, uniNum, buffUsed);
                 /*
-                //�����0��Ҫȥ��
+                //最后是0，要去掉
                 buffUsed--;
                 ret[buffUsed++] = '\r'; ret[buffUsed++] = '\n';
                 ret[buffUsed++] = '\r'; ret[buffUsed++] = '\n';
                 ret[buffUsed++] = 0;
                 */
                 if (pAgent) {
-                    pAgent->sendMsgToFrontend(ret, buffUsed - 1);   //���ܷ���0
+                    pAgent->sendMsgToFrontend(ret, buffUsed - 1);   //不能发送0
                 }
                 delete[] pUTF8Buff;
             }
             else {
-                *(int*)0 = 0;//û����Ҫ\r\n\r\n ����
+                *(int*)0 = 0;//没做。要\r\n\r\n 结束
                 if (pAgent) {
                     pAgent->sendMsgToFrontend((char*)str.characters8(), str.length());
                 }
@@ -130,7 +130,7 @@ namespace laya {
         }
         void runMessageLoopOnPause(int context_group_id) override {
             terminated_ = false;
-            //�������Ҫ�ȴ�������ǰ����Ϣ����Ϊ����������˾ͻ�����ִ��resume
+            //下面必须要等待并处理前端消息，因为这个函数完了就会立即执行resume
             while (!terminated_ && waitForFrontendEvent()) {
                 //while (platform_->FlushForegroundTasks(env_->isolate())) {}
             }
@@ -179,15 +179,15 @@ namespace laya {
         }*/
         double currentTimeMS() override { return tmGetCurms(); }
 
-        //����������ʱִ��һ���������� Allocation instrumentation timeline
-        //�����js�߳�ִ�еġ�callbackҲ��js�߳�ִ�о���
-        //interval_s ��λ���룬������0.05�룬���������updateӦ�������㡣
+        //调试器请求定时执行一个任务。例如 Allocation instrumentation timeline
+        //这个是js线程执行的。callback也在js线程执行就行
+        //interval_s 单位是秒，现在是0.05秒，这个精度用update应该能满足。
         void startRepeatingTimer(double interval_s, TimerCallback callback, void* data) override {
-            LOGE("û��");
+            LOGE("没做");
         }
-        //��������Ķ�ʱ����ֹͣ��
+        //上面请求的定时任务停止了
         void cancelTimer(void* data) override {
-            LOGE("û��");
+            LOGE("没做");
         }
 
 
@@ -200,13 +200,13 @@ namespace laya {
         printf("==============new v8 debugger===================\n");
         DebuggerAgent::sMsgID = 0;
         /*
-        connect�Ǵ���һ���µ�V8InspectorSessionImpl�� Ȼ�󴴽�һ���µ�V8RuntimeAgentImpl��
-        V8DebuggerAgentImpl��V8ProfilerAgentImpl��V8HeapProfilerAgentImpl��V8ConsoleAgentImpl��V8SchemaAgentImpl
-        Ȼ�����ЩAgentImpl�����ӵ����SessionImpl, ������ͬ�ĵ���������ܷ�����ͬ��Agent
+        connect是创建一个新的V8InspectorSessionImpl， 然后创建一堆新的V8RuntimeAgentImpl，
+        V8DebuggerAgentImpl，V8ProfilerAgentImpl，V8HeapProfilerAgentImpl，V8ConsoleAgentImpl，V8SchemaAgentImpl
+        然后把这些AgentImpl都连接到这个SessionImpl, 这样不同的调试命令就能发给不同的Agent
         */
         _dbg_session_ = _new_inspector->connect(1, m_pInspectorChannel, v8_inspector::StringView());
 
-        //ע�� �����߳����⣬������µ�ǰ��������������ǰ��ˢ�£�����js������������󣬿��ܻᵼ�·Ƿ�����������������٣������Ļ��ֲ��ÿ����Ⱥ��ԡ�
+        //注意 由于线程问题，如果有新的前端连进来（或者前端刷新），而js又在用这个对象，可能会导致非法。不过这种情况很少，加锁的话又不好看，先忽略。
         pWsSessionData = pData;
         //gLayaLog = mygLayaLog;
         //gLayaLogNoParam = mygLayaLogSimp;
@@ -241,7 +241,7 @@ namespace laya {
     }
 
     void DebuggerAgent::onDbgMsg(char* pMsg, int len) {
-        //printf(">>>%s\n", pMsg);
+        printf(">>>%s\n", pMsg);
         nFrontEndMsgID = sMsgID++;
         if (bFirst && nEnableDebuggerMsgID<0) {
             if (strstr(pMsg, "Debugger.enable") != NULL) {
@@ -254,7 +254,7 @@ namespace laya {
 
         int msglen = 0;
         //writeFileSync1("d:/temp/v8in.txt", message, strlen(message), buffer::raw);
-        //�ȼ��һ��command���������ͬ�Ķ�����
+        //先检查一下command，分配给不同的对象处理。
         msglen = strlen(msg);
         char* ptmpMsg = new char[msglen + 1];
         ptmpMsg[msglen] = 0;
@@ -343,7 +343,7 @@ namespace laya {
                 if (pJSThread_) {
                     pJSThread_->pushDbgFunc(std::bind(dispatchProtocolMsg_inJSThread, this, message_view, nFrontEndMsgID));
                 }
-                //delete[] pUTF16;  ���͵�jsִ�еĻ����Ͳ�Ҫ������ɾ����
+                //delete[] pUTF16;  发送到js执行的话，就不要在这里删除了
             }
             else {
                 StrBuff strbuf(1024, 512);
@@ -366,7 +366,7 @@ namespace laya {
         pWsSessionData->pTaskLock.lock();
         pWsSessionData->pSendTask.push_back(msg);
         pWsSessionData->pTaskLock.unlock();
-        //lws_callback_on_writable(pWsSessionData-> wsi);//һ���л��ᣬ����д�ص�
+        //lws_callback_on_writable(pWsSessionData-> wsi);//一旦有机会，触发写回调
     }
 
 
@@ -399,26 +399,26 @@ namespace laya {
         v8_inspector::StringView ctx_name(nameBuffer.get(), nameLen);
         _new_inspector->contextCreated(v8_inspector::V8ContextInfo(context, 1, ctx_name));
         /*
-            connect�Ǵ���һ���µ�V8InspectorSessionImpl�� Ȼ�󴴽�һ���µ�V8RuntimeAgentImpl��
-            V8DebuggerAgentImpl��V8ProfilerAgentImpl��V8HeapProfilerAgentImpl��V8ConsoleAgentImpl��V8SchemaAgentImpl
-            Ȼ�����ЩAgentImpl�����ӵ����SessionImpl, ������ͬ�ĵ���������ܷ�����ͬ��Agent
-            һ�����µ�session,v8�ͻ�ѵ�ǰ�Ѿ�����Ľű��ķ�����Ӧ��session��ֻ���ļ�������������ǰ������Ҫ��
+            connect是创建一个新的V8InspectorSessionImpl， 然后创建一堆新的V8RuntimeAgentImpl，
+            V8DebuggerAgentImpl，V8ProfilerAgentImpl，V8HeapProfilerAgentImpl，V8ConsoleAgentImpl，V8SchemaAgentImpl
+            然后把这些AgentImpl都连接到这个SessionImpl, 这样不同的调试命令就能发给不同的Agent
+            一旦有新的session,v8就会把当前已经编译的脚本的发给对应的session（只有文件名），而不是前端主动要。
         */
         //_dbg_session_ = _new_inspector->connect(1, m_pInspectorChannel, v8_inspector::StringView());
 
-        //����websocket server��������������Ϣ
+        //启动websocket server用来监听调试信息
         startWSSV(port_,this);
         
-        //���Ҫһ��������ͣ����Ҫ���⴦��
+        //如果要一上来就暂停，就要特殊处理
         if (bDebugWait) {
             while (!bHasFrontend) {
                 pJSThread->runDbgFuncs();
                 std::this_thread::sleep_for(std::chrono::microseconds(100));
             }
             /*
-            �����wait�Ļ���ֻ���Լ�������Ϣ��debugger����������������׼�����Ըĳ�ѭ����һ��ǰ�˷���Debugger.enable�Ϳ��Լ�����
-            semWaitDebugger.wait(); //�ȵȴ������������ϣ������Ϳ��Ա��Ᵽ�������Ϣ����ջ֮��Ŀ���ֱ�ӷ�����������
-            //ֱ������һЩ����ĵ�����Ϣ��schedulePauseOnNextStatement ��Ҫ��Щ���ã���ǰ�˷�����������̫����
+            如果用wait的话，只能自己发送消息打开debugger，但是这样并不标准，所以改成循环，一旦前端发来Debugger.enable就可以继续了
+            semWaitDebugger.wait(); //先等待调试器连接上，这样就可以避免保存调试信息，堆栈之类的可以直接发给调试器。
+            //直接设置一些必须的调试信息。schedulePauseOnNextStatement 需要这些设置，而前端发来的设置又太晚了
             static char* pMsg1 = R"({"id":5,"method":"Runtime.enable"})";
             static char* pMsg2 = R"({"id":6,"method":"Debugger.enable"})";
             uint16_t UTF16[1024];
@@ -431,7 +431,7 @@ namespace laya {
             v8_inspector::StringView message_view2(UTF16, uniLen);
             //_dbg_session_->dispatchProtocolMessage(message_view2);
 
-            //���ڿ�������ͣ�ڵ�һ���ˡ�
+            //现在可以设置停在第一句了。
             uniLen = UTF8StrToUnicodeStr((unsigned char*)"{}", UTF16, strlen(pMsg2));
             v8_inspector::StringView xx(UTF16, uniLen);
             //_dbg_session_->schedulePauseOnNextStatement(xx, xx);

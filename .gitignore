@@ -1,6 +1,8 @@
 node_modules
 build
 out
+*.o
+*.d
 *.xcuserstate
 publish/nativetools/template/ios/LayaBox/LayaBox.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
 *.xcscheme

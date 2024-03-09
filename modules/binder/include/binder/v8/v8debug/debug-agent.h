@@ -15,7 +15,7 @@ namespace laya {
     class JSThreadInterface;
     class strIter {
     public:
-        //���ؿվͱ�ʾû���ˡ�
+        //返回空就表示没有了。
         virtual char* get(int& len) = 0;
     };
     class StrBuff :public JCCommandEncoderBuffer {
@@ -63,36 +63,36 @@ namespace laya {
         }
     };
 
-    //�滻�ַ����е�',",�������Բ��ز����µ��ڴ�����
-    //�����ΪJSON׼����
+    //替换字符串中的',",这样可以不必产生新的内存需求。
+    //这个是为JSON准备的
     std::string encodeStrForJSON(const char* pStr);
     class InspectorFrontend;
     class per_session_data__v8dbg;
 	class DebuggerAgent {
 	public:
-		DebuggerAgent(const char* name, int port);//���ֻ�ǲ���Socket����Ϣ�շ����֣�ֱ��New DebuggerAgent(const char* name, int port)
-		//���������������Ҫ��ChormeDebugAPI��ʼ����
+		DebuggerAgent(const char* name, int port);//如果只是测试Socket和消息收发部分，直接New DebuggerAgent(const char* name, int port)
+		//如果是完整调试则要从ChormeDebugAPI开始调用
 		~DebuggerAgent();
 
 		void Shutdown();
 		v8::Isolate* isolate() { return isolate_; }
 		/**
-		* ����js�߳��ˣ�����һ���µ�jsid���Ժ�js��ص���Ϣ����ʹ�����jsid��
-		* �ṩһ��������ϣ��js�߳���ѭ���е�������
+		* 启动js线程了，创建一个新的jsid，以后js相关的消息，都使用这个jsid。
+		* 提供一个函数，希望js线程在循环中调用他。
 		*/
 		void onJSStart(JSThreadInterface* pJSThread,bool bDebugWait, std::function<void()> onAcceptNewFrontend, std::function<void()> onFrontEndClose);
 		/**
-		* js�߳̽����ˣ���ǰ��jsid��ʧЧ�ˣ��Ժ���յ��Ĵ�id����Ϣ�����ԡ�
+		* js线程结束了，当前的jsid就失效了，以后接收到的此id的消息都忽略。
 		*/
 		void onJSExit();
-		//������������log
+		//给调试器发送log
 		void sendToDbgConsole(char* pMsg, const char* src, int line, int colum, const char* type);
 
         void onAcceptNewFrontend(per_session_data__v8dbg* pData);
         void onFrontEndClose();
         void onDbgMsg(char* pMsg, int len);
         void sendMsgToFrontend(char* pMsg, int len);
-        void onMsgToV8End(int id);    //js�߳�ִ����ϵĻص�������js�߳�
+        void onMsgToV8End(int id);    //js线程执行完毕的回调。是在js线程
 	private:
 
 		v8::Isolate* isolate_;
@@ -103,10 +103,10 @@ namespace laya {
 		//semaphore terminate_now_;  // Semaphore to signal termination.
 		JSThreadInterface*	pJSThread_;
         per_session_data__v8dbg*    pWsSessionData=nullptr;
-        bool        bHasFrontend = false;//�ȵ���������������js
+        bool        bHasFrontend = false;//等到有人连进来才跑js
         bool        bFirst = true;
-        int         nFrontEndMsgID = 0; //�Լ��涨����Ϣid�������ǽ�������Ϣ��json����������һЩ��������Ҫ���ж��Ƿ�����Debugger.enable
-        int         nEnableDebuggerMsgID = -1;  //�ȴ������Ϣ��������������Ҫ��¼���ĸ�
+        int         nFrontEndMsgID = 0; //自己规定的消息id，并不是解析的消息的json，这样容易一些。现在主要是判断是否处理的Debugger.enable
+        int         nEnableDebuggerMsgID = -1;  //等待这个消息被处理，所以需要记录是哪个
         static int  sMsgID;
 	public:
         std::unique_ptr<v8_inspector::V8Inspector> _new_inspector;
