@@ -77,11 +77,6 @@ namespace laya {
         int sendMsgLen = 0;
         per_session_data__v8dbg *pss = (per_session_data__v8dbg *)user;
 
-        if(!(reason==LWS_CALLBACK_LOCK_POLL || reason==LWS_CALLBACK_UNLOCK_POLL || reason==LWS_CALLBACK_CHANGE_MODE_POLL_FD ||
-        reason==LWS_CALLBACK_GET_THREAD_ID ||reason==LWS_CALLBACK_SERVER_WRITEABLE
-        )){
-            printf("RRR:%d\n",reason);
-        }
         switch (reason) {
         case LWS_CALLBACK_PROTOCOL_INIT:
             break;
@@ -231,7 +226,7 @@ namespace laya {
 [
     {
         "description": "laya native debugger",
-        "devtoolsFrontendUrl": "/devtools/inspector.html?ws=localhost:5959/a9f0cbe3-46ba-4b94-b937-fa254f5974e2",
+        "devtoolsFrontendUrl": "/devtools/bundled/js_app.html?ws=localhost:5959/a9f0cbe3-46ba-4b94-b937-fa254f5974e2",
         "id": "1",
         "title": "LayaNative ",
         "type": "node",
@@ -245,7 +240,7 @@ namespace laya {
             }else if (strcmp(requestPath, "/json/version") == 0) {
                 const char* jsonResponse = R"json(
 {
-    "Browser": "LayaNative V8/1.0",
+    "Browser": "LayaNative V8/3.0",
     "Protocol-Version": "1.3",
     "User-Agent": "LayaNative V8",
     "V8-Version": "7.8.279.23",
@@ -255,8 +250,6 @@ namespace laya {
                 //lws_serve_http_file(wsi, jsonResponse, "application/json", NULL, 0);
                 return send_http_response(wsi,"application/json",jsonResponse);
             }
-
-            int a = 0;
         }
             break;
         default:
