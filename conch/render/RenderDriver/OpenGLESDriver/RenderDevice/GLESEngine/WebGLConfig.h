@@ -9,13 +9,13 @@ namespace laya
 class WebGLConfig
 {
   public:
-    bool stencil;
-    bool alpha;
-    bool depth;
-    bool antialias;
-    bool failIfMajorPerformanceCaveat;
-    bool premultipliedAlpha;
-    bool preserveDrawingBuffer;
+    bool stencil{false};
+    bool alpha{ false };
+    bool depth{ false };
+    bool antialias{ false };
+    bool failIfMajorPerformanceCaveat{ false };
+    bool premultipliedAlpha{ false };
+    bool preserveDrawingBuffer{ false };
     // WebGLPowerPreference powerPreference;
 };
 } // namespace laya
