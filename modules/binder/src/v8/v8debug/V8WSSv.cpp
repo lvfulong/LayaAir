@@ -15,8 +15,8 @@ namespace laya {
     };
 
     /*
-    ���� https://github.com/warmcat/libwebsockets/tree/master/minimal-examples/ws-server/minimal-ws-server-echo
-    ��Ҫ�л��汾��
+    参照 https://github.com/warmcat/libwebsockets/tree/master/minimal-examples/ws-server/minimal-ws-server-echo
+    需要切换版本。
     */
 
     per_session_data__v8dbg* pCurPss = nullptr;
@@ -32,7 +32,7 @@ namespace laya {
         switch (reason) {
         case LWS_CALLBACK_PROTOCOL_INIT:
             break;
-        case LWS_CALLBACK_ESTABLISHED:  //������������
+        case LWS_CALLBACK_ESTABLISHED:  //有人连进来了
             printf("connection established\n");
             pss->pRecvBuff = nullptr;
             pss->index = 0;
@@ -45,11 +45,11 @@ namespace laya {
             pCurPss = pss;
             break;
 
-        case LWS_CALLBACK_SERVER_WRITEABLE: //���Է�����
-            //ȱʡ���Ǽ������͡�������һ�ο���ֻ������һ����
+        case LWS_CALLBACK_SERVER_WRITEABLE: //可以发送了
+            //缺省的是继续发送。例如上一次可能只发送了一部分
             n = LWS_WRITE_CONTINUATION;
             if (!pss->continuation) {
-                //������µ����񣬾������ı����߶����ơ�
+                //如果是新的任务，就设置文本或者二进制。
                 if (pss->binary)
                     n = LWS_WRITE_BINARY;
                 else
@@ -61,7 +61,7 @@ namespace laya {
 
             //pss->tx += pss->len;
             pss->pTaskLock.lock();
-            //һ�δ���һ��
+            //一次处理一个
             if (pss->pSendTask.size() > 0) {
                 std::string& t1 = pss->pSendTask.front();
                 //printf("send:%s\n", t1.substr(0,200).c_str());
@@ -71,7 +71,7 @@ namespace laya {
                 }
                 pss->pSendBuff = new unsigned char[sendMsgLen + LWS_PRE];
                 memcpy(pss->pSendBuff + LWS_PRE, t1.c_str(), sendMsgLen);
-                //ɾ����һ��
+                //删掉第一个
                 pss->pSendTask.pop_front();
             }
             pss->pTaskLock.unlock();
@@ -83,23 +83,23 @@ namespace laya {
                 }
                 if (n < (int)sendMsgLen) {
                     lwsl_err("Partial write\n");
-                    //���ﲻ֪����ô����������˵���ַ��͵�������ùܡ��´�LWS_CALLBACK_SERVER_WRITEABLE��ʱ��Ӧ���Ѿ�ȫ�������ˡ�
-                    //����pss->continuationӦ�û���=0
-                    //����ֱ�ӷ��أ�����pss->continuation����1�ˣ��ǹ����ô
+                    //这里不知道怎么处理，按理说部分发送的情况不用管。下次LWS_CALLBACK_SERVER_WRITEABLE的时候应该已经全部发送了。
+                    //所以pss->continuation应该还是=0
+                    //这里直接返回，这样pss->continuation就是1了，是故意的么
                     return -1;
                 }
             }
             if (pss->final)
                 pss->continuation = 0;
-            /* ��ᵼ��websocket������д����-1
-            //һ��ȫ������
+            /* 这会导致websocket报错，写返回-1
+            //一次全部处理
             pss->pTaskLock.lock();
             if (pss->pSendTask.size() > 0) {
                 for (std::string& t1 : pss->pSendTask) {
                     printf("send:%s\n", t1.c_str());
                     sendMsgLen = t1.length();
                     if (pss->pSendBuff) {
-                        delete[] pss->pSendBuff;//TODO �Ż�
+                        delete[] pss->pSendBuff;//TODO 优化
                     }
                     pss->pSendBuff = new unsigned char[sendMsgLen + LWS_PRE];
                     memcpy(pss->pSendBuff + LWS_PRE, t1.c_str(), sendMsgLen);
@@ -110,19 +110,19 @@ namespace laya {
                     }
                     if (n < (int)sendMsgLen) {
                         lwsl_err("Partial write\n");
-                        //���ﲻ֪����ô����������˵���ַ��͵�������ùܡ��´�LWS_CALLBACK_SERVER_WRITEABLE��ʱ��Ӧ���Ѿ�ȫ�������ˡ�
-                        //����pss->continuationӦ�û���=0
-                        //����ֱ�ӷ��أ�����pss->continuation����1�ˣ��ǹ����ô
+                        //这里不知道怎么处理，按理说部分发送的情况不用管。下次LWS_CALLBACK_SERVER_WRITEABLE的时候应该已经全部发送了。
+                        //所以pss->continuation应该还是=0
+                        //这里直接返回，这样pss->continuation就是1了，是故意的么
                         return -1;
                     }
                 }
             }
             pss->pTaskLock.unlock();
             */
-            //lws_rx_flow_control(wsi, 1);    //�����ڴ������Ͻ������ݡ�
-            lws_callback_on_writable(wsi);//һ���л��ᣬ����д�ص�
+            //lws_rx_flow_control(wsi, 1);    //允许在此连接上接收数据。
+            lws_callback_on_writable(wsi);//一旦有机会，触发写回调
             break;
-        case LWS_CALLBACK_RECEIVE: { // ���Խ����ˡ�
+        case LWS_CALLBACK_RECEIVE: { // 可以接收了。
                                      // Create a buffer to hold our response
                                      // it has to have some pre and post padding.
                                      // You don't need to care what comes there, libwebsockets
@@ -130,14 +130,14 @@ namespace laya {
                                      // http://git.warmcat.com/cgi-bin/cgit/libwebsockets/tree/lib/libwebsockets.h#n597
 
             //amsg.first = lws_is_first_fragment(wsi);
-            pss->final = lws_is_final_fragment(wsi);    //�Ƿ������һ����Ϣ��
-            pss->binary = lws_frame_is_binary(wsi);     //�Ƿ��Ƕ����Ƶġ�
+            pss->final = lws_is_final_fragment(wsi);    //是否是最后一个信息。
+            pss->binary = lws_frame_is_binary(wsi);     //是否是二进制的。
             const size_t remaining = lws_remaining_packet_payload(wsi);
             //lwsl_info("+++ test-echo: RX len %ld final %ld, pss->len=%ld\n",(long)len, (long)pss->final, (long)pss->len);
 
             if (in && len > 0) {
                 if (remaining > 0) {
-                    //֡�������� TODO
+                    //帧不完整。 TODO
                     *(int*)0 = 1;
                 }
                 else {
@@ -152,8 +152,8 @@ namespace laya {
                 }
             }
 
-            //lws_rx_flow_control(wsi, 0);//��ֹ�ڴ������Ͻ������ݡ�
-            lws_callback_on_writable(wsi);//һ���л��ᣬ����д�ص�
+            //lws_rx_flow_control(wsi, 0);//禁止在此连接上接收数据。
+            lws_callback_on_writable(wsi);//一旦有机会，触发写回调
             break;
         }
 
@@ -167,6 +167,9 @@ namespace laya {
             //state = 0;
             break;
 
+        case LWS_CALLBACK_GET_THREAD_ID:
+            return (unsigned long)GetCurrentThreadId();
+            break;
         default:
             break;
         }
@@ -195,8 +198,8 @@ namespace laya {
     void wsserver_run(lws_context* context) {
         int n = 0;
         while (n >= 0 && !interrupted) {
-            //nWSSVSleep �� timeout_ms: �ȴ���ʱʱ�䣬��û���ҵ���Ҫ������������Ҫ�ȴ���ʱ�䣬Ϊ0���������أ�
-            //�����һͨ���ص�������Ϣ��
+            //nWSSVSleep 是 timeout_ms: 等待超时时间，即没有找到需要处理的连接需要等待的时间，为0则立即返回；
+            //这个会一通过回调处理消息。
             int nSleep = 10;
             if (pCurPss) {
                 pCurPss->pTaskLock.lock();
@@ -208,6 +211,11 @@ namespace laya {
             n = lws_service(context, nSleep);
         }
         lws_context_destroy(context);
+    }
+
+    static void lwsl_custom_logger(int level, const char* line) {
+        // 将libwebsocket的日志输出到你的日志系统或标准输出等
+        printf("%s\n", line);
     }
 
     void startWSSV(int port, DebuggerAgent* pDbgAgent) {
@@ -257,6 +265,8 @@ namespace laya {
         //}
         cinfo.gid = -1;
         cinfo.uid = -1;
+        cinfo.options |= LWS_SERVER_OPTION_DISABLE_IPV6;
+
 
         // create libwebsocket context representing this server
         context = lws_create_context( &cinfo);
