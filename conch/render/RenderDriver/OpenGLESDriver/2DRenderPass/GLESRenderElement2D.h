@@ -7,6 +7,7 @@
 
 namespace laya
 {
+	class GLESRenderContext2D;
 	class GLESRenderElement2D
 	{
 	public:

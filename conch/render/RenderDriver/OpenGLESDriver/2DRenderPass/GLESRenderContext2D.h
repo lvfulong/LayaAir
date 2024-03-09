@@ -6,6 +6,7 @@
 #include "GLESRenderElement2D.h"
 namespace laya
 {
+	class GLESRenderElement2D;
 	class GLESRenderContext2D {
 	public:
 		GLESRenderContext2D();
