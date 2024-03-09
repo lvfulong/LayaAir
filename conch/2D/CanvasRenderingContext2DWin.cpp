@@ -62,7 +62,7 @@ wchar_t *utf8ToUtf16(const std::string &str, int *pRetLen /* = nullptr*/)
         int nLen = static_cast<int>(str.size());
         int nBufLen = nLen + 1;
         pwszBuffer = new wchar_t[nBufLen];
-        assert(!pwszBuffer);
+        assert(pwszBuffer != nullptr);
         memset(pwszBuffer, 0, sizeof(wchar_t) * nBufLen);
         int actuallyLen = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), nLen, pwszBuffer, nBufLen);
         if (pRetLen != nullptr)
