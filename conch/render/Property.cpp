@@ -206,4 +206,12 @@ namespace laya
         CommandProperty::MAINTEXTURE_TEXELSIZE_ID = LayaGL::m_pWebglEngine->propertyNameToID("u_MainTex_TexelSize");
     }
 
+    RTShaderDefine ShaderDefines2D::GAMMASPACE;
+    RTShaderDefine ShaderDefines2D::INVERTY;
+    void ShaderDefines2D::__init__()
+    {
+        ShaderDefines2D::GAMMASPACE = LayaGL::m_pWebglEngine->getDefineByName("GAMMASPACE");
+        ShaderDefines2D::INVERTY = LayaGL::m_pWebglEngine->getDefineByName("INVERTY");
+    }
+
 }; // namespace laya

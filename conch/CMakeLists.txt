@@ -192,6 +192,10 @@ list(APPEND CONCH_SRC
 	render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESCullUtil.cpp
 	render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESQuickSort.h
 	render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESQuickSort.cpp
+	render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderContext2D.h
+	render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderContext2D.cpp
+	render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.h
+	render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.cpp
 	render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h
 	render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.cpp
 	render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTSubShader.cpp

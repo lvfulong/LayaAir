@@ -41,6 +41,7 @@ GLESEngine::GLESEngine(WebGLConfig config, WebGLMode webglMode)
         SkinnedMeshSprite3DProperty::__init__();
         Sprite3DProperty::__init__();
         Sprite3DRenderDeclarationProperty::__init__();
+        ShaderDefines2D::__init__();
     }
     std::vector<std::string> names;
     switch (webglMode)
