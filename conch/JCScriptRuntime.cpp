@@ -32,6 +32,7 @@
 #include "LayaAir/2D/Context2D.h"
 #include "LayaAir/2D/RenderTexture2D.h"
 //#include "btBulletDynamicsCommon.h"
+#include <cstdarg>
 std::string g_ConfigJS = "";
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;

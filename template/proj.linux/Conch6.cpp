@@ -130,8 +130,8 @@ int main(int argc, char* argv[])
         g_nInnerWidth = 1280;
         g_nInnerHeight = 720;
     }
-    int nJSDebugMode = 0;
-    int nJSDebugPort = 0;
+    int nJSDebugMode = 1;
+    int nJSDebugPort = 5959;
     //std::string cfgDebug = GetTypeString("default", "JSDebugPort", configpath.generic_string().c_str());
     //if (cfgDebug.length() > 0) 
     //{

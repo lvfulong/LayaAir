@@ -14,6 +14,54 @@ namespace laya {
         int *options;
     };
 
+
+    static int send_http_response(struct lws *wsi, const char* type, const char *str) {
+        // 确保从LWS_PRE偏移开始写入
+        unsigned char *buffer = (unsigned char *)malloc(LWS_PRE + 1024);
+        unsigned char *p = &buffer[LWS_PRE], *end = &buffer[LWS_PRE + 1024];
+
+        // 准备你的文本字符串内容
+        int response_len = strlen(str);
+        
+        // 添加HTTP头部
+        if (lws_add_http_header_status(wsi, HTTP_STATUS_OK, &p, end)) {
+            free(buffer);
+            return 1;
+        }
+
+        if (lws_add_http_header_by_token(wsi, WSI_TOKEN_HTTP_CONTENT_TYPE,
+            (const unsigned char *)type, strlen(type), &p, end)) {
+            free(buffer);
+            return 1;
+        }
+
+        if (lws_add_http_header_content_length(wsi, response_len, &p, end)) {
+            free(buffer);
+            return 1;
+        }
+
+        // 完成HTTP头部写入
+        if (lws_finalize_http_header(wsi, &p, end)) {
+            free(buffer);
+            return 1;
+        }
+
+        // 写入HTTP头部
+        if (lws_write(wsi, &buffer[LWS_PRE], p - (&buffer[LWS_PRE]), LWS_WRITE_HTTP_HEADERS) < 0) {
+            free(buffer);
+            return 1;
+        }
+
+        // 写入HTTP响应体
+        if (lws_write(wsi, (unsigned char *)str, response_len, LWS_WRITE_HTTP) < 0) {
+            free(buffer);
+            return 1;
+        }
+
+        free(buffer);
+        return 0;
+    }
+
     /*
     参照 https://github.com/warmcat/libwebsockets/tree/master/minimal-examples/ws-server/minimal-ws-server-echo
     需要切换版本。
@@ -29,6 +77,11 @@ namespace laya {
         int sendMsgLen = 0;
         per_session_data__v8dbg *pss = (per_session_data__v8dbg *)user;
 
+        if(!(reason==LWS_CALLBACK_LOCK_POLL || reason==LWS_CALLBACK_UNLOCK_POLL || reason==LWS_CALLBACK_CHANGE_MODE_POLL_FD ||
+        reason==LWS_CALLBACK_GET_THREAD_ID ||reason==LWS_CALLBACK_SERVER_WRITEABLE
+        )){
+            printf("RRR:%d\n",reason);
+        }
         switch (reason) {
         case LWS_CALLBACK_PROTOCOL_INIT:
             break;
@@ -64,7 +117,7 @@ namespace laya {
             //一次处理一个
             if (pss->pSendTask.size() > 0) {
                 std::string& t1 = pss->pSendTask.front();
-                //printf("send:%s\n", t1.substr(0,200).c_str());
+                printf("send:%s\n", t1.substr(0,200).c_str());
                 sendMsgLen = t1.length();
                 if (pss->pSendBuff) {
                     delete[] pss->pSendBuff;
@@ -168,7 +221,43 @@ namespace laya {
             break;
 
         case LWS_CALLBACK_GET_THREAD_ID:
-            return (unsigned long)GetCurrentThreadId();
+            //return (unsigned long)GetCurrentThreadId();
+            break;
+        case LWS_CALLBACK_HTTP:
+        {
+            const char* requestPath = (const char*)in;
+            if (strcmp(requestPath, "/json/list") == 0) {
+                const char* jsonResponse = R"json(
+[
+    {
+        "description": "laya native debugger",
+        "devtoolsFrontendUrl": "/devtools/inspector.html?ws=localhost:5959/a9f0cbe3-46ba-4b94-b937-fa254f5974e2",
+        "id": "1",
+        "title": "LayaNative ",
+        "type": "node",
+        "webSocketDebuggerUrl": "ws://localhost:5959/a9f0cbe3-46ba-4b94-b937-fa254f5974e2"
+    }
+]
+)json";
+                //lws_serve_http_file(wsi, jsonResponse, "application/json", NULL, 0);
+                return send_http_response(wsi,"application/json",jsonResponse);
+
+            }else if (strcmp(requestPath, "/json/version") == 0) {
+                const char* jsonResponse = R"json(
+{
+    "Browser": "LayaNative V8/1.0",
+    "Protocol-Version": "1.3",
+    "User-Agent": "LayaNative V8",
+    "V8-Version": "7.8.279.23",
+    "WebKit-Version": "537.36 (@2336ba86d0d067e7a5df1b596c80e4c1f235a5a3)"
+}
+                )json";
+                //lws_serve_http_file(wsi, jsonResponse, "application/json", NULL, 0);
+                return send_http_response(wsi,"application/json",jsonResponse);
+            }
+
+            int a = 0;
+        }
             break;
         default:
             break;
