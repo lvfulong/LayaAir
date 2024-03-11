@@ -330,8 +330,6 @@ list(APPEND CONCH_SRC
 	2D/FontDescription.h
 	2D/FontDescriptionParser.h
 	2D/FontDescriptionParser.cpp
-	2D/ColorParser.h
-	2D/ColorParser.cpp
 	2D/FontManager.h
 	2D/FontManager.cpp
 
