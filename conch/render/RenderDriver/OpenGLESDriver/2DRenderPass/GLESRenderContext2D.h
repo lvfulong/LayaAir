@@ -14,14 +14,6 @@ namespace laya
 		void setRenderTarget(GLESInternalRT* renderRT, bool clear, Color clearColor);
 		void setOffscreenView(uint32_t width, uint32_t height);
 		void drawRenderElementOne(GLESRenderElement2D* node);
-		
-		void setInvertY(bool& value) {
-			invertY = value;
-		}
-		
-		void setPipelineMode(std::string& value) {
-			pipelineMode = value;
-		}
 
 		void setSceneShaderData(GLESShaderData* value)
 		{

@@ -37,6 +37,8 @@
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTShaderPass.h>
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h>
+#include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.h>
+#include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderContext2D.h>
 
 namespace laya
 {
@@ -520,6 +522,26 @@ class RenderBindings
             class_binding.function("setTransform", &RTBaseRenderNode::setTransform);
             context.class_("conchRTBaseRenderNode", class_binding);
         }
+        {
+            class_<GLESRenderElement2D> class_binding;
+            class_binding.constructor<>();
+            class_binding.function("setValue2DShaderData", &GLESRenderElement2D::setValue2DShaderData);
+            class_binding.function("setMaterialShaderData", &GLESRenderElement2D::setMaterialShaderData);
+            class_binding.function("setGeometry", &GLESRenderElement2D::setGeometry);
+            class_binding.function("setSubShader", &GLESRenderElement2D::setSubShader);
+            context.class_("conchGLESRenderElement2D", class_binding);
+        }
+        {
+            class_<GLESRenderContext2D> class_binding;
+            class_binding.constructor<>();
+            class_binding.function("setGlobalConfigShaderData", &GLESRenderContext2D::setGlobalConfigShaderData);
+            class_binding.function("setRenderTarget", &GLESRenderContext2D::setRenderTarget);
+            class_binding.function("setOffscreenView", &GLESRenderContext2D::setOffscreenView);
+            class_binding.property_field("invertY", &GLESRenderContext2D::invertY);
+            class_binding.property_field("pipelineMode", &GLESRenderContext2D::pipelineMode);
+            context.class_("conchGLESRenderContext2D", class_binding);
+        }
+       
         {
             class_<GLESRenderContext3D> class_binding;
             class_binding.function("setClearData", &GLESRenderContext3D::setClearData);

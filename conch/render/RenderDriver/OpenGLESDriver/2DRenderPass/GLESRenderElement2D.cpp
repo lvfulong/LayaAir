@@ -7,6 +7,12 @@
 #include "GLESRenderContext2D.h"
 namespace laya
 {
+	RTDefineDatas* GLESRenderElement2D::_compileDefines = nullptr;
+	void GLESRenderElement2D::setCompileDefine(RTDefineDatas* value)
+	{
+		GLESRenderElement2D::_compileDefines = value;
+	}
+
 	GLESRenderElement2D::GLESRenderElement2D()
 	{
 
