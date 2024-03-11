@@ -249,6 +249,10 @@ void GLESEngine::scissor(int x, int y, int width, int height)
 
 void GLESEngine::scissorTest(bool value)
 {
+    if (m_scissorState==value) {
+        return;
+    }
+    m_scissorState = value;
     if (value)
         glEnable(GL_SCISSOR_TEST);
     else
