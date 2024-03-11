@@ -1,21 +1,14 @@
-﻿/**
-@file			JSWindowEditBox.cpp
-@brief			
-@author			James
-@version		1.0
-@date			2017_11_28
-*/
-
-#include "JSWindowEditBox.h"
+﻿#include "JSWindowEditBox.h"
 #include <binder/JSInterface.h>
 #include <utils/Log.h>
 #include <utils/JCColor.h>
 #include <utils/JCMemorySurvey.h>
 #include <CommCtrl.h>
+#include <utils/ColorParser.h>
 
 namespace laya
 {
-	static unsigned int ToWinColor(const char* color)
+	/*static unsigned int ToWinColor(const char* color)
 	{
 		static JCColorInt iCol;
 		JCColor::getColorRGBIntFromString(color, iCol);
@@ -26,7 +19,7 @@ namespace laya
 	static unsigned int ToWinColor(const std::string& color)
 	{
 		return ToWinColor(color.c_str());
-	}
+	}*/
 
     #define MEM_EDITBOX_RENDER_COMMAND_SIZE 65536
 
@@ -435,7 +428,13 @@ namespace laya
         m_nSelStart = m_nCaret;
         m_bMouseDrag = false;
 
-		ms_EditBoxInst->GetStyle().SetFontColor(ToWinColor(m_sFontColor));
+        uint32_t colorR{0};
+        uint32_t colorG{0};
+        uint32_t colorB{0};
+        uint32_t colorA{0};
+	    parseRGBAFromString(p_sColor, colorR, colorG, colorB, colorA);
+	    int nColor = colorA << 24 | colorR << 16 | colorG << 8 | colorB;
+		ms_EditBoxInst->GetStyle().SetFontColor(nColor);
 
         //focus();//单机两次是因为先处理的单机事件然后再赋值(应该反过来)，因此应该在赋值以后应该调用focus响应,相当于单击事件的延续
     }
@@ -443,7 +442,16 @@ namespace laya
 	void JSWindowEditBox::setBgColor(const char* p_sBgColor)
 	{
 		m_sBgColor = p_sBgColor;
-		ms_EditBoxInst->GetStyle().SetBgColor(ToWinColor(m_sBgColor));
+
+
+        uint32_t colorR{0};
+        uint32_t colorG{0};
+        uint32_t colorB{0};
+        uint32_t colorA{0};
+	    parseRGBAFromString(p_sBgColor, colorR, colorG, colorB, colorA);
+	    int nColor = colorA << 24 | colorR << 16 | colorG << 8 | colorB;
+
+		ms_EditBoxInst->GetStyle().SetBgColor(nColor);
 	}
     //------------------------------------------------------------------------------
     void JSWindowEditBox::setPos(int x, int y)

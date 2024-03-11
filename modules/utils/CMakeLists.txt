@@ -34,6 +34,7 @@ set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/JCEventBase.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/InputTypes.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Preprocessor.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/ColorParser.h
 )
 
 set(SOURCES
@@ -57,6 +58,7 @@ set(SOURCES
     src/thread/JCLayaThreadPool.cpp
     src/thread/JCWorkerThread.cpp
     src/thread/JCWorkSemaphore.cpp
+    src/ColorParser.cpp
 )
 
 set(DEPS_GL)

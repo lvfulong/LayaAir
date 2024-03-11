@@ -77,9 +77,10 @@ namespace laya
 	}
 	const std::string& VideoCache::GetCacheFilePath(const std::string& url)
 	{
+		static std::string tmpEmptyStr("");
 		auto it = ms_cachePathMap.find(url);
 		if (it == ms_cachePathMap.end())
-			return "";
+			return tmpEmptyStr;
 		else
 			return it->second;
 	}

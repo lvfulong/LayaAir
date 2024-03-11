@@ -39,6 +39,7 @@ class GLESShaderInstance //: public ResourceBase<GLESShaderInstance>
     CommandEncoder m_cameraUniformParamsMap;
     CommandEncoder m_spriteUniformParamsMap;
     CommandEncoder m_materialUniformParamsMap;
+    CommandEncoder m_sprite2DUniformParamsMap;
     GLShaderInstance *m_GLShaderInstance;
     uint32_t m_uploadMark = 0;
     GLESShaderData *m_uploadScene = 0;

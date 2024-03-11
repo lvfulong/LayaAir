@@ -154,5 +154,15 @@ public:
     static uint32_t MAINTEXTURE_TEXELSIZE_ID;
     static void __init__();
 };
+
+class ShaderDefines2D
+{
+public:
+    static RTShaderDefine GAMMASPACE;
+    static RTShaderDefine INVERTY;
+    static void __init__();
+};
+
+
 } // namespace laya
 #endif

@@ -87,24 +87,38 @@ void GLESShaderInstance::_create3D()
 }
 void GLESShaderInstance::_create2D()
 {
-
-    // TODO
+    GLESCommandUniformMap* sprite2DParms = GLESCommandUniformMap::createGlobalUniformMap("Sprite2D");
+    GLESCommandUniformMap* sceneParms = GLESCommandUniformMap::createGlobalUniformMap("Sprite2DGlobal");//分开，根据不同的Render
+    std::vector<ShaderVariable*>& data = m_GLShaderInstance->getUniformMap();
+    for (int i = 0, n = data.size(); i < n; i++) {
+        ShaderVariable* one = data[i];
+        if (sprite2DParms->hasPtrID(one->dataOffset)) {
+            m_sprite2DUniformParamsMap.addShaderUniform(one);
+        }
+        else if (sceneParms->hasPtrID(one->dataOffset)) {
+            m_sceneUniformParamsMap.addShaderUniform(one);
+        }
+        else {
+            m_materialUniformParamsMap.addShaderUniform(one);
+        }
+    }
 }
-	bool GLESShaderInstance::hasSpritePtrID(int32_t dataOffset)
-     {
-		std::vector<std::string>& commap = this->_shaderPass->nodeCommonMap;
-		if (commap.empty()) 
-        {
-			return false;
-		} else 
-        {
-			for (int i = 0, n = commap.size(); i < n; i++) {
-				if (GLESCommandUniformMap::createGlobalUniformMap(commap[i].c_str())->hasPtrID(dataOffset))
-					return true;
-			}
-			return false;
-		}
-	}
+bool GLESShaderInstance::hasSpritePtrID(int32_t dataOffset)
+{
+    std::vector<std::string>& commap = this->_shaderPass->nodeCommonMap;
+    if (commap.empty())
+    {
+        return false;
+    }
+    else
+    {
+        for (int i = 0, n = commap.size(); i < n; i++) {
+            if (GLESCommandUniformMap::createGlobalUniformMap(commap[i].c_str())->hasPtrID(dataOffset))
+                return true;
+        }
+        return false;
+    }
+}
 void GLESShaderInstance::_disposeResource()
 {
     // this._renderShaderInstance.destroy();

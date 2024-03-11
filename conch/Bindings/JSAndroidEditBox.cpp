@@ -1,8 +1,6 @@
-﻿
-#include <jni.h>
+﻿#include <jni.h>
 #include <JCConch.h>
-
-
+#include <utils/ColorParser.h>
 #include "JSAndroidEditBox.h"
 #include <binder/JSInterface.h>
 #include "../../JCScriptRuntime.h"
@@ -226,7 +224,13 @@ void JSAndroidEditBox::blur()
 //------------------------------------------------------------------------------
 void JSAndroidEditBox::setColor( const char* p_sColor )
 {
-	int nColor = JCColor::getColorUintFromString( p_sColor );
+ 	uint32_t colorR{0};
+    uint32_t colorG{0};
+    uint32_t colorB{0};
+    uint32_t colorA{0};
+	parseRGBAFromString(p_sColor, colorR, colorG, colorB, colorA);
+	int nColor = colorA << 24 | colorR << 16 | colorG << 8 | colorB;
+
 	CToJavaBridge::JavaRet kRet;
     CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setEditBoxColor", nColor, kRet);
 }
