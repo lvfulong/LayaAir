@@ -1,4 +1,4 @@
 
 [submodule "third_party"]
 	path = third_party
-	url = https://gitlab.layame.com/layaapk/layanative3.0-thirdparty.git
+	url = git@github.layabox.com:layaair/layanative3.0-thirdparty.git
