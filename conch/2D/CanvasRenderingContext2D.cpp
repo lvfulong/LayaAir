@@ -8,7 +8,7 @@
 #elif LINUX
 #include "CanvasRenderingContext2DLinux.h"
 #endif
-#include "ColorParser.h"
+#include <utils/ColorParser.h>
 #include "JCConch.h"
 
 namespace laya
