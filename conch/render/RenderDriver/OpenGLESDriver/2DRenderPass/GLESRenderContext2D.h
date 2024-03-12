@@ -26,9 +26,9 @@ namespace laya
 	public:
 		bool invertY;
 		std::string pipelineMode; 
-		GLESShaderData* sceneData;
-		RTDefineDatas* globalConfigShaderData;
-		GLESInternalRT* destRT;
+		GLESShaderData* sceneData = nullptr;
+		RTDefineDatas* globalConfigShaderData = nullptr;
+		GLESInternalRT* destRT = nullptr;
 	private:
 		
 		Color _clearColor;

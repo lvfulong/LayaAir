@@ -48,6 +48,7 @@ class RTShaderPass
     void _resizeCacheShaderMap(void *cacheMap, uint32_t hierarchy, uint32_t resizeLength);
 
   public:
+    bool is2D = false;
     std::string pipelineMode;
     bool statefirst = false;
     RTDefineDatas *validDefine = nullptr;

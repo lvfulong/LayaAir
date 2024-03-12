@@ -73,6 +73,7 @@ void GLESRenderElement3D::_render(GLESRenderContext3D *context)
         }
     }
 }
+
 void GLESRenderElement3D::_preUpdatePre(GLESRenderContext3D *context)
 {
     _compileShader(context);

@@ -225,7 +225,7 @@ void GLESEngine::viewport(int x, int y, int width, int height)
         if (x != lv.x || y != lv.y || width != lv.z || height != lv.w)
         {
             glViewport(x, y, width, height);
-            lv.setValue(x, y, width, height);
+            lv.setValue(x, y, width, height) ;
         }
     }
 }

@@ -149,6 +149,10 @@ class RenderBindings
             .field("normalized", &VertexStateContext::normalized)
             .field("vertexStride", &VertexStateContext::vertexStride)
             .field("elementOffset", &VertexStateContext::elementOffset);
+        value_object<UniformProperty>("conchUniformProperty")
+            .field("id", &UniformProperty::id)
+            .field("propertyName", &UniformProperty::propertyName)
+            .field("uniformtype", &UniformProperty::uniformtype);
         value_object<RTShaderDefine>("conchRTShaderDefine")
             .field("_index", &RTShaderDefine::_index)
             .field("_value", &RTShaderDefine::_value);
@@ -454,6 +458,7 @@ class RenderBindings
             class_binding.function("destroy", &RTShaderPass::destroy);
             class_binding.property_field("_pipelineMode", &RTShaderPass::pipelineMode);
             class_binding.property_field("_statefirst", &RTShaderPass::statefirst);
+            class_binding.property_field("is2D", &RTShaderPass::is2D);
             context.class_("conchRTShaderPass", class_binding);
         }
         {
@@ -529,6 +534,7 @@ class RenderBindings
             class_binding.function("setMaterialShaderData", &GLESRenderElement2D::setMaterialShaderData);
             class_binding.function("setGeometry", &GLESRenderElement2D::setGeometry);
             class_binding.function("setSubShader", &GLESRenderElement2D::setSubShader);
+            class_binding.class_function("setCompileDefine", &GLESRenderElement2D::setCompileDefine);
             context.class_("conchGLESRenderElement2D", class_binding);
         }
         {
@@ -537,6 +543,7 @@ class RenderBindings
             class_binding.function("setGlobalConfigShaderData", &GLESRenderContext2D::setGlobalConfigShaderData);
             class_binding.function("setRenderTarget", &GLESRenderContext2D::setRenderTarget);
             class_binding.function("setOffscreenView", &GLESRenderContext2D::setOffscreenView);
+            class_binding.function("drawRenderElementOne", &GLESRenderContext2D::drawRenderElementOne);
             class_binding.property_field("invertY", &GLESRenderContext2D::invertY);
             class_binding.property_field("pipelineMode", &GLESRenderContext2D::pipelineMode);
             context.class_("conchGLESRenderContext2D", class_binding);

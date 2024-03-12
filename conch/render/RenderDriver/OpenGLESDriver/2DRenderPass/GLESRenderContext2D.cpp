@@ -25,6 +25,7 @@ namespace laya
 			LayaGL::m_pWebglEngine->getTextureContext()->bindoutScreenTarget();
 			LayaGL::m_pWebglEngine->viewport(0, 0, _offscreenWidth, _offscreenHeight);
 		}
+
 		LayaGL::m_pWebglEngine->scissorTest(false);
 		uint32_t clearflag = clear ? static_cast<uint32_t>(RenderClearFlag::Color) : static_cast<uint32_t>(RenderClearFlag::Nothing);
 		LayaGL::m_pWebglEngine->clearRenderTexture(clearflag, &clearColor, 1);
@@ -32,6 +33,7 @@ namespace laya
 
 	void GLESRenderContext2D::setOffscreenView(uint32_t width, uint32_t height)
 	{
+
 		_offscreenWidth = width;
 		_offscreenHeight = height;
 	}
