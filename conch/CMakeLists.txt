@@ -82,16 +82,7 @@ list(APPEND CONCH_SRC
 	render/3D/renderInstance/RenderModuleData.cpp
 	render/3D/RenderObjs/RuntimeOBJ/GLESRenderCMD.h
 	render/3D/RenderObjs/RuntimeOBJ/GLESRenderCMD.cpp
-	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTRender3DProcess.h
-	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTRender3DProcess.cpp
-	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTForwardAddRP.h
-	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTForwardAddRP.cpp
-	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTDirectLightShadowRP.h
-	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTDirectLightShadowRP.cpp
-	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTSpotLightShadowRP.cpp
-	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTSpotLightShadowRP.h
-	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTForwardAddClusterRP.h
-	render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTForwardAddClusterRP.cpp
+
 	render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.h
 	render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.cpp
 	render/RenderDriver/OpenGLESDriver/RenderDevice/KTXTextureInfo.h
@@ -192,6 +183,16 @@ list(APPEND CONCH_SRC
 	render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESCullUtil.cpp
 	render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESQuickSort.h
 	render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESQuickSort.cpp
+	render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRender3DProcess/GLESRender3DProcess.h
+	render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRender3DProcess/GLESRender3DProcess.cpp
+	render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRender3DProcess/GLESForwardAddRP.h
+	render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRender3DProcess/GLESForwardAddRP.cpp
+	render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRender3DProcess/GLESDirectLightShadowRP.h
+	render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRender3DProcess/GLESDirectLightShadowRP.cpp
+	render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRender3DProcess/GLESSpotLightShadowRP.cpp
+	render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRender3DProcess/GLESSpotLightShadowRP.h
+	render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRender3DProcess/GLESForwardAddClusterRP.h
+	render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRender3DProcess/GLESForwardAddClusterRP.cpp
 	render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderContext2D.h
 	render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderContext2D.cpp
 	render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.h

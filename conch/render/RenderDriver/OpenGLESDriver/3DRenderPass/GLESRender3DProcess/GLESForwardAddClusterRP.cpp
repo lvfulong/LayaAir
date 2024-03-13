@@ -1,4 +1,4 @@
-#include "RTForwardAddClusterRP.h"
+#include "GLESForwardAddClusterRP.h"
 #include "render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderContext3D.h"
 #include <render/Property.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
@@ -7,16 +7,16 @@
 
 namespace laya
 {
-    Viewport RTForwardAddClusterRP::_context3DViewPortCatch =  Viewport(0, 0, 0, 0);
-    Vector4 RTForwardAddClusterRP::_contextScissorPortCatch =  Vector4(0, 0, 0, 0);
-    RTForwardAddClusterRP::RTForwardAddClusterRP() : opaqueList(false), transparent(true)
+    Viewport GLESForwardAddClusterRP::_context3DViewPortCatch =  Viewport(0, 0, 0, 0);
+    Vector4 GLESForwardAddClusterRP::_contextScissorPortCatch =  Vector4(0, 0, 0, 0);
+    GLESForwardAddClusterRP::GLESForwardAddClusterRP() : opaqueList(false), transparent(true)
     {
         _defaultNormalDepthColor = Color(0.5, 0.5, 1.0, 0.0);
     }
-    RTForwardAddClusterRP::~RTForwardAddClusterRP(){
+    GLESForwardAddClusterRP::~GLESForwardAddClusterRP(){
         
     }
-    void RTForwardAddClusterRP::render(GLESRenderContext3D* context, std::vector<RTBaseRenderNode*> list, uint32_t count){
+    void GLESForwardAddClusterRP::render(GLESRenderContext3D* context, std::vector<RTBaseRenderNode*> list, uint32_t count){
         context->_cameraUpdateMask++;
         this->opaqueList.clear();
         this->transparent.clear();
@@ -29,11 +29,11 @@ namespace laya
         if (((uint32_t)this->depthTextureMode & (uint32_t)DepthTextureMode::DepthNormals) != 0) {
             this->_renderDepthNormalPass(context);
         }
-        this->viewPort.cloneTo(RTForwardAddClusterRP::_context3DViewPortCatch);
-        this->scissor.cloneTo(RTForwardAddClusterRP::_contextScissorPortCatch);
+        this->viewPort.cloneTo(GLESForwardAddClusterRP::_context3DViewPortCatch);
+        this->scissor.cloneTo(GLESForwardAddClusterRP::_contextScissorPortCatch);
         this->_mainPass(context);
     }
-    void RTForwardAddClusterRP::_renderDepthPass(GLESRenderContext3D* context){
+    void GLESForwardAddClusterRP::_renderDepthPass(GLESRenderContext3D* context){
         context->pipelineMode = this->depthPipelineMode;
         Viewport& viewport = this->viewPort;
         GLESShaderData* shadervalue = context->sceneData;
@@ -55,7 +55,7 @@ namespace laya
         context->cameraData->setVector(DepthPassProperty::DEPTHZBUFFERPARAMS, this->_zBufferParams);
         shadervalue->removeDefine(DepthPassProperty::DEPTHPASS);
     }
-    void RTForwardAddClusterRP::_renderDepthNormalPass(GLESRenderContext3D* context){
+    void GLESForwardAddClusterRP::_renderDepthNormalPass(GLESRenderContext3D* context){
         context->pipelineMode = this->depthNormalPipelineMode;
         //传入shader该传的值
         Viewport& viewport = this->viewPort;
@@ -68,7 +68,7 @@ namespace laya
         this->opaqueList.renderQueue((GLESRenderContext3D*)context);
     }
 
-    void RTForwardAddClusterRP::opaqueTexturePass()
+    void GLESForwardAddClusterRP::opaqueTexturePass()
     {
         //TODO
         // var blit: BlitScreenQuadCMD = BlitScreenQuadCMD.create(currentTarget, this._opaqueTexture);
@@ -76,7 +76,7 @@ namespace laya
         // blit.run();
         // blit.recover();
     }
-    void RTForwardAddClusterRP::_mainPass(GLESRenderContext3D* context)
+    void GLESForwardAddClusterRP::_mainPass(GLESRenderContext3D* context)
     {
         context->pipelineMode = this->pipelineMode;
         if(enableCMD) GLESRenderCMD::applyCommandBuffers(context, _beforeForwardCmds);
@@ -99,36 +99,36 @@ namespace laya
         }
     }
 
-    void RTForwardAddClusterRP::_recoverRenderContext3D(GLESRenderContext3D* context)
+    void GLESForwardAddClusterRP::_recoverRenderContext3D(GLESRenderContext3D* context)
     {
-        const Viewport& cacheViewPor = RTForwardAddClusterRP::_context3DViewPortCatch;
-        const Vector4& cacheScissor = RTForwardAddClusterRP::_contextScissorPortCatch;
+        const Viewport& cacheViewPor = GLESForwardAddClusterRP::_context3DViewPortCatch;
+        const Vector4& cacheScissor = GLESForwardAddClusterRP::_contextScissorPortCatch;
         context->setViewport(cacheViewPor);
         context->setScissor(cacheScissor);
         context->setRenderTarget(this->destTarget);
     }
 
-    void RTForwardAddClusterRP::clearBeforeForwardCmds() {
+    void GLESForwardAddClusterRP::clearBeforeForwardCmds() {
         _beforeForwardCmds.clear();
     }
 
-    void RTForwardAddClusterRP::addBeforeForwardCmds(const std::vector<GLESRenderCMD*>& cmds) {
+    void GLESForwardAddClusterRP::addBeforeForwardCmds(const std::vector<GLESRenderCMD*>& cmds) {
         _beforeForwardCmds.push_back(cmds);
     }
 
-    void RTForwardAddClusterRP::clearBeforeSkyboxCmds() {
+    void GLESForwardAddClusterRP::clearBeforeSkyboxCmds() {
         _beforeSkyboxCmds.clear();
     }
 
-    void RTForwardAddClusterRP::addBeforeSkyboxCmds(const std::vector<GLESRenderCMD*>& cmds) {
+    void GLESForwardAddClusterRP::addBeforeSkyboxCmds(const std::vector<GLESRenderCMD*>& cmds) {
         _beforeSkyboxCmds.push_back(cmds);
     }
 
-    void RTForwardAddClusterRP::clearBeforeTransparentCmds() {
+    void GLESForwardAddClusterRP::clearBeforeTransparentCmds() {
         _beforeTransparentCmds.clear();
     }
 
-    void RTForwardAddClusterRP::addBeforeTransparentCmds(const std::vector<GLESRenderCMD*>& cmds) {
+    void GLESForwardAddClusterRP::addBeforeTransparentCmds(const std::vector<GLESRenderCMD*>& cmds) {
         _beforeTransparentCmds.push_back(cmds);
     }
 } // namespace laya

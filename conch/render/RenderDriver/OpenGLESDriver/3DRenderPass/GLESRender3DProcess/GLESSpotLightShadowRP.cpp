@@ -1,4 +1,4 @@
-#include "RTSpotLightShadowRP.h"
+#include "GLESSpotLightShadowRP.h"
 #include <render/Property.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 #include "render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderContext3D.h"
@@ -7,14 +7,14 @@
 namespace laya
 {
 
-RTSpotLightShadowRP::RTSpotLightShadowRP() : _renderQueue(false)
+GLESSpotLightShadowRP::GLESSpotLightShadowRP() : _renderQueue(false)
 {
 }
 
-RTSpotLightShadowRP::~RTSpotLightShadowRP()
+GLESSpotLightShadowRP::~GLESSpotLightShadowRP()
 {
 }
-void RTSpotLightShadowRP::setLight(RTSpotLight* value) 
+void GLESSpotLightShadowRP::setLight(RTSpotLight* value) 
 { 
     this->light = value;
     this->_shadowResolution = this->light->shadowResolution;
@@ -26,13 +26,13 @@ void RTSpotLightShadowRP::setLight(RTSpotLight* value)
     // this.destTarget && RenderTexture.recoverToPool(this.destTarget);// TODO 优化
     //this.destTarget = ShadowUtils.getTemporaryShadowTexture(this._shadowResolution, this._shadowResolution, ShadowMapFormat.bit16);
 }
-void RTSpotLightShadowRP::update(GLESRenderContext3D* context)
+void GLESSpotLightShadowRP::update(GLESRenderContext3D* context)
 {
     ShadowSpotData& shadowSpotData = this->_shadowSpotData;
     this->_getSpotLightShadowData(shadowSpotData, this->_shadowResolution, this->_shadowParams, this->_shadowSpotMatrices, this->_shadowSpotMapSize);
 }
 
-void RTSpotLightShadowRP::render(GLESRenderContext3D* context, std::vector<RTBaseRenderNode*>& list, uint32_t count)
+void GLESSpotLightShadowRP::render(GLESRenderContext3D* context, std::vector<RTBaseRenderNode*>& list, uint32_t count)
 {
     GLESShaderData* originCameraData = context->cameraData;
     GLESShaderData* shaderValues = context->sceneData;
@@ -67,7 +67,7 @@ void RTSpotLightShadowRP::render(GLESRenderContext3D* context, std::vector<RTBas
     context->_cameraUpdateMask++;
 }
 
-void RTSpotLightShadowRP::_getShadowBias(Real shadowResolution, Vector4& out)
+void GLESSpotLightShadowRP::_getShadowBias(Real shadowResolution, Vector4& out)
 {
 
     Real frustumSize = std::tan(_spotAngle * 0.5 * MathUtils3D::Deg2Rad) * _spotRange;
@@ -84,7 +84,7 @@ void RTSpotLightShadowRP::_getShadowBias(Real shadowResolution, Vector4& out)
 
     out.setValue(depthBias, normalBias, 0.0f, 0.0f);
 }
-void RTSpotLightShadowRP::_getSpotLightShadowData(ShadowSpotData& shadowSpotData, Real resolution, Vector4& shadowParams, Matrix4x4& shadowSpotMatrices, Vector4& shadowMapSize) {
+void GLESSpotLightShadowRP::_getSpotLightShadowData(ShadowSpotData& shadowSpotData, Real resolution, Vector4& shadowParams, Matrix4x4& shadowSpotMatrices, Vector4& shadowMapSize) {
     Vector3& out = shadowSpotData.position = _lightPos;
     shadowSpotData.resolution = resolution;
     shadowMapSize.setValue(1.0f / resolution, 1.0f / resolution, static_cast<Real>(resolution), static_cast<Real>(resolution));
@@ -106,7 +106,7 @@ void RTSpotLightShadowRP::_getSpotLightShadowData(ShadowSpotData& shadowSpotData
     shadowSpotData.cameraCullInfo._position = out;
 }
 
-void RTSpotLightShadowRP::_setupShadowCasterShaderValues(GLESShaderData* shaderValues, ShadowSpotData* shadowSliceData, const Vector4& shadowparams, const Vector4& shadowBias) {
+void GLESSpotLightShadowRP::_setupShadowCasterShaderValues(GLESShaderData* shaderValues, ShadowSpotData* shadowSliceData, const Vector4& shadowparams, const Vector4& shadowBias) {
     shaderValues->setVector(ShadowCasterPassProperty::SHADOW_BIAS, shadowBias);
     shaderValues->setVector(ShadowCasterPassProperty::SHADOW_PARAMS, shadowparams);
 
@@ -118,7 +118,7 @@ void RTSpotLightShadowRP::_setupShadowCasterShaderValues(GLESShaderData* shaderV
 
     shaderValues->setMatrix4x4(BaseCameraProperty::VIEWPROJECTMATRIX, shadowSliceData->viewProjectMatrix);
 }
-void RTSpotLightShadowRP::_applyRenderData(GLESShaderData* sceneData, GLESShaderData* cameraData)
+void GLESSpotLightShadowRP::_applyRenderData(GLESShaderData* sceneData, GLESShaderData* cameraData)
 {
     const RTSpotLight* spotLight = this->light;
     switch (spotLight->shadowMode) {
@@ -142,22 +142,22 @@ void RTSpotLightShadowRP::_applyRenderData(GLESShaderData* sceneData, GLESShader
 
 
 /*
-void RTSpotLightShadowRP::set_position(Vector3 value)
+void GLESSpotLightShadowRP::set_position(Vector3 value)
 {
 }
 
-void RTSpotLightShadowRP::set_lightforward(Vector3 value)
+void GLESSpotLightShadowRP::set_lightforward(Vector3 value)
 {
 }
-void RTSpotLightShadowRP::set_offsetx(uint32_t value)
-{
-}
-
-void RTSpotLightShadowRP::set_offsety(uint32_t value)
+void GLESSpotLightShadowRP::set_offsetx(uint32_t value)
 {
 }
 
-void RTSpotLightShadowRP::set_resolution(uint32_t value)
+void GLESSpotLightShadowRP::set_offsety(uint32_t value)
+{
+}
+
+void GLESSpotLightShadowRP::set_resolution(uint32_t value)
 {
 }
 */

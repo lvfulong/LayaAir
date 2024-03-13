@@ -1,23 +1,23 @@
-#ifndef __RTForwardAddRP_H_
-#define __RTForwardAddRP_H_
+#ifndef __GLESForwardAddRP_H_
+#define __GLESForwardAddRP_H_
 
 #include <vector>
 #include <stdint.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/GLESRenderCMD.h>
 
 namespace laya {
-	class RTDirectLightShadowRP;
-	class RTSpotLightShadowRP;
-	class RTForwardAddClusterRP;
+	class GLESDirectLightShadowRP;
+	class GLESSpotLightShadowRP;
+	class GLESForwardAddClusterRP;
 	//render Camera Pass data
-	class RTForwardAddRP {
+	class GLESForwardAddRP {
 	public:
-		RTForwardAddRP();
-		~RTForwardAddRP();
+		GLESForwardAddRP();
+		~GLESForwardAddRP();
 
-		void setDirectLightShadowPass(RTDirectLightShadowRP* value) { directLightShadowPass = value; }
-		void setSpotLightShadowPass(RTSpotLightShadowRP* value) { spotLightShadowPass = value; }
-		void setForwardAddClusterRP(RTForwardAddClusterRP* value) { renderpass = value; }
+		void setDirectLightShadowPass(GLESDirectLightShadowRP* value) { directLightShadowPass = value; }
+		void setSpotLightShadowPass(GLESSpotLightShadowRP* value) { spotLightShadowPass = value; }
+		void setForwardAddClusterRP(GLESForwardAddClusterRP* value) { renderpass = value; }
 		
 		void clearBeforeImageEffectCmds();
 		void addBeforeImageEffectCmds(const std::vector<GLESRenderCMD*>& cmds);
@@ -26,12 +26,12 @@ namespace laya {
 	public:
 		bool shadowCastPass = false;
 		//directLightPass
-		RTDirectLightShadowRP* directLightShadowPass = nullptr;
+		GLESDirectLightShadowRP* directLightShadowPass = nullptr;
 		bool enableDirectLightShadow = false;
 		//spotLightPass
-		RTSpotLightShadowRP* spotLightShadowPass = nullptr;
+		GLESSpotLightShadowRP* spotLightShadowPass = nullptr;
 		bool enableSpotLightShadowPass = false;
-		RTForwardAddClusterRP* renderpass = nullptr;
+		GLESForwardAddClusterRP* renderpass = nullptr;
 		// TODO
 		//PostProcessPass postprecessPass;
 		std::vector<std::vector<GLESRenderCMD*>> _beforeImageEffectCMDS;

@@ -1,13 +1,13 @@
-#include "RTRender3DProcess.h"
+#include "GLESRender3DProcess.h"
 #include "render/3D/design/Render3DProcess.h"
-#include "RTForwardAddRP.h"
-#include "RTDirectLightShadowRP.h"
-#include "RTSpotLightShadowRP.h"
-#include "RTForwardAddClusterRP.h"
+#include "GLESForwardAddRP.h"
+#include "GLESDirectLightShadowRP.h"
+#include "GLESSpotLightShadowRP.h"
+#include "GLESForwardAddClusterRP.h"
 
 namespace laya {
 
-    void RTRender3DProcess::renderFowarAddCameraPass(GLESRenderContext3D* context, RTForwardAddRP* passInfo, std::vector<RTBaseRenderNode*> renderNodeList, uint32_t count){
+    void GLESRender3DProcess::renderFowarAddCameraPass(GLESRenderContext3D* context, GLESForwardAddRP* passInfo, std::vector<RTBaseRenderNode*> renderNodeList, uint32_t count){
         //先渲染ShadowTexture
         if (passInfo->shadowCastPass) {
             if (passInfo->enableDirectLightShadow) {

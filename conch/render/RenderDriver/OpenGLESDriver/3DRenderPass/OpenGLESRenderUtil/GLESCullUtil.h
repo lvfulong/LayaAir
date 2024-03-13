@@ -3,10 +3,10 @@
 
 #include "GLESRenderListQueue.h"
 #include "render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.h"
-#include "render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTDirectLightShadowRP.h"
 #include "render/ShadowCullInfo.h"
 #include <core/math/Bounds.h>
 #include <utils/JCSingletonList.h>
+#include "../../../../ShadowSliceData.h"
 
 namespace laya
 {
