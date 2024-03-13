@@ -88,7 +88,7 @@ void GLESShaderInstance::_create3D()
 void GLESShaderInstance::_create2D()
 {
     GLESCommandUniformMap* sprite2DParms = GLESCommandUniformMap::createGlobalUniformMap("Sprite2D");
-    GLESCommandUniformMap* sceneParms = GLESCommandUniformMap::createGlobalUniformMap("Sprite2DGlobal");//·Ö¿ª£¬¸ù¾Ý²»Í¬µÄRender
+    GLESCommandUniformMap* sceneParms = GLESCommandUniformMap::createGlobalUniformMap("Sprite2DGlobal");//ï¿½Ö¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý²ï¿½Í¬ï¿½ï¿½Render
     std::vector<ShaderVariable*>& data = m_GLShaderInstance->getUniformMap();
     for (int i = 0, n = data.size(); i < n; i++) {
         ShaderVariable* one = data[i];
@@ -158,11 +158,10 @@ void GLESShaderInstance::uploadRenderStateBlendDepthByShader(GLESShaderData *sha
     if (*depthTest == RenderState::DEPTHTEST_OFF)
     {
         RenderStateContext::setDepthTest(false);
-        LOGI("cnm false");
     }
     else
     {
-        LOGI("cnm trye"); glEnable(GL_DEPTH_TEST);
+        glEnable(GL_DEPTH_TEST);
         RenderStateContext::setDepthTest(true);
         RenderStateContext::setDepthFunc((CompareFunction)*depthTest);
     }

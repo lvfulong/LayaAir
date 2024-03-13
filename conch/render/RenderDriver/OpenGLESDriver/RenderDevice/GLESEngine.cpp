@@ -27,7 +27,7 @@ std::vector<std::unordered_map<int32_t, std::string>> GLESEngine::_maskMap;
 std::unordered_map<uint32_t, RTShaderDefine> GLESEngine::_texGammaDefine;
 GLESEngine::GLESEngine(WebGLConfig config, WebGLMode webglMode)
 {
-    assert(LayaGL::m_pWebglEngine == nullptr);
+    //assert(LayaGL::m_pWebglEngine == nullptr);
     LayaGL::m_pWebglEngine = this;
     if (!g_kSystemConfig.m_bConchWebGL)
     {

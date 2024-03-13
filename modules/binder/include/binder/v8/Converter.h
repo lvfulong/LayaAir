@@ -227,7 +227,22 @@ template <> class Converter<uint32_t>
         return p_vl->IsUint32();
     }
 };
-
+template <> class Converter<uint16_t>
+{
+  public:
+    static uint16_t ToCpp(v8::Local<v8::Value> p_vl)
+    {
+        return p_vl.As<v8::Uint32>()->Value();
+    }
+    static v8::Local<v8::Value> ToJs(uint16_t p_vl)
+    {
+        return v8::Uint32::NewFromUnsigned(v8::Isolate::GetCurrent(), p_vl);
+    }
+    static bool is(v8::Local<v8::Value> p_vl)
+    {
+        return p_vl->IsUint32();
+    }
+};
 template <> class Converter<uint8_t>
 {
   public:
