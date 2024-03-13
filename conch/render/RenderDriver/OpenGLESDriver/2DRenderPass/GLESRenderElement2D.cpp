@@ -80,7 +80,12 @@ namespace laya
 				comDef->addDefineDatas(materialShaderData->_defineDatas);
 			}
 			pass->is2D = true;
-			GLESShaderInstance* shader = pass->callCreateShaderInstanceFunction();
+			RTShaderPass::CacheShaderItem* item = pass->getCacheShader(comDef);
+			GLESShaderInstance* shader;
+			if (item)
+				shader = item->_glesShaderInstance;
+			else
+				shader = pass->callCreateShaderInstanceFunction();
 			assert(shader != nullptr);
 			_shaderInstances.add(shader);
 		}
