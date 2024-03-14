@@ -1502,6 +1502,14 @@ namespace laya
         getError();
 #endif
     }
+    void JCLayaGL::texStorage3D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth)
+    {
+        ::glTexStorage3D(target, levels, internalformat, width, height, depth);
+#ifdef DEBUG_WEBGL
+        LOGI("glTexStorage3D");
+        getError();
+#endif
+    }
     void JCLayaGL::texImage2DCanvas(GLsizei width, GLsizei height, int canvas)
     {
         //todo 其他格式 预乘alpha
