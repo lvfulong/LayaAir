@@ -520,8 +520,8 @@ if(IOS)
 		platform/iOS/Notification/LayaNotifyManager.m
 		platform/iOS/Audio/JCMp3Player.h
 		platform/iOS/Audio/JCMp3Player.mm
-		platform/iOS/UIEditBoxWX.h
-		platform/iOS/UIEditBoxWX.mm
+		#platform/iOS/UIEditBoxWX.h
+		#platform/iOS/UIEditBoxWX.mm
 		platform/iOS/LayaOpenGLESView.h
 		platform/iOS/LayaOpenGLESView.mm
 		platform/iOS/Utils.h
