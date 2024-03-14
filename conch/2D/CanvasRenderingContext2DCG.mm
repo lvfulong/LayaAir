@@ -1,5 +1,5 @@
 #include "CanvasRenderingContext2DCG.h"
-#include "ColorParser.h"
+#include "utils/ColorParser.h"
 #import "Utils.h"
 #import <CoreText/CoreText.h>
 #import <Foundation/Foundation.h>

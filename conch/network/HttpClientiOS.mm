@@ -163,7 +163,7 @@ HttpURLSessionDownloaderImpl::HttpURLSessionDownloaderImpl(HttpClientiOS *client
     // m_localFilePath = localFilePath;
 
     NSString *strUrl = [NSString stringWithCString:m_downloader->m_url.c_str() encoding:NSUTF8StringEncoding];
-    strUrl = [strUrl stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+    //strUrl = [strUrl stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
     m_url = [NSURL URLWithString:strUrl];
 }
 

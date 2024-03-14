@@ -91,8 +91,6 @@ class JCTouchFilter;
     bool                        m_bStopEngine;
     
     NSRunLoop*                  m_pJSRunLoop;
-    
-    UIEditBoxWX*                m_UIEditBoxWX;
 }
 
 
