@@ -2065,6 +2065,7 @@ var FUNCTION_ID;
     FUNCTION_ID[FUNCTION_ID["CLEARBUFFERFI"] = 278] = "CLEARBUFFERFI";
     FUNCTION_ID[FUNCTION_ID["BINDBUFFERRANGE"] = 279] = "BINDBUFFERRANGE";
     FUNCTION_ID[FUNCTION_ID["BINDBUFFERBASE"] = 280] = "BINDBUFFERBASE";
+    FUNCTION_ID[FUNCTION_ID["TEXSTORAGE3D"] = 281] = "TEXSTORAGE3D";
 })(FUNCTION_ID || (FUNCTION_ID = {}));
 var UNIFORM_TYPE;
 (function (UNIFORM_TYPE) {
@@ -3706,6 +3707,9 @@ class GLCommandEncoder {
     }
     texStorage2D(target, levels, internalformat, width, height) {
         this.add_iiiiii(FUNCTION_ID.TEXSTORAGE2D, target, levels, internalformat, width, height);
+    }
+    texStorage3D(target, levels, internalformat, width, height, depth) {
+        this.add_iiiiiii(FUNCTION_ID.TEXSTORAGE3D, target, levels, internalformat, width, height, depth);
     }
     texParameterf(target, pname, param) {
         this.add_iiif(FUNCTION_ID.TEXPARAMETERF, target, pname, param);
@@ -6821,17 +6825,6 @@ window.downloadfile = function (url, force, onok, onerr) {
     filereader.onload = function () { onok && onok(filereader.result); };
     filereader.onerror = function () { onerr && onerr(); };
     filereader.readAsText(file);
-};
-window["wx"] = window["LayaNative"];
-window["wx"].downloadFile = function (param) {
-    var filereader = new FileReaderWX();
-    return filereader.downloadFile(param);
-};
-window["wx"].getFileSystemManager = function () {
-    return window["LayaNative"].FileSystemManager;
-};
-window["wx"].getSystemInfoSync = function () {
-    return JSON.parse(window["LayaNative"].getSystemInfoSyncString());
 };
 if (window.navigator.platform != "windows")
     window["ontouchstart"] = null;

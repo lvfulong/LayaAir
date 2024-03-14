@@ -43,7 +43,7 @@ namespace laya
         {
             return JSP_TO_JS_UNDEFINE;
         }
-        m_url = JS_TO_CPP(const char*, v8Url);
+        m_url = Converter<std::string>::ToCpp(v8Url);
         if (m_url.empty())
         {
             return JSP_TO_JS_UNDEFINE;

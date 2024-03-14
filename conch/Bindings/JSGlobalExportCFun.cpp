@@ -59,9 +59,7 @@
 #if !defined(LINUX) && !defined(WIN32)
 #include "PhysX/LayaPhysXExport.h"
 #endif
-#include "JSFileSystemManager.h"
 #include "JSFileReaderWX.h"
-#include "JSLayaNative.h"
 #include "JSArrayBufferRef.h"
 #include "JSLaunchOptions.h"
 #include "JSStat.h"
@@ -561,22 +559,14 @@ namespace laya
           
             JSUniformBufferObject::exportJS(context);
         }*/
-        Module layaNative(context.isolate());
-		JSLayaNative::getInstance()->exportJS(layaNative);
-
 
 	
-        Module env(context.isolate());
-        env.constant("USER_DATA_PATH", std::string("wxfile://usr"));
-        layaNative.submodule("env", env);
         
                      
-        JSFileSystemManager::getInstance()->exportJS(layaNative);
         
         JsDownloadTask::exportJS(context);
 
 
-        context.module("LayaNative", layaNative);
 
 		JSVideo::exportJS(context);   
 
@@ -640,7 +630,5 @@ namespace laya
         delete JSLayaGL::getInstance();
 
         //delete JSTextMemoryCanvas::getInstance();
-        delete JSLayaNative::getInstance();
-        delete JSFileSystemManager::getInstance();
     }
 }

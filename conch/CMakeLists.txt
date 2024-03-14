@@ -365,8 +365,6 @@ list(APPEND CONCH_SRC
 	Bindings/JSFileReaderWX.cpp
 	Bindings/JSFileSystem.h
 	Bindings/JSFileSystem.cpp
-	Bindings/JSFileSystemManager.h
-	Bindings/JSFileSystemManager.cpp
 	Bindings/JSGlobalExportCFun.h
 	Bindings/JSGlobalExportCFun.cpp
 	Bindings/JSHistory.h
@@ -379,8 +377,6 @@ list(APPEND CONCH_SRC
 	Bindings/JSLaunchOptions.cpp
 	Bindings/JSLayaGL.h
 	Bindings/JSLayaGL.cpp
-	Bindings/JSLayaNative.h
-	Bindings/JSLayaNative.cpp
 	Bindings/JSNotify.h
 	Bindings/JSNotify.cpp
 	Bindings/JSRuntime.h

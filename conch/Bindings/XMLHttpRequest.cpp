@@ -379,12 +379,8 @@ namespace laya
             Local value(arg1);
             if (value.isString())
             {
-                const char* pData = JS_TO_CPP(const char*, arg1);
-                if (pData)
-                {
-                    nDataLen = pData ? strlen(pData) : 0;
-                    postData(pdmgr, p_sUrl, (char*)pData, nDataLen);
-                }
+                const std::string& pData = Converter<std::string>::ToCpp(arg1);
+                postData(pdmgr, p_sUrl, (char*)pData.c_str(), pData.length());
             }
             else
             {
