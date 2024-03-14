@@ -400,8 +400,8 @@ template <> class Converter<void>
     }
 };
 //const char* sColor = Converter<const char*>::ToCpp(args);         error  get right value address
-//const std::string& sColor = Converter<std::string>::ToCpp(args);   ok
-//const std::string& sColor = Converter<const char*>::ToCpp(args);   ok
+//const std::string sColor = Converter<std::string>::ToCpp(args);   ok
+//const std::string sColor = Converter<const char*>::ToCpp(args);   ok
 template <> class Converter<const char *>
 {
   public:

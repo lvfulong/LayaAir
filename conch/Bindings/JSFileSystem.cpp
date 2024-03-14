@@ -140,7 +140,7 @@ namespace laya
 			Local value(args);
             if (value.isString())
             {
-                const std::string& pData = Converter<std::string>::ToCpp(args);
+                std::string pData = Converter<std::string>::ToCpp(args);
                 if (!pData.empty())
                 {
                     int len = pData.length();

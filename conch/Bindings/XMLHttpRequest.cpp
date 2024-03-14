@@ -379,7 +379,7 @@ namespace laya
             Local value(arg1);
             if (value.isString())
             {
-                const std::string& pData = Converter<std::string>::ToCpp(arg1);
+                std::string pData = Converter<std::string>::ToCpp(arg1);
                 postData(pdmgr, p_sUrl, (char*)pData.c_str(), pData.length());
             }
             else
