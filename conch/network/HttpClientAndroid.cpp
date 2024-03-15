@@ -1,5 +1,6 @@
 #include "HttpClientAndroid.h"
 #include <utils/Log.h>
+#include <utils/JCCommonMethod.h>
 
 static const char *s_className = "layaair/game/browser/LayaHttpClient";
 
@@ -37,7 +38,7 @@ HttpClientAndroid::HttpClientAndroid(const char *url, const char *localFilePath,
                                      std::weak_ptr<HttpClientManager> httpClientManager)
     : IHttpClient(httpClientManager)
 {
-    m_url = url;
+    m_url = encodeURI(url);
     m_localFilePath = localFilePath;
     m_functionOnEnd = functionOnEnd;
     m_functionOnProgress = functionOnProgress;
