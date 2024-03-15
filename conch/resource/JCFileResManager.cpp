@@ -302,7 +302,28 @@ namespace laya
         setState(freed);
         m_bSendToJS_complete = false;	//处理完了，可以继续post了。
     }
-
+    void JCFileResDCC::onResDownloadOKDataEmpty_JSThread(std::weak_ptr<int> p_cbref) {
+        if (!p_cbref.lock())
+            return;
+        //if (m_nLength == 0)	//如果已经为0了，则表示已经处理的，状态改变已经通知给需要的人了，直接返回。
+        //    return;
+        //hugao add
+        /*checkIsEncrypted(m_pBuffer.get(), m_nLength);
+        if (gHandleDataFunc) {
+            int nNewlen = m_nLength;
+            char* pNewData = gHandleDataFunc(m_pBuffer.get(), nNewlen);
+            if (pNewData) {
+                m_nLength = nNewlen;
+                m_pBuffer.reset(pNewData);
+            }
+        }*/
+        setState(ready);
+        //立即失效。如果再有相同请求，需要重新加载
+        m_pBuffer.reset((char*)0);	//TODO 测试：这个不一定会导致释放
+        m_nLength = 0;
+        setState(freed);
+        m_bSendToJS_complete = false;	//处理完了，可以继续post了。
+    }
     void JCFileResDCC::notifyErrorHandler(int p_nError, int p_nHttpResponse) {
         if (!m_bIgnoreError) {
         }
@@ -360,7 +381,13 @@ namespace laya
         if (pnCurlRet == 0/*CURLE_OK*/ && pnHttpRet >= 200 && pnHttpRet < 300) {
             //如果什么都没有返回，则不用继续处理了
             if (p_Buff.m_pPtr == NULL || p_Buff.m_nLen == 0)
-                goto end;
+            {
+                //goto end;
+                //fix bug 数据空 JS没回调
+                std::weak_ptr<int> wptr(m_CallbackRef);
+                std::function<void()> cb = std::bind(&JCFileResDCC::onResDownloadOKDataEmpty_JSThread, this, wptr);
+                postToJS(cb);
+            }
             pSvFileCache = m_pMgr->m_pFileCache;
             if (pSvFileCache) {
                 if (p_nChkSum > 0) {
