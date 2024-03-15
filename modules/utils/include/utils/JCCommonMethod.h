@@ -205,6 +205,7 @@ namespace laya
 	}
 
 	std::u32string to_utf32(const std::string& s);
+    std::string encodeURI(const char* value);
 };
 //------------------------------------------------------------------------------
 
