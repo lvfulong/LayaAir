@@ -14,7 +14,9 @@
 #ifdef ANDROID
 #include "AL/alext.h"
 #endif
+#if !defined(LINUX)
 #include "JCMp3Parser.h"
+#endif
 #include "../JCFileResManager.h"
 
 //------------------------------------------------------------------------------

@@ -442,8 +442,6 @@ list(APPEND CONCH_SRC
 	resource/Audio/JCWaveInfo.cpp
 	resource/Audio/JCWaveParser.h
 	resource/Audio/JCWaveParser.cpp
-	resource/Audio/JCMp3Parser.h
-	resource/Audio/JCMp3Parser.cpp
 	WebSocket/Uri.h
 	WebSocket/Uri.cpp
 	WebSocket/WebSocket.h
@@ -537,6 +535,8 @@ if(IOS)
 		Bindings/PhysX/PxWebBindings.cpp
 		Bindings/PhysX/emscripten.h
 		Bindings/PhysX/emscripten.cpp
+		resource/Audio/JCMp3Parser.h
+		resource/Audio/JCMp3Parser.cpp
 	)
 elseif(ANDROID)
 	list(APPEND PLATFORM_HEADER_DIR
@@ -569,6 +569,8 @@ elseif(ANDROID)
 		Bindings/PhysX/PxWebBindings.cpp
 		Bindings/PhysX/emscripten.h
 		Bindings/PhysX/emscripten.cpp
+		resource/Audio/JCMp3Parser.h
+		resource/Audio/JCMp3Parser.cpp
 	)
 elseif(MSVC)
 	list(APPEND PLATFORM_HEADER_DIR
@@ -592,6 +594,8 @@ elseif(MSVC)
 		Backend/src/esUtil.c
 		2D/CanvasRenderingContext2DWin.h
 		2D/CanvasRenderingContext2DWin.cpp
+		resource/Audio/JCMp3Parser.h
+		resource/Audio/JCMp3Parser.cpp
 	)
 elseif(LINUX)
 	list(APPEND PLATFORM_HEADER_DIR
