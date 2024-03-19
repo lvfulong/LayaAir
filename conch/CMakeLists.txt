@@ -809,7 +809,7 @@ elseif(LINUX)
 		utils
 		binder
 		zlib
-		mpg123
+		#mpg123
 		zip
 		websockets
 		png

@@ -379,6 +379,9 @@ JCWaveInfo* JCAudioWavPlayer::AddWaveInfo( const std::string& p_sUrl,unsigned ch
 //------------------------------------------------------------------------------
 JCWaveInfo* JCAudioWavPlayer::AddWaveInfoMp3(const std::string& p_sUrl, const char* p_sFilePath, void* p_pExternalMark)
 { 
+    #if defined(LINUX)
+    return nullptr;
+    #else
 	JCWaveInfo* pInfo = FindWaveInfo( p_sUrl );
     if( pInfo == NULL )
     {
@@ -396,6 +399,7 @@ JCWaveInfo* JCAudioWavPlayer::AddWaveInfoMp3(const std::string& p_sUrl, const ch
         }
     }
     return pInfo;
+    #endif
 }
 void JCAudioWavPlayer::autoGarbageCollection()
 {
