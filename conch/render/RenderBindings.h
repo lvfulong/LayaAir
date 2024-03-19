@@ -472,9 +472,10 @@ class RenderBindings
             class_binding.function("setOwner", &GLESRenderElement3D::setOwner);
             class_binding.function("setGeometry", &GLESRenderElement3D::setGeometry);
             class_binding.function("setSubShader", &GLESRenderElement3D::setSubShader);
-            class_binding.property_field("_isRender", &GLESRenderElement3D::isRender);
+            class_binding.property_field("isRender", &GLESRenderElement3D::isRender);
+            class_binding.property_field("canDynamicBatch", &GLESRenderElement3D::canDynamicBatch);
             class_binding.class_function("setCompileDefine", &GLESRenderElement3D::setCompileDefine);
-            class_binding.property_field("_materialRenderQueue", &GLESRenderElement3D::materialRenderQueue);
+            class_binding.property_field("materialRenderQueue", &GLESRenderElement3D::materialRenderQueue);
             context.class_("conchGLESRenderElement3D", class_binding);
         }
         {
@@ -592,9 +593,10 @@ class RenderBindings
         {
             class_<GLESForwardAddRP> class_binding;
             class_binding.constructor<>();
-            class_binding.property_field("_enableSpotLightShadowPass", &GLESForwardAddRP::enableSpotLightShadowPass);
-            class_binding.property_field("_enableDirectLightShadow", &GLESForwardAddRP::enableDirectLightShadow);
-            class_binding.property_field("_shadowCastPass", &GLESForwardAddRP::shadowCastPass);
+            class_binding.property_field("enableSpotLightShadowPass", &GLESForwardAddRP::enableSpotLightShadowPass);
+            class_binding.property_field("enableDirectLightShadow", &GLESForwardAddRP::enableDirectLightShadow);
+            class_binding.property_field("shadowCastPass", &GLESForwardAddRP::shadowCastPass);
+            class_binding.property_field("enablePostProcess", &GLESForwardAddRP::enablePostProcess);
             class_binding.function("setForwardAddClusterRP", &GLESForwardAddRP::setForwardAddClusterRP);
             class_binding.function("setDirectLightShadowPass", &GLESForwardAddRP::setDirectLightShadowPass);
             class_binding.function("setSpotLightShadowPass", &GLESForwardAddRP::setSpotLightShadowPass);
@@ -602,6 +604,7 @@ class RenderBindings
             class_binding.function("addBeforeImageEffectCmds", &GLESForwardAddRP::addBeforeImageEffectCmds);
             class_binding.function("clearAfterAllRenderCmds", &GLESForwardAddRP::clearAfterAllRenderCmds);
             class_binding.function("addAfterAllRenderCmds", &GLESForwardAddRP::addAfterAllRenderCmds);
+            class_binding.function("setPostProcess", &GLESForwardAddRP::setPostProcess);
             context.class_("conchGLESForwardAddRP", class_binding);
         }
         {
@@ -614,7 +617,7 @@ class RenderBindings
             class_binding.function("addShadowCasterCommandBuffers", &GLESDirectLightShadowRP::addShadowCasterCommandBuffers);
             class_binding.function("clearShadowCasterCommandBuffer", &GLESDirectLightShadowRP::clearShadowCasterCommandBuffer);
             class_binding.function("addShadowCasterCommandBuffers", &GLESDirectLightShadowRP::addShadowCasterCommandBuffers);
-            context.class_("conchRTDirectLightShadowCastRP", class_binding);
+            context.class_("conchGLESDirectLightShadowCastRP", class_binding);
         }
         {
             class_<GLESSpotLightShadowRP> class_binding;

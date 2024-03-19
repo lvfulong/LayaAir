@@ -1,0 +1,55 @@
+1、ts在引擎中用npm run buildSamples
+打包好的库在LayaAir\bin\rollUp
+一个是引擎的(laya.js)，一个是示例合集的(bundle.js)
+
+2、改一下native的启动服务器
+LayaNative3.0\template\resource\scripts\index.js
+最后面loadApp(conch.presetUrl || "http://192.168.3.7:8000/index.js");
+
+3、template/resource/config.ini 里面改ConchWebgl 写成1 就是webgl模式  写成0就是opengl模式
+JSDebugMode=1 才能调试
+JSDebugMode=2 启动才能调试（这个好）
+
+4、调试Chrome  打开Chrome
+（1）输入chrome://inspect 
+（2）添加端口配置5959（写死的）的端口到 port forwarding和configure
+（3）找到native，点击inspect
+可以通过ctrl+p来找文件
+但是生成的文件需要有sourceURL  例如//@ sourceURL=http://192.168.3.7:8000/rollup/laya.js，就可以在chrome调试面板找到laya.js
+
+
+可以把web源码的LayaAir\gulpfile里面的gulp.task('buildSamples'）换成下面代码，
+注意 改下代码里面的服务器地址
+{
+gulp.task('changeLayaJSNative', (cb) => {
+    // 发布时调用编译功能，判断是否点击了编译选项
+    let layajsPath = path.join("./", "bin/rollUp", "laya.js");
+    let layajsCon = fs.readFileSync(layajsPath, "utf8");
+    layajsCon = layajsCon.replace(/^var Laya = /mg, "");
+    layajsCon = layajsCon.replace(/\({}\);\s*\n*$/mg, "(window.Laya = window.Laya || {});");
+    layajsCon = layajsCon+'\n  //@ sourceURL=http://192.168.3.7:8000/rollup/laya.js';
+    fs.writeFileSync(layajsPath, layajsCon, "utf8");
+    cb();
+});
+gulp.task('changeBundleJSNative', (cb) => {
+    // 发布时调用编译功能，判断是否点击了编译选项
+    let layajsPath = path.join("./", "bin/rollUp", "bundle.js");
+    let layajsCon = fs.readFileSync(layajsPath, "utf8");
+    layajsCon = layajsCon+'\n  //@ sourceURL=http://192.168.3.7:8000/rollup/bundle.js';
+    fs.writeFileSync(layajsPath, layajsCon, "utf8");
+    cb();
+});
+
+
+// gulp.task('buildSamples',
+//     gulp.series(
+//         'compileSamples',
+//         'changeLayaJS',
+//     ));
+gulp.task('buildSamples',
+    gulp.series(
+        'compileSamples',
+        'changeLayaJSNative',
+        'changeBundleJSNative',
+    ));
+}

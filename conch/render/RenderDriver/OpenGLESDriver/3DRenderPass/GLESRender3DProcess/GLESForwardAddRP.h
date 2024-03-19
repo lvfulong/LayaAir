@@ -18,7 +18,7 @@ namespace laya {
 		void setDirectLightShadowPass(GLESDirectLightShadowRP* value) { directLightShadowPass = value; }
 		void setSpotLightShadowPass(GLESSpotLightShadowRP* value) { spotLightShadowPass = value; }
 		void setForwardAddClusterRP(GLESForwardAddClusterRP* value) { renderpass = value; }
-		
+		void setPostProcess(const std::vector<GLESRenderCMD*>& cmds);
 		void clearBeforeImageEffectCmds();
 		void addBeforeImageEffectCmds(const std::vector<GLESRenderCMD*>& cmds);
 		void clearAfterAllRenderCmds();
@@ -33,9 +33,11 @@ namespace laya {
 		bool enableSpotLightShadowPass = false;
 		GLESForwardAddClusterRP* renderpass = nullptr;
 		// TODO
+		bool enablePostProcess;
 		//PostProcessPass postprecessPass;
 		std::vector<std::vector<GLESRenderCMD*>> _beforeImageEffectCMDS;
 		std::vector<std::vector<GLESRenderCMD*>> _afterAllRenderCMDS;
+		std::vector<GLESRenderCMD*> postProcessCMDS;
 	};
 }
 #endif

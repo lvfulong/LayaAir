@@ -119,7 +119,7 @@ class GLESEngine
     laya::Vector4 m_lastScissor;
     laya::Color m_lastClearColor;
     bool m_scissorState = true;
-    float m_lastClearDepth = 1.0f;
+    float m_lastClearDepth = -1.0f;
     GLTextureContext *m_textureContext = nullptr;
     bool m_isWebGL2 = false;
     typedef std::unordered_map<std::string, int> PropertyNameIDMapType;

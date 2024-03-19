@@ -87,7 +87,9 @@ namespace laya
             this->opaqueList.renderQueue((GLESRenderContext3D*)context);
         }
         if (enableCMD) GLESRenderCMD::applyCommandBuffers(context, _beforeSkyboxCmds);
-        //context.drawRenderElementOne(this.skyRenderNode);
+        if (skyRenderNode != nullptr) {
+            context->drawRenderElementOne(skyRenderNode->renderelements[0]);
+        }
         if (enableOpaque) 
         {
             opaqueTexturePass();

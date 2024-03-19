@@ -29,4 +29,8 @@ namespace laya {
     {
         _afterAllRenderCMDS.push_back(cmds);
     }
+
+    void GLESForwardAddRP::setPostProcess(const std::vector<GLESRenderCMD*>& cmds) {
+        postProcessCMDS = cmds;
+    }
 }
