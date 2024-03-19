@@ -782,6 +782,7 @@ class RenderBindings
 
         {
             class_<GLESDrawNodeCMDData> class_binding;
+            class_binding.constructor<>();
             class_binding.function("setBaseRenderNode", &GLESDrawNodeCMDData::setBaseRenderNode);
             class_binding.function("setShaderData", &GLESDrawNodeCMDData::setShaderData);
             class_binding.function("setSubShader", &GLESDrawNodeCMDData::setSubShader);
@@ -790,6 +791,7 @@ class RenderBindings
 
         {
             class_<GLESBlitQuadCMDData> class_binding;
+            class_binding.constructor<>();
             class_binding.function("setDest", &GLESBlitQuadCMDData::setDest);
             class_binding.function("setViewport", &GLESBlitQuadCMDData::setViewport);
             class_binding.function("setScissor", &GLESBlitQuadCMDData::setScissor);
@@ -802,6 +804,7 @@ class RenderBindings
 
         {
             class_<GLESDrawElementCMDData> class_binding;
+            class_binding.constructor<>();
             class_binding.function("clearElement", &GLESDrawElementCMDData::clearElement);
             class_binding.function("addOneElement", &GLESDrawElementCMDData::addOneElement);
             context.class_("conchGLESDrawElementCMDData", class_binding);
@@ -809,6 +812,7 @@ class RenderBindings
 
         {
             class_<GLESSetViewportCMD> class_binding;
+            class_binding.constructor<>();
             class_binding.function("setViewport", &GLESSetViewportCMD::setViewport);
             class_binding.function("setScissor", &GLESSetViewportCMD::setScissor);
             context.class_("conchGLESSetViewportCMD", class_binding);
@@ -816,6 +820,7 @@ class RenderBindings
 
         {
             class_<GLESSetRenderTargetCMD> class_binding;
+            class_binding.constructor<>();
             class_binding.function("setRT", &GLESSetRenderTargetCMD::setRT);
             class_binding.function("setClearFlag", &GLESSetRenderTargetCMD::clearFlag);
             class_binding.function("clearColorValue", &GLESSetRenderTargetCMD::clearColorValue);
@@ -826,6 +831,7 @@ class RenderBindings
 
         {
             class_<GLESSetRenderData> class_binding;
+            class_binding.constructor<>();
             class_binding.function("setDataType", &GLESSetRenderData::setDataType);
             class_binding.function("setPropertyID", &GLESSetRenderData::setPropertyID);
             class_binding.function("setDest", &GLESSetRenderData::setDest);
@@ -836,6 +842,7 @@ class RenderBindings
 
         {
             class_<GLESSetShaderDefine> class_binding;
+            class_binding.constructor<>();
             class_binding.function("setAdd", &GLESSetShaderDefine::setAdd);
             class_binding.function("setDest", &GLESSetShaderDefine::setDest);
             class_binding.function("setDefine", &GLESSetShaderDefine::setDefine);
