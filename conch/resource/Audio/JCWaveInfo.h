@@ -122,6 +122,8 @@ public:
 
     std::string             m_sUrl;                     //url
 
+	std::string 			m_sLocalFile;
+
     double                  m_nTouchTime;               //时间戳
 
     //FACT_BLOCK				m_kFact;					//fact

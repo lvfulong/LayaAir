@@ -365,6 +365,7 @@ JCWaveInfo* JCAudioWavPlayer::AddWaveInfo( const std::string& p_sUrl,unsigned ch
 		if( pInfo != NULL )
 		{
             pInfo->m_sUrl = p_sUrl;
+            pInfo->m_sLocalFile = p_sFilePath;
             pInfo->m_nTouchTime = tmGetCurms();
 			pInfo->m_pExternalMark = p_pExternalMark;
 			m_vWaveInfos[ p_sUrl ] = pInfo;
@@ -386,6 +387,7 @@ JCWaveInfo* JCAudioWavPlayer::AddWaveInfoMp3(const std::string& p_sUrl, const ch
         if( pInfo != NULL )
         {
             pInfo->m_sUrl = p_sUrl;
+            pInfo->m_sLocalFile = p_sFilePath;
             pInfo->m_nTouchTime = tmGetCurms();
             pInfo->m_pExternalMark = p_pExternalMark;
             m_vWaveInfos[ p_sUrl ] = pInfo;

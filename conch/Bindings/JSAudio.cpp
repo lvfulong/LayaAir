@@ -166,6 +166,8 @@ namespace laya
 	    JCWaveInfo* pWavInfo = JCAudioManager::GetInstance()->FindWaveInfo( p_sSrc );
 	    if( pWavInfo != NULL )
 	    {
+			//设置一下这个值，防止pWavInfo被垃圾 回收以后无法重建
+			m_sLocalFileName = pWavInfo->m_sLocalFile;
 		    m_bDownloaded = true;
             std::weak_ptr<int> cbref(m_CallbackRef);
             std::function<void(void)> pFunction = std::bind(&JSAudio::onCanplayCallJSFunction,this, cbref);
