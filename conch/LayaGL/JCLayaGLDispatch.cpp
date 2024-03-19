@@ -305,6 +305,7 @@ namespace laya
 			&JCLayaGLDispatch::_layaGL_clearBufferfi,
 			&JCLayaGLDispatch::_layaGL_bindBufferRange,
 			&JCLayaGLDispatch::_layaGL_bindBufferBase,
+             &JCLayaGLDispatch::_layaGL_texStorage3D,
         };
         static const int nFuncs = sizeof(g_svProcFunctions) / sizeof(g_svProcFunctions[0]);
         char* pCmdBuffer = pRenderCmd.getReadPtr();
@@ -830,6 +831,11 @@ namespace laya
     {
         CMD_iiiii* cmd = layaGLCmd.popp<CMD_iiiii>();
         ms_pLayaGL->texStorage2D(cmd->i, cmd->j, cmd->k, cmd->l, cmd->m);
+    }
+    void JCLayaGLDispatch::_layaGL_texStorage3D(JCCommandEncoderBuffer& layaGLCmd)
+    {
+        CMD_iiiiii* cmd = layaGLCmd.popp<CMD_iiiiii>();
+        ms_pLayaGL->texStorage3D(cmd->i, cmd->j, cmd->k, cmd->l, cmd->m, cmd->n);
     }
     void JCLayaGLDispatch::_layaGL_texImage2D(JCCommandEncoderBuffer& layaGLCmd)
     {

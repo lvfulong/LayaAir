@@ -140,11 +140,11 @@ namespace laya
 			Local value(args);
             if (value.isString())
             {
-                const char* pData = JS_TO_CPP(const char*, args);
-                if ( pData )
+                std::string pData = Converter<std::string>::ToCpp(args);
+                if (!pData.empty())
                 {
-                    int len = strlen(pData);
-                    JCBuffer buf((char*)pData, len, false, false);
+                    int len = pData.length();
+                    JCBuffer buf((char*)pData.c_str(), len, false, false);
                     bret = writeFileSync( p_sUrl, buf, JCBuffer::utf8);
                 }
             }

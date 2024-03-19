@@ -33,7 +33,6 @@
 #include "JCConchRender.h"
 #include "JCScriptRuntime.h"
 #include <Bindings/Video/JSVideo.h>
-#include <Bindings/JSLayaNative.h>
 #include <imageLib/JCImageRW.h>
 #include "network/HttpClientAndroid.h"
 #include "2D/CanvasRenderingContext2DAndroid.h"
@@ -611,7 +610,7 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onChooseImageComplete(
 {
 	LOGI("JNI onChooseImageComplete tid=%x", std::this_thread::get_id());
 	const char* sJsonParam = env->GetStringUTFChars(p_sJsonParam, NULL);
-	JSLayaNative::getInstance()->onCompleteCallJSFunction(resultCode, sJsonParam);
+	//JSLayaNative::getInstance()->onCompleteCallJSFunction(resultCode, sJsonParam);
 	env->ReleaseStringUTFChars(p_sJsonParam, sJsonParam);
 }
 
@@ -624,23 +623,23 @@ JNIEXPORT jstring JNICALL Java_layaair_game_browser_ConchJNI_GetLocalTempCachePa
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onSaveImageToPhotosAlbumComplete(JNIEnv* env, jobject obj, jint resultCode)
 {
 	LOGI("JNI onSaveImageToPhotosAlbumComplete tid=%x", std::this_thread::get_id());
-	JSLayaNative::getInstance()->onSaveImageComplete(resultCode);
+	//JSLayaNative::getInstance()->onSaveImageComplete(resultCode);
 }
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleKeyboardInput(JNIEnv* env, jobject obj, jstring strValue)
 {
 	const char* value = env->GetStringUTFChars(strValue, NULL);
-	JSLayaNative::getInstance()->handleKeyboardInput(value);
+	//JSLayaNative::getInstance()->handleKeyboardInput(value);
 	env->ReleaseStringUTFChars(strValue, value);
 }
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleKeyboardConfirm(JNIEnv* env, jobject obj, jstring strValue)
 {
 	const char* value = env->GetStringUTFChars(strValue, NULL);
-	JSLayaNative::getInstance()->handleKeyboardConfirm(value);
+	//JSLayaNative::getInstance()->handleKeyboardConfirm(value);
 	env->ReleaseStringUTFChars(strValue, value);
 }
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleKeyboardComplete(JNIEnv* env, jobject obj, jstring strValue)
 {
 	const char* value = env->GetStringUTFChars(strValue, NULL);
-	JSLayaNative::getInstance()->handleKeyboardComplete(value);
+	//JSLayaNative::getInstance()->handleKeyboardComplete(value);
 	env->ReleaseStringUTFChars(strValue, value);
 }

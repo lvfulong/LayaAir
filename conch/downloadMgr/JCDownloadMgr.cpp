@@ -979,35 +979,5 @@ namespace laya{
 	}
 
 
-    std::string encodeURI(const char* value) {
-        if (!value)
-            return "";
-        std::ostringstream escaped;
-        escaped.fill('0');
-        escaped << std::hex;
-        unsigned char* pc = (unsigned char*)value;
-        unsigned char c = *pc;
-        bool afterQuery = false;    //query中的'也要处理.  query中的 |^ 不处理
-        while (c=*pc) {
-            c = *pc;
-            //标准是没有%的，但是chrome并不处理%，所以这里也不处理
-            if (isalnum(c) || c ==';' ||c=='/' || c =='?' || c == ':' || c == '@' || c == '&' || c == '=' || c == '+' ||
-                c == '$' || c == ',' || c == '-' || c == '_' || c == '.' || c == '!' || c == '~' || c == '*' || 
-                (!afterQuery && c == '\'' )|| c == '(' || c == ')' || c == '[' || c == ']' ||c=='%' ||
-                (afterQuery && c=='|') || 
-                (afterQuery && c=='^') ) {
-                if (!afterQuery&&c == '?')
-                    afterQuery = true;
-                escaped << c;
-                pc++;
-            }
-            else {
-                escaped << std::uppercase;
-                escaped << '%' << std::setw(2) << int((unsigned char)c);
-                escaped << std::nouppercase;
-                pc++;
-            }
-        }
-        return escaped.str();
-    }
+    
 }

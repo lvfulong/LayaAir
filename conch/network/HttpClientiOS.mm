@@ -1,6 +1,6 @@
 #include "HttpClientiOS.h"
 #include <utils/Log.h>
-#include <utils/Log.h>
+#include <utils/JCCommonMethod.h>
 #include "JCSystemConfig.h"
 #import <CFNetwork/CFNetwork.h>
 #import <Foundation/Foundation.h>
@@ -162,8 +162,8 @@ HttpURLSessionDownloaderImpl::HttpURLSessionDownloaderImpl(HttpClientiOS *client
     // m_functionOnProgress = functionOnProgress;
     // m_localFilePath = localFilePath;
 
-    NSString *strUrl = [NSString stringWithCString:m_downloader->m_url.c_str() encoding:NSUTF8StringEncoding];
-    strUrl = [strUrl stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+    std::string uriEncoded = encodeURI(m_downloader->m_url.c_str());
+    NSString *strUrl = [NSString stringWithCString:uriEncoded.c_str() encoding:NSUTF8StringEncoding];
     m_url = [NSURL URLWithString:strUrl];
 }
 

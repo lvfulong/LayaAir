@@ -294,6 +294,7 @@ enum FUNCTION_ID
     CLEARBUFFERFI,
     BINDBUFFERRANGE,
     BINDBUFFERBASE,
+    TEXSTORAGE3D,
 }
 enum UNIFORM_TYPE
 {
@@ -2425,6 +2426,10 @@ class GLCommandEncoder
     texStorage2D(target:any, levels:any, internalformat:any, width:number, height:number):void
     {
         this.add_iiiiii(FUNCTION_ID.TEXSTORAGE2D, target, levels, internalformat, width, height);
+    }
+    texStorage3D(target:any, levels:any, internalformat:any, width:number, height:number, depth:number):void
+    {
+        this.add_iiiiiii(FUNCTION_ID.TEXSTORAGE3D, target, levels, internalformat, width, height, depth);
     }
     texParameterf(target:number, pname:number, param:number):void
     {

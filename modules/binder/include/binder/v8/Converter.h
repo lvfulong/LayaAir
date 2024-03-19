@@ -399,24 +399,32 @@ template <> class Converter<void>
         return p_vl->IsNullOrUndefined();
     }
 };
-
+//const char* sColor = Converter<const char*>::ToCpp(args);         error  get right value address
+//const std::string sColor = Converter<std::string>::ToCpp(args);   ok
+//const std::string sColor = Converter<const char*>::ToCpp(args);   ok
 template <> class Converter<const char *>
 {
   public:
-    struct convertible_string : std::basic_string<std::string::value_type, std::string::traits_type>
+    class convertible_string
     {
-        using base_class = std::basic_string<std::string::value_type, std::string::traits_type>;
-        using base_class::base_class;
+      public:
+        convertible_string(const char *str) : realString(str)
+        {
+        }
+
         operator char const *() const
         {
-            return this->c_str();
+            return this->realString.c_str();
         }
+
+      private:
+        std::string realString;
     };
     using from_type = convertible_string;
     static from_type ToCpp(v8::Local<v8::Value> value)
     {
         v8::String::Utf8Value const str(v8::Isolate::GetCurrent(), value);
-        return from_type(reinterpret_cast<char const *>(*str), str.length());
+        return from_type(reinterpret_cast<char const *>(*str));
     }
     static v8::Local<v8::Value> ToJs(std::string_view p_vl, bool callDestructor = true)
     {

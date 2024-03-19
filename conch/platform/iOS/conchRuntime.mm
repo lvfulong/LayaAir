@@ -15,7 +15,7 @@
 #import "TouchFilter.h"
 #import <binder/JSInterface.h>
 #import "LayaWebView.h"
-#import <Bindings/JSLayaNative.h>
+//#import <Bindings/JSLayaNative.h>
 #import "LayaAlert.h"
 #import "CToObjectCIOS.h"
 #import "Reflection/refection.h"
@@ -350,7 +350,7 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
         
         // initialize the default values of LayaVideoPlayer
         [LayaVideoPlayer setCurParentView:m_pView withRetianValue:m_fRetinaValue];
-        m_UIEditBoxWX = nil;
+        //m_UIEditBoxWX = nil;
         
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChanged:)
         //                                             name:UIDeviceOrientationDidChangeNotification object:[UIDevice currentDevice]];
@@ -881,6 +881,7 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
 }
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey, id> *)info
 {
+#if 0
     UIImage *image = info[UIImagePickerControllerOriginalImage];
     image = [self compressOriginalImage:image];
     NSString * extention = nil;
@@ -934,6 +935,7 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
         laya::JSLayaNative::getInstance()->onCompleteCallJSFunction(1, [[[NSString alloc] initWithData:pJsonData encoding:NSUTF8StringEncoding] UTF8String]);
         [picker dismissViewControllerAnimated:YES completion:nil];
     }
+#endif
 }
 + (NSString *)uuid
 {
@@ -980,6 +982,7 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
 
 #pragma mark 保存到相册
 -(void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
+#if 0
     NSString *msg = nil ;
     if(error){
         msg = @"保存图片失败" ;
@@ -988,9 +991,11 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
         msg = @"保存图片成功" ;
         laya::JSLayaNative::getInstance()->onSaveImageComplete(1);
     }
+#endif
 }
 -(void)chooseImage:(int)count sizeType:(NSString*)sizeType sourceType:(NSString*)sourceType
 {
+#if 0
     if ([sourceType isEqualToString:@"camera"]) {
         if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
             UIImagePickerController* pickController = [[UIImagePickerController alloc] init];
@@ -1009,9 +1014,11 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
             [UIApplication.sharedApplication.delegate.window.rootViewController presentViewController:pickController animated:YES completion:nil];
         }
     }
+#endif
 }
 -(void)showEditBoxWX:(NSString*)defaultValue maxLength:(int)maxLength multiple:(bool)multiple confirmHold:(bool)confirmHold confirmType:(NSString*)confirmType prompt:(NSString*)prompt promptColor:(NSString*)promptColor inputType:(NSString*)inputType
 {
+#if 0
     if (m_UIEditBoxWX == nil) {
         m_UIEditBoxWX = [[UIEditBoxWX alloc] initWithMultiple:multiple];
     }
@@ -1027,14 +1034,17 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
     m_UIEditBoxWX.promptColor = promptColor;
     m_UIEditBoxWX.inputType = inputType;
     [m_UIEditBoxWX becomeFirstResponder];
+#endif
 }
 
 -(void)hideEditBoxWX
 {
+#if 0
     if (m_UIEditBoxWX != nil) {
         [m_UIEditBoxWX hide];
         m_UIEditBoxWX = nil;
     }
+#endif
 }
 -(void)alert:(NSString*)sInfo
 {
