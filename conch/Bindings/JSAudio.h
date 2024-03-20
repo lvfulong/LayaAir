@@ -63,6 +63,8 @@ namespace laya
 
         float getCurrentTime();
 
+		float getDuration();
+
 		void setIsBackgroundMusic(bool p_bIsBackgroundMusic);
 
 		bool getIsBackgroundMusic();
@@ -109,6 +111,7 @@ namespace laya
         std::string		        m_sSrc;					//src
 
         float                   m_nVolume;				//音量
+		float 					m_fDuration;			//秒
 
         std::string		        m_sLocalFileName;
 
@@ -128,6 +131,9 @@ namespace laya
 		bool					m_bIsBackgroundMusic = false;
 
 		int						m_nState = EXT_STATE_INVALID;
+
+		// 用户请求stop，但是现在还在下载
+		bool					m_bShouldStop = false;
     };
 }
 

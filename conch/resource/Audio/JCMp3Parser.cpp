@@ -119,6 +119,7 @@ JCWaveInfo* JCMp3Parser::GetWaveInfo(const char* path)
     mpg123_scan(m_mpg123handle);
     int totalFrames = mpg123_length(m_mpg123handle);
     
+    pWaveInfo->m_fDuration = ((float)totalFrames)/rate;
     pWaveInfo->m_nRealDataSize = totalFrames * m_bytesPerFrame;
     pWaveInfo->m_pData = new unsigned char[pWaveInfo->m_nRealDataSize];
     

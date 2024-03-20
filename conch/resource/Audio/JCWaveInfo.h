@@ -114,6 +114,8 @@ public:
 
 	U32						m_nRealDataSize;			//数据长度
 
+	float					m_fDuration;				//时间，秒
+
 	U8*						m_pData;					//数据
 
 	int						m_nCurPos;					//当前位置
@@ -121,6 +123,8 @@ public:
 	void*					m_pExternalMark;			//外部标记，现在目的是为了存储JSAudio的指针，为了能够回调JS，或者想存储你想存储的数据
 
     std::string             m_sUrl;                     //url
+
+	std::string 			m_sLocalFile;
 
     double                  m_nTouchTime;               //时间戳
 
