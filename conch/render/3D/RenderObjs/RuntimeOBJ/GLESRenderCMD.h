@@ -109,7 +109,34 @@ namespace laya
         GLESSetRenderData();
         ~GLESSetRenderData();
         void apply(GLESRenderContext3D* context) override;
-        void setValue(std::any& value) { _value = value; };
+        void setInt(int32_t value) {
+            _value = value;
+        };
+        void setFloat(float value) {
+            _value = value;
+        };
+        void setBool(bool value) {
+            _value = value;
+        };
+        void setVector2(Vector2& value) {
+            _value = value;
+        };
+        void setVector3(Vector3& value) {
+            _value = value;
+        };
+        void setVector(Vector4& value) {
+            _value = value;
+        };
+        void setMatrix4x4(Matrix4x4& value) {
+            _value = value;
+        };
+        void setColor(Color& value) {
+            _value = value;
+        }
+        void setTexture2D(GLESInternalTex* value) {
+            _value = value;
+        }
+
         void setBufferValueJS(JSValueAsParam value);
         void setBufferValue(uint8_t* data, uint32_t lengthInBytes);
         void setDataType(ShaderDataType type) { _type = type; };

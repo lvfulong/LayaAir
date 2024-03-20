@@ -179,6 +179,10 @@ list(APPEND CONCH_SRC
 	render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderElement3D.cpp
 	render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESSkinRenderElement.h
 	render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESSkinRenderElement.cpp
+	render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESInstanceRenderBatch.h
+	render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESInstanceRenderBatch.cpp
+	render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESInstanceRenderElement3D.h
+	render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESInstanceRenderElement3D.cpp
 	render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESCullUtil.h
 	render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESCullUtil.cpp
 	render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESQuickSort.h

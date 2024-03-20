@@ -12,6 +12,8 @@ namespace laya
     GLESForwardAddClusterRP::GLESForwardAddClusterRP() : opaqueList(false), transparent(true)
     {
         _defaultNormalDepthColor = Color(0.5, 0.5, 1.0, 0.0);
+        depthPipelineMode = "ShadowCaster";
+        depthNormalPipelineMode = "DepthNormal";
     }
     GLESForwardAddClusterRP::~GLESForwardAddClusterRP(){
         
@@ -43,8 +45,8 @@ namespace laya
         Vector4 tempVec4(viewport.x, viewport.y, viewport.width, viewport.height);
         context->setViewport(_tempViewport);
         context->setScissor(tempVec4);
-        context->setClearData(static_cast<RenderClearFlagBits>(RenderClearFlag::Depth), Color::BLACK, 1, 0);
         context->setRenderTarget(this->depthTarget);
+        context->setClearData(static_cast<RenderClearFlagBits>(RenderClearFlag::Depth), Color::BLACK, 1, 0);
         this->opaqueList.renderQueue((GLESRenderContext3D*)context);
         //渲染完后传入使用的参数
         Real far_ = this->camera->farplane;
@@ -55,6 +57,7 @@ namespace laya
         context->cameraData->setVector(DepthPassProperty::DEPTHZBUFFERPARAMS, this->_zBufferParams);
         shadervalue->removeDefine(DepthPassProperty::DEPTHPASS);
     }
+
     void GLESForwardAddClusterRP::_renderDepthNormalPass(GLESRenderContext3D* context){
         context->pipelineMode = this->depthNormalPipelineMode;
         //传入shader该传的值

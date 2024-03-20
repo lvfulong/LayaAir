@@ -53,3 +53,5 @@ gulp.task('buildSamples',
         'changeBundleJSNative',
     ));
 }
+
+5、启动launcher

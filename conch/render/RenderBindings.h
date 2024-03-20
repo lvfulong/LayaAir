@@ -884,7 +884,15 @@ class RenderBindings
             class_binding.function("setDataType", &GLESSetRenderData::setDataType);
             class_binding.function("setPropertyID", &GLESSetRenderData::setPropertyID);
             class_binding.function("setDest", &GLESSetRenderData::setDest);
-            class_binding.function("setValue", &GLESSetRenderData::setValue);
+            class_binding.function("setInt", &GLESSetRenderData::setInt);
+            class_binding.function("setFloat", &GLESSetRenderData::setFloat);
+            class_binding.function("setBool", &GLESSetRenderData::setBool);
+            class_binding.function("setVector2", &GLESSetRenderData::setVector2);
+            class_binding.function("setVector3", &GLESSetRenderData::setVector3);
+            class_binding.function("setVector", &GLESSetRenderData::setVector);
+            class_binding.function("setMatrix4x4", &GLESSetRenderData::setMatrix4x4);
+            class_binding.function("setColor", &GLESSetRenderData::setColor);
+            class_binding.function("setTexture2D", &GLESSetRenderData::setTexture2D);
             class_binding.function("setBufferValue", &GLESSetRenderData::setBufferValueJS);
             context.class_("conchGLESSetRenderData", class_binding);
         }

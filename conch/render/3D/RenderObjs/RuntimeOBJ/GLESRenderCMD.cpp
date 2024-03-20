@@ -1,7 +1,6 @@
 #include "GLESRenderCMD.h"
 #include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderElement3D.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
-#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 #include "Render3DNode/RTBaseRenderNode.h"
 #include <render/Property.h>
 namespace laya{
