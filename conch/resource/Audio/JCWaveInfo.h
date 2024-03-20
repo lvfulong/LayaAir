@@ -114,6 +114,8 @@ public:
 
 	U32						m_nRealDataSize;			//数据长度
 
+	float					m_fDuration;				//时间，秒
+
 	U8*						m_pData;					//数据
 
 	int						m_nCurPos;					//当前位置

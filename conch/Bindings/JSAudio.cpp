@@ -169,6 +169,7 @@ namespace laya
 			//设置一下这个值，防止pWavInfo被垃圾 回收以后无法重建
 			m_sLocalFileName = pWavInfo->m_sLocalFile;
 		    m_bDownloaded = true;
+			m_fDuration = pWavInfo->m_fDuration;
             std::weak_ptr<int> cbref(m_CallbackRef);
             std::function<void(void)> pFunction = std::bind(&JSAudio::onCanplayCallJSFunction,this, cbref);
             postToJS( pFunction );
@@ -207,7 +208,8 @@ namespace laya
 					    if( m_bAutoPlay || m_bNeedHandlePlay == true )
 					    {
 						    m_bNeedHandlePlay = false;
-						    play();
+							if(!m_bShouldStop)
+								play();
 					    }
 				    }
 			    }
@@ -309,7 +311,8 @@ namespace laya
 			if (m_bAutoPlay || m_bNeedHandlePlay == true)
 			{
 				m_bNeedHandlePlay = false;
-				play();
+				if(!m_bShouldStop)
+					play();
 			}
 		}
 	    else
@@ -318,7 +321,8 @@ namespace laya
 		    if( m_bAutoPlay || m_bNeedHandlePlay == true )
 		    {
 			    m_bNeedHandlePlay = false;
-			    play();
+				if(!m_bShouldStop)
+					play();
 		    }
 	    }
 	    return true;
@@ -356,6 +360,11 @@ namespace laya
 	    return m_nVolume;
     }
     //------------------------------------------------------------------------------
+
+	float JSAudio::getDuration(){
+		return m_fDuration;
+	}
+
     void JSAudio::play()
     {
         //if (m_bMuted)return;
@@ -456,9 +465,10 @@ namespace laya
         {
 			if (m_nState != EXT_STATE_PLAY)
 			{
+				m_bShouldStop = true;
 				return;
 			}
-
+			m_bShouldStop = false;//正确执行stop了，不需要记录了
 			m_nState = EXT_STATE_STOP;
             if (m_pOpenALInfo && m_pOpenALInfo->m_pAudio == this)
             {
@@ -527,6 +537,7 @@ namespace laya
         class_binding.property("muted", &JSAudio::getMuted, &JSAudio::setMuted);
         class_binding.property("src", &JSAudio::getSrc, &JSAudio::setSrc);
         class_binding.property("volume", &JSAudio::getVolume, &JSAudio::setVolume);
+		class_binding.property("duration",&JSAudio::getDuration);
         class_binding.property("currentTime", &JSAudio::getCurrentTime, &JSAudio::setCurrentTime);
 		class_binding.property("isBackgroundMusic", &JSAudio::getIsBackgroundMusic, &JSAudio::setIsBackgroundMusic);
 	    class_binding.function("setLoop", &JSAudio::setLoop);

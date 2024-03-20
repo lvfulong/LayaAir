@@ -160,7 +160,7 @@ bool JCWaveInfo::LoadData( unsigned char* p_sBuffer,int p_nBufferSize )
 		read( &m_kDataBlock, sizeof(DATA_BLOCK), p_sBuffer );
 		if ( memcmp( m_kDataBlock.szDataID, "data", 4 ) == 0 )
 		{
-            m_kDataBlock.dwDataSize /= 2;
+            m_kDataBlock.dwDataSize /= 2;	//为什么除以2
             m_nCurPos += sizeof(DATA_BLOCK);
             bResult = true;
             break;
@@ -177,7 +177,7 @@ bool JCWaveInfo::LoadData( unsigned char* p_sBuffer,int p_nBufferSize )
         return false;
     }
 	//拿出data数据
-	m_nRealDataSize = m_kDataBlock.dwDataSize * 2;
+	m_nRealDataSize = m_kDataBlock.dwDataSize * 2;	//为什么*2， 上面不除不就行了？
 	m_pData = new U8[m_nRealDataSize];
 	for( unsigned int i =0; i< m_kDataBlock.dwDataSize; i++ )
 	{
@@ -188,6 +188,15 @@ bool JCWaveInfo::LoadData( unsigned char* p_sBuffer,int p_nBufferSize )
 
 		m_pData[i*2+0] = n1;
 		m_pData[i*2+1] = n2;
+	}
+
+	if(bResult){
+		// 已知音频数据总字节数：m_nRealDataSize
+		// 每秒的字节数：采样率 * 通道数 * 每样本位数/8
+		float bytesPerSecond = m_kFmtBlock.wavFormat.dwSamplesPerSec *
+								m_kFmtBlock.wavFormat.wChannels *
+								(m_kFmtBlock.wavFormat.wBitsPerSample / 8.0);
+		m_fDuration = m_nRealDataSize / bytesPerSecond;
 	}
 	return true;
 }

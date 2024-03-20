@@ -836,6 +836,10 @@ class HTMLMediaElement<ConchMedia extends any> extends HTMLElement /*implements 
         return this._nativeObj.muted;
     }
 
+    get duration(){
+        return this._nativeObj.duration;
+    }
+
 }
 
 class HTMLMetaElement extends HTMLElement {
