@@ -207,7 +207,7 @@ namespace laya{
 #endif
 	};
 
-    std::string encodeURI(const char* url);
+
 }
 //------------------------------------------------------------------------------
 

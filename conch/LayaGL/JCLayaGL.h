@@ -201,6 +201,7 @@ namespace laya
 		virtual void clearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat* value);
 		virtual void blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter);
 		virtual void clearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth,  GLint stencil);
+        virtual void texStorage3D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
         //------------------------------------------------------------------------------
         const char* getString(unsigned int name);
         int getIntegerv(int name);

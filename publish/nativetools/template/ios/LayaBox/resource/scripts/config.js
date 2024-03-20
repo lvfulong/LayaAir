@@ -97,7 +97,10 @@ class loadingView
 	}
 	hideLoadingView()
 	{
-		this.bridge.call("hideSplash");
+		if(this.bridge)
+		{
+			this.bridge.call("hideSplash");
+		}
 	}
 }
 window.loadingView = new loadingView();

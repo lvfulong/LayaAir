@@ -73,6 +73,7 @@ void GLESRenderElement3D::_render(GLESRenderContext3D *context)
         }
     }
 }
+
 void GLESRenderElement3D::_preUpdatePre(GLESRenderContext3D *context)
 {
     _compileShader(context);
@@ -129,7 +130,13 @@ void GLESRenderElement3D::_compileShader(GLESRenderContext3D *context)
         }
         comDef->addDefineDatas(materialShaderData->_defineDatas);
 
-        GLESShaderInstance *shader = pass->callCreateShaderInstanceFunction();
+
+        RTShaderPass::CacheShaderItem* item = pass->getCacheShader(comDef);
+        GLESShaderInstance* shader;
+        if (item)
+            shader = item->_glesShaderInstance;
+        else
+            shader = pass->callCreateShaderInstanceFunction();
         assert(shader != nullptr);
         _addShaderInstance(shader);
     }

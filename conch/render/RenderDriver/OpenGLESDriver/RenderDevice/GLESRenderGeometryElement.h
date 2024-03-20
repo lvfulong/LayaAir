@@ -20,6 +20,7 @@ class GLESRenderGeometryElement // : public ResourceBase<GLESRenderGeometryEleme
     void setDrawArrayParams(int first, int count);
     void setDrawElementParams(int count, int offset);
     void clearRenderParams();
+    void cloneTo(GLESRenderGeometryElement* geometry);
     void destroy();
     // static GLESRenderGeometryElement *getRenderGeometryElement(uint32_t id);
     void setIndexFormat(IndexFormat indexFormat)
@@ -60,6 +61,8 @@ class GLESRenderGeometryElement // : public ResourceBase<GLESRenderGeometryEleme
     {
         _bufferState = value;
     }
+
+
 
   public:
     GLESBufferState *_bufferState = nullptr;

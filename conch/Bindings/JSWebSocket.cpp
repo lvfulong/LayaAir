@@ -274,11 +274,8 @@ namespace laya
         case Type_String:
             if (m_nWebSocketState == WSS_OPEN && m_pWebSocket)
             {
-                const char* sColor = JS_TO_CPP(const char*, args);
-                if (sColor)
-                {
-                    m_pWebSocket->send(sColor);
-                }
+                std::string sColor = Converter<std::string>::ToCpp(args);
+                m_pWebSocket->send(sColor);
             }
             break;
         default:

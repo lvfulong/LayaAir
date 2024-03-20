@@ -79,8 +79,13 @@ namespace laya
 			if (materialShaderData) {
 				comDef->addDefineDatas(materialShaderData->_defineDatas);
 			}
-			//TODO lv
-			GLESShaderInstance* shader = pass->callCreateShaderInstanceFunction();
+			pass->is2D = true;
+			RTShaderPass::CacheShaderItem* item = pass->getCacheShader(comDef);
+			GLESShaderInstance* shader;
+			if (item)
+				shader = item->_glesShaderInstance;
+			else
+				shader = pass->callCreateShaderInstanceFunction();
 			assert(shader != nullptr);
 			_shaderInstances.add(shader);
 		}
@@ -97,7 +102,7 @@ namespace laya
 		if (materialShaderData) {
 			shader->uploadUniforms(&(shader->m_materialUniformParamsMap),materialShaderData, true);
 		}
-		shader->uploadRenderStateBlendDepth(materialShaderData);
+		shader->uploadRenderStateBlendDepth(value2DShaderData);
 		LayaGL::m_pWebglEngine->getDrawContext()->drawGeometryElement(geometry);
 	}
 } // namespace laya

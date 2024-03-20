@@ -27,6 +27,15 @@ void GLESRenderGeometryElement::clearRenderParams()
 {
     m_pDrawParams->resetLength();
 }
+void GLESRenderGeometryElement::cloneTo(GLESRenderGeometryElement* geometry)
+{
+    geometry->setMeshTopology(getMeshTopology());
+    geometry->setDrawType(getDrawType());
+    geometry->setIndexFormat(getIndexFormat());
+    geometry->setInstanceCount(getInstanceCount());
+    geometry->m_pDrawParams->m_vElements = m_pDrawParams->m_vElements;
+    geometry->m_pDrawParams->setLength(m_pDrawParams->getLength());
+}
 void GLESRenderGeometryElement::destroy()
 {
     _bufferState = nullptr;

@@ -1,5 +1,5 @@
-#ifndef __RTSpotLightShadowRP_H_
-#define __RTSpotLightShadowRP_H_
+#ifndef __GLESSpotLightShadowRP_H_
+#define __GLESSpotLightShadowRP_H_
 
 #include "render/3D/design/Render3DProcess.h"
 #include <vector>
@@ -25,11 +25,11 @@ namespace laya
         Matrix4x4 viewProjectMatrix;
         CameraCullInfo cameraCullInfo;
     };
-class RTSpotLightShadowRP
+class GLESSpotLightShadowRP
 {
   public:
-      RTSpotLightShadowRP();
-    ~RTSpotLightShadowRP();
+      GLESSpotLightShadowRP();
+    ~GLESSpotLightShadowRP();
     void update(GLESRenderContext3D*context);
     void render(GLESRenderContext3D* context, std::vector<RTBaseRenderNode*>& list, uint32_t count);
     void _applyRenderData(GLESShaderData* sceneData, GLESShaderData* cameraData);

@@ -305,7 +305,7 @@ window.downloadfile = function (url, force, onok, onerr) {
     filereader.onerror = function () { onerr && onerr(); };
     filereader.readAsText(file);
 };
-window["wx"] = window["LayaNative"];
+/*window["wx"] = window["LayaNative"];
 window["wx"].downloadFile = function (param: any) {
     var filereader:any = new FileReaderWX();
     return filereader.downloadFile(param);
@@ -316,7 +316,7 @@ window["wx"].getFileSystemManager = function () {
 };
 window["wx"].getSystemInfoSync = function () {
     return JSON.parse(window["LayaNative"].getSystemInfoSyncString());
-};
+};*/
 if(window.navigator.platform!="windows")window["ontouchstart"]=null;
 window['GL_CAPS'] = GL_CAPS;
 window.focus=function() {}

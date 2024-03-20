@@ -67,6 +67,7 @@ class GLESRenderElement3D
     JSTransform *transform = nullptr;
     RTBaseRenderNode *owner = nullptr;
     bool isRender;
+    bool canDynamicBatch;
     static RTDefineDatas *_compileDefines;
 
   protected:

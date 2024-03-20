@@ -180,6 +180,7 @@ namespace laya
 		LAYA_CLEARBUFFERFI,
 		LAYA_BINDBUFFERRANGE,
 		LAYA_BINDBUFFERBASE,
+        LAYA_TEXSTORAGE3D,
     };
     class JCLayaGLDispatch
     {
@@ -348,6 +349,7 @@ namespace laya
 		static void _layaGL_clearBufferfi(JCCommandEncoderBuffer& layaGLCmd);
 		static void _layaGL_bindBufferRange(JCCommandEncoderBuffer& layaGLCmd);
 		static void _layaGL_bindBufferBase(JCCommandEncoderBuffer& layaGLCmd);
+        static void _layaGL_texStorage3D(JCCommandEncoderBuffer& layaGLCmd);
         //------------------------------------------------------------------------------
         //-------------------------webgl��չ����-----------------------------------------
         //------------------------------------------------------------------------------

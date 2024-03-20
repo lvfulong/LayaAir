@@ -83,6 +83,7 @@ namespace laya{
         void load(const char* p_pszURL, JCSharedBuffer* pSyncResult) override;
 	protected:
 		void onResDownloadOK_JSThread(std::weak_ptr<int> p_cbref);
+        void onResDownloadOKDataEmpty_JSThread(std::weak_ptr<int> p_cbref);
 		void onResDownloadErr_JSThread(std::weak_ptr<int> p_cbref,int p_nError, int p_nHttpResponse);
 
         void notifyErrorHandler(int p_nError, int p_nHttpResponse);

@@ -69,11 +69,12 @@ void GLESRenderContext3D::_start()
 {
     LayaGL::m_pWebglEngine->scissorTest(true);
     LayaGL::m_pWebglEngine->viewport(viewPort.x, viewPort.y, viewPort.width, viewPort.height);
-    LayaGL::m_pWebglEngine->scissor(scissor.x, scissor.y, scissor.z, scissor.w);
+    LayaGL::m_pWebglEngine->scissor(viewPort.x, viewPort.y, viewPort.width, viewPort.height);
     if (this->_clearFlag != static_cast<RenderClearFlagBits>(RenderClearFlag::Nothing))
     {
         LayaGL::m_pWebglEngine->clearRenderTexture(_clearFlag, &clearColor, clearDepth);
     }
+    LayaGL::m_pWebglEngine->scissor(scissor.x, scissor.y, scissor.z, scissor.w);
 }
 void GLESRenderContext3D::_end()
 {

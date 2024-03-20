@@ -18,11 +18,11 @@
 #include <core/math/Vector3.h>
 #include <core/math/Vector4.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.h>
-#include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTDirectLightShadowRP.h>
-#include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTForwardAddClusterRP.h>
-#include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTForwardAddRP.h>
-#include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTRender3DProcess.h>
-#include <render/3D/RenderObjs/RuntimeOBJ/Render3DProcess/RTSpotLightShadowRP.h>
+#include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRender3DProcess/GLESDirectLightShadowRP.h>
+#include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRender3DProcess/GLESForwardAddClusterRP.h>
+#include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRender3DProcess/GLESForwardAddRP.h>
+#include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRender3DProcess/GLESRender3DProcess.h>
+#include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRender3DProcess/GLESSpotLightShadowRP.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTDirectLight.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTLightmapData.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTModuleData.h>
@@ -149,6 +149,10 @@ class RenderBindings
             .field("normalized", &VertexStateContext::normalized)
             .field("vertexStride", &VertexStateContext::vertexStride)
             .field("elementOffset", &VertexStateContext::elementOffset);
+        value_object<UniformProperty>("conchUniformProperty")
+            .field("id", &UniformProperty::id)
+            .field("propertyName", &UniformProperty::propertyName)
+            .field("uniformtype", &UniformProperty::uniformtype);
         value_object<RTShaderDefine>("conchRTShaderDefine")
             .field("_index", &RTShaderDefine::_index)
             .field("_value", &RTShaderDefine::_value);
@@ -454,6 +458,7 @@ class RenderBindings
             class_binding.function("destroy", &RTShaderPass::destroy);
             class_binding.property_field("_pipelineMode", &RTShaderPass::pipelineMode);
             class_binding.property_field("_statefirst", &RTShaderPass::statefirst);
+            class_binding.property_field("is2D", &RTShaderPass::is2D);
             context.class_("conchRTShaderPass", class_binding);
         }
         {
@@ -467,9 +472,10 @@ class RenderBindings
             class_binding.function("setOwner", &GLESRenderElement3D::setOwner);
             class_binding.function("setGeometry", &GLESRenderElement3D::setGeometry);
             class_binding.function("setSubShader", &GLESRenderElement3D::setSubShader);
-            class_binding.property_field("_isRender", &GLESRenderElement3D::isRender);
+            class_binding.property_field("isRender", &GLESRenderElement3D::isRender);
+            class_binding.property_field("canDynamicBatch", &GLESRenderElement3D::canDynamicBatch);
             class_binding.class_function("setCompileDefine", &GLESRenderElement3D::setCompileDefine);
-            class_binding.property_field("_materialRenderQueue", &GLESRenderElement3D::materialRenderQueue);
+            class_binding.property_field("materialRenderQueue", &GLESRenderElement3D::materialRenderQueue);
             context.class_("conchGLESRenderElement3D", class_binding);
         }
         {
@@ -529,6 +535,7 @@ class RenderBindings
             class_binding.function("setMaterialShaderData", &GLESRenderElement2D::setMaterialShaderData);
             class_binding.function("setGeometry", &GLESRenderElement2D::setGeometry);
             class_binding.function("setSubShader", &GLESRenderElement2D::setSubShader);
+            class_binding.class_function("setCompileDefine", &GLESRenderElement2D::setCompileDefine);
             context.class_("conchGLESRenderElement2D", class_binding);
         }
         {
@@ -537,6 +544,7 @@ class RenderBindings
             class_binding.function("setGlobalConfigShaderData", &GLESRenderContext2D::setGlobalConfigShaderData);
             class_binding.function("setRenderTarget", &GLESRenderContext2D::setRenderTarget);
             class_binding.function("setOffscreenView", &GLESRenderContext2D::setOffscreenView);
+            class_binding.function("drawRenderElementOne", &GLESRenderContext2D::drawRenderElementOne);
             class_binding.property_field("invertY", &GLESRenderContext2D::invertY);
             class_binding.property_field("pipelineMode", &GLESRenderContext2D::pipelineMode);
             context.class_("conchGLESRenderContext2D", class_binding);
@@ -577,75 +585,77 @@ class RenderBindings
             context.class_("conchGLESRenderContext3D", class_binding);
         }
         {
-            class_<RTRender3DProcess> class_binding;
+            class_<GLESRender3DProcess> class_binding;
             class_binding.constructor<>();
-            class_binding.function("renderFowarAddCameraPass", &RTRender3DProcess::renderFowarAddCameraPass);
-            context.class_("conchRTRender3DProcess", class_binding);
+            class_binding.function("renderFowarAddCameraPass", &GLESRender3DProcess::renderFowarAddCameraPass);
+            context.class_("conchGLESRender3DProcess", class_binding);
         }
         {
-            class_<RTForwardAddRP> class_binding;
+            class_<GLESForwardAddRP> class_binding;
             class_binding.constructor<>();
-            class_binding.property_field("_enableSpotLightShadowPass", &RTForwardAddRP::enableSpotLightShadowPass);
-            class_binding.property_field("_enableDirectLightShadow", &RTForwardAddRP::enableDirectLightShadow);
-            class_binding.property_field("_shadowCastPass", &RTForwardAddRP::shadowCastPass);
-            class_binding.function("setForwardAddClusterRP", &RTForwardAddRP::setForwardAddClusterRP);
-            class_binding.function("setDirectLightShadowPass", &RTForwardAddRP::setDirectLightShadowPass);
-            class_binding.function("setSpotLightShadowPass", &RTForwardAddRP::setSpotLightShadowPass);
-            class_binding.function("clearBeforeImageEffectCmds", &RTForwardAddRP::clearBeforeImageEffectCmds);
-            class_binding.function("addBeforeImageEffectCmds", &RTForwardAddRP::addBeforeImageEffectCmds);
-            class_binding.function("clearAfterAllRenderCmds", &RTForwardAddRP::clearAfterAllRenderCmds);
-            class_binding.function("addAfterAllRenderCmds", &RTForwardAddRP::addAfterAllRenderCmds);
-            context.class_("conchRTForwardAddRP", class_binding);
+            class_binding.property_field("enableSpotLightShadowPass", &GLESForwardAddRP::enableSpotLightShadowPass);
+            class_binding.property_field("enableDirectLightShadow", &GLESForwardAddRP::enableDirectLightShadow);
+            class_binding.property_field("shadowCastPass", &GLESForwardAddRP::shadowCastPass);
+            class_binding.property_field("enablePostProcess", &GLESForwardAddRP::enablePostProcess);
+            class_binding.function("setForwardAddClusterRP", &GLESForwardAddRP::setForwardAddClusterRP);
+            class_binding.function("setDirectLightShadowPass", &GLESForwardAddRP::setDirectLightShadowPass);
+            class_binding.function("setSpotLightShadowPass", &GLESForwardAddRP::setSpotLightShadowPass);
+            class_binding.function("clearBeforeImageEffectCmds", &GLESForwardAddRP::clearBeforeImageEffectCmds);
+            class_binding.function("addBeforeImageEffectCmds", &GLESForwardAddRP::addBeforeImageEffectCmds);
+            class_binding.function("clearAfterAllRenderCmds", &GLESForwardAddRP::clearAfterAllRenderCmds);
+            class_binding.function("addAfterAllRenderCmds", &GLESForwardAddRP::addAfterAllRenderCmds);
+            class_binding.function("setPostProcess", &GLESForwardAddRP::setPostProcess);
+            context.class_("conchGLESForwardAddRP", class_binding);
         }
         {
-            class_<RTDirectLightShadowRP> class_binding;
+            class_<GLESDirectLightShadowRP> class_binding;
             class_binding.constructor<>();
-            class_binding.function("setCameraNodeData", &RTDirectLightShadowRP::setCameraNodeData);
-            class_binding.function("setRenderTarget", &RTDirectLightShadowRP::setRenderTarget);
-            class_binding.function("setLight", &RTDirectLightShadowRP::setLight);
-            class_binding.function("clearShadowCasterCommandBuffer", &RTDirectLightShadowRP::clearShadowCasterCommandBuffer);
-            class_binding.function("addShadowCasterCommandBuffers", &RTDirectLightShadowRP::addShadowCasterCommandBuffers);
-            class_binding.function("clearShadowCasterCommandBuffer", &RTDirectLightShadowRP::clearShadowCasterCommandBuffer);
-            class_binding.function("addShadowCasterCommandBuffers", &RTDirectLightShadowRP::addShadowCasterCommandBuffers);
-            context.class_("conchRTDirectLightShadowCastRP", class_binding);
+            class_binding.function("setCameraNodeData", &GLESDirectLightShadowRP::setCameraNodeData);
+            class_binding.function("setRenderTarget", &GLESDirectLightShadowRP::setRenderTarget);
+            class_binding.function("setLight", &GLESDirectLightShadowRP::setLight);
+            class_binding.function("clearShadowCasterCommandBuffer", &GLESDirectLightShadowRP::clearShadowCasterCommandBuffer);
+            class_binding.function("addShadowCasterCommandBuffers", &GLESDirectLightShadowRP::addShadowCasterCommandBuffers);
+            class_binding.function("clearShadowCasterCommandBuffer", &GLESDirectLightShadowRP::clearShadowCasterCommandBuffer);
+            class_binding.function("addShadowCasterCommandBuffers", &GLESDirectLightShadowRP::addShadowCasterCommandBuffers);
+            context.class_("conchGLESDirectLightShadowCastRP", class_binding);
         }
         {
-            class_<RTSpotLightShadowRP> class_binding;
+            class_<GLESSpotLightShadowRP> class_binding;
             class_binding.constructor<>();
-            class_binding.function("setRenderTarget", &RTSpotLightShadowRP::setRenderTarget);
-            class_binding.function("setLight", &RTSpotLightShadowRP::setLight);
-            context.class_("conchRTSpotLightShadowRP", class_binding);
+            class_binding.function("setRenderTarget", &GLESSpotLightShadowRP::setRenderTarget);
+            class_binding.function("setLight", &GLESSpotLightShadowRP::setLight);
+            context.class_("conchGLESSpotLightShadowRP", class_binding);
         }
         {
-            class_<RTForwardAddClusterRP> class_binding;
+            class_<GLESForwardAddClusterRP> class_binding;
             class_binding.constructor<>();
-            class_binding.property_field("_depthNormalPipelineMode", &RTForwardAddClusterRP::depthNormalPipelineMode);
-            class_binding.property_field("_depthPipelineMode", &RTForwardAddClusterRP::depthPipelineMode);
-            class_binding.property_field("_pipelineMode", &RTForwardAddClusterRP::pipelineMode);
-            class_binding.property_field("_depthTextureMode", &RTForwardAddClusterRP::depthTextureMode);
-            class_binding.property_field("_enableOpaqueTexture", &RTForwardAddClusterRP::enableOpaqueTexture);
-            class_binding.property_field("_enableCMD", &RTForwardAddClusterRP::enableCMD);
-            class_binding.property_field("_enableTransparent", &RTForwardAddClusterRP::enableTransparent);
-            class_binding.property_field("_enableCMD", &RTForwardAddClusterRP::enableCMD);
-            class_binding.property_field("_enableOpaque", &RTForwardAddClusterRP::enableOpaque);
-            class_binding.property_field("_clearFlag", &RTForwardAddClusterRP::clearFlag);
-            class_binding.function("setCameraCullInfo", &RTForwardAddClusterRP::setCameraCullInfo);
-            class_binding.function("setCameraNodeData", &RTForwardAddClusterRP::setCameraNodeData);
-            class_binding.function("setDestTarget", &RTForwardAddClusterRP::setDestTarget);
-            class_binding.function("setDepthTarget", &RTForwardAddClusterRP::setDepthTarget);
-            class_binding.function("setDepthNormalTarget", &RTForwardAddClusterRP::setDepthNormalTarget);
-            class_binding.function("setOpaqueTexture", &RTForwardAddClusterRP::setOpaqueTexture);
-            class_binding.function("setClearColor", &RTForwardAddClusterRP::setClearColor);
-            class_binding.function("setViewport", &RTForwardAddClusterRP::setViewport);
-            class_binding.function("setScissor", &RTForwardAddClusterRP::setScissor);
-            class_binding.function("setSkyRenderNode", &RTForwardAddClusterRP::setSkyRenderNode);
-            class_binding.function("clearBeforeForwardCmds", &RTForwardAddClusterRP::clearBeforeForwardCmds);
-            class_binding.function("addBeforeForwardCmds", &RTForwardAddClusterRP::addBeforeForwardCmds);
-            class_binding.function("clearBeforeSkyboxCmds", &RTForwardAddClusterRP::clearBeforeSkyboxCmds);
-            class_binding.function("addBeforeSkyboxCmds", &RTForwardAddClusterRP::addBeforeSkyboxCmds);
-            class_binding.function("clearBeforeTransparentCmds", &RTForwardAddClusterRP::clearBeforeTransparentCmds);
-            class_binding.function("addBeforeTransparentCmds", &RTForwardAddClusterRP::addBeforeTransparentCmds);
-            context.class_("conchRTForwardAddClusterRP", class_binding);
+            class_binding.property_field("_depthNormalPipelineMode", &GLESForwardAddClusterRP::depthNormalPipelineMode);
+            class_binding.property_field("_depthPipelineMode", &GLESForwardAddClusterRP::depthPipelineMode);
+            class_binding.property_field("_pipelineMode", &GLESForwardAddClusterRP::pipelineMode);
+            class_binding.property_field("_depthTextureMode", &GLESForwardAddClusterRP::depthTextureMode);
+            class_binding.property_field("_enableOpaqueTexture", &GLESForwardAddClusterRP::enableOpaqueTexture);
+            class_binding.property_field("_enableCMD", &GLESForwardAddClusterRP::enableCMD);
+            class_binding.property_field("_enableTransparent", &GLESForwardAddClusterRP::enableTransparent);
+            class_binding.property_field("_enableCMD", &GLESForwardAddClusterRP::enableCMD);
+            class_binding.property_field("_enableOpaque", &GLESForwardAddClusterRP::enableOpaque);
+            class_binding.property_field("_clearFlag", &GLESForwardAddClusterRP::clearFlag);
+            class_binding.function("setCameraCullInfo", &GLESForwardAddClusterRP::setCameraCullInfo);
+            class_binding.function("setCameraNodeData", &GLESForwardAddClusterRP::setCameraNodeData);
+            class_binding.function("setDestTarget", &GLESForwardAddClusterRP::setDestTarget);
+            class_binding.function("setDepthTarget", &GLESForwardAddClusterRP::setDepthTarget);
+            class_binding.function("setDepthNormalTarget", &GLESForwardAddClusterRP::setDepthNormalTarget);
+            class_binding.function("setOpaqueTexture", &GLESForwardAddClusterRP::setOpaqueTexture);
+            class_binding.function("setClearColor", &GLESForwardAddClusterRP::setClearColor);
+            class_binding.function("setViewport", &GLESForwardAddClusterRP::setViewport);
+            class_binding.function("setScissor", &GLESForwardAddClusterRP::setScissor);
+            class_binding.function("setSkyRenderNode", &GLESForwardAddClusterRP::setSkyRenderNode);
+            class_binding.function("clearBeforeForwardCmds", &GLESForwardAddClusterRP::clearBeforeForwardCmds);
+            class_binding.function("addBeforeForwardCmds", &GLESForwardAddClusterRP::addBeforeForwardCmds);
+            class_binding.function("clearBeforeSkyboxCmds", &GLESForwardAddClusterRP::clearBeforeSkyboxCmds);
+            class_binding.function("addBeforeSkyboxCmds", &GLESForwardAddClusterRP::addBeforeSkyboxCmds);
+            class_binding.function("clearBeforeTransparentCmds", &GLESForwardAddClusterRP::clearBeforeTransparentCmds);
+            class_binding.function("addBeforeTransparentCmds", &GLESForwardAddClusterRP::addBeforeTransparentCmds);
+            context.class_("conchGLESForwardAddClusterRP", class_binding);
         }
         {
             class_<RTLightmapData> class_binding;
@@ -772,6 +782,7 @@ class RenderBindings
 
         {
             class_<GLESDrawNodeCMDData> class_binding;
+            class_binding.constructor<>();
             class_binding.function("setBaseRenderNode", &GLESDrawNodeCMDData::setBaseRenderNode);
             class_binding.function("setShaderData", &GLESDrawNodeCMDData::setShaderData);
             class_binding.function("setSubShader", &GLESDrawNodeCMDData::setSubShader);
@@ -780,6 +791,7 @@ class RenderBindings
 
         {
             class_<GLESBlitQuadCMDData> class_binding;
+            class_binding.constructor<>();
             class_binding.function("setDest", &GLESBlitQuadCMDData::setDest);
             class_binding.function("setViewport", &GLESBlitQuadCMDData::setViewport);
             class_binding.function("setScissor", &GLESBlitQuadCMDData::setScissor);
@@ -792,6 +804,7 @@ class RenderBindings
 
         {
             class_<GLESDrawElementCMDData> class_binding;
+            class_binding.constructor<>();
             class_binding.function("clearElement", &GLESDrawElementCMDData::clearElement);
             class_binding.function("addOneElement", &GLESDrawElementCMDData::addOneElement);
             context.class_("conchGLESDrawElementCMDData", class_binding);
@@ -799,6 +812,7 @@ class RenderBindings
 
         {
             class_<GLESSetViewportCMD> class_binding;
+            class_binding.constructor<>();
             class_binding.function("setViewport", &GLESSetViewportCMD::setViewport);
             class_binding.function("setScissor", &GLESSetViewportCMD::setScissor);
             context.class_("conchGLESSetViewportCMD", class_binding);
@@ -806,6 +820,7 @@ class RenderBindings
 
         {
             class_<GLESSetRenderTargetCMD> class_binding;
+            class_binding.constructor<>();
             class_binding.function("setRT", &GLESSetRenderTargetCMD::setRT);
             class_binding.function("setClearFlag", &GLESSetRenderTargetCMD::clearFlag);
             class_binding.function("clearColorValue", &GLESSetRenderTargetCMD::clearColorValue);
@@ -816,6 +831,7 @@ class RenderBindings
 
         {
             class_<GLESSetRenderData> class_binding;
+            class_binding.constructor<>();
             class_binding.function("setDataType", &GLESSetRenderData::setDataType);
             class_binding.function("setPropertyID", &GLESSetRenderData::setPropertyID);
             class_binding.function("setDest", &GLESSetRenderData::setDest);
@@ -826,6 +842,7 @@ class RenderBindings
 
         {
             class_<GLESSetShaderDefine> class_binding;
+            class_binding.constructor<>();
             class_binding.function("setAdd", &GLESSetShaderDefine::setAdd);
             class_binding.function("setDest", &GLESSetShaderDefine::setDest);
             class_binding.function("setDefine", &GLESSetShaderDefine::setDefine);

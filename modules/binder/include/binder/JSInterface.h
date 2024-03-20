@@ -32,7 +32,7 @@ typedef JSValueRef JSValueAsParam;
 typedef JSValueRef JsValue;
 typedef JsObjHandleJSC JsObjHandle;
 #define JSP_RESET_GLOBAL_FUNCTION JSCGlobal::getInstance()->reset()
-#define JS_TO_CPP(tp, v) laya::__TransferToCpp<tp>::ToCpp(v)
+//#define JS_TO_CPP(tp, v) laya::__TransferToCpp<tp>::ToCpp(v)
 #define JSP_TO_JS_BYTE_ARRAY(vl, sz) (laya::__JsByteArray::ToJsByteArray(vl, sz))
 #define JSP_TO_JS(tp, v) (laya::__TransferToJs<tp>::ToJs(v))
 #define JSP_TO_JS_NULL JSP_TO_JS(void, 1)
@@ -57,7 +57,7 @@ typedef v8::Local<v8::Object> JsObject;
 #define JSP_TO_JS_PROMISE (v8::Local<v8::Promise>().As<v8::Value>())
 #define JSP_TO_JS_BYTE_ARRAY(vl, sz) (__JsByteArray::ToJsByteArray(vl, sz))
 #define JSP_TO_JS(tp, v) (Converter<tp>::ToJs(v))
-#define JS_TO_CPP(tp, v) (Converter<tp>::ToCpp(v))
+//#define JS_TO_CPP(tp, v) (Converter<tp>::ToCpp(v))
 #define JSP_TO_JS_STR(str) (v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), str).ToLocalChecked())
 #define JS_TRY                                                                                                         \
     v8::Isolate *isolate = v8::Isolate::GetCurrent();                                                                  \

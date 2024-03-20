@@ -56,7 +56,7 @@ class GLESRenderContext3D
         this->scissor = value;
         _needStart = true;
     }
-    uint32_t setClearData(uint32_t flag, Color color, float depthValue, uint8_t stencilValue)
+    uint32_t setClearData(uint32_t flag, Color &color, float depthValue, uint8_t stencilValue)
     {
         _clearFlag = flag;
         clearColor = color;

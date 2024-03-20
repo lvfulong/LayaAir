@@ -67,12 +67,12 @@ void GLESShaderData::clearDefine()
 
 void GLESShaderData::setBool(int32_t index, bool value)
 {
-    m_data[index] = value;
+    m_data[index] = (int32_t)value;
 }
 
 bool GLESShaderData::getBool(int32_t index)
 {
-    return std::any_cast<bool>(m_data[index]);
+    return std::any_cast<int32_t>(m_data[index]);
 }
 
 void GLESShaderData::setInt(int32_t index, int32_t value)

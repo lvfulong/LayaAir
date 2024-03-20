@@ -56,7 +56,7 @@ class GLESShaderData //: public ResourceBase<ShaderData>
         if (it != m_data.end())
         {
             // assert(it->second.type == std::typeid(T));
-            return std::any_cast<T>(&it->second);
+            return &std::any_cast<T&>(it->second);
         }
         return nullptr;
     }
