@@ -13,7 +13,6 @@ namespace laya
 	class JSTransform :public Transform3D::Listener
 	{
 	public:
-		static void exportJS(Context& context);
 		JSTransform();
 		JSTransform(JSValueAsParam pSharedData, JSValueAsParam pEvent);
 		~JSTransform();

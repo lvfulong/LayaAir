@@ -130,25 +130,4 @@ namespace laya
 		m_float64Array[4] = boundBox.max.y;
 		m_float64Array[5] = boundBox.max.z;
 	}
-	//------------------------------------------------------------------------------
-	void JSBounds::exportJS(Context& context)
-	{
-		class_<JSBounds> class_binding;
-		class_binding.constructor<>();
-		class_binding.constructor<JSValueAsParam>();
-		class_binding.function("setMin", &JSBounds::setMin);
-		class_binding.function("getMin", &JSBounds::getMinJS);
-		class_binding.function("setMax", &JSBounds::setMax);
-		class_binding.function("getMax", &JSBounds::getMaxJS);
-		class_binding.function("setCenter", &JSBounds::setCenter);
-		class_binding.function("getCenter", &JSBounds::getCenterJS);
-		class_binding.function("setExtent", &JSBounds::setExtent);
-		class_binding.function("getExtent", &JSBounds::getExtent);
-		class_binding.function("_tranform", &JSBounds::_tranform);
-		class_binding.function("cloneTo", &JSBounds::cloneTo);
-		class_binding.function("_getBoundBox", &JSBounds::getBoundBox);
-		context.class_("conchBounds", class_binding);
-
-	}
 }
-//------------------------------------------------------------------------------

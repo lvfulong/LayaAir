@@ -11,7 +11,6 @@ namespace laya
 	class JSBounds
 	{
 	public:
-		static void exportJS(Context& context);
 		JSBounds();
 		JSBounds(JSValueAsParam pSharedData);
 		~JSBounds();

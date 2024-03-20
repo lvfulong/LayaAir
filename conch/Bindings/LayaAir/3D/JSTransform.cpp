@@ -369,40 +369,4 @@ namespace laya
 	{
 		m_pTransform3D->getForward(forward);
 	}
-	//------------------------------------------------------------------------------
-	void JSTransform::exportJS(Context& context)
-	{
-		 class_<JSTransform> class_binding;
-		 class_binding.constructor<>();
-		 class_binding.constructor<JSValueAsParam, JSValueAsParam>();
-		 class_binding.function("setParent", &JSTransform::setParent);
-		class_binding.property("_isFrontFaceInvert", &JSTransform::_isFrontFaceInvert);
-		 class_binding.function("getLocalPosition", &JSTransform::_getLocalPosition);
-		 class_binding.function("setLocalPosition", &JSTransform::setLocalPosition);
-		 class_binding.function("getLocalRotation", &JSTransform::_getLocalRotation);
-		 class_binding.function("setLocalRotation", &JSTransform::setLocalRotation);
-		 class_binding.function("getLocalScale", &JSTransform::_getLocalScale);
-		 class_binding.function("setLocalScale", &JSTransform::setLocalScale);
-		 class_binding.function("getLocalRotationEuler", &JSTransform::_getLocalRotationEuler);
-		 class_binding.function("setLocalRotationEuler", &JSTransform::setLocalRotationEuler);
-		 class_binding.function("getRotation", &JSTransform::_getRotation);
-		class_binding.function("setRotation", &JSTransform::setRotation);
-		 class_binding.function("getPosition", &JSTransform::_getPosition);
-		 class_binding.function("setPosition", &JSTransform::setPosition);
-		 class_binding.function("getRotationEuler", &JSTransform::_getRotationEuler);
-		 class_binding.function("setRotationEuler", &JSTransform::setRotationEuler);
-		 class_binding.function("getWorldLossyScale", &JSTransform::_getWorldLossyScale);
-		 class_binding.function("setWorldLossyScale", &JSTransform::setWorldLossyScale);
-		 class_binding.function("getWorldMatrix", &JSTransform::_getWorldMatrix);
-		 class_binding.function("setWorldMatrix", &JSTransform::setWorldMatrix);
-		 class_binding.function("getLocalMatrix", &JSTransform::_getLocalMatrix);
-		 class_binding.function("setLocalMatrix", &JSTransform::setLocalMatrix);
-		 class_binding.function("translate", &JSTransform::translate);
-		 class_binding.function("lookAt", &JSTransform::lookAt);
-		 class_binding.function("rotate", &JSTransform::rotate);
-		 class_binding.function("_setTransformFlag", &JSTransform::_setTransformFlag);
-		 class_binding.function("_getTransformFlag", &JSTransform::_getTransformFlag);
-		context.class_("conchTransform", class_binding);
-	}
 }
-//------------------------------------------------------------------------------

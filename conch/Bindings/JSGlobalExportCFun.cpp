@@ -72,9 +72,7 @@
 #include "LayaAir/2D/JSWebGLCacheAsNormalCanvas.h"
 #include "LayaAir/2D/JSWordText.h"
 #include "LayaAir/2D/JSRenderTexture2D.h"
-#include "LayaAir/3D/JSTransform.h"
 #include "LayaAir/3D/JSSubmitScene3D.h"
-#include "Bindings/LayaAir/3D/JSBounds.h"
 #include "LayaAir/3D/JSUniformBufferObject.h"
 #include "2D/FontDescriptionParser.h"
 #include <utils/ColorParser.h>
@@ -572,8 +570,6 @@ namespace laya
 
 
         JSSubmitScene3D::exportJS(context);
-        JSBounds::exportJS(context);
-        JSTransform::exportJS(context);
         RenderBindings::exportJS(context);    
         //以下是全局函数
         //------------------------------------------------------------------------------
