@@ -56,7 +56,7 @@ void JCAudioWavPlayer::createOpenALSource()
         m_pOpenALSource[m_nALCount + i]->m_bPlaying = false;
         m_pOpenALSource[m_nALCount + i]->m_pAudio = NULL;
     }
-    LOGI("createOpenALSource current num=%d",m_pOpenALSource.size());
+    LOGI("createOpenALSource current num=%d",(int)m_pOpenALSource.size());
 }
 //------------------------------------------------------------------------------
 JCAudioWavPlayer::~JCAudioWavPlayer()
