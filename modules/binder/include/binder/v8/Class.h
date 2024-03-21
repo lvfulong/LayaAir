@@ -106,7 +106,16 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
         auto it = objects_.begin();
         for (; it != objects_.end(); it++)
         {
-            removeObject((ClassType *)it->first, it->second.callDestructor);
+            v8::HandleScope scope(isolate_);
+
+            if (it->second.callDestructor)
+            {
+                internal::raw_destructor((ClassType*)it->first);
+            }
+
+            it->second.pobj.ClearWeak();
+            it->second.pobj.Reset();
+
         }
         objects_.clear();
 
