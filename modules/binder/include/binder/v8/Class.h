@@ -16,7 +16,10 @@ namespace laya
 {
 namespace internal
 {
-
+template <typename ClassType> void raw_destructor(ClassType* pointer)
+{
+    delete pointer;
+}
 extern void addDeinitializer(std::function<void()> func);
 extern void runDeinitializers();
 template <typename T> struct remove_class;
@@ -444,13 +447,6 @@ template <typename ClassType> class class_
         return *this;
     }
 };
-namespace internal
-{
-template <typename ClassType> void raw_destructor(ClassType *pointer)
-{
-    delete pointer;
-}
-} // namespace internal
 template <typename ClassType> void ClassRegistry<ClassType>::removeObject(ClassType *objectPointer, bool callDestructor)
 {
     auto it = objects_.find((void *)objectPointer);
