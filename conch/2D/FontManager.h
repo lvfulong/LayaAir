@@ -6,6 +6,7 @@
 
 namespace laya
 {
+class NativeInfoImpl;
 class FontManager
 {
   public:
@@ -21,6 +22,7 @@ class FontManager
 
   public:
     std::unordered_map<std::string, std::string> m_fontName2RealName;
+    std::unordered_map<std::string, NativeInfoImpl*> m_fontName2NativeInfoImpl;
 };
 } // namespace laya
 #endif

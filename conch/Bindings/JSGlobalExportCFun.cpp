@@ -622,7 +622,7 @@ namespace laya
 #endif
 	}
     void JSGlobalDisExportC() {
-        FontManager::deleteInstance();
+        //FontManager::deleteInstance();
         delete JSLayaGL::getInstance();
 
         //delete JSTextMemoryCanvas::getInstance();

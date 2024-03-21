@@ -15,7 +15,15 @@ extern std::string gRedistPath;
 namespace laya
 {
 #ifdef ANDROID
+class NativeInfoImpl
+{
+    
+};
 #elif __APPLE__
+struct NativeInfoImpl
+{
+    CGFontRef m_registerfont;
+};
 extern std::vector<std::string> getAllSystemFontsIOS();
 static bool registerFontIOS(const std::string &family, CGDataProviderRef fontDataProvider)
 {
@@ -41,7 +49,15 @@ static bool registerFontIOS(const std::string &family, CGDataProviderRef fontDat
     }
 
     CFErrorRef error = nullptr;
-
+    auto it = FontManager::getInstance()->m_fontName2NativeInfoImpl.find(family);
+    if (it != FontManager::getInstance()->m_fontName2NativeInfoImpl.end())
+    {
+        CTFontManagerUnregisterGraphicsFont(it->second->m_registerfont, &error);
+        CGFontRelease(it->second->m_registerfont);
+        delete it->second;
+        FontManager::getInstance()->m_fontName2NativeInfoImpl.erase(it);
+    }
+    
     CTFontManagerRegisterGraphicsFont(registerfont, &error);
 
     if (error)
@@ -49,14 +65,16 @@ static bool registerFontIOS(const std::string &family, CGDataProviderRef fontDat
         CFStringRef errorDescription = CFErrorCopyDescription(error);
         LOGE("registerFont error: %s", errorDescription);
         CFRelease(errorDescription);
-
         CTFontManagerUnregisterGraphicsFont(registerfont, &error);
-
-        CTFontManagerRegisterGraphicsFont(registerfont, &error);
+        //CTFontManagerRegisterGraphicsFont(registerfont, &error);
         return false;
     }
-    CGFontRelease(registerfont);
+
+    
     FontManager::getInstance()->m_fontName2RealName.insert(std::make_pair(family, strRealFontName));
+    NativeInfoImpl* info = new NativeInfoImpl;
+    info->m_registerfont = registerfont;
+    FontManager::getInstance()->m_fontName2NativeInfoImpl.insert(std::make_pair(family, info));
     LOGE("registerFont succeed: %s", family.c_str());
     return true;
 }
@@ -70,6 +88,18 @@ FontManager::FontManager(){
 } FontManager::~FontManager()
 {
     m_fontName2RealName.clear();
+#ifdef ANDROID
+#elif __APPLE__
+    CFErrorRef error = nullptr;
+    std::unordered_map<std::string, NativeInfoImpl*>::iterator it = m_fontName2NativeInfoImpl.begin();
+    for (; it != m_fontName2NativeInfoImpl.end(); it++)
+    {
+        CTFontManagerUnregisterGraphicsFont(it->second->m_registerfont, &error);
+        CGFontRelease(it->second->m_registerfont);
+        delete it->second;
+    }
+#else
+#endif
 }
 FontManager *FontManager::getInstance()
 {
