@@ -12,7 +12,7 @@ namespace laya
 	GLESRenderContext2D::~GLESRenderContext2D() {
 
 	}
-	void GLESRenderContext2D::setRenderTarget(GLESInternalRT* renderRT, bool clear, Color &clearColor)
+	void GLESRenderContext2D::setRenderTarget(GLESInternalRT* renderRT, bool clear, const Color &clearColor)
 	{
 		destRT = renderRT;
 		if (destRT ) {

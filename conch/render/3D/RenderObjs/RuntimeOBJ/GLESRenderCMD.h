@@ -118,19 +118,19 @@ namespace laya
         void setBool(bool value) {
             _value = value;
         };
-        void setVector2(Vector2& value) {
+        void setVector2(const Vector2& value) {
             _value = value;
         };
-        void setVector3(Vector3& value) {
+        void setVector3(const Vector3& value) {
             _value = value;
         };
-        void setVector(Vector4& value) {
+        void setVector(const Vector4& value) {
             _value = value;
         };
-        void setMatrix4x4(Matrix4x4& value) {
+        void setMatrix4x4(const Matrix4x4& value) {
             _value = value;
         };
-        void setColor(Color& value) {
+        void setColor(const Color& value) {
             _value = value;
         }
         void setTexture2D(GLESInternalTex* value) {

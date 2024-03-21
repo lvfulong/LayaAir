@@ -73,7 +73,7 @@ class GLESEngine
     void scissor(int x, int y, int width, int height);
     void scissorTest(bool value);
     void colorMask(bool r, bool g, bool b, bool a);
-    void clearRenderTexture(uint32_t clearFlag, Color *clearcolor, float clearDepth);
+    void clearRenderTexture(uint32_t clearFlag, const Color *clearcolor, float clearDepth);
     int propertyNameToID(const char *name);
     const std::string &propertyIDToName(int id);
     void getNamesByDefineDataJS(RTDefineDatas* defineData, JSValueAsParam out);

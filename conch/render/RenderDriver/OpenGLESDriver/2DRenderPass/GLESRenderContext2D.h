@@ -11,7 +11,7 @@ namespace laya
 	public:
 		GLESRenderContext2D();
 		~GLESRenderContext2D();
-		void setRenderTarget(GLESInternalRT* renderRT, bool clear, Color  &clearColor);
+		void setRenderTarget(GLESInternalRT* renderRT, bool clear, const Color &clearColor);
 		void setOffscreenView(uint32_t width, uint32_t height);
 		void drawRenderElementOne(GLESRenderElement2D* node);
 
