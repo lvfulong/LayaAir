@@ -33,6 +33,7 @@ namespace laya
 	    m_sLocalFileName = "";
 	    m_bDownloaded = false;
         m_pOpenALInfo = NULL;
+		m_fDuration = std::numeric_limits<double>::quiet_NaN();
 	    AdjustAmountOfExternalAllocatedMemory( 534 );
 	    JCMemorySurvey::GetInstance()->newClass( "audio",534,this );
 	    m_CallbackRef.reset(new int(1));
@@ -256,8 +257,6 @@ namespace laya
 	    m_bDownloaded = true;
        // std::weak_ptr<int> cbref(m_CallbackRef);
         //std::function<void(void)> pFunction = std::bind(&JSAudio::onCanplayCallJSFunction,this, callbackref);
-        auto pFunction = std::bind(&JSAudio::onCanplayCallJSFunction, this, callbackref);
-        postToJS( pFunction );
 		if( m_nType == EXT_MP3)
 	    {
             if (g_kSystemConfig.m_bUseDcc)
@@ -297,6 +296,8 @@ namespace laya
                 m_sLocalFileName = pFileResWX->m_strLocalTempCachePath;
             }
 	    }
+
+		JCWaveInfo* info=nullptr;
 	    /*if( m_nType == EXT_MP3 && m_bIsBackgroundMusic)
 	    {
 		    if( m_bAutoPlay || m_bNeedHandlePlay == true )
@@ -305,26 +306,24 @@ namespace laya
 			    play();
 		    }
 	    }
-		else */if (m_nType == EXT_MP3)
-		{
-			JCAudioManager::GetInstance()->AddWaveInfoMp3(m_sSrc, m_sLocalFileName.c_str(), this);
-			if (m_bAutoPlay || m_bNeedHandlePlay == true)
-			{
-				m_bNeedHandlePlay = false;
-				if(!m_bShouldStop)
-					play();
-			}
-		}
-	    else
-	    {
-		    JCAudioManager::GetInstance()->AddWaveInfo( m_sSrc,p_buf,(int)(p_buf.m_nLen),this, m_nType == EXT_OGG);
-		    if( m_bAutoPlay || m_bNeedHandlePlay == true )
-		    {
+		else */
+		if (m_nType == EXT_MP3){
+			info = JCAudioManager::GetInstance()->AddWaveInfoMp3(m_sSrc, m_sLocalFileName.c_str(), this);
+		}else{
+		    info = JCAudioManager::GetInstance()->AddWaveInfo( m_sSrc,p_buf,(int)(p_buf.m_nLen),this, m_nType == EXT_OGG);
+	    }
+		if(info){
+			m_fDuration = info->m_fDuration;
+
+			auto pFunction = std::bind(&JSAudio::onCanplayCallJSFunction, this, callbackref);
+			postToJS( pFunction );
+
+		    if( m_bAutoPlay || m_bNeedHandlePlay == true ){
 			    m_bNeedHandlePlay = false;
 				if(!m_bShouldStop)
 					play();
 		    }
-	    }
+		}
 	    return true;
     }
     //------------------------------------------------------------------------------
