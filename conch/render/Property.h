@@ -163,6 +163,18 @@ public:
     static void __init__();
 };
 
+class RenderableSprite3D
+{
+public:
+    //lightmap
+    static uint32_t LIGHTMAPSCALEOFFSET;
+    static uint32_t LIGHTMAP;
+    static uint32_t LIGHTMAP_DIRECTION;
+    static RTShaderDefine SAHDERDEFINE_LIGHTMAP;
+    static RTShaderDefine SHADERDEFINE_RECEIVE_SHADOW;
+    static RTShaderDefine SHADERDEFINE_LIGHTMAP_DIRECTIONAL;
+    static void __init__();
+};
 
 } // namespace laya
 #endif
