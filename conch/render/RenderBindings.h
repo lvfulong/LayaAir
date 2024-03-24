@@ -537,44 +537,35 @@ class RenderBindings
         {
             class_<RTBaseRenderNode> class_binding;
             class_binding.constructor<>();
-            class_binding.property("_reflectionMode", &RTBaseRenderNode::getReflectionMode,
-                                   &RTBaseRenderNode::setReflectionMode);
-            class_binding.property("_lightProbUpdateMark", &RTBaseRenderNode::getLightProbUpdateMark,
-                                   &RTBaseRenderNode::setLightProbUpdateMark);
-            class_binding.property("_irradianceMode", &RTBaseRenderNode::getIrradianceMode,
-                                   &RTBaseRenderNode::setIrradianceMode);
-            class_binding.property("_probeReflectionUpdateMark", &RTBaseRenderNode::getProbeReflectionUpdateMark,
-                                   &RTBaseRenderNode::setProbeReflectionUpdateMark);
-            class_binding.property("_lightmapIndex", &RTBaseRenderNode::getLightmapIndex,
-                                   &RTBaseRenderNode::setLightmapIndex);
             class_binding.function("_applyLightProb", &RTBaseRenderNode::_applyLightProb);
             class_binding.function("_applyReflection", &RTBaseRenderNode::_applyReflection);
             class_binding.function("setRenderElements", &RTBaseRenderNode::setRenderElements);
             class_binding.function("setCommonUniformMap", &RTBaseRenderNode::setCommonUniformMap);
             class_binding.function("setLightmapScaleOffset", &RTBaseRenderNode::setLightmapScaleOffset);
-            class_binding.function("setWorldParams", &RTBaseRenderNode::setWorldParams);
             class_binding.function("destroy", &RTBaseRenderNode::destroy);
             class_binding.function("setCalculateBoundingBox", &RTBaseRenderNode::setCalculateBoundingBox);
             class_binding.function("setRenderUpdatePre", &RTBaseRenderNode::setRenderUpdatePre);
             class_binding.function("setShaderData", &RTBaseRenderNode::setShaderData);
             class_binding.function("setBaseGeometryBounds", &RTBaseRenderNode::setBaseGeometryBounds);
-            class_binding.property("_bounds", &RTBaseRenderNode::getBounds, &RTBaseRenderNode::setBounds);
-            class_binding.property("_boundsChange", &RTBaseRenderNode::getBoundsChange,
-                                   &RTBaseRenderNode::setBoundsChange);
-            class_binding.property("_customCullResoult", &RTBaseRenderNode::getCustomCullResoult,
-                                   &RTBaseRenderNode::setCustomCullResoult);
-            class_binding.property("_customCull", &RTBaseRenderNode::getCustomCull, &RTBaseRenderNode::setCustomCull);
-            class_binding.property("_staticMask", &RTBaseRenderNode::getStaticMask, &RTBaseRenderNode::setStaticMask);
-            class_binding.property("_layer", &RTBaseRenderNode::getLayer, &RTBaseRenderNode::setLayer);
-            class_binding.property("_renderbitFlag", &RTBaseRenderNode::getRenderbitFlag,
-                                   &RTBaseRenderNode::setRenderbitFlag);
-            class_binding.property("_distanceForSort", &RTBaseRenderNode::getDistanceForSort,
-                                   &RTBaseRenderNode::setDistanceForSort);
-            class_binding.property("_sortingFudge", &RTBaseRenderNode::getSortingFudge,
-                                   &RTBaseRenderNode::setSortingFudge);
-            class_binding.property("_castShadow", &RTBaseRenderNode::getCastShadow, &RTBaseRenderNode::setCastShadow);
-            class_binding.property("_enable", &RTBaseRenderNode::getEnable, &RTBaseRenderNode::setEnable);
             class_binding.function("setTransform", &RTBaseRenderNode::setTransform);
+            class_binding.function("setLightmap", &RTBaseRenderNode::setLightmap);
+            class_binding.function("setProbeReflection", &RTBaseRenderNode::setProbeReflection);
+            class_binding.property("_bounds", &RTBaseRenderNode::getBounds, &RTBaseRenderNode::setBounds);
+            class_binding.property_field("renderNodeType", &RTBaseRenderNode::renderNodeType);
+            class_binding.property_field("distanceForSort", &RTBaseRenderNode::distanceForSort);
+            class_binding.property_field("sortingFudge", &RTBaseRenderNode::sortingFudge);
+            class_binding.property_field("castShadow", &RTBaseRenderNode::castShadow);
+            class_binding.property_field("receiveShadow", &RTBaseRenderNode::receiveShadow);
+            class_binding.property_field("enable", &RTBaseRenderNode::enable);
+            class_binding.property_field("renderbitFlag", &RTBaseRenderNode::renderbitFlag);
+            class_binding.property_field("layer", &RTBaseRenderNode::layer);
+            class_binding.property_field("boundsChange", &RTBaseRenderNode::boundsChange);
+            class_binding.property_field("staticMask", &RTBaseRenderNode::staticMask);
+            class_binding.property_field("lightmapIndex", &RTBaseRenderNode::lightmapIndex);
+            class_binding.property_field("probeReflectionUpdateMark", &RTBaseRenderNode::probeReflectionUpdateMark);
+            class_binding.property_field("reflectionMode", &RTBaseRenderNode::reflectionMode);
+            class_binding.property_field("lightProbUpdateMark", &RTBaseRenderNode::lightProbUpdateMark);
+            class_binding.property_field("irradianceMode", &RTBaseRenderNode::irradianceMode);
             context.class_("conchRTBaseRenderNode", class_binding);
         }
         {

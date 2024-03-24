@@ -214,4 +214,22 @@ namespace laya
         ShaderDefines2D::INVERTY = LayaGL::m_pWebglEngine->getDefineByName("INVERTY");
     }
 
+    //RenderableSprite3D
+    uint32_t RenderableSprite3D::LIGHTMAPSCALEOFFSET;
+    uint32_t RenderableSprite3D::LIGHTMAP;
+    uint32_t RenderableSprite3D::LIGHTMAP_DIRECTION;
+
+    RTShaderDefine RenderableSprite3D::SAHDERDEFINE_LIGHTMAP;
+    RTShaderDefine RenderableSprite3D::SHADERDEFINE_RECEIVE_SHADOW;
+    RTShaderDefine RenderableSprite3D::SHADERDEFINE_LIGHTMAP_DIRECTIONAL;
+    void RenderableSprite3D::__init__(){
+        RenderableSprite3D::SHADERDEFINE_RECEIVE_SHADOW =  LayaGL::m_pWebglEngine->getDefineByName("RECEIVESHADOW");
+        RenderableSprite3D::SAHDERDEFINE_LIGHTMAP =  LayaGL::m_pWebglEngine->getDefineByName("LIGHTMAP");
+        RenderableSprite3D::SHADERDEFINE_LIGHTMAP_DIRECTIONAL =  LayaGL::m_pWebglEngine->getDefineByName("LIGHTMAP_DIRECTIONAL");
+
+        RenderableSprite3D::LIGHTMAPSCALEOFFSET =  LayaGL::m_pWebglEngine->propertyNameToID("u_LightmapScaleOffset");
+        RenderableSprite3D::LIGHTMAP =  LayaGL::m_pWebglEngine->propertyNameToID("u_LightMap");
+        RenderableSprite3D::LIGHTMAP_DIRECTION =  LayaGL::m_pWebglEngine->propertyNameToID("u_LightMapDirection");
+    }
+
 }; // namespace laya

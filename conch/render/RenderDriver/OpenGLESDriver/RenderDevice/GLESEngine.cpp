@@ -42,6 +42,7 @@ GLESEngine::GLESEngine(WebGLConfig config, WebGLMode webglMode)
         Sprite3DProperty::__init__();
         Sprite3DRenderDeclarationProperty::__init__();
         ShaderDefines2D::__init__();
+        RenderableSprite3D::__init__();
     }
     std::vector<std::string> names;
     switch (webglMode)

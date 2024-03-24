@@ -2,14 +2,20 @@
 #include "Bindings/LayaAir/3D/JSTransform.h"
 #include <render/Property.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
-
+#include "render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTLightmapData.h"
+#include "render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTModuleData.h"
+#include "render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTVolumetricGI.h"
+#include "render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTReflectionProb.h"
 namespace laya
 {
+    RTBaseRenderNode::RTBaseRenderNode(){
+        lightmapScaleOffset = Vector4(1, 0, 0, 0);
+        worldParams = Vector4(0, 0, 0, 0);
+    }
 
 bool RTBaseRenderNode::shadowCullPass()
 {
-    // todo
-    return true;
+    return castShadow&& enable&& renderbitFlag == 0;
 }
 JSBounds *RTBaseRenderNode::getBounds()
 {
@@ -44,59 +50,57 @@ void RTBaseRenderNode::setShaderData(GLESShaderData *data)
 {
     this->shaderData = data;
 }
-void RTBaseRenderNode::_applyReflection()
-{
-    // TODO
-    // if (!this.probeReflection || this.reflectionMode == ReflectionProbeMode.off) return;
-    // if (this.probeReflection.updateMark != this.probeReflectionUpdateMark) {
-    //    this.probeReflectionUpdateMark = this.probeReflection.updateMark;
-    //    this.probeReflection.applyRenderData(this.shaderData);
-    //}
-}
 
 void RTBaseRenderNode::_applyLightmap()
 {
-    // TODO
-    /* var lightMaps : Lightmap[] = this._scene.lightmaps;
-     var shaderValues : ShaderData = this._shaderValues;
-     var lightmapIndex : number = this._lightmapIndex;
-     if (lightmapIndex >= 0 && lightmapIndex < lightMaps.length) {
-         var lightMap : Lightmap = lightMaps[lightmapIndex];
-         shaderValues.setTexture(RenderableSprite3DProperty::LIGHTMAP, lightMap.lightmapColor);
-         shaderValues.addDefine(RenderableSprite3DProperty::SAHDERDEFINE_LIGHTMAP);
-         if (lightMap.lightmapDirection) {
-             shaderValues.setTexture(RenderableSprite3DProperty::LIGHTMAP_DIRECTION, lightMap.lightmapDirection);
-             shaderValues.addDefine(RenderableSprite3DProperty::SHADERDEFINE_LIGHTMAP_DIRECTIONAL);
-         }
-         else {
-             shaderValues.removeDefine(RenderableSprite3DParoperty::SHADERDEFINE_LIGHTMAP_DIRECTIONAL);
-         }
-     }
-     else {
-         shaderValues.removeDefine(RenderableSprite3DProperty::SAHDERDEFINE_LIGHTMAP);
-         shaderValues.removeDefine(RenderableSprite3DProperty::SHADERDEFINE_LIGHTMAP_DIRECTIONAL);
-     }*/
+    if (lightmap!=nullptr) {
+        shaderData->setVector(RenderableSprite3D::LIGHTMAPSCALEOFFSET, lightmapScaleOffset);
+        shaderData->setInternalTexture(RenderableSprite3D::LIGHTMAP, lightmap->lightmapColor);
+        shaderData->addDefine(RenderableSprite3D::SAHDERDEFINE_LIGHTMAP);
+        if (lightmap->lightmapDirection!=nullptr) {
+            shaderData->setInternalTexture(RenderableSprite3D::LIGHTMAP_DIRECTION, lightmap->lightmapDirection);
+            shaderData->addDefine(RenderableSprite3D::SHADERDEFINE_LIGHTMAP_DIRECTIONAL);
+        }
+        else {
+            shaderData->removeDefine(RenderableSprite3D::SHADERDEFINE_LIGHTMAP_DIRECTIONAL);
+        }
+    }
+    else {
+        shaderData->removeDefine(RenderableSprite3D::SAHDERDEFINE_LIGHTMAP);
+        shaderData->removeDefine(RenderableSprite3D::SHADERDEFINE_LIGHTMAP_DIRECTIONAL);
+    }
 }
 void RTBaseRenderNode::_renderUpdate(GLESRenderContext3D *context)
 {
-    // if (this->lightmapDirtyFlag) {
-    //     (this->lightmapDirtyFlag == context->sceneModuleData ? .lightmapDirtyFlag) && this._applyLightMapParams();
-    // }
-    // this->_applyReflection();
-    // this->_applyLightProb();
-    auto trans = this->transform;
-    this->shaderData->setMatrix4x4(Sprite3DProperty::WORLDMATRIX, trans->getWorldMatrix());
-    this->worldParams.x = trans->getFrontFaceValue();
-    this->shaderData->setVector(Sprite3DProperty::WORLDINVERTFRONT, this->worldParams);
+    if (context->sceneNodeData->lightmapDirtyFlag != lightmapDirtyFlag) {
+        _applyLightmap();
+        lightmapDirtyFlag = context->sceneNodeData->lightmapDirtyFlag;
+    }
+    _applyReflection();
+    _applyLightProb();
+    this->shaderData->setMatrix4x4(Sprite3DProperty::WORLDMATRIX, transform->getWorldMatrix());//TODO 不变不用设置优化
+    if (this->worldParams.x != transform->getFrontFaceValue()) {
+        this->worldParams.x = transform->getFrontFaceValue();
+        this->shaderData->setVector(Sprite3DProperty::WORLDINVERTFRONT, this->worldParams);
+    } 
 }
+
 void RTBaseRenderNode::_applyLightProb()
 {
-    // TODO
-    // if (this.lightmapIndex >= 0 || !this.volumetricGI) return;
-    // if (this.volumetricGI.updateMark != this.lightProbUpdateMark) {
-    //    this.lightProbUpdateMark = this.volumetricGI.updateMark;
-    //    this.volumetricGI.applyRenderData(this.shaderData);
-    //}
+    if (lightmapIndex >= 0 || !volumetricGI) return;
+    if (volumetricGI->updateMark != lightProbUpdateMark) {
+        lightProbUpdateMark = volumetricGI->updateMark;
+        volumetricGI->applyRenderData(shaderData);
+    }
+}
+
+void RTBaseRenderNode::_applyReflection()
+{
+    if (probeReflection==nullptr || reflectionMode == 0) return;
+    if (probeReflection->updateMark != probeReflectionUpdateMark) {
+        probeReflectionUpdateMark = probeReflection->updateMark;
+        probeReflection->applyRenderData(shaderData);
+    }
 }
 void RTBaseRenderNode::_renderUpdatePre(GLESRenderContext3D *context3D)
 {
@@ -117,7 +121,6 @@ bool RTBaseRenderNode::_needRender(BoundFrustum *pBoundFrustum)
     if (pBoundFrustum)
         return pBoundFrustum->intersects(getBounds()->_getBoundBox());
     else
-
         return true;
 }
 void RTBaseRenderNode::setRenderUpdatePre(JSValueAsParam function)
