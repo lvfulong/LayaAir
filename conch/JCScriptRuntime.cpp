@@ -447,6 +447,13 @@ namespace laya
         ((int*)pBuffer)[0] = 1;
         JCLayaGLDispatch::dispatchAllCmds(m_pRenderCmd);
         m_pRenderCmd->clearData();
+
+        JCArrayBufferManager::ArrayBufferContent* frmcnt = JCConch::s_pScriptRuntime->m_pArrayBufferManager->getArrayBuffer(JSLayaGL::getInstance()->m_nFrameAndSyncCountABListID);    
+        if(frmcnt){
+            char* frmCntBuff = frmcnt->m_pBuffer;
+            ((int*)frmCntBuff)[0] ++;
+        }
+        
     }
     void JCScriptRuntime::clearCmdBuffer()
     {
