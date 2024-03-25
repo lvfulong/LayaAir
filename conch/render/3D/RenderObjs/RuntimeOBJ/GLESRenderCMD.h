@@ -47,9 +47,11 @@ namespace laya
         void setViewport(const Viewport& viewport) { _viewport = viewport; };
         void setScissor(const Vector4& scissor) { _scissor = scissor; };
         void setDest(GLESInternalRT* dest) { _dest = dest; };
-        void setSource(GLESInternalTex* source) { _source = source; };
-        void setSourceTexelSize(const Vector4& v4) { _sourceTexelSize = v4; };
-        void setOffsetScale(const Vector4& v4) { _offsetScale = v4; };
+        void setSource(GLESInternalTex* source);
+  
+        void setOffsetScale(const Vector4& v4) {
+            _offsetScale = v4; 
+        };
         void setRenderElement(GLESRenderElement3D* element) { _element = element; };
     private:
         Vector4 _sourceTexelSize;

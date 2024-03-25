@@ -98,27 +98,29 @@ void RTShaderPass::_resizeCacheShaderMap(void *cacheMap, uint32_t hierarchy, uin
     uint32_t end = _cacheShaderHierarchy - 1;
     if (hierarchy == end)
     {
-        std::unordered_map<uint32_t, GLESShaderInstance *> shaderinstanceMap =
-            *(std::unordered_map<uint32_t, GLESShaderInstance *> *)cacheMap;
-        for (std::pair<uint32_t, GLESShaderInstance *> kv : shaderinstanceMap)
-        {
-            GLESShaderInstance *shader = kv.second;
+        std::unordered_map<uint32_t, void *>* shaderinstanceMap =
+            (std::unordered_map<uint32_t, void *> *)cacheMap;
+        std::unordered_map<uint32_t, void*> keyvalue = *shaderinstanceMap;
+        for (auto kv = keyvalue.begin(); kv != keyvalue.end(); ++kv) {
+            GLESShaderInstance* shader = (GLESShaderInstance*)kv->second;
+            uint32_t key = kv->first;
             uint32_t i = 0;
             uint32_t n = resizeLength - end;
-            std::unordered_map<uint32_t, void *> *cacheMapdata = (std::unordered_map<uint32_t, void *> *)cacheMap;
-            cacheMapdata->erase(kv.first);
+            std::unordered_map<uint32_t, void*>* cacheMapdata = (std::unordered_map<uint32_t, void*> *)cacheMap;
+            cacheMapdata->erase(kv->first);
             for (; i < n; i++)
             {
                 if (i == n - 1)
                 {
-                    std::pair<uint32_t, GLESShaderInstance *> shaderpart(0, shader);
+                    std::pair<uint32_t, GLESShaderInstance*> shaderpart(0, shader);
                     cacheMapdata->insert(shaderpart);
                 }
                 else
                 {
-                    uint32_t partkey = i == 0 ? kv.first : 0;
-                    std::pair<uint32_t, std::map<uint32_t, void *> *> mappart(partkey,
-                                                                              new std::map<uint32_t, void *>());
+                    uint32_t partkey = (i == 0) ? key : 0;
+                    std::pair<uint32_t, std::unordered_map<uint32_t, void*>*> mappart(partkey, new std::unordered_map<uint32_t, void*>());
+                    cacheMapdata->insert(mappart);
+                    cacheMapdata = (std::unordered_map<uint32_t, void*> *) mappart.second;
                 }
             }
         }

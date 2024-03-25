@@ -1,6 +1,7 @@
 #include "GLESRenderCMD.h"
 #include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderElement3D.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalTex.h"
 #include "Render3DNode/RTBaseRenderNode.h"
 #include <render/Property.h>
 namespace laya{
@@ -70,6 +71,13 @@ namespace laya{
 		context->setScissor(_scissor);
 		context->setRenderTarget(_dest);
 		context->drawRenderElementOne(_element);
+	}
+
+	void GLESBlitQuadCMDData::setSource(GLESInternalTex* source)
+	{
+		_source = source;
+
+		_sourceTexelSize.setValue(1.0 / _source->m_width, 1.0 / _source->m_height, _source->m_width, _source->m_height);
 	}
 
 

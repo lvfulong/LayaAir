@@ -836,7 +836,6 @@ class RenderBindings
             class_binding.function("setViewport", &GLESBlitQuadCMDData::setViewport);
             class_binding.function("setScissor", &GLESBlitQuadCMDData::setScissor);
             class_binding.function("setSource", &GLESBlitQuadCMDData::setSource);
-            class_binding.function("setSourceTexelSize", &GLESBlitQuadCMDData::setSourceTexelSize);
             class_binding.function("setOffsetScale", &GLESBlitQuadCMDData::setOffsetScale);
             class_binding.function("setRenderElement", &GLESBlitQuadCMDData::setRenderElement);
             context.class_("conchGLESBlitQuadCMDData", class_binding);
