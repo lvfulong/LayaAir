@@ -558,6 +558,9 @@ namespace laya
 		bool hasAssets = hasAssetsFt || hasAssetsID ;
 
 		if(hasAssets && (cachedAssetsID.length()==0 || assetsidLen != cachedAssetsID.length()|| strcmp(assetsid, cachedAssetsID.c_str())!=0) ){
+			//清理文件缓存
+			clearAllCachedFile();
+			
 			//先获取资源中的filteTable
 			char* pFileTableBuf=NULL;
 			int nFileTableLen = 0;
