@@ -68,6 +68,8 @@ class RTReflectionProb
     {
         // todo
     }
+
+    void applyRenderData(GLESShaderData* shaderData);
 };
 } // namespace laya
 #endif

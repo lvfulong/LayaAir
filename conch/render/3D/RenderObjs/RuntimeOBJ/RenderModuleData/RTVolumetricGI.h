@@ -13,9 +13,11 @@ class JSBounds;
 class RTVolumetricGI
 {
   public:
-      GLESInternalTex* irradiance;
-      GLESInternalTex* distance;
-      JSBounds* bound;
+      RTVolumetricGI() {};
+      ~RTVolumetricGI() {};
+      GLESInternalTex* irradiance = nullptr;
+      GLESInternalTex* distance = nullptr;
+      JSBounds* bound = nullptr;
       Real intensity;
       uint32_t  updateMark;
       Vector3 probeCounts;
@@ -38,6 +40,8 @@ class RTVolumetricGI
       {
           probeStep = value;
       }
+
+      void applyRenderData(GLESShaderData* shaderData);
 };
 } // namespace laya
 #endif

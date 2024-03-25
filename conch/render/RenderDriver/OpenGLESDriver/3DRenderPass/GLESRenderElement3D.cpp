@@ -130,7 +130,6 @@ void GLESRenderElement3D::_compileShader(GLESRenderContext3D *context)
         }
         comDef->addDefineDatas(materialShaderData->_defineDatas);
 
-
         RTShaderPass::CacheShaderItem* item = pass->getCacheShader(comDef);
         GLESShaderInstance* shader;
         if (item)

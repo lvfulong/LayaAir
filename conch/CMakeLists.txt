@@ -158,7 +158,10 @@ list(APPEND CONCH_SRC
 	render/3D/design/renderEnum/MemoryDataType.h
 	render/3D/design/renderEnum/RenderStatInfo.h
 	render/3D/design/renderShader/ShaderVariable.h
-
+	render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTVolumetricGI.h
+	render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTVolumetricGI.cpp
+	render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTReflectionProb.h
+	render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTReflectionProb.cpp
 	render/3D/temp/RenderStateContext.h
 	render/3D/temp/RenderStateContext.cpp
 	render/3D/temp/ObjectBase.h

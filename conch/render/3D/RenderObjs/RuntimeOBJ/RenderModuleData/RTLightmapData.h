@@ -12,8 +12,10 @@ namespace laya
 class RTLightmapData
 {
   public:
-	  GLESInternalTex* lightmapColor;// InternalTexture;
-	  GLESInternalTex* lightmapDirection;// InternalTexture;
+	  RTLightmapData() {};
+	  ~RTLightmapData() {};
+	  GLESInternalTex* lightmapColor = nullptr;// InternalTexture;
+	  GLESInternalTex* lightmapDirection = nullptr;// InternalTexture;
 
 	  void setLightmapColor(GLESInternalTex* value) { lightmapColor = value; }
 	  void setLightmapDirection(GLESInternalTex* value) { lightmapDirection = value; }
