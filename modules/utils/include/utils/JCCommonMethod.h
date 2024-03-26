@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include <vector>
 #include <string>
-
+#include <cstdint>
 #define MAX_CHARACTER_SIZE    8 
 
 namespace laya
