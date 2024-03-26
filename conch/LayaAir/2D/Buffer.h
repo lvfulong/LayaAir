@@ -6,6 +6,7 @@
 #include <render/3D/design/renderEnum/BufferTargetType.h>
 #include <iostream>
 #include <vector>
+#include <cstdint>
 
 namespace laya
 {
