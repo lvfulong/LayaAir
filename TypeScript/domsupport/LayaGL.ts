@@ -4755,6 +4755,10 @@ class LayaGLContext
     {
         this._currentCmdEncoder.texStorage2D(target, levels, internalformat, width, height);
     }
+    public texStorage3D(target:any, levels:any, internalformat:any, width:number, height:number, depth:number):void
+    {
+        this._currentCmdEncoder.texStorage3D(target, levels, internalformat, width, height, depth);
+    }
     public texParameterf(target:any, pname:any, param:any):void
     {
         this._currentCmdEncoder.texParameterf(target, pname, param);

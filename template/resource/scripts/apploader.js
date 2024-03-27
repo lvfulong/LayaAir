@@ -5017,6 +5017,9 @@ class LayaGLContext {
     texStorage2D(target, levels, internalformat, width, height) {
         this._currentCmdEncoder.texStorage2D(target, levels, internalformat, width, height);
     }
+    texStorage3D(target, levels, internalformat, width, height, depth) {
+        this._currentCmdEncoder.texStorage3D(target, levels, internalformat, width, height, depth);
+    }
     texParameterf(target, pname, param) {
         this._currentCmdEncoder.texParameterf(target, pname, param);
     }
@@ -6043,6 +6046,9 @@ class HTMLMediaElement extends HTMLElement {
     }
     get muted() {
         return this._nativeObj.muted;
+    }
+    get duration() {
+        return this._nativeObj.duration;
     }
 }
 class HTMLMetaElement extends HTMLElement {
