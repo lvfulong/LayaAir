@@ -149,8 +149,8 @@ void App::run(const Config &config, size_t width, size_t height, int nJSDebugMod
                 {
                     inputEvent e;
                     e.nTouchType = e.nType = E_ONMOUSEUP;
-                    e.posX = x;
-                    e.posY = y;
+                    e.posX = event.button.x;
+                    e.posY = event.button.y;
                     strncpy(e.type, "mouseup", 256);
 
                     JCConch::s_pConch->dispatchInputEvent(e);
@@ -159,8 +159,8 @@ void App::run(const Config &config, size_t width, size_t height, int nJSDebugMod
                 {
                     inputEvent e;
                     e.nTouchType = e.nType = E_ONRIGHTMOUSEUP;
-                    e.posX = x;
-                    e.posY = y;
+                    e.posX = event.button.x;
+                    e.posY = event.button.y;
                     strncpy(e.type, "rightmouseup", 256);
 
                     JCConch::s_pConch->dispatchInputEvent(e);
