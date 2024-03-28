@@ -181,6 +181,9 @@ namespace laya
 		LAYA_BINDBUFFERRANGE,
 		LAYA_BINDBUFFERBASE,
         LAYA_TEXSTORAGE3D,
+        LAYA_TEXSUBIMAGE3D_PIXEL,
+        LAYA_TEXSUBIMAGE3D_IMAGE,
+        LAYA_TEXSUBIMAGE3D_OFFSET,
     };
     class JCLayaGLDispatch
     {
@@ -350,6 +353,9 @@ namespace laya
 		static void _layaGL_bindBufferRange(JCCommandEncoderBuffer& layaGLCmd);
 		static void _layaGL_bindBufferBase(JCCommandEncoderBuffer& layaGLCmd);
         static void _layaGL_texStorage3D(JCCommandEncoderBuffer& layaGLCmd);
+        static void _layaGL_texImage3D_pixel(JCCommandEncoderBuffer& layaGLCmd);
+        static void _layaGL_texImage3D_image(JCCommandEncoderBuffer& layaGLCmd);
+        static void _layaGL_texImage3D_offset(JCCommandEncoderBuffer& layaGLCmd);
         //------------------------------------------------------------------------------
         //-------------------------webgl��չ����-----------------------------------------
         //------------------------------------------------------------------------------
