@@ -4,10 +4,13 @@
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESBufferState.h"
 namespace laya
 {
+uint32_t GLESRenderGeometryElement::_idCounter = 0;
 GLESRenderGeometryElement::GLESRenderGeometryElement()
     /*: ResourceBase(JCConch::s_pConchRender->m_pRenderGeometryElementManager), */
 {
     m_pDrawParams = new laya::JCSingletonList<int>(false);
+    _id = GLESRenderGeometryElement::_idCounter++;
+    
 }
 GLESRenderGeometryElement::~GLESRenderGeometryElement()
 {
@@ -35,6 +38,7 @@ void GLESRenderGeometryElement::cloneTo(GLESRenderGeometryElement* geometry)
     geometry->setInstanceCount(getInstanceCount());
     geometry->m_pDrawParams->m_vElements = m_pDrawParams->m_vElements;
     geometry->m_pDrawParams->setLength(m_pDrawParams->getLength());
+  
 }
 void GLESRenderGeometryElement::destroy()
 {

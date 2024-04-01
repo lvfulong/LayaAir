@@ -173,6 +173,7 @@ GLuint GLShaderInstance::_createShader(const std::string &str, int type)
                 std::string info = buf;
                 LOGI("GLShaderInstance _createShader %s", info.c_str());
                 delete[] buf;
+
             }
         }
     }
@@ -344,6 +345,7 @@ int GLShaderInstance::_uniform_vec2v(ShaderVariable *one, const std::any &dataIn
     laya::BufferDataInfo info = std::any_cast<laya::BufferDataInfo>(dataInfo);
     GLfloat *value = (GLfloat *)info.m_data;
     int count = info.m_lengthInBytes / (sizeof(GLfloat) * 2);
+
     /*if (count < 2)
     {
         GLfloat* uploadedValue= (GLfloat*)one->uploadedValue.data();
@@ -375,6 +377,7 @@ int GLShaderInstance::_uniform_vec3(ShaderVariable *one, const std::any &dataInf
         //memcpy(one->uploadedValue.data(), &data, sizeof(Vector3));
         return 1;
     }
+
     return 0;
 }
 

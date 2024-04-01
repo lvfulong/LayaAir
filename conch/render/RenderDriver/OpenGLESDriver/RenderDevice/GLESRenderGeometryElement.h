@@ -14,6 +14,8 @@ class GLESBufferState;
 
 class GLESRenderGeometryElement // : public ResourceBase<GLESRenderGeometryElement>
 {
+public:
+    static uint32_t _idCounter;
   public:
     GLESRenderGeometryElement();
     ~GLESRenderGeometryElement();
@@ -73,6 +75,7 @@ class GLESRenderGeometryElement // : public ResourceBase<GLESRenderGeometryEleme
     laya::JCSingletonList<int> *m_pDrawParams;
     GLenum _glindexFormat;
     GLenum _glmode;
+    uint32_t _id;
 };
 } // namespace laya
 #endif //__GLESRenderGeometryElement_H__

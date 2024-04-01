@@ -37,6 +37,7 @@ class GLRender2DContext;
 class IRender2DContext;
 class RTShaderDefine;
 class RTDefineDatas;
+struct VertexStateContext;
 class GLESEngine
 {
   public:
@@ -99,11 +100,12 @@ class GLESEngine
     int getStatisticsInfo(RenderStatisticsInfo info);
     void unbindVertexState();
     JsValue getTextureContextJS();
-
+    void regGlobalVertexDeclaration(std::string name, int32_t key, const VertexStateContext& declarations);
+    std::unordered_map<int32_t, VertexStateContext>* getGlobalVertexDeclaration(std::string name);
   private:
     bool getContext(const char *contextType);
     void _initBindBufferMap();
-
+    std::unordered_map<std::string, std::unordered_map<int32_t, VertexStateContext>*> _globalVertexDeclaration;
   private:
     friend class GLShaderInstance;
     friend class GLRender2DContext;

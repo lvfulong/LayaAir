@@ -388,8 +388,6 @@ class RenderBindings
             class_binding.constructor<WebGLConfig, WebGLMode>();
             class_binding.function("initRenderEngine", &GLESEngine::initRenderEngine);
             class_binding.function("getTextureContext", &GLESEngine::getTextureContextJS);
-            // todo class_binding.function("copySubFrameBuffertoTex", &GLESEngine::copySubFrameBuffertoTex);
-            // todo class_binding.function("getTextureContext", &GLESEngine::getTextureContext);
             class_binding.function("getParams", &GLESEngine::getParams);
             class_binding.function("getCapable", &GLESEngine::getCapable);
             class_binding.function("propertyNameToID", &GLESEngine::propertyNameToID);
@@ -397,15 +395,14 @@ class RenderBindings
             class_binding.function("getDefineByName", &GLESEngine::getDefineByName);
             class_binding.function("getNamesByDefineData", &GLESEngine::getNamesByDefineDataJS);
             class_binding.function("addTexGammaDefine", &GLESEngine::addTexGammaDefine);
-            // class_binding.function("propertyIDToName", &GLESEngine::propertyIDToName);
             class_binding.function("clearStatisticsInfo", &GLESEngine::clearStatisticsInfo);
             class_binding.function("getStatisticsInfo", &GLESEngine::getStatisticsInfo);
             class_binding.function("viewport", &GLESEngine::viewport);
             class_binding.function("scissor", &GLESEngine::scissor);
+            class_binding.function("regGlobalVertexDeclaration", &GLESEngine::regGlobalVertexDeclaration);
             context.class_("conchGLESEngine", class_binding);
         }
         {
-
             class_<GLESBufferState> class_binding;
             class_binding.constructor<>();
             class_binding.function("applyState", &GLESBufferState::applyState);
@@ -413,7 +410,6 @@ class RenderBindings
             context.class_("conchGLESBufferState", class_binding);
         }
         {
-
             class_<GLESCommandUniformMap> class_binding;
             class_binding.constructor<>();
             // class_binding.function("hasPtrID", &JSCommandUniformMap::hasPtrID);
@@ -525,6 +521,7 @@ class RenderBindings
             class_binding.property_field("canDynamicBatch", &GLESRenderElement3D::canDynamicBatch);
             class_binding.class_function("setCompileDefine", &GLESRenderElement3D::setCompileDefine);
             class_binding.property_field("materialRenderQueue", &GLESRenderElement3D::materialRenderQueue);
+            class_binding.property_field("materialId", &GLESRenderElement3D::materialId);
             context.class_("conchGLESRenderElement3D", class_binding);
         }
         {

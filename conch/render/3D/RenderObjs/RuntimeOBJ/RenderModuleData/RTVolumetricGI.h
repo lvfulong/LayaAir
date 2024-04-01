@@ -12,8 +12,10 @@ namespace laya
 class JSBounds;
 class RTVolumetricGI
 {
+public:
+    static uint32_t _idCounter;
   public:
-      RTVolumetricGI() {};
+      RTVolumetricGI() { _id = RTVolumetricGI::_idCounter++; };
       ~RTVolumetricGI() {};
       GLESInternalTex* irradiance = nullptr;
       GLESInternalTex* distance = nullptr;
@@ -23,6 +25,7 @@ class RTVolumetricGI
       Vector3 probeCounts;
       Vector3 probeStep;
       Vector4 params;
+      uint32_t _id;
 
       void setIrradiance(GLESInternalTex* value) { irradiance = value; }
       void setDistance(GLESInternalTex* value) { distance = value; }

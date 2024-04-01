@@ -20,9 +20,13 @@ enum class AmbientMode
 
 class RTReflectionProb
 {
+public:
+    static uint32_t _idCounter;
   public:
-    bool boxProjection;
-
+      RTReflectionProb() { _id = RTReflectionProb::_idCounter++; };
+      ~RTReflectionProb() {};
+      bool boxProjection;
+    uint32_t _id;
     JSBounds *bound = nullptr;
     AmbientMode ambientMode;
 

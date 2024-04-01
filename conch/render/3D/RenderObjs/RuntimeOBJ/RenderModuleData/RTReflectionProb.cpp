@@ -4,6 +4,7 @@
 #include "render/Property.h"
 namespace laya
 {
+    uint32_t RTReflectionProb::_idCounter = 0;
 	void RTReflectionProb::applyRenderData(GLESShaderData* shaderData) {
         if (!boxProjection) {
             shaderData->removeDefine(Sprite3DRenderDeclarationProperty::SHADERDEFINE_SPECCUBE_BOX_PROJECTION);

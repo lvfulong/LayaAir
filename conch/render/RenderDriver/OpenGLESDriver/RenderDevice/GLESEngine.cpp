@@ -19,6 +19,7 @@
 #include <utils/Log.h>
 #include <utils/Preprocessor.h>
 #include <render/Property.h>
+#include <unordered_map>
 namespace laya
 {
 std::unordered_map<std::string, RTShaderDefine> GLESEngine::_defineMap;
@@ -44,6 +45,7 @@ GLESEngine::GLESEngine(WebGLConfig config, WebGLMode webglMode)
         ShaderDefines2D::__init__();
         RenderableSprite3D::__init__();
         CommandProperty::__init__();
+        MeshSprite3DShaderDeclaration::__init__();
     }
     std::vector<std::string> names;
     switch (webglMode)
@@ -569,5 +571,23 @@ JsValue GLESEngine::getTextureContextJS()
     {
         return m_pJSTextureContext.toLocal().handle_;
     }
+}
+void GLESEngine::regGlobalVertexDeclaration(std::string name, int32_t key, const VertexStateContext& declarations)
+{
+    if (_globalVertexDeclaration.find(name) == _globalVertexDeclaration.end()) {
+        std::pair<std::string, std::unordered_map<int32_t, VertexStateContext>*> part(name, new std::unordered_map<int32_t, VertexStateContext>());
+        _globalVertexDeclaration.insert(part);
+    }
+    std::unordered_map<int32_t, VertexStateContext>* vetexdec = _globalVertexDeclaration.at(name);
+    std::pair<uint32_t, VertexStateContext> part(key, declarations);
+    vetexdec->insert(part);
+}
+
+std::unordered_map<int32_t, VertexStateContext>* GLESEngine::getGlobalVertexDeclaration(std::string name) {
+    if (_globalVertexDeclaration.find(name) != _globalVertexDeclaration.end()) {
+        return _globalVertexDeclaration.at(name);
+    }
+    else
+        return nullptr;
 }
 } // namespace laya

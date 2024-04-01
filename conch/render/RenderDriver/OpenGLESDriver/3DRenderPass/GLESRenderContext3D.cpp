@@ -18,8 +18,7 @@ uint32_t GLESRenderContext3D::drawRenderElementList(const JCSingletonList<GLESRe
         _start();
         _needStart = false;
     }
-  
-    // if (preUpdate) preUpdate(list);
+
     for (uint32_t i = 0, n = list.getLength(); i < n; i++)
     {
         list.m_vElements[i]->_preUpdatePre(this);

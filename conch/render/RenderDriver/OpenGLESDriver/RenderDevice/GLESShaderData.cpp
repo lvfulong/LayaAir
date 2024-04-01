@@ -55,9 +55,9 @@ void GLESShaderData::removeDefine(RTShaderDefine define)
     _defineDatas->remove(define);
 }
 
-void GLESShaderData::hasDefine(RTShaderDefine define)
+bool GLESShaderData::hasDefine(RTShaderDefine define)
 {
-    _defineDatas->has(define);
+   return _defineDatas->has(define);
 }
 
 void GLESShaderData::clearDefine()

@@ -9,6 +9,18 @@
 #include "Bindings/LayaAir/3D/JSBounds.h"
 namespace laya
 {
+    enum class BaseRenderType {
+        BaseRender = 0,
+        MeshRender = 1,
+        ParticleRender = 2,
+        TrailRender = 3,
+        LineRender = 4,
+        TerrainRender = 5,
+        SkyRender = 7,
+        SimpleSkinRender = 8,
+        SkinnedMeshRender = 9,
+    };
+
 enum class IrradianceMode
 {
     LightMap,
@@ -25,9 +37,9 @@ class RTReflectionProb;
 class RTVolumetricGI;
 class RTBaseRenderNode
 {
-  public:
+public:
     RTBaseRenderNode();
-     ~RTBaseRenderNode() {};
+    ~RTBaseRenderNode() {};
 public: //binding
     void setTransform(laya::JSTransform* value) { transform = value; }
     JSBounds* getBounds();
@@ -80,15 +92,15 @@ public://bind
     bool customCullResoult = false;//TODO
 public:
     std::vector<GLESRenderElement3D*> renderelements{};
+    Vector4 lightmapScaleOffset;
     Vector4 worldParams;
+    RTReflectionProb* probeReflection = nullptr;
+    RTVolumetricGI* volumetricGI = nullptr;
 protected:
-        JSBounds* bounds = nullptr;
-        Vector4 lightmapScaleOffset;
-        RTLightmapData* lightmap = nullptr;
-        RTReflectionProb* probeReflection = nullptr;
-        RTVolumetricGI* volumetricGI = nullptr;
-        uint32_t lightmapDirtyFlag;
-        uint32_t _updateMark;
+    JSBounds* bounds = nullptr;
+    RTLightmapData* lightmap = nullptr;
+    uint32_t lightmapDirtyFlag;
+    uint32_t _updateMark;
 };
 } // namespace laya
 #endif

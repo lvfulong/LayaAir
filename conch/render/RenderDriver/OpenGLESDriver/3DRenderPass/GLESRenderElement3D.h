@@ -19,8 +19,8 @@ class GLESRenderElement3D
   public:
     GLESRenderElement3D();
     virtual ~GLESRenderElement3D();
-    void _render(GLESRenderContext3D *context);
-    void _preUpdatePre(GLESRenderContext3D *context);
+    virtual void _render(GLESRenderContext3D *context);
+    virtual void _preUpdatePre(GLESRenderContext3D *context);
     void setRenderShaderData(GLESShaderData *value)
     {
         renderShaderData = value;
@@ -45,24 +45,25 @@ class GLESRenderElement3D
     {
         subshader = value;
     }
-    void destroy();
+    virtual void destroy();
 
     void _addShaderInstance(GLESShaderInstance *shader);
     static void setCompileDefine(RTDefineDatas *value);
 
-  private:
-    void _clearShaderInstance();
-    bool _getInvertFront();
-    void _compileShader(GLESRenderContext3D *context);
+    
+
 
   protected:
     virtual void drawGeometry(GLESShaderInstance *shaderIns);
-
+    virtual void _compileShader(GLESRenderContext3D* context);
+    virtual bool _getInvertFront();
+    void _clearShaderInstance();
   public:
     GLESRenderGeometryElement *geometry = nullptr;
     RTSubShader *subshader = nullptr;
     GLESShaderData *materialShaderData = nullptr;
     uint32_t materialRenderQueue;
+    uint32_t materialId;
     GLESShaderData *renderShaderData = nullptr;
     JSTransform *transform = nullptr;
     RTBaseRenderNode *owner = nullptr;

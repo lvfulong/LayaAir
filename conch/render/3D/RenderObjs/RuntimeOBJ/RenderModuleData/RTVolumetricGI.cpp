@@ -12,6 +12,7 @@
 
 namespace laya
 {
+    uint32_t RTVolumetricGI::_idCounter = 0;
 	void RTVolumetricGI::applyRenderData(GLESShaderData* shaderData) {
         shaderData->addDefine(Sprite3DRenderDeclarationProperty::SHADERDEFINE_VOLUMETRICGI);
         shaderData->setVector3(RenderableSprite3DProperty::VOLUMETRICGI_PROBECOUNTS, probeCounts);

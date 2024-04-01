@@ -218,18 +218,32 @@ namespace laya
     uint32_t RenderableSprite3D::LIGHTMAPSCALEOFFSET;
     uint32_t RenderableSprite3D::LIGHTMAP;
     uint32_t RenderableSprite3D::LIGHTMAP_DIRECTION;
-
+    uint32_t RenderableSprite3D::SIMPLESKINNEDMESHRENDERER_SIMPLE_SIMPLEANIMATORPARAMS;
     RTShaderDefine RenderableSprite3D::SAHDERDEFINE_LIGHTMAP;
     RTShaderDefine RenderableSprite3D::SHADERDEFINE_RECEIVE_SHADOW;
     RTShaderDefine RenderableSprite3D::SHADERDEFINE_LIGHTMAP_DIRECTIONAL;
+    
     void RenderableSprite3D::__init__(){
         RenderableSprite3D::SHADERDEFINE_RECEIVE_SHADOW =  LayaGL::m_pWebglEngine->getDefineByName("RECEIVESHADOW");
         RenderableSprite3D::SAHDERDEFINE_LIGHTMAP =  LayaGL::m_pWebglEngine->getDefineByName("LIGHTMAP");
         RenderableSprite3D::SHADERDEFINE_LIGHTMAP_DIRECTIONAL =  LayaGL::m_pWebglEngine->getDefineByName("LIGHTMAP_DIRECTIONAL");
-
+        RenderableSprite3D::SIMPLESKINNEDMESHRENDERER_SIMPLE_SIMPLEANIMATORPARAMS = LayaGL::m_pWebglEngine->propertyNameToID("u_SimpleAnimatorParams");
+        
         RenderableSprite3D::LIGHTMAPSCALEOFFSET =  LayaGL::m_pWebglEngine->propertyNameToID("u_LightmapScaleOffset");
         RenderableSprite3D::LIGHTMAP =  LayaGL::m_pWebglEngine->propertyNameToID("u_LightMap");
         RenderableSprite3D::LIGHTMAP_DIRECTION =  LayaGL::m_pWebglEngine->propertyNameToID("u_LightMapDirection");
     }
 
+    RTShaderDefine MeshSprite3DShaderDeclaration::SHADERDEFINE_UV0;
+    RTShaderDefine MeshSprite3DShaderDeclaration::SHADERDEFINE_UV1;
+    RTShaderDefine MeshSprite3DShaderDeclaration::SHADERDEFINE_COLOR;
+    RTShaderDefine MeshSprite3DShaderDeclaration::SHADERDEFINE_TANGENT;
+    RTShaderDefine MeshSprite3DShaderDeclaration::SHADERDEFINE_GPU_INSTANCE;
+    void MeshSprite3DShaderDeclaration::__init__() {
+        MeshSprite3DShaderDeclaration::SHADERDEFINE_UV0 = LayaGL::m_pWebglEngine->getDefineByName("UV");
+        MeshSprite3DShaderDeclaration::SHADERDEFINE_UV1 = LayaGL::m_pWebglEngine->getDefineByName("UV1");
+        MeshSprite3DShaderDeclaration::SHADERDEFINE_COLOR = LayaGL::m_pWebglEngine->getDefineByName("COLOR");
+        MeshSprite3DShaderDeclaration::SHADERDEFINE_TANGENT = LayaGL::m_pWebglEngine->getDefineByName("TANGENT");
+        MeshSprite3DShaderDeclaration::SHADERDEFINE_GPU_INSTANCE = LayaGL::m_pWebglEngine->getDefineByName("GPU_INSTANCE");
+    }
 }; // namespace laya

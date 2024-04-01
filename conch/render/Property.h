@@ -173,6 +173,22 @@ public:
     static RTShaderDefine SAHDERDEFINE_LIGHTMAP;
     static RTShaderDefine SHADERDEFINE_RECEIVE_SHADOW;
     static RTShaderDefine SHADERDEFINE_LIGHTMAP_DIRECTIONAL;
+    static uint32_t SIMPLESKINNEDMESHRENDERER_SIMPLE_SIMPLEANIMATORPARAMS;
+    static void __init__();
+};
+
+class MeshSprite3DShaderDeclaration {
+public:
+    /**UV0通道顶点数据宏 */
+    static RTShaderDefine SHADERDEFINE_UV0 ;
+    /**顶点色顶点数据宏 */
+    static RTShaderDefine SHADERDEFINE_COLOR;
+    /**UV1通道顶点数据宏 */
+    static RTShaderDefine SHADERDEFINE_UV1;
+    /** Tangent 通道顶点数据宏 */
+    static RTShaderDefine SHADERDEFINE_TANGENT;
+    /**instance调用宏 */
+    static RTShaderDefine SHADERDEFINE_GPU_INSTANCE;
     static void __init__();
 };
 
