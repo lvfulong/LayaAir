@@ -58,7 +58,7 @@ namespace laya
 		_updateCountMark++;
 		for (int i = 0; i < elementCount; i++) {
 			GLESRenderElement3D* element = elementArray[i];
-			if (false) {
+			if (element->canDynamicBatch) {
 				BatchMark* instanceMark = getBathMark(element);
 				if (_updateCountMark == instanceMark->updateMark) {
 					int instanceIndex = instanceMark->indexInList;

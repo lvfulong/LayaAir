@@ -24,7 +24,7 @@ namespace laya
 		else
 		{
 			std::vector<float>* dataArray = new std::vector<float>();
-			dataArray->resize(length / 4);
+			dataArray->resize(length);
 			return dataArray;
 		}
 	}
@@ -88,7 +88,6 @@ namespace laya
 
 	GLESInstanceRenderElement3D::GLESInstanceRenderElement3D()
 	{
-		GLESRenderElement3D::GLESRenderElement3D();
 		drawCount = 0;
 		updateNums = 0;
 		isRender = true;
