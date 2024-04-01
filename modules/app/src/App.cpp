@@ -4,6 +4,7 @@
 #include <SDL2/SDL_syswm.h>
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
+extern bool g_bGLCanvasSizeChanged;
 #ifdef WIN32
 #include <Windows.h>
 HWND g_hWnd;
@@ -148,8 +149,8 @@ void App::run(const Config &config, size_t width, size_t height, int nJSDebugMod
                 {
                     inputEvent e;
                     e.nTouchType = e.nType = E_ONMOUSEUP;
-                    e.posX = x;
-                    e.posY = y;
+                    e.posX = event.button.x;
+                    e.posY = event.button.y;
                     strncpy(e.type, "mouseup", 256);
 
                     JCConch::s_pConch->dispatchInputEvent(e);
@@ -158,8 +159,8 @@ void App::run(const Config &config, size_t width, size_t height, int nJSDebugMod
                 {
                     inputEvent e;
                     e.nTouchType = e.nType = E_ONRIGHTMOUSEUP;
-                    e.posX = x;
-                    e.posY = y;
+                    e.posX = event.button.x;
+                    e.posY = event.button.y;
                     strncpy(e.type, "rightmouseup", 256);
 
                     JCConch::s_pConch->dispatchInputEvent(e);
@@ -181,7 +182,9 @@ void App::run(const Config &config, size_t width, size_t height, int nJSDebugMod
                 switch (event.window.event)
                 {
                 case SDL_WINDOWEVENT_RESIZED:
-                    // window->resize();todo
+                    g_nInnerWidth = event.window.data1;
+                    g_nInnerHeight = event.window.data2;
+                    g_bGLCanvasSizeChanged = true;
                     break;
                 default:
                     break;

@@ -154,6 +154,7 @@ namespace laya
         virtual void stencilOp(GLenum fail, GLenum zfail, GLenum zpass);
         virtual void stencilOpSeparate(GLenum face, GLenum fail, GLenum zfail, GLenum zpass);
         virtual void texImage2D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, void* pixels);
+        virtual void texSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, void *pixels);
         virtual void texSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset,GLsizei width, GLsizei height, GLenum format, GLenum type, void* pixels);
         virtual void texParameterf(GLenum target, GLenum pname, GLfloat param);
         virtual void texParameteri(GLenum target, GLenum pname, GLint param);

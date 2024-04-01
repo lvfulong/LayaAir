@@ -295,6 +295,9 @@ enum FUNCTION_ID
     BINDBUFFERRANGE,
     BINDBUFFERBASE,
     TEXSTORAGE3D,
+    TEXSUBIMAGE3D_PIXEL,
+    TEXSUBIMAGE3D_IMAGE,
+    TEXSUBIMAGE3D_OFFSET,
 }
 enum UNIFORM_TYPE
 {
@@ -1117,6 +1120,12 @@ class GLCommandEncoder
     {
         this._need(36 + nAlignLength + 4);
 		this.add_iiiiiiiii(a, b, c, d, e, f, g, h, j);
+        this.wab(arraybuffer, length, nAlignLength, offset);
+    }
+    add_iiiiiiiiiii_wab(a:number, b:number, c:number, d:number, e:number, f:number, g:number, h:number, i:number, j:number, k:number, arraybuffer:any, length:number, nAlignLength:number, offset?:number):void
+    {
+        this._need(44 + nAlignLength + 4);
+		this.add_iiiiiiiiiii(a, b, c, d, e, f, g, h, i, j, k);
         this.wab(arraybuffer, length, nAlignLength, offset);
     }
     add_iiiiiiiiii(a:number, b:number, c:number, d:number, e:number, f:number, g:number, h:number, j:number,k:number):void
@@ -2430,6 +2439,31 @@ class GLCommandEncoder
     texStorage3D(target:any, levels:any, internalformat:any, width:number, height:number, depth:number):void
     {
         this.add_iiiiiii(FUNCTION_ID.TEXSTORAGE3D, target, levels, internalformat, width, height, depth);
+    }
+    public texSubImage3D(_args): void
+    {
+        var args = arguments;
+        if (ArrayBuffer.isView(args[10]))
+        {
+            if (args[11] !== undefined)
+            {
+            }
+            else
+            {
+                var ab:ArrayBuffer | ArrayBufferView = args[10];
+                var nAlignLength = this.getAlignLength(ab);
+                this.add_iiiiiiiiiii_wab(FUNCTION_ID.TEXSUBIMAGE3D_PIXEL, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], ab, ab.byteLength, nAlignLength);
+            } 
+            
+        }
+        else  if (args[10]._nativeObj)
+        {
+            this.add_iiiiiiiiiiii(FUNCTION_ID.TEXSUBIMAGE3D_IMAGE, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10]._nativeObj.conchImgId);
+        }
+        else if (args[10] instanceof Number || args[10] === null )
+        {
+            this.add_iiiiiiiiiiii(FUNCTION_ID.TEXSUBIMAGE3D_OFFSET, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10] === null ? 0 : args[10]);
+        }
     }
     texParameterf(target:number, pname:number, param:number):void
     {
@@ -4754,6 +4788,15 @@ class LayaGLContext
     public texStorage2D(target:any, levels:any, internalformat:any, width:number, height:number):void
     {
         this._currentCmdEncoder.texStorage2D(target, levels, internalformat, width, height);
+    }
+    public texStorage3D(target:any, levels:any, internalformat:any, width:number, height:number, depth:number):void
+    {
+        this._currentCmdEncoder.texStorage3D(target, levels, internalformat, width, height, depth);
+    }
+    public texSubImage3D(_args): void
+    {
+        var args = arguments;
+        this._currentCmdEncoder.texSubImage3D.apply(this._currentCmdEncoder, args);
     }
     public texParameterf(target:any, pname:any, param:any):void
     {

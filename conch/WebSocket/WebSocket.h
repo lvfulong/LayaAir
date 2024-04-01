@@ -13,7 +13,7 @@
 #include <vector>
 #include <list>
 #include <string>
-
+#include <cstdint>
 struct lws;
 struct lws_context;
 struct lws_protocols;

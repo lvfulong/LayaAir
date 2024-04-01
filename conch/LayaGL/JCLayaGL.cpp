@@ -1002,6 +1002,27 @@ namespace laya
         getError();
 #endif
     }
+    void JCLayaGL::texSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, void *pixels)
+    {
+		if (m_bFlipY)
+		{
+			JCImage::flipY(type, format, width, height, pixels);
+		}
+		if (format != GL_RGBA) 
+        {
+			::glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+			::glTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels);
+			::glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		}
+		else 
+        {
+			::glTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels);
+		}
+#ifdef DEBUG_WEBGL
+        LOGI("texSubImage3D target=%d,level=%d,xoffset=%d,yoffset=%d,width=%d,height=%d,format=%d,type=%d", target, level, xoffset, yoffset, width, height, format, type);
+        getError();
+#endif
+    }
     void JCLayaGL::texParameterf(GLenum target, GLenum pname, GLfloat param)
     {
         ::glTexParameterf(target, pname, param);

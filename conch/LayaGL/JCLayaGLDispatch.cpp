@@ -305,7 +305,10 @@ namespace laya
 			&JCLayaGLDispatch::_layaGL_clearBufferfi,
 			&JCLayaGLDispatch::_layaGL_bindBufferRange,
 			&JCLayaGLDispatch::_layaGL_bindBufferBase,
-             &JCLayaGLDispatch::_layaGL_texStorage3D,
+            &JCLayaGLDispatch::_layaGL_texStorage3D,
+            &JCLayaGLDispatch::_layaGL_texImage3D_pixel,
+            &JCLayaGLDispatch::_layaGL_texImage3D_image,
+            &JCLayaGLDispatch::_layaGL_texImage3D_offset,
         };
         static const int nFuncs = sizeof(g_svProcFunctions) / sizeof(g_svProcFunctions[0]);
         char* pCmdBuffer = pRenderCmd.getReadPtr();
@@ -899,6 +902,53 @@ namespace laya
                 LOGE("JCLayaGLDispatch::_layaGL_texImage2D image error");
             }
         }
+    }
+    void JCLayaGLDispatch::_layaGL_texImage3D_pixel(JCCommandEncoderBuffer& layaGLCmd)
+    {
+        CMD_iiiiiiiiiii* cmd = layaGLCmd.popp<CMD_iiiiiiiiiii>();
+        char* value = NULL;
+        if (cmd->k > 0)value = layaGLCmd.readBufferAlign(cmd->k);
+        ms_pLayaGL->texSubImage3D(cmd->a,cmd->b,cmd->c,cmd->d,cmd->e,cmd->f,cmd->g,cmd->h,cmd->i,cmd->j,(void *)value);
+        
+    }
+    void JCLayaGLDispatch::_layaGL_texImage3D_image(JCCommandEncoderBuffer& layaGLCmd)
+    {
+        //TODO 目前只支持Image
+        CMD_iiiiiiiiiii* cmd = layaGLCmd.popp<CMD_iiiiiiiiiii>();
+        auto pImage = ms_pLayaGL->m_pImageManager->getImage(cmd->k);
+        if (pImage)
+        {
+            pImage->enableImage();
+			pImage->updateTexImage();
+			if (ms_pLayaGL->m_bPremultiplyAlpha)
+			{
+				pImage->premultiplyAlpha();
+			}
+            if (ms_pLayaGL->m_bFlipY)
+			{
+				JCImage::flipY(GL_UNSIGNED_BYTE, GL_RGBA, pImage->m_kBitmapData.m_nWidth, pImage->m_kBitmapData.m_nHeight, pImage->m_kBitmapData.m_pImageData);
+			}
+            int width = pImage->getWidth();
+            int height = pImage->getHeight();
+            char* pBufferData = (char*)pImage->m_kBitmapData.m_pImageData;
+            if (pBufferData && width > 0 && height > 0)
+            {
+                unsigned char* outData = nullptr;
+                size_t outDataLen = 0;
+                convertRGBA8888ToFormat((unsigned char*)pBufferData, pImage->m_kBitmapData.m_nWidth * pImage->m_kBitmapData.m_nHeight * 4, cmd->k, &outData, &outDataLen);
+                ms_pLayaGL->texSubImage3D(cmd->a,cmd->b,cmd->c,cmd->d,cmd->e,cmd->f,cmd->g,cmd->h,cmd->i,cmd->j,outData);
+                if (outData != (unsigned char*)pBufferData)
+                {
+                   delete[] outData;
+                }
+            }
+            pImage->releaseBitmapData();
+        }
+    }
+    void JCLayaGLDispatch::_layaGL_texImage3D_offset(JCCommandEncoderBuffer& layaGLCmd)
+    {
+        CMD_iiiiiiiiiii* cmd = layaGLCmd.popp<CMD_iiiiiiiiiii>();
+        ms_pLayaGL->texSubImage3D(cmd->a,cmd->b,cmd->c,cmd->d,cmd->e,cmd->f,cmd->g,cmd->h,cmd->i,cmd->j,(void *)&cmd->k);
     }
     void JCLayaGLDispatch::_layaGL_texParameterf(JCCommandEncoderBuffer& layaGLCmd)
     {

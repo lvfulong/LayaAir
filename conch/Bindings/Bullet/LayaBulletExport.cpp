@@ -1667,7 +1667,10 @@ void WASM_EXP btCollisionWorld_removeConstraint(pointer_t ptr, pointer_t constra
 {
 	btDiscreteDynamicsWorld *world = (btDiscreteDynamicsWorld *)ptr;
 	btTypedConstraint* constraint = (btTypedConstraint *)constraintptr;
-	world->removeConstraint(constraint);
+	if (constraint != nullptr)
+	{
+		world->removeConstraint(constraint);
+	}
 }
 
 

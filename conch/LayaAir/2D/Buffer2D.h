@@ -6,6 +6,7 @@
 #include <vector>
 #include <stack>
 #include "Buffer.h"
+#include <cstdint>
 
 namespace laya
 {
@@ -18,7 +19,7 @@ namespace laya
 		int getBufferLength();
 		void setByteLength(int value);
 		int needSize(int sz);
-		Buffer2D& _resizeBuffer(int nsz, bool copy);//ÊÇ·ñÐÞ¸ÄÁË³¤¶È
+		Buffer2D& _resizeBuffer(int nsz, bool copy);//ï¿½Ç·ï¿½ï¿½Þ¸ï¿½ï¿½Ë³ï¿½ï¿½ï¿½
 		void setNeedUpload() { m_upload = true; }
 		bool _bind_upload();
 		uint8_t* getData() { return &m_constBuffer->m_buffer[0]; }
