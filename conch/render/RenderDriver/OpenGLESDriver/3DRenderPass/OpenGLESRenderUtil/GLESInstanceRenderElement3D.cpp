@@ -225,7 +225,7 @@ namespace laya
 			drawCount = _instanceElementList.size();
 			geometry->setInstanceCount(drawCount);
 			for (uint32_t i = 0; i < drawCount; i++) {
-				memcpy(worldMatrixData + i * 16, _instanceElementList[i]->transform->m_worldMatrix.elements, 16 * sizeof(float));
+				memcpy(worldMatrixData + i * 16, _instanceElementList[i]->transform->getWorldMatrix().elements, 16 * sizeof(float));
 			}
 			bool haveLightMap = renderShaderData->hasDefine(RenderableSprite3D::SAHDERDEFINE_LIGHTMAP) && renderShaderData->hasDefine(MeshSprite3DShaderDeclaration::SHADERDEFINE_UV1);
 			if (haveLightMap) {
