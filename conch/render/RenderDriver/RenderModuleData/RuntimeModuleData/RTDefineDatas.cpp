@@ -28,6 +28,7 @@ void RTDefineDatas::_intersectionDefineDatas(RTDefineDatas *define)
         if (value == 0 && i == (_length - 1))
         {
             _length--;
+
         }
         else
             _mask[i] = value;

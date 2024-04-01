@@ -53,12 +53,12 @@ namespace laya
 			return;
 		}
 		uint32_t elementCount = elements.getLength();
-		std::vector<GLESRenderElement3D*> elementArray = elements.m_vElements;
+		std::vector<GLESRenderElement3D*>& elementArray = elements.m_vElements;
 		elements.setLength(0);
 		_updateCountMark++;
 		for (int i = 0; i < elementCount; i++) {
 			GLESRenderElement3D* element = elementArray[i];
-			if (element->canDynamicBatch) {
+			if (false) {
 				BatchMark* instanceMark = getBathMark(element);
 				if (_updateCountMark == instanceMark->updateMark) {
 					int instanceIndex = instanceMark->indexInList;
@@ -103,6 +103,9 @@ namespace laya
 					instanceMark->batched = false;
 					elements.add(element);
 				}
+			}
+			else {
+				elements.add(element);
 			}
 		}
 
