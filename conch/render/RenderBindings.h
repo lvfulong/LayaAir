@@ -29,6 +29,7 @@
 #include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTReflectionProb.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTSpotLight.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTVolumetricGI.h>
+#include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTPointLight.h>
 #include <render/3D/temp/RenderState.h>
 #include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderContext3D.h>
 #include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESSkinRenderElement.h>
@@ -750,7 +751,20 @@ class RenderBindings
             context.class_("conchRTVolumetricGI", class_binding);
         }
         {
-            // RTSpotLight
+            class_<RTPointLight> class_binding;
+            class_binding.constructor<>();
+            class_binding.function("setTransform", &RTPointLight::setTransform);
+            class_binding.property_field("range", &RTPointLight::range);
+            class_binding.property_field("shadowResolution", &RTPointLight::shadowResolution);
+            class_binding.property_field("shadowDistance", &RTPointLight::shadowDistance);
+            class_binding.property_field("shadowMode", &RTPointLight::shadowMode);
+            class_binding.property_field("shadowStrength", &RTPointLight::shadowStrength);
+            class_binding.property_field("shadowDepthBias", &RTPointLight::shadowDepthBias);
+            class_binding.property_field("shadowNormalBias", &RTPointLight::shadowNormalBias);
+            class_binding.property_field("shadowNearPlane", &RTPointLight::shadowNearPlane);
+            context.class_("conchRTPointLight", class_binding);
+        }
+        {
             class_<RTSpotLight> class_binding;
             class_binding.constructor<>();
             class_binding.property_field("_shadowResolution", &RTSpotLight::shadowResolution);
