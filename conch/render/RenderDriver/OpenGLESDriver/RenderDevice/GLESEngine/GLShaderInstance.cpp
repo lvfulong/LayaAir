@@ -531,8 +531,7 @@ int GLShaderInstance::_uniform_sampler2D(ShaderVariable *one, const std::any &da
 int GLShaderInstance::_uniform_sampler2DArray(ShaderVariable *one, const std::any &dataInfo)
 {
     //linux compile error assert(dataInfo.type == std::typeid(uint32_t));
-    uint32_t id = std::any_cast<uint32_t>(dataInfo);
-    GLESInternalTex *texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(id);
+    GLESInternalTex* texture = std::any_cast<GLESInternalTex*>(dataInfo);
     if (texture != nullptr)
     {
         _bindTexture(one->textureID, GL_TEXTURE_2D_ARRAY, texture);
@@ -546,8 +545,7 @@ int GLShaderInstance::_uniform_sampler2DArray(ShaderVariable *one, const std::an
 int GLShaderInstance::_uniform_sampler3D(ShaderVariable *one, const std::any &dataInfo)
 {
     //linux compile error assert(dataInfo.type == std::typeid(uint32_t));
-    uint32_t id = std::any_cast<uint32_t>(dataInfo);
-    GLESInternalTex *texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(id);
+    GLESInternalTex* texture = std::any_cast<GLESInternalTex*>(dataInfo);
     if (texture != nullptr)
     {
         _bindTexture(one->textureID, GL_TEXTURE_3D, texture);
@@ -558,8 +556,7 @@ int GLShaderInstance::_uniform_sampler3D(ShaderVariable *one, const std::any &da
 int GLShaderInstance::_uniform_samplerCube(ShaderVariable *one, const std::any &dataInfo)
 {
     //linux compile error assert(dataInfo.type == std::typeid(uint32_t));
-    uint32_t id = std::any_cast<uint32_t>(dataInfo);
-    GLESInternalTex *texture = JCConch::s_pConchRender->m_pWebGLInternalTexManager->getObject(id);
+    GLESInternalTex* texture = std::any_cast<GLESInternalTex*>(dataInfo);
     if (texture != nullptr)
     {
         _bindTexture(one->textureID, GL_TEXTURE_CUBE_MAP, texture);
@@ -569,7 +566,7 @@ int GLShaderInstance::_uniform_samplerCube(ShaderVariable *one, const std::any &
 int GLShaderInstance::_uniform_UniformBuffer(ShaderVariable *one, const std::any &dataInfo)
 {
     //linux compile error assert(dataInfo.type == std::typeid(uint32_t));
-    uint32_t id = std::any_cast<uint32_t>(dataInfo);
+    int32_t id = std::any_cast<int32_t>(dataInfo);
     UniformBufferObject *ubo = JCConch::s_pConchRender->m_pUniformBufferObjectManager->getObject(id);
     if (ubo != nullptr)
     {

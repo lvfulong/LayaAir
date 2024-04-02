@@ -32,10 +32,12 @@ namespace laya
         void setBaseRenderNode(RTBaseRenderNode* node);
         void setShaderData(GLESShaderData* shaderData);
         void setSubShader(RTSubShader* subShader);
+        void setSubMeshIndex(int32_t index);
     private:
         RTBaseRenderNode* _node = nullptr;
         GLESShaderData* _shaderData = nullptr;
         RTSubShader* _subShader = nullptr;
+        int32_t _subMeshIndex = 0;
     };
     
     class GLESBlitQuadCMDData : GLESRenderCMD {

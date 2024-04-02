@@ -97,6 +97,7 @@ template <> class Converter<Matrix4x4>
         return JSP_TO_JS_UNDEFINE;
     }
 };
+
 class RenderBindings
 {
   public:
@@ -285,6 +286,7 @@ class RenderBindings
                     if (bIsArrayBuffer)
                     {
                         KTXTextureInfo info;
+                        info.source = pArrayBufferPtr;
                         info.compress = ktxInfo.compress;
                         info.sRGB = ktxInfo.sRGB;
                         info.dimension = ktxInfo.dimension;
@@ -298,11 +300,32 @@ class RenderBindings
                         ctx.setTextureKTXData(texture, info);
                     }
                 }));
-            /*class_binding.function("setCubeDDSData", &GLTextureContext::setCubeDDSData);
-          class_binding.function("setCubeKTXData", &GLTextureContext::setCubeKTXData);
-          class_binding.function("readRenderTargetPixelData", &GLTextureContext::readRenderTargetPixelData);
-          class_binding.function("getRenderTextureData", &GLTextureContext::getRenderTextureData);
-          */
+            //class_binding.function("setCubeDDSData", &GLTextureContext::setCubeDDSData);
+            class_binding.function_optional_override(
+                "setCubeKTXData",
+                optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, const KTXTextureInfoJS &ktxInfo) {
+                    char *pArrayBufferPtr = NULL;
+                    int nABLen = 0;
+                    bool bIsArrayBuffer = extractJSAB(ktxInfo.sourceAB, pArrayBufferPtr, nABLen);
+                    if (bIsArrayBuffer)
+                    {
+                        KTXTextureInfo info;
+                        info.source = pArrayBufferPtr;
+                        info.compress = ktxInfo.compress;
+                        info.sRGB = ktxInfo.sRGB;
+                        info.dimension = ktxInfo.dimension;
+                        info.mipmapCount = ktxInfo.mipmapCount;
+                        info.width = ktxInfo.width;
+                        info.height = ktxInfo.height;
+                        info.format = ktxInfo.format;
+                        info.mipmapCount = ktxInfo.mipmapCount;
+                        info.bytesOfKeyValueData = ktxInfo.bytesOfKeyValueData;
+                        info.headerOffset = ktxInfo.headerOffset;
+                        ctx.setCubeKTXData(texture, info);
+                    }
+                }));
+            //class_binding.function("readRenderTargetPixelData", &GLTextureContext::readRenderTargetPixelData);
+            //class_binding.function("getRenderTextureData", &GLTextureContext::getRenderTextureData);
             context.class_("conchGLESTextureContext", class_binding);
         }
         {
@@ -823,6 +846,7 @@ class RenderBindings
             class_binding.function("setBaseRenderNode", &GLESDrawNodeCMDData::setBaseRenderNode);
             class_binding.function("setShaderData", &GLESDrawNodeCMDData::setShaderData);
             class_binding.function("setSubShader", &GLESDrawNodeCMDData::setSubShader);
+            class_binding.function("setSubMeshIndex", &GLESDrawNodeCMDData::setSubMeshIndex);
             context.class_("conchGLESDrawNodeCMDData", class_binding);
         }
 

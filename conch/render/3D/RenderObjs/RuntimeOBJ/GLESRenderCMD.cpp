@@ -48,7 +48,10 @@ namespace laya{
 	{
 		_subShader = subShader;
 	}
-
+	void GLESDrawNodeCMDData::setSubMeshIndex(int32_t index)
+	{
+		_subMeshIndex = index;
+	}
 	//GLESBlitQuadCMDData
 
 	GLESBlitQuadCMDData::GLESBlitQuadCMDData()

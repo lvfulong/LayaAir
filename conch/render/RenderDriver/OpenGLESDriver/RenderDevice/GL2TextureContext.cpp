@@ -914,10 +914,10 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
             dataOffset += 4;
             for (int face = 0; face < 6; face++)
             {
-                GLenum t = cubeFace[face];
+                GLenum target = cubeFace[face];
                 if (compressed) {
                     uint8_t* sourceData = (uint8_t*)source + dataOffset;
-                    glCompressedTexImage2D(t, index, internalFormat, mipmapWidth, mipmapHeight, 0, imageSize, sourceData);
+                    glCompressedTexImage2D(target, index, internalFormat, mipmapWidth, mipmapHeight, 0, imageSize, sourceData);
                     memory += imageSize;
                 } else {
                     FormatPixelsParams pixelParams;
@@ -925,23 +925,8 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
                     int typedSize = imageSize / pixelParams.typedSize; 
                     
                     uint8_t* sourceData = nullptr;
-                    //switch(pixelParams.typedSize)
-                    //{
-                    //    case 1:
-                            sourceData = (uint8_t*)((uint8_t*)source + dataOffset);
-                            glTexSubImage2D(t, index, 0, 0, mipmapWidth, mipmapHeight, format, type, sourceData);
-                    //        break;
-                    //    case 2:
-                    //        sourceData = (uint8_t*)((uint8_t*)source + dataOffset);
-                    //        glTexSubImage2D(t, index, 0, 0, mipmapWidth, mipmapHeight, format, type, sourceData);
-                    //        break;
-                    //    case 4:
-                    //        sourceData = (uint8_t*)((uint8_t*)source + dataOffset);
-                    //        glTexSubImage2D(t, index, 0, 0, mipmapWidth, mipmapHeight, format, type, sourceData);
-                    //        break;
-                    //        default:
-                    //    break;
-                    //}
+                    sourceData = (uint8_t*)((uint8_t*)source + dataOffset);
+                    glTexImage2D(target, index, internalFormat, mipmapWidth, mipmapHeight, 0, format, type, sourceData);
                     memory += imageSize;
                 }
                 dataOffset += imageSize;
@@ -951,8 +936,23 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
             mipmapWidth = std::max(1, (int)(mipmapWidth * 0.5));
             mipmapHeight = std::max(1, (int)(mipmapHeight * 0.5));
         }
+        for (int index = ktxInfo.mipmapCount; index < texture->m_mipmapCount; index++) {
+
+            for (int face = 0; face < 6; face++) {
+                int target = cubeFace[face];
+                if (compressed) {
+                    // todo
+                }
+                else {
+                    glTexImage2D(target, index, internalFormat, mipmapWidth, mipmapHeight, 0, format, type, 0);
+                }
+            }
+
+            mipmapWidth = std::max(1.0, mipmapWidth * 0.5);
+            mipmapHeight = std::max(1.0, mipmapHeight * 0.5);
+        }
+        m_engine->_bindTexture(texture->m_target, 0); 
         texture->setGpuMemory(memory);
-        m_engine->_bindTexture(texture->m_target, 0);
         texture->setGpuMemory(getGLtexMemory(texture));
         if (!fourSize)
         {
