@@ -851,6 +851,17 @@ class RenderBindings
             // class_binding.function("setBuffer", &GLESShaderData::setBufferJS);
             class_binding.function("cloneTo", &GLESShaderData::cloneTo);
             class_binding.function("destroy", &GLESShaderData::destroy);
+            class_binding.function_optional_override(
+
+                "setBuffer",optional_override([](GLESShaderData& data,int32_t propertyIndex, JSValueAsParam value) {
+                    char* pArrayBufferPtr = NULL;
+                    int nABLen = 0; 
+                    bool bIsArrayBuffer = extractJSAB(value, pArrayBufferPtr, nABLen);
+                    if (bIsArrayBuffer)
+                    {
+                        data.setBuffer(propertyIndex,(uint8_t*)pArrayBufferPtr, nABLen);
+                    }
+                    }));
             context.class_("conchGLESShaderData", class_binding);
         }
 
