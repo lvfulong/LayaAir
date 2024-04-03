@@ -1267,7 +1267,7 @@ void GLTextureContext::setCubeKTXData(GLESInternalTex *texture, const KTXTexture
         GL_TEXTURE_CUBE_MAP_POSITIVE_Y, // up
         GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, // down
     };
-
+    bool compressed = ktxInfo.compress;
     int internalFormat = texture->m_internalFormat;
     int format = texture->m_format;
     int type = texture->m_type;
@@ -1313,6 +1313,21 @@ void GLTextureContext::setCubeKTXData(GLESInternalTex *texture, const KTXTexture
 
         mipmapWidth = std::max(1, (int)(mipmapWidth * 0.5));
         mipmapHeight = std::max(1, (int)(mipmapHeight * 0.5));
+    }
+    for (int index = ktxInfo.mipmapCount; index < texture->m_mipmapCount; index++) 
+    {
+        for (int face = 0; face < 6; face++) {
+            int target = cubeFace[face];
+            if (compressed) {
+                // todo 
+            }
+            else {
+                glTexSubImage2D(target, index, internalFormat, mipmapWidth, mipmapHeight, 0, format, type, 0);
+            }
+        }
+
+        mipmapWidth = std::max(1.0, mipmapWidth * 0.5);
+        mipmapHeight = std::max(1.0, mipmapHeight * 0.5);
     }
 
     m_engine->_bindTexture(texture->m_target, 0);
