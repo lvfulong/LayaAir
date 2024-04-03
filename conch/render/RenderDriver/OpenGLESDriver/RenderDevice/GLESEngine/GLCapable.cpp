@@ -87,6 +87,9 @@ namespace laya
 		m_capabilityMap[RenderCapable::COMPRESS_TEXTURE_ASTC] = value;
 		value = (isWebgl2) || (!!getExtension(WebGLExtension::EXT_sRGB));
 		m_capabilityMap[RenderCapable::Texture_SRGB] = value;
+		m_capabilityMap[RenderCapable::Texture_FloatLinearFiltering] = value;
+		value = isWebgl2 || (!!getExtension(WebGLExtension::OES_texture_half_float_linear));
+        m_capabilityMap[RenderCapable::Texture_HalfFloatLinearFiltering] = value;
 		value = isWebgl2;
 		m_capabilityMap[RenderCapable::MSAA] = value;
 		m_capabilityMap[RenderCapable::UnifromBufferObject] = false;

@@ -926,7 +926,7 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
                     
                     uint8_t* sourceData = nullptr;
                     sourceData = (uint8_t*)((uint8_t*)source + dataOffset);
-                    glTexImage2D(target, index, internalFormat, mipmapWidth, mipmapHeight, 0, format, type, sourceData);
+                    glTexSubImage2D(target, index, 0, 0, mipmapWidth, mipmapHeight, format, type, sourceData);
                     memory += imageSize;
                 }
                 dataOffset += imageSize;
@@ -936,21 +936,7 @@ invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
             mipmapWidth = std::max(1, (int)(mipmapWidth * 0.5));
             mipmapHeight = std::max(1, (int)(mipmapHeight * 0.5));
         }
-        for (int index = ktxInfo.mipmapCount; index < texture->m_mipmapCount; index++) {
-
-            for (int face = 0; face < 6; face++) {
-                int target = cubeFace[face];
-                if (compressed) {
-                    // todo
-                }
-                else {
-                    glTexImage2D(target, index, internalFormat, mipmapWidth, mipmapHeight, 0, format, type, 0);
-                }
-            }
-
-            mipmapWidth = std::max(1.0, mipmapWidth * 0.5);
-            mipmapHeight = std::max(1.0, mipmapHeight * 0.5);
-        }
+        
         m_engine->_bindTexture(texture->m_target, 0); 
         texture->setGpuMemory(memory);
         texture->setGpuMemory(getGLtexMemory(texture));
