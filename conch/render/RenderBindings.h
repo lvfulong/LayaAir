@@ -797,6 +797,7 @@ class RenderBindings
                     if (bIsArrayBuffer)
                     {
                         ctx.setAmbientSH((float *)pArrayBufferPtr);
+                        ctx.ambientSHByteLength = nABLen;
                     }
                 }));
             class_binding.function("setReflectionTexture", &RTReflectionProb::setReflectionTexture);

@@ -31,6 +31,7 @@ public:
     AmbientMode ambientMode;
 
     float *ambientSH = nullptr;
+    uint32_t ambientSHByteLength;
 
     Real ambientIntensity;
 

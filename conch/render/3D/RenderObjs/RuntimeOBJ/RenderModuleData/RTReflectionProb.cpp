@@ -32,8 +32,8 @@ namespace laya
             else
                 shaderData->removeDefine(Sprite3DRenderDeclarationProperty::SHADERDEFINE_IBL_RGBD);
            
-           /* if(ambientSH!=nullptr)
-                shaderData->setBuffer(RenderableSprite3D.AMBIENTSH, ambientSH);*/
+            if(ambientSH!=nullptr)
+                shaderData->setBuffer(RenderableSprite3DProperty::AMBIENTSH, (uint8_t*)ambientSH, ambientSHByteLength);
         }
         shaderData->setNumber(RenderableSprite3DProperty::AMBIENTINTENSITY, ambientIntensity);
         shaderData->setNumber(RenderableSprite3DProperty::REFLECTIONINTENSITY, reflectionIntensity);
