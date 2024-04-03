@@ -54,15 +54,26 @@ namespace laya
 		//anistropic
 		value = !!(getExtension(WebGLExtension::EXT_texture_filter_anisotropic));
 		m_capabilityMap[RenderCapable::Texture_anisotropic] = value;
-		if (isWebgl2)
-		{
-			value = !!getExtension(WebGLExtension::EXT_color_buffer_float) || !!getExtension(WebGLExtension::EXT_color_buffer_half_float);
-		}
-		else 
-		{
-			value = ((!!getExtension(WebGLExtension::OES_texture_half_float)) || (!!getExtension(WebGLExtension::EXT_color_buffer_half_float))) && (!!getExtension(WebGLExtension::OES_texture_half_float_linear));
-		}
-		m_capabilityMap[RenderCapable::RenderTextureFormat_R16G16B16A16] = value;
+
+        // half float renderable
+        if (isWebgl2) {
+            value = !!getExtension(WebGLExtension::EXT_color_buffer_float) || !!getExtension(WebGLExtension::EXT_color_buffer_half_float);
+        }
+        else {
+            value = ((!!getExtension(WebGLExtension::OES_texture_half_float)) || (!!getExtension(WebGLExtension::EXT_color_buffer_half_float))) && (!!getExtension(WebGLExtension::OES_texture_half_float_linear));
+        }
+        m_capabilityMap[RenderCapable::RenderTextureFormat_R16G16B16A16] = value;
+
+        // float renderable
+        if (isWebgl2) {
+            value = !!getExtension(WebGLExtension::EXT_color_buffer_float) && !!getExtension(WebGLExtension::OES_texture_float_linear);
+        }
+        else {
+            // OES_texture_float implicitly enables the WEBGL_color_buffer_float extension (if supported)
+            value = (!!getExtension(WebGLExtension::OES_texture_float)) && (!!getExtension(WebGLExtension::OES_texture_float_linear));
+        }
+        m_capabilityMap[RenderCapable::RenderTextureFormat_R32G32B32A32] = value;
+
 		value = isWebgl2 || (!!getExtension(WebGLExtension::WEBGL_depth_texture));
 		m_capabilityMap[RenderCapable::RenderTextureFormat_Depth] = value;
 		value = isWebgl2;
