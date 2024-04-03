@@ -46,7 +46,7 @@ namespace laya
 		bool value = isWebgl2 || !!(getExtension(WebGLExtension::OES_element_index_uint));
 		m_capabilityMap[RenderCapable::Element_Index_Uint32] = value;
 		//FLoat32Texture
-		value = isWebgl2 || !!(getExtension(WebGLExtension::OES_texture_float));
+		value =  !!(getExtension(WebGLExtension::OES_texture_float));
 		m_capabilityMap[RenderCapable::TextureFormat_R32G32B32A32] = value;
 		//halfFloatTexture
 		value = isWebgl2 || !!(getExtension(WebGLExtension::OES_texture_half_float));
@@ -165,6 +165,12 @@ namespace laya
 			m_extensionMap[WebGLExtension::OES_texture_float_linear] = _oesTextureFloatLinear;
 		}
 
+		auto _oesTextureFloat = _getExtension("OES_texture_float");
+		if (_oesTextureFloat != nullptr)
+		{
+			m_extensionMap[WebGLExtension::OES_texture_float] = _oesTextureFloat;
+		}
+
 		if (isWebgl2) 
 		{
 			auto _extColorBufferFloat = _getExtension("EXT_color_buffer_float");
@@ -208,11 +214,7 @@ namespace laya
 				m_extensionMap[WebGLExtension::OES_texture_half_float_linear] = _oesTextureHalfFloatLinear;
 			}
 
-			auto _oesTextureFloat = _getExtension("OES_texture_float");
-			if (_oesTextureFloat != nullptr)
-			{
-				m_extensionMap[WebGLExtension::OES_texture_float] = _oesTextureFloat;
-			}
+			
 
 			auto _oes_element_index_uint = _getExtension("OES_element_index_uint");
 			if (_oes_element_index_uint != nullptr)
@@ -262,6 +264,7 @@ namespace laya
 		const char* extention = (const char*)glGetString(GL_EXTENSIONS);/*GL_EXTENSIONS*/
 		const char* version = (const char*)glGetString(GL_VERSION);
 		const char* strOS = laya::JSConchConfig::getOS();
+		std::string str(extention);
 		if (strcmp(name, "EXT_texture_filter_anisotropic") == 0 
 			&& strstr(extention, "GL_EXT_texture_filter_anisotropic") != nullptr)
 		{
@@ -356,6 +359,10 @@ namespace laya
 			&& strstr(extention, "GL_EXT_color_buffer_half_float") != nullptr)
 		{
 			return &m_colorBufferHalfFloatExt;
+		}
+		else if (strcmp(name, "OES_texture_float_linear") == 0
+			&& strstr(extention, "GL_OES_texture_float_linear") != nullptr) {
+			return &m_SupportExtension;
 		}
 		return nullptr;
 	}

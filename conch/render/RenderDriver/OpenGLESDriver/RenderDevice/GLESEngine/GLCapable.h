@@ -12,6 +12,10 @@ namespace laya
 
 	};
 
+	struct SupportExtension :public IWebGLExtention {
+
+	};
+
 	struct TextureFilterAnisotropicExt: public IWebGLExtention
 	{
 		int MAX_TEXTURE_MAX_ANISOTROPY_EXT = 34047;
@@ -190,6 +194,7 @@ namespace laya
 		WebglDepthTextureExt m_webglDepthTextureExt;
 		sRGBExt m_sRGBExt;
 		ColorBufferHalfFloatExt m_colorBufferHalfFloatExt;
+		SupportExtension m_SupportExtension;
 	};
 }
 

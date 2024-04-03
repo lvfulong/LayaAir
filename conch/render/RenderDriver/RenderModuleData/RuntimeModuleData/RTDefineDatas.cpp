@@ -98,7 +98,7 @@ void RTDefineDatas::addDefineDatas(RTDefineDatas *defines)
         for (; i < maskStart; i++)
             _mask[i] |= defines->_mask[i];
         for (; i < size; i++)
-            _mask.push_back(defines->_mask[i]); 
+            _mask[i] = defines->_mask[i]; 
         _length = size;
     }
     else
