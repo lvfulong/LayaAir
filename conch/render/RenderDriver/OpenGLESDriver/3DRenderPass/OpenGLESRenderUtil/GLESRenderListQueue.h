@@ -36,6 +36,7 @@ class GLESRenderListQueue
         uint32_t count = _elements.getLength();
         this->quickSort.sort(&_elements, this->_isTransparent, 0, count - 1);
         context->drawRenderElementList(this->_elements);
+        _batch.clearRenderData();
     }
 
     void clear()

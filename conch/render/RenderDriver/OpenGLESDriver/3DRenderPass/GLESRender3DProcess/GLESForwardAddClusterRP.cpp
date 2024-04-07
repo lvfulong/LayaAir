@@ -34,6 +34,8 @@ namespace laya
         this->viewPort.cloneTo(GLESForwardAddClusterRP::_context3DViewPortCatch);
         this->scissor.cloneTo(GLESForwardAddClusterRP::_contextScissorPortCatch);
         this->_mainPass(context);
+
+        this->opaqueList._batch.recoverData();
     }
     void GLESForwardAddClusterRP::_renderDepthPass(GLESRenderContext3D* context){
         context->pipelineMode = this->depthPipelineMode;
@@ -67,7 +69,7 @@ namespace laya
         context->setViewport(_tempViewport);
         context->setScissor(tempVec4);
         context->setClearData(static_cast<uint32_t>(RenderClearFlag::Color) | static_cast<uint32_t>(RenderClearFlag::Depth), this->_defaultNormalDepthColor, 1, 0);
-        context->setRenderTarget(this->depthNormalTarget);
+        context->setRenderTarget(this->depthNormalTarget, static_cast<uint32_t> (RenderClearFlag::Color) | static_cast<uint32_t>(RenderClearFlag::Depth));
         this->opaqueList.renderQueue((GLESRenderContext3D*)context);
     }
 

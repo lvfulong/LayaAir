@@ -95,6 +95,7 @@ void GLESDirectLightShadowRP::render(GLESRenderContext3D *context, std::vector<R
     context->pipelineMode = "ShadowCaster";
     auto shadowMap = this->destTarget;
     context->setRenderTarget(shadowMap);
+    context->setClearData(static_cast<uint32_t>(RenderClearFlag::Depth), Color::BLACK, 1, 0);
     // 需要把shadowmap clear Depth;
     for (int i = 0, n = this->_cascadeCount; i < n; i++)
     {
