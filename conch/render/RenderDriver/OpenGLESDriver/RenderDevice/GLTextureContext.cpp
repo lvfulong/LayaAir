@@ -1666,10 +1666,8 @@ void GLTextureContext::updateVideoTexture(GLESInternalTex *texture, JCImage *sou
                                 &outDataLen);
 
         // todo 用 sub 会慢
-        glTexSubImage2D(target, 0, 0, 0, source->m_kBitmapData.m_nWidth, source->m_kBitmapData.m_nHeight, format, type,
-                        outData);
-        // gl.texImage2D(target, 0, internalFormat, format, type, video);
-
+        // glTexSubImage2D(target, 0, 0, 0, source->m_kBitmapData.m_nWidth, source->m_kBitmapData.m_nHeight, format, type, outData);
+        glTexImage2D(target, 0, internalFormat, width, height, 0, format, type, outData);
         texture->setGpuMemory(getGLtexMemory(texture));
         if (outData != (unsigned char *)pBufferData)
         {
