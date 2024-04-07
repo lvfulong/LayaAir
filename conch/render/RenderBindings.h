@@ -346,10 +346,10 @@ class RenderBindings
             class_binding.property_field("_isCube", &GLESInternalRT::m_isCube);
             class_binding.property_field("_samples", &GLESInternalRT::m_samples);
             class_binding.property_field("_generateMipmap", &GLESInternalRT::m_generateMipmap);
-            class_binding.property_field("_colorFormat", &GLESInternalRT::m_colorFormat);
-            class_binding.property_field("_depthStencilFormat", &GLESInternalRT::m_depthStencilFormat);
-            class_binding.property_field("_isSRGB", &GLESInternalRT::_isSRGB);
-            class_binding.property_field("_gpuMemory", &GLESInternalRT::m_gpuMemory);
+            class_binding.property_field("colorFormat", &GLESInternalRT::m_colorFormat);
+            class_binding.property_field("depthStencilFormat", &GLESInternalRT::m_depthStencilFormat);
+            class_binding.property_field("isSRGB", &GLESInternalRT::_isSRGB);
+            class_binding.property_field("gpuMemory", &GLESInternalRT::m_gpuMemory);
             class_binding.function("dispose", &GLESInternalRT::dispose);
             class_binding.property("_textures", &GLESInternalRT::getTextures);
             class_binding.property("_depthTexture", &GLESInternalRT::getDepthTexture);
