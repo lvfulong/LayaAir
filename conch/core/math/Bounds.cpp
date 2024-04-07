@@ -15,6 +15,7 @@ namespace laya
 	//------------------------------------------------------------------------------
 	Bounds::Bounds()
 	{
+		m_updateFlag = 0;
 	}
 	//------------------------------------------------------------------------------
 	Bounds::~Bounds()
@@ -60,8 +61,10 @@ namespace laya
 	void Bounds::setCenter(const Vector3& value)
 	{
 		m_center = value;
-		_setUpdateFlag(Bounds::_UPDATE_MIN | Bounds::_UPDATE_MAX, true);
-		_setUpdateFlag(Bounds::_UPDATE_CENTER, false);
+		//_setUpdateFlag(Bounds::_UPDATE_MIN | Bounds::_UPDATE_MAX, true);
+		_getMin(m_center, m_extent, m_boundBox.min);
+		_getMax(m_center, m_extent, m_boundBox.max);
+		_setUpdateFlag(Bounds::_UPDATE_CENTER|Bounds::_UPDATE_MIN|Bounds::_UPDATE_MAX, false);
 	}
 
 	const Vector3& Bounds::getCenter() const
@@ -77,8 +80,9 @@ namespace laya
 	void Bounds::setExtent(const Vector3& value)
 	{
 		m_extent = value;
-		_setUpdateFlag(Bounds::_UPDATE_MIN | Bounds::_UPDATE_MAX, true);
-		_setUpdateFlag(Bounds::_UPDATE_EXTENT, false);
+		_getMin(m_center, m_extent, m_boundBox.min);
+		_getMax(m_center, m_extent, m_boundBox.max);
+		_setUpdateFlag(Bounds::_UPDATE_EXTENT|Bounds::_UPDATE_MIN | Bounds::_UPDATE_MAX, false);
 	}
 
 	const Vector3& Bounds::getExtent() const
@@ -110,6 +114,7 @@ namespace laya
 			m_updateFlag |= type;
 		else
 			m_updateFlag &= ~type;
+
 	}
 
 	void Bounds::_getCenter(const Vector3& min, const Vector3& max, Vector3& out) const

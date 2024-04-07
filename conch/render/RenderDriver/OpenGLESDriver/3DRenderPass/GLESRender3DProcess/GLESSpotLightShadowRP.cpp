@@ -37,7 +37,7 @@ void GLESSpotLightShadowRP::render(GLESRenderContext3D* context, std::vector<RTB
     GLESShaderData* originCameraData = context->cameraData;
     GLESShaderData* shaderValues = context->sceneData;
     context->pipelineMode = "ShadowCaster";
-    context->setRenderTarget(destTarget);
+    context->setRenderTarget(destTarget, static_cast<uint32_t>(RenderClearFlag::Depth));
 
     ShadowSpotData& shadowSpotData = this->_shadowSpotData;
     this->_getShadowBias(shadowSpotData.resolution, this->_shadowBias);

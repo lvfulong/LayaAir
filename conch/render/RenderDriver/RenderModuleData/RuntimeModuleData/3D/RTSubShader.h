@@ -17,6 +17,7 @@ class RTSubShader
 
   public:
     std::vector<RTShaderPass *> shaderpasses;
+    bool enableInstance;
 };
 } // namespace laya
 
