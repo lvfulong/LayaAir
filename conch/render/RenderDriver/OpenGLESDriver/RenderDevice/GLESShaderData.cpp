@@ -70,9 +70,19 @@ void GLESShaderData::setBool(int32_t index, bool value)
     m_data[index] = (int32_t)value;
 }
 
-bool GLESShaderData::getBool(int32_t index)
+bool* GLESShaderData::getBool(int32_t index)
 {
-    return std::any_cast<int32_t>(m_data[index]);
+    if (m_data.find(index) != m_data.end())
+    {
+        static bool tmp;
+        tmp = std::any_cast<int32_t>(m_data[index]) > 0 ? true : false;
+        return &tmp;
+    }
+    else
+    {
+        return nullptr;
+    }
+
 }
 
 void GLESShaderData::setInt(int32_t index, int32_t value)
@@ -80,9 +90,16 @@ void GLESShaderData::setInt(int32_t index, int32_t value)
     m_data[index] = value;
 }
 
-int32_t GLESShaderData::getInt(int32_t index)
+int32_t* GLESShaderData::getInt(int32_t index)
 {
-    return std::any_cast<int32_t>(m_data[index]);
+    if (m_data.find(index) != m_data.end())
+    {
+        return &std::any_cast<int32_t&>(m_data[index]);
+    }
+    else
+    {
+        return nullptr;
+    }
 }
 
 void GLESShaderData::setNumber(int32_t index, float value)
@@ -90,9 +107,16 @@ void GLESShaderData::setNumber(int32_t index, float value)
     m_data[index] = value;
 }
 
-float GLESShaderData::getNumber(int32_t index)
+float* GLESShaderData::getNumber(int32_t index)
 {
-    return std::any_cast<float>(m_data[index]);
+    if (m_data.find(index) != m_data.end())
+    {
+        return &std::any_cast<float&>(m_data[index]);
+    }
+    else
+    {
+        return nullptr;
+    }
 }
 
 void GLESShaderData::setVector2(int32_t index, const Vector2 &value)
@@ -100,9 +124,16 @@ void GLESShaderData::setVector2(int32_t index, const Vector2 &value)
     m_data[index] = value;
 }
 
-const Vector2 &GLESShaderData::getVector2(int32_t index)
+Vector2* GLESShaderData::getVector2(int32_t index)
 {
-    return std::any_cast<const Vector2 &>(m_data[index]);
+    if (m_data.find(index) != m_data.end())
+    {
+        return &std::any_cast<Vector2&>(m_data[index]);
+    }
+    else
+    {
+        return nullptr;
+    }
 }
 
 void GLESShaderData::setVector(int32_t index, const Vector4 &value)
@@ -110,9 +141,16 @@ void GLESShaderData::setVector(int32_t index, const Vector4 &value)
     this->m_data[index] = value;
 }
 
-const Vector4 &GLESShaderData::getVector(int32_t index)
+Vector4* GLESShaderData::getVector(int32_t index)
 {
-    return std::any_cast<const Vector4 &>(m_data[index]);
+    if (m_data.find(index) != m_data.end())
+    {
+        return &std::any_cast<Vector4&>(m_data[index]);
+    }
+    else
+    {
+        return nullptr;
+    }
 }
 
 void GLESShaderData::setVector3(int32_t index, const Vector3 &value)
@@ -120,17 +158,20 @@ void GLESShaderData::setVector3(int32_t index, const Vector3 &value)
     this->m_data[index] = value;
 }
 
-const Vector3 &GLESShaderData::getVector3(int32_t index)
+Vector3* GLESShaderData::getVector3(int32_t index)
 {
-    return std::any_cast<const Vector3 &>(m_data[index]);
+    if (m_data.find(index) != m_data.end())
+    {
+        return &std::any_cast<Vector3&>(m_data[index]);
+    }
+    else
+    {
+        return nullptr;
+    }
 }
 
 void GLESShaderData::setColor(int32_t index, const Color &value)
 {
-    if (&value == nullptr)
-    {
-        return;
-    }
     if (m_data.find(index) != m_data.end())
     {
         m_gammaColorMap[index] = value;
@@ -166,9 +207,16 @@ void GLESShaderData::setMatrix3x3(int32_t index, const Matrix3x3 &value)
     m_data[index] = value;
 }
 
-const Matrix3x3 &GLESShaderData::getMatrix3x3(int32_t index)
+Matrix3x3* GLESShaderData::getMatrix3x3(int32_t index)
 {
-    return std::any_cast<const Matrix3x3 &>(m_data[index]);
+    if (m_data.find(index) != m_data.end())
+    {
+        return &std::any_cast<Matrix3x3&>(m_data[index]);
+    }
+    else
+    {
+        return nullptr;
+    }
 }
 
 void GLESShaderData::setMatrix4x4(int32_t index, const Matrix4x4 &value)
@@ -176,9 +224,16 @@ void GLESShaderData::setMatrix4x4(int32_t index, const Matrix4x4 &value)
     m_data[index] = value;
 }
 
-const Matrix4x4 &GLESShaderData::getMatrix4x4(int32_t index)
+Matrix4x4* GLESShaderData::getMatrix4x4(int32_t index)
 {
-    return std::any_cast<const Matrix4x4 &>(m_data[index]);
+    if (m_data.find(index) != m_data.end())
+    {
+        return &std::any_cast<Matrix4x4&>(m_data[index]);
+    }
+    else
+    {
+        return nullptr;
+    }
 }
 
 void GLESShaderData::setBuffer(int32_t index, uint8_t *data, uint32_t lengthInBytes)

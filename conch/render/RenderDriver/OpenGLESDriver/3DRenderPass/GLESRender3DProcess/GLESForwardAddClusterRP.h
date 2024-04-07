@@ -86,7 +86,7 @@ class GLESForwardAddClusterRP
 
   public:
     CameraCullInfo cameraCullInfo;
-    RTCameraNodeData *camera;
+    RTCameraNodeData *camera = nullptr;
     GLESInternalRT *opaqueTexture;
     GLESInternalRT *destTarget;
     GLESInternalRT *depthTarget;
