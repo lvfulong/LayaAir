@@ -152,9 +152,13 @@ void GLESShaderData::setColor(int32_t index, const Color &value)
     }
 }
 
-const Color &GLESShaderData::getColor(int32_t index)
+Color* GLESShaderData::getColor(int32_t index)
 {
-    return m_gammaColorMap[index];
+    if (m_gammaColorMap.find(index) == m_gammaColorMap.end())
+    {
+        return nullptr;
+    }
+    return &m_gammaColorMap[index];
 }
 
 void GLESShaderData::setMatrix3x3(int32_t index, const Matrix3x3 &value)

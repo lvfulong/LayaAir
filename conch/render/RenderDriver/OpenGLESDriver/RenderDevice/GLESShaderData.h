@@ -84,7 +84,7 @@ class GLESShaderData //: public ResourceBase<ShaderData>
     void setVector3(int32_t index, const Vector3 &value);
     const Vector3 &getVector3(int32_t index);
     void setColor(int32_t index, const Color &value);
-    const Color &getColor(int32_t index);
+    Color* getColor(int32_t index);
     void setMatrix4x4(int32_t index, const Matrix4x4 &value);
     const Matrix4x4 &getMatrix4x4(int32_t index);
     void setMatrix3x3(int32_t index, const Matrix3x3 &value);
