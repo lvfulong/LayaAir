@@ -163,6 +163,31 @@ template <> class Converter<int32_t>
         return p_vl->IsInt32();
     }
 };
+template <> class Converter<int32_t*>
+{
+  public:
+    static int32_t ToCpp(v8::Local<v8::Value> p_vl)
+    {
+        return p_vl.As<v8::Int32>()->Value();
+        // return p_vl->Int32Value(isolate->GetCurrentContext()).ToChecked();
+    }
+    static v8::Local<v8::Value> ToJs(int32_t* p_vl, bool callDestructor = true)
+    {
+        if (p_vl == nullptr)
+        {
+            return v8::Null(v8::Isolate::GetCurrent());
+        }
+        return v8::Int32::New(v8::Isolate::GetCurrent(), *p_vl);
+    }
+    static v8::Local<v8::Value> ToJsDate(int32_t* p_vl)
+    {
+        return v8::Date::New(v8::Isolate::GetCurrent()->GetCurrentContext(), (double)(*p_vl)).ToLocalChecked();
+    }
+    static bool is(v8::Local<v8::Value> p_vl)
+    {
+        return p_vl->IsInt32();
+    }
+};
 template <> class Converter<const int32_t &> : public Converter<int32_t>
 {
 };
@@ -320,6 +345,27 @@ template <> class Converter<bool>
     }
 };
 
+template <> class Converter<bool*>
+{
+  public:
+    static bool ToCpp(v8::Local<v8::Value> p_vl)
+    {
+        return p_vl->BooleanValue(v8::Isolate::GetCurrent());
+    }
+    static v8::Local<v8::Value> ToJs(bool* p_vl, bool callDestructor = true)
+    {
+        if (p_vl == nullptr)
+        {
+            return v8::Null(v8::Isolate::GetCurrent());
+        }
+        return v8::Boolean::New(v8::Isolate::GetCurrent(), *p_vl);
+    }
+    static bool is(v8::Local<v8::Value> p_vl)
+    {
+        return p_vl->IsBoolean();
+    }
+};
+
 template <> class Converter<float>
 {
   public:
@@ -337,7 +383,27 @@ template <> class Converter<float>
         return p_vl->IsNumber();
     }
 };
-
+template <> class Converter<float*>
+{
+  public:
+    static float ToCpp(v8::Local<v8::Value> p_vl)
+    {
+        return static_cast<float>(p_vl->NumberValue(v8::Isolate::GetCurrent()->GetCurrentContext()).ToChecked());
+        // return static_cast<float>(val.As<Number>()->Value());
+    }
+    static v8::Local<v8::Value> ToJs(float* p_vl, bool callDestructor = true)
+    {
+        if (p_vl == nullptr)
+        {
+            return v8::Null(v8::Isolate::GetCurrent());
+        }
+        return v8::Number::New(v8::Isolate::GetCurrent(), *p_vl);
+    }
+    static bool is(v8::Local<v8::Value> p_vl)
+    {
+        return p_vl->IsNumber();
+    }
+};
 template <> class Converter<double>
 {
   public:

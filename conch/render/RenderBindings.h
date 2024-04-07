@@ -252,8 +252,8 @@ class RenderBindings
             class_binding.function("createRenderTargetCubeInternal", &GLTextureContext::createRenderTargetCubeInternal);
             class_binding.function("setupRendertargetTextureAttachment",
                                    &GLTextureContext::setupRendertargetTextureAttachment);
-            // class_binding.function("initVideoTextureData", &GLTextureContext::initVideoTextureData);
-            // class_binding.function("updateVideoTexture", &GLTextureContext::updateVideoTexture);
+            class_binding.function("initVideoTextureData", &GLTextureContext::initVideoTextureData);
+            class_binding.function("updateVideoTexture", &GLTextureContext::updateVideoTexture);
             // setTextureSubImageData todo
 
             class_binding.function_optional_override(

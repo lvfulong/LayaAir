@@ -254,12 +254,12 @@ namespace laya
 			//simpleAnimationData
 			float* simpleAnimatorData = getUpdateData(1, 4 * GLESInstanceRenderElement3D::maxInstanceCount)->data();
 			for (uint32_t i = 0; i < drawCount; i++) {
-				Vector4 v4 = _instanceElementList[i]->renderShaderData->getVector(RenderableSprite3D::SIMPLESKINNEDMESHRENDERER_SIMPLE_SIMPLEANIMATORPARAMS);
+				Vector4* v4 = _instanceElementList[i]->renderShaderData->getVector(RenderableSprite3D::SIMPLESKINNEDMESHRENDERER_SIMPLE_SIMPLEANIMATORPARAMS);
 				uint32_t offset = i * 4;
-				simpleAnimatorData[offset] = v4.x;
-				simpleAnimatorData[offset + 1] = v4.y;
-				simpleAnimatorData[offset + 2] = v4.z;
-				simpleAnimatorData[offset + 3] = v4.w;
+				simpleAnimatorData[offset] = v4->x;
+				simpleAnimatorData[offset + 1] = v4->y;
+				simpleAnimatorData[offset + 2] = v4->z;
+				simpleAnimatorData[offset + 3] = v4->w;
 			}
 			addUpdateBuffer(_instanceStateInfo->simpleAnimatorVB, 4);
 		}
