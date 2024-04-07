@@ -72,7 +72,7 @@ namespace laya{
 		_element->materialShaderData->setVector(CommandProperty::MAINTEXTURE_TEXELSIZE_ID, _sourceTexelSize);
 		context->setViewport(_viewport);
 		context->setScissor(_scissor);
-		context->setRenderTarget(_dest);
+		context->setRenderTarget(_dest,static_cast<uint32_t>(RenderClearFlag::Nothing));
 		context->drawRenderElementOne(_element);
 	}
 

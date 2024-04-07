@@ -488,6 +488,7 @@ class RenderBindings
             class_binding.constructor<>();
             class_binding.function("addShaderPass", &RTSubShader::addShaderPass);
             class_binding.function("destroy", &RTSubShader::destroy);
+            class_binding.property_field("enableInstance", &RTSubShader::enableInstance);
             context.class_("conchRTSubShader", class_binding);
         }
         {
@@ -573,6 +574,7 @@ class RenderBindings
             class_binding.function("setProbeReflection", &RTBaseRenderNode::setProbeReflection);
             class_binding.property("_bounds", &RTBaseRenderNode::getBounds, &RTBaseRenderNode::setBounds);
             class_binding.property_field("renderNodeType", &RTBaseRenderNode::renderNodeType);
+            class_binding.property_field("distanceForSort", &RTBaseRenderNode::distanceForSort);
             class_binding.property_field("distanceForSort", &RTBaseRenderNode::distanceForSort);
             class_binding.property_field("sortingFudge", &RTBaseRenderNode::sortingFudge);
             class_binding.property_field("castShadow", &RTBaseRenderNode::castShadow);
