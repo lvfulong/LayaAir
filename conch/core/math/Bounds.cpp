@@ -115,8 +115,6 @@ namespace laya
 		else
 			m_updateFlag &= ~type;
 
-		if (m_updateFlag > 16)
-			int i = 10;
 	}
 
 	void Bounds::_getCenter(const Vector3& min, const Vector3& max, Vector3& out) const
