@@ -144,6 +144,7 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
         auto it = constructorFunctionMap_.find(numPara);
         if (it != constructorFunctionMap_.end())
         {
+            info.GetIsolate()->AdjustAmountOfExternalAllocatedMemory(static_cast<int64_t>(sizeof(ClassType)));
             return (it->second)(info);
         }
         /*else
@@ -171,7 +172,7 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
         {
             obj->SetAlignedPointerInInternalField(0, objectPointer);
             obj->SetAlignedPointerInInternalField(1, this);
-
+            isolate_->AdjustAmountOfExternalAllocatedMemory(static_cast<int64_t>(sizeof(ClassType)));
             v8::Global<v8::Object> pobj(isolate_, obj);
 
             pobj.SetWeak(this, WeakCallback<ClassType>, v8::WeakCallbackType::kInternalFields);
@@ -459,7 +460,7 @@ template <typename ClassType> void ClassRegistry<ClassType>::removeObject(ClassT
         {
             internal::raw_destructor(objectPointer);
         }
-
+        isolate_->AdjustAmountOfExternalAllocatedMemory(-static_cast<int64_t>(sizeof(ClassType)));
         it->second.pobj.ClearWeak();
         it->second.pobj.Reset();
         // if (erase)

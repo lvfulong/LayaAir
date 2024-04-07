@@ -279,5 +279,8 @@ GLESInternalTex *GLESShaderData::getInternalTexture(int32_t index)
 
 void GLESShaderData::cloneTo(GLESShaderData *destObject)
 {
+    this->_defineDatas->cloneTo(destObject->_defineDatas);
+    destObject->m_data = this->m_data;
+    destObject->m_gammaColorMap = this->m_gammaColorMap;
 }
 } // namespace laya
