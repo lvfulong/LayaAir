@@ -143,7 +143,7 @@ template <typename T> T convert_value_object_from_v8(v8::Local<v8::Value> value)
     return ret;
 }
 
-template <typename T> v8::Local<v8::Object> convert_value_object_to_v8(const T &value)
+template <typename T> v8::Local<v8::Value> convert_value_object_to_v8(const T &value)
 {
     assert(value_object<T>::is_bound && "casting from an unbound value_type");
     auto ret = v8::Object::New(v8::Isolate::GetCurrent());
@@ -153,6 +153,15 @@ template <typename T> v8::Local<v8::Object> convert_value_object_to_v8(const T &
         ret->Set(v8::Isolate::GetCurrent()->GetCurrentContext(), name, field.to_v8(&value, field.pfield));
     }
     return ret;
+}
+template <typename T> v8::Local<v8::Value> convert_value_object_to_v8(T* value)
+{
+    assert(value_object<T>::is_bound && "casting from an unbound value_type");
+    if (value == nullptr)
+    {
+        return v8::Null(v8::Isolate::GetCurrent());
+    }
+    return convert_value_object_to_v8(*value);
 }
 
 } // namespace internal

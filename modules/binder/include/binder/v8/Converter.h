@@ -18,8 +18,8 @@ namespace internal
 {
 template <typename T> T convert_value_object_from_v8(v8::Local<v8::Value> value);
 
-template <typename T> v8::Local<v8::Object> convert_value_object_to_v8(const T &t);
-
+template <typename T> v8::Local<v8::Value> convert_value_object_to_v8(const T &t);
+template <typename T> v8::Local<v8::Value> convert_value_object_to_v8(T *t);
 template <class T> struct is_value_object;
 
 template <typename T>
@@ -46,6 +46,20 @@ template <typename T> class Converter<T, std::enable_if_t<internal::is_value_obj
 {
   public:
     static v8::Local<v8::Value> ToJs(T value, bool callDestructor = true)
+    {
+        return internal::convert_value_object_to_v8(value);
+    }
+    static T ToCpp(v8::Local<v8::Value> value)
+    {
+        return internal::convert_value_object_from_v8<T>(value);
+    }
+};
+
+
+template <typename T> class Converter<T*, std::enable_if_t<internal::is_value_object<T>::value>>
+{
+  public:
+    static v8::Local<v8::Value> ToJs(T* value, bool callDestructor = true)
     {
         return internal::convert_value_object_to_v8(value);
     }
