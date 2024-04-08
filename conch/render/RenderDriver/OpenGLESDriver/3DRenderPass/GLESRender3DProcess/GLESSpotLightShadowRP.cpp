@@ -67,27 +67,27 @@ void GLESSpotLightShadowRP::render(GLESRenderContext3D* context, std::vector<RTB
     context->_cameraUpdateMask++;
 }
 
-void GLESSpotLightShadowRP::_getShadowBias(Real shadowResolution, Vector4& out)
+void GLESSpotLightShadowRP::_getShadowBias(float shadowResolution, Vector4& out)
 {
 
-    Real frustumSize = std::tan(_spotAngle * 0.5 * MathUtils3D::Deg2Rad) * _spotRange;
-    Real texelSize = frustumSize / shadowResolution;
-    Real depthBias = -_shadowDepthBias * texelSize;
-    Real normalBias = -_shadowNormalBias * texelSize;
+    float frustumSize = std::tan(_spotAngle * 0.5 * MathUtils3D::Deg2Rad) * _spotRange;
+    float texelSize = frustumSize / shadowResolution;
+    float depthBias = -_shadowDepthBias * texelSize;
+    float normalBias = -_shadowNormalBias * texelSize;
 
     if (_shadowMode == ShadowMode::SoftHigh) {
         // TODO: Handle the bias more accurately
-        const Real kernelRadius = 2.5;
+        const float kernelRadius = 2.5;
         depthBias *= kernelRadius;
         normalBias *= kernelRadius;
     }
 
     out.setValue(depthBias, normalBias, 0.0f, 0.0f);
 }
-void GLESSpotLightShadowRP::_getSpotLightShadowData(ShadowSpotData& shadowSpotData, Real resolution, Vector4& shadowParams, Matrix4x4& shadowSpotMatrices, Vector4& shadowMapSize) {
+void GLESSpotLightShadowRP::_getSpotLightShadowData(ShadowSpotData& shadowSpotData, float resolution, Vector4& shadowParams, Matrix4x4& shadowSpotMatrices, Vector4& shadowMapSize) {
     Vector3& out = shadowSpotData.position = _lightPos;
     shadowSpotData.resolution = resolution;
-    shadowMapSize.setValue(1.0f / resolution, 1.0f / resolution, static_cast<Real>(resolution), static_cast<Real>(resolution));
+    shadowMapSize.setValue(1.0f / resolution, 1.0f / resolution, static_cast<float>(resolution), static_cast<float>(resolution));
     shadowSpotData.offsetX = 0;
     shadowSpotData.offsetY = 0;
 

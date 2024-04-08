@@ -16,7 +16,6 @@ using laya::F32;
 using laya::FrustumCorner;
 using laya::Matrix4x4;
 using laya::Plane;
-using laya::Real;
 using laya::ShadowCascadesMode;
 using laya::ShadowSliceData;
 using laya::Utils3D;
@@ -102,25 +101,25 @@ FrustumCorner _frustumTwoPlaneCorners[6][6][6] = {
 
 // for global border for no cascade mode.
 void getDirectionalLightMatrices(const Vector3 &lightUp, const Vector3 &lightSide, const Vector3 &lightForward,
-                                 uint32_t cascadeIndex, Real nearPlane, Real shadowResolution,
+                                 uint32_t cascadeIndex, float nearPlane, float shadowResolution,
                                  ShadowSliceData &shadowSliceData, F32 *shadowMatrices)
 {
     BoundSphere &boundSphere = shadowSliceData.splitBoundSphere;
 
     // To solve shdow swimming problem.
     Vector3 &center = boundSphere.center;
-    Real radius = boundSphere.radius;
-    Real halfShadowResolution = shadowResolution / 2;
+    float radius = boundSphere.radius;
+    float halfShadowResolution = shadowResolution / 2;
     // Add border to prject edge pixel PCF.
     // Improve:the clip planes not conside the border,but I think is OK,because the object can clip is not
     // continuous.
-    Real borderRadius = radius * halfShadowResolution / (halfShadowResolution - ShadowUtils::atlasBorderSize);
-    Real borderDiam = borderRadius * 2.0;
-    Real sizeUnit = shadowResolution / borderDiam;
-    Real radiusUnit = borderDiam / shadowResolution;
-    Real upLen = ceil(Vector3::dot(center, lightUp) * sizeUnit) * radiusUnit;
-    Real sideLen = ceil(Vector3::dot(center, lightSide) * sizeUnit) * radiusUnit;
-    Real forwardLen = Vector3::dot(center, lightForward);
+    float borderRadius = radius * halfShadowResolution / (halfShadowResolution - ShadowUtils::atlasBorderSize);
+    float borderDiam = borderRadius * 2.0;
+    float sizeUnit = shadowResolution / borderDiam;
+    float radiusUnit = borderDiam / shadowResolution;
+    float upLen = ceil(Vector3::dot(center, lightUp) * sizeUnit) * radiusUnit;
+    float sideLen = ceil(Vector3::dot(center, lightSide) * sizeUnit) * radiusUnit;
+    float forwardLen = Vector3::dot(center, lightForward);
     center.x = lightUp.x * upLen + lightSide.x * sideLen + lightForward.x * forwardLen;
     center.y = lightUp.y * upLen + lightSide.y * sideLen + lightForward.y * forwardLen;
     center.z = lightUp.z * upLen + lightSide.z * sideLen + lightForward.z * forwardLen;
@@ -145,8 +144,8 @@ void getDirectionalLightMatrices(const Vector3 &lightUp, const Vector3 &lightSid
     Utils3D::_mulMatrixArray(ShadowUtils::_shadowMapScaleOffsetMatrix.elements, viewProjectMatrix.elements, 0,
                              shadowMatrices, cascadeIndex * 16);
 }
-void getDirectionLightShadowCullPlanes(Plane *cameraFrustumPlanes, uint32_t cascadeIndex, Real *splitDistance,
-                                       Real cameraNear, const Vector3 &direction, ShadowSliceData &shadowSliceData)
+void getDirectionLightShadowCullPlanes(Plane *cameraFrustumPlanes, uint32_t cascadeIndex, float*splitDistance,
+    float cameraNear, const Vector3 &direction, ShadowSliceData &shadowSliceData)
 {
     // http://lspiroengine.com/?p=187
     Vector3 *frustumCorners = ShadowUtils::_frustumCorners;
@@ -165,7 +164,7 @@ void getDirectionLightShadowCullPlanes(Plane *cameraFrustumPlanes, uint32_t casc
     Plane &top = cameraFrustumPlanes[(uint32_t)FrustumFace::Top];
 
     // adjustment the near/far plane
-    Real splitNearDistance = splitDistance[cascadeIndex] - cameraNear;
+    float splitNearDistance = splitDistance[cascadeIndex] - cameraNear;
     Plane &splitNear = ShadowUtils::_adjustNearPlane;
     Plane &splitFar = ShadowUtils::_adjustFarPlane;
     splitNear.normal = near_.normal;
@@ -237,7 +236,7 @@ void getDirectionLightShadowCullPlanes(Plane *cameraFrustumPlanes, uint32_t casc
     }
     shadowSliceData.cullPlaneCount = edgeIndex;
 }
-void prepareShadowReceiverShaderValues(Real shadowStrength, uint32_t shadowMapWidth, uint32_t shadowMapHeight,
+void prepareShadowReceiverShaderValues(float shadowStrength, uint32_t shadowMapWidth, uint32_t shadowMapHeight,
                                        ShadowSliceData *shadowSliceDatas, uint32_t cascadeCount, Vector4 &shadowMapSize,
                                        Vector4 &shadowParams, F32 *shadowMatrices, F32 *splitBoundSpheres)
 {
@@ -254,7 +253,7 @@ void prepareShadowReceiverShaderValues(Real shadowStrength, uint32_t shadowMapWi
         {
             BoundSphere &boundSphere = shadowSliceDatas[i].splitBoundSphere;
             Vector3 &center = boundSphere.center;
-            Real radius = boundSphere.radius;
+            float radius = boundSphere.radius;
             uint32_t offset = i * 4;
             splitBoundSpheres[offset] = center.x;
             splitBoundSpheres[offset + 1] = center.y;
@@ -268,13 +267,13 @@ void prepareShadowReceiverShaderValues(Real shadowStrength, uint32_t shadowMapWi
 }
 
 void applySliceTransform(const ShadowSliceData &shadowSliceData, uint32_t atlasWidth, uint32_t atlasHeight,
-                         uint32_t cascadeIndex, Real *outShadowMatrices)
+                         uint32_t cascadeIndex, float* outShadowMatrices)
 {
     // Apply shadow slice scale and offset
     Matrix4x4 slice;
-    Real *sliceE = slice.elements;
-    Real oneOverAtlasWidth = 1.0 / atlasWidth;
-    Real oneOverAtlasHeight = 1.0 / atlasHeight;
+    float *sliceE = slice.elements;
+    float oneOverAtlasWidth = 1.0 / atlasWidth;
+    float oneOverAtlasHeight = 1.0 / atlasHeight;
 
     sliceE[0] = shadowSliceData.resolution * oneOverAtlasWidth; // scale
     sliceE[5] = shadowSliceData.resolution * oneOverAtlasHeight;
@@ -287,16 +286,16 @@ void applySliceTransform(const ShadowSliceData &shadowSliceData, uint32_t atlasW
     uint32_t offset = cascadeIndex * 16;
     Utils3D::_mulMatrixArray(sliceE, outShadowMatrices, offset, outShadowMatrices, offset);
 }
-Real getBoundSphereByFrustum(Real near_, Real far_, Real fov, Real aspectRatio, const Vector3 &cameraPos,
+float getBoundSphereByFrustum(float near_, float far_, float fov, float aspectRatio, const Vector3 &cameraPos,
                              const Vector3 &forward, BoundSphere &outBoundSphere)
 {
     // https://lxjk.github.io/2017/04/15/Calculate-Minimal-Bounding-Sphere-of-Frustum.html
-    Real centerZ;
-    Real radius;
-    Real k = sqrt(1.0 + aspectRatio * aspectRatio) * tan(fov / 2.0);
-    Real k2 = k * k;
-    Real farSNear = far_ - near_;
-    Real farANear = far_ + near_;
+    float centerZ;
+    float radius;
+    float k = sqrt(1.0 + aspectRatio * aspectRatio) * tan(fov / 2.0);
+    float k2 = k * k;
+    float farSNear = far_ - near_;
+    float farANear = far_ + near_;
     if (k2 > farSNear / farANear)
     {
         centerZ = far_;
@@ -324,7 +323,7 @@ void getCameraFrustumPlanes(const Matrix4x4 &cameraViewProjectMatrix, std::vecto
                                       frustumPlanes[(int)FrustumFace::Bottom]);
 }
 
-Real getFarWithRadius(Real radius, Real denominator)
+float getFarWithRadius(float radius, float denominator)
 {
     // use the frustum side as the radius and get the far distance form camera.
     // var tFov: number = Math.tan(fov * 0.5);// get this the equation using Pythagorean
@@ -332,13 +331,13 @@ Real getFarWithRadius(Real radius, Real denominator)
     return sqrt(radius * radius / denominator);
 }
 
-void getCascadesSplitDistance(Real twoSplitRatio, const Vector3 &fourSplitRatio, Real cameraNear, Real shadowFar,
-                              Real fov, Real aspectRatio, ShadowCascadesMode cascadesMode, std::vector<Real> &out)
+void getCascadesSplitDistance(float twoSplitRatio, const Vector3 &fourSplitRatio, float cameraNear, float shadowFar,
+    float fov, float aspectRatio, ShadowCascadesMode cascadesMode, std::vector<float> &out)
 {
     out[0] = cameraNear;
-    Real range = shadowFar - cameraNear;
-    Real tFov = tan(fov * 0.5);
-    Real denominator = 1.0 + tFov * tFov * (aspectRatio * aspectRatio + 1.0);
+    float range = shadowFar - cameraNear;
+    float tFov = tan(fov * 0.5);
+    float denominator = 1.0 + tFov * tFov * (aspectRatio * aspectRatio + 1.0);
     switch (cascadesMode)
     {
     case ShadowCascadesMode::NoCascades:
@@ -356,7 +355,7 @@ void getCascadesSplitDistance(Real twoSplitRatio, const Vector3 &fourSplitRatio,
         break;
     }
 }
-Real getMaxTileResolutionInAtlas(uint32_t atlasWidth, uint32_t atlasHeight, uint32_t tileCount)
+float getMaxTileResolutionInAtlas(uint32_t atlasWidth, uint32_t atlasHeight, uint32_t tileCount)
 {
     uint32_t resolution = std::min(atlasWidth, atlasHeight);
     int32_t currentTileCount = std::floor(atlasWidth / resolution) * std::floor(atlasHeight / resolution);

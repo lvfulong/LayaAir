@@ -14,10 +14,10 @@ class RTCameraNodeData
 {
   public:
     JSTransform *transform;
-    Real farplane;
-    Real nearplane;
-    Real fieldOfView;
-    Real aspectRatio;
+    float farplane;
+    float nearplane;
+    float fieldOfView;
+    float aspectRatio;
     Matrix4x4 projectViewMatrix;
     void setProjectionViewMatrix(const Matrix4x4 &value)
     {

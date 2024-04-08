@@ -43,7 +43,7 @@ void GLESDirectLightShadowRP::setLight(RTDirectLight *light)
     else
     {
         this->_cascadeCount = cascadesMode == ShadowCascadesMode::TwoCascades ? 2 : 4;
-        Real shadowTileResolution =
+        float shadowTileResolution =
             ShadowUtils::getMaxTileResolutionInAtlas(atlasResolution, atlasResolution, this->_cascadeCount);
         this->_shadowTileResolution = shadowTileResolution;
         this->_shadowMapWidth = shadowTileResolution * 2;

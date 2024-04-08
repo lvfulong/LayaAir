@@ -13,16 +13,16 @@ class JSTransform;
 class RTDirectLight
 {
   public:
-    Real shadowNearPlane; 
+    float shadowNearPlane;
     ShadowCascadesMode shadowCascadesMode;
     JSTransform *transform;
     int32_t shadowResolution;
-    Real shadowDistance;
+    float shadowDistance;
     ShadowMode shadowMode;
-    Real shadowStrength;
-    Real shadowDepthBias;
-    Real shadowNormalBias;
-    Real shadowTwoCascadeSplits;
+    float shadowStrength;
+    float shadowDepthBias;
+    float shadowNormalBias;
+    float shadowTwoCascadeSplits;
 
     Vector3 _shadowFourCascadeSplits;
     Vector3 _direction;

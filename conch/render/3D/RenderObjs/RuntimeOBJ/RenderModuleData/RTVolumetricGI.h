@@ -20,7 +20,7 @@ public:
       GLESInternalTex* irradiance = nullptr;
       GLESInternalTex* distance = nullptr;
       JSBounds* bound = nullptr;
-      Real intensity;
+      float intensity;
       uint32_t  updateMark;
       Vector3 probeCounts;
       Vector3 probeStep;

@@ -51,8 +51,8 @@ namespace laya
         context->setClearData(static_cast<RenderClearFlagBits>(RenderClearFlag::Depth), Color::BLACK, 1, 0);
         this->opaqueList.renderQueue((GLESRenderContext3D*)context);
         //渲染完后传入使用的参数
-        Real far_ = this->camera->farplane;
-        Real near_ = this->camera->nearplane;
+        float far_ = this->camera->farplane;
+        float near_ = this->camera->nearplane;
         this->_zBufferParams.setValue(1.0 - far_ / near_, far_ / near_, (near_ - far_) / (near_ * far_), 1 / near_);
         context->cameraData->setVector(DepthPassProperty::DEFINE_SHADOW_BIAS, DepthPassProperty::SHADOW_BIAS);
 

@@ -15,15 +15,15 @@ class RTSpotLight
 {
   public:
     JSTransform* transform;
-    Real shadowResolution;
-    Real shadowDistance;
+    float shadowResolution;
+    float shadowDistance;
     ShadowMode shadowMode;
-    Real shadowStrength;
-    Real shadowDepthBias;
-    Real shadowNormalBias;
-    Real shadowNearPlane;
-    Real spotRange;
-    Real spotAngle;
+    float shadowStrength;
+    float shadowDepthBias;
+    float shadowNormalBias;
+    float shadowNearPlane;
+    float spotRange;
+    float spotAngle;
     Vector3 _direction;
     void setTransform(JSTransform* value)
     {

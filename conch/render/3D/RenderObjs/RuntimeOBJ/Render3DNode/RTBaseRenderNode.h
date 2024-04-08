@@ -68,8 +68,8 @@ public://bind
     void _calculateBoundingBox();
     uint32_t renderNodeType;
     JSTransform* transform = nullptr;
-    Real distanceForSort;
-    Real sortingFudge;
+    float distanceForSort;
+    float sortingFudge;
     bool castShadow;
     bool receiveShadow;
     bool enable;

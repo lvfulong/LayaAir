@@ -50,7 +50,7 @@ public:
     GLESInternalRT* destTarget;
     std::array<F32, 16 * _maxCascades> _shadowMatrices;
     std::array<F32, 4 * _maxCascades> _splitBoundSpheres;
-    std::vector<Real> _cascadesSplitDistance;
+    std::vector<float> _cascadesSplitDistance;
     ShadowCullInfo _shadowCullInfo;
     uint32_t pipelineMode;
     RTDirectLight* _light;
@@ -63,7 +63,7 @@ public:
     std::vector<Plane> _frustumPlanes;
     uint32_t _shadowMapWidth = 0;
     uint32_t _shadowMapHeight = 0;
-    Real _shadowTileResolution = 0;
+    float _shadowTileResolution = 0;
 
     //cmd
     std::vector<std::vector<GLESRenderCMD*>> _shadowCastCMDS;

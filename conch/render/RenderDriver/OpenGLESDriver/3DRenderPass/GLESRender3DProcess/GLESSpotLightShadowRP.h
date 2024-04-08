@@ -17,9 +17,9 @@ namespace laya
     public:
         GLESShaderData* cameraShaderValue;
         Vector3 position;
-        Real offsetX;
-        Real offsetY;
-        Real resolution;
+        float offsetX;
+        float offsetY;
+        float resolution;
         Matrix4x4 viewMatrix;
         Matrix4x4 projectionMatrix;
         Matrix4x4 viewProjectMatrix;
@@ -41,8 +41,8 @@ class GLESSpotLightShadowRP
     void set_offsetx(uint32_t value);
     void set_offsety(uint32_t value);
     void set_resolution(uint32_t value);*/
-    void _getShadowBias(Real shadowResolution, Vector4& out);
-    void _getSpotLightShadowData(ShadowSpotData& shadowSpotData, Real resolution, Vector4& shadowParams, Matrix4x4& shadowSpotMatrices, Vector4& shadowMapSize);
+    void _getShadowBias(float shadowResolution, Vector4& out);
+    void _getSpotLightShadowData(ShadowSpotData& shadowSpotData, float resolution, Vector4& shadowParams, Matrix4x4& shadowSpotMatrices, Vector4& shadowMapSize);
   public:
     //Vector3 position;
     //Vector3 lightforward;
@@ -62,17 +62,17 @@ class GLESSpotLightShadowRP
     RTSpotLight* light;
     Vector3 _lightPos;
     Matrix4x4 _lightWorldMatrix;
-    Real _shadowResolution;
+    float _shadowResolution;
     Matrix4x4 _shadowSpotMatrices;
     Vector4 _shadowSpotMapSize;
     Vector4 _shadowParams;
-    Real _spotAngle;
-    Real _spotRange;
-    Real _shadowDepthBias;
-    Real _shadowNormalBias;
+    float _spotAngle;
+    float _spotRange;
+    float _shadowDepthBias;
+    float _shadowNormalBias;
     Vector4 _shadowBias;
     ShadowMode _shadowMode;
-    Real _shadowStrength;
+    float _shadowStrength;
     ShadowSpotData _shadowSpotData;
     GLESRenderListQueue _renderQueue;
     GLESInternalRT* destTarget;
