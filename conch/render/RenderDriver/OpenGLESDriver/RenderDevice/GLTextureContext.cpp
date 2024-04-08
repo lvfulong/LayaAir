@@ -1740,14 +1740,6 @@ void GLTextureContext::getRenderTextureData(GLESInternalRT *internalTex, int x, 
     glBindFramebuffer(GL_FRAMEBUFFER, g_nMainFrameBuffer);
     return;
 }
-void GLTextureContext::setTextureImageDataJS(GLESInternalTex *texture, int source, bool premultiplyAlpha, bool invertY)
-{
-    auto pImage = JCConch::s_pConchRender->m_pImageManager->getImage(source);
-    if (pImage && texture)
-    {
-        this->setTextureImageData(texture, pImage.get(), premultiplyAlpha, invertY);
-    }
-}
 void GLTextureContext::setTexturePixelsDataJS(GLESInternalTex *texture, JSValueAsParam pixels, bool premultiplyAlpha,
                                               bool invertY)
 {

@@ -91,7 +91,7 @@ namespace laya
 		void LoadInternal(const std::string& path);
         void DispatchEvtToJS(const std::string path);
 
-	private:
+	public:
 		static int ms_handleIdx;
 		static std::set<std::string> ms_supportFormat;
 

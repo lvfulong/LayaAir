@@ -42,6 +42,7 @@
 #include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderContext2D.h>
 #include "Bindings/LayaAir/3D/JSTransform.h"
 #include "Bindings/LayaAir/3D/JSBounds.h"
+#include <Bindings/Video/JSVideo.h>
 
 namespace laya
 {
@@ -236,7 +237,6 @@ class RenderBindings
             class_binding.constructor<>();
             class_binding.function("createTextureInternal", &GLTextureContext::createTextureInternal);
             class_binding.function("setTexturePixelsData", &GLTextureContext::setTexturePixelsDataJS);
-            class_binding.function("setTextureImageData", &GLTextureContext::setTextureImageDataJS);
             class_binding.function("setTextureSubPixelsData", &GLTextureContext::setTextureSubPixelsDataJS);
             class_binding.function("setCubeImageData", &GLTextureContext::setCubeImageData);
             class_binding.function("setCubePixelsData", &GLTextureContext::setCubePixelsDataJS);
@@ -254,6 +254,24 @@ class RenderBindings
                                    &GLTextureContext::setupRendertargetTextureAttachment);
             class_binding.function("initVideoTextureData", &GLTextureContext::initVideoTextureData);
             class_binding.function("updateVideoTexture", &GLTextureContext::updateVideoTexture);
+            class_binding.function_optional_override(
+                "updateVideoTexture",
+                optional_override([](GLTextureContext &ctx, GLESInternalTex* texture, int source, bool premultiplyAlpha, bool invertY ) {
+                    auto pImage = JCConch::s_pConchRender->m_pImageManager->getImage(source);
+                    if (pImage && texture)
+                    {
+                        ctx.updateVideoTexture(texture, pImage.get(), premultiplyAlpha, invertY);
+                    }
+            }));
+            class_binding.function_optional_override(
+                "setTextureImageData",
+                optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, int source, bool premultiplyAlpha, bool invertY) {
+                    auto pImage = JCConch::s_pConchRender->m_pImageManager->getImage(source);
+                    if (pImage && texture)
+                    {
+                        ctx.setTextureImageData(texture, pImage.get(), premultiplyAlpha, invertY);
+                    }
+            }));
             // setTextureSubImageData todo
 
             class_binding.function_optional_override(

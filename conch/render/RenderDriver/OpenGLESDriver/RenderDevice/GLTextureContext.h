@@ -114,8 +114,7 @@ class GLTextureContext : public GLObject
     virtual void getRenderTextureData(GLESInternalRT *internalTex, int x, int y, int width, int height,
                                       std::vector<uint8_t> &out);
     virtual void updateVideoTexture(GLESInternalTex *texture, JCImage *video, bool premultiplyAlpha, bool invertY);
-    //
-    void setTextureImageDataJS(GLESInternalTex *texture, int source, bool premultiplyAlpha, bool invertY);
+
     void setTexturePixelsDataJS(GLESInternalTex *texture, JSValueAsParam pixels, bool premultiplyAlpha, bool invertY);
     void setTextureSubPixelsDataJS(GLESInternalTex *texture, JSValueAsParam source, int mipmapLevel,
                                    bool generateMipmap, int xOffset, int yOffset, int width, int height,
