@@ -486,7 +486,14 @@ int GLESEngine::uploadUniforms(GLShaderInstance *shader, CommandEncoder *command
             std::unordered_map<uint32_t, std::any>::iterator it = data.find(one->dataOffset);
             if (it != data.end())
             {
-                shaderCall += one->fun(one, it->second);
+                try 
+                {
+                    shaderCall += one->fun(one, it->second);
+                }
+                catch (const std::bad_any_cast& e)
+                {
+                    LOGE("Error: uniform [%s] set shaderData with different types", one->name.c_str());
+                }
             }
         }
     }
@@ -509,7 +516,16 @@ int GLESEngine::uploadCustomUniforms(GLShaderInstance *shader, const std::unorde
     {
         ShaderVariable* one = it->second;
         if (one && data != nullptr)
-            shaderCall += one->fun(one, tempAny);
+        {
+            try
+            {
+                shaderCall += one->fun(one, tempAny);
+            }
+            catch (const std::bad_any_cast& e)
+            {
+                LOGE("Error: uniform [%s] set shaderData with different types", one->name.c_str());
+            }
+        }
         tempData.m_data = nullptr;
     }
     return shaderCall;
