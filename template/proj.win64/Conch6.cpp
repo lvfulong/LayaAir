@@ -3,9 +3,12 @@
 #include <string>
 #include "JCConch.h"
 #include "JCSystemConfig.h"
+#include <filesystem>
 #include <app/App.h>
 #include <downloadCache/JCIosFileSource.h>
+#include <utils/JCCommonMethod.h>
 extern std::string gRedistPath;
+namespace  fs = std::filesystem;
 /*
 �÷���
     conch6.exe [options] url
@@ -83,11 +86,13 @@ int main(int argc, _TCHAR* argv[])
             }
         }
     }
-
-
+    fs::path exePath = laya::getExePath();
+    LOGE("start exe path %s", exePath.c_str());
+    gRedistPath = exePath.remove_filename().string();
     laya::JCIosFileSource* pAssets = new laya::JCIosFileSource();
     pAssets->Init(gRedistPath.c_str());
     laya::JCConch::s_pAssetsFiles = pAssets;
+    laya::g_kSystemConfig.loadConfigIniFile();
     if (bRunTest) 
     {
         //JSMemorySurvey::DelInstance();

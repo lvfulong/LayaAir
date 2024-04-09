@@ -44,11 +44,11 @@ namespace laya
 
 		void setVideoHandler(IVideoHandler* handler);
 
-		virtual bool isVideo() const override {
+		bool isVideo() const override {
 			return true;
 		}
 
-		virtual void updateTexImage();
+		void updateTexImage() override;
 		virtual bool enableImage() override { return true; }
 
     private:

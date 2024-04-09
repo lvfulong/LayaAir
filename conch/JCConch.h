@@ -36,7 +36,7 @@ namespace laya
 	{
 	public:
 
-		JCConch(JS_DEBUG_MODE nJSDebugMode,int nJSDebugPort );
+		JCConch();
 
 		~JCConch();
         
@@ -87,8 +87,6 @@ namespace laya
         JCFileSource*			                m_pAssetsRes;
         std::string				                m_strStartJS;
         std::string                             m_sCachePath;
-        int				                        m_nJSDebugPort;
-        JS_DEBUG_MODE                           m_nJSDebugMode;
     #ifdef JS_V8
         DebuggerAgent*			                m_pDbgAgent;
     #endif

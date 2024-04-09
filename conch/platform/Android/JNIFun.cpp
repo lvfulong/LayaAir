@@ -117,7 +117,6 @@ extern "C"
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleKeyboardInput(JNIEnv* env, jobject obj, jstring strValue);
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleKeyboardConfirm(JNIEnv* env, jobject obj, jstring strValue);
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleKeyboardComplete(JNIEnv* env, jobject obj, jstring strValue);
-	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_SetConchWebgl(JNIEnv* env, jobject obj, jboolean value);
 };
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_configSetURL(JNIEnv * env, jobject obj,jstring p_strUrl)
 {
@@ -138,7 +137,7 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_configSetParamExt(JNIE
 	LOGI("JNI setParamExt：%s", pstrParamExt);
 	env->ReleaseStringUTFChars(p_strParamExt, pstrParamExt);
 }
-JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_InitDLib(JNIEnv * env, jobject obj,jobject assetManager,int nThreadNum,jstring p_strAssetRootPath, jstring p_strCachePath , jstring p_strAPKExpansionMainPath, jstring p_strAPKExpansionPatchPath,int debugMode,int debugPort, jstring p_strConfigJS)
+JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_InitDLib(JNIEnv * env, jobject obj,jobject assetManager,int nThreadNum,jstring p_strAssetRootPath, jstring p_strCachePath , jstring p_strAPKExpansionMainPath, jstring p_strAPKExpansionPatchPath, jstring p_strConfigJS)
 {
 	LOGI("JNI InitDLib tid=%x", std::this_thread::get_id());
 	if(laya::JCConch::s_pConch)
@@ -198,12 +197,8 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_InitDLib(JNIEnv * env,
 	env->ReleaseStringUTFChars(p_strAPKExpansionMainPath, pAPKExpansionMain);
 	env->ReleaseStringUTFChars(p_strAPKExpansionPatchPath, pAPKExpansionPatch);
 	env->ReleaseStringUTFChars(p_strConfigJS, pConfigJS);
-	
-	laya::JCConch::s_pConch.reset(new laya::JCConch((laya::JS_DEBUG_MODE)debugMode, debugPort));
-}
-JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_SetConchWebgl(JNIEnv* env, jobject obj, jboolean value)
-{
-	g_kSystemConfig.m_bConchWebGL = value;
+	laya::g_kSystemConfig.loadConfigIniFile();
+	laya::JCConch::s_pConch.reset(new laya::JCConch());
 }
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_SetLocalStoragePath(JNIEnv * env, jobject obj,jstring p_strLocalStorage )
 {

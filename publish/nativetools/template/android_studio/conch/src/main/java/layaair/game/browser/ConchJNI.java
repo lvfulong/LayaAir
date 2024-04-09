@@ -53,9 +53,7 @@ public class ConchJNI
 	public static native void configSetParamExt(String p_strExt);
 	
 	//初始化
-    public static native void InitDLib( AssetManager p_am,int nDownloadThreadNum, String p_strAssetRoot, String p_strCachePath, String p_strAPKExpansionMainPath, String p_strAPKExpansionPatchPath,int debugMode,int debugPort,String js);
-
-	public static native void SetConchWebgl(boolean value);
+    public static native void InitDLib( AssetManager p_am,int nDownloadThreadNum, String p_strAssetRoot, String p_strCachePath, String p_strAPKExpansionMainPath, String p_strAPKExpansionPatchPath, String js);
 	//touch
 	public static native void handleTouch( int type,int id,int x,int y );
 

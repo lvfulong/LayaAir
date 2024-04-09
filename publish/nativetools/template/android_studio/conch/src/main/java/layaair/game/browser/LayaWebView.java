@@ -47,19 +47,19 @@ public class LayaWebView extends AbsoluteLayout implements View.OnKeyListener
 				if (keyCode == KeyEvent.KEYCODE_BACK && m_pWebView.canGoBack())
 				{
 					//m_pWebView.goBack();//后退
-					if(config.GetInstance().m_bBackkeyWebviewHide) {
-						hideWebView();
-					}
-					else
+					//if(config.GetInstance().m_bBackkeyWebviewHide) {
+					//	hideWebView();
+					//}
+					//else
 						closeWebView();
 					return true;    //已处理
 				}
 				else if (keyCode == KeyEvent.KEYCODE_BACK && !m_pWebView.canGoBack())
 				{
-					if(config.GetInstance().m_bBackkeyWebviewHide) {
-						hideWebView();
-					}
-					else
+					//if(config.GetInstance().m_bBackkeyWebviewHide) {
+					//	hideWebView();
+					//}
+					//else
 						closeWebView();
 					return true;
 				}

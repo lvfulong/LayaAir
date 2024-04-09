@@ -844,6 +844,27 @@ std::string encodeURI(const char* value) {
         }
         return escaped.str();
     }
+
+    std::string getExePath()
+    {    
+#ifdef LINUX 
+        char buf[256];
+	    memset(buf, 0, 256);
+	    ssize_t len = readlink("/proc/self/exe", buf, sizeof(buf));
+	    if (len <= 0) {
+		    printf("getExePath failed");
+            return "";
+	    }
+	    std::string ret(buf);
+	    return ret;
+#elif WIN32
+        TCHAR szPath[MAX_PATH];
+        ::GetModuleFileName(NULL, szPath, MAX_PATH);
+        return szPath; 
+#else
+        return "";
+#endif
+    }
 }
 //------------------------------------------------------------------------------
 

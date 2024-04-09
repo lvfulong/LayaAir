@@ -16,11 +16,8 @@ class App
     void run(const Config &config);
 
   private:
-    void loadConfigIniFile();
     bool m_closed = false;
     SDL_Window *m_sdlWindow;
-    int m_nJSDebugMode = 0;
-    int m_nJSDebugPort = 5959;
 };
 } // namespace laya
 #endif

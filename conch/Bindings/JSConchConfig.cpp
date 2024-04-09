@@ -649,19 +649,19 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
     }
     void JSConchConfig::setJSDebugMode(int nMode)
     {
-        JCConch::s_pConch->m_nJSDebugMode = (JS_DEBUG_MODE)nMode;
+        g_kSystemConfig.m_nJSDebugMode = (JS_DEBUG_MODE)nMode;
     }
     int JSConchConfig::getJSDebugMode()
     {
-        return JCConch::s_pConch->m_nJSDebugMode;
+        return g_kSystemConfig.m_nJSDebugMode;
     }
     void JSConchConfig::setJSDebugPort(int nPort)
     {
-        JCConch::s_pConch->m_nJSDebugPort = nPort;
+        g_kSystemConfig.m_nJSDebugPort = nPort;
     }
     int JSConchConfig::getJSDebugPort()
     {
-        return JCConch::s_pConch->m_nJSDebugPort;
+        return g_kSystemConfig.m_nJSDebugPort;
     }
     void JSConchConfig::setSoundGarbageCollectionTime(int nTime)
     {

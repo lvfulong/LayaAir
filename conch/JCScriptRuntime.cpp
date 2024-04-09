@@ -205,14 +205,14 @@ namespace laya
 #ifdef JS_V8_DEBUGGER
         if (m_pDbgAgent) 
         {
-            m_pDbgAgent->onJSStart(m_pScriptThread,(JCConch::s_pConch->m_nJSDebugMode == JS_DEBUG_MODE_WAIT) ? true : false,[]{
+            m_pDbgAgent->onJSStart(m_pScriptThread,(g_kSystemConfig.m_nJSDebugMode == JS_DEBUG_MODE_WAIT) ? true : false,[]{
                 //gLayaLog = mygLayaLog;
                 //gLayaLogNoParam = mygLayaLogSimp;
             },[]{
                 //gLayaLog = nullptr;
                 //gLayaLogNoParam = nullptr;
             });
-            LOGI("js debug open mode: %d port %d", JCConch::s_pConch->m_nJSDebugMode, JCConch::s_pConch->m_nJSDebugPort);
+            LOGI("js debug open mode: %d port %d", g_kSystemConfig.m_nJSDebugMode, g_kSystemConfig.m_nJSDebugPort);
 
             gLayaLog = mygLayaLog;
             gLayaLogNoParam = mygLayaLogSimp;

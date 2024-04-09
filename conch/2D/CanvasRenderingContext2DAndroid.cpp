@@ -1,6 +1,6 @@
 #include "CanvasRenderingContext2DAndroid.h"
 #include <utils/Log.h>
-
+#include <cassert>
 namespace laya
 {
 jclass CanvasRenderingContext2DAndroid::s_cls = nullptr;

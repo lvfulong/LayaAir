@@ -9,6 +9,8 @@
 #ifndef __JCFileSource_H__
 #define __JCFileSource_H__
 
+#include <string>
+
 namespace laya
 {
 	class JCFileSource
@@ -18,43 +20,56 @@ namespace laya
 
         virtual bool isFileExistInZipAPKExpansion(const char* sFileName) = 0;
 
-        /** @brief Ö±½ÓÅÐ¶Ï°üÄÚÊÇ·ñ´æÔÚÕâ¸öÎÄ¼þ
-         *  @param[in] ÎÄ¼þÃû×Ö
-         *  @return ·µ»Øtrue»òÕßfalse
+        /** @brief Ö±ï¿½ï¿½ï¿½Ð¶Ï°ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½
+         *  @param[in] ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½
+         *  @return ï¿½ï¿½ï¿½ï¿½trueï¿½ï¿½ï¿½ï¿½false
         */
 		virtual bool isFileExist( const char* sFileName )=0;
 
 
-        /** @brief »ñµÃfileSize
-         *  @param[in] ÎÄ¼þÃû×Ö
-         *  @return ·µ»Øsize
+        /** @brief ï¿½ï¿½ï¿½fileSize
+         *  @param[in] ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½
+         *  @return ï¿½ï¿½ï¿½ï¿½size
         */
         virtual unsigned int getFileSize(const char* sFileName)=0;
 
-        /** @brief ·ÖÅäÒ»¶Î¿Õ¼ä£¬º¯ÊýÖ¸Õë£¬ÎªÁË·ÖÅäÄÚ´æÊ¹ÓÃµÄ
+        /** @brief ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Î¿Õ¼ä£¬ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ë£¬Îªï¿½Ë·ï¿½ï¿½ï¿½ï¿½Ú´ï¿½Ê¹ï¿½Ãµï¿½
          *  @param[in] 
          *  @param[in]
          *  @return 
         */
 		typedef unsigned char* (*ALLOCMEM)(int nBufferSize,void* pBuffer );
 
-        /** @brief ¶ÁÈ¡ÎÄ¼þÄÚÈÝ
-         *  @param[in] ÎÄ¼þÃû×Ö
-         *  @param[in] allocµÄº¯ÊýÖ¸Õë£¬µ÷ÓÃÕß×Ô¼º¾ö¶¨·ÖÅä²ßÂÔ
-         *  @param[in] »ñµÃµÄbuffer
-         *  @param[out] ·µ»ØµÄbuffersize
-         *  @return ÊÇ·ñ³É¹¦
+        /** @brief ï¿½ï¿½È¡ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½
+         *  @param[in] ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½
+         *  @param[in] allocï¿½Äºï¿½ï¿½ï¿½Ö¸ï¿½ë£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+         *  @param[in] ï¿½ï¿½Ãµï¿½buffer
+         *  @param[out] ï¿½ï¿½ï¿½Øµï¿½buffersize
+         *  @return ï¿½Ç·ï¿½É¹ï¿½
         */
 		virtual bool loadFileContent( const char* sFileName, ALLOCMEM pAllocFunc, void* pUserData, int& nBuffSize ) = 0;
 
 
-        /** @brief ¶ÁÈ¡ÎÄ¼þÄÚÈÝ
-        *  @param[in] ÎÄ¼þÃû×Ö
-        *  @param[in] »ñµÃµÄbuffer
-        *  @param[out] ·µ»ØµÄbuffersize
-        *  @return ÊÇ·ñ³É¹¦
+        /** @brief ï¿½ï¿½È¡ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½
+        *  @param[in] ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½
+        *  @param[in] ï¿½ï¿½Ãµï¿½buffer
+        *  @param[out] ï¿½ï¿½ï¿½Øµï¿½buffersize
+        *  @return ï¿½Ç·ï¿½É¹ï¿½
         */
         virtual bool loadFileContent(const char* sFileName, char*& pBuffer, int& nBuffSize) = 0;
+
+        std::string readTextAsset(const char* p_pszFile)
+        {
+            char* sBuffer = NULL;
+            int nSize = 0;
+            if (loadFileContent(p_pszFile, sBuffer, nSize))
+            {
+                std::string rsBuffer = sBuffer;
+                delete[] sBuffer;
+                return rsBuffer;
+            }
+            return "";
+        }
 	};
 }
 //------------------------------------------------------------------------------

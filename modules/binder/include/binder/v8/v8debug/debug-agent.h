@@ -41,7 +41,7 @@ namespace laya {
         }
         StrBuff& operator <<(int64_t v) {
             char buf[64];
-            sprintf(buf, "%lld", v);
+            sprintf(buf, "%ld", v);
             addStr(buf);
             return *this;
         }

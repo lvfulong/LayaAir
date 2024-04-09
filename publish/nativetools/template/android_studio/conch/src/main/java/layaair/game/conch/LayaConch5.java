@@ -306,8 +306,6 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 		Log.e(TAG, "plugin-----------------onCreate() ");
 		ActivityManager am = (ActivityManager) mCtx.getSystemService(Context.ACTIVITY_SERVICE);
 		ProcessInfo.init(am);
-		InputStream in = getClass().getResourceAsStream("/assets/config.ini");
-		config.GetInstance().init(in);
 
 		boolean initedNative = false;
 		if (!m_bIsPlug) {
@@ -446,14 +444,13 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 			}
 		}
 		ConchJNI.SetLocalStoragePath(strLayaCache + "/localstorage");
-		ConchJNI.SetConchWebgl(config.GetInstance().m_bConchWebGL);
 
 		String cachePath = getAppCacheDir() + "/LayaCache";
 		if (m_AM != null) {
-			ConchJNI.InitDLib(m_AM,getDownloadThreadNum(), "cache", cachePath, m_strExpansionMainPath == null ? "" : m_strExpansionMainPath,m_strExpansionPatchPath == null ? "" : m_strExpansionPatchPath,config.GetInstance().m_nDebugMode,config.GetInstance().m_nDebugPort, m_strConfigJS);
+			ConchJNI.InitDLib(m_AM,getDownloadThreadNum(), "cache", cachePath, m_strExpansionMainPath == null ? "" : m_strExpansionMainPath,m_strExpansionPatchPath == null ? "" : m_strExpansionPatchPath, m_strConfigJS);
 		}
 		else {
-			ConchJNI.InitDLib(null,getDownloadThreadNum(), getJarFile(), cachePath, m_strExpansionMainPath == null ? "" : m_strExpansionMainPath,m_strExpansionPatchPath == null ? "" : m_strExpansionPatchPath,config.GetInstance().m_nDebugMode,config.GetInstance().m_nDebugPort, m_strConfigJS);
+			ConchJNI.InitDLib(null,getDownloadThreadNum(), getJarFile(), cachePath, m_strExpansionMainPath == null ? "" : m_strExpansionMainPath,m_strExpansionPatchPath == null ? "" : m_strExpansionPatchPath, m_strConfigJS);
 		}
 		InitView();
 	}
@@ -609,9 +606,9 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 			try
 			{
 				m_pLayaWebView = new LayaWebView(mCtx, this);
-				if( config.GetInstance().m_sWebviewUrl != null ) {
-					m_pLayaWebView.showWebView( config.GetInstance().m_sWebviewUrl, 0, 0, GetScreenWidth(), GetScreenHeight());
-				}
+				//if( config.GetInstance().m_sWebviewUrl != null ) {
+				//	m_pLayaWebView.showWebView( config.GetInstance().m_sWebviewUrl, 0, 0, GetScreenWidth(), GetScreenHeight());
+				//}
 			}
 			catch(Exception e)
 			{

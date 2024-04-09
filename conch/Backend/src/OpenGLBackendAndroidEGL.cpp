@@ -6,7 +6,7 @@
 // #define GLES_SILENCE_DEPRECATION
 #include <utils/Log.h>
 #include <android/native_window_jni.h>
-
+#include <cassert>
 namespace laya {
 static void printConfig(EGLDisplay eglDisplay, EGLConfig config) {
   LOGI("Config: %p", config);

@@ -61,8 +61,6 @@ public class MainActivity extends Activity {
         JSBridge.mMainActivity = this;
         mSplashDialog = new SplashDialog(this);
         mSplashDialog.showSplash();
-        InputStream inputStream = getClass().getResourceAsStream("/assets/config.ini");
-        config.GetInstance().init(inputStream);
         LayaApp.init(this);
         Log.d(TAG, "t1 " + System.currentTimeMillis());
 

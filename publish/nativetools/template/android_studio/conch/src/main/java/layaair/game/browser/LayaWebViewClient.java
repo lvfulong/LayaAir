@@ -28,7 +28,7 @@ public class LayaWebViewClient extends WebViewClient
     {
         Log.i("LayaWebView", "shouldInterceptRequest url=" + sUrl);
 
-       if(config.GetInstance().m_sConchGameUrl != null )
+       /*if(config.GetInstance().m_sConchGameUrl != null )
         {
             if (sUrl.indexOf(config.GetInstance().m_sConchGameUrl) > -1)
             {
@@ -46,7 +46,7 @@ public class LayaWebViewClient extends WebViewClient
                     Log.i( "0","exception" + exception.toString() );
                 }
             }
-        }
+        }*/
         return  super.shouldInterceptRequest(view, sUrl);
     }
 
@@ -54,7 +54,7 @@ public class LayaWebViewClient extends WebViewClient
     public boolean shouldOverrideUrlLoading( WebView view, String sUrl )
     {
         Log.i("LayaWebView", "shouldOverrideUrlLoading url=" + sUrl);
-        if(config.GetInstance().m_sConchGameUrl != null )
+        /*if(config.GetInstance().m_sConchGameUrl != null )
         {
             if (sUrl.indexOf(config.GetInstance().m_sConchGameUrl) > -1)
             {
@@ -65,7 +65,7 @@ public class LayaWebViewClient extends WebViewClient
             {
                 view.loadUrl(sUrl);
             }
-        }
+        }*/
         /*if (sUrl.startsWith("weixin://wap/pay?")||sUrl.startsWith("mqqapi://forward/url?")) {
             Intent intent = new Intent();
             intent.setAction(Intent.ACTION_VIEW);

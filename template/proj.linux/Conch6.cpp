@@ -85,11 +85,13 @@ int main(int argc, char* argv[])
         }
     }*/
 
-
-
+    fs::path exePath = getExePath();    
+    LOGE("start exe path %s", exePath.c_str());
+    gRedistPath = exePath.remove_filename().string();
     laya::JCIosFileSource* pAssets = new laya::JCIosFileSource();
     pAssets->Init(gRedistPath.c_str());
     laya::JCConch::s_pAssetsFiles = pAssets;
+    laya::g_kSystemConfig.loadConfigIniFile();
     if (bRunTest) 
     {
         //JSMemorySurvey::DelInstance();

@@ -32,6 +32,9 @@ namespace laya
         static bool     s_bLocalizable;                 //�����Ƿ��Ǳ��ذ�
 		bool            m_bConchWebGL;
 		int 			m_nOrientation = 24;
+		void 			loadConfigIniFile();
+        int 			m_nJSDebugMode = 0;
+    	int 			m_nJSDebugPort = 5959;
 	};
 	extern JCSystemConfig g_kSystemConfig;
 }

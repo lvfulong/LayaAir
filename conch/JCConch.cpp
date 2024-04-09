@@ -70,7 +70,7 @@ namespace laya
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "vibrate", kRet);
 #endif
     }
-    JCConch::JCConch(JS_DEBUG_MODE nJSDebugMode, int nJSDebugPort)
+    JCConch::JCConch()
     {
 #ifdef __APPLE__
 #elif _WIN32
@@ -92,10 +92,7 @@ namespace laya
         m_pFileResMgr = new JCFileResManager(pdmgr);
 
         //m_pScriptThread = new JSMulThread();//m_pScriptThread = new JSSingleThread();
-
-        m_nJSDebugMode = nJSDebugMode;
-        m_nJSDebugPort = nJSDebugPort;
-        
+       
 #ifdef WEBGL_THREAD
         LOGI("WebGL mode %s, WebGL thread on", g_kSystemConfig.m_bConchWebGL ? "on" : "off");
 #else
@@ -115,10 +112,10 @@ namespace laya
 
 #ifdef JS_V8_DEBUGGER
         m_pDbgAgent = NULL;
-        if (m_nJSDebugMode != JS_DEBUG_MODE_OFF)
+        if (g_kSystemConfig.m_nJSDebugMode != JS_DEBUG_MODE_OFF)
         {
-            LOGI("open js debug port at %d", m_nJSDebugPort);
-            m_pDbgAgent = new DebuggerAgent("layabox", m_nJSDebugPort);
+            LOGI("open js debug port at %d", g_kSystemConfig.m_nJSDebugPort);
+            m_pDbgAgent = new DebuggerAgent("layabox", g_kSystemConfig.m_nJSDebugPort);
             JCConch::s_pScriptRuntime->m_pDbgAgent = m_pDbgAgent;
         }
         else
@@ -145,7 +142,7 @@ namespace laya
         //    }
         //    return;
         //}
-        JCConch::s_pScriptRuntime->start(m_strStartJS.c_str(), m_nJSDebugPort);
+        JCConch::s_pScriptRuntime->start(m_strStartJS.c_str(), g_kSystemConfig.m_nJSDebugPort);
 	}
     JCConch::~JCConch() {
 

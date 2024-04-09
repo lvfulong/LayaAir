@@ -302,7 +302,7 @@ namespace laya
         return 1.0;
 #endif
     }
-	JsValue getExePath()
+	JsValue getExePath1()
     {
 #ifdef WIN32
         TCHAR szPath[MAX_PATH];
@@ -329,15 +329,7 @@ namespace laya
     }
     std::string readTextAsset(const char* p_pszFile)
     {
-        char* sBuffer = NULL;
-        int nSize = 0;
-        if (JCConch::s_pAssetsFiles->loadFileContent(p_pszFile, sBuffer, nSize))
-        {
-            std::string rsBuffer = sBuffer;
-            delete[] sBuffer;
-            return rsBuffer;
-        }
-        return "";
+        return JCConch::s_pAssetsFiles->readTextAsset(p_pszFile);
     }
 	void open(const char* p_pszUrl)
 	{
@@ -572,7 +564,7 @@ namespace laya
         context.function("setJoystickEvtFunction", &setJoystickEvtFunc);
         context.function("tmGetCurms", &tmGetCurms);
         context.function("reloadJS", &reloadJSThread);
-        context.function("getExePath", &getExePath);
+        context.function("getExePath", &getExePath1);
         context.function("getInnerHeight", &getInnerHeight);
         context.function("getInnerWidth", &getInnerWidth);
         context.function("getDevicePixelRatio", &getDevicePixelRatio);
