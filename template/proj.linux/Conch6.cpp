@@ -26,25 +26,8 @@ extern int g_nInnerHeight;
         ָ��Ч�ʲ��Ե����Ŀ¼
     -debug=""
 */
-/*static std::string	GetTypeString(LPCTSTR section_name, LPCTSTR key_name, LPCTSTR ini_file_path)
-{
-    const int kMaxString = 256;
-    TCHAR buffa[kMaxString];
-    GetPrivateProfileString(section_name, key_name, "not found", buffa, kMaxString, ini_file_path);
-    return buffa;
-}*/
-std::string getExePath()
-{
-    char buf[256];
-	memset(buf, 0, 256);
-	ssize_t len = readlink("/proc/self/exe", buf, sizeof(buf));
-	if (len <= 0) {
-		printf("getExePath failed");
-        return "";
-	}
-	std::string ret(buf);
-	return ret;
-}
+
+
 int main(int argc, char* argv[])
 {
     bool bRunTest = false;
@@ -101,54 +84,8 @@ int main(int argc, char* argv[])
             }
         }
     }*/
-    fs::path exePath = getExePath();
-    gRedistPath = exePath.remove_filename().string();
-    printf("start .exePath=%s\n", gRedistPath.c_str());
-    /*
-    fs::path configpath(szPath);
-    configpath.remove_filename();
-    configpath /= "config.ini";
-    if (!fs::exists(configpath)) 
-    {
-        printf("No config.ini file!\n");
-    }
-    std::string strW = GetTypeString("default", "scrWidth", configpath.generic_string().c_str());
-    std::string strH = GetTypeString("default", "scrHeight", configpath.generic_string().c_str()); 
-    if (strW.length() > 0) 
-    {
-        g_nInnerWidth = atoi(strW.c_str());
-    }
-
-    if (strH.length() > 0) 
-    {
-        g_nInnerHeight = atoi(strH.c_str());
-    }*/
-
-   // if (g_nInnerHeight == 0 || g_nInnerHeight == 0) 
-    {
-        printf(" The value of default.scrHeight or default.scrWidth in config.ini is wrong.\n");
-        g_nInnerWidth = 1280;
-        g_nInnerHeight = 720;
-    }
-    int nJSDebugMode = 1;
-    int nJSDebugPort = 5959;
-    //std::string cfgDebug = GetTypeString("default", "JSDebugPort", configpath.generic_string().c_str());
-    //if (cfgDebug.length() > 0) 
-    //{
-    //    nJSDebugPort = atoi(cfgDebug.c_str());
-    //}
-    //std::string cfgBreakOnFirst = GetTypeString("default", "JSDebugMode", configpath.generic_string().c_str());
-    //if (cfgBreakOnFirst.length() > 0)
-    //{
-    //    nJSDebugMode = atoi(cfgBreakOnFirst.c_str());
-    //}
 
 
-	//std::string cfgConchWebGL = GetTypeString("default", "ConchWebGL", configpath.generic_string().c_str());
-	//if (cfgConchWebGL.length() > 0)
-	{
-        laya::g_kSystemConfig.m_bConchWebGL = true;//atoi(cfgConchWebGL.c_str()) > 0 ? true : false;
-	}
 
     laya::JCIosFileSource* pAssets = new laya::JCIosFileSource();
     pAssets->Init(gRedistPath.c_str());

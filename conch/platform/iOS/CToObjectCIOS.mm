@@ -1161,7 +1161,7 @@ void CToObjectCopy( const char* p_sData )
 }
 void CToObjectCSetRepeatNotify( int p_nID,long p_nStartTime,int p_nRepeatType,const char* p_sTickerText,const char* p_sTitleText,const char* p_sDesc )
 {
-    if( [conchConfig GetInstance]->m_bNotification)
+    //if( [conchConfig GetInstance]->m_bNotification)
     {
         NSString* sTickerText = [NSString stringWithUTF8String:p_sTickerText];
         NSString* sTitileText = [NSString stringWithUTF8String:p_sTitleText];
@@ -1171,7 +1171,7 @@ void CToObjectCSetRepeatNotify( int p_nID,long p_nStartTime,int p_nRepeatType,co
 }
 void CToObjectCSetOnceNotify( int p_nID,long p_nStartTime,const char* p_sTickerText,const char* p_sTitleText,const char* p_sDesc )
 {
-    if( [conchConfig GetInstance]->m_bNotification)
+    //if( [conchConfig GetInstance]->m_bNotification)
     {
         NSString* sTickerText = [NSString stringWithUTF8String:p_sTickerText];
         NSString* sTitileText = [NSString stringWithUTF8String:p_sTitleText];
@@ -1181,14 +1181,14 @@ void CToObjectCSetOnceNotify( int p_nID,long p_nStartTime,const char* p_sTickerT
 }
 void CToObjectCDeleteOnceNotify( int p_nID )
 {
-    if( [conchConfig GetInstance]->m_bNotification)
+    //if( [conchConfig GetInstance]->m_bNotification)
     {
         [[LayaNotifyManager GetInstance]deleteOnceNotify:p_nID];
     }
 }
 void CToObjectCDeleteAllNotify()
 {
-    if( [conchConfig GetInstance]->m_bNotification)
+    //if( [conchConfig GetInstance]->m_bNotification)
     {
         [[LayaNotifyManager GetInstance]deleteAllNotify];
     }

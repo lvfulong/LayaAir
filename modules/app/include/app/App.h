@@ -13,11 +13,14 @@ class App
   public:
     App();
     ~App();
-    void run(const Config &config, size_t width, size_t height, int nJSDebugMode, int nJSDebugPort);
+    void run(const Config &config);
 
   private:
+    void loadConfigIniFile();
     bool m_closed = false;
     SDL_Window *m_sdlWindow;
+    int m_nJSDebugMode = 0;
+    int m_nJSDebugPort = 5959;
 };
 } // namespace laya
 #endif

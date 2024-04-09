@@ -35,6 +35,7 @@ set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/InputTypes.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Preprocessor.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/ColorParser.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/IniFile.h
 )
 
 set(SOURCES
@@ -59,6 +60,7 @@ set(SOURCES
     src/thread/JCWorkerThread.cpp
     src/thread/JCWorkSemaphore.cpp
     src/ColorParser.cpp
+    src/IniFile.cpp
 )
 
 set(DEPS_GL)
@@ -84,6 +86,7 @@ target_link_libraries(${TARGET}
     ghc
     zip
     zlib
+    iniparser
     ${DEPS_GL}
 )
 

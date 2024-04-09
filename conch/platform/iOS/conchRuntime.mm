@@ -133,10 +133,10 @@ static conchRuntime* g_pIOSConchRuntime = nil;
     m_nsRootResourcePath = [self getResourcePath];
     m_nsRootCachePath = [self getRootCachePath];
     NSLog(@"AppVersion=%@",[conchConfig GetInstance]->m_sAppVersion );
-    if( [conchConfig GetInstance]->m_bNotification)
-    {
-        [[LayaNotifyManager GetInstance]deleteAllNotify];
-    }
+    //if( [conchConfig GetInstance]->m_bNotification)
+    //{
+    //    [[LayaNotifyManager GetInstance]deleteAllNotify];
+    //}
     m_pTouchFilter = new JCTouchFilter();
     m_nTouchCount = 0;
     m_fIOSVersion = fIosVersion;

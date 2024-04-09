@@ -1,7 +1,12 @@
-#include <app/App.h>
 #include "JCConch.h"
-#include <assert.h>
 #include <SDL2/SDL_syswm.h>
+#include <app/App.h>
+#include <assert.h>
+#include <utils/IniFile.h>
+#include <filesystem>
+#include "JCSystemConfig.h"
+namespace  fs = std::filesystem;
+extern std::string gRedistPath;
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
 extern bool g_bGLCanvasSizeChanged;
@@ -9,8 +14,8 @@ extern bool g_bGLCanvasSizeChanged;
 #include <Windows.h>
 HWND g_hWnd;
 #elif LINUX
-#include <X11/Xlib.h>
 #include <SDL2/SDL_syswm.h>
+#include <X11/Xlib.h>
 Display *g_X11_display;
 Window g_X11_window;
 #endif
@@ -20,13 +25,88 @@ namespace laya
 App::App()
 {
     SDL_Init(SDL_INIT_EVENTS);
+    loadConfigIniFile();
 }
 App::~App()
 {
     SDL_DestroyWindow(m_sdlWindow);
     SDL_Quit();
 }
-void App::run(const Config &config, size_t width, size_t height, int nJSDebugMode, int nJSDebugPort)
+#if  LINUX
+std::string getExePath()
+{
+    char buf[256];
+	memset(buf, 0, 256);
+	ssize_t len = readlink("/proc/self/exe", buf, sizeof(buf));
+	if (len <= 0) {
+		printf("getExePath failed");
+        return "";
+	}
+	std::string ret(buf);
+	return ret;
+}
+#endif
+void App::loadConfigIniFile()
+{
+    fs::path exePath;
+#ifdef WIN32
+    TCHAR szPath[MAX_PATH];
+    ::GetModuleFileName(NULL, szPath, MAX_PATH);
+    exePath = szPath;
+#elif  LINUX
+    exePath = getExePath();
+#endif
+    gRedistPath = exePath.remove_filename().string();
+    LOGE("start exe path %s", gRedistPath.c_str());
+    // ���������ļ����ÿ���
+    fs::path configpath(szPath);
+    configpath.remove_filename();
+    configpath /= "config.ini";
+    if (!fs::exists(configpath))
+    {
+        LOGE("No config.ini file found!");
+    }
+    IniFile configIni(configpath.string().c_str());
+
+#ifdef WIN32 || LINUX
+    int defaultWidth = 1280;
+    if (configIni.hasEntry("common:width"))
+    {
+        g_nInnerWidth = configIni.getIntOrDefault("common:width", defaultWidth);
+    }
+    else
+    {
+        LOGW("Warning: can not find common:width use default %d", defaultWidth);
+    }
+
+    int defaultHeight = 720;
+    if (configIni.hasEntry("common:height"))
+    {
+        g_nInnerHeight = configIni.getIntOrDefault("common:height", defaultHeight);
+    }
+    else
+    {
+        LOGW("Warning: can not find common:height use default %d", defaultHeight);
+    }
+#endif
+#ifdef __APPLE__
+    if (configIni.hasEntry("ios:orientation"))
+    {
+        g_kSystemConfig.m_nOrientation = configIni.getUIntOrDefault("ios:orientation", 24);
+    }
+    else
+    {
+        LOGW("Warning: can not find ios:orientation use default %d", 24);
+    }
+#endif
+    m_nJSDebugMode = configIni.getIntOrDefault("common:JSDebugMode", 0);
+    m_nJSDebugPort = configIni.getIntOrDefault("common:JSDebugPort", 5959);
+
+
+    laya::g_kSystemConfig.m_bConchWebGL = configIni.getBoolOrDefault("common:ConchWebGL", true);
+
+}
+void App::run(const Config &config)
 {
     const int x = SDL_WINDOWPOS_CENTERED;
     const int y = SDL_WINDOWPOS_CENTERED;
@@ -40,9 +120,7 @@ void App::run(const Config &config, size_t width, size_t height, int nJSDebugMod
     {
         windowFlags |= SDL_WINDOW_HIDDEN;
     }
-    g_nInnerWidth = width;
-    g_nInnerHeight = height;
-    m_sdlWindow = SDL_CreateWindow(config.title.c_str(), x, y, (int)width, (int)height, windowFlags);
+    m_sdlWindow = SDL_CreateWindow(config.title.c_str(), x, y, (int)g_nInnerWidth, (int)g_nInnerHeight, windowFlags);
 
     SDL_SysWMinfo sys;
     SDL_VERSION(&sys.version);
@@ -67,7 +145,7 @@ void App::run(const Config &config, size_t width, size_t height, int nJSDebugMod
 #elif LINUX
     options.nativeLayer = m_sdlWindow;
 #endif
-    laya::JCConch::s_pConch.reset(new laya::JCConch((laya::JS_DEBUG_MODE)nJSDebugMode, nJSDebugPort));
+    laya::JCConch::s_pConch.reset(new laya::JCConch((laya::JS_DEBUG_MODE)m_nJSDebugMode, m_nJSDebugPort));
     laya::JCConch::s_pConchRender->createBackend(options);
     laya::JCConch::s_pConchRender->createScreenSurface(options.nativeLayer);
     laya::JCConch::s_pConch->onAppStart();

@@ -460,8 +460,6 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 
 	public  boolean isOpenNetwork()
 	{
-		if (!config.GetInstance().m_bCheckNetwork)
-			return true;
 		ConnectivityManager connManager = (ConnectivityManager) mCtx.getSystemService(Context.CONNECTIVITY_SERVICE);
 		return connManager.getActiveNetworkInfo() != null && (connManager.getActiveNetworkInfo().isAvailable() && connManager.getActiveNetworkInfo().isConnected());
 	}

@@ -31,6 +31,7 @@ namespace laya
         static bool     s_bIsPlug;                      //��Ϊ��ʼ��̫���ˣ�����static
         static bool     s_bLocalizable;                 //�����Ƿ��Ǳ��ذ�
 		bool            m_bConchWebGL;
+		int 			m_nOrientation = 24;
 	};
 	extern JCSystemConfig g_kSystemConfig;
 }

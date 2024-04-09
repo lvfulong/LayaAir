@@ -5,12 +5,7 @@
 #include "JCSystemConfig.h"
 #include <app/App.h>
 #include <downloadCache/JCIosFileSource.h>
-#include <filesystem>
-#include "JCSystemConfig.h"
-namespace  fs = std::filesystem;
 extern std::string gRedistPath;
-extern int g_nInnerWidth;
-extern int g_nInnerHeight;
 /*
 �÷���
     conch6.exe [options] url
@@ -88,56 +83,7 @@ int main(int argc, _TCHAR* argv[])
             }
         }
     }
-    TCHAR   szPath[MAX_PATH];
-    ::GetModuleFileName(NULL, szPath, MAX_PATH);
-    fs::path exePath = szPath;
-    gRedistPath = exePath.remove_filename().string();
-    printf("start .exePath=%s\n", gRedistPath.c_str());
-    //���������ļ����ÿ���
-    fs::path configpath(szPath);
-    configpath.remove_filename();
-    configpath /= "config.ini";
-    if (!fs::exists(configpath)) 
-    {
-        printf("No config.ini file!\n");
-    }
-    std::string strW = GetTypeString("default", "scrWidth", configpath.generic_string().c_str());
-    std::string strH = GetTypeString("default", "scrHeight", configpath.generic_string().c_str()); 
-    if (strW.length() > 0) 
-    {
-        g_nInnerWidth = atoi(strW.c_str());
-    }
 
-    if (strH.length() > 0) 
-    {
-        g_nInnerHeight = atoi(strH.c_str());
-    }
-
-    if (g_nInnerHeight == 0 || g_nInnerHeight == 0) 
-    {
-        printf(" The value of default.scrHeight or default.scrWidth in config.ini is wrong.\n");
-        g_nInnerWidth = 1280;
-        g_nInnerHeight = 720;
-    }
-    int nJSDebugMode = 0;
-    int nJSDebugPort = 0;
-    std::string cfgDebug = GetTypeString("default", "JSDebugPort", configpath.generic_string().c_str());
-    if (cfgDebug.length() > 0) 
-    {
-        nJSDebugPort = atoi(cfgDebug.c_str());
-    }
-    std::string cfgBreakOnFirst = GetTypeString("default", "JSDebugMode", configpath.generic_string().c_str());
-    if (cfgBreakOnFirst.length() > 0)
-    {
-        nJSDebugMode = atoi(cfgBreakOnFirst.c_str());
-    }
-
-
-	std::string cfgConchWebGL = GetTypeString("default", "ConchWebGL", configpath.generic_string().c_str());
-	if (cfgConchWebGL.length() > 0)
-	{
-        laya::g_kSystemConfig.m_bConchWebGL = atoi(cfgConchWebGL.c_str()) > 0 ? true : false;
-	}
 
     laya::JCIosFileSource* pAssets = new laya::JCIosFileSource();
     pAssets->Init(gRedistPath.c_str());
@@ -155,7 +101,7 @@ int main(int argc, _TCHAR* argv[])
     laya::App app;
     Config config;
     config.title = "LayaNative3.0";
-    app.run(config, g_nInnerWidth, g_nInnerHeight, nJSDebugMode, nJSDebugPort);
+    app.run(config);
     //app.handleMessage();
     //app.exitApp();
     //delete pAssets;
