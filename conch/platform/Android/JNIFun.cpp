@@ -53,17 +53,14 @@ extern std::string g_ConfigJS;
 
 using namespace laya;
 
-extern std::string LAYA_NATIVE_FILE_CACHE_TMP_PATH;
 //------------------------------------------------------------------------------
 extern "C"
 {
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_configSetParamExt(JNIEnv * env, jobject obj,jstring p_strParamExt);//extparam
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_configSetURL(JNIEnv * env, jobject obj,jstring p_strUrl);
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_configSetIsPlug(JNIEnv * env, jobject obj, jboolean p_bIsPlug);
-    JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_InitDLib(JNIEnv * env, jobject obj,jobject assetManager,jint nDownloadThreadNum,jstring p_strAssetRootPath,jstring p_strCachePath, jstring p_strAPKExpansionMainPath, jstring p_strAPKExpansionPatchPath,int threadMode,int debugMode,int debugPort,jboolean p_bUseDcc,jstring p_strConfigJS);
+    JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_InitDLib(JNIEnv * env, jobject obj,jobject assetManager,jint nDownloadThreadNum,jstring p_strAssetRootPath,jstring p_strCachePath, jstring p_strAPKExpansionMainPath, jstring p_strAPKExpansionPatchPath,int debugMode,int debugPort,jstring p_strConfigJS);
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_SetLocalStoragePath(JNIEnv * env, jobject obj,jstring p_strLocalStorage );
-	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_SetTmpCacheSpaceThreshold(JNIEnv * env, jobject obj,jint value );
-	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_SetTmpCacheTimeThreshold(JNIEnv * env, jobject obj, jint value);
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleTouch(JNIEnv * env, jobject obj,jint type,jint id,jint x,jint y );
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleKeyEvent(JNIEnv * env, jobject obj,jint keyCode,jint actionType);
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleJoystickEvent(JNIEnv * env, jobject obj,float THUMBL_xOffset,float THUMBL_yOffset,float THUMBR_xOffset,float THUMBR_yOffset,float LT_Offset,float RT_Offset);
@@ -117,7 +114,6 @@ extern "C"
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onSaveImageToPhotosAlbumComplete(JNIEnv* env, jobject obj, jint resultCode);
     JNIEXPORT void JNICALL Java_layaair_game_browser_LayaVideoPlayer_emit(JNIEnv* env, jobject obj, jlong ptr, jstring str);
 	JNIEXPORT void JNICALL Java_layaair_game_browser_LayaVideoPlayer_transferBitmap(JNIEnv* env, jobject obj, jobject bitmap, jlong dataPtr);
-	JNIEXPORT jstring JNICALL Java_layaair_game_browser_ConchJNI_GetLocalTempCachePath(JNIEnv* env);
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleKeyboardInput(JNIEnv* env, jobject obj, jstring strValue);
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleKeyboardConfirm(JNIEnv* env, jobject obj, jstring strValue);
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleKeyboardComplete(JNIEnv* env, jobject obj, jstring strValue);
@@ -142,7 +138,7 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_configSetParamExt(JNIE
 	LOGI("JNI setParamExt：%s", pstrParamExt);
 	env->ReleaseStringUTFChars(p_strParamExt, pstrParamExt);
 }
-JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_InitDLib(JNIEnv * env, jobject obj,jobject assetManager,int nThreadNum,jstring p_strAssetRootPath, jstring p_strCachePath , jstring p_strAPKExpansionMainPath, jstring p_strAPKExpansionPatchPath,int threadMode,int debugMode,int debugPort,jboolean p_bUseDcc, jstring p_strConfigJS)
+JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_InitDLib(JNIEnv * env, jobject obj,jobject assetManager,int nThreadNum,jstring p_strAssetRootPath, jstring p_strCachePath , jstring p_strAPKExpansionMainPath, jstring p_strAPKExpansionPatchPath,int debugMode,int debugPort, jstring p_strConfigJS)
 {
 	LOGI("JNI InitDLib tid=%x", std::this_thread::get_id());
 	if(laya::JCConch::s_pConch)
@@ -203,31 +199,7 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_InitDLib(JNIEnv * env,
 	env->ReleaseStringUTFChars(p_strAPKExpansionPatchPath, pAPKExpansionPatch);
 	env->ReleaseStringUTFChars(p_strConfigJS, pConfigJS);
 	
-	THREAD_MODE nMode = (THREAD_MODE)(threadMode);
-    if (nMode == THREAD_MODE_SINGLE)
-    {
-        g_kSystemConfig.m_nThreadMODE = nMode;
-        LOGI(">>>>>>Thread Mode = single");
-    }
-    else if (nMode == THREAD_MODE_DOUBLE)
-    {
-        g_kSystemConfig.m_nThreadMODE = nMode;
-        LOGI(">>>>>>Thread Mode = double");
-    }
-    else
-    {
-        LOGI(">>>>>>Thread Mode = %d", g_kSystemConfig.m_nThreadMODE);
-    }
-	g_kSystemConfig.m_bUseDcc = p_bUseDcc;
 	laya::JCConch::s_pConch.reset(new laya::JCConch((laya::JS_DEBUG_MODE)debugMode, debugPort));
-}
-JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_SetTmpCacheSpaceThreshold(JNIEnv * env, jobject obj,jint value )
-{
-    g_kSystemConfig.m_nTmpCacheSpaceThreshold = value;
-}
-JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_SetTmpCacheTimeThreshold(JNIEnv * env, jobject obj, jint value)
-{
-	g_kSystemConfig.m_nTmpCacheTimeThreshold = value;
 }
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_SetConchWebgl(JNIEnv* env, jobject obj, jboolean value)
 {
@@ -612,12 +584,6 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onChooseImageComplete(
 	const char* sJsonParam = env->GetStringUTFChars(p_sJsonParam, NULL);
 	//JSLayaNative::getInstance()->onCompleteCallJSFunction(resultCode, sJsonParam);
 	env->ReleaseStringUTFChars(p_sJsonParam, sJsonParam);
-}
-
-JNIEXPORT jstring JNICALL Java_layaair_game_browser_ConchJNI_GetLocalTempCachePath(JNIEnv* env)
-{
-	LOGI("JNI GetLocalTempCachePath tid=%x", std::this_thread::get_id());
-	return env->NewStringUTF(LAYA_NATIVE_FILE_CACHE_TMP_PATH.c_str());
 }
 
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onSaveImageToPhotosAlbumComplete(JNIEnv* env, jobject obj, jint resultCode)

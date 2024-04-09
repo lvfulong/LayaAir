@@ -59,7 +59,6 @@
 #if !defined(LINUX) && !defined(WIN32)
 #include "PhysX/LayaPhysXExport.h"
 #endif
-#include "JSFileReaderWX.h"
 #include "JSArrayBufferRef.h"
 #include "JSLaunchOptions.h"
 #include "JSStat.h"
@@ -481,7 +480,6 @@ namespace laya
         JSCanvasRenderingContext2D::exportJS(context);
         JsFile::exportJS(context);
         JsFileReader::exportJS(context);
-        JsFileReaderWX::exportJS(context);
 		JSRuntime::exportJS(context);
 		JSHistory::exportJS(context);
         JSConsole::exportJS(context);
@@ -560,11 +558,7 @@ namespace laya
 
 	
         
-                     
-        
-        JsDownloadTask::exportJS(context);
-
-
+                 
 
 		JSVideo::exportJS(context);   
 

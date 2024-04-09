@@ -57,12 +57,12 @@ public class LayaHttpClient {
     public static LayaHttpClient create(long ptr, String url, String localFilePath) {
         if (client == null) {
             Log.d(TAG, "cache path: " + ExportJavaFunction.GetInstance().m_pEngine.mCtx.getCacheDir());
-            if (config.GetInstance().m_bUseDcc) {
+            //if (config.GetInstance().m_bUseDcc) {
                 client = builder.build();//DCC需关闭缓存
-            }
-            else {
-                client = builder.cache(new Cache(new File(ExportJavaFunction.GetInstance().m_pEngine.mCtx.getCacheDir(), "okhttpcache"), 100 * 1024 * 1024)).build();
-            }
+            //}
+            //else {
+            //    client = builder.cache(new Cache(new File(ExportJavaFunction.GetInstance().m_pEngine.mCtx.getCacheDir(), "okhttpcache"), 100 * 1024 * 1024)).build();
+            //}
             client.dispatcher().setMaxRequests(128);
             client.dispatcher().setMaxRequestsPerHost(10);
         }

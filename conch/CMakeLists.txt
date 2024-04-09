@@ -368,8 +368,6 @@ list(APPEND CONCH_SRC
 	Bindings/JSFile.cpp
 	Bindings/JSFileReader.h
 	Bindings/JSFileReader.cpp
-	Bindings/JSFileReaderWX.h
-	Bindings/JSFileReaderWX.cpp
 	Bindings/JSFileSystem.h
 	Bindings/JSFileSystem.cpp
 	Bindings/JSGlobalExportCFun.h
@@ -436,7 +434,6 @@ list(APPEND CONCH_SRC
 	resource/JCResource.cpp
 	resource/JCResManager.h
 	resource/JCResManager.cpp
-	resource/JCFileResManagerWX.cpp
 	resource/JCFileResManager.h
 	resource/JCFileResManager.cpp
 	resource/Audio/JCAudioInterface.h

@@ -181,7 +181,7 @@ namespace laya
 		    return;
 	    }
 	    
-	    if(m_nType == EXT_MP3 && g_kSystemConfig.m_bUseDcc)
+	    if(m_nType == EXT_MP3)
 	    {
 		    //必须确保 如果是mp3必须每次都new JSAudio这个类，否则会出问题
 		    //临时用的这种办法，现在不好，因为有二次写文件的事情。。
@@ -226,13 +226,6 @@ namespace laya
 			    }
 		    }
 	    }
-	    else
-	    {
-		    laya::JCFileRes* res = JCConch::s_pScriptRuntime->m_pFileResMgr->getRes(m_sSrc);
-		    std::weak_ptr<int> cbref(m_CallbackRef);
-		    res->setOnReadyCB( std::bind(&JSAudio::onDownloaded,this, std::placeholders::_1,cbref));
-		    res->setOnErrorCB( std::bind(&JSAudio::onDownloadErr,this,std::placeholders::_1,std::placeholders::_2,cbref));
-	    }
     }
     //------------------------------------------------------------------------------
     bool JSAudio::onDownloadErr(void* p_pRes, int p_nErrCode,std::weak_ptr<int> callbackref)
@@ -259,8 +252,7 @@ namespace laya
         //std::function<void(void)> pFunction = std::bind(&JSAudio::onCanplayCallJSFunction,this, callbackref);
 		if( m_nType == EXT_MP3)
 	    {
-            if (g_kSystemConfig.m_bUseDcc)
-            {
+
                 //必须确保 如果是mp3必须每次都new JSAudio这个类，否则会出问题
                 //临时用的这种办法，现在不好，因为有二次写文件的事情。。
                 //TODO以后得修改
@@ -289,12 +281,6 @@ namespace laya
                     writeFileSync(m_sLocalFileName.c_str(), p_buf);
                     ms_vSaveMp3File[m_sSrc] = m_sLocalFileName;
                 }
-            }
-            else
-            {
-                laya::JCFileResWX* pFileResWX = (laya::JCFileResWX*)pRes;
-                m_sLocalFileName = pFileResWX->m_strLocalTempCachePath;
-            }
 	    }
 
 		JCWaveInfo* info=nullptr;

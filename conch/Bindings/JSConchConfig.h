@@ -125,8 +125,6 @@ namespace laya
 
         static void setSoundGarbageCollectionTime(int nTime);
 
-        static bool getUseDcc();
-
 		static bool getConchWebGL();
 
 		//机型

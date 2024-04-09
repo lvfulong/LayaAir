@@ -11,7 +11,6 @@
 #include <utils/Log.h>
 #include <binder/JSInterface.h>
 #include <Bindings/JSFileReader.h>
-#include <Bindings/JSFileReaderWX.h>
 #include <Bindings/JSGlobalExportCFun.h>
 #include <Bindings/JSInput.h>
 #include <utils/JCFileSource.h>

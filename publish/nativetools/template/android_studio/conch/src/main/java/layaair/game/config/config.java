@@ -12,13 +12,9 @@ public class config
 	public String	m_sWebviewUrl = null;
 	public String	m_sConchGameUrl = null;
 	public boolean  m_bBackkeyWebviewHide=false;
-	public int m_nThreadMode = 2;
 	public int m_nDebugMode = 0;
 	public int m_nDebugPort = 5959;
-	public boolean m_bUseDcc = true;
 	public boolean m_bConchWebGL = true;
-	public int m_nTmpCacheSpaceThreshold = 512;
-	public int m_nTmpCacheTimeThreshold = 500;
 	private Properties m_pProperties = null;
 	//------------------------------------------------------------------------------
 	//市场相关的
@@ -90,10 +86,7 @@ public class config
 			m_sWebviewUrl=m_pProperties.getProperty("WebviewUrl");
 			m_sConchGameUrl=m_pProperties.getProperty("ConchGameUrl");
 			m_bBackkeyWebviewHide=!"0".equals( m_pProperties.getProperty("BackKeyWebviewHide","0"));
-			int threadMode  = Integer.parseInt(m_pProperties.getProperty("ThreadMode","2"));
-			if (threadMode == 1 || threadMode == 2) {
-				m_nThreadMode = threadMode;
-			}
+
 
 			int debugMode  = Integer.parseInt(m_pProperties.getProperty("JSDebugMode","0"));
 			if (debugMode == 0 || debugMode == 1 || debugMode == 2) {
@@ -101,15 +94,10 @@ public class config
 			}
 			m_nDebugPort = Integer.parseInt(m_pProperties.getProperty("JSDebugPort","5919"));
 
-			int value = Integer.parseInt(m_pProperties.getProperty("UseDcc","1"));
-			m_bUseDcc = value > 0 ? true : false;
 
 			int conchWebGL = Integer.parseInt(m_pProperties.getProperty("ConchWebGL","1"));
 			m_bConchWebGL = conchWebGL > 0 ? true : false;
 
-			m_nTmpCacheSpaceThreshold = Integer.parseInt(m_pProperties.getProperty("TmpCacheSpaceThreshold","512"));
-
-			m_nTmpCacheTimeThreshold = Integer.parseInt(m_pProperties.getProperty("TmpCacheTimeThreshold","500"));
 
 			return true;
 		} catch (IOException e) {

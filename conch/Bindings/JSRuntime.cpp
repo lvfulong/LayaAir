@@ -20,7 +20,6 @@
 #include "JSArrayBufferRef.h"
 #include "2D/FontManager.h"
 
-extern std::string LAYA_NATIVE_FILE_CACHE_TMP_PATH;
 laya::JCZip *g_ZipPackage = NULL;
 //------------------------------------------------------------------------------
 namespace laya
@@ -427,9 +426,7 @@ namespace laya
 #endif
 		return safeInsetRight;
 	}
-	const char* JSRuntime::getLocalTempCachePath() {
-		return LAYA_NATIVE_FILE_CACHE_TMP_PATH.c_str();
-	}
+
 	JsValue JSRuntime::getLaunchOptionsSync()
 	{
 		return JSP_TO_JS(JSLaunchOptions*, new JSLaunchOptions());
@@ -644,7 +641,6 @@ namespace laya
 		class_binding.class_function("convertBitmapToJpeg", &JSRuntime::convertBitmapToJpeg);
 		class_binding.class_function("callWebviewJS", &JSRuntime::callWebviewJS);
 		class_binding.class_function("exit", &JSRuntime::exit);
-		class_binding.class_function("getLocalTempCachePath", &JSRuntime::getLocalTempCachePath);
         class_binding.class_function("createArrayBufferRef", &JSRuntime::createArrayBufferRef);
         class_binding.class_function("registerFont", &JSRuntime::registerFont);
         //class_property必须在下面，否则导不出class_function

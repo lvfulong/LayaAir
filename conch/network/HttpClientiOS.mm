@@ -207,7 +207,7 @@ void HttpURLSessionDownloaderImpl::doRequest()
         NSURLSession *session = [NSURLSession sessionWithConfiguration:defaultConfig];
 
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:m_url];
-        if (g_kSystemConfig.m_bUseDcc)
+        //if (g_kSystemConfig.m_bUseDcc)
         {
             request.cachePolicy = NSURLRequestReloadIgnoringLocalCacheData; // DCC需关闭缓存
         }

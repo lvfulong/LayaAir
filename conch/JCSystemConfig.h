@@ -30,10 +30,6 @@ namespace laya
         bool            m_bShowInternalPerBar;          //�Ƿ���ʾjs ondraw���ֺ�gl����״����ͼ��
         static bool     s_bIsPlug;                      //��Ϊ��ʼ��̫���ˣ�����static
         static bool     s_bLocalizable;                 //�����Ƿ��Ǳ��ذ�
-        int/*THREAD_MODE*/     m_nThreadMODE;                  //�߳�ģʽ
-        bool            m_bUseDcc;
-		int				m_nTmpCacheSpaceThreshold; //MB
-		int				m_nTmpCacheTimeThreshold; //MS
 		bool            m_bConchWebGL;
 	};
 	extern JCSystemConfig g_kSystemConfig;

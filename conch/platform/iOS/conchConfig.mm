@@ -64,10 +64,6 @@ static conchConfig* g_pConchConfig = nil;
         const char* sCheckNetwork=pConfigFile->GetValue("checkNetwork");
         const char* sOrientation=pConfigFile->GetValue("orientation");
         const char* sNotification = pConfigFile->GetValue("notification");
-        const char* sThreadMode = pConfigFile->GetValue("ThreadMode");
-        const char* sUseDcc = pConfigFile->GetValue("UseDcc");
-        const char* sTmpCacheSpaceThreshold = pConfigFile->GetValue("TmpCacheSpaceThreshold");
-        const char* sTmpCacheTimeThreshold = pConfigFile->GetValue("TmpCacheTimeThreshold");
 		const char* sConchWebGL = pConfigFile->GetValue("ConchWebGL");
         if( sGameID )
         {
@@ -106,38 +102,7 @@ static conchConfig* g_pConchConfig = nil;
         {
             NSLog(@"读取ini notification 错误");
         }
-        if(sThreadMode)
-        {
-            int nThreadMode = atoi(sThreadMode);
-            laya::THREAD_MODE nMode = (laya::THREAD_MODE)nThreadMode;
-            if (nMode == laya::THREAD_MODE_SINGLE)
-            {
-                laya::g_kSystemConfig.m_nThreadMODE = nMode;
-                NSLog(@">>>>>>Thread Mode = single");
-            }
-            else if (nMode == laya::THREAD_MODE_DOUBLE)
-            {
-                laya::g_kSystemConfig.m_nThreadMODE = nMode;
-                NSLog(@">>>>>>Thread Mode = double");
-            }
-            else
-            {
-                NSLog(@">>>>>>Thread Mode = %d", laya::g_kSystemConfig.m_nThreadMODE);
-            }
-        }
-        else
-        {
-            NSLog(@"读取ini ThreadMode错误");
-        }
         
-        if( sUseDcc )
-        {
-            laya::g_kSystemConfig.m_bUseDcc = atoi(sUseDcc) > 0;
-        }
-        else
-        {
-            laya::g_kSystemConfig.m_bUseDcc = true;
-        }
         
 		if(sConchWebGL)
         {
@@ -146,24 +111,6 @@ static conchConfig* g_pConchConfig = nil;
         else
         {
             laya::g_kSystemConfig.m_bConchWebGL = true;
-        }
-		
-        if (sTmpCacheSpaceThreshold)
-        {
-            laya::g_kSystemConfig.m_nTmpCacheSpaceThreshold = atoi(sTmpCacheSpaceThreshold);
-        }
-        else
-        {
-            laya::g_kSystemConfig.m_nTmpCacheSpaceThreshold = 512;
-        }
-
-        if (sTmpCacheTimeThreshold)
-        {
-            laya::g_kSystemConfig.m_nTmpCacheTimeThreshold = atoi(sTmpCacheTimeThreshold);
-        }
-        else
-        {
-            laya::g_kSystemConfig.m_nTmpCacheTimeThreshold = 500;
         }
         
         delete pConfigFile;

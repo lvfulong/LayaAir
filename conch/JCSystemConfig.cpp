@@ -21,10 +21,6 @@ namespace laya
 		m_jsonparamExt="";
         s_bLocalizable = false;
         m_bShowInternalPerBar = false;
-        m_nThreadMODE = THREAD_MODE_DOUBLE;
-        m_bUseDcc = true;
-		m_nTmpCacheSpaceThreshold = 512;
-		m_nTmpCacheTimeThreshold = 500;
 		m_bConchWebGL = true;
 	}
 }

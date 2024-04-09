@@ -667,10 +667,6 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
     {
         JCAudioWavPlayer::s_nGarbageCollectionTime = nTime;
     }
-    bool JSConchConfig::getUseDcc()
-    {
-        return g_kSystemConfig.m_bUseDcc;
-    }
 	bool JSConchConfig::getConchWebGL()
 	{
 		return g_kSystemConfig.m_bConchWebGL;
@@ -760,7 +756,6 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         class_binding.class_property("paramExt", &JSConchConfig::getJsonparamExt);
         class_binding.class_property("urlIgnoreCase", &JSConchConfig::getUrlIgnoreCase, &JSConchConfig::setUrlIgnoreCase);
         class_binding.class_property("localizable", &JSConchConfig::getLocalable, &JSConchConfig::setLocalable);
-        class_binding.class_property("useDCC", &JSConchConfig::getUseDcc);
         context.class_("conchConfig", class_binding);
     }
 }

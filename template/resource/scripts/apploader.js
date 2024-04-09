@@ -1319,9 +1319,6 @@ class Location {
         return ret;
     }
     resolve(fileName) {
-        if (!conchConfig.useDCC) {
-            return fileName;
-        }
         var urlcache = Location.__urlCache__[fileName];
         if (urlcache != null)
             return urlcache;

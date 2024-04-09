@@ -711,14 +711,9 @@ namespace laya
     JCFileResManager::JCFileResManager(JCDownloadMgr* pDownloadMgr) {
         m_pFileCache = nullptr;
         m_bUrlToLowerCase = false;
-		if (g_kSystemConfig.m_bUseDcc)
-		{
-			m_vExtNeedSave = { ".png",".jpg",".wav",".ogg" };
-		}
-		else
-		{
-			m_vExtNeedSave = { ".png",".jpg",".wav",".ogg",".mp3" };
-		}
+
+		m_vExtNeedSave = { ".png",".jpg",".wav",".ogg" };
+	
         m_pDownloadMgr = pDownloadMgr;
     }
 
@@ -743,14 +738,9 @@ namespace laya
         JCFileRes* pRes = NULL;
         FileResMap::iterator it = m_ResMap.find(url);
         if (it == m_ResMap.end()) {
-			if (g_kSystemConfig.m_bUseDcc)
-			{
-				pRes = new JCFileResDCC(m_pDownloadMgr,this);
-			}
-			else
-			{
-				pRes = new JCFileResWX(m_pDownloadMgr,this);
-			}
+
+			pRes = new JCFileResDCC(m_pDownloadMgr,this);
+
             if (p_nConnTimeout>0) {
                 pRes->m_nConnTimeout = p_nConnTimeout;
             }

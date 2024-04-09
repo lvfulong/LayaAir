@@ -446,16 +446,14 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 			}
 		}
 		ConchJNI.SetLocalStoragePath(strLayaCache + "/localstorage");
-		ConchJNI.SetTmpCacheSpaceThreshold(config.GetInstance().m_nTmpCacheSpaceThreshold);
-		ConchJNI.SetTmpCacheTimeThreshold(config.GetInstance().m_nTmpCacheTimeThreshold);
 		ConchJNI.SetConchWebgl(config.GetInstance().m_bConchWebGL);
 
 		String cachePath = getAppCacheDir() + "/LayaCache";
 		if (m_AM != null) {
-			ConchJNI.InitDLib(m_AM,getDownloadThreadNum(), "cache", cachePath, m_strExpansionMainPath == null ? "" : m_strExpansionMainPath,m_strExpansionPatchPath == null ? "" : m_strExpansionPatchPath, config.GetInstance().m_nThreadMode,config.GetInstance().m_nDebugMode,config.GetInstance().m_nDebugPort,config.GetInstance().m_bUseDcc, m_strConfigJS);
+			ConchJNI.InitDLib(m_AM,getDownloadThreadNum(), "cache", cachePath, m_strExpansionMainPath == null ? "" : m_strExpansionMainPath,m_strExpansionPatchPath == null ? "" : m_strExpansionPatchPath,config.GetInstance().m_nDebugMode,config.GetInstance().m_nDebugPort, m_strConfigJS);
 		}
 		else {
-			ConchJNI.InitDLib(null,getDownloadThreadNum(), getJarFile(), cachePath, m_strExpansionMainPath == null ? "" : m_strExpansionMainPath,m_strExpansionPatchPath == null ? "" : m_strExpansionPatchPath, config.GetInstance().m_nThreadMode,config.GetInstance().m_nDebugMode,config.GetInstance().m_nDebugPort,config.GetInstance().m_bUseDcc, m_strConfigJS);
+			ConchJNI.InitDLib(null,getDownloadThreadNum(), getJarFile(), cachePath, m_strExpansionMainPath == null ? "" : m_strExpansionMainPath,m_strExpansionPatchPath == null ? "" : m_strExpansionPatchPath,config.GetInstance().m_nDebugMode,config.GetInstance().m_nDebugPort, m_strConfigJS);
 		}
 		InitView();
 	}
@@ -1010,57 +1008,6 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		Log.d(TAG, "onActivityResult" );
-		/*结果回调*/
-		switch (requestCode) {
-			case Constants.REQUEST_SELECT_REQUEST_CODE:
-			case Constants.REQUEST_CAMERA_ACTIVITY:
-				CallbackRes res = new CallbackRes();
-				ArrayList<CallbackRes.TempFiles> tempFiles = new ArrayList<>();
-				Gson gson = new Gson();
-				if (intent != null) {
-					Log.i(TAG, "onActivityResult: ");
-					ArrayList<String> resultList = intent.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
-					ArrayList<Integer> sizeList = intent.getIntegerArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT_SIZE);
-					ArrayList<String> tempList = new ArrayList<>();
-					Log.d(TAG, "onActivityResult: size" + resultList.size());
-					if (resultList != null && resultList.size() > 0) {
-						for (int i = 0; i < resultList.size(); i++) {
-							String path = resultList.get(i);
-							String md5 = Utils.md5(path).toLowerCase();
-							String tmpFileName = md5 + Utils.getExtension(path);
-							String tempPath = ConchJNI.GetLocalTempCachePath() + "/" + tmpFileName;
-							int size = sizeList.get(i);
-							Log.d(TAG, "onActivityResult: path " + path);
-							Log.d(TAG, "onActivityResult: md5 " + md5);
-							Log.d(TAG, "onActivityResult: files --------" + ConchJNI.GetLocalTempCachePath());
-							CallbackRes.TempFiles files = new CallbackRes.TempFiles();
-							ImageUtils.compressImage(path, tempPath);
-							tempList.add("wxfile://tmp/" + tmpFileName);
-							files.setPath("wxfile://tmp/" + tmpFileName);
-							files.setSize(size);
-							tempFiles.add(files);
-							Log.d(TAG, "onActivityResult: files " + files.getPath());
-							Log.d(TAG, "onActivityResult: files " + files.getSize());
-						}
-						Log.d(TAG, "onActivityResult: files --------" + ConchJNI.GetLocalTempCachePath());
-//						res.setTempFilePaths(resultList);
-						res.setTempFilePaths(tempList);
-						res.setTempFiles(tempFiles);
-						String json = gson.toJson(res);
-						Log.d(TAG, "onActivityResult: json " + json);
-						ConchJNI.onChooseImageComplete(1, json);
-					} else {
-						String json = gson.toJson(res);
-						ConchJNI.onChooseImageComplete(0, json);
-					}
-				} else {
-					String json = gson.toJson(res);
-					ConchJNI.onChooseImageComplete(0, json);
-				}
-			break;
-			default:
-				break;
-		}
 	}
 
     @Override

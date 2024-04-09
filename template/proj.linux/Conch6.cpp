@@ -142,31 +142,7 @@ int main(int argc, char* argv[])
     //{
     //    nJSDebugMode = atoi(cfgBreakOnFirst.c_str());
     //}
-    //std::string cfgThreadMode = GetTypeString("default", "ThreadMode", configpath.generic_string().c_str());
-    /*if (cfgThreadMode.length() > 0)
-    {
-        laya::THREAD_MODE nMode = (laya::THREAD_MODE)(atoi(cfgThreadMode.c_str()));
-        if (nMode == laya::THREAD_MODE_SINGLE)
-        {
-            laya::g_kSystemConfig.m_nThreadMODE = nMode;
-            LOGI(">>>>>>Thread Mode = single");
-        }
-        else if (nMode == laya::THREAD_MODE_DOUBLE)
-        {
-            laya::g_kSystemConfig.m_nThreadMODE = nMode;
-            LOGI(">>>>>>Thread Mode = double");
-        }
-        else
-        {
-            LOGI(">>>>>>Thread Mode = %d", laya::g_kSystemConfig.m_nThreadMODE);
-        }
-    }*/
 
-	//std::string cfgUseDcc = GetTypeString("default", "UseDcc", configpath.generic_string().c_str());
-	//if (cfgUseDcc.length() > 0)
-	{
-        laya::g_kSystemConfig.m_bUseDcc = true;//atoi(cfgUseDcc.c_str()) > 0 ? true : false;
-	}
 
 	//std::string cfgConchWebGL = GetTypeString("default", "ConchWebGL", configpath.generic_string().c_str());
 	//if (cfgConchWebGL.length() > 0)

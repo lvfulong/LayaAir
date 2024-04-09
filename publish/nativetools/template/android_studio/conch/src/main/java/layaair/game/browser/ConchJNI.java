@@ -53,11 +53,7 @@ public class ConchJNI
 	public static native void configSetParamExt(String p_strExt);
 	
 	//初始化
-    public static native void InitDLib( AssetManager p_am,int nDownloadThreadNum, String p_strAssetRoot, String p_strCachePath, String p_strAPKExpansionMainPath, String p_strAPKExpansionPatchPath,int threadMode,int debugMode,int debugPort,boolean useDcc,String js);
-
-	public static native void SetTmpCacheSpaceThreshold(int value );
-
-	public static native void SetTmpCacheTimeThreshold(int value );
+    public static native void InitDLib( AssetManager p_am,int nDownloadThreadNum, String p_strAssetRoot, String p_strCachePath, String p_strAPKExpansionMainPath, String p_strAPKExpansionPatchPath,int debugMode,int debugPort,String js);
 
 	public static native void SetConchWebgl(boolean value);
 	//touch
@@ -159,8 +155,6 @@ public class ConchJNI
 	public static native  boolean onBackPressed();
 
 	public static native void onChooseImageComplete(int resultCode, String jsonParam);
-
-	public static native String GetLocalTempCachePath();
 
 	public static native void onSaveImageToPhotosAlbumComplete(int resultCode);
 

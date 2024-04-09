@@ -119,8 +119,6 @@ namespace laya
 		
 	    static void exit();
 
-		static const char* getLocalTempCachePath();
-
         static JsValue createArrayBufferRef(JSValueAsParam pArrayBuffer, int nType, bool bSyncToRender, int nRefType);
         
 

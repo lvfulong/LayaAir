@@ -18,12 +18,6 @@
 
 namespace laya
 {
-    enum THREAD_MODE
-    {
-        THREAD_MODE_SINGLE = 1,
-        THREAD_MODE_DOUBLE,
-    };
-
     #define PI          3.141592653589793
     //#define ARC_TO_RAD  0.0174532925199433
 

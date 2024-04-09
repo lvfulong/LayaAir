@@ -28,7 +28,6 @@
 #import <Bindings/JSConchConfig.h>
 #import "LayaOpenGLESView.h"
 
-extern std::string LAYA_NATIVE_FILE_CACHE_TMP_PATH;
 
 @implementation FuncObj
 -(id)init:(std::function<void(void)>)func

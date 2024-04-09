@@ -54,10 +54,6 @@ int g_nInnerWidth = 1024;
 int g_nInnerHeight = 768;
 bool g_bGLCanvasSizeChanged = false;
 
-std::string LAYA_NATIVE_FILE_CACHE_ROOT_PATH = "";
-std::string LAYA_NATIVE_FILE_CACHE_USR_PATH = "";
-std::string LAYA_NATIVE_FILE_CACHE_TMP_PATH = "";
-//std::string LAYA_NATIVE_FILE_CACHE_LOCAL_PATH = "";
 namespace laya
 {
     extern std::shared_ptr<JCWorkerThread> g_DecThread;
@@ -84,61 +80,7 @@ namespace laya
 #endif
         m_nUrlHistoryPos = -1;
         m_sCachePath = gRedistPath + "/appCache";
-        LAYA_NATIVE_FILE_CACHE_ROOT_PATH = gRedistPath + "LayaNativeCache";
-        LAYA_NATIVE_FILE_CACHE_USR_PATH = LAYA_NATIVE_FILE_CACHE_ROOT_PATH + "/usr";
-        //LAYA_NATIVE_FILE_CACHE_LOCAL_PATH = LAYA_NATIVE_FILE_CACHE_ROOT_PATH + "/local";
-		if (!g_kSystemConfig.m_bUseDcc)
-		{
-			std::error_code error;
-			if (!fs::exists(LAYA_NATIVE_FILE_CACHE_USR_PATH, error))
-			{
-				fs::create_directories(LAYA_NATIVE_FILE_CACHE_USR_PATH, error);
-			}
-			LOGI("TmpCacheSpaceThreshold %dMB TmpCacheTimeThreshold %dMS", g_kSystemConfig.m_nTmpCacheSpaceThreshold, g_kSystemConfig.m_nTmpCacheTimeThreshold);
-			bool bRemoveStarted = false;
-			double totalStart = tmGetCurms();
-			double removeStart = tmGetCurms();
-			std::uintmax_t removeSize = 0;
-			LAYA_NATIVE_FILE_CACHE_TMP_PATH = LAYA_NATIVE_FILE_CACHE_ROOT_PATH + "/tmp";
-			std::uintmax_t TmpCacheSpaceThreshold = g_kSystemConfig.m_nTmpCacheSpaceThreshold * 1024 * 1024;
-			if (fs::exists(LAYA_NATIVE_FILE_CACHE_TMP_PATH, error))
-			{
-				/*std::uintmax_t totalSize = 0;
-				std::uintmax_t size = 0;
-				for (auto& it : fs::directory_iterator(LAYA_NATIVE_FILE_CACHE_TMP_PATH))
-				{
-					if (fs::is_regular_file(it))
-					{
-						size = it.file_size();
-						totalSize += it.file_size();
-						if (totalSize > TmpCacheSpaceThreshold)
-						{
-							if (!bRemoveStarted)
-							{
-								removeStart = tmGetCurms();
-								bRemoveStarted = true;
-							}
-							fs::remove(it);
-							removeSize += size;
-							if (tmGetCurms() - removeStart > g_kSystemConfig.m_nTmpCacheTimeThreshold)
-							{
-								break;
-							}
-						}
 
-						//LOGI("TmpCacheThreshold %s", entry.path().string().c_str());
-					}
-
-				}
-				LOGI("total %dB  %dMB remove tmp files %dB %dMB remove time %dMS total time %dMS", totalSize, (int)(totalSize / 1024 / 1024), removeSize, (int)(removeSize / 1024 / 1024), (int)(tmGetCurms() - removeStart), (int)(tmGetCurms() - totalStart));
-				*/
-			}
-			else
-			{
-				LOGI("create %s", LAYA_NATIVE_FILE_CACHE_TMP_PATH.c_str());
-				fs::create_directories(LAYA_NATIVE_FILE_CACHE_TMP_PATH, error);
-			}
-		}
         g_DecThread = std::make_shared<JCWorkerThread>(new JCWorkerThread(true));
         g_DecThread->setThreadName("image decode");
 		g_FileIOThread = new JCWorkerThread(true);

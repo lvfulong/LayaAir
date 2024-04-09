@@ -212,7 +212,7 @@ namespace laya
         else
         {
             std::string file = p_pFile->m_FullName;
-            if (g_kSystemConfig.m_bUseDcc && p_pFile->m_iPos == JsFile::__IsLocal)
+            if (p_pFile->m_iPos == JsFile::__IsLocal)
             {
                 file = std::string("file:///") + file;
             }

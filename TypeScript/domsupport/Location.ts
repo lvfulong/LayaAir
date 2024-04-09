@@ -182,9 +182,7 @@ class Location {
         return ret;
     }
     resolve(fileName:string):string{
-        if (!conchConfig.useDCC) {
-            return fileName;
-        }
+
         //从缓存里取出此文件名
         var urlcache = Location.__urlCache__[fileName];
         //如果已经缓存过，直接返回结果
