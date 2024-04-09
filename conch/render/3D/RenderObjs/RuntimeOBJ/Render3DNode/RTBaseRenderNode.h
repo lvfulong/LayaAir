@@ -99,7 +99,7 @@ public:
 protected:
     JSBounds* bounds = nullptr;
     RTLightmapData* lightmap = nullptr;
-    uint32_t lightmapDirtyFlag = -1;
+    int lightmapDirtyFlag = -1;
     uint32_t _updateMark;
 };
 } // namespace laya
