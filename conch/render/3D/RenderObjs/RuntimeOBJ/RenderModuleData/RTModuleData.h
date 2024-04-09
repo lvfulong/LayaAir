@@ -31,7 +31,7 @@ class RTCameraNodeData
 class RTSceneNodeData
 {
   public:
-    uint32_t lightmapDirtyFlag = -1;;
+    int32_t lightmapDirtyFlag = -1;;
 };
 } // namespace laya
 #endif
