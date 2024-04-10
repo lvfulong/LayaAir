@@ -132,7 +132,6 @@ elseif(MSVC)
 	add_executable(${PROJECT_NAME}
 		${PROJECT_SOURCES}
 	)
-	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
 
 	file(GLOB DLLS 
 		${CMAKE_CURRENT_SOURCE_DIR}/../third_party/v8/lib/win64/*.dll 
