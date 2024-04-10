@@ -19,7 +19,7 @@ extern void(*gLayaLog)(int level, const char* file, int line,  const char* fmt,.
 extern void(*gLayaLogNoParam)(int level, const char* file, int line, const char* msg);
 extern void(*gLayaLogBin)(int level, const char* file, int line, void* pData, int len);
 extern int g_nDebugLevel;
-void alert(bool fmt, ...);
+void alert(const char* fmt, ...);
 
 #ifdef WEBASM
     #define LOG_TAG "LayaBox"
