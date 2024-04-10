@@ -74,16 +74,15 @@ template <typename T> class Converter<T, std::enable_if_t<std::is_enum<T>::value
   public:
     static T ToCpp(v8::Local<v8::Value> p_vl)
     {
-        return static_cast<T>(p_vl.As<v8::Uint32>()->Value());
-        // return p_vl->Uint32Value();
+        return static_cast<int32_t>(p_vl.As<v8::Int32>()->Value());
     }
     static v8::Local<v8::Value> ToJs(T p_vl, bool callDestructor = true)
     {
-        return v8::Uint32::NewFromUnsigned(v8::Isolate::GetCurrent(), static_cast<uint32_t>(p_vl));
+        return v8::Int32::New(v8::Isolate::GetCurrent(), static_cast<int32_t>(p_vl));
     }
     static bool is(v8::Local<v8::Value> p_vl)
     {
-        return p_vl->IsUint32();
+        return p_vl->IsInt32();
     }
 };
 
