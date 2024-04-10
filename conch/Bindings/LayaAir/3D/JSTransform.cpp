@@ -269,12 +269,12 @@ namespace laya
 	const Matrix4x4& JSTransform::getWorldMatrix()
 	{
 		const Matrix4x4& matrix = m_pTransform3D->getWorldMatrix();
-		if (m_pTransform3D->m_bWorldMatrixNeedSync)
+		/*if (m_pTransform3D->m_bWorldMatrixNeedSync)
 		{
 			memcpy(m_float32Array, matrix.elements, sizeof(float) * 16);
 			m_pTransform3D->m_bWorldMatrixNeedSync = false;
 			return matrix;
-		}
+		}*/
 		return matrix;
 	}
 	void JSTransform::setWorldMatrix()
