@@ -123,7 +123,6 @@ if(IOS)
 	)
 elseif(MSVC)
 	list(APPEND PROJECT_SOURCES
-		proj.win64/AppMessage.h
 		proj.win64/conch6.cpp
 		proj.win64/stdafx.h
 		proj.win64/stdafx.cpp
