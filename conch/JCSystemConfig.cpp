@@ -7,6 +7,10 @@
 #ifdef WIN32
 #include <windows.h>
 #endif
+#include "JCConch.h"
+#include <utils/JCFileSource.h>
+
+extern std::string gAssetRootPath;
 extern std::string gRedistPath;
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
@@ -38,15 +42,22 @@ void JCSystemConfig::reset()
 void JCSystemConfig::loadConfigIniFile()
 {
     // ���������ļ����ÿ���
-    std::string configpath = gRedistPath;
+    std::string configpath = gAssetRootPath; 
     configpath += "/config.ini";
+#if __APPLE__||ANDROID
+    std::string content = JCConch::s_pAssetsFiles->readTextAsset("config.ini");
+    JCBuffer buf((char*)content.c_str(), strlen(content.c_str()), false, false);
+    std::string tempFilePath = gRedistPath + "appCache" +  std::string("/tmp_config.ini");
+    writeFileSync(tempFilePath.c_str(), buf, JCBuffer::utf8); 
+    configpath = tempFilePath;
+#endif
     std::error_code error;
     if (!fs::exists(configpath, error))
     {
         LOGE("No config.ini file found!");
     }
     IniFile configIni(configpath.c_str());
-#ifdef WIN32 || LINUX
+#if WIN32 || LINUX
     int defaultWidth = 1280;
     if (configIni.hasEntry("common:width"))
     {
