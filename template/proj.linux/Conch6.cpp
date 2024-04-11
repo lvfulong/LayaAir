@@ -27,7 +27,7 @@ extern int g_nInnerHeight;
     -debug=""
 */
 
-
+std::string gAssetRootPath = "";
 int main(int argc, char* argv[])
 {
     bool bRunTest = false;
@@ -88,6 +88,7 @@ int main(int argc, char* argv[])
     fs::path exePath = getExePath();    
     LOGE("start exe path %s", exePath.c_str());
     gRedistPath = exePath.remove_filename().string();
+    gAssetRootPath = gRedistPath;
     laya::JCIosFileSource* pAssets = new laya::JCIosFileSource();
     pAssets->Init(gRedistPath.c_str());
     laya::JCConch::s_pAssetsFiles = pAssets;

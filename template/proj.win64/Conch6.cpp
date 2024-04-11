@@ -23,13 +23,7 @@ namespace  fs = std::filesystem;
         ָ��Ч�ʲ��Ե����Ŀ¼
     -debug=""
 */
-static std::string	GetTypeString(LPCTSTR section_name, LPCTSTR key_name, LPCTSTR ini_file_path)
-{
-    const int kMaxString = 256;
-    TCHAR buffa[kMaxString];
-    GetPrivateProfileString(section_name, key_name, "not found", buffa, kMaxString, ini_file_path);
-    return buffa;
-}
+std::string gAssetRootPath = "";
 int main(int argc, _TCHAR* argv[])
 {
     bool bRunTest = false;
@@ -89,6 +83,7 @@ int main(int argc, _TCHAR* argv[])
     fs::path exePath = laya::getExePath();
     LOGE("start exe path %s", exePath.c_str());
     gRedistPath = exePath.remove_filename().string();
+    gAssetRootPath = gRedistPath;
     laya::JCIosFileSource* pAssets = new laya::JCIosFileSource();
     pAssets->Init(gRedistPath.c_str());
     laya::JCConch::s_pAssetsFiles = pAssets;

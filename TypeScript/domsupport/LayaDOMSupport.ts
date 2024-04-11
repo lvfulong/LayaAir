@@ -18,7 +18,7 @@ class IDBEnvironment implements IDBEnvironment{}
  * 因为有些局部变量不希望直接暴露到全局环境下，所以做一个封装用的全局类
  */
 class _Window extends EventTarget {
-    crypto: Crypto;
+    //crypto: Crypto;
     onerror: ErrorEventHandler;
     Audio:HTMLAudioElement;
     private timer = new WindowTimers();

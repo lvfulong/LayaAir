@@ -20,7 +20,7 @@ namespace laya
 class JCMp3Interface
 {
 public:
-
+	virtual ~JCMp3Interface() {}
 	virtual void play( const char* p_sUrl,int p_nTimes,float nCurrentTime,JCAudioInterface* p_pJSAudio )=0;
 
 	virtual void delAudio( JCAudioInterface* p_pJSAudio )=0;

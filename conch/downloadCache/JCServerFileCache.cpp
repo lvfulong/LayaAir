@@ -33,10 +33,8 @@ extern std::string gRedistPath;
     std::string gAssetRootPath="";
 	std::string gAPKExpansionMainPath="";
 	std::string gAPKExpansionPatchPath="";
-#elif __APPLE__
-extern std::string gAssetRootPath;
 #else
-std::string gAssetRootPath="d:/temp/myassets";
+extern std::string gAssetRootPath;
 #endif
 
 namespace laya
