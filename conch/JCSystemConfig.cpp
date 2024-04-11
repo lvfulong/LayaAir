@@ -1,7 +1,6 @@
 #include "JCSystemConfig.h"
 #include <utils/JCCommonMethod.h>
-#include <filesystem>
-#include "JCSystemConfig.h"
+#include <utils/JCFileSystem.h>
 #include <utils/Log.h>
 #include <utils/IniFile.h>
 #include <utils/JCBuffer.h>
@@ -11,7 +10,7 @@
 extern std::string gRedistPath;
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
-namespace  fs = std::filesystem;
+
 namespace laya
 {
 JCSystemConfig g_kSystemConfig;
@@ -39,13 +38,14 @@ void JCSystemConfig::reset()
 void JCSystemConfig::loadConfigIniFile()
 {
     // ���������ļ����ÿ���
-    fs::path configpath(gRedistPath);
-    configpath /= "config.ini";
-    if (!fs::exists(configpath))
+    std::string configpath = gRedistPath;
+    configpath += "/config.ini";
+    std::error_code error;
+    if (!fs::exists(configpath, error))
     {
         LOGE("No config.ini file found!");
     }
-    IniFile configIni(configpath.string().c_str());
+    IniFile configIni(configpath.c_str());
 #ifdef WIN32 || LINUX
     int defaultWidth = 1280;
     if (configIni.hasEntry("common:width"))
