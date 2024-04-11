@@ -130,9 +130,9 @@ void GLESShaderInstance::_disposeResource()
     // m_renderState = nullptr;
 }
 
-int GLESShaderInstance::uploadUniforms(CommandEncoder *shaderUniform, GLESShaderData *shaderDatas, bool uploadUnTexture)
+void GLESShaderInstance::uploadUniforms(CommandEncoder *shaderUniform, GLESShaderData *shaderDatas, bool uploadUnTexture)
 {
-    return m_pGLESEngine->uploadUniforms(m_GLShaderInstance, shaderUniform, shaderDatas, uploadUnTexture);
+    m_pGLESEngine->_addStatisticsInfo(GPUEngineStatisticsInfo::C_UniformBufferUploadCount, m_pGLESEngine->uploadUniforms(m_GLShaderInstance, shaderUniform, shaderDatas, uploadUnTexture));
 }
 int GLESShaderInstance::uploadCustomUniforms(int index, char *data, int byteSize)
 {

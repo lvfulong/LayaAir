@@ -442,6 +442,7 @@ class RenderBindings
             class_binding.function("viewport", &GLESEngine::viewport);
             class_binding.function("scissor", &GLESEngine::scissor);
             class_binding.function("regGlobalVertexDeclaration", &GLESEngine::regGlobalVertexDeclaration);
+            class_binding.property_field("enableStatistics", &GLESEngine::enableStatistics);
             context.class_("conchGLESEngine", class_binding);
         }
         {

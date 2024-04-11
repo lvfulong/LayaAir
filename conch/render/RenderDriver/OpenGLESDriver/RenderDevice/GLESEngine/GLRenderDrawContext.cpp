@@ -66,9 +66,9 @@ void GLRenderDrawContext::drawElementsInstanced(int glmode, int count, int /*Ind
     else
         m_angleInstancedArrays->drawElementsInstancedANGLE(glmode, count, gltype, (const void *)offset, instanceCount);
 
-    m_engine->_addStatisticsInfo(RenderStatisticsInfo::DrawCall, 1);
-    m_engine->_addStatisticsInfo(RenderStatisticsInfo::InstanceDrawCall, 1);
-    m_engine->_addStatisticsInfo(RenderStatisticsInfo::Triangle, count / 3 * instanceCount);
+    m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::C_DrawCallCount, 1);
+    m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::C_Instancing_DrawCallCount, 1);
+    m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::C_TriangleCount, count / 3 * instanceCount);
 }
 void GLRenderDrawContext::drawArraysInstanced(int glmode, int first, int count, int instanceCount)
 {
@@ -79,19 +79,18 @@ void GLRenderDrawContext::drawArraysInstanced(int glmode, int first, int count, 
     else
         m_angleInstancedArrays->drawArraysInstancedANGLE(glmode, first, count, instanceCount);
 
-    m_engine->_addStatisticsInfo(RenderStatisticsInfo::DrawCall, 1);
-    m_engine->_addStatisticsInfo(RenderStatisticsInfo::InstanceDrawCall, 1);
+    m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::C_DrawCallCount, 1);
+    m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::C_Instancing_DrawCallCount, 1);
     // TODO glmode
-    m_engine->_addStatisticsInfo(RenderStatisticsInfo::Triangle, (count - 2) * instanceCount);
+    m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::C_TriangleCount, (count - 2) * instanceCount);
 }
 void GLRenderDrawContext::drawArrays(int glmode, int first, int count)
 {
     // GLenum glmode = getMeshTopology(mode);
     glDrawArrays(glmode, first, count);
 
-    m_engine->_addStatisticsInfo(RenderStatisticsInfo::DrawCall, 1);
-    // TODO glmode
-    m_engine->_addStatisticsInfo(RenderStatisticsInfo::Triangle, (count - 2));
+    m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::C_DrawCallCount, 1);
+    m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::C_TriangleCount, (count - 2));
 }
 void GLRenderDrawContext::drawElements(int glmode, int count, int /*IndexFormat*/ gltype, int offset)
 {
@@ -99,16 +98,16 @@ void GLRenderDrawContext::drawElements(int glmode, int count, int /*IndexFormat*
     // GLenum gltype = getIndexType(type);
     glDrawElements(glmode, count, gltype, (const void *)offset);
 
-    m_engine->_addStatisticsInfo(RenderStatisticsInfo::DrawCall, 1);
-    m_engine->_addStatisticsInfo(RenderStatisticsInfo::Triangle, count / 3);
+    m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::C_DrawCallCount, 1);
+    m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::C_TriangleCount, count / 3);
 }
 void GLRenderDrawContext::drawElements2DTemp(MeshTopology mode, int count, IndexFormat type, int offset)
 {
     GLenum glmode = getMeshTopology(mode);
     GLenum gltype = getIndexType(type);
     glDrawElements(glmode, count, gltype, (const void *)offset);
-    m_engine->_addStatisticsInfo(RenderStatisticsInfo::DrawCall, 1);
-    m_engine->_addStatisticsInfo(RenderStatisticsInfo::Triangle, count / 3);
+    m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::C_DrawCallCount, 1);
+    m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::C_TriangleCount, count / 3);
 }
 
 void GLRenderDrawContext::drawGeometryElement(GLESRenderGeometryElement *geometryElement)

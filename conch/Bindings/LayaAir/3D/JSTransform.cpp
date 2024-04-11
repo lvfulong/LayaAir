@@ -254,6 +254,7 @@ namespace laya
 		euler.y = m_float64Array[1];
 		euler.z = m_float64Array[2];
 		m_pTransform3D->setRotationEuler(euler);
+
 	}
 	bool JSTransform::_getWorldMatrix()
 	{

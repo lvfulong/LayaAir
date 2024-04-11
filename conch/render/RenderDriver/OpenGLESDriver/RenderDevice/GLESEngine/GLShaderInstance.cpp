@@ -26,6 +26,8 @@ GLShaderInstance::~GLShaderInstance()
 }
 void GLShaderInstance::_create()
 {
+    m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::C_ShaderCompile, 1);
+    //let preTime = performance.now(); 计算时间TODO
     m_program = glCreateProgram();
     m_vshader = _createShader(m_vs, GL_VERTEX_SHADER);
     m_pshader = _createShader(m_ps, GL_FRAGMENT_SHADER);
@@ -147,6 +149,7 @@ void GLShaderInstance::_create()
             _addShaderUnifiormFun(one);
         }
     }
+    //WebGLEngine.instance._addStatisticsInfo(GPUEngineStatisticsInfo.T_ShaderCompile, (performance.now() - preTime) | 0); TODO
 }
 
 GLuint GLShaderInstance::_createShader(const std::string &str, int type)
@@ -285,6 +288,7 @@ bool GLShaderInstance::useProgram()
         return false;
     glUseProgram(m_program);
     m_engine->m_glUseProgram = this;
+   m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::C_SetRenderPassCount, 1);
     return true;
 }
 int GLShaderInstance::_uniform1f(ShaderVariable *one, const std::any &dataInfo)

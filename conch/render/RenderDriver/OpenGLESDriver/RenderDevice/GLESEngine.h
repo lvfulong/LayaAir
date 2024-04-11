@@ -42,7 +42,7 @@ class GLESEngine
 {
   public:
     static std::unordered_map<uint32_t, RTShaderDefine> _texGammaDefine;
-
+    bool enableStatistics;
   public:
     GLESEngine(WebGLConfig config, WebGLMode webglMode);
     ~GLESEngine();
@@ -95,9 +95,9 @@ class GLESEngine
     GLBuffer *_getBindUBOBuffer(int glPointer);
     void _setBindUBOBuffer(int glPointer, GLBuffer *buffer);
     void _initStatisticsInfo();
-    void _addStatisticsInfo(RenderStatisticsInfo info, int value);
-    void clearStatisticsInfo(RenderStatisticsInfo info);
-    int getStatisticsInfo(RenderStatisticsInfo info);
+    void _addStatisticsInfo(GPUEngineStatisticsInfo info, int value);
+    void clearStatisticsInfo();
+    int getStatisticsInfo(GPUEngineStatisticsInfo info);
     void unbindVertexState();
     JsValue getTextureContextJS();
     void regGlobalVertexDeclaration(std::string name, int32_t key, const VertexStateContext& declarations);
@@ -141,7 +141,7 @@ class GLESEngine
     std::unordered_map<std::string, int> m_GLUBOPointerMap;
     // ��¼��Pointer��UBO
     // GPUͳ������
-    typedef std::unordered_map<RenderStatisticsInfo, int> RenderStatisticsInfoMapType;
+    typedef std::unordered_map<GPUEngineStatisticsInfo, int> RenderStatisticsInfoMapType;
     RenderStatisticsInfoMapType m_GLStatisticsInfo;
     std::unordered_map<int, GLBuffer *> _GLBindPointerUBOMap;
     Persistent m_pJSTextureContext;

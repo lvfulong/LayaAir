@@ -2,6 +2,7 @@
 #include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderElement3D.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalTex.h"
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalRT.h>
 #include "Render3DNode/RTBaseRenderNode.h"
 #include <render/Property.h>
 namespace laya{
@@ -134,6 +135,13 @@ namespace laya{
 	void GLESSetRenderTargetCMD::apply(GLESRenderContext3D* context) {
 		context->setRenderTarget(_rt);
 		context->setClearData(_flag,_clearColor, _clearDepth, _clearStencilValue);
+		if (_rt != nullptr) {
+			GLESInternalTex* tex = static_cast<GLESInternalTex*>(_rt->m_textures[0]);
+			Viewport vp(0, 0, tex->m_width, tex->m_height);
+			Vector4 scissor(0, 0, tex->m_width, tex->m_height);
+			context->setViewport(vp);
+			context->setScissor(scissor);
+		}
 	}
 
 	GLESSetRenderData::GLESSetRenderData() {

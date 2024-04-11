@@ -49,6 +49,7 @@ void RTBaseRenderNode::setBaseGeometryBounds(JSBounds *bounds)
 void RTBaseRenderNode::setShaderData(GLESShaderData *data)
 {
     this->shaderData = data;
+
 }
 
 void RTBaseRenderNode::_applyLightmap()

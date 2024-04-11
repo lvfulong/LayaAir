@@ -36,6 +36,8 @@ class GLESInternalRT : public GLObject
     }
     JsValue getDepthTexture();
     JsValue getTextures();
+private:
+    void _changeTexMemory(int byteLength);
   public:
     GLuint m_framebuffer = 0;
     GLuint m_depthbuffer = 0;

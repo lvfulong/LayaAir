@@ -46,6 +46,8 @@ class GLESVertexBuffer // : public VertexBuffer
     {
         _shaderValues[key] = declarations;
     }
+protected:
+    void _changeMemory(int bytelength);
   public:
     GLBuffer *_glBuffer;
     bool _instanceBuffer = false;

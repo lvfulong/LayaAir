@@ -32,8 +32,10 @@ void GLESRenderElement3D::_render(GLESRenderContext3D *context)
             // Scene
             if (uploadScene || switchShader)
             {
-                sceneShaderData &&
+                if (sceneShaderData != nullptr) {
                     shaderIns->uploadUniforms(&(shaderIns->m_sceneUniformParamsMap), sceneShaderData, uploadScene);
+                }
+                   
                 shaderIns->m_uploadScene = sceneShaderData;
             }
             // render
@@ -50,8 +52,9 @@ void GLESRenderElement3D::_render(GLESRenderContext3D *context)
             bool uploadCamera = shaderIns->m_uploadCameraShaderValue != cameraShaderData || switchUpdateMark;
             if (uploadCamera || switchShader)
             {
-                cameraShaderData &&
+                if (cameraShaderData != nullptr) {
                     shaderIns->uploadUniforms(&(shaderIns->m_cameraUniformParamsMap), cameraShaderData, uploadCamera);
+                }
                 shaderIns->m_uploadCameraShaderValue = cameraShaderData;
             }
             // material
@@ -61,9 +64,11 @@ void GLESRenderElement3D::_render(GLESRenderContext3D *context)
                 shaderIns->uploadUniforms(&(shaderIns->m_materialUniformParamsMap), materialShaderData, uploadMaterial);
                 shaderIns->m_uploadMaterial = materialShaderData;
                 // GlobalData<
-                (context->globalShaderData != nullptr) &&
+                if(context->globalShaderData != nullptr) {
                     shaderIns->uploadUniforms(&(shaderIns->m_materialUniformParamsMap), context->globalShaderData,
-                                              uploadMaterial);
+                        uploadMaterial);
+                }
+                    
             }
             // renderData update
             // TODO：Renderstate as a Object to less upload

@@ -152,27 +152,30 @@ void GLESEngine::_initBindBufferMap()
 
 void GLESEngine::_initStatisticsInfo()
 {
-    m_GLStatisticsInfo.insert(std::make_pair(RenderStatisticsInfo::DrawCall, 0));
-    m_GLStatisticsInfo.insert(std::make_pair(RenderStatisticsInfo::InstanceDrawCall, 0));
-    m_GLStatisticsInfo.insert(std::make_pair(RenderStatisticsInfo::Triangle, 0));
-    m_GLStatisticsInfo.insert(std::make_pair(RenderStatisticsInfo::UniformUpload, 0));
-    m_GLStatisticsInfo.insert(std::make_pair(RenderStatisticsInfo::TextureMemeory, 0));
-    m_GLStatisticsInfo.insert(std::make_pair(RenderStatisticsInfo::GPUMemory, 0));
-    m_GLStatisticsInfo.insert(std::make_pair(RenderStatisticsInfo::RenderTextureMemory, 0));
-    m_GLStatisticsInfo.insert(std::make_pair(RenderStatisticsInfo::BufferMemory, 0));
+    for (int i = 0,n = static_cast<int>(GPUEngineStatisticsInfo::Count); i < n; i++) {
+        std::pair<GPUEngineStatisticsInfo, int> pars(static_cast<GPUEngineStatisticsInfo>(i),0);
+        m_GLStatisticsInfo.insert(pars);
+    }
 }
-void GLESEngine::_addStatisticsInfo(RenderStatisticsInfo info, int value)
+void GLESEngine::_addStatisticsInfo(GPUEngineStatisticsInfo info, int value)
 {
+    if (!enableStatistics) {
+        return;
+    }
     int newValue = getStatisticsInfo(info) + value;
     m_GLStatisticsInfo[info] = newValue;
 }
 
-void GLESEngine::clearStatisticsInfo(RenderStatisticsInfo info)
+void GLESEngine::clearStatisticsInfo()
 {
-    m_GLStatisticsInfo[info] = 0;
+    if (enableStatistics) {
+        for (int i = 0, n = static_cast<int>(GPUEngineStatisticsInfo::FrameClearCount); i < n; i++) {
+            m_GLStatisticsInfo[static_cast<GPUEngineStatisticsInfo>(i)] = 0;
+        }
+    }
 }
 
-int GLESEngine::getStatisticsInfo(RenderStatisticsInfo info)
+int GLESEngine::getStatisticsInfo(GPUEngineStatisticsInfo info)
 {
     RenderStatisticsInfoMapType::iterator it = m_GLStatisticsInfo.find(info);
     if (it == m_GLStatisticsInfo.end())

@@ -13,6 +13,7 @@ namespace laya
 		_getGLTarget(m_targetType);
 		_getGLUsage(m_bufferUsageType);
 		glGenBuffers(1, &m_glBuffer);
+		m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::RC_GPUBuffer, 1);
 	}
 	GLBuffer::~GLBuffer()
 	{
@@ -57,8 +58,7 @@ namespace laya
 	}
 	void GLBuffer::_memorychange(int bytelength)
 	{
-		m_engine->_addStatisticsInfo(RenderStatisticsInfo::BufferMemory, bytelength);
-		m_engine->_addStatisticsInfo(RenderStatisticsInfo::GPUMemory, bytelength);
+		m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::M_GPUBuffer, -m_byteLength+ bytelength);
 	}
 	bool GLBuffer::bindBuffer()
 	{
@@ -88,22 +88,23 @@ namespace laya
 	void GLBuffer::setDataLength(int length)
 	{
 		bindBuffer();
-		_memorychange(-m_byteLength);
+		_memorychange(length);
 		m_byteLength = length;
 		glBufferData(m_glTarget,m_byteLength,NULL,m_glUsage);
 		unbindBuffer();
-		_memorychange(m_byteLength);
 	}
 	void GLBuffer::setData(const char* buffer, int bufferLength, int offset)
 	{
 		bindBuffer();
 		glBufferSubData(m_glTarget, offset, bufferLength, buffer);
+		m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::C_GeometryBufferUploadCount, 1);
 		unbindBuffer();
 	}
 	void GLBuffer::setDataEx(const char* buffer, int offset, int length)
 	{
 		bindBuffer();
 		glBufferSubData(m_glTarget, offset, length, buffer);
+		m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::C_GeometryBufferUploadCount, 1);
 		unbindBuffer();
 	}
 	void GLBuffer::bindBufferBase(int glPointer)
@@ -131,8 +132,9 @@ namespace laya
 	{
 		if (m_glBuffer != 0)
 		{
+			m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::RC_GPUBuffer, -1);
 			glDeleteBuffers(1, &m_glBuffer);
-			_memorychange(m_byteLength);
+			_memorychange(0);
 			m_byteLength = 0;
 			m_engine = nullptr;
 			m_glBuffer = 0;

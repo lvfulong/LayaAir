@@ -21,6 +21,7 @@ GLESInternalRT::GLESInternalRT(RenderTargetFormat colorFormat, RenderTargetForma
     {
         glGenFramebuffers(1, &m_msaaFramebuffer);
     }
+    m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::RC_ALLRenderTexture, 1);
 }
 int GLESInternalRT::getGpuMemory()
 {
@@ -28,9 +29,14 @@ int GLESInternalRT::getGpuMemory()
 }
 void GLESInternalRT::setGpuMemory(int value)
 {
+    _changeTexMemory(value);
     m_gpuMemory = value;
-    m_engine->_addStatisticsInfo(RenderStatisticsInfo::GPUMemory, m_gpuMemory);
-    m_engine->_addStatisticsInfo(RenderStatisticsInfo::RenderTextureMemory, m_gpuMemory);
+   
+}
+
+void GLESInternalRT::_changeTexMemory(int byteLength) {
+    m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::M_GPUMemory, -m_gpuMemory + byteLength);
+    m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::M_ALLRenderTexture, -m_gpuMemory + byteLength);
 }
 
 GLESInternalRT::~GLESInternalRT()
@@ -76,9 +82,9 @@ void GLESInternalRT::dispose()
         m_msaaRenderbuffer = 0;
     }
 
-    m_engine->_addStatisticsInfo(RenderStatisticsInfo::GPUMemory, -m_gpuMemory);
-    m_engine->_addStatisticsInfo(RenderStatisticsInfo::RenderTextureMemory, -m_gpuMemory);
+    _changeTexMemory(0);
     m_gpuMemory = 0;
+    m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::RC_ALLRenderTexture, -1);
 }
 JsValue GLESInternalRT::getDepthTexture()
 {

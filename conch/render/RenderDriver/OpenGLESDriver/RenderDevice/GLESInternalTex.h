@@ -160,6 +160,10 @@ class GLESInternalTex : public GLObject, public ObjectBase<GLESInternalTex>
         _setTexParameteri(pname, param);
     }
 
+    void _changeTexMemory(int memory);
+    GPUEngineStatisticsInfo _statistics_M_Texture;
+    GPUEngineStatisticsInfo _statistics_RC_Texture;
+
   public:
     GLuint m_resource = 0;
     int m_resourceTarget;

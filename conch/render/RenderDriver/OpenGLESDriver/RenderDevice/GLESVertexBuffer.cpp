@@ -6,6 +6,7 @@ namespace laya
 GLESVertexBuffer::GLESVertexBuffer(BufferTargetType targetType, BufferUsage bufferUsageType)
 {
     _glBuffer = (GLBuffer *)LayaGL::m_pWebglEngine->createBuffer(BufferTargetType::ARRAY_BUFFER, bufferUsageType);
+    LayaGL::m_pWebglEngine->_addStatisticsInfo(GPUEngineStatisticsInfo::RC_VertexBuffer, 1);
 }
 GLESVertexBuffer::~GLESVertexBuffer()
 {
@@ -15,12 +16,21 @@ GLESVertexBuffer::~GLESVertexBuffer()
         this->_glBuffer = nullptr;
     }
 }
+
+void GLESVertexBuffer::_changeMemory(int bytelength) {
+    LayaGL::m_pWebglEngine->_addStatisticsInfo(GPUEngineStatisticsInfo::M_VertexBuffer, -_glBuffer->m_byteLength + bytelength);
+}
+
+
 void GLESVertexBuffer::destroy()
 {
-    this->_glBuffer->destroy();
+    _glBuffer->destroy();
+    _changeMemory(0);
+    LayaGL::m_pWebglEngine->_addStatisticsInfo(GPUEngineStatisticsInfo::RC_VertexBuffer, -1);
 }
 void GLESVertexBuffer::setDataLength(int byteLength)
 {
+    _changeMemory(byteLength);
     this->_glBuffer->setDataLength(byteLength);
 }
 

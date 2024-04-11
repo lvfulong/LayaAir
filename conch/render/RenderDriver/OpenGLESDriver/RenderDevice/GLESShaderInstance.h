@@ -22,7 +22,7 @@ class GLESShaderInstance //: public ResourceBase<GLESShaderInstance>
     bool bind();
     void destroy();
     void _disposeResource();
-    int uploadUniforms(CommandEncoder *shaderUniform, GLESShaderData *shaderDatas, bool uploadUnTexture);
+    void uploadUniforms(CommandEncoder *shaderUniform, GLESShaderData *shaderDatas, bool uploadUnTexture);
     int uploadCustomUniforms(int index, char *data, int byteSize);
     void uploadRenderStateFrontFace(GLESShaderData *shaderDatas, bool isTarget, bool invertFront);
     void uploadRenderStateBlendDepth(GLESShaderData *shaderDatas);

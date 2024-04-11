@@ -23,6 +23,29 @@ GLESInternalTex::GLESInternalTex(int target, int width, int height, int depth, T
 
     m_isPotSize = isPot(width) && isPot(height);
 
+    if (dimension == TextureDimension::Tex3D) {
+        m_isPotSize = m_isPotSize && isPot(depth);
+    }
+
+    switch (dimension) {
+    case TextureDimension::Tex2D:
+        _statistics_M_Texture = GPUEngineStatisticsInfo::M_Texture2D;
+        _statistics_RC_Texture = GPUEngineStatisticsInfo::RC_Texture2D;
+        break;
+    case TextureDimension::Tex3D:
+        _statistics_M_Texture = GPUEngineStatisticsInfo::M_Texture3D;
+        _statistics_RC_Texture = GPUEngineStatisticsInfo::RC_Texture3D;
+        break;
+    case TextureDimension::Cube:
+        _statistics_M_Texture = GPUEngineStatisticsInfo::M_TextureCube;
+        _statistics_RC_Texture = GPUEngineStatisticsInfo::RC_TextureCube;
+        break;
+    case TextureDimension::Texture2DArray:
+        _statistics_M_Texture = GPUEngineStatisticsInfo::M_Texture2DArray;
+        _statistics_RC_Texture = GPUEngineStatisticsInfo::RC_Texture2DArray;
+        break;
+    }
+
     m_mipmap = mipmap && m_isPotSize;
     m_mipmapCount = m_mipmap ? std::max(ceil(log2(width)) + 1, ceil(log2(height)) + 1) : 1;
 
@@ -46,6 +69,7 @@ GLESInternalTex::GLESInternalTex(int target, int width, int height, int depth, T
     setAnisoLevel(4.0f);
 
     setCompareMode(TextureCompareMode::None);
+    m_engine->_addStatisticsInfo(_statistics_RC_Texture, 1);
 }
 int GLESInternalTex::getGpuMemory()
 {
@@ -53,11 +77,8 @@ int GLESInternalTex::getGpuMemory()
 }
 void GLESInternalTex::setGpuMemory(int value)
 {
-    m_engine->_addStatisticsInfo(RenderStatisticsInfo::GPUMemory, -m_gpuMemory);
-    m_engine->_addStatisticsInfo(RenderStatisticsInfo::TextureMemeory, -m_gpuMemory);
+    _changeTexMemory(value);
     m_gpuMemory = value;
-    m_engine->_addStatisticsInfo(RenderStatisticsInfo::GPUMemory, m_gpuMemory);
-    m_engine->_addStatisticsInfo(RenderStatisticsInfo::TextureMemeory, m_gpuMemory);
 }
 GLenum GLESInternalTex::getFilteMinrParam(FilterMode filterMode, bool mipmap)
 {
@@ -148,15 +169,23 @@ void GLESInternalTex::_setTexParametexf(GLenum pname, GLfloat param)
     glTexParameterf(m_target, pname, param);
     m_engine->_bindTexture(m_target, 0);
 }
+
+void GLESInternalTex::_changeTexMemory(int memory) {
+   m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::M_GPUMemory, -m_gpuMemory + memory);
+   m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::M_ALLTexture, -m_gpuMemory + memory);
+   m_engine->_addStatisticsInfo(_statistics_M_Texture, -m_gpuMemory + memory);
+}
+
 void GLESInternalTex::dispose()
 {
+
     if (m_resource)
     {
         glDeleteTextures(1, &m_resource);
         m_resource = 0;
-        m_engine->_addStatisticsInfo(RenderStatisticsInfo::GPUMemory, -m_gpuMemory);
-        m_engine->_addStatisticsInfo(RenderStatisticsInfo::TextureMemeory, -m_gpuMemory);
+        _changeTexMemory(0);
         m_gpuMemory = 0;
+        m_engine->_addStatisticsInfo(_statistics_RC_Texture, -1);
     }
 }
 void GLESInternalTex::setBaseMipmapLevel(int value)
