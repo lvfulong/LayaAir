@@ -526,7 +526,6 @@ interface conchConfig{
 	pushAtlasMaxWidth:number;
 	maxEJAnimation:number;
     urlIgnoreCase:boolean;
-    useDCC:boolean;
 	getStoragePath():string;
 	setMemoryCanvasSize(w:number,h:number):void;
 	getTotalMem():number;

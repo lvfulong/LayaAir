@@ -340,6 +340,9 @@ async function loadApp(url: string) {
         `);
         document.createElement("script").text="window.onload&&window.onload()";
     }
+    else if (data.indexOf("<html>") >= 0) {
+        startAppHTML(data);
+    }
     else {//全部当成json处理
         startApp(data);
     }
@@ -433,336 +436,29 @@ window['updateByZip'] =function(url, onEvent, onEnd){
             }
         },10,100000000);
 }
-
-function startSmallGame(localfile: string) {
-   // (window as any).conch.app_start_load_hmr = Date.now() - (window as any).conch.app_start_load_hmr_start;
-   var zip: ZipFile = new ZipFile();
-    if(!zip.setSrc(localfile)) {
-        console.log("Error : load local package error! \n");
-        return;
-    }
-    conch.setZipPackage(zip);
-
-
-    function loadLib(url:string) {
-        var qpos = url.indexOf('?');
-        if(qpos < 0) {
-            qpos = url.length;
-        }
-    
-        url = url.substr(0, qpos);
-        if (url.indexOf('./') == 0) {
-            url = url.replace("./","");
-        }
-        var script = document.createElement("script");
-        /*if(url.indexOf("laya.physics3D.js") >= 0 )
-        {
-            url = url.replace("laya.physics3D.js","laya.physics3D.runtime.js");
-        }*/
-        var text = zip.readAsTextByName(url);
-        if (text) {
-            console.log("local file: " + url + " loaded success");
-            script["text"] = text;
-            script.onerror=function() {
-                console.log("loadLib: " + url + " failed");
-                if (window["loadingView"]) {
-                    window["loadingView"].setFontColor("#FF0000");
-                    window["loadingView"].showTips("InternalError");
-                }
-            }
-            document.head.appendChild(script);
-        }
-        else {
-            console.log("local file: " + url + " loaded failed");
-            if (window["loadingView"]) {
-                window["loadingView"].setFontColor("#FF0000");
-                window["loadingView"].showTips("InternalError");
-            }
-        }
-        document.head.appendChild(script);
-    }
-    window['loadLib']=loadLib;
-
-    var data: string = zip.readAsTextByName('index.js');
-    if (!data) {
-        console.log("Error : load index.js error! \n ");
-        if (window["loadingView"]) {
-            window["loadingView"].setFontColor("#FF0000");
-            window["loadingView"].showTips("InternalError");
-        }
-        return;
-    }
-    window.eval(data + `
-    //@ sourceURL=index.js
-    `);
-    document.createElement("script").text="window.onload&&window.onload()";
-    /*var data: string = zip.readAsTextByName('runtime.json');
-    var jsonobj: { scripts: string[], screenorientation: string, screenOrientation: string, } = null;
-    try {
-        jsonobj = JSON.parse(data);
-    } catch (e) {
-        console.log("Error:start page parse error! \n " + data);
-        return;
-    }
-    
-    jsonobj.scripts.forEach((path)=>{
-        console.log(path);
-        var t = document.createElement("script");
-        var text = zip.readAsTextByName(path);
-        if (text) {
-            t["text"] = text;
-            t.onerror=function() {
-                if (window["loadingView"]) {
-                    window["loadingView"].setFontColor("#FF0000");
-                    window["loadingView"].showTips("InternalError");
-                }
-            }
-            document.head.appendChild(t);
-        }
-        else {
-            console.log("local file: " + path + " load failed");
-        }
-    });
-    if (jsonobj.screenOrientation) setOrientation(jsonobj.screenOrientation);
-    else if (jsonobj.screenorientation) setOrientation(jsonobj.screenorientation);
-    else setOrientation("sensor_landscape");
-    //document.createElement("script").text="window.onload&&window.onload()"; 
-    */
-}
-var lastPercent = -1;
-function download(url: string, cachePkgPath: string, md5: string) {
-    /**
-     * 下载文件，保存到localfile中。
-    */
-    console.log("start download " + url);
-    downloadBigFile(url, cachePkgPath, 
-        //进度回调
-        (total: number, now: number, speed: number) => {
-            let percent = Math.floor((now / total) * 100);
-            if (percent > lastPercent) {
-                console.log('downloading' + percent, null);
-                if (window["loadingView"]) {
-                    window["loadingView"].loading(percent);
-                }
-            }
-            lastPercent = percent;
-            return false;
-        },
-        //完成回调
-        (curlret: number, httpret: number) => {
-            if(curlret != 0 || httpret < 200 || httpret >= 300) {
-                console.log('downloadError ' + httpret + " " + url);
-                if (window["loadingView"]) {
-                    window["loadingView"].setFontColor("#FF0000");
-                    window["loadingView"].showTips("NetworkError");
-                }
-                return;
-            } 
-            else {
-                console.log('downloaded ' + url);
-                
-                let thisMd5 = calcmd5(fs_readFileSync(cachePkgPath));
-                console.log('check downloaded md5 ' + md5);
-                if (thisMd5 !== md5) {
-                    if (window["loadingView"]) {
-                        window["loadingView"].setFontColor("#FF0000");
-                        window["loadingView"].showTips("DownloadError");
+function startAppHTML(data: string) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(data, "text/html");
+    const scriptElements = doc.querySelectorAll("script");
+    scriptElements.forEach(element => {
+        element.attributes.forEach(attri => {
+            if (attri.nodeName == "src") {
+                var t = document.createElement("script");
+                t["src"] = attri.nodeValue;
+                t.onerror=function(){
+                    if(window["onLayaInitError"])
+                    {
+                        window["onLayaInitError"]("Load script error");
                     }
+           
                 }
-                else {
-                    startSmallGame(cachePkgPath);
-                }
+                document.head.appendChild(t);
             }
-        }, 10, 100000000);   
-}
-async function loadSmallGame(url: string) {
-    //window["conchSmallGameLocal"] = false;
-    window["conchUseWXAdapter"] = true;
-    
-    let urllen = url.length;
-    if (urllen < 2) return;
-    url = url.trim();
-
-    console.log("loadSmallGame:" + url);
-
-    if (history.length <= 0) {
-        history._push(url);
-    }
-    
-    let tempLocation = new Location;
-    tempLocation.setHref(url);
-    location._search  = tempLocation._search;
-
-    //location.setHref("");
-    window.localStorage.create(url);
-
-    try {
-        require("config");
-    }
-    catch(e)
-    {
-    }
-
-    //await initFreeType();   //TODO 如果下载这里相当于会卡住。
-
-    let data: string = await asyncs.loadText(url + "&" + Date.now());
-    for(let n = 0; n < 3 && !data; n++) {
-        data = await asyncs.loadText(url+ "&" + Date.now());
-    }
-    if(!data) {
-        if (window["loadingView"]) {
-            window["loadingView"].setFontColor("#FF0000");
-            window["loadingView"].showTips("NetworkError");
-        }
-        if(!data || data.length <= 0) {
-            return ;
-        }
-    } 
-    
-    class versionItem {
-        version: string;
-        url: string;
-        md5: string;
-    }
-
-    let jsonobj: { versionList: versionItem[] } = null;
-    try {
-        jsonobj = JSON.parse(data);
-    } catch(e) {
-        if (window["loadingView"]) {
-            window["loadingView"].setFontColor("#FF0000");
-            window["loadingView"].showTips("ParseJsonError");
-        }
-        return ;
-    }
-    let item: versionItem = jsonobj.versionList[0]; 
-    let cachePath = conch.getCachePath();
-     if (!fs_exists(cachePath)) {
-        fs_mkdir(cachePath);
-    }
-    //(window as any).conch.app_start_load_hmr_start = Date.now();
-    //let localfile =  cachePath + item.url.substr(item.url.lastIndexOf('/'));
-    let localCachePkg =  cachePath + "/package.zip";
-    if (!fs_exists(localCachePkg)) { 
-        var  assetPkgData = conch.readFileFromAsset('cache/package.zip', 'raw');
-        if (!assetPkgData) {
-            console.log('start to download new package');
-            download(item.url+ "?" + Date.now(), localCachePkg, item.md5);
-        }
-        else {
-            let md5 = calcmd5(assetPkgData as ArrayBuffer);
-            console.log('asset package md5 ' + md5 + ' ' + item.md5);
-            if (md5 !== item.md5) {
-                console.log('start to download new package');
-                download(item.url+ "?" + Date.now(), localCachePkg, item.md5);
-            }
-            else {
-                console.log('start with asset package');
-                fs_writeFileSync(localCachePkg, assetPkgData);
-                startSmallGame(localCachePkg);
-            }
-        }
-    }
-    else {
-        let md5 = calcmd5(fs_readFileSync(localCachePkg));
-        console.log('md5 ' + md5 + ' ' + item.md5);
-        if (md5 !== item.md5) {
-            console.log('start to download new package');
-            fs_rm(localCachePkg);
-            download(item.url+ "?" + Date.now(), localCachePkg, item.md5);
-        }
-        else {
-            startSmallGame(localCachePkg);
-            console.log('start with cached package');
-        }
-    }
-}
-async function loadSmallGameLocal(url: string) {
-    //window["conchSmallGameLocal"] = true;
-    window["conchUseWXAdapter"] = true;
-    
-    let urllen = url.length;
-    if (urllen < 2) return;
-    url = url.trim();
-
-    console.log("loadSmallGame:" + url);
-
-    if (history.length <= 0) {
-        history._push(url);
-    }
-    
-    let tempLocation = new Location;
-    tempLocation.setHref(url);
-    location._search  = tempLocation._search;
-
-    //location.setHref("");
-    window.localStorage.create(url);
-
-    try {
-        require("config");
-    }
-    catch(e)
-    {
-    }
-
-    //await initFreeType();   //TODO 如果下载这里相当于会卡住。
-
-    /*let data: string = await asyncs.loadText(url + "&" + Date.now());
-    for(let n = 0; n < 3 && !data; n++) {
-        data = await asyncs.loadText(url+ "&" + Date.now());
-    }
-    if(!data) {
-        if (window["loadingView"]) {
-            window["loadingView"].setFontColor("#FF0000");
-            window["loadingView"].showTips("NetworkError");
-        }
-        if(!data || data.length <= 0) {
-            return ;
-        }
-    } 
-    
-    class versionItem {
-        version: string;
-        url: string;
-        md5: string;
-    }
-
-    let jsonobj: { versionList: versionItem[] } = null;
-    try {
-        jsonobj = JSON.parse(data);
-    } catch(e) {
-        if (window["loadingView"]) {
-            window["loadingView"].setFontColor("#FF0000");
-            window["loadingView"].showTips("ParseJsonError");
-        }
-        return ;
-    }
-    let item: versionItem = jsonobj.versionList[0]; */
-    let cachePath = conch.getCachePath();
-    //(window as any).conch.app_start_load_hmr_start = Date.now();
-    //let localfile =  cachePath + item.url.substr(item.url.lastIndexOf('/'));
-    let localCachePkg =  cachePath + "/package.zip";
-    if (!fs_exists(cachePath)) {
-        fs_mkdir(cachePath);
-    }
-    //if (!fs_exists(localCachePkg)) {
-        var assetPkgData = conch.readFileFromAsset('cache/package.zip', 'raw');
-        if (!assetPkgData) {
-            console.log('error find no package');
-        }
-        else {
-            console.log('start with asset package');
-            //if (!fs_exists(localCachePkg)) {
-                fs_writeFileSync(localCachePkg, assetPkgData);
-            //}
-            startSmallGame(localCachePkg);
-        }
-    /*}
-    else {
-        startSmallGame(localCachePkg);
-        console.log('start with cached package');
-    }*/
-	let md5 = calcmd5(fs_readFileSync(localCachePkg));
-    console.log('md5 ' + md5);
+        });
+    });
+    //todo if (jsonobj.screenOrientation) setOrientation(jsonobj.screenOrientation);
+    //todo else if (jsonobj.screenorientation) setOrientation(jsonobj.screenorientation);
+    //todo else setOrientation("sensor_landscape");
+    document.createElement("script").text="window.onload&&window.onload()";
 }
 loadApp(conch.presetUrl || "http://layabox.com/layanative3.0/demo/index.js");

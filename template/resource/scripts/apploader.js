@@ -6625,6 +6625,21 @@ class _jsXmlNode extends _jsXmlAttr {
         var attr = this.attributes[name];
         return attr ? attr["nodeValue"] : "";
     }
+    querySelectorAll(selectors) {
+        let elements = [];
+        if (this.childNodes[0]) {
+            this.traverseDOM(this.childNodes[0], selectors, elements);
+        }
+        return elements;
+    }
+    traverseDOM(node, selectors, elements) {
+        if (node.nodeName === selectors) {
+            elements.push(node);
+        }
+        node.childNodes.forEach(childNode => {
+            childNode.traverseDOM(childNode, selectors, elements);
+        });
+    }
 }
 class _jsXmlDocument extends _jsXmlNode {
 }

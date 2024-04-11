@@ -220,6 +220,9 @@ async function loadApp(url) {
         `);
         document.createElement("script").text = "window.onload&&window.onload()";
     }
+    else if (data.indexOf("<html>") >= 0) {
+        startAppHTML(data);
+    }
     else {
         startApp(data);
     }
@@ -282,217 +285,24 @@ window['updateByZip'] = function (url, onEvent, onEnd) {
         }
     }, 10, 100000000);
 };
-function startSmallGame(localfile) {
-    var zip = new ZipFile();
-    if (!zip.setSrc(localfile)) {
-        console.log("Error : load local package error! \n");
-        return;
-    }
-    conch.setZipPackage(zip);
-    function loadLib(url) {
-        var qpos = url.indexOf('?');
-        if (qpos < 0) {
-            qpos = url.length;
-        }
-        url = url.substr(0, qpos);
-        if (url.indexOf('./') == 0) {
-            url = url.replace("./", "");
-        }
-        var script = document.createElement("script");
-        var text = zip.readAsTextByName(url);
-        if (text) {
-            console.log("local file: " + url + " loaded success");
-            script["text"] = text;
-            script.onerror = function () {
-                console.log("loadLib: " + url + " failed");
-                if (window["loadingView"]) {
-                    window["loadingView"].setFontColor("#FF0000");
-                    window["loadingView"].showTips("InternalError");
-                }
-            };
-            document.head.appendChild(script);
-        }
-        else {
-            console.log("local file: " + url + " loaded failed");
-            if (window["loadingView"]) {
-                window["loadingView"].setFontColor("#FF0000");
-                window["loadingView"].showTips("InternalError");
+function startAppHTML(data) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(data, "text/html");
+    const scriptElements = doc.querySelectorAll("script");
+    scriptElements.forEach(element => {
+        element.attributes.forEach(attri => {
+            if (attri.nodeName == "src") {
+                var t = document.createElement("script");
+                t["src"] = attri.nodeValue;
+                t.onerror = function () {
+                    if (window["onLayaInitError"]) {
+                        window["onLayaInitError"]("Load script error");
+                    }
+                };
+                document.head.appendChild(t);
             }
-        }
-        document.head.appendChild(script);
-    }
-    window['loadLib'] = loadLib;
-    var data = zip.readAsTextByName('index.js');
-    if (!data) {
-        console.log("Error : load index.js error! \n ");
-        if (window["loadingView"]) {
-            window["loadingView"].setFontColor("#FF0000");
-            window["loadingView"].showTips("InternalError");
-        }
-        return;
-    }
-    window.eval(data + `
-    //@ sourceURL=index.js
-    `);
+        });
+    });
     document.createElement("script").text = "window.onload&&window.onload()";
-}
-var lastPercent = -1;
-function download(url, cachePkgPath, md5) {
-    console.log("start download " + url);
-    downloadBigFile(url, cachePkgPath, (total, now, speed) => {
-        let percent = Math.floor((now / total) * 100);
-        if (percent > lastPercent) {
-            console.log('downloading' + percent, null);
-            if (window["loadingView"]) {
-                window["loadingView"].loading(percent);
-            }
-        }
-        lastPercent = percent;
-        return false;
-    }, (curlret, httpret) => {
-        if (curlret != 0 || httpret < 200 || httpret >= 300) {
-            console.log('downloadError ' + httpret + " " + url);
-            if (window["loadingView"]) {
-                window["loadingView"].setFontColor("#FF0000");
-                window["loadingView"].showTips("NetworkError");
-            }
-            return;
-        }
-        else {
-            console.log('downloaded ' + url);
-            let thisMd5 = calcmd5(fs_readFileSync(cachePkgPath));
-            console.log('check downloaded md5 ' + md5);
-            if (thisMd5 !== md5) {
-                if (window["loadingView"]) {
-                    window["loadingView"].setFontColor("#FF0000");
-                    window["loadingView"].showTips("DownloadError");
-                }
-            }
-            else {
-                startSmallGame(cachePkgPath);
-            }
-        }
-    }, 10, 100000000);
-}
-async function loadSmallGame(url) {
-    window["conchUseWXAdapter"] = true;
-    let urllen = url.length;
-    if (urllen < 2)
-        return;
-    url = url.trim();
-    console.log("loadSmallGame:" + url);
-    if (history.length <= 0) {
-        history._push(url);
-    }
-    let tempLocation = new Location;
-    tempLocation.setHref(url);
-    location._search = tempLocation._search;
-    window.localStorage.create(url);
-    try {
-        require("config");
-    }
-    catch (e) {
-    }
-    let data = await asyncs.loadText(url + "&" + Date.now());
-    for (let n = 0; n < 3 && !data; n++) {
-        data = await asyncs.loadText(url + "&" + Date.now());
-    }
-    if (!data) {
-        if (window["loadingView"]) {
-            window["loadingView"].setFontColor("#FF0000");
-            window["loadingView"].showTips("NetworkError");
-        }
-        if (!data || data.length <= 0) {
-            return;
-        }
-    }
-    class versionItem {
-    }
-    let jsonobj = null;
-    try {
-        jsonobj = JSON.parse(data);
-    }
-    catch (e) {
-        if (window["loadingView"]) {
-            window["loadingView"].setFontColor("#FF0000");
-            window["loadingView"].showTips("ParseJsonError");
-        }
-        return;
-    }
-    let item = jsonobj.versionList[0];
-    let cachePath = conch.getCachePath();
-    if (!fs_exists(cachePath)) {
-        fs_mkdir(cachePath);
-    }
-    let localCachePkg = cachePath + "/package.zip";
-    if (!fs_exists(localCachePkg)) {
-        var assetPkgData = conch.readFileFromAsset('cache/package.zip', 'raw');
-        if (!assetPkgData) {
-            console.log('start to download new package');
-            download(item.url + "?" + Date.now(), localCachePkg, item.md5);
-        }
-        else {
-            let md5 = calcmd5(assetPkgData);
-            console.log('asset package md5 ' + md5 + ' ' + item.md5);
-            if (md5 !== item.md5) {
-                console.log('start to download new package');
-                download(item.url + "?" + Date.now(), localCachePkg, item.md5);
-            }
-            else {
-                console.log('start with asset package');
-                fs_writeFileSync(localCachePkg, assetPkgData);
-                startSmallGame(localCachePkg);
-            }
-        }
-    }
-    else {
-        let md5 = calcmd5(fs_readFileSync(localCachePkg));
-        console.log('md5 ' + md5 + ' ' + item.md5);
-        if (md5 !== item.md5) {
-            console.log('start to download new package');
-            fs_rm(localCachePkg);
-            download(item.url + "?" + Date.now(), localCachePkg, item.md5);
-        }
-        else {
-            startSmallGame(localCachePkg);
-            console.log('start with cached package');
-        }
-    }
-}
-async function loadSmallGameLocal(url) {
-    window["conchUseWXAdapter"] = true;
-    let urllen = url.length;
-    if (urllen < 2)
-        return;
-    url = url.trim();
-    console.log("loadSmallGame:" + url);
-    if (history.length <= 0) {
-        history._push(url);
-    }
-    let tempLocation = new Location;
-    tempLocation.setHref(url);
-    location._search = tempLocation._search;
-    window.localStorage.create(url);
-    try {
-        require("config");
-    }
-    catch (e) {
-    }
-    let cachePath = conch.getCachePath();
-    let localCachePkg = cachePath + "/package.zip";
-    if (!fs_exists(cachePath)) {
-        fs_mkdir(cachePath);
-    }
-    var assetPkgData = conch.readFileFromAsset('cache/package.zip', 'raw');
-    if (!assetPkgData) {
-        console.log('error find no package');
-    }
-    else {
-        console.log('start with asset package');
-        fs_writeFileSync(localCachePkg, assetPkgData);
-        startSmallGame(localCachePkg);
-    }
-    let md5 = calcmd5(fs_readFileSync(localCachePkg));
-    console.log('md5 ' + md5);
 }
 loadApp(conch.presetUrl || "http://layabox.com/layanative3.0/demo/index.js");

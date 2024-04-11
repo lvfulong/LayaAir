@@ -163,9 +163,27 @@ class _jsXmlNode extends _jsXmlAttr
         var attr=this.attributes[name];
         return attr?attr["nodeValue"]:"";
     }  
+    querySelectorAll(selectors: string):any{
+        let elements:any = [];
+        if (this.childNodes[0]) {
+            this.traverseDOM(this.childNodes[0], selectors, elements);
+        }
+        return elements;
+    }
+    private traverseDOM(node:any, selectors:string, elements:any) {
+        // 当当前节点是元素节点并且标签名匹配选择器时，添加到elements数组中
+        if (/*node.nodeType === Node.ELEMENT_NODE && */node.nodeName === selectors) {
+            elements.push(node);
+        }
+        
+        // 遍历所有子节点
+        node.childNodes.forEach(childNode => {
+            childNode.traverseDOM(childNode, selectors, elements);
+        });
+    }
 }
 
 class _jsXmlDocument extends _jsXmlNode
 {
-    
+
 }
