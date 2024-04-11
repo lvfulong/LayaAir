@@ -10,13 +10,8 @@
     },
     "files": [
         "RuntimeExt.ts",
-        "Base64.ts",
-        "Debugger.ts",
-        "Crypto.ts",
         "Console.ts",
         "Event.ts",
-        "Bluetooth.ts",
-        "Gamepad.ts",
         "Storage.ts",
         "Input.ts",
         "Navigator.ts",

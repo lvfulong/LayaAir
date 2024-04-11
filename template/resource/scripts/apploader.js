@@ -125,59 +125,6 @@ class measureText {
     ;
     ;
 }
-class WindowBase64 {
-    constructor() {
-        this.atob = function () { return null; };
-        this.btoa = function () { return null; };
-    }
-}
-window["WindowBase64"] = WindowBase64;
-function _process() {
-    this.pid = 0;
-    this.cwd = function () {
-        return 'd:/temp';
-    };
-    this.mainModule = 'index.js';
-    this.argv = ['conch.exe', 'index.js'];
-    this.version = '1.3.1';
-    this._require = function (f) { console.log('process require(' + f + ')'); return function nop() { }; };
-    this._debugObject = {};
-}
-window.process = new _process();
-class SubtleCrypto {
-    decrypt(algorithm, key, data) {
-    }
-    deriveBits(algorithm, baseKey, length) {
-    }
-    deriveKey(algorithm, baseKey, derivedKeyType, extractable, keyUsages) {
-    }
-    digest(algorithm, data) {
-    }
-    encrypt(algorithm, key, data) {
-    }
-    exportKey(format, key) {
-    }
-    generateKey(algorithm, extractable, keyUsages) {
-    }
-    importKey(format, keyData, algorithm, extractable, keyUsages) {
-    }
-    sign(algorithm, key, data) {
-    }
-    unwrapKey(format, wrappedKey, unwrappingKey, unwrapAlgorithm, unwrappedKeyAlgorithm, extractable, keyUsages) {
-    }
-    verify(algorithm, key, signature, data) {
-    }
-    wrapKey(format, key, wrappingKey, wrapAlgorithm) {
-    }
-}
-class Crypto {
-    constructor() {
-        this.subtle = new SubtleCrypto();
-    }
-    getRandomValues(array) {
-        return null;
-    }
-}
 var LogLevel;
 (function (LogLevel) {
     LogLevel[LogLevel["Warn"] = 0] = "Warn";
@@ -467,26 +414,6 @@ class ProgressEvent extends Event {
     }
 }
 var _lbProgressEvent = window["ProgressEvent"] = ProgressEvent;
-var VendorIDSource;
-(function (VendorIDSource) {
-    VendorIDSource[VendorIDSource["bluetooth"] = 0] = "bluetooth";
-    VendorIDSource[VendorIDSource["usb"] = 1] = "usb";
-})(VendorIDSource || (VendorIDSource = {}));
-;
-class BluetoothDevice {
-    connectGATT() {
-        return null;
-    }
-}
-class Bluetooth extends EventTarget {
-    requestDevice(options) {
-        return null;
-    }
-}
-class Gamepad {
-}
-class GamepadEvent extends Event {
-}
 class Storage {
     constructor() {
         this.storagePath = conchConfig.getStoragePath();
@@ -6724,7 +6651,6 @@ window.removeEventListener = _window.removeEventListener.bind(_window);
 window.dispatchEvent = _window.dispatchEvent.bind(_window);
 window.document = new Document();
 window.layaDoc = window.document;
-window.crypto = new Crypto();
 window.devicePixelRatio = 1.0;
 var Image = window.Image = HTMLImageElement;
 var Audio = window.Audio = HTMLAudioElement;

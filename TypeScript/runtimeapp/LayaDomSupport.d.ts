@@ -59,8 +59,8 @@ declare class _Buffer {
     static oneInt(that: IBuffer, fid: number, n: number): void;
     static point(that: IBuffer, fid: number, x: number, y: number): void;
 }
-declare function _process(): void;
-interface Algorithm {
+//declare function _process(): void;
+/*interface Algorithm {
     name?: string;
 }
 interface KeyAlgorithm {
@@ -89,7 +89,7 @@ declare class SubtleCrypto {
 declare class Crypto {
     subtle: SubtleCrypto;
     getRandomValues(array: ArrayBufferView): ArrayBufferView;
-}
+}*/
 declare enum LogLevel {
     Warn = 0,
     Error = 1,
@@ -434,22 +434,6 @@ declare class BluetoothDevice {
 }
 declare class Bluetooth extends EventTarget implements BluetoothDeviceEventHandlers, CharacteristicEventHandlers, ServiceEventHandlers {
     requestDevice(options: RequestDeviceOptions): Promise<BluetoothDevice>;
-}
-interface GamepadButton {
-    pressed: boolean;
-    value: number;
-}
-declare class Gamepad {
-    axes: number[];
-    buttons: GamepadButton[];
-    connected: boolean;
-    id: string;
-    index: number;
-    mapping: string;
-    timestamp: number;
-}
-declare class GamepadEvent extends Event {
-    gamepad: Gamepad;
 }
 declare class Storage {
     private storagePath;
@@ -1760,7 +1744,7 @@ interface Window extends EventTarget, WindowTimers {
     onresize: (ev: UIEvent) => any;
     requestAnimationFrame(callback: FrameRequestCallback): number;
     cancelAnimationFrame(handle: number): void;
-    process: any;
+    //process: any;
     Socket: typeof Socket;
     WebSocket: typeof WebSocket;
     parent: Window;

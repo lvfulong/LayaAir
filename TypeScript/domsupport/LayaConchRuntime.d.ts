@@ -943,9 +943,9 @@ interface conch_jsgcdebug{
     id:number;
 }
     
-declare var createProcess:(js:string,url:string)=>void;
-declare var closeCurProcess:()=>void;
-declare var reloadCurProcess:()=>void;
+//declare var createProcess:(js:string,url:string)=>void;
+//declare var closeCurProcess:()=>void;
+//declare var reloadCurProcess:()=>void;
 declare var urlBack:()=>void;
 declare var urlForward:()=>void;
 declare var setOnActive:(cb:()=>void)=>void;
