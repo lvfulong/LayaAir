@@ -81,7 +81,7 @@ void JCSystemConfig::loadConfigIniFile()
 #ifdef __APPLE__
     if (configIni.hasEntry("ios:orientation"))
     {
-        m_nOrientation = configIni.getUIntOrDefault("ios:orientation", 24);
+        m_nOrientationType = configIni.getUIntOrDefault("ios:orientation", 24);
     }
     else
     {

@@ -31,7 +31,7 @@ namespace laya
         static bool     s_bIsPlug;                      //��Ϊ��ʼ��̫���ˣ�����static
         static bool     s_bLocalizable;                 //�����Ƿ��Ǳ��ذ�
 		bool            m_bConchWebGL;
-		int 			m_nOrientation = 24;
+		int 			m_nOrientationType = 24;
 		void 			loadConfigIniFile();
         int 			m_nJSDebugMode = 0;
     	int 			m_nJSDebugPort = 5959;

@@ -107,7 +107,7 @@
      UIInterfaceOrientationMaskLandscapeLeft,        ===8
      UIInterfaceOrientationMaskLandscapeRight,       ===16
      */
-    return [conchConfig GetInstance]->m_nOrientationType;
+    return [conchRuntime getOrientationMask];
 }
 //-------------------------------------------------------------------------------
 - (BOOL)shouldAutorotate

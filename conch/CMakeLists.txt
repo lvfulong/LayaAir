@@ -505,8 +505,8 @@ if(IOS)
 		platform/iOS/CToObjectC.h
 		platform/iOS/conchRuntime.h
 		platform/iOS/conchRuntime.mm
-		platform/iOS/conchConfig.h
-		platform/iOS/conchConfig.mm
+		#platform/iOS/conchConfig.h
+		#platform/iOS/conchConfig.mm
 		platform/iOS/Video/IVideoRenderTarget.h
 		platform/iOS/Video/IVideoRenderTarget.m
 		platform/iOS/Video/PlayerLayerRenderTarget.h

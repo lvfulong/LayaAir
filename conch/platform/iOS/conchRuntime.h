@@ -123,4 +123,5 @@ class JCTouchFilter;
 -(void)onOrientationChanged:(CGSize)size;
 -(void)onResize:(CGSize)size;
 -(void)alert:(NSString*)sInfo;
++(UIInterfaceOrientationMask)getOrientationMask;
 @end

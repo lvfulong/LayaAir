@@ -20,7 +20,7 @@ root_dir=${current_dir}/..
 echo ${root_dir}
 
 
-conch_dir=${root_dir}/conch
+conch_dir=${root_dir}
 publish_dir=${root_dir}/publish
 third_party_dir=${root_dir}/third_party
 

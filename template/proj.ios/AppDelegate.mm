@@ -50,7 +50,7 @@
 
 - (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
 {
-    return [conchConfig GetInstance]->m_nOrientationType;
+    return [conchRuntime getOrientationMask];
 }
 
 @end

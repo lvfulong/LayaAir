@@ -132,7 +132,7 @@ static conchRuntime* g_pIOSConchRuntime = nil;
     
     m_nsRootResourcePath = [self getResourcePath];
     m_nsRootCachePath = [self getRootCachePath];
-    NSLog(@"AppVersion=%@",[conchConfig GetInstance]->m_sAppVersion );
+    //NSLog(@"AppVersion=%@",[conchConfig GetInstance]->m_sAppVersion );
     //if( [conchConfig GetInstance]->m_bNotification)
     //{
     //    [[LayaNotifyManager GetInstance]deleteAllNotify];
@@ -144,7 +144,7 @@ static conchRuntime* g_pIOSConchRuntime = nil;
     m_pResolution = new CGPoint();
     
     CGRect kRect = [UIScreen mainScreen].bounds;
-    int nOrientationType = [conchConfig GetInstance]->m_nOrientationType;
+    int nOrientationType = laya::g_kSystemConfig.m_nOrientationType;
     
     if( ( nOrientationType & UIInterfaceOrientationMaskLandscapeLeft ) == UIInterfaceOrientationMaskLandscapeLeft ||
        ( nOrientationType & UIInterfaceOrientationMaskLandscapeRight ) ==  UIInterfaceOrientationMaskLandscapeRight )
@@ -312,7 +312,7 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
         gAssetRootPath= gResourcePath+"/cache/";
         pRedistFileResource->Init( gResourcePath.c_str() );
         laya::JCConch::s_pAssetsFiles = pRedistFileResource;
-        laya::JCConch::s_pConch.reset(new laya::JCConch(laya::JS_DEBUG_MODE_OFF,0));
+        laya::JCConch::s_pConch.reset(new laya::JCConch());
         laya::JCConch::s_pConchRender->createBackend(m_options);
         laya::JCConch::s_pConchRender->createScreenSurface(m_options.nativeLayer);
 		laya::JCConch::s_pConch->onAppStart();
@@ -671,31 +671,31 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
         switch(p_nType)
         {
             case 0://landscape 16
-                [conchConfig GetInstance]->m_nOrientationType = UIInterfaceOrientationMaskLandscapeRight;
+                laya::g_kSystemConfig.m_nOrientationType = UIInterfaceOrientationMaskLandscapeRight;
                 break;
             case 1://portrait 2
-                [conchConfig GetInstance]->m_nOrientationType = UIInterfaceOrientationMaskPortrait;
+                laya::g_kSystemConfig.m_nOrientationType = UIInterfaceOrientationMaskPortrait;
                 break;
             case 8://reverse_landscape 8
-                [conchConfig GetInstance]->m_nOrientationType = UIInterfaceOrientationMaskLandscapeLeft;
+                laya::g_kSystemConfig.m_nOrientationType = UIInterfaceOrientationMaskLandscapeLeft;
                 break;
             case 9://reverse_portrait 4
-                [conchConfig GetInstance]->m_nOrientationType = UIInterfaceOrientationMaskPortraitUpsideDown;
+                laya::g_kSystemConfig.m_nOrientationType = UIInterfaceOrientationMaskPortraitUpsideDown;
                 break;
             case 4://sensor all
-                [conchConfig GetInstance]->m_nOrientationType = UIInterfaceOrientationMaskAll;
+                laya::g_kSystemConfig.m_nOrientationType = UIInterfaceOrientationMaskAll;
                 break;
             case 10://full sensor all
-                [conchConfig GetInstance]->m_nOrientationType = UIInterfaceOrientationMaskAll;
+                laya::g_kSystemConfig.m_nOrientationType = UIInterfaceOrientationMaskAll;
                 break;
             case 2://user full
-                [conchConfig GetInstance]->m_nOrientationType = UIInterfaceOrientationMaskAll;
+                laya::g_kSystemConfig.m_nOrientationType = UIInterfaceOrientationMaskAll;
                 break;
             case 6://sensor_landscape
-                [conchConfig GetInstance]->m_nOrientationType = UIInterfaceOrientationMaskLandscapeRight | UIInterfaceOrientationMaskLandscapeLeft;
+                laya::g_kSystemConfig.m_nOrientationType = UIInterfaceOrientationMaskLandscapeRight | UIInterfaceOrientationMaskLandscapeLeft;
                 break;
             case 7://sensor_portrait
-                [conchConfig GetInstance]->m_nOrientationType = UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
+                laya::g_kSystemConfig.m_nOrientationType = UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
                 break;
             default://behind nosensor
                 break;
@@ -708,7 +708,7 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
             if (array != nil && array.count > 0) {
                 UIWindowScene *scene = (UIWindowScene *)array[0];
                 if (scene != nil) {
-                    UIWindowSceneGeometryPreferencesIOS *geometryPreferences = [[UIWindowSceneGeometryPreferencesIOS alloc] initWithInterfaceOrientations:[conchConfig GetInstance]->m_nOrientationType];
+                    UIWindowSceneGeometryPreferencesIOS *geometryPreferences = [[UIWindowSceneGeometryPreferencesIOS alloc] initWithInterfaceOrientations: laya::g_kSystemConfig.m_nOrientationType];
                     [scene requestGeometryUpdateWithPreferences:geometryPreferences
                                                    errorHandler:^(NSError * _Nonnull error) {
                         //NSAssert(NO, [NSString stringWithFormat:@"rotate screen error：%@", error]);
@@ -737,7 +737,7 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
     {
         case 0://landscape 16
         {
-            [conchConfig GetInstance]->m_nOrientationType = UIInterfaceOrientationMaskLandscapeRight;
+            laya::g_kSystemConfig.m_nOrientationType = UIInterfaceOrientationMaskLandscapeRight;
             NSNumber *value=[NSNumber numberWithInt:UIInterfaceOrientationLandscapeRight];
             [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
             
@@ -745,43 +745,43 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
             break;
         case 1://portrait 2
         {
-            [conchConfig GetInstance]->m_nOrientationType = UIInterfaceOrientationMaskPortrait;
+            laya::g_kSystemConfig.m_nOrientationType = UIInterfaceOrientationMaskPortrait;
             NSNumber *value=[NSNumber numberWithInt:UIInterfaceOrientationPortrait];
             [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
         }
             break;
         case 8://reverse_landscape 8
         {
-            [conchConfig GetInstance]->m_nOrientationType = UIInterfaceOrientationMaskLandscapeLeft;
+            laya::g_kSystemConfig.m_nOrientationType = UIInterfaceOrientationMaskLandscapeLeft;
             NSNumber *value=[NSNumber numberWithInt:UIInterfaceOrientationLandscapeLeft];
             [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
         }
             break;
         case 9://reverse_portrait 4
         {
-            [conchConfig GetInstance]->m_nOrientationType = UIInterfaceOrientationMaskPortraitUpsideDown;
+            laya::g_kSystemConfig.m_nOrientationType = UIInterfaceOrientationMaskPortraitUpsideDown;
             NSNumber *value=[NSNumber numberWithInt:UIInterfaceOrientationPortraitUpsideDown];
             [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
         }
             break;
         case 4://sensor all
         {
-            [conchConfig GetInstance]->m_nOrientationType = UIInterfaceOrientationMaskAll;
+            laya::g_kSystemConfig.m_nOrientationType = UIInterfaceOrientationMaskAll;
         }
             break;
         case 10://full sensor all
         {
-            [conchConfig GetInstance]->m_nOrientationType = UIInterfaceOrientationMaskAll;
+            laya::g_kSystemConfig.m_nOrientationType = UIInterfaceOrientationMaskAll;
         }
             break;
         case 2://user full
         {
-            [conchConfig GetInstance]->m_nOrientationType = UIInterfaceOrientationMaskAll;
+            laya::g_kSystemConfig.m_nOrientationType = UIInterfaceOrientationMaskAll;
         }
             break;
         case 6://sensor_landscape
         {
-            [conchConfig GetInstance]->m_nOrientationType = UIInterfaceOrientationMaskLandscapeRight | UIInterfaceOrientationMaskLandscapeLeft;
+            laya::g_kSystemConfig.m_nOrientationType = UIInterfaceOrientationMaskLandscapeRight | UIInterfaceOrientationMaskLandscapeLeft;
             if (!UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation))
             {
                 NSNumber *value=[NSNumber numberWithInt:UIInterfaceOrientationLandscapeLeft];
@@ -791,7 +791,7 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
             break;
         case 7://sensor_portrait
         {
-            [conchConfig GetInstance]->m_nOrientationType = UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
+            laya::g_kSystemConfig.m_nOrientationType = UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
             
             if (!UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation))
             {
@@ -1048,5 +1048,9 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
 -(void)alert:(NSString*)sInfo
 {
     [[conchRuntime GetIOSConchRuntime]->m_pLayaAlert alert:[sInfo UTF8String]];
+}
++(UIInterfaceOrientationMask)getOrientationMask
+{
+    return laya::g_kSystemConfig.m_nOrientationType;
 }
 @end

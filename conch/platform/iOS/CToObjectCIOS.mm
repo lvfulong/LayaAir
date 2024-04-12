@@ -1036,11 +1036,19 @@ std::string CToObjectCGetDeviceModel()
 }
 std::string CToObjectCGetAppVersion()
 {
-    return [[conchConfig GetInstance]->m_sAppVersion cStringUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary* infoDictionary =  [[NSBundle mainBundle] infoDictionary];
+    // 当前应用软件版本 Bundle versions string, short
+    NSString* sAppVersion = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
+    //NSLog(@"当前应用软件版本:%@", sAppVersion);
+    return [sAppVersion cStringUsingEncoding:NSUTF8StringEncoding];
 }
 std::string CToObjectCGetAppLocalVersion()
 {
-    return [[conchConfig GetInstance]->m_sAppLocalVersion cStringUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary* infoDictionary =  [[NSBundle mainBundle] infoDictionary];
+    // 当前应用版本号码 Bundle versions
+    NSString* sAppLocalVersion = [infoDictionary objectForKey:@"CFBundleVersion"];
+    //NSLog(@"当前应用Local版本号码：%@" sAppLocalVersion);
+    return [sAppLocalVersion cStringUsingEncoding:NSUTF8StringEncoding];
 }
 float CToObjectCGetDeviceSystemVersion()
 {
