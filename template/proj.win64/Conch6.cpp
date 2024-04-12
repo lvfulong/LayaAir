@@ -10,17 +10,17 @@
 extern std::string gRedistPath;
 namespace  fs = std::filesystem;
 /*
-�÷���
+用法：
     conch6.exe [options] url
-������
+参数：
     -test
-        ִֻ��c�Ĳ�����������ʱ����ʹ��url
+        只执行c的测试用例。这时候不再使用url
     -perf
-        ִ��һ��url����ͳ��
+        执行一个url进行统计
     -perf_count
-        update�Ĵ���
+        update的次数
     -opath    path
-        ָ��Ч�ʲ��Ե����Ŀ¼
+        指定效率测试的输出目录
     -debug=""
 */
 std::string gAssetRootPath = "";
@@ -28,7 +28,7 @@ int main(int argc, _TCHAR* argv[])
 {
     bool bRunTest = false;
     char* pRunTestCase = NULL;
-    //��������
+    //解析参数
     for (int i = 1; i < argc; i++) 
     {
         if (argv[i][0] != '-') 
@@ -39,7 +39,7 @@ int main(int argc, _TCHAR* argv[])
             }
             else
             {
-                printf(" ��������ֻ����һ������url��������ǲ�������Ҫ�ԡ�-����ͷ!\n ");
+                printf(" 参数错误！只能有一个启动url，否则就是参数，需要以‘-’开头!\n ");
                 return 1;
             }
             if (memcmp(argv[i], "http", 4) != 0) 
