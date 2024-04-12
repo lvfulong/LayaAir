@@ -221,7 +221,6 @@ function archive_ios {
     rm -rf ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS/include
     mkdir ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS/include
     cp  ${conch_dir}/platform/iOS/conchRuntime.h ${publish_dir}/template/ios/LayaRuntime-iOS/include
-    cp  ${conch_dir}/platform/iOS/conchConfig.h ${publish_dir}/template/ios/LayaRuntime-iOS/include
     mkdir ${publish_dir}/template/ios/LayaRuntime-iOS/include/Reachability
     cp  ${conch_dir}/platform/iOS/Reachability/Reachability.h ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS/include/Reachability
     #—————————————————————resource————————————————————————

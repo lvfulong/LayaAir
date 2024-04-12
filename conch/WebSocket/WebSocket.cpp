@@ -424,7 +424,7 @@ int WebSocket::onSocketCallback(
 		case LWS_CALLBACK_PROTOCOL_DESTROY:
 		case LWS_CALLBACK_CLIENT_CONNECTION_ERROR:
 			{
-				LOGI("WebSocket onSocketCallback connection error %d reason", reason);
+				LOGI("WebSocket onSocketCallback connection error %s %d reason", in != nullptr ? (const char*)in : "", reason);
 				WsMessage* msg = nullptr;
 				if (reason == LWS_CALLBACK_CLIENT_CONNECTION_ERROR
 					|| (reason == LWS_CALLBACK_PROTOCOL_DESTROY && m_readyState == State::CONNECTING)

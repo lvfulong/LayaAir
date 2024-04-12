@@ -106,7 +106,7 @@ int main(int argc, char* argv[])
     laya::App app;
     Config config;
     config.title = "Conch3.0";
-    app.run(config, g_nInnerWidth, g_nInnerHeight, nJSDebugMode, nJSDebugPort);
+    app.run(config);
     //app.handleMessage();
     //app.exitApp();
     //delete pAssets;
