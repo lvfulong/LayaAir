@@ -1,4 +1,4 @@
-﻿/**
+/**
 @file			JCVBOMgr.h
 @brief			
 @author			James

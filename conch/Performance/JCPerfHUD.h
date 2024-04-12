@@ -1,4 +1,4 @@
-﻿/**
+/**
 @file			JCPerfHUD.h
 @brief			
 @author			James

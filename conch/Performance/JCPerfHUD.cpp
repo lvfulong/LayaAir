@@ -35,7 +35,7 @@ namespace laya
         m_DataLock.unlock();
     }
 
-    //�����Ǿ���ʱ��
+    //假设是均匀时间
     void PerfData::drawData(JCPerfDataRender* pRender) {
         m_DataLock.lock();
         JCPerfDataRender::vertex cdata[100];
@@ -43,7 +43,7 @@ namespace laya
 
         int nPanelW = pRender->m_nWidth;
         auto it = m_vDatas.begin();
-        int nXOff = m_nMaxData - m_vDatas.size();  //��Ȼ>=0
+        int nXOff = m_nMaxData - m_vDatas.size();  //必然>=0
         float dx = ((float)nPanelW)/m_nMaxData;
         float cx = nXOff*dx;
         int num = 0;
@@ -53,7 +53,7 @@ namespace laya
             pCurVert->y = (*it)*m_fScale;
             pCurVert++;
             num++;
-            if (num > 100) {//���������buffer�����ֵ�ˣ��Ȼ�һ�¡�
+            if (num > 100) {//超出上面的buffer的最大值了，先画一下。
                 pRender->draw2DLines((float*)cdata, num, m_nColor);
                 num = 0;
                 pCurVert = (JCPerfDataRender::vertex*)cdata;
@@ -149,7 +149,7 @@ namespace laya
 	{
 		if( p_nId < 0 || p_nId >= MAXPERFDATA )
         {
-			LOGE("CPerfHUD::AddData����������� max=%d,cur=%d", MAXPERFDATA, p_nId );
+			LOGE("CPerfHUD::AddData超出最大数量 max=%d,cur=%d", MAXPERFDATA, p_nId );
 			return NULL;
 		}
 		PerfData* pData = (PerfData*)m_vDatas[p_nId];
@@ -172,7 +172,7 @@ namespace laya
         int id = pData->m_nID;
         pData->m_nMaxData = m_nMaxData;
         if (id < 0 || id >= MAXPERFDATA){
-            LOGE("CPerfHUD::AddData����������� max=%d,cur=%d", MAXPERFDATA, id);
+            LOGE("CPerfHUD::AddData超出最大数量 max=%d,cur=%d", MAXPERFDATA, id);
             return nullptr;
         }
         PerfDataBase* pCurData = m_vDatas[id];
@@ -181,7 +181,7 @@ namespace laya
             m_vValidID.push_back(id);
         }
         else {
-            LOGE("�Ѿ����������� %d , %s",((int)pCurData->m_nID), (pCurData->m_strDesc.c_str()));
+            LOGE("已经存在数据了 %d , %s",((int)pCurData->m_nID), (pCurData->m_strDesc.c_str()));
             return pCurData;
         }
         return pData;
@@ -216,7 +216,7 @@ namespace laya
     PerfDataBase* JCPerfHUD::getData( int id )
 	{
 		if( id<0 || id>=MAXPERFDATA){
-			LOGE("JCPerfHUD::getData����������� max=%d,cur=%d", MAXPERFDATA, id );
+			LOGE("JCPerfHUD::getData超出最大数量 max=%d,cur=%d", MAXPERFDATA, id );
 			return NULL;
 		}
 		return m_vDatas[id];
@@ -226,7 +226,7 @@ namespace laya
 	{
 		if( p_nDataID<0 || p_nDataID>=MAXPERFDATA)
 		{
-			LOGE("JCPerfHUD::updateData����������� max=%d,cur=%d", MAXPERFDATA, p_nDataID );
+			LOGE("JCPerfHUD::updateData超出最大数量 max=%d,cur=%d", MAXPERFDATA, p_nDataID );
 			return ;
 		}
 		if(m_vDatas[p_nDataID])
@@ -343,7 +343,7 @@ void main(){
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
         draw2DRect(0,0,(float)m_nWidth,(float)m_nHeight,0x66000000 );
-		//�̶�
+		//刻度
 		float maxx= (float)m_nWidth;
 		float k[4];
 
@@ -388,7 +388,7 @@ void main(){
         k[3] = 167.0f*JCPerfHUD::m_fGlobalScale;
         draw2DLines(k, 2, 0x550000ff);
 
-		//����
+		//数据
 		int nValidSize = JCPerfHUD::m_vValidID.size();
 		for( int i=0; i < nValidSize ; i++ ){
 			PerfDataBase* pData =JCPerfHUD::m_vDatas[JCPerfHUD::m_vValidID[i]];
@@ -427,7 +427,7 @@ void main(){
     }
     
     /*
-        ���ݵ�x�ᵥλ��֡
+        数据的x轴单位是帧
     */
     void JCPerfDataRender::draw2DLines( float* p_pVerts, int vertnum, unsigned int p_nColor)
     {
@@ -481,7 +481,7 @@ void main(){
         static vertex tmpvertex[4];
         int nVertNum = 4;
 
-        //������Ǵ���ġ����ܻᵼ�����صĶ�ʧ����
+        //下面的是错误的。可能会导致严重的丢失精度
         tmpvertex[0].x = x;
         tmpvertex[0].y = y;
 
@@ -515,7 +515,7 @@ void main(){
     }
 
     /*
-       ���ݵ�x�ᵥλ��ʱ�䣬ms��
+       数据的x轴单位是时间，ms。
     */
     void JCPerfDataRender::drawAsBarGraph(float* pData, int p_nDataNum, float scale, unsigned int p_nColor) {
         if (p_nDataNum <= 1)
@@ -533,11 +533,11 @@ void main(){
         color[1] = ((p_nColor & 0x0000ff00) >> 8) / 255.0f; //g
         color[2] = (p_nColor & 0x000000ff) / 255.0f; //b
         perfBarData::dataType* pBarData = (perfBarData::dataType*)pData;
-        //�ӵ�ǰʱ�䵹��displayDuration ms������ͼ�εģ������m_tmDrawTm - displayDuration�� �ұ��� m_tmDrawTm 
+        //从当前时间倒退displayDuration ms，整个图形的，左边是m_tmDrawTm - displayDuration， 右边是 m_tmDrawTm 
         static double displayDuration = 4000.0;
         double sttm = m_tmDrawTm - displayDuration;// pBarData[0].tm;
         //float edtm = pBarData[p_nDataNum - 1].tm;
-        float dataduration = (float)displayDuration;//�̶�4���ӡ� edtm - sttm + 16.667f;    //���Ҹ��Ӱ��
+        float dataduration = (float)displayDuration;//固定4秒钟。 edtm - sttm + 16.667f;    //左右各加半个
         float barwidth = m_nWidth/(dataduration/16.6667f);
         float foffx = (float)m_nOffX;
         float foffy = (float)m_nOffY;
@@ -550,7 +550,7 @@ void main(){
             float lty = foffy + m_nHeight - (pBarData->start + pBarData->duration)*scale;
             float rbx = cx + barwidth;
             float rby = foffy + m_nHeight - pBarData->start*scale;
-            if (rby - lty < 1.0f)//��С��ҪΪ0�����򿴲�����
+            if (rby - lty < 1.0f)//大小不要为0，否则看不到了
                 rby = lty + 1.0f;
 
             ltx = ((ltx*2.0f / JCPerfHUD::m_pLayaGL->m_nMainCanvasWidth) - 1.0f);
@@ -574,15 +574,15 @@ void main(){
                 nVertNum = 0;
                 pCurVert = tmpvertex;
             }
-            //�ٰ���һ�λ�������
+            //再把下一段画到上面
             if (true) {
                 perfBarData::dataType* pBarDataN =(i<p_nDataNum-1)?(pBarData + 1):pBarData;
-                float cx = foffx + ((float)(pBarData->tm - sttm))*m_nWidth / dataduration;//���ʱ��Ҫ�õ�ǰ��
+                float cx = foffx + ((float)(pBarData->tm - sttm))*m_nWidth / dataduration;//这个时间要用当前的
                 float ltx = cx;
                 float lty = foffy + m_nHeight - (pBarDataN->start + pBarDataN->duration+16.6667f)*scale;
                 float rbx = cx + barwidth;
                 float rby = foffy + m_nHeight - (pBarDataN->start+(float)(pBarDataN->tm-pBarData->tm))*scale;
-                if (rby - lty < 1.0f)//��С��ҪΪ0�����򿴲�����
+                if (rby - lty < 1.0f)//大小不要为0，否则看不到了
                     rby = lty + 1.0f;
 
                 ltx = ((ltx*2.0f / JCPerfHUD::m_pLayaGL->m_nMainCanvasWidth) - 1.0f);
