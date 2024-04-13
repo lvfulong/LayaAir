@@ -18,6 +18,7 @@
 #include <utils/Base64.h>
 #include "JSConsole.h"
 #include "XMLHttpRequest.h"
+#include "JSFetch.h"
 #include "JSConchConfig.h"
 #include "JSXmlNode.h"
 #include "JSXmlAttr.h"
@@ -477,6 +478,7 @@ namespace laya
         JSConsole::exportJS(context);
         JSImage::exportJS(context);
         XMLHttpRequest::exportJS(context);
+        //Fetch::exportJS(context);
         JSConchConfig::exportJS(context);
         JSXmlNode::exportJS(context);
         JSXmlDocument::exportJS(context);

@@ -167,7 +167,7 @@ namespace laya
     {
         if (!cbref.lock())
             return;       
-        //���һ��js����
+        //检查一下js环境
         //if (!pxhr->IsMyJsEnv())
         //    return;
         if (p_Buff) 
@@ -228,10 +228,10 @@ namespace laya
         char* pBuff = new char[p_Buff.m_nLen + 1];//(bin?0:1)];
         memcpy(pBuff, p_Buff.m_pPtr, p_Buff.m_nLen);
         //if(!bin){
-        pBuff[p_Buff.m_nLen] = 0;	//�����ǲ��Ƕ����ƶ�����һ��
+        pBuff[p_Buff.m_nLen] = 0;	//不管是不是二进制都保护一下
         if (curlr != 0 || httpr<200 || httpr>300) 
         {
-            //����
+            //错误
             postToJS(std::bind(_onPostError_JSThread, pxhr, curlr, httpr, callbackref));
         }
         else
@@ -247,7 +247,7 @@ namespace laya
         bool isfunc = pObj->IsFunction();
         //v8::Persistent<v8::Function>* pFunc = new v8::Persistent<v8::Function>(pIso, v8::Local<v8::Function>::Cast(pObj));
         v8::Persistent<v8::Object>* ppf = weakHoldJsObj(v8::Local<v8::Object>::Cast(pObj));
-        mpJsOnReadyStateChange = (JsFunction*) ppf; //�Ƿ�Σ�գ���Ҫ���� // v8::Persistent<v8::Function>::Cast(*ppf);
+        mpJsOnReadyStateChange = (JsFunction*) ppf; //是否危险，需要测试 // v8::Persistent<v8::Function>::Cast(*ppf);
     }
     */
     /*
@@ -329,7 +329,7 @@ namespace laya
                 while (it != m_requestHeaders.end())
                 {
                     std::string head = (*it).first;
-                    head += ": ";//��׼�ǿ�����������ո�
+                    head += ": ";//标准是可以有任意个空格
                     head += (*it).second;
                     headers.push_back(head);
                     it++;
@@ -357,7 +357,7 @@ namespace laya
             while (it != m_requestHeaders.end()) 
             {
                 std::string head = (*it).first;
-                head += ": ";//��׼�ǿ�����������ո�
+                head += ": ";//标准是可以有任意个空格
                 head += (*it).second;
                 headers.push_back(head);
                 it++;
@@ -390,7 +390,7 @@ namespace laya
                 if (bisab)
                 {
                     postData(pdmgr, p_sUrl, (char*)pData, nDataLen);
-                    // m_responseTypeCode = ResponseTypeArrayBuffer; ���ܸ�����������Է�������
+                    // m_responseTypeCode = ResponseTypeArrayBuffer;  不能根据这个来绝对返回类型
                 }
                 else
                 {

@@ -190,7 +190,8 @@ static void PromiseRejectHandlerInMainThread(v8::PromiseRejectMessage data)
     v8::HandleScope hs(v8::Isolate::GetCurrent());
     v8::Local<v8::StackTrace> stack =
         v8::StackTrace::CurrentStackTrace(v8::Isolate::GetCurrent(), 20, v8::StackTrace::kOverview);
-    const char *s = stackTraceToString(stack).c_str();
+    std::string str = stackTraceToString(stack);
+    const char *s = str.c_str();
 
     LOGI("unhandledrejection stack %s", s);
     LOGE("unhandledrejection %s", error_message != nullptr ? error_message : "no message");

@@ -49,7 +49,6 @@ namespace laya
 
 		State readyState() const;
 
-		//����
 		void open(const char* method, const char* p_url, bool async);
 
 		void changeState(State newState);
@@ -111,12 +110,12 @@ namespace laya
 
 		inline void postData(JCDownloadMgr* p_pDownloadMgr, const char* p_pszURL, char* p_pData, int p_nLen );
 
-		//��Ϊ������v8ԭ���ķ�����js����ת��JsObjHandle2���Էֳ���������
+		//因为不是用v8原生的方法把js函数转换JsObjHandle2所以分成两个函数
         void setPostCB(JSValueAsParam p_onOK, JSValueAsParam p_onError);
 
 		void JsPostData( const char* p_sUrl, JSValueAsParam arg1 );
 
-        //�ص�Ҳ���� setPostCB���õĺ���
+        //回调也是走 setPostCB设置的函数
         void getData(const char* p_sUrl);
 		
         static void exportJS(Context& context);
@@ -137,7 +136,7 @@ namespace laya
 	public:
 		
 		Persistent		        m_funcOnStateChg;
-		Persistent		        m_This;// this �� JS ����
+		Persistent		        m_This;// this 的 JS 对象
 		Persistent		        m_jsfunPostComplete;
 		Persistent		        m_jsfunPostError;
 		std::shared_ptr<int>	m_CallbackRef;
