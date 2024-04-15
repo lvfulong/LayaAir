@@ -174,15 +174,17 @@ static void PromiseRejectHandlerInMainThread(v8::PromiseRejectMessage data)
         return;
     }
     v8::Local<v8::Value> exception = data.GetValue();
-    const char *error_message = nullptr;
+    //const char *error_message = nullptr;
+    std::string error_message;
     v8::Local<v8::Message> message = v8::Exception::CreateMessage(isolate, exception);
 
     if (!message.IsEmpty())
     {
-        if (message->Get().IsEmpty() || message->Get()->IsNull())
-            error_message = "";
-        else{
-            error_message = Converter<const char *>::ToCpp(message->Get().As<v8::Value>());
+        if (message->Get().IsEmpty() || message->Get()->IsNull()){
+        }else{
+            v8::String::Utf8Value utf8(isolate, message->Get().As<v8::String>());
+            error_message.assign(*utf8);
+            //error_message = Converter<const char*>::ToCpp(message->Get().As<v8::String>());
         }
     }
     // std::string kBuf = "if(conch.onunhandledrejection){conch.onunhandledrejection('";
@@ -196,7 +198,7 @@ static void PromiseRejectHandlerInMainThread(v8::PromiseRejectMessage data)
     const char *s = str.c_str();
 
     LOGI("unhandledrejection stack %s", s);
-    LOGE("unhandledrejection %s", error_message != nullptr ? error_message : "no message");
+    LOGE("unhandledrejection %s", error_message.c_str());// != nullptr ? error_message : "no message");
     IsolateData *pIsolateData = IsolateData::From(isolate);
     Javascript *pJavascript = (Javascript *)pIsolateData->m_data;
     pJavascript->m_promiseRejectHandler(data.GetPromise(), data.GetValue(), "unhandledrejection");

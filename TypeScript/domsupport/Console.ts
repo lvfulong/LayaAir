@@ -56,9 +56,10 @@ class Console {
         var c = _console;
         c.log(LogLevel.Info,message);//+optionalParams.join());
     }
-    log(message?: any/*, ...optionalParams: any[]*/): void{
+    log(...args: any[]): void{
         var c = _console;
-        c.log(LogLevel.Info, message);//+optionalParams.join());
+        let msg = args.join(' ');
+        c.log(LogLevel.Info, msg);
     }
     //msIsIndependentlyComposed(element: Element): boolean;
     profile(reportName?: string): void{
