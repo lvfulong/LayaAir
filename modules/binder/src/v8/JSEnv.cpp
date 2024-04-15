@@ -181,7 +181,9 @@ static void PromiseRejectHandlerInMainThread(v8::PromiseRejectMessage data)
     {
         if (message->Get().IsEmpty() || message->Get()->IsNull())
             error_message = "";
-        error_message = Converter<const char *>::ToCpp(message->Get().As<v8::Value>());
+        else{
+            error_message = Converter<const char *>::ToCpp(message->Get().As<v8::Value>());
+        }
     }
     // std::string kBuf = "if(conch.onunhandledrejection){conch.onunhandledrejection('";
     // kBuf += UrlEncode(error_message != nullptr ? error_message : "");
