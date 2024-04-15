@@ -29,6 +29,7 @@
 #include "JSFileSystem.h"
 #include "JSZip.h"
 #include "JSNotify.h"
+#include "JSTextDecoder.h"
 
 #include "JSCanvasRenderingContext2D.h"
 #ifdef ANDROID
@@ -479,6 +480,7 @@ namespace laya
         JSImage::exportJS(context);
         XMLHttpRequest::exportJS(context);
         //Fetch::exportJS(context);
+        TextDecoderWrapper::exportJS(context);
         JSConchConfig::exportJS(context);
         JSXmlNode::exportJS(context);
         JSXmlDocument::exportJS(context);
