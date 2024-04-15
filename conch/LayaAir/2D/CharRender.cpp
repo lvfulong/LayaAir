@@ -1,5 +1,5 @@
 #include "CharRender.h"
-//ÓĞÎÊÌâ£¬µ×²ãÒıÓÃÉÏ²ãÁË
+//æœ‰é—®é¢˜ï¼Œåº•å±‚å¼•ç”¨ä¸Šå±‚äº†
 //#include "../../fontMgr/JCTextMemoryCanvas.h"
 
 namespace laya
