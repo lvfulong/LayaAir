@@ -415,6 +415,8 @@ list(APPEND CONCH_SRC
 	Bindings/JSPromiseRejectionEvent.h
 	Bindings/JSPromiseRejectionEvent.cpp
 	Bindings/JSCanvasRenderingContext2D.cpp
+	Bindings/JSTextDecoder.h
+	Bindings/JSTextDecoder.cpp
 	
 	OpenAL/
 	LayaGL/JCIDGenerator.h
