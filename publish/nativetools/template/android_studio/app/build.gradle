@@ -20,14 +20,14 @@ android {
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
 		applicationId "com.layabox.conch"
-        versionCode 1
-        versionName "release-1"
-        minSdkVersion 19
-        targetSdkVersion 29
+        versionCode VERSION_CODE.toInteger()
+        versionName VERSION_NAME
+        minSdkVersion MIN_SDK_VERSION.toInteger()
+        targetSdkVersion TARGET_SDK_VERSION.toInteger()
         multiDexEnabled true //方法数超过65536时，开启多dex的支持
         ndk {
             // 设置支持的SO库架构
-            abiFilters 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64'
+            abiFilters ABI_FILETERS.split(',')
         }
         flavorDimensions "default"
     }
