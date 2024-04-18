@@ -335,7 +335,7 @@ namespace laya {
         lws_context_creation_info cinfo;
         memset(&cinfo, 0, sizeof(cinfo));
         cinfo.port = port;
-        cinfo.mounts = &mount;
+        //cinfo.mounts = &mount;
         cinfo.protocols = protocols;
         cinfo.extensions = lws_get_internal_extensions();
         //if (!use_ssl) {
