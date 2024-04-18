@@ -4,7 +4,6 @@
     #include <utils/JCMemorySurvey.h>
     #include <binder/JSInterface.h>
     #include "../../JCScriptRuntime.h"
-    #include <utils/JCFileSource.h>
     #include <resource/JCFileResManager.h>
     
     #include "JSRuntime.h"

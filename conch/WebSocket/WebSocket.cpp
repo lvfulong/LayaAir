@@ -17,7 +17,6 @@
 #include <libwebsockets.h>
 #include <thread>
 #include <stdlib.h>
-#include <utils/JCFileSource.h>
 #include <algorithm>
 #ifdef ANDROID
 #include <downloadCache/JCAndroidFileSource.h>

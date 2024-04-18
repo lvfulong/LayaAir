@@ -10,7 +10,6 @@
 #include <utils/Log.h>
 #include <utils/JCCommonMethod.h>
 #include "JCSystemConfig.h"
-#include <utils/JCFileSource.h>
 #include <downloadCache/JCServerFileCache.h>
 #include "JCScriptRuntime.h"
 #include <Bindings/JSConchConfig.h>
