@@ -8,6 +8,7 @@
 #include <windows.h>
 #endif
 #include "JCConch.h"
+#include <utils/JCFileSource.h>
 
 extern std::string gAssetRootPath;
 extern std::string gRedistPath;
