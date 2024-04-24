@@ -369,9 +369,12 @@ class RenderBindings
             class_binding.property_field("isSRGB", &GLESInternalRT::_isSRGB);
             class_binding.property_field("gpuMemory", &GLESInternalRT::m_gpuMemory);
             class_binding.function("dispose", &GLESInternalRT::dispose);
-            class_binding.property("_textures", &GLESInternalRT::getTextures);
-            class_binding.property("_depthTexture", &GLESInternalRT::getDepthTexture);
-            context.class_("conchGLESInternalRT", class_binding);
+            class_binding.function_optional_override("getTextures", optional_override([](GLESInternalRT& ctx) {
+                return ctx.m_textures;
+                }));
+            class_binding.function_optional_override("getDepthTexture", optional_override([](GLESInternalRT& ctx) {
+                return ctx.m_depthTexture;
+                }));
         }
         {
             class_<GLESInternalTex> class_binding;
@@ -379,12 +382,14 @@ class RenderBindings
             class_binding.function("dispose", &GLESInternalTex::dispose);
             class_binding.function("getWidth", &GLESInternalTex::getWidth);
             class_binding.function("getHeight", &GLESInternalTex::getHeight);
+            class_binding.function("getIsPotSize", &GLESInternalTex::getIsPotSize);
+            class_binding.function("getDepth", &GLESInternalTex::getDepth);
+            class_binding.function("getGPUMemory", &GLESInternalTex::getGpuMemory);
             class_binding.property_field("target", &GLESInternalTex::m_target);
             class_binding.property_field("mipmapCount", &GLESInternalTex::m_mipmapCount);
             class_binding.property_field("mipmap", &GLESInternalTex::m_mipmap);
             class_binding.property_field("useSRGBLoad", &GLESInternalTex::m_useSRGBLoad);
             class_binding.property_field("gammaCorrection", &GLESInternalTex::m_gammaCorrection);
-            class_binding.property("gpuMemory", &GLESInternalTex::getGpuMemory, &GLESInternalTex::setGpuMemory);
             class_binding.property("resource", &GLESInternalTex::getResource);
             class_binding.property("filterMode", &GLESInternalTex::getFilterMode, &GLESInternalTex::setFilterMode);
             class_binding.property("wrapU", &GLESInternalTex::getWrapU, &GLESInternalTex::setWrapU);

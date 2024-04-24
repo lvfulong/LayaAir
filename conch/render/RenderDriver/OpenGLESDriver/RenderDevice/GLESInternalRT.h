@@ -34,8 +34,8 @@ class GLESInternalRT : public GLObject
     {
         return -m_isCube;
     }
-    JsValue getDepthTexture();
-    JsValue getTextures();
+    //JsValue getDepthTexture();
+   // JsValue getTextures();
 private:
     void _changeTexMemory(int byteLength);
   public:
@@ -53,8 +53,8 @@ private:
     RenderTargetFormat m_depthStencilFormat;
     int m_gpuMemory = 0;
     bool _isSRGB = false;
-    Persistent m_pJSTextures;
-    Persistent m_pJSDepthTexture;
+   /* Persistent m_pJSTextures;
+    Persistent m_pJSDepthTexture;*/
 };
 } // namespace laya
 #endif

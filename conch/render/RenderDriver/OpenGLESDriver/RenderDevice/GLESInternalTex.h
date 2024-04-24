@@ -121,12 +121,18 @@ class GLESInternalTex : public GLObject, public ObjectBase<GLESInternalTex>
     {
         return m_height;
     }
+
+    int getDepth() {
+        return depth;
+    }
+
     void dispose();
 
     GLuint getResource()
     {
         return m_resource;
     }
+
 
     void setBaseMipmapLevel(int value);
 
@@ -144,6 +150,10 @@ class GLESInternalTex : public GLObject, public ObjectBase<GLESInternalTex>
 
     void setInternalFormat(int value);
 
+    bool getIsPotSize() {
+        return m_isPotSize;
+    }
+
   protected:
     GLenum getFilteMinrParam(FilterMode filterMode, bool mipmap);
 
@@ -159,6 +169,8 @@ class GLESInternalTex : public GLObject, public ObjectBase<GLESInternalTex>
         }
         _setTexParameteri(pname, param);
     }
+
+   
 
     void _changeTexMemory(int memory);
     GPUEngineStatisticsInfo _statistics_M_Texture;

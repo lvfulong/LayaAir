@@ -112,6 +112,9 @@ template <typename T> class Converter<T *, std::enable_if_t<internal::is_wrapped
   public:
     static v8::Local<v8::Value> ToJs(T *value, bool callDestructor = true)
     {
+        if (value == nullptr) {
+            return v8::Null(v8::Isolate::GetCurrent());
+        }
         return wrapCppObject<T>(value, callDestructor);
     }
 
