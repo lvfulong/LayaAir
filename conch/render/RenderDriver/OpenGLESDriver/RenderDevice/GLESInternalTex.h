@@ -26,10 +26,7 @@ class GLESInternalTex : public GLObject, public ObjectBase<GLESInternalTex>
   public:
     GLESInternalTex(int target, int width, int height, int depth, TextureDimension dimension, bool mipmap,
                     bool useSRGBLoader, int gammaCorrection);
-    ~GLESInternalTex()
-    {
-        dispose();
-    }
+    ~GLESInternalTex();
     bool isPot(int value)
     {
         return (value & (value - 1)) == 0;

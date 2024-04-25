@@ -51,7 +51,7 @@ void GLESInternalRT::dispose()
 {
     for (TexturesVec::iterator it = m_textures.begin(); it != m_textures.end(); it++)
     {
-        delete *it;
+       // TODO delete *it;
     }
     m_textures.clear();
 

@@ -11,12 +11,13 @@ namespace laya
     Vector4 GLESForwardAddClusterRP::_contextScissorPortCatch =  Vector4(0, 0, 0, 0);
     GLESForwardAddClusterRP::GLESForwardAddClusterRP() : opaqueList(false), transparent(true)
     {
+
         _defaultNormalDepthColor = Color(0.5, 0.5, 1.0, 0.0);
         depthPipelineMode = "ShadowCaster";
         depthNormalPipelineMode = "DepthNormal";
     }
     GLESForwardAddClusterRP::~GLESForwardAddClusterRP(){
-        
+
     }
     void GLESForwardAddClusterRP::render(GLESRenderContext3D* context, std::vector<RTBaseRenderNode*> list, uint32_t count){
         context->_cameraUpdateMask++;

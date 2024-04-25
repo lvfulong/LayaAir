@@ -1801,6 +1801,7 @@ void GLTextureContext::setCubeSubPixelDataJS(GLESInternalTex *texture, JSValueAs
         int nABLen = 0;
         bool bIsArrayBuffer = extractJSAB(vecSources[i], pArrayBufferPtr, nABLen);
         vecDatas.push_back(pArrayBufferPtr);
+
     }
     this->setCubeSubPixelData(texture, vecDatas, mipmapLevel, generateMipmap, xOffset, yOffset, width, height,
                               premultiplyAlpha, invertY);

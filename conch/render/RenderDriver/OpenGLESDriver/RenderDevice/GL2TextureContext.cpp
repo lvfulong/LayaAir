@@ -469,33 +469,7 @@ namespace laya
 
         m_engine->_bindTexture(texture->m_target, 0);
     }
-	/*setTextureSubImageData(texture: GLESInternalTex, source: HTMLImageElement | HTMLCanvasElement | ImageBitmap, x: number, y: number, premultiplyAlpha: boolean, invertY: boolean) {
-	let target = texture.target;
-	let internalFormat = texture.internalFormat;
-	let format = texture.format;
-	let type = texture.type;
-	let width = texture.width;
-	let height = texture.height;
-	let mipmapCount = texture.mipmapCount;
 
-	let gl = this._gl;
-	premultiplyAlpha && gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-	invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-
-	this._engine._bindTexture(texture.target, texture.resource);
-
-	//gl.texStorage2D(target, mipmapCount, internalFormat, source.width, source.height);
-	gl.texSubImage2D(target, 0, x, y, source.width, source.height, format, type, source);
-	texture.gpuMemory = this.getGLtexMemory(texture);
-	if (texture.mipmap) {
-	gl.generateMipmap(texture.target);
-}
-
-this._engine._bindTexture(texture.target, null);
-
-premultiplyAlpha && gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
-invertY && gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
-}*/
     void GL2TextureContext::setTexturePixelsData(GLESInternalTex* texture, char* source, int sourceBytes, bool premultiplyAlpha, bool invertY)
 	{
 
