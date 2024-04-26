@@ -118,12 +118,12 @@ class textBitmap {
 }
 window["textBitmap"] = textBitmap;
 class measureText {
+    ;
+    ;
     constructor() {
         this.width = 0;
         this.height = 0;
     }
-    ;
-    ;
 }
 var LogLevel;
 (function (LogLevel) {
@@ -165,9 +165,10 @@ class Console {
         var c = _console;
         c.log(LogLevel.Info, message);
     }
-    log(message) {
+    log(...args) {
         var c = _console;
-        c.log(LogLevel.Info, message);
+        let msg = args.join(' ');
+        c.log(LogLevel.Info, msg);
     }
     profile(reportName) {
     }
@@ -344,13 +345,17 @@ class MouseEvent extends UIEvent {
 }
 var _lbMouseEvent = window['MouseEvent'] = MouseEvent;
 class MouseWheelEvent extends MouseEvent {
+    initMouseWheelEvent(typeArg, canBubbleArg, cancelableArg, viewArg, detailArg, screenXArg, screenYArg, clientXArg, clientYArg, buttonArg, relatedTargetArg, modifiersListArg, wheelDeltaArg) {
+    }
     constructor() {
         super("mousewheel");
     }
-    initMouseWheelEvent(typeArg, canBubbleArg, cancelableArg, viewArg, detailArg, screenXArg, screenYArg, clientXArg, clientYArg, buttonArg, relatedTargetArg, modifiersListArg, wheelDeltaArg) {
-    }
 }
 class WheelEvent extends MouseEvent {
+    getCurrentPoint(element) {
+    }
+    initWheelEvent(typeArg, canBubbleArg, cancelableArg, viewArg, detailArg, screenXArg, screenYArg, clientXArg, clientYArg, buttonArg, relatedTargetArg, modifiersListArg, deltaXArg, deltaYArg, deltaZArg, deltaMode) {
+    }
     constructor(typeArg, eventInitDict) {
         super(typeArg, eventInitDict);
         if (eventInitDict) {
@@ -359,10 +364,6 @@ class WheelEvent extends MouseEvent {
             this.deltaY = eventInitDict.deltaY;
             this.deltaZ = eventInitDict.deltaZ;
         }
-    }
-    getCurrentPoint(element) {
-    }
-    initWheelEvent(typeArg, canBubbleArg, cancelableArg, viewArg, detailArg, screenXArg, screenYArg, clientXArg, clientYArg, buttonArg, relatedTargetArg, modifiersListArg, deltaXArg, deltaYArg, deltaZArg, deltaMode) {
     }
 }
 WheelEvent.DOM_DELTA_LINE = 1;
@@ -415,12 +416,6 @@ class ProgressEvent extends Event {
 }
 var _lbProgressEvent = window["ProgressEvent"] = ProgressEvent;
 class Storage {
-    constructor() {
-        this.storagePath = conchConfig.getStoragePath();
-        this.filename = '';
-        this.db = {};
-        this._len = 0;
-    }
     get length() {
         return this._len;
     }
@@ -453,6 +448,12 @@ class Storage {
     setItem(key, data) {
         this._setItem(key, data);
         this.savedb();
+    }
+    constructor() {
+        this.storagePath = conchConfig.getStoragePath();
+        this.filename = '';
+        this.db = {};
+        this._len = 0;
     }
     create(url) {
         if (location.protocol == "file:") {
@@ -813,8 +814,6 @@ var _lbKeyboardEvent = window["KeyboardEvent"] = KeyboardEvent;
     });
 })(window.document);
 class Navigator {
-    constructor() {
-    }
     get appName() { return 'Netscape'; }
     get appVersion() { return this.userAgent; }
     ;
@@ -843,6 +842,8 @@ class Navigator {
     get language() { return 'zh-CN'; }
     ;
     get userLanguage() { return 'zh-CN'; }
+    constructor() {
+    }
     getGamepads() {
         return null;
     }
@@ -963,16 +964,16 @@ class ElementTraversal {
     }
 }
 class Element extends Node {
-    constructor() {
-        super();
-        this.__visible = true;
-    }
     set id(s) {
         this._id = s;
         document.all.push(this);
     }
     get id() {
         return this._id;
+    }
+    constructor() {
+        super();
+        this.__visible = true;
     }
     setAttribute(name, value) {
         if (!this._attribs)
@@ -1128,6 +1129,42 @@ var WindowTimers = ns_Timer._WindowTimers;
 var requestAnimationFrame = ns_Timer.requestAnimationFrame;
 var cancelAnimationFrame = ns_Timer.cancelAnimationFrame;
 class Location {
+    get hostname() {
+        return this._hostname;
+    }
+    get host() {
+        return this._host;
+    }
+    get fullpath() {
+        return this._fullpath;
+    }
+    get pathname() {
+        return this._pathname;
+    }
+    get protocol() {
+        return this._protocol;
+    }
+    get search() {
+        return this._search;
+    }
+    get port() {
+        return this._port;
+    }
+    get origin() {
+        return this._origin;
+    }
+    get href() {
+        return this._href;
+    }
+    set href(url) {
+        url = this.normalizeUrl(url);
+        var oldhref = this._href;
+        if (url != oldhref) {
+            this.setHref(url);
+            if (this._href != oldhref)
+                reloadJS(true);
+        }
+    }
     constructor() {
         this._nativeObj = conch;
         this._host = "";
@@ -1171,42 +1208,6 @@ class Location {
             window.localStorage.create(this.fullpath);
         };
         this.bk_setHref = this._nativeObj.setHref.bind(this._nativeObj);
-    }
-    get hostname() {
-        return this._hostname;
-    }
-    get host() {
-        return this._host;
-    }
-    get fullpath() {
-        return this._fullpath;
-    }
-    get pathname() {
-        return this._pathname;
-    }
-    get protocol() {
-        return this._protocol;
-    }
-    get search() {
-        return this._search;
-    }
-    get port() {
-        return this._port;
-    }
-    get origin() {
-        return this._origin;
-    }
-    get href() {
-        return this._href;
-    }
-    set href(url) {
-        url = this.normalizeUrl(url);
-        var oldhref = this._href;
-        if (url != oldhref) {
-            this.setHref(url);
-            if (this._href != oldhref)
-                reloadJS(true);
-        }
     }
     setBaseHref(basehref) {
     }
@@ -3947,6 +3948,16 @@ GLCommandEncoder._fakeIDCount = 0;
 GLCommandEncoder._fakeArray = [new fakeIDObj(0, 0)];
 GLCommandEncoder._locTable = new ProgramLocationTable();
 class LayaGLContext {
+    static __init__() {
+        LayaGLContext._syncBufferList = new Int32Array(LayaGLContext._syncBufferSize);
+        LayaGLContext._syncBufferList["conchRef"] = conch.createArrayBufferRef(LayaGLContext._syncBufferList, LayaGLContext.ARRAY_BUFFER_TYPE_DATA, false, LayaGLContext.ARRAY_BUFFER_REF_REFERENCE);
+        LayaGLContext._syncBufferList["_ptrID"] = LayaGLContext._syncBufferList["conchRef"].id;
+        LayaGLContext._frameAndSyncCountBuffer = new Int32Array(2);
+        LayaGLContext._frameAndSyncCountBuffer["conchRef"] = conch.createArrayBufferRef(LayaGLContext._frameAndSyncCountBuffer, LayaGLContext.ARRAY_BUFFER_TYPE_DATA, false, LayaGLContext.ARRAY_BUFFER_REF_REFERENCE);
+        LayaGLContext._frameAndSyncCountBuffer["_ptrID"] = LayaGLContext._frameAndSyncCountBuffer["conchRef"].id;
+        LayaGLContext._frameAndSyncCountBuffer[0] = 1;
+        LayaGLContext._frameAndSyncCountBuffer[1] = 0;
+    }
     constructor(contextType) {
         this.width = 0;
         this.height = 0;
@@ -4541,16 +4552,6 @@ class LayaGLContext {
             this._currentCmdEncoder = this._defaultEncoder;
             this._nativeObj.setRootCommandEncoder(this._defaultEncoder._buffer["_ptrID"]);
         }
-    }
-    static __init__() {
-        LayaGLContext._syncBufferList = new Int32Array(LayaGLContext._syncBufferSize);
-        LayaGLContext._syncBufferList["conchRef"] = conch.createArrayBufferRef(LayaGLContext._syncBufferList, LayaGLContext.ARRAY_BUFFER_TYPE_DATA, false, LayaGLContext.ARRAY_BUFFER_REF_REFERENCE);
-        LayaGLContext._syncBufferList["_ptrID"] = LayaGLContext._syncBufferList["conchRef"].id;
-        LayaGLContext._frameAndSyncCountBuffer = new Int32Array(2);
-        LayaGLContext._frameAndSyncCountBuffer["conchRef"] = conch.createArrayBufferRef(LayaGLContext._frameAndSyncCountBuffer, LayaGLContext.ARRAY_BUFFER_TYPE_DATA, false, LayaGLContext.ARRAY_BUFFER_REF_REFERENCE);
-        LayaGLContext._frameAndSyncCountBuffer["_ptrID"] = LayaGLContext._frameAndSyncCountBuffer["conchRef"].id;
-        LayaGLContext._frameAndSyncCountBuffer[0] = 1;
-        LayaGLContext._frameAndSyncCountBuffer[1] = 0;
     }
     static getFrameCount() {
         return LayaGLContext._frameAndSyncCountBuffer[0];
@@ -5531,13 +5532,13 @@ class CSSStyleDeclaration {
     }
 }
 class HTMLElement extends Element {
+    onCSS_Transform(mat) { }
+    ;
     constructor() {
         super();
         this.style = new CSSStyleDeclaration();
         this.style._htmlEle = this;
     }
-    onCSS_Transform(mat) { }
-    ;
     onerror(ev) {
     }
     onload(ev) {
@@ -6006,10 +6007,6 @@ class HTMLMediaElement extends HTMLElement {
     }
 }
 class HTMLMetaElement extends HTMLElement {
-    constructor() {
-        super();
-        this.tagName = "META";
-    }
     get httpEquiv() {
         return this["http-equiv"];
     }
@@ -6020,6 +6017,10 @@ class HTMLMetaElement extends HTMLElement {
     }
     get name() {
         return this._name;
+    }
+    constructor() {
+        super();
+        this.tagName = "META";
     }
 }
 class HTMLAudioElement extends HTMLMediaElement {
@@ -6598,6 +6599,9 @@ class _jsXmlAttr {
     }
 }
 class _jsXmlNode extends _jsXmlAttr {
+    get firstChild() {
+        return this.childNodes ? this.childNodes[0] : null;
+    }
     constructor() {
         super("", "");
         this.childNodes = [];
@@ -6605,9 +6609,6 @@ class _jsXmlNode extends _jsXmlAttr {
             return this[i];
         };
         this.attributes = [];
-    }
-    get firstChild() {
-        return this.childNodes ? this.childNodes[0] : null;
     }
     getElementsByTagName(name) {
         var result = [];
@@ -6892,19 +6893,5 @@ if (window["physx"]) {
     };
 }
 (function () {
-    'use strict';
-    var gl = LayaGLContext;
-    class AppInfo {
-    }
-    ;
-    var appobj = null;
-    try {
-        appobj = JSON.parse(conch.readFileFromAsset('app.json', 'utf8'));
-        if (appobj) {
-            require(appobj.mainjs);
-        }
-    }
-    catch (e) {
-        require('index');
-    }
+    require('index.js');
 })();
