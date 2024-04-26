@@ -12,7 +12,6 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import layaair.game.config.config;
 import okhttp3.Cache;
 import okhttp3.CacheControl;
 import okhttp3.Call;

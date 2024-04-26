@@ -28,7 +28,6 @@ import layaair.game.network.NetworkReceiver;
 import layaair.game.browser.ExportJavaFunction;
 import layaair.game.browser.ConchJNI;
 import layaair.game.browser.LayaEditBox;
-import layaair.game.config.config;
 import layaair.game.device.DevID;
 import layaair.game.utility.Constants;
 import layaair.game.utility.LayaAudioMusic;
@@ -952,7 +951,6 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 	public void delInstance()
 	{
 		ExportJavaFunction.DelInstance();
-		config.DelInstance();
 		if(m_layaEventListener!=null) {
 			m_layaEventListener.destroy();
 		}
