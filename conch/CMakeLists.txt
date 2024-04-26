@@ -486,8 +486,6 @@ if(IOS)
 		platform/iOS/TouchFilter.cpp
 		platform/iOS/NSString.h
 		platform/iOS/NSString.m
-		platform/iOS/LayaWebView.h
-		platform/iOS/LayaWebView.mm
 		platform/iOS/LayaVideoPlayer.h
 		platform/iOS/LayaVideoPlayer.mm
 		platform/iOS/LayaToast.h

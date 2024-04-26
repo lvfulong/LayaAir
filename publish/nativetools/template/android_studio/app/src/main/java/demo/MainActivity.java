@@ -61,7 +61,6 @@ public class MainActivity extends Activity {
         JSBridge.mMainActivity = this;
         mSplashDialog = new SplashDialog(this);
         mSplashDialog.showSplash();
-        LayaApp.init(this);
         Log.d(TAG, "t1 " + System.currentTimeMillis());
 
         Set<String> requiredPermissions = new HashSet<>();
@@ -134,7 +133,6 @@ public class MainActivity extends Activity {
     }
 
     private void doDestroy() {
-        LayaApp.onDestroy();
         if (mSplashDialog != null && mSplashDialog.isShowing()) {
             mSplashDialog.dismiss();
         }

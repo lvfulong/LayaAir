@@ -294,73 +294,6 @@ namespace laya
         }
         return JSP_TO_JS_NULL;
     }
-    void JSRuntime::setExternalLinkEx(const char* sUrl,int x, int y, int w, int h, bool bCloseWebview)
-    {
-#ifdef ANDROID
-        CToJavaBridge::JavaRet ret;
-        CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setExternalLink", sUrl,x,y,w,h, bCloseWebview?1:0,ret);
-#elif __APPLE__
-       CToObjectCSetExternalLink( sUrl,x,y,w,h, bCloseWebview);
-#elif WIN32
-
-#endif
-    }
-    void JSRuntime::setExternalLink(const char* sUrl)
-    {
-#ifdef ANDROID
-        CToJavaBridge::JavaRet ret;
-        CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setExternalLink", sUrl, 0, 0, 0, 0,1,ret);
-#elif __APPLE__
-        CToObjectCSetExternalLink(sUrl, 0, 0, 0, 0, true);
-#elif WIN32
-
-#endif
-    }
-    void JSRuntime::closeExternalLink()
-    {
-#ifdef ANDROID
-        CToJavaBridge::JavaRet ret;
-        CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "closeExternalLink", ret);
-#elif __APPLE__
-        CToObjectCCloseExternalLink();
-#elif WIN32
-
-#endif
-    }
-    void JSRuntime::callWebviewJS(const char* sFunctionName, const char* sJsonParam, const char* sCallbackFunction)
-    {
-        LOGI("JSRuntime::callWebviewJS functionName=%s,sJsonParam=%s,sCallbackFunction=%s", sFunctionName, sJsonParam, sCallbackFunction );
-#ifdef ANDROID
-        CToJavaBridge::JavaRet ret;
-        CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "callWebViewJS", sFunctionName, sJsonParam, sCallbackFunction, ret);
-#elif __APPLE__
-        CToObjectCCallWebviewJS(sFunctionName, sJsonParam, sCallbackFunction);
-#elif WIN32
-
-#endif
-    }
-    void JSRuntime::hideWebview()
-    {
-#ifdef ANDROID
-        CToJavaBridge::JavaRet ret;
-        CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "hideExternalLink", ret);
-#elif __APPLE__
-        CToObjectCHideWebView();
-#elif WIN32
-        
-#endif
-    }
-    void JSRuntime::showWebView()
-    {
-#ifdef ANDROID
-        CToJavaBridge::JavaRet ret;
-        CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "showExternalLink", ret);
-#elif __APPLE__
-        CToObjectCShowWebView();
-#elif WIN32
-        
-#endif
-    }
 	void JSRuntime::exit()
     {
 #ifdef ANDROID
@@ -629,17 +562,11 @@ namespace laya
 		class_binding.class_function("strTobufer", &JSRuntime::strTobufer);
 		class_binding.class_function("callMethod", &JSRuntime::callMethod);
 		class_binding.class_function("printCorpseImages", &JSRuntime::printCorpseImages);
-		class_binding.class_function("setExternalLink", &JSRuntime::setExternalLink);
-		class_binding.class_function("setExternalLinkEx", &JSRuntime::setExternalLinkEx);
-		class_binding.class_function("closeExternalLink", &JSRuntime::closeExternalLink);
-		class_binding.class_function("hideWebview", &JSRuntime::hideWebview);
-		class_binding.class_function("showWebview", &JSRuntime::showWebView);
 		class_binding.class_function("captureScreen", &JSRuntime::captureScreen);
 		class_binding.class_function("saveAsPng", &JSRuntime::saveAsPng);
 		class_binding.class_function("saveAsJpeg", &JSRuntime::saveAsJpeg);
 		class_binding.class_function("convertBitmapToPng", &JSRuntime::convertBitmapToPng);
 		class_binding.class_function("convertBitmapToJpeg", &JSRuntime::convertBitmapToJpeg);
-		class_binding.class_function("callWebviewJS", &JSRuntime::callWebviewJS);
 		class_binding.class_function("exit", &JSRuntime::exit);
         class_binding.class_function("createArrayBufferRef", &JSRuntime::createArrayBufferRef);
         class_binding.class_function("registerFont", &JSRuntime::registerFont);

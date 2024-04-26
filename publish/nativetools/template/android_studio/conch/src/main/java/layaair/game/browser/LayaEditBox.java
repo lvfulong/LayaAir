@@ -748,7 +748,6 @@ public class LayaEditBox
 	public void onChanged(String s)
 	{
 		ConchJNI.inputChange(0);
-		//m_pWebView.runScript("window.inputobjs["+m_nID+"].onInnerChanged('"+s+"');");
 	}
 	public void setCursorPosition( final int p_nPos )
 	{

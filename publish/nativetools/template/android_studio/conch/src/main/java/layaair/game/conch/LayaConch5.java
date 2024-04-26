@@ -28,7 +28,6 @@ import layaair.game.network.NetworkReceiver;
 import layaair.game.browser.ExportJavaFunction;
 import layaair.game.browser.ConchJNI;
 import layaair.game.browser.LayaEditBox;
-import layaair.game.browser.LayaWebView;
 import layaair.game.config.config;
 import layaair.game.device.DevID;
 import layaair.game.utility.Constants;
@@ -98,7 +97,6 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 	private static final String TAG = "LayaConch5";
 	public boolean localizable=false;
 	public AbsoluteLayout m_pAbsLayout = null;
-	public LayaWebView m_pLayaWebView = null;
 	public LayaEditBox m_pEditBox = null;
 	private AbsoluteLayout m_pEditBoxLayout = null;
 	private ImageView mImageView = null;
@@ -602,24 +600,6 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 		}
 
 		m_pAbsLayout.addView(m_pCavans);
-		if (m_pLayaWebView == null) {
-			try
-			{
-				m_pLayaWebView = new LayaWebView(mCtx, this);
-				//if( config.GetInstance().m_sWebviewUrl != null ) {
-				//	m_pLayaWebView.showWebView( config.GetInstance().m_sWebviewUrl, 0, 0, GetScreenWidth(), GetScreenHeight());
-				//}
-			}
-			catch(Exception e)
-			{
-				Log.e("LayaBoxwebView", ">>>>>>>>>>>>>>Exception"+e.toString());
-			}
-			catch(Throwable e)
-			{
-				Log.e("LayaBoxwebView", ">>>>>>>>>>>>>>throwable"+e.toString());
-			}
-		}
-
 		if (m_pEditBox == null) {
 
 			m_pEditBoxLayout = new AbsoluteLayout(mCtx);
@@ -846,10 +826,6 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 		return m_pEditBox;
 	}
 
-	public LayaWebView getWebView() {
-		return m_pLayaWebView;
-	}
-
 	public Context getGameContext() {
 		return mCtx;
 	}
@@ -959,11 +935,6 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 		ms_layaConche = null;
 		m_marketBundle=null;
 
-		if(m_pLayaWebView!=null)
-		{
-			m_pLayaWebView.destroy();
-			m_pLayaWebView=null;
-		}
 		if(m_pEditBoxLayout!=null)
 		{
 			m_pEditBoxLayout.removeAllViews();

@@ -75,7 +75,6 @@ extern "C"
     JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_OnAppResume(JNIEnv * env, jobject obj );
     JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onDrawFrame(JNIEnv * env, jobject obj );
     JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_exportStaticMethodToC(JNIEnv * env, jobject obj, jstring packcls);
-	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_closeExternalWebView(JNIEnv * env, jobject obj );
     JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_alertCallback(JNIEnv * env, jobject obj );
     JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onSensorChanged(JNIEnv * env, jobject obj,float arc );
     JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_reloadJS(JNIEnv * env, jobject obj );
@@ -424,10 +423,6 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_OnSurfaceDestroy(JNIEn
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onDrawFrame(JNIEnv * env, jobject obj )
 {
     laya::JCConch::s_pConch->update();
-}
-
-JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_closeExternalWebView(JNIEnv * env, jobject obj )
-{
 }
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_alertCallback(JNIEnv * env, jobject obj )
 {

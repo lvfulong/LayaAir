@@ -433,34 +433,6 @@ public class ExportJavaFunction
 		return w;
 	}
 	//------------------------------------------------------------------------------
-	public static void setExternalLink( String p_sUrl,int x,int y,int w,int h,int bKeyCloseView )
-	{
-		ExportJavaFunction exjf = ExportJavaFunction.GetInstance();
-		if( exjf!=null )
-			exjf.showExternalWeb(p_sUrl,x,y,w,h,bKeyCloseView);
-	}
-	//------------------------------------------------------------------------------
-	public static void closeExternalLink()
-	{
-		ExportJavaFunction exjf = ExportJavaFunction.GetInstance();
-		if( exjf!=null )
-			exjf.closeWebView();
-	}
-
-	public static  void hideExternalLink()
-	{
-		ExportJavaFunction exjf = ExportJavaFunction.GetInstance();
-		if( exjf!=null )
-			exjf.hideWebView();
-	}
-
-	public static  void showExternalLink()
-	{
-		ExportJavaFunction exjf = ExportJavaFunction.GetInstance();
-		if( exjf!=null )
-			exjf.showWebView();
-	}
-	//------------------------------------------------------------------------------
 	public static void copy(final String data)
 	{
 		ExportJavaFunction exjf = ExportJavaFunction.GetInstance();
@@ -487,78 +459,6 @@ public class ExportJavaFunction
 		ExportJavaFunction exjf = ExportJavaFunction.GetInstance();
 		if( exjf!=null )
 			exjf.doFinish();
-	}
-	//------------------------------------------------------------------------------
-	private void showExternalWeb( final String p_sUrl,final int x,final int y,final int w,final int h,final int bKeyCloseWebview )
-	{
-		m_Handler.post
-		(
-			new Runnable() 
-			{
-				public void run() 
-				{
-					ReadyData readyData=m_pEngine.getWebView().m_pReadyData;
-					readyData.m_sUrl = p_sUrl;
-					readyData.m_nX = x;
-					readyData.m_nY = y;
-					readyData.m_nWidth = w;
-					readyData.m_nHeight = h;
-					readyData.m_bKeyEventCloseView = (bKeyCloseWebview!=0);
-					//TODO 插件中怎么获得宽高
-					WindowManager wm = (WindowManager) (m_pEngine.getGameContext().getSystemService(Context.WINDOW_SERVICE));
-					DisplayMetrics dm = new DisplayMetrics();
-					wm.getDefaultDisplay().getMetrics(dm);
-					if(readyData.m_nWidth==0)
-					{
-						readyData.m_nWidth = dm.widthPixels;
-					}
-					if(readyData.m_nHeight==0)
-					{
-						readyData.m_nHeight = dm.heightPixels;
-					}
-					m_pEngine.getWebView().showWebView();
-				}
-			}
-		);
-	}
-	//------------------------------------------------------------------------------
-	private void hideWebView(){
-		m_Handler.post
-		(
-				new Runnable()
-				{
-					public void run()
-					{
-						m_pEngine.getWebView().hideWebView();
-					}
-				}
-		);
-	}
-
-	//------------------------------------------------------------------------------
-	private void closeWebView() {
-		m_Handler.post
-		(
-			new Runnable() 
-			{
-				public void run() 
-				{
-					m_pEngine.getWebView().closeWebView();
-				}
-			}
-		);
-	}
-	private void showWebView(){
-		m_Handler.post
-				(
-						new Runnable()
-						{
-							public void run()
-							{
-								m_pEngine.getWebView().showWebViewEx();
-							}
-						}
-				);
 	}
 	//------------------------------------------------------------------------------
 	private void doExit(){
@@ -617,37 +517,6 @@ public class ExportJavaFunction
 							}
 						}
 				);
-	}
-	//------------------------------------------------------------------------------
-	public static void callWebViewJS( String sFunctionName,String sJsonParam,String sCallbackFuncton )
-	{
-		ExportJavaFunction exjf = ExportJavaFunction.GetInstance();
-		if( exjf!=null )
-		{
-			exjf.callWebViewJSFunction(sFunctionName, sJsonParam,sCallbackFuncton);
-		}
-	}
-	private void callWebViewJSFunction( final String sFunctionName,final String sJsonParam,final String sCallbackFuncton )
-	{
-		m_Handler.post
-			(
-					new Runnable() {
-						public void run()
-					{
-						JSONObject obj=new JSONObject();
-						try {
-							obj.put("type","runJS");
-							obj.put("fName",sFunctionName);
-							obj.put("value",sJsonParam);
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
-						//if(m_pEngine.m_pPlatform!=null)
-						//m_pEngine.m_pPlatform.LP_sendMessageToPlatform(obj.toString());
-						m_pEngine.getWebView().callWebViewJSFunction(sFunctionName,sJsonParam,sCallbackFuncton);
-					}
-				}
-			);
 	}
 	//------------------------------------------------------------------------------
 	public static void setEditBoxPosX( int p_nLeft )
