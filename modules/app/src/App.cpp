@@ -21,6 +21,52 @@ Window g_X11_window;
 
 namespace laya
 {
+
+#ifdef WIN32
+    HHOOK hKeyboardHook = NULL;
+
+    LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
+    {
+        if (nCode == HC_ACTION)
+        {
+            KBDLLHOOKSTRUCT* pKeyboardHook = (KBDLLHOOKSTRUCT*)lParam;
+
+            bool isAltPressed = (pKeyboardHook->flags & LLKHF_ALTDOWN) != 0;
+            bool isCtrlPressed = GetAsyncKeyState(VK_CONTROL);
+            bool isShiftPressed = GetAsyncKeyState(VK_SHIFT);
+            //printf("%d,%d,%d\n", isAltPressed, isCtrlPressed, isShiftPressed);
+            if (wParam == WM_KEYDOWN)
+            {
+                inputEvent e;
+                e.nTouchType = e.nType = E_ONKEYDOWN;
+                strncpy(e.type, "keydown", 256);
+                e.keyCode = pKeyboardHook->vkCode;
+
+                e.bCtrl = isCtrlPressed;
+                e.bShift = isShiftPressed;
+                e.bAlt = isAltPressed;
+
+                JCConch::s_pConch->dispatchInputEvent(e);
+            }
+            else if (wParam == WM_KEYUP) {
+                inputEvent e;
+                e.nTouchType = e.nType = E_ONKEYUP;
+                strncpy(e.type, "keyup", 256);
+                e.keyCode = pKeyboardHook->vkCode;
+
+                e.bCtrl = isCtrlPressed;
+                e.bShift = isShiftPressed;
+                e.bAlt = isAltPressed;
+
+                JCConch::s_pConch->dispatchInputEvent(e);
+            }
+        }
+
+        return CallNextHookEx(hKeyboardHook, nCode, wParam, lParam);
+    }
+#elif LINUX
+#endif // WIN32
+
 App::App()
 {
     SDL_Init(SDL_INIT_EVENTS);
@@ -54,6 +100,8 @@ void App::run(const Config &config)
 #ifdef WIN32
         g_hWnd = sys.info.win.window;
         // HINSTANCE hInstance = sys.info.win.hinstance;
+        hKeyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardProc, sys.info.win.hinstance, 0);
+
 #elif LINUX
         g_X11_display = sys.info.x11.display;
         g_X11_window = sys.info.x11.window;
@@ -76,6 +124,9 @@ void App::run(const Config &config)
     laya::JCConch::s_pConch->onAppStart();
 
     SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
+    // 启用SDL_SYSWMEVENT
+    //SDL_EventState(SDL_SYSWMEVENT, SDL_ENABLE);
+    //SDL_StopTextInput();
 
     SDL_Event event;
     while (!m_closed)
@@ -93,6 +144,7 @@ void App::run(const Config &config)
                 {
                     m_closed = true;
                 }
+                break;
                 inputEvent e;
                 e.nTouchType = e.nType = E_ONKEYDOWN;
                 strncpy(e.type, "keydown", 256);
@@ -110,6 +162,78 @@ void App::run(const Config &config)
                 JCConch::s_pConch->dispatchInputEvent(e);
             }
             break;
+            case SDL_SYSWMEVENT:{
+                break;
+                SDL_SysWMmsg* sysMsg = event.syswm.msg;
+                switch (sysMsg->subsystem){
+                case SDL_SYSWM_WINDOWS: {
+                    UINT msg = sysMsg->msg.win.msg;
+                    WPARAM wParam = sysMsg->msg.win.wParam;
+                    LPARAM lParam = sysMsg->msg.win.lParam;
+                    switch (msg) {
+                    case WM_KEYDOWN: {
+                        inputEvent e;
+                        e.nTouchType = e.nType = E_ONKEYDOWN;
+                        strncpy(e.type, "keydown", 256);
+                        UINT keyCode = wParam;
+                        e.keyCode = keyCode;
+
+                        e.bCtrl = (GetKeyState(VK_CONTROL) & 0x8000) != 0;
+                        e.bShift = (GetKeyState(VK_SHIFT) & 0x8000) != 0;
+                        e.bAlt = (GetKeyState(VK_MENU) & 0x8000) != 0;
+
+                        JCConch::s_pConch->dispatchInputEvent(e);
+
+                    }
+                        break;
+                    case WM_KEYUP: {
+                        inputEvent e;
+                        e.nTouchType = e.nType = E_ONKEYUP;
+                        strncpy(e.type, "keydown", 256);
+                        e.keyCode = event.key.keysym.scancode;
+
+                        JCConch::s_pConch->dispatchInputEvent(e);
+
+                    }
+                        break;
+                    }
+                    if (msg == WM_KEYDOWN) {
+                        int a = 10;
+                    }
+                    break;
+                }
+                case SDL_SYSWM_X11: {
+                    break;
+                }
+                    
+                }
+
+            }
+            break;
+            /*
+            case SDL_TEXTEDITING: {
+                inputEvent e;
+                auto aa = event.text.text;
+                printf("Editing text: %s\n", event.edit.text);
+                printf("Cursor position: %d\n", event.edit.start);
+                printf("Selection length: %d\n", event.edit.length);
+                int a = 1;
+            }
+                break;
+            case SDL_TEXTINPUT: {
+                inputEvent e;
+                auto aa = event.text.text;
+                printf("SDL_TEXTINPUT text: %s\n", event.edit.text);
+
+
+                int a = 1;
+            }
+                break;
+            case SDL_TEXTEDITING_EXT: {
+                inputEvent e;
+            }
+                break;
+*/
             case SDL_MOUSEWHEEL: {
                 inputEvent e;
                 e.nTouchType = e.nType = E_ONMOUSEWHEEL;
@@ -199,5 +323,11 @@ void App::run(const Config &config)
         }
         laya::JCConch::s_pConch->update();
     }
+
+#ifdef WIN32
+    // 卸载键盘钩子
+    UnhookWindowsHookEx(hKeyboardHook);
+#elif LINUX
+#endif
 }
 } // namespace laya
