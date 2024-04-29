@@ -22,51 +22,6 @@ Window g_X11_window;
 namespace laya
 {
 
-#ifdef WIN32
-    HHOOK hKeyboardHook = NULL;
-
-    LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
-    {
-        if (nCode == HC_ACTION)
-        {
-            KBDLLHOOKSTRUCT* pKeyboardHook = (KBDLLHOOKSTRUCT*)lParam;
-
-            bool isAltPressed = (pKeyboardHook->flags & LLKHF_ALTDOWN) != 0;
-            bool isCtrlPressed = GetAsyncKeyState(VK_CONTROL);
-            bool isShiftPressed = GetAsyncKeyState(VK_SHIFT);
-            //printf("%d,%d,%d\n", isAltPressed, isCtrlPressed, isShiftPressed);
-            if (wParam == WM_KEYDOWN)
-            {
-                inputEvent e;
-                e.nTouchType = e.nType = E_ONKEYDOWN;
-                strncpy(e.type, "keydown", 256);
-                e.keyCode = pKeyboardHook->vkCode;
-
-                e.bCtrl = isCtrlPressed;
-                e.bShift = isShiftPressed;
-                e.bAlt = isAltPressed;
-
-                JCConch::s_pConch->dispatchInputEvent(e);
-            }
-            else if (wParam == WM_KEYUP) {
-                inputEvent e;
-                e.nTouchType = e.nType = E_ONKEYUP;
-                strncpy(e.type, "keyup", 256);
-                e.keyCode = pKeyboardHook->vkCode;
-
-                e.bCtrl = isCtrlPressed;
-                e.bShift = isShiftPressed;
-                e.bAlt = isAltPressed;
-
-                JCConch::s_pConch->dispatchInputEvent(e);
-            }
-        }
-
-        return CallNextHookEx(hKeyboardHook, nCode, wParam, lParam);
-    }
-#elif LINUX
-#endif // WIN32
-
 App::App()
 {
     SDL_Init(SDL_INIT_EVENTS);
@@ -77,8 +32,73 @@ App::~App()
     SDL_Quit();
 }
 
+std::array<int, 512> keycodeMap = {
+    0, 0, 0, 0,
+    'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','1','2','3','4','5','6','7','8','9','0',
+};
+
+
 void App::run(const Config &config)
 {
+    keycodeMap[SDL_SCANCODE_RETURN] = 0x0d;// VK_RETURN;
+    keycodeMap[SDL_SCANCODE_ESCAPE] = 0x1b;// VK_ESCAPE;
+    keycodeMap[SDL_SCANCODE_BACKSPACE] = 0x08;//VK_BACK;
+    keycodeMap[SDL_SCANCODE_TAB] = 0x09;//VK_TAB;
+    keycodeMap[SDL_SCANCODE_SPACE] = 0x20;//VK_SPACE;
+    keycodeMap[SDL_SCANCODE_MINUS] = 0xBD;//VK_OEM_MINUS;
+    keycodeMap[SDL_SCANCODE_MINUS] = 0x92;//VK_OEM_NEC_EQUAL
+    keycodeMap[SDL_SCANCODE_LEFTBRACKET] = 0xDB;//VK_OEM_4;//{
+    keycodeMap[SDL_SCANCODE_RIGHTBRACKET] = 0xDD;//VK_OEM_6//}
+    keycodeMap[SDL_SCANCODE_BACKSLASH] = 0xBF;//VK_OEM_2///  反斜杠
+    keycodeMap[SDL_SCANCODE_SEMICOLON] = 0xBA;//VK_OEM_1
+    keycodeMap[SDL_SCANCODE_COMMA] = 0xBC;//VK_OEM_COMMA
+    keycodeMap[SDL_SCANCODE_PERIOD] = 0xBE;//VK_OEM_PERIOD
+    keycodeMap[SDL_SCANCODE_SLASH] = 0xDC;//VK_OEM_5
+    keycodeMap[SDL_SCANCODE_CAPSLOCK] = 0x14;//VK_CAPITAL
+    keycodeMap[SDL_SCANCODE_F1] = 0x70;//VK_F1
+    keycodeMap[SDL_SCANCODE_F2] = 0x71;//VK_F2
+    keycodeMap[SDL_SCANCODE_F3] = 0x72;//VK_F3
+    keycodeMap[SDL_SCANCODE_F4] = 0x73;//VK_F4
+    keycodeMap[SDL_SCANCODE_F5] = 0x74;//VK_F5
+    keycodeMap[SDL_SCANCODE_F6] = 0x75;//VK_F6
+    keycodeMap[SDL_SCANCODE_F7] = 0x76;//VK_F7
+    keycodeMap[SDL_SCANCODE_F8] = 0x77;//VK_F8
+    keycodeMap[SDL_SCANCODE_F9] = 0x78;//VK_F9
+    keycodeMap[SDL_SCANCODE_F10] = 0x79;//VK_F10
+    keycodeMap[SDL_SCANCODE_F11] = 0x7A;//VK_F11
+    keycodeMap[SDL_SCANCODE_F12] = 0x7B;//VK_F12
+    keycodeMap[SDL_SCANCODE_PRINTSCREEN] = 0x2C;//VK_SNAPSHOT
+    keycodeMap[SDL_SCANCODE_SCROLLLOCK] = 0x91;//VK_SCROLL
+    keycodeMap[SDL_SCANCODE_PAUSE] = 0x13;//VK_PAUSE
+    keycodeMap[SDL_SCANCODE_INSERT] = 0x2D;//VK_INSERT
+    keycodeMap[SDL_SCANCODE_HOME] = 0x24;//VK_HOME
+    keycodeMap[SDL_SCANCODE_PAGEUP] = 0x21;//VK_PRIOR
+    keycodeMap[SDL_SCANCODE_DELETE] = 0x2E;//VK_DELETE
+    keycodeMap[SDL_SCANCODE_END] = 0x23;//VK_END
+    keycodeMap[SDL_SCANCODE_PAGEDOWN] = 0x22;//VK_NEXT
+    keycodeMap[SDL_SCANCODE_RIGHT] = 0x27;//VK_RIGHT
+    keycodeMap[SDL_SCANCODE_LEFT] = 0x25;//VK_LEFT
+    keycodeMap[SDL_SCANCODE_DOWN] = 0x28;//VK_DOWN
+    keycodeMap[SDL_SCANCODE_UP] = 0x26;//VK_UP
+    keycodeMap[SDL_SCANCODE_NUMLOCKCLEAR] = 0x90;//VK_NUMLOCK
+    keycodeMap[SDL_SCANCODE_KP_DIVIDE] = 0x6F;//VK_DIVIDE
+    keycodeMap[SDL_SCANCODE_KP_MULTIPLY] = 0x6A;//VK_MULTIPLY
+    keycodeMap[SDL_SCANCODE_KP_MINUS] = 0x6D;//VK_SUBTRACT
+    keycodeMap[SDL_SCANCODE_KP_PLUS] = 0x6B;//VK_ADD
+    keycodeMap[SDL_SCANCODE_KP_ENTER] = 0x0D;//VK_RETURN
+    keycodeMap[SDL_SCANCODE_KP_1] = 0x61;//VK_NUMPAD1
+    keycodeMap[SDL_SCANCODE_KP_2] = 0x62;//VK_NUMPAD2
+    keycodeMap[SDL_SCANCODE_KP_3] = 0x63;//VK_NUMPAD3
+    keycodeMap[SDL_SCANCODE_KP_4] = 0x64;//VK_NUMPAD4
+    keycodeMap[SDL_SCANCODE_KP_5] = 0x65;//VK_NUMPAD5
+    keycodeMap[SDL_SCANCODE_KP_6] = 0x66;//VK_NUMPAD6
+    keycodeMap[SDL_SCANCODE_KP_7] = 0x67;//VK_NUMPAD7
+    keycodeMap[SDL_SCANCODE_KP_8] = 0x68;//VK_NUMPAD8
+    keycodeMap[SDL_SCANCODE_KP_9] = 0x69;//VK_NUMPAD9
+    keycodeMap[SDL_SCANCODE_KP_0] = 0x60;//VK_NUMPAD0
+    keycodeMap[SDL_SCANCODE_KP_PERIOD] = 0x6E; //VK_DECIMAL //小键盘的‘.’
+
+
     const int x = SDL_WINDOWPOS_CENTERED;
     const int y = SDL_WINDOWPOS_CENTERED;
     uint32_t windowFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI;
@@ -100,7 +120,6 @@ void App::run(const Config &config)
 #ifdef WIN32
         g_hWnd = sys.info.win.window;
         // HINSTANCE hInstance = sys.info.win.hinstance;
-        hKeyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardProc, sys.info.win.hinstance, 0);
 
 #elif LINUX
         g_X11_display = sys.info.x11.display;
@@ -126,7 +145,7 @@ void App::run(const Config &config)
     SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
     // 启用SDL_SYSWMEVENT
     //SDL_EventState(SDL_SYSWMEVENT, SDL_ENABLE);
-    //SDL_StopTextInput();
+    SDL_StopTextInput();
 
     SDL_Event event;
     while (!m_closed)
@@ -144,73 +163,43 @@ void App::run(const Config &config)
                 {
                     m_closed = true;
                 }
-                break;
-                inputEvent e;
-                e.nTouchType = e.nType = E_ONKEYDOWN;
-                strncpy(e.type, "keydown", 256);
-                e.keyCode = event.key.keysym.scancode;
+				inputEvent e;
+				e.nTouchType = e.nType = E_ONKEYDOWN;
+				strncpy(e.type, "keydown", 256);
+				//e.keyCode = event.key.keysym.scancode;
+                e.keyCode = keycodeMap[event.key.keysym.scancode];
+				//e.keyCode = event.key.keysym.sym;
+				auto  mod = event.key.keysym.mod;
+				bool bCtrl = mod & (KMOD_LCTRL | KMOD_RCTRL);
+				bool bAlt = mod & KMOD_ALT;
+				bool bShift = mod & KMOD_SHIFT;
+				e.bAlt = bAlt;
+				e.bShift = bShift;
+				e.bCtrl = bCtrl;
+
+                //printf("alt:%d ctrl:%d shift:%d\n", bAlt, bCtrl, bShift);
 
                 JCConch::s_pConch->dispatchInputEvent(e);
             }
             break;
             case SDL_KEYUP: {
-                inputEvent e;
-                e.nTouchType = e.nType = E_ONKEYUP;
-                strncpy(e.type, "keyup", 256);
-                e.keyCode = event.key.keysym.scancode;
+                 inputEvent e;
+                 e.nTouchType = e.nType = E_ONKEYUP;
+                 strncpy(e.type, "keyup", 256);
+                 //e.keyCode = event.key.keysym.scancode;
+                 e.keyCode = keycodeMap[event.key.keysym.scancode];
+                 auto  mod = event.key.keysym.mod;
+                 bool bCtrl = mod & (KMOD_LCTRL | KMOD_RCTRL);
+                 bool bAlt = mod & KMOD_ALT;
+                 bool bShift = mod & KMOD_SHIFT;
+                 e.bAlt = bAlt;
+                 e.bShift = bShift;
+                 e.bCtrl = bCtrl;
 
-                JCConch::s_pConch->dispatchInputEvent(e);
+                 JCConch::s_pConch->dispatchInputEvent(e);
             }
             break;
-            case SDL_SYSWMEVENT:{
-                break;
-                SDL_SysWMmsg* sysMsg = event.syswm.msg;
-                switch (sysMsg->subsystem){
-                case SDL_SYSWM_WINDOWS: {
-                    UINT msg = sysMsg->msg.win.msg;
-                    WPARAM wParam = sysMsg->msg.win.wParam;
-                    LPARAM lParam = sysMsg->msg.win.lParam;
-                    switch (msg) {
-                    case WM_KEYDOWN: {
-                        inputEvent e;
-                        e.nTouchType = e.nType = E_ONKEYDOWN;
-                        strncpy(e.type, "keydown", 256);
-                        UINT keyCode = wParam;
-                        e.keyCode = keyCode;
-
-                        e.bCtrl = (GetKeyState(VK_CONTROL) & 0x8000) != 0;
-                        e.bShift = (GetKeyState(VK_SHIFT) & 0x8000) != 0;
-                        e.bAlt = (GetKeyState(VK_MENU) & 0x8000) != 0;
-
-                        JCConch::s_pConch->dispatchInputEvent(e);
-
-                    }
-                        break;
-                    case WM_KEYUP: {
-                        inputEvent e;
-                        e.nTouchType = e.nType = E_ONKEYUP;
-                        strncpy(e.type, "keydown", 256);
-                        e.keyCode = event.key.keysym.scancode;
-
-                        JCConch::s_pConch->dispatchInputEvent(e);
-
-                    }
-                        break;
-                    }
-                    if (msg == WM_KEYDOWN) {
-                        int a = 10;
-                    }
-                    break;
-                }
-                case SDL_SYSWM_X11: {
-                    break;
-                }
-                    
-                }
-
-            }
-            break;
-            /*
+             /*
             case SDL_TEXTEDITING: {
                 inputEvent e;
                 auto aa = event.text.text;
@@ -323,11 +312,5 @@ void App::run(const Config &config)
         }
         laya::JCConch::s_pConch->update();
     }
-
-#ifdef WIN32
-    // 卸载键盘钩子
-    UnhookWindowsHookEx(hKeyboardHook);
-#elif LINUX
-#endif
 }
 } // namespace laya
