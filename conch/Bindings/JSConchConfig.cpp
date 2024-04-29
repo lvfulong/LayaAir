@@ -301,7 +301,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         return "Conch-android";
 #elif WIN32
         return "Conch-window";
-#elif LINUX
+#elif __linux__
         return "Conch-linux";
 #endif
     }
@@ -313,7 +313,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         return "Conch-android";
 #elif WIN32
         return "Conch-window";
-#elif LINUX
+#elif __linux__
         return "Conch-linux";
 #endif
     }
@@ -332,7 +332,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         return m_sGUID.c_str();
 #elif WIN32
         return "window";
-#elif LINUX
+#elif __linux__
         return "linux";
 #endif
     }
@@ -344,7 +344,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         return "android-conch6-release-3.1.0-beta.1";
 #elif WIN32
         return "window-conch6-release-3.1.0-beta.1";
-#elif LINUX
+#elif __linux__
         return "linux-conch6-release-3.1.0-beta.1";
 #endif
     }
@@ -364,7 +364,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 		return "";
 #elif WIN32
 		return "";
-#elif LINUX
+#elif __linux__
         return "";
 #endif
 	}
@@ -384,7 +384,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 		return "";
 #elif WIN32
 		return "";
-#elif LINUX
+#elif __linux__
         return "";
 #endif
 	}
@@ -405,7 +405,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         return "";
 #elif WIN32
         return "";
-#elif LINUX
+#elif __linux__
         return "";
 #endif
     }
@@ -425,7 +425,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 		return "";
 #elif WIN32
 		return "";
-#elif LINUX
+#elif __linux__
         return "";
 #endif
 	}
@@ -455,7 +455,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         return "";
 #elif WIN32
         return "3.0";
-#elif LINUX
+#elif __linux__
         return "3.0";
 #endif
     }
@@ -474,7 +474,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         return "";
 #elif WIN32
         return "3.0";
-#elif LINUX
+#elif __linux__
         return "3.0";
 #endif
     }
@@ -500,7 +500,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         }
         LOGI("getDeviceInfo::get_Value=%s", m_sDeviceInfo.c_str());
         return m_sDeviceInfo.c_str();
-#elif WIN32 || LINUX
+#elif WIN32 || __linux__
         return "{\"resolution\":\"1920*1080\",	\"guid\":\"xxxxxxxxx\",\"imei\":[\"imeixxx\"],\"imsi\":[\"imsixxx\"],\"os\":\"windows\",\"osversion\":\"windows7 64\",\"phonemodel\":\"Wintel\"	}";
 #endif
     }
@@ -684,7 +684,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 		return 0;
 #elif WIN32
         return 0;
-#elif LINUX
+#elif __linux__
         return 0;
 #endif
     }

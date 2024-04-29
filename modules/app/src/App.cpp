@@ -12,7 +12,7 @@ extern bool g_bGLCanvasSizeChanged;
 #ifdef WIN32
 #include <Windows.h>
 HWND g_hWnd;
-#elif LINUX
+#elif __linux__
 #include <SDL2/SDL_syswm.h>
 #include <X11/Xlib.h>
 Display *g_X11_display;
@@ -121,7 +121,7 @@ void App::run(const Config &config)
         g_hWnd = sys.info.win.window;
         // HINSTANCE hInstance = sys.info.win.hinstance;
 
-#elif LINUX
+#elif __linux__
         g_X11_display = sys.info.x11.display;
         g_X11_window = sys.info.x11.window;
 #endif
@@ -134,7 +134,7 @@ void App::run(const Config &config)
     laya::BackendOptions options;
 #ifdef WIN32
     options.nativeLayer = g_hWnd;
-#elif LINUX
+#elif __linux__
     options.nativeLayer = m_sdlWindow;
 #endif
     laya::JCConch::s_pConch.reset(new laya::JCConch());

@@ -92,7 +92,7 @@ namespace laya
 
 #ifdef __APPLE__
         OpenGLBackendiOS*                       m_GfxBackend = { nullptr };
-#elif LINUX
+#elif __linux__
 		OpenGLBackendLinuxEGLX11*                m_GfxBackend = { nullptr };
 #elif __ANDROID__
 		OpenGLBackendAndroidEGL*                m_GfxBackend = { nullptr };

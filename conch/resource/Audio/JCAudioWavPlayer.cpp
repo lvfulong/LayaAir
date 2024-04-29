@@ -14,7 +14,7 @@
 #ifdef __ANDROID__
 #include "AL/alext.h"
 #endif
-#if !defined(LINUX)
+#if !defined(__linux__)
 #include "JCMp3Parser.h"
 #endif
 #include "../JCFileResManager.h"
@@ -382,7 +382,7 @@ JCWaveInfo* JCAudioWavPlayer::AddWaveInfo( const std::string& p_sUrl,unsigned ch
 //------------------------------------------------------------------------------
 JCWaveInfo* JCAudioWavPlayer::AddWaveInfoMp3(const std::string& p_sUrl, const char* p_sFilePath, void* p_pExternalMark)
 { 
-    #if defined(LINUX)
+    #if defined(__linux__)
     return nullptr;
     #else
 	JCWaveInfo* pInfo = FindWaveInfo( p_sUrl );
