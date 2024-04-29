@@ -57,7 +57,7 @@ void JCSystemConfig::loadConfigIniFile()
         LOGE("No config.ini file found!");
     }
     IniFile configIni(configpath.c_str());
-#if WIN32 || __linux__
+#if WIN32 || __LINUX__
     int defaultWidth = 1280;
     if (configIni.hasEntry("common:width"))
     {

@@ -847,7 +847,7 @@ std::string encodeURI(const char* value) {
 
     std::string getExePath()
     {    
-#ifdef __linux__ 
+#ifdef __LINUX__ 
         char buf[256];
 	    memset(buf, 0, 256);
 	    ssize_t len = readlink("/proc/self/exe", buf, sizeof(buf));

@@ -6,7 +6,7 @@
 #include <OpenGLES/ES2/glext.h>
 #include <OpenGLES/ES3/gl.h>
 #include <OpenGLES/ES3/glext.h>
-#elif __linux__
+#elif __LINUX__
 #include <glad/egl.h>
 #include <glad/gles2.h>
 #elif __ANDROID__

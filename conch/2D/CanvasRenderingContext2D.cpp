@@ -5,7 +5,7 @@
 #include "CanvasRenderingContext2DWin.h"
 #elif __APPLE__
 #include "CanvasRenderingContext2DCG.h"
-#elif __linux__
+#elif __LINUX__
 #include "CanvasRenderingContext2DLinux.h"
 #endif
 #include <utils/ColorParser.h>
@@ -23,7 +23,7 @@ CanvasRenderingContext2D *CanvasRenderingContext2D::create(int width, int height
     return new CanvasRenderingContext2DWin(width, height);
 #elif __APPLE__
     return new CanvasRenderingContext2DCG(width, height);
-#elif __linux__
+#elif __LINUX__
     return new CanvasRenderingContext2DLinux(width, height);
 #endif
 }

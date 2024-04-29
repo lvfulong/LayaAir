@@ -38,7 +38,7 @@
 #elif WIN32
 	#include <Windows.h>
     #include "JSWindowEditBox.h"
-#elif __linux__
+#elif __LINUX__
     #include "JSLinuxEditBox.h"
 #elif __APPLE__
     #include "JSIOSEditBox.h"
@@ -58,7 +58,7 @@
 #include "Video/JSVideo.h"
 #include <LayaGL/JCLayaGLDispatch.h>
 #include "Bullet/LayaBulletExport.h"
-#if !defined(__linux__) && !defined(WIN32)
+#if !defined(__LINUX__) && !defined(WIN32)
 #include "PhysX/LayaPhysXExport.h"
 #endif
 #include "JSArrayBufferRef.h"
@@ -90,7 +90,7 @@ extern bool g_bGLCanvasSizeChanged;
 	int g_bEnableTouch = true;
 #elif __APPLE__
 	int g_bEnableTouch = true;
-#elif __linux__
+#elif __LINUX__
 	int g_bEnableTouch = false;
 #endif
  std::string g_sExePath = "";
@@ -300,7 +300,7 @@ namespace laya
         return 1.0;
 #elif __APPLE__
 		return 1.0;// CToObjectCGetDevicePixelRatio();
-#elif __linux__
+#elif __LINUX__
         return 1.0;
 #endif
     }
@@ -500,7 +500,7 @@ namespace laya
 #ifdef WIN32
 
         JSWindowEditBox::exportJS(context);
-#elif __linux__
+#elif __LINUX__
         JSLinuxEditBox::exportJS(context);
 #elif __ANDROID__
         JSAndroidEditBox::exportJS(context);
@@ -607,7 +607,7 @@ namespace laya
         context.function("atob", &atob);
         context.function("_createImageBitmap", &createImageBitmap);
         JSLayaConchBullet::exportJS(context);
- #if !defined(__linux__) && !defined(WIN32)
+ #if !defined(__LINUX__) && !defined(WIN32)
         JSLayaConchPhysX::exportJS(context);
 #endif
 	}
