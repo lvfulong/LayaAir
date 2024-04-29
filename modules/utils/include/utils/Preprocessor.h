@@ -9,7 +9,7 @@
 #elif LINUX
 #include <glad/egl.h>
 #include <glad/gles2.h>
-#elif ANDROID
+#elif __ANDROID__
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 #include <GLES3/gl3.h>

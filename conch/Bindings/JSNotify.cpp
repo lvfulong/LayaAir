@@ -1,7 +1,7 @@
 #include "JSNotify.h"
 #include <utils/Log.h>
 #include <utils/JCMemorySurvey.h>
-#ifdef ANDROID
+#ifdef __ANDROID__
 	#include <jni.h>
 	#include "CToJavaBridge.h"
 #elif __APPLE__
@@ -14,7 +14,7 @@ namespace laya
     void JSNotify::setRepeatNotify( int p_nID,int p_nStartTime,int p_nRepeatType,const char* p_sTickerText,const char* p_sTitleText,const char* p_sDesc )
     {
         LOGI("JSNotify::setRepeatNotify id=%d,startTime=%ld,type=%d,tickerText=%s,titleText=%s,desc=%s",p_nID,p_nStartTime,p_nRepeatType,p_sTickerText,p_sTitleText,p_sDesc );
-        #ifdef ANDROID
+        #ifdef __ANDROID__
             std::vector<intptr_t> params;
             params.push_back(p_nID);
             params.push_back((long)p_nStartTime);
@@ -34,7 +34,7 @@ namespace laya
     void JSNotify::setOnceNotify( int p_nID,int p_nStartTime,const char* p_sTickerText,const char* p_sTitleText,const char* p_sDesc )
     {
         LOGI("JSNotify::setOnceNotify id=%d,startTime=%ld,tickerText=%s,titleText=%s,desc=%s",p_nID,p_nStartTime,p_sTickerText,p_sTitleText,p_sDesc );
-        #ifdef ANDROID
+        #ifdef __ANDROID__
             std::vector<intptr_t> params;
             params.push_back(p_nID);
             params.push_back((long)p_nStartTime);
@@ -53,7 +53,7 @@ namespace laya
     void JSNotify::deleteOnceNotify( int p_nID )
     {
         LOGI("JSNotify::deleteOnceNotify id=%d",p_nID );
-        #ifdef ANDROID
+        #ifdef __ANDROID__
             CToJavaBridge::JavaRet kRet;
             CToJavaBridge::GetInstance()->callMethod("layaair.game.Notifycation.LayaNotifyManager", "removeNotify", p_nID, kRet);
         #elif __APPLE__
@@ -66,7 +66,7 @@ namespace laya
     void JSNotify::deleteAllNotify()
     {
         LOGI("JSNotify::deleteAllNotify" );
-        #ifdef ANDROID
+        #ifdef __ANDROID__
             CToJavaBridge::JavaRet kRet;
             CToJavaBridge::GetInstance()->callMethod("layaair.game.Notifycation.LayaNotifyManager", "removeAllNotify", kRet);
         #elif __APPLE__

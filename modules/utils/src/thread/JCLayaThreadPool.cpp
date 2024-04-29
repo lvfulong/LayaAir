@@ -23,7 +23,7 @@ namespace laya{
         LOGI("start thread:%s,%d", threadname, thid);
 		//threadInfoLog("start thread:%s,%d", threadname, thid);
 	}
-#elif ANDROID
+#elif __ANDROID__
 	{
 		//threadInfoLog("start thread:%s,%d", threadname, gettidv1());
 	}
@@ -38,7 +38,7 @@ namespace laya{
 		LOGI("thread end:%s,%d", threadname, thid);
 		//threadInfoLog("thread end:%s,%d", threadname, thid);
 	}
-#elif ANDROID
+#elif __ANDROID__
 	{
 		LOGI("thread end:%s,%d", threadname, gettidv1());
 		//threadInfoLog("thread end:%s,%ld", threadname, gettidv1());

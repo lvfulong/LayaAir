@@ -24,7 +24,7 @@
 #include <Audio/JCAudioManager.h>
 #include <Bindings/JSInput.h>
 
-#ifdef ANDROID
+#ifdef __ANDROID__
     #include "WebSocket/WebSocket.h"
     #include "CToJavaBridge.h"
     #include <dlfcn.h>
@@ -39,7 +39,7 @@
 #endif
 #ifdef __APPLE__
 #include "OpenGLBackendiOS.h"
-#elif ANDROID
+#elif __ANDROID__
 #include "OpenGLBackendAndroidEGL.h"
 #elif WIN32
 #include "OpenGLBackendWinEGL.h"
@@ -65,7 +65,7 @@ namespace laya
     std::shared_ptr<JCScriptRuntime> JCConch::s_pScriptRuntime;
     void _vibrate()
     {
-#ifdef ANDROID
+#ifdef __ANDROID__
         CToJavaBridge::JavaRet kRet;
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "vibrate", kRet);
 #endif
@@ -75,7 +75,7 @@ namespace laya
 #ifdef __APPLE__
 #elif WIN32
         HMODULE libHandle = LoadLibrary("libGLESv2.dll");
-#elif ANDROID
+#elif __ANDROID__
         //void *libhandle = dlopen("libGLESv2.so", RTLD_LAZY);
 #endif
         m_nUrlHistoryPos = -1;
@@ -289,7 +289,7 @@ namespace laya
         m_semaphore.setDataNum(0);
         m_semaphoreFramePacer.stop();
         postToJS([]() {
-#ifdef ANDROID
+#ifdef __ANDROID__
             if( laya::JCAudioManager::GetInstance()->getMp3Mute() == false && laya::JCAudioManager::GetInstance()->getMp3Stopped() == false)
             {
                 JCAudioManager::GetInstance()->pauseMp3();
@@ -311,7 +311,7 @@ namespace laya
         m_semaphore.setDataNum(1);
         m_semaphoreFramePacer.resume();
         postToJS([]() {
-#ifdef ANDROID
+#ifdef __ANDROID__
             //继续声音
             if( laya::JCAudioManager::GetInstance()->getMp3Mute() == false && laya::JCAudioManager::GetInstance()->getMp3Stopped() == false)
             {

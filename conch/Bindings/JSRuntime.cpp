@@ -6,7 +6,7 @@
 #ifdef __APPLE__ 
     #include "CToObjectC.h"
 #endif
-#ifdef ANDROID 
+#ifdef __ANDROID__ 
 #include "CToJavaBridge.h"
 #endif
 #include "../../JCSystemConfig.h"
@@ -112,7 +112,7 @@ namespace laya
 
                 std::string cookiefile = JSConchConfig::getLocalStoragePath() + ss + "_curlcookie.txt";
                 pdm->setCookieFile(cookiefile.c_str());
-#ifdef ANDROID
+#ifdef __ANDROID__
                 CToJavaBridge::JavaRet kRet;
                 CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setHrefToJava", url.c_str(), kRet);
 #endif
@@ -188,7 +188,7 @@ namespace laya
     {
 #ifdef __APPLE__
         CToObjectCSetScreenWakeLock(p_bWakeLock);
-#elif ANDROID
+#elif __ANDROID__
         CToJavaBridge::JavaRet kRet;
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setScreenWakeLock", p_bWakeLock, kRet);
 #elif WIN32
@@ -199,7 +199,7 @@ namespace laya
     {
 #ifdef __APPLE__
         CToObjectCSetSensorAble(p_bSensorAble);
-#elif ANDROID
+#elif __ANDROID__
         CToJavaBridge::JavaRet kRet;
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setSensorAble", p_bSensorAble, kRet);
 #elif WIN32
@@ -224,7 +224,7 @@ namespace laya
     }
     const char* JSRuntime::callMethod(int objid,bool isSyn,const char*clsName, const char* methodName, const char* paramStr)
     {
-#ifdef ANDROID
+#ifdef __ANDROID__
         CToJavaBridge::JavaRet kRet;
         if (CToJavaBridge::GetInstance()->callMethodRefection(objid, isSyn, clsName, methodName, paramStr, kRet))
         {
@@ -296,7 +296,7 @@ namespace laya
     }
 	void JSRuntime::exit()
     {
-#ifdef ANDROID
+#ifdef __ANDROID__
         CToJavaBridge::JavaRet ret;
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "exit", ret);
 #elif __APPLE__
@@ -309,7 +309,7 @@ namespace laya
         int safeInsetLeft = 0;
         int safeInsetBottom = 0;
         int safeInsetRight = 0;
-#ifdef ANDROID
+#ifdef __ANDROID__
 		CToJavaBridge::GetInstance()->getSafeInsetRect(safeInsetLeft, safeInsetTop, safeInsetRight, safeInsetBottom);
 #elif __APPLE__
         CToObjectCGetSafeAreaInsets(&safeInsetTop, &safeInsetLeft, &safeInsetBottom, &safeInsetRight);
@@ -323,7 +323,7 @@ namespace laya
         int safeInsetLeft = 0;
         int safeInsetBottom = 0;
         int safeInsetRight = 0;
-#ifdef ANDROID
+#ifdef __ANDROID__
 		CToJavaBridge::GetInstance()->getSafeInsetRect(safeInsetLeft, safeInsetTop, safeInsetRight, safeInsetBottom);
 #elif __APPLE__
         CToObjectCGetSafeAreaInsets(&safeInsetTop, &safeInsetLeft, &safeInsetBottom, &safeInsetRight);
@@ -337,7 +337,7 @@ namespace laya
         int safeInsetLeft = 0;
         int safeInsetBottom = 0;
         int safeInsetRight = 0;
-#ifdef ANDROID
+#ifdef __ANDROID__
 		CToJavaBridge::GetInstance()->getSafeInsetRect(safeInsetLeft, safeInsetTop, safeInsetRight, safeInsetBottom);
 #elif __APPLE__
         CToObjectCGetSafeAreaInsets(&safeInsetTop, &safeInsetLeft, &safeInsetBottom, &safeInsetRight);
@@ -351,7 +351,7 @@ namespace laya
         int safeInsetLeft = 0;
         int safeInsetBottom = 0;
         int safeInsetRight = 0;
-#ifdef ANDROID
+#ifdef __ANDROID__
 		CToJavaBridge::GetInstance()->getSafeInsetRect(safeInsetLeft, safeInsetTop, safeInsetRight, safeInsetBottom);
 #elif __APPLE__
         CToObjectCGetSafeAreaInsets(&safeInsetTop, &safeInsetLeft, &safeInsetBottom, &safeInsetRight);

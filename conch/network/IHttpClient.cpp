@@ -1,6 +1,6 @@
 #include <utils/Log.h>
 #include <network/IHttpClient.h>
-#if ANDROID
+#if __ANDROID__
 #include "network/HttpClientAndroid.h"
 #elif __APPLE__
 #include "network/HttpClientiOS.h"
@@ -28,7 +28,7 @@ IHttpClient *HttpClientManager::createHttpClient(const char *url, const char *lo
                                                  const IHttpClient::onEndFunction &functionOnEnd)
 {
     IHttpClient *httpClient = nullptr;
-#if ANDROID
+#if __ANDROID__
     httpClient = new HttpClientAndroid(url, localFilePath, functionOnProgress, functionOnEnd, shared_from_this());
 #elif __APPLE__
     httpClient = new HttpClientiOS(url, localFilePath, functionOnProgress, functionOnEnd, shared_from_this());

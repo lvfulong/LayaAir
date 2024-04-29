@@ -99,7 +99,7 @@ namespace laya
     {
     #ifdef WIN32
 	    m_pMp3Player = new JCAudioMp3Player();
-    #elif ANDROID
+    #elif __ANDROID__
 	    m_pMp3Player = new JCAudioMp3Media();
     #elif __APPLE__
         m_pMp3Player = new JCAudioMp3Player();

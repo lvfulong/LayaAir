@@ -1,7 +1,7 @@
 #include "FontManager.h"
 #include <utils/Log.h>
 #include <utils/JCFileSystem.h>
-#ifdef ANDROID
+#ifdef __ANDROID__
 #include "CanvasRenderingContext2DAndroid.h"
 #elif __APPLE__
 #include <CoreGraphics/CGDataProvider.h>
@@ -14,7 +14,7 @@
 extern std::string gRedistPath;
 namespace laya
 {
-#ifdef ANDROID
+#ifdef __ANDROID__
 class NativeInfoImpl
 {
     
@@ -81,14 +81,14 @@ static bool registerFontIOS(const std::string &family, CGDataProviderRef fontDat
 #endif
 FontManager *g_pFontManager = nullptr;
 FontManager::FontManager(){
-#ifdef ANDROID
+#ifdef __ANDROID__
 #elif __APPLE__
 #else
 #endif
 } FontManager::~FontManager()
 {
     m_fontName2RealName.clear();
-#ifdef ANDROID
+#ifdef __ANDROID__
 #elif __APPLE__
     CFErrorRef error = nullptr;
     std::unordered_map<std::string, NativeInfoImpl*>::iterator it = m_fontName2NativeInfoImpl.begin();
@@ -115,7 +115,7 @@ void FontManager::deleteInstance()
 }
 bool FontManager::registerFont(const std::string &family, const std::string &path)
 {
-#ifdef ANDROID
+#ifdef __ANDROID__
     return CanvasRenderingContext2DAndroid::registerFontFromPath(family, path);
 #elif __APPLE__
     CGDataProviderRef fontDataProvider = CGDataProviderCreateWithFilename(path.c_str());
@@ -131,7 +131,7 @@ bool FontManager::registerFont(const std::string &family, const std::string &pat
 }
 bool FontManager::registerFont(const std::string &family, const uint8_t *data, int32_t byteLength)
 {
-#ifdef ANDROID
+#ifdef __ANDROID__
     JCBuffer buf((char *)data, byteLength, false, false);
     std::string tempFilePath = gRedistPath + "/appCache" +  std::string("/tmp_") + family;
     writeFileSync(tempFilePath.c_str(), buf);
@@ -156,7 +156,7 @@ bool FontManager::registerFont(const std::string &family, const uint8_t *data, i
 }
 std::vector<std::string> FontManager::getAllSystemFonts()
 {
-#ifdef ANDROID
+#ifdef __ANDROID__
     return std::vector<std::string>();
 #elif __APPLE__
     return getAllSystemFontsIOS();
