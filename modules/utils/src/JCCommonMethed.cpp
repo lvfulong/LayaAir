@@ -19,7 +19,7 @@
     #include <sys/time.h>
     #include <time.h>
     #include <mach/mach_time.h>
-#elif ANDROID
+#elif __ANDROID__
     #include <time.h>
 #elif WIN32
     #include <windows.h>
@@ -664,7 +664,7 @@ namespace laya
 
         int64_t nanosec = mach_absolute_time()*info.numer / info.denom;
         return (nanosec / 1e6);
-#elif ANDROID
+#elif __ANDROID__
         struct timespec now;
         clock_gettime(CLOCK_MONOTONIC, &now);
         return now.tv_sec * 1000.0 + now.tv_nsec / 1e6;
@@ -699,7 +699,7 @@ namespace laya
         //PagefileUsage 虚拟内存
         //PeakPagefileUsage 峰值虚拟内存
         return pmc.WorkingSetSize / 1024;
-#elif ANDROID
+#elif __ANDROID__
         return 0;
 #elif __APPLE__
         return 0;

@@ -14,7 +14,7 @@
 #include <chrono>
 #include "../downloadMgr/JCHttpHeader.h"
 
-#ifdef ANDROID
+#ifdef __ANDROID__
     #include "../downloadCache/JCAndroidFileSource.h"
 #else
     #include "../downloadCache/JCIosFileSource.h"
@@ -28,7 +28,7 @@
 extern std::string gRedistPath;
 //这个对象不依赖于process，所以放到外面。
 
-#ifdef ANDROID
+#ifdef __ANDROID__
     AAssetManager* g_pAssetManager=nullptr;
     std::string gAssetRootPath="";
 	std::string gAPKExpansionMainPath="";
@@ -325,7 +325,7 @@ namespace laya
 	JCServerFileCache::JCServerFileCache(){
 		m_pAssets = NULL;
 		/*
-#ifdef ANDROID
+#ifdef __ANDROID__
 		m_pAssets = new JCAndroidFileSource();
 #else
 		m_pAssets = new JCIosFileSource();
@@ -443,7 +443,7 @@ namespace laya
 		replace_all(tmpWebBase,"\\","_");
 		std::string assetsPath = gAssetRootPath+"/"+tmpWebBase;
 		JCFileSource* pFileReader = NULL;
-#ifdef ANDROID
+#ifdef __ANDROID__
 		if(g_pAssetManager)
         {
 			JCAndroidFileSource* pAssets = new JCAndroidFileSource();

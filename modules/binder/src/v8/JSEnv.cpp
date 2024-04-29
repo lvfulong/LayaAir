@@ -262,7 +262,7 @@ void JSV8Worker::_defRunLoop()
         SetNameInternal(thid, m_strName.c_str());
         // threadInfoLog("start thread:%s,%d", m_strName.c_str(), thid);
     }
-#elif ANDROID
+#elif __ANDROID__
     {
         // threadInfoLog("start thread:%s,%ld", m_strName.c_str(), gettidv1());
     }

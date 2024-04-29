@@ -44,7 +44,7 @@ void JCSystemConfig::loadConfigIniFile()
     // ���������ļ����ÿ���
     std::string configpath = gAssetRootPath; 
     configpath += "/config.ini";
-#if __APPLE__||ANDROID
+#if __APPLE__||__ANDROID__
     std::string content = JCConch::s_pAssetsFiles->readTextAsset("config.ini");
     JCBuffer buf((char*)content.c_str(), strlen(content.c_str()), false, false);
     std::string tempFilePath = gRedistPath + "appCache" +  std::string("/tmp_config.ini");

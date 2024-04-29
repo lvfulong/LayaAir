@@ -10,7 +10,7 @@
 #ifdef __APPLE__
 #include "../../IOSFreetype/JCIOSFreeType.h"
 #endif
-#ifdef ANDROID
+#ifdef __ANDROID__
 #include "../../JCSystemConfig.h"
 #include "CToJavaBridge.h"
 #endif   

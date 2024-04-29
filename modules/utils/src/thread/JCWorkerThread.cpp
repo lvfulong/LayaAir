@@ -48,7 +48,7 @@ void SetNameInternal(unsigned int thread_id, const char* name)
 	{
 	}
 }
-#elif ANDROID
+#elif __ANDROID__
 #include <sys/syscall.h>  
 #define gettidv1() syscall(__NR_gettid)  
 #define gettidv2() syscall(SYS_gettid)  
@@ -145,7 +145,7 @@ namespace laya{
             LOGI("start thread:%s,%d", m_strName.c_str(), thid);
             //threadInfoLog("start thread:%s,%d", m_strName.c_str(), thid);
 		}
-#elif ANDROID
+#elif __ANDROID__
 		{
             LOGI("start thread:%s,%d", m_strName.c_str(), (int)gettidv1());
 			//threadInfoLog("start thread:%s,%ld", m_strName.c_str(), gettidv1());

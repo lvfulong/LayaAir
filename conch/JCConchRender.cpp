@@ -23,9 +23,9 @@
 #include "OpenGLBackendiOS.h"
 #elif LINUX
 #include "OpenGLBackendLinuxEGLX11.h"
-#elif ANDROID
+#elif __ANDROID__
 #include "OpenGLBackendAndroidEGL.h"
-#elif _WIN32
+#elif WIN32
 #include "OpenGLBackendWinEGL.h"
 #endif
 #include "render/LayaGL.h"
@@ -362,9 +362,9 @@ void JCConchRender::requestCaptureScreen()
                 m_GfxBackend = new OpenGLBackendiOS();
 #elif LINUX
                 m_GfxBackend = new OpenGLBackendLinuxEGLX11();
-#elif ANDROID
+#elif __ANDROID__
                 m_GfxBackend = new OpenGLBackendAndroidEGL();
-#elif _WIN32
+#elif WIN32
                 m_GfxBackend = new OpenGLBackendWinEGL();
 #endif
                 m_GfxBackend->create(options);

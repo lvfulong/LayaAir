@@ -3,7 +3,7 @@
 
 #include <algorithm>
 #include "MathUtils3D.h"
-#ifdef _WIN32
+#ifdef WIN32
 #ifdef min
 #undef min
 #endif
