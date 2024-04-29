@@ -4,7 +4,7 @@
 #include "network/HttpClientAndroid.h"
 #elif __APPLE__
 #include "network/HttpClientiOS.h"
-#elif _WIN32
+#elif WIN32
 #endif
 
 namespace laya
@@ -32,7 +32,7 @@ IHttpClient *HttpClientManager::createHttpClient(const char *url, const char *lo
     httpClient = new HttpClientAndroid(url, localFilePath, functionOnProgress, functionOnEnd, shared_from_this());
 #elif __APPLE__
     httpClient = new HttpClientiOS(url, localFilePath, functionOnProgress, functionOnEnd, shared_from_this());
-#elif _WIN32
+#elif WIN32
     httpClient = nullptr; // TODO
 #endif
     addHttpClient(httpClient);

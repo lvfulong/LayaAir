@@ -96,7 +96,7 @@ namespace laya
 		OpenGLBackendLinuxEGLX11*                m_GfxBackend = { nullptr };
 #elif ANDROID
 		OpenGLBackendAndroidEGL*                m_GfxBackend = { nullptr };
-#elif _WIN32
+#elif WIN32
         OpenGLBackendWinEGL*   m_GfxBackend = { nullptr };
 #endif
 #ifdef WEBGL_THREAD

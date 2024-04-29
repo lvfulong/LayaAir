@@ -6,7 +6,7 @@
 #include "Matrix4x4.h"
 #include <vector>
 #include <limits>
-#ifdef _WIN32
+#ifdef WIN32
 #ifdef min
 #undef min
 #endif

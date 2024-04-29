@@ -34,14 +34,14 @@
 #elif __APPLE__
     #include "CToObjectC.h"
     #include "pthread.h"
-#elif _WIN32
+#elif WIN32
     #include <windows.h>
 #endif
 #ifdef __APPLE__
 #include "OpenGLBackendiOS.h"
 #elif ANDROID
 #include "OpenGLBackendAndroidEGL.h"
-#elif _WIN32
+#elif WIN32
 #include "OpenGLBackendWinEGL.h"
 #endif
 
@@ -73,7 +73,7 @@ namespace laya
     JCConch::JCConch()
     {
 #ifdef __APPLE__
-#elif _WIN32
+#elif WIN32
         HMODULE libHandle = LoadLibrary("libGLESv2.dll");
 #elif ANDROID
         //void *libhandle = dlopen("libGLESv2.so", RTLD_LAZY);
