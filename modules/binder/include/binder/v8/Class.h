@@ -470,24 +470,6 @@ template <typename ClassType> void ClassRegistry<ClassType>::removeObject(ClassT
     }
 }
 
-/*template <typename ClassType> ObjectRegistry *ClassRegistry<ClassType>::getObjectRegistry(ClassType *objectPointer)
-{
-    auto it = objects_.find(objectPointer);
-    if (it != objects_.end())
-    {
-        return &it->second;
-    }
-
-    for (auto const info : derivatives_)
-    {
-        ObjectRegistry *result = info->getObjectRegistry(objectPointer);
-        if (result != nullptr)
-            return result;
-    }
-
-    return nullptr;
-}*/
-
 template <typename ClassType> static void WeakCallback(const v8::WeakCallbackInfo<ClassRegistry<ClassType>> &data)
 {
     ClassType *object = static_cast<ClassType *>(data.GetInternalField(0));

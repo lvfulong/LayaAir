@@ -55,11 +55,6 @@ void GLESInternalRT::dispose()
     }
     m_textures.clear();
 
-    //if (m_depthTexture)
-    //{
-    //    delete m_depthTexture;
-    //}
-
     if (m_framebuffer)
     {
         glDeleteFramebuffers(1, &m_framebuffer);
@@ -85,35 +80,6 @@ void GLESInternalRT::dispose()
     m_gpuMemory = 0;
     m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::RC_ALLRenderTexture, -1);
 }
-//JsValue GLESInternalRT::getDepthTexture()
-//{
-//    if (m_pJSDepthTexture.isEmpty())
-//    {
-//        m_pJSDepthTexture.reset(Converter<GLESInternalTex*>::ToJs(m_depthTexture, false));
-//        return m_pJSDepthTexture.toLocal().handle_;
-//    }
-//    else
-//    {
-//        return m_pJSDepthTexture.toLocal().handle_;
-//    }
-//}
-//JsValue GLESInternalRT::getTextures()
-//{
-//    if (m_pJSTextures.isEmpty())
-//    {
-//        int size = this->m_textures.size();
-//        std::vector<GLESInternalTex*> vec;
-//        vec.reserve(size);
-//        for (int i = 0; i < size; i++)
-//        {
-//            vec.push_back(this->m_textures[i]);
-//        }
-//        m_pJSTextures.reset(Converter<std::vector<GLESInternalTex*>>::ToJs(vec, false));
-//        return m_pJSTextures.toLocal().handle_;
-//    }
-//    else
-//    {
-//        return m_pJSTextures.toLocal().handle_;
-//    }
-//}
+
+
 } // namespace laya

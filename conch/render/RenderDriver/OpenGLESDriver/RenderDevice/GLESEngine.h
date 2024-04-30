@@ -66,6 +66,7 @@ class GLESEngine
     GLTextureContext *createTextureContext(bool isWebGL2);
     GLBuffer *createBuffer(BufferTargetType targetType, BufferUsage bufferUsageType);
     GLBuffer *_getbindBuffer(BufferTargetType target);
+    void resizeOffScreen(uint32_t width, uint32_t height);
     void addTexGammaDefine(uint32_t key, RTShaderDefine value);
     void _setbindBuffer(BufferTargetType target, GLBuffer *buffer);
     void _bindTexture(GLenum target, GLESInternalTex *texture);

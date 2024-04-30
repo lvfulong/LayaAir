@@ -7,10 +7,12 @@ namespace laya
 
 RTDefineDatas::RTDefineDatas()
 {
+
 }
 
 RTDefineDatas::~RTDefineDatas()
 {
+
     _mask.clear();
 }
 
