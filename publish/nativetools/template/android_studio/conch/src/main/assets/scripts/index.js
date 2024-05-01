@@ -26,16 +26,21 @@ function loadLib(url) {
 window['loadLib'] = loadLib;
 window['require'] = loadLib;
 const asyncs = require("async");
-function registerFont() {
-    var assetFontData = conch.readFileFromAsset('font/layabox.ttf', 'raw');
+function registerFont(fontName, fileName) {
+    var assetFontData = conch.readFileFromAsset(fileName, 'raw');
     if (assetFontData) {
-        if (conch.registerFont("layabox", assetFontData)) {
+        if (conch.registerFont(fontName, assetFontData)) {
             log('字体注册成功');
         }
         else {
             log('字体注册失败');
         }
     }
+}
+function registerAllFonts() {
+    registerFont('Arial', 'font/Arial.ttf');
+    registerFont('SimHei', 'font/SimHei.ttf');
+    registerFont('MicrosoftYaHei', 'font/Microsoft Yahei.ttf');
 }
 function setOrientation(s) {
     var nameToVal = {
@@ -119,6 +124,7 @@ async function loadApp(url) {
     }
     cache = window.appcache = new AppCache(urlpath);
     document.loadCookie();
+    registerAllFonts();
     var isDccOk = true;
     async function updateDcc() {
         cache.setResourceID('appurl', urlpath);
