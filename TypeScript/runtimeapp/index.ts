@@ -135,6 +135,7 @@ function registerAllFonts()
     registerFont('Arial', 'font/Arial.ttf');
     registerFont('SimHei', 'font/SimHei.ttf');
     registerFont('MicrosoftYaHei', 'font/Microsoft Yahei.ttf');
+    registerFont('SimSun', 'font/SimSun.ttc');
 }
 function setOrientation(s: string) {
     var nameToVal = {
