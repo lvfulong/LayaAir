@@ -170,6 +170,7 @@ TextMetrics CanvasRenderingContext2DCG::measureText(const std::string &text)
     metrics.m_width = ceilf(dim.width);
     metrics.m_height = ceilf(dim.height);
     metrics.m_ascender = m_impl->m_UIFont.ascender;
+    metrics.m_descender = -m_impl->m_UIFont.descender;
     return metrics;
 }
 void CanvasRenderingContext2DCG::clearRect(double x, double y, double width, double height)
@@ -311,6 +312,42 @@ void CanvasRenderingContext2DCG::setFont(const char *font)
     m_impl->_attributesDict = [[NSMutableDictionary alloc]  init];
     [m_impl->_attributesDict setObject:m_impl->m_UIFont forKey: NSFontAttributeName];
     [m_impl->_attributesDict setObject:paragraphStyle forKey:NSParagraphStyleAttributeName];
+}
+void CanvasRenderingContext2DCG::getTextPosition(const std::string &text, double x, double y, double &outX, double &outY)
+{
+    TextMetrics textMetrics = measureText(text);
+    outX = x;
+    outY = y;
+    if (m_textAlign == TextAlign::Center)
+    {
+        outX = x - textMetrics.m_width / 2.0f;
+    }
+    else if (m_textAlign == TextAlign::Left)
+    {
+    }
+    else if (m_textAlign == TextAlign::Right)
+    {
+        outX = x - textMetrics.m_width;
+    }
+
+    if (m_textBaseline == TextBaseline::Top)
+    {
+        LOGI("");
+    }
+    else if (m_textBaseline == TextBaseline::Middle)
+    {
+        outY = y - (textMetrics.m_descender + textMetrics.m_ascender) * 0.5f;
+        //outY = y - textMetrics.m_height / 2.0f;
+    }
+    else if (m_textBaseline == TextBaseline::Bottom)
+    {
+        //outY = y - textMetrics.m_height;
+        outY = y - (textMetrics.m_descender + textMetrics.m_ascender);
+    }
+    else if (m_textBaseline == TextBaseline::Alphabetic)
+    {
+        outY = y - textMetrics.m_ascender;
+    }
 }
 std::vector<std::string> getAllSystemFontsIOS()
 {

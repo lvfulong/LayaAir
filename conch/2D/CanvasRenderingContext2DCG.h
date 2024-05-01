@@ -26,6 +26,7 @@ class CanvasRenderingContext2DCG : public CanvasRenderingContext2D
     const BitmapData &getBitmapData() const override;
 
   protected:
+    void getTextPosition(const std::string &text, double x, double y, double &outX, double &outY) override;
     void chooseFont(const std::string& strFontName);
     CanvasRenderingContext2DCGImpl *m_impl = {nullptr};
 };

@@ -63,9 +63,15 @@ static bool registerFontIOS(const std::string &family, CGDataProviderRef fontDat
     if (error)
     {
         CFStringRef errorDescription = CFErrorCopyDescription(error);
-        LOGE("registerFont error: %s", errorDescription);
+        //kCTFontManagerErrorDuplicatedName = 305
+        //An error that indicates the file can't register because of a duplicate font name.
+        if (CFErrorGetCode(error) == 305) {
+        }
+        else {
+            LOGE("registerFont error: %s", errorDescription);
+        }
         CFRelease(errorDescription);
-        CTFontManagerUnregisterGraphicsFont(registerfont, &error);
+        //CTFontManagerUnregisterGraphicsFont(registerfont, &error);
         //CTFontManagerRegisterGraphicsFont(registerfont, &error);
         return false;
     }
