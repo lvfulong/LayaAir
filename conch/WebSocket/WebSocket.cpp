@@ -20,7 +20,7 @@
 #include <algorithm>
 #ifdef __ANDROID__
 #include <downloadCache/JCAndroidFileSource.h>
-#elif __APPLE_
+#elif __APPLE__
 #include <downloadCache/JCIosFileSource.h>
 #endif
 #include <utils/Log.h>
