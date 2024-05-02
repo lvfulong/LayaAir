@@ -168,7 +168,10 @@ TextMetrics CanvasRenderingContext2DCG::measureText(const std::string &text)
     TextMetrics metrics;
 
     metrics.m_width = ceilf(dim.width);
-    metrics.m_height = ceilf(dim.height);
+    //metrics.m_height = ceilf(dim.height);
+    //NSLog(@"measureText [ascender %f] [descender %f] [leading %f]",m_impl->m_UIFont.ascender,m_impl->m_UIFont.descender,m_impl->m_UIFont.leading);
+    //NSLog(@"measureText [dim.height %f] [a-d+l%f] [lineHeight %f]",ceilf(dim.height),m_impl->m_UIFont.ascender - m_impl->m_UIFont.descender + m_impl->m_UIFont.leading, m_impl->m_UIFont.lineHeight);
+    metrics.m_height = m_impl->m_UIFont.lineHeight;// lineHeight == m_impl->m_UIFont.ascender - m_impl->m_UIFont.descender
     metrics.m_ascender = m_impl->m_UIFont.ascender;
     metrics.m_descender = -m_impl->m_UIFont.descender;
     return metrics;
