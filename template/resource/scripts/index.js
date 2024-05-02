@@ -39,7 +39,7 @@ function registerFont(fontName, fileName) {
 }
 function registerAllFonts() {
     registerFont('Arial', 'font/Arial.ttf');
-    registerFont('SimHei', 'font/山字瓜子体.ttf');
+    registerFont('SimHei', 'font/SimHei.ttf');
     registerFont('MicrosoftYaHei', 'font/Microsoft Yahei.ttf');
     registerFont('SimSun', 'font/SimSun.ttc');
 }
@@ -312,4 +312,4 @@ function startAppHTML(data) {
     });
     document.createElement("script").text = "window.onload&&window.onload()";
 }
-loadApp("http://10.10.20.77:13999/index.js");
+loadApp(conch.presetUrl || "http://layabox.com/layanative3.0/demo/index.js");
