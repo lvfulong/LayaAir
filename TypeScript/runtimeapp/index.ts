@@ -122,12 +122,7 @@ function registerFont(fontName, fileName)
 {
     var assetFontData = conch.readFileFromAsset(fileName, 'raw');
     if (assetFontData) {
-        if (conch.registerFont(fontName, assetFontData)) {
-            log('字体注册成功');
-        }
-        else {
-            log('字体注册失败');
-        }
+        conch.registerFont(fontName, assetFontData);
     }
 }
 function registerAllFonts()
