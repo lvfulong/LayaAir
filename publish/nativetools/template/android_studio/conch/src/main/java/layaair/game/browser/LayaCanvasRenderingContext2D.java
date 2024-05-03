@@ -57,6 +57,8 @@ public class LayaCanvasRenderingContext2D {
         this.height = height;
         this.bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         this.canvas = new Canvas(this.bitmap);
+        this.paint.setAntiAlias(true);
+        this.paint.setSubpixelText(true);
     }
     @SuppressLint("LongLogTag")
     static float getTextY(TextBaseline textBaseline, float y, Paint paint) {
