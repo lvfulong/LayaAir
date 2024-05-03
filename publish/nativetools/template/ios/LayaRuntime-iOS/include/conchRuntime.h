@@ -58,7 +58,7 @@ class JCTouchFilter;
     //-----------------------------------------------------------------
     
     JCMp3Player*                m_pMp3Player;           //MP3播放器
-
+    
     LayaReachability*           m_pNetworkListener;     //网络监听
     
     //-----------------------------------------------------------------
@@ -85,8 +85,6 @@ class JCTouchFilter;
     bool                        m_bStopEngine;
     
     NSRunLoop*                  m_pJSRunLoop;
-    
-    UIEditBoxWX*                m_UIEditBoxWX;
 }
 
 
@@ -119,4 +117,5 @@ class JCTouchFilter;
 -(void)onOrientationChanged:(CGSize)size;
 -(void)onResize:(CGSize)size;
 -(void)alert:(NSString*)sInfo;
++(UIInterfaceOrientationMask)getOrientationMask;
 @end

@@ -63,11 +63,14 @@ endif()
 # 设置可执行文件的输出目录
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-
-add_subdirectory(conch)
-add_subdirectory(template)
 add_subdirectory(modules/utils)
 add_subdirectory(modules/binder)
+add_subdirectory(conch)
+
+if(NOT IS_BUILDING_STATIC_LIBS)
+   add_subdirectory(template)
+endif()
+
 
 if(MSVC OR LINUX)
 	add_subdirectory(modules/app)
