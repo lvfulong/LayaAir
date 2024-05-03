@@ -4,7 +4,6 @@
 #import <utils/JCColor.h>
 #import "JCScriptRuntime.h"
 #import "CToObjectC.h"
-#import "conchConfig.h"
 #import "LayaToast.h"
 #import "Notification/LayaNotifyManager.h"
 #import <downloadCache/JCIosFileSource.h>

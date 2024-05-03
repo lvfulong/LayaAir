@@ -8,7 +8,6 @@
  */
 #import <UIKit/UIKit.h>
 #import <GLKit/GLKit.h>
-#import "conchConfig.h"
 #import <functional>
 
 typedef char* (*HandleFileData)(const char* data, int& len);

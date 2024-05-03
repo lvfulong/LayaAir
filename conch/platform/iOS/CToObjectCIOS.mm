@@ -16,7 +16,6 @@
 #import <utils/JCCommonMethod.h>
 #import <utils/Log.h>
 #import <mach/mach.h>
-#import "conchConfig.h"
 #import "LayaToast.h"
 #import "Notification/LayaNotifyManager.h"
 #import "conchRuntime.h"
