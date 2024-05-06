@@ -48,6 +48,8 @@ static bool registerFontIOS(const std::string &family, CGDataProviderRef fontDat
         return false;
     }
 
+    //LOGE("registerFont family: %s strRealFontName: %s", family.c_str(), strRealFontName.c_str());
+
     CFErrorRef error = nullptr;
     auto it = FontManager::getInstance()->m_fontName2NativeInfoImpl.find(family);
     if (it != FontManager::getInstance()->m_fontName2NativeInfoImpl.end())
@@ -64,9 +66,8 @@ static bool registerFontIOS(const std::string &family, CGDataProviderRef fontDat
     {
         CFStringRef errorDescription = CFErrorCopyDescription(error);
         //kCTFontManagerErrorDuplicatedName = 305
-        //An error that indicates the file can't register because of a duplicate font name.
         if (CFErrorGetCode(error) == 305) {
-            return true;
+            LOGE("registerFont error: %s", "the file can't register because of a duplicate font name");
         }
         else {
             LOGE("registerFont error: %s", errorDescription);
@@ -82,7 +83,7 @@ static bool registerFontIOS(const std::string &family, CGDataProviderRef fontDat
     NativeInfoImpl* info = new NativeInfoImpl;
     info->m_registerfont = registerfont;
     FontManager::getInstance()->m_fontName2NativeInfoImpl.insert(std::make_pair(family, info));
-    LOGE("registerFont succeed: %s", family.c_str());
+    LOGI("registerFont succeed: %s", family.c_str());
     return true;
 }
 #endif

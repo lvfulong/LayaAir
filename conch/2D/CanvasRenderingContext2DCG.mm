@@ -260,8 +260,17 @@ void CanvasRenderingContext2DCG::chooseFont(const std::string& strFontName)
     }
     else*/ if (isBold)
     {
-        m_impl->m_UIFont =
-        [UIFont fontWithName:[fontName stringByAppendingString:@"-Bold"] size:m_fontDescription.m_size];
+        auto pair = FontManager::getInstance()->getRealFontName(strFontName + "-Bold");
+        //real name is not xx-Bold is some like xx Bold
+        if (pair.first) {
+            NSString *fontName = [NSString stringWithUTF8String:pair.second.c_str()];
+            m_impl->m_UIFont =
+            [UIFont fontWithName:fontName size:m_fontDescription.m_size];
+        }
+        else {
+            m_impl->m_UIFont =
+            [UIFont fontWithName:[fontName stringByAppendingString:@"-Bold"] size:m_fontDescription.m_size];
+        }
     }
     else
     {
