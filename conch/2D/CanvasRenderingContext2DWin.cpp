@@ -5,7 +5,11 @@
 #include <regex>
 #include <utils/JCCrypto.h>
 #include <utils/Log.h>
+#include <gdiplusenums.h>
+#include <gdiplusgraphics.h>
 extern HWND g_hWnd;
+
+using namespace Gdiplus;
 
 namespace laya
 {
@@ -28,6 +32,8 @@ CanvasRenderingContext2DWin::CanvasRenderingContext2DWin(int width, int height)
     s_count++;
     m_gdiBitmap = new Gdiplus::Bitmap(m_width, m_height, PixelFormat32bppARGB);
     m_gdiGraphics = new Gdiplus::Graphics(m_gdiBitmap);
+    m_gdiGraphics->SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAliasGridFit);
+    m_gdiGraphics->SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
 
     m_bitmapData.m_nWidth = width;
     m_bitmapData.m_nHeight = height;
@@ -36,8 +42,8 @@ CanvasRenderingContext2DWin::CanvasRenderingContext2DWin(int width, int height)
     // matrix.Translate(0.0f, height);
     // matrix.Scale(1.0f, -1.0f);
     // m_gdiGraphics->SetTransform(&matrix);
-    m_stringFormat.SetAlignment(Gdiplus::StringAlignmentNear);       // 水平
-    m_stringFormat.SetLineAlignment(Gdiplus::StringAlignmentCenter); // 垂直
+    //m_stringFormat.SetAlignment(Gdiplus::StringAlignmentNear);       // 水平
+    m_stringFormat.SetLineAlignment(Gdiplus::StringAlignmentNear); // 垂直
     setDefault();
 }
 CanvasRenderingContext2DWin::~CanvasRenderingContext2DWin()
@@ -103,9 +109,21 @@ void CanvasRenderingContext2DWin::strokeText(const std::string &text, double x, 
     double outX;
     double outY;
     getTextPosition(text, x, y, outX, outY);
-    m_gdiGraphics->DrawString(pwszBuffer, bufferLen, m_font, Gdiplus::PointF(outX, outY), &m_stringFormat,
-                              &Gdiplus::SolidBrush(Gdiplus::SolidBrush(
-                                  Gdiplus::Color(m_strokeColorA, m_strokeColorR, m_strokeColorG, m_strokeColorB))));
+    //m_gdiGraphics->DrawString(pwszBuffer, bufferLen, m_font, Gdiplus::PointF(outX, outY), &m_stringFormat,
+    //                          &Gdiplus::SolidBrush(Gdiplus::SolidBrush(
+    //                              Gdiplus::Color(m_strokeColorA, m_strokeColorR, m_strokeColorG, m_strokeColorB))));
+
+    FontFamily fontFamily;
+    m_font->GetFamily(&fontFamily);
+    
+    int size = m_font->GetSize();
+
+    Gdiplus::GraphicsPath path;
+    path.AddString(pwszBuffer, -1, &fontFamily, Gdiplus::FontStyleRegular, size, PointF(outX, outY), &m_stringFormat);
+    Pen pen(Color(m_strokeColorR, m_strokeColorG, m_strokeColorB), 10); // 红色描边，宽度为3
+    //SolidBrush brush(Color(255, 255, 255, 255)); // 白色填充
+    m_gdiGraphics->DrawPath(&pen, &path); // 绘制描边
+    //graphics.FillPath(&brush, &path); // 填充内部
 }
 TextMetrics CanvasRenderingContext2DWin::measureTextUtf16(wchar_t *pwszBuffer, int bufferLen)
 {
@@ -144,7 +162,8 @@ void CanvasRenderingContext2DWin::clearRect(double x, double y, double width, do
     {
         return;
     }
-    m_gdiGraphics->Clear(Gdiplus::Color(1, 0, 0, 0));
+    
+    m_gdiGraphics->Clear(Gdiplus::Color(0, 0, 0, 0));
 }
 void CanvasRenderingContext2DWin::save()
 {
@@ -175,18 +194,51 @@ ImageData CanvasRenderingContext2DWin::getImageData(double x, double y, double w
         data.m_height = clampedH;
         data.m_data.resize(clampedW * clampedH * 4);
         unsigned char *glImageData = &data.m_data[0];
-        for (auto y = 0; y < clampedH; y++)
-        {
-            for (auto x = 0; x < clampedW; x++)
-            {
-                Gdiplus::Color color;
-                m_gdiBitmap->GetPixel(x, y, &color); // m_gdiBitmap->GetPixel(x, clampedH - y - 1, &color);
-                glImageData[(x + y * clampedW) * 4 + 0] = color.GetR();
-                glImageData[(x + y * clampedW) * 4 + 1] = color.GetG();
-                glImageData[(x + y * clampedW) * 4 + 2] = color.GetB();
-                glImageData[(x + y * clampedW) * 4 + 3] = color.GetA();
+
+        Gdiplus::Rect rect(0, 0, clampedW, clampedH);
+
+        Status status;
+        Gdiplus::BitmapData  lockedbmp;
+        status = m_gdiBitmap->LockBits(&rect, Gdiplus::ImageLockModeRead, PixelFormat32bppARGB,&lockedbmp);
+        if (status != Ok) {
+            //TODO
+        }
+
+        byte* pixels = static_cast<byte*>(lockedbmp.Scan0);
+        UINT rowBytes = lockedbmp.Stride; // 扫描线宽度，可能会包含填充字节
+
+        for (int y = 0; y < rect.Height; ++y) {
+            byte* row = pixels + (y * rowBytes);
+            for (int x = 0; x < rect.Width; ++x) {
+                // Pixels stored in BGRA order
+                BYTE* pixel = row + (x * 4);
+                float alpha = pixel[3] / 255.0;
+
+                glImageData[(x + y * clampedW) * 4 + 0]/*r*/ = pixel[2]/*r*/ * alpha;
+                glImageData[(x + y * clampedW) * 4 + 1]/*g*/ = pixel[1] * alpha;
+                glImageData[(x + y * clampedW) * 4 + 2]/*b*/ = pixel[0] * alpha;
+                glImageData[(x + y * clampedW) * 4 + 3] = pixel[3]; // a
             }
         }
+
+        //for (auto y = 0; y < clampedH; y++)
+        //{
+        //    for (auto x = 0; x < clampedW; x++)
+        //    {
+        //        Gdiplus::Color color;
+        //        m_gdiBitmap->GetPixel(x, y, &color); // m_gdiBitmap->GetPixel(x, clampedH - y - 1, &color);
+        //        BYTE a = color.GetA();
+        //        if (a < 255 && a>0) {
+        //            int a = 0;
+        //        }
+        //        glImageData[(x + y * clampedW) * 4 + 0] = color.GetA();
+        //        glImageData[(x + y * clampedW) * 4 + 1] = color.GetA();
+        //        glImageData[(x + y * clampedW) * 4 + 2] = color.GetA();
+        //        glImageData[(x + y * clampedW) * 4 + 3] = color.GetA();
+        //    }
+        //}
+        m_gdiBitmap->UnlockBits(&lockedbmp);
+
         return data;
     }
     else
@@ -293,15 +345,15 @@ void CanvasRenderingContext2DWin::getTextPosition(const std::string &text, doubl
     }
     else if (m_textBaseline == TextBaseline::Middle)
     {
-        outY = y + textMetrics.m_height / 2.0f;
+        outY = y - textMetrics.m_height / 2.0f;
     }
     else if (m_textBaseline == TextBaseline::Bottom)
     {
-        outY = y + textMetrics.m_height;
+        //TODO outY = y + textMetrics.m_height;
     }
     else if (m_textBaseline == TextBaseline::Alphabetic)
     {
-        outY = y + textMetrics.m_ascender;
+        //TODO outY = y + textMetrics.m_ascender;
     }
 }
 void CanvasRenderingContext2DWin::setFont(const char *font)
@@ -333,7 +385,7 @@ void CanvasRenderingContext2DWin::setFont(const char *font)
     {
         delete m_font;
     }
-    m_font = new Gdiplus::Font(&fontfamily, m_fontDescription.m_size, m_fontStyle, Gdiplus::UnitPoint);
+    m_font = new Gdiplus::Font(&fontfamily, m_fontDescription.m_size, m_fontStyle, Gdiplus::UnitPixel);
     // LOGI("setFont %s %f", font, m_fontDescription.m_size);
 }
 bool CanvasRenderingContext2DWin::registerFontFromPath(const std::string &fontName, const std::string &path)
