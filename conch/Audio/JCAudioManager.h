@@ -10,7 +10,7 @@
 #define __JCAudioManager_H__
 
 //包含头文件
-#ifdef ANDROID
+#ifdef __ANDROID__
 	#include "android/JCAudioMp3Media.h"
 #elif WIN32
 	#include "windows/JCAudioMp3Player.h"	

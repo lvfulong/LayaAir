@@ -4,7 +4,6 @@
 #import <utils/JCColor.h>
 #import "JCScriptRuntime.h"
 #import "CToObjectC.h"
-#import "conchConfig.h"
 #import "LayaToast.h"
 #import "Notification/LayaNotifyManager.h"
 #import <downloadCache/JCIosFileSource.h>
@@ -14,7 +13,6 @@
 #import "LayaEditBox.h"
 #import "TouchFilter.h"
 #import <binder/JSInterface.h>
-#import "LayaWebView.h"
 //#import <Bindings/JSLayaNative.h>
 #import "LayaAlert.h"
 #import "CToObjectCIOS.h"
@@ -82,7 +80,6 @@ static conchRuntime* g_pIOSConchRuntime = nil;
         m_pEditBox = NULL;
         m_pEditBoxDelegate = NULL;
         m_pMp3Player = NULL;
-        m_pWebView = NULL;
         m_pNetworkListener = NULL;
         m_fRetinaValue = 1;
         m_nsRootResourcePath = nil;
@@ -169,8 +166,6 @@ static conchRuntime* g_pIOSConchRuntime = nil;
     [m_pEditBoxDelegate setRetinaValue:m_fRetinaValue];
     m_pEditBox = [[LayaEditBox alloc]initWithParentView:m_pView EditBoxDelegate:m_pEditBoxDelegate ScreenRatio:m_fRetinaValue ];
     m_pMp3Player = [[JCMp3Player alloc] init];
-    
-    [self initExternalWebview];
 }
 
 void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruption_state)
@@ -230,12 +225,6 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
 {
     laya::JCConch::s_pConch->update();
 }
-
--(void) initExternalWebview
-{
-    m_pWebView = [[LayaWebView alloc] init];
-    [m_pView addSubview:m_pWebView->m_pWebView];
-}
 -(void) initNetworkListener
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStateChange) name:LayakReachabilityChangedNotification object:nil];
@@ -257,8 +246,6 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
 //------------------------------------------------------------------------------
 -(void)destroy
 {
-    m_pWebView = nil;
-
     if (m_pTouchFilter != nullptr)
     {
         delete m_pTouchFilter;

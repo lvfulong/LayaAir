@@ -112,7 +112,7 @@ namespace laya {
             //一次处理一个
             if (pss->pSendTask.size() > 0) {
                 std::string& t1 = pss->pSendTask.front();
-                printf("send:%s\n", t1.substr(0,200).c_str());
+                //printf("send:%s\n", t1.substr(0,200).c_str());
                 sendMsgLen = t1.length();
                 if (pss->pSendBuff) {
                     delete[] pss->pSendBuff;

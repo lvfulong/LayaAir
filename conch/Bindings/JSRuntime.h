@@ -105,18 +105,6 @@ namespace laya
 
         static void printCorpseImages();
 
-        static void setExternalLink(const char* sUrl);
-
-        static void setExternalLinkEx( const char* sUrl,int x,int y,int w,int h,bool bCloseWebview );
-
-        static void closeExternalLink();
-
-        static void callWebviewJS( const char* sFunctionName,const char* sJsonParam,const char* sCallbackFunction );
-
-        static void hideWebview();
-
-        static void showWebView();
-		
 	    static void exit();
 
         static JsValue createArrayBufferRef(JSValueAsParam pArrayBuffer, int nType, bool bSyncToRender, int nRefType);

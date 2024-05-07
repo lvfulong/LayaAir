@@ -13,9 +13,10 @@ class TextMetrics
 
     TextMetrics(TextMetrics &&) = default;
     TextMetrics &operator=(TextMetrics &&) = default;
-    int m_width{0};
-    int m_height{0};
-    int m_ascender{0};
+    float m_width{0};
+    float m_height{0};
+    float m_ascender{0};
+    float m_descender{0};
 };
 } // namespace laya
 #endif

@@ -89,7 +89,7 @@ class CanvasRenderingContext2D
     const char *getLineJoin();
 
   protected:
-    void getTextPosition(const std::string &text, double x, double y, double &outX, double &outY);
+    virtual void getTextPosition(const std::string &text, double x, double y, double &outX, double &outY);
     void setDefault();
   protected:
     int m_width;

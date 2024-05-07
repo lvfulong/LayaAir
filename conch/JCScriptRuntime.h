@@ -16,7 +16,7 @@
 #include <utils/JCCommonMethod.h>
 #include <vector>
 
-#ifdef ANDROID
+#ifdef __ANDROID__
     #include <Bindings/JSAndroidEditBox.h>   
 #elif __APPLE__
     #include <Bindings/JSIOSEditBox.h>
@@ -155,7 +155,7 @@ namespace laya
         */
         //int                                 m_nThreadState;                 
         JCArrayBufferManager*               m_pArrayBufferManager;          ///<ArrayBufferManager
-#ifdef ANDROID
+#ifdef __ANDROID__
         JSAndroidEditBox*                   m_pCurEditBox;
 #elif __APPLE__
         JSIOSEditBox *                      m_pCurEditBox;

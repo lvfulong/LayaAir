@@ -98,8 +98,6 @@ public class ConchJNI
 	
 	public static native void exportStaticMethodToC( String packcls);
 	
-	public static native void closeExternalWebView();
-	
 	public static native void editBoxOnInput( String p_sEvent );
 	
 	public static native void alertCallback();

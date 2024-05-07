@@ -11,10 +11,10 @@
 #include <utils/Log.h>
 #include "JCWaveParser.h"
 #include "JCOggParser.h"
-#ifdef ANDROID
+#ifdef __ANDROID__
 #include "AL/alext.h"
 #endif
-#if !defined(LINUX)
+#if !defined(__LINUX__)
 #include "JCMp3Parser.h"
 #endif
 #include "../JCFileResManager.h"
@@ -382,7 +382,7 @@ JCWaveInfo* JCAudioWavPlayer::AddWaveInfo( const std::string& p_sUrl,unsigned ch
 //------------------------------------------------------------------------------
 JCWaveInfo* JCAudioWavPlayer::AddWaveInfoMp3(const std::string& p_sUrl, const char* p_sFilePath, void* p_pExternalMark)
 { 
-    #if defined(LINUX)
+    #if defined(__LINUX__)
     return nullptr;
     #else
 	JCWaveInfo* pInfo = FindWaveInfo( p_sUrl );
@@ -459,7 +459,7 @@ void JCAudioWavPlayer::pause()
     {
         alSourcePause(m_pOpenALSource[i]->m_nOpenALSouceID);
     }
-    #ifdef ANDROID
+    #ifdef __ANDROID__
         alcDevicePauseSOFT(m_pDevice);
     #endif
 }
@@ -470,7 +470,7 @@ void JCAudioWavPlayer::resume()
     {
         alSourcePlay(m_pOpenALSource[i]->m_nOpenALSouceID);
     }
-    #ifdef ANDROID
+    #ifdef __ANDROID__
         alcDeviceResumeSOFT(m_pDevice);
     #endif
 }

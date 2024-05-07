@@ -8,7 +8,6 @@
  */
 #import <UIKit/UIKit.h>
 #import <GLKit/GLKit.h>
-#import "conchConfig.h"
 #import <functional>
 
 typedef char* (*HandleFileData)(const char* data, int& len);
@@ -16,7 +15,6 @@ typedef char* (*HandleFileData)(const char* data, int& len);
 class JCTouchFilter;
 @class LayaReachability;
 @class JCMp3Player;
-@class LayaWebView;
 @class LayaEditBox;
 @class LayaEditBoxDelegate;
 @class LayaAlert;
@@ -60,11 +58,6 @@ class JCTouchFilter;
     
     JCMp3Player*                m_pMp3Player;           //MP3播放器
     
-    //界面相关的
-    //-----------------------------------------------------------------
-    
-    LayaWebView*                m_pWebView;             //webView
-    
     LayaReachability*           m_pNetworkListener;     //网络监听
     
     //-----------------------------------------------------------------
@@ -91,8 +84,6 @@ class JCTouchFilter;
     bool                        m_bStopEngine;
     
     NSRunLoop*                  m_pJSRunLoop;
-    
-    UIEditBoxWX*                m_UIEditBoxWX;
 }
 
 
@@ -125,4 +116,5 @@ class JCTouchFilter;
 -(void)onOrientationChanged:(CGSize)size;
 -(void)onResize:(CGSize)size;
 -(void)alert:(NSString*)sInfo;
++(UIInterfaceOrientationMask)getOrientationMask;
 @end

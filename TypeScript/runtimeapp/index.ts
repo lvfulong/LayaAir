@@ -118,17 +118,23 @@ import asyncs = require('async');
     }
 }*/
 //initFreeType();
-function registerFont()
+function registerFont(fontName, fileName)
 {
-    var assetFontData = conch.readFileFromAsset('font/layabox.ttf', 'raw');
+    var assetFontData = conch.readFileFromAsset(fileName, 'raw');
     if (assetFontData) {
-        if (conch.registerFont("layabox", assetFontData)) {
-            log('字体注册成功');
-        }
-        else {
-            log('字体注册失败');
-        }
+        conch.registerFont(fontName, assetFontData);
     }
+}
+function registerAllFonts()
+{
+    var sOS = conchConfig.getOS();
+    if(sOS == "Conch-ios") {
+        registerFont('Palatino Linotype-Bold', 'font/Palatino Linotype Bold.ttf');
+    }
+    registerFont('Palatino Linotype', 'font/Palatino Linotype.ttf');
+    registerFont('SimHei', 'font/SimHei.ttf');
+    registerFont('MicrosoftYaHei', 'font/Microsoft Yahei.ttf');
+    registerFont('SimSun', 'font/SimSun.ttc');
 }
 function setOrientation(s: string) {
     var nameToVal = {
@@ -225,8 +231,7 @@ async function loadApp(url: string) {
     cache = window.appcache = new AppCache(urlpath);//这时候会加载资源索引，因此如果更新了索引，必须重新创建。
     //为了让启动html也使用缓存，需要在loadUrl刚开始的时候就创建appcache对象。
     document.loadCookie();
-    //await initFreeType();   //TODO 如果下载这里相当于会卡住。
-    //registerFont()
+    registerAllFonts();
     var isDccOk=true;
     async function updateDcc() {
         cache.setResourceID('appurl', urlpath);

@@ -20,7 +20,7 @@ root_dir=${current_dir}/..
 echo ${root_dir}
 
 
-conch_dir=${root_dir}
+conch_dir=${root_dir}/conch
 publish_dir=${root_dir}/publish
 third_party_dir=${root_dir}/third_party
 
@@ -41,7 +41,8 @@ function build_ios {
 		-DIOS=1 \
 		-DCMAKE_TOOLCHAIN_FILE=${root_dir}/cmake/clang/iOS.cmake \
 		-DCMAKE_SYSTEM_NAME=iOS \
-		${conch_dir}
+        -DIS_BUILDING_STATIC_LIBS=1 \
+		${root_dir}
 
 
     #cmake --build .
@@ -92,7 +93,8 @@ function build_android {
 		-DANDROID_PLATFORM=${CONCH_ANDROID_MINI_SDK_VERSION} \
 		-DANDROID_ARM_NEON=TRUE \
 		-DANDROID_TOOLCHAIN=clang \
-		${conch_dir}
+        -DIS_BUILDING_STATIC_LIBS=1 \
+		${root_dir}
 
 		cmake --build .
 		cmake --install .
@@ -108,7 +110,7 @@ function archive_ios {
     rm -rf ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS
     mkdir ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS
     mkdir ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS/libs
-    
+    cd build
     rm -rf armv64
     rm -rf x86_64
     mkdir armv64
@@ -197,11 +199,19 @@ function archive_ios {
 
     #lipo -extract arm64 ${third_party_dir}/physx/lib/ios/libPhysXVehicle2_static.a -o armv64/libPhysXVehicle2_static.a
     #lipo -extract x86_64 ${third_party_dir}/physx/lib/ios/libPhysXVehicle2_static.a -o x86_64/libPhysXVehicle2_static.a
-
+    
+    #TODO cmake install
+    
     local build_type=$1
-    cp build/ios-${build_type}-arm64/libconch.a armv64
-    cp build/ios-${build_type}-x86_64/libconch.a x86_64
+    cp ios-${build_type}-arm64/conch/libconch.a armv64
+    cp ios-${build_type}-x86_64/conch/libconch.a x86_64
 
+    cp ios-${build_type}-arm64/modules/binder/libbinder.a armv64
+    cp ios-${build_type}-x86_64/modules/binder/libbinder.a x86_64
+    
+    cp ios-${build_type}-arm64/modules/utils/libutils.a armv64
+    cp ios-${build_type}-x86_64/modules/utils/libutils.a x86_64
+    
     cd armv64
     libtool -static *.a -o libconch.a
     cd ..
@@ -213,6 +223,7 @@ function archive_ios {
     lipo -create armv64/libconch.a x86_64/libconch.a -output ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS/libs/libconch.a
 
     strip -S -X ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS/libs/libconch.a
+    
     rm -rf armv64
     rm -rf x86_64
 
@@ -220,8 +231,8 @@ function archive_ios {
 
     rm -rf ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS/include
     mkdir ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS/include
-    cp  ${conch_dir}/platform/iOS/conchRuntime.h ${publish_dir}/template/ios/LayaRuntime-iOS/include
-    mkdir ${publish_dir}/template/ios/LayaRuntime-iOS/include/Reachability
+    cp  ${conch_dir}/platform/iOS/conchRuntime.h ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS/include
+    mkdir ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS/include/Reachability
     cp  ${conch_dir}/platform/iOS/Reachability/Reachability.h ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS/include/Reachability
     #—————————————————————resource————————————————————————
     #rm -rf ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS/resource

@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <android/native_window_jni.h>
-#ifdef ANDROID
+#ifdef __ANDROID__
     #include <sys/syscall.h>
     #define gettidv1() syscall(__NR_gettid)
     #define gettidv2() syscall(SYS_gettid)
@@ -75,7 +75,6 @@ extern "C"
     JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_OnAppResume(JNIEnv * env, jobject obj );
     JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onDrawFrame(JNIEnv * env, jobject obj );
     JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_exportStaticMethodToC(JNIEnv * env, jobject obj, jstring packcls);
-	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_closeExternalWebView(JNIEnv * env, jobject obj );
     JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_alertCallback(JNIEnv * env, jobject obj );
     JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onSensorChanged(JNIEnv * env, jobject obj,float arc );
     JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_reloadJS(JNIEnv * env, jobject obj );
@@ -197,7 +196,6 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_InitDLib(JNIEnv * env,
 	env->ReleaseStringUTFChars(p_strAPKExpansionMainPath, pAPKExpansionMain);
 	env->ReleaseStringUTFChars(p_strAPKExpansionPatchPath, pAPKExpansionPatch);
 	env->ReleaseStringUTFChars(p_strConfigJS, pConfigJS);
-	laya::g_kSystemConfig.loadConfigIniFile();
 	laya::JCConch::s_pConch.reset(new laya::JCConch());
 }
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_SetLocalStoragePath(JNIEnv * env, jobject obj,jstring p_strLocalStorage )
@@ -424,10 +422,6 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_OnSurfaceDestroy(JNIEn
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onDrawFrame(JNIEnv * env, jobject obj )
 {
     laya::JCConch::s_pConch->update();
-}
-
-JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_closeExternalWebView(JNIEnv * env, jobject obj )
-{
 }
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_alertCallback(JNIEnv * env, jobject obj )
 {

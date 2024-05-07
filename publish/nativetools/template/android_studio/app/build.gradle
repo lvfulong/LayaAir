@@ -58,7 +58,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     android {
-        ndkVersion "22.1.7171670"//r22b
+        ndkVersion "21.0.6113669"//ndk r21e
     }
     namespace 'com.layabox.conch'
     lint {

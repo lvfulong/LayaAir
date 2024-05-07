@@ -21,11 +21,11 @@
 #include "LayaAir/2D/RenderState2D.h"
 #ifdef __APPLE__
 #include "OpenGLBackendiOS.h"
-#elif LINUX
+#elif __LINUX__
 #include "OpenGLBackendLinuxEGLX11.h"
-#elif ANDROID
+#elif __ANDROID__
 #include "OpenGLBackendAndroidEGL.h"
-#elif _WIN32
+#elif WIN32
 #include "OpenGLBackendWinEGL.h"
 #endif
 #include "render/LayaGL.h"
@@ -360,11 +360,11 @@ void JCConchRender::requestCaptureScreen()
             if (m_GfxBackend == nullptr) {
  #ifdef __APPLE__
                 m_GfxBackend = new OpenGLBackendiOS();
-#elif LINUX
+#elif __LINUX__
                 m_GfxBackend = new OpenGLBackendLinuxEGLX11();
-#elif ANDROID
+#elif __ANDROID__
                 m_GfxBackend = new OpenGLBackendAndroidEGL();
-#elif _WIN32
+#elif WIN32
                 m_GfxBackend = new OpenGLBackendWinEGL();
 #endif
                 m_GfxBackend->create(options);

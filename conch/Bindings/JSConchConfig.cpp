@@ -3,7 +3,7 @@
 #include "resource/JCFileResManager.h"
 #include "../../JCScriptRuntime.h"
 #include "JCConch.h"
-#ifdef ANDROID
+#ifdef __ANDROID__
     #include "CToJavaBridge.h"
 #elif WIN32
     #include <Windows.h>
@@ -56,7 +56,7 @@ namespace laya
     }
     float JSConchConfig::getTotalMem()
     {
-#ifdef ANDROID
+#ifdef __ANDROID__
         CToJavaBridge::JavaRet kRet;
         if (CToJavaBridge::GetInstance()->callMethod("layaair.game.utility.ProcessInfo", "getTotalMem", kRet, CToJavaBridge::JavaRet::RT_Float))
         {
@@ -75,7 +75,7 @@ namespace laya
     }
     int JSConchConfig::getUsedMem()
     {
-#ifdef ANDROID
+#ifdef __ANDROID__
         CToJavaBridge::JavaRet kRet;
         if (CToJavaBridge::GetInstance()->callMethod("layaair.game.utility.ProcessInfo", "getUsedMem", kRet, CToJavaBridge::JavaRet::RT_Float))
         {
@@ -91,7 +91,7 @@ namespace laya
     }
     int JSConchConfig::getAvalidMem()
     {
-#ifdef ANDROID
+#ifdef __ANDROID__
         CToJavaBridge::JavaRet kRet;
         if (CToJavaBridge::GetInstance()->callMethod("layaair.game.utility.ProcessInfo", "getAvalidMem", kRet, CToJavaBridge::JavaRet::RT_Float))
         {
@@ -110,7 +110,7 @@ namespace laya
     }
     float JSConchConfig::getScreenInch()
     {
-#ifdef ANDROID
+#ifdef __ANDROID__
         CToJavaBridge::JavaRet kRet;
         if (CToJavaBridge::GetInstance()->callMethod("layaair.game.utility.ProcessInfo", "getScreenInch", kRet, CToJavaBridge::JavaRet::RT_Float))
         {
@@ -126,7 +126,7 @@ namespace laya
     }
     void JSConchConfig::setTouchMoveRange(float p_fMM)
     {
-#ifdef ANDROID
+#ifdef __ANDROID__
         CToJavaBridge::JavaRet kRet;
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setTouchMoveRange", p_fMM,kRet);
 #elif WIN32
@@ -156,7 +156,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         }
         int w = g_nInnerWidth > g_nInnerHeight ? g_nInnerWidth : g_nInnerHeight;
         int h = g_nInnerWidth > g_nInnerHeight ? g_nInnerHeight : g_nInnerWidth;
-#ifdef ANDROID
+#ifdef __ANDROID__
         if (vbLandscapes[p_nOrientation]) {
             g_nInnerWidth = w;
             g_nInnerHeight = h;
@@ -167,7 +167,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         }
 #endif
         g_bGLCanvasSizeChanged = true;
-#ifdef ANDROID
+#ifdef __ANDROID__
         CToJavaBridge::JavaRet kRet;
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setScreenOrientation", p_nOrientation, kRet);
 #elif WIN32
@@ -188,7 +188,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 
     int JSConchConfig::getNetworkType()
     {
-#ifdef ANDROID
+#ifdef __ANDROID__
         CToJavaBridge::JavaRet kRet;
         if (CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "getContextedType", kRet, CToJavaBridge::JavaRet::RT_Int))
         {
@@ -205,7 +205,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 
 	const char* JSConchConfig::getIPAddress()
 	{
-#ifdef ANDROID
+#ifdef __ANDROID__
 		CToJavaBridge::JavaRet kRet;
 		if (CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "getIPAddress", kRet))
 		{
@@ -297,11 +297,11 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
     {
 #ifdef __APPLE__
         return "Conch-ios";
-#elif ANDROID
+#elif __ANDROID__
         return "Conch-android";
 #elif WIN32
         return "Conch-window";
-#elif LINUX
+#elif __LINUX__
         return "Conch-linux";
 #endif
     }
@@ -309,11 +309,11 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
     {
 #ifdef __APPLE__
         return "Conch-ios";
-#elif ANDROID
+#elif __ANDROID__
         return "Conch-android";
 #elif WIN32
         return "Conch-window";
-#elif LINUX
+#elif __LINUX__
         return "Conch-linux";
 #endif
     }
@@ -322,7 +322,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 #ifdef __APPLE__
         m_sGUID = CToObjectCGetGUID();
         return m_sGUID.c_str();
-#elif ANDROID
+#elif __ANDROID__
         CToJavaBridge::JavaRet kRet;
         if (CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "getWifiMac", kRet))
         {
@@ -332,7 +332,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         return m_sGUID.c_str();
 #elif WIN32
         return "window";
-#elif LINUX
+#elif __LINUX__
         return "linux";
 #endif
     }
@@ -340,11 +340,11 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
     {
 #ifdef __APPLE__
         return "ios-conch6-release-3.1.0-beta.1";
-#elif ANDROID
+#elif __ANDROID__
         return "android-conch6-release-3.1.0-beta.1";
 #elif WIN32
         return "window-conch6-release-3.1.0-beta.1";
-#elif LINUX
+#elif __LINUX__
         return "linux-conch6-release-3.1.0-beta.1";
 #endif
     }
@@ -354,7 +354,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 #ifdef __APPLE__
 		m_sModel = CToObjectCGetModel();
 		return m_sModel.c_str();
-#elif ANDROID
+#elif __ANDROID__
 		CToJavaBridge::JavaRet kRet;
 		if (CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "getModel", kRet))
 		{
@@ -364,7 +364,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 		return "";
 #elif WIN32
 		return "";
-#elif LINUX
+#elif __LINUX__
         return "";
 #endif
 	}
@@ -374,7 +374,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 #ifdef __APPLE__
 		m_sCountryCode = CToObjectCGetCountryCode();
 		return m_sCountryCode.c_str();
-#elif ANDROID
+#elif __ANDROID__
 		CToJavaBridge::JavaRet kRet;
 		if (CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "getCountryCode", kRet))
 		{
@@ -384,7 +384,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 		return "";
 #elif WIN32
 		return "";
-#elif LINUX
+#elif __LINUX__
         return "";
 #endif
 	}
@@ -395,7 +395,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 #ifdef __APPLE__
         m_sCountryCode = CToObjectCGetTelCountryCode();
 		return m_sCountryCode.c_str();
-#elif ANDROID
+#elif __ANDROID__
         CToJavaBridge::JavaRet kRet;
         if (CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "getTelCountryCode", kRet))
         {
@@ -405,7 +405,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         return "";
 #elif WIN32
         return "";
-#elif LINUX
+#elif __LINUX__
         return "";
 #endif
     }
@@ -415,7 +415,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 #ifdef __APPLE__
 		m_sLanguage = CToObjectCGetLanguage();
 		return m_sLanguage.c_str();
-#elif ANDROID
+#elif __ANDROID__
 		CToJavaBridge::JavaRet kRet;
 		if (CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "getLanguage", kRet))
 		{
@@ -425,14 +425,14 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 		return "";
 #elif WIN32
 		return "";
-#elif LINUX
+#elif __LINUX__
         return "";
 #endif
 	}
 	void JSConchConfig::setLanguage(const char* pStrLanguage)
 	{
 #ifdef WIN32
-#elif ANDROID
+#elif __ANDROID__
 		std::string strBuffer = pStrLanguage;
 		CToJavaBridge::JavaRet kRet;
 		CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setLanguage", strBuffer.c_str(), kRet);
@@ -445,7 +445,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 #ifdef __APPLE__
         m_sAppVersion = CToObjectCGetAppVersion();
         return m_sAppVersion.c_str();
-#elif ANDROID
+#elif __ANDROID__
         CToJavaBridge::JavaRet kRet;
         if (CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "getAppVersion", kRet))
         {
@@ -455,7 +455,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         return "";
 #elif WIN32
         return "3.0";
-#elif LINUX
+#elif __LINUX__
         return "3.0";
 #endif
     }
@@ -464,7 +464,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 #ifdef __APPLE__
         m_sAppLocalVersion = CToObjectCGetAppLocalVersion();
         return m_sAppLocalVersion.c_str();
-#elif ANDROID
+#elif __ANDROID__
         CToJavaBridge::JavaRet kRet;
         if (CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "getAppLocalVersion", kRet))
         {
@@ -474,7 +474,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         return "";
 #elif WIN32
         return "3.0";
-#elif LINUX
+#elif __LINUX__
         return "3.0";
 #endif
     }
@@ -492,7 +492,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 #ifdef __APPLE__
         m_sDeviceInfo = CToObjectCGetDeviceInfo();
         return m_sDeviceInfo.c_str();
-#elif ANDROID
+#elif __ANDROID__
         CToJavaBridge::JavaRet kRet;
         if (CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "GetDeviceInfo", kRet))
         {
@@ -500,7 +500,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         }
         LOGI("getDeviceInfo::get_Value=%s", m_sDeviceInfo.c_str());
         return m_sDeviceInfo.c_str();
-#elif WIN32 || LINUX
+#elif WIN32 || __LINUX__
         return "{\"resolution\":\"1920*1080\",	\"guid\":\"xxxxxxxxx\",\"imei\":[\"imeixxx\"],\"imsi\":[\"imsixxx\"],\"os\":\"windows\",\"osversion\":\"windows7 64\",\"phonemodel\":\"Wintel\"	}";
 #endif
     }
@@ -675,7 +675,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
     {
 #ifdef __APPLE__
         return CToObjectCGetMemoryUsageInByte();
-#elif ANDROID
+#elif __ANDROID__
 		CToJavaBridge::JavaRet kRet;
 		if (CToJavaBridge::GetInstance()->callMethod("layaair.game.utility.ProcessInfo", "getMemoryUsageInByte", kRet, CToJavaBridge::JavaRet::RT_Float))
 		{
@@ -684,7 +684,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 		return 0;
 #elif WIN32
         return 0;
-#elif LINUX
+#elif __LINUX__
         return 0;
 #endif
     }

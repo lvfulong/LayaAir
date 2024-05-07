@@ -32,13 +32,13 @@
 #include "JSTextDecoder.h"
 
 #include "JSCanvasRenderingContext2D.h"
-#ifdef ANDROID
+#ifdef __ANDROID__
     #include "JSAndroidEditBox.h"
 	#include "CToJavaBridge.h"
 #elif WIN32
 	#include <Windows.h>
     #include "JSWindowEditBox.h"
-#elif LINUX
+#elif __LINUX__
     #include "JSLinuxEditBox.h"
 #elif __APPLE__
     #include "JSIOSEditBox.h"
@@ -58,7 +58,7 @@
 #include "Video/JSVideo.h"
 #include <LayaGL/JCLayaGLDispatch.h>
 #include "Bullet/LayaBulletExport.h"
-#if !defined(LINUX) && !defined(WIN32)
+#if !defined(__LINUX__) && !defined(WIN32)
 #include "PhysX/LayaPhysXExport.h"
 #endif
 #include "JSArrayBufferRef.h"
@@ -86,11 +86,11 @@ extern int g_nInnerHeight ;
 extern bool g_bGLCanvasSizeChanged;
 #ifdef WIN32
 	int g_bEnableTouch = false;
-#elif ANDROID
+#elif __ANDROID__
 	int g_bEnableTouch = true;
 #elif __APPLE__
 	int g_bEnableTouch = true;
-#elif LINUX
+#elif __LINUX__
 	int g_bEnableTouch = false;
 #endif
  std::string g_sExePath = "";
@@ -237,7 +237,7 @@ namespace laya
 	void copy(const char* data)
 	{
 #ifdef WIN32
-#elif ANDROID
+#elif __ANDROID__
 		std::string strBuffer = data;
 		CToJavaBridge::JavaRet kRet;
 		CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "copy", strBuffer.c_str(), kRet);
@@ -269,7 +269,7 @@ namespace laya
         ucStr = NULL;
         std::wstring wsBuffer = (wchar_t*)utf8_unicode(p_sBuffer).c_str();
         MessageBoxW(NULL, wsBuffer.c_str(), L"alert", MB_OK);
-#elif ANDROID
+#elif __ANDROID__
         std::string strBuffer = p_sBuffer;
         CToJavaBridge::JavaRet kRet;
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "alert", strBuffer.c_str(), kRet);
@@ -296,11 +296,11 @@ namespace laya
     {
 #ifdef WIN32
         return 1.0;
-#elif ANDROID
+#elif __ANDROID__
         return 1.0;
 #elif __APPLE__
 		return 1.0;// CToObjectCGetDevicePixelRatio();
-#elif LINUX
+#elif __LINUX__
         return 1.0;
 #endif
     }
@@ -336,7 +336,7 @@ namespace laya
 	void open(const char* p_pszUrl)
 	{
 #ifdef WIN32
-#elif ANDROID
+#elif __ANDROID__
 		std::string strBuffer = p_pszUrl;
 		CToJavaBridge::JavaRet kRet;
 		CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "open", strBuffer.c_str(), kRet);
@@ -500,9 +500,9 @@ namespace laya
 #ifdef WIN32
 
         JSWindowEditBox::exportJS(context);
-#elif LINUX
+#elif __LINUX__
         JSLinuxEditBox::exportJS(context);
-#elif ANDROID
+#elif __ANDROID__
         JSAndroidEditBox::exportJS(context);
 #elif __APPLE__
 
@@ -607,7 +607,7 @@ namespace laya
         context.function("atob", &atob);
         context.function("_createImageBitmap", &createImageBitmap);
         JSLayaConchBullet::exportJS(context);
- #if !defined(LINUX) && !defined(WIN32)
+ #if !defined(__LINUX__) && !defined(WIN32)
         JSLayaConchPhysX::exportJS(context);
 #endif
 	}

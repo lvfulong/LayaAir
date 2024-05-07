@@ -145,7 +145,6 @@ void JSCanvasRenderingContext2D::exportJS(Context &context)
     class_<TextMetrics> class_binding_text_metrics;
     class_binding_text_metrics.constructor<>();
     class_binding_text_metrics.property_field("width", &TextMetrics::m_width);
-    class_binding_text_metrics.property_field("height", &TextMetrics::m_height);
     context.class_("TextMetrics", class_binding_text_metrics);
 
     class_<JSCanvasRenderingContext2D> class_binding;

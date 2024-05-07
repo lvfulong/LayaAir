@@ -69,18 +69,18 @@ namespace laya
         {
             JCConch::s_pScriptRuntime->m_pJSTouchEvtFunction.call<void>(getCurrentContext().global(), e.nTouchType, e.id, e.type, e.posX, e.posY);
         }
-        //���
+        //mouse
         else if (e.nType >= E_ONMOUSEDOWN && e.nType <= E_ONRIGHTMOUSEUP)
         {
             JCConch::s_pScriptRuntime->m_pJSMouseEvtFunction.call<void>(getCurrentContext().global(), e.nTouchType, e.type, e.posX, e.posY, e.nWheel);
         }
-        //����
+        //keyboard
         else if (e.nType >= E_ONKEYDOWN && e.nType <= E_ONKEYUP)
         {
-            int bAlt = e.bAlt ? 1 : 0;
+            int bAlt = e.bAlt ? 4 : 0;
             int bShift = e.bShift ? 2 : 0;
-            int bCtrl = e.bCtrl ? 4 : 0;
-            JCConch::s_pScriptRuntime->m_pJSKeyEvtFunction.call<void>(getCurrentContext().global(), e.type, e.keyCode, e.keyChar, bAlt&bShift&bCtrl);
+            int bCtrl = e.bCtrl ? 1 : 0;
+            JCConch::s_pScriptRuntime->m_pJSKeyEvtFunction.call<void>(getCurrentContext().global(), e.type, e.keyCode, e.keyChar, bAlt|bShift|bCtrl);
         }
         else if (e.nType == E_JOYSTICK) 
         {

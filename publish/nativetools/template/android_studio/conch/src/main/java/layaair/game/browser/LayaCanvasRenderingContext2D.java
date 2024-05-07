@@ -57,6 +57,8 @@ public class LayaCanvasRenderingContext2D {
         this.height = height;
         this.bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         this.canvas = new Canvas(this.bitmap);
+        this.paint.setAntiAlias(true);
+        this.paint.setSubpixelText(true);
     }
     @SuppressLint("LongLogTag")
     static float getTextY(TextBaseline textBaseline, float y, Paint paint) {
@@ -83,7 +85,9 @@ public class LayaCanvasRenderingContext2D {
     static float[] measureText(LayaCanvasRenderingContext2D context, String text) {
         float width = context.paint.measureText(text);
         Paint.FontMetrics fontMetrics = context.paint.getFontMetrics();
-        float height = fontMetrics.bottom - fontMetrics.top;
+        //float height = fontMetrics.bottom - fontMetrics.top;
+        float height = fontMetrics.descent-fontMetrics.ascent;
+        //Log.d("measureText ", (fontMetrics.bottom - fontMetrics.top) + " " + (fontMetrics.descent-fontMetrics.ascent)  + " " + fontMetrics.leading);
         float[] metrics = { width, height, fontMetrics.ascent};
         return metrics;
     }
