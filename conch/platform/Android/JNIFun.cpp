@@ -196,7 +196,6 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_InitDLib(JNIEnv * env,
 	env->ReleaseStringUTFChars(p_strAPKExpansionMainPath, pAPKExpansionMain);
 	env->ReleaseStringUTFChars(p_strAPKExpansionPatchPath, pAPKExpansionPatch);
 	env->ReleaseStringUTFChars(p_strConfigJS, pConfigJS);
-	laya::g_kSystemConfig.loadConfigIniFile();
 	laya::JCConch::s_pConch.reset(new laya::JCConch());
 }
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_SetLocalStoragePath(JNIEnv * env, jobject obj,jstring p_strLocalStorage )
