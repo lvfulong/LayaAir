@@ -2225,7 +2225,7 @@ namespace laya
 		}
 		if (this->isMain)
 		{
-			if (g_kSystemConfig.m_bConchWebGL)
+			if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
 			{
 				g_nMainFrameBuffer = m_target->getGLFramebuffer();
 			}

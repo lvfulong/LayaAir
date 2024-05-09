@@ -101,9 +101,9 @@ namespace laya
         //m_pScriptThread = new JSMulThread();//m_pScriptThread = new JSSingleThread();
        
 #ifdef WEBGL_THREAD
-        LOGI("WebGL mode %s, WebGL thread on", g_kSystemConfig.m_bConchWebGL ? "on" : "off");
+        LOGI("WebGL mode %s, WebGL thread on", g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL ? "on" : "off");
 #else
-        LOGI("WebGL mode %s, WebGL thread off", g_kSystemConfig.m_bConchWebGL ? "on" : "off");
+        LOGI("WebGL mode %s, WebGL thread off", g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL ? "on" : "off");
 #endif
 
         s_pConchRender.reset(new JCConchRender(m_pFileResMgr));

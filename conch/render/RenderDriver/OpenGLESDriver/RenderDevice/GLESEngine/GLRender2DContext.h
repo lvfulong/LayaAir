@@ -19,7 +19,7 @@ namespace laya
 
 		void activeTexture(int textureID) override
 		{
-			if (laya::g_kSystemConfig.m_bConchWebGL)
+			if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
 			{
 				glActiveTexture(textureID);
 			}

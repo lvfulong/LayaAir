@@ -669,8 +669,12 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
     }
 	bool JSConchConfig::getConchWebGL()
 	{
-		return g_kSystemConfig.m_bConchWebGL;
+		return g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL;//lv todo delete
 	}
+    GraphicsAPI JSConchConfig::getGraphicsAPI()
+    {
+        return g_kSystemConfig.m_graphicsAPI;
+    }
     int JSConchConfig::getMemoryUsageInByte()
     {
 #ifdef __APPLE__
@@ -741,7 +745,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 		 class_binding.class_function("setDownloadOptTimeout", &JSConchConfig::setDownloadOptTimeout);
 		 class_binding.class_function("printAllMemorySurvey", &JSConchConfig::printAllMemorySurvey);
 		 class_binding.class_function("enableEncodeURI", &JSConchConfig::enableEncodeURI);
-
+         class_binding.class_function("getGraphicsAPI", &JSConchConfig::getGraphicsAPI);
 		 class_binding.class_function("setSoundGarbageCollectionTime", &JSConchConfig::setSoundGarbageCollectionTime);
 		 class_binding.class_function("setLanguage", &JSConchConfig::setLanguage);
 		 class_binding.class_function("getLanguage", &JSConchConfig::getLanguage);
@@ -752,7 +756,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
          //class_property必须在下面，否则导不出class_function
         class_binding.class_property("JSDebugMode", &JSConchConfig::getJSDebugMode, &JSConchConfig::setJSDebugMode);
         class_binding.class_property("JSDebugPort", &JSConchConfig::getJSDebugPort, &JSConchConfig::setJSDebugPort);
-		class_binding.class_property("conchWebGL", &JSConchConfig::getConchWebGL);
+        class_binding.class_property("conchWebGL", &JSConchConfig::getConchWebGL);
         class_binding.class_property("paramExt", &JSConchConfig::getJsonparamExt);
         class_binding.class_property("urlIgnoreCase", &JSConchConfig::getUrlIgnoreCase, &JSConchConfig::setUrlIgnoreCase);
         class_binding.class_property("localizable", &JSConchConfig::getLocalable, &JSConchConfig::setLocalable);

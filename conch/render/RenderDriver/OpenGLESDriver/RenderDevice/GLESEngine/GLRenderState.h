@@ -179,7 +179,7 @@ namespace laya
 
 		void setDepthTest(bool value) 
 		{
-			if (laya::g_kSystemConfig.m_bConchWebGL)
+			if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
 			{
 				value ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
 			}
@@ -195,7 +195,7 @@ namespace laya
 
 		void setDepthMask(bool value) 
 		{
-			if (laya::g_kSystemConfig.m_bConchWebGL)
+			if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
 			{
 				glDepthMask(value);
 			}
@@ -211,7 +211,7 @@ namespace laya
 		void setDepthFunc(CompareFunction compareFunction) 
 		{
 			GLenum value = _getGLCompareFunction(compareFunction);
-			if (laya::g_kSystemConfig.m_bConchWebGL)
+			if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
 			{
 				glDepthFunc(value);
 			}
@@ -227,7 +227,7 @@ namespace laya
 
 		void setStencilTest(bool value) 
 		{
-			if (laya::g_kSystemConfig.m_bConchWebGL)
+			if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
 			{
 				value ? glEnable(GL_STENCIL_TEST) : glDisable(GL_STENCIL_TEST);
 			}
@@ -245,7 +245,7 @@ namespace laya
 		void setStencilFunc(CompareFunction compareFunction, int ref) 
 		{
 			GLenum fun = _getGLCompareFunction(compareFunction);
-			if (laya::g_kSystemConfig.m_bConchWebGL)
+			if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
 			{
 				glStencilFunc(fun, ref, 0xff);
 			}
@@ -264,7 +264,7 @@ namespace laya
 			GLenum fail = _getGLStencilOperation(failFunction);
 			GLenum zfail = _getGLStencilOperation(zfailFunction);
 			GLenum zpass = _getGLStencilOperation(zpassFunction);
-			if (laya::g_kSystemConfig.m_bConchWebGL)
+			if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
 			{
 				glStencilOp(fail, zfail, zpass);
 			}
@@ -281,7 +281,7 @@ namespace laya
 		}
 		void setBlend(bool value) 
 		{
-			if (laya::g_kSystemConfig.m_bConchWebGL)
+			if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
 			{
 				value ? glEnable(GL_BLEND) : glDisable(GL_BLEND);
 			}
@@ -297,7 +297,7 @@ namespace laya
 		void setBlendEquation(BlendEquationSeparate equation) 
 		{
 			GLenum blendEquation = _getBlendOperation(equation);
-			if (laya::g_kSystemConfig.m_bConchWebGL)
+			if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
 			{
 				glBlendEquation(blendEquation);
 			}
@@ -315,7 +315,7 @@ namespace laya
 		{
 			GLenum blendEquationRGB = _getBlendOperation(equationRGB);
 			GLenum blendEquationAlpha = _getBlendOperation(equationAlpha);
-			if (laya::g_kSystemConfig.m_bConchWebGL)
+			if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
 			{
 				glBlendEquationSeparate(blendEquationRGB, blendEquationAlpha);
 			}
@@ -335,7 +335,7 @@ namespace laya
 			GLenum sFactor = _getBlendFactor(source);
 			GLenum dFactor = _getBlendFactor(dest);
 			// �и�iOS��bug����ԭ����д����ʱ������
-			if (laya::g_kSystemConfig.m_bConchWebGL)
+			if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
 			{
 				glBlendFunc(sFactor, dFactor);
 			}
@@ -359,7 +359,7 @@ namespace laya
 			GLenum dstRGB = _getBlendFactor(destRGBFactor);
 			GLenum srcAlpha = _getBlendFactor(srcAlphaFactor);
 			GLenum dstAlpha = _getBlendFactor(dstAlphaFactor);
-			if (laya::g_kSystemConfig.m_bConchWebGL)
+			if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
 			{
 				glBlendFuncSeparate(srcRGB, dstRGB, srcAlpha, dstAlpha);
 			}
@@ -379,7 +379,7 @@ namespace laya
 		}
 		void setCullFace(bool value) 
 		{
-			if (laya::g_kSystemConfig.m_bConchWebGL)
+			if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
 			{
 				value ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
 			}
@@ -395,7 +395,7 @@ namespace laya
 		void setFrontFace(CullMode cullmode) 
 		{
 			GLenum value = _getGLFrontfaceFactor(cullmode);
-			if (laya::g_kSystemConfig.m_bConchWebGL)
+			if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
 			{
 				glFrontFace(value);
 			}

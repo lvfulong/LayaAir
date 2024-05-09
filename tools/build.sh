@@ -104,7 +104,35 @@ function build_android {
 	
 		cd ${current_dir}
 }
+function build_windows {
+    local build_type=$1
+    local arch=$2
+    local platform=$3
+    local build_dir="build/windows-${build_type}-${arch}"
+    mkdir -p "${build_dir}"
+    cd "${build_dir}"
 
+	if [[ "$2" == "win32" ]]; then
+		 cmake \
+		     -G "Visual Studio 17 2022" \
+            -A x632 \
+		    -DCMAKE_BUILD_TYPE="${build_type}" \
+            -DIS_BUILDING_STATIC_LIBS=1 \
+		    ${root_dir}
+	fi
+	
+	if [[ "$2" == "win64" ]]; then
+        cmake \
+		     -G "Visual Studio 17 2022" \
+            -A x64 \
+		    -DCMAKE_BUILD_TYPE="${build_type}" \
+            -DIS_BUILDING_STATIC_LIBS=1 \
+		    ${root_dir}
+    fi
+    cmake --build .
+    #make
+    cd ${current_dir}
+}
 function archive_ios {
     #—————————————————————merge static lib————————————————————————
     rm -rf ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS
@@ -307,6 +335,10 @@ fi
             build_android release "arm7"
             build_android release "x86_64"
             build_android release "x86"
+            exit 1
+            ;;
+        windows)
+            build_windows release "win64"
             exit 1
             ;;
     esac

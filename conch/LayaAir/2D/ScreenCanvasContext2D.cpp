@@ -53,7 +53,7 @@ namespace laya
 		m_submits.reserve(8);
 		m_mesh = MeshQuadTexture::getAMesh(m_pGLESEngine, false);
 		m_meshlist.push_back(m_mesh);
-        //if (g_kSystemConfig.m_bConchWebGL) {
+        //if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL) {
             Shader2D::preprocess2D(Shader2DDefines::TEXTURE2D, texture_vs.c_str(), texture_ps.c_str());
         //}
 	}

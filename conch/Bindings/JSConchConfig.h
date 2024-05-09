@@ -127,6 +127,8 @@ namespace laya
 
 		static bool getConchWebGL();
 
+        static GraphicsAPI getGraphicsAPI();
+
 		//机型
 		static const char* getModel();
 

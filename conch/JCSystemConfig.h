@@ -3,6 +3,7 @@
 #define _LAYA_CONFIG_H__
 
 #include <string>
+#include <utils/Types.h>
 
 namespace laya
 {
@@ -30,7 +31,7 @@ namespace laya
         bool            m_bShowInternalPerBar;          //�Ƿ���ʾjs ondraw���ֺ�gl����״����ͼ��
         static bool     s_bIsPlug;                      //��Ϊ��ʼ��̫���ˣ�����static
         static bool     s_bLocalizable;                 //�����Ƿ��Ǳ��ذ�
-		bool            m_bConchWebGL;
+		GraphicsAPI     m_graphicsAPI = GraphicsAPI::OpenGLES;
 		int 			m_nOrientationType = 24;
 		void 			loadConfigIniFile();
         int 			m_nJSDebugMode = 0;

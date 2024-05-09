@@ -35,7 +35,6 @@ void JCSystemConfig::reset()
     m_jsonparamExt = "";
     s_bLocalizable = false;
     m_bShowInternalPerBar = false;
-    m_bConchWebGL = true;
 }
 
 
@@ -59,23 +58,23 @@ void JCSystemConfig::loadConfigIniFile()
     IniFile configIni(configpath.c_str());
 #if WIN32 || __LINUX__
     int defaultWidth = 1280;
-    if (configIni.hasEntry("common:width"))
+    if (configIni.hasEntry("desktop:width"))
     {
-        g_nInnerWidth = configIni.getIntOrDefault("common:width", defaultWidth);
+        g_nInnerWidth = configIni.getIntOrDefault("desktop:width", defaultWidth);
     }
     else
     {
-        LOGW("Warning: can not find common:width use default %d", defaultWidth);
+        LOGW("Warning: can not find desktop:width use default %d", defaultWidth);
     }
 
     int defaultHeight = 720;
-    if (configIni.hasEntry("common:height"))
+    if (configIni.hasEntry("desktop:height"))
     {
-        g_nInnerHeight = configIni.getIntOrDefault("common:height", defaultHeight);
+        g_nInnerHeight = configIni.getIntOrDefault("desktop:height", defaultHeight);
     }
     else
     {
-        LOGW("Warning: can not find common:height use default %d", defaultHeight);
+        LOGW("Warning: can not find desktop:height use default %d", defaultHeight);
     }
 #endif
 #ifdef __APPLE__
@@ -91,6 +90,6 @@ void JCSystemConfig::loadConfigIniFile()
     m_nJSDebugMode = configIni.getIntOrDefault("common:JSDebugMode", 0);
     m_nJSDebugPort = configIni.getIntOrDefault("common:JSDebugPort", 5959);
 
-    m_bConchWebGL = configIni.getBoolOrDefault("common:ConchWebGL", true);
+    m_graphicsAPI = toGraphicsAPI(configIni.getStringOrDefault("common:GraphicsAPI", "OpenGLES"));
 }
 } // namespace laya

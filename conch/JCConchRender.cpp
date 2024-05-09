@@ -232,7 +232,7 @@ void JCConchRender::end()
     GLboolean last_enable_scissor_test;
     int last_width;
     int last_height;
-    if (g_kSystemConfig.m_bConchWebGL)
+    if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
     {
         glGetIntegerv(GL_ACTIVE_TEXTURE, (GLint*)&last_active_texture);
         glActiveTexture(GL_TEXTURE0);
@@ -277,7 +277,7 @@ void JCConchRender::end()
     //m_pScreenContext->drawTarget(m_pScreenContext->m_target, 0, 0, width, height, m, INV_UV, BlendMode::disable);
     m_pScreenContext->flush();
     m_pScreenContext->clear();
-    if (g_kSystemConfig.m_bConchWebGL)
+    if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
     {
         glUseProgram(last_program);
         glBindTexture(GL_TEXTURE_2D, last_texture);
@@ -321,7 +321,7 @@ void JCConchRender::requestCaptureScreen()
 #endif
             m_GfxBackend->createScreenSurface(nativeHandle);
             m_GfxBackend->makeCurrent();
-            if (g_kSystemConfig.m_bConchWebGL && LayaGL::m_pWebglEngine == nullptr)
+            if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL && LayaGL::m_pWebglEngine == nullptr)
             {
                 WebGLConfig config;
                 LayaGL::m_pWebglEngine = new GLESEngine(config, WebGLMode::Auto);

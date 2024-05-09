@@ -36,6 +36,7 @@ set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/Preprocessor.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/ColorParser.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/IniFile.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/Types.h
 )
 
 set(SOURCES
@@ -61,6 +62,7 @@ set(SOURCES
     src/thread/JCWorkSemaphore.cpp
     src/ColorParser.cpp
     src/IniFile.cpp
+    src/Types.cpp
 )
 
 set(DEPS_GL)

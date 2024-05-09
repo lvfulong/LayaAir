@@ -5,7 +5,7 @@ namespace laya
 {
 	void GLRenderState::setStencilMask(bool value)
 	{
-		if (g_kSystemConfig.m_bConchWebGL)
+		if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
 		{
 			value ? glStencilMask(0xff) : glStencilMask(0x00);
 		}
