@@ -59,7 +59,7 @@ namespace laya
         //m_pShaderDataManager = new ResourceManager<ShaderData>();
         //m_pShaderInstanceManager = new ResourceManager<ShaderInstance>();
         //m_pRenderGeometryElementManager = new ResourceManager<RenderGeometryElement>();
-        m_pWordTextManager = new ObjectManager<WordText>();
+        //m_pWordTextManager = new ObjectManager<WordText>();
         m_pUniformBufferObjectManager = new ObjectManager<UniformBufferObject>();
 #ifdef WEBGL_THREAD
         m_WebGLThread = new WebGLThread();
@@ -111,12 +111,12 @@ namespace laya
                 delete m_pScreenContext;
                 m_pScreenContext = 0;
             }
-            if (m_pWordTextManager)
+             /*if (m_pWordTextManager)
             {
                 delete m_pWordTextManager;
                 m_pWordTextManager = NULL;
             }
-            /*if (m_pRenderGeometryElementManager)
+           if (m_pRenderGeometryElementManager)
             {
                 delete m_pRenderGeometryElementManager;
                 m_pRenderGeometryElementManager = NULL;

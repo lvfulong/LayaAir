@@ -68,11 +68,8 @@
 #include "JSFile.h"
 #include "JSFileReader.h"
 #include "JSImageBitmap.h"
-#include "LayaAir/2D/JSContext2D.h"
+
 #include "LayaAir/2D/Shader2D.h"
-#include "LayaAir/2D/JSWebGLCacheAsNormalCanvas.h"
-#include "LayaAir/2D/JSWordText.h"
-#include "LayaAir/2D/JSRenderTexture2D.h"
 #include "LayaAir/3D/JSSubmitScene3D.h"
 #include "LayaAir/3D/JSUniformBufferObject.h"
 #include "2D/FontDescriptionParser.h"
@@ -600,9 +597,7 @@ namespace laya
         context.function("conchToBase64", &conchToBase64);
         context.function("conchToBase64FlipY", &conchToBase64FlipY);
         context.function("copy", &copy);
-        context.function("preCompile2D", &Shader2D::preprocess2D);
         context.function("open", &open);
-        context.function("set2DRenderConfig", &Context2D::set2DRenderConfig);
         context.function("btoa", &btoa);
         context.function("atob", &atob);
         context.function("_createImageBitmap", &createImageBitmap);
