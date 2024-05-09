@@ -16,14 +16,14 @@
 #include "SubmitTarget.h"
 #include "RenderTexture2D.h"
 #include "RenderState2D.h"
-#include "WebGLCacheAsNormalCanvas.h"
-#include "SubmitCanvas.h"
-#include "TextRender.h"
+//#include "WebGLCacheAsNormalCanvas.h"
+//#include "SubmitCanvas.h"
+//#include "TextRender.h"
 #include "JCConch.h"
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLTextureContext.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalRT.h>
-#include "JCContext2DDispatch.h"
+//#include "JCContext2DDispatch.h"
 #include <Bindings/JSLayaGL.h>
 #include "BufferStateBase.h"
 #include "JCSystemConfig.h"
@@ -76,7 +76,7 @@ namespace laya
         MeshQuadTexture::onDestroy();
         SubmitVG::onDestroy();
         SubmitCMD::onDestroy();
-        SubmitCanvas::onDestroy();
+        //SubmitCanvas::onDestroy();
         Shader2D::onDestroy();
         if (Context2D::m_textRender)
         {

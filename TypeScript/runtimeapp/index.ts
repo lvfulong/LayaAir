@@ -127,7 +127,11 @@ function registerFont(fontName, fileName)
 }
 function registerAllFonts()
 {
-    registerFont('Arial', 'font/Arial.ttf');
+    var sOS = conchConfig.getOS();
+    if(sOS == "Conch-ios") {
+        registerFont('Palatino Linotype-Bold', 'font/Palatino Linotype Bold.ttf');
+    }
+    registerFont('Palatino Linotype', 'font/Palatino Linotype.ttf');
     registerFont('SimHei', 'font/SimHei.ttf');
     registerFont('MicrosoftYaHei', 'font/Microsoft Yahei.ttf');
     registerFont('SimSun', 'font/SimSun.ttc');

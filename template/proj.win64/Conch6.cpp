@@ -87,7 +87,7 @@ int main(int argc, _TCHAR* argv[])
     laya::JCIosFileSource* pAssets = new laya::JCIosFileSource();
     pAssets->Init(gRedistPath.c_str());
     laya::JCConch::s_pAssetsFiles = pAssets;
-    laya::g_kSystemConfig.loadConfigIniFile();
+    
     if (bRunTest) 
     {
         //JSMemorySurvey::DelInstance();

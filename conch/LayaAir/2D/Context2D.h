@@ -9,7 +9,6 @@
 #include "BlendMode.h"
 #include "Path.h"
 #include "Rectangle.h"
-#include "CharRenderInfo.h"
 
 namespace laya
 {
@@ -145,8 +144,8 @@ namespace laya
 		void fillRect(float x, float y, float width, float height);
         void fillTexture(int textureID, float x, float y, float width, float height, RepeatMode type, float offsetX, float offsetY, int color);
 		void clipRect(float x, float y, float width, float height);
-		void drawCanvas(Context2D* canvas, float x, float y, float width, float height);
-		void drawCanvas(WebGLCacheAsNormalCanvas* src, float x, float y, float width, float height);
+		//void drawCanvas(Context2D* canvas, float x, float y, float width, float height);
+		//void drawCanvas(WebGLCacheAsNormalCanvas* src, float x, float y, float width, float height);
 		bool drawTarget(std::shared_ptr<RenderTexture2D> rt, float x, float y, float width, float height, const Matrix& m, /*shaderValue : Value2D,*/ float uv[4], BlendMode blend = BlendMode::invalid);
 		void setAsBitmap(bool value);
 		void size(int w, int h);
@@ -220,7 +219,7 @@ namespace laya
 		static TextRender*												m_textRender;
 		bool															drawTexAlign = false;		// �������ض���
 		int																m_flushCnt = 0;
-		std::vector<std::shared_ptr<CharRenderInfo>>*					m_touches = nullptr;
+		//std::vector<std::shared_ptr<CharRenderInfo>>*					m_touches = nullptr;
 		JCContext2DDispatch*											m_pContext2DDispatch;
 		int																m_nSharedCommandBufferID = -1;
 		GLESEngine*													m_pGLESEngine;

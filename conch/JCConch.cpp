@@ -72,6 +72,13 @@ namespace laya
     }
     JCConch::JCConch()
     {
+        m_sCachePath = gRedistPath + "/appCache";
+        std::error_code error;
+        if (!fs::exists(m_sCachePath, error))
+        {
+            fs::create_directories(m_sCachePath, error);
+        }
+        laya::g_kSystemConfig.loadConfigIniFile();
 #ifdef __APPLE__
 #elif WIN32
         HMODULE libHandle = LoadLibrary("libGLESv2.dll");
@@ -79,7 +86,7 @@ namespace laya
         //void *libhandle = dlopen("libGLESv2.so", RTLD_LAZY);
 #endif
         m_nUrlHistoryPos = -1;
-        m_sCachePath = gRedistPath + "/appCache";
+        
 
         g_DecThread = std::make_shared<JCWorkerThread>(new JCWorkerThread(true));
         g_DecThread->setThreadName("image decode");
@@ -128,7 +135,6 @@ namespace laya
         m_strLocalStoragePath = gRedistPath + "/localstorage/";
         //try
         //{
-        std::error_code error;
         if (!fs::exists(m_strLocalStoragePath, error))
         {
             fs::create_directories(m_strLocalStoragePath, error);

@@ -262,22 +262,6 @@ list(APPEND CONCH_SRC
 	LayaAir/2D/Context2D.cpp
 	LayaAir/2D/Matrix.h
 	LayaAir/2D/Matrix.cpp
-	LayaAir/2D/TextRender.h
-	LayaAir/2D/TextRender.cpp
-	LayaAir/2D/TextAtlas.h
-	LayaAir/2D/TextAtlas.cpp
-	LayaAir/2D/TextTexture.h
-	LayaAir/2D/TextTexture.cpp
-	LayaAir/2D/AtlasGrid.h
-	LayaAir/2D/AtlasGrid.cpp
-	LayaAir/2D/CharRenderInfo.h
-	LayaAir/2D/CharRenderInfo.cpp
-	LayaAir/2D/CharRender.cpp
-	LayaAir/2D/CharRender.h
-	LayaAir/2D/WordText.h
-	LayaAir/2D/WordText.cpp
-	LayaAir/2D/FontInfo.h
-	LayaAir/2D/FontInfo.cpp
 	LayaAir/2D/SubmitBase.h
 	LayaAir/2D/SubmitBase.cpp
 	LayaAir/2D/Shader2DCompile.h
@@ -310,14 +294,10 @@ list(APPEND CONCH_SRC
 	LayaAir/2D/SubmitCMD.cpp
 	LayaAir/2D/SubmitTarget.h
 	LayaAir/2D/SubmitTarget.cpp
-	LayaAir/2D/SubmitCanvas.h
-	LayaAir/2D/SubmitCanvas.cpp
 	LayaAir/2D/MeshQuadTexture.h
 	LayaAir/2D/MeshQuadTexture.cpp
 	LayaAir/2D/RenderState2D.h
 	LayaAir/2D/RenderState2D.cpp
-	LayaAir/2D/WebGLCacheAsNormalCanvas.h
-	LayaAir/2D/WebGLCacheAsNormalCanvas.cpp
 	LayaAir/2D/Point.h
 	LayaAir/2D/Path.h
 	LayaAir/2D/Path.cpp
@@ -326,8 +306,6 @@ list(APPEND CONCH_SRC
 	LayaAir/2D/earcut.hpp
 	LayaAir/2D/Bezier.h
 	LayaAir/2D/Bezier.cpp
-	LayaAir/2D/JCContext2DDispatch.h
-	LayaAir/2D/JCContext2DDispatch.cpp
 	LayaAir/2D/ScreenCanvasContext2D.h
 	LayaAir/2D/ScreenCanvasContext2D.cpp
 	LayaAir/2D/Buffer.h

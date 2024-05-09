@@ -248,7 +248,7 @@ void CanvasRenderingContext2DCG::chooseFont(const std::string& strFontName)
     bool isBold = m_fontDescription.isBold();
     bool isItalic = m_fontDescription.isItalic();
     NSString *fontName = [NSString stringWithUTF8String:strFontName.c_str()];
-    if (isBold && isItalic)
+    /*if (isBold && isItalic)
     {
         m_impl->m_UIFont =
         [UIFont fontWithName:[fontName stringByAppendingString:@"-BoldItalic"] size:m_fontDescription.m_size];
@@ -258,10 +258,19 @@ void CanvasRenderingContext2DCG::chooseFont(const std::string& strFontName)
         m_impl->m_UIFont =
         [UIFont fontWithName:[fontName stringByAppendingString:@"-Italic"] size:m_fontDescription.m_size];
     }
-    else if (isBold)
+    else*/ if (isBold)
     {
-        m_impl->m_UIFont =
-        [UIFont fontWithName:[fontName stringByAppendingString:@"-Bold"] size:m_fontDescription.m_size];
+        auto pair = FontManager::getInstance()->getRealFontName(strFontName + "-Bold");
+        //real name is not xx-Bold is some like xx Bold
+        if (pair.first) {
+            NSString *fontNameBold = [NSString stringWithUTF8String:pair.second.c_str()];
+            m_impl->m_UIFont =
+            [UIFont fontWithName:fontNameBold size:m_fontDescription.m_size];
+        }
+        else {
+            m_impl->m_UIFont =
+            [UIFont fontWithName:[fontName stringByAppendingString:@"-Bold"] size:m_fontDescription.m_size];
+        }
     }
     else
     {
@@ -297,10 +306,10 @@ void CanvasRenderingContext2DCG::setFont(const char *font)
         {
             m_impl->m_UIFont = [UIFont boldSystemFontOfSize:m_fontDescription.m_size];
         }
-        else if (isItalic)
+        /*else if (isItalic)
         {
             m_impl->m_UIFont = [UIFont italicSystemFontOfSize:m_fontDescription.m_size];
-        }
+        }*/
         else
         {
             m_impl->m_UIFont = [UIFont systemFontOfSize:m_fontDescription.m_size];
@@ -311,10 +320,15 @@ void CanvasRenderingContext2DCG::setFont(const char *font)
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
     [paragraphStyle setAlignment:NSTextAlignmentCenter];
-
+    
     m_impl->_attributesDict = [[NSMutableDictionary alloc]  init];
     [m_impl->_attributesDict setObject:m_impl->m_UIFont forKey: NSFontAttributeName];
     [m_impl->_attributesDict setObject:paragraphStyle forKey:NSParagraphStyleAttributeName];
+    
+    if (isItalic)
+    {
+        [m_impl->_attributesDict setObject:@(0.3f) forKey: NSObliquenessAttributeName];
+    }
 }
 void CanvasRenderingContext2DCG::getTextPosition(const std::string &text, double x, double y, double &outX, double &outY)
 {

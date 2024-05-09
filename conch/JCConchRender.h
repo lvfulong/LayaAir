@@ -25,9 +25,6 @@
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderGeometryElement.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalTex.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
-#include "LayaAir/2D/WordText.h"
-//#include <render/3D/temp/UniformBufferObject.h>
-//#include <render/3D/temp/ShaderInstance.h>
 
 namespace laya
 {
@@ -86,7 +83,7 @@ namespace laya
 		//ResourceManager<ShaderData>*			m_pShaderDataManager;
         //ResourceManager<ShaderInstance>*		m_pShaderInstanceManager;
         //ResourceManager<RenderGeometryElement>* m_pRenderGeometryElementManager;
-		ObjectManager<WordText>*				m_pWordTextManager;
+		//ObjectManager<WordText>*				m_pWordTextManager;
 		ObjectManager<UniformBufferObject>*	    m_pUniformBufferObjectManager;
         ScreenCanvasContext2D*                  m_pScreenContext = nullptr;
 

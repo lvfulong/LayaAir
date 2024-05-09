@@ -27,7 +27,6 @@
 #include <Bindings/JSLaunchOptions.h>
 #include <Bindings/JSPromiseRejectionEvent.h>
 #include "LayaAir/2D/RenderState2D.h"
-#include "LayaAir/2D/CharRenderInfo.h"
 #include "LayaAir/2D/Context2D.h"
 #include "LayaAir/2D/RenderTexture2D.h"
 //#include "btBulletDynamicsCommon.h"
@@ -423,7 +422,6 @@ namespace laya
 		
         //float dt = tmGetCurms() - nBenginTime;
         //PERF_UPDATE_DATA(JCPerfHUD::PHUD_JS_DELAY, (float)dt);
-		RenderInfo::loopCount++;
 
         JCConch::s_pConchRender->postTaskFromJSToRenderSync([this]()->bool {
             JCConch::s_pScriptRuntime->dispatchLayaGLBuffer(false);
