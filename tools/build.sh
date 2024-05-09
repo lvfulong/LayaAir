@@ -100,7 +100,7 @@ function build_android {
 		cmake --install .
 
 		cp ${CONCH_NDK_PATH}/sources/cxx-stl/llvm-libc++/libs/${android_abi}/libc++_shared.so ${publish_dir}/nativetools/template/android_studio/app/libs/${android_abi}
-		cp ./libconch.so  ${publish_dir}/nativetools/template/android_studio/app/libs/${android_abi}
+		cp ./conch/libconch.so  ${publish_dir}/nativetools/template/android_studio/app/libs/${android_abi}
 	
 		cd ${current_dir}
 }
@@ -211,6 +211,9 @@ function archive_ios {
     
     cp ios-${build_type}-arm64/modules/utils/libutils.a armv64
     cp ios-${build_type}-x86_64/modules/utils/libutils.a x86_64
+    
+    cp ios-${build_type}-arm64/iniparser/libiniparser.a armv64
+    cp ios-${build_type}-x86_64/iniparser/libiniparser.a x86_64
     
     cd armv64
     libtool -static *.a -o libconch.a
