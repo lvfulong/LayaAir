@@ -51,6 +51,7 @@ CanvasRenderingContext2DWin::~CanvasRenderingContext2DWin()
 }
 void CanvasRenderingContext2DWin::setLineWidth(double lineWidth)
 {
+    m_lineWidth = lineWidth;
 }
 void CanvasRenderingContext2DWin::setLineJoin(const char *lineJoin)
 {
@@ -90,9 +91,15 @@ void CanvasRenderingContext2DWin::fillText(const std::string &text, double x, do
     double outX;
     double outY;
     getTextPosition(text, x, y, outX, outY);
+    //这个由于windows自己的排版导致左边空隙过大
+    //m_gdiGraphics->DrawString(
+    //    pwszBuffer, bufferLen, m_font, Gdiplus::PointF(outX, outY), &m_stringFormat,
+    //    &Gdiplus::SolidBrush(Gdiplus::Color(m_fillColorA, m_fillColorR, m_fillColorG, m_fillColorB)));
+
     m_gdiGraphics->DrawString(
-        pwszBuffer, bufferLen, m_font, Gdiplus::PointF(outX, outY), &m_stringFormat,
+        pwszBuffer, bufferLen, m_font, Gdiplus::PointF(outX, outY), Gdiplus::StringFormat::GenericTypographic(),
         &Gdiplus::SolidBrush(Gdiplus::Color(m_fillColorA, m_fillColorR, m_fillColorG, m_fillColorB)));
+
 }
 
 void CanvasRenderingContext2DWin::strokeText(const std::string &text, double x, double y,
@@ -119,8 +126,8 @@ void CanvasRenderingContext2DWin::strokeText(const std::string &text, double x, 
     int size = m_font->GetSize();
 
     Gdiplus::GraphicsPath path;
-    path.AddString(pwszBuffer, -1, &fontFamily, Gdiplus::FontStyleRegular, size, PointF(outX, outY), &m_stringFormat);
-    Pen pen(Color(m_strokeColorR, m_strokeColorG, m_strokeColorB), 10); // 红色描边，宽度为3
+    path.AddString(pwszBuffer, -1, &fontFamily, Gdiplus::FontStyleRegular, size, PointF(outX, outY), Gdiplus::StringFormat::GenericTypographic());
+    Pen pen(Color(m_strokeColorR, m_strokeColorG, m_strokeColorB), m_lineWidth);
     //SolidBrush brush(Color(255, 255, 255, 255)); // 白色填充
     m_gdiGraphics->DrawPath(&pen, &path); // 绘制描边
     //graphics.FillPath(&brush, &path); // 填充内部
@@ -139,7 +146,9 @@ TextMetrics CanvasRenderingContext2DWin::measureTextUtf16(wchar_t *pwszBuffer, i
     graphicsPathObj.GetBounds(&rcBound);
 
     Gdiplus::RectF layoutRect(0, 0, m_width, m_height);
-    m_gdiGraphics->MeasureString(pwszBuffer, bufferLen, m_font, layoutRect, &m_stringFormat, &rcBound);
+    //m_gdiGraphics->MeasureString(pwszBuffer, bufferLen, m_font, layoutRect, &m_stringFormat, &rcBound);
+    //stringFormat必须用StringFormat::GenericTypographic(), 否则偏大
+    m_gdiGraphics->MeasureString(pwszBuffer, bufferLen, m_font, layoutRect, Gdiplus::StringFormat::GenericTypographic(), &rcBound);
     metrics.m_width = rcBound.Width;
     metrics.m_height = rcBound.Height;
     // UINT16 desent = fontFamily.GetCellDescent(m_fontStyle);
@@ -147,6 +156,7 @@ TextMetrics CanvasRenderingContext2DWin::measureTextUtf16(wchar_t *pwszBuffer, i
     UINT16 ascender = fontFamily.GetCellAscent(m_fontStyle);
     UINT16 ascenderPixel = m_font->GetSize() * ascender / fontFamily.GetEmHeight(m_fontStyle);
     metrics.m_ascender = ascenderPixel;
+    metrics.m_descender = fontFamily.GetCellDescent(m_fontStyle);
     // LOGI("measureText %f %f", rcBound.Width, rcBound.Height);
     return metrics;
 }
@@ -194,8 +204,9 @@ ImageData CanvasRenderingContext2DWin::getImageData(double x, double y, double w
         data.m_height = clampedH;
         data.m_data.resize(clampedW * clampedH * 4);
         unsigned char *glImageData = &data.m_data[0];
+        //ZeroMemory(glImageData, clampedW * clampedH * 4);
 
-        Gdiplus::Rect rect(0, 0, clampedW, clampedH);
+        Gdiplus::Rect rect(clampedX, clampedY, clampedW, clampedH);
 
         Status status;
         Gdiplus::BitmapData  lockedbmp;
@@ -218,7 +229,13 @@ ImageData CanvasRenderingContext2DWin::getImageData(double x, double y, double w
                 glImageData[(x + y * clampedW) * 4 + 1]/*g*/ = pixel[1] * alpha;
                 glImageData[(x + y * clampedW) * 4 + 2]/*b*/ = pixel[0] * alpha;
                 glImageData[(x + y * clampedW) * 4 + 3] = pixel[3]; // a
+
+                //if (pixel[3] > 0 || pixel[2] > 0 || pixel[1] > 0 || pixel[0] > 0)
+                //    printf("+");
+                //else 
+                //    printf("-");
             }
+            //printf("\n");
         }
 
         //for (auto y = 0; y < clampedH; y++)
@@ -358,6 +375,8 @@ void CanvasRenderingContext2DWin::getTextPosition(const std::string &text, doubl
 }
 void CanvasRenderingContext2DWin::setFont(const char *font)
 {
+    if (strcmp(font, getFont())==0)
+        return;
     CanvasRenderingContext2D::setFont(font);
     bool isBold = m_fontDescription.isBold();
     bool isItalic = m_fontDescription.isItalic();
