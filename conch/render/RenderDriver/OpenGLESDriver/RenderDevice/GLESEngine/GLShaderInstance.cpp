@@ -581,7 +581,7 @@ int GLShaderInstance::_uniform_UniformBuffer(ShaderVariable *one, const std::any
 }
 void GLShaderInstance::_bindTexture(int textureID, GLenum target, GLESInternalTex *texture)
 {
-    if (g_kSystemConfig.m_bConchWebGL)
+    if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
     {
         glActiveTexture(textureID);
         glBindTexture(target, texture == nullptr ? 0 : texture->getResource());

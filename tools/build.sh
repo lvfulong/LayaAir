@@ -100,11 +100,39 @@ function build_android {
 		cmake --install .
 
 		cp ${CONCH_NDK_PATH}/sources/cxx-stl/llvm-libc++/libs/${android_abi}/libc++_shared.so ${publish_dir}/nativetools/template/android_studio/app/libs/${android_abi}
-		cp ./libconch.so  ${publish_dir}/nativetools/template/android_studio/app/libs/${android_abi}
+		cp ./conch/libconch.so  ${publish_dir}/nativetools/template/android_studio/app/libs/${android_abi}
 	
 		cd ${current_dir}
 }
+function build_windows {
+    local build_type=$1
+    local arch=$2
+    local platform=$3
+    local build_dir="build/windows-${build_type}-${arch}"
+    mkdir -p "${build_dir}"
+    cd "${build_dir}"
 
+	if [[ "$2" == "win32" ]]; then
+		 cmake \
+		     -G "Visual Studio 17 2022" \
+            -A x632 \
+		    -DCMAKE_BUILD_TYPE="${build_type}" \
+            -DIS_BUILDING_STATIC_LIBS=1 \
+		    ${root_dir}
+	fi
+	
+	if [[ "$2" == "win64" ]]; then
+        cmake \
+		     -G "Visual Studio 17 2022" \
+            -A x64 \
+		    -DCMAKE_BUILD_TYPE="${build_type}" \
+            -DIS_BUILDING_STATIC_LIBS=1 \
+		    ${root_dir}
+    fi
+    cmake --build .
+    #make
+    cd ${current_dir}
+}
 function archive_ios {
     #—————————————————————merge static lib————————————————————————
     rm -rf ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS
@@ -205,22 +233,31 @@ function archive_ios {
     local build_type=$1
     cp ios-${build_type}-arm64/conch/libconch.a armv64
     cp ios-${build_type}-x86_64/conch/libconch.a x86_64
+    
+    cp ios-${build_type}-arm64/ghc/libghc.a armv64
+    cp ios-${build_type}-x86_64/ghc/lighc.a x86_64
 
+    cp ios-${build_type}-arm64/rapidxml/librapidxml.a armv64
+    cp ios-${build_type}-x86_64/rapidxml/librapidxml.a x86_64
+    
     cp ios-${build_type}-arm64/modules/binder/libbinder.a armv64
     cp ios-${build_type}-x86_64/modules/binder/libbinder.a x86_64
     
     cp ios-${build_type}-arm64/modules/utils/libutils.a armv64
     cp ios-${build_type}-x86_64/modules/utils/libutils.a x86_64
     
+    cp ios-${build_type}-arm64/iniparser/libiniparser.a armv64
+    cp ios-${build_type}-x86_64/iniparser/libiniparser.a x86_64
+    
     cd armv64
-    libtool -static *.a -o libconch.a
+    libtool -static *.a -o libconch_static.a
     cd ..
 
     cd x86_64
-    libtool -static *.a -o libconch.a
+    libtool -static *.a -o libconch_static.a
     cd ..
 
-    lipo -create armv64/libconch.a x86_64/libconch.a -output ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS/libs/libconch.a
+    lipo -create armv64/libconch_static.a x86_64/libconch_static.a -output ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS/libs/libconch.a
 
     strip -S -X ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS/libs/libconch.a
     
@@ -298,6 +335,10 @@ fi
             build_android release "arm7"
             build_android release "x86_64"
             build_android release "x86"
+            exit 1
+            ;;
+        windows)
+            build_windows release "win64"
             exit 1
             ;;
     esac

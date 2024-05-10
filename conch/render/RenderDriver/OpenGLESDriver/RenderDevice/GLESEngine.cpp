@@ -32,7 +32,7 @@ GLESEngine::GLESEngine(WebGLConfig config, WebGLMode webglMode)
 {
     //assert(LayaGL::m_pWebglEngine == nullptr);
     LayaGL::m_pWebglEngine = this;
-    if (!g_kSystemConfig.m_bConchWebGL)
+    if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::OpenGLES)
     {
 
         BaseCameraProperty::__init__();
@@ -209,7 +209,7 @@ void GLESEngine::_setbindBuffer(BufferTargetType target, GLBuffer *buffer)
 }
 void GLESEngine::_bindTexture(GLenum target, GLESInternalTex *texture)
 {
-    if (g_kSystemConfig.m_bConchWebGL)
+    if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
     {
         glBindTexture(target, texture == nullptr ? 0 : texture->m_resource);
     }
@@ -231,7 +231,7 @@ void GLESEngine::viewport(int x, int y, int width, int height)
 {
     // gl.enable(gl.SCISSOR_TEST);
     // gl.scissor(x, transformY, width, height);
-    if (g_kSystemConfig.m_bConchWebGL)
+    if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
     {
         glViewport(x, y, width, height);
     }
@@ -248,7 +248,7 @@ void GLESEngine::viewport(int x, int y, int width, int height)
 
 void GLESEngine::scissor(int x, int y, int width, int height)
 {
-    if (g_kSystemConfig.m_bConchWebGL)
+    if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
     {
         glScissor(x, y, width, height);
     }

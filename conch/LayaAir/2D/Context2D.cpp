@@ -16,15 +16,15 @@
 #include "SubmitTarget.h"
 #include "RenderTexture2D.h"
 #include "RenderState2D.h"
-#include "WebGLCacheAsNormalCanvas.h"
-#include "SubmitCanvas.h"
-#include "TextRender.h"
+//#include "WebGLCacheAsNormalCanvas.h"
+//#include "SubmitCanvas.h"
+//#include "TextRender.h"
 #include "JCConch.h"
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLTextureContext.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalRT.h>
 #include "Bezier.h"
-#include "JCContext2DDispatch.h"
+//#include "JCContext2DDispatch.h"
 #include <Bindings/JSLayaGL.h>
 #include "BufferStateBase.h"
 #include "JCSystemConfig.h"
@@ -50,10 +50,10 @@ namespace laya
 	Context2D::Context2D(GLESEngine* pWebglEngine)
 	{
 		m_pGLESEngine = pWebglEngine;
-		if (m_textRender == nullptr)
+		/*if (m_textRender == nullptr)
 		{
 			m_textRender = new TextRender(m_pGLESEngine);
-		}
+		}*/
 		if (!m_defaultTexture)
 		{
 			m_defaultTexture = m_pGLESEngine->getTextureContext()->createTextureInternal(TextureDimension::Tex2D, 2, 2, TextureFormat::R8G8B8A8, true , false, false);//TODO check js
@@ -62,7 +62,7 @@ namespace laya
 		m_lastTex = m_defaultTexture;
 		m_pRenderCmd = new JCCommandEncoderBuffer(0, 0);
 
-		m_pContext2DDispatch = new JCContext2DDispatch(this);
+		//m_pContext2DDispatch = new JCContext2DDispatch(this);
 		
 		clear();
 	}
@@ -312,7 +312,7 @@ namespace laya
 		//charbook gc
 		if (m_flushCnt % 60 == 0 && isMain) 
 		{
-			m_textRender->GC();
+			//m_textRender->GC();
 		}
 		if (BufferStateBase::m_curBindedBufferState != nullptr)
 		{
@@ -2068,7 +2068,7 @@ namespace laya
 		m_curSubmit = SubmitBase::RENDERBASE;
 		return false;
 	}
-	void Context2D::drawCanvas(Context2D* src, float x, float y, float width, float height)
+	/*void Context2D::drawCanvas(Context2D* src, float x, float y, float width, float height)
 	{
 		if (!src) return;
 		//var src : Context = canvas.context as Context;
@@ -2125,18 +2125,18 @@ namespace laya
 
 			m_curSubmit = SubmitBase::RENDERBASE;
 		}
-	}
+	}*/
 	void Context2D::_drawRenderTexture(RenderTexture2D* tex, float x, float y, float width, float height, const Matrix& m, float alpha, float uv[8], int color)
 	{
 		_inner_drawTexture(tex->m_texture, x, y, width, height, m, uv, 1.0, false, color);
 	}
 	void Context2D::fillWords(const char* data, float x, float y, const char* fontStr, int color, int strokeColor, float lineWidth, int textAlign)
 	{
-		m_textRender->fillWords(this, data, x, y, fontStr, color, strokeColor, lineWidth, textAlign);
+		//m_textRender->fillWords(this, data, x, y, fontStr, color, strokeColor, lineWidth, textAlign);
 	}
 	void Context2D::fillWordText(int id, float x, float y, const char* fontStr, int color, int strokeColor, float lineWidth, int textAlign)
 	{
-		m_textRender->fillWordText(this, id, x, y, fontStr, color, strokeColor, lineWidth, textAlign);
+		//m_textRender->fillWordText(this, id, x, y, fontStr, color, strokeColor, lineWidth, textAlign);
 	}
 	/*void Context2D::drawText(const char* data, float x, float y, const char* fontStr, int color, int strokeColor, float lineWidth, int textAlign)
 	{
@@ -2225,7 +2225,7 @@ namespace laya
 		}
 		if (this->isMain)
 		{
-			if (g_kSystemConfig.m_bConchWebGL)
+			if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
 			{
 				g_nMainFrameBuffer = m_target->getGLFramebuffer();
 			}
@@ -2258,7 +2258,7 @@ namespace laya
 	{
 		if (m_nSharedCommandBufferID != -1)
 		{
-			m_pContext2DDispatch->flushCommand(m_nSharedCommandBufferID);
+			//m_pContext2DDispatch->flushCommand(m_nSharedCommandBufferID);
 		}
 	}
 	void Context2D::addRenderObject3D(ISubmit* scene3D)

@@ -202,6 +202,8 @@ namespace laya
     std::string encodeURI(const char* value);
 
     std::string getExePath();
+    std::string toLowerCase(const std::string &str);
+    bool compareStrings(const std::string &str1, const std::string &str2, bool caseSensitive);
 };
 //------------------------------------------------------------------------------
 
