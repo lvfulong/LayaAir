@@ -5,10 +5,10 @@ namespace laya
 class Utils3D
 {
   public:
-    static void _mulMatrixArray(float *left, float *right, int rightOffset, float *outArray, int outOffset)
+    static void _mulMatrixArray(const float *left, float *right, int rightOffset, float *outArray, int outOffset)
     {
         float *l = right;
-        float *r = left;
+        const float *r = left;
         float *e = outArray;
 
         float l11 = l[rightOffset], l12 = l[rightOffset + 1], l13 = l[rightOffset + 2], l14 = l[rightOffset + 3];

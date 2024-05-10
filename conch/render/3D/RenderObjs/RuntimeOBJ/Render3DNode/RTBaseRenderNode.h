@@ -61,7 +61,7 @@ public:
     void _applyLightProb();
     void setWorldParams(const Vector4& value) { worldParams = value; }
     bool shadowCullPass();
-    void _renderUpdate(GLESRenderContext3D* context);
+    virtual void _renderUpdate(GLESRenderContext3D* context);
     void _renderUpdatePre(GLESRenderContext3D* context3D);
     bool _needRender(BoundFrustum* pBoundFrustum);
 public://bind

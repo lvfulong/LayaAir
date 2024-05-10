@@ -43,6 +43,7 @@
 #include "Bindings/LayaAir/3D/JSTransform.h"
 #include "Bindings/LayaAir/3D/JSBounds.h"
 #include <Bindings/Video/JSVideo.h>
+#include <render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTSkinRenderNode.h>
 
 namespace laya
 {
@@ -616,6 +617,28 @@ class RenderBindings
             class_binding.property_field("irradianceMode", &RTBaseRenderNode::irradianceMode);
             context.class_("conchRTBaseRenderNode", class_binding);
         }
+        {
+            class_<RTSkinRenderNode> class_binding;
+            class_binding.constructor<>();
+            class_binding.inherit<RTBaseRenderNode>();
+            class_binding.function("computeSkinnedData", &RTSkinRenderNode::computeSkinnedData);
+            class_binding.function("setRootBoneTransfom", &RTSkinRenderNode::setRootBoneTransfom);
+            class_binding.function("setOwnerTransform", &RTSkinRenderNode::setOwnerTransform);
+            class_binding.function("resizeSkinnedData", &RTSkinRenderNode::resizeSkinnedData);
+            class_binding.function("setSkinnedDataByIndex", &RTSkinRenderNode::setSkinnedDataByIndex);
+            class_binding.function("clearBoneTransform", &RTSkinRenderNode::clearBoneTransform);
+            class_binding.function("addBoneTransform", &RTSkinRenderNode::addBoneTransform);
+            class_binding.function("resizeCacheMeshInverseBindPoes", &RTSkinRenderNode::resizeCacheMeshInverseBindPoes);
+            class_binding.function("setinverseBindPoseDataByIndex", &RTSkinRenderNode::setinverseBindPoseDataByIndex);
+            class_binding.function("resizeMatrixCache", &RTSkinRenderNode::resizeMatrixCache);
+            class_binding.function("setMatrixCacheByIndex", &RTSkinRenderNode::setMatrixCacheByIndex);
+            class_binding.function("setSubMeshCount", &RTSkinRenderNode::setSubMeshCount);
+            class_binding.function("resizeBoneIndicesList", &RTSkinRenderNode::resizeBoneIndicesList);
+            class_binding.function("setBoneIndicesList", &RTSkinRenderNode::setBoneIndicesList);
+            context.class_("conchRTSkinRenderNode", class_binding);
+        }
+        
+
         {
             class_<GLESRenderElement2D> class_binding;
             class_binding.constructor<>();
