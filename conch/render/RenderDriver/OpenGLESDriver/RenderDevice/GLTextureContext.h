@@ -87,8 +87,7 @@ class GLTextureContext : public GLObject
     virtual void setupRendertargetTextureAttachment(GLESInternalRT *renderTarget, GLESInternalTex *texture);
     virtual void bindoutScreenTarget();
     virtual void unbindRenderTarget(GLESInternalRT *renderTarget);
-    virtual GLESInternalTex *createRenderTextureInternal(TextureDimension dimension, int width, int height,
-                                                         RenderTargetFormat format, bool generateMipmap, bool sRGB);
+   
     virtual GLESInternalTex *createRenderTextureCubeInternal(TextureDimension dimension, int size,
                                                              RenderTargetFormat format, bool generateMipmap, bool sRGB);
     virtual GLuint createRenderbuffer(int width, int height, int internalFormat, int samples);
@@ -122,12 +121,14 @@ class GLTextureContext : public GLObject
     void setCubePixelsDataJS(GLESInternalTex *texture, JSValueAsParam source, bool premultiplyAlpha, bool invertY);
     void setCubeSubPixelDataJS(GLESInternalTex *texture, JSValueAsParam source, int mipmapLevel, bool generateMipmap,
                                int xOffset, int yOffset, int width, int height, bool premultiplyAlpha, bool invertY);
-
+    virtual GLESInternalTex* createRenderTargetDepthTexture(GLESInternalRT* renderTarget, TextureDimension dimension, int width, int height);
   protected:
     virtual int getGLtexMemory(GLESInternalTex *tex, int depth = 1);
     virtual int getGLRTTexMemory(int width, int height, RenderTargetFormat colorFormat,
                                  RenderTargetFormat depthStencilFormat, bool generateMipmap, int multiSamples,
                                  bool cube);
+    virtual GLESInternalTex* createRenderTextureInternal(TextureDimension dimension, int width, int height,
+        RenderTargetFormat format, bool generateMipmap, bool sRGB);
     sRGBExt *m_sRGB;
     OESTextureHalfFloatExt *m_oesTextureHalfFloat;
     CompressdTextureS3tc_srgbExt *m_compressdTextureS3tc_srgb;

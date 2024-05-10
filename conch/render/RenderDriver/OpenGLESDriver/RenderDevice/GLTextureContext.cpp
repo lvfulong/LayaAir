@@ -1806,4 +1806,38 @@ void GLTextureContext::setCubeSubPixelDataJS(GLESInternalTex *texture, JSValueAs
     this->setCubeSubPixelData(texture, vecDatas, mipmapLevel, generateMipmap, xOffset, yOffset, width, height,
                               premultiplyAlpha, invertY);
 }
+GLESInternalTex* GLTextureContext::createRenderTargetDepthTexture(GLESInternalRT* renderTarget, TextureDimension dimension, int width, int height)
+{
+   // let gl = renderTarget._gl;
+
+    if (renderTarget->m_depthStencilFormat == RenderTargetFormat::None) {
+        return nullptr;
+    }
+
+    // delete depth buffer
+    if (renderTarget->m_depthbuffer != 0) {
+        glDeleteRenderbuffers(1, &(renderTarget->m_depthbuffer));
+        renderTarget->m_depthbuffer = 0;
+    }
+    // create depth texture
+    RenderTargetFormat format = renderTarget->m_depthStencilFormat;
+    bool mipmap = renderTarget->m_generateMipmap;
+    bool sRGB = renderTarget->_isSRGB;
+
+    // delete old tex
+    if (renderTarget->m_depthTexture!=nullptr) {
+        renderTarget->m_depthTexture->dispose();
+    }
+    GLESInternalTex* texture = createRenderTextureInternal(dimension, width, height, format, mipmap, sRGB);
+    renderTarget->m_depthTexture = texture;
+
+    // set attachment
+    GLenum attachment = glRenderTargetAttachment(renderTarget->m_depthStencilFormat);
+    GLuint framebuffer = renderTarget->m_framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, attachment,GL_TEXTURE_2D, texture->m_resource, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, g_nMainFrameBuffer);
+
+    return texture;
+}
 } // namespace laya

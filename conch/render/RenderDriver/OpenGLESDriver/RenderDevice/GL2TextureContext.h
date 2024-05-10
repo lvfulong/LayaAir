@@ -35,13 +35,15 @@ namespace laya
 		void setCubePixelsData(GLESInternalTex* texture, const std::vector<char*>& source, bool premultiplyAlpha, bool invertY) override;
         void setCubeKTXData(GLESInternalTex *texture, const KTXTextureInfo &ktxInfo) override;
 		GLuint createRenderbuffer(int width, int height, int internalFormat, int samples) override;
-		GLESInternalTex* createRenderTextureInternal(TextureDimension dimension, int width, int height, RenderTargetFormat format, bool gengerateMipmap, bool sRGB) override;
+	
 		GLESInternalRT* createRenderTargetInternal(int width, int height, RenderTargetFormat colorFormat, RenderTargetFormat depthStencilFormat, bool generateMipmap, bool sRGB, int multiSamples) override;
 		GLESInternalRT* createRenderTargetCubeInternal(int size, RenderTargetFormat colorFormat, RenderTargetFormat depthStencilFormat, bool generateMipmap, bool sRGB, int multiSamples) override;
 		void unbindRenderTarget(GLESInternalRT* renderTarget) override;
 		void bindRenderTarget(GLESInternalRT* renderTarget, int faceIndex) override;
 		GLESInternalTex* createRenderTextureCubeInternal(TextureDimension dimension, int size, RenderTargetFormat format, bool generateMipmap, bool sRGB) override;
         int getGLtexMemory(GLESInternalTex *tex, int depth = 1) override;
+	protected:
+		GLESInternalTex* createRenderTextureInternal(TextureDimension dimension, int width, int height, RenderTargetFormat format, bool gengerateMipmap, bool sRGB) override;
 	};
 }
 #endif

@@ -246,10 +246,10 @@ class RenderBindings
             class_binding.function("bindRenderTarget", &GLTextureContext::bindRenderTarget);
             class_binding.function("unbindRenderTarget", &GLTextureContext::unbindRenderTarget);
             class_binding.function("bindoutScreenTarget", &GLTextureContext::bindoutScreenTarget);
-            class_binding.function("createRenderTextureInternal", &GLTextureContext::createRenderTextureInternal);
             class_binding.function("createRenderTextureCubeInternal",
                                    &GLTextureContext::createRenderTextureCubeInternal);
             class_binding.function("createRenderTargetInternal", &GLTextureContext::createRenderTargetInternal);
+            class_binding.function("createRenderTargetDepthTexture",&GLTextureContext::createRenderTargetDepthTexture);
             class_binding.function("createRenderTargetCubeInternal", &GLTextureContext::createRenderTargetCubeInternal);
             class_binding.function("setupRendertargetTextureAttachment",
                                    &GLTextureContext::setupRendertargetTextureAttachment);
