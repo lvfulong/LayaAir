@@ -127,14 +127,14 @@ function registerFont(fontName, fileName)
 }
 function registerAllFonts()
 {
-    var sOS = conchConfig.getOS();
+    /*var sOS = conchConfig.getOS();
     if(sOS == "Conch-ios") {
         registerFont('Palatino Linotype-Bold', 'font/Palatino Linotype Bold.ttf');
     }
     registerFont('Palatino Linotype', 'font/Palatino Linotype.ttf');
     registerFont('SimHei', 'font/SimHei.ttf');
     registerFont('MicrosoftYaHei', 'font/Microsoft Yahei.ttf');
-    registerFont('SimSun', 'font/SimSun.ttc');
+    registerFont('SimSun', 'font/SimSun.ttc');*/
 }
 function setOrientation(s: string) {
     var nameToVal = {
