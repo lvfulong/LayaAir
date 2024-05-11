@@ -852,6 +852,7 @@ void GLTextureContext::setTextureDDSData(GLESInternalTex *texture, const DDSText
     int bpp = ddsInfo.bpp;
     int blocksBytes = ddsInfo.blockBytes;
     int mipmapCount = ddsInfo.mipmapCount;
+    bool compressed = ddsInfo.compressed;
 
     bool fourSize = width % 4 == 0 && height % 4 == 0;
 
@@ -862,17 +863,31 @@ void GLTextureContext::setTextureDDSData(GLESInternalTex *texture, const DDSText
 
     m_engine->_bindTexture(texture->m_target, texture);
 
+    FormatPixelsParams formatParams;
+    getFormatPixelsParams(ddsInfo.format, formatParams);
+    int channelsByte = formatParams.bytesPerPixel / formatParams.channels;
+
     int mipmapWidth = width;
     int mipmapHeight = height;
     int memory = 0;
 
     for (int index = 0; index < mipmapCount; index++)
     {
-        int32_t dataLength = std::max(4, mipmapWidth) / 4 * std::max(4, mipmapWidth) / 4 * blocksBytes;
-        glCompressedTexImage2D(target, index, internalFormat, mipmapWidth, mipmapHeight, 0, dataLength, source + dataOffset);
+        if (compressed) {
+            int32_t dataLength = std::max(4, mipmapWidth) / 4 * std::max(4, mipmapWidth) / 4 * blocksBytes;
+            glCompressedTexImage2D(target, index, internalFormat, mipmapWidth, mipmapHeight, 0, dataLength, source + dataOffset);
 
-        memory += dataLength;
-        dataOffset += bpp ? (mipmapWidth * mipmapHeight * (bpp / 8)) : dataLength;
+            memory += dataLength;
+            dataOffset += bpp ? (mipmapWidth * mipmapHeight * (bpp / 8)) : dataLength;
+        }
+        else {
+            int dataLength = mipmapWidth * mipmapHeight * formatParams.channels;
+
+            glTexImage2D(target, index, internalFormat, mipmapWidth, mipmapHeight, 0, format, type, source+ dataOffset);
+            memory += dataLength;
+            dataOffset += dataLength * channelsByte;
+        }
+       
 
         mipmapWidth *= 0.5;
         mipmapHeight *= 0.5;
