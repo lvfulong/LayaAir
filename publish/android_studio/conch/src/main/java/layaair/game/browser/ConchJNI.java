@@ -150,10 +150,6 @@ public class ConchJNI
 	
 	public static native  boolean onBackPressed();
 
-	public static native void onChooseImageComplete(int resultCode, String jsonParam);
-
-	public static native void onSaveImageToPhotosAlbumComplete(int resultCode);
-
 	public static native void handleKeyboardInput(String strValue);
 
 	public static native void handleKeyboardConfirm(String strValue);

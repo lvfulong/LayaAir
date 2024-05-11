@@ -18,12 +18,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 
-import layaair.game.browser.CameraActivity;
 import layaair.game.browser.ConchSurfaceView;
 import layaair.game.browser.LayaVideoPlayer;
-import layaair.game.browser.Picture.ImageUtils;
-import layaair.game.browser.Picture.MultiImageSelectorActivity;
-import layaair.game.browser.Picture.bean.CallbackRes;
 import layaair.game.network.NetworkReceiver;
 import layaair.game.browser.ExportJavaFunction;
 import layaair.game.browser.ConchJNI;
@@ -84,7 +80,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.danikula.videocache.HttpProxyCacheServer;
-import com.google.gson.Gson;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -142,7 +137,6 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 
 	private Vector<LayaVideoPlayer> m_videoPlayers = new Vector<LayaVideoPlayer>();
     private boolean isToast = true;//是否弹吐司，为了保证for循环只弹一次
-    private String saveImageToAlbumFilePath = "";
 
 	public String 	m_strAlertTitle = "";
 	public String  m_strOnBackPressed = "";
@@ -976,34 +970,6 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        boolean isPermissions = true;
-        for (int i = 0; i < permissions.length; i++) {
-            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                isPermissions = false;
-                if (!ActivityCompat.shouldShowRequestPermissionRationale((Activity) mCtx, permissions[i])) { //用户选择了"不再询问"
-                    if (isToast) {
-                        Toast.makeText(mCtx, "请手动打开权限", Toast.LENGTH_SHORT).show();
-                        isToast = false;
-                    }
-                }
-            }
-        }
-        isToast = true;
-        if (isPermissions) {
-            if (requestCode == Constants.REQUEST_PERMISSION_CODE_SAVE_IMAGE) {
-                saveImageToPhotosAlbum(saveImageToAlbumFilePath);
-            }
-            else if (requestCode == Constants.REQUEST_PERMISSION_CODE_CAMERA) {
-				((Activity)mCtx).startActivityForResult(new Intent(mCtx, CameraActivity.class), Constants.REQUEST_CAMERA_ACTIVITY);
-				Log.d(TAG, "onRequestPermissionsResult");
-			}
-        } else {
-            Log.d(TAG, "onRequestPermissionsResult: PERMISSION_DENIED");
-            if (requestCode == Constants.REQUEST_PERMISSION_CODE_SAVE_IMAGE) {
-                ConchJNI.onSaveImageToPhotosAlbumComplete(0);
-                saveImageToAlbumFilePath = "";
-            }
-        }
     }
 
 
@@ -1204,112 +1170,5 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 	@Override
 	public void  setStringOnBackPressed(String str) {
 		m_strOnBackPressed = str;
-	}
-
-	public void chooseImage(int count, String sizeType, String sourceType) {
-		Activity activity = (Activity) mCtx;
-		if (sourceType.equals("camera")) {
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-				boolean hasPermission = Utils.checkPermission(activity, CameraActivity.REQUIRED_PERMISSIONS, Constants.REQUEST_PERMISSION_CODE_CAMERA);
-				if (hasPermission) {
-					activity.startActivityForResult(new Intent(activity, CameraActivity.class), Constants.REQUEST_CAMERA_ACTIVITY);
-				}
-			}
-		} else {
-
-			if(sizeType != null && sourceType != null) {
-				Intent intent = new Intent(activity, MultiImageSelectorActivity.class);
-				intent.putExtra("count", count);
-				intent.putExtra("sizeType", sizeType);
-				intent.putExtra("sourceType", sourceType);
-				Log.d("chooseImage", "chooseImage: " + count);
-				Log.d("chooseImage", "chooseImage: " + sizeType);
-				Log.d("chooseImage", "chooseImage: " + sourceType);
-				activity.startActivityForResult(intent, Constants.REQUEST_SELECT_REQUEST_CODE);
-			}
-		}
-	}
-
-	public void beforeSaveImageToPhotosAlbum(String filePath) {
-		Log.d("beforeSaveImage", ": " + filePath);
-        saveImageToAlbumFilePath = filePath;
-        boolean hasPermission = Utils.checkPermission(mCtx, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.REQUEST_PERMISSION_CODE_SAVE_IMAGE);
-        if (hasPermission) {
-            saveImageToPhotosAlbum(saveImageToAlbumFilePath);
-        }
-    }
-
-	public void saveImageToPhotosAlbum(String filePath) {
-		Log.d("saveImageToPhotosAlbum", "saveImageToPhotosAlbum: " + filePath);
-		boolean result = false;
-		try {
-			FileInputStream fis = new FileInputStream(filePath);
-			result = insertToAlbum(fis, ImageUtils.getMimeType(filePath), Utils.getExtension(filePath));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		if (result) {
-			ConchJNI.onSaveImageToPhotosAlbumComplete(1);
-		} else {
-			ConchJNI.onSaveImageToPhotosAlbumComplete(0);
-		}
-        saveImageToAlbumFilePath = "";
-	}
-
-	private boolean insertToAlbum(InputStream inputStream, String type, String suffix) {
-		Log.d(TAG, "insertToAlbum: ");
-		if (inputStream == null)
-			return false;
-
-		boolean result = false;
-		String fileName = System.currentTimeMillis() + suffix;
-		ContentValues contentValues = new ContentValues();
-		contentValues.put(MediaStore.Images.ImageColumns.DISPLAY_NAME, fileName);
-		if (type != null && !type.equals("")) {
-			contentValues.put(MediaStore.Images.Media.MIME_TYPE, type);
-		}
-
-		//插入相册图片表
-		Uri uri;
-		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) { //SD 卡是否可用，可用则用 SD 卡，否则用内部存储
-			uri = mCtx.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-			Log.d(TAG, "insertToAlbum: EXTERNAL_CONTENT_URI uri " + uri);
-		} else {
-			uri = mCtx.getContentResolver().insert(MediaStore.Images.Media.INTERNAL_CONTENT_URI, contentValues);
-			Log.d(TAG, "insertToAlbum: INTERNAL_CONTENT_URI uri " + uri);
-		}
-		if (uri != null) {
-			//写入文件
-			result = writeToFile(uri, inputStream);
-		}
-		Log.d(TAG, "insertToAlbum: result " + result);
-		return result;
-	}
-
-	private boolean writeToFile(Uri uri, InputStream inputStream) {
-		Log.d(TAG, "writeToFile: ");
-		if (uri == null || inputStream == null)
-			return false;
-
-		boolean result;
-		try {
-			OutputStream outputStream = mCtx.getContentResolver().openOutputStream(uri);
-			byte[] in = new byte[1024];
-			int len = 0;
-			do {
-				len = inputStream.read(in);
-				if (len != -1) {
-					outputStream.write(in, 0, len);
-					outputStream.flush();
-				}
-			} while (len != -1);
-			result = true;
-			inputStream.close();
-			outputStream.close();
-		} catch (Exception e) {
-			Log.d(TAG, e.getLocalizedMessage());
-			result = false;
-		}
-		return result;
 	}
 }

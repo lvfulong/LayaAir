@@ -1205,21 +1205,6 @@ public class ExportJavaFunction
 		}
 	}
 
-
-	public static void chooseImage(int count, String sizeType, String sourceType) {
-		ExportJavaFunction pExport = ExportJavaFunction.GetInstance();
-		if (pExport != null) {
-			pExport.m_pEngine.chooseImage(count, sizeType, sourceType);
-		}
-	}
-
-	public static void saveImageToPhotosAlbum(String filePath) {
-		ExportJavaFunction pExport = ExportJavaFunction.GetInstance();
-		if (pExport != null) {
-			pExport.m_pEngine.beforeSaveImageToPhotosAlbum(filePath);
-		}
-	}
-
 	public static int[] getSafeInsetRect() {
 		ExportJavaFunction pExport = ExportJavaFunction.GetInstance();
 		Rect rect = NotchUtils.getSafeInsetRect((Activity) pExport.m_pEngine.mCtx);

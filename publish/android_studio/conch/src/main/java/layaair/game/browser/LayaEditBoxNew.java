@@ -49,7 +49,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.load.engine.Resource;
 
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 
