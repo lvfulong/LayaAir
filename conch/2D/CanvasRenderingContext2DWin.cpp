@@ -407,8 +407,71 @@ void CanvasRenderingContext2DWin::setFont(const char *font)
     m_font = new Gdiplus::Font(&fontfamily, m_fontDescription.m_size, m_fontStyle, Gdiplus::UnitPixel);
     // LOGI("setFont %s %f", font, m_fontDescription.m_size);
 }
-bool CanvasRenderingContext2DWin::registerFontFromPath(const std::string &fontName, const std::string &path)
+
+bool CanvasRenderingContext2DWin::registerFontFromPath(const std::string& fontName, const std::string& path)
 {
+    return true;
+	// 创建一个PrivateFontCollection对象 
+	PrivateFontCollection fontCollection;
+
+	// 添加字体到PrivateFontCollection 
+	// 假设字体文件名为 "YourFont.ttf"，并且位于当前可执行文件的同一目录中 
+    int bufferLen = 0;
+    wchar_t* pwszBuffer = utf8ToUtf16(path.c_str(), &bufferLen);
+
+	//fontCollection.AddFontFile(pwszBuffer);
+    //delete pwszBuffer;
+    //fontCollection.AddFontFile(L"D:\\work\\laya\\native3.0\\LayaNative3.0\\template\\build\\bin\\Debug\\appCache\\tmp_Palatino Linotype.ttf");
+    //fontCollection.AddFontFile(L"C:/Windows/Fonts/HYZhongHeiTi-197.ttf");
+    fontCollection.AddFontFile(L"D:\\work\\laya\\native3.0\\LayaNative3.0\\template\\build\\bin\\Debug\\font/layabox.ttf");
+
+	// 检查是否成功加载字体 
+	int familyCount = fontCollection.GetFamilyCount();
+	if (familyCount > 0) {
+		// 创建FontFamily对象 
+		FontFamily* fontFamilies = new FontFamily[familyCount];
+		int found = 0;
+
+		fontCollection.GetFamilies(familyCount, fontFamilies, &found);
+		if (found > 0) {
+			// 创建Font对象 
+			Font myFont(fontFamilies, 24, FontStyleRegular, UnitPixel);
+
+			// 从这里开始，就可以使用myFont进行绘制了 
+			// ... 
+		}
+	    // 释放资源 
+	    delete[] fontFamilies;
+	}
+
+	return true;
+}
+
+bool CanvasRenderingContext2DWin::registerFontFromBuffer(const std::string& fontName, const uint8_t* buff, int len) {
+    return true;
+    // 创建一个PrivateFontCollection对象 
+    PrivateFontCollection fontCollection;
+    fontCollection.AddMemoryFont(buff,len);
+
+    // 检查是否成功加载字体 
+    int familyCount = fontCollection.GetFamilyCount();
+    if (familyCount > 0) {
+        // 创建FontFamily对象 
+        FontFamily* fontFamilies = new FontFamily[familyCount];
+        int found = 0;
+
+        fontCollection.GetFamilies(familyCount, fontFamilies, &found);
+        if (found > 0) {
+            // 创建Font对象 
+            Font myFont(fontFamilies, 24, FontStyleRegular, UnitPixel);
+
+            // 从这里开始，就可以使用myFont进行绘制了 
+            // ... 
+        }
+        // 释放资源 
+        delete[] fontFamilies;
+    }
+
     return true;
 }
 } // namespace laya

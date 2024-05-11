@@ -7,6 +7,8 @@
 #include <CoreGraphics/CGDataProvider.h>
 #include <CoreGraphics/CGFont.h>
 #include <CoreText/CTFontManager.h>
+#elif WIN32
+#include "CanvasRenderingContext2DWin.h"
 #else
 #endif
 
@@ -133,10 +135,15 @@ bool FontManager::registerFont(const std::string &family, const std::string &pat
         return false;
     }
     return registerFontIOS(family, fontDataProvider);
+#elif WIN32
+    return CanvasRenderingContext2DWin::registerFontFromPath(family, path);
 #else
     return true;
 #endif
 }
+
+
+
 bool FontManager::registerFont(const std::string &family, const uint8_t *data, int32_t byteLength)
 {
 #ifdef __ANDROID__
@@ -158,6 +165,8 @@ bool FontManager::registerFont(const std::string &family, const uint8_t *data, i
     bool ret = registerFontIOS(family, fontDataProvider);
     CGDataProviderRelease(fontDataProvider);
     return ret;
+#elif WIN32
+    return CanvasRenderingContext2DWin::registerFontFromBuffer(family,data, byteLength);
 #else
     return true;
 #endif
