@@ -109,8 +109,6 @@ extern "C"
     JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_setLocalizable(JNIEnv * env, jobject obj, jboolean p_bIsLocalPackage);
     JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_callConchJSFunction(JNIEnv* env, jobject obj, jstring sFunctionName,jstring sJsonParam,jstring sCallbackFunction);
 	JNIEXPORT jboolean JNICALL Java_layaair_game_browser_ConchJNI_onBackPressed(JNIEnv* env, jobject obj);
-	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onChooseImageComplete(JNIEnv* env, jobject obj, jint resultCode, jstring p_sJsonParam);
-	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onSaveImageToPhotosAlbumComplete(JNIEnv* env, jobject obj, jint resultCode);
     JNIEXPORT void JNICALL Java_layaair_game_browser_LayaVideoPlayer_emit(JNIEnv* env, jobject obj, jlong ptr, jstring str);
 	JNIEXPORT void JNICALL Java_layaair_game_browser_LayaVideoPlayer_transferBitmap(JNIEnv* env, jobject obj, jobject bitmap, jlong dataPtr);
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleKeyboardInput(JNIEnv* env, jobject obj, jstring strValue);
@@ -567,19 +565,6 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_LayaVideoPlayer_transferBitmap(
 	AndroidBitmap_unlockPixels(env,bitmap);
 }
 
-JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onChooseImageComplete(JNIEnv* env, jobject obj, jint resultCode, jstring p_sJsonParam)
-{
-	LOGI("JNI onChooseImageComplete tid=%x", std::this_thread::get_id());
-	const char* sJsonParam = env->GetStringUTFChars(p_sJsonParam, NULL);
-	//JSLayaNative::getInstance()->onCompleteCallJSFunction(resultCode, sJsonParam);
-	env->ReleaseStringUTFChars(p_sJsonParam, sJsonParam);
-}
-
-JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onSaveImageToPhotosAlbumComplete(JNIEnv* env, jobject obj, jint resultCode)
-{
-	LOGI("JNI onSaveImageToPhotosAlbumComplete tid=%x", std::this_thread::get_id());
-	//JSLayaNative::getInstance()->onSaveImageComplete(resultCode);
-}
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleKeyboardInput(JNIEnv* env, jobject obj, jstring strValue)
 {
 	const char* value = env->GetStringUTFChars(strValue, NULL);
