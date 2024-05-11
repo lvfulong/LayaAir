@@ -8,6 +8,7 @@
 #include <downloadCache/JCIosFileSource.h>
 #include <utils/JCCommonMethod.h>
 extern std::string gRedistPath;
+extern std::string gAssetRootPath;
 namespace  fs = std::filesystem;
 /*
 用法：
@@ -23,7 +24,6 @@ namespace  fs = std::filesystem;
         指定效率测试的输出目录
     -debug=""
 */
-std::string gAssetRootPath = "";
 int main(int argc, _TCHAR* argv[])
 {
     bool bRunTest = false;

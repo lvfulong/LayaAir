@@ -10,6 +10,7 @@
 
 namespace  fs = std::filesystem;
 extern std::string gRedistPath;
+extern std::string gAssetRootPath;
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
 /*
@@ -26,8 +27,6 @@ extern int g_nInnerHeight;
         ָ��Ч�ʲ��Ե����Ŀ¼
     -debug=""
 */
-
-std::string gAssetRootPath = "";
 int main(int argc, char* argv[])
 {
     bool bRunTest = false;

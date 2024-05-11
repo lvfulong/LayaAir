@@ -47,9 +47,8 @@
 
 std::string gRedistPath = "";
 std::string gResourcePath = "";
-#ifdef __APPLE__
-    std::string gAssetRootPath = "";
-#endif
+std::string gAssetRootPath = "";
+
 int g_nInnerWidth = 1024;
 int g_nInnerHeight = 768;
 bool g_bGLCanvasSizeChanged = false;

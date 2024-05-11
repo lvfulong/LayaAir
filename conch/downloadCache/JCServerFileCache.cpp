@@ -24,18 +24,17 @@
 
 
 
-
+extern std::string gAssetRootPath;
 extern std::string gRedistPath;
-//这个对象不依赖于process，所以放到外面。
 
 #ifdef __ANDROID__
     AAssetManager* g_pAssetManager=nullptr;
-    std::string gAssetRootPath="";
 	std::string gAPKExpansionMainPath="";
 	std::string gAPKExpansionPatchPath="";
-#else
-extern std::string gAssetRootPath;
 #endif
+
+
+
 
 namespace laya
 {
