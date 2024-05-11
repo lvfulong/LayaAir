@@ -85,7 +85,7 @@ int main(int argc, char* argv[])
         }
     }*/
 
-    fs::path exePath = getExePath();    
+    fs::path exePath = laya::getExePath();    
     LOGE("start exe path %s", exePath.c_str());
     gRedistPath = exePath.remove_filename().string();
     gAssetRootPath = gRedistPath;
