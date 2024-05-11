@@ -99,8 +99,8 @@ function build_android {
 		cmake --build .
 		cmake --install .
 
-		cp ${CONCH_NDK_PATH}/sources/cxx-stl/llvm-libc++/libs/${android_abi}/libc++_shared.so ${publish_dir}/nativetools/template/android_studio/app/libs/${android_abi}
-		cp ./conch/libconch.so  ${publish_dir}/nativetools/template/android_studio/app/libs/${android_abi}
+		cp ${CONCH_NDK_PATH}/sources/cxx-stl/llvm-libc++/libs/${android_abi}/libc++_shared.so ${publish_dir}/android_studio/app/libs/${android_abi}
+		cp ./conch/libconch.so  ${publish_dir}/android_studio/app/libs/${android_abi}
 	
 		cd ${current_dir}
 }
@@ -135,9 +135,9 @@ function build_windows {
 }
 function archive_ios {
     #—————————————————————merge static lib————————————————————————
-    rm -rf ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS
-    mkdir ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS
-    mkdir ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS/libs
+    rm -rf ${publish_dir}/ios/Runtime
+    mkdir ${publish_dir}/ios/Runtime
+    mkdir ${publish_dir}/ios/Runtime/libs
     cd build
     rm -rf armv64
     rm -rf x86_64
@@ -257,24 +257,24 @@ function archive_ios {
     libtool -static *.a -o libconch_static.a
     cd ..
 
-    lipo -create armv64/libconch_static.a x86_64/libconch_static.a -output ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS/libs/libconch.a
+    lipo -create armv64/libconch_static.a x86_64/libconch_static.a -output ${publish_dir}/ios/Runtime/libs/libconch.a
 
-    strip -S -X ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS/libs/libconch.a
+    strip -S -X ${publish_dir}/ios/Runtime/libs/libconch.a
     
     rm -rf armv64
     rm -rf x86_64
 
     #—————————————————————copy .h————————————————————————
 
-    rm -rf ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS/include
-    mkdir ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS/include
-    cp  ${conch_dir}/platform/iOS/conchRuntime.h ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS/include
-    mkdir ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS/include/Reachability
-    cp  ${conch_dir}/platform/iOS/Reachability/Reachability.h ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS/include/Reachability
+    rm -rf ${publish_dir}/ios/Runtime/include
+    mkdir ${publish_dir}/ios/Runtime/include
+    cp  ${conch_dir}/platform/iOS/conchRuntime.h ${publish_dir}/ios/Runtime/include
+    mkdir ${publish_dir}/ios/Runtime/include/Reachability
+    cp  ${conch_dir}/platform/iOS/Reachability/Reachability.h ${publish_dir}/ios/Runtime/include/Reachability
     #—————————————————————resource————————————————————————
-    #rm -rf ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS/resource
-    #mkdir ${publish_dir}/nativetools/template/ios/LayaRuntime-iOS/resource
-    #cp -rf ${conch_dir}h/build/conch/proj.ios/resource ${publish_dir}/nativetools/template/ios/LayaBox/
+    #rm -rf ${publish_dir}/ios/Runtime/resource
+    #mkdir ${publish_dir}/ios/Runtime/resource
+    #cp -rf ${conch_dir}h/build/conch/proj.ios/resource ${publish_dir}/ios/LayaBox/
 }
 
 
