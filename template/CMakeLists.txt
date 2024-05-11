@@ -154,7 +154,7 @@ elseif(MSVC)
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${file} $<TARGET_FILE_DIR:${PROJECT_NAME}>/${relative_path}
 		)
 	endforeach()
-	target_link_libraries(${PROJECT_NAME} PRIVATE app conch)
+	target_link_libraries(${PROJECT_NAME} PRIVATE conch)
 elseif(LINUX)
 	list(APPEND PROJECT_SOURCES
 		proj.linux/Conch6.cpp
@@ -163,7 +163,7 @@ elseif(LINUX)
 	add_executable(${PROJECT_NAME}
 		${PROJECT_SOURCES}
 	)
-	target_link_libraries(${PROJECT_NAME} PRIVATE app conch)
+	target_link_libraries(${PROJECT_NAME} PRIVATE conch)
 endif()
 
 # target_include_directories(${PROJECT_NAME})

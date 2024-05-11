@@ -1,7 +1,7 @@
 #ifndef __APP_H__
 #define __APP_H__
 
-#include <app/Config.h>
+#include <Application/Config.h>
 #define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
 #include <string>

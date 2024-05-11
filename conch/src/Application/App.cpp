@@ -1,6 +1,6 @@
 #include "JCConch.h"
 #include <SDL2/SDL_syswm.h>
-#include <app/App.h>
+#include <Application/App.h>
 #include <assert.h>
 #include <filesystem>
 #include "JCSystemConfig.h"

@@ -59,18 +59,15 @@ endif()
 # 设置可执行文件的输出目录
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+if(NOT BUILDING_CONCH_SHARED AND NOT BUILDING_CONCH_STATIC)
+   add_definitions(-DBUILDING_CONCH_FROME_SOURCE)
+   add_subdirectory(template)
+endif()
+
 add_subdirectory(modules/utils)
 add_subdirectory(modules/binder)
 add_subdirectory(conch)
 
-if(NOT IS_BUILDING_STATIC_LIBS)
-   add_subdirectory(template)
-endif()
-
-
-if(MSVC OR LINUX)
-	add_subdirectory(modules/app)
-endif()
 add_subdirectory(third_party/iniparser iniparser)
 add_subdirectory(third_party/zlib zlib)
 add_subdirectory(third_party/zip zip)

@@ -41,7 +41,7 @@ function build_ios {
 		-DIOS=1 \
 		-DCMAKE_TOOLCHAIN_FILE=${root_dir}/cmake/clang/iOS.cmake \
 		-DCMAKE_SYSTEM_NAME=iOS \
-        -DIS_BUILDING_STATIC_LIBS=1 \
+        -DBUILDING_CONCH_STATIC=1 \
 		${root_dir}
 
 
@@ -93,7 +93,7 @@ function build_android {
 		-DANDROID_PLATFORM=${CONCH_ANDROID_MINI_SDK_VERSION} \
 		-DANDROID_ARM_NEON=TRUE \
 		-DANDROID_TOOLCHAIN=clang \
-        -DIS_BUILDING_STATIC_LIBS=1 \
+        -DBUILDING_CONCH_SHARED=1 \
 		${root_dir}
 
 		cmake --build .
@@ -117,7 +117,7 @@ function build_windows {
 		     -G "Visual Studio 17 2022" \
             -A x632 \
 		    -DCMAKE_BUILD_TYPE="${build_type}" \
-            -DIS_BUILDING_STATIC_LIBS=1 \
+            -DBUILDING_CONCH_SHARED=1 \
 		    ${root_dir}
 	fi
 	
@@ -126,7 +126,7 @@ function build_windows {
 		     -G "Visual Studio 17 2022" \
             -A x64 \
 		    -DCMAKE_BUILD_TYPE="${build_type}" \
-            -DIS_BUILDING_STATIC_LIBS=1 \
+            -DBUILDING_CONCH_SHARED=1 \
 		    ${root_dir}
     fi
     cmake --build .

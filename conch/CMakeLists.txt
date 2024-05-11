@@ -581,6 +581,8 @@ elseif(MSVC)
 		src/2D/CanvasRenderingContext2DWin.cpp
 		src/resource/Audio/JCMp3Parser.h
 		src/resource/Audio/JCMp3Parser.cpp
+		src/Exports.cpp
+		src/Application/App.cpp
 	)
 elseif(LINUX)
 	list(APPEND PLATFORM_HEADER_DIR
@@ -596,6 +598,8 @@ elseif(LINUX)
 		src/2D/CanvasRenderingContext2DLinux.cpp
 		src/Bindings/JSLinuxEditBox.h
 		src/Bindings/JSLinuxEditBox.cpp
+		src/Exports.cpp
+		src/Application/App.cpp
 	)
 endif()
 
@@ -605,7 +609,11 @@ set(CONCH_HEADERS_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
 if(ANDROID)
 	add_library(${PROJECT_NAME} SHARED ${CONCH_SRC})
 elseif(MSVC)
-	add_library(${PROJECT_NAME} ${CONCH_SRC})
+	if(BUILDING_CONCH_SHARED)
+		add_library(${PROJECT_NAME} SHARED ${CONCH_SRC})
+	else()
+		add_library(${PROJECT_NAME} ${CONCH_SRC})
+	endif()
 	target_precompile_headers(${PROJECT_NAME} PRIVATE ${CONCH_HEADERS})
 elseif(LINUX)
 	add_library(${PROJECT_NAME} ${CONCH_SRC})
@@ -784,6 +792,8 @@ elseif(MSVC)
 		linearmath
 		BulletSoftBody
 		gdiplus
+		SDL2
+		SDL2main
 	)
 elseif(LINUX)
 	find_package(X11 REQUIRED)
@@ -820,6 +830,8 @@ elseif(LINUX)
 		ssl
 		crypto
 		pthread
+		SDL2
+		SDL2main
 	)
 endif()
 
