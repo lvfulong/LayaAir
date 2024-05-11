@@ -720,6 +720,9 @@ lws_vhost* WebSocket::createVhost(struct lws_protocols* protocols, int& sslConne
 #ifdef WIN32
     static std::string caFilePath = gRedistPath + std::string("ca/") + caFileName;
     bool isCAFileExist = fs::exists(caFilePath, error);
+#elif __LINUX__
+    static std::string caFilePath = gRedistPath + std::string("ca/") + caFileName;
+    bool isCAFileExist = fs::exists(caFilePath, error);
 #else
     static std::string caFilePath = gResourcePath + "ca/" + caFileName;
     bool isCAFileExist = JCConch::s_pAssetsFiles->isFileExist(("ca/" + caFileName).c_str());

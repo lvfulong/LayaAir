@@ -4,6 +4,7 @@
 #include <utils/JCSingletonList.h>
 #include <unordered_map>
 #include <any>
+#include <cstdint>
 
 namespace laya
 {
