@@ -44,12 +44,13 @@
 #elif WIN32
 #include "OpenGLBackendWinEGL.h"
 #endif
-
+#ifdef WIN32
+HWND g_hWnd;
+#endif
 std::string gRedistPath = "";
 std::string gResourcePath = "";
-#ifdef __APPLE__
-    std::string gAssetRootPath = "";
-#endif
+std::string gAssetRootPath = "";
+
 int g_nInnerWidth = 1024;
 int g_nInnerHeight = 768;
 bool g_bGLCanvasSizeChanged = false;
