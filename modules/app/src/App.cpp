@@ -11,7 +11,7 @@ extern int g_nInnerHeight;
 extern bool g_bGLCanvasSizeChanged;
 #ifdef WIN32
 #include <Windows.h>
-HWND g_hWnd;
+extern HWND g_hWnd;
 #elif __LINUX__
 #include <SDL2/SDL_syswm.h>
 #include <X11/Xlib.h>

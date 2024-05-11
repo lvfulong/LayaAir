@@ -44,7 +44,9 @@
 #elif WIN32
 #include "OpenGLBackendWinEGL.h"
 #endif
-
+#ifdef WIN32
+HWND g_hWnd;
+#endif
 std::string gRedistPath = "";
 std::string gResourcePath = "";
 std::string gAssetRootPath = "";
