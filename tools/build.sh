@@ -72,7 +72,6 @@ function build_android {
 	
     local build_type=$1
     local arch=$2
-    local platform=$3
     local build_dir="build/android-${build_type}-${arch}"
     mkdir -p "${build_dir}"
     cd "${build_dir}"
@@ -107,16 +106,20 @@ function build_android {
 function build_windows {
     local build_type=$1
     local arch=$2
-    local platform=$3
     local build_dir="build/windows-${build_type}-${arch}"
+    local install_dir="install/windows-${build_type}-${arch}"
+    
+    mkdir -p "${install_dir}"
     mkdir -p "${build_dir}"
+   
     cd "${build_dir}"
 
 	if [[ "$2" == "win32" ]]; then
 		 cmake \
 		     -G "Visual Studio 17 2022" \
-            -A x632 \
-		    -DCMAKE_BUILD_TYPE="${build_type}" \
+            -A x32 \
+            -DCMAKE_BUILD_TYPE="${build_type}" \
+            -DCMAKE_INSTALL_PREFIX="../../${install_dir}" \
             -DBUILDING_CONCH_SHARED=1 \
 		    ${root_dir}
 	fi
@@ -125,11 +128,12 @@ function build_windows {
         cmake \
 		     -G "Visual Studio 17 2022" \
             -A x64 \
-		    -DCMAKE_BUILD_TYPE="${build_type}" \
+            -DCMAKE_BUILD_TYPE="${build_type}" \
+            -DCMAKE_INSTALL_PREFIX="../../${install_dir}" \
             -DBUILDING_CONCH_SHARED=1 \
 		    ${root_dir}
     fi
-    cmake --build .
+    cmake --build . --target install
     #make
     cd ${current_dir}
 }
@@ -338,7 +342,7 @@ fi
             exit 1
             ;;
         windows)
-            build_windows release "win64"
+            build_windows "Release" "win64"
             exit 1
             ;;
     esac

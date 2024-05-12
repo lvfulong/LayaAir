@@ -6,3 +6,22 @@ else()
 	message("LINUX : false")
 endif()
 add_definitions(-DCONCH)
+
+
+if (NOT BUILDING_ARCH)
+    set(BUILDING_ARCH "${CMAKE_HOST_SYSTEM_PROCESSOR}")
+    if (CMAKE_OSX_ARCHITECTURES MATCHES ".*;.*")
+        set(BUILDING_ARCH "universal")
+    else()
+        if (NOT "${CMAKE_OSX_ARCHITECTURES}" STREQUAL "")
+            set(BUILDING_ARCH "${CMAKE_OSX_ARCHITECTURES}")
+        endif()
+    endif()
+
+endif()
+
+string(TOLOWER "${BUILDING_ARCH}" BUILDING_ARCH)
+string(REPLACE "amd64" "x86_64" BUILDING_ARCH "${BUILDING_ARCH}")
+if (NOT DIST_DIR)
+    set(DIST_DIR "${BUILDING_ARCH}")
+endif()

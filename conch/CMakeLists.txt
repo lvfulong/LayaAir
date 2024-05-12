@@ -19,6 +19,9 @@ set(CONCH_INCLUDE)
 set(CONCH_SRC)
 set(PLATFORM_HEADER_DIR)
 
+
+set(PUBLIC_HEADER_DIR include)
+
 list(APPEND CONCH_INCLUDE
 	./include
 	src/WebGL/include
@@ -605,7 +608,7 @@ endif()
 
 set(CONCH_HEADERS_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
 )
-
+include_directories(${PUBLIC_HEADER_DIR})
 if(ANDROID)
 	add_library(${PROJECT_NAME} SHARED ${CONCH_SRC})
 elseif(MSVC)
@@ -622,11 +625,12 @@ elseif(IOS)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fobjc-arc")
 endif()
 
-target_include_directories(${PROJECT_NAME}
-	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
-	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/${PLATFORM_HEADER_DIR}
-	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/${CONCH_INCLUDE}
-)
+target_include_directories(${PROJECT_NAME} PUBLIC ${PUBLIC_HDR_DIR})
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src})
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/${PLATFORM_HEADER_DIR})
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/${CONCH_INCLUDE})
+
+
 set_target_properties(${PROJECT_NAME} PROPERTIES
 	LINK_FLAGS "${CONCH_PLATFORM_LINK_FLAGS}"
 	LINK_FLAGS_DEBUG "${CONCH_PLATFORM_LINK_FLAGS_DEBUG}"
@@ -852,8 +856,8 @@ target_compile_options(${PROJECT_NAME} PRIVATE
 	${WARNINGS}
 )
 
-# target_link_libraries(${PROJECT_NAME} PUBLIC utils)
-# target_link_libraries(${PROJECT_NAME} PUBLIC binder)
+install(TARGETS ${PROJECT_NAME} DESTINATION lib/${BUILDING_ARCH})
+install(DIRECTORY ./include DESTINATION .)
 
 message("CMAKE_BUILD_TYPE:${CMAKE_BUILD_TYPE}")
 message("CMAKE_C_FLAGS:${CMAKE_C_FLAGS}")
