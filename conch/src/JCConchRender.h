@@ -25,6 +25,7 @@
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderGeometryElement.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalTex.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
+#include "JCSystemConfig.h"
 
 namespace laya
 {
@@ -54,20 +55,22 @@ namespace laya
 
         template <typename F, typename ... Args>
    	    auto postTaskFromJSToRenderSync(F&& f, Args&& ... args)->std::future<std::result_of_t<F(Args...)>> {
-#ifdef WEBGL_THREAD
-        return m_WebGLThread->postTaskSync(f);//TODOs
-#else
-        std::promise<std::result_of_t<F(Args...)>> p;
-        p.set_value(f());
-        return p.get_future();
-#endif
+            if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL) {
+                return m_WebGLThread->postTaskSync(f);//TODOs
+            }
+            else {
+                std::promise<std::result_of_t<F(Args...)>> p;
+                p.set_value(f());
+                return p.get_future();
+            }
     	}
         void postTaskFromJSToRenderAsync(std::function<void()> task) {
-#ifdef WEBGL_THREAD
-         m_WebGLThread->postTaskSync(task);//TODOs
-#else
-         task();
-#endif
+            if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL) {
+                m_WebGLThread->postTaskSync(task);//TODOs
+            }
+            else {
+                task();
+            }
         }
     public:
         JCWorkerThread*                         m_pRenderThread;
@@ -96,9 +99,7 @@ namespace laya
 #elif WIN32
         OpenGLBackendWinEGL*   m_GfxBackend = { nullptr };
 #endif
-#ifdef WEBGL_THREAD
         WebGLThread*                            m_WebGLThread = nullptr;
-#endif
     };
 }
 //------------------------------------------------------------------------------

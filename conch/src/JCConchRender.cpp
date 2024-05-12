@@ -61,10 +61,9 @@ namespace laya
         //m_pRenderGeometryElementManager = new ResourceManager<RenderGeometryElement>();
         //m_pWordTextManager = new ObjectManager<WordText>();
         m_pUniformBufferObjectManager = new ObjectManager<UniformBufferObject>();
-#ifdef WEBGL_THREAD
-        m_WebGLThread = new WebGLThread();
-#endif
-
+        if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL) { 
+            m_WebGLThread = new WebGLThread();
+        }
     }
 	JCConchRender::~JCConchRender()
 	{
@@ -101,11 +100,8 @@ namespace laya
             delete m_pProgramLocationTable;
             m_pProgramLocationTable = NULL;
         }
-#ifdef WEBGL_THREAD
-        m_WebGLThread->postTaskSync([this]()->bool {
-#else
-        JCConch::s_pScriptRuntime->m_pScriptThread->postTaskSync([this]()->bool {
-#endif
+        
+         auto  func = [this]()->bool {
             if (m_pScreenContext)
             {
                 delete m_pScreenContext;
@@ -150,14 +146,19 @@ namespace laya
             delete m_GfxBackend;
             m_GfxBackend = nullptr;
             return true;
-        }).get();
-#ifdef WEBGL_THREAD
+        };
+        if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL) {
+            m_WebGLThread->postTaskSync(func).get();
+        }
+        else {
+            JCConch::s_pScriptRuntime->m_pScriptThread->postTaskSync(func).get();
+        }
+
         if (m_WebGLThread != nullptr)
         {
             delete m_WebGLThread;
             m_WebGLThread = nullptr;
         }
-#endif
 	}
     void JCConchRender::update() {
         m_nFrameCount++;
@@ -314,11 +315,7 @@ void JCConchRender::requestCaptureScreen()
 }
     void JCConchRender::createScreenSurface(void *nativeHandle)
     {
-#ifdef WEBGL_THREAD
-        m_WebGLThread->postTaskAsync([this, nativeHandle]() {
-#else
-        JCConch::s_pScriptRuntime->m_pScriptThread->post([this, nativeHandle]()  {
-#endif
+        auto  func = [this, nativeHandle]() {
             m_GfxBackend->createScreenSurface(nativeHandle);
             m_GfxBackend->makeCurrent();
             if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL && LayaGL::m_pWebglEngine == nullptr)
@@ -328,36 +325,42 @@ void JCConchRender::requestCaptureScreen()
                 LayaGL::m_pWebglEngine->initRenderEngine();
                 LayaGL::m_pWebglEngine->createTextureContext(LayaGL::m_pWebglEngine->isWebGL2());
             }
-        });
+        };
+        if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL) {
+            m_WebGLThread->postTaskAsync(func);
+        }
+        else {
+            JCConch::s_pScriptRuntime->m_pScriptThread->post(func);
+        }
     }
     void JCConchRender::onScreenSurfaceResize(int width, int height)
     {
-#ifdef WEBGL_THREAD
-        m_WebGLThread->postTaskAsync([this, width, height](){
-#else
-        JCConch::s_pScriptRuntime->m_pScriptThread->post([this, width, height]() {
-#endif
+         auto  func = [this, width, height]() { 
             m_GfxBackend->onScreenSurfaceResize(width, height);
-        });
+        };
+        if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL) {
+             m_WebGLThread->postTaskAsync(func);
+        }
+        else {
+            JCConch::s_pScriptRuntime->m_pScriptThread->post(func);
+        }
     }
     void JCConchRender::destroyScreenSurface()
     {
-#ifdef WEBGL_THREAD
-        m_WebGLThread->postTaskAsync([this]() {
-#else
-        JCConch::s_pScriptRuntime->m_pScriptThread->post([this](){
-#endif  
+        auto  func = [this]() {
             m_GfxBackend->destroyScreenSurface();
-        });
+        };
+        if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL) {
+            m_WebGLThread->postTaskAsync(func);
+        }
+        else {
+            JCConch::s_pScriptRuntime->m_pScriptThread->post(func);
+        }
     }
     void JCConchRender::createBackend(const BackendOptions& options)
     {
-#ifdef WEBGL_THREAD
-        m_WebGLThread->postTaskAsync([this, options](){
-#else
-        JCConch::s_pScriptRuntime->m_pScriptThread->post([this, options]() {
-#endif
-            if (m_GfxBackend == nullptr) {
+        auto  func = [this, options]() { 
+                        if (m_GfxBackend == nullptr) {
  #ifdef __APPLE__
                 m_GfxBackend = new OpenGLBackendiOS();
 #elif __LINUX__
@@ -369,7 +372,13 @@ void JCConchRender::requestCaptureScreen()
 #endif
                 m_GfxBackend->create(options);
             }
-        });
+        };
+        if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL) {
+            m_WebGLThread->postTaskAsync(func);
+        }
+        else {
+            JCConch::s_pScriptRuntime->m_pScriptThread->post(func);
+        }
     }
 }
 //------------------------------------------------------------------------------
