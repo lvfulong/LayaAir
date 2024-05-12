@@ -855,7 +855,9 @@ endif()
 target_compile_options(${PROJECT_NAME} PRIVATE
 	${WARNINGS}
 )
-
+if(MSVC)
+install(FILES ${WIN_DLLS} DESTINATION lib/x64)
+endif()
 install(TARGETS ${PROJECT_NAME} DESTINATION lib/${BUILDING_ARCH})
 install(DIRECTORY ./include DESTINATION .)
 

@@ -13,6 +13,21 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="资源文件\resource">
+      <UniqueIdentifier>{46237b23-3a48-4184-a2f1-6833e736252e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="资源文件\resource\ca">
+      <UniqueIdentifier>{27bce2c2-ed89-4000-98b5-4faacff2896d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="资源文件\resource\cache">
+      <UniqueIdentifier>{48c8727f-fdd1-44e0-a58a-aa7a28b6a018}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="资源文件\resource\font">
+      <UniqueIdentifier>{eaca6560-5955-4a1e-a8af-a86e4fe42a37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="资源文件\resource\scripts">
+      <UniqueIdentifier>{adae3d73-e78e-4bce-a653-920cc126536b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -45,5 +60,36 @@
     <Image Include="LayaBox.ico">
       <Filter>资源文件</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resource\config.ini">
+      <Filter>资源文件\resource</Filter>
+    </None>
+    <None Include="resource\ca\cacert.pem">
+      <Filter>资源文件\resource\ca</Filter>
+    </None>
+    <None Include="resource\scripts\apploader.js">
+      <Filter>资源文件\resource\scripts</Filter>
+    </None>
+    <None Include="resource\scripts\async.js">
+      <Filter>资源文件\resource\scripts</Filter>
+    </None>
+    <None Include="resource\scripts\config.js">
+      <Filter>资源文件\resource\scripts</Filter>
+    </None>
+    <None Include="resource\scripts\index.js">
+      <Filter>资源文件\resource\scripts</Filter>
+    </None>
+    <None Include="resource\scripts\runtimeInit.js">
+      <Filter>资源文件\resource\scripts</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="resource\cache\readme.txt">
+      <Filter>资源文件\resource\cache</Filter>
+    </Text>
+    <Text Include="resource\font\empty.txt">
+      <Filter>资源文件\resource\font</Filter>
+    </Text>
   </ItemGroup>
 </Project>

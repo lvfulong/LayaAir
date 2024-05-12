@@ -132,13 +132,9 @@ elseif(MSVC)
 		${PROJECT_SOURCES}
 	)
 
-	file(GLOB DLLS 
-		${CMAKE_CURRENT_SOURCE_DIR}/../third_party/v8/lib/win64/*.dll 
-		${CMAKE_CURRENT_SOURCE_DIR}/../third_party/angle/lib/win64/*.dll
-		${CMAKE_CURRENT_SOURCE_DIR}/../third_party/openal/lib/win64/*.dll
-	)
+	
 
-	foreach(file ${DLLS})
+	foreach(file ${WIN_DLLS})
 		add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${file} $<TARGET_FILE_DIR:${PROJECT_NAME}>
 		)

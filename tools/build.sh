@@ -107,8 +107,8 @@ function build_windows {
     local build_type=$1
     local arch=$2
     local build_dir="build/windows-${build_type}-${arch}"
-    local install_dir="install/windows-${build_type}-${arch}"
-    
+    #local install_dir="install/windows-${build_type}-${arch}"
+    local install_dir="${publish_dir}/windows/Runtime"
     mkdir -p "${install_dir}"
     mkdir -p "${build_dir}"
    
@@ -119,7 +119,7 @@ function build_windows {
 		     -G "Visual Studio 17 2022" \
             -A x32 \
             -DCMAKE_BUILD_TYPE="${build_type}" \
-            -DCMAKE_INSTALL_PREFIX="../../${install_dir}" \
+            -DCMAKE_INSTALL_PREFIX="${install_dir}" \
             -DBUILDING_CONCH_SHARED=1 \
 		    ${root_dir}
 	fi
@@ -129,7 +129,7 @@ function build_windows {
 		     -G "Visual Studio 17 2022" \
             -A x64 \
             -DCMAKE_BUILD_TYPE="${build_type}" \
-            -DCMAKE_INSTALL_PREFIX="../../${install_dir}" \
+            -DCMAKE_INSTALL_PREFIX="${install_dir}" \
             -DBUILDING_CONCH_SHARED=1 \
 		    ${root_dir}
     fi

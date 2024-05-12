@@ -112,6 +112,10 @@
       <AdditionalDependencies>conch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>.\Runtime\lib\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(SolutionDir)resource\*"  "$(OutDir)" /s /e /i /y
+xcopy /y "$(SolutionDir)Runtime\lib\$(LibrariesArchitecture)\*.dll"         "$(OutDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -131,6 +135,10 @@
       <AdditionalDependencies>conch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>.\Runtime\lib\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(SolutionDir)resource\*"  "$(OutDir)" /s /e /i /y
+xcopy /y "$(SolutionDir)Runtime\lib\$(LibrariesArchitecture)\*.dll"         "$(OutDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
@@ -147,6 +155,19 @@
   <ItemGroup>
     <Image Include="LayaBox.ico" />
     <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resource\ca\cacert.pem" />
+    <None Include="resource\config.ini" />
+    <None Include="resource\scripts\apploader.js" />
+    <None Include="resource\scripts\async.js" />
+    <None Include="resource\scripts\config.js" />
+    <None Include="resource\scripts\index.js" />
+    <None Include="resource\scripts\runtimeInit.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="resource\cache\readme.txt" />
+    <Text Include="resource\font\empty.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
