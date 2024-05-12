@@ -101,7 +101,7 @@ namespace laya
 
         //m_pScriptThread = new JSMulThread();//m_pScriptThread = new JSSingleThread();
        
-        LOGI("Graphics API %s", toString(g_kSystemConfig.m_graphicsAPI));
+        LOGI("Graphics API %s", toString(g_kSystemConfig.m_graphicsAPI).c_str());
 
 
         s_pConchRender.reset(new JCConchRender(m_pFileResMgr));

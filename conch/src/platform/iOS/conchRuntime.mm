@@ -101,6 +101,12 @@ static conchRuntime* g_pIOSConchRuntime = nil;
 
 -(void)setConchRuntimeParam:(CGRect)frame;
 {
+    
+    laya::g_kSystemConfig.m_nOrientationType =
+    [self parseInterfaceOrientations: [[[NSBundle mainBundle] infoDictionary] objectForKey:@"UISupportedInterfaceOrientations"]];
+    
+    
+    
     float fIOSVersion = [[[UIDevice currentDevice] systemVersion] floatValue];
     //获得retina屏的缩放值
     float fRetinaValue = [UIScreen mainScreen].scale;
@@ -1039,5 +1045,26 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
 +(UIInterfaceOrientationMask)getOrientationMask
 {
     return laya::g_kSystemConfig.m_nOrientationType;
+}
+- (NSUInteger)parseInterfaceOrientations:(NSArray*)orientations
+{
+    NSUInteger ret = 0;
+    if (orientations != nil) {
+        NSEnumerator* enumerator = [orientations objectEnumerator];
+        NSString* orientationString;
+
+        while (orientationString = [enumerator nextObject]) {
+            if ([orientationString isEqualToString:@"UIInterfaceOrientationPortrait"]) {
+                ret = ret | (1 << UIInterfaceOrientationPortrait);
+            } else if ([orientationString isEqualToString:@"UIInterfaceOrientationPortraitUpsideDown"]) {
+                ret = ret | (1 << UIInterfaceOrientationPortraitUpsideDown);
+            } else if ([orientationString isEqualToString:@"UIInterfaceOrientationLandscapeLeft"]) {
+                ret = ret | (1 << UIInterfaceOrientationLandscapeLeft);
+            } else if ([orientationString isEqualToString:@"UIInterfaceOrientationLandscapeRight"]) {
+                ret = ret | (1 << UIInterfaceOrientationLandscapeRight);
+            }
+        }
+    }
+    return ret;
 }
 @end
