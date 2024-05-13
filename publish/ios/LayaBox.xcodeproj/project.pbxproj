@@ -19,7 +19,6 @@
 		8AF2AB002959718A009F77F8 /* CoreHaptics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AF2AAFF2959718A009F77F8 /* CoreHaptics.framework */; };
 		A208134C1D7439E6008ABB72 /* cache in Resources */ = {isa = PBXBuildFile; fileRef = A20813431D7439E6008ABB72 /* cache */; };
 		A208134D1D7439E6008ABB72 /* config.ini in Resources */ = {isa = PBXBuildFile; fileRef = A20813441D7439E6008ABB72 /* config.ini */; };
-		A208134E1D7439E6008ABB72 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A20813451D7439E6008ABB72 /* Default-568h@2x.png */; };
 		A208134F1D7439E6008ABB72 /* libconchRuntime.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A20813461D7439E6008ABB72 /* libconchRuntime.bundle */; };
 		A20813521D7439E6008ABB72 /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = A20813491D7439E6008ABB72 /* scripts */; };
 		A24420661C8EC96500BB430C /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2460A871C8DB4160032CD8D /* CoreTelephony.framework */; };
@@ -78,7 +77,6 @@
 		8AF2AAFF2959718A009F77F8 /* CoreHaptics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreHaptics.framework; path = System/Library/Frameworks/CoreHaptics.framework; sourceTree = SDKROOT; };
 		A20813431D7439E6008ABB72 /* cache */ = {isa = PBXFileReference; lastKnownFileType = folder; name = cache; path = resource/cache; sourceTree = "<group>"; };
 		A20813441D7439E6008ABB72 /* config.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = config.ini; path = resource/config.ini; sourceTree = "<group>"; };
-		A20813451D7439E6008ABB72 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "resource/Default-568h@2x.png"; sourceTree = "<group>"; };
 		A20813461D7439E6008ABB72 /* libconchRuntime.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = libconchRuntime.bundle; path = resource/libconchRuntime.bundle; sourceTree = "<group>"; };
 		A20813491D7439E6008ABB72 /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = scripts; path = resource/scripts; sourceTree = "<group>"; };
 		A245DC16219402A000745202 /* ca */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ca; path = resource/ca; sourceTree = "<group>"; };
@@ -279,7 +277,6 @@
 				A24C4B201F4F08BD001BCD86 /* font */,
 				A20813431D7439E6008ABB72 /* cache */,
 				A20813441D7439E6008ABB72 /* config.ini */,
-				A20813451D7439E6008ABB72 /* Default-568h@2x.png */,
 				A20813461D7439E6008ABB72 /* libconchRuntime.bundle */,
 				A20813491D7439E6008ABB72 /* scripts */,
 			);
@@ -400,7 +397,6 @@
 				A208134F1D7439E6008ABB72 /* libconchRuntime.bundle in Resources */,
 				A208134D1D7439E6008ABB72 /* config.ini in Resources */,
 				A245DC17219402A100745202 /* ca in Resources */,
-				A208134E1D7439E6008ABB72 /* Default-568h@2x.png in Resources */,
 				A24C4B211F4F08BD001BCD86 /* font in Resources */,
 				A2460A2A1C8DAF710032CD8D /* Main.storyboard in Resources */,
 			);
