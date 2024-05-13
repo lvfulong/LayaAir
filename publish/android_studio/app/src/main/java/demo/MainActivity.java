@@ -83,7 +83,7 @@ public class MainActivity extends Activity {
         mPlugin.game_plugin_set_runtime_proxy(mProxy);
 //        mPlugin.game_plugin_set_option("localize","true");
         mPlugin.game_plugin_set_option("localize","false");
-        mPlugin.game_plugin_set_option("gameUrl", "http://layabox.com/layanative3.0/demo/index.js");
+        //mPlugin.game_plugin_set_option("gameUrl", "http://layabox.com/layanative3.0/demo/index.js");
         mPlugin.game_plugin_init(3);
         View gameView = mPlugin.game_plugin_get_view();
         this.setContentView(gameView);

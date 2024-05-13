@@ -484,7 +484,6 @@ namespace laya
         JSXmlAttr::exportJS(context);
         JSDOMParser::exportJS(context);
         JSAudio::exportJS(context);
-        JsAppCache::exportJS(context);
         JSWebSocket::exportJS(context);
         JSZip::exportJS(context);
         JSNotify::exportJS(context);
