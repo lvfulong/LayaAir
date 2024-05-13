@@ -284,15 +284,6 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         JCDownloadMgr::s_nNoResponseTimeout = 15000;
     }
 
-    void JSConchConfig::setDownloadVersionString(const char* p_pszVersion) {
-        if (p_pszVersion && strlen(p_pszVersion) > 0) {
-            JCFileResDCC::s_strExtVersion = p_pszVersion;
-            JCFileResDCC::s_strExtVersion += "=";
-        }
-        else
-            JCFileResDCC::s_strExtVersion = "";
-    }
-
     const char* JSConchConfig::getOS()
     {
 #ifdef __APPLE__
@@ -720,7 +711,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 		 class_binding.class_function("clearChkIgnoreChksumExt", &JSConchConfig::clearChkIgnoreChksumExt);
 		 class_binding.class_function("setDownloadUnmask", &JSConchConfig::setDownloadUnmask);
 		 class_binding.class_function("resetDownloadUnmask", &JSConchConfig::resetDownloadUnmask);
-		 class_binding.class_function("setDownloadVersionString", &JSConchConfig::setDownloadVersionString);
+		 //class_binding.class_function("setDownloadVersionString", &JSConchConfig::setDownloadVersionString);
 		 class_binding.class_function("getOS", &JSConchConfig::getOS);
 		 class_binding.class_function("getAppVersion", &JSConchConfig::getAppVersion);
 		 class_binding.class_function("getAppLocalVersion", &JSConchConfig::getAppLocalVersion);

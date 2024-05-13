@@ -109,30 +109,6 @@ class PlatformObj extends PlatformBase{
 window["PlatformClass"]=PlatformClass;
 window["PlatformObj"]=PlatformObj;
 
-/**
- * 直接加载缓存中的某个文件
- * @param cache
- * @param relUrl  相对路径，从/开始。例如 '/test.html'
- */
-function loadRawCache(cache:AppCache, relUrl:string, encode:'raw'|'utf8'):string|ArrayBuffer{
-    var cpath = cache.getCachePath();
-    var relFile = relUrl; 
-    var id =  new Uint32Array([cache.hashstr(relFile)])[0].toString(16);
-    var fn = cpath+'/files/'+id.substr(0,2)+'/'+id.substr(2);
-    var ab = fs_readFileSync(fn);
-    if(ab){
-        var content = new Uint8Array(ab,48);
-        //content就是文件内容
-        //如果需要字符串
-        if(encode==='utf8'){
-            var strCont = String.fromCharCode.apply(null,content);
-            return strCont
-        }
-        else
-            return content.buffer;
-    }  
-    return null;
-}
 class textBitmap
 {
     _nativeObj:_textBitmap;
