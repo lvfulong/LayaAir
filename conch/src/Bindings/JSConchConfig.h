@@ -155,6 +155,7 @@ namespace laya
         static float                   m_fScreenScaleH;
         static float                   m_fScreenTx;
         static float                   m_fScreenTy;
+        static bool                     s_useDCC2;
     };
 }
 #endif

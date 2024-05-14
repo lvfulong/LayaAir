@@ -532,8 +532,20 @@ namespace laya
         return false;
     }
 
+    /**
+    *   不带dcc和缓存的下载
+    */
     void JSRuntime::downloadFile(JSValueAsParam url, JSValueAsParam onProgress, JSValueAsParam onComplete, JSValueAsParam onError) {
-        JCDownloadMgr* pdmgr = JCDownloadMgr::getInstance();
+        Local v8url(url);
+        if (!v8url.isString())return;
+        std::string strUrl = v8url.as<std::string>();
+        if (strUrl.empty()) return;
+        //TODO
+        int a = 0;
+
+    }
+
+    void JSRuntime::setDCCObject(JSValueAsParam obj){
 
     }
 
@@ -583,7 +595,8 @@ namespace laya
 		class_binding.class_property("safeInsetBottom", &JSRuntime::GetSafeInsetBottom);
 		class_binding.class_property("safeInsetRight", &JSRuntime::GetSafeInsetRight);
         class_binding.class_property("presetUrl", &JSRuntime::getPresetUrl);
-        class_binding.class_function("_download", &JSRuntime::downloadFile);
+        class_binding.class_function("downloadNoCache", &JSRuntime::downloadFile);
+        class_binding.class_function("setDCCObject", &JSRuntime::setDCCObject);
         context.class_("conch", class_binding);
     }
 }

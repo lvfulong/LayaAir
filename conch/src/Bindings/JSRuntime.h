@@ -15,8 +15,7 @@ namespace laya
         {
             onframeid, ondrawid, onresizeid, ontouchevtid,ondevicemotionevtid, onkeyevtid, onmouseevtid, oninvalidglid,onotherevtid,onnetworkevt,onblurid,onfocusid, bulletsetid, bulletgetid, zippackageid,onunhandledrejection, screenorientationchangeid, setglobalrepaintid, bulletdrawlineid, bulletclearlineid
         };
-
-	    
+    
 	    static void exportJS(Context& context);
 	    
     public:
@@ -93,6 +92,7 @@ namespace laya
         static bool registerFont(JSValueAsParam jsFamily, JSValueAsParam pathOrArrayBuffer);
 
         static void downloadFile(JSValueAsParam url, JSValueAsParam onProgress, JSValueAsParam onComplete, JSValueAsParam onError);
+        static void setDCCObject(JSValueAsParam obj);
     public:
 
         static JsValue readFileFromAsset(const char* file, const char* encode);
