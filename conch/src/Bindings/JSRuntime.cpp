@@ -531,6 +531,12 @@ namespace laya
         LOGI("registerFont failed");
         return false;
     }
+
+    void JSRuntime::downloadFile(JSValueAsParam url, JSValueAsParam onProgress, JSValueAsParam onComplete, JSValueAsParam onError) {
+        JCDownloadMgr* pdmgr = JCDownloadMgr::getInstance();
+
+    }
+
     void JSRuntime::exportJS(Context& context)
     {
         class_<JSRuntime> class_binding;
@@ -577,6 +583,7 @@ namespace laya
 		class_binding.class_property("safeInsetBottom", &JSRuntime::GetSafeInsetBottom);
 		class_binding.class_property("safeInsetRight", &JSRuntime::GetSafeInsetRight);
         class_binding.class_property("presetUrl", &JSRuntime::getPresetUrl);
+        class_binding.class_function("_download", &JSRuntime::downloadFile);
         context.class_("conch", class_binding);
     }
 }

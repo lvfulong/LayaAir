@@ -219,9 +219,10 @@ list(APPEND CONCH_SRC
 
 	src/Audio/JCAudioManager.cpp
 	src/Audio/JCAudioManager.h
-	src/downloadCache/JCFileTable.cpp
-	src/downloadCache/JCServerFileCache.h
-	src/downloadCache/JCServerFileCache.cpp
+	src/downloadCache/DCC1/JCFileTable.cpp
+	src/downloadCache/DCC1/JCServerFileCache.h
+	src/downloadCache/DCC1/JCServerFileCache.cpp
+	src/downloadCache/DCC1/JCFileResDCC.cpp
 	src/downloadMgr/JCDownloadMgr.h
 	src/downloadMgr/JCDownloadMgr.cpp
 	src/downloadMgr/JCHttpHeader.h

@@ -22,6 +22,8 @@
 #include <LayaGL/JCLayaGLDispatch.h>
 #include <string>
 
+#include "../../downloadCache/DCC1/JCFileResDCC.h"
+
 extern int g_nDebugLevel;
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
@@ -282,6 +284,15 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 
     void JSConchConfig::resetDownloadNoResponseTimeout() {
         JCDownloadMgr::s_nNoResponseTimeout = 15000;
+    }
+
+    void JSConchConfig::setDownloadVersionString(const char* p_pszVersion) {
+        if (p_pszVersion && strlen(p_pszVersion) > 0) {
+            JCFileResDCC::s_strExtVersion = p_pszVersion;
+            JCFileResDCC::s_strExtVersion += "=";
+        }
+        else
+            JCFileResDCC::s_strExtVersion = "";
     }
 
     const char* JSConchConfig::getOS()

@@ -91,6 +91,8 @@ namespace laya
 		static void computeSubSkinnedDataForNative(JSValueAsParam inverseBindPosesBuffer, JSValueAsParam boneIndices, JSValueAsParam subData, JSValueAsParam skinnedMatrixCaches, JSValueAsParam bonesTransform, JSValueAsParam skinnedDataLoopMarks, JSValueAsParam skinnedData);
 
         static bool registerFont(JSValueAsParam jsFamily, JSValueAsParam pathOrArrayBuffer);
+
+        static void downloadFile(JSValueAsParam url, JSValueAsParam onProgress, JSValueAsParam onComplete, JSValueAsParam onError);
     public:
 
         static JsValue readFileFromAsset(const char* file, const char* encode);

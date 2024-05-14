@@ -60,64 +60,6 @@ namespace laya{
         std::string m_strSvIP;      //调试用
         int m_nLastHttpResponse = 0;
     };
-	class JCFileResDCC : public JCFileRes
-    {
-    public:
-
-        JCFileResDCC(JCDownloadMgr* pNetLoader, JCFileResManager* pMgr);	//只能由JCFileResManager创建
-        ~JCFileResDCC();
-        bool restoreRes() override;;
-        //直接读取缓存的。如果不在缓存中，则返回false
-        bool loadFromCache(JCBuffer& buff, bool bDoCheckSum) override;
-        
-        /** @brief 加载资源。注意只允许调试或者manager调用。否则可能会同一个资源加载多次。
-         *  @param[in] 
-         *  @return 
-        */
-        void load(const char* p_pszURL, JCSharedBuffer* pSyncResult) override;
-	protected:
-		void onResDownloadOK_JSThread(std::weak_ptr<int> p_cbref);
-        void onResDownloadOKDataEmpty_JSThread(std::weak_ptr<int> p_cbref);
-		void onResDownloadErr_JSThread(std::weak_ptr<int> p_cbref,int p_nError, int p_nHttpResponse);
-
-        void notifyErrorHandler(int p_nError, int p_nHttpResponse);
-
-        /** @brief 下载完成的回调。
-         *  @param[in] p_Buff 下载结果。
-         *  @param[in] pLocalAddr 下载线程获得的本地地址。
-         *  @param[in] pSvAddr 下载线程获得的服务器地址。
-         *  @param[in] p_nChkSum 本次下载请求希望的校验值
-         *  @param[in] p_nDownloadNum 这是本请求的第几次下载。因为校验错误的话会尝试多次下载。
-         *  @param[in] p_cbref 保护用。
-         *  @return void
-        */
-		void onDownloaded( JCBuffer& p_Buff , 
-                const std::string& pLocalAddr, const std::string& pSvAddr, 
-                int pnCurlRet, int pnHttpRet,
-                const std::string& pstrHeader,
-                int p_nDownloadNum, std::weak_ptr<int> p_cbref );
-
-		void onDownloadError(int p_nError, int p_nHttpResponse,std::weak_ptr<int> p_cbref );
-		int onProgress(unsigned int, unsigned int,float,std::weak_ptr<int> p_cbref );
-
-		//带校验的下载。p_nChkSum可以为0，表示不检查
-		void verifyDownload(const char* p_pszURL);
-		bool checkIsEncrypted(char *buf,int len);
-        
-        void normalizeUrl();
-	public:
-        Action                          m_nLastAction;  //测试用
-		std::string						m_strURL;
-		std::shared_ptr<int>			m_CallbackRef;
-    
-	protected:
-        JCDownloadMgr*                  m_pNetLoader;
-        JCFileResManager*	            m_pMgr;
-		bool                            m_bDownloading;
-        std::mutex                      m_CallbackLock;
-		bool							m_bSendToJS_complete;	//完成事件已经post给js队列等待处理了。避免同一个对象多次post。必须都在js线程处理这个变量
-        JCUrl                           m_Url;
-	};
 
 	class JCFileResManager{
 	public:

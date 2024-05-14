@@ -3,7 +3,7 @@
 #include <resource/JCFileResManager.h>
 #include "../../JCScriptRuntime.h"
 #include <utils/JCFileSystem.h>
-#include <downloadCache/JCServerFileCache.h>
+#include <downloadCache/DCC1/JCServerFileCache.h>
 #include <JCConch.h>
 
 

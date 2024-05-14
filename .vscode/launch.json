@@ -1,10 +1,21 @@
 {
     "configurations": [
+        {
+            "name": "(Windows) Launch",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/template/Debug/launcher",
+            "args": ["http://localhost:8899/index.js"],
+            "stopAtEntry": false,
+            "cwd": "${fileDirname}",
+            "environment": [],
+            "console": "externalTerminal"
+        },
     {
         "name": "(gdb) 启动",
         "type": "cppdbg",
         "request": "launch",
-        "program": "${workspaceFolder}/builddbg/template/launcher",
+        "program": "${workspaceFolder}/builddbg/template/Debug/launcher",
         "args": [],
         "stopAtEntry": false,
         "cwd": "${fileDirname}",

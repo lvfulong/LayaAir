@@ -1,10 +1,10 @@
 #include "JCServerFileCache.h"
-#include "../downloadCache/JCFileTable.h"
+#include "JCFileTable.h"
 #include <utils/JCCrypto.h>
 #include <utils/JCSimpleCRC.h>
 #include <zlib.h>
 #include <sys/stat.h>
-#include "../resource/JCFileResManager.h"
+#include "resource/JCFileResManager.h"
 #include <utils/JCFileSystem.h>
 #include <utils/JCCommonMethod.h>
 #include <utils/Log.h>
@@ -12,12 +12,12 @@
 #include <utils/JCCrypto.h>
 #include <time.h>
 #include <chrono>
-#include "../downloadMgr/JCHttpHeader.h"
+#include "../../downloadMgr/JCHttpHeader.h"
 
 #ifdef __ANDROID__
-    #include "../downloadCache/JCAndroidFileSource.h"
+    #include "../JCAndroidFileSource.h"
 #else
-    #include "../downloadCache/JCIosFileSource.h"
+    #include "../JCIosFileSource.h"
 #endif
 #define PATH_SOURCEID "sourceid"
 #define ERROR_FILE_C_R_W (-6)
@@ -108,7 +108,7 @@ namespace laya
 			  fclose(pf);
 			  return false;
 			}
-			  
+
 			int contentSz = filesz-sizeof(fileShell);
 			if(contentSz>0){
 				p_BufRet.create(contentSz);
@@ -124,7 +124,7 @@ namespace laya
 		}else
 			return false;
 	}
-
+	
 	bool JCCachedFileSys::loadShell(const char* p_pszFile, fileShell& p_nFs, time_t& p_tmLastModify){
         std::lock_guard<std::recursive_mutex> lock(m_lockFileRW);
         struct stat buf;
@@ -175,6 +175,84 @@ namespace laya
 		return chksum;
 	}
 
+    std::string JCCachedFileSys::updateAFile(typeFile p_nFileID, char* p_pBuff, int p_nLen, typeChkSum p_nChkSum,
+        bool p_bExtVersion, time_t p_tmExpiredTm, bool p_bWithProcess){
+        std::lock_guard<std::recursive_mutex> lock(m_lockFileRW);
+		//写文件
+		std::string path;
+		//try {
+			std::string pathfile = fileToPath(p_nFileID,path,true);
+			FILE* pf = fopen(pathfile.c_str(),"wb");
+			if(pf){
+				fileShell fs;
+                if (p_bExtVersion)
+                    fs.extVersionMgr = 1;
+				fs.chkSum = p_nChkSum;
+                fs.expiredTime = p_tmExpiredTm;
+                fs.withprocess = p_bWithProcess;
+                //p_tmExpiredTm==0也是持久的。==0并且不持久的话，不会到这里
+                if (p_bExtVersion || p_nChkSum != 0 || p_tmExpiredTm==0) {
+                    fs.tmpFile = 0;
+#ifdef _DEBUG
+                    if (p_tmExpiredTm != 0) {
+                        //LOGE("持久缓存类型的文件,不能设置失效期");
+						//*(int*)0 = 10;
+                    }
+#endif
+                }
+                else {
+                    fs.tmpFile = 1;
+#ifdef _DEBUG
+                    if (p_tmExpiredTm == 0) {
+                        //LOGE("临时缓存类型的文件,必须设置失效期");
+                        //*(int*)0 = 10;
+                    }
+#endif
+                }
+				int l = fwrite(&fs,1,sizeof(fs),pf);
+				if(l<sizeof(fs)){
+					fclose(pf);
+					//throw ERROR_FILE_C_R_W;
+					return "";
+				}
+				l = fwrite( p_pBuff, 1,p_nLen, pf);
+				if(l<p_nLen){
+					fclose(pf);
+					//throw ERROR_FILE_C_R_W;
+					return "";
+				}
+				fs.ready=true;
+				fflush(pf);
+				fseek(pf,0,SEEK_SET);
+				l = fwrite(&fs,1,sizeof(fs),pf);
+				if(l<sizeof(fs)){
+					fclose(pf);
+					//throw ERROR_FILE_C_R_W;
+					return "";
+				}
+				fflush(pf);
+				fclose(pf);
+                return pathfile;
+			}else{
+				//打开文件失败，应该是目录不对，或者没有权限。
+				LOGE("Error! JCServerFileCache::onFileDownloaded fopen error! file=%08x\n", p_nFileID);
+				//throw ERROR_FILE_C_R_W;
+				return "";
+			}
+		//}catch(...){
+		//	if( global_onCreateFileError){
+		//		global_onCreateFileError();
+		//	}
+		//}
+        static std::string errret = "";
+        return errret;
+	}
+
+	void JCCachedFileSys::delFromCache( typeFile p_nFileID ){
+		std::string path;
+		std::string pathfile = fileToPath(p_nFileID,path,false);
+		remove(pathfile.c_str());
+	}
 
 	bool JCCachedFileSys::createShell(JCCachedFileSys::typeFile p_nFileID, JCCachedFileSys::typeChkSum p_nChkSum){
         std::lock_guard<std::recursive_mutex> lock(m_lockFileRW);
@@ -408,6 +486,21 @@ namespace laya
         time(&m_tmCacheMgrCreateTime);
 	}
 
+    void JCServerFileCache::clearAllCachedFile() {
+        //保护一下，防止设置错误导致的删除了其他目录
+        if (m_strCachePath.length() < 4 || m_strAppPath.length() <= 0) {
+			LOGE("clearAllCachedFile error");
+            return;
+        }
+        std::string sourceidPath = m_strCachePath + m_strAppPath + "/files/";
+        //try {
+			std::error_code error;
+            fs::remove_all(sourceidPath.c_str(), error);
+            fs::create_directories(sourceidPath.c_str(), error);
+        //}
+        //catch (...) {
+        //}
+    }
 
 	std::string JCServerFileCache::getAppPath(){
 		return m_strCachePath+m_strAppPath;
@@ -463,7 +556,7 @@ namespace laya
 
 		if(hasAssets && (cachedAssetsID.length()==0 || assetsidLen != cachedAssetsID.length()|| strcmp(assetsid, cachedAssetsID.c_str())!=0) ){
 			//清理文件缓存
-			//clearAllCachedFile();
+			clearAllCachedFile();
 			//先获取资源中的filteTable
 			char* pFileTableBuf=NULL;
 			int nFileTableLen = 0;
@@ -472,7 +565,7 @@ namespace laya
 				if( m_pAssets->loadFileContent(ftfile, pFileTableBuf, nFileTableLen ) == false )
                 {
 					LOGE("read the file which names filetable.txt error!");
-				}	
+	}
 			}
             else
             {
@@ -521,7 +614,14 @@ namespace laya
 	}
 
 	int JCServerFileCache::setFileTables(const char* p_pszFiles ){
-		return 0;
+		if( m_pFileTable ){
+			delete m_pFileTable;
+			m_pFileTable = NULL;
+	}
+		m_pFileTable = new JCFileTable();
+		//buffer buf;
+		//readFileSync(p_pszFile, buf, buffer::utf8);
+		return m_pFileTable->initByString(p_pszFiles);
 	}
 
     /**
@@ -529,7 +629,7 @@ namespace laya
     */
     unsigned int JCServerFileCache::getFileID(const char* Url) {
         if (Url==nullptr)
-            return 0;
+        return 0;
 		const char* nUrl = Url;
         //bool bChanged = false;
         if (m_pFuncTransUrl && m_pFuncTransUrlData) {
@@ -539,7 +639,7 @@ namespace laya
                 nUrl = (char*)Url;
             //else if(nUrl!=Url)//这里有个规则，就是转换函数不允许直接操作字符串内存。
             //    bChanged = true;
-        }
+    }
 
         int len = strlen(nUrl);
         char* pRelUrl =(char*)nUrl;
@@ -595,7 +695,7 @@ namespace laya
 
             while (*pCur == split || *pCur == '\r' || *pCur == '\n') {
                 pCur++;
-            }
+    }
             if (*pCur == 0)
                 break;
             pData = pCur;
@@ -626,7 +726,9 @@ namespace laya
     }
 
 	bool JCServerFileCache::getFileInfo(unsigned int p_nFileID, unsigned int& p_nChkSum ){
+		if( !m_pFileTable )
 		return false;
+		return m_pFileTable->find(p_nFileID, p_nChkSum );
 	}
 
     bool _after_cache_loaded(const char* pfilename, char* ptr, int len, char*& newptr, int& newlen) {
@@ -689,7 +791,7 @@ namespace laya
 				}
 				else {
                     if (!fs.ready)	//如果还没下载下来
-                        return false;
+		return false;
                     //如果是其他版本的不能使用
                     if (fs.version != CURCACHEFILEVER)
                         return false;
@@ -699,7 +801,7 @@ namespace laya
 
                     if (p_bUseVersion) {
                         return (fs.extVersionMgr && fs.chkSum == p_nChkSum);
-                    }
+	}
                     else if (p_nChkSum) {
                         return (fs.chkSum == p_nChkSum);
                     }
@@ -810,7 +912,7 @@ namespace laya
 		std::string resourceidfile = getAppPath()+"/"+PATH_SOURCEID+"/"+p_pszResource;
 		JCBuffer buf((char*)p_pszVal,strlen(p_pszVal),false,false);
 		writeFileSync(resourceidfile.c_str(),buf,JCBuffer::utf8);
-	}
+}
 
 	std::string JCServerFileCache::getResourceID(const char* p_pszResource ){
 		std::string resourceidfile = getAppPath()+"/"+PATH_SOURCEID+"/"+p_pszResource;

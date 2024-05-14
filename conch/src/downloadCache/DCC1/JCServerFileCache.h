@@ -84,7 +84,24 @@ namespace laya
          *  可能会导致创建链接文件。对于不存在的不会创建壳。
         */
 		bool load(typeFile p_nFileID, typeChkSum& p_nChkSum, JCSharedBuffer& p_BufRet );
+       
+        /** @brief 更新cache中的一个资源。不做校验码的检查。检查需要在外面做
+         *  @param[in] p_nFileID
+         *  @param[in] p_pBuff
+         *  @param[in] p_nLen
+         *  @param[in] p_nChkSum 这个值必须外部提供。此函数只是直接与头的记录进行比较。
+         *  @param[in] p_bExtVersion 外部提供的版本号，如果为true，则 p_nChkSum就是版本号
+         *  @param[in] p_tmExpiredTm 过期时间。只对临时文件有效
+         *  @param[in] p_bWithProcess 进程内不允许删除。
+         *  @return 如果保存成功。返回本地路径。否则返回"";
+        */
+		std::string updateAFile(typeFile p_nFileID, char* p_pBuff, int p_nLen, typeChkSum p_nChkSum,
+            bool p_bExtVersion, time_t p_tmExpiredTm, bool p_bWithProcess);
 
+        /** @brief 删除cache中的文件资源
+         *  @param p_nFileID 
+        */
+		void delFromCache( typeFile p_nFileID );
 
 		static typeChkSum  getChkSum( char* p_pBuff, int p_nLen );
 
@@ -203,6 +220,17 @@ namespace laya
 		*/
 		bool loadShell(const char* p_pszFile, JCCachedFileSys::fileShell& p_nFs, time_t& p_tmLastModify);
 
+        /**
+        *  @brief 从缓存中加载指定版本号的某个文件。
+        *  @param[in] p_nFileID 文件id
+        *  @param[in] p_nVersion 版本号
+        *  @param[out] p_BufRet 返回的文件内容
+        *  @return 如果文件存在，并且版本符合，就返回true，并且p_BufRet有返回内容
+        */
+        //bool loadByVersion(unsigned int p_nFileID, int p_nVersion, JCSharedBuffer& p_BufRet);
+
+		//删除cache中的文件资源
+		void delFromCache( JCCachedFileSys::typeFile p_nFileID ){ m_FileSys.delFromCache(p_nFileID);}
 
         /** @brief 根据p_pTable来更新所有的内容。这样以后就不用再需要fileTable了
          *   如果用索引表的方法（不用分散文件），必须用这种方式
@@ -219,6 +247,12 @@ namespace laya
 		void setResourceID(const char* p_pszResource, const char* p_pszVal);
 		std::string getResourceID(const char* p_pszResource );
 
+        /** @brief
+         *  删除本url的所有的缓存文件。包括session文件。
+         *  这个函数可能很危险，不要暴露出去。
+         *  @return 
+        */
+        void clearAllCachedFile();
 
         /** @brief 文件下载完成。 更新文件的缓存。
          *  @param[in] p_nFileID 文件ID。
@@ -230,7 +264,8 @@ namespace laya
         std::string updateAFile(JCCachedFileSys::typeFile p_nFileID, char* p_pBuff, int p_nLen, 
             JCCachedFileSys::typeChkSum p_nChkSum, bool p_bExtVersion, time_t p_tmExpiredTm,
             bool p_bWithProcess) {
-            return "";
+			return m_FileSys.updateAFile(p_nFileID, p_pBuff, p_nLen, p_nChkSum, p_bExtVersion,
+                p_tmExpiredTm, p_bWithProcess);
 		}
 
         /** 
