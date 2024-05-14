@@ -4,7 +4,7 @@
 #include <utils/JCCommonMethod.h>
 #include <downloadMgr/JCDownloadMgr.h>
 #include <utils/JCMemorySurvey.h>
-#include <downloadCache/JCServerFileCache.h>
+#include "../downloadCache/DCC1/JCServerFileCache.h"
 #include <utils/JCFileSystem.h>
 #include <resource/JCFileResManager.h>
 #include <utils/JCLayaUrl.h>

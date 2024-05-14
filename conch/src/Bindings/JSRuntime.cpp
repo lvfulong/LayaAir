@@ -19,6 +19,7 @@
 //#include "LayaAir/3D/JSTransform.h"
 #include "JSArrayBufferRef.h"
 #include "2D/FontManager.h"
+#include "../downloadCache/DCC2/DirectDownloader.h"
 
 laya::JCZip *g_ZipPackage = NULL;
 //------------------------------------------------------------------------------
@@ -532,6 +533,21 @@ namespace laya
         return false;
     }
 
+    std::vector<std::shared_ptr<DirectDownloader>> downloaders;
+    int onprog(unsigned int now, unsigned int total, float speed) {
+        return 0;
+    }
+
+    void onDownloaded(
+        JCBuffer& p_Buff,
+        const std::string& pLocalAddr,
+        const std::string& pSvAddr,
+        int pnCurlRet,
+        int pnHttpRet,
+        const std::string& pstrHeader) {
+
+    }
+
     /**
     *   不带dcc和缓存的下载
     */
@@ -543,7 +559,74 @@ namespace laya
         //TODO
         int a = 0;
 
+        // 创建 DirectDownloader 对象用于下载文件
+        //auto downloader = std::make_shared<DirectDownloader>();
+        //downloaders.push_back(downloader);
+
+
+        JCDownloadMgr* pNetLoader = JCDownloadMgr::getInstance();
+        pNetLoader->download(strUrl.c_str(), 0, onprog, onDownloaded, 0, 0);
+
+
+        auto isolate = v8::Isolate::GetCurrent();
+        //v8::Persistent<v8::Value> onCompleteP(isolate, onComplete);  
+        //转成持久句柄。由于lambda不允许拷贝，所以用shareptr
+        auto onCompleteP = std::make_shared<v8::Persistent<v8::Value>>(isolate, onComplete);
+
+        // 在 JavaScript 线程中执行 onComplete 回调
+        auto completeCb = [onCompleteP](JCBuffer buffer, const std::string& localAddr, const std::string& svAddr) {
+            auto isolate = v8::Isolate::GetCurrent();
+            v8::HandleScope handleScope(isolate); // 创建 HandleScope
+            v8::Local<v8::Context> context = isolate->GetCurrentContext();
+            // 将下载的数据传递给 JS 回调
+            //Local scopeV8(buffer);
+            //Local value = String::NewFromUtf8(isolate, buffer.m_pPtr);
+            const int argc = 1;
+            JSValueAsParam argv[argc] = {};
+            //把持久句柄转成本地句柄            
+            v8::Local func(onCompleteP->Get(isolate));
+            //func.CallAsFunction(isolate->GetCurrentContext(), isolate->GetCurrentContext()->Global(), argc, argv);
+            // 确认value是函数
+            if (func->IsFunction()) {
+                auto v8function = v8::Local<v8::Function>::Cast(func);
+
+                const unsigned argc = 1;
+                v8::Local<v8::Value> argv[argc] = { 
+                    v8::String::NewFromUtf8(isolate, "Hello, world!", v8::NewStringType::kNormal).ToLocalChecked() 
+                };
+
+                // 调用函数
+                v8::Local<v8::Value> result;
+                if (v8function->Call(context, context->Global(), argc, argv).ToLocal(&result)) {
+                    // 函数调用成功，result 包含返回值
+                    // 在此处理 result （如果需要）
+                }
+                else {
+                    // 处理错误
+                }
+
+                //释放持久句柄
+                onCompleteP->Reset();
+            }
+            else {
+                // 抛出错误或处理非函数情况
+            }
+
+        };
+
+        // 设置下载的回调，确保在JS线程中执行
+        //std::function<void()> cb = std::bind(&JSRuntime::onDownloadComplete, this, completeCb);
+        //postToJS(cb);
+
     }
+
+    // 下载完成后在 JS 线程调用回调
+    void onDownloadComplete(std::function<void(JCBuffer, const std::string&, const std::string&)> callback) {
+        // 在这里使用 DirectDownloader 的结果调用 JavaScript 的回调函数
+        // 该函数应由 postToJS 在 JS 线程中回调来执行
+        //callback();
+    }
+
 
     void JSRuntime::setDCCObject(JSValueAsParam obj){
 
@@ -588,6 +671,8 @@ namespace laya
 		class_binding.class_function("exit", &JSRuntime::exit);
         class_binding.class_function("createArrayBufferRef", &JSRuntime::createArrayBufferRef);
         class_binding.class_function("registerFont", &JSRuntime::registerFont);
+        class_binding.class_function("downloadNoCache", &JSRuntime::downloadFile);
+        class_binding.class_function("setDCCObject", &JSRuntime::setDCCObject);
         //class_property必须在下面，否则导不出class_function
         class_binding.class_property("onunhandledrejection", &JSRuntime::getOnUnhandledRejection, &JSRuntime::setOnUnhandledRejection);
 		class_binding.class_property("safeInsetTop", &JSRuntime::getSafeInsetTop);
@@ -595,8 +680,6 @@ namespace laya
 		class_binding.class_property("safeInsetBottom", &JSRuntime::GetSafeInsetBottom);
 		class_binding.class_property("safeInsetRight", &JSRuntime::GetSafeInsetRight);
         class_binding.class_property("presetUrl", &JSRuntime::getPresetUrl);
-        class_binding.class_function("downloadNoCache", &JSRuntime::downloadFile);
-        class_binding.class_function("setDCCObject", &JSRuntime::setDCCObject);
         context.class_("conch", class_binding);
     }
 }
