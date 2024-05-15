@@ -73,7 +73,10 @@ namespace laya
         if (it == m_ResMap.end()) {
 
             if(JSConchConfig::s_useDCC2){
-                //pRes = new JCFileResDCC2(m_pDownloadMgr,this);
+                pRes = new JCFileResDCC2();
+                m_ResMap[url] = pRes;
+                pRes->load(url.c_str(), nullptr);
+                return pRes;
             }else{
                 pRes = new JCFileResDCC(m_pDownloadMgr,this);
                 if (p_nConnTimeout>0) {

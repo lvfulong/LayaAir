@@ -684,7 +684,7 @@ namespace laya
     }
 
 
-    void JSRuntime::setDCCObject(JSValueAsParam obj){
+    void JSRuntime::setDownloader(JSValueAsParam obj){
 
     }
 
@@ -728,7 +728,7 @@ namespace laya
         class_binding.class_function("createArrayBufferRef", &JSRuntime::createArrayBufferRef);
         class_binding.class_function("registerFont", &JSRuntime::registerFont);
         class_binding.class_function("downloadNoCache", &JSRuntime::downloadFile);
-        class_binding.class_function("setDCCObject", &JSRuntime::setDCCObject);
+        class_binding.class_function("setDownloader", &JSRuntime::setDownloader);
         //class_property必须在下面，否则导不出class_function
         class_binding.class_property("onunhandledrejection", &JSRuntime::getOnUnhandledRejection, &JSRuntime::setOnUnhandledRejection);
 		class_binding.class_property("safeInsetTop", &JSRuntime::getSafeInsetTop);

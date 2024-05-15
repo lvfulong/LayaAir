@@ -92,7 +92,7 @@ namespace laya
         static bool registerFont(JSValueAsParam jsFamily, JSValueAsParam pathOrArrayBuffer);
 
         static void downloadFile(JSValueAsParam url, JSValueAsParam onProgress, JSValueAsParam onComplete, JSValueAsParam onError);
-        static void setDCCObject(JSValueAsParam obj);
+        static void setDownloader(JSValueAsParam obj);
     public:
 
         static JsValue readFileFromAsset(const char* file, const char* encode);
