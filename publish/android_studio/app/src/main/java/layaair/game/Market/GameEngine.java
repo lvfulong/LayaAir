@@ -64,11 +64,7 @@ public class GameEngine implements IPlugin {
 
 	@Override
 	public void game_plugin_init(int nDownloadThreadNum) {
-	    Log.d(TAG,"game_plugin_init url ="+mGameUrl);
-	    if( mGameUrl == null || mGameUrl.length() <2 ){
-	        Log.e("","引擎初始化失败，没有游戏地址 gameUrl = "+mGameUrl);
-	        return;
-	    }
+	    Log.d(TAG,"game_plugin_init url = " + mGameUrl);
 	    String gameUrl = mGameUrl;
 	    mLayaGameEngine.setIsPlugin(false);
 	    mLayaGameEngine.setGameUrl(gameUrl);
