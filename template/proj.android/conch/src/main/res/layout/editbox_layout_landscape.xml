@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layaair.game.browser.KeyboardLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="false"
+    android:orientation="vertical">
+
+    <!--<Button
+        android:id="@+id/editbox_touch"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0"
+        android:layout_above="@id/editbox_panel" />!-->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_view"
+        android:animateLayoutChanges="false"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/editbox_panel_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:animateLayoutChanges="false">
+
+            <RelativeLayout
+                android:id="@+id/editbox_panel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:animateLayoutChanges="false"
+                android:background="@drawable/editbox_panel_background"
+                android:gravity="bottom"
+                android:verticalScrollbarPosition="left">
+
+                <Button
+                    android:id="@+id/editbox_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/editbox_text"
+                    android:layout_alignBottom="@id/editbox_text"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="9dp"
+                    android:animateLayoutChanges="false"
+                    android:background="@drawable/editbox_button"
+                    android:fontFamily="sans-serif"
+                    android:minWidth="0dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:rotationX="29"
+                    android:text="测试"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/editbox_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="9dp"
+                    android:layout_marginRight="40dp"
+                    android:layout_marginBottom="11dp"
+                    android:layout_toLeftOf="@id/editbox_button"
+                    android:animateLayoutChanges="false"
+                    android:background="@drawable/editbox_background"
+                    android:maxHeight="50dp"
+                    android:padding="7dp"
+                    android:text=""
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </androidx.core.widget.NestedScrollView>
+</layaair.game.browser.KeyboardLayout>

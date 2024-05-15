@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+  <external-files-path name="laya-external-files-path-download" path="Download"/>
+  <external-files-path name="laya-external-files-path-root" path="."/>
+  <external-cache-path name="laya-external-cache-path-download" path="Download"/>
+  <external-cache-path name="laya-external-cache-path-root" path="."/>
+  <files-path name="laya-files-path-root" path="." />
+  <cache-path name="laya-cache-path-root" path="." />
+  <root-path path="." name="laya-root-path" />
+</paths>

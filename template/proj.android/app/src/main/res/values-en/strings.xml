@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">LayaBox</string>
+    <string name="on_back_pressed">Click the back button again to exit the app!</string>
+    <string name="alert_dialog_title">Tips</string>
+    <string name="todo">todo</string>
+    <string name="waring">Waring</string>
+    <string name="permission_waring">Failed to obtain permission, which may cause some functions to fail to work normally. Please go to the application permission setting page for manual authorization</string>
+    <string name="init_failed">Initialization failed, please exit and try again</string>
+    <string name="ok">OK</string>
+    <string name="network_error">The network is abnormal, please check your network or contact the developer</string>
+    <string name="parse_json_error">Parse json error, please exit and try again</string>
+    <string name="download_error">Download error, please exit and try again</string>
+    <string name="internal_error">Internal error, please contact the developer</string>
+    <string name="tips0">The gates of the new world are about to open</string>
+    <string name="tips1">The enemy has 30 seconds left to reach the battlefield</string>
+    <string name="tips2">Mom said, Nobody can eat hot tofu in a hurry</string>
+</resources>
