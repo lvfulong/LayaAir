@@ -2,6 +2,7 @@
 #include "JCFileResDCC2.h"
 #include "../../downloadMgr/JCDownloadMgr.h"
 #include "JCConch.h"
+#include <utils/JCFileSystem.h>
 
 namespace laya{
     JCFileResDCC2::JCFileResDCC2(){
@@ -23,15 +24,17 @@ namespace laya{
     }
 
     void JCFileResDCC2::onDownloaded(JCBuffer& p_Buff,
-        const std::string& pLocalAddr, const std::string& pSvAddr,
-        int pnCurlRet, int pnHttpRet,
-        const std::string& pstrHeader,
-        int p_nDownloadNum, std::weak_ptr<int> p_cbref) {
+            const std::string& pLocalAddr, const std::string& pSvAddr,
+            int pnCurlRet, int pnHttpRet,
+            const std::string& pstrHeader,
+            int p_nDownloadNum, 
+            const char* pszLocalPach, 
+            std::weak_ptr<int> p_cbref) {
 
         m_pBuffer = std::shared_ptr<char>(new char[p_Buff.m_nLen], std::default_delete<char[]>());
         memcpy(m_pBuffer.get(), p_Buff.m_pPtr, p_Buff.m_nLen);
         m_nLength = p_Buff.m_nLen;
-
+        m_strLocalPath = pszLocalPach?pszLocalPach:"";
         if (!m_bSendToJS_complete) {
             std::weak_ptr<int> wptr(m_CallbackRef);
             m_bSendToJS_complete = true;	//这里肯定是js线程，可以处理这个标志
@@ -63,15 +66,20 @@ namespace laya{
         m_bSendToJS_complete = false;	//处理完了，可以继续post了。
     }
 
-
+    void JCFileResDCC2::setDownloader( IDownloader* downloader){
+        m_pDownloader = downloader;
+    }
+    
     void JCFileResDCC2::load(const char* p_pszURL, JCSharedBuffer* pSyncResult){
+        std::weak_ptr<int> wptr(m_CallbackRef);
         if(m_pDownloader){
             //有人接管
-
+            m_pDownloader->download(p_pszURL, 
+                std::bind(&JCFileResDCC2::onDownloaded, this, std::placeholders::_1, "", "", 0, 0, "", 1, std::placeholders::_2, wptr)
+            );
         }else{
             //直接下载
             JCDownloadMgr* pNetLoader = JCDownloadMgr::getInstance();
-            std::weak_ptr<int> wptr(m_CallbackRef);
             pNetLoader->download(p_pszURL, 0, 
                 std::bind(&JCFileResDCC2::onProgress, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, wptr),
                 std::bind(&JCFileResDCC2::onDownloaded, this,
@@ -81,11 +89,14 @@ namespace laya{
                     std::placeholders::_4,
                     std::placeholders::_5,
                     std::placeholders::_6,
-                    1, wptr), m_nOptTimeout, m_nConnTimeout);
+                    1, nullptr, wptr), m_nOptTimeout, m_nConnTimeout);
         }
     }
 
     bool JCFileResDCC2::loadFromCache(JCBuffer& buff, bool bDoCheckSum) {
+        if(m_strLocalPath.length()>0){
+            return readFileSync(m_strLocalPath.c_str(), buff);
+        }
         return false;
     }
 

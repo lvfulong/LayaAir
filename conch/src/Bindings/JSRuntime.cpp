@@ -20,6 +20,7 @@
 #include "JSArrayBufferRef.h"
 #include "2D/FontManager.h"
 #include "../downloadCache/DCC2/DirectDownloader.h"
+#include "../downloadCache/DCC2/JSDownloader.h"
 
 laya::JCZip *g_ZipPackage = NULL;
 //------------------------------------------------------------------------------
@@ -685,7 +686,10 @@ namespace laya
 
 
     void JSRuntime::setDownloader(JSValueAsParam obj){
-
+        std::shared_ptr<JSDownloader> jsdownloader = std::make_shared<JSDownloader>();
+        jsdownloader->setJSDownloader(obj);
+        JCFileResManager* pfsMgr = JCConch::s_pScriptRuntime->m_pFileResMgr;
+        pfsMgr->m_pDownloader = jsdownloader;
     }
 
     void JSRuntime::exportJS(Context& context)

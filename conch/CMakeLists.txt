@@ -224,6 +224,7 @@ list(APPEND CONCH_SRC
 	src/downloadCache/DCC1/JCServerFileCache.cpp
 	src/downloadCache/DCC1/JCFileResDCC.cpp
 	src/downloadCache/DCC2/JCFileResDCC2.cpp
+	src/downloadCache/DCC2/JSDownloader.cpp
 	src/downloadCache/DCC2/DirectDownloader.cpp
 	src/downloadMgr/JCDownloadMgr.h
 	src/downloadMgr/JCDownloadMgr.cpp

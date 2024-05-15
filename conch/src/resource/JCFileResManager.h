@@ -9,6 +9,7 @@
 #include <utils/JCBuffer.h>
 #include <mutex>
 #include <utils/JCLayaUrl.h>
+#include "../downloadCache/DCC2/IDownloader.h"
 
 #define MAXDOWNLOADTRY 3
 
@@ -83,6 +84,7 @@ namespace laya{
 		bool			            m_bUrlToLowerCase;
 		std::mutex		        m_maplock;
         std::vector<std::string>    m_vExtNeedSave;     //这种扩展名的需要保存到临时缓存中。
+        std::shared_ptr<IDownloader> m_pDownloader;
     protected:
         JCDownloadMgr*              m_pDownloadMgr;
         FileResMap			        m_ResMap;

@@ -48,10 +48,12 @@ namespace laya
 		m_vExtNeedSave = { ".png",".jpg",".wav",".ogg" };
 	
         m_pDownloadMgr = pDownloadMgr;
+        m_pDownloader = nullptr;
     }
 
     JCFileResManager::~JCFileResManager() {
         clear();
+        m_pDownloader = nullptr;
     }
 
     void JCFileResManager::clear() {
@@ -73,7 +75,9 @@ namespace laya
         if (it == m_ResMap.end()) {
 
             if(JSConchConfig::s_useDCC2){
-                pRes = new JCFileResDCC2();
+                auto dcc2 = new JCFileResDCC2();
+                dcc2->setDownloader(m_pDownloader.get());
+                pRes = dcc2;
                 m_ResMap[url] = pRes;
                 pRes->load(url.c_str(), nullptr);
                 return pRes;
