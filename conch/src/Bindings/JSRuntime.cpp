@@ -533,9 +533,91 @@ namespace laya
         return false;
     }
 
-    std::vector<std::shared_ptr<DirectDownloader>> downloaders;
-    int onprog(unsigned int now, unsigned int total, float speed) {
+    void onProgJS(unsigned int now, unsigned int total, float speed, std::shared_ptr<v8::Persistent<v8::Value>>& jsOnProg) {
+        auto isolate = v8::Isolate::GetCurrent();
+        v8::HandleScope handleScope(isolate); // 创建 HandleScope
+        v8::Local<v8::Context> context = isolate->GetCurrentContext();
+        // 将下载的数据传递给 JS 回调
+        //把持久句柄转成本地句柄            
+        v8::Local func(jsOnProg->Get(isolate));
+        // 确认value是函数
+        if (func->IsFunction()) {
+            auto v8function = v8::Local<v8::Function>::Cast(func);
+            const unsigned argc = 3;
+            v8::Local<v8::Value> argv[argc] = {
+                v8::Number::New(isolate, now),
+                v8::Number::New(isolate, total),
+                v8::Number::New(isolate, speed),
+            };
+
+            // 调用函数
+            v8::Local<v8::Value> result;
+            if (v8function->Call(context, context->Global(), argc, argv).ToLocal(&result)) {
+                // 函数调用成功，result 包含返回值
+                // 在此处理 result （如果需要）
+            }
+            else {
+                // 处理错误
+            }
+
+            //释放持久句柄
+            jsOnProg->Reset();
+        }
+        else {
+            // 抛出错误或处理非函数情况
+        }
+    }
+    //std::vector<std::shared_ptr<DirectDownloader>> downloaders;
+    int onprog(unsigned int now, unsigned int total, float speed, std::shared_ptr<v8::Persistent<v8::Value>>& jsOnProg) {
+        postToJS(std::bind(onProgJS, now, total, speed, jsOnProg));
         return 0;
+    }
+
+    void onDownloaded_JS(JCBuffer & p_Buff,
+            const std::string & pLocalAddr,
+            const std::string & pSvAddr,
+            int pnCurlRet,
+            int pnHttpRet,
+            const std::string & pstrHeader,
+            std::shared_ptr<v8::Persistent<v8::Value>>& jsOnComp,
+            std::shared_ptr<v8::Persistent<v8::Value>>& jsOnProg
+    ) {
+        auto isolate = v8::Isolate::GetCurrent();
+        v8::HandleScope handleScope(isolate); // 创建 HandleScope
+        v8::Local<v8::Context> context = isolate->GetCurrentContext();
+        // 将下载的数据传递给 JS 回调
+        //把持久句柄转成本地句柄            
+        v8::Local func(jsOnComp->Get(isolate));
+        // 确认value是函数
+        if (func->IsFunction()) {
+            auto v8function = v8::Local<v8::Function>::Cast(func);
+            const unsigned argc = 3;
+            v8::Local<v8::Value> argv[argc] = {
+                laya::createJSAB(p_Buff.m_pPtr, p_Buff.m_nLen),
+                v8::String::NewFromUtf8(isolate, pLocalAddr.c_str(), v8::NewStringType::kNormal).ToLocalChecked(),
+                v8::String::NewFromUtf8(isolate, pSvAddr.c_str(), v8::NewStringType::kNormal).ToLocalChecked()
+            };
+
+            // 调用函数
+            v8::Local<v8::Value> result;
+            if (v8function->Call(context, context->Global(), argc, argv).ToLocal(&result)) {
+                // 函数调用成功，result 包含返回值
+                // 在此处理 result （如果需要）
+            }
+            else {
+                // 处理错误
+            }
+
+            //释放持久句柄
+            jsOnComp->Reset();
+            jsOnProg->Reset();
+            //释放buffer
+            p_Buff.m_bNeedDel = true;
+            p_Buff.free();
+        }
+        else {
+            // 抛出错误或处理非函数情况
+        }
     }
 
     void onDownloaded(
@@ -544,8 +626,22 @@ namespace laya
         const std::string& pSvAddr,
         int pnCurlRet,
         int pnHttpRet,
-        const std::string& pstrHeader) {
+        const std::string& pstrHeader,
+        std::shared_ptr<v8::Persistent<v8::Value>>& jsOnComp,
+        std::shared_ptr<v8::Persistent<v8::Value>>& jsOnProg) {
 
+        //checkIsEncrypted(p_Buff.m_pPtr, p_Buff.m_nLen);
+        //if (gHandleDataFunc) {
+        //    int nNewlen = m_nLength;
+        //    char* pNewData = gHandleDataFunc(m_pBuffer.get(), nNewlen);
+        //    if (pNewData) {
+        //        m_nLength = nNewlen;
+        //        m_pBuffer.reset(pNewData);
+        //    }
+        //}
+
+        p_Buff.m_bNeedDel = false; //下载线程不要删除，js那边删
+        postToJS(std::bind(onDownloaded_JS, p_Buff, std::ref(pLocalAddr), std::ref(pSvAddr), pnCurlRet, pnHttpRet, pstrHeader, jsOnComp, jsOnProg));
     }
 
     /**
@@ -556,68 +652,28 @@ namespace laya
         if (!v8url.isString())return;
         std::string strUrl = v8url.as<std::string>();
         if (strUrl.empty()) return;
-        //TODO
-        int a = 0;
-
-        // 创建 DirectDownloader 对象用于下载文件
-        //auto downloader = std::make_shared<DirectDownloader>();
-        //downloaders.push_back(downloader);
-
-
-        JCDownloadMgr* pNetLoader = JCDownloadMgr::getInstance();
-        pNetLoader->download(strUrl.c_str(), 0, onprog, onDownloaded, 0, 0);
-
 
         auto isolate = v8::Isolate::GetCurrent();
         //v8::Persistent<v8::Value> onCompleteP(isolate, onComplete);  
         //转成持久句柄。由于lambda不允许拷贝，所以用shareptr
         auto onCompleteP = std::make_shared<v8::Persistent<v8::Value>>(isolate, onComplete);
+        auto onProgP = std::make_shared<v8::Persistent<v8::Value>>(isolate, onProgress);
 
-        // 在 JavaScript 线程中执行 onComplete 回调
-        auto completeCb = [onCompleteP](JCBuffer buffer, const std::string& localAddr, const std::string& svAddr) {
-            auto isolate = v8::Isolate::GetCurrent();
-            v8::HandleScope handleScope(isolate); // 创建 HandleScope
-            v8::Local<v8::Context> context = isolate->GetCurrentContext();
-            // 将下载的数据传递给 JS 回调
-            //Local scopeV8(buffer);
-            //Local value = String::NewFromUtf8(isolate, buffer.m_pPtr);
-            const int argc = 1;
-            JSValueAsParam argv[argc] = {};
-            //把持久句柄转成本地句柄            
-            v8::Local func(onCompleteP->Get(isolate));
-            //func.CallAsFunction(isolate->GetCurrentContext(), isolate->GetCurrentContext()->Global(), argc, argv);
-            // 确认value是函数
-            if (func->IsFunction()) {
-                auto v8function = v8::Local<v8::Function>::Cast(func);
+        JCDownloadMgr* pNetLoader = JCDownloadMgr::getInstance();
+        auto onComp = std::bind(onDownloaded,
+            std::placeholders::_1,
+            std::placeholders::_2,
+            std::placeholders::_3,
+            std::placeholders::_4,
+            std::placeholders::_5,
+            std::placeholders::_6, onCompleteP,onProgP);
+        auto onProg = std::bind(onprog,
+            std::placeholders::_1,
+            std::placeholders::_2,
+            std::placeholders::_3,
+            onProgP);
 
-                const unsigned argc = 1;
-                v8::Local<v8::Value> argv[argc] = { 
-                    v8::String::NewFromUtf8(isolate, "Hello, world!", v8::NewStringType::kNormal).ToLocalChecked() 
-                };
-
-                // 调用函数
-                v8::Local<v8::Value> result;
-                if (v8function->Call(context, context->Global(), argc, argv).ToLocal(&result)) {
-                    // 函数调用成功，result 包含返回值
-                    // 在此处理 result （如果需要）
-                }
-                else {
-                    // 处理错误
-                }
-
-                //释放持久句柄
-                onCompleteP->Reset();
-            }
-            else {
-                // 抛出错误或处理非函数情况
-            }
-
-        };
-
-        // 设置下载的回调，确保在JS线程中执行
-        //std::function<void()> cb = std::bind(&JSRuntime::onDownloadComplete, this, completeCb);
-        //postToJS(cb);
-
+        pNetLoader->download(strUrl.c_str(), 0, onProg, onComp, 0, 0);
     }
 
     // 下载完成后在 JS 线程调用回调
