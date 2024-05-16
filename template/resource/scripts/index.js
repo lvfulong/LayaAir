@@ -119,4 +119,13 @@ window.document.addEventListener('keydown', function (e) {
     }
 });
 window.loadConchUrl = loadApp;
-loadApp("http://layabox.com/layanative3.0/demo/index.js");
+let layadcc = require('layadcc.js').layadcc;
+let dcc = new layadcc.LayaDCCClient('http://localhost:7788/');
+dcc.pathMapToDCC = 'http://localhost:8899/';
+dcc.init('http://localhost:7788/version.1.0.0.json', null).then((ok) => {
+    if (!ok) {
+        console.log('init dcc error!');
+    }
+    dcc.injectToNative3();
+    loadApp("http://layabox.com/layanative3.0/demo/index.js");
+});

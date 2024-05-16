@@ -238,5 +238,17 @@ window.document.addEventListener('keydown', function (e: KeyboardEvent) {
     }
 });
 window.loadConchUrl = loadApp;
+//@ts-ignore
+let layadcc = require('layadcc.js').layadcc;
+let dcc = new layadcc.LayaDCCClient('http://localhost:7788/' );
+//设置这个地址下的资源加载走DCC模式
+dcc.pathMapToDCC= 'http://localhost:8899/';
+//通过DCC的根文件初始化dcc客户端
+dcc.init('http://localhost:7788/version.1.0.0.json',null).then((ok:boolean)=>{
+    if(!ok){
+        console.log('init dcc error!');
+    }
+    dcc.injectToNative3();
+    loadApp("http://layabox.com/layanative3.0/demo/index.js");
+})
 
-loadApp("http://layabox.com/layanative3.0/demo/index.js");
