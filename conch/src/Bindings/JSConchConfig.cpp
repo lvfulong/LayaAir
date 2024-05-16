@@ -35,7 +35,7 @@ extern HWND g_hWnd;
 
 namespace laya
 {
-    bool                    JSConchConfig::s_useDCC2 = true;
+    bool                    JSConchConfig::s_useDCC2 = false;
 	std::string				JSConchConfig::m_sGUID = "unknow";
     std::string				JSConchConfig::m_sDeviceModel = "unknow";
 	std::string				JSConchConfig::m_sDeviceInfo= "{\"resolution\":\"unknow\",	\"guid\":\"unknow\",\"imei\":[\"unknow\"],\"imsi\":[\"unknow\"],\"os\":\"unknow\",\"osversion\":\"unknow\",\"phonemodel\":\"unknow\"	}";
