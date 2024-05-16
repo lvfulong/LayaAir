@@ -10,10 +10,10 @@ namespace laya{
         //std::vector<Persistent>  m_onEndCBs;
         bool m_inited=false;
 
-        void onDownloadOK(JCBuffer& p_Buff, const char* localPath);
         //void onDownloadEndJs(const v8::FunctionCallbackInfo<v8::Value>& args);
     public:
         struct jsCallbackData{
+            JSDownloader* pThis;
             onDownloadedFunc cFunc;
             Persistent      jsFunc;
         };

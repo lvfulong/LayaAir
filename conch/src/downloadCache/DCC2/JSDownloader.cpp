@@ -13,35 +13,37 @@ namespace laya{
         m_jsDownloader.reset();
     }
 
-    void JSDownloader::onDownloadOK(JCBuffer& p_Buff, const char* localPath){
-
-    }
-
     void onDownloadEndJs(const v8::FunctionCallbackInfo<v8::Value>& args){
         auto isolate = args.GetIsolate();
         auto context = isolate->GetCurrentContext();
         int num = args.Length();
+
+        char* pABPtr = NULL;
+        int nABLen = 0;
+        if (!extractJSAB(args[1], pABPtr, nABLen)) {
+            //参数不对
+            LOGE("onDownloadEndJs 参数不对，第二个参数是");
+            return;
+        }
+
+        const char* pLocalPath = nullptr;
+        if (args[2]->IsString()) {
+            v8::String::Utf8Value v8lp(isolate, args[2]);
+            pLocalPath = *v8lp;
+        }
+
         auto v1 = args[0];
-        bool bb = v1->IsExternal();
-
-        auto jsFunc = args.Holder();
-
-        auto value = jsFunc->Get(context, v8::String::NewFromUtf8(isolate, "onok", v8::NewStringType::kNormal).ToLocalChecked());
-        //if (!value.IsEmpty() && value.ToLocalChecked()->IsExternal()) {
         if (!v1.IsEmpty() && v1->IsExternal()) {
             auto external = v8::Local<v8::External>::Cast(v1);
             auto extdata = reinterpret_cast<JSDownloader::jsCallbackData*>(external->Value());
+            //这个buffer不要删除，是js的问题
+            JCBuffer buff(pABPtr, nABLen,false,false);
             //执行
-            //(*(*onok_ptr))();
-            auto bb = JCBuffer();;
-            extdata->cFunc (JCBuffer(), (const char*)"");
+            extdata->cFunc(buff, pLocalPath);
             //清理
             extdata->jsFunc.reset();
             delete extdata;
-            // 从 "onok" 属性中移除 External
-            //jsFunc->Delete(context, v8::String::NewFromUtf8(isolate, "onok", v8::NewStringType::kNormal).ToLocalChecked());
         }
-
     }
 
     void JSDownloader::setJSDownloader(JSValueAsParam obj){
@@ -59,6 +61,7 @@ namespace laya{
         auto func = tpl->GetFunction(ctx).ToLocalChecked();
 
         auto data = new jsCallbackData();
+        data->pThis = this;
         data->cFunc = onok;
         data->jsFunc.reset(func);
         //auto onok_shared = std::make_shared<onDownloadedFunc>(data);
