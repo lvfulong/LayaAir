@@ -7,13 +7,11 @@ namespace laya{
     class JSDownloader :public IDownloader{
     private:
         Persistent  m_jsDownloader;
-        //v8::Local<v8::FunctionTemplate> m_onEndTemp;
         //std::vector<Persistent>  m_onEndCBs;
         bool m_inited=false;
 
         void onDownloadOK(JCBuffer& p_Buff, const char* localPath);
         //void onDownloadEndJs(const v8::FunctionCallbackInfo<v8::Value>& args);
-        void initjs();
     public:
         struct jsCallbackData{
             onDownloadedFunc cFunc;
