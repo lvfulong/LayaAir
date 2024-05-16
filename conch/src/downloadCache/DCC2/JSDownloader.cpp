@@ -13,26 +13,45 @@ namespace laya{
         m_jsDownloader.reset();
     }
 
+    void CallDebugger(v8::Isolate* isolate) {
+        v8::HandleScope handle_scope(isolate);
+        v8::Local<v8::Context> context = isolate->GetCurrentContext();
+
+        // 创建含有 `debugger;` 语句的JS代码
+        v8::Local<v8::String> code = v8::String::NewFromUtf8Literal(isolate, "debugger;");
+        v8::Local<v8::Script> script = v8::Script::Compile(context, code).ToLocalChecked();
+        script->Run(context);
+    }
+
+
+    //js下载完成之后调回这里，这里保存着对应的c++的回调，再继续调回c++，使自己看起来像是一个普通的c++接口
     void onDownloadEndJs(const v8::FunctionCallbackInfo<v8::Value>& args){
         auto isolate = args.GetIsolate();
         auto context = isolate->GetCurrentContext();
-        int num = args.Length();
 
+        v8::Local<v8::Object> cbObj = args.This();
+
+        // 获取 external_onok 成员
+        v8::Local<v8::String> external_onok_key = v8::String::NewFromUtf8(isolate, "external_onok").ToLocalChecked();
+        v8::Local<v8::Value> external_onok_value = cbObj->Get(context, external_onok_key).ToLocalChecked();
+
+        int num = args.Length();
+        //CallDebugger(isolate);
         char* pABPtr = NULL;
         int nABLen = 0;
-        if (!extractJSAB(args[1], pABPtr, nABLen)) {
+        if (!extractJSAB(args[0], pABPtr, nABLen)) {
             //参数不对
-            LOGE("onDownloadEndJs 参数不对，第二个参数是");
+            LOGE("onDownloadEndJs 参数不对，第一个参数是Arraybuffer");
             return;
         }
 
         const char* pLocalPath = nullptr;
-        if (args[2]->IsString()) {
-            v8::String::Utf8Value v8lp(isolate, args[2]);
+        if (args[1]->IsString()) {
+            v8::String::Utf8Value v8lp(isolate, args[1]);
             pLocalPath = *v8lp;
         }
 
-        auto v1 = args[0];
+        auto v1 = external_onok_value;
         if (!v1.IsEmpty() && v1->IsExternal()) {
             auto external = v8::Local<v8::External>::Cast(v1);
             auto extdata = reinterpret_cast<JSDownloader::jsCallbackData*>(external->Value());
@@ -44,6 +63,9 @@ namespace laya{
             extdata->jsFunc.reset();
             delete extdata;
         }
+        // 将 external_onok 成员设置为 null，避免多次调用使用上面已经删除的指针
+        cbObj->Set(isolate->GetCurrentContext(), external_onok_key, v8::Null(isolate)).FromJust();
+
     }
 
     void JSDownloader::setJSDownloader(JSValueAsParam obj){
@@ -60,7 +82,7 @@ namespace laya{
         auto tpl = v8::FunctionTemplate::New(isolate, onDownloadEndJs);
         auto func = tpl->GetFunction(ctx).ToLocalChecked();
 
-        auto data = new jsCallbackData();
+        jsCallbackData* data = new jsCallbackData();
         data->pThis = this;
         data->cFunc = onok;
         data->jsFunc.reset(func);
@@ -71,7 +93,18 @@ namespace laya{
 
         // 创建持久引用并调用 JS
         //v8::Persistent<v8::Function> pcb(isolate, func);
+        // 创建一个新的 JavaScript 对象
+        auto obj = v8::Object::New(isolate);
 
-        m_jsDownloader.call<void>(ctx->Global(), pszUrl, func.As<v8::Object>(), external_onok.As<v8::Value>());
+        // 将 onDownloadEndJs 函数设置为对象的成员
+        v8::Local<v8::String> onDownloadEndJs_key = v8::String::NewFromUtf8(isolate, "onDownloadEnd").ToLocalChecked();
+        obj->Set(ctx, onDownloadEndJs_key, func).FromJust();
+
+        // 将 external_onok 设置为对象的成员
+        v8::Local<v8::String> external_onok_key = v8::String::NewFromUtf8(isolate, "external_onok").ToLocalChecked();
+        obj->Set(ctx, external_onok_key, external_onok).FromJust();
+
+        //m_jsDownloader.call<void>(ctx->Global(), pszUrl, func.As<v8::Object>(), external_onok.As<v8::Value>());
+        m_jsDownloader.call<void>(ctx->Global(), pszUrl, obj);
     }
 }
