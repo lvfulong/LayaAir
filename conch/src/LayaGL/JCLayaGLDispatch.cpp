@@ -853,10 +853,10 @@ namespace laya
 			{
 				pImage->premultiplyAlpha();
 			}
-            if (ms_pLayaGL->m_bFlipY)
+            /*if (ms_pLayaGL->m_bFlipY)
 			{
 				JCImage::flipY(GL_UNSIGNED_BYTE, GL_RGBA, pImage->m_kBitmapData.m_nWidth, pImage->m_kBitmapData.m_nHeight, pImage->m_kBitmapData.m_pImageData);
-			}
+			}*/
             int width = pImage->getWidth();
             int height = pImage->getHeight();
             char* pBufferData = (char*)pImage->m_kBitmapData.m_pImageData;
@@ -924,10 +924,10 @@ namespace laya
 			{
 				pImage->premultiplyAlpha();
 			}
-            if (ms_pLayaGL->m_bFlipY)
+            /*if (ms_pLayaGL->m_bFlipY)
 			{
 				JCImage::flipY(GL_UNSIGNED_BYTE, GL_RGBA, pImage->m_kBitmapData.m_nWidth, pImage->m_kBitmapData.m_nHeight, pImage->m_kBitmapData.m_pImageData);
-			}
+			}*/
             int width = pImage->getWidth();
             int height = pImage->getHeight();
             char* pBufferData = (char*)pImage->m_kBitmapData.m_pImageData;
@@ -973,10 +973,10 @@ namespace laya
 			{
 				pImage->premultiplyAlpha();
 			}
-            if (ms_pLayaGL->m_bFlipY)
+            /*if (ms_pLayaGL->m_bFlipY)
 			{
 				JCImage::flipY(GL_UNSIGNED_BYTE, GL_RGBA, pImage->m_kBitmapData.m_nWidth, pImage->m_kBitmapData.m_nHeight, pImage->m_kBitmapData.m_pImageData);
-			}
+			}*/
             int width = pImage->getWidth();
             int height = pImage->getHeight();
             char* pBufferData = (char*)pImage->m_kBitmapData.m_pImageData;
