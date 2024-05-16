@@ -226,10 +226,14 @@ void App::run(const Config &config)
             case SDL_MOUSEWHEEL: {
                 inputEvent e;
                 e.nTouchType = e.nType = E_ONMOUSEWHEEL;
-                strncpy(e.type, "mousewheel", 256);
+                strncpy(e.type, "wheel", 256);
                 e.posX = event.button.x;
                 e.posY = event.button.y;
-                e.nWheel = event.wheel.y;
+                e.deltaMode = 0;
+                e.deltaX = -event.wheel.x * 100.0f;//凑的
+                e.deltaY = -event.wheel.y * 100.0f;//凑的
+                e.deltaZ = 0.0f;//凑的
+                e.nWheel = 1;
 
                 JCConch::s_pConch->dispatchInputEvent(e);
                 break;

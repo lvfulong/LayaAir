@@ -72,7 +72,7 @@ namespace laya
         //mouse
         else if (e.nType >= E_ONMOUSEDOWN && e.nType <= E_ONRIGHTMOUSEUP)
         {
-            JCConch::s_pScriptRuntime->m_pJSMouseEvtFunction.call<void>(getCurrentContext().global(), e.nTouchType, e.type, e.posX, e.posY, e.nWheel);
+            JCConch::s_pScriptRuntime->m_pJSMouseEvtFunction.call<void>(getCurrentContext().global(), e.nTouchType, e.type, e.posX, e.posY, e.nWheel, e.deltaMode, e.deltaX, e.deltaY, e.deltaZ);
         }
         //keyboard
         else if (e.nType >= E_ONKEYDOWN && e.nType <= E_ONKEYUP)
