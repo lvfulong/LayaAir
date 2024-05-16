@@ -7,7 +7,7 @@ namespace laya{
     class JSDownloader :public IDownloader{
     private:
         Persistent  m_jsDownloader;
-        v8::Local<v8::FunctionTemplate> m_onEndTemp;
+        //v8::Local<v8::FunctionTemplate> m_onEndTemp;
         //std::vector<Persistent>  m_onEndCBs;
         bool m_inited=false;
 
