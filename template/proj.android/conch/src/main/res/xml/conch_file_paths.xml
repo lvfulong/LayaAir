@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <external-files-path name="conch-external-files-path-download" path="Download"/>
+    <external-files-path name="conch-external-files-path-root" path="."/>
+    <external-cache-path name="conch-external-cache-path-download" path="Download"/>
+    <external-cache-path name="conch-external-cache-path-root" path="."/>
+    <files-path name="conch-files-path-root" path="." />
+    <cache-path name="conch-cache-path-root" path="." />
+    <root-path path="." name="conch-root-path" />
+</paths>

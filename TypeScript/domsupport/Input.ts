@@ -193,7 +193,7 @@ var _lbKeyboardEvent= window["KeyboardEvent"]=KeyboardEvent;
     
     conch.setKeyEvtFunction(keyEventHandle());
 
-    conch.setMouseEvtFunction(function(touchtype: number, type: string, x: number, y: number, wheel: number) {
+    conch.setMouseEvtFunction(function(touchtype: number, type: string, x: number, y: number, wheel: number, deltaMode: number, deltaX: number, deltaY: number, deltaZ: number) {
         var doc = window.document;
         if (!doc) {
             console.log('mouse event cant dispatch!');
@@ -203,11 +203,17 @@ var _lbKeyboardEvent= window["KeyboardEvent"]=KeyboardEvent;
      
         var target = doc.pickElement(x, y);
         if (wheel != 0) {
-            var evt1 = new MouseWheelEvent();
+            //var evt1 = new MouseWheelEvent();
+            var evt1 = new WheelEvent("wheel");
             evt1.clientX = evt1.pageX = evt1.screenX = x;
             evt1.clientY = evt1.pageY = evt1.screenY = y;
-            evt1.target=target;
+            evt1.target = target;
             evt1.wheelDelta = wheel;
+            evt1.deltaMode = deltaMode;
+            evt1.deltaX = deltaX;
+            evt1.deltaY = deltaY;
+            evt1.deltaZ = deltaZ;
+            evt1.target = target;
             doc.dispatchEvent(evt1);
         }
         else{

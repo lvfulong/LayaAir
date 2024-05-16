@@ -38,6 +38,7 @@ namespace laya{
             class_<TextDecoderWrapper> class_binding;
             class_binding.function("decode", &TextDecoderWrapper::decode);
             class_binding.constructor<>();
+            class_binding.constructor<const char*>();
             context.class_("TextDecoder", class_binding);
     }
 }

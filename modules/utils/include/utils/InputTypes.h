@@ -23,6 +23,12 @@ struct inputEvent
     bool bShift;
     int id;
     int nTouchType; // 是用来传给js的
+
+    int deltaMode = 0;
+    float deltaX = 0.0f;
+    float deltaY = 0.0f;
+    float deltaZ = 0.0f;
+
     inputEvent()
     {
         memset(type, 0, 256);
