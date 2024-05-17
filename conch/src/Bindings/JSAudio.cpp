@@ -4,7 +4,6 @@
 #include <utils/JCCommonMethod.h>
 #include <downloadMgr/JCDownloadMgr.h>
 #include <utils/JCMemorySurvey.h>
-#include "../downloadCache/DCC1/JCServerFileCache.h"
 #include <utils/JCFileSystem.h>
 #include <resource/JCFileResManager.h>
 #include <utils/JCLayaUrl.h>
@@ -274,11 +273,24 @@ namespace laya
                     {
                         sT[p3] = 0;
                     }
-                    unsigned int hash = JCCachedFileSys::hashRaw(m_sSrc.c_str());
-                    char tmpBuf[32];
-                    sprintf(tmpBuf, "%x_", hash);
-                    m_sLocalFileName = JCConch::s_pScriptRuntime->m_pFileResMgr->m_pFileCache->getAppPath() + "/" + tmpBuf + audiofile;
-                    writeFileSync(m_sLocalFileName.c_str(), p_buf);
+                    //unsigned int hash = JCCachedFileSys::hashRaw(m_sSrc.c_str());
+                    //char tmpBuf[32];
+                    //sprintf(tmpBuf, "%x_", hash);
+                    //m_sLocalFileName = JCConch::s_pScriptRuntime->m_pFileResMgr->m_pFileCache->getAppPath() + "/" + tmpBuf + audiofile;
+#ifdef WIN32
+					//windows下可以直接使用这个文件
+					// 不行，需要扩展名
+					//m_sLocalFileName = pFileRes->m_strLocalPath;
+#else
+#endif
+					if (m_sLocalFileName.length() <= 0) {
+						char tmpBuf[32];
+						sprintf(tmpBuf, "%x_%x",pFileRes->m_nLength, rand());
+						const char* local = tmpBuf;
+						m_sLocalFileName = JCFileResManager::getAppCachePath() + "/" + local + audiofile;
+						writeFileSync(m_sLocalFileName.c_str(), p_buf);
+					}
+					
                     ms_vSaveMp3File[m_sSrc] = m_sLocalFileName;
                 }
 	    }

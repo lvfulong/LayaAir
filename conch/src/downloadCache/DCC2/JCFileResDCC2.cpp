@@ -71,6 +71,7 @@ namespace laya{
     }
     
     void JCFileResDCC2::load(const char* p_pszURL, JCSharedBuffer* pSyncResult){
+        m_strURL = p_pszURL;
         std::weak_ptr<int> wptr(m_CallbackRef);
         if(m_pDownloader){
             //有人接管

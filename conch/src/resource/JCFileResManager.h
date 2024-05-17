@@ -60,6 +60,9 @@ namespace laya{
         bool m_bIgnoreError = false;			//是否忽略下载错误
         std::string m_strSvIP;      //调试用
         int m_nLastHttpResponse = 0;
+        //记录本地缓存路径，以便直接加载
+        std::string m_strLocalPath;
+
     };
 
 	class JCFileResManager{
@@ -69,6 +72,8 @@ namespace laya{
 		JCFileResManager(JCDownloadMgr* pDownloadMgr);
 
 		~JCFileResManager();
+
+        static std::string getAppCachePath();
 
 		void setFileCache( JCServerFileCache* p_pFileCache){
 			m_pFileCache = p_pFileCache;

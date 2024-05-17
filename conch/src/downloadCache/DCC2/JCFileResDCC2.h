@@ -16,8 +16,6 @@ namespace laya{
 	class JCFileResDCC2 : public JCFileRes
     {
     private:
-        //记录本地缓存路径，以便直接加载
-        std::string m_strLocalPath;
         std::string m_strURL;
         IDownloader* m_pDownloader;
         bool	m_bSendToJS_complete;	//完成事件已经post给js队列等待处理了。避免同一个对象多次post。必须都在js线程处理这个变量
