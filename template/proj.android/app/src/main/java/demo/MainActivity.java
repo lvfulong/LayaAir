@@ -28,6 +28,9 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.layabox.conch.R;
 
 import static android.content.ContentValues.TAG;
@@ -40,7 +43,9 @@ public class MainActivity extends Activity {
     boolean isLoad=false;
     boolean isExit=false;
     public static SplashDialog mSplashDialog = null;
+    public static layaair.game.floatmenu.FloatPanel mFloatPanel = null;
     public static final String TAG = "MainActivity";
+    @SuppressWarnings("deprecation")
     @Override    
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +65,9 @@ public class MainActivity extends Activity {
         JSBridge.mMainActivity = this;
         mSplashDialog = new SplashDialog(this);
         mSplashDialog.showSplash();
+
+        mFloatPanel = new layaair.game.floatmenu.FloatPanel(this);
+
         Log.d(TAG, "t1 " + System.currentTimeMillis());
 
         Set<String> requiredPermissions = new HashSet<>();
@@ -91,6 +99,17 @@ public class MainActivity extends Activity {
         Log.d(TAG, "t3 " + System.currentTimeMillis());
     }
     public void onActivityResult(int requestCode, int resultCode,Intent intent) {
+        //laya player
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if(result != null) {
+            if(result.getContents() == null) {
+                Log.d("MainActivity", "Cancelled scan");
+            } else {
+                Log.d("MainActivity", "Scanned");
+                demo.layaPlayer.JSBridge.onScanResult(result.getContents());
+            }
+        }
+        //laya player
         super.onActivityResult(requestCode, resultCode, intent);
 
         Log.d("laya", "onActivityResult: requestCode " + requestCode);
@@ -128,7 +147,8 @@ public class MainActivity extends Activity {
         }
         doDestroy();
         if(isLoad)mPlugin.game_plugin_onDestroy();
-
+        mFloatPanel.destory();
+        mFloatPanel = null;
     }
 
     private void doDestroy() {
@@ -196,7 +216,7 @@ public class MainActivity extends Activity {
         }
         return false;
     }
-
+    @SuppressWarnings("deprecation")
     private void translucentNavigation() {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
@@ -210,7 +230,7 @@ public class MainActivity extends Activity {
             NotchUtils.getSafeHeight(this);
         }
     }
-
+    @SuppressWarnings("deprecation")
     private void hideNavigationBar() {
         int flags;
         flags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION

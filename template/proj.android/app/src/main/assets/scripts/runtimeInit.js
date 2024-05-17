@@ -2,7 +2,6 @@ window = this;
 window.conch_File=File;
 window.conch_FileReader = FileReader;
 
-
 (function () {
     function file2path(p) {
         if (!p) return null;

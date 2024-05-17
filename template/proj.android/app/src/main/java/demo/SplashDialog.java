@@ -48,7 +48,7 @@ public class SplashDialog extends Dialog {
             }
         }
     };
-
+    @SuppressWarnings("deprecation")
     public SplashDialog(Context context) {
         super(context, R.style.Splash);
         mContext = context;
@@ -150,7 +150,7 @@ public class SplashDialog extends Dialog {
             return super.dispatchKeyEvent(event);
         }
     }
-
+    @SuppressWarnings("deprecation")
     private void hideNavigationBar() {
         int flags;
         flags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION

@@ -118,14 +118,36 @@ window.document.addEventListener('keydown', function (e) {
             break;
     }
 });
-window.loadConchUrl = loadApp;
-let layadcc = require('layadcc.js').layadcc;
-let dcc = new layadcc.LayaDCCClient('http://localhost:7788/');
-dcc.pathMapToDCC = 'http://localhost:8899/';
-dcc.init('http://localhost:7788/version.1.0.0.json', null).then((ok) => {
-    if (!ok) {
-        console.log('init dcc error!');
+function getBaseUrl(url) {
+    let qidx = url.indexOf('?');
+    if (qidx > 0) {
+        url = url.substring(0, qidx);
     }
-    dcc.injectToNative3();
-    loadApp(conch.presetUrl || "http://10.10.20.77:13999/index.js");
-});
+    url = url.substring(0, url.lastIndexOf('/') + 1);
+    return url;
+}
+window.loadConchUrl = loadApp;
+var enableDcc2 = true;
+var appUrl = 'http://layabox.com/layanative3.0/demo/index.js';
+var dccHead = '';
+var dccUrl = null;
+var mapToDCC = null;
+if (enableDcc2) {
+    let layadcc = require('layadcc.js').layadcc;
+    let dcc = new layadcc.LayaDCCClient(dccUrl || getBaseUrl(dccHead));
+    dcc.pathMapToDCC = mapToDCC || getBaseUrl(appUrl);
+    dcc.init(dccHead, null).then((ok) => {
+        if (ok) {
+            dcc.injectToNative3();
+        }
+        else {
+            console.log('init dcc error!');
+        }
+        window.layadcc2 = layadcc;
+        window.dcc2 = dcc;
+        loadApp(conch.presetUrl || appUrl);
+    });
+}
+else {
+    loadApp(conch.presetUrl || appUrl);
+}
