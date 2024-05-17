@@ -1,6 +1,6 @@
 
 #include "JSDownloader.h"
-
+#include <utils/JCBuffer.h>
 namespace laya{
     struct CallbackData {
         JSDownloader::onDownloadedFunc callback;
