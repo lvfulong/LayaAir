@@ -826,7 +826,6 @@ elseif(LINUX)
 		vorbisfile
 		vorbis
 		ogg
-		freetype
 		curl
 		v8_monolith
 		BulletDynamics
