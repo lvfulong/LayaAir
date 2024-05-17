@@ -3,7 +3,6 @@
 #include <resource/JCFileResManager.h>
 #include "../../JCScriptRuntime.h"
 #include <utils/JCFileSystem.h>
-#include <downloadCache/DCC1/JCServerFileCache.h>
 #include <JCConch.h>
 
 
@@ -152,11 +151,19 @@ namespace laya
 			{
 				sT[p3] = 0;
 			}
-			unsigned int hash = JCCachedFileSys::hashRaw(m_curDownloadUrl.c_str());
-			char tmpBuf[32];
-			sprintf(tmpBuf, "%x_", hash);
-			localFilePath = JCConch::s_pScriptRuntime->m_pFileResMgr->m_pFileCache->getAppPath() + "/" + tmpBuf + mediaFile;
-			writeFileSync(localFilePath.c_str(), p_buf);
+
+#ifdef WIN32
+			//windows下可以直接使用这个文件
+			// 不行，需要扩展名
+			//localFilePathUrl = pFileRes->m_strLocalPath;
+#else
+#endif
+			if (localFilePathUrl.length() <= 0) {
+				char tmpBuf[32];
+				sprintf(tmpBuf, "%x_%x", pFileRes->m_nLength, rand());
+				localFilePathUrl = JCFileResManager::getAppCachePath() + "/" + tmpBuf + mediaFile;
+				writeFileSync(localFilePathUrl.c_str(), p_buf);
+			}
 
 			localFilePathUrl = "file://" + localFilePath;
 			ms_cachePathMap[m_curDownloadUrl] = localFilePathUrl;
