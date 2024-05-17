@@ -237,18 +237,45 @@ window.document.addEventListener('keydown', function (e: KeyboardEvent) {
             break;
     }
 });
-window.loadConchUrl = loadApp;
-//@ts-ignore
-let layadcc = require('layadcc.js').layadcc;
-let dcc = new layadcc.LayaDCCClient('http://localhost:7788/' );
-//设置这个地址下的资源加载走DCC模式
-dcc.pathMapToDCC= 'http://localhost:8899/';
-//通过DCC的根文件初始化dcc客户端
-dcc.init('http://localhost:7788/version.1.0.0.json',null).then((ok:boolean)=>{
-    if(!ok){
-        console.log('init dcc error!');
+
+//取url所在目录
+function getBaseUrl(url:string){
+    let qidx = url.indexOf('?');
+    if(qidx>0){
+        url = url.substring(0,qidx);
     }
-    dcc.injectToNative3();
-    loadApp(conch.presetUrl || "http://layabox.com/layanative3.0/demo/index.js");
-})
+    url = url.substring(0,url.lastIndexOf('/')+1);//保留最后的/
+    return url;
+}
+
+window.loadConchUrl = loadApp;
+var enableDcc2=true;
+var appUrl = 'http://layabox.com/layanative3.0/demo/index.js';
+var dccHead = '';
+//null表示根据规则自己计算
+var dccUrl = null;
+//null表示根据规则自己计算
+var mapToDCC=null;
+
+if(enableDcc2){
+    //@ts-ignore
+    let layadcc = require('layadcc.js').layadcc;
+    let dcc = new layadcc.LayaDCCClient(dccUrl||getBaseUrl(dccHead));
+    //设置这个地址下的资源加载走DCC模式
+    dcc.pathMapToDCC= mapToDCC||getBaseUrl(appUrl);
+    //通过DCC的根文件初始化dcc客户端
+    dcc.init(dccHead,null).then((ok:boolean)=>{
+        if(ok){
+            dcc.injectToNative3();
+        }else{
+            console.log('init dcc error!');
+        }
+        //导出以便用户使用
+        (window as any).layadcc2 = layadcc;
+        (window as any).dcc2 = dcc;
+        loadApp(conch.presetUrl||appUrl);
+    })
+}else{
+    loadApp(conch.presetUrl||appUrl);
+}
 
