@@ -342,13 +342,13 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
     const char* JSConchConfig::getRuntimeVersion()
     {
 #ifdef __APPLE__
-        return "ios-conch6-release-3.1.0-beta.1";
+        return "ios-conch6-release-3.2.0-beta.1";
 #elif __ANDROID__
-        return "android-conch6-release-3.1.0-beta.1";
+        return "android-conch6-release-3.2.0-beta.1";
 #elif WIN32
-        return "window-conch6-release-3.1.0-beta.1";
+        return "window-conch6-release-3.2.0-beta.1";
 #elif __LINUX__
-        return "linux-conch6-release-3.1.0-beta.1";
+        return "linux-conch6-release-3.2.0-beta.1";
 #endif
     }
 	//机型
