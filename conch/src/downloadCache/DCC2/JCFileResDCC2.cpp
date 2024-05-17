@@ -38,8 +38,14 @@ namespace laya{
         if (!m_bSendToJS_complete) {
             std::weak_ptr<int> wptr(m_CallbackRef);
             m_bSendToJS_complete = true;	//这里肯定是js线程，可以处理这个标志
-            std::function<void()> cb = std::bind(&JCFileResDCC2::onResDownloadOK_JSThread, this, wptr);
-            postToJS(cb);
+            if (isInJSThread()) {
+                //如果本身就在js线程，则立即做，这样可以节省一帧
+                onResDownloadOK_JSThread(wptr);
+            }
+            else {
+                std::function<void()> cb = std::bind(&JCFileResDCC2::onResDownloadOK_JSThread, this, wptr);
+                postToJS(cb);
+            }
         }
     }
 

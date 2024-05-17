@@ -67,6 +67,7 @@ namespace laya
 			//TODO m_Semaphore 的stop标记现在不是原子的。
 			//std::interprocess::ipcdetail::atomic_write32( &m_bWantToStop, 0 );
 			m_pThread = new std::thread(std::bind(&JCDataThread::__ThreadEntry,this));
+			m_nThreadID = m_pThread->get_id();
 			if( 0 == m_pThread )
 				return false;
 			return true;
@@ -114,6 +115,7 @@ namespace laya
 			m_Semaphore.reset();
 			delete m_pThread;
 			m_pThread = NULL;
+			//m_nThreadID = 0;
 		}
 
 		/**
@@ -152,6 +154,8 @@ namespace laya
 		std::string		m_strName;
 	public:
 		int				m_nThreadNo;
+		std::thread::id		m_nThreadID;
+
 	};
 
 	template<class _Tp>
