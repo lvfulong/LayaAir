@@ -94,6 +94,10 @@ namespace laya
 
 		virtual void _runLoop();	//需要继承的。例如js线程，需要在_defRunLoop外面包点运行环境
 
+		std::thread::id getTheadID() {
+			return m_ThreadTasks.m_nThreadID;
+		}
+
     public:
 
         loopRun						m_funcLoop;

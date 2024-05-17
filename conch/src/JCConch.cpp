@@ -23,6 +23,7 @@
 #include <LayaGL/JCLayaGL.h>
 #include <Audio/JCAudioManager.h>
 #include <Bindings/JSInput.h>
+#include <thread>
 
 #ifdef __ANDROID__
     #include "WebSocket/WebSocket.h"
@@ -283,10 +284,26 @@ namespace laya
         }
     }
 
-	void postToJS(std::function<void(void)> task) {
+    bool isInJSThread() {
         auto pScriptRuntime = JCConch::s_pScriptRuntime;
-        if (pScriptRuntime) {
-            pScriptRuntime->m_pScriptThread->post(task);
+        if (!pScriptRuntime)
+            return false;
+        auto worker = pScriptRuntime->m_pScriptThread->getWorker();
+        if(!worker)
+            return false;
+        auto jsThreadID = worker->getTheadID();
+        return (std::this_thread::get_id() == jsThreadID);
+    }
+
+	void postToJS(std::function<void(void)> task) {
+        if (isInJSThread()) {
+            task();
+        }
+        else {
+            auto pScriptRuntime = JCConch::s_pScriptRuntime;
+            if (pScriptRuntime) {
+                pScriptRuntime->m_pScriptThread->post(task);
+            }
         }
     }
     void JCConch::onAppPause() {

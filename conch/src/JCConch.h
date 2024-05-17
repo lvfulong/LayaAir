@@ -106,6 +106,7 @@ namespace laya
 
     void postToPlatform(std::function<void(void)> task);
 
+    bool isInJSThread();
 	void postToJS(std::function<void(void)> task);
 };
 //------------------------------------------------------------------------------
