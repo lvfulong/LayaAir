@@ -44,7 +44,7 @@ extern int g_nInnerHeight;
 namespace laya
 {
 	static float INV_UV[8] = { 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f };
-	TextRender* Context2D::m_textRender = nullptr;
+	//TextRender* Context2D::m_textRender = nullptr;
 	static uint8_t PIXELS[16] = {0}; 
 	//------------------------------------------------------------------------------
 	Context2D::Context2D(GLESEngine* pWebglEngine)

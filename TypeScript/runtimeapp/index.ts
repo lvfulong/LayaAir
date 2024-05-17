@@ -249,6 +249,6 @@ dcc.init('http://localhost:7788/version.1.0.0.json',null).then((ok:boolean)=>{
         console.log('init dcc error!');
     }
     dcc.injectToNative3();
-    loadApp("http://layabox.com/layanative3.0/demo/index.js");
+    loadApp(conch.presetUrl || "http://layabox.com/layanative3.0/demo/index.js");
 })
 

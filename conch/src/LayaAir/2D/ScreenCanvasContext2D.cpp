@@ -78,11 +78,6 @@ namespace laya
         SubmitCMD::onDestroy();
         //SubmitCanvas::onDestroy();
         Shader2D::onDestroy();
-        if (Context2D::m_textRender)
-        {
-            delete Context2D::m_textRender;
-            Context2D::m_textRender = nullptr;
-        }
         if (m_target != nullptr)
         {
             delete m_target;

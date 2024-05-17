@@ -216,7 +216,7 @@ namespace laya
 		std::shared_ptr<RenderTexture2D>								m_target;
 		int																m_width = Context2D::MAXSIZE;
 		int																m_height = Context2D::MAXSIZE;
-		static TextRender*												m_textRender;
+		//static TextRender*												m_textRender;
 		bool															drawTexAlign = false;		// �������ض���
 		int																m_flushCnt = 0;
 		//std::vector<std::shared_ptr<CharRenderInfo>>*					m_touches = nullptr;
