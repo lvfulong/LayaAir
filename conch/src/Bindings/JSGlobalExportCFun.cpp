@@ -609,7 +609,9 @@ namespace laya
     void JSGlobalDisExportC() {
         //FontManager::deleteInstance();
         delete JSLayaGL::getInstance();
-
+        JCFileResManager* pfsMgr = JCConch::s_pScriptRuntime->m_pFileResMgr;
+        if(pfsMgr)
+            pfsMgr->m_pDownloader.reset();
         //delete JSTextMemoryCanvas::getInstance();
     }
 }
