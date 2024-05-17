@@ -101,13 +101,13 @@ int conchMain(int argc, char *argv[])
     pAssets->Init(gRedistPath.c_str());
     laya::JCConch::s_pAssetsFiles = pAssets;
 
-    if (bRunTest)
-    {
+    //if (bRunTest)
+    //{
         // JSMemorySurvey::DelInstance();
         // svFileCache::delInstance();
         // delete pAssets;
-        return 0;
-    }
+        //return 0;
+    //}
     // if (g_kSystemConfig.m_bPerfStat) {
     //     gRunStat.strTestID = g_kSystemConfig.m_strStartURL;
     // }
