@@ -41,6 +41,7 @@ public class MainActivity extends Activity {
     boolean isExit=false;
     public static SplashDialog mSplashDialog = null;
     public static final String TAG = "MainActivity";
+    @SuppressWarnings("deprecation")
     @Override    
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -196,7 +197,7 @@ public class MainActivity extends Activity {
         }
         return false;
     }
-
+    @SuppressWarnings("deprecation")
     private void translucentNavigation() {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
@@ -210,7 +211,7 @@ public class MainActivity extends Activity {
             NotchUtils.getSafeHeight(this);
         }
     }
-
+    @SuppressWarnings("deprecation")
     private void hideNavigationBar() {
         int flags;
         flags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION

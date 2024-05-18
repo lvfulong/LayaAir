@@ -986,7 +986,7 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 
 	public void setLocalizable(boolean b)
 	{
-		localizable=b;
+		localizable = b;
 	}
 
 	public void setGameUrl(String _param) {
