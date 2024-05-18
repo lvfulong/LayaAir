@@ -89,9 +89,6 @@ namespace laya
         JCFileSource*			                m_pAssetsRes;
         std::string				                m_strStartJS;
         std::string                             m_sCachePath;
-    #ifdef JS_V8
-        DebuggerAgent*			                m_pDbgAgent;
-    #endif
         JCFileResManager*	                    m_pFileResMgr;
     protected:
         bool					                m_bDestroying;

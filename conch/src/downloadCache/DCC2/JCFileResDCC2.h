@@ -39,7 +39,7 @@ namespace laya{
         ~JCFileResDCC2();
 
         void setDownloader( IDownloader* downloader);
-        bool restoreRes();
+        bool restoreRes() override;
         bool loadFromCache(JCBuffer& buff, bool bDoCheckSum) override;
 
         /** @brief 加载资源。注意只允许调试或者manager调用。否则可能会同一个资源加载多次。

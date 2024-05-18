@@ -59,7 +59,7 @@ namespace laya
         */
         void init(JCFileResManager* pFileMgr, JCFileSource* pAssetRes, JCConch* pConch);
 
-        void start(const char* pStartJS, int debugPort);
+        void start(const char* pStartJS);
 
         void stop();
 

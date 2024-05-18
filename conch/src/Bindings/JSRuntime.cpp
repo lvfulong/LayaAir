@@ -96,6 +96,7 @@ namespace laya
                 std::string url = JCConch::s_pScriptRuntime->m_pUrl->resolve(strHef.c_str());
                 g_kSystemConfig.m_strStartURL = url;
                 g_kSystemConfig.m_strStartURL.at(0) = g_kSystemConfig.m_strStartURL.at(0);
+                JCConch::s_pConch->urlHistoryPush(url.c_str());
                 JCDownloadMgr* pdm = JCDownloadMgr::getInstance();
                 if (pdm) 
                 {
