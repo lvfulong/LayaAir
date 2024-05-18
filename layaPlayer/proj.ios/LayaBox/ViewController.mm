@@ -10,12 +10,17 @@
     CTCellularData *_cellularData;
     LayaReachability *_pNetworkListener;
     bool _isInit;
+    UIFloatPanel* m_floatPanel;
 }
 static ViewController* g_pIOSMainViewController = nil;
 //------------------------------------------------------------------------------
 +(ViewController*)GetIOSViewController
 {
     return g_pIOSMainViewController;
+}
+-(void)showFloatPanel:(bool)show
+{
+    m_floatPanel.hidden = !show;
 }
 //------------------------------------------------------------------------------
 -(instancetype)initWithFrame:(CGRect)frame

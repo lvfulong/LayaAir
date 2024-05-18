@@ -6,5 +6,6 @@
 
 -(instancetype)initWithFrame:(CGRect)frame;
 +(ViewController*)GetIOSViewController;
+-(void)showFloatPanel:(bool)show;
 @end
 

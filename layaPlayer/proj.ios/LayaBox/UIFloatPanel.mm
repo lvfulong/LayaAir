@@ -2,7 +2,6 @@
 #import "UIFloatPanel.h"
 #import <objc/runtime.h>
 #import "conchRuntime.h"
-#import "conchConfig.h"
 #import <UIKit/UIAlertController.h>
 #import "AppDelegate.h"
 #import "ScanViewController.h"

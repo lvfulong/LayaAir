@@ -69,7 +69,7 @@
 }
 +(void)onScanResult:(NSString*)result
 {
-    NSString* js = [[NSString alloc] initWithFormat:@"script.UIController.instance.onScanResult('%@')", result];
+    NSString* js = [[NSString alloc] initWithFormat:@"window.layaPlayerOnScanResult('%@')", result];
     [[conchRuntime GetIOSConchRuntime] runJS:js];
 }
 +(void)showFloatPanel:(NSNumber*)show
@@ -77,11 +77,11 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         if (show.intValue > 0)
         {
-            [ViewController GetIOSViewController]->m_floatPanel.hidden = false;
+            [[ViewController GetIOSViewController] showFloatPanel:false];
         }
         else
         {
-            [ViewController GetIOSViewController]->m_floatPanel.hidden = true;
+            [[ViewController GetIOSViewController] showFloatPanel:true];
         }
     });
 }
