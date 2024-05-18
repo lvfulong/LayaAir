@@ -5,6 +5,6 @@
 @interface ViewController: UIViewController
 
 -(instancetype)initWithFrame:(CGRect)frame;
-
++(ViewController*)GetIOSViewController;
 @end
 

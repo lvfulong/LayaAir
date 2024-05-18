@@ -1,7 +1,7 @@
 #import "ViewController.h"
 #import <CoreTelephony/CTCellularData.h>
 #import "Reachability/Reachability.h"
-
+#import "UIFloatPanel.h"
 @implementation ViewController
 {
     CGRect _frame;
@@ -11,12 +11,19 @@
     LayaReachability *_pNetworkListener;
     bool _isInit;
 }
+static ViewController* g_pIOSMainViewController = nil;
+//------------------------------------------------------------------------------
++(ViewController*)GetIOSViewController
+{
+    return g_pIOSMainViewController;
+}
 //------------------------------------------------------------------------------
 -(instancetype)initWithFrame:(CGRect)frame
 {
     self = [super init];
     if( self != nil )
     {
+        g_pIOSMainViewController = self;
         _frame = frame;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStateChange) name:LayakReachabilityChangedNotification object:nil];
         _pNetworkListener = [LayaReachability reachabilityForInternetConnection];
@@ -34,7 +41,8 @@
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     _conchRuntime = [[conchRuntime alloc] initWithFrame:_frame URL:nil];
     self.view = _conchRuntime->m_pView;
-    
+    m_floatPanel = [[UIFloatPanel alloc] initWithParentView: _conchRuntime->m_pView];
+    m_floatPanel.hidden = true;
     _cellularData = [[CTCellularData alloc] init];
     if (_cellularData.restrictedState == kCTCellularDataNotRestricted || _pNetworkListener.currentReachabilityStatus != NotReachable) {
         [self initConch];
@@ -52,6 +60,7 @@
 - (void)dealloc
 {
     [self destroy];
+     m_floatPanel = nil;
 }
 //------------------------------------------------------------------------------
 - (void)destroy
