@@ -1,7 +1,9 @@
 {
   "resolution": {
     "designWidth": 736,
-    "designHeight": 1266
+    "designHeight": 1266,
+    "scaleMode": "exactfit",
+    "backgroundColor": "rgba(30, 24, 81, 1)"
   },
   "3D": {
     "lightClusterCount": {

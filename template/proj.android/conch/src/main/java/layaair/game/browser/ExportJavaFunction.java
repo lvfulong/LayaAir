@@ -876,29 +876,6 @@ public class ExportJavaFunction
 		);
 	}
 	
-	public static void postCmdToMain(int nCmd, int nParam1, int nParam2){
-		ExportJavaFunction pExport = ExportJavaFunction.GetInstance();
-		if(pExport!=null)
-			pExport._postCmdToMain(nCmd, nParam1, nParam2);
-	}
-	
-	public void _postCmdToMain(int nCmd, int nParam1, int nParam2){
-		class _Runnable implements Runnable{ 
-			int m_nCmd = 0;
-			int m_nP1 = 0;
-			int m_nP2 = 0;
-
-			public _Runnable(int nCmd, int nParam1, int nParam2){
-				m_nCmd = nCmd; m_nP1 = nParam1; m_nP2 = nParam2;
-			}
-			public void run(){
-				ConchJNI.onRunCmd(m_nCmd, m_nP1, m_nP2);
-			}
-		};
-		
-		m_Handler.post(new _Runnable(nCmd, nParam1, nParam2));
-	}
-	//------------------------------------------------------------------------------
 	public static String getWifiMac()
 	{
 		ExportJavaFunction exp = ExportJavaFunction.GetInstance();

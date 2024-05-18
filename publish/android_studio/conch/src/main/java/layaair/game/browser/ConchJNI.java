@@ -53,7 +53,7 @@ public class ConchJNI
 	public static native void configSetParamExt(String p_strExt);
 	
 	//初始化
-    public static native void InitDLib( AssetManager p_am,int nDownloadThreadNum, String p_strAssetRoot, String p_strCachePath, String p_strAPKExpansionMainPath, String p_strAPKExpansionPatchPath, String js);
+    public static native void InitDLib( AssetManager p_am,int nDownloadThreadNum, String p_strAssetRoot, String p_strCachePath, String p_strAPKExpansionMainPath, String p_strAPKExpansionPatchPath);
 	//touch
 	public static native void handleTouch( int type,int id,int x,int y );
 
@@ -104,10 +104,6 @@ public class ConchJNI
 	
 	public static native void onSensorChanged( float arc );
 	
-	public static native void reloadJS();
-	
-	public static native void onRunCmd(int cmd, int param1, int param2 );
-	
 	//执行一段js代码或者函数
 	//参数是一段js代码。
 	public static native void RunJS( String jsstring );
@@ -118,37 +114,12 @@ public class ConchJNI
 	public static native void audioMusicPlayEnd();
 	
 	public static native void networkChanged( int p_nNetworkType );
-	//market 回调-----------------------------------
-	public static native void onMarketInit( String p_sTokenDir );
-	public static native void loginCallback( String jsonParam);
-	public static native void authorizeCallback( String jsonParam);
-	public static native void refreshTokenCallback( String jsonParam);
-	public static native void rechargeEvent( String jsonParam );
-	public static native void inputChange(int keyCode);
-	
-	public static native void onShareAndFeed( String jsonParam);
-	public static native void onGetGameFriends( String jsonParam);
-	public static native void onSendToDesktop( String jsonParam );
-	public static native void onLogout( String jsonParam );
-	public static native void onTopicCircle( String jsonParam );
-	public static native void onInviteCallback(String jsonParam);
 
-	public static native void onSwitchUserCallback(String jsonParam);
-	public static native void onEnterPlatformCallback(String jsonParam);
-	public static native void onEnterBBSCallback(String jsonParam);
-	public static native void onEnterFeedbackCallback(String jsonParam);
-	public static native void onEnterAccountMgrCallback(String jsonParam);
-	public static native void onBuyPropsCallback(String jsonParam);
-	public static native void onSetRechargeInfoCallback(String jsonParam);
-	public static native void onSendMessageToPlatformCallback(String jsonParam);
-	
-	public static native void onGetUserInfoCallback(String jsonParam);
-	public static native void onGetAvailableLoginTypeCallback(String jsonParam);
+	public static native void inputChange(int keyCode);
+
 	public static native void setLocalizable(boolean isLocalPackage);
 	//调用Conch的JS函数
 	public static native void callConchJSFunction( String sFunctionName,String sJsonParam,String sCallbackFunction );
-	
-	public static native  boolean onBackPressed();
 
 	public static native void handleKeyboardInput(String strValue);
 
@@ -156,4 +127,7 @@ public class ConchJNI
 
 	public static native void handleKeyboardComplete(String strValue);
 
+	public static native void reloadJS();
+
+	public static native void urlBack();
 }

@@ -77,7 +77,6 @@ public class GameEngine implements IPlugin {
 		mLayaGameEngine.setStringOnBackPressed(mContext.getString( R.string.on_back_pressed ));
 		mLayaGameEngine.setDownloadThreadNum(nDownloadThreadNum);
 		mLayaGameEngine.setAppCacheDir(_path);
-		mLayaGameEngine.setConfigJS(getInjectJS());
 		mLayaGameEngine.setExpansionZipDir( (String)mGameEngineProxy.laya_get_value("ExpansionMainPath"),(String)mGameEngineProxy.laya_get_value("ExpansionPatchPath"));
 		AssetManager am = mContext.getAssets();
 		mLayaGameEngine.setAssetInfo(am);
@@ -89,13 +88,6 @@ public class GameEngine implements IPlugin {
 		LayaConch5 tmp = (LayaConch5)mLayaGameEngine;
 		Log.e(TAG,"game_plugin_init soPath="+tmp.getSoPath()+" jarfile="+tmp.getJarFile()+" appcache="+tmp.getAppCacheDir());
 	}
-
-	public String getInjectJS() {
-		String js = "";
-		Log.d(TAG, "inject js " + js);
-		return js;
-	}
-
 	@Override
 	public boolean game_plugin_intercept_key(int keycode) {
 		return false;

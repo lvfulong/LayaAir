@@ -110,7 +110,6 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 	protected String m_strCachePath = "";
 	protected String m_strExpansionMainPath = "";
 	protected String m_strExpansionPatchPath = "";
-	protected String m_strConfigJS = "";
 	static public String m_strSoPath = "";
 	static public String m_strJarFile = "";
 	static public String m_strSoFile = "/libconch.so";
@@ -438,10 +437,10 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 
 		String cachePath = getAppCacheDir() + "/LayaCache";
 		if (m_AM != null) {
-			ConchJNI.InitDLib(m_AM,getDownloadThreadNum(), "cache", cachePath, m_strExpansionMainPath == null ? "" : m_strExpansionMainPath,m_strExpansionPatchPath == null ? "" : m_strExpansionPatchPath, m_strConfigJS);
+			ConchJNI.InitDLib(m_AM,getDownloadThreadNum(), "cache", cachePath, m_strExpansionMainPath == null ? "" : m_strExpansionMainPath,m_strExpansionPatchPath == null ? "" : m_strExpansionPatchPath);
 		}
 		else {
-			ConchJNI.InitDLib(null,getDownloadThreadNum(), getJarFile(), cachePath, m_strExpansionMainPath == null ? "" : m_strExpansionMainPath,m_strExpansionPatchPath == null ? "" : m_strExpansionPatchPath, m_strConfigJS);
+			ConchJNI.InitDLib(null,getDownloadThreadNum(), getJarFile(), cachePath, m_strExpansionMainPath == null ? "" : m_strExpansionMainPath,m_strExpansionPatchPath == null ? "" : m_strExpansionPatchPath);
 		}
 		InitView();
 	}
@@ -974,11 +973,11 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 
 
     public void game_plugin_onUrlBack() {
-		ConchJNI.onRunCmd(0x400 + 3333 + 104, -1, 0);
+		ConchJNI.urlBack();
 	}
 
 	public void game_plugin_onUrlRefresh() {
-		ConchJNI.onRunCmd(0x400 + 3333 + 102, 0, 0);
+		ConchJNI.reloadJS();
 	}
 
 	public int game_plugin_getTouchMovRange() {
@@ -987,8 +986,7 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 
 	public void setLocalizable(boolean b)
 	{
-		localizable=b;
-		//ConchJNI.onSendToDesktop("sfsdfsadfsadf");
+		localizable = b;
 	}
 
 	public void setGameUrl(String _param) {
@@ -1029,11 +1027,6 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 		m_strExpansionMainPath = mainPath;
 		m_strExpansionPatchPath = patchPath;
 	}
-	public void setConfigJS(final String js)
-	{
-		m_strConfigJS = js;
-	}
-
 	// 获得so文件路径
 	public String getSoPath() {
 		return m_strSoPath;

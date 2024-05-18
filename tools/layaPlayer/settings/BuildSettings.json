@@ -1,3 +1,17 @@
 {
-  "name": "layaplayer"
+  "name": "layaplayer",
+  "useCompressedEngine": false,
+  "startupScene": "res://9b931ecf-fde9-44dd-acf3-15f8dc807965",
+  "includedScenes": [
+    "res://9b931ecf-fde9-44dd-acf3-15f8dc807965"
+  ],
+  "alwaysIncluded": [
+    "sprites"
+  ],
+  "ios": {
+    "version": "release-v3.1.3.1",
+    "packResources": false,
+    "screenOrientation": "portrait",
+    "allowTextureCompressedFormat": false
+  }
 }

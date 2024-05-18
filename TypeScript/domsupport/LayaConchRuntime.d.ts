@@ -683,7 +683,6 @@ interface conch {
     setTouchEvtFunction:(cb:(touchtype:number,id:number,etype:string,x:number,y:number)=>void)=>void;
     setDeviceMotionEvtFunction(f:Function);
     setNetworkEvtFunction(f:Function);
-    setOnBackPressedFunction(f:()=>void);
     exit();//only android
     createTextureGroup(): any;//JSTextureGroup
     createBoneAnimTemplate(): any;//JSBoneAnimTemplate

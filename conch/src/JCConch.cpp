@@ -272,6 +272,20 @@ namespace laya
     {
          JSInput::getInstance()->activeCall(e);
     }
+    void JCConch::dispatchEngineEvent(const EngineEventBase&  e)
+    {
+         switch(e.m_type)
+         {
+            case EngineEventType::Reload:
+                reload();
+                break;
+            case EngineEventType::UrlBack:
+                urlBack();
+                break;
+            default:
+                break;
+         }
+    }
     void JCConch::postToPlatform(std::function<void(void)> task) {
         std::unique_lock<std::mutex> lock(m_mutex);
         m_tasks.emplace_back(task);

@@ -15,6 +15,7 @@
 #include "WebGL/WebGLThread.h"
 #include "Backend.h"
 #include <utils/InputTypes.h>
+#include "EngineEvent.h"
 
 namespace laya
 {
@@ -76,6 +77,7 @@ namespace laya
 
         void dispatchInputEvent(DeviceMotionEvent e);
 
+        void dispatchEngineEvent(const EngineEventBase&  e);
     public:
 
         static std::shared_ptr<JCConch>         s_pConch;

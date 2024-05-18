@@ -17,8 +17,6 @@ import android.widget.AbsoluteLayout;
     //  设置扩展包路径
 	 void setExpansionZipDir( final String mainPath,final String patchPath );
 
-	 void setConfigJS(final String js);
-
 	//	设置so路径
 	 void setSoPath(String _soPath);
 	//	设置jar文件名

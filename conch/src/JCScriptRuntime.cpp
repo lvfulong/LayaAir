@@ -31,7 +31,7 @@
 #include "LayaAir/2D/RenderTexture2D.h"
 //#include "btBulletDynamicsCommon.h"
 #include <cstdarg>
-std::string g_ConfigJS = "";
+
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
 extern bool g_bGLCanvasSizeChanged;
@@ -251,10 +251,6 @@ namespace laya
                 JSP_RUN_SCRIPT(sJSRuntime);
                 delete[] sJSRuntime;
             }
-        }
-        if (!g_ConfigJS.empty())
-        {
-            JSP_RUN_SCRIPT(g_ConfigJS.c_str());
         }
         char* sJCBuffer = NULL;
         int nJSSize = 0;
