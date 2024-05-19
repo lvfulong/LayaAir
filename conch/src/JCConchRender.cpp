@@ -168,7 +168,7 @@ namespace laya
     }
 	void JCConchRender::clearAllData()
 	{
-        LOGI(">>>JCConchRender::clearAllData =%d", std::this_thread::get_id());
+        LOGI(">>>JCConchRender::clearAllData = %s", ToString<std::thread::id >::convert(std::this_thread::get_id()).c_str());
         //m_kPerfRender.invalidGLRes();
         m_pLayaGL->deleteAllGLRes();
         //图片全部清空
