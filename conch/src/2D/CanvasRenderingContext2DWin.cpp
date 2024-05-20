@@ -48,6 +48,9 @@ CanvasRenderingContext2DWin::CanvasRenderingContext2DWin(int width, int height)
 }
 CanvasRenderingContext2DWin::~CanvasRenderingContext2DWin()
 {
+    if (m_pLastFontFamily) {
+        delete m_pLastFontFamily;
+    }
 }
 void CanvasRenderingContext2DWin::setLineWidth(double lineWidth)
 {
@@ -399,12 +402,22 @@ void CanvasRenderingContext2DWin::setFont(const char *font)
     }
     int bufferLen = 0;
     wchar_t *pwszBuffer = utf8ToUtf16(m_fontDescription.m_family, &bufferLen);
-    Gdiplus::FontFamily fontfamily(pwszBuffer);
-    if (m_font != nullptr)
-    {
+    const Gdiplus::FontFamily*  pFontFamily = new  Gdiplus::FontFamily(pwszBuffer);
+    if (m_font != nullptr){
         delete m_font;
     }
-    m_font = new Gdiplus::Font(&fontfamily, m_fontDescription.m_size, m_fontStyle, Gdiplus::UnitPixel);
+    if (pFontFamily->GetLastStatus() != Gdiplus::Ok) {
+        delete pFontFamily;
+        //回退到通用无衬线字体
+        pFontFamily = Gdiplus::FontFamily::GenericSansSerif();
+    }
+    else {
+        if (m_pLastFontFamily) {
+            delete m_pLastFontFamily;
+        }
+        m_pLastFontFamily = pFontFamily;
+    }
+    m_font = new Gdiplus::Font(pFontFamily, m_fontDescription.m_size, m_fontStyle, Gdiplus::UnitPixel);
     // LOGI("setFont %s %f", font, m_fontDescription.m_size);
 }
 

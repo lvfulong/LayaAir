@@ -40,6 +40,7 @@ class CanvasRenderingContext2DWin : public CanvasRenderingContext2D
     Gdiplus::Bitmap *m_gdiBitmap;
     Gdiplus::Graphics *m_gdiGraphics;
     Gdiplus::Font *m_font = nullptr;
+    const Gdiplus::FontFamily* m_pLastFontFamily=nullptr;
     Gdiplus::StringFormat m_stringFormat;
     Gdiplus::FontStyle m_fontStyle;
 };
