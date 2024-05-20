@@ -167,6 +167,7 @@ private:
     bool m_bLastIsBin = false;
     char* m_pLastData = nullptr;
     size_t m_nCurDataLen = 0;
+	std::string m_supportedProtocols;
 };
 
 }
