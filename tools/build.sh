@@ -133,7 +133,7 @@ function build_windows {
             -DBUILDING_CONCH_SHARED=1 \
 		    ${root_dir}
     fi
-    cmake --build . --target install
+    cmake --build . --config ${build_type} --target install 
     #make
     cd ${current_dir}
 }
