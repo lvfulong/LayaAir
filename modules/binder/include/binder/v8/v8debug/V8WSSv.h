@@ -9,19 +9,19 @@
 
 namespace laya {
 
-    //Ã¿¸ösessionµÄ¸½¼ÓÊı¾İ
+    //æ¯ä¸ªsessionçš„é™„åŠ æ•°æ®
     class per_session_data__v8dbg {
     public:
         size_t rx, tx;
-        unsigned char* pRecvBuff;   //Èç¹û³¤¶ÈÌ«´ó£¬¾ÍÓÃÕâ¸ö£¬Õâ¸öĞèÒªÊÍ·Å
+        unsigned char* pRecvBuff;   //å¦‚æœé•¿åº¦å¤ªå¤§ï¼Œå°±ç”¨è¿™ä¸ªï¼Œè¿™ä¸ªéœ€è¦é‡Šæ”¾
         unsigned char RecvBuf[LWS_PRE + MAX_V8DBG_PAYLOAD];
-        unsigned int nRecvLen;   //½ÓÊÕµÄ³¤¶È
+        unsigned int nRecvLen;   //æ¥æ”¶çš„é•¿åº¦
         unsigned int index;
         unsigned char* pSendBuff;
         int final;
         int continuation;
         int binary;
-        DebuggerAgent* pDbgAgent;   //Èç¹ûÓĞ¶à¸ösessionµÄ»°£¬ÕâÀï¿ÉÒÔ±£´æsession
+        DebuggerAgent* pDbgAgent;   //å¦‚æœæœ‰å¤šä¸ªsessionçš„è¯ï¼Œè¿™é‡Œå¯ä»¥ä¿å­˜session
         std::recursive_mutex     pTaskLock;
         std::deque<std::string> pSendTask;
         //std::vector<std::string>    pSendTask;

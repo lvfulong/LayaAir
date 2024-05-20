@@ -84,7 +84,7 @@ namespace laya {
             printf("connection established\n");
             pss->pRecvBuff = nullptr;
             pss->index = 0;
-            pss->nRecvLen = -1;
+            pss->nRecvLen = 0;
             pss->pDbgAgent = gpDbgAgent;
             new (&pss->pTaskLock) std::recursive_mutex();
             new (&pss->pSendTask) std::deque<std::string>();
@@ -185,18 +185,27 @@ namespace laya {
 
             if (in && len > 0) {
                 if (remaining > 0) {
-                    //帧不完整。 TODO
-                    *(int*)0 = 1;
+                    // 帧不完整，需要缓存接收到的数据
+                    if (pss->nRecvLen + LWS_PRE + len > sizeof(pss->RecvBuf)) {
+                        // 缓存空间不足，处理错误
+                        lwsl_err("Receive buffer overflow\n");
+                        return -1;
+                    }
+                    memcpy(&pss->RecvBuf[LWS_PRE] + pss->nRecvLen, in, len);
+                    pss->nRecvLen += len;
+                    pss->rx += len;
                 }
                 else {
                     if (len+LWS_PRE > sizeof(pss->RecvBuf)) {
-                        *(int*)0 = 1;//TODO 
+                        lwsl_err("Receive buffer overflow\n");
+                        return -1;
                     }
-                    memcpy(&pss->RecvBuf[LWS_PRE], in, len);
-                    pss->RecvBuf[LWS_PRE + len] = 0;
-                    pss->nRecvLen = (unsigned int)len;
+                    memcpy(&pss->RecvBuf[LWS_PRE] + pss->nRecvLen, in, len);
+                    pss->nRecvLen += (unsigned int)len;
+                    pss->RecvBuf[LWS_PRE + pss->nRecvLen] = 0;
                     pss->rx += len;
-                    pss->pDbgAgent->onDbgMsg((char*)(pss->RecvBuf + LWS_PRE), len);
+                    pss->pDbgAgent->onDbgMsg((char*)(pss->RecvBuf + LWS_PRE), pss->nRecvLen);
+                    pss->nRecvLen = 0;  //完整了，清零
                 }
             }
 
@@ -300,6 +309,51 @@ namespace laya {
         printf("%s\n", line);
     }
 
+#ifdef WIN32    //因为目前只有windows的websocket更新了
+    
+    void startWSSV(int port, DebuggerAgent* pDbgAgent) {
+        gpDbgAgent = pDbgAgent;
+        interrupted = false;
+        struct lws_context* context;
+        // we're not using ssl
+        const char* cert_path = NULL;
+        const char* key_path = NULL;
+        // no special options
+        int opts = 0;
+
+
+        lws_set_log_level(LLL_ERR | LLL_WARN | LLL_NOTICE | LLL_USER/* | LLL_INFO */ /* | LLL_DEBUG */, NULL);
+
+        lws_context_creation_info cinfo;
+        memset(&cinfo, 0, sizeof(cinfo));
+        cinfo.port = port;
+        //cinfo.mounts = &mount;
+        cinfo.protocols = protocols;
+        //cinfo.extensions = lws_get_internal_extensions();
+        //if (!use_ssl) {
+        cinfo.ssl_cert_filepath = NULL;
+        cinfo.ssl_private_key_filepath = NULL;
+        //} else {
+        //  info.ssl_cert_filepath = LOCAL_RESOURCE_PATH"/libwebsockets-test-server.pem";
+        //  info.ssl_private_key_filepath = LOCAL_RESOURCE_PATH"/libwebsockets-test-server.key.pem";
+        //}
+        cinfo.gid = -1;
+        cinfo.uid = -1;
+        cinfo.options |= LWS_SERVER_OPTION_DISABLE_IPV6;
+
+
+        // create libwebsocket context representing this server
+        context = lws_create_context(&cinfo);
+
+        if (context == NULL) {
+            fprintf(stderr, "libwebsocket init failed\n");
+            return;
+        }
+
+        printf("starting server...\n");
+        wssvth = new std::thread(std::bind(wsserver_run, context));;
+    }
+#else
     void startWSSV(int port, DebuggerAgent* pDbgAgent) {
         gpDbgAgent = pDbgAgent;
         interrupted = false;
@@ -361,7 +415,7 @@ namespace laya {
         printf("starting server...\n");
         wssvth  = new std::thread(std::bind(wsserver_run, context));;
     }
-
+#endif
     void stopWSSV() {
         interrupted = true;
         if (wssvth != NULL)
