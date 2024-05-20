@@ -22,7 +22,7 @@ namespace laya
             int nReadSize = fread((char*)pBuff, 1, nBuffSize, fp);
             if (nReadSize == nBuffSize)
             {
-                LOGI("found the file in the package:%s\n", sFileName);
+                //LOGI("found the file in the package:%s\n", sFileName);
                 bRet = true;
             }
         }
@@ -42,7 +42,7 @@ namespace laya
         int nReadSize = fread((char*)pBuffer, 1, nBuffSize, fp);
         if (nReadSize == nBuffSize)
         {
-            LOGI("found the file in the package:%s\n", sFileName);
+            //LOGI("found the file in the package:%s\n", sFileName);
             bRet = true;
         }
         pBuffer[nBuffSize] = 0;

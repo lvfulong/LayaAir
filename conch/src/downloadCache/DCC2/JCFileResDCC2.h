@@ -33,6 +33,7 @@ namespace laya{
             const char* pszLocalPach,
             std::weak_ptr<int> p_cbref);
         void onResDownloadOK_JSThread(std::weak_ptr<int> p_cbref);
+        void onResDownloadErr_JSThread(std::weak_ptr<int> p_cbref, int p_nError, int p_nHttpResponse);
 
     public:
         JCFileResDCC2();

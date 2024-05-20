@@ -209,7 +209,7 @@ namespace laya{
                 }
                 p_pBuff[p_iBuffSize] = 0;
                 AAsset_close(pFile);
-                LOGI("found the file in the package:%s\n", pathfile);
+                //LOGI("found the file in the package:%s\n", pathfile);
 				if (bRet)
 				{
 					return true;

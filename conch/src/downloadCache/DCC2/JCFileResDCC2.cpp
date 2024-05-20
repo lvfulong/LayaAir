@@ -20,7 +20,26 @@ namespace laya{
     }
 
     void JCFileResDCC2::onDownloadError(int p_nError, int p_nHttpResponse, std::weak_ptr<int> p_cbref) {
-        *(int*)0=1;
+        if (!p_cbref.lock())
+            return;
+        m_pBuffer.reset((char*)0);
+        m_nLength = 0;
+
+        if (!m_bIgnoreError) {
+            LOGE("JCFileRes::onDownloadError file error[%d]:%s", p_nError, m_strURL.c_str());
+            //errorflog("下载文件错误[%d]：%s",p_nError, m_strURL.c_str());
+        }
+        //m_pMgr->delRes(m_strURL.c_str());	到资源管理器中统一做
+        //auto it = m_ResMap.find(m_strURL.c_str());
+        std::weak_ptr<int> wptr(m_CallbackRef);
+        if (isInJSThread()) {
+            onResDownloadErr_JSThread(wptr, p_nError, p_nHttpResponse);
+        }
+        else {
+            //转到js线程执行setState。
+            std::function<void()> cb = std::bind(&JCFileResDCC2::onResDownloadErr_JSThread, this, wptr, p_nError, p_nHttpResponse);
+            postToJS(cb);
+        }
     }
 
     void JCFileResDCC2::onDownloaded(JCBuffer& p_Buff,
@@ -30,7 +49,9 @@ namespace laya{
             int p_nDownloadNum, 
             const char* pszLocalPach, 
             std::weak_ptr<int> p_cbref) {
-
+        if (p_Buff.m_nLen <= 0) {
+            return onDownloadError(0, 0, p_cbref);//不知道错误码
+        }
         m_pBuffer = std::shared_ptr<char>(new char[p_Buff.m_nLen], std::default_delete<char[]>());
         memcpy(m_pBuffer.get(), p_Buff.m_pPtr, p_Buff.m_nLen);
         m_nLength = p_Buff.m_nLen;
@@ -70,6 +91,18 @@ namespace laya{
         m_nLength = 0;
         setState(freed);
         m_bSendToJS_complete = false;	//处理完了，可以继续post了。
+    }
+
+    void JCFileResDCC2::onResDownloadErr_JSThread(std::weak_ptr<int> p_cbref, int p_nError, int p_nHttpResponse) {
+        if (!p_cbref.lock())
+            return;
+        //mnErrNo = downloadError;
+        m_nErrNo = p_nError;
+        m_nLastHttpResponse = p_nHttpResponse;
+        setState(error);
+        //立即失效。如果再有相同请求，需要重新加载
+        m_pBuffer.reset((char*)0);	//TODO 测试：这个不一定会导致释放
+        m_nLength = 0;
     }
 
     void JCFileResDCC2::setDownloader( IDownloader* downloader){

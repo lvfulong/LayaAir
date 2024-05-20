@@ -39,26 +39,36 @@ namespace laya{
         //CallDebugger(isolate);
         char* pABPtr = NULL;
         int nABLen = 0;
-        if (!extractJSAB(args[0], pABPtr, nABLen)) {
-            //参数不对
-            LOGE("onDownloadEndJs 参数不对，第一个参数是Arraybuffer");
-            return;
+        bool isNull = args[0].IsEmpty() || args[0]->IsNull();
+        if (!isNull) {
+            if (!extractJSAB(args[0], pABPtr, nABLen)) {
+                //参数不对
+                LOGE("onDownloadEndJs 参数不对，第一个参数是Arraybuffer");
+                return;
+            }
         }
 
-        const char* pLocalPath = nullptr;
-        if (args[1]->IsString()) {
+        //const char* pLocalPath = nullptr;
+        std::string localPath;
+        if (!isNull && args[1]->IsString()) {
             v8::String::Utf8Value v8lp(isolate, args[1]);
-            pLocalPath = *v8lp;
+            //pLocalPath = *v8lp;   由于v8lp会被释放，这个不能直接使用指针
+            localPath.assign(*v8lp);
         }
 
         auto v1 = external_onok_value;
         if (!v1.IsEmpty() && v1->IsExternal()) {
             auto external = v8::Local<v8::External>::Cast(v1);
             auto extdata = reinterpret_cast<JSDownloader::jsCallbackData*>(external->Value());
-            //这个buffer不要删除，是js的问题
-            JCBuffer buff(pABPtr, nABLen,false,false);
-            //执行
-            extdata->cFunc(buff, pLocalPath);
+            if (isNull) {
+                extdata->cFunc(JCBuffer(0), nullptr);
+            }
+            else {
+                //这个buffer不要删除，是js的问题
+                JCBuffer buff(pABPtr, nABLen,false,false);
+                //执行
+                extdata->cFunc(buff, localPath.c_str());
+            }
             //清理
             extdata->jsFunc.reset();
             delete extdata;
