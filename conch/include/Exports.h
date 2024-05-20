@@ -5,5 +5,5 @@
 #include <tchar.h>
 extern int conchMain(int argc, _TCHAR* argv[]);
 #elif __LINUX__
-//todo
+extern int conchMain(int argc, char *argv[]);
 #endif

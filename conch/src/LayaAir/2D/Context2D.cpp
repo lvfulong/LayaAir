@@ -69,11 +69,11 @@ namespace laya
 	//------------------------------------------------------------------------------
 	Context2D::~Context2D()
 	{
-		if (m_pContext2DDispatch)
+		/*if (m_pContext2DDispatch)
 		{
 			delete m_pContext2DDispatch;
 			m_pContext2DDispatch = nullptr;
-		}
+		}*/
 		//void Context2D::_releaseMem(bool keepRT)
 		//{
 

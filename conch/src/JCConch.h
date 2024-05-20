@@ -15,6 +15,7 @@
 #include "WebGL/WebGLThread.h"
 #include "Backend.h"
 #include <utils/InputTypes.h>
+#include "EngineEvent.h"
 
 namespace laya
 {
@@ -76,6 +77,7 @@ namespace laya
 
         void dispatchInputEvent(DeviceMotionEvent e);
 
+        void dispatchEngineEvent(const EngineEventBase&  e);
     public:
 
         static std::shared_ptr<JCConch>         s_pConch;
@@ -87,9 +89,6 @@ namespace laya
         JCFileSource*			                m_pAssetsRes;
         std::string				                m_strStartJS;
         std::string                             m_sCachePath;
-    #ifdef JS_V8
-        DebuggerAgent*			                m_pDbgAgent;
-    #endif
         JCFileResManager*	                    m_pFileResMgr;
     protected:
         bool					                m_bDestroying;

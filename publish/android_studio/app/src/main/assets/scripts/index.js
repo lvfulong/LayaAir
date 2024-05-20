@@ -95,12 +95,35 @@ async function loadApp(url) {
         `);
         document.createElement("script").text = "window.onload&&window.onload()";
     }
+    else if (data.indexOf("<html>") >= 0) {
+        startAppHTML(data);
+    }
     else {
         console.log('url must be a js file');
     }
     if (window["loadingView"] && window["loadingView"].loadingAutoClose) {
         window["loadingView"].hideLoadingView();
     }
+}
+function startAppHTML(data) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(data, "text/html");
+    const scriptElements = doc.querySelectorAll("script");
+    scriptElements.forEach(element => {
+        element.attributes.forEach(attri => {
+            if (attri.nodeName == "src") {
+                var t = document.createElement("script");
+                t["src"] = attri.nodeValue;
+                t.onerror = function () {
+                    if (window["onLayaInitError"]) {
+                        window["onLayaInitError"]("Load script error");
+                    }
+                };
+                document.head.appendChild(t);
+            }
+        });
+    });
+    document.createElement("script").text = "window.onload&&window.onload()";
 }
 window.document.addEventListener('keydown', function (e) {
     switch (e.keyCode) {

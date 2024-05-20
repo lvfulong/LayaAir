@@ -14,6 +14,8 @@
 #include <vector>
 #include <string>
 #include <cstdint>
+#include <iostream>
+#include <sstream>
 #define MAX_CHARACTER_SIZE    8 
 
 namespace laya
@@ -204,6 +206,26 @@ namespace laya
     std::string getExePath();
     std::string toLowerCase(const std::string &str);
     bool compareStrings(const std::string &str1, const std::string &str2, bool caseSensitive);
+
+    // 基础模板
+template<typename T>
+class ToString {
+public:
+    static std::string convert(const T& value) {
+        std::ostringstream oss;
+        oss << value;
+        return oss.str();
+    }
+};
+
+// 对于一些特殊的类型，如布尔值，可以特化该模板
+template<>
+class ToString<bool> {
+public:
+    static std::string convert(bool value) {
+        return value ? "true" : "false";
+    }
+};
 };
 //------------------------------------------------------------------------------
 

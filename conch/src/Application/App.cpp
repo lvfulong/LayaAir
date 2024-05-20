@@ -227,7 +227,7 @@ void App::run(const Config &config)
                 inputEvent e;
                 e.nTouchType = e.nType = E_ONMOUSEWHEEL;
                 strncpy(e.type, "wheel", 256);
-                e.posX = event.wheel.mouseX
+                e.posX = event.wheel.mouseX;
                 e.posY = event.wheel.mouseY;
                 e.deltaMode = 0;
                 e.deltaX = -event.wheel.x * 100.0f;//凑的

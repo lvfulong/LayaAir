@@ -410,7 +410,8 @@ const std::string &GLESEngine::propertyIDToName(int id)
     {
         return it->second;
     }
-    return "";
+    static std::string empty("");
+    return empty;
 }
 void GLESEngine::getNamesByDefineDataJS(RTDefineDatas* defineData, JSValueAsParam out)
 {

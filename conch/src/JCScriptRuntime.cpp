@@ -31,7 +31,7 @@
 #include "LayaAir/2D/RenderTexture2D.h"
 //#include "btBulletDynamicsCommon.h"
 #include <cstdarg>
-std::string g_ConfigJS = "";
+
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
 extern bool g_bGLCanvasSizeChanged;
@@ -152,11 +152,27 @@ namespace laya
         JCConch::s_pScriptRuntime->m_pJSOnUnhandledRejectionFunction.call<void>(getCurrentContext().global(), JSP_TO_JS(JSPromiseRejectionEvent*, event));
 #endif
     }
-    void JCScriptRuntime::start(const char* pStartJS, int debugPort) 
+    void JCScriptRuntime::start(const char* pStartJS) 
     {
         LOGI("Start js %s", pStartJS);
         if (pStartJS)m_strStartJS = pStartJS;
-        m_debugPort = debugPort;
+
+#ifdef JS_V8_DEBUGGER
+        m_pDbgAgent = NULL;
+        if (g_kSystemConfig.m_nJSDebugMode != JS_DEBUG_MODE_OFF)
+        {
+            LOGI("open js debug port at %d", g_kSystemConfig.m_nJSDebugPort);
+            m_pDbgAgent = new DebuggerAgent("layabox", g_kSystemConfig.m_nJSDebugPort);
+            JCConch::s_pScriptRuntime->m_pDbgAgent = m_pDbgAgent;
+        }
+        else
+        {
+            m_pDbgAgent = NULL;
+            JCConch::s_pScriptRuntime->m_pDbgAgent = NULL;
+        }
+#endif
+
+        m_debugPort = g_kSystemConfig.m_nJSDebugMode;
         m_pScriptThread->initialize(m_debugPort, std::bind(&onUnhandledRejection, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
         //m_nThreadState = 1;
         m_pScriptThread->setLoopFunc(std::bind(&JCScriptRuntime::onUpdate, JCConch::s_pScriptRuntime.get()));
@@ -165,6 +181,15 @@ namespace laya
     void JCScriptRuntime::stop()
     {
         LOGI("Stop js start...");
+
+#ifdef JS_V8_DEBUGGER
+        if (m_pDbgAgent)
+        {
+            m_pDbgAgent->Shutdown();
+            delete m_pDbgAgent;
+            m_pDbgAgent = NULL;
+        }
+#endif
         //while (m_nThreadState==1)
         {
             //LOGI("stop: wait for thread to start...");
@@ -190,7 +215,7 @@ namespace laya
         // 例如一个资源正在下载，则可能的问题：1.可能会上个线程取消了，不会再回调， 2. 自己希望回调的是上个js环境，也无法传给新的js环境。
         // 所以需要clear。
         m_pFileResMgr->clear();
-        start(m_strStartJS.c_str(), m_debugPort);
+        start(m_strStartJS.c_str());
         loadJSScript();
     }
     void JCScriptRuntime::onThreadInit(JCEventEmitter::evtPtr evt) 
@@ -251,10 +276,6 @@ namespace laya
                 JSP_RUN_SCRIPT(sJSRuntime);
                 delete[] sJSRuntime;
             }
-        }
-        if (!g_ConfigJS.empty())
-        {
-            JSP_RUN_SCRIPT(g_ConfigJS.c_str());
         }
         char* sJCBuffer = NULL;
         int nJSSize = 0;

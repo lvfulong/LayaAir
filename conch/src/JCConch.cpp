@@ -116,20 +116,7 @@ namespace laya
 
         JCConch::s_pScriptRuntime->init(m_pFileResMgr, m_pAssetsRes, this);
 
-#ifdef JS_V8_DEBUGGER
-        m_pDbgAgent = NULL;
-        if (g_kSystemConfig.m_nJSDebugMode != JS_DEBUG_MODE_OFF)
-        {
-            LOGI("open js debug port at %d", g_kSystemConfig.m_nJSDebugPort);
-            m_pDbgAgent = new DebuggerAgent("layabox", g_kSystemConfig.m_nJSDebugPort);
-            JCConch::s_pScriptRuntime->m_pDbgAgent = m_pDbgAgent;
-        }
-        else
-        {
-            m_pDbgAgent = NULL;
-            JCConch::s_pScriptRuntime->m_pDbgAgent = NULL;
-        }
-#endif
+
         //onAppStart();
         m_strLocalStoragePath = gRedistPath + "/localstorage/";
         //try
@@ -147,7 +134,7 @@ namespace laya
         //    }
         //    return;
         //}
-        JCConch::s_pScriptRuntime->start(m_strStartJS.c_str(), g_kSystemConfig.m_nJSDebugPort);
+        JCConch::s_pScriptRuntime->start(m_strStartJS.c_str());
 	}
     JCConch::~JCConch() {
 
@@ -174,14 +161,7 @@ namespace laya
         s_pScriptRuntime.reset();
         delete JCAudioManager::GetInstance();
         s_pConchRender.reset();
-#ifdef JS_V8_DEBUGGER
-        if (m_pDbgAgent) 
-        {
-            m_pDbgAgent->Shutdown();
-            delete m_pDbgAgent;
-            m_pDbgAgent = NULL;
-        }
-#endif
+
         LOGI("onAppDestroy...");
 	}
 
@@ -271,6 +251,20 @@ namespace laya
     void JCConch::dispatchInputEvent(DeviceMotionEvent e)
     {
          JSInput::getInstance()->activeCall(e);
+    }
+    void JCConch::dispatchEngineEvent(const EngineEventBase&  e)
+    {
+         switch(e.m_type)
+         {
+            case EngineEventType::Reload:
+                reload();
+                break;
+            case EngineEventType::UrlBack:
+                urlBack();
+                break;
+            default:
+                break;
+         }
     }
     void JCConch::postToPlatform(std::function<void(void)> task) {
         std::unique_lock<std::mutex> lock(m_mutex);
