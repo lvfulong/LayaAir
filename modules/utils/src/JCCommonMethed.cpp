@@ -948,6 +948,29 @@ bool compareStrings(const std::string &str1, const std::string &str2, bool caseS
         return toLowerCase(str1) == toLowerCase(str2);
     }
 }
+#if WIN32
+wchar_t *utf8ToUtf16(const std::string &str, int *pRetLen /* = nullptr*/)
+{
+
+    wchar_t *pwszBuffer = nullptr;
+    if (str.empty())
+    {
+        return nullptr;
+    }
+    int nLen = static_cast<int>(str.size());
+    int nBufLen = nLen + 1;
+    pwszBuffer = new wchar_t[nBufLen];
+    assert(pwszBuffer != nullptr);
+    memset(pwszBuffer, 0, sizeof(wchar_t) * nBufLen);
+    int actuallyLen = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), nLen, pwszBuffer, nBufLen);
+    if (pRetLen != nullptr)
+    {
+        *pRetLen = actuallyLen;
+    }
+    return pwszBuffer;
+}
+
+#endif
 } // namespace laya
 //------------------------------------------------------------------------------
 

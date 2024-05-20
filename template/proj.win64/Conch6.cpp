@@ -7,5 +7,5 @@
 
 int main(int argc, _TCHAR* argv[])
 {
-	return conchMain(argc, argv);
+	return conchMainConsole(argc, argv);
 }

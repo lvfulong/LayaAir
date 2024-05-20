@@ -5,7 +5,7 @@
 #include "LayaBox.h"
 #include "ExportsShared.h"
 
-int main(int argc, _TCHAR* argv[])
+int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nShowCmd)
 {
-	return conchMain(argc, argv);
+	return conchMain(hInstance, hPrevInstance, lpCmdLine, nShowCmd);
 }

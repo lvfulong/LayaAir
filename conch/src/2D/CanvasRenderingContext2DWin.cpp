@@ -5,8 +5,10 @@
 #include <regex>
 #include <utils/JCCrypto.h>
 #include <utils/Log.h>
+#include <utils/JCCommonMethod.h>
 #include <gdiplusenums.h>
 #include <gdiplusgraphics.h>
+
 extern HWND g_hWnd;
 
 using namespace Gdiplus;
@@ -59,29 +61,7 @@ void CanvasRenderingContext2DWin::setLineWidth(double lineWidth)
 void CanvasRenderingContext2DWin::setLineJoin(const char *lineJoin)
 {
 }
-wchar_t *utf8ToUtf16(const std::string &str, int *pRetLen /* = nullptr*/)
-{
 
-    wchar_t *pwszBuffer = nullptr;
-    do
-    {
-        if (str.empty())
-        {
-            break;
-        }
-        int nLen = static_cast<int>(str.size());
-        int nBufLen = nLen + 1;
-        pwszBuffer = new wchar_t[nBufLen];
-        assert(pwszBuffer != nullptr);
-        memset(pwszBuffer, 0, sizeof(wchar_t) * nBufLen);
-        int actuallyLen = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), nLen, pwszBuffer, nBufLen);
-        if (pRetLen != nullptr)
-        {
-            *pRetLen = actuallyLen;
-        }
-    } while (false);
-    return pwszBuffer;
-}
 void CanvasRenderingContext2DWin::fillText(const std::string &text, double x, double y, std::optional<double> maxWidth)
 {
     if (m_width <= 0 || m_height <= 0)

@@ -16,6 +16,9 @@
 #include <cstdint>
 #include <iostream>
 #include <sstream>
+#include <locale>
+#include <codecvt>
+
 #define MAX_CHARACTER_SIZE    8 
 
 namespace laya
@@ -226,6 +229,9 @@ public:
         return value ? "true" : "false";
     }
 };
+#if WIN32
+wchar_t* utf8ToUtf16(const std::string& str, int* pRetLen = nullptr);
+#endif
 };
 //------------------------------------------------------------------------------
 

@@ -10,9 +10,7 @@
 #include <filesystem>
 #include <string>
 #include <utils/JCCommonMethod.h>
-#if WIN32
-#include <windows.h>
-#endif
+
 extern std::string gRedistPath;
 extern std::string gAssetRootPath;
 namespace fs = std::filesystem;
@@ -31,11 +29,40 @@ namespace fs = std::filesystem;
         指定效率测试的输出目录
     -debug=""
 */
+int mainImpl()
+{
+    fs::path exePath = laya::getExePath();
+    LOGE("start exe path %s", exePath.c_str());
+    gRedistPath = exePath.remove_filename().string();
+    gAssetRootPath = gRedistPath;
+    laya::JCIosFileSource* pAssets = new laya::JCIosFileSource();
+    pAssets->Init(gRedistPath.c_str());
+    laya::JCConch::s_pAssetsFiles = pAssets;
+
+    //if (bRunTest)
+    //{
+        // JSMemorySurvey::DelInstance();
+        // svFileCache::delInstance();
+        // delete pAssets;
+        //return 0;
+    //}
+    // if (g_kSystemConfig.m_bPerfStat) {
+    //     gRunStat.strTestID = g_kSystemConfig.m_strStartURL;
+    // }
+    laya::App app;
+    Config config;
+    config.title = "LayaNative3.0";
+    app.run(config);
+    // app.handleMessage();
+    // app.exitApp();
+    // delete pAssets;
+    return 0;
+}
 #if WIN32
-int conchMain(int argc, _TCHAR *argv[])
+int conchMainConsole(int argc, _TCHAR* argv[])
 {
     bool bRunTest = false;
-    char *pRunTestCase = NULL;
+    char* pRunTestCase = NULL;
     // 解析参数
     for (int i = 1; i < argc; i++)
     {
@@ -58,7 +85,7 @@ int conchMain(int argc, _TCHAR *argv[])
         }
         else
         {
-            char *cargv = (char *)argv[i] + 1;
+            char* cargv = (char*)argv[i] + 1;
             if (memcmp(cargv, "test", 4) == 0)
             {
                 bRunTest = true;
@@ -89,34 +116,31 @@ int conchMain(int argc, _TCHAR *argv[])
             }
         }
     }
+    return  mainImpl();
+}
+std::string WideCharToMultiByteString(LPWSTR lpwstr) {
+    if (!lpwstr) return ""; // 如果输入为空，返回空字符串
+
+    // 获取所需的缓冲区大小
+    int len = WideCharToMultiByte(CP_UTF8, 0, lpwstr, -1, NULL, 0, NULL, NULL);
+    std::string retString(len - 1, 0); // 创建足够长度的字符串（减去 null 终结符）
+
+    // 执行转换
+    WideCharToMultiByte(CP_UTF8, 0, lpwstr, -1, &retString[0], len, NULL, NULL);
+    return retString;
+}
+int conchMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nShowCmd)
+{
+    std::string strCmdLine = WideCharToMultiByteString(lpCmdLine);
+    if (strstr(strCmdLine.c_str(), "http"))
+    {
+        laya::g_kSystemConfig.m_strStartURL = strCmdLine;
+    }
+    return  mainImpl();
+}
 #elif __LINUX__
 int conchMain(int argc, char *argv[])
 {
-#endif
-    fs::path exePath = laya::getExePath();
-    LOGE("start exe path %s", exePath.c_str());
-    gRedistPath = exePath.remove_filename().string();
-    gAssetRootPath = gRedistPath;
-    laya::JCIosFileSource *pAssets = new laya::JCIosFileSource();
-    pAssets->Init(gRedistPath.c_str());
-    laya::JCConch::s_pAssetsFiles = pAssets;
-
-    //if (bRunTest)
-    //{
-        // JSMemorySurvey::DelInstance();
-        // svFileCache::delInstance();
-        // delete pAssets;
-        //return 0;
-    //}
-    // if (g_kSystemConfig.m_bPerfStat) {
-    //     gRunStat.strTestID = g_kSystemConfig.m_strStartURL;
-    // }
-    laya::App app;
-    Config config;
-    config.title = "LayaNative3.0";
-    app.run(config);
-    // app.handleMessage();
-    // app.exitApp();
-    // delete pAssets;
-    return 0;
+    return  mainImpl();
 }
+#endif
