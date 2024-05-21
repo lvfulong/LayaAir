@@ -51,7 +51,7 @@ int mainImpl()
     // }
     laya::App app;
     Config config;
-    config.title = "LayaNative3.0";
+    config.title = "LayaNative3";
     app.run(config);
     // app.handleMessage();
     // app.exitApp();
