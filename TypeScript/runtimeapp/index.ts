@@ -207,14 +207,11 @@ async function loadApp(url: string) {
     var qpos = url.indexOf('?');
     if(qpos<0) qpos = url.length;
 
-    if (url.substr(qpos - 3,3) === '.js') {
+    if (url.substr(qpos - 3,3) === '.js' || data.indexOf("loadLib(") >= 0) {
         window.eval(data + `
         //@ sourceURL=${url}
         `);
         document.createElement("script").text="window.onload&&window.onload()";
-    }
-    else if (data.indexOf("<html>") >= 0) {
-        startAppHTML(data);
     }
     else { 
         console.log('url must be a js file');
@@ -222,31 +219,6 @@ async function loadApp(url: string) {
     if (window["loadingView"] && window["loadingView"].loadingAutoClose) {
         window["loadingView"].hideLoadingView();
     }
-}
-function startAppHTML(data: string) {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(data, "text/html");
-    const scriptElements = doc.querySelectorAll("script");
-    scriptElements.forEach(element => {
-        element.attributes.forEach(attri => {
-            if (attri.nodeName == "src") {
-                var t = document.createElement("script");
-                t["src"] = attri.nodeValue;
-                t.onerror=function(){
-                    if(window["onLayaInitError"])
-                    {
-                        window["onLayaInitError"]("Load script error");
-                    }
-           
-                }
-                document.head.appendChild(t);
-            }
-        });
-    });
-    //todo if (jsonobj.screenOrientation) setOrientation(jsonobj.screenOrientation);
-    //todo else if (jsonobj.screenorientation) setOrientation(jsonobj.screenorientation);
-    //todo else setOrientation("sensor_landscape");
-    document.createElement("script").text="window.onload&&window.onload()";
 }
 window.document.addEventListener('keydown', function (e: KeyboardEvent) {
     switch (e.keyCode) {
