@@ -208,9 +208,9 @@ ImageData CanvasRenderingContext2DWin::getImageData(double x, double y, double w
                 BYTE* pixel = row + (x * 4);
                 float alpha = pixel[3] / 255.0;
 
-                glImageData[(x + y * clampedW) * 4 + 0]/*r*/ = pixel[2]/*r*/ * alpha;
-                glImageData[(x + y * clampedW) * 4 + 1]/*g*/ = pixel[1] * alpha;
-                glImageData[(x + y * clampedW) * 4 + 2]/*b*/ = pixel[0] * alpha;
+                glImageData[(x + y * clampedW) * 4 + 0]/*r*/ = pixel[2]/*r*/;
+                glImageData[(x + y * clampedW) * 4 + 1]/*g*/ = pixel[1] ;
+                glImageData[(x + y * clampedW) * 4 + 2]/*b*/ = pixel[0] ;
                 glImageData[(x + y * clampedW) * 4 + 3] = pixel[3]; // a
 
                 //if (pixel[3] > 0 || pixel[2] > 0 || pixel[1] > 0 || pixel[0] > 0)
