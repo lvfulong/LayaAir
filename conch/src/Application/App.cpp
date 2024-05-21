@@ -98,7 +98,7 @@ void App::run(const Config &config)
     keycodeMap[SDL_SCANCODE_KP_0] = 0x60;//VK_NUMPAD0
     keycodeMap[SDL_SCANCODE_KP_PERIOD] = 0x6E; //VK_DECIMAL //小键盘的‘.’
 
-
+    laya::JCConch::s_pConch.reset(new laya::JCConch());
     const int x = SDL_WINDOWPOS_CENTERED;
     const int y = SDL_WINDOWPOS_CENTERED;
     uint32_t windowFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI;
@@ -137,7 +137,7 @@ void App::run(const Config &config)
 #elif __LINUX__
     options.nativeLayer = m_sdlWindow;
 #endif
-    laya::JCConch::s_pConch.reset(new laya::JCConch());
+
     laya::JCConch::s_pConchRender->createBackend(options);
     laya::JCConch::s_pConchRender->createScreenSurface(options.nativeLayer);
     laya::JCConch::s_pConch->onAppStart();
