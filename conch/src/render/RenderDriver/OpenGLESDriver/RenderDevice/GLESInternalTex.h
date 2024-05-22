@@ -185,7 +185,6 @@ class GLESInternalTex : public GLObject, public ObjectBase<GLESInternalTex>
 
     int m_mipmapCount;
     bool m_useSRGBLoad;
-    int m_gammaCorrection;
 
     // webgl param
     int m_target;

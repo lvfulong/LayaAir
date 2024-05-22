@@ -106,7 +106,7 @@ namespace laya
 		}
 
 		bool returnGamma = !(RenderTexture2D::m_currentActive);
-		returnGamma = returnGamma && texture->m_gammaCorrection == 1;
+		returnGamma = returnGamma && texture->gammaCorrection == 1;
 		if (returnGamma)
 		{
 			m_shaderDefines.add(Shader2DDefines::GAMMASPACE);

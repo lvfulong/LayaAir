@@ -55,7 +55,7 @@ GLESInternalTex::GLESInternalTex(int target, int width, int height, int depth, T
     m_mipmapCount = m_mipmap ? std::max(ceil(log2(width)) + 1, ceil(log2(height)) + 1) : 1;
 
     m_useSRGBLoad = useSRGBLoader;
-    m_gammaCorrection = gammaCorrection;
+    gammaCorrection = gammaCorrection;
 
     m_target = target;
 

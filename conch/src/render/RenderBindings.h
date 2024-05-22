@@ -390,7 +390,7 @@ class RenderBindings
             class_binding.property_field("mipmapCount", &GLESInternalTex::m_mipmapCount);
             class_binding.property_field("mipmap", &GLESInternalTex::m_mipmap);
             class_binding.property_field("useSRGBLoad", &GLESInternalTex::m_useSRGBLoad);
-            class_binding.property_field("gammaCorrection", &GLESInternalTex::m_gammaCorrection);
+            class_binding.property_field("gammaCorrection", &GLESInternalTex::gammaCorrection);
             class_binding.property("resource", &GLESInternalTex::getResource);
             class_binding.property("filterMode", &GLESInternalTex::getFilterMode, &GLESInternalTex::setFilterMode);
             class_binding.property("wrapU", &GLESInternalTex::getWrapU, &GLESInternalTex::setWrapU);

@@ -146,7 +146,7 @@ namespace laya
 			m_shaderDefines.add(Shader2DDefines::WORLDMAT);
 		}
 		bool returnGamma = !(RenderTexture2D::m_currentActive);
-		returnGamma = returnGamma && m_bGamma && texture->m_gammaCorrection == 1;
+		returnGamma = returnGamma && m_bGamma && texture->gammaCorrection == 1;
 		if (returnGamma)
 		{
 			m_shaderDefines.add(Shader2DDefines::GAMMASPACE);
