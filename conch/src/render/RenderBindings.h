@@ -716,6 +716,7 @@ class RenderBindings
             class_binding.function("clearAfterAllRenderCmds", &GLESForwardAddRP::clearAfterAllRenderCmds);
             class_binding.function("addAfterAllRenderCmds", &GLESForwardAddRP::addAfterAllRenderCmds);
             class_binding.function("setPostProcess", &GLESForwardAddRP::setPostProcess);
+            class_binding.function("setfinalize", &GLESForwardAddRP::setfinalize);
             context.class_("conchGLESForwardAddRP", class_binding);
         }
         {

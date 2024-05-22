@@ -148,6 +148,9 @@ namespace laya
         ShadowCasterPassProperty::SHADOW_MATRICES = LayaGL::m_pWebglEngine->propertyNameToID("u_ShadowMatrices");
         ShadowCasterPassProperty::SHADOW_SPLIT_SPHERES = LayaGL::m_pWebglEngine->propertyNameToID("u_ShadowSplitSpheres");
     }
+
+    RTShaderDefine Scene3DShaderDeclaration::SHADERDEFINE_SHADOW;
+    RTShaderDefine Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT;
     RTShaderDefine Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_CASCADE;
     RTShaderDefine Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SOFT_SHADOW_LOW;
     RTShaderDefine Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SOFT_SHADOW_HIGH;
@@ -155,7 +158,12 @@ namespace laya
     RTShaderDefine Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT_SOFT_SHADOW_HIGH;
     void Scene3DShaderDeclaration::__init__()
     {
-        Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_CASCADE = LayaGL::m_pWebglEngine->getDefineByName("SHADOW_CASCADE");
+        Scene3DShaderDeclaration::SHADERDEFINE_SHADOW =
+            LayaGL::m_pWebglEngine->getDefineByName("SHADOW");
+        Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT =
+            LayaGL::m_pWebglEngine->getDefineByName("SHADOW_SPOT");
+        Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_CASCADE = 
+            LayaGL::m_pWebglEngine->getDefineByName("SHADOW_CASCADE");
         Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SOFT_SHADOW_LOW =
             LayaGL::m_pWebglEngine->getDefineByName("SHADOW_SOFT_SHADOW_LOW");
         Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SOFT_SHADOW_HIGH =

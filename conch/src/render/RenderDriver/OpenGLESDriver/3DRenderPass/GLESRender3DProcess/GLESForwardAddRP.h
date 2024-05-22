@@ -19,6 +19,7 @@ namespace laya {
 		void setSpotLightShadowPass(GLESSpotLightShadowRP* value) { spotLightShadowPass = value; }
 		void setForwardAddClusterRP(GLESForwardAddClusterRP* value) { renderpass = value; }
 		void setPostProcess(const std::vector<GLESRenderCMD*>& cmds);
+		void setfinalize(const std::vector<GLESRenderCMD*>& cmds);
 		void clearBeforeImageEffectCmds();
 		void addBeforeImageEffectCmds(const std::vector<GLESRenderCMD*>& cmds);
 		void clearAfterAllRenderCmds();
@@ -38,6 +39,8 @@ namespace laya {
 		std::vector<std::vector<GLESRenderCMD*>> _beforeImageEffectCMDS;
 		std::vector<std::vector<GLESRenderCMD*>> _afterAllRenderCMDS;
 		std::vector<GLESRenderCMD*> postProcessCMDS;
+
+		std::vector<GLESRenderCMD*> finalize;
 	};
 }
 #endif

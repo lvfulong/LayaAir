@@ -111,7 +111,8 @@ class Scene3DShaderDeclaration
     /**@internal */
     // static SHADERDEFINE_SPOTLIGHT : ShaderDefine;
     /**@internal */
-    // static SHADERDEFINE_SHADOW : ShaderDefine;
+    static RTShaderDefine SHADERDEFINE_SHADOW;
+    static RTShaderDefine SHADERDEFINE_SHADOW_SPOT;
 
     static RTShaderDefine SHADERDEFINE_SHADOW_CASCADE;
     static RTShaderDefine SHADERDEFINE_SHADOW_SOFT_SHADOW_LOW;

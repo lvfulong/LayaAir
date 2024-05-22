@@ -4,6 +4,7 @@
 #include "GLESDirectLightShadowRP.h"
 #include "GLESSpotLightShadowRP.h"
 #include "GLESForwardAddClusterRP.h"
+#include "render/Property.h"
 
 namespace laya {
 
@@ -11,15 +12,33 @@ namespace laya {
         //先渲染ShadowTexture
         if (passInfo->shadowCastPass) {
             if (passInfo->enableDirectLightShadow) {
+                context->sceneData->addDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW);
+                context->sceneData->removeDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT);
                 passInfo->directLightShadowPass->update(context);
                 passInfo->directLightShadowPass->render(context, renderNodeList, count);
             }
             if (passInfo->enableSpotLightShadowPass) {
+                context->sceneData->addDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT);
+                context->sceneData->removeDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW);
                 passInfo->spotLightShadowPass->update(context);
                 passInfo->spotLightShadowPass->render(context, renderNodeList, count);
             }
         }
         
+        if (passInfo->enableDirectLightShadow) {
+            context->sceneData->addDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW);
+        }
+        else {
+            context->sceneData->removeDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW);
+        }
+
+        if (passInfo->enableSpotLightShadowPass) {
+            context->sceneData->addDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT);
+        }
+        else {
+            context->sceneData->removeDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT);
+        }
+
         //postProcess TODO
         passInfo->renderpass->render(context, renderNodeList, count);
 
@@ -29,7 +48,9 @@ namespace laya {
         
         GLESRenderCMD::applyCommandBuffers(context, passInfo->_afterAllRenderCMDS);
         //PostProcess
-        
+        if (passInfo->finalize.size() != 0) {
+            context->runCMDList(passInfo->finalize);
+        }
         //afterEverything cmd
     }
 }
