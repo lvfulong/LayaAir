@@ -18,6 +18,9 @@ class App
   private:
     bool m_closed = false;
     SDL_Window *m_sdlWindow;
+    bool m_min = false;
+    bool m_activate = true;
+
 };
 } // namespace laya
 #endif

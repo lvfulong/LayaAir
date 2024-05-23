@@ -306,6 +306,33 @@ void App::run(const Config &config)
                     g_nInnerHeight = event.window.data2;
                     g_bGLCanvasSizeChanged = true;
                     break;
+                case SDL_WINDOWEVENT_MINIMIZED:
+                    if (!m_min) {
+                        m_min = true;
+                        laya::JCConch::s_pConch->onAppPause();
+                    }
+                    m_activate = false;
+                    break;
+                case SDL_WINDOWEVENT_MAXIMIZED:
+                    if (m_min) {
+                        m_min = false;
+                        laya::JCConch::s_pConch->onAppResume();
+                    }
+                    m_activate = true;
+                    break;
+                case SDL_WINDOWEVENT_RESTORED:
+                    if (m_min) {
+                        m_min = false;
+                        laya::JCConch::s_pConch->onAppResume();
+                    }
+                    m_activate = true;
+                    break;
+                case SDL_WINDOWEVENT_FOCUS_GAINED:
+                    m_activate = true;
+                    break;
+                case SDL_WINDOWEVENT_FOCUS_LOST:
+                    m_activate = false;
+                    break;
                 default:
                     break;
                 }
@@ -314,6 +341,12 @@ void App::run(const Config &config)
                 break;
             }
         }
+        int delay = 8;
+        if (m_min) delay = 100;
+        else if (!m_activate) {
+            delay = 33;
+        }
+        SDL_Delay(delay);
         laya::JCConch::s_pConch->update();
     }
 }
