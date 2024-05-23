@@ -7,7 +7,8 @@
 #include <core/math/Plane.h>
 #include <core/math/BoundSphere.h>
 #include <core/math/BoundFrustum.h>
-
+#include "render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h"
 namespace laya
 {
 class GLESShaderData;
@@ -22,6 +23,9 @@ struct CameraCullInfo
 class ShadowSliceData
 {
   public:
+      ShadowSliceData() {
+          cameraShaderValue = new GLESShaderData(new RTDefineDatas());
+      };
     GLESShaderData *cameraShaderValue; // todo LayaGL.renderOBJCreate.createShaderData(null);
     Vector3 position;
     double offsetX;    // todo type

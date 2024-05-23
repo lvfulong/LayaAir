@@ -12,6 +12,7 @@ namespace laya
 GLESDirectLightShadowRP::GLESDirectLightShadowRP() : _renderQueue(false)
 {
     _cascadesSplitDistance.resize(_maxCascades + 1);
+    _frustumPlanes.resize(6);
 }
 
 GLESDirectLightShadowRP::~GLESDirectLightShadowRP()
@@ -65,6 +66,7 @@ void GLESDirectLightShadowRP::update(GLESRenderContext3D *context)
                                           this->camera->aspectRatio, this->shadowCastMode, splitDistance);
     ShadowUtils::getCameraFrustumPlanes(this->camera->projectViewMatrix, frustumPlanes);
     Vector3 forward;
+
     this->camera->transform->getForward(forward);
     Vector3::normalize(forward, forward);
     for (int i = 0; i < this->_cascadeCount; i++)
@@ -96,7 +98,8 @@ void GLESDirectLightShadowRP::render(GLESRenderContext3D *context, std::vector<R
     auto shadowMap = this->destTarget;
     context->setRenderTarget(shadowMap);
     context->setClearData(static_cast<uint32_t>(RenderClearFlag::Depth), Color::BLACK, 1, 0);
-    // 需要把shadowmap clear Depth;
+    
+    GLESShaderData* originCameraData = context->cameraData;
     for (int i = 0, n = this->_cascadeCount; i < n; i++)
     {
         ShadowSliceData &sliceData = this->_shadowSliceDatas[i];
@@ -138,6 +141,9 @@ void GLESDirectLightShadowRP::render(GLESRenderContext3D *context, std::vector<R
         GLESRenderCMD::applyCommandBuffers(context, _shadowCastCMDS);
     }
     this->_applyRenderData(context->sceneData, context->cameraData);
+    context->cameraData = originCameraData;
+    context->_cameraUpdateMask++;
+
 }
 
 void GLESDirectLightShadowRP::_applyRenderData(GLESShaderData *scene, GLESShaderData *camera)
@@ -204,7 +210,7 @@ void GLESDirectLightShadowRP::_setupShadowCasterShaderValues(GLESShaderData *sha
 {
     shaderValues->setVector(ShadowCasterPassProperty::SHADOW_BIAS, shadowBias);
     shaderValues->setVector3(ShadowCasterPassProperty::SHADOW_LIGHT_DIRECTION, LightParam);
-    auto cameraSV = shadowSliceData.cameraShaderValue; // TODO:should optimization with shader upload.
+    GLESShaderData* cameraSV = shadowSliceData.cameraShaderValue; // TODO:should optimization with shader upload.
     cameraSV->setMatrix4x4(BaseCameraProperty::VIEWMATRIX, shadowSliceData.viewMatrix);
     cameraSV->setMatrix4x4(BaseCameraProperty::PROJECTMATRIX, shadowSliceData.projectionMatrix);
     cameraSV->setMatrix4x4(BaseCameraProperty::VIEWPROJECTMATRIX, shadowSliceData.viewProjectMatrix);

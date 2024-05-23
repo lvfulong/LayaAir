@@ -42,6 +42,7 @@ namespace laya {
         //postProcess TODO
         passInfo->renderpass->render(context, renderNodeList, count);
 
+
         GLESRenderCMD::applyCommandBuffers(context, passInfo->_beforeImageEffectCMDS);
         if (passInfo->enablePostProcess&& (passInfo->postProcessCMDS.size() != 0))
             context->runCMDList(passInfo->postProcessCMDS);
