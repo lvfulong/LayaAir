@@ -61,7 +61,8 @@ namespace laya{
             auto external = v8::Local<v8::External>::Cast(v1);
             auto extdata = reinterpret_cast<JSDownloader::jsCallbackData*>(external->Value());
             if (isNull) {
-                extdata->cFunc(JCBuffer(0), nullptr);
+                JCBuffer buffer(0);
+                extdata->cFunc(buffer, nullptr);
             }
             else {
                 //这个buffer不要删除，是js的问题
