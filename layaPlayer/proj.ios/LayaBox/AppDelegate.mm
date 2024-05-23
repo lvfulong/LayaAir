@@ -57,7 +57,35 @@
 
 - (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
 {
-    return [conchRuntime getOrientationMask];
+    conchRuntime* pConchRuntime = [conchRuntime GetIOSConchRuntime];
+    if (pConchRuntime != nil) {
+        return [conchRuntime getOrientationMask];
+    }
+    else {
+        return [self parseInterfaceOrientations: [[[NSBundle mainBundle] infoDictionary] objectForKey:@"UISupportedInterfaceOrientations"]];
+    }
+}
+
+- (NSUInteger)parseInterfaceOrientations:(NSArray*)orientations
+{
+    NSUInteger ret = 0;
+    if (orientations != nil) {
+        NSEnumerator* enumerator = [orientations objectEnumerator];
+        NSString* orientationString;
+
+        while (orientationString = [enumerator nextObject]) {
+            if ([orientationString isEqualToString:@"UIInterfaceOrientationPortrait"]) {
+                ret = ret | (1 << UIInterfaceOrientationPortrait);
+            } else if ([orientationString isEqualToString:@"UIInterfaceOrientationPortraitUpsideDown"]) {
+                ret = ret | (1 << UIInterfaceOrientationPortraitUpsideDown);
+            } else if ([orientationString isEqualToString:@"UIInterfaceOrientationLandscapeLeft"]) {
+                ret = ret | (1 << UIInterfaceOrientationLandscapeLeft);
+            } else if ([orientationString isEqualToString:@"UIInterfaceOrientationLandscapeRight"]) {
+                ret = ret | (1 << UIInterfaceOrientationLandscapeRight);
+            }
+        }
+    }
+    return ret;
 }
 
 @end
