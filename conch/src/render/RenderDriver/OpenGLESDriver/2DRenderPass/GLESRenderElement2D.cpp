@@ -103,6 +103,7 @@ namespace laya
 			shader->uploadUniforms(&(shader->m_materialUniformParamsMap),materialShaderData, true);
 		}
 		shader->uploadRenderStateBlendDepth(value2DShaderData);
+		shader->uploadRenderStateFrontFace(value2DShaderData, false, context->invertY);
 		LayaGL::m_pWebglEngine->getDrawContext()->drawGeometryElement(geometry);
 	}
 } // namespace laya
