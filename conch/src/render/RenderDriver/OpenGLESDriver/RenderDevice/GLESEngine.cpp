@@ -48,6 +48,7 @@ GLESEngine::GLESEngine(WebGLConfig config, WebGLMode webglMode)
         RenderableSprite3D::__init__();
         CommandProperty::__init__();
         MeshSprite3DShaderDeclaration::__init__();
+        SimpleSkinRender3DProperty::__init__();
     }
     std::vector<std::string> names;
     switch (webglMode)

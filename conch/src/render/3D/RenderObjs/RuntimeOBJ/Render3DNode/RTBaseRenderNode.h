@@ -69,7 +69,7 @@ public://bind
     uint32_t renderNodeType;
     JSTransform* transform = nullptr;
     float distanceForSort;
-    float sortingFudge;
+    float sortingFudge = 0;
     bool castShadow;
     bool receiveShadow;
     bool enable;

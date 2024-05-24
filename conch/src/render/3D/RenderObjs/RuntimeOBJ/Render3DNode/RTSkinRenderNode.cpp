@@ -33,6 +33,8 @@ namespace laya
 					
 			}
 			else {
+				if (bones.size() == 0)
+					return;
 				JSTransform* bone = bones[index];
 				if (bone) {
 					laya::Utils3D::_mulMatrixArray(bone->getWorldMatrix().elements, inverseBindPose[index].elements, 0, data, k * 16);

@@ -244,6 +244,7 @@ namespace laya
 		break;
 		case BaseRenderType::SimpleSkinRender: 
 		{
+
 			worldMatrixData = getUpdateData(0, GLESInstanceRenderElement3D::maxInstanceCount * 16)->data();
 			addUpdateBuffer(_instanceStateInfo->worldInstanceVB, 16);
 			drawCount = _instanceElementList.size();

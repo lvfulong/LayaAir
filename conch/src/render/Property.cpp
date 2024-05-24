@@ -178,6 +178,13 @@ namespace laya
     {
         SkinnedMeshSprite3DProperty::BONES = LayaGL::m_pWebglEngine->propertyNameToID("u_Bones");
     }
+
+    uint32_t SimpleSkinRender3DProperty::SIMPLE_SIMPLEANIMATORPARAMS = 0;
+    void SimpleSkinRender3DProperty::__init__()
+    {
+        SimpleSkinRender3DProperty::SIMPLE_SIMPLEANIMATORPARAMS = LayaGL::m_pWebglEngine->propertyNameToID("u_SimpleAnimatorParams");
+    }
+
     uint32_t Sprite3DProperty::WORLDMATRIX = 0;
     uint32_t Sprite3DProperty::WORLDINVERTFRONT = 0;
 

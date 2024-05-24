@@ -130,6 +130,12 @@ class SkinnedMeshSprite3DProperty
     static uint32_t BONES;
     static void __init__();
 };
+class SimpleSkinRender3DProperty
+{
+public:
+    static uint32_t SIMPLE_SIMPLEANIMATORPARAMS;
+    static void __init__();
+};
 class Sprite3DProperty
 {
   public:
@@ -137,6 +143,7 @@ class Sprite3DProperty
     static uint32_t WORLDINVERTFRONT;
     static void __init__();
 };
+
 class Sprite3DRenderDeclarationProperty
 {
   public:

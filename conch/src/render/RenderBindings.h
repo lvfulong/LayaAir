@@ -44,6 +44,7 @@
 #include "Bindings/LayaAir/3D/JSBounds.h"
 #include <Bindings/Video/JSVideo.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTSkinRenderNode.h>
+#include <render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTSimpleSkinRenderNode.h>
 
 namespace laya
 {
@@ -638,7 +639,13 @@ class RenderBindings
             class_binding.function("setBoneIndicesList", &RTSkinRenderNode::setBoneIndicesList);
             context.class_("conchRTSkinRenderNode", class_binding);
         }
-        
+        {
+            class_<RTSimpleSkinRenderNode> class_binding;
+            class_binding.constructor<>();
+            class_binding.inherit<RTBaseRenderNode>();
+            class_binding.function("setSimpleAnimatorParams", &RTSimpleSkinRenderNode::setSimpleAnimatorParams);
+            context.class_("conchRTSimpleSkinRenderNode", class_binding);
+        }
 
         {
             class_<GLESRenderElement2D> class_binding;

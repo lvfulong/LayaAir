@@ -91,6 +91,8 @@ list(APPEND CONCH_SRC
 	src/render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.cpp
 	src/render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTSkinRenderNode.h
 	src/render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTSkinRenderNode.cpp
+	src/render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTSimpleSkinRenderNode.h
+	src/render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTSimpleSkinRenderNode.cpp
 	src/render/RenderDriver/OpenGLESDriver/RenderDevice/KTXTextureInfo.h
 	src/render/RenderDriver/OpenGLESDriver/RenderDevice/GLESBufferState.h
 	src/render/RenderDriver/OpenGLESDriver/RenderDevice/GLESBufferState.cpp
