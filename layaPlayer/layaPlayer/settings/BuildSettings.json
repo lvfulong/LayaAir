@@ -8,10 +8,20 @@
   "alwaysIncluded": [
     "sprites"
   ],
+  "android": {
+    "allowTextureCompressedFormat": false,
+    "targetArchitectures": {
+      "ARMv7": true,
+      "ARM64": false,
+      "x86": false,
+      "x86-64": false
+    },
+    "exportFormat": "APK",
+    "exportProject": true
+  },
   "ios": {
-    "version": "release-v3.1.3.1",
+    "allowTextureCompressedFormat": false,
     "packResources": false,
-    "screenOrientation": "portrait",
-    "allowTextureCompressedFormat": false
+    "screenOrientation": "portrait"
   }
 }
