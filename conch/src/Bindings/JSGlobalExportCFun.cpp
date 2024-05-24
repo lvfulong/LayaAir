@@ -511,43 +511,7 @@ namespace laya
 		JSStat::exportJS(context);
         //JSTextMemoryCanvas::getInstance()->exportJS(context);
         JSArrayBufferRef::exportJS(context);
-        /*if (!g_kSystemConfig.m_bConchWebGL) {
-         
-            JSRenderStateCommand::exportJS(context);
-            JSRenderState::exportJS(context);
-            JSGLRenderDrawContext::exportJS(context);
-            JSContext2D::exportJS(context);
-            JSWebGLCacheAsNormalCanvas::exportJS(context);
-            JSGLTextureContext::exportJS(context);
-            JSGL2TextureContext::exportJS(context);
-            JSWebGLInternalTex::exportJS(context);
-            JSGLESEngine::exportJS(context);
-            JSRenderTexture2D::exportJS(context);
-            JSGLVertexState::exportJS(context);
-            JSVertexBuffer3D::exportJS(context);
-            JSIndexBuffer3D::exportJS(context);
-            JSShaderInstance::exportJS(context);
-            JSAttributeMap::exportJS(context);
-            JSShaderData::exportJS(context);
-            JSCommandEncoder::exportJS(context);
-            JSWebGLInternalRT::exportJS(context);
-            JSGLBuffer::exportJS(context);
-            JSRenderGeometryElement::exportJS(context);
-            JSRenderElement::exportJS(context);
-            JSRenderQueue::exportJS(context);
-            JSCommandUniformMap::exportJS(context);
-            JSRenderContext3D::exportJS(context);
-            JSRenderNode::exportJS(context);
-            JSSceneCullManger::exportJS(context);
-            JSCullPass::exportJS(context);
-            JSUploadMemoryManager::exportJS(context);
-            JSQuickSort::exportJS(context);
-            JSWordText::exportJS(context);
-            JSCameraCullInfo::exportJS(context);
-            JSShadowCullInfo::exportJS(context);
-          
-            JSUniformBufferObject::exportJS(context);
-        }*/
+
 
 	
         
@@ -555,9 +519,11 @@ namespace laya
 
 		JSVideo::exportJS(context);   
 
-
-        JSSubmitScene3D::exportJS(context);
-        RenderBindings::exportJS(context);    
+        if (g_kSystemConfig.m_graphicsAPI != GraphicsAPI::WebGL) 
+        { 
+            JSSubmitScene3D::exportJS(context);
+            RenderBindings::exportJS(context);    
+        }
         //以下是全局函数
         //------------------------------------------------------------------------------
         context.function("setTouchEvtFunction", &setTouchEvtFunc);
