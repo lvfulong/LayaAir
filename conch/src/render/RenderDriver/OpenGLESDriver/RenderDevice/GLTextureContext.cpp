@@ -865,7 +865,7 @@ void GLTextureContext::setTextureDDSData(GLESInternalTex *texture, const DDSText
 
     FormatPixelsParams formatParams;
     getFormatPixelsParams(ddsInfo.format, formatParams);
-    int channelsByte = formatParams.bytesPerPixel / formatParams.channels;
+   
 
     int mipmapWidth = width;
     int mipmapHeight = height;
@@ -881,6 +881,7 @@ void GLTextureContext::setTextureDDSData(GLESInternalTex *texture, const DDSText
             dataOffset += bpp ? (mipmapWidth * mipmapHeight * (bpp / 8)) : dataLength;
         }
         else {
+            int channelsByte = formatParams.bytesPerPixel / formatParams.channels;
             int dataLength = mipmapWidth * mipmapHeight * formatParams.channels;
 
             glTexImage2D(target, index, internalFormat, mipmapWidth, mipmapHeight, 0, format, type, source+ dataOffset);

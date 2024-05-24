@@ -249,7 +249,7 @@ namespace laya
 			drawCount = _instanceElementList.size();
 			geometry->setInstanceCount(drawCount);
 			for (uint32_t i = 0; i < drawCount; i++) {
-				memcpy(worldMatrixData += i * 16, _instanceElementList[i]->transform->m_worldMatrix.elements, 16 * sizeof(float));
+				memcpy(worldMatrixData + i * 16, _instanceElementList[i]->transform->getWorldMatrix().elements, 16 * sizeof(float));
 			}
 			//simpleAnimationData
 			float* simpleAnimatorData = getUpdateData(1, 4 * GLESInstanceRenderElement3D::maxInstanceCount)->data();

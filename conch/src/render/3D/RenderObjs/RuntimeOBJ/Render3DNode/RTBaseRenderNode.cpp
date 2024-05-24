@@ -32,6 +32,7 @@ void RTBaseRenderNode::setBounds(JSBounds *bounds)
 }
 void RTBaseRenderNode::_calculateBoundingBox()
 {
+
     if (customCull)
     {
         // todo

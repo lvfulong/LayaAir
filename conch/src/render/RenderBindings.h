@@ -284,6 +284,7 @@ class RenderBindings
                     if (bIsArrayBuffer)
                     {
                         DDSTextureInfo info;
+                        info.source = pArrayBufferPtr;
                         info.compressed = ddsInfo.compressed;
                         info.dataOffset = ddsInfo.dataOffset;
                         info.blockBytes = ddsInfo.blockBytes;
