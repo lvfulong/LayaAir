@@ -128,7 +128,8 @@ TextMetrics CanvasRenderingContext2DWin::measureTextUtf16(wchar_t *pwszBuffer, i
     Gdiplus::RectF rcBound;
     graphicsPathObj.GetBounds(&rcBound);
 
-    Gdiplus::RectF layoutRect(0, 0, m_width, m_height);
+    //测量不能用layout来限制，设置一个很大的范围避免超过（希望实际的measure不要依赖实际画布大小）
+    Gdiplus::RectF layoutRect(0, 0, 100000, 100000);
     //m_gdiGraphics->MeasureString(pwszBuffer, bufferLen, m_font, layoutRect, &m_stringFormat, &rcBound);
     //stringFormat必须用StringFormat::GenericTypographic(), 否则偏大
     m_gdiGraphics->MeasureString(pwszBuffer, bufferLen, m_font, layoutRect, Gdiplus::StringFormat::GenericTypographic(), &rcBound);
@@ -177,8 +178,8 @@ ImageData CanvasRenderingContext2DWin::getImageData(double x, double y, double w
 {
     int clampedX = std::clamp(x, 0.0, static_cast<double>(m_width));
     int clampedY = std::clamp(y, 0.0, static_cast<double>(m_height));
-    int clampedW = std::clamp(width, 0.0, static_cast<double>(m_width));
-    int clampedH = std::clamp(height, 0.0, static_cast<double>(m_height));
+    int clampedW = std::clamp(width, 0.0, static_cast<double>(m_width)-x);
+    int clampedH = std::clamp(height, 0.0, static_cast<double>(m_height)-y);
 
     if (clampedW > 0 && clampedH > 0)
     {
