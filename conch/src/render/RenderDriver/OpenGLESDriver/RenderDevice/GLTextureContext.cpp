@@ -1361,6 +1361,9 @@ TextureCompareMode GLTextureContext::setTextureCompareMode(GLESInternalTex *text
 
 void GLTextureContext::bindRenderTarget(GLESInternalRT *renderTarget, int faceIndex)
 {
+    if (renderTarget != currentActiveRT && currentActiveRT != nullptr) {
+        unbindRenderTarget(currentActiveRT);
+    }
     auto framebuffer = renderTarget->m_framebuffer;
 
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
@@ -1371,11 +1374,15 @@ void GLTextureContext::bindRenderTarget(GLESInternalRT *renderTarget, int faceIn
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + faceIndex,
                                texture->m_resource, 0);
     }
+    currentActiveRT = renderTarget;
 }
 
 void GLTextureContext::bindoutScreenTarget()
 {
+    if(currentActiveRT!=nullptr)
+    unbindRenderTarget(currentActiveRT);
     glBindFramebuffer(GL_FRAMEBUFFER, g_nMainFrameBuffer);
+  
 }
 
 void GLTextureContext::unbindRenderTarget(GLESInternalRT *renderTarget)
@@ -1396,6 +1403,7 @@ void GLTextureContext::unbindRenderTarget(GLESInternalRT *renderTarget)
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, g_nMainFrameBuffer);
+    currentActiveRT = nullptr;
 }
 
 GLESInternalTex *GLTextureContext::createRenderTextureInternal(TextureDimension dimension, int width, int height,

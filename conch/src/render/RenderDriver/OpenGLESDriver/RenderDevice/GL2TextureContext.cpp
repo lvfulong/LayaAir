@@ -1169,6 +1169,9 @@ namespace laya
 
     void GL2TextureContext::bindRenderTarget(GLESInternalRT* renderTarget, int faceIndex)
 	{
+        if (renderTarget != currentActiveRT&& currentActiveRT!=nullptr) {
+            unbindRenderTarget(currentActiveRT);
+        }
         if (renderTarget->m_isCube) 
 		{
             glBindFramebuffer(GL_FRAMEBUFFER, renderTarget->m_framebuffer);
@@ -1185,6 +1188,8 @@ namespace laya
 
             glBindFramebuffer(GL_FRAMEBUFFER, renderTarget->m_framebuffer);
         }
+
+        currentActiveRT = renderTarget;
     }
 
 	void GL2TextureContext::unbindRenderTarget(GLESInternalRT* renderTarget)
@@ -1227,6 +1232,7 @@ namespace laya
         }
 
         glBindFramebuffer(GL_FRAMEBUFFER, g_nMainFrameBuffer);
+        currentActiveRT = nullptr;
     }
 
 }

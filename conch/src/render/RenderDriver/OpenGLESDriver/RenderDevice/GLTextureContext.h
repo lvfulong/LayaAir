@@ -123,6 +123,7 @@ class GLTextureContext : public GLObject
                                int xOffset, int yOffset, int width, int height, bool premultiplyAlpha, bool invertY);
     virtual GLESInternalTex* createRenderTargetDepthTexture(GLESInternalRT* renderTarget, TextureDimension dimension, int width, int height);
   protected:
+      GLESInternalRT* currentActiveRT = nullptr;
     virtual int getGLtexMemory(GLESInternalTex *tex, int depth = 1);
     virtual int getGLRTTexMemory(int width, int height, RenderTargetFormat colorFormat,
                                  RenderTargetFormat depthStencilFormat, bool generateMipmap, int multiSamples,
