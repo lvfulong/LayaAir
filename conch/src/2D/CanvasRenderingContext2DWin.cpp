@@ -195,7 +195,8 @@ ImageData CanvasRenderingContext2DWin::getImageData(double x, double y, double w
         Gdiplus::BitmapData  lockedbmp;
         status = m_gdiBitmap->LockBits(&rect, Gdiplus::ImageLockModeRead, PixelFormat32bppARGB,&lockedbmp);
         if (status != Ok) {
-            //TODO
+            LOGE("CanvasRenderingContext2DWin::getImageData GDI+ error %d", static_cast<int>(status));
+            return ImageData();
         }
 
         byte* pixels = static_cast<byte*>(lockedbmp.Scan0);
@@ -258,6 +259,8 @@ void CanvasRenderingContext2DWin::setTransform(double a, double b, double c, dou
     {
         return;
     }
+    //Gdiplus::Matrix m(a,  b,  c,  d,  e,  f);
+    //m_gdiGraphics->SetTransform(&m);
 }
 void CanvasRenderingContext2DWin::scale(double x, double y)
 {
@@ -265,6 +268,7 @@ void CanvasRenderingContext2DWin::scale(double x, double y)
     {
         return;
     }
+    //m_gdiGraphics->ScaleTransform(x, y);
 }
 /*void CanvasRenderingContext2DWin::setTextAlign(const char* textAlign)
 {
