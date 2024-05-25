@@ -3,7 +3,7 @@
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 #include "render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderContext3D.h"
 #include "render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESCullUtil.h"
-
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h"
 namespace laya
 {
 
@@ -70,10 +70,11 @@ void GLESSpotLightShadowRP::render(GLESRenderContext3D* context, std::vector<RTB
 void GLESSpotLightShadowRP::_getShadowBias(float shadowResolution, Vector4& out)
 {
 
+
     float frustumSize = std::tan(_spotAngle * 0.5 * MathUtils3D::Deg2Rad) * _spotRange;
     float texelSize = frustumSize / shadowResolution;
-    float depthBias = -_shadowDepthBias * texelSize;
-    float normalBias = -_shadowNormalBias * texelSize;
+    float depthBias = -light->shadowDepthBias * texelSize;
+    float normalBias = -light->shadowNormalBias * texelSize;
 
     if (_shadowMode == ShadowMode::SoftHigh) {
         // TODO: Handle the bias more accurately
@@ -140,6 +141,16 @@ void GLESSpotLightShadowRP::_applyRenderData(GLESShaderData* sceneData, GLESShad
     sceneData->setVector(ShadowCasterPassProperty::SHADOW_PARAMS, this->_shadowParams);
 }
 
+
+ShadowSpotData::ShadowSpotData()
+{
+    cameraShaderValue = new GLESShaderData(new RTDefineDatas());
+}
+
+ShadowSpotData::~ShadowSpotData()
+{
+
+}
 
 /*
 void GLESSpotLightShadowRP::set_position(Vector3 value)

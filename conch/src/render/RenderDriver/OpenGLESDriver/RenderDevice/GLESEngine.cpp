@@ -34,7 +34,6 @@ GLESEngine::GLESEngine(WebGLConfig config, WebGLMode webglMode)
     LayaGL::m_pWebglEngine = this;
     if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::OpenGLES)
     {
-
         BaseCameraProperty::__init__();
         DepthPassProperty::__init__();
         RenderableSprite3DProperty::__init__();

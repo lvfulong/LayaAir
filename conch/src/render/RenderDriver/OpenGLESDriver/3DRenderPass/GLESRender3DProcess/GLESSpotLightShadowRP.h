@@ -15,6 +15,8 @@ namespace laya
     class ShadowSpotData
     {
     public:
+        ShadowSpotData();
+        ~ShadowSpotData();
         GLESShaderData* cameraShaderValue;
         Vector3 position;
         float offsetX;
@@ -29,7 +31,7 @@ class GLESSpotLightShadowRP
 {
   public:
       GLESSpotLightShadowRP();
-    ~GLESSpotLightShadowRP();
+      ~GLESSpotLightShadowRP();
     void update(GLESRenderContext3D*context);
     void render(GLESRenderContext3D* context, std::vector<RTBaseRenderNode*>& list, uint32_t count);
     void _applyRenderData(GLESShaderData* sceneData, GLESShaderData* cameraData);
