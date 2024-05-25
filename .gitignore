@@ -11,3 +11,4 @@ LayaMe/MomoYo_iOS/MomoYo.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspace
 publish/nativetools/template/ios/LayaBox/LayaBox.xcodeproj/xcuserdata/joychina.xcuserdatad/xcschemes/xcschememanagement.plist
 third_party
 xcshareddata
+.DS_Store
