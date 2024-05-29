@@ -610,8 +610,32 @@ elseif(LINUX)
 		src/Exports.cpp
 		src/Application/App.cpp
 	)
-endif()
+elseif(OHOS)
+	list(APPEND PLATFORM_HEADER_DIR
+		src/Backend/src
+	)
+	list(APPEND CONCH_SRC
+		src/platform/OHOS/napi/helper/NapiHelper.cpp
+    	src/platform/OHOS/napi/plugin_manager.cpp
+    	src/platform/OHOS/napi/WorkerMessageQueue.cpp
+    	src/platform/OHOS/napi/render/plugin_render.cpp
+    	src/platform/OHOS/napi/render/egl_core.cpp
+    	src/platform/OHOS/napi/modules/TouchesNapi.cpp
+    	src/platform/OHOS/napi/modules/VideoPlayerNapi.cpp
+		#src/downloadCache/JCIosFileSource.h
+		#src/downloadCache/JCIosFileSource.cpp
+		#src/Backend/src/OpenGLBackendLinuxEGLX11.h
+		#src/Backend/src/OpenGLBackendLinuxEGLX11.cpp
+		src/Bindings/Video/JSVideo_OHOSImpl.cpp
+		#src/2D/CanvasRenderingContext2DLinux.h
+		#src/2D/CanvasRenderingContext2DLinux.cpp
+		src/Bindings/JSOHOSEditBox.h
+		src/Bindings/JSOHOSEditBox.cpp
+		#src/Exports.cpp
+		#src/Application/App.cpp
 
+	)
+endif()
 set(CONCH_HEADERS_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
 )
 include_directories(${PUBLIC_HEADER_DIR})
@@ -629,6 +653,8 @@ elseif(LINUX)
 elseif(IOS)
 	add_library(${PROJECT_NAME} ${CONCH_SRC})
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fobjc-arc")
+elseif(OHOS)
+	add_library(${PROJECT_NAME} SHARED ${CONCH_SRC})
 endif()
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${PUBLIC_HDR_DIR})
@@ -843,6 +869,9 @@ elseif(LINUX)
 		SDL2
 		SDL2main
 	)
+elseif(OHOS)
+	target_link_libraries(${PROJECT_NAME} ${EGL-lib} ${GLESv3-lib} ${hilog-lib} ${libuv-lib} ${Drawing-lib} ${libace-lib} ${libnapi-lib} ${rawfile-lib}
+    libohaudio.so libavplayer.so common render v8_monolith thirdParty) 
 endif()
 
 if(MSVC)
