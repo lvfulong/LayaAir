@@ -143,8 +143,8 @@ if (enableDcc2) {
         else {
             console.log('init dcc error!');
         }
-        window.layadcc2 = layadcc;
-        window.dcc2 = dcc;
+        window.layadcc = layadcc;
+        window.dcc = dcc;
         loadApp(conch.presetUrl || appUrl);
     });
 }
