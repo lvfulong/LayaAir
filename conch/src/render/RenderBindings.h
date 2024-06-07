@@ -666,6 +666,15 @@ class RenderBindings
             class_binding.function("drawRenderElementOne", &GLESRenderContext2D::drawRenderElementOne);
             class_binding.property_field("invertY", &GLESRenderContext2D::invertY);
             class_binding.property_field("pipelineMode", &GLESRenderContext2D::pipelineMode);
+            class_binding.function_optional_override(
+                "drawRenderElementList",
+                optional_override(
+                    [](GLESRenderContext2D& ctx, const std::vector<GLESRenderElement2D*> elements, uint32_t length) {
+                        JCSingletonList<GLESRenderElement2D*> list(false);
+                        list.m_vElements = elements;
+                        list.setLength(length);
+                        ctx.drawRenderElementList(list);
+                    }));
             context.class_("conchGLESRenderContext2D", class_binding);
         }
        
@@ -775,6 +784,7 @@ class RenderBindings
             class_binding.function("addBeforeSkyboxCmds", &GLESForwardAddClusterRP::addBeforeSkyboxCmds);
             class_binding.function("clearBeforeTransparentCmds", &GLESForwardAddClusterRP::clearBeforeTransparentCmds);
             class_binding.function("addBeforeTransparentCmds", &GLESForwardAddClusterRP::addBeforeTransparentCmds);
+            class_binding.function("setOpaqueCMD", &GLESForwardAddClusterRP::setOpaqueCMD);
             context.class_("conchGLESForwardAddClusterRP", class_binding);
         }
         {

@@ -37,4 +37,5 @@ namespace laya {
     void GLESForwardAddRP::setfinalize(const std::vector<GLESRenderCMD*>& cmds) {
         finalize = cmds;
     }
+
 }
