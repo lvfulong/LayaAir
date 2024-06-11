@@ -3,7 +3,7 @@
 #include "string"
 #include <core/math/Color.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalRT.h>
-
+#include <utils/JCSingletonList.h>
 namespace laya
 {
 	class GLESRenderElement2D;
