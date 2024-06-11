@@ -270,9 +270,9 @@ if(enableDcc2){
         }else{
             console.log('init dcc error!');
         }
-        //导出以便用户使用
-        (window as any).layadcc2 = layadcc;
-        (window as any).dcc2 = dcc;
+        //导出以便用户使用，要保证与web端一致
+        (window as any).layadcc = layadcc;
+        (window as any).dcc = dcc;
         loadApp(conch.presetUrl||appUrl);
     })
 }else{

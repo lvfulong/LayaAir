@@ -43,4 +43,19 @@ namespace laya
 		node->_preUpdatePre(this);
 		node->_render(this);
 	}
+
+
+
+	void GLESRenderContext2D::drawRenderElementList(const JCSingletonList<GLESRenderElement2D*>& list)
+	{
+		for (int i  = 0, n  = list.getLength(); i < n; i++) {
+			GLESRenderElement2D* element = list.m_vElements[i];
+			element->_preUpdatePre(this);//render
+		}
+		for (int i = 0, n = list.getLength(); i < n; i++) {
+			GLESRenderElement2D* element = list.m_vElements[i];
+			element->_render(this);//render
+		}
+		return ;
+	}
 } // namespace laya

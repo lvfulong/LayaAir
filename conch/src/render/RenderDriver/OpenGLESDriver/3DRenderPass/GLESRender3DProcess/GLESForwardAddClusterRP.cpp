@@ -74,13 +74,11 @@ namespace laya
         this->opaqueList.renderQueue((GLESRenderContext3D*)context);
     }
 
-    void GLESForwardAddClusterRP::opaqueTexturePass()
+    void GLESForwardAddClusterRP::opaqueTexturePass(GLESRenderContext3D* context)
     {
-        //TODO
-        // var blit: BlitScreenQuadCMD = BlitScreenQuadCMD.create(currentTarget, this._opaqueTexture);
-        // blit.setContext(renderContext);
-        // blit.run();
-        // blit.recover();
+        if (opaquePassCmd.size() != 0) {
+            context->runCMDList(opaquePassCmd);
+        }
     }
     void GLESForwardAddClusterRP::_mainPass(GLESRenderContext3D* context)
     {
@@ -96,9 +94,9 @@ namespace laya
         if (skyRenderNode != nullptr) {
             context->drawRenderElementOne(skyRenderNode->renderelements[0]);
         }
-        if (enableOpaque) 
+        if (enableOpaqueTexture)
         {
-            opaqueTexturePass();
+            opaqueTexturePass(context);
         }
         if (enableCMD) GLESRenderCMD::applyCommandBuffers(context, _beforeTransparentCmds);
         this->_recoverRenderContext3D(context);
@@ -138,5 +136,9 @@ namespace laya
 
     void GLESForwardAddClusterRP::addBeforeTransparentCmds(const std::vector<GLESRenderCMD*>& cmds) {
         _beforeTransparentCmds.push_back(cmds);
+    }
+
+    void GLESForwardAddClusterRP::setOpaqueCMD(const std::vector<GLESRenderCMD*>& cmds) {
+        opaquePassCmd = cmds;
     }
 } // namespace laya

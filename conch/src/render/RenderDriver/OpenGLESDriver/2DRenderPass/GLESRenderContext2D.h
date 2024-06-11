@@ -13,6 +13,7 @@ namespace laya
 		~GLESRenderContext2D();
 		void setRenderTarget(GLESInternalRT* renderRT, bool clear, const Color &clearColor);
 		void setOffscreenView(uint32_t width, uint32_t height);
+		void drawRenderElementList(const JCSingletonList<GLESRenderElement2D*>& list);
 		void drawRenderElementOne(GLESRenderElement2D* node);
 
 		void setSceneShaderData(GLESShaderData* value)

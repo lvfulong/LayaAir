@@ -109,7 +109,7 @@ void CanvasRenderingContext2DWin::strokeText(const std::string &text, double x, 
     int size = m_font->GetSize();
 
     Gdiplus::GraphicsPath path;
-    path.AddString(pwszBuffer, -1, &fontFamily, Gdiplus::FontStyleRegular, size, PointF(outX, outY), Gdiplus::StringFormat::GenericTypographic());
+    path.AddString(pwszBuffer, -1, &fontFamily, m_font->GetStyle(), size, PointF(outX, outY), Gdiplus::StringFormat::GenericTypographic());
     Pen pen(Color(m_strokeColorR, m_strokeColorG, m_strokeColorB), m_lineWidth);
     //SolidBrush brush(Color(255, 255, 255, 255)); // 白色填充
     m_gdiGraphics->DrawPath(&pen, &path); // 绘制描边

@@ -71,6 +71,9 @@ class GLESForwardAddClusterRP
     {
         camera = value;
     }
+
+    void setOpaqueCMD(const std::vector<GLESRenderCMD*>& cmds);
+
     void clearBeforeForwardCmds();
     void addBeforeForwardCmds(const std::vector<GLESRenderCMD*>& cmds);
     void clearBeforeSkyboxCmds();
@@ -80,7 +83,7 @@ class GLESForwardAddClusterRP
   private:
     void _recoverRenderContext3D(GLESRenderContext3D *context);
     void _mainPass(GLESRenderContext3D *context);
-    void opaqueTexturePass();
+    void opaqueTexturePass(GLESRenderContext3D* context);
     void _renderDepthPass(GLESRenderContext3D *context);
     void _renderDepthNormalPass(GLESRenderContext3D *context);
 
@@ -115,6 +118,8 @@ class GLESForwardAddClusterRP
     std::vector<std::vector<GLESRenderCMD*>> _beforeForwardCmds;
     std::vector<std::vector<GLESRenderCMD*>> _beforeSkyboxCmds;
     std::vector<std::vector<GLESRenderCMD*>> _beforeTransparentCmds;
+
+    std::vector<GLESRenderCMD*> opaquePassCmd;
 };
 } // namespace laya
 #endif

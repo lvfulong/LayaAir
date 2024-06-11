@@ -64,6 +64,10 @@ bool GLESBufferState::isBind()
 }
 void GLESBufferState::destroy()
 {
+    if (GLESBufferState::_curBindedBufferState == this) {
+        _glVertexState->unbindVertexArray();
+        GLESBufferState::_curBindedBufferState = nullptr;
+    }
     this->_glVertexState->destroy();
     this->_vertexBuffers.clear();
     this->_bindedIndexBuffer = nullptr;
