@@ -959,6 +959,10 @@ class HTMLVideoElement extends HTMLMediaElement<ConchVideo> {
         return super.appendChild(node);
     }
 
+    get ended():boolean{
+        return this._nativeObj.currentTime>=this._nativeObj.duration;
+    }
+
     // media
     get readyState():number {
         return this._nativeObj.readyState;
