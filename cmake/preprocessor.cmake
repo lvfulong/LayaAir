@@ -25,3 +25,13 @@ string(REPLACE "amd64" "x64" BUILDING_ARCH "${BUILDING_ARCH}")
 if (NOT DIST_DIR)
     set(DIST_DIR "${BUILDING_ARCH}")
 endif()
+
+
+if(OHOS)
+    set(OHOS TRUE)
+    add_definitions(-DOHOS=1)
+    set(CMAKE_CXX_FLAGS "-fvisibility=hidden -fvisibility-inlines-hidden ${CMAKE_CXX_FLAGS}")
+    if("${OHOS_ARCH}" STREQUAL "armeabi-v7a")
+        set(CMAKE_CXX_FLAGS "-march=armv7a ${CMAKE_CXX_FLAGS}")
+    endif()
+endif()

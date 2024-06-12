@@ -1,8 +1,7 @@
-#ifdef OHOS
 #include "JSVideo.h"
 #include "aki/jsbind.h"
-#include "util/Log.h"
-#include "helper/NapiHelper.h"
+#include "utils/Log.h"
+#include "platform/ohos/napi/helper/NapiHelper.h"
 
 namespace laya
 {
@@ -155,4 +154,3 @@ namespace laya
         _currentTime = currentTime;
     }
 }
-#endif //OHOS

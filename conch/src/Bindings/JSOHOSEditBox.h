@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <string>
-#include "../JSInterface/JSInterface.h"
+#include <binder/JSInterface.h>
 
 namespace laya{
 
@@ -14,12 +14,10 @@ enum EditBoxType{
     NUMBER,
     NUMBER_PASSWORD,
 };
-class JSOHOSEditBox:public JsObjBase, public JSObjNode{
+class JSOHOSEditBox
+{
     public:
-        static JsObjClassInfo JSCLSINFO;
-        void JSConstructor(JsFuncArgs& args){};
-
-        static void exportJS();
+       static void exportJS(Context& context);
         JSOHOSEditBox();
         ~JSOHOSEditBox();
     public:
@@ -88,7 +86,7 @@ class JSOHOSEditBox:public JsObjBase, public JSObjNode{
     private:
         int m_tag;
         std::shared_ptr<int> m_CallbackRef;
-        JsObjHandle m_pJSFunctionOnInput;//JS的回调
+        Persistent m_pJSFunctionOnInput;//JS的回调
 };
 }
 #endif //__JSOHOSEditBox_H__

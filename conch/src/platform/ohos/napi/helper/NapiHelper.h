@@ -1,4 +1,4 @@
-#include "../conch/JCConch.h"
+#include "JCConch.h"
 #include <hilog/log.h>
 
 using namespace laya;

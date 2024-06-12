@@ -6,6 +6,9 @@
 #include <OpenGLES/ES2/glext.h>
 #include <OpenGLES/ES3/gl.h>
 #include <OpenGLES/ES3/glext.h>
+#elif OHOS
+#include <EGL/egl.h>
+#include <GLES3/gl3.h>
 #elif __LINUX__
 #include <glad/egl.h>
 #include <glad/gles2.h>

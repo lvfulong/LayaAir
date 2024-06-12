@@ -1,15 +1,15 @@
 #ifndef _NAPIFUN_
 #define _NAPIFUN_
 
-#include "../conch/JCConch.h"
-#include "../conch/Audio/JCAudioManager.h"
-#include "util/Log.h"
+#include "JCConch.h"
+#include "Audio/JCAudioManager.h"
+#include "utils/Log.h"
 #include "aki/jsbind.h"
-#include "../conch/JCSystemConfig.h"
-#include "../common/util/JCZipFile.h"
-#include "../conch/JCScriptRuntime.h"
+#include "JCSystemConfig.h"
+#include "utils/JCZipFile.h"
+#include "JCScriptRuntime.h"
 #include <rawfile/raw_file_manager.h>
-#include "napi/plugin_manager.h"
+#include "platform/ohos/napi/plugin_manager.h"
 #include "downloadCache/JCOHOSFileSource.h"
 #include "../common/misc/JCLayaThreadPool.h"
 

@@ -1,4 +1,8 @@
 #include "TouchesNapi.h"
+
+
+#include <utils/InputTypes.h>
+#include "JCConch.h"
 using namespace laya;
 extern "C"
 {
@@ -11,7 +15,7 @@ extern "C"
         e.posY = y;
         e.id = id;
         strncpy(e.type, "touchstart", 256);
-        JCScriptRuntime::s_JSRT->dispatchInputEvent(e);
+        JCConch::s_pConch->dispatchInputEvent(e);
     }
 
     void nativeHandleTouchUp(int id, int x, int y)
@@ -23,7 +27,7 @@ extern "C"
         e.posY = y;
         e.id = id;
         strncpy(e.type, "touchend", 256);
-        JCScriptRuntime::s_JSRT->dispatchInputEvent(e);
+        JCConch::s_pConch->dispatchInputEvent(e);
     }
 
     void nativeHandleTouchMove(int id, int x, int y)
@@ -35,7 +39,7 @@ extern "C"
         e.posY = y;
         e.id = id;
         strncpy(e.type, "touchmove", 256);
-        JCScriptRuntime::s_JSRT->dispatchInputEvent(e);
+        JCConch::s_pConch->dispatchInputEvent(e);
     }
 
     void nativeHandleTouchCancel(int id, int x, int y)
@@ -47,6 +51,6 @@ extern "C"
         e.posY = y;
         e.id = id;
         strncpy(e.type, "touchCancel", 256);
-        JCScriptRuntime::s_JSRT->dispatchInputEvent(e);
+        JCConch::s_pConch->dispatchInputEvent(e);
     }
 }

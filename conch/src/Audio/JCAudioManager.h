@@ -16,9 +16,15 @@
 	#include "windows/JCAudioMp3Player.h"	
 #elif __APPLE__
     #include "ios/JCAudioMp3Player.h"
+#elif OHOS
+    #include "ohos/JCAudioMp3Player.h"
 #endif
 
+#ifdef OHOS
+#include "resource/Audio/JCAudioWavPlayer-openharmony.h"
+#else
 #include "resource/Audio/JCAudioWavPlayer.h"
+#endif
 #include <map>
 #include <vector>
 #include "resource/Audio/JCWaveInfo.h"
@@ -87,20 +93,33 @@ namespace laya
         /** @brief 播放声音
          *  @param[in] 声音interface
         */
-        OpenALSourceInfo* playWav(JCAudioInterface* p_pAudio, const std::string& p_sUrl,bool bIsOgg, float currentTime);
+      
+		#ifdef OHOS
+		OHAudioRenderInfo* playWav(JCAudioInterface* p_pAudio, const std::string& p_sUrl,bool bIsOgg, float currentTime);
+	    void setWavVolume(OHAudioRenderInfo* audioRenderInfo,float nVolume );
 
+        void stopWav(OHAudioRenderInfo* audioRenderInfo );
+		float getCurrentTime(OHAudioRenderInfo* pOpenALInfo);
+		#else
+  		OpenALSourceInfo* playWav(JCAudioInterface* p_pAudio, const std::string& p_sUrl,bool bIsOgg, float currentTime);
+
+	    void setWavVolume(OpenALSourceInfo* pOpenALInfo,float nVolume );
+
+        void stopWav(OpenALSourceInfo* pOpenALInfo );
+		
 		OpenALSourceInfo* playWavMp3(JCAudioInterface* p_pAudio, const std::string& p_sUrl, const char* p_sFilePath, float currentTime);
+		float getCurrentTime(OpenALSourceInfo* pOpenALInfo);
+		#endif
+
+		
 
         /** @brief 删除wav
          *  @param[in] 声音的interface
         */
         void delWav(JCAudioInterface* p_pAudio);
 
-        void stopWav(OpenALSourceInfo* pOpenALInfo );
 
         void stopAllWav();
-
-	    void setWavVolume(OpenALSourceInfo* pOpenALInfo,float nVolume );
 
         void setAllWavVolume( float nVolume );
 
@@ -117,7 +136,7 @@ namespace laya
 
 	    void update();
 
-		float getCurrentTime(OpenALSourceInfo* pOpenALInfo);
+		
 
     public:
 

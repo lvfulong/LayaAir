@@ -1,12 +1,11 @@
 #include "JSOHOSEditBox.h"
 #include "aki/jsbind.h"
 #include "../../JCScriptRuntime.h"
-#include "util/Log.h"
-#include "util/JCColor.h"
+#include "utils/Log.h"
+#include "utils/JCColor.h"
 
 namespace laya{
     static int curIndex = 0;
-    ADDJSCLSINFO(JSOHOSEditBox,JSObjNode);
     JSOHOSEditBox::JSOHOSEditBox(){
         m_tag = curIndex;
         curIndex++;
@@ -23,12 +22,12 @@ namespace laya{
         m_nScaleY = 1;
         m_bForbidEdit = false;
         m_CallbackRef.reset(new int(1));
-        AdjustAmountOfExternalAllocatedMemory(256);
-        JCMemorySurvey::GetInstance()->newClass("OHOSEditBox",256,this);
+        //AdjustAmountOfExternalAllocatedMemory(256);
+        //JCMemorySurvey::GetInstance()->newClass("OHOSEditBox",256,this);
         aki::JSBind::GetJSFunction("EditBox.create")->Invoke<void>(m_tag);
     }
     JSOHOSEditBox::~JSOHOSEditBox(){
-        JCMemorySurvey::GetInstance()->releaseClass("OHOSEditBox",this);
+        //JCMemorySurvey::GetInstance()->releaseClass("OHOSEditBox",this);
         aki::JSBind::GetJSFunction("EditBox.remove")->Invoke<void>(m_tag);
     }
     void JSOHOSEditBox::addEventListener(const char* p_sName, JSValueAsParam p_pFunction){
@@ -222,42 +221,44 @@ namespace laya{
     bool JSOHOSEditBox::getForbidEdit(){
         return m_bForbidEdit;
     }
-    void JSOHOSEditBox::exportJS(){
-        JSP_CLASS("ConchInput",JSOHOSEditBox);
-        JSP_ADD_PROPERTY(left,JSOHOSEditBox,get_Left,set_Left);//2
-        JSP_ADD_PROPERTY(top,JSOHOSEditBox,get_Top,set_Top);//2
-        JSP_ADD_PROPERTY(width,JSOHOSEditBox,get_Width,set_Width);//2
-        JSP_ADD_PROPERTY(height,JSOHOSEditBox,get_Height,set_Height);//2
-        JSP_ADD_PROPERTY(opacity,JSOHOSEditBox,get_Opacity,set_Opacity);//2
-        JSP_ADD_PROPERTY(style,JSOHOSEditBox,get_Style,set_Style);//2
-        JSP_ADD_PROPERTY(value,JSOHOSEditBox,get_Value,set_Value);//2
-        JSP_ADD_PROPERTY(visible,JSOHOSEditBox,get_Visible,set_Visible);//2
-        JSP_ADD_METHOD("addEventListener",JSOHOSEditBox::addEventListener);
-        JSP_ADD_METHOD("setLeft",JSOHOSEditBox::setLeft);
-        JSP_ADD_METHOD("setTop",JSOHOSEditBox::setTop);
-        JSP_ADD_METHOD("setWidth",JSOHOSEditBox::setWidth);
-        JSP_ADD_METHOD("setHeight",JSOHOSEditBox::setHeight);
-        JSP_ADD_METHOD("setOpacity",JSOHOSEditBox::setOpacity);
-        JSP_ADD_METHOD("setValue",JSOHOSEditBox::setValue);
-        JSP_ADD_METHOD("getValue",JSOHOSEditBox::getValue);
-        JSP_ADD_METHOD("setStyle",JSOHOSEditBox::setStyle);
-        JSP_ADD_METHOD("setVisible",JSOHOSEditBox::setVisible);
-        JSP_ADD_METHOD("focus",JSOHOSEditBox::focus);
-        JSP_ADD_METHOD("blur",JSOHOSEditBox::blur);
-        JSP_ADD_METHOD("setColor",JSOHOSEditBox::setColor);
-        JSP_ADD_METHOD("setFontSize",JSOHOSEditBox::setFontSize);
-        JSP_ADD_METHOD("setPos",JSOHOSEditBox::setPos);
-        JSP_ADD_METHOD("setSize",JSOHOSEditBox::setSize);
-        JSP_ADD_METHOD("setCursorPosition",JSOHOSEditBox::setCursorPosition);
-        JSP_ADD_METHOD("setScale",JSOHOSEditBox::setScale);
-        JSP_ADD_METHOD("setMaxLength",JSOHOSEditBox::setMaxLength);
-        JSP_ADD_METHOD("setType",JSOHOSEditBox::setType);
-        JSP_ADD_METHOD("setNumberOnly",JSOHOSEditBox::setNumberOnly);
-        JSP_ADD_METHOD("setRegular",JSOHOSEditBox::setRegular);
-        JSP_ADD_METHOD("setFont",JSOHOSEditBox::setFont);
-        JSP_ADD_METHOD("setMultiAble",JSOHOSEditBox::setMultiAble);
-        JSP_ADD_METHOD("setForbidEdit",JSOHOSEditBox::setForbidEdit);
-        JSP_ADD_METHOD("getForbidEdit",JSOHOSEditBox::getForbidEdit);
-        JSP_INSTALL_CLASS("ConchInput",JSOHOSEditBox);
+    void JSOHOSEditBox::exportJS(Context& context)
+    {
+        class_<JSOHOSEditBox> class_binding;
+	    class_binding.constructor<>();
+        class_binding.property("left", &JSOHOSEditBox::get_Left, &JSOHOSEditBox::set_Left);//2
+        class_binding.property("top", &JSOHOSEditBox::get_Top, &JSOHOSEditBox::set_Top);//2
+        class_binding.property("width", &JSOHOSEditBox::get_Width, &JSOHOSEditBox::set_Width);//2
+        class_binding.property("height", &JSOHOSEditBox::get_Height, &JSOHOSEditBox::set_Height);//2
+        class_binding.property("opacity", &JSOHOSEditBox::get_Opacity, &JSOHOSEditBox::set_Opacity);//2
+        class_binding.property("style", &JSOHOSEditBox::get_Style, &JSOHOSEditBox::set_Style);//2
+        class_binding.property("value", &JSOHOSEditBox::get_Value, &JSOHOSEditBox::set_Value);//2
+        class_binding.property("visible", &JSOHOSEditBox::get_Visible, &JSOHOSEditBox::set_Visible);//2
+        class_binding.function("addEventListener", &JSOHOSEditBox::addEventListener);
+        class_binding.function("setLeft", &JSOHOSEditBox::setLeft);
+        class_binding.function("setTop", &JSOHOSEditBox::setTop);
+        class_binding.function("setWidth", &JSOHOSEditBox::setWidth);
+        class_binding.function("setHeight", &JSOHOSEditBox::setHeight);
+        class_binding.function("setOpacity", &JSOHOSEditBox::setOpacity);
+        class_binding.function("setValue", &JSOHOSEditBox::setValue);
+        class_binding.function("getValue", &JSOHOSEditBox::getValue);
+        class_binding.function("setStyle", &JSOHOSEditBox::setStyle);
+        class_binding.function("setVisible", &JSOHOSEditBox::setVisible);
+        class_binding.function("focus", &JSOHOSEditBox::focus);
+        class_binding.function("blur", &JSOHOSEditBox::blur);
+        class_binding.function("setColor", &JSOHOSEditBox::setColor);
+        class_binding.function("setFontSize", &JSOHOSEditBox::setFontSize);
+        class_binding.function("setPos", &JSOHOSEditBox::setPos);
+        class_binding.function("setSize", &JSOHOSEditBox::setSize);
+        class_binding.function("setCursorPosition", &JSOHOSEditBox::setCursorPosition);
+        class_binding.function("setScale", &JSOHOSEditBox::setScale);
+        class_binding.function("setMaxLength", &JSOHOSEditBox::setMaxLength);
+        class_binding.function("setType", &JSOHOSEditBox::setType);
+        class_binding.function("setNumberOnly", &JSOHOSEditBox::setNumberOnly);
+        class_binding.function("setRegular", &JSOHOSEditBox::setRegular);
+        class_binding.function("setFont", &JSOHOSEditBox::setFont);
+        class_binding.function("setMultiAble", &JSOHOSEditBox::setMultiAble);
+        class_binding.function("setForbidEdit", &JSOHOSEditBox::setForbidEdit);
+        class_binding.function("getForbidEdit", &JSOHOSEditBox::getForbidEdit);
+        context.class_("ConchInput", class_binding);
     }
 }

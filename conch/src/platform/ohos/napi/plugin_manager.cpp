@@ -7,7 +7,7 @@
 #include "modules/VideoPlayerNapi.h"
 #include "plugin_manager.h"
 #include <aki/jsbind.h>
-#include "util/Log.h"
+#include "utils/Log.h"
 
 enum ContextType
 {

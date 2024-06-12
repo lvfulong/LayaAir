@@ -1,7 +1,7 @@
 #include "VideoPlayerNapi.h"
 #include "../plugin_manager.h"
-#include "util/Log.h"
-#include "conch/JSWrapper/LayaWrap/Video/JSVideo.h"
+#include "utils/Log.h"
+#include <Bindings/Video/JSVideo.h>
 #include <js_native_api.h>
 #include <js_native_api_types.h>
 

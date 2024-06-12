@@ -429,8 +429,6 @@ list(APPEND CONCH_SRC
 	src/resource/JCFileResManager.h
 	src/resource/JCFileResManager.cpp
 	src/resource/Audio/JCAudioInterface.h
-	src/resource/Audio/JCAudioWavPlayer.h
-	src/resource/Audio/JCAudioWavPlayer.cpp
 	src/resource/Audio/JCMp3Interface.h
 	src/resource/Audio/JCOggParser.h
 	src/resource/Audio/JCOggParser.cpp
@@ -531,6 +529,8 @@ if(IOS)
 		src/Bindings/PhysX/emscripten.cpp
 		src/resource/Audio/JCMp3Parser.h
 		src/resource/Audio/JCMp3Parser.cpp
+		src/resource/Audio/JCAudioWavPlayer.h
+		src/resource/Audio/JCAudioWavPlayer.cpp
 	)
 elseif(ANDROID)
 	list(APPEND PLATFORM_HEADER_DIR
@@ -565,6 +565,8 @@ elseif(ANDROID)
 		src/Bindings/PhysX/emscripten.cpp
 		src/resource/Audio/JCMp3Parser.h
 		src/resource/Audio/JCMp3Parser.cpp
+		src/resource/Audio/JCAudioWavPlayer.h
+		src/resource/Audio/JCAudioWavPlayer.cpp
 	)
 elseif(MSVC)
 	list(APPEND PLATFORM_HEADER_DIR
@@ -592,6 +594,35 @@ elseif(MSVC)
 		src/resource/Audio/JCMp3Parser.cpp
 		src/Exports.cpp
 		src/Application/App.cpp
+		src/resource/Audio/JCAudioWavPlayer.h
+		src/resource/Audio/JCAudioWavPlayer.cpp
+	)
+elseif(OHOS)
+	list(APPEND PLATFORM_HEADER_DIR
+		src/Backend/src
+	)
+	list(APPEND CONCH_SRC
+		src/platform/OHOS/napi/helper/NapiHelper.cpp
+    	src/platform/OHOS/napi/plugin_manager.cpp
+    	src/platform/OHOS/napi/WorkerMessageQueue.cpp
+    	src/platform/OHOS/napi/render/plugin_render.cpp
+    	src/platform/OHOS/napi/render/egl_core.cpp
+    	src/platform/OHOS/napi/modules/TouchesNapi.cpp
+    	src/platform/OHOS/napi/modules/VideoPlayerNapi.cpp
+		src/downloadCache/JCOHOSFileSource.h
+		#src/Backend/src/OpenGLBackendLinuxEGLX11.h
+		#src/Backend/src/OpenGLBackendLinuxEGLX11.cpp
+		src/Bindings/Video/JSVideo_OHOSImpl.cpp
+		src/2D/CanvasRenderingContext2DOHOS.h
+		src/2D/CanvasRenderingContext2DOHOS.cpp
+		src/Bindings/JSOHOSEditBox.h
+		src/Bindings/JSOHOSEditBox.cpp
+		src/resource/Audio/JCAudioWavplayer-openharmony.h
+		src/resource/Audio/JCAudioWavplayer-openharmony.cpp
+		src/Audio/ohos/JCAudioMp3Player.cpp
+		src/Audio/ohos/JCAudioMp3Player.h
+		#src/Exports.cpp
+		#src/Application/App.cpp
 	)
 elseif(LINUX)
 	list(APPEND PLATFORM_HEADER_DIR
@@ -609,31 +640,8 @@ elseif(LINUX)
 		src/Bindings/JSLinuxEditBox.cpp
 		src/Exports.cpp
 		src/Application/App.cpp
-	)
-elseif(OHOS)
-	list(APPEND PLATFORM_HEADER_DIR
-		src/Backend/src
-	)
-	list(APPEND CONCH_SRC
-		src/platform/OHOS/napi/helper/NapiHelper.cpp
-    	src/platform/OHOS/napi/plugin_manager.cpp
-    	src/platform/OHOS/napi/WorkerMessageQueue.cpp
-    	src/platform/OHOS/napi/render/plugin_render.cpp
-    	src/platform/OHOS/napi/render/egl_core.cpp
-    	src/platform/OHOS/napi/modules/TouchesNapi.cpp
-    	src/platform/OHOS/napi/modules/VideoPlayerNapi.cpp
-		#src/downloadCache/JCIosFileSource.h
-		#src/downloadCache/JCIosFileSource.cpp
-		#src/Backend/src/OpenGLBackendLinuxEGLX11.h
-		#src/Backend/src/OpenGLBackendLinuxEGLX11.cpp
-		src/Bindings/Video/JSVideo_OHOSImpl.cpp
-		#src/2D/CanvasRenderingContext2DLinux.h
-		#src/2D/CanvasRenderingContext2DLinux.cpp
-		src/Bindings/JSOHOSEditBox.h
-		src/Bindings/JSOHOSEditBox.cpp
-		#src/Exports.cpp
-		#src/Application/App.cpp
-
+		src/resource/Audio/JCAudioWavPlayer.h
+		src/resource/Audio/JCAudioWavPlayer.cpp
 	)
 endif()
 set(CONCH_HEADERS_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
@@ -648,13 +656,13 @@ elseif(MSVC)
 		add_library(${PROJECT_NAME} ${CONCH_SRC})
 	endif()
 	target_precompile_headers(${PROJECT_NAME} PRIVATE ${CONCH_HEADERS})
+elseif(OHOS)
+	add_library(${PROJECT_NAME} SHARED ${CONCH_SRC})
 elseif(LINUX)
 	add_library(${PROJECT_NAME} ${CONCH_SRC})
 elseif(IOS)
 	add_library(${PROJECT_NAME} ${CONCH_SRC})
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fobjc-arc")
-elseif(OHOS)
-	add_library(${PROJECT_NAME} SHARED ${CONCH_SRC})
 endif()
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${PUBLIC_HDR_DIR})
@@ -831,6 +839,34 @@ elseif(MSVC)
 		SDL2
 		SDL2main
 	)
+elseif(OHOS)
+
+	target_link_libraries(${PROJECT_NAME} 
+		${EGL-lib}
+		${GLESv3-lib}
+	  	${hilog-lib} 
+	  	${libuv-lib}
+	    ${Drawing-lib}
+		${libace-lib} 
+		${libnapi-lib}
+		${rawfile-lib}
+    	libohaudio.so
+		libavplayer.so
+		v8_monolith
+		thirdParty
+		utils
+		binder
+		curl
+		jpeg
+		jpeg-turbo
+		png
+		BulletDynamics
+		BulletCollision
+		vorbisfile
+		vorbis
+		ogg
+		aki_jsbind
+		) 
 elseif(LINUX)
 	find_package(X11 REQUIRED)
 	add_subdirectory("../third_party/glad/glad-2.0.4/cmake" glad_cmake)
@@ -869,9 +905,6 @@ elseif(LINUX)
 		SDL2
 		SDL2main
 	)
-elseif(OHOS)
-	target_link_libraries(${PROJECT_NAME} ${EGL-lib} ${GLESv3-lib} ${hilog-lib} ${libuv-lib} ${Drawing-lib} ${libace-lib} ${libnapi-lib} ${rawfile-lib}
-    libohaudio.so libavplayer.so common render v8_monolith thirdParty) 
 endif()
 
 if(MSVC)
@@ -893,8 +926,8 @@ target_compile_options(${PROJECT_NAME} PRIVATE
 if(MSVC)
 install(FILES ${WIN_DLLS} DESTINATION lib/x64)
 endif()
-install(TARGETS ${PROJECT_NAME} DESTINATION lib/${BUILDING_ARCH})
-install(DIRECTORY ./include DESTINATION .)
+#install(TARGETS ${PROJECT_NAME} DESTINATION lib/${BUILDING_ARCH})
+#install(DIRECTORY ./include DESTINATION .)
 
 message("CMAKE_BUILD_TYPE:${CMAKE_BUILD_TYPE}")
 message("CMAKE_C_FLAGS:${CMAKE_C_FLAGS}")

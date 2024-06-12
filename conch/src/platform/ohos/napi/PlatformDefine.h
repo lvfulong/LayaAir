@@ -2,7 +2,7 @@
 #define __PLATFORMDEFINE_H__
 
 #include <assert.h>
-#include "util/Log.h"
+#include "utils/Log.h"
 
 #define CC_DLL
 

@@ -7,7 +7,7 @@
 #include "../../napi/NAPIFun.cpp"
 
 #include <assert.h>
-#include "util/Log.h"
+#include "utils/Log.h"
 
 using namespace laya;
 
