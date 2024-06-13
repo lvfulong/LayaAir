@@ -610,8 +610,8 @@ elseif(OHOS)
     	src/platform/OHOS/napi/modules/TouchesNapi.cpp
     	src/platform/OHOS/napi/modules/VideoPlayerNapi.cpp
 		src/downloadCache/JCOHOSFileSource.h
-		#src/Backend/src/OpenGLBackendLinuxEGLX11.h
-		#src/Backend/src/OpenGLBackendLinuxEGLX11.cpp
+		src/Backend/src/OpenGLBackendOHOSEGL.h
+		src/Backend/src/OpenGLBackendOHOSEGL.cpp
 		src/Bindings/Video/JSVideo_OHOSImpl.cpp
 		src/2D/CanvasRenderingContext2DOHOS.h
 		src/2D/CanvasRenderingContext2DOHOS.cpp
@@ -621,8 +621,6 @@ elseif(OHOS)
 		src/resource/Audio/JCAudioWavplayer-openharmony.cpp
 		src/Audio/ohos/JCAudioMp3Player.cpp
 		src/Audio/ohos/JCAudioMp3Player.h
-		#src/Exports.cpp
-		#src/Application/App.cpp
 	)
 elseif(LINUX)
 	list(APPEND PLATFORM_HEADER_DIR
@@ -853,7 +851,6 @@ elseif(OHOS)
     	libohaudio.so
 		libavplayer.so
 		v8_monolith
-		thirdParty
 		utils
 		binder
 		curl
@@ -862,10 +859,13 @@ elseif(OHOS)
 		png
 		BulletDynamics
 		BulletCollision
+		LinearMath
 		vorbisfile
 		vorbis
 		ogg
 		aki_jsbind
+		ssl
+		crypto
 		) 
 elseif(LINUX)
 	find_package(X11 REQUIRED)

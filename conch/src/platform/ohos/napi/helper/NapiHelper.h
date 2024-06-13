@@ -1,7 +1,7 @@
 #include "JCConch.h"
 #include <hilog/log.h>
 
-using namespace laya;
+//using namespace laya;
 
 class NapiHelper{
 public:

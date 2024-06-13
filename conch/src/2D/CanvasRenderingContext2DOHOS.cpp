@@ -5,11 +5,13 @@
 #include <regex>
 #include <utils/JCCrypto.h>
 #include <utils/Log.h>
-extern HWND g_hWnd;
+#include <rawfile/raw_file_manager.h>
 
+extern NativeResourceManager *g_pAssetManager;
 namespace laya
 {
 static int s_count = 0;
+OH_Drawing_FontCollection *CanvasRenderingContext2DOHOS::m_fontCollection = nullptr;
 CanvasRenderingContext2DOHOS::CanvasRenderingContext2DOHOS(int width, int height)
     : CanvasRenderingContext2D(width, height)
 {
@@ -32,13 +34,16 @@ CanvasRenderingContext2DOHOS::CanvasRenderingContext2DOHOS(int width, int height
     OH_Drawing_CanvasClear(m_canvas, OH_Drawing_ColorSetArgb(0xFF, 0xFF, 0xFF, 0xFF));
 
     m_fontTypography = OH_Drawing_CreateTypographyStyle();
-    m_fontTextStyle= OH_Drawing_CreateTextStyle();
-    m_fontCollection= OH_Drawing_CreateFontCollection();
+    m_fontTextStyle = OH_Drawing_CreateTextStyle();
+    if (CanvasRenderingContext2DOHOS::m_fontCollection == nullptr)
+    {
+        CanvasRenderingContext2DOHOS::m_fontCollection = OH_Drawing_CreateFontCollection();
+    }
 
     OH_Drawing_SetTypographyTextAlign(m_fontTypography, TEXT_ALIGN_LEFT);
     OH_Drawing_SetTextStyleBaseLine(m_fontTextStyle, TEXT_BASELINE_ALPHABETIC);
 
-    m_typographyCreate=OH_Drawing_CreateTypographyHandler(m_fontTypography, m_fontCollection);
+    m_typographyCreate = OH_Drawing_CreateTypographyHandler(m_fontTypography, CanvasRenderingContext2DOHOS::m_fontCollection);
 
     m_bitmapData.m_nWidth = width;
     m_bitmapData.m_nHeight = height;
@@ -61,29 +66,6 @@ void CanvasRenderingContext2DOHOS::setLineWidth(double lineWidth)
 }
 void CanvasRenderingContext2DOHOS::setLineJoin(const char *lineJoin)
 {
-}
-wchar_t *utf8ToUtf16(const std::string &str, int *pRetLen /* = nullptr*/)
-{
-
-    wchar_t *pwszBuffer = nullptr;
-    do
-    {
-        if (str.empty())
-        {
-            break;
-        }
-        int nLen = static_cast<int>(str.size());
-        int nBufLen = nLen + 1;
-        pwszBuffer = new wchar_t[nBufLen];
-        assert(pwszBuffer != nullptr);
-        memset(pwszBuffer, 0, sizeof(wchar_t) * nBufLen);
-        int actuallyLen = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), nLen, pwszBuffer, nBufLen);
-        if (pRetLen != nullptr)
-        {
-            *pRetLen = actuallyLen;
-        }
-    } while (false);
-    return pwszBuffer;
 }
 void CanvasRenderingContext2DOHOS::fillText(const std::string &text, double x, double y, std::optional<double> maxWidth)
 {
@@ -141,7 +123,7 @@ TextMetrics CanvasRenderingContext2DOHOS::measureText(const std::string &text)
     metrics.m_height = OH_Drawing_TypographyGetHeight(typography);
     return metrics;
 }
-void CanvasRenderingContext2DWin::clearRect(double x, double y, double width, double height)
+void CanvasRenderingContext2DOHOS::clearRect(double x, double y, double width, double height)
 {
     if (m_width <= 0 || m_height <= 0)
     {
@@ -150,14 +132,14 @@ void CanvasRenderingContext2DWin::clearRect(double x, double y, double width, do
     
     //m_gdiGraphics->Clear(Gdiplus::Color(0, 0, 0, 0));
 }
-void CanvasRenderingContext2DWin::save()
+void CanvasRenderingContext2DOHOS::save()
 {
     if (m_width <= 0 || m_height <= 0)
     {
         return;
     }
 }
-void CanvasRenderingContext2DWin::restore()
+void CanvasRenderingContext2DOHOS::restore()
 {
     if (m_width <= 0 || m_height <= 0)
     {
@@ -165,7 +147,7 @@ void CanvasRenderingContext2DWin::restore()
     }
 }
 
-ImageData CanvasRenderingContext2DWin::getImageData(double x, double y, double width, double height)
+ImageData CanvasRenderingContext2DOHOS::getImageData(double x, double y, double width, double height)
 {
     int clampedX = std::clamp(x, 0.0, static_cast<double>(m_width));
     int clampedY = std::clamp(y, 0.0, static_cast<double>(m_height));
@@ -179,58 +161,7 @@ ImageData CanvasRenderingContext2DWin::getImageData(double x, double y, double w
         data.m_height = clampedH;
         data.m_data.resize(clampedW * clampedH * 4);
         unsigned char *glImageData = &data.m_data[0];
-        //ZeroMemory(glImageData, clampedW * clampedH * 4);
-
-        Gdiplus::Rect rect(clampedX, clampedY, clampedW, clampedH);
-
-        Status status;
-        Gdiplus::BitmapData  lockedbmp;
-        status = m_gdiBitmap->LockBits(&rect, Gdiplus::ImageLockModeRead, PixelFormat32bppARGB,&lockedbmp);
-        if (status != Ok) {
-            //TODO
-        }
-
-        byte* pixels = static_cast<byte*>(lockedbmp.Scan0);
-        UINT rowBytes = lockedbmp.Stride; // 扫描线宽度，可能会包含填充字节
-
-        for (int y = 0; y < rect.Height; ++y) {
-            byte* row = pixels + (y * rowBytes);
-            for (int x = 0; x < rect.Width; ++x) {
-                // Pixels stored in BGRA order
-                BYTE* pixel = row + (x * 4);
-                float alpha = pixel[3] / 255.0;
-
-                glImageData[(x + y * clampedW) * 4 + 0]/*r*/ = pixel[2]/*r*/ * alpha;
-                glImageData[(x + y * clampedW) * 4 + 1]/*g*/ = pixel[1] * alpha;
-                glImageData[(x + y * clampedW) * 4 + 2]/*b*/ = pixel[0] * alpha;
-                glImageData[(x + y * clampedW) * 4 + 3] = pixel[3]; // a
-
-                //if (pixel[3] > 0 || pixel[2] > 0 || pixel[1] > 0 || pixel[0] > 0)
-                //    printf("+");
-                //else 
-                //    printf("-");
-            }
-            //printf("\n");
-        }
-
-        //for (auto y = 0; y < clampedH; y++)
-        //{
-        //    for (auto x = 0; x < clampedW; x++)
-        //    {
-        //        Gdiplus::Color color;
-        //        m_gdiBitmap->GetPixel(x, y, &color); // m_gdiBitmap->GetPixel(x, clampedH - y - 1, &color);
-        //        BYTE a = color.GetA();
-        //        if (a < 255 && a>0) {
-        //            int a = 0;
-        //        }
-        //        glImageData[(x + y * clampedW) * 4 + 0] = color.GetA();
-        //        glImageData[(x + y * clampedW) * 4 + 1] = color.GetA();
-        //        glImageData[(x + y * clampedW) * 4 + 2] = color.GetA();
-        //        glImageData[(x + y * clampedW) * 4 + 3] = color.GetA();
-        //    }
-        //}
-        m_gdiBitmap->UnlockBits(&lockedbmp);
-
+        //todo
         return data;
     }
     else
@@ -241,8 +172,10 @@ ImageData CanvasRenderingContext2DWin::getImageData(double x, double y, double w
 }
 const BitmapData &CanvasRenderingContext2DOHOS::getBitmapData() const
 {
-    void *bitmapAddr = OH_Drawing_BitmapGetPixels(m_bitmap);
-    memcpy(m_bitmapData.m_bitmapData.m_pImageData, bitmapAddr, _bufferSize);
+    /*void *bitmapAddr = OH_Drawing_BitmapGetPixels(m_bitmap);
+    memcpy(m_bitmapData.m_pImageData, bitmapAddr, _bufferSize);
+    return m_bitmapData;*/
+
     return m_bitmapData;
     // return getImageData(0, 0, m_width, m_height);
 }
@@ -378,10 +311,9 @@ void CanvasRenderingContext2DOHOS::setFont(const char *font)
 }
 bool CanvasRenderingContext2DOHOS::registerFontFromPath(const std::string &fontName, const std::string &path)
 {
-
-    NativeResourceManager *mNativeResMgr;// 传入
-      // 获取rawfile指针对象
-    RawFile *rawFile = OH_ResourceManager_OpenRawFile(mNativeResMgr, fontPath);
+    //todo
+    /*// 获取rawfile指针对象
+    RawFile *rawFile = OH_ResourceManager_OpenRawFile(g_pAssetManager, path.c_str());
     if (rawFile != nullptr) {
         //OH_LOG_Print(LOG_APP, LOG_ERROR, GLOBAL_RESMGR, tag, "OH_ResourceManager_OpenRawFile success");
     }
@@ -392,11 +324,9 @@ bool CanvasRenderingContext2DOHOS::registerFontFromPath(const std::string &fontN
     // 一次性读取rawfile全部内容
     int res = OH_ResourceManager_ReadRawFile(rawFile, outdata, len);
 
-    OH_Drawing_RegisterFontBuffer(m_fontCollection, fontFamily, outdata, len);
+    OH_Drawing_RegisterFontBuffer(CanvasRenderingContext2DOHOS::m_fontCollection, fontName, outdata, len);
     // 关闭打开的指针对象
-    OH_ResourceManager_CloseRawFile(rawFile);
-
-}
+    OH_ResourceManager_CloseRawFile(rawFile);*/
     return true;
 }
 

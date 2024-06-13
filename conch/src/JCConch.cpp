@@ -304,7 +304,7 @@ namespace laya
         m_semaphore.setDataNum(0);
         m_semaphoreFramePacer.stop();
         postToJS([]() {
-#ifdef __ANDROID__
+#ifdef __ANDROID__||OHOS
             if( laya::JCAudioManager::GetInstance()->getMp3Mute() == false && laya::JCAudioManager::GetInstance()->getMp3Stopped() == false)
             {
                 JCAudioManager::GetInstance()->pauseMp3();
@@ -326,7 +326,7 @@ namespace laya
         m_semaphore.setDataNum(1);
         m_semaphoreFramePacer.resume();
         postToJS([]() {
-#ifdef __ANDROID__
+#ifdef __ANDROID__||OHOS
             //继续声音
             if( laya::JCAudioManager::GetInstance()->getMp3Mute() == false && laya::JCAudioManager::GetInstance()->getMp3Stopped() == false)
             {

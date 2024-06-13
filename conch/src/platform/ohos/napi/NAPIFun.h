@@ -4,16 +4,15 @@
 #include "JCConch.h"
 #include "Audio/JCAudioManager.h"
 #include "utils/Log.h"
-#include "aki/jsbind.h"
 #include "JCSystemConfig.h"
 #include "utils/JCZipFile.h"
 #include "JCScriptRuntime.h"
 #include <rawfile/raw_file_manager.h>
 #include "platform/ohos/napi/plugin_manager.h"
 #include "downloadCache/JCOHOSFileSource.h"
-#include "../common/misc/JCLayaThreadPool.h"
-
-using namespace laya;
+#include <utils/thread/JCLayaThreadPool.h>
+#include <aki/jsbind.h>
+//using namespace laya;
 
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
@@ -42,7 +41,8 @@ public:
     static void ConchNAPI_OnAppDestroy();
     static void ConchNAPI_OnAppPause();
     static void ConchNAPI_OnAppResume();
-    static void ConchNAPI_OnGLReady(int width,int height);
+    static void ConchNAPI_OnSurfaceCreated(void* window);
+    static void ConchNAPI_OnSurfaceResize(int width,int height);
     static void ConchNAPI_OnAppStart();
     static void ConchNAPI_onDrawFrame();
     static void ConchNAPI_onVSyncCallback(long VSynctm);
@@ -56,10 +56,10 @@ public:
     static void ConchNAPI_handleDeviceOrientationEvent(float ra,float rb,float rg);
 
 private:
-    bool g_bEngineInited =false;
-    std::mutex g_kReadyLock;
-    laya::JCConch *g_pConch= NULL;
-    bool g_bInBKGround = false;
+    //bool g_bEngineInited =false;
+    //std::mutex g_kReadyLock;
+    //laya::JCConch *g_pConch= NULL;
+    //bool g_bInBKGround = false;
     int64_t g_nInitTime = 0;
 
 private:

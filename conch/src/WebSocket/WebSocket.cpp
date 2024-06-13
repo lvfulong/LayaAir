@@ -22,6 +22,8 @@
 #include <downloadCache/JCAndroidFileSource.h>
 #elif __APPLE__
 #include <downloadCache/JCIosFileSource.h>
+#elif OHOS
+#include <downloadCache/JCOHOSFileSource.h>
 #endif
 #include <utils/Log.h>
 #ifdef WIN32
@@ -791,7 +793,7 @@ lws_vhost* WebSocket::createVhost(struct lws_protocols* protocols, int& sslConne
     {
         if (isCAFileExist)
         {
-#ifdef __ANDROID__
+#ifdef __ANDROID__ || OHOS
             // if ca file is in the apk, try to extract it to writable path
             std::string writablePath = gRedistPath;
             static std::string newCaFilePath = writablePath + caFileName;

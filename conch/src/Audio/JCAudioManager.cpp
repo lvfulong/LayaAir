@@ -289,7 +289,7 @@ namespace laya
     {
 	    return m_pWavPlayer->FindWaveInfo( p_sUrl );
     }
-#if !defined(__LINUX__) || !defined(OHOS)
+#if !defined(__LINUX__) && !defined(OHOS)//todo
     OpenALSourceInfo*  JCAudioManager::playWavMp3(JCAudioInterface* p_pAudio, const std::string& p_sUrl, const char* p_sFilePath, float currentTime)
 	{
 		return m_pWavPlayer->playAudioMp3(p_pAudio, p_sUrl, p_sFilePath, currentTime);

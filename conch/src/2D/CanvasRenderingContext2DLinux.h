@@ -30,7 +30,7 @@ class CanvasRenderingContext2DLinux : public CanvasRenderingContext2D
     static bool registerFontFromPath(const std::string &fontName, const std::string &path);
 
   protected:
-    void getTextPosition(const std::string &text, double x, double y, double &outX, double &outY);
+    void getTextPosition(const std::string &text, double x, double y, double &outX, double &outY) override;
     CanvasRenderingContext2DLinuxImpl *m_impl = {nullptr};
     BitmapData m_bitmapData;
 };

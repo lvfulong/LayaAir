@@ -97,7 +97,7 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_configSetURL(JNIEnv * 
 {
     char* pstrUrl =(char*) env->GetStringUTFChars( p_strUrl, NULL ); 
 	g_kSystemConfig.m_strStartURL = pstrUrl;
-	LOGI("JNI seturl：%s", pstrUrl);
+	LOGI("JNI seturl: %s", pstrUrl);
 	env->ReleaseStringUTFChars(p_strUrl, pstrUrl);
 }
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_configSetIsPlug(JNIEnv * env, jobject obj, jboolean p_bIsPlug)
@@ -131,7 +131,7 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_InitDLib(JNIEnv * env,
 	CanvasRenderingContext2DAndroid::addStaticMethod(env, "layaair/game/browser/LayaCanvasRenderingContext2D");
 
     //这个不要放到开始，以影响面上面的异常处理
-    g_nInitTime=tmGetCurms();
+    g_nInitTime = tmGetCurms();
     char* pAssetRootPath =(char*) env->GetStringUTFChars( p_strAssetRootPath, NULL ); 
 	char* pCachePath = (char*)env->GetStringUTFChars( p_strCachePath, NULL);
 	char* pAPKExpansionMain =(char*) env->GetStringUTFChars( p_strAPKExpansionMainPath, NULL ); 
@@ -459,7 +459,7 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_setLocalizable(JNIEnv 
 {
 	LOGI("JNI setLocalizable tid=%x", std::this_thread::get_id());
     JCSystemConfig::s_bLocalizable = p_bIsLocalPackage;
-    LOGI("setLocalizable：%d", p_bIsLocalPackage);
+    LOGI("setLocalizable: %d", p_bIsLocalPackage);
 }
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_callConchJSFunction(JNIEnv* env, jobject obj, jstring p_sFunctionName,jstring p_sJsonParam,jstring p_sCallbackFunction)
 {

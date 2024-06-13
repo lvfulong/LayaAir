@@ -21,21 +21,21 @@ class JSOHOSEditBox
         JSOHOSEditBox();
         ~JSOHOSEditBox();
     public:
-        int set_Left(int p_nLeft);
+        void set_Left(int p_nLeft);
         int get_Left();
-        int set_Top(int p_nTop);
+        void set_Top(int p_nTop);
         int get_Top();
-        int set_Width(int p_nWidth);
+        void set_Width(int p_nWidth);
         int get_Width();
-        int set_Height(int p_nHeight);
+        void set_Height(int p_nHeight);
         int get_Height();
-        float set_Opacity(float p_Opacity);
+        void set_Opacity(float p_Opacity);
         float get_Opacity();
-        const char* set_Value(const char* p_sValue);
+        void set_Value(const char* p_sValue);
         const char* get_Value();
         void set_Style(const char* p_sStyle);
         const char* get_Style();
-        bool set_Visible(bool p_bVisible);
+        void set_Visible(bool p_bVisible);
         bool get_Visible();
     public:
         void setColor(const char* p_sColor);

@@ -1,5 +1,5 @@
 #include "NapiHelper.h"
-#include "aki/jsbind.h"
+#include <aki/jsbind.h>
 
 using namespace laya;
 
@@ -7,8 +7,9 @@ NapiHelper NapiHelper::help_;
 
 std::string NapiHelper::getDeviceInfo()
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getDeviceInfo, this));
-    return deviceInfo;
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getDeviceInfo, this));
+    //return deviceInfo;
+    return "";
 }
 
 std::string NapiHelper::__getDeviceInfo()
@@ -22,8 +23,9 @@ std::string NapiHelper::__getDeviceInfo()
 
 int NapiHelper::getNetworkType()
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getNetworkType, this));
-    return networkType;
+   // JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getNetworkType, this));
+   // return networkType;
+   return 0;
 }
 
 int NapiHelper::__getNetworkType()
@@ -37,8 +39,8 @@ int NapiHelper::__getNetworkType()
 
 void NapiHelper::playBackgroundMusic(const char *p_sUrl, int p_nTimes, float nCurrentTime)
 {
-    JCConch::s_pConchRender->setInterruptFunc(
-        std::bind(&NapiHelper::__playBackgroundMusic, this, p_sUrl, p_nTimes, nCurrentTime));
+    //JCConch::s_pConchRender->setInterruptFunc(
+    //    std::bind(&NapiHelper::__playBackgroundMusic, this, p_sUrl, p_nTimes, nCurrentTime));
 }
 
 void NapiHelper::__playBackgroundMusic(const char *p_sUrl, int p_nTimes, float nCurrentTime)
@@ -51,7 +53,7 @@ void NapiHelper::__playBackgroundMusic(const char *p_sUrl, int p_nTimes, float n
 
 void NapiHelper::pauseBackgroundMusic()
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__pauseBackgroundMusic, this));
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__pauseBackgroundMusic, this));
 }
 
 void NapiHelper::__pauseBackgroundMusic()
@@ -64,7 +66,7 @@ void NapiHelper::__pauseBackgroundMusic()
 
 void NapiHelper::stopBackgroundMusic()
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__stopBackgroundMusic, this));
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__stopBackgroundMusic, this));
 }
 
 void NapiHelper::__stopBackgroundMusic()
@@ -77,7 +79,7 @@ void NapiHelper::__stopBackgroundMusic()
 
 void NapiHelper::resumeBackgroundMusic()
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__resumeBackgroundMusic, this));
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__resumeBackgroundMusic, this));
 }
 
 void NapiHelper::__resumeBackgroundMusic()
@@ -90,7 +92,7 @@ void NapiHelper::__resumeBackgroundMusic()
 
 void NapiHelper::setBackgroundMusicVolume(float p_nVolume)
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__setBackgroundMusicVolume, this, p_nVolume));
+   // JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__setBackgroundMusicVolume, this, p_nVolume));
 }
 
 void NapiHelper::__setBackgroundMusicVolume(float p_nVolume)
@@ -103,7 +105,7 @@ void NapiHelper::__setBackgroundMusicVolume(float p_nVolume)
 
 void NapiHelper::setCurrentTime(double nCurrentTime)
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__setCurrentTime, this, nCurrentTime));
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__setCurrentTime, this, nCurrentTime));
 }
 
 void NapiHelper::__setCurrentTime(double nCurrentTime)
@@ -116,8 +118,9 @@ void NapiHelper::__setCurrentTime(double nCurrentTime)
 
 double NapiHelper::getCurrentTime()
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getCurrentTime, this));
-    return currentTime;
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getCurrentTime, this));
+    //return currentTime;
+    return 0;
 }
 
 double NapiHelper::__getCurrentTime()
@@ -132,8 +135,9 @@ double NapiHelper::__getCurrentTime()
 
 double NapiHelper::getDuration()
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getDuration, this));
-    return duration;
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getDuration, this));
+    //return duration;
+    return 0;
 }
 
 double NapiHelper::__getDuration()
@@ -148,7 +152,7 @@ double NapiHelper::__getDuration()
 
 void NapiHelper::startVibration(float duration)
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__startVibration, this, duration));
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__startVibration, this, duration));
 }
 
 void NapiHelper::__startVibration(float duration)
@@ -161,8 +165,9 @@ void NapiHelper::__startVibration(float duration)
 
 std::string NapiHelper::getAppVersion()
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getAppVersion, this));
-    return appVersion;
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getAppVersion, this));
+    //return appVersion;
+    return "";
 }
 
 std::string NapiHelper::__getAppVersion()
@@ -176,8 +181,9 @@ std::string NapiHelper::__getAppVersion()
 
 std::string NapiHelper::getAppLocalVersion()
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getAppLocalVersion, this));
-    return appLocalVersion;
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getAppLocalVersion, this));
+    //return appLocalVersion;
+    return "";
 }
 
 std::string NapiHelper::__getAppLocalVersion()
@@ -191,7 +197,7 @@ std::string NapiHelper::__getAppLocalVersion()
 
 void NapiHelper::createVideoPlayer(int m_tag)
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__createVideoPlayer, this, m_tag));
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__createVideoPlayer, this, m_tag));
 }
 
 void NapiHelper::__createVideoPlayer(int m_tag)
@@ -204,7 +210,7 @@ void NapiHelper::__createVideoPlayer(int m_tag)
 
 void NapiHelper::removeVideoPlayer(int m_tag)
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__removeVideoPlayer, this, m_tag));
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__removeVideoPlayer, this, m_tag));
 }
 
 void NapiHelper::__removeVideoPlayer(int m_tag)
@@ -217,7 +223,7 @@ void NapiHelper::__removeVideoPlayer(int m_tag)
 
 void NapiHelper::setURL(int m_tag, std::string path, int isurl)
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__setURL, this, m_tag, path, isurl));
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__setURL, this, m_tag, path, isurl));
 }
 
 void NapiHelper::__setURL(int m_tag, std::string path, int isurl)
@@ -230,7 +236,7 @@ void NapiHelper::__setURL(int m_tag, std::string path, int isurl)
 
 void NapiHelper::play(int m_tag)
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__play, this, m_tag));
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__play, this, m_tag));
 }
 void NapiHelper::__play(int m_tag)
 {
@@ -242,7 +248,7 @@ void NapiHelper::__play(int m_tag)
 
 void NapiHelper::pause(int m_tag)
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__pause, this, m_tag));
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__pause, this, m_tag));
 }
 void NapiHelper::__pause(int m_tag)
 {
@@ -254,7 +260,7 @@ void NapiHelper::__pause(int m_tag)
 
 void NapiHelper::stop(int m_tag)
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__stop, this, m_tag));
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__stop, this, m_tag));
 }
 void NapiHelper::__stop(int m_tag)
 {
@@ -266,7 +272,7 @@ void NapiHelper::__stop(int m_tag)
 
 void NapiHelper::setLooping(int m_tag, bool value)
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__setLooping, this, m_tag, value));
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__setLooping, this, m_tag, value));
 }
 void NapiHelper::__setLooping(int m_tag, bool value)
 {
@@ -278,7 +284,7 @@ void NapiHelper::__setLooping(int m_tag, bool value)
 
 void NapiHelper::setAutoplay(int m_tag, bool value)
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__setAutoplay, this, m_tag, value));
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__setAutoplay, this, m_tag, value));
 }
 void NapiHelper::__setAutoplay(int m_tag, bool value)
 {
@@ -290,7 +296,7 @@ void NapiHelper::__setAutoplay(int m_tag, bool value)
 
 void NapiHelper::setX(int m_tag, double value)
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__setX, this, m_tag, value));
+   //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__setX, this, m_tag, value));
 }
 void NapiHelper::__setX(int m_tag, double value)
 {
@@ -302,7 +308,7 @@ void NapiHelper::__setX(int m_tag, double value)
 
 void NapiHelper::setY(int m_tag, double value)
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__setY, this, m_tag, value));
+   // JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__setY, this, m_tag, value));
 }
 
 void NapiHelper::__setY(int m_tag, double value)
@@ -315,7 +321,7 @@ void NapiHelper::__setY(int m_tag, double value)
 
 void NapiHelper::setWidth(int m_tag, double value)
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__setWidth, this, m_tag, value));
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__setWidth, this, m_tag, value));
 }
 
 void NapiHelper::__setWidth(int m_tag, double value)
@@ -328,7 +334,7 @@ void NapiHelper::__setWidth(int m_tag, double value)
 
 void NapiHelper::setHeight(int m_tag, double value)
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__setHeight, this, m_tag, value));
+   //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__setHeight, this, m_tag, value));
 }
 
 void NapiHelper::__setHeight(int m_tag, double value)
@@ -341,7 +347,7 @@ void NapiHelper::__setHeight(int m_tag, double value)
 
 void NapiHelper::setVideoCurrentTime(int m_tag, double value)
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__setVideoCurrentTime, this, m_tag, value));
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__setVideoCurrentTime, this, m_tag, value));
 }
 
 void NapiHelper::__setVideoCurrentTime(int m_tag, double value)
@@ -354,7 +360,7 @@ void NapiHelper::__setVideoCurrentTime(int m_tag, double value)
 
 void NapiHelper::setVolume(int m_tag, double value)
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__setVolume, this, m_tag, value));
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__setVolume, this, m_tag, value));
 }
 
 void NapiHelper::__setVolume(int m_tag, double value)
@@ -367,8 +373,9 @@ void NapiHelper::__setVolume(int m_tag, double value)
 
 int NapiHelper::getVolume(int m_tag)
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getVolume, this, m_tag));
-    return volume;
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getVolume, this, m_tag));
+    //return volume;
+    return 0;
 }
 
 int NapiHelper::__getVolume(int m_tag)
@@ -382,7 +389,7 @@ int NapiHelper::__getVolume(int m_tag)
 
 void NapiHelper::showDialog(const char *p_sBuffer)
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__showDialog, this, p_sBuffer));
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__showDialog, this, p_sBuffer));
 }
 
 void NapiHelper::__showDialog(const char *p_sBuffer)
@@ -396,7 +403,7 @@ void NapiHelper::__showDialog(const char *p_sBuffer)
 
 void NapiHelper::setKeepScreenOn(bool value)
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__setKeepScreenOn, this, value));
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__setKeepScreenOn, this, value));
 }
 
 void NapiHelper::__setKeepScreenOn(bool value)
@@ -409,7 +416,7 @@ void NapiHelper::__setKeepScreenOn(bool value)
 
 void NapiHelper::setPreferredOrientation(int orientation)
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__setPreferredOrientation, this, orientation));
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__setPreferredOrientation, this, orientation));
 }
 
 void NapiHelper::__setPreferredOrientation(int orientation)
@@ -422,8 +429,9 @@ void NapiHelper::__setPreferredOrientation(int orientation)
 
 float NapiHelper::getScreenInch()
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getScreenInch, this));
-    return screenInch;
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getScreenInch, this));
+    //return screenInch;
+    return 0;
 }
 
 float NapiHelper::__getScreenInch()
@@ -441,8 +449,9 @@ float NapiHelper::__getScreenInch()
 
 int NapiHelper::getAvalidMem()
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getAvalidMem, this));
-    return avalidMem;
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getAvalidMem, this));
+    //return avalidMem;
+    return 0;
 }
 
 int NapiHelper::__getAvalidMem()
@@ -456,8 +465,9 @@ int NapiHelper::__getAvalidMem()
 
 int NapiHelper::getUsedMem()
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getUsedMem, this));
-    return usedMem;
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getUsedMem, this));
+    //return usedMem;
+    return 0;
 }
 
 int NapiHelper::__getUsedMem()
@@ -471,7 +481,7 @@ int NapiHelper::__getUsedMem()
 
 void NapiHelper::exitGame()
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__exitGame, this));
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__exitGame, this));
 }
 
 void NapiHelper::__exitGame()
@@ -484,8 +494,9 @@ void NapiHelper::__exitGame()
 
 std::string NapiHelper::postMessageToUIThread(std::string eventName, std::string data)
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__postMessageToUIThread, this, eventName, data));
-    return eventResult;
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__postMessageToUIThread, this, eventName, data));
+    //return eventResult;
+    return "";
 }
 
 std::string NapiHelper::__postMessageToUIThread(std::string eventName, std::string data)
@@ -499,8 +510,9 @@ std::string NapiHelper::__postMessageToUIThread(std::string eventName, std::stri
 
 std::string NapiHelper::postSyncMessageToUIThread(std::string eventName, std::string data)
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__postSyncMessageToUIThread, this, eventName, data));
-    return syncEventResult;
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__postSyncMessageToUIThread, this, eventName, data));
+    //return syncEventResult;
+    return "";
 }
 
 std::string NapiHelper::__postSyncMessageToUIThread(std::string eventName, std::string data)
@@ -520,7 +532,7 @@ std::string NapiHelper::__postSyncMessageToUIThread(std::string eventName, std::
 
 void NapiHelper::enableAccelerometer()
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__enableAccelerometer, this));
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__enableAccelerometer, this));
 }
 
 void NapiHelper::__enableAccelerometer()
@@ -533,7 +545,7 @@ void NapiHelper::__enableAccelerometer()
 
 void NapiHelper::disableAccelerometer()
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__disableAccelerometer, this));
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__disableAccelerometer, this));
 }
 
 void NapiHelper::__disableAccelerometer()
@@ -546,7 +558,7 @@ void NapiHelper::__disableAccelerometer()
 
 void NapiHelper::enableOrientation()
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__enableOrientation, this));
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__enableOrientation, this));
 }
 
 void NapiHelper::__enableOrientation()
@@ -559,7 +571,7 @@ void NapiHelper::__enableOrientation()
 
 void NapiHelper::disableOrientation()
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__disableOrientation, this));
+    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__disableOrientation, this));
 }
 
 void NapiHelper::__disableOrientation()

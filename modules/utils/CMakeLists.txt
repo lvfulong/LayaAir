@@ -72,7 +72,7 @@ if(MSVC)
         egl
         gles
     )
-elseif(LINUX)
+elseif(LINUX AND NOT OHOS)
     list(APPEND DEPS_GL
         glad
     )

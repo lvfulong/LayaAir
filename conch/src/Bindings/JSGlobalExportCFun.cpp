@@ -35,6 +35,10 @@
 #ifdef __ANDROID__
     #include "JSAndroidEditBox.h"
 	#include "CToJavaBridge.h"
+#elif OHOS
+    #include "JSOHOSEditBox.h"
+    #include "aki/jsbind.h"
+    #include "platform/ohos/napi/helper/NapiHelper.h"
 #elif WIN32
 	#include <Windows.h>
     #include "JSWindowEditBox.h"
@@ -58,7 +62,7 @@
 #include "Video/JSVideo.h"
 #include <LayaGL/JCLayaGLDispatch.h>
 #include "Bullet/LayaBulletExport.h"
-#if !defined(__LINUX__) && !defined(WIN32)
+#if !defined(__LINUX__) && !defined(WIN32) && !defined(OHOS)//todo
 #include "PhysX/LayaPhysXExport.h"
 #endif
 #include "JSArrayBufferRef.h"
@@ -87,35 +91,38 @@ extern bool g_bGLCanvasSizeChanged;
 	int g_bEnableTouch = true;
 #elif __APPLE__
 	int g_bEnableTouch = true;
+#elif OHOS
+	int g_bEnableTouch = true;
 #elif __LINUX__
 	int g_bEnableTouch = false;
 #endif
  std::string g_sExePath = "";
 
 
-/** @brief 这个函数是为了实现comman库中的alert函数
- * 不定长的函数
-*/
-void alert(const char* fmt, ...)
-{
-    char buf[1024];
-    char* pBuf = NULL;
-    va_list args;
-    va_start(args, fmt);
-    int len = vsprintf(buf, fmt, args);
-    if (len < 0) {
-        pBuf = new char[4096];
-        len = vsprintf(pBuf, fmt, args);
+    /** @brief 这个函数是为了实现comman库中的alert函数
+    * 不定长的函数
+    */
+    void alert(const char* fmt, ...)
+    {   
+        char buf[1024];
+        char* pBuf = NULL;
+        va_list args;
+        va_start(args, fmt);
+        int len = vsprintf(buf, fmt, args);
+        if (len < 0) {
+            pBuf = new char[4096];
+            len = vsprintf(pBuf, fmt, args);
+        }
+        va_end(args);
+        laya::LayaAlert(pBuf ? pBuf : buf);
+        if (pBuf) 
+        {
+            delete[] pBuf;
+        }
     }
-    va_end(args);
-    laya::LayaAlert(pBuf ? pBuf : buf);
-    if (pBuf) 
-    {
-        delete[] pBuf;
-    }
-}
 namespace laya 
 {
+
     //下载大文件，zip用的
     struct JSFuncWrapper
     {
@@ -270,6 +277,8 @@ namespace laya
         std::string strBuffer = p_sBuffer;
         CToJavaBridge::JavaRet kRet;
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "alert", strBuffer.c_str(), kRet);
+#elif OHOS
+        NapiHelper::GetInstance()->showDialog(p_sBuffer);
 #elif __APPLE__
         CToObjectCAlert(p_sBuffer);
 #endif
@@ -495,18 +504,16 @@ namespace laya
         JSPromiseRejectionEvent::exportJS(context);
         JSImageBitmap::exportJS(context);
 #ifdef WIN32
-
         JSWindowEditBox::exportJS(context);
 #elif __LINUX__
         JSLinuxEditBox::exportJS(context);
 #elif __ANDROID__
         JSAndroidEditBox::exportJS(context);
+#elif OHOS
+        JSOHOSEditBox::exportJS(context);
 #elif __APPLE__
-
         JSIOSEditBox::exportJS(context);
 #endif
-        //JSTextCanvas
-;
         //JSTextBitmapInfo::exportJS(context);
 		JSStat::exportJS(context);
         //JSTextMemoryCanvas::getInstance()->exportJS(context);
@@ -568,7 +575,7 @@ namespace laya
         context.function("atob", &atob);
         context.function("_createImageBitmap", &createImageBitmap);
         JSLayaConchBullet::exportJS(context);
- #if !defined(__LINUX__) && !defined(WIN32)
+ #if !defined(__LINUX__) && !defined(WIN32) && !defined(OHOS)//TODO
         JSLayaConchPhysX::exportJS(context);
 #endif
 	}

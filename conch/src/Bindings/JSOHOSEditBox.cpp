@@ -1,8 +1,10 @@
 #include "JSOHOSEditBox.h"
-#include "aki/jsbind.h"
-#include "../../JCScriptRuntime.h"
+#include <aki/jsbind.h>
+#include <binder/JSInterface.h>
 #include "utils/Log.h"
 #include "utils/JCColor.h"
+#include <JCConch.h>
+#include "../../JCScriptRuntime.h"
 
 namespace laya{
     static int curIndex = 0;
@@ -31,57 +33,59 @@ namespace laya{
         aki::JSBind::GetJSFunction("EditBox.remove")->Invoke<void>(m_tag);
     }
     void JSOHOSEditBox::addEventListener(const char* p_sName, JSValueAsParam p_pFunction){
-        if(strcmp(p_sName,"input")==0){
-            m_pJSFunctionOnInput.set(0,this,p_pFunction);
-        } else if(strcmp(p_sName, "keydown")==0){
+        if(strcmp(p_sName,"input") == 0)
+        {
+            m_pJSFunctionOnInput.reset(p_pFunction);
+        } 
+        else if (strcmp(p_sName, "keydown") == 0) {
             //m_pJSFunctionOnKeydown = p_pFunction;
         }
     }
-    int JSOHOSEditBox::set_Left(int p_nLeft){
+    void JSOHOSEditBox::set_Left(int p_nLeft){
         m_nLeft = p_nLeft;
         aki::JSBind::GetJSFunction("EditBox.setPos")->Invoke<void>(m_tag, m_nLeft, m_nTop);
-        return m_nLeft;
+        //return m_nLeft;
     }
     int JSOHOSEditBox::get_Left(){
         return m_nLeft;
     }
-    int JSOHOSEditBox::set_Top(int p_nTop){
+    void JSOHOSEditBox::set_Top(int p_nTop){
         m_nTop = p_nTop;
         aki::JSBind::GetJSFunction("EditBox.setPos")->Invoke<void>(m_tag, m_nLeft, m_nTop);
-        return m_nTop;
+        //return m_nTop;
     }
     int JSOHOSEditBox::get_Top(){
         return m_nTop;
     }
-    int JSOHOSEditBox::set_Width(int p_nWidth){
+    void JSOHOSEditBox::set_Width(int p_nWidth){
         m_nWidth = p_nWidth;
         aki::JSBind::GetJSFunction("EditBox.setSize")->Invoke<void>(m_tag,(int)(m_nWidth * m_nScaleX), (int)(m_nHeight * m_nScaleY));
-        return m_nWidth;
+        //return m_nWidth;
     }
     int JSOHOSEditBox::get_Width(){
         return m_nWidth;
     }
-    int JSOHOSEditBox::set_Height(int p_nHeight){
+    void JSOHOSEditBox::set_Height(int p_nHeight){
         m_nHeight = p_nHeight;
         aki::JSBind::GetJSFunction("EditBox.setSize")->Invoke<void>(m_tag,(int)(m_nWidth * m_nScaleX), (int)(m_nHeight * m_nScaleY));
-        return m_nHeight;
+        //return m_nHeight;
     }
     int JSOHOSEditBox::get_Height(){
         return m_nHeight;
     }
-    float JSOHOSEditBox::set_Opacity(float p_Opacity){
+    void JSOHOSEditBox::set_Opacity(float p_Opacity){
         m_fOpacity = p_Opacity;
         aki::JSBind::GetJSFunction("EditBox.setOpacity")->Invoke<void>(m_tag, m_fOpacity);
-        return m_fOpacity;
+        //return m_fOpacity;
     }
     float JSOHOSEditBox::get_Opacity(){
         return m_fOpacity;
     }
-    const char* JSOHOSEditBox::set_Value(const char* p_sValue){
+    void JSOHOSEditBox::set_Value(const char* p_sValue){
         LOGI("JSOHOSEditBox::set_Value=%{public}s",p_sValue);
         m_sValue = (p_sValue!=NULL)?p_sValue:"";
         aki::JSBind::GetJSFunction("EditBox.setValue")->Invoke<void>(m_tag, m_sValue);
-        return m_sValue.c_str();
+        //return m_sValue.c_str();
     }
     const char* JSOHOSEditBox::get_Value(){
         m_sValue = aki::JSBind::GetJSFunction("EditBox.getValue")->Invoke<std::string>(m_tag);
@@ -97,10 +101,10 @@ namespace laya{
     const char* JSOHOSEditBox::get_Style(){
         return m_sStyle.c_str();
     }
-    bool JSOHOSEditBox::set_Visible(bool p_bVisible){
+    void JSOHOSEditBox::set_Visible(bool p_bVisible){
         m_bVisible = p_bVisible;
         aki::JSBind::GetJSFunction("EditBox.setVisible")->Invoke<void>(m_tag, m_bVisible);
-        return m_bVisible;
+        //return m_bVisible;
     }
     bool JSOHOSEditBox::get_Visible(){
         return m_bVisible;
@@ -204,12 +208,13 @@ namespace laya{
     void JSOHOSEditBox::onInputCallJSFunction(std::weak_ptr<int> callbackref){
         if(!callbackref.lock())
             return;
-        m_pJSFunctionOnInput.Call();
+        m_pJSFunctionOnInput.call<void>(toLocal(this));
     }
-    void JSOHOSEditBox::onInput(){
+    void JSOHOSEditBox::onInput()
+    {
         std::weak_ptr<int> cbref(m_CallbackRef);
-        std::function<void(void)> pFunction = std::bind(&JSOHOSEditBox::onInputCallJSFunction,this,cbref);
-        JCScriptRuntime::s_JSRT->m_pScriptThread->post(pFunction);
+        std::function<void(void)> pFunction = std::bind(&JSOHOSEditBox::onInputCallJSFunction, this, cbref);
+        JCConch::s_pScriptRuntime->m_pScriptThread->post(pFunction);
     }
     void JSOHOSEditBox::setMultiAble(bool p_bMultiAble){
         aki::JSBind::GetJSFunction("EditBox.setMultiAble")->Invoke<void>(m_tag, p_bMultiAble);

@@ -1,10 +1,11 @@
 #ifndef __JCOHOSFileSource_H__
 #define __JCOHOSFileSource_H__
-#include "JCFileSource.h"
+
+#include <utils/JCFileSource.h>
 #include <rawfile/raw_file_manager.h>
-#include "../../napi/common/native_common.h"
-#include "../util/Log.h"
-#include "../util/JCZipFile.h"
+#include "platform/ohos/napi/common/native_common.h"
+#include "utils/Log.h"
+#include "utils/JCZipFile.h"
 
 namespace laya{
     class JCOHOSFileSource : public JCFileSource{

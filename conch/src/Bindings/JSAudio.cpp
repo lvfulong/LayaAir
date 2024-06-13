@@ -418,7 +418,7 @@ namespace laya
 	    }
 	    else */if (m_nType == EXT_MP3/* && !m_bIsBackgroundMusic*/)
 	    {			
-#if !defined(__LINUX__) || !defined(OHOS)
+#if !defined(__LINUX__) && !defined(OHOS)//todo
 		    m_pOpenALInfo = JCAudioManager::GetInstance()->playWavMp3( this, m_sSrc, m_sLocalFileName.c_str(), m_nCurrentTime);
 #endif
 	    }

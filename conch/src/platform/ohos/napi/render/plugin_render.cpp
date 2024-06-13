@@ -202,7 +202,7 @@ void PluginRender::OnSurfaceCreated(OH_NativeXComponent* component, void* window
     int32_t ret = OH_NativeXComponent_GetXComponentSize(component, window, &width_, &height_);
     if (ret == OH_NATIVEXCOMPONENT_RESULT_SUCCESS) {
         eglCore_->GLContextInit(window, width_, height_);
-        NAPIFun::ConchNAPI_OnGLReady(width_,height_);
+        NAPIFun::ConchNAPI_OnSurfaceCreated(window);
     }
 }
 
@@ -211,7 +211,7 @@ void PluginRender::OnSurfaceChanged(OH_NativeXComponent* component, void* window
     LOGI("PluginRender::OnSurfaceChanged");
     int32_t ret = OH_NativeXComponent_GetXComponentSize(component, window, &width_, &height_);
     if (ret == OH_NATIVEXCOMPONENT_RESULT_SUCCESS) {
-        NAPIFun::ConchNAPI_OnGLReady(width_,height_);
+        NAPIFun::ConchNAPI_OnSurfaceResize(width_,height_);
     }
 }
 
@@ -266,24 +266,13 @@ void PluginRender::OnShowNative() {
     if (timerInited_) {
         uv_timer_start(&timerHandle_, &PluginRender::timerCb, 0, 1);
     }
-    JCAudioManager* am = JCAudioManager::GetInstance();
-    if(am->getMp3Mute() == false && am ->getMp3Stopped() == false)
-    {
-        auto pFunction = std::bind(&JCAudioManager::resumeMp3,am);
-        JCScriptRuntime::s_JSRT->m_pPoster->postToJS(pFunction);
-    }
-    laya::JCAudioManager::GetInstance()->m_pWavPlayer->resume();
+    NAPIFun::ConchNAPI_OnAppResume();
 }
 
 void PluginRender::OnHideNative() {
     LOGI("PluginRender::OnHideNative");
-    JCAudioManager* am =JCAudioManager::GetInstance();
-    if(am->getMp3Mute() == false && am->getMp3Stopped() == false)
-    {
-        auto pFunction = std::bind(&JCAudioManager::pauseMp3,am);
-        JCScriptRuntime::s_JSRT->m_pPoster->postToJS( pFunction );
-    }
-    laya::JCAudioManager::GetInstance()->m_pWavPlayer->pause();
+
+    NAPIFun::ConchNAPI_OnAppPause();
 
     if (timerInited_) {
         uv_timer_stop(&timerHandle_);
