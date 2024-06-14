@@ -300,7 +300,7 @@ void CToObjectCLogIExt(const char *str);
         }                                                                                                              \
         if (g_nDebugLevel >= 4)                                                                                        \
         {                                                                                                              \
-            laya::alert(__VA_ARGS__);                                                                                  \
+            alert(__VA_ARGS__);                                                                                  \
         }                                                                                                              \
     }
 

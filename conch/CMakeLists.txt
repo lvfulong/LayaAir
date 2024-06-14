@@ -926,9 +926,10 @@ target_compile_options(${PROJECT_NAME} PRIVATE
 if(MSVC)
 install(FILES ${WIN_DLLS} DESTINATION lib/x64)
 endif()
-#install(TARGETS ${PROJECT_NAME} DESTINATION lib/${BUILDING_ARCH})
-#install(DIRECTORY ./include DESTINATION .)
-
+if(NOT OHOS)
+install(TARGETS ${PROJECT_NAME} DESTINATION lib/${BUILDING_ARCH})
+install(DIRECTORY ./include DESTINATION .)
+endif()
 message("CMAKE_BUILD_TYPE:${CMAKE_BUILD_TYPE}")
 message("CMAKE_C_FLAGS:${CMAKE_C_FLAGS}")
 message("CMAKE_CXX_FLAGS:${CMAKE_CXX_FLAGS}")

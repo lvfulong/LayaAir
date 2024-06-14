@@ -15,47 +15,22 @@ extern std::string gRedistPath;
 extern std::string gAssetRootPath;
 namespace fs = std::filesystem;
 
-/*
-用法：
-    conch6.exe [options] url
-参数：
-    -test
-        只执行c的测试用例。这时候不再使用url
-    -perf
-        执行一个url进行统计
-    -perf_count
-        update的次数
-    -opath    path
-        指定效率测试的输出目录
-    -debug=""
-*/
+
+//conch6.exe [options] url
+
 int mainImpl()
 {
     fs::path exePath = laya::getExePath();
-    LOGE("start exe path %s", exePath.c_str());
+    std::string exeName = laya::removeFileExtension(exePath.filename().string());
     gRedistPath = exePath.remove_filename().string();
     gAssetRootPath = gRedistPath;
     laya::JCIosFileSource* pAssets = new laya::JCIosFileSource();
     pAssets->Init(gRedistPath.c_str());
     laya::JCConch::s_pAssetsFiles = pAssets;
-
-    //if (bRunTest)
-    //{
-        // JSMemorySurvey::DelInstance();
-        // svFileCache::delInstance();
-        // delete pAssets;
-        //return 0;
-    //}
-    // if (g_kSystemConfig.m_bPerfStat) {
-    //     gRunStat.strTestID = g_kSystemConfig.m_strStartURL;
-    // }
     laya::App app;
     Config config;
-    config.title = "LayaNative3";
+    config.title = exeName;
     app.run(config);
-    // app.handleMessage();
-    // app.exitApp();
-    // delete pAssets;
     return 0;
 }
 #if WIN32

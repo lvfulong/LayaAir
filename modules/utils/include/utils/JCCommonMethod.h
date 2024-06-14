@@ -232,6 +232,8 @@ public:
 #if WIN32
 wchar_t* utf8ToUtf16(const std::string& str, int* pRetLen = nullptr);
 #endif
+
+std::string removeFileExtension(const std::string& filename);
 };
 //------------------------------------------------------------------------------
 

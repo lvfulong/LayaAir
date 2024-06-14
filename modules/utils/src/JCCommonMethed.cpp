@@ -971,6 +971,16 @@ wchar_t *utf8ToUtf16(const std::string &str, int *pRetLen /* = nullptr*/)
 }
 
 #endif
+std::string removeFileExtension(const std::string& filename) {
+    // 查找最后一个点的位置
+    size_t lastDotIndex = filename.find_last_of(".");
+    // 如果找不到点或者这个点是第一个字符（可能是一个隐藏的Unix文件），则返回原始字符串
+    if (lastDotIndex == std::string::npos || lastDotIndex == 0) {
+        return filename;
+    }
+    // 返回不含扩展名的文件名部分
+    return filename.substr(0, lastDotIndex);
+}
 } // namespace laya
 //------------------------------------------------------------------------------
 
