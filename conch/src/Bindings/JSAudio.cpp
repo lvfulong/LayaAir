@@ -207,8 +207,7 @@ namespace laya
 		    else
 		    {
 			    m_sLocalFileName = iter->second;
-				std::error_code error;
-			    if(fs::exists(m_sLocalFileName.c_str(), error))
+			    if(FileSystem::exists(m_sLocalFileName))
                 {
 				    m_bDownloaded = true;
                     std::weak_ptr<int> cbref(m_CallbackRef);

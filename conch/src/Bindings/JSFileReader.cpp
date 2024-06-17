@@ -121,14 +121,13 @@ namespace laya
         p_pFile->close();
         size_t iFileSize;
         std::time_t tmLastWrite;
-        std::error_code error;
         //try
         //{
-            iFileSize = (size_t)fs::file_size(p_pFile->m_FullName, error);
-//#ifdef WIN32
-            tmLastWrite = std::chrono::system_clock::to_time_t(fs::last_write_time(p_pFile->m_FullName, error));
+            iFileSize = (size_t)FileSystem::file_size(p_pFile->m_FullName);
+//#ifdef 
+            tmLastWrite = FileSystem::last_write_time(p_pFile->m_FullName);
 //#else
-//            tmLastWrite = fs::last_write_time(p_pFile->m_FullName);
+//            tmLastWrite = FileSystem::last_write_time(p_pFile->m_FullName);
 //#endif
         //}
         //catch (fs::filesystem_error &ec)

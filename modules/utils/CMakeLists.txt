@@ -16,8 +16,6 @@ set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/JCMemorySurvey.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/JCLayaUrl.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/JCJson.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/JCIniFile.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/JCFlog.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/JCCrypto.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/JCCommonMethod.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/JCColor.h
@@ -47,8 +45,6 @@ set(SOURCES
     src/JCMemorySurvey.cpp
     src/JCLayaUrl.cpp
     src/JCJson.cpp
-    src/JCIniFile.cpp
-    src/JCFlog.cpp
     src/JCCrypto.cpp
     src/JCCommonMethed.cpp
     src/JCColor.cpp

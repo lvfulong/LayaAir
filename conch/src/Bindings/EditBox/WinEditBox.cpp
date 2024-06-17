@@ -301,7 +301,7 @@ namespace laya {
 		SelectObject(hdc, m_font);
 
 		FillRect(hdc, &m_ncRect, CreateSolidBrush(m_style->bgColor));
-		DrawText(hdc, m_text.c_str(), -1, &m_ncRect, DT_LEFT | DT_TOP);
+		//DrawText(hdc, m_text.c_str(), -1, &m_ncRect, DT_LEFT | DT_TOP);
 
 		EndPaint(GetCurHWND(), &paint);
 	}
@@ -310,7 +310,7 @@ namespace laya {
 	{
 		int length = GetWindowTextLength(GetCurHWND());
 		m_text.resize(length + 1);
-		GetWindowText(GetCurHWND(), &(*m_text.begin()), length + 1);
+		//GetWindowText(GetCurHWND(), &(*m_text.begin()), length + 1);
 	}
 
 	const char* WinEditBox::GetText()
@@ -326,7 +326,7 @@ namespace laya {
 	void WinEditBox::SetText(const char* text)
 	{
 		m_text = text;
-		SetWindowText(GetCurHWND(), m_text.c_str());
+		//SetWindowText(GetCurHWND(), m_text.c_str());
 
 		if (m_isFocus)
 		{

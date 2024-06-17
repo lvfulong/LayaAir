@@ -50,12 +50,12 @@ void JCSystemConfig::loadConfigIniFile()
     writeFileSync(tempFilePath.c_str(), buf, JCBuffer::utf8); 
     configpath = tempFilePath;
 #endif
-    std::error_code error;
-    if (!fs::exists(configpath, error))
+    if (!FileSystem::exists(configpath))
     {
-        LOGE("No config.ini file found!");
+       LOGE("No config.ini file found!");
     }
     IniFile configIni(configpath.c_str());
+
 #if WIN32 || __LINUX__
     int defaultWidth = 1280;
     if (configIni.hasEntry("desktop:width"))

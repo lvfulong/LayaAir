@@ -7,7 +7,11 @@ namespace laya
     {
 		bool bRet = false;
         std::string sFullName = m_sRootPath +"/"+ sFileName;
+        #ifdef WIN32
+        FILE* fp = _wfopen(utf8ToWide(sFullName).c_str(), L"rb");
+        #else
         FILE* fp = fopen(sFullName.c_str(), "rb");
+        #endif
         if (!fp) return false;
         fseek(fp, 0, SEEK_END);
         nBuffSize = (int)ftell(fp);
@@ -33,7 +37,11 @@ namespace laya
     {
         bool bRet = false;
         std::string sFullName = m_sRootPath + "/"+sFileName;
+        #ifdef WIN32
+        FILE* fp = _wfopen(utf8ToWide(sFullName).c_str(), L"rb");
+        #else
         FILE* fp = fopen(sFullName.c_str(), "rb");
+        #endif
         if (!fp) return false;
         fseek(fp, 0, SEEK_END);
         nBuffSize = (unsigned int)ftell(fp);

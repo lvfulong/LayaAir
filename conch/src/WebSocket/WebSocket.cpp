@@ -26,15 +26,8 @@
 #include <downloadCache/JCOHOSFileSource.h>
 #endif
 #include <utils/Log.h>
-#ifdef WIN32
-#include <filesystem>
-namespace  fs = std::filesystem;
-#ifdef min
-#undef min
-#endif
-#else
+#include <utils/Preprocessor.h>
 #include <utils/JCFileSystem.h>
-#endif
 extern std::string gRedistPath;
 extern std::string gResourcePath;
 const uint32_t RX_BUFFER_SIZE = 65536;
@@ -775,13 +768,12 @@ lws_context_creation_info WebSocket::createContextCreationInfo(const struct lws_
 lws_vhost* WebSocket::createVhost(struct lws_protocols* protocols, int& sslConnection)
 {
     std::string caFileName = "cacert.pem";
-	std::error_code error;
 #ifdef WIN32
     static std::string caFilePath = gRedistPath + std::string("ca/") + caFileName;
-    bool isCAFileExist = fs::exists(caFilePath, error);
+    bool isCAFileExist = FileSystem::exists(caFilePath);
 #elif __LINUX__
     static std::string caFilePath = gRedistPath + std::string("ca/") + caFileName;
-    bool isCAFileExist = fs::exists(caFilePath, error);
+    bool isCAFileExist = FileSystem::exists(caFilePath);
 #else
     static std::string caFilePath = gResourcePath + "ca/" + caFileName;
     bool isCAFileExist = JCConch::s_pAssetsFiles->isFileExist(("ca/" + caFileName).c_str());
@@ -798,7 +790,7 @@ lws_vhost* WebSocket::createVhost(struct lws_protocols* protocols, int& sslConne
             std::string writablePath = gRedistPath;
             static std::string newCaFilePath = writablePath + caFileName;
 
-            if (fs::exists(newCaFilePath, error))
+            if (FileSystem::exists(newCaFilePath))
             {
                 LOGI("ca file already exists in apk [%s]", newCaFilePath.c_str());
                 info.ssl_ca_filepath = newCaFilePath.c_str();

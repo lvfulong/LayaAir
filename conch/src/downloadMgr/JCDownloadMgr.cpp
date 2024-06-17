@@ -29,7 +29,9 @@
 #define P_PRIORITY_NORMAL 0
 #define P_PRIORITY_LOW 1
 #define P_NOLOCALFILE nullptr
-
+#if WIN32
+#include "timeapi.h"
+#endif
 #include <cctype>
 #include <iomanip>
 #include <sstream>

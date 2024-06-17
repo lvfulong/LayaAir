@@ -1,13 +1,6 @@
-﻿/**
-@file			JCWaveInfo.cpp
-@brief			
-@author			James
-@version		1.0
-@date			2012_11_17
-*/
-
-#include "JCWaveInfo.h"
+﻿#include "JCWaveInfo.h"
 #include <utils/Log.h>
+#include <utils/JCCommonMethod.h>
 #pragma warning (disable: 4996)
 
 namespace laya
@@ -37,7 +30,12 @@ JCWaveInfo::~JCWaveInfo( void )
 //------------------------------------------------------------------------------
 bool JCWaveInfo::LoadData( const char* p_sFileName )
 {
-	FILE *fp = fopen( p_sFileName,"rb" );
+	#ifdef WIN32
+    FILE* fp = _wfopen(utf8ToWide(p_sFileName).c_str(), L"rb");
+    #else
+    FILE* fp = fopen(p_sFileName, "rb");
+    #endif
+
 	if( fp == NULL )
 	{
 		LOGE("JCWaveInfo::LoadData Can't open file %s",p_sFileName );
@@ -214,7 +212,4 @@ unsigned char JCWaveInfo::getC( unsigned char* p_sBuffer, int p_nBufferSize)
 	}
 	return p_sBuffer[m_nCurPos];
 }
-//------------------------------------------------------------------------------
 }
-
-//-----------------------------END FILE--------------------------------

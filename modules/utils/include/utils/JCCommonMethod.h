@@ -18,7 +18,11 @@
 #include <sstream>
 #include <locale>
 #include <codecvt>
-
+#include "Log.h"
+#if WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#endif
 #define MAX_CHARACTER_SIZE    8 
 
 namespace laya
@@ -230,7 +234,59 @@ public:
     }
 };
 #if WIN32
-wchar_t* utf8ToUtf16(const std::string& str, int* pRetLen = nullptr);
+inline std::wstring utf8ToWide(const std::string& utf8Text)
+{
+    if (utf8Text.empty()) 
+    {
+        return {};
+    }
+
+    std::wstring wideText;
+    const int wideLength = ::MultiByteToWideChar(CP_UTF8, 0, utf8Text.data(), (int)utf8Text.size(), nullptr, 0);
+    if (wideLength == 0)
+    {
+        LOGE("utf8_to_wide get size error: %s", std::to_string(::GetLastError()).c_str());
+        return {};
+    }
+
+    wideText.resize(wideLength, 0);
+    wchar_t* wideString = const_cast<wchar_t*>(wideText.data());
+    const int length = ::MultiByteToWideChar(CP_UTF8, 0, utf8Text.data(), (int)utf8Text.size(), wideString, wideLength);
+    if (length != wideLength)
+    {
+        LOGE("utf8_to_wide convert string error: %s", std::to_string(::GetLastError()).c_str());
+        return {};
+    }
+
+    return wideText;
+}
+
+inline std::string wideToUtf8(const std::wstring& wideText) 
+{
+    if (wideText.empty())
+    {
+        return {};
+    }
+
+    std::string narrowText;
+    int narrowLength = ::WideCharToMultiByte(CP_UTF8, 0, wideText.data(), (int)wideText.size(), nullptr, 0, nullptr, nullptr);
+    if (narrowLength == 0) 
+    {
+        LOGE("wide_to_utf8 get size error: %s",std::to_string(::GetLastError()).c_str());
+        return {};
+    }
+    narrowText.resize(narrowLength, 0);
+    char* narrowString = const_cast<char*>(narrowText.data());
+    const int length =
+        ::WideCharToMultiByte(CP_UTF8, 0, wideText.data(), (int)wideText.size(), narrowString, narrowLength, nullptr, nullptr);
+    if (length != narrowLength)
+    {
+        LOGE("wide_to_utf8 convert string error: %s", std::to_string(::GetLastError()).c_str());
+        return {};
+    }
+
+    return narrowText;
+}
 #endif
 
 std::string removeFileExtension(const std::string& filename);

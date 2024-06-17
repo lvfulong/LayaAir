@@ -405,7 +405,11 @@ namespace laya{
         return size*nmemb;
     }
     long GetLocalFileLenth(const char* fileName) {
+        #ifdef WIN32
+        FILE* fp = _wfopen(utf8ToWide(fileName).c_str(), L"rb");
+        #else
         FILE* fp = fopen(fileName, "rb");
+       	#endif
         if (fp != NULL) {
             fseek(fp, 0, SEEK_END);
             long len = ftell(fp);

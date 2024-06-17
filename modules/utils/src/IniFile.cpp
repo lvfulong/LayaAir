@@ -6,7 +6,16 @@ namespace laya
 {
 IniFile::IniFile(const std::string &filePath)
 {
+#ifdef WIN32
+    FILE* in;
+    if ((in = _wfopen(utf8ToWide(filePath).c_str(), L"r")) == NULL)
+    {
+        LOGE("iniparser: cannot open %s\n", filePath.c_str());
+    }
+    m_dictionary = iniparser_load_laya(in);
+#else
     m_dictionary = iniparser_load(filePath.c_str());
+#endif
 }
 
 IniFile::IniFile()

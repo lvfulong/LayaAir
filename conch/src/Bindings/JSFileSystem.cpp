@@ -6,52 +6,6 @@
 
 namespace laya
 {
-	bool JSFileSystem::exists(const char* p_pszPath )
-    {
-        bool bret = false;
-        //try {
-        //    bret = fs::exists(p_pszPath);
-        //}
-        //catch (...) {
-        //    return false;
-        //}
-		std::error_code error;
-        return fs::exists(p_pszPath, error);
-	}
-	bool JSFileSystem::mkdir( const char* p_pszPath )
-    {
-		bool bret = false;
-		//try 
-        //{
-		//	bret = fs::create_directories(p_pszPath);
-		//}
-		//catch (...) 
-        //{
-		//	return false;
-		//}
-		std::error_code error;
-		return fs::create_directories(p_pszPath, error);
-	}
-	bool ChkPermission( const char* p_pszFile, const char* p_pszDesc ) 
-    {
-        return true;
-	}
-	bool JSFileSystem::rm(const char* p_pszFile) 
-    {
-		if(!ChkPermission(p_pszFile,"rm is forbidden!"))
-        {
-			return false;
-		}
-		//try
-        //{
-            std::error_code error;
-			return fs::remove(p_pszFile, error);
-		//}
-		//catch (...)
-        //{
-		//	return false;
-		//}
-	}
 	bool JSFileSystem::rmDir(const char* p_pszPath, JSValueAsParam onprogress, JSValueAsParam oncomplete, JSValueAsParam onerror) 
     {
 		return true;
@@ -60,40 +14,29 @@ namespace laya
     {
 		return true;
 	}
-	JsValue JSFileSystem::readdirSync(const char* pPath) 
+	JsValue JSFileSystem::readdirSync(const std::string &path) 
     {
-		std::vector < std::string> paths;
-		std::string path = pPath;
-		std::error_code error;
-		if (!fs::exists(path, error))
+		if (!FileSystem::exists(path))
 			return JSP_TO_JS_NULL;
-		fs::directory_iterator item_begin(path, error);
-		fs::directory_iterator item_end;
-		for (; item_begin != item_end; item_begin.increment(error)) {
-			auto pp = (*item_begin).path().filename();
-			paths.push_back(pp.generic_string());
-		}
+		std::vector<std::string> paths = FileSystem::readdirSync(path);
 		return Converter<std::vector<std::string> >::ToJs(paths);
 	}
-	JsValue JSFileSystem::lstatSync(const char* pPath) 
+	JsValue JSFileSystem::lstatSync(const std::string &path) 
     {
-		std::vector < std::string> paths;
-		std::string path = pPath;
-		std::error_code error;
-		if (!fs::exists(path, error))
+		std::vector<std::string> paths;
+		if (!FileSystem::exists(path))
 			return JSP_TO_JS_NULL;
 		//try {
-			auto st = fs::status(path, error);
 			std::time_t wtime;
 //#ifdef WIN32
-            wtime = std::chrono::system_clock::to_time_t(fs::last_write_time(path, error));
+            wtime = FileSystem::last_write_time(path);
 //#else
-//            wtime = fs::last_write_time(path);
+//            wtime = FileSystem::last_write_time(path);
 //#endif
-			bool isDir = fs::is_directory(st);
-			bool isFile = fs::is_regular_file(st);
+			bool isDir = FileSystem::is_directory(path);
+			bool isFile = FileSystem::is_regular_file(path);
 			int sz = 0;
-			if (!isDir)sz = (int)fs::file_size(path, error);
+			if (!isDir)sz = (int)FileSystem::file_size(path);
 #ifdef JS_V8
 			//st.type;
 			v8::Isolate* pIso = v8::Isolate::GetCurrent();
@@ -153,10 +96,6 @@ namespace laya
     }
 	JsValue JSFileSystem::readBinFileSync(const char* p_pszFile) 
     {
-		if(!ChkPermission(p_pszFile,"readBinFileSync is forbidden!"))
-        {
-			return JSP_TO_JS_NULL;
-		}
         JCBuffer buf;
 		if (readFileSync(p_pszFile, buf, JCBuffer::raw))
         {
@@ -167,7 +106,4 @@ namespace laya
 			return JSP_TO_JS_NULL;
 		}
     }
-	void JSFileSystem::exportJS()
-    {
-	}
 };
