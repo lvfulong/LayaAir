@@ -1,5 +1,7 @@
 #ifndef __INPUT_TYPES_H__
 #define __INPUT_TYPES_H__
+
+#include<string.h>
 namespace laya
 {
 struct inputEvent

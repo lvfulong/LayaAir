@@ -36,7 +36,11 @@ namespace laya
 		virtual bool isFileExist( const char* sFileName )
 		{
             std::string sFullName = m_sRootPath + "/"+sFileName;
-            FILE* fp = fopen(sFullName.c_str(),"rb");
+        	#ifdef WIN32
+        	FILE* fp = _wfopen(utf8ToWide(sFullName).c_str(), L"rb");
+        	#else
+        	FILE* fp = fopen(sFullName.c_str(), "rb");
+        	#endif
             if( !fp )
             {
                 return false;
@@ -47,7 +51,11 @@ namespace laya
         virtual unsigned int getFileSize(const char* sFileName)
         {
             std::string sFullName = m_sRootPath + "/"+ sFileName;
-            FILE* fp = fopen(sFullName.c_str(), "rb");
+            #ifdef WIN32
+        	FILE* fp = _wfopen(utf8ToWide(sFullName).c_str(), L"rb");
+        	#else
+        	FILE* fp = fopen(sFullName.c_str(), "rb");
+       	 	#endif
             if (!fp) return 0;
             fseek(fp, 0, SEEK_END);
             int nBuffSize = (int)ftell(fp);

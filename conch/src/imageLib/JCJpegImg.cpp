@@ -89,7 +89,7 @@ namespace laya
 	 * Sample routine for JPEG decompression.  We assume that the source file name
 	 * is passed in.  We want to return 1 on success, 0 on error.
 	 */
-	unsigned char* readFile(const char* filename,int &size)
+	/*unsigned char* readFile(const char* filename,int &size)
 	{
 	  unsigned char *infile;
 	  FILE* fInput;
@@ -110,7 +110,7 @@ namespace laya
 	  }
 	  fclose(fInput);
 	  return infile;
-	}
+	}*/
 
 	GLOBAL(int) LoadJpegFromMem (BitmapData * texture,unsigned  char * infile,int size )
 	{
@@ -337,7 +337,12 @@ namespace laya
 		int row_stride; //?每一行的字节数
 		jcs.err = jpeg_std_error(&jem);
 		jpeg_create_compress(&jcs);
-		fp = fopen(filename,"wb");
+		#ifdef WIN32
+        fp = _wfopen(utf8ToWide(filename).c_str(), L"wb");
+        #else
+        fp = fopen(filename, "wb");
+       	#endif
+
 		if(fp==NULL)
 			return false;
 		jpeg_stdio_dest(&jcs,fp);

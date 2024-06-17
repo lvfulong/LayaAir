@@ -186,7 +186,7 @@ namespace laya
     void JCImageManager::printCorpseImages(const char* sFileName)
     {
 #ifdef WIN32
-        FILE* fp = fopen(sFileName, "w");
+        FILE* fp = _wfopen(utf8ToWide(sFileName).c_str(), L"w");
         char sBuffer[2048] = { 0 };
         int nSizeCount = 0;
         for (int i = 0, n = m_vImages.size(); i < n; i++ )

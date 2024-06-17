@@ -17,10 +17,10 @@ namespace laya
             int nlen = UTF8StrToUnicodeStr((unsigned char*)p_sBuffer, ucStr, nLen);
             switch (logLevel)
             {
-            case Warn:
+            case LogLevel::Warn:
                 wprintf(L"warn:%s\n", (wchar_t *)ucStr);
                 break;
-            case Error:
+            case LogLevel::Error:
                 wprintf(L"error:%s\n", (wchar_t *)ucStr);
                 break;
             default:
@@ -33,10 +33,10 @@ namespace laya
     #elif __APPLE__
         switch (logLevel)
         {
-            case Warn:
+            case LogLevel::Warn:
                 LOGIExt(p_sBuffer);
                 break;
-            case Error:
+            case LogLevel::Error:
                 LOGIExt(p_sBuffer);
                 break;
             default:
@@ -46,10 +46,10 @@ namespace laya
     #else
         switch (logLevel)
         {
-        case Warn:
+        case LogLevel::Warn:
             LOGI(" %s", p_sBuffer);
             break;
-        case Error:
+        case LogLevel::Error:
             LOGI(" %s", p_sBuffer);
             break;
         default:
@@ -81,7 +81,7 @@ namespace laya
 			    if (!srcurl.IsEmpty()) {
 				    srcfile = *v8::String::Utf8Value(isolate, srcurl->ToString(isolate->GetCurrentContext()).ToLocalChecked());
 			    }
-			    gLayaLogNoParam(Info, srcfile.c_str(), ln, p_sBuffer);
+			    gLayaLogNoParam(static_cast<int>(LogLevel::Info), srcfile.c_str(), ln, p_sBuffer);
 		    }
 		    //gLayaLog(Info,
 	    }

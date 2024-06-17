@@ -1,7 +1,7 @@
 #include "RTDefineDatas.h"
 #include <algorithm>
 #include <utils/Log.h>
-
+#include <utils/Preprocessor.h>
 namespace laya
 {
 

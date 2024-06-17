@@ -65,8 +65,7 @@ namespace laya
 
 		int pos = filePathUrl.find_first_of("://");
 		const std::string& filePath = filePathUrl.substr(pos + 3);
-		std::error_code error;
-		if (!fs::exists(filePath, error))
+		if (!FileSystem::exists(filePath))
 		{
 			ms_cachePathMap.erase(it);
 			return false;

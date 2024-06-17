@@ -69,8 +69,8 @@ void CanvasRenderingContext2DWin::fillText(const std::string &text, double x, do
         return;
     }
     int bufferLen = 0;
-    wchar_t *pwszBuffer = utf8ToUtf16(text, &bufferLen);
-    TextMetrics matrics = measureTextUtf16(pwszBuffer, bufferLen);
+    std::wstring strWide = utf8ToWide(text);
+    TextMetrics matrics = measureTextUtf16(strWide.data(), strWide.size());
     double outX;
     double outY;
     getTextPosition(text, x, y, outX, outY);
@@ -80,7 +80,7 @@ void CanvasRenderingContext2DWin::fillText(const std::string &text, double x, do
     //    &Gdiplus::SolidBrush(Gdiplus::Color(m_fillColorA, m_fillColorR, m_fillColorG, m_fillColorB)));
 
     m_gdiGraphics->DrawString(
-        pwszBuffer, bufferLen, m_font, Gdiplus::PointF(outX, outY), Gdiplus::StringFormat::GenericTypographic(),
+        strWide.data(), strWide.size(), m_font, Gdiplus::PointF(outX, outY), Gdiplus::StringFormat::GenericTypographic(),
         &Gdiplus::SolidBrush(Gdiplus::Color(m_fillColorA, m_fillColorR, m_fillColorG, m_fillColorB)));
 
 }
@@ -93,9 +93,8 @@ void CanvasRenderingContext2DWin::strokeText(const std::string &text, double x, 
         return;
     }
 
-    int bufferLen = 0;
-    wchar_t *pwszBuffer = utf8ToUtf16(text, &bufferLen);
-    TextMetrics matrics = measureTextUtf16(pwszBuffer, bufferLen);
+    std::wstring strWide = utf8ToWide(text);
+    TextMetrics matrics = measureTextUtf16(strWide.data(), strWide.size());
     double outX;
     double outY;
     getTextPosition(text, x, y, outX, outY);
@@ -109,7 +108,7 @@ void CanvasRenderingContext2DWin::strokeText(const std::string &text, double x, 
     int size = m_font->GetSize();
 
     Gdiplus::GraphicsPath path;
-    path.AddString(pwszBuffer, -1, &fontFamily, m_font->GetStyle(), size, PointF(outX, outY), Gdiplus::StringFormat::GenericTypographic());
+    path.AddString(strWide.data(), -1, &fontFamily, m_font->GetStyle(), size, PointF(outX, outY), Gdiplus::StringFormat::GenericTypographic());
     Pen pen(Color(m_strokeColorR, m_strokeColorG, m_strokeColorB), m_lineWidth);
     //SolidBrush brush(Color(255, 255, 255, 255)); // 白色填充
     m_gdiGraphics->DrawPath(&pen, &path); // 绘制描边
@@ -146,9 +145,8 @@ TextMetrics CanvasRenderingContext2DWin::measureTextUtf16(wchar_t *pwszBuffer, i
 }
 TextMetrics CanvasRenderingContext2DWin::measureText(const std::string &text)
 {
-    int bufferLen = 0;
-    wchar_t *pwszBuffer = utf8ToUtf16(text, &bufferLen);
-    return measureTextUtf16(pwszBuffer, bufferLen);
+    std::wstring strWide = utf8ToWide(text);
+    return measureTextUtf16(strWide.data(), strWide.size());
 }
 void CanvasRenderingContext2DWin::clearRect(double x, double y, double width, double height)
 {
@@ -385,9 +383,8 @@ void CanvasRenderingContext2DWin::setFont(const char *font)
     {
         m_fontStyle = Gdiplus::FontStyle::FontStyleRegular;
     }
-    int bufferLen = 0;
-    wchar_t *pwszBuffer = utf8ToUtf16(m_fontDescription.m_family, &bufferLen);
-    const Gdiplus::FontFamily*  pFontFamily = new  Gdiplus::FontFamily(pwszBuffer);
+    std::wstring strWide = utf8ToWide(m_fontDescription.m_family);
+    const Gdiplus::FontFamily*  pFontFamily = new  Gdiplus::FontFamily(strWide.data());
     if (m_font != nullptr){
         delete m_font;
     }
@@ -414,8 +411,8 @@ bool CanvasRenderingContext2DWin::registerFontFromPath(const std::string& fontNa
 
 	// 添加字体到PrivateFontCollection 
 	// 假设字体文件名为 "YourFont.ttf"，并且位于当前可执行文件的同一目录中 
-    int bufferLen = 0;
-    wchar_t* pwszBuffer = utf8ToUtf16(path.c_str(), &bufferLen);
+
+    std::wstring strWide = utf8ToWide(path.c_str());
 
 	//fontCollection.AddFontFile(pwszBuffer);
     //delete pwszBuffer;

@@ -2,9 +2,7 @@
 #include <SDL2/SDL_syswm.h>
 #include <Application/App.h>
 #include <assert.h>
-#include <filesystem>
 #include "JCSystemConfig.h"
-namespace  fs = std::filesystem;
 extern std::string gRedistPath;
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;

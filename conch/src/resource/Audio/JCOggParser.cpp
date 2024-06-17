@@ -1,17 +1,9 @@
-﻿/**
-@file			JCOggParser.cpp
-@brief			
-@author			James
-@version		1.0
-@date			2014_11_26
-*/
-
-//包含头文件
-#include "JCOggParser.h"
+﻿#include "JCOggParser.h"
 #include <utils/Log.h>
 #include <vorbis/vorbisfile.h>
 #include <ogg/ogg.h>
 #include <vector>
+#include <utils/JCCommonMethod.h>
 #pragma warning (disable: 4996)
 
 namespace laya
@@ -80,7 +72,12 @@ JCWaveInfo* JCOggParser::GetWaveInfo( const char* p_sFileName,unsigned char* p_s
 	else if( p_sFileName != NULL )
 	{
 		FILE* fp = NULL;
-		fp = fopen( p_sFileName, "rb" );
+		#ifdef WIN32
+        fp = _wfopen(utf8ToWide(p_sFileName).c_str(), L"rb");
+        #else
+    	fp = fopen(p_sFileName, "rb");
+       	#endif
+
 		if( fp )
 		{
 			nResult = ov_open_callbacks( (void*)fp, &pOggStream, NULL, 0, OV_CALLBACKS_DEFAULT );

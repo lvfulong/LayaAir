@@ -1,12 +1,5 @@
-﻿/**
-@file			JCWaveParser.cpp
-@brief			
-@author			James
-@version		1.0
-@date			2014_11_26
-*/
-
-#include "JCWaveParser.h"
+﻿#include "JCWaveParser.h"
+#include <utils/JCCommonMethod.h>
 #pragma warning (disable: 4996)
 
 namespace laya
@@ -65,7 +58,12 @@ void JCWaveParser::TestWave( const char* p_sFileName,const char* p_sOutFileName 
 	JCWaveInfo* pInfo = GetWaveInfoFromFile( p_sFileName );
 	if( pInfo )
 	{
-		FILE* fp = fopen( p_sOutFileName,"a+" );
+		#ifdef WIN32
+    	FILE* fp = _wfopen(utf8ToWide(p_sOutFileName).c_str(), L"a+");
+    	#else
+    	FILE* fp = fopen(p_sOutFileName, "a+");
+    	#endif
+
 		char sBuf[128];
 		fputs( "{", fp );
 

@@ -114,8 +114,9 @@
       <AdditionalLibraryDirectories>.\Runtime\lib\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(SolutionDir)resource\*"  "$(OutDir)" /s /e /i /y
-xcopy /y "$(SolutionDir)Runtime\lib\$(LibrariesArchitecture)\*.dll"         "$(OutDir)"</Command>
+      <Command>xcopy $(SolutionDir)resource\*" $(OutDir) /s /e /i /y
+
+xcopy /y $(SolutionDir)Runtime\lib\$(LibrariesArchitecture)\*.dll        $(OutDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -138,8 +139,9 @@ xcopy /y "$(SolutionDir)Runtime\lib\$(LibrariesArchitecture)\*.dll"         "$(O
       <AdditionalLibraryDirectories>.\Runtime\lib\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(SolutionDir)resource\*"  "$(OutDir)" /s /e /i /y
-xcopy /y "$(SolutionDir)Runtime\lib\$(LibrariesArchitecture)\*.dll"         "$(OutDir)"</Command>
+      <Command>xcopy $(SolutionDir)resource\*" $(OutDir) /s /e /i /y
+
+xcopy /y $(SolutionDir)Runtime\lib\$(LibrariesArchitecture)\*.dll        $(OutDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

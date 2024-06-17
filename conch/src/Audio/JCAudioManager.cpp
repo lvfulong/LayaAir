@@ -66,8 +66,27 @@ namespace laya
 		    JCAudioWavPlayer* pWavPlayer = m_sAudioManager->m_pWavPlayer;
 		    if( pWavPlayer != NULL )
 		    {
-                int m_nALCount = pWavPlayer->m_pOpenALSource.size();
-			    for (int i = 0; i < m_nALCount; i++)
+				#ifdef OHOS
+				int nALCount = pWavPlayer->m_pAudioRenderSource.size();
+                for (int i = 0; i < nALCount; i++)
+			    {
+					if( pWavPlayer->m_pAudioRenderSource[i]->m_bPlaying == true ) {
+						OHAudioRenderInfo* pAudioRenderInfo = pWavPlayer->m_pAudioRenderSource[i];
+						if(pAudioRenderInfo->_audioRender != nullptr) {
+							OH_AudioRenderer_Stop(pAudioRenderInfo->_audioRender);
+							OH_AudioRenderer_Release(pAudioRenderInfo->_audioRender);
+						}
+						if(pAudioRenderInfo->_builder != nullptr) {
+							OH_AudioStreamBuilder_Destroy(pAudioRenderInfo->_builder);
+						}
+						pAudioRenderInfo->m_pAudio = NULL;
+						pAudioRenderInfo->m_bPlaying = false;
+					}
+			    }
+
+				#else
+                int nALCount = pWavPlayer->m_pOpenALSource.size();
+                for (int i = 0; i < nALCount; i++)
 			    {
 				    if( pWavPlayer->m_pOpenALSource[i]->m_bPlaying == true )
 				    {
@@ -76,6 +95,7 @@ namespace laya
 					    pWavPlayer->m_pOpenALSource[i]->m_bPlaying = false;
 				    }
 			    }
+				#endif
 			    pWavPlayer->ClearAllWaveInfo();
 		    }
 		    m_sAudioManager->ClearAllAudioBufferPlay();
@@ -103,6 +123,8 @@ namespace laya
 	    m_pMp3Player = new JCAudioMp3Media();
     #elif __APPLE__
         m_pMp3Player = new JCAudioMp3Player();
+    #elif OHOS
+	    m_pMp3Player = new JCAudioMp3Player();
     #endif
     }
     //------------------------------------------------------------------------------
@@ -196,7 +218,26 @@ namespace laya
 		    m_pMp3Player->resume();
 	    }
     }
-    //------------------------------------------------------------------------------
+   	#ifdef OHOS
+    OHAudioRenderInfo* JCAudioManager::playWav(JCAudioInterface* p_pAudio, const std::string& p_sUrl, bool bIsOgg, float currentTime)
+    {
+        return m_pWavPlayer->playAudio(p_pAudio, p_sUrl, bIsOgg);//todo  currentTime
+    }
+    void JCAudioManager::stopWav(OHAudioRenderInfo* audioRenderInfo)
+    {
+        m_pWavPlayer->stop(audioRenderInfo);
+    }
+    void JCAudioManager::setWavVolume(OHAudioRenderInfo* audioRenderInfo, float nVolume)
+    {
+        m_pWavPlayer->setVolume(audioRenderInfo, nVolume);
+    }
+    float JCAudioManager::getCurrentTime(OHAudioRenderInfo* pOpenALInfo)
+	{
+        //todo
+        return 0;
+		//return m_pWavPlayer->getCurrentTime(pOpenALInfo);
+	}
+	#else
     OpenALSourceInfo* JCAudioManager::playWav(JCAudioInterface* p_pAudio, const std::string& p_sUrl, bool bIsOgg, float currentTime)
     {
         return m_pWavPlayer->playAudio(p_pAudio, p_sUrl, bIsOgg, currentTime);
@@ -205,13 +246,19 @@ namespace laya
     {
         m_pWavPlayer->stop(pOpenALInfo);
     }
-    void JCAudioManager::stopAllWav()
-    {
-        m_pWavPlayer->stopAll();
-    }
+
     void JCAudioManager::setWavVolume(OpenALSourceInfo* pOpenALInfo, float nVolume)
     {
         m_pWavPlayer->setVolume(pOpenALInfo, nVolume);
+    }
+    float JCAudioManager::getCurrentTime(OpenALSourceInfo* pOpenALInfo)
+	{
+		return m_pWavPlayer->getCurrentTime(pOpenALInfo);
+	}
+    #endif  
+    void JCAudioManager::stopAllWav()
+    {
+        m_pWavPlayer->stopAll();
     }
     void JCAudioManager::setAllWavVolume(float nVolume)
     {
@@ -242,20 +289,22 @@ namespace laya
     {
 	    return m_pWavPlayer->FindWaveInfo( p_sUrl );
     }
-    //------------------------------------------------------------------------------
+#if !defined(__LINUX__) && !defined(OHOS)//todo
     OpenALSourceInfo*  JCAudioManager::playWavMp3(JCAudioInterface* p_pAudio, const std::string& p_sUrl, const char* p_sFilePath, float currentTime)
 	{
 		return m_pWavPlayer->playAudioMp3(p_pAudio, p_sUrl, p_sFilePath, currentTime);
 	}
+#endif
 	//------------------------------------------------------------------------------
 	JCWaveInfo* JCAudioManager::AddWaveInfoMp3(const std::string& p_sUrl, const char* p_sFilePath, void* p_pExternalMark)
 	{
+#if defined(OHOS)
+        return nullptr;//todo
+#else
 		return m_pWavPlayer->AddWaveInfoMp3(p_sUrl, p_sFilePath, p_pExternalMark);
+#endif
 	}
-	float JCAudioManager::getCurrentTime(OpenALSourceInfo* pOpenALInfo)
-	{
-		return m_pWavPlayer->getCurrentTime(pOpenALInfo);
-	}
+
 }
 
 //-----------------------------END FILE--------------------------------

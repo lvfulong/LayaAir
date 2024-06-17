@@ -35,6 +35,10 @@
 #ifdef __ANDROID__
     #include "JSAndroidEditBox.h"
 	#include "CToJavaBridge.h"
+#elif OHOS
+    #include "JSOHOSEditBox.h"
+    #include "aki/jsbind.h"
+    #include "platform/ohos/napi/helper/NapiHelper.h"
 #elif WIN32
 	#include <Windows.h>
     #include "JSWindowEditBox.h"
@@ -58,7 +62,7 @@
 #include "Video/JSVideo.h"
 #include <LayaGL/JCLayaGLDispatch.h>
 #include "Bullet/LayaBulletExport.h"
-#if !defined(__LINUX__) && !defined(WIN32)
+#if !defined(__LINUX__) && !defined(WIN32) && !defined(OHOS)//todo
 #include "PhysX/LayaPhysXExport.h"
 #endif
 #include "JSArrayBufferRef.h"
@@ -87,35 +91,38 @@ extern bool g_bGLCanvasSizeChanged;
 	int g_bEnableTouch = true;
 #elif __APPLE__
 	int g_bEnableTouch = true;
+#elif OHOS
+	int g_bEnableTouch = true;
 #elif __LINUX__
 	int g_bEnableTouch = false;
 #endif
  std::string g_sExePath = "";
 
 
-/** @brief 这个函数是为了实现comman库中的alert函数
- * 不定长的函数
-*/
-void alert(const char* fmt, ...)
-{
-    char buf[1024];
-    char* pBuf = NULL;
-    va_list args;
-    va_start(args, fmt);
-    int len = vsprintf(buf, fmt, args);
-    if (len < 0) {
-        pBuf = new char[4096];
-        len = vsprintf(pBuf, fmt, args);
+    /** @brief 这个函数是为了实现comman库中的alert函数
+    * 不定长的函数
+    */
+    void alert(const char* fmt, ...)
+    {   
+        char buf[1024];
+        char* pBuf = NULL;
+        va_list args;
+        va_start(args, fmt);
+        int len = vsprintf(buf, fmt, args);
+        if (len < 0) {
+            pBuf = new char[4096];
+            len = vsprintf(pBuf, fmt, args);
+        }
+        va_end(args);
+        laya::LayaAlert(pBuf ? pBuf : buf);
+        if (pBuf) 
+        {
+            delete[] pBuf;
+        }
     }
-    va_end(args);
-    laya::LayaAlert(pBuf ? pBuf : buf);
-    if (pBuf) 
-    {
-        delete[] pBuf;
-    }
-}
 namespace laya 
 {
+
     //下载大文件，zip用的
     struct JSFuncWrapper
     {
@@ -270,6 +277,8 @@ namespace laya
         std::string strBuffer = p_sBuffer;
         CToJavaBridge::JavaRet kRet;
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "alert", strBuffer.c_str(), kRet);
+#elif OHOS
+        NapiHelper::GetInstance()->showDialog(p_sBuffer);
 #elif __APPLE__
         CToObjectCAlert(p_sBuffer);
 #endif
@@ -301,20 +310,7 @@ namespace laya
         return 1.0;
 #endif
     }
-	JsValue getExePath1()
-    {
-#ifdef WIN32
-        TCHAR szPath[MAX_PATH];
-        ::GetModuleFileName(NULL, szPath, MAX_PATH);
-        ::GetFullPathName(szPath, MAX_PATH, szPath, NULL);
-        g_sExePath = szPath;
-        return JSP_TO_JS(const char*, g_sExePath.c_str());
-#elif __APPLE__
-        return JSP_TO_JS_NULL;
-#else
-        return JSP_TO_JS_NULL;
-#endif
-    }
+
 	void writeStrFileSync(const char* p_pszFile, const char* p_pString )
     {
         JCBuffer buf((char*)p_pString, strlen(p_pString), false, false);
@@ -495,18 +491,16 @@ namespace laya
         JSPromiseRejectionEvent::exportJS(context);
         JSImageBitmap::exportJS(context);
 #ifdef WIN32
-
         JSWindowEditBox::exportJS(context);
 #elif __LINUX__
         JSLinuxEditBox::exportJS(context);
 #elif __ANDROID__
         JSAndroidEditBox::exportJS(context);
+#elif OHOS
+        JSOHOSEditBox::exportJS(context);
 #elif __APPLE__
-
         JSIOSEditBox::exportJS(context);
 #endif
-        //JSTextCanvas
-;
         //JSTextBitmapInfo::exportJS(context);
 		JSStat::exportJS(context);
         //JSTextMemoryCanvas::getInstance()->exportJS(context);
@@ -531,7 +525,7 @@ namespace laya
         context.function("setJoystickEvtFunction", &setJoystickEvtFunc);
         context.function("tmGetCurms", &tmGetCurms);
         context.function("reloadJS", &reloadJSThread);
-        context.function("getExePath", &getExePath1);
+        context.function("getExePath", &getExePath);
         context.function("getInnerHeight", &getInnerHeight);
         context.function("getInnerWidth", &getInnerWidth);
         context.function("getDevicePixelRatio", &getDevicePixelRatio);
@@ -546,9 +540,9 @@ namespace laya
         context.function("readFileSync", &readFileSync1);
         context.function("writeStrFileSync", &writeStrFileSync);
         context.function("readTextAsset", &readTextAsset);
-        context.function("fs_exists", &JSFileSystem::exists);
-        context.function("fs_mkdir", JSFileSystem::mkdir);
-        context.function("fs_rm", &JSFileSystem::rm);
+        context.function("fs_exists", &FileSystem::exists);
+        context.function("fs_mkdir", &FileSystem::mkdir);
+        context.function("fs_rm", &FileSystem::rm);
         context.function("fs_rmDir", &JSFileSystem::rmDir);
         context.function("fs_rmDirSync", &JSFileSystem::rmDirSync);
         context.function("fs_readdirSync", &JSFileSystem::readdirSync);
@@ -568,7 +562,7 @@ namespace laya
         context.function("atob", &atob);
         context.function("_createImageBitmap", &createImageBitmap);
         JSLayaConchBullet::exportJS(context);
- #if !defined(__LINUX__) && !defined(WIN32)
+ #if !defined(__LINUX__) && !defined(WIN32) && !defined(OHOS)//TODO
         JSLayaConchPhysX::exportJS(context);
 #endif
 	}

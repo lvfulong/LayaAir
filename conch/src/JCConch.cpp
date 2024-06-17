@@ -75,15 +75,14 @@ namespace laya
     JCConch::JCConch()
     {
         m_sCachePath = gRedistPath + "/appCache";
-        std::error_code error;
-        if (!fs::exists(m_sCachePath, error))
+        if (!FileSystem::exists(m_sCachePath))
         {
-            fs::create_directories(m_sCachePath, error);
+            FileSystem::mkdir(m_sCachePath);
         }
         laya::g_kSystemConfig.loadConfigIniFile();
 #ifdef __APPLE__
 #elif WIN32
-        HMODULE libHandle = LoadLibrary("libGLESv2.dll");
+        HMODULE libHandle = LoadLibrary(L"libGLESv2.dll");
 #elif __ANDROID__
         //void *libhandle = dlopen("libGLESv2.so", RTLD_LAZY);
 #endif
@@ -119,21 +118,11 @@ namespace laya
 
         //onAppStart();
         m_strLocalStoragePath = gRedistPath + "/localstorage/";
-        //try
-        //{
-        if (!fs::exists(m_strLocalStoragePath, error))
+
+        if (!FileSystem::exists(m_strLocalStoragePath))
         {
-            fs::create_directories(m_strLocalStoragePath, error);
+            FileSystem::mkdir(m_strLocalStoragePath);
         }
-        //}
-        //catch (...)
-        //{
-        //    if (global_onCreateFileError)
-        //    {
-        //        global_onCreateFileError();
-        //    }
-        //    return;
-        //}
         JCConch::s_pScriptRuntime->start(m_strStartJS.c_str());
 	}
     JCConch::~JCConch() {
@@ -304,7 +293,7 @@ namespace laya
         m_semaphore.setDataNum(0);
         m_semaphoreFramePacer.stop();
         postToJS([]() {
-#ifdef __ANDROID__
+#ifdef __ANDROID__||OHOS
             if( laya::JCAudioManager::GetInstance()->getMp3Mute() == false && laya::JCAudioManager::GetInstance()->getMp3Stopped() == false)
             {
                 JCAudioManager::GetInstance()->pauseMp3();
@@ -326,7 +315,7 @@ namespace laya
         m_semaphore.setDataNum(1);
         m_semaphoreFramePacer.resume();
         postToJS([]() {
-#ifdef __ANDROID__
+#ifdef __ANDROID__||OHOS
             //继续声音
             if( laya::JCAudioManager::GetInstance()->getMp3Mute() == false && laya::JCAudioManager::GetInstance()->getMp3Stopped() == false)
             {

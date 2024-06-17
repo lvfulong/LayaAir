@@ -7,64 +7,37 @@
 #include "JCSystemConfig.h"
 #include <Application/App.h>
 #include <downloadCache/JCIosFileSource.h>
-#include <filesystem>
+#include <utils/JCFileSystem.h>
 #include <string>
 #include <utils/JCCommonMethod.h>
 
 extern std::string gRedistPath;
 extern std::string gAssetRootPath;
-namespace fs = std::filesystem;
 
-/*
-用法：
-    conch6.exe [options] url
-参数：
-    -test
-        只执行c的测试用例。这时候不再使用url
-    -perf
-        执行一个url进行统计
-    -perf_count
-        update的次数
-    -opath    path
-        指定效率测试的输出目录
-    -debug=""
-*/
+// conch6.exe [options] url
+
 int mainImpl()
 {
-    fs::path exePath = laya::getExePath();
-    LOGE("start exe path %s", exePath.c_str());
-    gRedistPath = exePath.remove_filename().string();
+    std::string exePath = laya::getExePath();
+    std::string exeName = laya::removeFileExtension(laya::FileSystem::filename(exePath));
+    gRedistPath = laya::FileSystem::remove_filename(exePath);
     gAssetRootPath = gRedistPath;
-    laya::JCIosFileSource* pAssets = new laya::JCIosFileSource();
+    laya::JCIosFileSource *pAssets = new laya::JCIosFileSource();
     pAssets->Init(gRedistPath.c_str());
     laya::JCConch::s_pAssetsFiles = pAssets;
-
-    //if (bRunTest)
-    //{
-        // JSMemorySurvey::DelInstance();
-        // svFileCache::delInstance();
-        // delete pAssets;
-        //return 0;
-    //}
-    // if (g_kSystemConfig.m_bPerfStat) {
-    //     gRunStat.strTestID = g_kSystemConfig.m_strStartURL;
-    // }
     laya::App app;
     Config config;
-    config.title = "LayaNative3";
+    config.title = exeName;
     app.run(config);
-    // app.handleMessage();
-    // app.exitApp();
-    // delete pAssets;
     return 0;
 }
 #if WIN32
-int conchMainConsole(int argc, _TCHAR* argv[])
+int conchMainConsole(int argc, WCHAR *argv[])
 {
     bool bRunTest = false;
-    char* pRunTestCase = NULL;
+    char *pRunTestCase = NULL;
     // 解析参数
-    for (int i = 1; i < argc; i++)
+    /*for (int i = 1; i < argc; i++)
     {
         if (argv[i][0] != '-')
         {
@@ -115,32 +88,30 @@ int conchMainConsole(int argc, _TCHAR* argv[])
                 printf("Unknown param:%s\n", cargv);
             }
         }
-    }
-    return  mainImpl();
+    }*/
+    return mainImpl();
 }
-std::string WideCharToMultiByteString(LPWSTR lpwstr) {
-    if (!lpwstr) return ""; // 如果输入为空，返回空字符串
 
-    // 获取所需的缓冲区大小
-    int len = WideCharToMultiByte(CP_UTF8, 0, lpwstr, -1, NULL, 0, NULL, NULL);
-    std::string retString(len - 1, 0); // 创建足够长度的字符串（减去 null 终结符）
-
-    // 执行转换
-    WideCharToMultiByte(CP_UTF8, 0, lpwstr, -1, &retString[0], len, NULL, NULL);
-    return retString;
-}
 int conchMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nShowCmd)
 {
-    std::string strCmdLine = WideCharToMultiByteString(lpCmdLine);
-    if (strstr(strCmdLine.c_str(), "http"))
+    int argc;
+    LPWSTR *strCmdLineWide = CommandLineToArgvW(lpCmdLine, &argc);
+
+    if (argc > 0)
     {
-        laya::g_kSystemConfig.m_strStartURL = strCmdLine;
+        std::string strCmdLineUtf8 = laya::wideToUtf8(strCmdLineWide[0]);
+        if (strstr(strCmdLineUtf8.c_str(), "http"))
+        {
+            laya::g_kSystemConfig.m_strStartURL = strCmdLineUtf8;
+        }
     }
-    return  mainImpl();
+    int ret = mainImpl();
+    LocalFree(strCmdLineWide);
+    return ret;
 }
 #elif __LINUX__
 int conchMain(int argc, char *argv[])
 {
-    return  mainImpl();
+    return mainImpl();
 }
 #endif

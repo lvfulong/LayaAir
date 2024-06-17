@@ -30,11 +30,11 @@
 namespace laya
 {
     class ScreenCanvasContext2D;
-    class JCFileSource;
     class OpenGLBackendiOS;
 	class OpenGLBackendAndroidEGL;
     class OpenGLBackendWinEGL;
     class OpenGLBackendLinuxEGLX11;
+    class OpenGLBackendOHOSEGL;
     class JCConchRender
     {
     public:
@@ -98,6 +98,8 @@ namespace laya
 		OpenGLBackendAndroidEGL*                m_GfxBackend = { nullptr };
 #elif WIN32
         OpenGLBackendWinEGL*   m_GfxBackend = { nullptr };
+#elif OHOS
+        OpenGLBackendOHOSEGL*   m_GfxBackend = { nullptr };
 #endif
         WebGLThread*                            m_WebGLThread = nullptr;
     };

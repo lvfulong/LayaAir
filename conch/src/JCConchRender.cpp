@@ -26,6 +26,8 @@
 #include "OpenGLBackendAndroidEGL.h"
 #elif WIN32
 #include "OpenGLBackendWinEGL.h"
+#elif OHOS
+#include "OpenGLBackendOHOSEGL.h"
 #endif
 #include "render/LayaGL.h"
 extern int g_nInnerHeight;
@@ -368,6 +370,8 @@ void JCConchRender::requestCaptureScreen()
                 m_GfxBackend = new OpenGLBackendAndroidEGL();
 #elif WIN32
                 m_GfxBackend = new OpenGLBackendWinEGL();
+#elif OHOS
+                m_GfxBackend = new OpenGLBackendOHOSEGL();
 #endif
                 m_GfxBackend->create(options);
             }

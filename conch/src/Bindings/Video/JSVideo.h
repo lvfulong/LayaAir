@@ -85,6 +85,10 @@ namespace laya
 
 		void _releaseHandler();
 
+		static void executeVideoCallback(int index, int event);
+		static void executeLoadedmetadata(int index, const char* evtName);
+		static void executeDurationBack(int index, int duration);
+		static void executeCurrentTimeBack(int index, int currentTime);
 	private:
 		void Init();
 		void Dispose();
@@ -92,6 +96,7 @@ namespace laya
         void DispatchEvtToJS(const std::string path);
 
 	public:
+		int m_tag; 
 		static int ms_handleIdx;
 		static std::set<std::string> ms_supportFormat;
 

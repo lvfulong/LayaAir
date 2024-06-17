@@ -1,7 +1,7 @@
 #include "MathUtils3D.h"
 #include <utils/JCCommonMethod.h>
 #include <limits>
-
+#include <utils/Preprocessor.h>
 namespace laya
 {
 	double MathUtils3D::zeroTolerance = 1e-6f;

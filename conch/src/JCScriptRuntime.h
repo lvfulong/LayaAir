@@ -17,7 +17,9 @@
 #include <vector>
 
 #ifdef __ANDROID__
-    #include <Bindings/JSAndroidEditBox.h>   
+    #include <Bindings/JSAndroidEditBox.h>
+#elif OHOS
+    #include <Bindings/JSOHOSEditBox.h>   
 #elif __APPLE__
     #include <Bindings/JSIOSEditBox.h>
 #endif
@@ -157,6 +159,8 @@ namespace laya
         JCArrayBufferManager*               m_pArrayBufferManager;          ///<ArrayBufferManager
 #ifdef __ANDROID__
         JSAndroidEditBox*                   m_pCurEditBox;
+#elif OHOS
+        JSOHOSEditBox*                      m_pCurEditBox;
 #elif __APPLE__
         JSIOSEditBox *                      m_pCurEditBox;
 #endif

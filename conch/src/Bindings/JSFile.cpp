@@ -86,7 +86,7 @@ namespace laya
             if (pQpos) len = pQpos - p_pszName;
             std::string strName = "";
             strName.append(p_pszName, len);
-            std::string strname = fs::path(strName).filename().generic_string();
+            std::string strname = FileSystem::filename(strName);
             len = strname.length();
             if (len > 0)
             {
@@ -108,7 +108,7 @@ namespace laya
             std::string strName = "";
             strName.append(p_pszName, len);
             m_FullName = strName.c_str();
-            std::string strname = fs::path(m_FullName).filename().generic_string();
+            std::string strname = FileSystem::filename(m_FullName);
             len = strname.length();
             if (len > 0)
             {
