@@ -1,39 +1,55 @@
 {
     "configurations": [
         {
-            "name": "(Windows) Launch",
+            "name": "Windows Launch",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/template/Debug/launcher",
-            "args": ["http://localhost:8899/index.js"],
+            "program": "${workspaceFolder}/template/build/bin/Debug/launcher.exe",
+            "args": [
+                "http://localhost:8899/index.js"
+            ],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],
-            "console": "externalTerminal"
+            //"console": "externalTerminal"
+            "externalConsole": true,
         },
-    {
-        "name": "(gdb) 启动",
-        "type": "cppdbg",
-        "request": "launch",
-        "program": "${workspaceFolder}/builddbg/template/Debug/launcher",
-        "args": [],
-        "stopAtEntry": false,
-        "cwd": "${fileDirname}",
-        "environment": [],
-        "externalConsole": false,
-        "MIMode": "gdb",
-        "setupCommands": [
-            {
-                "description": "为 gdb 启用整齐打印",
-                "text": "-enable-pretty-printing",
-                "ignoreFailures": true
-            },
-            {
-                "description": "将反汇编风格设置为 Intel",
-                "text": "-gdb-set disassembly-flavor intel",
-                "ignoreFailures": true
-            }
-        ]
-    }
-    ]
+        {
+            "name": "conchjs",
+            "type": "node",
+            "request": "attach",
+            "port": 5959,
+            "address": "localhost",
+        },      
+        {
+            "name": "(gdb) 启动",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/builddbg/template/Debug/launcher",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${fileDirname}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "为 gdb 启用整齐打印",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "将反汇编风格设置为 Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ]
+        }
+    ],
+    "compounds": [
+        {
+            "name": "C++和v8",
+            "configurations": ["Windows Launch", "conchjs"]
+        }
+    ]    
 }
