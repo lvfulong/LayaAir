@@ -241,7 +241,7 @@ namespace laya {
     }
 
     void DebuggerAgent::onDbgMsg(char* pMsg, int len) {
-        printf(">>>%s\n", pMsg);
+        //printf(">>>%s\n", pMsg);
         nFrontEndMsgID = sMsgID++;
         if (bFirst && nEnableDebuggerMsgID<0) {
             if (strstr(pMsg, "Debugger.enable") != NULL) {
