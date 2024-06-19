@@ -127,7 +127,7 @@ class RenderBindings
             .field("height", &Viewport::height)
             .field("minDepth", &Viewport::minDepth)
             .field("maxDepth", &Viewport::maxDepth);
-        value_object<Plane>("conchPlane").field("_normal", &Plane::normal).field("_distance", &Plane::distance);
+        value_object<Plane>("conchPlane").field("normal", &Plane::normal).field("distance", &Plane::distance);
         value_object<BoundFrustum>("conchBoundFrustum")
             .field("_matrix", &BoundFrustum::_matrix)
             .field("_near", &BoundFrustum::_near)
