@@ -12,7 +12,8 @@ IniFile::IniFile(const std::string &filePath)
     {
         LOGE("iniparser: cannot open %s\n", filePath.c_str());
     }
-    m_dictionary = iniparser_load_laya(in);
+    m_dictionary = iniparser_load_file(in, "");
+    fclose(in);
 #else
     m_dictionary = iniparser_load(filePath.c_str());
 #endif

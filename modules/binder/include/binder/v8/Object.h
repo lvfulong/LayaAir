@@ -58,6 +58,7 @@ namespace internal
 {
 struct value_object_field
 {
+    std::string field_name_str;
     v8::Global<v8::Value> field_name;
     void *pfield;
     void (*from_v8)(v8::Local<v8::Value> value, void *obj, void *pfield);
@@ -107,7 +108,7 @@ template <typename T> class value_object : public value_object_base<T>
     template <typename Field> value_object &field(const char *js_name, Field field)
     {
         internal::value_object_field f = {
-            v8::Global<v8::Value>(v8::Isolate::GetCurrent(), laya::Converter<const char *>::ToJs(js_name)),
+            js_name, v8::Global<v8::Value>(v8::Isolate::GetCurrent(), laya::Converter<const char *>::ToJs(js_name)),
             internal::ptr_cast<Field>(field), value_object::field_from_v8<Field>, value_object::field_to_v8<Field>};
         fields.emplace_back(std::move(f));
         return *this;
@@ -137,8 +138,19 @@ template <typename T> T convert_value_object_from_v8(v8::Local<v8::Value> value)
     T ret{};
     for (auto &field : value_object<T>::fields)
     {
-        auto prop = obj->Get(v8::Isolate::GetCurrent()->GetCurrentContext(), field.toLocalFieldName()).ToLocalChecked();
-        field.from_v8(prop, (void *)&ret, field.pfield);
+        v8::MaybeLocal<v8::Value> prop =
+            obj->Get(v8::Isolate::GetCurrent()->GetCurrentContext(), field.toLocalFieldName());
+        if (!prop.IsEmpty())
+        {
+            field.from_v8(prop.ToLocalChecked(), (void *)&ret, field.pfield);
+        }
+        else
+        {
+            std::string error = std::string("Could not find property with name of ") + field.field_name_str;
+            LOGE(error.c_str());
+            v8::Isolate::GetCurrent()->ThrowException(
+                v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), error.c_str()).ToLocalChecked());
+        }
     }
     return ret;
 }
@@ -154,7 +166,7 @@ template <typename T> v8::Local<v8::Value> convert_value_object_to_v8(const T &v
     }
     return ret;
 }
-template <typename T> v8::Local<v8::Value> convert_value_object_to_v8(T* value)
+template <typename T> v8::Local<v8::Value> convert_value_object_to_v8(T *value)
 {
     assert(value_object<T>::is_bound && "casting from an unbound value_type");
     if (value == nullptr)
