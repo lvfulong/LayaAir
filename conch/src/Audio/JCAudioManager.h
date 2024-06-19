@@ -130,7 +130,7 @@ namespace laya
 
         JCWaveInfo* AddWaveInfo( const std::string& p_sUrl,JCBuffer& p_pBuffer,int p_nSize,void* p_pExternalMark,bool p_bIsOgg );
 
-		JCWaveInfo* AddWaveInfoMp3(const std::string& p_sUrl, const char* p_sFilePath, void* p_pExternalMark);
+		JCWaveInfo* AddWaveInfoMp3(const std::string& p_sUrl, const std::string& p_sFilePath, void* p_pExternalMark);
 
 	    JCWaveInfo* FindWaveInfo( const std::string& p_sUrl );
 

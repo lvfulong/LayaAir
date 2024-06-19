@@ -323,7 +323,7 @@ namespace laya
 	    }
 		else */
 		if (m_nType == EXT_MP3){
-			info = JCAudioManager::GetInstance()->AddWaveInfoMp3(m_sSrc, m_sLocalFileName.c_str(), this);
+			info = JCAudioManager::GetInstance()->AddWaveInfoMp3(m_sSrc, m_sLocalFileName, this);
 		}else{
 		    info = JCAudioManager::GetInstance()->AddWaveInfo( m_sSrc,p_buf,(int)(p_buf.m_nLen),this, m_nType == EXT_OGG);
 	    }

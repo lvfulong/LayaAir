@@ -98,12 +98,12 @@ public:
 
 public:
 
-	JCWaveInfo* AddWaveInfoMp3(const std::string& p_sUrl, const char* p_sFilePath, void* p_pExternalMark);
+	JCWaveInfo* AddWaveInfoMp3(const std::string& p_sUrl, const std::string& p_sFilePath, void* p_pExternalMark);
 
 	/** @brief 添加资源
 	 *  @return
 	*/
-    JCWaveInfo* AddWaveInfo( const std::string& p_sUrl,unsigned char* p_pBuffer,int p_nSize,const char* p_sFilePath,void* p_pExternalMark,bool p_bIsOgg );
+    JCWaveInfo* AddWaveInfo( const std::string& p_sUrl,unsigned char* p_pBuffer,int p_nSize, const std::string& p_sFilePath,void* p_pExternalMark,bool p_bIsOgg );
 
 	/** @brief 查找资源根据 ulid
 	 *  @param[in] ulID

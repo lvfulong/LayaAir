@@ -351,7 +351,7 @@ void JCAudioWavPlayer::Release()
 }
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-JCWaveInfo* JCAudioWavPlayer::AddWaveInfo( const std::string& p_sUrl,unsigned char* p_pBuffer,int p_nSize,const char* p_sFilePath,void* p_pExternalMark,bool p_bIsOgg )
+JCWaveInfo* JCAudioWavPlayer::AddWaveInfo( const std::string& p_sUrl,unsigned char* p_pBuffer,int p_nSize, const std::string& p_sFilePath,void* p_pExternalMark,bool p_bIsOgg )
 {
 	JCWaveInfo* pInfo = FindWaveInfo( p_sUrl );
 	if( pInfo == NULL )
@@ -362,7 +362,7 @@ JCWaveInfo* JCAudioWavPlayer::AddWaveInfo( const std::string& p_sUrl,unsigned ch
 		}
 		else
 		{
-            pInfo = JCOggParser::GetInstance()->GetWaveInfo( p_sFilePath,p_pBuffer,p_nSize );
+            pInfo = JCOggParser::GetInstance()->GetWaveInfo(p_sFilePath.c_str(), p_pBuffer, p_nSize);
 		}
 		if( pInfo != NULL )
 		{
@@ -380,7 +380,7 @@ JCWaveInfo* JCAudioWavPlayer::AddWaveInfo( const std::string& p_sUrl,unsigned ch
 	return pInfo;
 }
 //------------------------------------------------------------------------------
-JCWaveInfo* JCAudioWavPlayer::AddWaveInfoMp3(const std::string& p_sUrl, const char* p_sFilePath, void* p_pExternalMark)
+JCWaveInfo* JCAudioWavPlayer::AddWaveInfoMp3(const std::string& p_sUrl, const std::string& p_sFilePath, void* p_pExternalMark)
 { 
     #if defined(__LINUX__)
     return nullptr;
@@ -388,7 +388,7 @@ JCWaveInfo* JCAudioWavPlayer::AddWaveInfoMp3(const std::string& p_sUrl, const ch
 	JCWaveInfo* pInfo = FindWaveInfo( p_sUrl );
     if( pInfo == NULL )
     {
-        pInfo = JCMp3Parser::GetInstance()->GetWaveInfo(p_sFilePath);
+        pInfo = JCMp3Parser::GetInstance()->GetWaveInfo(p_sFilePath.c_str());
         if( pInfo != NULL )
         {
             pInfo->m_sUrl = p_sUrl;

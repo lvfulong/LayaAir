@@ -282,7 +282,7 @@ namespace laya
     //------------------------------------------------------------------------------
     JCWaveInfo* JCAudioManager::AddWaveInfo( const std::string& p_sUrl,JCBuffer& p_pBuffer,int p_nSize,void* p_pExternalMark,bool p_bIsOgg )
     {
-	    return m_pWavPlayer->AddWaveInfo( p_sUrl,(unsigned char*)p_pBuffer.m_pPtr,p_nSize,NULL,p_pExternalMark,p_bIsOgg );
+	    return m_pWavPlayer->AddWaveInfo( p_sUrl,(unsigned char*)p_pBuffer.m_pPtr, p_nSize, "", p_pExternalMark, p_bIsOgg );
     }
     //------------------------------------------------------------------------------
     JCWaveInfo* JCAudioManager::FindWaveInfo( const std::string& p_sUrl )
@@ -296,7 +296,7 @@ namespace laya
 	}
 #endif
 	//------------------------------------------------------------------------------
-	JCWaveInfo* JCAudioManager::AddWaveInfoMp3(const std::string& p_sUrl, const char* p_sFilePath, void* p_pExternalMark)
+	JCWaveInfo* JCAudioManager::AddWaveInfoMp3(const std::string& p_sUrl, const std::string& p_sFilePath, void* p_pExternalMark)
 	{
 #if defined(OHOS)
         return nullptr;//todo
