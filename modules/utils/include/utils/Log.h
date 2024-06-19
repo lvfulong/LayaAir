@@ -61,36 +61,36 @@ void CToObjectCLogIExt(const char *str);
     {                                                                                                                  \
         if (g_nDebugLevel >= 3)                                                                                        \
         {                                                                                                              \
-            CToObjectCLogIExt(str);                                                                              \
+            CToObjectCLogIExt(str);                                                                                    \
         }                                                                                                              \
     }
 #define LOGI(...)                                                                                                      \
     {                                                                                                                  \
         if (g_nDebugLevel >= 3)                                                                                        \
         {                                                                                                              \
-            CToObjectCLogI(__VA_ARGS__);                                                                         \
+            CToObjectCLogI(__VA_ARGS__);                                                                               \
         }                                                                                                              \
     }
 #define LOGW(...)                                                                                                      \
     {                                                                                                                  \
         if (g_nDebugLevel >= 2)                                                                                        \
         {                                                                                                              \
-            CToObjectCLogW(__VA_ARGS__);                                                                         \
+            CToObjectCLogW(__VA_ARGS__);                                                                               \
         }                                                                                                              \
         if (g_nDebugLevel >= 5)                                                                                        \
         {                                                                                                              \
-            alert(__VA_ARGS__);                                                                                  \
+            alert(__VA_ARGS__);                                                                                        \
         }                                                                                                              \
     }
 #define LOGE(...)                                                                                                      \
     {                                                                                                                  \
         if (g_nDebugLevel >= 1)                                                                                        \
         {                                                                                                              \
-            CToObjectCLogE(__VA_ARGS__);                                                                         \
+            CToObjectCLogE(__VA_ARGS__);                                                                               \
         }                                                                                                              \
         if (g_nDebugLevel >= 4)                                                                                        \
         {                                                                                                              \
-            alert(__VA_ARGS__);                                                                                  \
+            alert(__VA_ARGS__);                                                                                        \
         }                                                                                                              \
     }
 #elif __LINUX__
@@ -98,9 +98,9 @@ void CToObjectCLogIExt(const char *str);
     {                                                                                                                  \
         if (g_nDebugLevel >= 3)                                                                                        \
         {                                                                                                              \
-            if (gLayaLog)                                                                                        \
+            if (gLayaLog)                                                                                              \
             {                                                                                                          \
-                gLayaLog(static_cast<int>(laya::LogLevel::Info), __FILE__, __LINE__, __VA_ARGS__);               \
+                gLayaLog(static_cast<int>(laya::LogLevel::Info), __FILE__, __LINE__, __VA_ARGS__);                     \
             }                                                                                                          \
             else                                                                                                       \
             {                                                                                                          \
@@ -113,9 +113,9 @@ void CToObjectCLogIExt(const char *str);
     {                                                                                                                  \
         if (g_nDebugLevel >= 2)                                                                                        \
         {                                                                                                              \
-            if (gLayaLog)                                                                                        \
+            if (gLayaLog)                                                                                              \
             {                                                                                                          \
-                gLayaLog(static_cast<int>(laya::LogLevel::Warn), __FILE__, __LINE__, __VA_ARGS__);               \
+                gLayaLog(static_cast<int>(laya::LogLevel::Warn), __FILE__, __LINE__, __VA_ARGS__);                     \
             }                                                                                                          \
             else                                                                                                       \
             {                                                                                                          \
@@ -132,9 +132,9 @@ void CToObjectCLogIExt(const char *str);
     {                                                                                                                  \
         if (g_nDebugLevel >= 1)                                                                                        \
         {                                                                                                              \
-            if (gLayaLog)                                                                                        \
+            if (gLayaLog)                                                                                              \
             {                                                                                                          \
-                gLayaLog(static_cast<int>(laya::LogLevel::Error), __FILE__, __LINE__, __VA_ARGS__);              \
+                gLayaLog(static_cast<int>(laya::LogLevel::Error), __FILE__, __LINE__, __VA_ARGS__);                    \
             }                                                                                                          \
             else                                                                                                       \
             {                                                                                                          \
@@ -144,7 +144,7 @@ void CToObjectCLogIExt(const char *str);
         }                                                                                                              \
         if (g_nDebugLevel >= 4)                                                                                        \
         {                                                                                                              \
-            alert(__VA_ARGS__);                                                                                  \
+            alert(__VA_ARGS__);                                                                                        \
         }                                                                                                              \
     }
 #elif __ANDROID__
@@ -152,9 +152,9 @@ void CToObjectCLogIExt(const char *str);
     {                                                                                                                  \
         if (g_nDebugLevel >= 3)                                                                                        \
         {                                                                                                              \
-            if (gLayaLog)                                                                                        \
+            if (gLayaLog)                                                                                              \
             {                                                                                                          \
-                gLayaLog(static_cast<int>(laya::LogLevel::Info), __FILE__, __LINE__, __VA_ARGS__);               \
+                gLayaLog(static_cast<int>(laya::LogLevel::Info), __FILE__, __LINE__, __VA_ARGS__);                     \
             }                                                                                                          \
             else                                                                                                       \
             {                                                                                                          \
@@ -166,9 +166,9 @@ void CToObjectCLogIExt(const char *str);
     {                                                                                                                  \
         if (g_nDebugLevel >= 2)                                                                                        \
         {                                                                                                              \
-            if (gLayaLog)                                                                                        \
+            if (gLayaLog)                                                                                              \
             {                                                                                                          \
-                gLayaLog(static_cast<int>(laya::LogLevel::Warn), __FILE__, __LINE__, __VA_ARGS__);               \
+                gLayaLog(static_cast<int>(laya::LogLevel::Warn), __FILE__, __LINE__, __VA_ARGS__);                     \
             }                                                                                                          \
             else                                                                                                       \
             {                                                                                                          \
@@ -177,16 +177,16 @@ void CToObjectCLogIExt(const char *str);
         }                                                                                                              \
         if (g_nDebugLevel >= 5)                                                                                        \
         {                                                                                                              \
-            alert(__VA_ARGS__);                                                                                  \
+            alert(__VA_ARGS__);                                                                                        \
         }                                                                                                              \
     }
 #define LOGE(...)                                                                                                      \
     {                                                                                                                  \
         if (g_nDebugLevel >= 1)                                                                                        \
         {                                                                                                              \
-            if (laya::gLayaLog)                                                                                        \
+            if (gLayaLog)                                                                                              \
             {                                                                                                          \
-                gLayaLog(static_cast<int>(laya::LogLevel::Error), __FILE__, __LINE__, __VA_ARGS__);              \
+                gLayaLog(static_cast<int>(laya::LogLevel::Error), __FILE__, __LINE__, __VA_ARGS__);                    \
             }                                                                                                          \
             else                                                                                                       \
             {                                                                                                          \
@@ -195,7 +195,7 @@ void CToObjectCLogIExt(const char *str);
         }                                                                                                              \
         if (g_nDebugLevel >= 4)                                                                                        \
         {                                                                                                              \
-            alert(__VA_ARGS__);                                                                                  \
+            alert(__VA_ARGS__);                                                                                        \
         }                                                                                                              \
     }
 #elif OHOS
@@ -203,9 +203,9 @@ void CToObjectCLogIExt(const char *str);
     {                                                                                                                  \
         if (g_nDebugLevel >= 3)                                                                                        \
         {                                                                                                              \
-            if (gLayaLog)                                                                                        \
+            if (gLayaLog)                                                                                              \
             {                                                                                                          \
-                gLayaLog(static_cast<int>(laya::LogLevel::Info), __FILE__, __LINE__, __VA_ARGS__);               \
+                gLayaLog(static_cast<int>(laya::LogLevel::Info), __FILE__, __LINE__, __VA_ARGS__);                     \
             }                                                                                                          \
             else                                                                                                       \
             {                                                                                                          \
@@ -217,9 +217,9 @@ void CToObjectCLogIExt(const char *str);
     {                                                                                                                  \
         if (g_nDebugLevel >= 2)                                                                                        \
         {                                                                                                              \
-            if (gLayaLog)                                                                                        \
+            if (gLayaLog)                                                                                              \
             {                                                                                                          \
-                gLayaLog(static_cast<int>(laya::LogLevel::Warn), __FILE__, __LINE__, __VA_ARGS__);               \
+                gLayaLog(static_cast<int>(laya::LogLevel::Warn), __FILE__, __LINE__, __VA_ARGS__);                     \
             }                                                                                                          \
             else                                                                                                       \
             {                                                                                                          \
@@ -235,9 +235,9 @@ void CToObjectCLogIExt(const char *str);
     {                                                                                                                  \
         if (g_nDebugLevel >= 1)                                                                                        \
         {                                                                                                              \
-            if (gLayaLog)                                                                                        \
+            if (gLayaLog)                                                                                              \
             {                                                                                                          \
-                gLayaLog(static_cast<int>(laya::LogLevel::Error), __FILE__, __LINE__, __VA_ARGS__);              \
+                gLayaLog(static_cast<int>(laya::LogLevel::Error), __FILE__, __LINE__, __VA_ARGS__);                    \
             }                                                                                                          \
             else                                                                                                       \
             {                                                                                                          \
@@ -254,9 +254,9 @@ void CToObjectCLogIExt(const char *str);
     {                                                                                                                  \
         if (g_nDebugLevel >= 3)                                                                                        \
         {                                                                                                              \
-            if (gLayaLog)                                                                                        \
+            if (gLayaLog)                                                                                              \
             {                                                                                                          \
-                gLayaLog(static_cast<int>(laya::LogLevel::Info), __FILE__, __LINE__, __VA_ARGS__);               \
+                gLayaLog(static_cast<int>(laya::LogLevel::Info), __FILE__, __LINE__, __VA_ARGS__);                     \
             }                                                                                                          \
             else                                                                                                       \
             {                                                                                                          \
@@ -269,9 +269,9 @@ void CToObjectCLogIExt(const char *str);
     {                                                                                                                  \
         if (g_nDebugLevel >= 2)                                                                                        \
         {                                                                                                              \
-            if (gLayaLog)                                                                                        \
+            if (gLayaLog)                                                                                              \
             {                                                                                                          \
-                gLayaLog(static_cast<int>(laya::LogLevel::Warn), __FILE__, __LINE__, __VA_ARGS__);               \
+                gLayaLog(static_cast<int>(laya::LogLevel::Warn), __FILE__, __LINE__, __VA_ARGS__);                     \
             }                                                                                                          \
             else                                                                                                       \
             {                                                                                                          \
@@ -281,16 +281,16 @@ void CToObjectCLogIExt(const char *str);
         }                                                                                                              \
         if (g_nDebugLevel >= 5)                                                                                        \
         {                                                                                                              \
-            alert(__VA_ARGS__);                                                                                  \
+            alert(__VA_ARGS__);                                                                                        \
         }                                                                                                              \
     }
 #define LOGE(...)                                                                                                      \
     {                                                                                                                  \
         if (g_nDebugLevel >= 1)                                                                                        \
         {                                                                                                              \
-            if (gLayaLog)                                                                                        \
+            if (gLayaLog)                                                                                              \
             {                                                                                                          \
-                gLayaLog(static_cast<int>(laya::LogLevel::Error), __FILE__, __LINE__, __VA_ARGS__);              \
+                gLayaLog(static_cast<int>(laya::LogLevel::Error), __FILE__, __LINE__, __VA_ARGS__);                    \
             }                                                                                                          \
             else                                                                                                       \
             {                                                                                                          \
@@ -300,7 +300,7 @@ void CToObjectCLogIExt(const char *str);
         }                                                                                                              \
         if (g_nDebugLevel >= 4)                                                                                        \
         {                                                                                                              \
-            alert(__VA_ARGS__);                                                                                  \
+            alert(__VA_ARGS__);                                                                                        \
         }                                                                                                              \
     }
 

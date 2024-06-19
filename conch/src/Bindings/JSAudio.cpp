@@ -235,6 +235,13 @@ namespace laya
 			    }
 		    }
 	    }
+		else
+	    {
+		    laya::JCFileRes* res = JCConch::s_pScriptRuntime->m_pFileResMgr->getRes(m_sSrc);
+		    std::weak_ptr<int> cbref(m_CallbackRef);
+		    res->setOnReadyCB( std::bind(&JSAudio::onDownloaded,this, std::placeholders::_1,cbref));
+		    res->setOnErrorCB( std::bind(&JSAudio::onDownloadErr,this,std::placeholders::_1,std::placeholders::_2,cbref));
+	    }
     }
     //------------------------------------------------------------------------------
     bool JSAudio::onDownloadErr(void* p_pRes, int p_nErrCode,std::weak_ptr<int> callbackref)

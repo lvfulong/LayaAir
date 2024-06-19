@@ -147,7 +147,7 @@ template <typename T> T convert_value_object_from_v8(v8::Local<v8::Value> value)
         else
         {
             std::string error = std::string("Could not find property with name of ") + field.field_name_str;
-            LOGE(error.c_str());
+            LOGE("%s", error.c_str());
             v8::Isolate::GetCurrent()->ThrowException(
                 v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), error.c_str()).ToLocalChecked());
         }
