@@ -655,6 +655,7 @@ class RenderBindings
             class_binding.function("setGeometry", &GLESRenderElement2D::setGeometry);
             class_binding.function("setSubShader", &GLESRenderElement2D::setSubShader);
             class_binding.class_function("setCompileDefine", &GLESRenderElement2D::setCompileDefine);
+            class_binding.function("destroy", &GLESRenderElement2D::destroy);
             context.class_("conchGLESRenderElement2D", class_binding);
         }
         {

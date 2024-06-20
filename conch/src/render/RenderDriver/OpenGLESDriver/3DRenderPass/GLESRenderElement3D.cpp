@@ -148,6 +148,7 @@ void GLESRenderElement3D::_compileShader(GLESRenderContext3D *context)
 void GLESRenderElement3D::drawGeometry(GLESShaderInstance *shaderIns)
 {
     LayaGL::m_pWebglEngine->getDrawContext()->drawGeometryElement(geometry);
+
 }
 void GLESRenderElement3D::setCompileDefine(RTDefineDatas *value)
 {

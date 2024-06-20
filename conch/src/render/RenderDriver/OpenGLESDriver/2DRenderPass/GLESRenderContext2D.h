@@ -19,6 +19,7 @@ namespace laya
 		void setSceneShaderData(GLESShaderData* value)
 		{
 			sceneData = value;
+
 		}
 		void setGlobalConfigShaderData(RTDefineDatas* value)
 		{

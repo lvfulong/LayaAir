@@ -22,6 +22,16 @@ namespace laya
 	{
 
 	}
+
+	void GLESRenderElement2D::destroy() {
+		_shaderInstances.clear();
+		GLESShaderData* materialShaderData = nullptr;
+		GLESShaderData* value2DShaderData = nullptr;
+		GLESRenderGeometryElement* geometry = nullptr;
+		RTSubShader* subshader = nullptr;
+		
+	}
+
 	void GLESRenderElement2D::_preUpdatePre(GLESRenderContext2D* context)
 	{
 		_compileShader(context);
