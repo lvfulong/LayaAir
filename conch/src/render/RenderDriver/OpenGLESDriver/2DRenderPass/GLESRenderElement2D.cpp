@@ -112,8 +112,15 @@ namespace laya
 		if (materialShaderData) {
 			shader->uploadUniforms(&(shader->m_materialUniformParamsMap),materialShaderData, true);
 		}
-		shader->uploadRenderStateBlendDepth(value2DShaderData);
-		shader->uploadRenderStateFrontFace(value2DShaderData, false, context->invertY);
+
+		if (renderStateIsBySprite || materialShaderData==nullptr) {
+			shader->uploadRenderStateBlendDepth(value2DShaderData);
+			shader->uploadRenderStateFrontFace(value2DShaderData, false, context->invertY);
+		}
+		else {
+			shader->uploadRenderStateBlendDepth(materialShaderData);
+			shader->uploadRenderStateFrontFace(materialShaderData, false, context->invertY);
+		}
 		LayaGL::m_pWebglEngine->getDrawContext()->drawGeometryElement(geometry);
 	}
 } // namespace laya

@@ -18,6 +18,7 @@
 #include "../../LayaAir/2D/ScreenCanvasContext2D.h"
 #include "../../LayaAir/2D/RenderTexture2D.h"
 #include "LayaAir/2D/RenderState2D.h"
+#include <render/3D/temp/RenderStateContext.h>
 #ifdef __APPLE__
 #include "OpenGLBackendiOS.h"
 #elif __LINUX__
@@ -275,6 +276,13 @@ void JCConchRender::end()
     RenderState2D::height = g_nInnerHeight;
     m_pScreenContext->clear();
     //m_pScreenContext->size(g_nInnerWidth, g_nInnerHeight);
+    //
+    //临时在最好的渲染前恢复状态
+    RenderStateContext::setDepthTest(false);
+    RenderStateContext::setCullFace(false);
+    RenderStateContext::setBlend(false);
+    RenderStateContext::setDepthFunc(CompareFunction::Always);
+    RenderStateContext::setStencilTest(false);
     m_pScreenContext->drawToScreen(m);
     //m_pScreenContext->drawTarget(m_pScreenContext->m_target, 0, 0, width, height, m, INV_UV, BlendMode::disable);
     m_pScreenContext->flush();

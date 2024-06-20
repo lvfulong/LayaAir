@@ -656,6 +656,7 @@ class RenderBindings
             class_binding.function("setSubShader", &GLESRenderElement2D::setSubShader);
             class_binding.class_function("setCompileDefine", &GLESRenderElement2D::setCompileDefine);
             class_binding.function("destroy", &GLESRenderElement2D::destroy);
+            class_binding.property_field("renderStateIsBySprite", &GLESRenderElement2D::renderStateIsBySprite);
             context.class_("conchGLESRenderElement2D", class_binding);
         }
         {

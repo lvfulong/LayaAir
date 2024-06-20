@@ -41,6 +41,7 @@ namespace laya
 		GLESShaderData* value2DShaderData = nullptr;
 		GLESRenderGeometryElement* geometry = nullptr;
 		RTSubShader* subshader = nullptr;
+		bool renderStateIsBySprite = true;
 	private:
 	protected:
 		JCSingletonList<GLESShaderInstance*> _shaderInstances = JCSingletonList<GLESShaderInstance*>(false);
