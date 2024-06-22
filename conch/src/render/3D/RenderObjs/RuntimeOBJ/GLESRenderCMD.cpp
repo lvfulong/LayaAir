@@ -26,16 +26,31 @@ namespace laya{
 	}
 	void GLESDrawNodeCMDData::apply(GLESRenderContext3D* context)
 	{
-		_node->_renderUpdatePre(context);
-		for (auto element : _node->renderelements) {
-				RTSubShader* oriElement = element->subshader;
+		if (this->_shaderData && this->_subShader) {
+			_node->_renderUpdatePre(context);
+			if (this->_subMeshIndex == -1) {
+				for (auto element : _node->renderelements) {
+					RTSubShader* oriElement = element->subshader;
+					GLESShaderData* oriMatShaderData = element->materialShaderData;
+					element->subshader = _subShader;
+					element->materialShaderData = _shaderData;
+					context->drawRenderElementOne(element);
+					element->subshader = oriElement;
+					element->materialShaderData = oriMatShaderData;
+				}
+			}
+			else {
+				auto element = _node->renderelements[this->_subMeshIndex];
+				RTSubShader* oriSubShader = element->subshader;
 				GLESShaderData* oriMatShaderData = element->materialShaderData;
-				element->subshader = _subShader;
-				element->materialShaderData = _shaderData;
+				element->subshader = this->_subShader;
+				element->materialShaderData = this->_shaderData;
 				context->drawRenderElementOne(element);
-				element->subshader = oriElement;
+				element->subshader = oriSubShader;
 				element->materialShaderData = oriMatShaderData;
+			}
 		}
+
 	}
 	void GLESDrawNodeCMDData::setBaseRenderNode(RTBaseRenderNode* node)
 	{
