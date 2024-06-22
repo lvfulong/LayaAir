@@ -347,6 +347,13 @@ class RenderBindings
                     }
                 }));
             //class_binding.function("readRenderTargetPixelData", &GLTextureContext::readRenderTargetPixelData);
+            class_binding.function_optional_override("readRenderTargetPixelData",
+            optional_override([](GLTextureContext &ctx, GLESInternalRT* renderTarget, int xOffset, int yOffset, int width, int height, JSValueAsParam out) {
+		        std::vector<uint8_t> buffer;
+		        ctx.readRenderTargetPixelData(renderTarget, xOffset, yOffset, width, height, buffer);
+		        writeToJSAB(out, (const char*)buffer.data(), buffer.size());
+		        return out;
+            }));
             //class_binding.function("getRenderTextureData", &GLTextureContext::getRenderTextureData);
             context.class_("conchGLESTextureContext", class_binding);
         }

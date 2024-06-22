@@ -24,7 +24,10 @@ class GLESRenderListQueue
 
     void addRenderElement(GLESRenderElement3D *renderelement)
     {
-        this->_elements.add(renderelement);
+        if (renderelement->materialShaderData)
+        {
+            this->_elements.add(renderelement);
+        }
     }
 
     void renderQueue(GLESRenderContext3D *context)
