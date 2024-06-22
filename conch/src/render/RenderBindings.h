@@ -355,6 +355,55 @@ class RenderBindings
                     writeToJSAB(out, (const char *)buffer.data(), buffer.size());
                     return out;
                 }));
+            class_binding.function("createTexture3DInternal", &GLTextureContext::createTexture3DInternal);
+            class_binding.function_optional_override(
+                "setTexture3DImageData",
+                optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, JSValueAsParam jsSources,
+                                     int depth, bool premultiplyAlpha, bool invertY) {
+                    std::vector<JSImage *> sources = Converter<std::vector<JSImage *>>::ToCpp(jsSources);
+                    ctx.setTexture3DImageData(texture, sources, depth, premultiplyAlpha, invertY);
+                }));
+
+            class_binding.function_optional_override(
+                "setTexture3DPixelsData",
+                optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, JSValueAsParam pixels, int depth,
+                                     bool premultiplyAlpha, bool invertY) {
+                    if (texture == nullptr)
+                    {
+                        return;
+                    }
+                    char *arrayBuffer;
+                    int abLength;
+                    bool isArrayBuffer = extractJSAB(pixels, arrayBuffer, abLength);
+                    if (isArrayBuffer)
+                    {
+                        ctx.setTexture3DPixelsData(texture, arrayBuffer, abLength, depth, premultiplyAlpha, invertY);
+                    }
+                    else
+                    {
+                        ctx.setTexture3DPixelsData(texture, nullptr, abLength, depth, premultiplyAlpha, invertY);
+                    }
+                }));
+
+            class_binding.function_optional_override(
+                "setTexture3DSubPixelsData",
+                optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, JSValueAsParam pixels,
+                                     int mipmapLevel, bool generateMipmap, int xOffset, int yOffset, int zOffset,
+                                     int width, int height, int depth, bool premultiplyAlpha, bool invertY) {
+                    if (texture == nullptr)
+                    {
+                        return;
+                    }
+                    char *arrayBuffer;
+                    int abLength;
+                    bool isArrayBuffer = extractJSAB(pixels, arrayBuffer, abLength);
+                    if (isArrayBuffer)
+                    {
+                        ctx.setTexture3DSubPixelsData(texture, arrayBuffer, mipmapLevel, generateMipmap, xOffset,
+                                                      yOffset, zOffset, width, height, depth, premultiplyAlpha,
+                                                      invertY);
+                    }
+                }));
             // class_binding.function("getRenderTextureData", &GLTextureContext::getRenderTextureData);
             context.class_("conchGLESTextureContext", class_binding);
         }
@@ -363,10 +412,6 @@ class RenderBindings
             class_<GL2TextureContext> class_binding;
             class_binding.inherit<GLTextureContext>();
             class_binding.constructor<>();
-            /*
-            class_binding.function("setTexture3DImageData", &JSGL2TextureContext::setTexture3DImageData);
-            class_binding.function("setTexture3DPixelsData", &JSGL2TextureContext::setTexture3DPixelsData);
-            class_binding.function("setTexture3DSubPixelsData", &JSGL2TextureContext::setTexture3DSubPixelsData);*/
             context.class_("conchGLES2TextureContext", class_binding);
         }
         {
@@ -917,44 +962,44 @@ class RenderBindings
             class_binding.constructor<RTDefineDatas *>();
             // class_binding.function("getOwnerDefineData", &GLESShaderData::getOwnerDefineDataJS);
             class_binding.function("setBool", &GLESShaderData::setBool);
-            class_binding.function_optional_override("getBool",
-                                                     optional_override([](GLESShaderData &ctx, int32_t index)->JsValue {
-                                                         bool *ret = ctx.getBool(index);
-                                                         if (ret != nullptr)
-                                                         {
-                                                             return Converter<int>::ToJs(*ret);
-                                                         }
-                                                         else
-                                                         {
-                                                             return JSP_TO_JS_UNDEFINE;
-                                                         }
-                                                     }));
+            class_binding.function_optional_override(
+                "getBool", optional_override([](GLESShaderData &ctx, int32_t index) -> JsValue {
+                    bool *ret = ctx.getBool(index);
+                    if (ret != nullptr)
+                    {
+                        return Converter<int>::ToJs(*ret);
+                    }
+                    else
+                    {
+                        return JSP_TO_JS_UNDEFINE;
+                    }
+                }));
             class_binding.function("setInt", &GLESShaderData::setInt);
-            class_binding.function_optional_override("getInt",
-                                                     optional_override([](GLESShaderData &ctx, int32_t index)->JsValue {
-                                                         int *ret = ctx.getInt(index);
-                                                         if (ret != nullptr)
-                                                         {
-                                                             return Converter<int>::ToJs(*ret);
-                                                         }
-                                                         else
-                                                         {
-                                                             return JSP_TO_JS_UNDEFINE;
-                                                         }
-                                                     }));
+            class_binding.function_optional_override(
+                "getInt", optional_override([](GLESShaderData &ctx, int32_t index) -> JsValue {
+                    int *ret = ctx.getInt(index);
+                    if (ret != nullptr)
+                    {
+                        return Converter<int>::ToJs(*ret);
+                    }
+                    else
+                    {
+                        return JSP_TO_JS_UNDEFINE;
+                    }
+                }));
             class_binding.function("setNumber", &GLESShaderData::setNumber);
-            class_binding.function_optional_override("getNumber",
-                                                     optional_override([](GLESShaderData &ctx, int32_t index)->JsValue {
-                                                         float *ret = ctx.getNumber(index);
-                                                         if (ret != nullptr)
-                                                         {
-                                                             return Converter<float>::ToJs(*ret);
-                                                         }
-                                                         else
-                                                         {
-                                                             return JSP_TO_JS_UNDEFINE;
-                                                         }
-                                                     }));
+            class_binding.function_optional_override(
+                "getNumber", optional_override([](GLESShaderData &ctx, int32_t index) -> JsValue {
+                    float *ret = ctx.getNumber(index);
+                    if (ret != nullptr)
+                    {
+                        return Converter<float>::ToJs(*ret);
+                    }
+                    else
+                    {
+                        return JSP_TO_JS_UNDEFINE;
+                    }
+                }));
             class_binding.function("setVector2", &GLESShaderData::setVector2);
             class_binding.function("getVector2", &GLESShaderData::getVector2);
             class_binding.function("setVector3", &GLESShaderData::setVector3);

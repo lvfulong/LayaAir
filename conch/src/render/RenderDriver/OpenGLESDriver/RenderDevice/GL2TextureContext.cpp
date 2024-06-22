@@ -513,7 +513,32 @@ namespace laya
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 		}
     }
+    GLESInternalTex* GL2TextureContext::createTexture3DInternal(TextureDimension dimension, int width, int height, int depth, TextureFormat format, bool generateMipmap, bool sRGB, bool premultipliedAlpha)
+    {
+        // todo  一些format 不支持自动生成mipmap
 
+        // todo  这个判断, 若纹理本身格式不支持？
+        bool useSRGBExt = this->isSRGBFormat(static_cast<int>(format)) || (sRGB && this->supportSRGB(static_cast<int>(format), generateMipmap));
+        if (premultipliedAlpha) {//预乘法和SRGB同时开启，会有颜色白边问题
+            useSRGBExt = false;
+        }
+        float gammaCorrection = 1.0f;
+        if (!useSRGBExt && sRGB) {
+            gammaCorrection = 2.2f;
+        }
+
+        // let dimension = TextureDimension.Tex2D;
+        GLenum target = this->getTarget(dimension);
+        GLESInternalTex* internalTex = new GLESInternalTex(target, width, height, depth, dimension, generateMipmap, useSRGBExt, gammaCorrection);
+
+        auto glParam = this->glTextureParam(format, useSRGBExt);
+
+        internalTex->setInternalFormat(glParam.internalFormat);
+        internalTex->m_format = glParam.format;
+        internalTex->m_type = glParam.type;
+
+        return internalTex;
+    }
     void GL2TextureContext::setTexture3DImageData(GLESInternalTex *texture, const std::vector<JSImage *>& sources, int depth, bool premultiplyAlpha, bool invertY)
     {
         

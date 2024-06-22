@@ -62,6 +62,10 @@ class GLTextureContext : public GLObject
                                      bool premultiplyAlpha, bool invertY);
     virtual void setTexturePixelsData(GLESInternalTex *texture, char *source, int sourceBytes, bool premultiplyAlpha,
                                       bool invertY);
+    virtual GLESInternalTex* createTexture3DInternal(TextureDimension dimension, int width, int height, int depth, TextureFormat format, bool generateMipmap, bool sRGB, bool premultipliedAlpha)
+    {
+        return nullptr;
+    }
     virtual void setTexture3DImageData(GLESInternalTex *texture, const std::vector<JSImage *> &sources, int depth,
                                        bool premultiplyAlpha, bool invertY)
     {

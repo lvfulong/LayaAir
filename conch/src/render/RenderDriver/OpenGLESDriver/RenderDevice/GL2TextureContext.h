@@ -24,6 +24,7 @@ namespace laya
 		GLRenderBufferParam* glRenderBufferParam(RenderTargetFormat format, bool useSRGB) override;
 		const GLParam& glRenderTextureParam(RenderTargetFormat format, bool useSRGB) override;
 		bool supportSRGB(int format, bool mipmap) override;
+		GLESInternalTex* createTexture3DInternal(TextureDimension dimension, int width, int height, int depth, TextureFormat format, bool generateMipmap, bool sRGB, bool premultipliedAlpha) override;
 		void setTextureImageData(GLESInternalTex* texture, JCImage* source/*HTMLImageElement | HTMLCanvasElement | ImageBitmap*/, bool premultiplyAlpha, bool invertY) override;
 		void setTexturePixelsData(GLESInternalTex* texture, char* source, int sourceBytes, bool premultiplyAlpha, bool invertY) override;
         void setTexture3DImageData(GLESInternalTex* texture, const std::vector<JSImage*>& sources, int depth, bool premultiplyAlpha, bool invertY) override;
