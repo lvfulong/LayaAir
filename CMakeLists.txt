@@ -11,13 +11,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CONCH_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
 include(${CONCH_ROOT_DIR}/cmake/preprocessor.cmake)
 
-
-option(USE_DOUBLE_PRECISION "Use double" OFF)
-
-if(USE_DOUBLE_PRECISION)
-	add_definitions(-DUSE_DOUBLE_PRECISION)
-endif()
-
 if(ANDROID)
 	add_definitions(-DJS_V8)
 	option(CONCH_USE_CURL_DOWNLOAD "Use CURL" OFF)
@@ -50,7 +43,6 @@ elseif(OHOS)
 	add_definitions(-DOHOS_STL=c++_shared)
 	add_definitions(-DOHOS_TOOLCHAIN=clang)
 	add_definitions(-fno-rtti)
-	#add_definitions(-DBT_USE_DOUBLE_PRECISION)
 	add_definitions(-DAL_ALEXT_PROTOTYPES)
 elseif(LINUX)
 	add_definitions(-DJS_V8)

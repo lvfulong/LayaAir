@@ -798,7 +798,7 @@ elseif(IOS)
 	)
 	set_property(TARGET ${PROJECT_NAME} PROPERTY XCODE_ATTRIBUTE_ENABLE_BITCODE "NO")
 elseif(MSVC)
-	target_compile_definitions(${PROJECT_NAME} PRIVATE GL_GLEXT_PROTOTYPES BT_USE_DOUBLE_PRECISION)
+	#target_compile_definitions(${PROJECT_NAME} PRIVATE GL_GLEXT_PROTOTYPES)
 	target_link_libraries(${PROJECT_NAME} PUBLIC
 		version.lib
 		Setupapi.lib
@@ -872,7 +872,7 @@ elseif(LINUX)
 	add_subdirectory("../third_party/glad/glad-2.0.4/cmake" glad_cmake)
 	glad_add_library(glad REPRODUCIBLE LOADER API egl=1.5 gles2=3.0)
 	set(LINKER_FLAGS ${LINKER_FLAGS} "-Wl,--push-state,-Bstatic,-lstdc++,--pop-state")
-	target_compile_definitions(${PROJECT_NAME} PRIVATE GL_GLEXT_PROTOTYPES BT_USE_DOUBLE_PRECISION)
+	#target_compile_definitions(${PROJECT_NAME} PRIVATE GL_GLEXT_PROTOTYPES)
 	target_link_libraries(${PROJECT_NAME} PUBLIC
 		${LINKER_FLAGS}
 		X11
