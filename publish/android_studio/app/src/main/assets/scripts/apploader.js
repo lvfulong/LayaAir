@@ -6062,6 +6062,9 @@ class HTMLVideoElement extends HTMLMediaElement {
         }
         return super.appendChild(node);
     }
+    get ended() {
+        return this._nativeObj.currentTime >= this._nativeObj.duration;
+    }
     get readyState() {
         return this._nativeObj.readyState;
     }
