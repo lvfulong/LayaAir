@@ -11,6 +11,7 @@
 #include "BulletDynamics/Character/btKinematicCharacterController.h"
 #include "BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h"
 #include "BulletSoftBody/btSoftRigidDynamicsWorld.h"
+#include "BulletCollision/CollisionShapes/btShapeHull.h"
 #include <Bindings/JSRuntime.h>
 #define  WASM_EXP JSLayaConchBullet::
 #define __BTWASM_SYSCALL_NAME(name)
@@ -169,6 +170,15 @@ namespace laya
         static void  btCompoundShape_removeChildShapeByIndex(pointer_t ptr, int childShapeIndex);
         static pointer_t  btCompoundShape_getChildShape(pointer_t ptr, int index);
         static void  btCompoundShape_updateChildTransform(pointer_t ptr, int index, pointer_t newChildTransform, bool shouldRecalculateLocalAabb);
+        static pointer_t btShapeHull_create(pointer_t ptr);
+        static int btShapeHull_numVertices(pointer_t ptr);
+        static int btShapeHull_numIndices(pointer_t ptr);
+        static pointer_t btShapeHull_getVertexPointer(pointer_t ptr, int index);
+        static int btShapeHull_getIndexPointer(pointer_t ptr, int index);
+        static pointer_t btConvexHullShape_create(pointer_t ptr);
+        static void btConvexHullShape_addPoint(pointer_t ptr, pointer_t vertex1, bool recalculateLocalAabb);
+        static int btConvexHullShape_getNumEdges(pointer_t ptr);
+        static pointer_t btConvexHullShape_getVertex(pointer_t ptr, int i);
         static void  btStridingMeshInterface_destroy(pointer_t ptr);
         static pointer_t  btTriangleMesh_create();
         static void  btTriangleMesh_addTriangle(pointer_t ptr, pointer_t vertex1, pointer_t vertex2, pointer_t vertex3, bool removeDuplicateVertices);

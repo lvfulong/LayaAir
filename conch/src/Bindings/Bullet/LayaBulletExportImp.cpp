@@ -285,6 +285,15 @@ namespace laya
 		class_binding.class_function("btKinematicCharacterController_AllHitInfo_get_m_collisionObjects", &JSLayaConchBullet::btKinematicCharacterController_AllHitInfo_get_m_collisionObjects);
 		class_binding.class_function("btGeneric6DofSpring2Constraint_setRotationOrder", &JSLayaConchBullet::btGeneric6DofSpring2Constraint_setRotationOrder);
 		class_binding.class_function("solveSphereHit", &JSLayaConchBullet::solveSphereHit);
+		class_binding.class_function("btShapeHull_create", &JSLayaConchBullet::btShapeHull_create);
+		class_binding.class_function("btShapeHull_numVertices", &JSLayaConchBullet::btShapeHull_numVertices);
+		class_binding.class_function("btShapeHull_numIndices", &JSLayaConchBullet::btShapeHull_numIndices);
+		class_binding.class_function("btShapeHull_getVertexPointer", &JSLayaConchBullet::btShapeHull_getVertexPointer);
+		class_binding.class_function("btShapeHull_getIndexPointer", &JSLayaConchBullet::btShapeHull_getIndexPointer);
+		class_binding.class_function("btConvexHullShape_create", &JSLayaConchBullet::btConvexHullShape_create);
+		class_binding.class_function("btConvexHullShape_addPoint", &JSLayaConchBullet::btConvexHullShape_addPoint);
+		class_binding.class_function("btConvexHullShape_getNumEdges", &JSLayaConchBullet::btConvexHullShape_getNumEdges);
+		class_binding.class_function("btConvexHullShape_getVertex", &JSLayaConchBullet::btConvexHullShape_getVertex);
 		//class_binding.class_function("btRigidBody_setSurfaceVelocity", JSLayaConchBullet::btRigidBody_setSurfaceVelocity);
 		//class_binding.class_function("btRigidBody_setSurfaceVelocityxyz", JSLayaConchBullet::btRigidBody_setSurfaceVelocityxyz);
 		//class_binding.class_function("btCollisionObject_setHasCDCallback", JSLayaConchBullet::btCollisionObject_setHasCDCallback);

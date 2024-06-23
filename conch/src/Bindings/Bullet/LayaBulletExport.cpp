@@ -39,6 +39,7 @@ typedef int pointer_t;
 #include "../bullet/src/BulletCollision/CollisionDispatch/btGhostObject.h"
 #include "../bullet/src/BulletDynamics/Character/btKinematicCharacterController.h"
 #include "../bullet/src/BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h"
+#include "../bullet/src/BulletCollision/CollisionShapes/btShapeHull.h"
 #define WASM_EXP __attribute__((visibility("default")))
 #define __BTWASM_SYSCALL_NAME(name) \
 	__attribute__((__import_module__("LayaAirInteractive"), __import_name__(#name)))
@@ -945,6 +946,38 @@ void WASM_EXP btCompoundShape_updateChildTransform(pointer_t ptr, int index, poi
 	compShape->updateChildTransform(index, *(btTransform *)newChildTransform, shouldRecalculateLocalAabb);
 }
 
+//btConvexHullShape
+pointer_t WASM_EXP btConvexHullShape_create(pointer_t ptr)
+{
+	btShapeHull* hull = (btShapeHull *) ptr;
+
+	btConvexHullShape* convexShape = new btConvexHullShape();
+	for (int i=0;i<hull->numVertices();i++)
+	{
+		convexShape->addPoint(hull->getVertexPointer()[i]);	
+	}
+	return (pointer_t) convexShape;
+}
+
+void WASM_EXP btConvexHullShape_addPoint(pointer_t ptr, pointer_t vertex1,bool recalculateLocalAabb)
+{
+	btConvexHullShape *convexHullShape = (btConvexHullShape *)ptr;
+	convexHullShape->addPoint(*(btVector3 *)vertex1,recalculateLocalAabb);
+}
+
+int WASM_EXP btConvexHullShape_getNumEdges(pointer_t ptr)
+{
+	btConvexHullShape *convexHullShape = (btConvexHullShape *)ptr;
+	return convexHullShape->getNumEdges();
+}
+
+pointer_t WASM_EXP btConvexHullShape_getVertex(pointer_t ptr,int i)
+{
+	btVector3 vtx;
+	btConvexHullShape *convexHullShape = (btConvexHullShape *)ptr;
+	convexHullShape->getVertex(i,vtx);
+	return (pointer_t)&vtx;
+}
 //btStridingMeshInterface
 void WASM_EXP btStridingMeshInterface_destroy(pointer_t ptr)
 {
@@ -965,6 +998,41 @@ btScalar WASM_EXP btConcaveShape_getMargin(pointer_t ptr)
 }
 
 
+//btShapeHull
+pointer_t WASM_EXP btShapeHull_create(pointer_t ptr)
+{
+	btTriangleMesh* trimesh = (btTriangleMesh *) ptr;
+	btConvexShape* tmpConvexShape = new btConvexTriangleMeshShape(trimesh);
+	btShapeHull* hull = new btShapeHull(tmpConvexShape);
+	btScalar margin = tmpConvexShape->getMargin();
+	hull->buildHull(margin);
+	tmpConvexShape->setUserPointer(hull);
+	return (pointer_t)hull;
+}
+
+int WASM_EXP btShapeHull_numVertices(pointer_t ptr)
+{
+	btShapeHull* hull = (btShapeHull *) ptr;
+	return hull->numVertices();
+}
+
+int WASM_EXP btShapeHull_numIndices(pointer_t ptr)
+{
+	btShapeHull* hull = (btShapeHull *) ptr;
+	return hull->numIndices();
+}
+
+pointer_t WASM_EXP btShapeHull_getVertexPointer(pointer_t ptr,int index)
+{
+	btShapeHull* hull = (btShapeHull *) ptr;
+	return (pointer_t)&hull->getVertexPointer()[index];
+}
+
+int WASM_EXP btShapeHull_getIndexPointer(pointer_t ptr,int index)
+{
+	btShapeHull* hull = (btShapeHull *) ptr;
+	return hull->getIndexPointer()[index];
+}
 //btTriangleMesh
 pointer_t WASM_EXP btTriangleMesh_create()
 {
