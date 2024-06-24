@@ -650,6 +650,7 @@ class RenderBindings
             class_binding.function("setBaseGeometryBounds", &RTBaseRenderNode::setBaseGeometryBounds);
             class_binding.function("setTransform", &RTBaseRenderNode::setTransform);
             class_binding.function("setLightmap", &RTBaseRenderNode::setLightmap);
+            class_binding.function("setVolumetricGI", &RTBaseRenderNode::setVolumetricGI);
             class_binding.function("setProbeReflection", &RTBaseRenderNode::setProbeReflection);
             class_binding.property("_bounds", &RTBaseRenderNode::getBounds, &RTBaseRenderNode::setBounds);
             class_binding.property_field("renderNodeType", &RTBaseRenderNode::renderNodeType);
