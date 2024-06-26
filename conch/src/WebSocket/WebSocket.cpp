@@ -769,8 +769,9 @@ lws_vhost* WebSocket::createVhost(struct lws_protocols* protocols, int& sslConne
 {
     std::string caFileName = "cacert.pem";
 #ifdef WIN32
-    static std::string caFilePath = gRedistPath + std::string("ca/") + caFileName;
+    static std::string caFilePath = gRedistPath + std::string("ca\\") + caFileName;
     bool isCAFileExist = FileSystem::exists(caFilePath);
+
 #elif __LINUX__
     static std::string caFilePath = gRedistPath + std::string("ca/") + caFileName;
     bool isCAFileExist = FileSystem::exists(caFilePath);
@@ -825,7 +826,7 @@ lws_vhost* WebSocket::createVhost(struct lws_protocols* protocols, int& sslConne
         }
         else
         {
-            LOGI("can not find ca file in [%s]", caFilePath.c_str());
+            LOGW("warning: can not find ca file in [%s], skip server cert hostname check", caFilePath.c_str());
             sslConnection = sslConnection | LCCSCF_ALLOW_SELFSIGNED | LCCSCF_SKIP_SERVER_CERT_HOSTNAME_CHECK;
         }
     }
