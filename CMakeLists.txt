@@ -82,7 +82,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 if(NOT BUILDING_CONCH_SHARED AND NOT BUILDING_CONCH_STATIC)
    add_definitions(-DBUILDING_CONCH_FROME_SOURCE)
-   add_subdirectory(template)
+   if(NOT LINUX AND NOT OHOS)
+		add_subdirectory(template)
+   endif()
 endif()
 
 add_subdirectory(modules/utils)

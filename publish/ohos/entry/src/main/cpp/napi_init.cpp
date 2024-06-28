@@ -1,6 +1,6 @@
 #include <js_native_api.h>
 #include <js_native_api_types.h>
-#include "platform/ohos/napi/native_api.h"
+#include "napi/native_api.h"
 /*
  * function for module exports
  */

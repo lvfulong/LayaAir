@@ -7,8 +7,6 @@
 
 #include <ace/xcomponent/native_interface_xcomponent.h>
 #include <napi/native_api.h>
-
-#include "egl_core.h"
 #include "../WorkerMessageQueue.h"
 
 class PluginRender {
@@ -66,7 +64,6 @@ public:
     uv_loop_t* workerLoop_{nullptr};
     uv_async_t messageSignal_{};
     WorkerMessageQueue messageQueue_;
-    EGLCore* eglCore_{nullptr};
 
     uint64_t width_;
     uint64_t height_;

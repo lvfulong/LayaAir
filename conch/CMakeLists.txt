@@ -602,25 +602,24 @@ elseif(OHOS)
 		src/Backend/src
 	)
 	list(APPEND CONCH_SRC
-		src/platform/OHOS/napi/helper/NapiHelper.cpp
-    	src/platform/OHOS/napi/plugin_manager.cpp
-    	src/platform/OHOS/napi/WorkerMessageQueue.cpp
-    	src/platform/OHOS/napi/render/plugin_render.cpp
-    	src/platform/OHOS/napi/render/egl_core.cpp
-    	src/platform/OHOS/napi/modules/TouchesNapi.cpp
-    	src/platform/OHOS/napi/modules/VideoPlayerNapi.cpp
-		src/downloadCache/JCOHOSFileSource.h
-		src/Backend/src/OpenGLBackendOHOSEGL.h
+		src/platform/ohos/napi/helper/NapiHelper.cpp
+    	src/platform/ohos/napi/plugin_manager.cpp
+    	src/platform/ohos/napi/WorkerMessageQueue.cpp
+    	src/platform/ohos/napi/render/plugin_render.cpp
+    	src/platform/ohos/napi/modules/TouchesNapi.cpp
+    	src/platform/ohos/napi/modules/VideoPlayerNapi.cpp
+		#src/downloadCache/JCOHOSFileSource.h
+		#src/Backend/src/OpenGLBackendOHOSEGL.h
 		src/Backend/src/OpenGLBackendOHOSEGL.cpp
 		src/Bindings/Video/JSVideo_OHOSImpl.cpp
-		src/2D/CanvasRenderingContext2DOHOS.h
+		#src/2D/CanvasRenderingContext2DOHOS.h
 		src/2D/CanvasRenderingContext2DOHOS.cpp
-		src/Bindings/JSOHOSEditBox.h
+		#src/Bindings/JSOHOSEditBox.h
 		src/Bindings/JSOHOSEditBox.cpp
-		src/resource/Audio/JCAudioWavplayer-openharmony.h
+		#src/resource/Audio/JCAudioWavplayer-openharmony.h
 		src/resource/Audio/JCAudioWavplayer-openharmony.cpp
 		src/Audio/ohos/JCAudioMp3Player.cpp
-		src/Audio/ohos/JCAudioMp3Player.h
+		#src/Audio/ohos/JCAudioMp3Player.h
 	)
 elseif(LINUX)
 	list(APPEND PLATFORM_HEADER_DIR
@@ -656,6 +655,7 @@ elseif(MSVC)
 	target_precompile_headers(${PROJECT_NAME} PRIVATE ${CONCH_HEADERS})
 elseif(OHOS)
 	add_library(${PROJECT_NAME} SHARED ${CONCH_SRC})
+	target_compile_options(${PROJECT_NAME} PRIVATE -O3)
 elseif(LINUX)
 	add_library(${PROJECT_NAME} ${CONCH_SRC})
 elseif(IOS)
@@ -838,8 +838,7 @@ elseif(MSVC)
 		SDL2main
 	)
 elseif(OHOS)
-
-	target_link_libraries(${PROJECT_NAME} 
+	target_link_libraries(${PROJECT_NAME} PUBLIC
 		${EGL-lib}
 		${GLESv3-lib}
 	  	${hilog-lib} 
