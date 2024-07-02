@@ -1,6 +1,4 @@
 'use strict';
-require("webglPlus.js");
-
 conch["platCallBack"] = function (ret) {
     var objid, m, rs, c, rJSON;
     if (ret == null)
@@ -83,23 +81,6 @@ PlatformObj.objMap = {};
 PlatformObj.objNum = 0;
 window["PlatformClass"] = PlatformClass;
 window["PlatformObj"] = PlatformObj;
-function loadRawCache(cache, relUrl, encode) {
-    var cpath = cache.getCachePath();
-    var relFile = relUrl;
-    var id = new Uint32Array([cache.hashstr(relFile)])[0].toString(16);
-    var fn = cpath + '/files/' + id.substr(0, 2) + '/' + id.substr(2);
-    var ab = fs_readFileSync(fn);
-    if (ab) {
-        var content = new Uint8Array(ab, 48);
-        if (encode === 'utf8') {
-            var strCont = String.fromCharCode.apply(null, content);
-            return strCont;
-        }
-        else
-            return content.buffer;
-    }
-    return null;
-}
 class textBitmap {
     constructor(obj) {
         this._nativeObj = obj;
@@ -127,145 +108,6 @@ class measureText {
     ;
     ;
 }
-class conchTextCanvas {
-    constructor() {
-        this.charSizeMap = new Map();
-        this._currentFont = null;
-        this._nativeObj = window["_conchTextCanvas"];
-    }
-    scale(x, y) {
-        this._nativeObj.scale(x, y);
-    }
-    get font() {
-        this._currentFont = this._nativeObj.font;
-        return this._currentFont;
-    }
-    set font(value) {
-        this._currentFont = value;
-        this._nativeObj.font = value;
-    }
-    setFontInfo(font) {
-        this._nativeObj.setFontInfo(font);
-    }
-    measureText(text) {
-        if (!this._currentFont) {
-            return null;
-        }
-        var measure = new measureText();
-        var widthCount = 0;
-        var maxHeight = 0;
-        var charCode = 0;
-        var char = "";
-        var size = null;
-        var dic = null;
-        if (!text) {
-            return this.measureText('undefined');
-        }
-        for (var i = 0; i < text.length; i++) {
-            char = text.charAt(i);
-            charCode = text.charCodeAt(i);
-            dic = this.charSizeMap.get(this._currentFont);
-            if (!dic) {
-                dic = new Map();
-                this.charSizeMap.set(this._currentFont.slice(0), dic);
-            }
-            if (charCode >= 0x4E00 && charCode <= 0x9FFF) {
-                size = dic.get("国");
-                if (!size) {
-                    size = this._nativeObj.measureChar("国".charCodeAt(0));
-                    dic.set("国", size);
-                }
-            }
-            else {
-                size = dic.get(char);
-                if (!size) {
-                    size = this._nativeObj.measureChar(charCode);
-                    dic.set(char.slice(0), size);
-                }
-            }
-            widthCount += size.width;
-            maxHeight = size.height > maxHeight ? size.height : maxHeight;
-        }
-        measure.width = widthCount;
-        measure.height = maxHeight;
-        return measure;
-    }
-    initFreeTypeDefaultFontFromFile(defaultTTFs) {
-        return this._nativeObj.initFreeTypeDefaultFontFromFile(defaultTTFs);
-    }
-    initFreeTypeDefaultFontFromBuffer(ab) {
-        return this._nativeObj.initFreeTypeDefaultFontFromBuffer(ab);
-    }
-    setFontFaceFromUrl(fontFamily, TTFFileName) {
-        return this._nativeObj.setFontFaceFromUrl(fontFamily, TTFFileName);
-    }
-    setFontFaceFromBuffer(fontFamily, ab) {
-        return this._nativeObj.setFontFaceFromBuffer(fontFamily, ab);
-    }
-    removeFont(fontFamily) {
-        return this._nativeObj.removeFont(fontFamily);
-    }
-    getTextBitmapData(sText, nColor, nBorderSize, nBorderColor) {
-        var nativeObj = this._nativeObj._getTextBitmapData(sText, nColor, nBorderSize, nBorderColor);
-        var pTextBitmap = new textBitmap(nativeObj);
-        pTextBitmap.data = nativeObj.data;
-        return pTextBitmap;
-    }
-}
-window["conchTextCanvas"] = new conchTextCanvas;
-class WindowBase64 {
-    constructor() {
-        this.atob = function () { return null; };
-        this.btoa = function () { return null; };
-    }
-}
-window["WindowBase64"] = WindowBase64;
-function _process() {
-    this.pid = 0;
-    this.cwd = function () {
-        return 'd:/temp';
-    };
-    this.mainModule = 'index.js';
-    this.argv = ['conch.exe', 'index.js'];
-    this.version = '1.3.1';
-    this._require = function (f) { console.log('process require(' + f + ')'); return function nop() { }; };
-    this._debugObject = {};
-}
-window.process = new _process();
-class SubtleCrypto {
-    decrypt(algorithm, key, data) {
-    }
-    deriveBits(algorithm, baseKey, length) {
-    }
-    deriveKey(algorithm, baseKey, derivedKeyType, extractable, keyUsages) {
-    }
-    digest(algorithm, data) {
-    }
-    encrypt(algorithm, key, data) {
-    }
-    exportKey(format, key) {
-    }
-    generateKey(algorithm, extractable, keyUsages) {
-    }
-    importKey(format, keyData, algorithm, extractable, keyUsages) {
-    }
-    sign(algorithm, key, data) {
-    }
-    unwrapKey(format, wrappedKey, unwrappingKey, unwrapAlgorithm, unwrappedKeyAlgorithm, extractable, keyUsages) {
-    }
-    verify(algorithm, key, signature, data) {
-    }
-    wrapKey(format, key, wrappingKey, wrapAlgorithm) {
-    }
-}
-class Crypto {
-    constructor() {
-        this.subtle = new SubtleCrypto();
-    }
-    getRandomValues(array) {
-        return null;
-    }
-}
 var LogLevel;
 (function (LogLevel) {
     LogLevel[LogLevel["Warn"] = 0] = "Warn";
@@ -279,8 +121,8 @@ class Console {
     }
     assert(test, message) {
         var c = _console;
-        if (test) {
-            c.log(3, message);
+        if (!test) {
+            c.log(3, "assert failed " + message);
         }
         ;
     }
@@ -306,9 +148,10 @@ class Console {
         var c = _console;
         c.log(LogLevel.Info, message);
     }
-    log(message) {
+    log(...args) {
         var c = _console;
-        c.log(LogLevel.Info, message);
+        let msg = args.join(' ');
+        c.log(LogLevel.Info, msg);
     }
     profile(reportName) {
     }
@@ -321,6 +164,10 @@ class Console {
     warn(message) {
         var c = _console;
         c.log(LogLevel.Warn, message);
+    }
+    table(message) {
+        var c = _console;
+        c.log(LogLevel.Info, "console.table not support ");
     }
 }
 class GlobalEventHandlers {
@@ -481,10 +328,10 @@ class MouseEvent extends UIEvent {
 }
 var _lbMouseEvent = window['MouseEvent'] = MouseEvent;
 class MouseWheelEvent extends MouseEvent {
-    initMouseWheelEvent(typeArg, canBubbleArg, cancelableArg, viewArg, detailArg, screenXArg, screenYArg, clientXArg, clientYArg, buttonArg, relatedTargetArg, modifiersListArg, wheelDeltaArg) {
-    }
     constructor() {
         super("mousewheel");
+    }
+    initMouseWheelEvent(typeArg, canBubbleArg, cancelableArg, viewArg, detailArg, screenXArg, screenYArg, clientXArg, clientYArg, buttonArg, relatedTargetArg, modifiersListArg, wheelDeltaArg) {
     }
 }
 class WheelEvent extends MouseEvent {
@@ -551,26 +398,6 @@ class ProgressEvent extends Event {
     }
 }
 var _lbProgressEvent = window["ProgressEvent"] = ProgressEvent;
-var VendorIDSource;
-(function (VendorIDSource) {
-    VendorIDSource[VendorIDSource["bluetooth"] = 0] = "bluetooth";
-    VendorIDSource[VendorIDSource["usb"] = 1] = "usb";
-})(VendorIDSource || (VendorIDSource = {}));
-;
-class BluetoothDevice {
-    connectGATT() {
-        return null;
-    }
-}
-class Bluetooth extends EventTarget {
-    requestDevice(options) {
-        return null;
-    }
-}
-class Gamepad {
-}
-class GamepadEvent extends Event {
-}
 class Storage {
     constructor() {
         this.storagePath = conchConfig.getStoragePath();
@@ -612,7 +439,6 @@ class Storage {
         this.savedb();
     }
     create(url) {
-        url = location.fullpath;
         if (location.protocol == "file:") {
             this.filename = url.substring(8).replace(/:/g, '_').replace(/[\\\/]/g, '__');
             this.fileNamePre = this.storagePath + '/' + this.filename;
@@ -620,7 +446,6 @@ class Storage {
         else {
             this.fileNamePre = this.storagePath + '/' + url.split('/')[2].replace(':', '_');
         }
-
         this.filename = this.fileNamePre + '.txt';
         var strdb = readFileSync(this.filename, 'utf8') || '{}';
         var db = JSON.parse(strdb);
@@ -897,7 +722,7 @@ var _lbKeyboardEvent = window["KeyboardEvent"] = KeyboardEvent;
         };
     }
     conch.setKeyEvtFunction(keyEventHandle());
-    conch.setMouseEvtFunction(function (touchtype, type, x, y, wheel) {
+    conch.setMouseEvtFunction(function (touchtype, type, x, y, wheel, deltaMode, deltaX, deltaY, deltaZ) {
         var doc = window.document;
         if (!doc) {
             console.log('mouse event cant dispatch!');
@@ -905,11 +730,16 @@ var _lbKeyboardEvent = window["KeyboardEvent"] = KeyboardEvent;
         }
         var target = doc.pickElement(x, y);
         if (wheel != 0) {
-            var evt1 = new MouseWheelEvent();
+            var evt1 = new WheelEvent("wheel");
             evt1.clientX = evt1.pageX = evt1.screenX = x;
             evt1.clientY = evt1.pageY = evt1.screenY = y;
             evt1.target = target;
             evt1.wheelDelta = wheel;
+            evt1.deltaMode = deltaMode;
+            evt1.deltaX = deltaX;
+            evt1.deltaY = deltaY;
+            evt1.deltaZ = deltaZ;
+            evt1.target = target;
             doc.dispatchEvent(evt1);
         }
         else {
@@ -962,8 +792,18 @@ var _lbKeyboardEvent = window["KeyboardEvent"] = KeyboardEvent;
         event["code"] = type;
         document.dispatchEvent(event);
     });
+    conch.setOnBlur(function () {
+        var event = new Event("blur");
+        window.dispatchEvent(event);
+    });
+    conch.setOnFocus(function () {
+        var event = new Event("focus");
+        window.dispatchEvent(event);
+    });
 })(window.document);
 class Navigator {
+    constructor() {
+    }
     get appName() { return 'Netscape'; }
     get appVersion() { return this.userAgent; }
     ;
@@ -975,8 +815,6 @@ class Navigator {
             return "LayaBox(iPhone; CPU iPhone OS Mac OS X)";
         else if (os == "android")
             return "LayaBox Android";
-        else if (os == "OpenHarmony")
-            return "LayaBox OpenHarmony";
         else
             return 'LayaBox/2.1';
     }
@@ -994,8 +832,6 @@ class Navigator {
     get language() { return 'zh-CN'; }
     ;
     get userLanguage() { return 'zh-CN'; }
-    constructor() {
-    }
     getGamepads() {
         return null;
     }
@@ -1086,6 +922,15 @@ class Node extends EventTarget {
             obj = obj.parentNode;
         }
         return ret;
+    }
+    contains(child) {
+        var p = this._childs.indexOf(child);
+        if (p >= 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }
 Node._nodeid = 0;
@@ -1274,6 +1119,15 @@ var cancelAnimationFrame = ns_Timer.cancelAnimationFrame;
 class Location {
     constructor() {
         this._nativeObj = conch;
+        this._host = "";
+        this._hostname = "";
+        this._fullpath = "";
+        this._pathname = "";
+        this._protocol = "";
+        this._port = "";
+        this._search = "";
+        this._href = "";
+        this._origin = "";
         this.setHref = (url) => {
             if (!url || url.length < 8) {
                 alert("您的地址不符合要求");
@@ -1303,7 +1157,7 @@ class Location {
                 alert("您的地址不符合要求");
             }
             this.bk_setHref(url);
-            window.localStorage.create(this._fullpath + '/');
+            window.localStorage.create(this.fullpath);
         };
         this.bk_setHref = this._nativeObj.setHref.bind(this._nativeObj);
     }
@@ -1434,6 +1288,7 @@ class Location {
     }
 }
 Location.__urlCache__ = {};
+window["Location"] = Location;
 function applyMixins(derivedCtor, baseCtors) {
     baseCtors.forEach(baseCtor => {
         Object.getOwnPropertyNames(baseCtor.prototype).forEach(name => {
@@ -1599,6 +1454,9 @@ class XMLHttpRequest extends EventTarget {
             this._responseType = "arraybuffer";
         this.xhr.mimeType = "1";
     }
+    abort() {
+        this.xhr.abort();
+    }
     send(body) {
         if (body) {
             if (body instanceof ArrayBuffer || ArrayBuffer.isView(body) || body instanceof DataView)
@@ -1732,11 +1590,13 @@ class CanvasRenderingContext {
     constructor(c) {
         this.canvas = c;
         this.gl = LayaGLContext.instance;
+        this._nativeObj = new window.conchCanvasRenderingContext2D(c.width, c.height);
     }
     setSize(w, h) {
         if (this._width != w || this._height != h) {
             this._width = w;
             this._height = h;
+            this._nativeObj = new window.conchCanvasRenderingContext2D(w, h);
             if (this.canvas._isFirst) {
                 this.gl.setMainContextSize(this._width, this._height);
             }
@@ -1748,19 +1608,80 @@ class CanvasRenderingContext {
     }
     toBase64(type, encoderOptions, callback) {
     }
-    getImageData(x, y, w, h, callBack) {
-    }
     drawImage(...args) {
+    }
+    fillText(text, x, y, maxWidth) {
+        this._nativeObj.fillText(text, x, y, maxWidth);
+    }
+    strokeText(text, x, y, maxWidth) {
+        this._nativeObj.strokeText(text, x, y, maxWidth);
+    }
+    measureText(text) {
+        return this._nativeObj.measureText(text);
+    }
+    clearRect(x, y, width, height) {
+        this._nativeObj.clearRect(x, y, width, height);
+    }
+    save() {
+        return this._nativeObj.save();
+    }
+    restore() {
+        return this._nativeObj.restore();
+    }
+    getImageData(x, y, width, height) {
+        return this._nativeObj.getImageData(x, y, width, height);
+    }
+    setTransform(a, b, c, d, e, f) {
+        this._nativeObj.setTransform(a, b, c, d, e, f);
+    }
+    scale(x, y) {
+        this._nativeObj.scale(x, y);
     }
     destroy() {
         this.canvas = null;
         this.gl = null;
     }
     set font(fontName) {
-        window["_conchTextCanvas"].font = fontName;
+        this._nativeObj.font = fontName;
     }
     get font() {
-        return window["_conchTextCanvas"].font;
+        return this._nativeObj.font;
+    }
+    set textAlign(textAlign) {
+        this._nativeObj.textAlign = textAlign;
+    }
+    get textAlign() {
+        return this._nativeObj.textAlign;
+    }
+    set textBaseline(textBaseline) {
+        this._nativeObj.textBaseline = textBaseline;
+    }
+    get textBaseline() {
+        return this._nativeObj.textBaseline;
+    }
+    set fillStyle(fillStyle) {
+        this._nativeObj.fillStyle = fillStyle;
+    }
+    get fillStyle() {
+        return this._nativeObj.fillStyle;
+    }
+    set strokeStyle(strokeStyle) {
+        this._nativeObj.strokeStyle = strokeStyle;
+    }
+    get strokeStyle() {
+        return this._nativeObj.strokeStyle;
+    }
+    set lineWidth(lineWidth) {
+        this._nativeObj.lineWidth = lineWidth;
+    }
+    get lineWidth() {
+        return this._nativeObj.lineWidth;
+    }
+    set lineJoin(lineJoin) {
+        this._nativeObj.lineJoin = lineJoin;
+    }
+    get lineJoin() {
+        return this._nativeObj.lineJoin;
     }
 }
 window["CanvasRenderingContext"] = CanvasRenderingContext;
@@ -1904,25 +1825,6 @@ var FUNCTION_ID;
     FUNCTION_ID[FUNCTION_ID["ADDSHADERUNIFORM"] = 3] = "ADDSHADERUNIFORM";
     FUNCTION_ID[FUNCTION_ID["UPLOADSHADERUNIFORMS"] = 4] = "UPLOADSHADERUNIFORMS";
     FUNCTION_ID[FUNCTION_ID["UPLOADSHADERUNIFORMS_BUFFER"] = 5] = "UPLOADSHADERUNIFORMS_BUFFER";
-    FUNCTION_ID[FUNCTION_ID["USECOMMANDENCODER"] = 6] = "USECOMMANDENCODER";
-    FUNCTION_ID[FUNCTION_ID["LOADDATATOREG"] = 7] = "LOADDATATOREG";
-    FUNCTION_ID[FUNCTION_ID["LOADDATATOREGEX"] = 8] = "LOADDATATOREGEX";
-    FUNCTION_ID[FUNCTION_ID["IFLESS0"] = 9] = "IFLESS0";
-    FUNCTION_ID[FUNCTION_ID["IFEQUAL0"] = 10] = "IFEQUAL0";
-    FUNCTION_ID[FUNCTION_ID["IFGREATER0"] = 11] = "IFGREATER0";
-    FUNCTION_ID[FUNCTION_ID["IFLEQUAL0"] = 12] = "IFLEQUAL0";
-    FUNCTION_ID[FUNCTION_ID["IFGEQUAL0"] = 13] = "IFGEQUAL0";
-    FUNCTION_ID[FUNCTION_ID["IFGNOTEQUAL0"] = 14] = "IFGNOTEQUAL0";
-    FUNCTION_ID[FUNCTION_ID["OPERATEREG"] = 15] = "OPERATEREG";
-    FUNCTION_ID[FUNCTION_ID["STORE"] = 16] = "STORE";
-    FUNCTION_ID[FUNCTION_ID["CREATEIMAGEONRENDERTHREAD"] = 64] = "CREATEIMAGEONRENDERTHREAD";
-    FUNCTION_ID[FUNCTION_ID["DELETE_IMAGE_ON_RENDER_THREAD"] = 65] = "DELETE_IMAGE_ON_RENDER_THREAD";
-    FUNCTION_ID[FUNCTION_ID["RELEASE_IMAGE_ON_RENDER_THREAD"] = 66] = "RELEASE_IMAGE_ON_RENDER_THREAD";
-    FUNCTION_ID[FUNCTION_ID["SET_IMAGE_RELEASE_SPACE_TIME"] = 67] = "SET_IMAGE_RELEASE_SPACE_TIME";
-    FUNCTION_ID[FUNCTION_ID["SET_PREMULTIPLY_ALPHA"] = 68] = "SET_PREMULTIPLY_ALPHA";
-    FUNCTION_ID[FUNCTION_ID["PERFADDDATA"] = 69] = "PERFADDDATA";
-    FUNCTION_ID[FUNCTION_ID["PERFUPDATEDT"] = 70] = "PERFUPDATEDT";
-    FUNCTION_ID[FUNCTION_ID["SET_MAIN_CONTEXT_SIZE"] = 71] = "SET_MAIN_CONTEXT_SIZE";
     FUNCTION_ID[FUNCTION_ID["GETCONTEXTATTRIBUTES"] = 128] = "GETCONTEXTATTRIBUTES";
     FUNCTION_ID[FUNCTION_ID["ISCONTEXTLOST"] = 129] = "ISCONTEXTLOST";
     FUNCTION_ID[FUNCTION_ID["GETSUPPORTEDEXTENSIONS"] = 130] = "GETSUPPORTEDEXTENSIONS";
@@ -2012,69 +1914,74 @@ var FUNCTION_ID;
     FUNCTION_ID[FUNCTION_ID["LINKPROGRAM"] = 214] = "LINKPROGRAM";
     FUNCTION_ID[FUNCTION_ID["PIXELSTOREI"] = 215] = "PIXELSTOREI";
     FUNCTION_ID[FUNCTION_ID["POLYGONOFFSET"] = 216] = "POLYGONOFFSET";
-    FUNCTION_ID[FUNCTION_ID["READPIXELS"] = 217] = "READPIXELS";
-    FUNCTION_ID[FUNCTION_ID["RENDERBUFFERSTORAGE"] = 218] = "RENDERBUFFERSTORAGE";
-    FUNCTION_ID[FUNCTION_ID["SAMPLECOVERAGE"] = 219] = "SAMPLECOVERAGE";
-    FUNCTION_ID[FUNCTION_ID["SCISSOR"] = 220] = "SCISSOR";
-    FUNCTION_ID[FUNCTION_ID["SHADERSOURCE"] = 221] = "SHADERSOURCE";
-    FUNCTION_ID[FUNCTION_ID["STENCILFUNC"] = 222] = "STENCILFUNC";
-    FUNCTION_ID[FUNCTION_ID["STENCILFUNCSEPARATE"] = 223] = "STENCILFUNCSEPARATE";
-    FUNCTION_ID[FUNCTION_ID["STENCILMASK"] = 224] = "STENCILMASK";
-    FUNCTION_ID[FUNCTION_ID["STENCILMASKSEPARATE"] = 225] = "STENCILMASKSEPARATE";
-    FUNCTION_ID[FUNCTION_ID["STENCILOP"] = 226] = "STENCILOP";
-    FUNCTION_ID[FUNCTION_ID["STENCILOPSEPARATE"] = 227] = "STENCILOPSEPARATE";
-    FUNCTION_ID[FUNCTION_ID["TEXIMAGE2D"] = 228] = "TEXIMAGE2D";
-    FUNCTION_ID[FUNCTION_ID["TEXPARAMETERF"] = 229] = "TEXPARAMETERF";
-    FUNCTION_ID[FUNCTION_ID["TEXPARAMETERI"] = 230] = "TEXPARAMETERI";
-    FUNCTION_ID[FUNCTION_ID["TEXSUBIMAGE2D"] = 231] = "TEXSUBIMAGE2D";
-    FUNCTION_ID[FUNCTION_ID["UNIFORM1F"] = 232] = "UNIFORM1F";
-    FUNCTION_ID[FUNCTION_ID["UNIFORM1FV"] = 233] = "UNIFORM1FV";
-    FUNCTION_ID[FUNCTION_ID["UNIFORM1I"] = 234] = "UNIFORM1I";
-    FUNCTION_ID[FUNCTION_ID["UNIFORM1IV"] = 235] = "UNIFORM1IV";
-    FUNCTION_ID[FUNCTION_ID["UNIFORM2F"] = 236] = "UNIFORM2F";
-    FUNCTION_ID[FUNCTION_ID["UNIFORM2FV"] = 237] = "UNIFORM2FV";
-    FUNCTION_ID[FUNCTION_ID["UNIFORM2I"] = 238] = "UNIFORM2I";
-    FUNCTION_ID[FUNCTION_ID["UNIFORM2IV"] = 239] = "UNIFORM2IV";
-    FUNCTION_ID[FUNCTION_ID["UNIFORM3F"] = 240] = "UNIFORM3F";
-    FUNCTION_ID[FUNCTION_ID["UNIFORM3FV"] = 241] = "UNIFORM3FV";
-    FUNCTION_ID[FUNCTION_ID["UNIFORM3I"] = 242] = "UNIFORM3I";
-    FUNCTION_ID[FUNCTION_ID["UNIFORM3IV"] = 243] = "UNIFORM3IV";
-    FUNCTION_ID[FUNCTION_ID["UNIFORM4F"] = 244] = "UNIFORM4F";
-    FUNCTION_ID[FUNCTION_ID["UNIFORM4FV"] = 245] = "UNIFORM4FV";
-    FUNCTION_ID[FUNCTION_ID["UNIFORM4I"] = 246] = "UNIFORM4I";
-    FUNCTION_ID[FUNCTION_ID["UNIFORM4IV"] = 247] = "UNIFORM4IV";
-    FUNCTION_ID[FUNCTION_ID["UNIFORMMATRIX2FV"] = 248] = "UNIFORMMATRIX2FV";
-    FUNCTION_ID[FUNCTION_ID["UNIFORMMATRIX3FV"] = 249] = "UNIFORMMATRIX3FV";
-    FUNCTION_ID[FUNCTION_ID["UNIFORMMATRIX4FV"] = 250] = "UNIFORMMATRIX4FV";
-    FUNCTION_ID[FUNCTION_ID["USEPROGRAM"] = 251] = "USEPROGRAM";
-    FUNCTION_ID[FUNCTION_ID["VALIDATEPROGRAM"] = 252] = "VALIDATEPROGRAM";
-    FUNCTION_ID[FUNCTION_ID["VERTEXATTRIB1F"] = 253] = "VERTEXATTRIB1F";
-    FUNCTION_ID[FUNCTION_ID["VERTEXATTRIB1FV"] = 254] = "VERTEXATTRIB1FV";
-    FUNCTION_ID[FUNCTION_ID["VERTEXATTRIB2F"] = 255] = "VERTEXATTRIB2F";
-    FUNCTION_ID[FUNCTION_ID["VERTEXATTRIB2FV"] = 256] = "VERTEXATTRIB2FV";
-    FUNCTION_ID[FUNCTION_ID["VERTEXATTRIB3F"] = 257] = "VERTEXATTRIB3F";
-    FUNCTION_ID[FUNCTION_ID["VERTEXATTRIB3FV"] = 258] = "VERTEXATTRIB3FV";
-    FUNCTION_ID[FUNCTION_ID["VERTEXATTRIB4F"] = 259] = "VERTEXATTRIB4F";
-    FUNCTION_ID[FUNCTION_ID["VERTEXATTRIB4FV"] = 260] = "VERTEXATTRIB4FV";
-    FUNCTION_ID[FUNCTION_ID["VERTEXATTRIBPOINTER"] = 261] = "VERTEXATTRIBPOINTER";
-    FUNCTION_ID[FUNCTION_ID["VIEWPORT"] = 262] = "VIEWPORT";
-    FUNCTION_ID[FUNCTION_ID["CONFIGUREBACKBUFFER"] = 263] = "CONFIGUREBACKBUFFER";
-    FUNCTION_ID[FUNCTION_ID["COMPRESSEDTEXIMAGE2D"] = 264] = "COMPRESSEDTEXIMAGE2D";
-    FUNCTION_ID[FUNCTION_ID["TEXIMAGE2D_PIXEL"] = 265] = "TEXIMAGE2D_PIXEL";
-    FUNCTION_ID[FUNCTION_ID["TEXSUBIMAGE2D_PIXEL"] = 266] = "TEXSUBIMAGE2D_PIXEL";
-    FUNCTION_ID[FUNCTION_ID["CREATEVERTEXARRAY"] = 267] = "CREATEVERTEXARRAY";
-    FUNCTION_ID[FUNCTION_ID["BINDVERTEXARRAY"] = 268] = "BINDVERTEXARRAY";
-    FUNCTION_ID[FUNCTION_ID["DELETEVERTEXARRAYS"] = 269] = "DELETEVERTEXARRAYS";
-    FUNCTION_ID[FUNCTION_ID["READPIXELS_ASYNC"] = 270] = "READPIXELS_ASYNC";
-    FUNCTION_ID[FUNCTION_ID["COMPRESSEDTEXSUBIMAGE2D"] = 271] = "COMPRESSEDTEXSUBIMAGE2D";
-    FUNCTION_ID[FUNCTION_ID["VERTEXATTRIBDIVISOR"] = 272] = "VERTEXATTRIBDIVISOR";
-    FUNCTION_ID[FUNCTION_ID["DRAWARRAYSINSTANCED"] = 273] = "DRAWARRAYSINSTANCED";
-    FUNCTION_ID[FUNCTION_ID["DRAWELEMENTSINSTANCED"] = 274] = "DRAWELEMENTSINSTANCED";
-    FUNCTION_ID[FUNCTION_ID["TEXIMAGE2DCANVAS"] = 275] = "TEXIMAGE2DCANVAS";
-    FUNCTION_ID[FUNCTION_ID["TEXSTORAGE2D"] = 276] = "TEXSTORAGE2D";
-    FUNCTION_ID[FUNCTION_ID["RENDERBUFFERSTORAGEMUILTISAMPLE"] = 277] = "RENDERBUFFERSTORAGEMUILTISAMPLE";
-    FUNCTION_ID[FUNCTION_ID["CLEARBUFFERFV"] = 278] = "CLEARBUFFERFV";
-    FUNCTION_ID[FUNCTION_ID["BLITFRAMEBUFFER"] = 279] = "BLITFRAMEBUFFER";
+    FUNCTION_ID[FUNCTION_ID["RENDERBUFFERSTORAGE"] = 217] = "RENDERBUFFERSTORAGE";
+    FUNCTION_ID[FUNCTION_ID["SAMPLECOVERAGE"] = 218] = "SAMPLECOVERAGE";
+    FUNCTION_ID[FUNCTION_ID["SCISSOR"] = 219] = "SCISSOR";
+    FUNCTION_ID[FUNCTION_ID["SHADERSOURCE"] = 220] = "SHADERSOURCE";
+    FUNCTION_ID[FUNCTION_ID["STENCILFUNC"] = 221] = "STENCILFUNC";
+    FUNCTION_ID[FUNCTION_ID["STENCILFUNCSEPARATE"] = 222] = "STENCILFUNCSEPARATE";
+    FUNCTION_ID[FUNCTION_ID["STENCILMASK"] = 223] = "STENCILMASK";
+    FUNCTION_ID[FUNCTION_ID["STENCILMASKSEPARATE"] = 224] = "STENCILMASKSEPARATE";
+    FUNCTION_ID[FUNCTION_ID["STENCILOP"] = 225] = "STENCILOP";
+    FUNCTION_ID[FUNCTION_ID["STENCILOPSEPARATE"] = 226] = "STENCILOPSEPARATE";
+    FUNCTION_ID[FUNCTION_ID["TEXIMAGE2D"] = 227] = "TEXIMAGE2D";
+    FUNCTION_ID[FUNCTION_ID["TEXPARAMETERF"] = 228] = "TEXPARAMETERF";
+    FUNCTION_ID[FUNCTION_ID["TEXPARAMETERI"] = 229] = "TEXPARAMETERI";
+    FUNCTION_ID[FUNCTION_ID["TEXSUBIMAGE2D"] = 230] = "TEXSUBIMAGE2D";
+    FUNCTION_ID[FUNCTION_ID["UNIFORM1F"] = 231] = "UNIFORM1F";
+    FUNCTION_ID[FUNCTION_ID["UNIFORM1FV"] = 232] = "UNIFORM1FV";
+    FUNCTION_ID[FUNCTION_ID["UNIFORM1I"] = 233] = "UNIFORM1I";
+    FUNCTION_ID[FUNCTION_ID["UNIFORM1IV"] = 234] = "UNIFORM1IV";
+    FUNCTION_ID[FUNCTION_ID["UNIFORM2F"] = 235] = "UNIFORM2F";
+    FUNCTION_ID[FUNCTION_ID["UNIFORM2FV"] = 236] = "UNIFORM2FV";
+    FUNCTION_ID[FUNCTION_ID["UNIFORM2I"] = 237] = "UNIFORM2I";
+    FUNCTION_ID[FUNCTION_ID["UNIFORM2IV"] = 238] = "UNIFORM2IV";
+    FUNCTION_ID[FUNCTION_ID["UNIFORM3F"] = 239] = "UNIFORM3F";
+    FUNCTION_ID[FUNCTION_ID["UNIFORM3FV"] = 240] = "UNIFORM3FV";
+    FUNCTION_ID[FUNCTION_ID["UNIFORM3I"] = 241] = "UNIFORM3I";
+    FUNCTION_ID[FUNCTION_ID["UNIFORM3IV"] = 242] = "UNIFORM3IV";
+    FUNCTION_ID[FUNCTION_ID["UNIFORM4F"] = 243] = "UNIFORM4F";
+    FUNCTION_ID[FUNCTION_ID["UNIFORM4FV"] = 244] = "UNIFORM4FV";
+    FUNCTION_ID[FUNCTION_ID["UNIFORM4I"] = 245] = "UNIFORM4I";
+    FUNCTION_ID[FUNCTION_ID["UNIFORM4IV"] = 246] = "UNIFORM4IV";
+    FUNCTION_ID[FUNCTION_ID["UNIFORMMATRIX2FV"] = 247] = "UNIFORMMATRIX2FV";
+    FUNCTION_ID[FUNCTION_ID["UNIFORMMATRIX3FV"] = 248] = "UNIFORMMATRIX3FV";
+    FUNCTION_ID[FUNCTION_ID["UNIFORMMATRIX4FV"] = 249] = "UNIFORMMATRIX4FV";
+    FUNCTION_ID[FUNCTION_ID["USEPROGRAM"] = 250] = "USEPROGRAM";
+    FUNCTION_ID[FUNCTION_ID["VALIDATEPROGRAM"] = 251] = "VALIDATEPROGRAM";
+    FUNCTION_ID[FUNCTION_ID["VERTEXATTRIB1F"] = 252] = "VERTEXATTRIB1F";
+    FUNCTION_ID[FUNCTION_ID["VERTEXATTRIB1FV"] = 253] = "VERTEXATTRIB1FV";
+    FUNCTION_ID[FUNCTION_ID["VERTEXATTRIB2F"] = 254] = "VERTEXATTRIB2F";
+    FUNCTION_ID[FUNCTION_ID["VERTEXATTRIB2FV"] = 255] = "VERTEXATTRIB2FV";
+    FUNCTION_ID[FUNCTION_ID["VERTEXATTRIB3F"] = 256] = "VERTEXATTRIB3F";
+    FUNCTION_ID[FUNCTION_ID["VERTEXATTRIB3FV"] = 257] = "VERTEXATTRIB3FV";
+    FUNCTION_ID[FUNCTION_ID["VERTEXATTRIB4F"] = 258] = "VERTEXATTRIB4F";
+    FUNCTION_ID[FUNCTION_ID["VERTEXATTRIB4FV"] = 259] = "VERTEXATTRIB4FV";
+    FUNCTION_ID[FUNCTION_ID["VERTEXATTRIBPOINTER"] = 260] = "VERTEXATTRIBPOINTER";
+    FUNCTION_ID[FUNCTION_ID["VIEWPORT"] = 261] = "VIEWPORT";
+    FUNCTION_ID[FUNCTION_ID["CONFIGUREBACKBUFFER"] = 262] = "CONFIGUREBACKBUFFER";
+    FUNCTION_ID[FUNCTION_ID["COMPRESSEDTEXIMAGE2D"] = 263] = "COMPRESSEDTEXIMAGE2D";
+    FUNCTION_ID[FUNCTION_ID["TEXIMAGE2D_PIXEL"] = 264] = "TEXIMAGE2D_PIXEL";
+    FUNCTION_ID[FUNCTION_ID["TEXSUBIMAGE2D_PIXEL"] = 265] = "TEXSUBIMAGE2D_PIXEL";
+    FUNCTION_ID[FUNCTION_ID["CREATEVERTEXARRAY"] = 266] = "CREATEVERTEXARRAY";
+    FUNCTION_ID[FUNCTION_ID["BINDVERTEXARRAY"] = 267] = "BINDVERTEXARRAY";
+    FUNCTION_ID[FUNCTION_ID["DELETEVERTEXARRAYS"] = 268] = "DELETEVERTEXARRAYS";
+    FUNCTION_ID[FUNCTION_ID["COMPRESSEDTEXSUBIMAGE2D"] = 269] = "COMPRESSEDTEXSUBIMAGE2D";
+    FUNCTION_ID[FUNCTION_ID["VERTEXATTRIBDIVISOR"] = 270] = "VERTEXATTRIBDIVISOR";
+    FUNCTION_ID[FUNCTION_ID["DRAWARRAYSINSTANCED"] = 271] = "DRAWARRAYSINSTANCED";
+    FUNCTION_ID[FUNCTION_ID["DRAWELEMENTSINSTANCED"] = 272] = "DRAWELEMENTSINSTANCED";
+    FUNCTION_ID[FUNCTION_ID["TEXIMAGE2DCANVAS"] = 273] = "TEXIMAGE2DCANVAS";
+    FUNCTION_ID[FUNCTION_ID["TEXSTORAGE2D"] = 274] = "TEXSTORAGE2D";
+    FUNCTION_ID[FUNCTION_ID["RENDERBUFFERSTORAGEMUILTISAMPLE"] = 275] = "RENDERBUFFERSTORAGEMUILTISAMPLE";
+    FUNCTION_ID[FUNCTION_ID["CLEARBUFFERFV"] = 276] = "CLEARBUFFERFV";
+    FUNCTION_ID[FUNCTION_ID["BLITFRAMEBUFFER"] = 277] = "BLITFRAMEBUFFER";
+    FUNCTION_ID[FUNCTION_ID["CLEARBUFFERFI"] = 278] = "CLEARBUFFERFI";
+    FUNCTION_ID[FUNCTION_ID["BINDBUFFERRANGE"] = 279] = "BINDBUFFERRANGE";
+    FUNCTION_ID[FUNCTION_ID["BINDBUFFERBASE"] = 280] = "BINDBUFFERBASE";
+    FUNCTION_ID[FUNCTION_ID["TEXSTORAGE3D"] = 281] = "TEXSTORAGE3D";
+    FUNCTION_ID[FUNCTION_ID["TEXSUBIMAGE3D_PIXEL"] = 282] = "TEXSUBIMAGE3D_PIXEL";
+    FUNCTION_ID[FUNCTION_ID["TEXSUBIMAGE3D_IMAGE"] = 283] = "TEXSUBIMAGE3D_IMAGE";
+    FUNCTION_ID[FUNCTION_ID["TEXSUBIMAGE3D_OFFSET"] = 284] = "TEXSUBIMAGE3D_OFFSET";
 })(FUNCTION_ID || (FUNCTION_ID = {}));
 var UNIFORM_TYPE;
 (function (UNIFORM_TYPE) {
@@ -2209,18 +2116,6 @@ class WebGLVertextArray {
         this.id = id;
     }
 }
-class CallbackFuncObj {
-    constructor() {
-        this._vFunc = new Map();
-        this.id = CallbackFuncObj.s_nID++;
-        this._nativeObj = new _callbackFuncObj(this.id);
-    }
-    addCallbackFunc(index, func) {
-        this._vFunc[index] = func;
-        this._nativeObj.addCallbackFunc(index, func);
-    }
-}
-CallbackFuncObj.s_nID = 0;
 class fakeIDObj {
     constructor(id = 0, frame = 0) {
         this.id = id;
@@ -2232,10 +2127,9 @@ class GLCommandEncoder {
         this._adjustSize = 0;
         this._byteLen = 0;
         this._isSyncToRenderThread = false;
-        this._readPixelsAsyncCallbackFuncObj = new CallbackFuncObj();
         this._isSyncToRenderThread = isSyncToRenderThread;
         this._layagl = layagl;
-        this._byteLen = reserveSize;
+        this._byteLen = 2048 * 2048 * 4 + 1024 * 512;
         this._adjustSize = adjustSize;
         this._init(isSyncToRenderThread);
     }
@@ -2250,33 +2144,28 @@ class GLCommandEncoder {
     getPtrID() {
         return this._buffer["_ptrID"];
     }
-    beginEncoding() {
-        this._layagl.beginCommandEncoding(this);
-    }
-    endEncoding() {
-        this._layagl.endCommandEncoding();
-    }
-    clearEncoding() {
-        this._idata[0] = 1;
-    }
     getCount() {
         return this._idata[0];
     }
     _need(sz) {
         if ((this._byteLen - (this._idata[0] << 2)) >= sz)
             return;
-        this._byteLen += (sz > this._adjustSize) ? sz : this._adjustSize;
-        var pre = this._idata;
-        var preConchRef = this._buffer["conchRef"];
-        var prePtrID = this._buffer["_ptrID"];
-        this._buffer = new ArrayBuffer(this._byteLen);
-        this._idata = new Int32Array(this._buffer);
-        this._fdata = new Float32Array(this._buffer);
-        this._byteArray = new Uint8Array(this._buffer);
-        this._buffer["conchRef"] = preConchRef;
-        this._buffer["_ptrID"] = prePtrID;
-        pre && this._idata.set(pre, 0);
-        webglPlus.updateArrayBufferRef(this._buffer["_ptrID"], preConchRef.isSyncToRender(), this._buffer);
+        this._layagl._nativeObj.flushCommand();
+        if (sz > this._byteLen) {
+            this._byteLen += (sz > this._adjustSize) ? sz : this._adjustSize;
+            var pre = this._idata;
+            var preConchRef = this._buffer["conchRef"];
+            var prePtrID = this._buffer["_ptrID"];
+            this._buffer = new ArrayBuffer(this._byteLen);
+            this._idata = new Int32Array(this._buffer);
+            this._fdata = new Float32Array(this._buffer);
+            this._byteArray = new Uint8Array(this._buffer);
+            this._buffer["conchRef"] = preConchRef;
+            this._buffer["_ptrID"] = prePtrID;
+            pre && this._idata.set(pre, 0);
+            conch.updateArrayBufferRef(this._buffer["_ptrID"], preConchRef.isSyncToRender(), this._buffer);
+            console.log("command buffer too big " + sz);
+        }
     }
     add_i(i) {
         this._need(4);
@@ -2308,6 +2197,17 @@ class GLCommandEncoder {
         this._idata[i++] = b;
         this._idata[0] = i;
     }
+    add_ii_wab(a, b, arraybuffer, length, nAlignLength, offset) {
+        this._need(8 + nAlignLength + 4);
+        this.add_ii(a, b);
+        this.wab(arraybuffer, length, nAlignLength, offset);
+    }
+    add_ii_String(a, b, str, len) {
+        var ab = conch.strTobufer(str);
+        this._need(8 + len + 4);
+        this.add_ii(a, b);
+        this.add_String(str, len);
+    }
     add_if(a, b) {
         this._need(8);
         var i = this._idata[0];
@@ -2323,6 +2223,17 @@ class GLCommandEncoder {
         idata[i++] = b;
         idata[i++] = c;
         this._idata[0] = i;
+    }
+    add_iii_wab(a, b, c, arraybuffer, length, nAlignLength, offset) {
+        this._need(12 + nAlignLength + 4);
+        this.add_iii(a, b, c);
+        this.wab(arraybuffer, length, nAlignLength, offset);
+    }
+    add_iii_String(a, b, c, str, len) {
+        var ab = conch.strTobufer(str);
+        this._need(12 + len + 4);
+        this.add_iii(a, b, c);
+        this.add_String(str, len);
     }
     add_iif(a, b, c) {
         this._need(12);
@@ -2352,6 +2263,17 @@ class GLCommandEncoder {
         idata[i++] = d;
         this._idata[0] = i;
     }
+    add_iiifi(a, b, c, d, e) {
+        this._need(20);
+        var idata = this._idata;
+        var i = this._idata[0];
+        idata[i++] = a;
+        idata[i++] = b;
+        idata[i++] = c;
+        this._fdata[i++] = d;
+        idata[i++] = e;
+        this._idata[0] = i;
+    }
     add_iiii(a, b, c, d) {
         this._need(16);
         var idata = this._idata;
@@ -2361,6 +2283,11 @@ class GLCommandEncoder {
         idata[i++] = c;
         idata[i++] = d;
         idata[0] = i;
+    }
+    add_iiii_wab(a, b, c, d, arraybuffer, length, nAlignLength, offset) {
+        this._need(16 + nAlignLength + 4);
+        this.add_iiii(a, b, c, d);
+        this.wab(arraybuffer, length, nAlignLength, offset);
     }
     add_iiif(a, b, c, d) {
         this._need(16);
@@ -2530,6 +2457,11 @@ class GLCommandEncoder {
         idata[i++] = g;
         idata[0] = i;
     }
+    add_iiiiiii_wab(a, b, c, d, e, f, g, arraybuffer, length, nAlignLength, offset) {
+        this._need(28 + nAlignLength + 4);
+        this.add_iiiiiii(a, b, c, d, e, f, g);
+        this.wab(arraybuffer, length, nAlignLength, offset);
+    }
     add_iiiiiiiiiiii(a, b, c, d, e, f, g, h, j, k, l, m) {
         this._need(48);
         var idata = this._idata;
@@ -2672,6 +2604,11 @@ class GLCommandEncoder {
         idata[i++] = h;
         idata[0] = i;
     }
+    add_iiiiiiii_wab(a, b, c, d, e, f, g, h, arraybuffer, length, nAlignLength, offset) {
+        this._need(32 + nAlignLength + 4);
+        this.add_iiiiiiii(a, b, c, d, e, f, g, h);
+        this.wab(arraybuffer, length, nAlignLength, offset);
+    }
     add_iiiiiiiii(a, b, c, d, e, f, g, h, j) {
         this._need(36);
         var idata = this._idata;
@@ -2686,6 +2623,16 @@ class GLCommandEncoder {
         idata[i++] = h;
         idata[i++] = j;
         idata[0] = i;
+    }
+    add_iiiiiiiii_wab(a, b, c, d, e, f, g, h, j, arraybuffer, length, nAlignLength, offset) {
+        this._need(36 + nAlignLength + 4);
+        this.add_iiiiiiiii(a, b, c, d, e, f, g, h, j);
+        this.wab(arraybuffer, length, nAlignLength, offset);
+    }
+    add_iiiiiiiiiii_wab(a, b, c, d, e, f, g, h, i, j, k, arraybuffer, length, nAlignLength, offset) {
+        this._need(44 + nAlignLength + 4);
+        this.add_iiiiiiiiiii(a, b, c, d, e, f, g, h, i, j, k);
+        this.wab(arraybuffer, length, nAlignLength, offset);
     }
     add_iiiiiiiiii(a, b, c, d, e, f, g, h, j, k) {
         this._need(40);
@@ -2825,7 +2772,7 @@ class GLCommandEncoder {
         if (supports("GL_OES_depth_texture") || supports("GL_ARB_depth_texture") || supports("GL_ANGLE_depth_texture"))
             result.push("WEBGL_depth_texture");
         if (version.indexOf("OpenGL ES 3.") != -1) {
-            if (conchConfig.getOS() == "Conch-android" || conchConfig.getOS() == "Conch-ohos") {
+            if (conchConfig.getOS() == "Conch-android") {
                 result.push("WEBGL_compressed_texture_etc");
             }
         }
@@ -2839,10 +2786,10 @@ class GLCommandEncoder {
             result.push("EXT_disjoint_timer_query");
         if (supports("GL_OES_compressed_ETC1_RGB8_texture"))
             result.push("WEBGL_compressed_texture_etc1");
-        if (supports("GL_EXT_texture_compression_s3tc"))
+        if (supports("GL_EXT_texture_compression_s3tc") || supports("GL_EXT_texture_compression_s3tc_srgb")) {
             result.push("WEBGL_compressed_texture_s3tc");
-        if (supports("GL_EXT_texture_compression_s3tc_srgb"))
             result.push("WEBGL_compressed_texture_s3tc_srgb");
+        }
         if (supports("GL_OES_texture_compression_astc"))
             result.push("WEBGL_compressed_texture_astc");
         result.push("WEBGL_debug_renderer_info");
@@ -2877,7 +2824,7 @@ class GLCommandEncoder {
             (extention.indexOf('GL_EXT_shader_texture_lod') != -1 || extention.indexOf('GL_ARB_shader_texture_lod') != -1)) {
             return {};
         }
-        else if (name === 'OES_element_index_uint' && (extention.indexOf('GL_OES_element_index_uint') != -1)) {
+        else if (name === 'OES_element_index_uint' && extention.indexOf('GL_OES_element_index_uint') != -1) {
             return {};
         }
         else if (name === 'EXT_sRGB' && extention.indexOf('GL_EXT_sRGB') != -1) {
@@ -2902,7 +2849,7 @@ class GLCommandEncoder {
             return { COMPRESSED_RGB_ETC1_WEBGL: 36196 };
         }
         else if (name === 'WEBGL_compressed_texture_s3tc'
-            && supports('GL_EXT_texture_compression_s3tc')) {
+            && extention.indexOf('GL_EXT_texture_compression_s3tc')) {
             return {
                 COMPRESSED_RGBA_S3TC_DXT1_EXT: 33777,
                 COMPRESSED_RGBA_S3TC_DXT3_EXT: 33778,
@@ -2953,7 +2900,7 @@ class GLCommandEncoder {
         else if (name.indexOf('WEBGL_depth_texture') != -1 && ((supports("GL_OES_depth_texture") || supports("GL_ARB_depth_texture") || supports("GL_ANGLE_depth_texture")))) {
             return { UNSIGNED_INT_24_8_WEBGL: 34042 };
         }
-        else if (name.indexOf('WEBGL_compressed_texture_astc') != -1 && (extention.indexOf('GL_OES_texture_compression_astc') != -1 || extention.indexOf('GL_KHR_texture_compression_astc') != -1 || ((conchConfig.getOS() == "Conch-android" || conchConfig.getOS() == "Conch-ohos") && version.indexOf("OpenGL ES 3.") != -1 && version.indexOf("OpenGL ES 3.0") == -1))) {
+        else if (name.indexOf('WEBGL_compressed_texture_astc') != -1 && (extention.indexOf('GL_OES_texture_compression_astc') != -1 || extention.indexOf('GL_KHR_texture_compression_astc') != -1 || (conchConfig.getOS() == "Conch-android" && version.indexOf("OpenGL ES 3.") != -1 && version.indexOf("OpenGL ES 3.0") == -1))) {
             return {
                 COMPRESSED_RGBA_ASTC_4x4_KHR: 0x93B0,
                 COMPRESSED_RGBA_ASTC_5x4_KHR: 0x93B1,
@@ -2985,7 +2932,7 @@ class GLCommandEncoder {
                 COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR: 0x93DD,
             };
         }
-        else if (name.indexOf('WEBGL_compressed_texture_etc') != -1 && (conchConfig.getOS() == "Conch-android" || conchConfig.getOS() == "Conch-ohos") && version.indexOf("OpenGL ES 3.") != -1) {
+        else if (name.indexOf('WEBGL_compressed_texture_etc') != -1 && conchConfig.getOS() == "Conch-android" && version.indexOf("OpenGL ES 3.") != -1) {
             return {
                 COMPRESSED_R11_EAC: 0x9270,
                 COMPRESSED_SIGNED_R11_EAC: 0x9271,
@@ -3024,17 +2971,25 @@ class GLCommandEncoder {
     }
     bindAttribLocation(program, index, name) {
         var strLen = this.getStrLength(name);
-        this.add_iii(FUNCTION_ID.BINDATTRIBLOCATION, program.id, index);
-        this.add_String(name, strLen);
+        this.add_iii_String(FUNCTION_ID.BINDATTRIBLOCATION, program.id, index, name, strLen);
     }
     bindBuffer(target, buffer) {
         this.add_iii(FUNCTION_ID.BINDBUFFER, target, buffer ? buffer.id : 0);
+    }
+    bindBufferRange(target, index, buffer, offset, size) {
+        this.add_iiiiii(FUNCTION_ID.BINDBUFFERRANGE, target, index, buffer ? buffer.id : 0, offset, size);
+    }
+    bindBufferBase(target, index, buffer) {
+        this.add_iiii(FUNCTION_ID.BINDBUFFERBASE, target, index, buffer ? buffer.id : 0);
     }
     bindFramebuffer(target, framebuffer) {
         this.add_iii(FUNCTION_ID.BINDFRAMEBUFFER, target, framebuffer ? framebuffer.id : 0);
     }
     bindRenderbuffer(target, renderbuffer) {
         this.add_iii(FUNCTION_ID.BINDRENDERBUFFER, target, renderbuffer ? renderbuffer.id : 0);
+    }
+    clearBufferfi(buffer, drawbuffer, depth, stencil) {
+        this.add_iiifi(FUNCTION_ID.BINDTEXTURE, buffer, drawbuffer, depth, stencil);
     }
     clearBufferfv(buffer, drawbuffer, values, srcOffset) {
         let offset = srcOffset ? srcOffset : 0;
@@ -3067,8 +3022,7 @@ class GLCommandEncoder {
     bufferData(target, sizeOrArray, usage) {
         if (ArrayBuffer.isView(sizeOrArray) || (sizeOrArray instanceof ArrayBuffer)) {
             var nAlignLength = this.getAlignLength(sizeOrArray);
-            this.add_iii(FUNCTION_ID.BUFFERDATA_ARRAYBUFFER, target, usage);
-            this.wab(sizeOrArray, sizeOrArray.byteLength, nAlignLength);
+            this.add_iii_wab(FUNCTION_ID.BUFFERDATA_ARRAYBUFFER, target, usage, sizeOrArray, sizeOrArray.byteLength, nAlignLength);
         }
         else {
             var size = sizeOrArray;
@@ -3077,8 +3031,7 @@ class GLCommandEncoder {
     }
     bufferSubData(target, offset, data) {
         var nAlignLength = this.getAlignLength(data);
-        this.add_iii(FUNCTION_ID.BUFFERSUBDATA, target, offset);
-        this.wab(data, data.byteLength, nAlignLength);
+        this.add_iii_wab(FUNCTION_ID.BUFFERSUBDATA, target, offset, data, data.byteLength, nAlignLength);
     }
     checkFramebufferStatus(target) {
         return this._layagl._nativeObj.checkFramebufferStatusEx(target);
@@ -3178,11 +3131,9 @@ class GLCommandEncoder {
         let shaderid = -1;
         if (program.vsShader && program.vsShader.id === shader.id) {
             shaderid = program.vsShader.id;
-            program.vsShader = null;
         }
         else if (program.psShader && program.psShader.id === shader.id) {
             shaderid = program.psShader.id;
-            program.psShader = null;
         }
         if (shaderid > 0) {
             program.attachedShaderCount--;
@@ -3397,6 +3348,18 @@ class GLCommandEncoder {
         }
         return result;
     }
+    getActiveUniformBlockName(program, uniformBlockIndex) {
+        var gl = this._layagl;
+        return gl._nativeObj.getActiveUniformBlockName(program ? program.id : 0, uniformBlockIndex);
+    }
+    getUniformBlockIndex(program, uniformBlockName) {
+        var gl = this._layagl;
+        return gl._nativeObj.getUniformBlockIndex(program ? program.id : 0, uniformBlockName);
+    }
+    uniformBlockBinding(program, uniformBlockIndex, uniformBlockBinding) {
+        var gl = this._layagl;
+        return gl._nativeObj.uniformBlockBinding(program ? program.id : 0, uniformBlockIndex, uniformBlockBinding);
+    }
     getProgramParameter(program, pname) {
         let ret;
         var gl = this._layagl;
@@ -3506,15 +3469,10 @@ class GLCommandEncoder {
         }
         return null;
     }
-    getUniformMutiThread(program, location) {
-        console.log("getUniformMutiThread can't support");
-        return null;
-    }
     getUniformLocation(program, name) {
         var fakeLoc = GLCommandEncoder._locTable.getFakeLocation(program.id, name);
         var strLen = this.getStrLength(name);
-        this.add_iii(FUNCTION_ID.GETUNIFORMLOCATION, program.id, fakeLoc);
-        this.add_String(name, strLen);
+        this.add_iii_String(FUNCTION_ID.GETUNIFORMLOCATION, program.id, fakeLoc, name, strLen);
         program.addLocationPair(fakeLoc, name);
         return fakeLoc;
     }
@@ -3605,11 +3563,6 @@ class GLCommandEncoder {
         var ret = this._layagl._nativeObj.readPixels(x, y, width, height, format, type);
         pixels.set(new Uint8Array(ret));
     }
-    readPixelsAsync(x, y, w, h, format, type, callBack) {
-        var fakeID = this.createFakeID();
-        this._readPixelsAsyncCallbackFuncObj.addCallbackFunc(fakeID, callBack);
-        this.add_iiiiiiiii(FUNCTION_ID.READPIXELS_ASYNC, x, y, w, h, format, type, this._readPixelsAsyncCallbackFuncObj.id, fakeID);
-    }
     renderbufferStorage(target, internalformat, width, height) {
         this.add_iiiii(FUNCTION_ID.RENDERBUFFERSTORAGE, target, internalformat, width, height);
     }
@@ -3625,8 +3578,7 @@ class GLCommandEncoder {
     shaderSource(shader, source) {
         shader.src = source;
         var strLen = this.getStrLength(source);
-        this.add_ii(FUNCTION_ID.SHADERSOURCE, shader.id);
-        this.add_String(source, strLen);
+        this.add_ii_String(FUNCTION_ID.SHADERSOURCE, shader.id, source, strLen);
     }
     stencilFunc(func, ref, mask) {
         this.add_iiii(FUNCTION_ID.STENCILFUNC, func, ref, mask);
@@ -3652,7 +3604,14 @@ class GLCommandEncoder {
             if (args[5]._nativeObj) {
                 this.add_iiiiiii(FUNCTION_ID.TEXIMAGE2D, args[0], args[1], args[2], args[3], args[4], args[5]._nativeObj.conchImgId);
             }
+            else if (args[5]._context && args[5]._context._nativeObj) {
+                this.add_iiiiiii(FUNCTION_ID.TEXIMAGE2D, args[0], args[1], args[2], args[3], args[4], args[5]._nativeObj.conchImgId);
+            }
+            else if (args[5].conchImgId !== undefined) {
+                this.add_iiiiiii(FUNCTION_ID.TEXIMAGE2D, args[0], args[1], args[2], args[3], args[4], args[5].conchImgId);
+            }
             else {
+                alert("lvtodo");
                 this.add_iiiiiiiii(FUNCTION_ID.TEXIMAGE2DCANVAS, args[0], args[1], args[2], args[3], args[4], args[5]._ctx._targets._glTexture.id, args[5].width, args[5].height);
             }
         }
@@ -3663,13 +3622,33 @@ class GLCommandEncoder {
             else if (args[8] instanceof ArrayBuffer || ArrayBuffer.isView(args[8])) {
                 var ab = args[8];
                 var nAlignLength = this.getAlignLength(ab);
-                this.add_iiiiiiiii(FUNCTION_ID.TEXIMAGE2D_PIXEL, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
-                this.wab(ab, ab.byteLength, nAlignLength);
+                this.add_iiiiiiiii_wab(FUNCTION_ID.TEXIMAGE2D_PIXEL, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], ab, ab.byteLength, nAlignLength);
             }
         }
     }
     texStorage2D(target, levels, internalformat, width, height) {
         this.add_iiiiii(FUNCTION_ID.TEXSTORAGE2D, target, levels, internalformat, width, height);
+    }
+    texStorage3D(target, levels, internalformat, width, height, depth) {
+        this.add_iiiiiii(FUNCTION_ID.TEXSTORAGE3D, target, levels, internalformat, width, height, depth);
+    }
+    texSubImage3D(_args) {
+        var args = arguments;
+        if (ArrayBuffer.isView(args[10])) {
+            if (args[11] !== undefined) {
+            }
+            else {
+                var ab = args[10];
+                var nAlignLength = this.getAlignLength(ab);
+                this.add_iiiiiiiiiii_wab(FUNCTION_ID.TEXSUBIMAGE3D_PIXEL, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], ab, ab.byteLength, nAlignLength);
+            }
+        }
+        else if (args[10]._nativeObj) {
+            this.add_iiiiiiiiiiii(FUNCTION_ID.TEXSUBIMAGE3D_IMAGE, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10]._nativeObj.conchImgId);
+        }
+        else if (args[10] instanceof Number || args[10] === null) {
+            this.add_iiiiiiiiiiii(FUNCTION_ID.TEXSUBIMAGE3D_OFFSET, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10] === null ? 0 : args[10]);
+        }
     }
     texParameterf(target, pname, param) {
         this.add_iiif(FUNCTION_ID.TEXPARAMETERF, target, pname, param);
@@ -3683,16 +3662,27 @@ class GLCommandEncoder {
             if (args[6]._nativeObj) {
                 this.add_iiiiiiii(FUNCTION_ID.TEXSUBIMAGE2D, args[0], args[1], args[2], args[3], args[4], args[5], args[6]._nativeObj.conchImgId);
             }
+            else if (args[6].conchImgId !== undefined) {
+                this.add_iiiiiiii(FUNCTION_ID.TEXSUBIMAGE2D, args[0], args[1], args[2], args[3], args[4], args[5], args[6].conchImgId);
+            }
         }
         else if (args.length == 9) {
             if (args[8] == null) {
                 this.add_iiiiiiiiii(FUNCTION_ID.TEXSUBIMAGE2D_PIXEL, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], 0);
             }
+            else if (args[8]._nativeObj) {
+                this.add_iiiiiiii(FUNCTION_ID.TEXSUBIMAGE2D, args[0], args[1], args[2], args[3], args[6], args[7], args[8]._nativeObj.conchImgId);
+            }
+            else if (args[8]._context && args[8]._context._nativeObj) {
+                this.add_iiiiiiii(FUNCTION_ID.TEXSUBIMAGE2D, args[0], args[1], args[2], args[3], args[6], args[7], args[8]._context._nativeObj.conchImgId);
+            }
+            else if (args[8].conchImgId !== undefined) {
+                this.add_iiiiiiii(FUNCTION_ID.TEXSUBIMAGE2D, args[0], args[1], args[2], args[3], args[6], args[7], args[8].conchImgId);
+            }
             else if (args[8] instanceof ArrayBuffer || ArrayBuffer.isView(args[8])) {
                 var ab = args[8];
                 var nAlignLength = this.getAlignLength(ab);
-                this.add_iiiiiiiii(FUNCTION_ID.TEXSUBIMAGE2D_PIXEL, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
-                this.wab(ab, ab.byteLength, nAlignLength);
+                this.add_iiiiiiiii_wab(FUNCTION_ID.TEXSUBIMAGE2D_PIXEL, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], ab, ab.byteLength, nAlignLength);
             }
         }
     }
@@ -3705,8 +3695,7 @@ class GLCommandEncoder {
     }
     uniform1fv_laya(location, values) {
         var nAlignLength = this.getAlignLength(values);
-        this.add_ii(FUNCTION_ID.UNIFORM1FV, location);
-        this.wab(values, values.byteLength, nAlignLength);
+        this.add_ii_wab(FUNCTION_ID.UNIFORM1FV, location, values, values.byteLength, nAlignLength);
     }
     uniform1i(location, x) {
         this.add_iii(FUNCTION_ID.UNIFORM1I, location, x);
@@ -3717,8 +3706,7 @@ class GLCommandEncoder {
     }
     uniform1iv_laya(location, values) {
         var nAlignLength = this.getAlignLength(values);
-        this.add_ii(FUNCTION_ID.UNIFORM1IV, location);
-        this.wab(values, values.byteLength, nAlignLength);
+        this.add_ii_wab(FUNCTION_ID.UNIFORM1IV, location, values, values.byteLength, nAlignLength);
     }
     uniform2f(location, x, y) {
         this.add_iiff(FUNCTION_ID.UNIFORM2F, location, x, y);
@@ -3729,8 +3717,7 @@ class GLCommandEncoder {
     }
     uniform2fv_laya(location, values) {
         var nAlignLength = this.getAlignLength(values);
-        this.add_ii(FUNCTION_ID.UNIFORM2FV, location);
-        this.wab(values, values.byteLength, nAlignLength);
+        this.add_ii_wab(FUNCTION_ID.UNIFORM2FV, location, values, values.byteLength, nAlignLength);
     }
     uniform2i(location, x, y) {
         this.add_iiii(FUNCTION_ID.UNIFORM2I, location, x, y);
@@ -3741,8 +3728,7 @@ class GLCommandEncoder {
     }
     uniform2iv_laya(location, values) {
         var nAlignLength = this.getAlignLength(values);
-        this.add_ii(FUNCTION_ID.UNIFORM2IV, location);
-        this.wab(values, values.byteLength, nAlignLength);
+        this.add_ii_wab(FUNCTION_ID.UNIFORM2IV, location, values, values.byteLength, nAlignLength);
     }
     uniform3f(location, x, y, z) {
         this.add_iifff(FUNCTION_ID.UNIFORM3F, location, x, y, z);
@@ -3753,8 +3739,7 @@ class GLCommandEncoder {
     }
     uniform3fv_laya(location, values) {
         var nAlignLength = this.getAlignLength(values);
-        this.add_ii(FUNCTION_ID.UNIFORM3FV, location);
-        this.wab(values, values.byteLength, nAlignLength);
+        this.add_ii_wab(FUNCTION_ID.UNIFORM3FV, location, values, values.byteLength, nAlignLength);
     }
     uniform3i(location, x, y, z) {
         this.add_iiiii(FUNCTION_ID.UNIFORM3I, location, x, y, z);
@@ -3765,8 +3750,7 @@ class GLCommandEncoder {
     }
     uniform3iv_laya(location, values) {
         var nAlignLength = this.getAlignLength(values);
-        this.add_ii(FUNCTION_ID.UNIFORM3IV, location);
-        this.wab(values, values.byteLength, nAlignLength);
+        this.add_ii_wab(FUNCTION_ID.UNIFORM3IV, location, values, values.byteLength, nAlignLength);
     }
     uniform4f(location, x, y, z, w) {
         this.add_iiffff(FUNCTION_ID.UNIFORM4F, location, x, y, z, w);
@@ -3777,8 +3761,7 @@ class GLCommandEncoder {
     }
     uniform4fv_laya(location, values) {
         var nAlignLength = this.getAlignLength(values);
-        this.add_ii(FUNCTION_ID.UNIFORM4FV, location);
-        this.wab(values, values.byteLength, nAlignLength);
+        this.add_ii_wab(FUNCTION_ID.UNIFORM4FV, location, values, values.byteLength, nAlignLength);
     }
     uniform4i(location, x, y, z, w) {
         this.add_iiiiii(FUNCTION_ID.UNIFORM4I, location, x, y, z, w);
@@ -3789,8 +3772,7 @@ class GLCommandEncoder {
     }
     uniform4iv_laya(location, values) {
         var nAlignLength = this.getAlignLength(values);
-        this.add_ii(FUNCTION_ID.UNIFORM4IV, location);
-        this.wab(values, values.byteLength, nAlignLength);
+        this.add_ii_wab(FUNCTION_ID.UNIFORM4IV, location, values, values.byteLength, nAlignLength);
     }
     uniformMatrix2fv(location, transpose, values) {
         values = (values instanceof Array) ? new Float32Array(values) : values;
@@ -3798,8 +3780,7 @@ class GLCommandEncoder {
     }
     uniformMatrix2fv_laya(location, transpose, value) {
         var nAlignLength = this.getAlignLength(value);
-        this.add_iii(FUNCTION_ID.UNIFORMMATRIX2FV, location, transpose);
-        this.wab(value, value.byteLength, nAlignLength);
+        this.add_iii_wab(FUNCTION_ID.UNIFORMMATRIX2FV, location, transpose, value, value.byteLength, nAlignLength);
     }
     uniformMatrix3fv(location, transpose, values) {
         values = (values instanceof Array) ? new Float32Array(values) : values;
@@ -3807,8 +3788,7 @@ class GLCommandEncoder {
     }
     uniformMatrix3fv_laya(location, transpose, value) {
         var nAlignLength = this.getAlignLength(value);
-        this.add_iii(FUNCTION_ID.UNIFORMMATRIX3FV, location, transpose);
-        this.wab(value, value.byteLength, nAlignLength);
+        this.add_iii_wab(FUNCTION_ID.UNIFORMMATRIX3FV, location, transpose, value, value.byteLength, nAlignLength);
     }
     uniformMatrix4fv(location, transpose, values) {
         values = (values instanceof Array) ? new Float32Array(values) : values;
@@ -3816,8 +3796,7 @@ class GLCommandEncoder {
     }
     uniformMatrix4fv_laya(location, transpose, value) {
         var nAlignLength = this.getAlignLength(value);
-        this.add_iii(FUNCTION_ID.UNIFORMMATRIX4FV, location, transpose);
-        this.wab(value, value.byteLength, nAlignLength);
+        this.add_iii_wab(FUNCTION_ID.UNIFORMMATRIX4FV, location, transpose, value, value.byteLength, nAlignLength);
     }
     useProgram(program) {
         this.add_ii(FUNCTION_ID.USEPROGRAM, program ? program.id : 0);
@@ -3830,32 +3809,28 @@ class GLCommandEncoder {
     }
     vertexAttrib1fv(indx, values) {
         var nAlignLength = this.getAlignLength(values);
-        this.add_ii(FUNCTION_ID.VERTEXATTRIB1FV, indx);
-        this.wab(values, values.byteLength, nAlignLength);
+        this.add_ii_wab(FUNCTION_ID.VERTEXATTRIB1FV, indx, values, values.byteLength, nAlignLength);
     }
     vertexAttrib2f(indx, x, y) {
         this.add_iiff(FUNCTION_ID.VERTEXATTRIB2F, indx, x, y);
     }
     vertexAttrib2fv(indx, values) {
         var nAlignLength = this.getAlignLength(values);
-        this.add_ii(FUNCTION_ID.VERTEXATTRIB2FV, indx);
-        this.wab(values, values.byteLength, nAlignLength);
+        this.add_ii_wab(FUNCTION_ID.VERTEXATTRIB2FV, indx, values, values.byteLength, nAlignLength);
     }
     vertexAttrib3f(indx, x, y, z) {
         this.add_iifff(FUNCTION_ID.VERTEXATTRIB3F, indx, x, y, z);
     }
     vertexAttrib3fv(indx, values) {
         var nAlignLength = this.getAlignLength(values);
-        this.add_ii(FUNCTION_ID.VERTEXATTRIB3FV, indx);
-        this.wab(values, values.byteLength, nAlignLength);
+        this.add_ii_wab(FUNCTION_ID.VERTEXATTRIB3FV, indx, values, values.byteLength, nAlignLength);
     }
     vertexAttrib4f(indx, x, y, z, w) {
         this.add_iiffff(FUNCTION_ID.VERTEXATTRIB4F, indx, x, y, z, w);
     }
     vertexAttrib4fv(indx, values) {
         var nAlignLength = this.getAlignLength(values);
-        this.add_ii(FUNCTION_ID.VERTEXATTRIB4FV, indx);
-        this.wab(values, values.byteLength, nAlignLength);
+        this.add_ii_wab(FUNCTION_ID.VERTEXATTRIB4FV, indx, values, values.byteLength, nAlignLength);
     }
     vertexAttribPointer(indx, size, type, normalized, stride, offset) {
         this.add_iiiiiii(FUNCTION_ID.VERTEXATTRIBPOINTER, indx, size, type, normalized, stride, offset);
@@ -3871,14 +3846,12 @@ class GLCommandEncoder {
     compressedTexImage2D(_args) {
         var args = arguments;
         var nAlignLength = this.getAlignLength(args[6]);
-        this.add_iiiiiii(FUNCTION_ID.COMPRESSEDTEXIMAGE2D, args[0], args[1], args[2], args[3], args[4], args[5]);
-        this.wab(args[6], args[6].byteLength, nAlignLength);
+        this.add_iiiiiii_wab(FUNCTION_ID.COMPRESSEDTEXIMAGE2D, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[6].byteLength, nAlignLength);
     }
     compressedTexSubImage2D(_args) {
         var args = arguments;
         var nAlignLength = this.getAlignLength(args[7]);
-        this.add_iiiiiiii(FUNCTION_ID.COMPRESSEDTEXSUBIMAGE2D, args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
-        this.wab(args[7], args[7].byteLength, nAlignLength);
+        this.add_iiiiiiii_wab(FUNCTION_ID.COMPRESSEDTEXSUBIMAGE2D, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[7].byteLength, nAlignLength);
     }
     createVertexArray() {
         var fakeID = this.createFakeID();
@@ -3904,85 +3877,6 @@ class GLCommandEncoder {
     drawElementsInstanced(mode, count, type, offset, instanceCount) {
         this.add_iiiiii(FUNCTION_ID.DRAWELEMENTSINSTANCED, mode, count, type, offset, instanceCount);
     }
-    uniformMatrix2fvEx(location, transpose, value) {
-        if (!value["_ptrID"]) {
-            this._layagl.createArrayBufferRef(value, LayaGLContext.ARRAY_BUFFER_TYPE_DATA, true);
-        }
-        var nID = value["_ptrID"];
-        this._layagl.syncBufferToRenderThread(value);
-        this.add_iiii(FUNCTION_ID.UNIFORMMATRIX2FVEX, location, transpose, nID);
-    }
-    uniformMatrix3fvEx(location, transpose, value) {
-        if (!value["_ptrID"]) {
-            this._layagl.createArrayBufferRef(value, LayaGLContext.ARRAY_BUFFER_TYPE_DATA, true);
-        }
-        var nID = value["_ptrID"];
-        this._layagl.syncBufferToRenderThread(value);
-        this.add_iiii(FUNCTION_ID.UNIFORMMATRIX3FVEX, location, transpose, nID);
-    }
-    uniformMatrix4fvEx(location, transpose, value) {
-        if (!value["_ptrID"]) {
-            this._layagl.createArrayBufferRef(value, LayaGLContext.ARRAY_BUFFER_TYPE_DATA, true);
-        }
-        var nID = value["_ptrID"];
-        this._layagl.syncBufferToRenderThread(value);
-        this.add_iiii(FUNCTION_ID.UNIFORMMATRIX4FVEX, location, transpose, nID);
-    }
-    addShaderUniform(one) {
-        var funID = 0;
-        var isArray = one.isArray;
-        switch (one.type) {
-            case GLCommandEncoder.INT:
-                funID = isArray ? UNIFORM_TYPE.INTERIOR_UNIFORM1IV : UNIFORM_TYPE.INTERIOR_UNIFORM1I;
-                break;
-            case GLCommandEncoder.FLOAT:
-                funID = isArray ? UNIFORM_TYPE.INTERIOR_UNIFORM1FV : UNIFORM_TYPE.INTERIOR_UNIFORM1F;
-                break;
-            case GLCommandEncoder.FLOAT_VEC2:
-                funID = isArray ? UNIFORM_TYPE.INTERIOR_UNIFORM2FV : UNIFORM_TYPE.INTERIOR_UNIFORM2F;
-                break;
-            case GLCommandEncoder.FLOAT_VEC3:
-                funID = isArray ? UNIFORM_TYPE.INTERIOR_UNIFORM3FV : UNIFORM_TYPE.INTERIOR_UNIFORM3F;
-                break;
-            case GLCommandEncoder.FLOAT_VEC4:
-                funID = isArray ? UNIFORM_TYPE.INTERIOR_UNIFORM4FV : UNIFORM_TYPE.INTERIOR_UNIFORM4F;
-                break;
-            case GLCommandEncoder.SAMPLER_2D:
-                funID = UNIFORM_TYPE.INTERIOR_UNIFORMSAMPLER_2D;
-                break;
-            case GLCommandEncoder.SAMPLER_CUBE:
-                funID = UNIFORM_TYPE.INTERIOR_UNIFORMSAMPLER_CUBE;
-                break;
-            case GLCommandEncoder.FLOAT_MAT4:
-                funID = UNIFORM_TYPE.INTERIOR_UNIFORMMATRIX4FV;
-                break;
-            case GLCommandEncoder.BOOL:
-                funID = UNIFORM_TYPE.INTERIOR_UNIFORM1I;
-                break;
-            case GLCommandEncoder.FLOAT_MAT2:
-                funID = UNIFORM_TYPE.INTERIOR_UNIFORMMATRIX2FV;
-                break;
-            case GLCommandEncoder.FLOAT_MAT3:
-                funID = UNIFORM_TYPE.INTERIOR_UNIFORMMATRIX3FV;
-                break;
-            default:
-                throw new Error("compile shader err!");
-        }
-        this._layagl.syncBufferToRenderThread(this._buffer);
-        this.add_iiiiii(FUNCTION_ID.ADDSHADERUNIFORM, funID, one.location, one.type, one.dataOffset, one.textureID);
-    }
-    uploadShaderUniforms(commandEncoder, data, type) {
-        if (type == LayaGLContext.UPLOAD_SHADER_UNIFORM_TYPE_ID) {
-            this._layagl.syncBufferToRenderThread(data);
-            this.add_iii(FUNCTION_ID.UPLOADSHADERUNIFORMS, commandEncoder._buffer["_ptrID"], data._ptrID);
-        }
-        else {
-            var nAlignLength = this.getAlignLength(data);
-            this.add_ii(FUNCTION_ID.UPLOADSHADERUNIFORMS_BUFFER, commandEncoder._buffer["_ptrID"]);
-            this.wab(data, data.byteLength, nAlignLength);
-        }
-        return 0;
-    }
     createFakeID() {
         var frameCount = this._layagl.getFrameCount();
         var fakeArray = GLCommandEncoder._fakeArray;
@@ -4003,14 +3897,6 @@ class GLCommandEncoder {
         fakeObj.id = -1;
         fakeObj.frameCount = this._layagl.getFrameCount();
     }
-    useCommandEncoder(commandEncoder) {
-        if (commandEncoder._isSyncToRenderThread) {
-            this._layagl.syncBufferToRenderThread(commandEncoder);
-        }
-        var loc = this._idata[0];
-        this.add_ii(FUNCTION_ID.USECOMMANDENCODER, commandEncoder.getPtrID());
-        return loc;
-    }
     getProgramParameterEx(vs, ps, define, pname) {
         return this._layagl.getProgramParameterEx(vs, ps, define, pname);
     }
@@ -4019,38 +3905,6 @@ class GLCommandEncoder {
     }
     getActiveUniformEx(vs, ps, define, index) {
         return this._layagl.getActiveUniformEx(vs, ps, define, index);
-    }
-    loadDataToReg(regNum, data, offset, size) {
-        var nAlignLength = this.getAlignLength(data);
-        this.add_iiii(FUNCTION_ID.LOADDATATOREG, regNum, offset, size);
-        this.wab(data, data.byteLength, nAlignLength);
-    }
-    loadDataToRegEx(regNum, dataID, offset, size) {
-        this.add_iiiii(FUNCTION_ID.LOADDATATOREGEX, regNum, dataID, offset, size);
-    }
-    ifLess0(regNum, statementNum) {
-        this.add_iii(FUNCTION_ID.IFLESS0, regNum, statementNum);
-    }
-    ifEqual0(regNum, statementNum) {
-        this.add_iii(FUNCTION_ID.IFEQUAL0, regNum, statementNum);
-    }
-    ifGreater0(regNum, statementNum) {
-        this.add_iii(FUNCTION_ID.IFGREATER0, regNum, statementNum);
-    }
-    ifLEqual0(regNum, statementNum) {
-        this.add_iii(FUNCTION_ID.IFLEQUAL0, regNum, statementNum);
-    }
-    ifGEqual0(regNum, statementNum) {
-        this.add_iii(FUNCTION_ID.IFGEQUAL0, regNum, statementNum);
-    }
-    ifGNotEqual0(regNum, statementNum) {
-        this.add_iii(FUNCTION_ID.IFGNOTEQUAL0, regNum, statementNum);
-    }
-    operateReg(regOut, reg1, reg2, size, operateType, dataType) {
-        this.add_iiiiiii(FUNCTION_ID.OPERATEREG, regOut, reg1, reg2, size, operateType, dataType);
-    }
-    store(dataID, offset, regID, size) {
-        this.add_iiiii(FUNCTION_ID.STORE, dataID, offset, regID, size);
     }
     getAlignLength(data) {
         var byteLength = data.byteLength;
@@ -4089,7 +3943,6 @@ class LayaGLContext {
         this._currentCmdEncoder = null;
         this._saveCommandEncoder = new Array();
         this._currentContext = null;
-        this._threadMode = LayaGLContext.THREAD_MODE_DOUBLE;
         this._curBindInfo = new BindInfo();
         this.DEPTH_BUFFER_BIT = 0x00000100;
         this.STENCIL_BUFFER_BIT = 0x00000400;
@@ -4661,7 +4514,6 @@ class LayaGLContext {
             return LayaGLContext.instance;
         }
         this._nativeObj = layagl;
-        this._threadMode = this._nativeObj.getThreadMode();
         contextType = contextType.toLowerCase();
         if (contextType.indexOf("layagl") >= 0) {
             this._nativeObj.setSyncArrayBufferID(LayaGLContext._syncBufferList["_ptrID"]);
@@ -4681,61 +4533,19 @@ class LayaGLContext {
     }
     static __init__() {
         LayaGLContext._syncBufferList = new Int32Array(LayaGLContext._syncBufferSize);
-        LayaGLContext._syncBufferList["conchRef"] = webglPlus.createArrayBufferRef(LayaGLContext._syncBufferList, LayaGLContext.ARRAY_BUFFER_TYPE_DATA, false, LayaGLContext.ARRAY_BUFFER_REF_REFERENCE);
+        LayaGLContext._syncBufferList["conchRef"] = conch.createArrayBufferRef(LayaGLContext._syncBufferList, LayaGLContext.ARRAY_BUFFER_TYPE_DATA, false, LayaGLContext.ARRAY_BUFFER_REF_REFERENCE);
         LayaGLContext._syncBufferList["_ptrID"] = LayaGLContext._syncBufferList["conchRef"].id;
         LayaGLContext._frameAndSyncCountBuffer = new Int32Array(2);
-        LayaGLContext._frameAndSyncCountBuffer["conchRef"] = webglPlus.createArrayBufferRef(LayaGLContext._frameAndSyncCountBuffer, LayaGLContext.ARRAY_BUFFER_TYPE_DATA, false, LayaGLContext.ARRAY_BUFFER_REF_REFERENCE);
+        LayaGLContext._frameAndSyncCountBuffer["conchRef"] = conch.createArrayBufferRef(LayaGLContext._frameAndSyncCountBuffer, LayaGLContext.ARRAY_BUFFER_TYPE_DATA, false, LayaGLContext.ARRAY_BUFFER_REF_REFERENCE);
         LayaGLContext._frameAndSyncCountBuffer["_ptrID"] = LayaGLContext._frameAndSyncCountBuffer["conchRef"].id;
         LayaGLContext._frameAndSyncCountBuffer[0] = 1;
         LayaGLContext._frameAndSyncCountBuffer[1] = 0;
-        if (layagl.getThreadMode() > 1) {
-            LayaGLContext.prototype.bindBuffer = LayaGLContext.prototype.bindBufferMutiThread;
-            LayaGLContext.prototype.useProgram = LayaGLContext.prototype.useProgramMutiThread;
-            GLCommandEncoder.prototype.getUniform = GLCommandEncoder.prototype.getUniformMutiThread;
-        }
     }
     static getFrameCount() {
         return LayaGLContext._frameAndSyncCountBuffer[0];
     }
     getFrameCount() {
         return LayaGLContext._frameAndSyncCountBuffer[0];
-    }
-    syncBufferToRenderThread(value, index = 0) {
-        if (LayaGLContext.instance._threadMode == LayaGLContext.THREAD_MODE_SINGLE)
-            return;
-        var bNeedSync = false;
-        if (!value._refArray) {
-            if (value.frameCount != LayaGLContext._frameAndSyncCountBuffer[0]) {
-                value.frameCount = LayaGLContext._frameAndSyncCountBuffer[0];
-                bNeedSync = true;
-            }
-        }
-        else {
-            var obj = value._refArray[index];
-            if (obj.frameCount != LayaGLContext._frameAndSyncCountBuffer[0]) {
-                obj.frameCount = LayaGLContext._frameAndSyncCountBuffer[0];
-                bNeedSync = true;
-            }
-        }
-        if (bNeedSync) {
-            if ((LayaGLContext._frameAndSyncCountBuffer[1] + 1) > LayaGLContext._syncBufferSize) {
-                var pre = LayaGLContext._syncBufferList;
-                var preConchRef = LayaGLContext._syncBufferList["conchRef"];
-                var prePtrID = LayaGLContext._syncBufferList["_ptrID"];
-                LayaGLContext._syncBufferSize += LayaGLContext._SYNC_ARRAYBUFFER_SIZE_;
-                LayaGLContext._syncBufferList = new Int32Array(LayaGLContext._syncBufferSize);
-                LayaGLContext._syncBufferList["conchRef"] = preConchRef;
-                LayaGLContext._syncBufferList["_ptrID"] = prePtrID;
-                pre && LayaGLContext._syncBufferList.set(pre, 0);
-                webglPlus.updateArrayBufferRef(LayaGLContext._syncBufferList["_ptrID"], false, LayaGLContext._syncBufferList);
-            }
-            var nID = value.getPtrID ? value.getPtrID(index) : value["_ptrID"];
-            if (!nID) {
-                alert("syncBufferToRenderThread id error");
-                debugger;
-            }
-            LayaGLContext._syncBufferList[LayaGLContext._frameAndSyncCountBuffer[1]++] = nID;
-        }
     }
     getDefaultCommandEncoder() {
         return this._defaultEncoder;
@@ -4776,25 +4586,6 @@ class LayaGLContext {
             this.height = h;
             this._nativeObj.setSize(w, h);
         }
-    }
-    createCommandEncoder(reserveSize, adjustSize, isSyncToRenderThread) {
-        reserveSize = reserveSize ? reserveSize : 128;
-        adjustSize = adjustSize ? adjustSize : 64;
-        isSyncToRenderThread = isSyncToRenderThread ? isSyncToRenderThread : false;
-        var cmd = new GLCommandEncoder(this, reserveSize, adjustSize, isSyncToRenderThread);
-        if (isSyncToRenderThread) {
-            this.syncBufferToRenderThread(cmd);
-        }
-        return cmd;
-    }
-    beginCommandEncoding(commandEncoder) {
-        commandEncoder = commandEncoder ? commandEncoder : this._defaultEncoder;
-        this._saveCommandEncoder.push(commandEncoder);
-        this._currentCmdEncoder = commandEncoder;
-    }
-    endCommandEncoding() {
-        this._saveCommandEncoder.pop();
-        this._currentCmdEncoder = this._saveCommandEncoder[this._saveCommandEncoder.length - 1];
     }
     getContextAttributes() {
         return this._currentCmdEncoder.getContextAttributes();
@@ -4837,8 +4628,11 @@ class LayaGLContext {
         this.setBind(target, buffer);
         this._currentCmdEncoder.bindBuffer(target, buffer);
     }
-    bindBufferMutiThread(target, buffer) {
-        this._currentCmdEncoder.bindBuffer(target, buffer);
+    bindBufferRange(target, index, buffer, offset, size) {
+        this._currentCmdEncoder.bindBufferRange(target, index, buffer, offset, size);
+    }
+    bindBufferBase(target, index, buffer) {
+        this._currentCmdEncoder.bindBufferBase(target, index, buffer);
     }
     bindFramebuffer(target, framebuffer) {
         this._currentCmdEncoder.bindFramebuffer(target, framebuffer);
@@ -4847,6 +4641,9 @@ class LayaGLContext {
     bindRenderbuffer(target, renderbuffer) {
         this._currentCmdEncoder.bindRenderbuffer(target, renderbuffer);
         this.setBind(target, renderbuffer);
+    }
+    clearBufferfi(buffer, drawbuffer, depth, stencil) {
+        this._currentCmdEncoder.clearBufferfv(buffer, drawbuffer, depth, stencil);
     }
     clearBufferfv(buffer, drawbuffer, values, srcOffset) {
         this._currentCmdEncoder.clearBufferfv(buffer, drawbuffer, values, srcOffset);
@@ -5032,6 +4829,15 @@ class LayaGLContext {
     getFramebufferAttachmentParameter(target, attachment, pname) {
         return this._currentCmdEncoder.getFramebufferAttachmentParameter(target, attachment, pname);
     }
+    getActiveUniformBlockName(program, uniformBlockIndex) {
+        return this._currentCmdEncoder.getActiveUniformBlockName(program, uniformBlockIndex);
+    }
+    getUniformBlockIndex(program, uniformBlockName) {
+        return this._currentCmdEncoder.getUniformBlockIndex(program, uniformBlockName);
+    }
+    uniformBlockBinding(program, uniformBlockIndex, uniformBlockBinding) {
+        return this._currentCmdEncoder.uniformBlockBinding(program, uniformBlockIndex, uniformBlockBinding);
+    }
     getProgramParameter(program, pname) {
         return this._currentCmdEncoder.getProgramParameter(program, pname);
     }
@@ -5110,9 +4916,6 @@ class LayaGLContext {
     readPixels(x, y, width, height, format, type, pixels) {
         this._currentCmdEncoder.readPixels(x, y, width, height, format, type, pixels);
     }
-    readPixelsAsync(x, y, w, h, format, type, callBack) {
-        this._currentCmdEncoder.readPixelsAsync(x, y, w, h, format, type, callBack);
-    }
     renderbufferStorage(target, internalformat, width, height) {
         this._currentCmdEncoder.renderbufferStorage(target, internalformat, width, height);
     }
@@ -5152,6 +4955,13 @@ class LayaGLContext {
     }
     texStorage2D(target, levels, internalformat, width, height) {
         this._currentCmdEncoder.texStorage2D(target, levels, internalformat, width, height);
+    }
+    texStorage3D(target, levels, internalformat, width, height, depth) {
+        this._currentCmdEncoder.texStorage3D(target, levels, internalformat, width, height, depth);
+    }
+    texSubImage3D(_args) {
+        var args = arguments;
+        this._currentCmdEncoder.texSubImage3D.apply(this._currentCmdEncoder, args);
     }
     texParameterf(target, pname, param) {
         this._currentCmdEncoder.texParameterf(target, pname, param);
@@ -5224,9 +5034,6 @@ class LayaGLContext {
         this.setBind(LayaGLContext.CURRENT_PROGRAM, program);
         this._currentCmdEncoder.useProgram(program);
     }
-    useProgramMutiThread(program) {
-        this._currentCmdEncoder.useProgram(program);
-    }
     validateProgram(program) {
         this._currentCmdEncoder.validateProgram(program);
     }
@@ -5294,55 +5101,6 @@ class LayaGLContext {
     drawElementsInstanced(mode, count, type, offset, instanceCount) {
         this._currentCmdEncoder.drawElementsInstanced(mode, count, type, offset, instanceCount);
     }
-    uniformMatrix2fvEx(location, transpose, value) {
-        this._currentCmdEncoder.uniformMatrix2fvEx(location, transpose, value);
-    }
-    uniformMatrix3fvEx(location, transpose, value) {
-        this._currentCmdEncoder.uniformMatrix3fvEx(location, transpose, value);
-    }
-    uniformMatrix4fvEx(location, transpose, value) {
-        this._currentCmdEncoder.uniformMatrix4fvEx(location, transpose, value);
-    }
-    addShaderUniform(one) {
-        this._currentCmdEncoder.addShaderUniform(one);
-    }
-    uploadShaderUniforms(commandEncoder, data, type) {
-        this._currentCmdEncoder.uploadShaderUniforms(commandEncoder, data, type);
-        return 0;
-    }
-    useCommandEncoder(commandEncoder) {
-        this._currentCmdEncoder.useCommandEncoder(commandEncoder);
-    }
-    loadDataToReg(regNum, data, offset, size) {
-        this._currentCmdEncoder.loadDataToReg(regNum, data, offset, size);
-    }
-    loadDataToRegEx(regNum, dataID, offset, size) {
-        this._currentCmdEncoder.loadDataToRegEx(regNum, dataID, offset, size);
-    }
-    ifLess0(regNum, statementNum) {
-        this._currentCmdEncoder.ifLess0(regNum, statementNum);
-    }
-    ifEqual0(regNum, statementNum) {
-        this._currentCmdEncoder.ifEqual0(regNum, statementNum);
-    }
-    ifGreater0(regNum, statementNum) {
-        this._currentCmdEncoder.ifGreater0(regNum, statementNum);
-    }
-    ifLEqual0(regNum, statementNum) {
-        this._currentCmdEncoder.ifLEqual0(regNum, statementNum);
-    }
-    ifGEqual0(regNum, statementNum) {
-        this._currentCmdEncoder.ifGEqual0(regNum, statementNum);
-    }
-    ifGNotEqual0(regNum, statementNum) {
-        this._currentCmdEncoder.ifGNotEqual0(regNum, statementNum);
-    }
-    operateReg(regOut, reg1, reg2, size, operateType, dataType) {
-        this._currentCmdEncoder.operateReg(regOut, reg1, reg2, size, operateType, dataType);
-    }
-    store(dataID, offset, regID, size) {
-        this._currentCmdEncoder.store(dataID, offset, regID, size);
-    }
     setMainContextSize(width, height) {
         this._nativeObj.setMainContextSize(width, height);
     }
@@ -5358,97 +5116,17 @@ class LayaGLContext {
     getActiveUniformEx(vs, ps, define, index) {
         return this._nativeObj.getActiveUniformEx(vs, ps, define, index);
     }
-    static createArrayBufferRef(arrayBuffer, type, syncRender) {
-        var bufferConchRef = webglPlus.createArrayBufferRef(arrayBuffer, type, syncRender, LayaGLContext.ARRAY_BUFFER_REF_REFERENCE);
+    createArrayBufferRef(arrayBuffer, type, syncRender) {
+        var bufferConchRef = conch.createArrayBufferRef(arrayBuffer, type, syncRender, LayaGLContext.ARRAY_BUFFER_REF_REFERENCE);
         arrayBuffer["conchRef"] = bufferConchRef;
         arrayBuffer["_ptrID"] = bufferConchRef.id;
         return bufferConchRef;
-    }
-    static createArrayBufferRefs(arrayBuffer, type, syncRender, refType) {
-        if (!arrayBuffer._refArray) {
-            arrayBuffer._refArray = [];
-            arrayBuffer._refNum = 1;
-            arrayBuffer._refArray.length = 1;
-            arrayBuffer.getRefNum = function () {
-                return this._refNum;
-            };
-            arrayBuffer.clearRefNum = function () {
-                this._refNum = 1;
-            };
-            arrayBuffer.getRefSize = function () {
-                return this._refArray.length;
-            };
-            arrayBuffer.getPtrID = function (index) {
-                index = index ? index : 0;
-                return this._refArray[index].ptrID;
-            };
-        }
-        var bufferConchRef = null;
-        if (refType == LayaGLContext.ARRAY_BUFFER_REF_REFERENCE) {
-            var refArray = arrayBuffer._refArray;
-            if (!refArray[0]) {
-                bufferConchRef = webglPlus.createArrayBufferRef(arrayBuffer, type, syncRender, refType);
-                refArray[0] = { "ref": bufferConchRef, "ptrID": bufferConchRef.id };
-            }
-        }
-        else {
-            if (arrayBuffer._refNum < arrayBuffer._refArray.length) {
-                bufferConchRef = arrayBuffer._refArray[arrayBuffer._refNum].ref;
-                var nPtrID = arrayBuffer.getPtrID(arrayBuffer._refNum);
-                webglPlus.syncArrayBufferDataToRuntime(nPtrID, bufferConchRef.isSyncToRender(), arrayBuffer);
-            }
-            else {
-                bufferConchRef = webglPlus.createArrayBufferRef(arrayBuffer, type, syncRender, refType);
-                arrayBuffer._refArray.push({ "ref": bufferConchRef, "ptrID": bufferConchRef.id });
-            }
-            arrayBuffer._refNum++;
-        }
-        return bufferConchRef;
-    }
-    static syncBufferToRenderThread(value, index = 0) {
-        if (LayaGLContext.instance._threadMode == LayaGLContext.THREAD_MODE_SINGLE)
-            return;
-        var bNeedSync = false;
-        if (!value._refArray) {
-            if (value.frameCount != LayaGLContext._frameAndSyncCountBuffer[0]) {
-                value.frameCount = LayaGLContext._frameAndSyncCountBuffer[0];
-                bNeedSync = true;
-            }
-        }
-        else {
-            var obj = value._refArray[index];
-            if (obj.frameCount != LayaGLContext._frameAndSyncCountBuffer[0]) {
-                obj.frameCount = LayaGLContext._frameAndSyncCountBuffer[0];
-                bNeedSync = true;
-            }
-        }
-        if (bNeedSync) {
-            if ((LayaGLContext._frameAndSyncCountBuffer[1] + 1) > LayaGLContext._syncBufferSize) {
-                var pre = LayaGLContext._syncBufferList;
-                var preConchRef = LayaGLContext._syncBufferList["conchRef"];
-                var prePtrID = LayaGLContext._syncBufferList["_ptrID"];
-                LayaGLContext._syncBufferSize += LayaGLContext._SYNC_ARRAYBUFFER_SIZE_;
-                LayaGLContext._syncBufferList = new Int32Array(LayaGLContext._syncBufferSize);
-                LayaGLContext._syncBufferList["conchRef"] = preConchRef;
-                LayaGLContext._syncBufferList["_ptrID"] = prePtrID;
-                pre && LayaGLContext._syncBufferList.set(pre, 0);
-                webglPlus.updateArrayBufferRef(LayaGLContext._syncBufferList["_ptrID"], false, LayaGLContext._syncBufferList);
-            }
-            var nID = value.getPtrID ? value.getPtrID(index) : value["_ptrID"];
-            if (!nID) {
-                alert("syncBufferToRenderThread id error");
-                debugger;
-            }
-            LayaGLContext._syncBufferList[LayaGLContext._frameAndSyncCountBuffer[1]++] = nID;
-        }
     }
 }
 LayaGLContext._SYNC_ARRAYBUFFER_SIZE_ = 4096;
 LayaGLContext._syncBufferSize = LayaGLContext._SYNC_ARRAYBUFFER_SIZE_;
 LayaGLContext._tempGLEncoder = null;
 LayaGLContext._shader_macro_id_ = 1;
-LayaGLContext.THREAD_MODE_SINGLE = 1;
-LayaGLContext.THREAD_MODE_DOUBLE = 2;
 LayaGLContext.EXECUTE_JS_THREAD_BUFFER = 0;
 LayaGLContext.EXECUTE_RENDER_THREAD_BUFFER = 1;
 LayaGLContext.EXECUTE_COPY_TO_RENDER = 2;
@@ -5775,12 +5453,12 @@ LayaGLContext.UNPACK_COLORSPACE_CONVERSION_WEBGL = 0x9243;
 LayaGLContext.BROWSER_DEFAULT_WEBGL = 0x9244;
 LayaGLContext.RGBA16F = 0x881A;
 LayaGLContext.HALF_FLOAT = 0x140B;
+window["webglPlus"] = conch;
 window["WebGLRenderingContext"] = LayaGLContext;
 window["WebGL2RenderingContext"] = LayaGLContext;
 window["LayaGLContext"] = LayaGLContext;
 window["ProgramLocationTable"] = ProgramLocationTable;
 window["GLCommandEncoder"] = GLCommandEncoder;
-window["CallbackFuncObj"] = CallbackFuncObj;
 class CSSStyleDeclaration {
     constructor() {
         this._transform = new Float32Array([1, 0, 0, 1, 0, 0]);
@@ -5869,7 +5547,7 @@ class HTMLScriptElement extends HTMLElement {
     set src(url) {
         var _t = this;
         this._src = location.resolve(url);
-        console.log("HTMLScriptElement set src" + this._src);
+        console.log("HTMLScriptElement set src: " + this._src);
         document.uploadScript({ "src": this._src, "obj": this });
     }
     get src() {
@@ -6119,9 +5797,6 @@ class HTMLImageElement extends HTMLElement {
         this._nativeObj.onload = this._nativeOnload;
         this._nativeObj.putBitmapData(data, w, h);
     }
-    setPremultiplyAlpha(b) {
-        this._nativeObj.setPremultiplyAlpha(b);
-    }
     conchDestroy() {
         this._nativeObj.destroy();
     }
@@ -6284,6 +5959,9 @@ class HTMLMediaElement extends HTMLElement {
     }
     play() {
         this._nativeObj.play();
+        return new Promise((resolve, reject) => {
+            resolve();
+        });
     }
     pause() {
         this._nativeObj.pause();
@@ -6312,8 +5990,15 @@ class HTMLMediaElement extends HTMLElement {
     get muted() {
         return this._nativeObj.muted;
     }
+    get duration() {
+        return this._nativeObj.duration;
+    }
 }
 class HTMLMetaElement extends HTMLElement {
+    constructor() {
+        super();
+        this.tagName = "META";
+    }
     get httpEquiv() {
         return this["http-equiv"];
     }
@@ -6324,10 +6009,6 @@ class HTMLMetaElement extends HTMLElement {
     }
     get name() {
         return this._name;
-    }
-    constructor() {
-        super();
-        this.tagName = "META";
     }
 }
 class HTMLAudioElement extends HTMLMediaElement {
@@ -6342,14 +6023,17 @@ class HTMLAudioElement extends HTMLMediaElement {
     stop() {
         this._nativeObj.stop();
     }
+    set isBackgroundMusic(v) {
+        this._nativeObj.isBackgroundMusic = v;
+    }
+    get isBackgroundMusic() {
+        return this._nativeObj.isBackgroundMusic;
+    }
     set muted(v) {
         this._nativeObj.muted = v;
     }
     get muted() {
         return this._nativeObj.muted;
-    }
-    get duration() {
-        return this._nativeObj.duration;
     }
     addEventListener(type, listener, useCapture) {
         super.addEventListener(type, listener, useCapture);
@@ -6377,6 +6061,9 @@ class HTMLVideoElement extends HTMLMediaElement {
             this.src = node.src;
         }
         return super.appendChild(node);
+    }
+    get ended() {
+        return this._nativeObj.currentTime >= this._nativeObj.duration;
     }
     get readyState() {
         return this._nativeObj.readyState;
@@ -6433,6 +6120,7 @@ window["HTMLVideoElement"] = HTMLVideoElement;
 class HTMLBodyElement extends HTMLElement {
     constructor() {
         super();
+        this._isFirseSet = false;
         this.tagName = "BODY";
     }
     get clientHeight() {
@@ -6446,8 +6134,9 @@ class HTMLBodyElement extends HTMLElement {
     set clientWidth(w) {
     }
     appendChild(newChild) {
-        if (newChild instanceof HTMLCanvasElement) {
+        if (!this._isFirseSet && newChild instanceof HTMLCanvasElement) {
             newChild.setFirst();
+            this._isFirseSet = true;
         }
         return super.appendChild(newChild);
     }
@@ -6551,7 +6240,7 @@ class Document extends Node {
             var t = this.scriptTextList[i];
             if (!t)
                 return;
-            console.log(">>>>>>>>>>>>>>>eval" + t.src);
+            console.log(">>>>>>>>>>>>>>>eval src=" + t.src);
             var t1 = Date.now();
             window.evalJS(t._stext);
             console.log(">>>>>>>>>>>>>>>>>eval take time:" + (Date.now() - t1));
@@ -6752,6 +6441,7 @@ class CloseEvent extends Event {
     initCloseEvent(typeArg, canBubbleArg, cancelableArg, wasCleanArg, codeArg, reasonArg) {
     }
 }
+window.CloseEvent = CloseEvent;
 class MessageEvent extends Event {
     constructor(type, eventInitDict) {
         super(type);
@@ -6759,6 +6449,7 @@ class MessageEvent extends Event {
     initMessageEvent(typeArg, canBubbleArg, cancelableArg, dataArg, originArg, lastEventIdArg, sourceArg) {
     }
 }
+window.MessageEvent = MessageEvent;
 class WebSocket extends EventTarget {
     constructor(url) {
         super();
@@ -6899,9 +6590,6 @@ class _jsXmlAttr {
     }
 }
 class _jsXmlNode extends _jsXmlAttr {
-    get firstChild() {
-        return this.childNodes ? this.childNodes[0] : null;
-    }
     constructor() {
         super("", "");
         this.childNodes = [];
@@ -6909,6 +6597,9 @@ class _jsXmlNode extends _jsXmlAttr {
             return this[i];
         };
         this.attributes = [];
+    }
+    get firstChild() {
+        return this.childNodes ? this.childNodes[0] : null;
     }
     getElementsByTagName(name) {
         var result = [];
@@ -6925,6 +6616,21 @@ class _jsXmlNode extends _jsXmlAttr {
     getAttribute(name) {
         var attr = this.attributes[name];
         return attr ? attr["nodeValue"] : "";
+    }
+    querySelectorAll(selectors) {
+        let elements = [];
+        if (this.childNodes[0]) {
+            this.traverseDOM(this.childNodes[0], selectors, elements);
+        }
+        return elements;
+    }
+    traverseDOM(node, selectors, elements) {
+        if (node.nodeName === selectors) {
+            elements.push(node);
+        }
+        node.childNodes.forEach(childNode => {
+            childNode.traverseDOM(childNode, selectors, elements);
+        });
     }
 }
 class _jsXmlDocument extends _jsXmlNode {
@@ -6952,7 +6658,6 @@ window.removeEventListener = _window.removeEventListener.bind(_window);
 window.dispatchEvent = _window.dispatchEvent.bind(_window);
 window.document = new Document();
 window.layaDoc = window.document;
-window.crypto = new Crypto();
 window.devicePixelRatio = 1.0;
 var Image = window.Image = HTMLImageElement;
 var Audio = window.Audio = HTMLAudioElement;
@@ -6961,10 +6666,6 @@ window.cancelAnimationFrame = cancelAnimationFrame;
 var parent = window.parent = window;
 var frames = window.frames = null;
 var navigator = window.navigator = new Navigator();
-window.open = (url, target, features, replace) => {
-    createProcess('scripts/index.js', url);
-    return window;
-};
 var onload = window.onload = null;
 function printstack() {
     var e = new Error();
@@ -6989,6 +6690,15 @@ Object.defineProperty(window, 'outerWidth', { get: function () { return _$innerW
 Object.defineProperty(window, 'outerHeight', { get: function () { return _$innerHeight; } });
 Object.defineProperty(window, 'devicePixelRatio', { get: function () { return _$devicePixelRatio; } });
 conch.setOnResize(function (w, h) {
+    if (_$innerWidth == h && _$innerHeight == w) {
+        _$innerWidth = w;
+        _$innerHeight = h;
+        var evt = new UIEvent('orientationchange');
+        evt.view = window;
+        document._dispatchEvent(evt);
+        window.dispatchEvent(evt);
+        window.console.log(">>>>>>>>>>>>>>>>orientationchange");
+    }
     _$innerWidth = w;
     _$innerHeight = h;
     window.console.log(">>>>>>>>>>>>>>>>innerWidth:" + _$innerWidth + "innerHeight:" + _$innerHeight);
@@ -7026,7 +6736,6 @@ conch.onerror = function (message, filename, lineno, colno, error) {
 };
 Object.defineProperty(window, 'onerror', { set: function (fun) {
         conch.__onerror = fun;
-        showAlertOnJsException(false);
     }, get: function () {
         return conch.__onerror;
     } });
@@ -7044,11 +6753,6 @@ var clearTimeout = window.clearTimeout = _window.clearTimeout;
 var setInterval = window.setInterval = _window.setInterval;
 var setTimeout = window.setTimeout = _window.setTimeout;
 Object.defineProperty(window, 'runtime', { get: function () { return true; } });
-window.postMessage = function (data, d) {
-    if (typeof (data) == "object")
-        data = JSON.stringify(data);
-    conch.callWebviewJS("window.__getMessemage", encodeURIComponent(data), "");
-};
 window.postRuntimeMessage = function (d) {
     if (typeof (d) == "object")
         d = JSON.stringify(d);
@@ -7107,22 +6811,73 @@ class Performance {
 }
 window["Performance"] = Performance;
 window.performance = new Performance();
+window["createImageBitmap"] = function (imageSource, options) {
+    return new Promise((resolve, reject) => {
+        if (imageSource instanceof HTMLImageElement) {
+            resolve(window["_createImageBitmap"](imageSource._nativeObj, options));
+        }
+        else {
+            resolve(null);
+        }
+    });
+};
+if (window["physx"]) {
+    window["physx"]["_HEAP_ARRAYBUFFER"] = new ArrayBuffer(1024 * 1024);
+    window["physx"]["HEAPU32"] = new Uint32Array(window["physx"]["_HEAP_ARRAYBUFFER"]);
+    window["physx"]["HEAPU32"] = new Int32Array(window["physx"]["_HEAP_ARRAYBUFFER"]);
+    window["physx"]["HEAPF32"] = new Float32Array(window["physx"]["_HEAP_ARRAYBUFFER"]);
+    window["physx"]["HEAPU8"] = new Uint8Array(window["physx"]["_HEAP_ARRAYBUFFER"]);
+    window["physx"]["HEAPU16"] = new Uint16Array(window["physx"]["_HEAP_ARRAYBUFFER"]);
+    window["physx"]["BLOCK_RECORDS"] = [{ offset: 0, bytes: window["physx"]["_HEAP_ARRAYBUFFER"].byteLength, state: "free" }];
+    window["physx"]["_malloc"] = function (bytes) {
+        let found = false;
+        for (var i = 0; i < window["physx"]["BLOCK_RECORDS"].length; i++) {
+            let record = window["physx"]["BLOCK_RECORDS"][i];
+            if (record.state === "free") {
+                if (bytes <= record.bytes) {
+                    let offset = record.offset;
+                    record.bytes -= bytes;
+                    record.offset += bytes;
+                    window["physx"]["onMalloc"](window["physx"]["_HEAP_ARRAYBUFFER"]);
+                    window["physx"]["BLOCK_RECORDS"].splice(i, 0, { offset: offset, bytes: bytes, state: "malloc" });
+                    return offset;
+                }
+            }
+        }
+        if (!found) {
+            let size = window["physx"]["_HEAP_ARRAYBUFFER"].byteLength;
+            window["physx"]["_HEAP_ARRAYBUFFER"].resize(size * 2);
+            return window["physx"]["_malloc"](bytes);
+        }
+    };
+    window["physx"]["_free"] = function (offset) {
+        for (var i = 0; i < window["physx"]["BLOCK_RECORDS"].length; i++) {
+            let record = window["physx"]["BLOCK_RECORDS"][i];
+            if (record.state === "malloc" && record.offset == offset) {
+                if (i > 0) {
+                    let recordPre = window["physx"]["BLOCK_RECORDS"][i - 1];
+                    if (recordPre.state === "free") {
+                        recordPre.bytes += record.bytes;
+                        window["physx"]["BLOCK_RECORDS"].splice(i, 1);
+                        return;
+                    }
+                }
+                else if (i < window["physx"]["BLOCK_RECORDS"].length - 1) {
+                    let recordNext = window["physx"]["BLOCK_RECORDS"][i + 1];
+                    if (recordNext.state === "free") {
+                        recordNext.bytes += record.bytes;
+                        recordNext.offset = record.offset;
+                        window["physx"]["BLOCK_RECORDS"].splice(i, 1);
+                        return;
+                    }
+                }
+                else {
+                    record.state == "free";
+                }
+            }
+        }
+    };
+}
 (function () {
-    'use strict';
-    var gl = LayaGLContext;
-    window["extendWebGLPlusToWebGLContext"](gl);
-    class AppInfo {
-    }
-    ;
-    var appobj = null;
-    try {
-        // appobj = JSON.parse(conch.readFileFromAsset('app.json', 'utf8'));
-        // if (appobj) {
-            // require(appobj.mainjs);
-        require('scripts/index.js');
-        // }
-    }
-    catch (e) {
-        require('index');
-    }
+    require('index.js');
 })();
