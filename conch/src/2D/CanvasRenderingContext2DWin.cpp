@@ -8,14 +8,15 @@
 #include <utils/JCCommonMethod.h>
 #include <gdiplusenums.h>
 #include <gdiplusgraphics.h>
+#include <map>
 
 extern HWND g_hWnd;
 
 using namespace Gdiplus;
+std::map<std::string, std::wstring> fontAliasMap;
 
 namespace laya
 {
-static int s_count = 0;
 CanvasRenderingContext2DWin::CanvasRenderingContext2DWin(int width, int height)
     : CanvasRenderingContext2D(width, height)
 {
@@ -23,15 +24,6 @@ CanvasRenderingContext2DWin::CanvasRenderingContext2DWin(int width, int height)
     {
         return;
     }
-    if (s_count == 0)
-    {
-        ULONG_PTR gdiplusToken;
-        Gdiplus::GdiplusStartupInput gdiStartupInput;
-        Gdiplus::Status gdiStatus = Gdiplus::GdiplusStartup(&gdiplusToken, &gdiStartupInput, NULL);
-        if (Gdiplus::Status::Ok != gdiStatus)
-            return;
-    }
-    s_count++;
     m_gdiBitmap = new Gdiplus::Bitmap(m_width, m_height, PixelFormat32bppARGB);
     m_gdiGraphics = new Gdiplus::Graphics(m_gdiBitmap);
     m_gdiGraphics->SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAliasGridFit);
@@ -383,8 +375,16 @@ void CanvasRenderingContext2DWin::setFont(const char *font)
     {
         m_fontStyle = Gdiplus::FontStyle::FontStyleRegular;
     }
-    std::wstring strWide = utf8ToWide(m_fontDescription.m_family);
-    const Gdiplus::FontFamily*  pFontFamily = new  Gdiplus::FontFamily(strWide.data());
+
+    const Gdiplus::FontFamily* pFontFamily = nullptr;
+    auto it = fontAliasMap.find(m_fontDescription.m_family);
+    if (it == fontAliasMap.end()) {
+        std::wstring strWide = utf8ToWide(m_fontDescription.m_family);
+        pFontFamily = new  Gdiplus::FontFamily(strWide.data());
+    }
+    else {
+        pFontFamily = new  Gdiplus::FontFamily(it->second.data());
+    }
     if (m_font != nullptr){
         delete m_font;
     }
@@ -403,52 +403,10 @@ void CanvasRenderingContext2DWin::setFont(const char *font)
     // LOGI("setFont %s %f", font, m_fontDescription.m_size);
 }
 
-bool CanvasRenderingContext2DWin::registerFontFromPath(const std::string& fontName, const std::string& path)
-{
-    return true;
-	// 创建一个PrivateFontCollection对象 
-	PrivateFontCollection fontCollection;
-
-	// 添加字体到PrivateFontCollection 
-	// 假设字体文件名为 "YourFont.ttf"，并且位于当前可执行文件的同一目录中 
-
-    std::wstring strWide = utf8ToWide(path.c_str());
-
-	//fontCollection.AddFontFile(pwszBuffer);
-    //delete pwszBuffer;
-    //fontCollection.AddFontFile(L"D:\\work\\laya\\native3.0\\LayaNative3.0\\template\\build\\bin\\Debug\\appCache\\tmp_Palatino Linotype.ttf");
-    //fontCollection.AddFontFile(L"C:/Windows/Fonts/HYZhongHeiTi-197.ttf");
-    fontCollection.AddFontFile(L"D:\\work\\laya\\native3.0\\LayaNative3.0\\template\\build\\bin\\Debug\\font/layabox.ttf");
-
-	// 检查是否成功加载字体 
-	int familyCount = fontCollection.GetFamilyCount();
-	if (familyCount > 0) {
-		// 创建FontFamily对象 
-		FontFamily* fontFamilies = new FontFamily[familyCount];
-		int found = 0;
-
-		fontCollection.GetFamilies(familyCount, fontFamilies, &found);
-		if (found > 0) {
-			// 创建Font对象 
-			Font myFont(fontFamilies, 24, FontStyleRegular, UnitPixel);
-
-			// 从这里开始，就可以使用myFont进行绘制了 
-			// ... 
-		}
-	    // 释放资源 
-	    delete[] fontFamilies;
-	}
-
-	return true;
-}
-
-bool CanvasRenderingContext2DWin::registerFontFromBuffer(const std::string& fontName, const uint8_t* buff, int len) {
-    return true;
-    // 创建一个PrivateFontCollection对象 
+std::wstring getMemFontFamilyFromFile(const std::string& path) {
     PrivateFontCollection fontCollection;
-    fontCollection.AddMemoryFont(buff,len);
-
-    // 检查是否成功加载字体 
+    std::wstring strWide = utf8ToWide(path.c_str());
+    fontCollection.AddFontFile(strWide.data());
     int familyCount = fontCollection.GetFamilyCount();
     if (familyCount > 0) {
         // 创建FontFamily对象 
@@ -457,16 +415,98 @@ bool CanvasRenderingContext2DWin::registerFontFromBuffer(const std::string& font
 
         fontCollection.GetFamilies(familyCount, fontFamilies, &found);
         if (found > 0) {
-            // 创建Font对象 
-            Font myFont(fontFamilies, 24, FontStyleRegular, UnitPixel);
-
-            // 从这里开始，就可以使用myFont进行绘制了 
-            // ... 
+            WCHAR familyName[LF_FACESIZE];
+            fontFamilies[0].GetFamilyName(familyName);
+            delete[] fontFamilies;
+            return familyName;
         }
         // 释放资源 
         delete[] fontFamilies;
     }
+    return L"";
+}
+
+bool CanvasRenderingContext2DWin::registerFontFromPath(const std::string& fontName, const std::string& path)
+{
+	// 创建一个PrivateFontCollection对象 
+    if (CanvasRenderingContext2DWin::gFontCollection == nullptr) {
+        CanvasRenderingContext2DWin::gFontCollection = new PrivateFontCollection();
+    }
+    auto fontCollection = CanvasRenderingContext2DWin::gFontCollection;
+	// 添加字体到PrivateFontCollection 
+	// 假设字体文件名为 "YourFont.ttf"，并且位于当前可执行文件的同一目录中 
+
+    auto familyName = getMemFontFamilyFromFile(path);
+    if (familyName == L"")
+        return false;
+    if (fontName.length() > 1) {
+        fontAliasMap[fontName] = familyName;
+    }
+
+    std::wstring strWide = utf8ToWide(path.c_str());
+	fontCollection->AddFontFile(strWide.data());
+    //delete pwszBuffer;
+    //fontCollection.AddFontFile(L"D:\\work\\laya\\native3.0\\LayaNative3.0\\template\\build\\bin\\Debug\\appCache\\tmp_Palatino Linotype.ttf");
+    //fontCollection.AddFontFile(L"C:/Windows/Fonts/HYZhongHeiTi-197.ttf");
+    //fontCollection.AddFontFile(L"D:\\work\\laya\\native3.0\\LayaNative3.0\\template\\build\\bin\\Debug\\font/layabox.ttf");
 
     return true;
 }
+
+PrivateFontCollection* CanvasRenderingContext2DWin::gFontCollection=nullptr;
+std::vector<char*> CanvasRenderingContext2DWin::fontBuffers;
+
+//这个破API实在是没有办法知道新加的字体的名字，只好再次创建一个临时来获得。
+std::wstring getMemFontFamilyFromBuffer(const uint8_t* buff, int len) {
+    PrivateFontCollection fontCollection;
+    fontCollection.AddMemoryFont(buff, len);
+    int familyCount = fontCollection.GetFamilyCount();
+    if (familyCount > 0) {
+        // 创建FontFamily对象 
+        FontFamily* fontFamilies = new FontFamily[familyCount];
+        int found = 0;
+
+        fontCollection.GetFamilies(familyCount, fontFamilies, &found);
+        if (found > 0) {
+            WCHAR familyName[LF_FACESIZE];
+            fontFamilies[0].GetFamilyName(familyName);
+            delete[] fontFamilies;
+            return familyName;
+        }
+        // 释放资源 
+        delete[] fontFamilies;
+    }
+    return L"";
+}
+
+
+bool CanvasRenderingContext2DWin::registerFontFromBuffer(const std::string& fontName, const uint8_t* buff, int len) {
+    // 创建一个PrivateFontCollection对象 
+    if (CanvasRenderingContext2DWin::gFontCollection == nullptr) {
+        CanvasRenderingContext2DWin::gFontCollection = new PrivateFontCollection();
+    }
+    auto fontCollection = CanvasRenderingContext2DWin::gFontCollection;
+
+    auto familyName = getMemFontFamilyFromBuffer(buff, len);
+    if (familyName == L"")
+        return false;
+    if (fontName.length() > 1) {
+        fontAliasMap[fontName] = familyName;
+    }
+    // AddMemoryFont 需要引用这个内存，所以new一个
+    char* pmem = new char[len];
+    memcpy(pmem, buff, len);
+    fontCollection->AddMemoryFont(pmem,len);
+    CanvasRenderingContext2DWin::fontBuffers.push_back(pmem);
+    return true;
+}
+
+void CanvasRenderingContext2DWin::clearAllBuffer() {
+    auto& all = CanvasRenderingContext2DWin::fontBuffers;
+    for (auto i = all.begin(); i != all.end(); i++) {
+        delete [] *i;
+    }
+    all.clear();
+}
+
 } // namespace laya

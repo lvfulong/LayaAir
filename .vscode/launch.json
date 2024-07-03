@@ -4,15 +4,14 @@
             "name": "Windows Launch",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/template/build/bin/Debug/launcher.exe",
+            "program": "${workspaceFolder}/template/build/bin/RelWithDebInfo/launcher.exe",
             "args": [
                 "http://localhost:8899/index.js"
             ],
             "stopAtEntry": false,
-            "cwd": "${fileDirname}",
+            //"cwd": "${fileDirname}",
             "environment": [],
-            //"console": "externalTerminal"
-            "externalConsole": true,
+            "console": "integratedTerminal"
         },
         {
             "name": "conchjs",

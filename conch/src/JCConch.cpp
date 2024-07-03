@@ -37,6 +37,7 @@
     #include "pthread.h"
 #elif WIN32
     #include <windows.h>
+#include "2D\CanvasRenderingContext2DWin.h"
 #endif
 #ifdef __APPLE__
 #include "OpenGLBackendiOS.h"
@@ -160,6 +161,10 @@ namespace laya
         {
             return;
         }
+#ifdef WIN32
+        CanvasRenderingContext2DWin::clearAllBuffer();
+#endif
+
         JCAudioManager::GetInstance();
         m_isAppStarted = true;
         JCConch::s_pScriptRuntime->loadJSScript();

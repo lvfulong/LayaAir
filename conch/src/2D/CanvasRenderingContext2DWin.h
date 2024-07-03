@@ -6,6 +6,8 @@
 #include <gdiplus.h>
 #include <optional>
 #include <string>
+#include <gdiplusheaders.h>
+#include <vector>
 
 namespace laya
 {
@@ -32,8 +34,12 @@ class CanvasRenderingContext2DWin : public CanvasRenderingContext2D
     void setLineJoin(const char *lineJoin) override;
     static bool registerFontFromPath(const std::string &fontName, const std::string &path);
     static bool registerFontFromBuffer(const std::string& fontName, const uint8_t* buff, int len);
+    static void clearAllBuffer();
 
   protected:
+    static Gdiplus::PrivateFontCollection* gFontCollection;
+    //为了释放用
+    static std::vector<char*> fontBuffers;
     void getTextPosition(const std::string &text, double x, double y, double &outX, double &outY);
     TextMetrics measureTextUtf16(wchar_t *pwszBuffer, int bufferLen);
     BitmapData m_bitmapData;
