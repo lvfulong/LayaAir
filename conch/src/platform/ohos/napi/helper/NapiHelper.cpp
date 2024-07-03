@@ -9,7 +9,7 @@ std::string NapiHelper::getDeviceInfo()
 {
     //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getDeviceInfo, this));
     //return deviceInfo;
-    return "";
+    return __getDeviceInfo();
 }
 
 std::string NapiHelper::__getDeviceInfo()
@@ -167,7 +167,7 @@ std::string NapiHelper::getAppVersion()
 {
     //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getAppVersion, this));
     //return appVersion;
-    return "";
+    return __getAppVersion();
 }
 
 std::string NapiHelper::__getAppVersion()
@@ -183,7 +183,7 @@ std::string NapiHelper::getAppLocalVersion()
 {
     //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getAppLocalVersion, this));
     //return appLocalVersion;
-    return "";
+    return  __getAppLocalVersion();
 }
 
 std::string NapiHelper::__getAppLocalVersion()
@@ -417,6 +417,7 @@ void NapiHelper::__setKeepScreenOn(bool value)
 void NapiHelper::setPreferredOrientation(int orientation)
 {
     //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__setPreferredOrientation, this, orientation));
+    __setPreferredOrientation(orientation);
 }
 
 void NapiHelper::__setPreferredOrientation(int orientation)

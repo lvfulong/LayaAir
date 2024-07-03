@@ -9,6 +9,10 @@
     #include <Windows.h>
 #elif __APPLE__
     #include "CToObjectC.h"
+#elif OHOS
+    #include "aki/jsbind.h"
+    #include <string>
+    #include "platform/ohos/napi/helper/NapiHelper.h"
 #endif
 #include "downloadMgr/JCDownloadMgr.h"
 #include <utils/Log.h>
@@ -181,6 +185,30 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         MoveWindow(g_hWnd, 0, 0, g_nInnerWidth, g_nInnerHeight, true);
 #elif __APPLE__
         CToObjectCSetScreenOrientation(p_nOrientation);
+#elif OHOS
+        int orientation = 0;
+        if(p_nOrientation == landscape) {
+           orientation = 2;
+        } else if(p_nOrientation == portrait) {
+           orientation = 1;
+        } else if(p_nOrientation == user) {
+           orientation = 0;
+        } else if(p_nOrientation == behind) {
+           orientation = 5;
+        } else if(p_nOrientation == nosensor) {
+           orientation = 11;
+        } else if(p_nOrientation == sensor_landscape) {
+           orientation = 7;
+        } else if(p_nOrientation == sensor_portrait) {
+           orientation = 6;
+        } else if(p_nOrientation == reverse_landscape) {
+           orientation = 4;
+        } else if(p_nOrientation == reverse_portrait) {
+           orientation = 3;
+        } else if(p_nOrientation == sensor || p_nOrientation == full_sensor) {
+           orientation = 3;
+        }
+        NapiHelper::GetInstance()->setPreferredOrientation(orientation);
 #endif
 
     }
@@ -308,6 +336,8 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         return "Conch-android";
 #elif WIN32
         return "Conch-window";
+#elif OHOS
+        return "Conch-ohos";
 #elif __LINUX__
         return "Conch-linux";
 #endif
@@ -320,6 +350,8 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         return "Conch-android";
 #elif WIN32
         return "Conch-window";
+#elif OHOS
+        return "Conch-ohos";
 #elif __LINUX__
         return "Conch-linux";
 #endif
@@ -460,6 +492,9 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 			return m_sAppVersion.c_str();
         }
         return "";
+#elif OHOS
+        m_sAppVersion = NapiHelper::GetInstance()->getAppVersion();
+        return m_sAppVersion.c_str();
 #elif WIN32
         return "3.0";
 #elif __LINUX__
@@ -479,20 +514,14 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 			return m_sAppLocalVersion.c_str();
         }
         return "";
+#elif OHOS
+        m_sAppLocalVersion = NapiHelper::GetInstance()->getAppLocalVersion();
+        return m_sAppLocalVersion.c_str();
 #elif WIN32
         return "3.0";
 #elif __LINUX__
         return "3.0";
 #endif
-    }
-    bool JSConchConfig::getIsPlug() 
-    {
-        return JCSystemConfig::s_bIsPlug != 0;
-    }
-
-    const char* JSConchConfig::getJsonparamExt()
-    {
-        return g_kSystemConfig.m_jsonparamExt.c_str();
     }
     const char* JSConchConfig::getDeviceInfo()
     {
@@ -506,6 +535,9 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
             m_sDeviceInfo = CToJavaBridge::GetInstance()->getJavaString(kRet.pJNI, kRet.strRet);
         }
         LOGI("getDeviceInfo::get_Value=%s", m_sDeviceInfo.c_str());
+        return m_sDeviceInfo.c_str();
+#elif OHOS
+        m_sDeviceInfo = NapiHelper::GetInstance()->getDeviceInfo();
         return m_sDeviceInfo.c_str();
 #elif WIN32 || __LINUX__
         return "{\"resolution\":\"1920*1080\",	\"guid\":\"xxxxxxxxx\",\"imei\":[\"imeixxx\"],\"imsi\":[\"imsixxx\"],\"os\":\"windows\",\"osversion\":\"windows7 64\",\"phonemodel\":\"Wintel\"	}";
@@ -734,7 +766,6 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 		 class_binding.class_function("getBrowserInfo", &JSConchConfig::getBrowserInfo);
 		 class_binding.class_function("getGuid", &JSConchConfig::getGuid);
 		 class_binding.class_function("getDeviceInfo", &JSConchConfig::getDeviceInfo);
-		 class_binding.class_function("getIsPlug", &JSConchConfig::getIsPlug);
 		 class_binding.class_function("setLimitFPS", &JSConchConfig::setLimitFPS);
 		 class_binding.class_function("setMouseFrame", &JSConchConfig::setMouseFrame);
 		 class_binding.class_function("setSlowFrame", &JSConchConfig::setSlowFrame);
@@ -764,7 +795,6 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         class_binding.class_property("JSDebugMode", &JSConchConfig::getJSDebugMode, &JSConchConfig::setJSDebugMode);
         class_binding.class_property("JSDebugPort", &JSConchConfig::getJSDebugPort, &JSConchConfig::setJSDebugPort);
         class_binding.class_property("conchWebGL", &JSConchConfig::getConchWebGL);
-        class_binding.class_property("paramExt", &JSConchConfig::getJsonparamExt);
         class_binding.class_property("urlIgnoreCase", &JSConchConfig::getUrlIgnoreCase, &JSConchConfig::setUrlIgnoreCase);
         class_binding.class_property("localizable", &JSConchConfig::getLocalable, &JSConchConfig::setLocalable);
         context.class_("conchConfig", class_binding);

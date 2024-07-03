@@ -306,6 +306,8 @@ namespace laya
         return 1.0;
 #elif __APPLE__
 		return 1.0;// CToObjectCGetDevicePixelRatio();
+#elif OHOS
+        return 1.0;
 #elif __LINUX__
         return 1.0;
 #endif

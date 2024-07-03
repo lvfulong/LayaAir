@@ -8,8 +8,6 @@ import android.webkit.ValueCallback;
 import android.widget.AbsoluteLayout;
 
  public abstract interface ILayaGameEgine {
-    //  设置是否插件方式运行
-    void setIsPlugin(boolean isPlugin);
 	//	设置游戏缓存目录
 	 void setAppCacheDir(String _cacheDir);
 	 // 设置下载线程的个数

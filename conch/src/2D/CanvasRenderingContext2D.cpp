@@ -5,6 +5,8 @@
 #include "CanvasRenderingContext2DWin.h"
 #elif __APPLE__
 #include "CanvasRenderingContext2DCG.h"
+#elif OHOS
+#include "CanvasRenderingContext2DOHOS.h"
 #elif __LINUX__
 #include "CanvasRenderingContext2DLinux.h"
 #endif
@@ -25,6 +27,8 @@ CanvasRenderingContext2D *CanvasRenderingContext2D::create(int width, int height
     return new CanvasRenderingContext2DCG(width, height);
 #elif __LINUX__
     return new CanvasRenderingContext2DLinux(width, height);
+#elif OHOS
+    return new CanvasRenderingContext2DOHOS(width, height);
 #endif
 }
 CanvasRenderingContext2D *CanvasRenderingContext2D::get(int id)

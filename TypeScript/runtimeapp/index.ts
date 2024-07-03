@@ -7,7 +7,6 @@ console.log('     runtimeversion:' + conchConfig.getRuntimeVersion());
 console.log('     appVersion:' + conchConfig.getAppVersion());
 console.log('     appLocalVersion:' + conchConfig.getAppLocalVersion());
 console.log('          jsversion:' + window._conchInfo.version);
-console.log('             isplug:' + conchConfig.getIsPlug());
 console.log('======================================================');
 
 function log(m) {

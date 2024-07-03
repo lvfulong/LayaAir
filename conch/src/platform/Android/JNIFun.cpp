@@ -58,7 +58,6 @@ extern "C"
 {
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_configSetParamExt(JNIEnv * env, jobject obj,jstring p_strParamExt);//extparam
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_configSetURL(JNIEnv * env, jobject obj,jstring p_strUrl);
-	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_configSetIsPlug(JNIEnv * env, jobject obj, jboolean p_bIsPlug);
     JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_InitDLib(JNIEnv * env, jobject obj,jobject assetManager,jint nDownloadThreadNum,jstring p_strAssetRootPath,jstring p_strCachePath, jstring p_strAPKExpansionMainPath, jstring p_strAPKExpansionPatchPath);
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_SetLocalStoragePath(JNIEnv * env, jobject obj,jstring p_strLocalStorage );
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleTouch(JNIEnv * env, jobject obj,jint type,jint id,jint x,jint y );
@@ -99,18 +98,6 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_configSetURL(JNIEnv * 
 	g_kSystemConfig.m_strStartURL = pstrUrl;
 	LOGI("JNI seturl: %s", pstrUrl);
 	env->ReleaseStringUTFChars(p_strUrl, pstrUrl);
-}
-JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_configSetIsPlug(JNIEnv * env, jobject obj, jboolean p_bIsPlug)
-{
-    JCSystemConfig::s_bIsPlug = p_bIsPlug;
-	LOGI("JNI setIsPlug：%d", p_bIsPlug);
-}
-JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_configSetParamExt(JNIEnv * env, jobject obj,jstring p_strParamExt)
-{
-    char* pstrParamExt =(char*) env->GetStringUTFChars( p_strParamExt, NULL ); 
-	g_kSystemConfig.m_jsonparamExt = pstrParamExt;
-	LOGI("JNI setParamExt：%s", pstrParamExt);
-	env->ReleaseStringUTFChars(p_strParamExt, pstrParamExt);
 }
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_InitDLib(JNIEnv * env, jobject obj,jobject assetManager,int nThreadNum,jstring p_strAssetRootPath, jstring p_strCachePath , jstring p_strAPKExpansionMainPath, jstring p_strAPKExpansionPatchPath)
 {

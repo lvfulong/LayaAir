@@ -13,8 +13,8 @@
 #ifndef WEBASM
 #include <utils/JCLayaUrl.h>
 #endif
-#include <utils/Log.h>
 #include <algorithm>
+#include <utils/Log.h>
 #if __APPLE__
 #include <mach/mach_time.h>
 #include <sys/time.h>
@@ -950,15 +950,37 @@ bool compareStrings(const std::string &str1, const std::string &str2, bool caseS
     }
 }
 
-std::string removeFileExtension(const std::string& filename) {
+std::string removeFileExtension(const std::string &filename)
+{
     // 查找最后一个点的位置
     size_t lastDotIndex = filename.find_last_of(".");
     // 如果找不到点或者这个点是第一个字符（可能是一个隐藏的Unix文件），则返回原始字符串
-    if (lastDotIndex == std::string::npos || lastDotIndex == 0) {
+    if (lastDotIndex == std::string::npos || lastDotIndex == 0)
+    {
         return filename;
     }
     // 返回不含扩展名的文件名部分
     return filename.substr(0, lastDotIndex);
+}
+// 使用 C 标准库中的 vsnprintf 函数生成格式化字符串
+std::string vformat(const char *fmt, va_list args)
+{
+    va_list args_copy;
+    va_copy(args_copy, args);
+
+    // 使用一个足够大的固定大小数组来尝试格式化字符串
+    std::vector<char> buf(1024);
+    int needed = vsnprintf(buf.data(), buf.size(), fmt, args_copy);
+    va_end(args_copy);
+
+    // 检查是否足够，并重新尝试
+    if (needed < 0 || needed >= static_cast<int>(buf.size()))
+    {
+        buf.resize(needed + 1);
+        vsnprintf(buf.data(), buf.size(), fmt, args);
+    }
+
+    return std::string(buf.data());
 }
 } // namespace laya
 //------------------------------------------------------------------------------

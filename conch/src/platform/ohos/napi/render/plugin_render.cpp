@@ -198,6 +198,7 @@ void PluginRender::OnSurfaceCreated(OH_NativeXComponent* component, void* window
     int32_t ret = OH_NativeXComponent_GetXComponentSize(component, window, &width_, &height_);
     if (ret == OH_NATIVEXCOMPONENT_RESULT_SUCCESS) {
         NAPIFun::ConchNAPI_OnSurfaceCreated(window);
+        NAPIFun::ConchNAPI_OnSurfaceResize(width_,height_);
     }
 }
 
