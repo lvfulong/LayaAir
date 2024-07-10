@@ -10,9 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <utils/JCCommonMethod.h>
-#ifndef WEBASM
 #include <utils/JCLayaUrl.h>
-#endif
 #include <algorithm>
 #include <utils/Log.h>
 #if OS_IOS
@@ -26,13 +24,6 @@
 #include <psapi.h>
 #include <windows.h>
 #pragma comment(lib, "psapi.lib")
-#endif
-
-#ifdef WEBASM
-extern "C"
-{
-    double DateNow();
-}
 #endif
 #include <codecvt>
 #include <iomanip>
@@ -398,7 +389,6 @@ bool splitPath(const char *p_pszPath, std::vector<std::string> &out)
 // 应该不是很可靠，没有处理大小写等，临时拼凑的。
 std::string normalizePath(const char *p_pszPath, bool toLowerCase, int &p_nProtocol)
 {
-#ifndef WEBASM
     JCUrl url;
     url.parse(p_pszPath);
     p_nProtocol = (int)url.m_nProto;
@@ -447,9 +437,6 @@ std::string normalizePath(const char *p_pszPath, bool toLowerCase, int &p_nProto
     }
     return ret+query;
     */
-#else
-    return "";
-#endif
 }
 //------------------------------------------------------------------------------
 void paserUTF8(std::string p_sBuffer, long p_nSize, std::vector<std::string> &p_vOut)
@@ -687,9 +674,6 @@ std::string UrlDecode(const char *str)
 //------------------------------------------------------------------------------
 double tmGetCurms()
 {
-#ifdef WEBASM
-    return DateNow();
-#else
 #ifdef OS_IOS
 
     // 下面的方法好像也可以达到精度
@@ -728,7 +712,6 @@ double tmGetCurms()
                 // return ret;
 #else
     return 0;
-#endif
 #endif
 }
 

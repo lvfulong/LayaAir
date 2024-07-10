@@ -43,24 +43,9 @@ void alert(const char *fmt, ...);
 #if OS_OHOS
 void logMessage(laya::LogType logType, const char *file, int line, const char *fmt, ...);
 #endif
-#ifdef WEBASM
+
 #define LOG_TAG "LayaBox"
-#define LOGI(...)                                                                                                      \
-    {                                                                                                                  \
-        printf(__VA_ARGS__);                                                                                           \
-        printf("\n");                                                                                                  \
-    }
-#define LOGW(...)                                                                                                      \
-    {                                                                                                                  \
-        printf(__VA_ARGS__);                                                                                           \
-        printf("\n");                                                                                                  \
-    }
-#define LOGE(...)                                                                                                      \
-    {                                                                                                                  \
-        printf(__VA_ARGS__);                                                                                           \
-        printf("\n");                                                                                                  \
-    }
-#else
+
 #ifdef OS_IOS
 void CToObjectCLogI(const char *szFormat, ...);
 void CToObjectCLogW(const char *szFormat, ...);
@@ -269,6 +254,5 @@ void CToObjectCLogIExt(const char *str);
         }                                                                                                              \
     }
 
-#endif
 #endif
 #endif //__Log_H__

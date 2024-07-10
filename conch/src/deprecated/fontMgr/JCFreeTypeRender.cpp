@@ -25,21 +25,17 @@ namespace laya
         m_nDevDPIY = 72;
         m_fItalicsValue = 0;
         m_pIOSFTInterface = NULL;
-#ifndef WEBASM
         m_pFTlibrary = NULL;
         m_pCurrentFT = NULL;   
         FT_Init_FreeType(&m_pFTlibrary);
-#endif
         m_pWordBuff = new char[MAX_LINE_WIDTH * MAX_CHAR_HEIGHT * 4];
     }
     JCFreeTypeFontRender::~JCFreeTypeFontRender()
     {
         clearCustomFont();
         clearDefaultFont();
-#ifndef WEBASM
         FT_Done_FreeType(m_pFTlibrary);
         m_pFTlibrary = NULL;
-#endif
         if (m_pWordBuff)
         {
             delete[] m_pWordBuff;
@@ -48,27 +44,22 @@ namespace laya
     }
     void JCFreeTypeFontRender::clearCustomFont()
     {
-#ifndef WEBASM
         for (MapFTFace::iterator iter = m_vCustomMadeFT.begin(); iter != m_vCustomMadeFT.end(); iter++)
         {
             delete iter->second;
         }
         m_vCustomMadeFT.clear();
-#endif
     }
     void JCFreeTypeFontRender::clearDefaultFont()
     {
-#ifndef WEBASM
         for (int i = 0, n = m_vDefaultFT.size(); i < n; i++)
         {
             delete m_vDefaultFT[i];
         }
         m_vDefaultFT.clear();
-#endif
     }
     bool JCFreeTypeFontRender::initDefaultFont(const char* sDefaultTTFs)
     {
-#ifndef WEBASM
        // if (m_vDefaultFT.size() > 0)return true;
         
         if( strlen(sDefaultTTFs) > 0 )
@@ -112,12 +103,10 @@ namespace laya
             }
         #endif
         }
-#endif
         return true;
     }
     bool JCFreeTypeFontRender::initDefaultFont(char* pBuffer, int nBuferLen)
     {
-#ifndef WEBASM
         //clearDefaultFont();
         //arrayBuffer will be GC , so copy
         char* copyBuffer = new char[nBuferLen];
@@ -132,10 +121,8 @@ namespace laya
         {
             m_vDefaultFT.push_back(new FTFaceRecord(pFTFace, copyBuffer));
         }
-#endif
         return true;
     }
-#ifndef WEBASM
     FT_Face JCFreeTypeFontRender::getFTFaceFromBuffer(char* pBuffer, int nBuferLen)
     {
         FT_Error nError = 0;
@@ -163,10 +150,8 @@ namespace laya
         FT_Select_Charmap(pFTFace, FT_ENCODING_UNICODE);
         return pFTFace;
     }
-#endif
     bool JCFreeTypeFontRender::setFont(const char* sFontName) 
     {
-#ifndef WEBASM
         m_pCurrentFT = NULL;
         MapFTFace::iterator iter = m_vCustomMadeFT.find(sFontName);
         if (iter != m_vCustomMadeFT.end())
@@ -174,12 +159,10 @@ namespace laya
             m_pCurrentFT = iter->second->face;
             return true;
         }
-#endif
         return false;
     }
 	void JCFreeTypeFontRender::setItalics(float fValue)
     {
-#ifndef WEBASM
         if (m_fItalicsValue == fValue)return;
 		m_fItalicsValue = fValue;
         FT_Matrix kMatrix;
@@ -195,11 +178,9 @@ namespace laya
         {
             FT_Set_Transform(m_vDefaultFT[i]->face, &kMatrix, 0);
         }
-#endif
 	}
     void JCFreeTypeFontRender::setFontSize(int nWidth, int nHeight)
     {
-#ifndef WEBASM
         int nW = nWidth << 6;
         int nH = nHeight << 6;
         if (m_nFontSizeW == nW && m_nFontSizeH == nH)
@@ -221,11 +202,9 @@ namespace laya
         {
             FT_Set_Char_Size(m_vDefaultFT[i]->face, m_nFontSizeW, m_nFontSizeH, m_nDevDPIX, m_nDevDPIY);
         }
-#endif
     }
 	void JCFreeTypeFontRender::getMetric( int nUnicode, int& nWidth, int& nHeight )
     {
-#ifndef WEBASM
         if (nUnicode == 0x0009 || nUnicode == 0x0D || nUnicode == 0x0A)//Tab
         {
             nUnicode = 0x0020;//半角空格
@@ -284,11 +263,9 @@ namespace laya
 		FT_Bitmap& kBitmap = pGlyph->bitmap;
         nWidth = pGlyph->advance.x >> 6;
         nHeight = (pFTFace->size->metrics.ascender- pFTFace->size->metrics.descender)>>6;
-#endif
 	}
 	void JCFreeTypeFontRender::getBitmapData(int nUnicode, unsigned char*& pBitmap, int& nWidth, int& nHeight, int& nDataW, int& nDataH, int& nDataLeft, int& nDataTop, int& nUnderlineTop, int& nUnderlineHeight)
     {
-#ifndef WEBASM
         if (nUnicode == 0x0009 || nUnicode == 0x0D || nUnicode == 0x0A)//Tab
         {
             nUnicode = 0x0020;//半角空格
@@ -378,7 +355,6 @@ namespace laya
 				memcpy(&pBitmap[y*kBitmap.width], &kBitmap.buffer[y*kBitmap.pitch], kBitmap.width);
 			}
 		}
-#endif
 	}
     struct Info
     {
@@ -620,7 +596,6 @@ namespace laya
     }
     bool JCFreeTypeFontRender::setFontFaceFromUrl(const char* sFontFamily, const char* sTTFFileName)
     {
-#ifndef WEBASM
         m_kLoadGlyphLock.lock();
         bool bRet = false;
         FT_Face pFTFace = getFTFaceFromFile(sTTFFileName);
@@ -636,12 +611,9 @@ namespace laya
         }
         m_kLoadGlyphLock.unlock();
         return bRet;
-#endif
-        return true;
     }
     bool JCFreeTypeFontRender::setFontFaceFromBuffer(const char* sFontFamily, char* pBuffer, int nBuferLen)
     {
-#ifndef WEBASM
         m_kLoadGlyphLock.lock();
         bool bRet = false;
         //arrayBuffer will be GC , so copy
@@ -660,12 +632,9 @@ namespace laya
         }
         m_kLoadGlyphLock.unlock();
         return bRet;
-#endif
-        return true;
     }
     bool JCFreeTypeFontRender::removeFont(const char* sFontFamily)
     {
-#ifndef WEBASM
         m_kLoadGlyphLock.lock();
         bool bRet = false;
         MapFTFace::iterator iter = m_vCustomMadeFT.find(sFontFamily);
@@ -677,8 +646,6 @@ namespace laya
         }
         m_kLoadGlyphLock.unlock();
         return bRet;
-#endif
-        return true;
     }
     void JCFreeTypeFontRender::setIOSFTInterface(JCIOSFTInterface* pIOSFTInterface)
     {

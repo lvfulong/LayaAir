@@ -20,10 +20,9 @@
 #include "../imageLib/JCImageRW.h"
 #include "../JCIOSFTInterface.h"
 #include <math.h>
-#ifndef WEBASM
-    #include <ft2build.h>
-    #include FT_FREETYPE_H
-#endif
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
 namespace laya
 {
     const uint32_t TEXT_SIZE_ALLOWANCE = 8;
@@ -34,7 +33,6 @@ namespace laya
 	class JCFreeTypeFontRender
     {
     public:
-#ifndef WEBASM
         struct FTFaceRecord
         {
             FT_Face face;
@@ -57,7 +55,6 @@ namespace laya
             }
         };
         typedef std::unordered_map<std::string, FTFaceRecord*> MapFTFace;
-#endif
 	public:
         
         JCFreeTypeFontRender();
@@ -198,7 +195,6 @@ namespace laya
         */
         std::string writeIOSFontTTF();
 
-#ifndef WEBASM
 
         /** @brief ͨ��buffer���FT_face
         *  @param[in] buffer
@@ -214,7 +210,6 @@ namespace laya
         */
         FT_Face getFTFaceFromFile(const char* sFileName);
 
-#endif
 
         static  int32_t RoundToInt(float F)
         {
@@ -244,13 +239,10 @@ namespace laya
         int                                         m_nDevDPIY;                     ///<dpi
         float			                            m_fItalicsValue;                ///<б���
         JCIOSFTInterface*                           m_pIOSFTInterface;              ///<Ϊ��IOSʹ�õ�
-
-#ifndef WEBASM
         FT_Library		                            m_pFTlibrary;                   ///<FreeType��Ҫ��
         std::vector<FTFaceRecord*>                  m_vDefaultFT;	                ///<Ĭ�ϵ������
         FT_Face                                     m_pCurrentFT;                   ///<��ǰ�������
         MapFTFace                                   m_vCustomMadeFT;                ///<�û����Ƶ�����
-#endif
 	};
 }
 //------------------------------------------------------------------------------

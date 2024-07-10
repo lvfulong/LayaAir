@@ -1,20 +1,13 @@
 #include "JSImage.h"
 #include <utils/Log.h>
-#ifndef WEBASM
-    #include <utils/JCMemorySurvey.h>
-    #include <binder/JSInterface.h>
-    #include "../../JCScriptRuntime.h"
-    #include <resource/JCFileResManager.h>
-    
-    #include "JSRuntime.h"
-    #include <utils/JCFileSystem.h>
-#else
-    #include "../../JCScrpitRuntimeWASM.h"
-#endif
-
+#include <utils/JCMemorySurvey.h>
+#include <binder/JSInterface.h>
+#include "../../JCScriptRuntime.h"
+#include <resource/JCFileResManager.h> 
+#include "JSRuntime.h"
+#include <utils/JCFileSystem.h>
 #include "../../JCConch.h"
 #include "../../JCSystemConfig.h"
-
 #include <LayaGL/JCLayaGLDispatch.h>
 #include <utils/JCCrypto.h>
 
@@ -24,23 +17,17 @@ namespace laya
     {
         m_pImage = std::make_shared<JCImage>();
         m_nID = JCConch::s_pConchRender->m_pImageManager->getImageID();
-#ifndef WEBASM
         m_pImage->setManager(JCConch::s_pConchRender->m_pFileResManager, JCConch::s_pConchRender->m_pImageManager);
         m_CallbackRef.reset(new int(1));
         m_bComplete = false;
         m_nDownloadState = 0;
-#else
-        m_pImage->setManager(JCConch::s_pConchRender->m_pAtlasManager, JCConch::s_pConchRender->m_pTextureManager, NULL, JCConch::s_pConchRender->m_pImageManager);
-#endif
     }
     JSImage::~JSImage()
     {
-#ifndef WEBASM
 	    m_pOnLoad.reset();
 	    m_pOnError.reset();
         m_pObj.reset();
 	    JCMemorySurvey::GetInstance()->releaseClass( "image",this );
-#endif
         destroy();
     }
     void JSImage::destroy()
@@ -58,7 +45,7 @@ namespace laya
             releaseImageOnRenderThread(m_nID);
         }
     }
-#ifndef WEBASM
+
     void JSImage::onLoaded(std::weak_ptr<int> callbackref)
     {
 	    std::function<void(void)> pFunction = std::bind(&JSImage::onLoadedCallJSFunction,this, callbackref);
@@ -338,21 +325,11 @@ namespace laya
 	    }
 	    return JSP_TO_JS_NULL;
     }
-#endif
-    void JSImage::setImageInfo(const char* sUrl, int w, int h)
-    {
-#ifdef WEBASM
-        if(sUrl)m_pImage->m_sUrl = sUrl;
-        m_pImage->m_kBitmapData.m_nWidth = w;
-        m_pImage->m_kBitmapData.m_nHeight = h;
-        createImageOnRenderThread(m_nID, m_pImage);
-#endif
-    }
     int JSImage::getImageID()
     {
 	    return m_nID;
     }
-#ifndef WEBASM
+
     void JSImage::exportJS(Context& context) 
     {
         class_<JSImage> class_binding;
@@ -376,7 +353,6 @@ namespace laya
         class_binding.function("destroy", &JSImage::destroy);
         context.class_("conchImage", class_binding);
     }
-#endif
     void JSImage::createImageOnRenderThread(int nID, std::shared_ptr<JCImage> pImage)
     {
         JCConch::s_pConchRender->postTaskFromJSToRenderAsync([nID, pImage]() {
