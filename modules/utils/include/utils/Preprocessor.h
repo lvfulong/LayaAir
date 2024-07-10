@@ -1,28 +1,28 @@
 #ifndef __LAYA_PREPROCESSOR_H__
 #define __LAYA_PREPROCESSOR_H__
-#ifdef __APPLE__
+#ifdef OS_IOS
 #define GLES_SILENCE_DEPRECATION
 #include <OpenGLES/ES2/gl.h>
 #include <OpenGLES/ES2/glext.h>
 #include <OpenGLES/ES3/gl.h>
 #include <OpenGLES/ES3/glext.h>
-#elif OHOS
+#elif OS_OHOS
 #include <EGL/egl.h>
 #include <GLES3/gl3.h>
-#elif __LINUX__
+#elif OS_LINUX
 #include <glad/egl.h>
 #include <glad/gles2.h>
-#elif __ANDROID__
+#elif OS_ANDROID
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 #include <GLES3/gl3.h>
-#elif WIN32
+#elif OS_WINDOWS
 #include <GLES3/gl3.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 #endif
 
-#ifdef WIN32
+#ifdef OS_WINDOWS
 #ifdef min
 #undef min
 #endif

@@ -66,7 +66,7 @@ namespace laya
 		    JCAudioWavPlayer* pWavPlayer = m_sAudioManager->m_pWavPlayer;
 		    if( pWavPlayer != NULL )
 		    {
-				#ifdef OHOS
+				#ifdef OS_OHOS
 				int nALCount = pWavPlayer->m_pAudioRenderSource.size();
                 for (int i = 0; i < nALCount; i++)
 			    {
@@ -117,13 +117,13 @@ namespace laya
     //------------------------------------------------------------------------------
     void JCAudioManager::createMp3player()
     {
-    #ifdef WIN32
+    #ifdef OS_WINDOWS
 	    m_pMp3Player = new JCAudioMp3Player();
-    #elif __ANDROID__
+    #elif OS_ANDROID
 	    m_pMp3Player = new JCAudioMp3Media();
-    #elif __APPLE__
+    #elif OS_IOS
         m_pMp3Player = new JCAudioMp3Player();
-    #elif OHOS
+    #elif OS_OHOS
 	    m_pMp3Player = new JCAudioMp3Player();
     #endif
     }
@@ -218,7 +218,7 @@ namespace laya
 		    m_pMp3Player->resume();
 	    }
     }
-   	#ifdef OHOS
+   	#ifdef OS_OHOS
     OHAudioRenderInfo* JCAudioManager::playWav(JCAudioInterface* p_pAudio, const std::string& p_sUrl, bool bIsOgg, float currentTime)
     {
         return m_pWavPlayer->playAudio(p_pAudio, p_sUrl, bIsOgg);//todo  currentTime
@@ -289,7 +289,7 @@ namespace laya
     {
 	    return m_pWavPlayer->FindWaveInfo( p_sUrl );
     }
-#if !defined(__LINUX__) && !defined(OHOS)//todo
+#if !defined(OS_LINUX) && !defined(OS_OHOS)//todo
     OpenALSourceInfo*  JCAudioManager::playWavMp3(JCAudioInterface* p_pAudio, const std::string& p_sUrl, const char* p_sFilePath, float currentTime)
 	{
 		return m_pWavPlayer->playAudioMp3(p_pAudio, p_sUrl, p_sFilePath, currentTime);
@@ -298,7 +298,7 @@ namespace laya
 	//------------------------------------------------------------------------------
 	JCWaveInfo* JCAudioManager::AddWaveInfoMp3(const std::string& p_sUrl, const std::string& p_sFilePath, void* p_pExternalMark)
 	{
-#if defined(OHOS)
+#if defined(OS_OHOS)
         return nullptr;//todo
 #else
 		return m_pWavPlayer->AddWaveInfoMp3(p_sUrl, p_sFilePath, p_pExternalMark);

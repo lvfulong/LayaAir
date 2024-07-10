@@ -1,6 +1,6 @@
 #pragma once
 
-#if WIN32
+#if OS_WINDOWS
 #include <wtypes.h>
 #include <tchar.h>
 #if BUILDING_CONCH_SHARED
@@ -10,6 +10,6 @@
 #endif
 extern "C" CONCH_API int conchMainConsole(int argc, WCHAR * argv[]);
 extern "C" CONCH_API int conchMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nShowCmd);
-#elif __LINUX__
+#elif OS_LINUX
 extern int conchMain(int argc, char *argv[]);
 #endif

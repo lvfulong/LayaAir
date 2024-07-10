@@ -308,9 +308,8 @@ namespace laya {
         // 将libwebsocket的日志输出到你的日志系统或标准输出等
         printf("%s\n", line);
     }
-
-#ifdef WIN32    //因为目前只有windows的websocket更新了
-    
+    // 因为目前只有windows的websocket更新了
+#if defined(OS_WINDOWS) || defined(OS_OHOS)   
     void startWSSV(int port, DebuggerAgent* pDbgAgent) {
         gpDbgAgent = pDbgAgent;
         interrupted = false;

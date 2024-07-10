@@ -1,10 +1,10 @@
 #include <utils/Log.h>
 #include <network/IHttpClient.h>
-#if __ANDROID__
+#if OS_ANDROID
 #include "network/HttpClientAndroid.h"
-#elif __APPLE__
+#elif OS_IOS
 #include "network/HttpClientiOS.h"
-#elif WIN32
+#elif OS_WINDOWS
 #endif
 
 namespace laya
@@ -28,11 +28,11 @@ IHttpClient *HttpClientManager::createHttpClient(const char *url, const char *lo
                                                  const IHttpClient::onEndFunction &functionOnEnd)
 {
     IHttpClient *httpClient = nullptr;
-#if __ANDROID__
+#if OS_ANDROID
     httpClient = new HttpClientAndroid(url, localFilePath, functionOnProgress, functionOnEnd, shared_from_this());
-#elif __APPLE__
+#elif OS_IOS
     httpClient = new HttpClientiOS(url, localFilePath, functionOnProgress, functionOnEnd, shared_from_this());
-#elif WIN32
+#elif OS_WINDOWS
     httpClient = nullptr; // TODO
 #endif
     addHttpClient(httpClient);

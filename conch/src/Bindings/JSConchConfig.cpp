@@ -3,13 +3,13 @@
 #include "resource/JCFileResManager.h"
 #include "../../JCScriptRuntime.h"
 #include "JCConch.h"
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
     #include "CToJavaBridge.h"
-#elif WIN32
+#elif OS_WINDOWS
     #include <Windows.h>
-#elif __APPLE__
+#elif OS_IOS
     #include "CToObjectC.h"
-#elif OHOS
+#elif OS_OHOS
     #include "aki/jsbind.h"
     #include <string>
     #include "platform/ohos/napi/helper/NapiHelper.h"
@@ -20,7 +20,7 @@
 #include "../../JCConchRender.h"
 #include "../../JCConch.h"
 #include "../../WebSocket/WebSocket.h"
-#ifdef OHOS
+#ifdef OS_OHOS
 #include <resource/Audio/JCAudioWavPlayer-openharmony.h>
 #else
 #include <resource/Audio/JCAudioWavPlayer.h>
@@ -37,7 +37,7 @@ extern int g_nInnerWidth;
 extern int g_nInnerHeight;
 extern bool g_bGLCanvasSizeChanged;
 
-#ifdef WIN32
+#ifdef OS_WINDOWS
 extern HWND g_hWnd;
 #endif
 
@@ -67,80 +67,86 @@ namespace laya
     }
     float JSConchConfig::getTotalMem()
     {
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
         CToJavaBridge::JavaRet kRet;
         if (CToJavaBridge::GetInstance()->callMethod("layaair.game.utility.ProcessInfo", "getTotalMem", kRet, CToJavaBridge::JavaRet::RT_Float))
         {
             return kRet.floatRet;
         }
         return 0;
-#elif WIN32
+#elif OS_WINDOWS
         MEMORYSTATUSEX statex;
         statex.dwLength = sizeof(statex);
         GlobalMemoryStatusEx(&statex);
         return (float)(statex.ullTotalPhys / 1024);
-#elif __APPLE__
+#elif OS_IOS
         return CToObjectCGetTotalMem();
 #endif
         return 0;
     }
     int JSConchConfig::getUsedMem()
     {
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
         CToJavaBridge::JavaRet kRet;
         if (CToJavaBridge::GetInstance()->callMethod("layaair.game.utility.ProcessInfo", "getUsedMem", kRet, CToJavaBridge::JavaRet::RT_Float))
         {
             return (int)(kRet.floatRet);
         }
         return 0;
-#elif __APPLE__
+#elif OS_IOS
         return CToObjectCGetUsedMem();
-#elif WIN32
+#elif OS_WINDOWS
         return getAppUsedMem();
+#elif OS_OHOS
+        return NapiHelper::GetInstance()->getUsedMem();
 #endif
         return 0;
     }
     int JSConchConfig::getAvalidMem()
     {
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
         CToJavaBridge::JavaRet kRet;
         if (CToJavaBridge::GetInstance()->callMethod("layaair.game.utility.ProcessInfo", "getAvalidMem", kRet, CToJavaBridge::JavaRet::RT_Float))
         {
             return (int)(kRet.floatRet);
         }
         return 0;
-#elif WIN32
+#elif OS_OHOS
+        return NapiHelper::GetInstance()->getAvalidMem();
+#elif OS_WINDOWS
         MEMORYSTATUSEX statex;
         statex.dwLength = sizeof(statex);
         GlobalMemoryStatusEx(&statex);
         return (int)(statex.ullAvailPhys / 1024);
-#elif __APPLE__
+#elif OS_IOS
         return CToObjectCGetAvalidMem();
 #endif
         return 0;
     }
     float JSConchConfig::getScreenInch()
     {
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
         CToJavaBridge::JavaRet kRet;
         if (CToJavaBridge::GetInstance()->callMethod("layaair.game.utility.ProcessInfo", "getScreenInch", kRet, CToJavaBridge::JavaRet::RT_Float))
         {
             return kRet.floatRet;
         }
         return 0;
-#elif WIN32
+#elif OS_OHOS
+        return NapiHelper::GetInstance()->getScreenInch();
+#elif OS_WINDOWS
         return 0;
-#elif __APPLE__
+#elif OS_IOS
         return CToObjectCGetScreenInch();
 #endif
         return 0;
     }
     void JSConchConfig::setTouchMoveRange(float p_fMM)
     {
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
         CToJavaBridge::JavaRet kRet;
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setTouchMoveRange", p_fMM,kRet);
-#elif WIN32
+#elif OS_WINDOWS
 
 #endif
     }
@@ -167,7 +173,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         }
         int w = g_nInnerWidth > g_nInnerHeight ? g_nInnerWidth : g_nInnerHeight;
         int h = g_nInnerWidth > g_nInnerHeight ? g_nInnerHeight : g_nInnerWidth;
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
         if (vbLandscapes[p_nOrientation]) {
             g_nInnerWidth = w;
             g_nInnerHeight = h;
@@ -178,14 +184,14 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         }
 #endif
         g_bGLCanvasSizeChanged = true;
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
         CToJavaBridge::JavaRet kRet;
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setScreenOrientation", p_nOrientation, kRet);
-#elif WIN32
+#elif OS_WINDOWS
         MoveWindow(g_hWnd, 0, 0, g_nInnerWidth, g_nInnerHeight, true);
-#elif __APPLE__
+#elif OS_IOS
         CToObjectCSetScreenOrientation(p_nOrientation);
-#elif OHOS
+#elif OS_OHOS
         int orientation = 0;
         if(p_nOrientation == landscape) {
            orientation = 2;
@@ -223,33 +229,35 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 
     int JSConchConfig::getNetworkType()
     {
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
         CToJavaBridge::JavaRet kRet;
         if (CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "getContextedType", kRet, CToJavaBridge::JavaRet::RT_Int))
         {
             return kRet.intRet;
         }
         return 1;
-#elif WIN32
+#elif OS_WINDOWS
         return 1;
-#elif __APPLE__
+#elif OS_IOS
         return CToObjectCGetNetworkType();
+#elif OS_OHOS
+        return NapiHelper::GetInstance()->getNetworkType();
 #endif
         return 0;
     }
 
 	const char* JSConchConfig::getIPAddress()
 	{
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
 		CToJavaBridge::JavaRet kRet;
 		if (CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "getIPAddress", kRet))
 		{
 			m_sIPAddress = CToJavaBridge::GetInstance()->getJavaString(kRet.pJNI, kRet.strRet);
 		}
 		return m_sIPAddress.c_str();
-#elif WIN32
+#elif OS_WINDOWS
 		return "";
-#elif __APPLE__
+#elif OS_IOS
 		//m_sIPAddress = CToObjectCIPAddress();
 		return m_sIPAddress.c_str();
 #endif
@@ -330,38 +338,38 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 
     const char* JSConchConfig::getOS()
     {
-#ifdef __APPLE__
+#ifdef OS_IOS
         return "Conch-ios";
-#elif __ANDROID__
+#elif OS_ANDROID
         return "Conch-android";
-#elif WIN32
+#elif OS_WINDOWS
         return "Conch-window";
-#elif OHOS
+#elif OS_OHOS
         return "Conch-ohos";
-#elif __LINUX__
+#elif OS_LINUX
         return "Conch-linux";
 #endif
     }
     const char* JSConchConfig::getBrowserInfo()
     {
-#ifdef __APPLE__
+#ifdef OS_IOS
         return "Conch-ios";
-#elif __ANDROID__
+#elif OS_ANDROID
         return "Conch-android";
-#elif WIN32
+#elif OS_WINDOWS
         return "Conch-window";
-#elif OHOS
+#elif OS_OHOS
         return "Conch-ohos";
-#elif __LINUX__
+#elif OS_LINUX
         return "Conch-linux";
 #endif
     }
     const char* JSConchConfig::getGuid()
     {
-#ifdef __APPLE__
+#ifdef OS_IOS
         m_sGUID = CToObjectCGetGUID();
         return m_sGUID.c_str();
-#elif __ANDROID__
+#elif OS_ANDROID
         CToJavaBridge::JavaRet kRet;
         if (CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "getWifiMac", kRet))
         {
@@ -369,31 +377,33 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         }
         LOGI("getGuid::get_Value=%s", m_sGUID.c_str());
         return m_sGUID.c_str();
-#elif WIN32
+#elif OS_WINDOWS
         return "window";
-#elif __LINUX__
+#elif OS_LINUX
         return "linux";
 #endif
     }
     const char* JSConchConfig::getRuntimeVersion()
     {
-#ifdef __APPLE__
+#ifdef OS_IOS
         return "ios-conch6-release-3.2.0-beta.2";
-#elif __ANDROID__
+#elif OS_ANDROID
         return "android-conch6-release-3.2.0-beta.2";
-#elif WIN32
+#elif OS_WINDOWS
         return "window-conch6-release-3.2.0-beta.2";
-#elif __LINUX__
+#elif OS_OHOS
+        return "ohos-conch6-release-3.2.0-beta.2";
+#elif OS_LINUX
         return "linux-conch6-release-3.2.0-beta.2";
 #endif
     }
 	//机型
 	const char* JSConchConfig::getModel()
 	{
-#ifdef __APPLE__
+#ifdef OS_IOS
 		m_sModel = CToObjectCGetModel();
 		return m_sModel.c_str();
-#elif __ANDROID__
+#elif OS_ANDROID
 		CToJavaBridge::JavaRet kRet;
 		if (CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "getModel", kRet))
 		{
@@ -401,19 +411,19 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 			return m_sModel.c_str();
 		}
 		return "";
-#elif WIN32
+#elif OS_WINDOWS
 		return "";
-#elif __LINUX__
+#elif OS_LINUX
         return "";
 #endif
 	}
 	//国家&地区
 	const char* JSConchConfig::getCountryCode()
 	{
-#ifdef __APPLE__
+#ifdef OS_IOS
 		m_sCountryCode = CToObjectCGetCountryCode();
 		return m_sCountryCode.c_str();
-#elif __ANDROID__
+#elif OS_ANDROID
 		CToJavaBridge::JavaRet kRet;
 		if (CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "getCountryCode", kRet))
 		{
@@ -421,9 +431,9 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 			return m_sCountryCode.c_str();
 		}
 		return "";
-#elif WIN32
+#elif OS_WINDOWS
 		return "";
-#elif __LINUX__
+#elif OS_LINUX
         return "";
 #endif
 	}
@@ -431,10 +441,10 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
     //设备国家&地区码
     const char* JSConchConfig::getTelCountryCode()
     {
-#ifdef __APPLE__
+#ifdef OS_IOS
         m_sCountryCode = CToObjectCGetTelCountryCode();
 		return m_sCountryCode.c_str();
-#elif __ANDROID__
+#elif OS_ANDROID
         CToJavaBridge::JavaRet kRet;
         if (CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "getTelCountryCode", kRet))
         {
@@ -442,19 +452,19 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
             return m_sCountryCode.c_str();
         }
         return "";
-#elif WIN32
+#elif OS_WINDOWS
         return "";
-#elif __LINUX__
+#elif OS_LINUX
         return "";
 #endif
     }
 
 	const char* JSConchConfig::getLanguage()
 	{
-#ifdef __APPLE__
+#ifdef OS_IOS
 		m_sLanguage = CToObjectCGetLanguage();
 		return m_sLanguage.c_str();
-#elif __ANDROID__
+#elif OS_ANDROID
 		CToJavaBridge::JavaRet kRet;
 		if (CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "getLanguage", kRet))
 		{
@@ -462,29 +472,29 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 			return m_sLanguage.c_str();
 	}
 		return "";
-#elif WIN32
+#elif OS_WINDOWS
 		return "";
-#elif __LINUX__
+#elif OS_LINUX
         return "";
 #endif
 	}
 	void JSConchConfig::setLanguage(const char* pStrLanguage)
 	{
-#ifdef WIN32
-#elif __ANDROID__
+#ifdef OS_WINDOWS
+#elif OS_ANDROID
 		std::string strBuffer = pStrLanguage;
 		CToJavaBridge::JavaRet kRet;
 		CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setLanguage", strBuffer.c_str(), kRet);
-#elif __APPLE__
+#elif OS_IOS
 		CToObjectCSetLanguage(pStrLanguage);
 #endif
 	}
     const char* JSConchConfig::getAppVersion()
     {
-#ifdef __APPLE__
+#ifdef OS_IOS
         m_sAppVersion = CToObjectCGetAppVersion();
         return m_sAppVersion.c_str();
-#elif __ANDROID__
+#elif OS_ANDROID
         CToJavaBridge::JavaRet kRet;
         if (CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "getAppVersion", kRet))
         {
@@ -492,21 +502,21 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 			return m_sAppVersion.c_str();
         }
         return "";
-#elif OHOS
+#elif OS_OHOS
         m_sAppVersion = NapiHelper::GetInstance()->getAppVersion();
         return m_sAppVersion.c_str();
-#elif WIN32
+#elif OS_WINDOWS
         return "3.0";
-#elif __LINUX__
+#elif OS_LINUX
         return "3.0";
 #endif
     }
     const char* JSConchConfig::getAppLocalVersion()
     {
-#ifdef __APPLE__
+#ifdef OS_IOS
         m_sAppLocalVersion = CToObjectCGetAppLocalVersion();
         return m_sAppLocalVersion.c_str();
-#elif __ANDROID__
+#elif OS_ANDROID
         CToJavaBridge::JavaRet kRet;
         if (CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "getAppLocalVersion", kRet))
         {
@@ -514,21 +524,21 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 			return m_sAppLocalVersion.c_str();
         }
         return "";
-#elif OHOS
+#elif OS_OHOS
         m_sAppLocalVersion = NapiHelper::GetInstance()->getAppLocalVersion();
         return m_sAppLocalVersion.c_str();
-#elif WIN32
+#elif OS_WINDOWS
         return "3.0";
-#elif __LINUX__
+#elif OS_LINUX
         return "3.0";
 #endif
     }
     const char* JSConchConfig::getDeviceInfo()
     {
-#ifdef __APPLE__
+#ifdef OS_IOS
         m_sDeviceInfo = CToObjectCGetDeviceInfo();
         return m_sDeviceInfo.c_str();
-#elif __ANDROID__
+#elif OS_ANDROID
         CToJavaBridge::JavaRet kRet;
         if (CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "GetDeviceInfo", kRet))
         {
@@ -536,16 +546,16 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         }
         LOGI("getDeviceInfo::get_Value=%s", m_sDeviceInfo.c_str());
         return m_sDeviceInfo.c_str();
-#elif OHOS
+#elif OS_OHOS
         m_sDeviceInfo = NapiHelper::GetInstance()->getDeviceInfo();
         return m_sDeviceInfo.c_str();
-#elif WIN32 || __LINUX__
+#elif OS_WINDOWS || OS_LINUX
         return "{\"resolution\":\"1920*1080\",	\"guid\":\"xxxxxxxxx\",\"imei\":[\"imeixxx\"],\"imsi\":[\"imsixxx\"],\"os\":\"windows\",\"osversion\":\"windows7 64\",\"phonemodel\":\"Wintel\"	}";
 #endif
     }
     float JSConchConfig::getCurrentDeviceSystemVersion()
     {
-#ifdef __APPLE__
+#ifdef OS_IOS
         return CToObjectCGetDeviceSystemVersion();
 #else
         return 0.0f;
@@ -716,18 +726,18 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
     }
     int JSConchConfig::getMemoryUsageInByte()
     {
-#ifdef __APPLE__
+#ifdef OS_IOS
         return CToObjectCGetMemoryUsageInByte();
-#elif __ANDROID__
+#elif OS_ANDROID
 		CToJavaBridge::JavaRet kRet;
 		if (CToJavaBridge::GetInstance()->callMethod("layaair.game.utility.ProcessInfo", "getMemoryUsageInByte", kRet, CToJavaBridge::JavaRet::RT_Float))
 		{
 			return (int)(kRet.floatRet);
 		}
 		return 0;
-#elif WIN32
+#elif OS_WINDOWS
         return 0;
-#elif __LINUX__
+#elif OS_LINUX
         return 0;
 #endif
     }

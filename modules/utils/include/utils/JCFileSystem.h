@@ -3,7 +3,7 @@
 
 #include <utils/JCBuffer.h>
 
-//#ifdef __APPLE__
+//#ifdef OS_IOS
 // https://github.com/gulrak/filesystem.git
 #include "ghc/filesystem.hpp"
 namespace fs = ghc::filesystem;
@@ -12,7 +12,7 @@ namespace fs = ghc::filesystem;
 //namespace fs = std::filesystem;
 //#endif
 
-#ifdef WIN32
+#ifdef OS_WINDOWS
 #else
 #include <cassert>
 #include <cerrno>

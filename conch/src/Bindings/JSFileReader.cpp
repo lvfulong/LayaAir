@@ -267,7 +267,7 @@ namespace laya
             unsigned char* pTemp = pBuff;
             if (content_type_string == m_iContentType)
             {
-#ifdef __APPLE__
+#ifdef OS_IOS
                 if (IsTextUTF8((char*)pBuff, nLen) == false)
                 {
                     char sBuffer[1024] = { 0 };

@@ -337,7 +337,7 @@ namespace laya
 		int row_stride; //?每一行的字节数
 		jcs.err = jpeg_std_error(&jem);
 		jpeg_create_compress(&jcs);
-		#ifdef WIN32
+		#ifdef OS_WINDOWS
         fp = _wfopen(utf8ToWide(filename).c_str(), L"wb");
         #else
         fp = fopen(filename, "wb");

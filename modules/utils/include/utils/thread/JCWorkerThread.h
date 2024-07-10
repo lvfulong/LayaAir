@@ -15,7 +15,7 @@
 #include <utils/JCEmitter.h>
 #include "JCLayaThreadPool.h"
 
-#ifdef __APPLE__
+#ifdef OS_IOS
 #include <pthread.h>
 #endif
 #include <future>

@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <android/native_window_jni.h>
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
     #include <sys/syscall.h>
     #define gettidv1() syscall(__NR_gettid)
     #define gettidv2() syscall(SYS_gettid)

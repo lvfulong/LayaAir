@@ -28,7 +28,7 @@ std::string vformat(const char *fmt, va_list args)
 
     return std::string(buf.data());
 }
-#if OHOS
+#if OS_OHOS
 void logMessage(laya::LogType logType, const char *file, int line, const char *fmt, ...)
 {
     va_list args;

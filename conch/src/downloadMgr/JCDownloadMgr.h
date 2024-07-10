@@ -184,7 +184,7 @@ namespace laya{
         short		m_nThreadNum;
 
         std::recursive_mutex m_CancelMutex;
-#ifdef WIN32
+#ifdef OS_WINDOWS
         std::atomic_uint32_t m_nStopNum;				//完成个数
 #else
         std::atomic_uint m_nStopNum;				//完成个数

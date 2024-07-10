@@ -72,7 +72,7 @@ JCWaveInfo* JCOggParser::GetWaveInfo( const char* p_sFileName,unsigned char* p_s
 	else if( p_sFileName != NULL )
 	{
 		FILE* fp = NULL;
-		#ifdef WIN32
+		#ifdef OS_WINDOWS
         fp = _wfopen(utf8ToWide(p_sFileName).c_str(), L"rb");
         #else
     	fp = fopen(p_sFileName, "rb");

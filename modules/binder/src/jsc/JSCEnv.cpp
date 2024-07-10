@@ -8,7 +8,7 @@
 
 #include "JSCEnv.h"
 #include "../../../CToObjectC.h"
-#ifdef __APPLE__
+#ifdef OS_IOS
 #include <pthread.h>
 #endif
 namespace laya

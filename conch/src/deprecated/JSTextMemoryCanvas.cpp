@@ -15,10 +15,10 @@
 #include "../../JCScriptRuntime.h"
 #include <utils/Log.h>
 #include "JSTextBitmapInfo.h"
-#ifdef __APPLE__
+#ifdef OS_IOS
 #include "../../IOSFreetype/JCIOSFreeType.h"
 #endif
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
 #include "../../JCSystemConfig.h"
 #include "CToJavaBridge.h"
 #endif   

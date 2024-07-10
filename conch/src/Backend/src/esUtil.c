@@ -20,7 +20,7 @@
 //
 #include <stdio.h>
 #include <stdlib.h>
-#if __APPLE__
+#if OS_IOS
 	#include <OpenGLES/ES3/gl.h>
     #include <OpenGLES/ES3/glext.h>
 	#include <OPenGLES/EAGL.h>

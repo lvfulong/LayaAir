@@ -453,7 +453,7 @@ list(APPEND CONCH_SRC
 	src/JCSystemConfig.cpp
 )
 
-if(IOS)
+if(OS_IOS)
 	list(APPEND PLATFORM_HEADER_DIR
 		src/platform/iOS
 	)
@@ -532,7 +532,7 @@ if(IOS)
 		src/resource/Audio/JCAudioWavPlayer.h
 		src/resource/Audio/JCAudioWavPlayer.cpp
 	)
-elseif(ANDROID)
+elseif(OS_ANDROID)
 	list(APPEND PLATFORM_HEADER_DIR
 		src/platform/Android
 		src/OpenAL/include
@@ -568,7 +568,7 @@ elseif(ANDROID)
 		src/resource/Audio/JCAudioWavPlayer.h
 		src/resource/Audio/JCAudioWavPlayer.cpp
 	)
-elseif(MSVC)
+elseif(OS_WINDOWS)
 	list(APPEND PLATFORM_HEADER_DIR
 		platform/Windows
 	)
@@ -597,7 +597,7 @@ elseif(MSVC)
 		src/resource/Audio/JCAudioWavPlayer.h
 		src/resource/Audio/JCAudioWavPlayer.cpp
 	)
-elseif(OHOS)
+elseif(OS_OHOS)
 	list(APPEND PLATFORM_HEADER_DIR
 		src/Backend/src
 	)
@@ -621,7 +621,7 @@ elseif(OHOS)
 		src/Audio/ohos/JCAudioMp3Player.cpp
 		#src/Audio/ohos/JCAudioMp3Player.h
 	)
-elseif(LINUX)
+elseif(OS_LINUX)
 	list(APPEND PLATFORM_HEADER_DIR
 		src/Backend/src
 	)
@@ -644,21 +644,21 @@ endif()
 set(CONCH_HEADERS_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
 )
 include_directories(${PUBLIC_HEADER_DIR})
-if(ANDROID)
+if(OS_ANDROID)
 	add_library(${PROJECT_NAME} SHARED ${CONCH_SRC})
-elseif(MSVC)
+elseif(OS_WINDOWS)
 	if(BUILDING_CONCH_SHARED)
 		add_library(${PROJECT_NAME} SHARED ${CONCH_SRC})
 	else()
 		add_library(${PROJECT_NAME} ${CONCH_SRC})
 	endif()
 	target_precompile_headers(${PROJECT_NAME} PRIVATE ${CONCH_HEADERS})
-elseif(OHOS)
+elseif(OS_OHOS)
 	add_library(${PROJECT_NAME} SHARED ${CONCH_SRC})
 	target_compile_options(${PROJECT_NAME} PRIVATE -O3)
-elseif(LINUX)
+elseif(OS_LINUX)
 	add_library(${PROJECT_NAME} ${CONCH_SRC})
-elseif(IOS)
+elseif(OS_IOS)
 	add_library(${PROJECT_NAME} ${CONCH_SRC})
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fobjc-arc")
 endif()
@@ -678,7 +678,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 	OUTPUT_NAME "conch"
 )
 
-if(ANDROID)
+if(OS_ANDROID)
 	# if(ANDROID_ABI STREQUAL "x86")
 	# set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-warn-shared-textrel")
 	# endif()
@@ -733,7 +733,7 @@ if(ANDROID)
 		ssl
 		crypto
 	)
-elseif(IOS)
+elseif(OS_IOS)
 	target_link_libraries(${PROJECT_NAME} PUBLIC
 		"-framework UIKit"
 		"-framework AVKit"
@@ -797,7 +797,7 @@ elseif(IOS)
 		PhysXVehicle2
 	)
 	set_property(TARGET ${PROJECT_NAME} PROPERTY XCODE_ATTRIBUTE_ENABLE_BITCODE "NO")
-elseif(MSVC)
+elseif(OS_WINDOWS)
 	#target_compile_definitions(${PROJECT_NAME} PRIVATE GL_GLEXT_PROTOTYPES)
 	target_link_libraries(${PROJECT_NAME} PUBLIC
 		version.lib
@@ -837,7 +837,7 @@ elseif(MSVC)
 		SDL2
 		SDL2main
 	)
-elseif(OHOS)
+elseif(OS_OHOS)
 	target_link_libraries(${PROJECT_NAME} PUBLIC
 		${EGL-lib}
 		${GLESv3-lib}
@@ -866,7 +866,7 @@ elseif(OHOS)
 		ssl
 		crypto
 		) 
-elseif(LINUX)
+elseif(OS_LINUX)
 	find_package(X11 REQUIRED)
 	add_subdirectory("../third_party/glad/glad-2.0.4/cmake" glad_cmake)
 	glad_add_library(glad REPRODUCIBLE LOADER API egl=1.5 gles2=3.0)
@@ -906,7 +906,7 @@ elseif(LINUX)
 	)
 endif()
 
-if(MSVC)
+if(OS_WINDOWS)
 	set(WARNINGS
 		/wd4819 # 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
 		/bigobj
@@ -922,10 +922,10 @@ endif()
 target_compile_options(${PROJECT_NAME} PRIVATE
 	${WARNINGS}
 )
-if(MSVC)
+if(OS_WINDOWS)
 install(FILES ${WIN_DLLS} DESTINATION lib/x64)
 endif()
-if(NOT OHOS)
+if(NOT OS_OHOS)
 install(TARGETS ${PROJECT_NAME} DESTINATION lib/${BUILDING_ARCH})
 install(DIRECTORY ./include DESTINATION .)
 endif()

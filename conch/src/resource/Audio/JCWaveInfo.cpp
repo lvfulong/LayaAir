@@ -30,7 +30,7 @@ JCWaveInfo::~JCWaveInfo( void )
 //------------------------------------------------------------------------------
 bool JCWaveInfo::LoadData( const char* p_sFileName )
 {
-	#ifdef WIN32
+	#ifdef OS_WINDOWS
     FILE* fp = _wfopen(utf8ToWide(p_sFileName).c_str(), L"rb");
     #else
     FILE* fp = fopen(p_sFileName, "rb");

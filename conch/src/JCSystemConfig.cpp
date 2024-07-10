@@ -4,7 +4,7 @@
 #include <utils/Log.h>
 #include <utils/IniFile.h>
 #include <utils/JCBuffer.h>
-#ifdef WIN32
+#ifdef OS_WINDOWS
 #include <windows.h>
 #endif
 #include "JCConch.h"
@@ -41,7 +41,7 @@ void JCSystemConfig::loadConfigIniFile()
     // ���������ļ����ÿ���
     std::string configpath = gAssetRootPath; 
     configpath += "config.ini";
-#if __APPLE__||__ANDROID__||OHOS
+#if defined(OS_IOS) || defined(OS_ANDROID) || defined(OS_OHOS)
     std::string content = JCConch::s_pAssetsFiles->readTextAsset("config.ini");
     JCBuffer buf((char*)content.c_str(), strlen(content.c_str()), false, false);
     std::string tempFilePath = gRedistPath + "appCache" +  std::string("/tmp_config.ini");
@@ -54,7 +54,7 @@ void JCSystemConfig::loadConfigIniFile()
     }
     IniFile configIni(configpath.c_str());
 
-#if WIN32 || __LINUX__
+#if defined(OS_WINDOWS) || defined(OS_LINUX)
     int defaultWidth = 1280;
     if (configIni.hasEntry("desktop:width"))
     {
@@ -75,7 +75,7 @@ void JCSystemConfig::loadConfigIniFile()
         LOGW("Warning: can not find desktop:height use default %d", defaultHeight);
     }
 #endif
-#ifdef __APPLE__
+#ifdef OS_IOS
     if (configIni.hasEntry("ios:orientation"))
     {
         m_nOrientationType = configIni.getUIntOrDefault("ios:orientation", 24);

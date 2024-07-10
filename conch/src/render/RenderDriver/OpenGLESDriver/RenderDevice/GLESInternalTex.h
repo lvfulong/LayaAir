@@ -15,7 +15,7 @@
 #include <render/3D/design/renderEnum/WrapMode.h>
 #include <render/3D/temp/ObjectBase.h>
 #include <utils/Preprocessor.h>
-#ifdef __LINUX__
+#ifdef OS_LINUX
 #define GL_TEXTURE_WRAP_R 0x8072
 #endif
 

@@ -390,6 +390,7 @@ int NapiHelper::__getVolume(int m_tag)
 void NapiHelper::showDialog(const char *p_sBuffer)
 {
     //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__showDialog, this, p_sBuffer));
+    __showDialog(p_sBuffer);
 }
 
 void NapiHelper::__showDialog(const char *p_sBuffer)

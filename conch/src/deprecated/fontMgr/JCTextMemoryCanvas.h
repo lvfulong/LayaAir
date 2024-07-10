@@ -53,7 +53,7 @@ namespace laya
 		JCFontInfo*                 m_pCurrentFontInfo;
 		std::string                 m_sFont;
 		BitmapData                  m_kBitmapData;
-#ifdef __APPLE__
+#ifdef OS_IOS
 		class JCIOSFreeType*              m_pIOSFreeType;                 ///<iosfreetype 
 #endif
 		double m_fScaleX;

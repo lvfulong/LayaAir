@@ -3,16 +3,16 @@
 #include <stdint.h>
 #include <stdio.h>
 #pragma warning(disable : 4996)
-#ifdef WIN32
+#ifdef OS_WINDOWS
 #pragma execution_character_set("utf-8")
 #endif
 extern int g_nDebugLevel;
 
 #define LOG_TAG "LayaBox"
-#if __ANDROID__
+#if OS_ANDROID
 #include <android/log.h>
 #include <jni.h>
-#elif OHOS
+#elif OS_OHOS
 #include <hilog/log.h>
 #endif
 namespace laya
@@ -40,7 +40,7 @@ extern void (*gLayaLogNoParam)(int level, const char *file, int line, const char
 extern void (*gLayaLogBin)(int level, const char *file, int line, void *pData, int len);
 
 void alert(const char *fmt, ...);
-#if OHOS
+#if OS_OHOS
 void logMessage(laya::LogType logType, const char *file, int line, const char *fmt, ...);
 #endif
 #ifdef WEBASM
@@ -61,7 +61,7 @@ void logMessage(laya::LogType logType, const char *file, int line, const char *f
         printf("\n");                                                                                                  \
     }
 #else
-#ifdef __APPLE__
+#ifdef OS_IOS
 void CToObjectCLogI(const char *szFormat, ...);
 void CToObjectCLogW(const char *szFormat, ...);
 void CToObjectCLogE(const char *szFormat, ...);
@@ -102,7 +102,7 @@ void CToObjectCLogIExt(const char *str);
             alert(__VA_ARGS__);                                                                                        \
         }                                                                                                              \
     }
-#elif __LINUX__
+#elif OS_LINUX
 #define LOGI(...)                                                                                                      \
     {                                                                                                                  \
         if (g_nDebugLevel >= 3)                                                                                        \
@@ -156,7 +156,7 @@ void CToObjectCLogIExt(const char *str);
             alert(__VA_ARGS__);                                                                                        \
         }                                                                                                              \
     }
-#elif __ANDROID__
+#elif OS_ANDROID
 #define LOGI(...)                                                                                                      \
     {                                                                                                                  \
         if (g_nDebugLevel >= 3)                                                                                        \
@@ -207,14 +207,14 @@ void CToObjectCLogIExt(const char *str);
             alert(__VA_ARGS__);                                                                                        \
         }                                                                                                              \
     }
-#elif OHOS
+#elif OS_OHOS
 #define LOGI(...)   \                                                                                                   
     logMessage(laya::LogType::Info, __FILE__, __LINE__, __VA_ARGS__);                                                  
     #define LOGW(...)\
      logMessage(laya::LogType::Warn, __FILE__, __LINE__, __VA_ARGS__);                               
     #define LOGE(...)\ 
     logMessage(laya::LogType::Error, __FILE__, __LINE__, __VA_ARGS__);
-#elif WIN32
+#elif OS_WINDOWS
 #define LOGI(...)                                                                                                      \
     {                                                                                                                  \
         if (g_nDebugLevel >= 3)                                                                                        \

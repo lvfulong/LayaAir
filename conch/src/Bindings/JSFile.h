@@ -6,7 +6,7 @@
 #include "JsBlob.h"
 #include <utils/JCMemorySurvey.h>
 #include <utils/JCFileSystem.h>
-#ifdef WIN32
+#ifdef OS_WINDOWS
     #define strcasecmp _stricmp
     #define strncasecmp _strnicmp
 #endif

@@ -218,7 +218,7 @@ namespace laya
 
         static  int32_t RoundToInt(float F)
         {
-            #ifdef WIN32
+            #ifdef OS_WINDOWS
                 // Note: the x2 is to workaround the rounding-to-nearest-even-number issue when the fraction is .5
                 return _mm_cvt_ss2si(_mm_set_ss(F + F + 0.5f)) >> 1;
             #else

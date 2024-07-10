@@ -8,7 +8,7 @@ namespace laya
     void JSConsole::log(int p_nType,const char* p_sBuffer )
     {
         LogLevel logLevel = (LogLevel)p_nType;
-    #ifdef WIN32
+    #ifdef OS_WINDOWS
 	    if( p_sBuffer==NULL)
 		    return;
 	    int nLen = strlen( p_sBuffer ) + 3;
@@ -30,7 +30,7 @@ namespace laya
             delete[] ucStr;
             ucStr = NULL;
         }
-    #elif __APPLE__
+    #elif OS_IOS
         switch (logLevel)
         {
             case LogLevel::Warn:

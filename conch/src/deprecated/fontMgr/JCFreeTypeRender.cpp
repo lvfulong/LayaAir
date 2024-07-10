@@ -90,7 +90,7 @@ namespace laya
         }
         else
         {
-        #ifdef __APPLE__
+        #ifdef OS_IOS
             std::string sPath = getIOSFontTTFPath();
             FT_Face pFTFace = getFTFaceFromFile(sPath.c_str());
             if ( pFTFace == NULL )

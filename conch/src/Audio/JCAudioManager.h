@@ -10,17 +10,17 @@
 #define __JCAudioManager_H__
 
 //包含头文件
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
 	#include "android/JCAudioMp3Media.h"
-#elif WIN32
+#elif OS_WINDOWS
 	#include "windows/JCAudioMp3Player.h"	
-#elif __APPLE__
+#elif OS_IOS
     #include "ios/JCAudioMp3Player.h"
-#elif OHOS
+#elif OS_OHOS
     #include "ohos/JCAudioMp3Player.h"
 #endif
 
-#ifdef OHOS
+#ifdef OS_OHOS
 #include "resource/Audio/JCAudioWavPlayer-openharmony.h"
 #else
 #include "resource/Audio/JCAudioWavPlayer.h"
@@ -94,7 +94,7 @@ namespace laya
          *  @param[in] 声音interface
         */
       
-		#ifdef OHOS
+		#ifdef OS_OHOS
 		OHAudioRenderInfo* playWav(JCAudioInterface* p_pAudio, const std::string& p_sUrl,bool bIsOgg, float currentTime);
 	    void setWavVolume(OHAudioRenderInfo* audioRenderInfo,float nVolume );
 

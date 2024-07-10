@@ -15,13 +15,13 @@
 #endif
 #include <algorithm>
 #include <utils/Log.h>
-#if __APPLE__
+#if OS_IOS
 #include <mach/mach_time.h>
 #include <sys/time.h>
 #include <time.h>
-#elif __ANDROID__
+#elif defined(OS_ANDROID) || defined(OS_OHOS)
 #include <time.h>
-#elif WIN32
+#elif OS_WINDOWS
 #include <iostream>
 #include <psapi.h>
 #include <windows.h>
@@ -523,7 +523,7 @@ void paserUTF8(std::string p_sBuffer, long p_nSize, std::vector<std::string> &p_
 //------------------------------------------------------------------------------
 char *LayaStrlwr(char *p_str)
 {
-#ifdef WIN32
+#ifdef OS_WINDOWS
     return _strlwr(p_str);
 #else
     char *orig = p_str;
@@ -535,7 +535,7 @@ char *LayaStrlwr(char *p_str)
 //------------------------------------------------------------------------------
 char *LayaStrupr(char *p_str)
 {
-#ifdef WIN32
+#ifdef OS_WINDOWS
     return _strupr(p_str);
 #else
     char *orign = p_str;
@@ -690,7 +690,7 @@ double tmGetCurms()
 #ifdef WEBASM
     return DateNow();
 #else
-#ifdef __APPLE__
+#ifdef OS_IOS
 
     // 下面的方法好像也可以达到精度
     //     struct timeval tv;
@@ -708,11 +708,11 @@ double tmGetCurms()
 
     int64_t nanosec = mach_absolute_time() * info.numer / info.denom;
     return (nanosec / 1e6);
-#elif __ANDROID__
+#elif defined(OS_ANDROID) || defined(OS_OHOS)
     struct timespec now;
     clock_gettime(CLOCK_MONOTONIC, &now);
     return now.tv_sec * 1000.0 + now.tv_nsec / 1e6;
-#elif WIN32
+#elif OS_WINDOWS
     static __int64 freq = 0;
     if (freq == 0)
     {
@@ -734,7 +734,7 @@ double tmGetCurms()
 
 int getAppUsedMem()
 {
-#ifdef WIN32
+#ifdef OS_WINDOWS
     HANDLE handle = GetCurrentProcess();
     PROCESS_MEMORY_COUNTERS pmc;
     GetProcessMemoryInfo(handle, &pmc, sizeof(pmc));
@@ -743,9 +743,9 @@ int getAppUsedMem()
     // PagefileUsage 虚拟内存
     // PeakPagefileUsage 峰值虚拟内存
     return pmc.WorkingSetSize / 1024;
-#elif __ANDROID__
+#elif OS_ANDROID
     return 0;
-#elif __APPLE__
+#elif OS_IOS
     return 0;
 #endif
 }
@@ -909,7 +909,7 @@ std::string encodeURI(const char *value)
 
 std::string getExePath()
 {
-#ifdef __LINUX__
+#ifdef OS_LINUX
     char buf[256];
     memset(buf, 0, 256);
     ssize_t len = readlink("/proc/self/exe", buf, sizeof(buf));
@@ -920,7 +920,7 @@ std::string getExePath()
     }
     std::string ret(buf);
     return ret;
-#elif WIN32
+#elif OS_WINDOWS
     WCHAR szPath[MAX_PATH];
     ::GetModuleFileNameW(NULL, szPath, MAX_PATH);
     std::string path = wideToUtf8(szPath);

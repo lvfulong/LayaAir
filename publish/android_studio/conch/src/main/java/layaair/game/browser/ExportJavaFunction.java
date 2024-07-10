@@ -982,8 +982,6 @@ public class ExportJavaFunction
 			return 0;
 		return ((Activity)exp.m_pEngine.mCtx).getRequestedOrientation();
 		//return LayaWrapper.GetInstance().m_LayaEngineContext.getRequestedOrientation();
-		
-		return 0;
 	}
 	// ------------------------------------------------------------------------------
 	public static void ShowMessage(String pMessage){

@@ -8,14 +8,8 @@
 #include "render/LayaGL.h"
 #include <Bindings/JSImage.h>
 #include <assert.h>
-#ifdef WIN32
-#ifdef min
-#undef min
-#endif
-#ifdef max
-#undef max
-#endif
-#endif
+#include <utils/Preprocessor.h>
+
 namespace laya
 {
 static void TexImage2DSafe(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height,

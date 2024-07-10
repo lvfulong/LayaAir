@@ -1,6 +1,6 @@
 #ifndef V8_SOCKET_H_
 #define V8_SOCKET_H_
-#ifdef WIN32
+#ifdef OS_WINDOWS
 #include <WinSock2.h>
 #else
 #include <netinet/in.h>
