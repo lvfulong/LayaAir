@@ -1,0 +1,14 @@
+#include "OSLinux.h"
+#include <utils/Log.h>
+
+namespace laya
+{
+
+OSLinux::~OSLinux()
+{
+}
+float OSLinux::getTotalMem()
+{
+    return 0;//todo
+}
+} // namespace laya

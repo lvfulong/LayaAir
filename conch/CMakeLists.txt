@@ -451,8 +451,11 @@ list(APPEND CONCH_SRC
 	src/JCScriptRuntime.cpp
 	src/JCSystemConfig.h
 	src/JCSystemConfig.cpp
+	src/platform/src/OS.cpp
 )
-
+list(APPEND PLATFORM_HEADER_DIR
+		src/platform/include
+	)
 if(OS_IOS)
 	list(APPEND PLATFORM_HEADER_DIR
 		src/platform/iOS
@@ -516,6 +519,7 @@ if(OS_IOS)
 		src/platform/iOS/LayaOpenGLESView.mm
 		src/platform/iOS/Utils.h
 		src/platform/iOS/Utils.mm
+		src/platform/src/OSiOS.mm
 		src/Backend/src/OpenGLBackendiOS.h
 		src/Backend/src/OpenGLBackendiOS.mm
 		src/network/HttpClientiOS.h
@@ -551,6 +555,7 @@ elseif(OS_ANDROID)
 		src/platform/Android/JNIFun.cpp
 		src/platform/Android/CToJavaBridge.h
 		src/platform/Android/CToJavaBridge.cpp
+		src/platform/src/OSAndroid.cpp
 		src/Bindings/Video/JSVideo_AndroidImpl.cpp
 		src/Bindings/JSAndroidEditBox.h
 		src/Bindings/JSAndroidEditBox.cpp
@@ -596,6 +601,7 @@ elseif(OS_WINDOWS)
 		src/Application/App.cpp
 		src/resource/Audio/JCAudioWavPlayer.h
 		src/resource/Audio/JCAudioWavPlayer.cpp
+		src/platform/src/OSWin.cpp
 	)
 elseif(OS_OHOS)
 	list(APPEND PLATFORM_HEADER_DIR
@@ -608,25 +614,20 @@ elseif(OS_OHOS)
     	src/platform/ohos/napi/render/plugin_render.cpp
     	src/platform/ohos/napi/modules/TouchesNapi.cpp
     	src/platform/ohos/napi/modules/VideoPlayerNapi.cpp
-		#src/downloadCache/JCOHOSFileSource.h
-		#src/Backend/src/OpenGLBackendOHOSEGL.h
+		src/platform/src/OSOHOS.cpp
 		src/Backend/src/OpenGLBackendOHOSEGL.cpp
 		src/Bindings/Video/JSVideo_OHOSImpl.cpp
-		#src/2D/CanvasRenderingContext2DOHOS.h
 		src/2D/CanvasRenderingContext2DOHOS.cpp
-		#src/Bindings/JSOHOSEditBox.h
 		src/Bindings/JSOHOSEditBox.cpp
-		#src/resource/Audio/JCAudioWavplayer-openharmony.h
 		src/resource/Audio/JCAudioWavplayer-openharmony.cpp
 		src/Audio/ohos/JCAudioMp3Player.cpp
-		#src/Audio/ohos/JCAudioMp3Player.h
 	)
 elseif(OS_LINUX)
 	list(APPEND PLATFORM_HEADER_DIR
 		src/Backend/src
 	)
 	list(APPEND CONCH_SRC
-	src/downloadCache/JCIosFileSource.h
+		src/downloadCache/JCIosFileSource.h
 		src/downloadCache/JCIosFileSource.cpp
 		src/Backend/src/OpenGLBackendLinuxEGLX11.h
 		src/Backend/src/OpenGLBackendLinuxEGLX11.cpp
@@ -639,6 +640,7 @@ elseif(OS_LINUX)
 		src/Application/App.cpp
 		src/resource/Audio/JCAudioWavPlayer.h
 		src/resource/Audio/JCAudioWavPlayer.cpp
+		src/platform/src/OSLinux.cpp
 	)
 endif()
 set(CONCH_HEADERS_DIRS ${CMAKE_CURRENT_SOURCE_DIR}

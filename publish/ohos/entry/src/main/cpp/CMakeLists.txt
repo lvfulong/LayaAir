@@ -2,13 +2,13 @@ cmake_minimum_required(VERSION 3.6)
 set(PROJECT_NAME laya)
 project(${PROJECT_NAME})
 
-#set(USE_CMAKE_BUILD_FROM_SOURCE ON)
-set(USE_CMAKE_BUILD_FROM_SOURCE OFF)
+set(USE_CMAKE_BUILD_FROM_SOURCE ON)
+#set(USE_CMAKE_BUILD_FROM_SOURCE OFF)
 
 if(USE_CMAKE_BUILD_FROM_SOURCE)
     # 根目录
     set(NATIVER_RENDER_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../../../../..)
-    add_definitions(-DOHOS)
+    add_definitions(-DOS_OHOS)
 
     # sys - cpp
     file(GLOB_RECURSE source_files
@@ -35,7 +35,7 @@ else()
         PROPERTIES
         IMPORTED_LOCATION ${LIBRARY_DIR}/libconch.so)
 
-    add_definitions(-DOHOS)
+    add_definitions(-DOS_OHOS)
 
     # sys - cpp
     file(GLOB_RECURSE source_files

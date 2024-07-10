@@ -24,7 +24,7 @@
 #include <Audio/JCAudioManager.h>
 #include <Bindings/JSInput.h>
 #include <thread>
-
+#include <platform/OS.h>
 #ifdef OS_ANDROID
     #include "WebSocket/WebSocket.h"
     #include "CToJavaBridge.h"
@@ -335,6 +335,14 @@ namespace laya
                 pScriptRuntime->onFocus();
             }
         });
+    }
+    OS* JCConch::getOS()
+    {
+        if (!m_OS)
+        {
+            m_OS = createOS();
+        }
+        return m_OS.get();
     }
 };
 //------------------------------------------------------------------------------

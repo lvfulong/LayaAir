@@ -1,0 +1,18 @@
+#ifndef __OS_H__
+#define __OS_H__
+#include <memory>
+namespace laya
+{
+
+class OS
+{
+  public:
+    virtual ~OS()
+    {
+    }
+    virtual float getTotalMem() = 0;
+};
+
+std::unique_ptr<OS> createOS();
+} // namespace laya
+#endif

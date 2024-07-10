@@ -14,6 +14,7 @@
     #include <string>
     #include "platform/ohos/napi/helper/NapiHelper.h"
 #endif
+#include "platform/OS.h"
 #include "downloadMgr/JCDownloadMgr.h"
 #include <utils/Log.h>
 #include "../../JCSystemConfig.h"
@@ -61,28 +62,11 @@ namespace laya
 
     const char* JSConchConfig::getLocalStoragePath()
     {
-        if (JCConch::s_pConch)
-            return JCConch::s_pConch->getLocalStoragePath();
-        return "";
+        return JCConch::s_pConch->getLocalStoragePath();
     }
     float JSConchConfig::getTotalMem()
     {
-#ifdef OS_ANDROID
-        CToJavaBridge::JavaRet kRet;
-        if (CToJavaBridge::GetInstance()->callMethod("layaair.game.utility.ProcessInfo", "getTotalMem", kRet, CToJavaBridge::JavaRet::RT_Float))
-        {
-            return kRet.floatRet;
-        }
-        return 0;
-#elif OS_WINDOWS
-        MEMORYSTATUSEX statex;
-        statex.dwLength = sizeof(statex);
-        GlobalMemoryStatusEx(&statex);
-        return (float)(statex.ullTotalPhys / 1024);
-#elif OS_IOS
-        return CToObjectCGetTotalMem();
-#endif
-        return 0;
+        return JCConch::s_pConch->getOS()->getTotalMem();
     }
     int JSConchConfig::getUsedMem()
     {
