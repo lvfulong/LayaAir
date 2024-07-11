@@ -113,7 +113,7 @@ void App::run(const Config &config)
         windowFlags |= SDL_WINDOW_HIDDEN;
     }
 
-#ifdef WIN32
+#ifdef OS_WINDOWS
     ULONG_PTR gdiplusToken;
     Gdiplus::GdiplusStartupInput gdiStartupInput;
     Gdiplus::Status gdiStatus = Gdiplus::GdiplusStartup(&gdiplusToken, &gdiStartupInput, NULL);

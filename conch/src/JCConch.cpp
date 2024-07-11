@@ -37,7 +37,6 @@
     #include "pthread.h"
 #elif OS_WINDOWS
     #include <windows.h>
-#include "2D\CanvasRenderingContext2DWin.h"
 #endif
 #ifdef OS_IOS
 #include "OpenGLBackendiOS.h"
@@ -167,9 +166,7 @@ namespace laya
         {
             return;
         }
-#ifdef WIN32
-        CanvasRenderingContext2DWin::clearAllBuffer();
-#endif
+
 
         JCAudioManager::GetInstance();
         m_isAppStarted = true;

@@ -529,15 +529,15 @@ namespace laya
     }
     bool JSRuntime::registerFont(JSValueAsParam jsFamily, JSValueAsParam pathOrArrayBuffer)
     {
-        bool familyIsNull = jsFamily->IsNull() || jsFamily->IsUndefined();
-        Local value(pathOrArrayBuffer);
-        if (value.isString())
+        Local valueFamily(jsFamily);
+        Local valuePathOrArrayBuffer(pathOrArrayBuffer);
+        if (valueFamily.isString() && valuePathOrArrayBuffer.isString())
         {
-            std::string path = value.as<std::string>();
+            std::string path = valuePathOrArrayBuffer.as<std::string>();
             std::string family = Converter<std::string>::ToCpp(jsFamily);
-            return FontManager::getInstance()->registerFont(familyIsNull ? "" : family, path);
+            return FontManager::getInstance()->registerFont(family, path);
         }
-        else if (value.isArrayBuffer())
+        else if (valueFamily.isString() && valuePathOrArrayBuffer.isArrayBuffer())
         {
             char* ab = NULL;
             int byte = 0;
@@ -545,7 +545,7 @@ namespace laya
             if (isab)
             {
                 std::string family = Converter<std::string>::ToCpp(jsFamily);
-                return FontManager::getInstance()->registerFont(familyIsNull ? "" : family, (uint8_t*)ab, byte);
+                return FontManager::getInstance()->registerFont(family, (uint8_t*)ab, byte);
             }
         }
         LOGI("registerFont failed");
