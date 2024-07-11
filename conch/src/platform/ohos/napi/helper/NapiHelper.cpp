@@ -449,22 +449,6 @@ float NapiHelper::__getScreenInch()
     return screenInch;
 }
 
-int NapiHelper::getAvalidMem()
-{
-    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getAvalidMem, this));
-    //return avalidMem;
-    return 0;
-}
-
-int NapiHelper::__getAvalidMem()
-{
-    if (auto getAvalidMem = aki::JSBind::GetJSFunction("DeviceUtils.getAvalidMem"))
-    {
-        avalidMem = getAvalidMem->Invoke<int>();
-    }
-    return avalidMem;
-}
-
 int NapiHelper::getUsedMem()
 {
     //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getUsedMem, this));

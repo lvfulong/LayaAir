@@ -11,6 +11,7 @@ class OS
     {
     }
     virtual float getTotalMem() = 0;
+    virtual int getAvalidMem() = 0;
     virtual int getMemoryUsageInByte() = 0;
 };
 

@@ -17,6 +17,18 @@ float OSAndroid::getTotalMem()
     }
     return 0;
 }
+int OSAndroid::getAvalidMem()
+{
+
+    CToJavaBridge::JavaRet kRet;
+    if (CToJavaBridge::GetInstance()->callMethod("layaair.game.utility.ProcessInfo", "getAvalidMem", kRet,
+                                                 CToJavaBridge::JavaRet::RT_Float))
+    {
+        return (int)(kRet.floatRet);
+    }
+    return 0;
+}
+
 int OSAndroid::getMemoryUsageInByte()
 {
     CToJavaBridge::JavaRet kRet;

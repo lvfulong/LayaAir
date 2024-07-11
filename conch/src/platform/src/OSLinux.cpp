@@ -11,6 +11,10 @@ float OSLinux::getTotalMem()
 {
     return 0; // todo
 }
+int OSLinux::getAvalidMem()
+{
+    return 0; // todo
+}
 int OSLinux::getMemoryUsageInByte()
 {
     return 0; // todo

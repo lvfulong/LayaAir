@@ -8,6 +8,7 @@ class OSiOS : public OS
   public:
     ~OSiOS();
     float getTotalMem() override;
+    int getAvalidMem() override;
     int getMemoryUsageInByte() override;
 };
 } // namespace laya

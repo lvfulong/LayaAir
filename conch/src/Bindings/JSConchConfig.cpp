@@ -88,24 +88,7 @@ namespace laya
     }
     int JSConchConfig::getAvalidMem()
     {
-#ifdef OS_ANDROID
-        CToJavaBridge::JavaRet kRet;
-        if (CToJavaBridge::GetInstance()->callMethod("layaair.game.utility.ProcessInfo", "getAvalidMem", kRet, CToJavaBridge::JavaRet::RT_Float))
-        {
-            return (int)(kRet.floatRet);
-        }
-        return 0;
-#elif OS_OHOS
-        return NapiHelper::GetInstance()->getAvalidMem();
-#elif OS_WINDOWS
-        MEMORYSTATUSEX statex;
-        statex.dwLength = sizeof(statex);
-        GlobalMemoryStatusEx(&statex);
-        return (int)(statex.ullAvailPhys / 1024);
-#elif OS_IOS
-        return CToObjectCGetAvalidMem();
-#endif
-        return 0;
+        return JCConch::s_pConch->getOS()->getAvalidMem();
     }
     float JSConchConfig::getScreenInch()
     {

@@ -8,6 +8,7 @@ class OSLinux : public OS
   public:
     ~OSLinux();
     float getTotalMem() override;
+    int getAvalidMem() override;
     int getMemoryUsageInByte() override;
 };
 } // namespace laya

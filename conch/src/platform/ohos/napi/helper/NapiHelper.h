@@ -40,7 +40,6 @@ public:
     void setKeepScreenOn(bool value);
     void setPreferredOrientation(int orientation);
     float getScreenInch();
-    int getAvalidMem();
     int getUsedMem();
     void exitGame();
     void enableAccelerometer();
@@ -84,7 +83,6 @@ private:
     void __setKeepScreenOn(bool value);
     void __setPreferredOrientation(int orientation);
     float __getScreenInch();
-    int __getAvalidMem();
     int __getUsedMem();
     void __exitGame();
     void __enableAccelerometer();
@@ -107,7 +105,6 @@ private:
     double currentTime;
     double duration;
     float screenInch;
-    int avalidMem;
     int usedMem;
 
 };

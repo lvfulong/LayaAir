@@ -11,6 +11,10 @@ float OSiOS::getTotalMem()
 {
     return CToObjectCGetTotalMem();
 }
+int OSiOS::getAvalidMem()
+{
+    return CToObjectCGetAvalidMem();
+}
 int OSiOS::getMemoryUsageInByte()
 {
     return CToObjectCGetMemoryUsageInByte();
