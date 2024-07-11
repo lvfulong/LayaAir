@@ -1,6 +1,6 @@
 #include "OSWin.h"
-#include <utils/Log.h>
 #include <Windows.h>
+#include <utils/Log.h>
 namespace laya
 {
 
@@ -13,5 +13,9 @@ float OSWin::getTotalMem()
     statex.dwLength = sizeof(statex);
     GlobalMemoryStatusEx(&statex);
     return (float)(statex.ullTotalPhys / 1024);
+}
+int OSWin::getMemoryUsageInByte()
+{
+    return 0; // todo
 }
 } // namespace laya

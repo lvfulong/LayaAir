@@ -8,6 +8,7 @@ class OSOHOS : public OS
   public:
     ~OSOHOS();
     float getTotalMem() override;
+    int getMemoryUsageInByte() override;
 };
 } // namespace laya
 #endif

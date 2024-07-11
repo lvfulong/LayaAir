@@ -11,6 +11,7 @@ class OS
     {
     }
     virtual float getTotalMem() = 0;
+    virtual int getMemoryUsageInByte() = 0;
 };
 
 std::unique_ptr<OS> createOS();

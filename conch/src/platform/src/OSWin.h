@@ -8,6 +8,7 @@ class OSWin : public OS
   public:
     ~OSWin();
     float getTotalMem() override;
+    int getMemoryUsageInByte() override;
 };
 } // namespace laya
 #endif

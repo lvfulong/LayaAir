@@ -9,6 +9,10 @@ OSLinux::~OSLinux()
 }
 float OSLinux::getTotalMem()
 {
-    return 0;//todo
+    return 0; // todo
+}
+int OSLinux::getMemoryUsageInByte()
+{
+    return 0; // todo
 }
 } // namespace laya

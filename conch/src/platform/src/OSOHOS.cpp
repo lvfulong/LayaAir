@@ -11,4 +11,8 @@ float OSOHOS::getTotalMem()
 {
     return 0; // todo
 }
+int OSOHOS::getMemoryUsageInByte()
+{
+    return 0; // todo
+}
 } // namespace laya

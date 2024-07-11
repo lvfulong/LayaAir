@@ -8,6 +8,7 @@ class OSAndroid : public OS
   public:
     ~OSAndroid();
     float getTotalMem() override;
+    int getMemoryUsageInByte() override;
 };
 } // namespace laya
 #endif

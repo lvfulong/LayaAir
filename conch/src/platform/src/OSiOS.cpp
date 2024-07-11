@@ -11,4 +11,8 @@ float OSiOS::getTotalMem()
 {
     return CToObjectCGetTotalMem();
 }
+int OSiOS::getMemoryUsageInByte()
+{
+    return CToObjectCGetMemoryUsageInByte();
+}
 } // namespace laya

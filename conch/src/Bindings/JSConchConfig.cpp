@@ -710,20 +710,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
     }
     int JSConchConfig::getMemoryUsageInByte()
     {
-#ifdef OS_IOS
-        return CToObjectCGetMemoryUsageInByte();
-#elif OS_ANDROID
-		CToJavaBridge::JavaRet kRet;
-		if (CToJavaBridge::GetInstance()->callMethod("layaair.game.utility.ProcessInfo", "getMemoryUsageInByte", kRet, CToJavaBridge::JavaRet::RT_Float))
-		{
-			return (int)(kRet.floatRet);
-		}
-		return 0;
-#elif OS_WINDOWS
-        return 0;
-#elif OS_LINUX
-        return 0;
-#endif
+        return JCConch::s_pConch->getOS()->getMemoryUsageInByte();
     }
     void JSConchConfig::exportJS(Context& context)
     {
