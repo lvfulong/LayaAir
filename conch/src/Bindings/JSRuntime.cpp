@@ -3,11 +3,15 @@
 #include "downloadMgr/JCDownloadMgr.h"
 #include "../../JCConch.h"
 #include <utils/JCFileSource.h>
-#ifdef __APPLE__ 
+#ifdef OS_IOS 
     #include "CToObjectC.h"
 #endif
-#ifdef __ANDROID__ 
+#ifdef OS_ANDROID 
 #include "CToJavaBridge.h"
+#elif OS_OHOS
+    #include "aki/jsbind.h"
+    #include <string>
+    #include "platform/ohos/napi/helper/NapiHelper.h"
 #endif
 #include "../../JCSystemConfig.h"
 #include "JSInput.h"
@@ -115,7 +119,7 @@ namespace laya
 
                 std::string cookiefile = JSConchConfig::getLocalStoragePath() + ss + "_curlcookie.txt";
                 pdm->setCookieFile(cookiefile.c_str());
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
                 CToJavaBridge::JavaRet kRet;
                 CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setHrefToJava", url.c_str(), kRet);
 #endif
@@ -189,23 +193,33 @@ namespace laya
     }
     void JSRuntime::setScreenWakeLock(bool p_bWakeLock)
     {
-#ifdef __APPLE__
+#ifdef OS_IOS
         CToObjectCSetScreenWakeLock(p_bWakeLock);
-#elif __ANDROID__
+#elif OS_ANDROID
         CToJavaBridge::JavaRet kRet;
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setScreenWakeLock", p_bWakeLock, kRet);
-#elif WIN32
+#elif OS_OHOS
+        NapiHelper::GetInstance()->setKeepScreenOn(p_bWakeLock);
+#elif OS_WINDOWS
 
 #endif
     }
     void JSRuntime::setSensorAble(bool p_bSensorAble)
     {
-#ifdef __APPLE__
+#ifdef OS_IOS
         CToObjectCSetSensorAble(p_bSensorAble);
-#elif __ANDROID__
+#elif OS_ANDROID
         CToJavaBridge::JavaRet kRet;
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setSensorAble", p_bSensorAble, kRet);
-#elif WIN32
+#elif OS_OHOS
+        if(p_bSensorAble) {
+            NapiHelper::GetInstance()->enableAccelerometer();
+            NapiHelper::GetInstance()->enableOrientation();
+        } else {
+            NapiHelper::GetInstance()->disableAccelerometer();
+            NapiHelper::GetInstance()->disableOrientation();
+        }
+#elif OS_WINDOWS
 
 #endif
     }
@@ -227,7 +241,7 @@ namespace laya
     }
     const char* JSRuntime::callMethod(int objid,bool isSyn,const char*clsName, const char* methodName, const char* paramStr)
     {
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
         CToJavaBridge::JavaRet kRet;
         if (CToJavaBridge::GetInstance()->callMethodRefection(objid, isSyn, clsName, methodName, paramStr, kRet))
         {
@@ -236,9 +250,9 @@ namespace laya
             return m_strReturn.c_str();
         }
         return "";
-#elif WIN32
+#elif OS_WINDOWS
         
-#elif __APPLE__
+#elif OS_IOS
         m_strReturn = CToObjectCCallMethod( objid, isSyn, clsName, methodName,paramStr);
         LOGI("JSRuntime::callMethod %s", m_strReturn.c_str());
         return m_strReturn.c_str();
@@ -299,11 +313,13 @@ namespace laya
     }
 	void JSRuntime::exit()
     {
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
         CToJavaBridge::JavaRet ret;
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "exit", ret);
-#elif __APPLE__
-#elif WIN32
+#elif OS_OHOS
+        NapiHelper::GetInstance()->exitGame();
+#elif OS_IOS
+#elif OS_ANDROID
 #endif
     }
 	int JSRuntime::getSafeInsetTop()
@@ -312,11 +328,11 @@ namespace laya
         int safeInsetLeft = 0;
         int safeInsetBottom = 0;
         int safeInsetRight = 0;
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
 		CToJavaBridge::GetInstance()->getSafeInsetRect(safeInsetLeft, safeInsetTop, safeInsetRight, safeInsetBottom);
-#elif __APPLE__
+#elif OS_IOS
         CToObjectCGetSafeAreaInsets(&safeInsetTop, &safeInsetLeft, &safeInsetBottom, &safeInsetRight);
-#elif WIN32
+#elif OS_WINDOWS
 #endif
 		return safeInsetTop;
 	}
@@ -326,11 +342,11 @@ namespace laya
         int safeInsetLeft = 0;
         int safeInsetBottom = 0;
         int safeInsetRight = 0;
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
 		CToJavaBridge::GetInstance()->getSafeInsetRect(safeInsetLeft, safeInsetTop, safeInsetRight, safeInsetBottom);
-#elif __APPLE__
+#elif OS_IOS
         CToObjectCGetSafeAreaInsets(&safeInsetTop, &safeInsetLeft, &safeInsetBottom, &safeInsetRight);
-#elif WIN32
+#elif OS_WINDOWS
 #endif
 		return safeInsetLeft;
 	}
@@ -340,11 +356,11 @@ namespace laya
         int safeInsetLeft = 0;
         int safeInsetBottom = 0;
         int safeInsetRight = 0;
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
 		CToJavaBridge::GetInstance()->getSafeInsetRect(safeInsetLeft, safeInsetTop, safeInsetRight, safeInsetBottom);
-#elif __APPLE__
+#elif OS_IOS
         CToObjectCGetSafeAreaInsets(&safeInsetTop, &safeInsetLeft, &safeInsetBottom, &safeInsetRight);
-#elif WIN32
+#elif OS_WINDOWS
 #endif
 		return safeInsetBottom;
 	}
@@ -354,11 +370,11 @@ namespace laya
         int safeInsetLeft = 0;
         int safeInsetBottom = 0;
         int safeInsetRight = 0;
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
 		CToJavaBridge::GetInstance()->getSafeInsetRect(safeInsetLeft, safeInsetTop, safeInsetRight, safeInsetBottom);
-#elif __APPLE__
+#elif OS_IOS
         CToObjectCGetSafeAreaInsets(&safeInsetTop, &safeInsetLeft, &safeInsetBottom, &safeInsetRight);
-#elif WIN32
+#elif OS_WINDOWS
 #endif
 		return safeInsetRight;
 	}

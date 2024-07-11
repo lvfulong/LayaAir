@@ -16,6 +16,7 @@
 #include "Backend.h"
 #include <utils/InputTypes.h>
 #include "EngineEvent.h"
+#include <memory>
 
 namespace laya
 {
@@ -33,6 +34,7 @@ namespace laya
 	class DebuggerAgent;
     class JSMulThread;
     class JCScriptRuntime;
+    class OS;
 	class JCConch
 	{
 	public:
@@ -78,6 +80,8 @@ namespace laya
         void dispatchInputEvent(DeviceMotionEvent e);
 
         void dispatchEngineEvent(const EngineEventBase&  e);
+
+        OS* getOS();
     public:
 
         static std::shared_ptr<JCConch>         s_pConch;
@@ -94,6 +98,7 @@ namespace laya
         bool					                m_bDestroying;
         std::vector<std::string>                m_vUrlHistory;
         int                                     m_nUrlHistoryPos;
+        std::unique_ptr<OS>                     m_OS;
     public:
 
         std::vector<std::function<void(void)>>  m_tasks;

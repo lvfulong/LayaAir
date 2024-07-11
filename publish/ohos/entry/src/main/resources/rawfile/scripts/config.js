@@ -67,19 +67,19 @@ class loadingView
 			}
 		}
 	}
-	setTips(value)
+	showTips(value)
 	{
-		if(this.bridge)
-		{
-			if (this.sOS == "Conch-ios")
-			{
-				this.bridge.call("setTips:",value);
-			}
-			else if(this.sOS == "Conch-android")
-			{
-				this.bridge.call("setTips",value);
-			}
-		}
+	    if(this.bridge)
+     	{
+     		if (this.sOS == "Conch-ios")
+     		{
+     			this.bridge.call("showTips:",value);
+     		}
+     		else if(this.sOS == "Conch-android")
+     		{
+     			this.bridge.call("showTips",value);
+     		}
+     	}
 	}
 	loading(value)
 	{
@@ -97,19 +97,25 @@ class loadingView
 	}
 	hideLoadingView()
 	{
-		this.bridge.call("hideSplash");
+		if(this.bridge)
+		{
+			this.bridge.call("hideSplash");
+		}
 	}
 }
 window.loadingView = new loadingView();
 if(window.loadingView)
 {
-    window.loadingView.loadingAutoClose=true;//true代表当动画播放完毕，自动进入游戏。false为开发者手动控制
+	window.loadingView.loadingAutoClose=true;//true代表当动画播放完毕，自动进入游戏。false为开发者手动控制
     window.loadingView.bgColor("#000000");//设置背景颜色
     window.loadingView.setFontColor("#ffffff");//设置字体颜色
-    window.loadingView.setTips(["新世界的大门即将打开","敌军还有30秒抵达战场","妈妈说，心急吃不了热豆腐"]);//设置tips数组，会随机出现
+    window.loadingView.loading(-1);
 }
 window.onLayaInitError=function(e)
 {
 	console.log("onLayaInitError error=" + e);
 	alert("加载游戏失败，可能由于您的网络不稳定，请退出重进");
+}
+window.hideSplashScreen = function() {
+    window.loadingView.hideLoadingView();
 }

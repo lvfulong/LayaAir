@@ -335,7 +335,7 @@ GLBuffer *GLESEngine::createBuffer(BufferTargetType targetType, BufferUsage buff
 }
 static bool isGLES3Disbaled()
 {
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
     const char *renderer_str = reinterpret_cast<const char *>(glGetString(GL_RENDERER));
     char sdk[128] = "0";
     __system_property_get("ro.build.version.sdk", sdk);

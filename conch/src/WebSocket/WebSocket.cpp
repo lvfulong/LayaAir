@@ -18,11 +18,11 @@
 #include <thread>
 #include <stdlib.h>
 #include <algorithm>
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
 #include <downloadCache/JCAndroidFileSource.h>
-#elif __APPLE__
+#elif OS_IOS
 #include <downloadCache/JCIosFileSource.h>
-#elif OHOS
+#elif OS_OHOS
 #include <downloadCache/JCOHOSFileSource.h>
 #endif
 #include <utils/Log.h>
@@ -148,7 +148,7 @@ void WsThreadHelper::wsThreadEntryFunc()
 	m_pWebSocket->onSubThreadStarted();
 	//�ȵȸ�500�����ٵ��� libwebsocket_service 
 	//�����ٵڶ��ε���connect��ʱ��������������win64��ws2���첽���ӵ����⣿��
-#ifdef WIN32
+#ifdef OS_WINDOWS
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
 #endif
 	while (!m_needQuit)
@@ -368,7 +368,7 @@ int WebSocket::onSubThreadLoop()
 
 	return 0;
 }
-#if WIN32
+#if OS_WINDOWS
 void WebSocket::onSubThreadStarted() {
 
 
@@ -768,11 +768,11 @@ lws_context_creation_info WebSocket::createContextCreationInfo(const struct lws_
 lws_vhost* WebSocket::createVhost(struct lws_protocols* protocols, int& sslConnection)
 {
     std::string caFileName = "cacert.pem";
-#ifdef WIN32
+#ifdef OS_WINDOWS
     static std::string caFilePath = gRedistPath + std::string("ca\\") + caFileName;
     bool isCAFileExist = FileSystem::exists(caFilePath);
 
-#elif __LINUX__
+#elif OS_LINUX
     static std::string caFilePath = gRedistPath + std::string("ca/") + caFileName;
     bool isCAFileExist = FileSystem::exists(caFilePath);
 #else
@@ -786,7 +786,7 @@ lws_vhost* WebSocket::createVhost(struct lws_protocols* protocols, int& sslConne
     {
         if (isCAFileExist)
         {
-#ifdef __ANDROID__ || OHOS
+#if defined(OS_ANDROID) || defined(OS_OHOS)   
             // if ca file is in the apk, try to extract it to writable path
             std::string writablePath = gRedistPath;
             static std::string newCaFilePath = writablePath + caFileName;

@@ -10,7 +10,7 @@
 #include <string.h>
 #include <utils/Log.h>
 #include "JCImageRW.h"
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
 #include <malloc.h>
 #endif
 

@@ -132,10 +132,7 @@ static uint64_t getCurrentMillSecond() {
 void PluginRender::timerCb(uv_timer_t* handle)
 {
     // LOGI("PluginRender::timerCb, animationInterval_ is %{public}lu", animationInterval_);
-    if (PluginRender::GetInstance()->eglCore_ != nullptr) {
-        PluginRender::GetInstance()->eglCore_->Update();
-        NAPIFun::ConchNAPI_onDrawFrame();
-    }
+    NAPIFun::ConchNAPI_onDrawFrame();
 }
 
 void PluginRender::SetNativeXComponent(OH_NativeXComponent* component)
@@ -198,11 +195,10 @@ void PluginRender::changeFPS(uint64_t animationInterval) {
 void PluginRender::OnSurfaceCreated(OH_NativeXComponent* component, void* window)
 {
     LOGI("PluginRender::OnSurfaceCreated");
-    eglCore_ = new EGLCore();
     int32_t ret = OH_NativeXComponent_GetXComponentSize(component, window, &width_, &height_);
     if (ret == OH_NATIVEXCOMPONENT_RESULT_SUCCESS) {
-        eglCore_->GLContextInit(window, width_, height_);
         NAPIFun::ConchNAPI_OnSurfaceCreated(window);
+        NAPIFun::ConchNAPI_OnSurfaceResize(width_,height_);
     }
 }
 
@@ -305,7 +301,7 @@ napi_value PluginRender::NapiChangeShape(napi_env env, napi_callback_info info)
     LOGI("PluginRender::NapiChangeShape");
     PluginRender* instance = PluginRender::GetInstance();
     if (instance) {
-        instance->eglCore_->Update();
+        //instance->eglCore_->Update();
     }
     return nullptr;
 }

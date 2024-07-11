@@ -109,7 +109,7 @@ namespace laya
 #ifdef JS_V8
         m_pDbgAgent = nullptr;  
 #endif
-#if !defined(__LINUX__) && !defined(WIN32)
+#if !defined(OS_LINUX) && !defined(OS_WINDOWS)
 		m_pCurEditBox = NULL;
 #endif
     }
@@ -330,7 +330,7 @@ namespace laya
 		m_pJSOnScreenOrientationChanged.reset();
 		m_pJSSetGlobalRepaintFunction.reset();
 		g_ZipPackage = NULL;
-#if !defined(__LINUX__) && !defined(WIN32)
+#if !defined(OS_LINUX) && !defined(OS_WINDOWS)
         m_pCurEditBox = NULL;
 #endif
         internal::runDeinitializers();

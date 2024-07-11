@@ -7,7 +7,7 @@
 */
 
 #include "JCIOSFreeType.h"
-#ifdef __APPLE__
+#ifdef OS_IOS
     #include "CToObjectC.h"
 #endif
 #include <utils/Log.h>

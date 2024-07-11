@@ -27,7 +27,6 @@ namespace laya
         int             m_nSleepTime;
 		int		        m_nPerf_UpdateNum;
 		std::string	    m_strPerfOut;
-		std::string     m_jsonparamExt;                 //�������
         bool            m_bShowInternalPerBar;          //�Ƿ���ʾjs ondraw���ֺ�gl����״����ͼ��
         static bool     s_bIsPlug;                      //��Ϊ��ʼ��̫���ˣ�����static
         static bool     s_bLocalizable;                 //�����Ƿ��Ǳ��ذ�

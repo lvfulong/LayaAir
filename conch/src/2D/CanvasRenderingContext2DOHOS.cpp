@@ -43,7 +43,7 @@ CanvasRenderingContext2DOHOS::CanvasRenderingContext2DOHOS(int width, int height
     OH_Drawing_SetTypographyTextAlign(m_fontTypography, TEXT_ALIGN_LEFT);
     OH_Drawing_SetTextStyleBaseLine(m_fontTextStyle, TEXT_BASELINE_ALPHABETIC);
 
-    m_typographyCreate = OH_Drawing_CreateTypographyHandler(m_fontTypography, CanvasRenderingContext2DOHOS::m_fontCollection);
+    //m_typographyCreate = OH_Drawing_CreateTypographyHandler(m_fontTypography, CanvasRenderingContext2DOHOS::m_fontCollection);
 
     m_bitmapData.m_nWidth = width;
     m_bitmapData.m_nHeight = height;
@@ -80,8 +80,8 @@ void CanvasRenderingContext2DOHOS::fillText(const std::string &text, double x, d
     //m_gdiGraphics->DrawString(
     //    pwszBuffer, bufferLen, m_font, Gdiplus::PointF(outX, outY), &m_stringFormat,
     //    &Gdiplus::SolidBrush(Gdiplus::Color(m_fillColorA, m_fillColorR, m_fillColorG, m_fillColorB)));
-    OH_Drawing_Typography *typography = realDraw(text.c_str());
-    OH_Drawing_TypographyPaint(typography, m_canvas, outX, outY);
+    //OH_Drawing_Typography *typography = realDraw(text.c_str());
+    //OH_Drawing_TypographyPaint(typography, m_canvas, outX, outY);
     // m_gdiGraphics->DrawString(
     //     pwszBuffer, bufferLen, m_font, Gdiplus::PointF(outX, outY), Gdiplus::StringFormat::GenericTypographic(),
     //     &Gdiplus::SolidBrush(Gdiplus::Color(m_fillColorA, m_fillColorR, m_fillColorG, m_fillColorB)));
@@ -118,9 +118,9 @@ void CanvasRenderingContext2DOHOS::strokeText(const std::string &text, double x,
 TextMetrics CanvasRenderingContext2DOHOS::measureText(const std::string &text)
 {
     TextMetrics metrics;
-    OH_Drawing_Typography *typography = realDraw(text.c_str());
-    metrics.m_width = OH_Drawing_TypographyGetMaxIntrinsicWidth(typography);
-    metrics.m_height = OH_Drawing_TypographyGetHeight(typography);
+    //OH_Drawing_Typography *typography = realDraw(text.c_str());
+    metrics.m_width = 0;//OH_Drawing_TypographyGetMaxIntrinsicWidth(typography);
+    metrics.m_height = 0;//OH_Drawing_TypographyGetHeight(typography);
     return metrics;
 }
 void CanvasRenderingContext2DOHOS::clearRect(double x, double y, double width, double height)

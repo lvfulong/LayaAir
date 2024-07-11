@@ -2,14 +2,8 @@
 #include "JCConch.h"
 #include "JCConchRender.h"
 #include "render/LayaGL.h"
-#ifdef WIN32
-#ifdef min
-#undef min
-#endif
-#ifdef max
-#undef max
-#endif
-#endif
+#include <utils/Preprocessor.h>
+
 using laya::JCConch;
 namespace laya
 {

@@ -70,7 +70,6 @@ namespace laya
 	    static float getScreenInch();
 	    static void setTouchMoveRange( float p_fMM );
 	    static void setScreenOrientation( int p_nOrientation );
-	    static bool getIsPlug();
         static bool getLocalable();
         static void setLocalable(bool isLocalPackage);
         /** 
@@ -95,7 +94,6 @@ namespace laya
 	    //得到一个版本描述字符串
 	    static const char* getRuntimeVersion();
 		static const char* getLanguage();
-	    static const char* getJsonparamExt();
 	    static const char* getDeviceInfo();
         static const char* getAppVersion();
         static const char* getAppLocalVersion();

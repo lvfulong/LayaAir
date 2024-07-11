@@ -3,14 +3,8 @@
 
 #include <algorithm>
 #include "MathUtils3D.h"
-#ifdef WIN32
-#ifdef min
-#undef min
-#endif
-#ifdef max
-#undef max
-#endif
-#endif
+#include <utils/Preprocessor.h>
+
 namespace laya
 {
 	class Matrix4x4;

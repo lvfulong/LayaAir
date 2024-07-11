@@ -214,7 +214,7 @@ namespace laya
 		png_structp png_ptr;  
 		png_infop info_ptr;  
 		
-		#ifdef WIN32
+		#ifdef OS_WINDOWS
         FILE* png_file = _wfopen(utf8ToWide(png_file_name).c_str(), L"wb");
         #else
         FILE *png_file = fopen(png_file_name, "wb");  

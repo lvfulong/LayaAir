@@ -15,7 +15,7 @@
 //#include <Performance/JCPerfHUD.h>
 #include <LayaGL/JCLayaGL.h>
 #include <utils/thread/JCWorkerThread.h>
-#ifdef __APPLE__
+#ifdef OS_IOS
 #include "IOSFreetype/JCIOSFreeType.h"
 #endif
 #include <atomic>
@@ -90,15 +90,15 @@ namespace laya
 		ObjectManager<UniformBufferObject>*	    m_pUniformBufferObjectManager;
         ScreenCanvasContext2D*                  m_pScreenContext = nullptr;
 
-#ifdef __APPLE__
+#ifdef OS_IOS
         OpenGLBackendiOS*                       m_GfxBackend = { nullptr };
-#elif __LINUX__
+#elif OS_LINUX
 		OpenGLBackendLinuxEGLX11*                m_GfxBackend = { nullptr };
-#elif __ANDROID__
+#elif OS_ANDROID
 		OpenGLBackendAndroidEGL*                m_GfxBackend = { nullptr };
-#elif WIN32
+#elif OS_WINDOWS
         OpenGLBackendWinEGL*   m_GfxBackend = { nullptr };
-#elif OHOS
+#elif OS_OHOS
         OpenGLBackendOHOSEGL*   m_GfxBackend = { nullptr };
 #endif
         WebGLThread*                            m_WebGLThread = nullptr;

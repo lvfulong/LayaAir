@@ -100,7 +100,6 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 	private boolean m_interceptKey = false;
 	public AssetManager m_AM = null;
 	public Context mCtx = null;
-	public boolean m_bIsPlug = true;
 	public String m_strUrl = "";
 	public String m_strExt = "";
 	public boolean m_bHorizontalScreen ; // 是否横屏
@@ -298,28 +297,18 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 		ProcessInfo.init(am);
 
 		boolean initedNative = false;
-		if (!m_bIsPlug) {
-			if (m_strSoPath.length() > 0) {
-				String pluginPath = getSoPath() + m_strSoFile;// "libegret.so";
-				initedNative = ConchJNI.initNativeLibrary(pluginPath, true);
-				if (!initedNative) {
-					throw new RuntimeException("Failed to load native runtime library");
-				}
-			} else {
-				initedNative = ConchJNI.initNativeLibrary("conch", false);
-				if (!initedNative) {
-					throw new RuntimeException("Failed to load native runtime library");
-				}
-			}
-		} else {
+		if (m_strSoPath.length() > 0) {
 			String pluginPath = getSoPath() + m_strSoFile;// "libegret.so";
 			initedNative = ConchJNI.initNativeLibrary(pluginPath, true);
 			if (!initedNative) {
 				throw new RuntimeException("Failed to load native runtime library");
 			}
+		} else {
+			initedNative = ConchJNI.initNativeLibrary("conch", false);
+			if (!initedNative) {
+				throw new RuntimeException("Failed to load native runtime library");
+			}
 		}
-		// 先配置一下
-		ConchJNI.configSetIsPlug(m_bIsPlug);
 		if (m_strUrl.length() > 0) {
 			ConchJNI.configSetURL(m_strUrl);
 		}
@@ -496,14 +485,6 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 			ConchJNI.handleKeyEvent(keyCode, KeyEvent.ACTION_UP);
 		}
 		ExportJavaFunction exp = ExportJavaFunction.GetInstance();
-		if(exp!=null&&exp.m_pEngine.getIsPlug() ){
-			//此处方便js接管Back事件，鉴于qq浏览器在没有初始化完成的时候就调用了back造成非法现予以屏蔽
-			return false;
-		}
-		else
-		{
-			Log.e("","exp is null");
-		}
 		/*if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN)
 		{
 			Log.e("", "onKey = " + keyCode);
@@ -748,10 +729,6 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 		m_AM = am;
 	}
 
-	public void game_conch3_SetIsPlug(boolean b) {
-		m_bIsPlug = b;
-	}
-
 	public void game_conch3_setAppWorkPath(String runpath) {// 在这里保存运行数据。
 		m_strCachePath = runpath;
 	}
@@ -808,10 +785,6 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 	}
 	public ConchSurfaceView getCanvas() {
 		return m_pCavans;
-	}
-
-	public boolean getIsPlug() {
-		return m_bIsPlug;
 	}
 
 	public LayaEditBox getEditBox() {
@@ -1125,11 +1098,6 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
     @Override
     public void setAssetInfo(AssetManager am) {
         game_conch3_setAssetInfo(am);        
-    }
-
-    @Override
-    public void setIsPlugin(boolean isPlugin) {
-        game_conch3_SetIsPlug(isPlugin);
     }
 
 	public static String getLocalVersion(Context ctx) {

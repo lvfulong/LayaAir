@@ -1,10 +1,10 @@
 #include "JSNotify.h"
 #include <utils/Log.h>
 #include <utils/JCMemorySurvey.h>
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
 	#include <jni.h>
 	#include "CToJavaBridge.h"
-#elif __APPLE__
+#elif OS_IOS
     #include "CToObjectC.h"
 #endif
 
@@ -14,7 +14,7 @@ namespace laya
     void JSNotify::setRepeatNotify( int p_nID,int p_nStartTime,int p_nRepeatType,const char* p_sTickerText,const char* p_sTitleText,const char* p_sDesc )
     {
         LOGI("JSNotify::setRepeatNotify id=%d,startTime=%ld,type=%d,tickerText=%s,titleText=%s,desc=%s",p_nID,p_nStartTime,p_nRepeatType,p_sTickerText,p_sTitleText,p_sDesc );
-        #ifdef __ANDROID__
+        #ifdef OS_ANDROID
             std::vector<intptr_t> params;
             params.push_back(p_nID);
             params.push_back((long)p_nStartTime);
@@ -24,9 +24,9 @@ namespace laya
             params.push_back((long)p_sDesc);
             CToJavaBridge::JavaRet kRet;
             CToJavaBridge::GetInstance()->callMethod("laya.game.Notifycation.LayaNotifyManager", "setRepeatingNotify", p_nID, p_nStartTime,p_nRepeatType,p_sTickerText, p_sTitleText, p_sDesc, kRet);
-        #elif __APPLE__
+        #elif OS_IOS
             CToObjectCSetRepeatNotify( p_nID,p_nStartTime,p_nRepeatType,p_sTickerText,p_sTickerText,p_sDesc );
-        #elif WIN32
+        #elif OS_WINDOWS
             
         #endif
     }
@@ -34,7 +34,7 @@ namespace laya
     void JSNotify::setOnceNotify( int p_nID,int p_nStartTime,const char* p_sTickerText,const char* p_sTitleText,const char* p_sDesc )
     {
         LOGI("JSNotify::setOnceNotify id=%d,startTime=%ld,tickerText=%s,titleText=%s,desc=%s",p_nID,p_nStartTime,p_sTickerText,p_sTitleText,p_sDesc );
-        #ifdef __ANDROID__
+        #ifdef OS_ANDROID
             std::vector<intptr_t> params;
             params.push_back(p_nID);
             params.push_back((long)p_nStartTime);
@@ -43,9 +43,9 @@ namespace laya
             params.push_back((long)p_sDesc);
             CToJavaBridge::JavaRet kRet;
             CToJavaBridge::GetInstance()->callMethod("layaair.game.Notifycation.LayaNotifyManager", "setOnceNotify", p_nID,p_nStartTime,p_sTickerText,p_sTitleText,p_sDesc,kRet);
-        #elif __APPLE__
+        #elif OS_IOS
             CToObjectCSetOnceNotify( p_nID,p_nStartTime,p_sTickerText,p_sTitleText,p_sDesc );
-        #elif WIN32
+        #elif OS_WINDOWS
             
         #endif
     }
@@ -53,12 +53,12 @@ namespace laya
     void JSNotify::deleteOnceNotify( int p_nID )
     {
         LOGI("JSNotify::deleteOnceNotify id=%d",p_nID );
-        #ifdef __ANDROID__
+        #ifdef OS_ANDROID
             CToJavaBridge::JavaRet kRet;
             CToJavaBridge::GetInstance()->callMethod("layaair.game.Notifycation.LayaNotifyManager", "removeNotify", p_nID, kRet);
-        #elif __APPLE__
+        #elif OS_IOS
             CToObjectCDeleteOnceNotify( p_nID );
-        #elif WIN32
+        #elif OS_WINDOWS
             
         #endif
     }
@@ -66,12 +66,12 @@ namespace laya
     void JSNotify::deleteAllNotify()
     {
         LOGI("JSNotify::deleteAllNotify" );
-        #ifdef __ANDROID__
+        #ifdef OS_ANDROID
             CToJavaBridge::JavaRet kRet;
             CToJavaBridge::GetInstance()->callMethod("layaair.game.Notifycation.LayaNotifyManager", "removeAllNotify", kRet);
-        #elif __APPLE__
+        #elif OS_IOS
             CToObjectCDeleteAllNotify();
-        #elif WIN32
+        #elif OS_WINDOWS
             
         #endif
     }

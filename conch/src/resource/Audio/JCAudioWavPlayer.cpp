@@ -11,10 +11,10 @@
 #include <utils/Log.h>
 #include "JCWaveParser.h"
 #include "JCOggParser.h"
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
 #include "AL/alext.h"
 #endif
-#if !defined(__LINUX__)
+#if !defined(OS_LINUX)
 #include "JCMp3Parser.h"
 #endif
 #include "../JCFileResManager.h"
@@ -175,7 +175,7 @@ void JCAudioWavPlayer::delAudio(JCAudioInterface* p_pAudio)
 //------------------------------------------------------------------------------
 void JCAudioWavPlayer::releaseOpenAL( OpenALSourceInfo* pOpenALInfo )
 {
-#ifdef __APPLE__
+#ifdef OS_IOS
     // some specific OpenAL implement defects existed on iOS platform
     // refer to: https://github.com/cocos2d/cocos2d-x/issues/18597
     ALint sourceState;
@@ -382,7 +382,7 @@ JCWaveInfo* JCAudioWavPlayer::AddWaveInfo( const std::string& p_sUrl,unsigned ch
 //------------------------------------------------------------------------------
 JCWaveInfo* JCAudioWavPlayer::AddWaveInfoMp3(const std::string& p_sUrl, const std::string& p_sFilePath, void* p_pExternalMark)
 { 
-    #if defined(__LINUX__)
+    #if defined(OS_LINUX)
     return nullptr;
     #else
 	JCWaveInfo* pInfo = FindWaveInfo( p_sUrl );
@@ -459,7 +459,7 @@ void JCAudioWavPlayer::pause()
     {
         alSourcePause(m_pOpenALSource[i]->m_nOpenALSouceID);
     }
-    #ifdef __ANDROID__
+    #ifdef OS_ANDROID
         alcDevicePauseSOFT(m_pDevice);
     #endif
 }
@@ -470,7 +470,7 @@ void JCAudioWavPlayer::resume()
     {
         alSourcePlay(m_pOpenALSource[i]->m_nOpenALSouceID);
     }
-    #ifdef __ANDROID__
+    #ifdef OS_ANDROID
         alcDeviceResumeSOFT(m_pDevice);
     #endif
 }

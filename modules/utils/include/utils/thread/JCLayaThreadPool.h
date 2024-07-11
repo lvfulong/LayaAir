@@ -19,14 +19,14 @@
 #include <utils/JCCommonMethod.h>
 #include <mutex>
 
-#ifdef WIN32
+#ifdef OS_WINDOWS
 extern void SetNameInternal(unsigned int thread_id, const char* name);
-#elif __ANDROID__
+#elif OS_ANDROID || OS_OHOS
 #include <sys/syscall.h>  
 #include <unistd.h>
 #define gettidv1() syscall(__NR_gettid)  
 #define gettidv2() syscall(SYS_gettid)  
-#elif __APPLE__
+#elif OS_IOS
 #include <pthread.h>
 #endif
 

@@ -36,7 +36,7 @@ namespace laya
 		virtual bool isFileExist( const char* sFileName )
 		{
             std::string sFullName = m_sRootPath + "/"+sFileName;
-        	#ifdef WIN32
+        	#ifdef OS_WINDOWS
         	FILE* fp = _wfopen(utf8ToWide(sFullName).c_str(), L"rb");
         	#else
         	FILE* fp = fopen(sFullName.c_str(), "rb");
@@ -51,7 +51,7 @@ namespace laya
         virtual unsigned int getFileSize(const char* sFileName)
         {
             std::string sFullName = m_sRootPath + "/"+ sFileName;
-            #ifdef WIN32
+            #ifdef OS_WINDOWS
         	FILE* fp = _wfopen(utf8ToWide(sFullName).c_str(), L"rb");
         	#else
         	FILE* fp = fopen(sFullName.c_str(), "rb");

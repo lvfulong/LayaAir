@@ -838,18 +838,11 @@ public class ExportJavaFunction
 	{
 		m_Handler.post
 				(
-						new Runnable() {
-							public void run() {
-/*					if( m_pEngine.getIsPlug() )
-					{*/
-								LayaConch5.GetInstance().setScreenWakeLock(m_bScreenWakeLock);
-//					}
-					/*else
-					{
-						LayaWrapper.setScreenWakeLock( m_bScreenWakeLock );
-					}*/
-							}
+					new Runnable() {
+						public void run() {
+							LayaConch5.GetInstance().setScreenWakeLock(m_bScreenWakeLock);
 						}
+					}
 				);
 	}
 	//------------------------------------------------------------------------------
@@ -928,12 +921,11 @@ public class ExportJavaFunction
 	public static void setScreenOrientation( int p_nOrientation  )
 	{
 		ExportJavaFunction exp = ExportJavaFunction.GetInstance();
-		if(exp==null) return;
-		if( !exp.m_pEngine.getIsPlug() )
-		{
-//			LayaWrapper.GetInstance().m_LayaEngineContext.setRequestedOrientation(p_nOrientation);
-			((Activity)exp.m_pEngine.mCtx).setRequestedOrientation(p_nOrientation);
+		if(exp == null) {
+			return;
 		}
+		((Activity)exp.m_pEngine.mCtx).setRequestedOrientation(p_nOrientation);
+		
 		Log.i("0", ">>>>>>ExportJavaFunction setScreenOrientation=" + p_nOrientation );
 		boolean bLandscape = false;
 		switch( p_nOrientation )
@@ -988,11 +980,8 @@ public class ExportJavaFunction
 		ExportJavaFunction exp = ExportJavaFunction.GetInstance();
 		if(exp==null)
 			return 0;
-		if( !exp.m_pEngine.getIsPlug() ){
-		    return ((Activity)exp.m_pEngine.mCtx).getRequestedOrientation();
-			//return LayaWrapper.GetInstance().m_LayaEngineContext.getRequestedOrientation();
-		}
-		return 0;
+		return ((Activity)exp.m_pEngine.mCtx).getRequestedOrientation();
+		//return LayaWrapper.GetInstance().m_LayaEngineContext.getRequestedOrientation();
 	}
 	// ------------------------------------------------------------------------------
 	public static void ShowMessage(String pMessage){

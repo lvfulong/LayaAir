@@ -514,7 +514,7 @@ interface conchConfig{
 	PerfDelData:(id:number)=>void;
 	//PerfShow:(b:number)=>void;
 	//启动程序的时候的额外参数
-    paramExt:string;
+    //paramExt:string;
     //glCaps:GL_CAPS;
 	maxFileMemSize:number;
 	maxTextureMemSize:number;
@@ -584,10 +584,6 @@ interface conchConfig{
      * 例如"{\"resolution\":\"1920*1080\",	\"guid\":\"xxxxxxxxx\",\"imei\":[\"imeixxx\"],\"imsi\":[\"imsixxx\"],\"os\":\"windows\",\"osversion\":\"windows7 64\",\"phonemodel\":\"Wintel\"	}"
      */
 	getDeviceInfo():string;
-    /**
-     * return 返回是否是插件模式
-     */
-    getIsPlug():boolean;
     /**
      * 设置是否30帧
      * @parms b 是否30帧

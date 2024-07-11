@@ -10,11 +10,11 @@
 #define __JCAudioWavPlayer_H__
 
 //包含头文件
-#ifdef WIN32
+#ifdef OS_WINDOWS
     #include <xaudio2.h>
     #include <AL/al.h>
     #include <AL/alc.h>
-#elif __APPLE__
+#elif OS_IOS
     #include <OpenAL/al.h>
     #include <OpenAl/alc.h>
 #else

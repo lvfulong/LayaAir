@@ -67,7 +67,7 @@ function(mark_multi_resources res_out)
 	set(${res_out} ${tmp_file_list} PARENT_SCOPE)
 endfunction()
 
-if(IOS)
+if(OS_IOS)
 	list(APPEND PROJECT_SOURCES
 		proj.ios/AppDelegate.h
 		proj.ios/AppDelegate.mm
@@ -121,7 +121,7 @@ if(IOS)
 		"-framework AVFoundation"
 		conch
 	)
-elseif(MSVC)
+elseif(OS_WINDOWS)
 	list(APPEND PROJECT_SOURCES
 		proj.win64/conch6.cpp
 		proj.win64/stdafx.h
@@ -151,7 +151,7 @@ elseif(MSVC)
 		)
 	endforeach()
 	target_link_libraries(${PROJECT_NAME} PRIVATE conch)
-elseif(LINUX)
+elseif(OS_LINUX)
 	list(APPEND PROJECT_SOURCES
 		proj.linux/Conch6.cpp
 	)
@@ -168,7 +168,7 @@ function(set_xcode_property TARGET XCODE_PROPERTY XCODE_VALUE)
 	set_property(TARGET ${TARGET} PROPERTY XCODE_ATTRIBUTE_${XCODE_PROPERTY} ${XCODE_VALUE})
 endfunction(set_xcode_property)
 
-if(IOS)	
+if(OS_IOS)	
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fobjc-arc")
 	set(CMAKE_XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_ARC "YES" CACHE INTERNAL "")
 	SET (CMAKE_XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET 12.0)

@@ -451,9 +451,12 @@ list(APPEND CONCH_SRC
 	src/JCScriptRuntime.cpp
 	src/JCSystemConfig.h
 	src/JCSystemConfig.cpp
+	src/platform/src/OS.cpp
 )
-
-if(IOS)
+list(APPEND PLATFORM_HEADER_DIR
+		src/platform/include
+	)
+if(OS_IOS)
 	list(APPEND PLATFORM_HEADER_DIR
 		src/platform/iOS
 	)
@@ -516,6 +519,7 @@ if(IOS)
 		src/platform/iOS/LayaOpenGLESView.mm
 		src/platform/iOS/Utils.h
 		src/platform/iOS/Utils.mm
+		src/platform/src/OSiOS.mm
 		src/Backend/src/OpenGLBackendiOS.h
 		src/Backend/src/OpenGLBackendiOS.mm
 		src/network/HttpClientiOS.h
@@ -532,7 +536,7 @@ if(IOS)
 		src/resource/Audio/JCAudioWavPlayer.h
 		src/resource/Audio/JCAudioWavPlayer.cpp
 	)
-elseif(ANDROID)
+elseif(OS_ANDROID)
 	list(APPEND PLATFORM_HEADER_DIR
 		src/platform/Android
 		src/OpenAL/include
@@ -551,6 +555,7 @@ elseif(ANDROID)
 		src/platform/Android/JNIFun.cpp
 		src/platform/Android/CToJavaBridge.h
 		src/platform/Android/CToJavaBridge.cpp
+		src/platform/src/OSAndroid.cpp
 		src/Bindings/Video/JSVideo_AndroidImpl.cpp
 		src/Bindings/JSAndroidEditBox.h
 		src/Bindings/JSAndroidEditBox.cpp
@@ -568,7 +573,7 @@ elseif(ANDROID)
 		src/resource/Audio/JCAudioWavPlayer.h
 		src/resource/Audio/JCAudioWavPlayer.cpp
 	)
-elseif(MSVC)
+elseif(OS_WINDOWS)
 	list(APPEND PLATFORM_HEADER_DIR
 		platform/Windows
 	)
@@ -596,38 +601,33 @@ elseif(MSVC)
 		src/Application/App.cpp
 		src/resource/Audio/JCAudioWavPlayer.h
 		src/resource/Audio/JCAudioWavPlayer.cpp
+		src/platform/src/OSWin.cpp
 	)
-elseif(OHOS)
+elseif(OS_OHOS)
 	list(APPEND PLATFORM_HEADER_DIR
 		src/Backend/src
 	)
 	list(APPEND CONCH_SRC
-		src/platform/OHOS/napi/helper/NapiHelper.cpp
-    	src/platform/OHOS/napi/plugin_manager.cpp
-    	src/platform/OHOS/napi/WorkerMessageQueue.cpp
-    	src/platform/OHOS/napi/render/plugin_render.cpp
-    	src/platform/OHOS/napi/render/egl_core.cpp
-    	src/platform/OHOS/napi/modules/TouchesNapi.cpp
-    	src/platform/OHOS/napi/modules/VideoPlayerNapi.cpp
-		src/downloadCache/JCOHOSFileSource.h
-		src/Backend/src/OpenGLBackendOHOSEGL.h
+		src/platform/ohos/napi/helper/NapiHelper.cpp
+    	src/platform/ohos/napi/plugin_manager.cpp
+    	src/platform/ohos/napi/WorkerMessageQueue.cpp
+    	src/platform/ohos/napi/render/plugin_render.cpp
+    	src/platform/ohos/napi/modules/TouchesNapi.cpp
+    	src/platform/ohos/napi/modules/VideoPlayerNapi.cpp
+		src/platform/src/OSOHOS.cpp
 		src/Backend/src/OpenGLBackendOHOSEGL.cpp
 		src/Bindings/Video/JSVideo_OHOSImpl.cpp
-		src/2D/CanvasRenderingContext2DOHOS.h
 		src/2D/CanvasRenderingContext2DOHOS.cpp
-		src/Bindings/JSOHOSEditBox.h
 		src/Bindings/JSOHOSEditBox.cpp
-		src/resource/Audio/JCAudioWavplayer-openharmony.h
 		src/resource/Audio/JCAudioWavplayer-openharmony.cpp
 		src/Audio/ohos/JCAudioMp3Player.cpp
-		src/Audio/ohos/JCAudioMp3Player.h
 	)
-elseif(LINUX)
+elseif(OS_LINUX)
 	list(APPEND PLATFORM_HEADER_DIR
 		src/Backend/src
 	)
 	list(APPEND CONCH_SRC
-	src/downloadCache/JCIosFileSource.h
+		src/downloadCache/JCIosFileSource.h
 		src/downloadCache/JCIosFileSource.cpp
 		src/Backend/src/OpenGLBackendLinuxEGLX11.h
 		src/Backend/src/OpenGLBackendLinuxEGLX11.cpp
@@ -640,25 +640,27 @@ elseif(LINUX)
 		src/Application/App.cpp
 		src/resource/Audio/JCAudioWavPlayer.h
 		src/resource/Audio/JCAudioWavPlayer.cpp
+		src/platform/src/OSLinux.cpp
 	)
 endif()
 set(CONCH_HEADERS_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
 )
 include_directories(${PUBLIC_HEADER_DIR})
-if(ANDROID)
+if(OS_ANDROID)
 	add_library(${PROJECT_NAME} SHARED ${CONCH_SRC})
-elseif(MSVC)
+elseif(OS_WINDOWS)
 	if(BUILDING_CONCH_SHARED)
 		add_library(${PROJECT_NAME} SHARED ${CONCH_SRC})
 	else()
 		add_library(${PROJECT_NAME} ${CONCH_SRC})
 	endif()
 	target_precompile_headers(${PROJECT_NAME} PRIVATE ${CONCH_HEADERS})
-elseif(OHOS)
+elseif(OS_OHOS)
 	add_library(${PROJECT_NAME} SHARED ${CONCH_SRC})
-elseif(LINUX)
+	target_compile_options(${PROJECT_NAME} PRIVATE -O3)
+elseif(OS_LINUX)
 	add_library(${PROJECT_NAME} ${CONCH_SRC})
-elseif(IOS)
+elseif(OS_IOS)
 	add_library(${PROJECT_NAME} ${CONCH_SRC})
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fobjc-arc")
 endif()
@@ -678,7 +680,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 	OUTPUT_NAME "conch"
 )
 
-if(ANDROID)
+if(OS_ANDROID)
 	# if(ANDROID_ABI STREQUAL "x86")
 	# set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-warn-shared-textrel")
 	# endif()
@@ -733,7 +735,7 @@ if(ANDROID)
 		ssl
 		crypto
 	)
-elseif(IOS)
+elseif(OS_IOS)
 	target_link_libraries(${PROJECT_NAME} PUBLIC
 		"-framework UIKit"
 		"-framework AVKit"
@@ -797,7 +799,7 @@ elseif(IOS)
 		PhysXVehicle2
 	)
 	set_property(TARGET ${PROJECT_NAME} PROPERTY XCODE_ATTRIBUTE_ENABLE_BITCODE "NO")
-elseif(MSVC)
+elseif(OS_WINDOWS)
 	#target_compile_definitions(${PROJECT_NAME} PRIVATE GL_GLEXT_PROTOTYPES)
 	target_link_libraries(${PROJECT_NAME} PUBLIC
 		version.lib
@@ -837,9 +839,8 @@ elseif(MSVC)
 		SDL2
 		SDL2main
 	)
-elseif(OHOS)
-
-	target_link_libraries(${PROJECT_NAME} 
+elseif(OS_OHOS)
+	target_link_libraries(${PROJECT_NAME} PUBLIC
 		${EGL-lib}
 		${GLESv3-lib}
 	  	${hilog-lib} 
@@ -867,7 +868,7 @@ elseif(OHOS)
 		ssl
 		crypto
 		) 
-elseif(LINUX)
+elseif(OS_LINUX)
 	find_package(X11 REQUIRED)
 	add_subdirectory("../third_party/glad/glad-2.0.4/cmake" glad_cmake)
 	glad_add_library(glad REPRODUCIBLE LOADER API egl=1.5 gles2=3.0)
@@ -907,7 +908,7 @@ elseif(LINUX)
 	)
 endif()
 
-if(MSVC)
+if(OS_WINDOWS)
 	set(WARNINGS
 		/wd4819 # 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
 		/bigobj
@@ -923,10 +924,10 @@ endif()
 target_compile_options(${PROJECT_NAME} PRIVATE
 	${WARNINGS}
 )
-if(MSVC)
+if(OS_WINDOWS)
 install(FILES ${WIN_DLLS} DESTINATION lib/x64)
 endif()
-if(NOT OHOS)
+if(NOT OS_OHOS)
 install(TARGETS ${PROJECT_NAME} DESTINATION lib/${BUILDING_ARCH})
 install(DIRECTORY ./include DESTINATION .)
 endif()

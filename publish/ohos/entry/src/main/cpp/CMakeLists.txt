@@ -1,13 +1,14 @@
 cmake_minimum_required(VERSION 3.6)
-project(laya)
+set(PROJECT_NAME laya)
+project(${PROJECT_NAME})
 
-#set(USE_CMAKE_BUILD_FROM_SOURCE ON)
-set(USE_CMAKE_BUILD_FROM_SOURCE OFF)
+set(USE_CMAKE_BUILD_FROM_SOURCE ON)
+#set(USE_CMAKE_BUILD_FROM_SOURCE OFF)
 
 if(USE_CMAKE_BUILD_FROM_SOURCE)
     # 根目录
-    set(NATIVER_RENDER_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../../../../../../..)
-    add_definitions(-DOHOS)
+    set(NATIVER_RENDER_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../../../../..)
+    add_definitions(-DOS_OHOS)
 
     # sys - cpp
     file(GLOB_RECURSE source_files
@@ -22,19 +23,19 @@ if(USE_CMAKE_BUILD_FROM_SOURCE)
         # you want CMake to locate.
         ace_napi.z)
 
-    include_directories(${NATIVER_RENDER_ROOT_PATH}/Conch/source/)
+    include_directories(${NATIVER_RENDER_ROOT_PATH}/conch/src/)
 
-    add_subdirectory(${NATIVER_RENDER_ROOT_PATH}/Conch/build/conch/proj.ohos layaair)
-    target_link_libraries(${PROJECT_NAME} PUBLIC layaair ${libnapi-lib})
+    add_subdirectory(${NATIVER_RENDER_ROOT_PATH} conch)
+    target_link_libraries(${PROJECT_NAME} PUBLIC conch ${libnapi-lib})
 else()
-    set(LIBRARY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party/layaair/libs/${OHOS_ARCH}")
+    set(LIBRARY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party/conch/lib/${OHOS_ARCH}")
 
-    add_library(layaair SHARED IMPORTED)
-    set_target_properties(layaair
+    add_library(conch SHARED IMPORTED)
+    set_target_properties(conch
         PROPERTIES
-        IMPORTED_LOCATION ${LIBRARY_DIR}/liblayaair.so)
+        IMPORTED_LOCATION ${LIBRARY_DIR}/libconch.so)
 
-    add_definitions(-DOHOS)
+    add_definitions(-DOS_OHOS)
 
     # sys - cpp
     file(GLOB_RECURSE source_files
@@ -49,6 +50,6 @@ else()
         # you want CMake to locate.
         ace_napi.z)
     target_link_libraries(${PROJECT_NAME} PUBLIC
-        layaair
+        conch
         ${libnapi-lib})
 endif()

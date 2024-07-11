@@ -28,14 +28,8 @@
 #include <Bindings/JSLayaGL.h>
 #include "BufferStateBase.h"
 #include "JCSystemConfig.h"
-#ifdef WIN32
-	#ifdef min
-		#undef min
-	#endif
-	#ifdef max
-		#undef max
-	#endif
-#endif
+#include <utils/Preprocessor.h>
+
 using Coord = float;
 using N = uint16_t;
 using Point = std::array<Coord, 2>;
