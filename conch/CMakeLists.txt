@@ -37,6 +37,12 @@ if(CONCH_USE_CURL_DOWNLOAD)
 	src/downloadMgr/JCCurlWrap.cpp)
 endif()
 
+if(CONCH_USE_NEW_CURL_DOWNLOAD)
+	list(APPEND CONCH_SRC
+	src/network/curl/CurlMultiHandle.cpp
+	src/network/curl/Scheduler.cpp)
+endif()
+
 list(APPEND CONCH_SRC
 
 	# 分开数据库类core/Math 和相关方法类core/Util
