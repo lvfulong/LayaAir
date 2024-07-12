@@ -44,4 +44,12 @@ void OSAndroid::exit()
     CToJavaBridge::JavaRet ret;
     CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "exit", ret);
 }
+std::string OSAndroid::postAsyncMessage(const std::string &eventName, const std::string &data)
+{
+    return ""; // todo
+}
+std::string OSAndroid::postSyncMessage(const std::string &eventName, const std::string &data)
+{
+    return ""; // todo
+}
 } // namespace laya

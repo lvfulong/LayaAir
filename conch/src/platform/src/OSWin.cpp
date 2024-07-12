@@ -29,4 +29,12 @@ void OSWin::exit()
 {
     // todo
 }
+std::string OSWin::postAsyncMessage(const std::string &eventName, const std::string &data)
+{
+    return ""; // todo
+}
+std::string OSWin::postSyncMessage(const std::string &eventName, const std::string &data)
+{
+    return ""; // todo
+}
 } // namespace laya

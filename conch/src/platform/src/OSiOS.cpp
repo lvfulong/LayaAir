@@ -22,4 +22,12 @@ int OSiOS::getMemoryUsageInByte()
 void OSiOS::exit()
 {
 }
+std::string OSiOS::postAsyncMessage(const std::string &eventName, const std::string &data)
+{
+    return ""; // todo
+}
+std::string OSiOS::postSyncMessage(const std::string &eventName, const std::string &data)
+{
+    return ""; // todo
+}
 } // namespace laya
