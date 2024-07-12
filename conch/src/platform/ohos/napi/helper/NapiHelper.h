@@ -41,7 +41,6 @@ public:
     void setPreferredOrientation(int orientation);
     float getScreenInch();
     int getUsedMem();
-    void exitGame();
     void enableAccelerometer();
     void disableAccelerometer();
     void enableOrientation();
@@ -84,7 +83,6 @@ private:
     void __setPreferredOrientation(int orientation);
     float __getScreenInch();
     int __getUsedMem();
-    void __exitGame();
     void __enableAccelerometer();
     void __disableAccelerometer();
     void __enableOrientation();

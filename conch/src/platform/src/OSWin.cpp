@@ -25,4 +25,8 @@ int OSWin::getMemoryUsageInByte()
 {
     return 0; // todo
 }
+void OSWin::exit()
+{
+    // todo
+}
 } // namespace laya

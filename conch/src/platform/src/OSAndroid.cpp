@@ -39,4 +39,9 @@ int OSAndroid::getMemoryUsageInByte()
     }
     return 0;
 }
+void OSAndroid::exit()
+{
+    CToJavaBridge::JavaRet ret;
+    CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "exit", ret);
+}
 } // namespace laya

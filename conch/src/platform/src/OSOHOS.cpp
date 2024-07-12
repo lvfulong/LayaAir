@@ -1,6 +1,6 @@
 #include "OSOHOS.h"
-#include <utils/Log.h>
 #include <aki/jsbind.h>
+#include <utils/Log.h>
 namespace laya
 {
 
@@ -22,5 +22,12 @@ int OSOHOS::getAvalidMem()
 int OSOHOS::getMemoryUsageInByte()
 {
     return 0; // todo
+}
+void OSOHOS::exit()
+{
+    if (auto exit = aki::JSBind::GetJSFunction("ApplicationManager.exit"))
+    {
+        exit->Invoke<void>();
+    }
 }
 } // namespace laya

@@ -465,19 +465,6 @@ int NapiHelper::__getUsedMem()
     return usedMem;
 }
 
-void NapiHelper::exitGame()
-{
-    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__exitGame, this));
-}
-
-void NapiHelper::__exitGame()
-{
-    if (auto exit = aki::JSBind::GetJSFunction("ApplicationManager.exit"))
-    {
-        exit->Invoke<void>();
-    }
-}
-
 std::string NapiHelper::postMessageToUIThread(std::string eventName, std::string data)
 {
     //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__postMessageToUIThread, this, eventName, data));

@@ -10,6 +10,7 @@ class OSAndroid : public OS
     float getTotalMem() override;
     int getAvalidMem() override;
     int getMemoryUsageInByte() override;
+    void exit() override;
 };
 } // namespace laya
 #endif

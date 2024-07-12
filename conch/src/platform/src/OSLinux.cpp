@@ -19,4 +19,8 @@ int OSLinux::getMemoryUsageInByte()
 {
     return 0; // todo
 }
+void OSLinux::exit()
+{
+    // todo
+}
 } // namespace laya

@@ -13,6 +13,7 @@
     #include <string>
     #include "platform/ohos/napi/helper/NapiHelper.h"
 #endif
+#include "platform/OS.h"
 #include "../../JCSystemConfig.h"
 #include "JSInput.h"
 #include "JSConchConfig.h"
@@ -313,14 +314,7 @@ namespace laya
     }
 	void JSRuntime::exit()
     {
-#ifdef OS_ANDROID
-        CToJavaBridge::JavaRet ret;
-        CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "exit", ret);
-#elif OS_OHOS
-        NapiHelper::GetInstance()->exitGame();
-#elif OS_IOS
-#elif OS_ANDROID
-#endif
+        JCConch::s_pConch->getOS()->exit();
     }
 	int JSRuntime::getSafeInsetTop()
 	{

@@ -19,4 +19,7 @@ int OSiOS::getMemoryUsageInByte()
 {
     return CToObjectCGetMemoryUsageInByte();
 }
+void OSiOS::exit()
+{
+}
 } // namespace laya
