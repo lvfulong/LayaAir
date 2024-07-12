@@ -30,4 +30,27 @@ void OSOHOS::exit()
         exit->Invoke<void>();
     }
 }
+std::string OSOHOS::postAsyncMessage(const std::string &eventName, const std::string &data)
+{
+    std::string syncEventResult;
+    std::promise<std::string> promise;
+    std::function<void(std::string)> cb = [&promise](std::string message){
+        promise.set_value(message); 
+    };
+    if (auto post = aki::JSBind::GetJSFunction("HandleMessageUtils.handleAsyncMessage"))
+    {
+        post->Invoke<void>(eventName, data, cb);
+    }
+    syncEventResult = promise.get_future().get();
+    return syncEventResult; 
+}
+std::string OSOHOS::postSyncMessage(const std::string &eventName, const std::string &data)
+{
+    std::string eventResult;
+    if (auto post = aki::JSBind::GetJSFunction("HandleMessageUtils.handleSyncMessage"))
+    {
+        eventResult = post->Invoke<std::string>(eventName, data);
+    }
+    return eventResult;
+}
 } // namespace laya

@@ -28,7 +28,7 @@ export class NapiHelper {
     laya.JSBind.bindFunction('DeviceUtils.setKeepScreenOn', DeviceUtils.setKeepScreenOn);
     laya.JSBind.bindFunction('DeviceUtils.setPreferredOrientation', DeviceUtils.setPreferredOrientation);
     laya.JSBind.bindFunction("ApplicationManager.exit", ApplicationManager.exit);
-    laya.JSBind.bindFunction("HandleMessageUtils.handleMessage", HandleMessageUtils.handleMessage);
+    laya.JSBind.bindFunction("HandleMessageUtils.handleAsyncMessage", HandleMessageUtils.handleAsyncMessage);
     laya.JSBind.bindFunction("HandleMessageUtils.handleSyncMessage", HandleMessageUtils.handleSyncMessage);
   }
 

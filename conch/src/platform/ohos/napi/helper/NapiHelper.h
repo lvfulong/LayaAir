@@ -45,8 +45,6 @@ public:
     void disableAccelerometer();
     void enableOrientation();
     void disableOrientation();
-    std::string postMessageToUIThread(std::string eventName, std::string data);
-    std::string postSyncMessageToUIThread(std::string eventName, std::string data);
 
 private:
     std::string __getDeviceInfo();
@@ -87,17 +85,12 @@ private:
     void __disableAccelerometer();
     void __enableOrientation();
     void __disableOrientation();
-    std::string __postMessageToUIThread(std::string eventName, std::string data);
-    std::string __postSyncMessageToUIThread(std::string eventName, std::string data);
-
     static NapiHelper help_;
 
 private:
     std::string deviceInfo;
     std::string appVersion;
     std::string appLocalVersion;
-    std::string eventResult;
-    std::string syncEventResult;
     int networkType;
     int volume;
     double currentTime;

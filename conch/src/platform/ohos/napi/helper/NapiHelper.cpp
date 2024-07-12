@@ -465,44 +465,6 @@ int NapiHelper::__getUsedMem()
     return usedMem;
 }
 
-std::string NapiHelper::postMessageToUIThread(std::string eventName, std::string data)
-{
-    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__postMessageToUIThread, this, eventName, data));
-    //return eventResult;
-    return "";
-}
-
-std::string NapiHelper::__postMessageToUIThread(std::string eventName, std::string data)
-{
-    if (auto post = aki::JSBind::GetJSFunction("HandleMessageUtils.handleMessage"))
-    {
-        eventResult = post->Invoke<std::string>(eventName, data);
-    }
-    return eventResult;
-}
-
-std::string NapiHelper::postSyncMessageToUIThread(std::string eventName, std::string data)
-{
-    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__postSyncMessageToUIThread, this, eventName, data));
-    //return syncEventResult;
-    return "";
-}
-
-std::string NapiHelper::__postSyncMessageToUIThread(std::string eventName, std::string data)
-{
-    std::promise<std::string> promise;
-    std::function<void(std::string)> cb = [&promise](std::string message){
-        promise.set_value(message); 
-    };
-    if (auto post = aki::JSBind::GetJSFunction("HandleMessageUtils.handleSyncMessage"))
-    {
-        post->Invoke<void>(eventName, data, cb);
-    }
-    syncEventResult = promise.get_future().get();
-    return syncEventResult;
-}
-
-
 void NapiHelper::enableAccelerometer()
 {
     //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__enableAccelerometer, this));

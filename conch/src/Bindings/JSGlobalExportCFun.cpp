@@ -67,7 +67,6 @@
 #endif
 #include "JSArrayBufferRef.h"
 #include "JSLaunchOptions.h"
-#include "JSStat.h"
 #include "JSPromiseRejectionEvent.h"
 #include "JSFile.h"
 #include "JSFileReader.h"
@@ -504,7 +503,6 @@ namespace laya
         JSIOSEditBox::exportJS(context);
 #endif
         //JSTextBitmapInfo::exportJS(context);
-		JSStat::exportJS(context);
         //JSTextMemoryCanvas::getInstance()->exportJS(context);
         JSArrayBufferRef::exportJS(context);
 

@@ -703,11 +703,19 @@ namespace laya
         JCFileResManager* pfsMgr = JCConch::s_pScriptRuntime->m_pFileResMgr;
         pfsMgr->m_pDownloader = jsdownloader;
     }
-
+    std::string JSRuntime::postAsyncMessage(const std::string &eventName, const std::string &data)
+    {
+        return JCConch::s_pConch->getOS()->postAsyncMessage(eventName, data);
+    }
+    std::string JSRuntime::postSyncMessage(const std::string &eventName, const std::string &data)
+    {
+        return JCConch::s_pConch->getOS()->postSyncMessage(eventName, data);
+    }
     void JSRuntime::exportJS(Context& context)
     {
         class_<JSRuntime> class_binding;
-		//class_binding.class_function("computeSubSkinnedDataForNative", &JSRuntime::computeSubSkinnedDataForNative)TODO;
+		class_binding.class_function("postAsyncMessage", &JSRuntime::postAsyncMessage);
+        class_binding.class_function("postSyncMessage", &JSRuntime::postSyncMessage);
 		class_binding.class_function("setGlobalRepaint", &JSRuntime::setGlobalRepaint);
 		class_binding.class_function("setScreenOrientation", &JSRuntime::setScreenOrientation);
 		class_binding.class_function("getLaunchOptionsSync", &JSRuntime::getLaunchOptionsSync);
