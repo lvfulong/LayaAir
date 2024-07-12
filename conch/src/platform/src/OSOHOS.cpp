@@ -32,6 +32,7 @@ void OSOHOS::exit()
 }
 std::string OSOHOS::postAsyncMessage(const std::string &eventName, const std::string &data)
 {
+    //handleAsyncMessage is called in ohos ui thread
     std::string syncEventResult;
     std::promise<std::string> promise;
     std::function<void(std::string)> cb = [&promise](std::string message){
@@ -46,6 +47,7 @@ std::string OSOHOS::postAsyncMessage(const std::string &eventName, const std::st
 }
 std::string OSOHOS::postSyncMessage(const std::string &eventName, const std::string &data)
 {
+    //handleSyncMessage is called in ohos ui thread
     std::string eventResult;
     if (auto post = aki::JSBind::GetJSFunction("HandleMessageUtils.handleSyncMessage"))
     {

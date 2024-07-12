@@ -15,7 +15,14 @@ extern std::string gRedistPath;
 extern std::string gAssetRootPath;
 
 // conch6.exe [options] url
+handleSyncMessageCallback g_handleSyncMessageCb;
+handleAsyncMessageCallback g_handleAsyncMessageCb;
 
+void conchSetHandleMessageCallback(handleSyncMessageCallback handleSyncMessageCb, handleAsyncMessageCallback handleAsyncMessageCb)
+{
+    g_handleSyncMessageCb = handleSyncMessageCb;
+    g_handleAsyncMessageCb = handleAsyncMessageCb;
+}
 int mainImpl()
 {
     std::string exePath = laya::getExePath();

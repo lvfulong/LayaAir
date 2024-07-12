@@ -107,7 +107,7 @@ namespace laya
         JCWorkSemaphore                         m_semaphoreFramePacer;
         JCWorkSemaphore                         m_semaphore;
 	};
-
+    // todo 当前Windows linux android有效 ohos是layaWorker
     void postToPlatform(std::function<void(void)> task);
 
     bool isInJSThread();

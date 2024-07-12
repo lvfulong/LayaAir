@@ -1,6 +1,8 @@
 #pragma once
 
 #if OS_WINDOWS
+#include <functional>
+#include <string>
 #include <wtypes.h>
 #include <tchar.h>
 #if BUILDING_CONCH_SHARED
@@ -11,5 +13,12 @@
 extern "C" CONCH_API int conchMainConsole(int argc, WCHAR * argv[]);
 extern "C" CONCH_API int conchMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nShowCmd);
 #elif OS_LINUX
+#include <functional>
+#include <string>
 extern int conchMain(int argc, char *argv[]);
 #endif
+
+typedef std::function<void(const std::string &result)> handleResultCallback;
+typedef std::function<std::string(const std::string &eventName, const std::string &data)> handleSyncMessageCallback;
+typedef std::function<void(const std::string &eventName, const std::string &data, handleResultCallback resultCallback)> handleAsyncMessageCallback;
+extern void conchSetHandleMessageCallback(handleSyncMessageCallback handleSyncMessageCb, handleAsyncMessageCallback handleAsyncMessageCb);
