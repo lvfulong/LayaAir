@@ -1,7 +1,7 @@
 #include "OSLinux.h"
 #include "Exports.h"
-#include <future>
 #include <JCConch.h>
+#include <future>
 #include <utils/Log.h>
 
 extern handleSyncMessageCallback g_handleSyncMessageCb;
@@ -29,22 +29,34 @@ void OSLinux::exit()
 {
     // todo
 }
-std::string OSLinux::postAsyncMessage(const std::string &eventName, const std::string &data)
+JsValue OSLinux::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
-    // handleAsyncMessage is called in platform os ui thread
-    std::string syncEventResult;
-    std::promise<std::string> promise;
-    std::function<void(std::string)> cb = [&promise](std::string message) { promise.set_value(message); };
+    auto isolate = v8::Isolate::GetCurrent();
+    auto context = isolate->GetCurrentContext();
+
+    napi_deferred deferred;
+    napi_value promise;
+
+    napi_create_promise(context, &deferred, &promise);
+
+    std::function<void(std::string)> cb = [deferred](std::string message) {
+        postToJS([deferred, message]() {
+            auto isolate = v8::Isolate::GetCurrent();
+            auto context = isolate->GetCurrentContext();
+            napi_value v = JsValueFromV8LocalValue(Converter<const char *>::ToJs(message));
+            napi_resolve_deferred(context, deferred, v);
+        });
+    };
     if (g_handleAsyncMessageCb)
     {
+        // handleAsyncMessage is called in platform os ui thread
         postToPlatform([eventName, data, cb]() { g_handleAsyncMessageCb(eventName, data, cb); });
     }
-    syncEventResult = promise.get_future().get();
-    return syncEventResult;
+    return V8LocalValueFromJsValue(promise);
 }
 std::string OSLinux::postSyncMessage(const std::string &eventName, const std::string &data)
 {
-    // handleSyncMessage is called in platform os ui thread
+    //handleSyncMessage is called in platform os ui thread
     std::string eventResult;
     std::promise<std::string> promise;
     if (g_handleSyncMessageCb)

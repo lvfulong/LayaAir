@@ -11,7 +11,7 @@ class OSAndroid : public OS
     int getAvalidMem() override;
     int getMemoryUsageInByte() override;
     void exit() override;
-    std::string postAsyncMessage(const std::string &eventName, const std::string &data) override;
+    JsValue postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data) override;
     std::string postSyncMessage(const std::string &eventName, const std::string &data) override;
 };
 } // namespace laya

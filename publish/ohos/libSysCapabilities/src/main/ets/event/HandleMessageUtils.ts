@@ -9,7 +9,7 @@ export default class HandleMessageUtils {
     * @param data 数据
     */
     static handleSyncMessage(eventName: string, data: string): string {
-        return "true";
+        return "sync result";
     }
 
     /**
@@ -19,6 +19,6 @@ export default class HandleMessageUtils {
     * @param cb callback
     */
     static async handleAsyncMessage(eventName: string, data: string, cb: Function): Promise<void> {
-        cb("");
+        cb("async result");
     }
 }

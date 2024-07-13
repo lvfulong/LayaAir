@@ -44,9 +44,9 @@ void OSAndroid::exit()
     CToJavaBridge::JavaRet ret;
     CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "exit", ret);
 }
-std::string OSAndroid::postAsyncMessage(const std::string &eventName, const std::string &data)
+JsValue OSAndroid::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
-    return ""; // todo
+    return JSP_TO_JS_NULL; // todo
 }
 std::string OSAndroid::postSyncMessage(const std::string &eventName, const std::string &data)
 {

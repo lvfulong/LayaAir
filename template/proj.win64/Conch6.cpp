@@ -8,9 +8,9 @@
 int main(int argc, _TCHAR *argv[])
 {
     conchSetHandleMessageCallback(
-        [](const std::string &eventName, const std::string &data) -> std::string { return ""; },
+        [](const std::string &eventName, const std::string &data) -> std::string { return "sync result"; },
         [](const std::string &eventName, const std::string &data, handleResultCallback resultCallback) -> void {
-            resultCallback("");
+            resultCallback("async result");
         });
     return conchMainConsole(argc, argv);
 }

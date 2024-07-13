@@ -22,9 +22,9 @@ int OSiOS::getMemoryUsageInByte()
 void OSiOS::exit()
 {
 }
-std::string OSiOS::postAsyncMessage(const std::string &eventName, const std::string &data)
+JsValue OSiOS::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
-    return ""; // todo
+    return JSP_TO_JS_NULL; // todo
 }
 std::string OSiOS::postSyncMessage(const std::string &eventName, const std::string &data)
 {

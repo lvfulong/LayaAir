@@ -703,9 +703,11 @@ namespace laya
         JCFileResManager* pfsMgr = JCConch::s_pScriptRuntime->m_pFileResMgr;
         pfsMgr->m_pDownloader = jsdownloader;
     }
-    std::string JSRuntime::postAsyncMessage(const std::string &eventName, const std::string &data)
+    //todo 刷新生命周期
+    std::shared_ptr<int> callbackRef(new int(1));
+    JsValue JSRuntime::postAsyncMessage(const std::string &eventName, const std::string &data)
     {
-        return JCConch::s_pConch->getOS()->postAsyncMessage(eventName, data);
+        return JCConch::s_pConch->getOS()->postAsyncMessage(callbackRef, eventName, data);
     }
     std::string JSRuntime::postSyncMessage(const std::string &eventName, const std::string &data)
     {

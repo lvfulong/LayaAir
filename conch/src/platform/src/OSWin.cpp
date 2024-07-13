@@ -35,22 +35,36 @@ void OSWin::exit()
 {
     // todo
 }
-std::string OSWin::postAsyncMessage(const std::string &eventName, const std::string &data)
+JsValue OSWin::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
-    // handleAsyncMessage is called in platform os ui thread
-    std::string syncEventResult;
-    std::promise<std::string> promise;
-    std::function<void(std::string)> cb = [&promise](std::string message) { promise.set_value(message); };
+    auto isolate = v8::Isolate::GetCurrent();
+    auto context = isolate->GetCurrentContext();
+
+    napi_deferred deferred;
+    napi_value promise;
+
+    napi_create_promise(context, &deferred, &promise);
+
+    std::function<void(std::string)> cb = [deferred, cbref](std::string message) {
+        postToJS([deferred, message, cbref]() {
+            if (!cbref.lock())
+                return;
+            auto isolate = v8::Isolate::GetCurrent();
+            auto context = isolate->GetCurrentContext();
+            napi_value v = JsValueFromV8LocalValue(Converter<const char *>::ToJs(message));
+            napi_resolve_deferred(context, deferred, v);
+        });
+    };
     if (g_handleAsyncMessageCb)
     {
+        // handleAsyncMessage is called in platform os ui thread
         postToPlatform([eventName, data, cb]() { g_handleAsyncMessageCb(eventName, data, cb); });
     }
-    syncEventResult = promise.get_future().get();
-    return syncEventResult;
+    return V8LocalValueFromJsValue(promise);
 }
 std::string OSWin::postSyncMessage(const std::string &eventName, const std::string &data)
 {
-    // handleSyncMessage is called in platform os ui thread
+    //handleSyncMessage is called in platform os ui thread
     std::string eventResult;
     std::promise<std::string> promise;
     if (g_handleSyncMessageCb)

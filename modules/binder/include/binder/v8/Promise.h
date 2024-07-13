@@ -6,51 +6,25 @@
 
 namespace laya
 {
-class Promise final
+typedef struct napi_value__ *napi_value;
+typedef struct napi_deferred__ *napi_deferred;
+inline v8::Local<v8::Value> V8LocalValueFromJsValue(napi_value v)
 {
-  public:
-    Promise() = default;
-    Promise(v8::Local<v8::Value> promise);
+    v8::Local<v8::Value> local;
+    memcpy(static_cast<void *>(&local), &v, sizeof(v));
+    return local;
+}
+inline napi_deferred JsDeferredFromNodePersistent(v8::Global<v8::Value> *local)
+{
+    return reinterpret_cast<napi_deferred>(local);
+}
 
-    Promise(Promise const &) = default;
-    Promise &operator=(Promise const &) = delete;
-
-    Promise(Promise &&) = delete;
-    Promise &operator=(Promise &&) = delete;
-
-    static Promise reject(v8::Local<v8::Value> value);
-
-    static Promise resolve(v8::Local<v8::Value> value);
-
-    static v8::Local<v8::Promise> rejectRaw(v8::Local<v8::Value> value);
-
-    static v8::Local<v8::Promise> resolveRaw(v8::Local<v8::Value> value);
-
-    v8::Local<v8::Promise> getV8Promise() const
-    {
-        return promise_;
-    }
-
-  private:
-    class Resolver final
-    {
-
-      public:
-        explicit Resolver();
-        v8::Local<v8::Promise> getV8Promise() const;
-        void resolve(v8::Local<v8::Value>);
-        void reject(v8::Local<v8::Value>);
-        void clear()
-        {
-            resolver_.Clear();
-        }
-
-      private:
-        v8::Local<v8::Promise::Resolver> resolver_;
-    };
-
-  private:
-    v8::Local<v8::Promise> promise_;
-};
+inline napi_value JsValueFromV8LocalValue(v8::Local<v8::Value> local)
+{
+    return reinterpret_cast<napi_value>(*local);
+}
+void napi_create_promise(v8::Local<v8::Context> context, napi_deferred *deferred, napi_value *promise);
+void napi_resolve_deferred(v8::Local<v8::Context> context, napi_deferred deferred, napi_value resolution);
+void napi_reject_deferred(v8::Local<v8::Context> context, napi_deferred deferred, napi_value resolution);
 } // namespace laya
 #endif
