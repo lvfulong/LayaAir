@@ -39,8 +39,10 @@ JsValue OSLinux::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &e
 
     napi_create_promise(context, &deferred, &promise);
 
-    std::function<void(std::string)> cb = [deferred](std::string message) {
-        postToJS([deferred, message]() {
+    std::function<void(std::string)> cb = [deferred, cbref](std::string message) {
+        postToJS([deferred, message, cbref]() {
+            if (!cbref.lock())
+                return;
             auto isolate = v8::Isolate::GetCurrent();
             auto context = isolate->GetCurrentContext();
             napi_value v = JsValueFromV8LocalValue(Converter<const char *>::ToJs(message));
@@ -56,7 +58,7 @@ JsValue OSLinux::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &e
 }
 std::string OSLinux::postSyncMessage(const std::string &eventName, const std::string &data)
 {
-    //handleSyncMessage is called in platform os ui thread
+    // handleSyncMessage is called in platform os ui thread
     std::string eventResult;
     std::promise<std::string> promise;
     if (g_handleSyncMessageCb)
