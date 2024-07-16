@@ -2,6 +2,7 @@
 #define __HTTP_CLIENT_OHOS_H__
 
 #include "network/IHttpClient.h"
+#include <aki/jsbind.h>
 #include <string>
 
 namespace laya
@@ -22,6 +23,13 @@ class HttpClientOHOS : public IHttpClient
     void cancel() override;
 
   private:
+    aki::Value m_object;
 };
+
 } // namespace laya
+
+napi_value HttpClientOHOS_onFailure(napi_env env, napi_callback_info info);
+napi_value HttpClientOHOS_onResponse(napi_env env, napi_callback_info info);
+napi_value HttpClientOHOS_onProgress(napi_env env, napi_callback_info info);
+
 #endif

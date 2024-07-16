@@ -625,6 +625,7 @@ elseif(OS_OHOS)
 		src/Bindings/JSOHOSEditBox.cpp
 		src/resource/Audio/JCAudioWavplayer-openharmony.cpp
 		src/Audio/ohos/JCAudioMp3Player.cpp
+		src/network/HttpClientOHOS.cpp
 	)
 elseif(OS_LINUX)
 	list(APPEND PLATFORM_HEADER_DIR

@@ -4,6 +4,8 @@
 #include "network/HttpClientAndroid.h"
 #elif OS_IOS
 #include "network/HttpClientiOS.h"
+#elif OS_OHOS
+#include "network/HttpClientOHOS.h"
 #elif OS_WINDOWS
 #endif
 
@@ -34,6 +36,8 @@ IHttpClient *HttpClientManager::createHttpClient(const char *url, const char *lo
     httpClient = new HttpClientiOS(url, localFilePath, functionOnProgress, functionOnEnd, shared_from_this());
 #elif OS_WINDOWS
     httpClient = nullptr; // TODO
+#elif OS_OHOS
+    httpClient = new HttpClientOHOS(url, localFilePath, functionOnProgress, functionOnEnd, shared_from_this());
 #endif
     addHttpClient(httpClient);
     return httpClient;
