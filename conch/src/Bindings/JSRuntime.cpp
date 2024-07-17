@@ -544,7 +544,7 @@ namespace laya
         //把持久句柄转成本地句柄            
         v8::Local func(jsOnProg->Get(isolate));
         // 确认value是函数
-        if (func->IsFunction()) {
+        if ( !func.IsEmpty() && func->IsFunction()) {
             auto v8function = v8::Local<v8::Function>::Cast(func);
             const unsigned argc = 3;
             v8::Local<v8::Value> argv[argc] = {
