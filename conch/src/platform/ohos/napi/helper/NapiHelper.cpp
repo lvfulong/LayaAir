@@ -9,7 +9,7 @@ std::string NapiHelper::getDeviceInfo()
 {
     //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getDeviceInfo, this));
     //return deviceInfo;
-    return "";
+    return __getDeviceInfo();
 }
 
 std::string NapiHelper::__getDeviceInfo()
@@ -167,7 +167,7 @@ std::string NapiHelper::getAppVersion()
 {
     //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getAppVersion, this));
     //return appVersion;
-    return "";
+    return __getAppVersion();
 }
 
 std::string NapiHelper::__getAppVersion()
@@ -183,7 +183,7 @@ std::string NapiHelper::getAppLocalVersion()
 {
     //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getAppLocalVersion, this));
     //return appLocalVersion;
-    return "";
+    return  __getAppLocalVersion();
 }
 
 std::string NapiHelper::__getAppLocalVersion()
@@ -390,6 +390,7 @@ int NapiHelper::__getVolume(int m_tag)
 void NapiHelper::showDialog(const char *p_sBuffer)
 {
     //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__showDialog, this, p_sBuffer));
+    __showDialog(p_sBuffer);
 }
 
 void NapiHelper::__showDialog(const char *p_sBuffer)
@@ -417,6 +418,7 @@ void NapiHelper::__setKeepScreenOn(bool value)
 void NapiHelper::setPreferredOrientation(int orientation)
 {
     //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__setPreferredOrientation, this, orientation));
+    __setPreferredOrientation(orientation);
 }
 
 void NapiHelper::__setPreferredOrientation(int orientation)
@@ -447,22 +449,6 @@ float NapiHelper::__getScreenInch()
     return screenInch;
 }
 
-int NapiHelper::getAvalidMem()
-{
-    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getAvalidMem, this));
-    //return avalidMem;
-    return 0;
-}
-
-int NapiHelper::__getAvalidMem()
-{
-    if (auto getAvalidMem = aki::JSBind::GetJSFunction("DeviceUtils.getAvalidMem"))
-    {
-        avalidMem = getAvalidMem->Invoke<int>();
-    }
-    return avalidMem;
-}
-
 int NapiHelper::getUsedMem()
 {
     //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getUsedMem, this));
@@ -478,57 +464,6 @@ int NapiHelper::__getUsedMem()
     }
     return usedMem;
 }
-
-void NapiHelper::exitGame()
-{
-    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__exitGame, this));
-}
-
-void NapiHelper::__exitGame()
-{
-    if (auto exit = aki::JSBind::GetJSFunction("ApplicationManager.exit"))
-    {
-        exit->Invoke<void>();
-    }
-}
-
-std::string NapiHelper::postMessageToUIThread(std::string eventName, std::string data)
-{
-    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__postMessageToUIThread, this, eventName, data));
-    //return eventResult;
-    return "";
-}
-
-std::string NapiHelper::__postMessageToUIThread(std::string eventName, std::string data)
-{
-    if (auto post = aki::JSBind::GetJSFunction("HandleMessageUtils.handleMessage"))
-    {
-        eventResult = post->Invoke<std::string>(eventName, data);
-    }
-    return eventResult;
-}
-
-std::string NapiHelper::postSyncMessageToUIThread(std::string eventName, std::string data)
-{
-    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__postSyncMessageToUIThread, this, eventName, data));
-    //return syncEventResult;
-    return "";
-}
-
-std::string NapiHelper::__postSyncMessageToUIThread(std::string eventName, std::string data)
-{
-    std::promise<std::string> promise;
-    std::function<void(std::string)> cb = [&promise](std::string message){
-        promise.set_value(message); 
-    };
-    if (auto post = aki::JSBind::GetJSFunction("HandleMessageUtils.handleSyncMessage"))
-    {
-        post->Invoke<void>(eventName, data, cb);
-    }
-    syncEventResult = promise.get_future().get();
-    return syncEventResult;
-}
-
 
 void NapiHelper::enableAccelerometer()
 {

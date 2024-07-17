@@ -5,7 +5,12 @@
 #include "ExportsShared.h"
 #endif
 
-int main(int argc, _TCHAR* argv[])
+int main(int argc, _TCHAR *argv[])
 {
-	return conchMainConsole(argc, argv);
+    conchSetHandleMessageCallback(
+        [](const std::string &eventName, const std::string &data) -> std::string { return "sync result"; },
+        [](const std::string &eventName, const std::string &data, handleResultCallback resultCallback) -> void {
+            resultCallback("async result");
+        });
+    return conchMainConsole(argc, argv);
 }

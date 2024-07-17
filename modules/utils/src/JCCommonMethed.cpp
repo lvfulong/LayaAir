@@ -10,29 +10,20 @@
 #include <stdlib.h>
 #include <string.h>
 #include <utils/JCCommonMethod.h>
-#ifndef WEBASM
 #include <utils/JCLayaUrl.h>
-#endif
-#include <utils/Log.h>
 #include <algorithm>
-#if __APPLE__
+#include <utils/Log.h>
+#if OS_IOS
 #include <mach/mach_time.h>
 #include <sys/time.h>
 #include <time.h>
-#elif __ANDROID__
+#elif defined(OS_ANDROID) || defined(OS_OHOS)
 #include <time.h>
-#elif WIN32
+#elif OS_WINDOWS
 #include <iostream>
 #include <psapi.h>
 #include <windows.h>
 #pragma comment(lib, "psapi.lib")
-#endif
-
-#ifdef WEBASM
-extern "C"
-{
-    double DateNow();
-}
 #endif
 #include <codecvt>
 #include <iomanip>
@@ -398,7 +389,6 @@ bool splitPath(const char *p_pszPath, std::vector<std::string> &out)
 // 应该不是很可靠，没有处理大小写等，临时拼凑的。
 std::string normalizePath(const char *p_pszPath, bool toLowerCase, int &p_nProtocol)
 {
-#ifndef WEBASM
     JCUrl url;
     url.parse(p_pszPath);
     p_nProtocol = (int)url.m_nProto;
@@ -447,9 +437,6 @@ std::string normalizePath(const char *p_pszPath, bool toLowerCase, int &p_nProto
     }
     return ret+query;
     */
-#else
-    return "";
-#endif
 }
 //------------------------------------------------------------------------------
 void paserUTF8(std::string p_sBuffer, long p_nSize, std::vector<std::string> &p_vOut)
@@ -523,7 +510,7 @@ void paserUTF8(std::string p_sBuffer, long p_nSize, std::vector<std::string> &p_
 //------------------------------------------------------------------------------
 char *LayaStrlwr(char *p_str)
 {
-#ifdef WIN32
+#ifdef OS_WINDOWS
     return _strlwr(p_str);
 #else
     char *orig = p_str;
@@ -535,7 +522,7 @@ char *LayaStrlwr(char *p_str)
 //------------------------------------------------------------------------------
 char *LayaStrupr(char *p_str)
 {
-#ifdef WIN32
+#ifdef OS_WINDOWS
     return _strupr(p_str);
 #else
     char *orign = p_str;
@@ -687,10 +674,7 @@ std::string UrlDecode(const char *str)
 //------------------------------------------------------------------------------
 double tmGetCurms()
 {
-#ifdef WEBASM
-    return DateNow();
-#else
-#ifdef __APPLE__
+#ifdef OS_IOS
 
     // 下面的方法好像也可以达到精度
     //     struct timeval tv;
@@ -708,11 +692,11 @@ double tmGetCurms()
 
     int64_t nanosec = mach_absolute_time() * info.numer / info.denom;
     return (nanosec / 1e6);
-#elif __ANDROID__
+#elif defined(OS_ANDROID) || defined(OS_OHOS)
     struct timespec now;
     clock_gettime(CLOCK_MONOTONIC, &now);
     return now.tv_sec * 1000.0 + now.tv_nsec / 1e6;
-#elif WIN32
+#elif OS_WINDOWS
     static __int64 freq = 0;
     if (freq == 0)
     {
@@ -729,12 +713,11 @@ double tmGetCurms()
 #else
     return 0;
 #endif
-#endif
 }
 
 int getAppUsedMem()
 {
-#ifdef WIN32
+#ifdef OS_WINDOWS
     HANDLE handle = GetCurrentProcess();
     PROCESS_MEMORY_COUNTERS pmc;
     GetProcessMemoryInfo(handle, &pmc, sizeof(pmc));
@@ -743,9 +726,9 @@ int getAppUsedMem()
     // PagefileUsage 虚拟内存
     // PeakPagefileUsage 峰值虚拟内存
     return pmc.WorkingSetSize / 1024;
-#elif __ANDROID__
+#elif OS_ANDROID
     return 0;
-#elif __APPLE__
+#elif OS_IOS
     return 0;
 #endif
 }
@@ -909,7 +892,7 @@ std::string encodeURI(const char *value)
 
 std::string getExePath()
 {
-#ifdef __LINUX__
+#ifdef OS_LINUX
     char buf[256];
     memset(buf, 0, 256);
     ssize_t len = readlink("/proc/self/exe", buf, sizeof(buf));
@@ -920,7 +903,7 @@ std::string getExePath()
     }
     std::string ret(buf);
     return ret;
-#elif WIN32
+#elif OS_WINDOWS
     WCHAR szPath[MAX_PATH];
     ::GetModuleFileNameW(NULL, szPath, MAX_PATH);
     std::string path = wideToUtf8(szPath);
@@ -950,15 +933,37 @@ bool compareStrings(const std::string &str1, const std::string &str2, bool caseS
     }
 }
 
-std::string removeFileExtension(const std::string& filename) {
+std::string removeFileExtension(const std::string &filename)
+{
     // 查找最后一个点的位置
     size_t lastDotIndex = filename.find_last_of(".");
     // 如果找不到点或者这个点是第一个字符（可能是一个隐藏的Unix文件），则返回原始字符串
-    if (lastDotIndex == std::string::npos || lastDotIndex == 0) {
+    if (lastDotIndex == std::string::npos || lastDotIndex == 0)
+    {
         return filename;
     }
     // 返回不含扩展名的文件名部分
     return filename.substr(0, lastDotIndex);
+}
+// 使用 C 标准库中的 vsnprintf 函数生成格式化字符串
+std::string vformat(const char *fmt, va_list args)
+{
+    va_list args_copy;
+    va_copy(args_copy, args);
+
+    // 使用一个足够大的固定大小数组来尝试格式化字符串
+    std::vector<char> buf(1024);
+    int needed = vsnprintf(buf.data(), buf.size(), fmt, args_copy);
+    va_end(args_copy);
+
+    // 检查是否足够，并重新尝试
+    if (needed < 0 || needed >= static_cast<int>(buf.size()))
+    {
+        buf.resize(needed + 1);
+        vsnprintf(buf.data(), buf.size(), fmt, args);
+    }
+
+    return std::string(buf.data());
 }
 } // namespace laya
 //------------------------------------------------------------------------------

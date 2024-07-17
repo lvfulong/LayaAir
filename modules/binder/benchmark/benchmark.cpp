@@ -1,5 +1,5 @@
 #include <benchmark/benchmark.h>
-#ifdef WIN32
+#ifdef OS_WINDOWS
 #pragma comment ( lib, "Shlwapi.lib" )
 #endif
 static void BM_SomeFunction(benchmark::State& state) {

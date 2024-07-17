@@ -10,7 +10,7 @@
 //#include "../misc/conchDebugThread.h"
 #include <utils/JCCommonMethod.h>
 #include <utils/Log.h>
-#ifdef WIN32
+#ifdef OS_WINDOWS
 #include <windows.h>
 #include <process.h>
 //2013.3.5
@@ -48,10 +48,15 @@ void SetNameInternal(unsigned int thread_id, const char* name)
 	{
 	}
 }
-#elif __ANDROID__
+#elif OS_ANDROID
 #include <sys/syscall.h>  
 #define gettidv1() syscall(__NR_gettid)  
 #define gettidv2() syscall(SYS_gettid)  
+#elif OS_OHOS
+#include <sys/syscall.h>
+#include "unistd.h"
+#define gettidv1() syscall(__NR_gettid)  
+#define gettidv2() syscall(SYS_gettid)
 #endif
 
 namespace laya{
@@ -138,14 +143,14 @@ namespace laya{
 
 	void JCWorkerThread::_defRunLoop(){
 		//设置名字
-#ifdef WIN32
+#ifdef OS_WINDOWS
 		{
 			DWORD thid = GetCurrentThreadId();
 			SetNameInternal(thid, m_strName.c_str());
             LOGI("start thread:%s,%d", m_strName.c_str(), thid);
             //threadInfoLog("start thread:%s,%d", m_strName.c_str(), thid);
 		}
-#elif __ANDROID__
+#elif defined(OS_ANDROID) || defined(OS_OHOS)
 		{
             LOGI("start thread:%s,%d", m_strName.c_str(), (int)gettidv1());
 			//threadInfoLog("start thread:%s,%ld", m_strName.c_str(), gettidv1());

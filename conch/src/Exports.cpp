@@ -15,7 +15,14 @@ extern std::string gRedistPath;
 extern std::string gAssetRootPath;
 
 // conch6.exe [options] url
+handleSyncMessageCallback g_handleSyncMessageCb;
+handleAsyncMessageCallback g_handleAsyncMessageCb;
 
+void conchSetHandleMessageCallback(handleSyncMessageCallback handleSyncMessageCb, handleAsyncMessageCallback handleAsyncMessageCb)
+{
+    g_handleSyncMessageCb = handleSyncMessageCb;
+    g_handleAsyncMessageCb = handleAsyncMessageCb;
+}
 int mainImpl()
 {
     std::string exePath = laya::getExePath();
@@ -31,7 +38,7 @@ int mainImpl()
     app.run(config);
     return 0;
 }
-#if WIN32
+#if OS_WINDOWS
 int conchMainConsole(int argc, WCHAR *argv[])
 {
     bool bRunTest = false;
@@ -109,7 +116,7 @@ int conchMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, in
     LocalFree(strCmdLineWide);
     return ret;
 }
-#elif __LINUX__
+#elif OS_LINUX
 int conchMain(int argc, char *argv[])
 {
     return mainImpl();

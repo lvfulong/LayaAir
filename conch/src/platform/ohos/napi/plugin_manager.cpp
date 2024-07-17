@@ -8,6 +8,7 @@
 #include "plugin_manager.h"
 #include <aki/jsbind.h>
 #include "utils/Log.h"
+#include "network/HttpClientOHOS.h"
 
 enum ContextType
 {
@@ -16,6 +17,7 @@ enum ContextType
     WORKER_INIT,
     NATIVE_API,
     VIDEOPLAYER_NAPI,
+    HTTP_NAPI,
 };
 
 JSBIND_ENUM(ContextType)
@@ -25,6 +27,7 @@ JSBIND_ENUM(ContextType)
     JSBIND_ENUM_VALUE(WORKER_INIT);
     JSBIND_ENUM_VALUE(NATIVE_API);
     JSBIND_ENUM_VALUE(VIDEOPLAYER_NAPI);
+    JSBIND_ENUM_VALUE(HTTP_NAPI);
 }
 
 NapiManager NapiManager::manager_;
@@ -87,6 +90,16 @@ napi_value NapiManager::GetContext(long contextEnum)
             DECLARE_NAPI_FUNCTION("loadedmetadata", VideoPlayerNapi::loadedmetadata),
             DECLARE_NAPI_FUNCTION("onDurationBack", VideoPlayerNapi::onDurationBack),
             DECLARE_NAPI_FUNCTION("onCurrentTimeBack", VideoPlayerNapi::onCurrentTimeBack),
+        };
+        NAPI_CALL(env, napi_define_properties(env, exports, sizeof(desc) / sizeof(desc[0]), desc));
+    }
+    break;
+    case HTTP_NAPI:
+    {
+        napi_property_descriptor desc[] = {
+            DECLARE_NAPI_FUNCTION("HttpClientOHOS_onFailure", HttpClientOHOS_onFailure),
+            DECLARE_NAPI_FUNCTION("HttpClientOHOS_onResponse", HttpClientOHOS_onResponse),
+            DECLARE_NAPI_FUNCTION("HttpClientOHOS_onProgress", HttpClientOHOS_onProgress),
         };
         NAPI_CALL(env, napi_define_properties(env, exports, sizeof(desc) / sizeof(desc[0]), desc));
     }

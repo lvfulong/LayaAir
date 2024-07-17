@@ -17,13 +17,15 @@ export interface CPPFunctions {
   onDurationBack: (viewTag: number, duration: number) => void;
   onCurrentTimeBack: (viewTag: number, currentTime: number) => void;
   loadedmetadata: (viewTag: number) => void;
+  HttpClientOHOS_onFailure: (ptr: number, code: number) => void;
+  HttpClientOHOS_onResponse: (ptr: number, ab: ArrayBuffer, responseCode: number, header: string) => void;
+  HttpClientOHOS_onProgress: (ptr: number, total: number, now: number, speed: number) => void;
 }
 
 export const getContext: (a: number) => CPPFunctions;
 
-export const ConchNAPI_InitDLib: (rsmgr: resourceManager.ResourceManager, nThreadNum: number, p_strAssetRootPath: string, p_strCachePath: string, threadMode: number, debugMode: number, debugPort: number) => void;
+export const ConchNAPI_InitDLib: (rsmgr: resourceManager.ResourceManager, nThreadNum: number, p_strAssetRootPath: string, p_strCachePath: string) => void;
 export const ConchNAPI_configSetURL: (p_strUrl: string) => void;
-export const ConchNAPI_configSetIsPlug: (v: boolean) => void;
 export const ConchNAPI_SetLocalStoragePath:(p_strLocalStorage: string) => void;
 export const ConchNAPI_setLocalizable: (p_bIsLocalPackage: boolean) => void;
 export const ConchNAPI_OnAppStart: () => void;

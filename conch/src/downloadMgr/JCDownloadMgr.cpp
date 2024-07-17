@@ -29,7 +29,7 @@
 #define P_PRIORITY_NORMAL 0
 #define P_PRIORITY_LOW 1
 #define P_NOLOCALFILE nullptr
-#if WIN32
+#if OS_WINDOWS
 #include "timeapi.h"
 #endif
 #include <cctype>
@@ -200,7 +200,7 @@ namespace laya{
 	//等待清空队列。
 	class _QueryWaitEmpty :public _QueryBase {
 	protected:
-#ifdef WIN32
+#ifdef OS_WINDOWS
 		std::atomic_uint32_t* mpNum = nullptr;
 	public:
 		_QueryWaitEmpty(std::atomic_uint32_t* pNum) {
@@ -610,7 +610,7 @@ namespace laya{
 #ifdef CURL_DOWNLOAD
 		_l_ServerStop = false;
 		_QueryBase* pQuery;
-#ifdef WIN32
+#ifdef OS_WINDOWS
 		srand(timeGetTime());
 #else
 		//TODO 随机数种子	在线程中访问全局随机数可能有问题

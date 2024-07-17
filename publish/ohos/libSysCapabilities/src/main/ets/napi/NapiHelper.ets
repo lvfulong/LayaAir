@@ -11,6 +11,7 @@ import SoundUtils from '../system/sound/SoundUtils'
 import laya from "liblaya.so"
 import { EditBox } from '../components/EditBox'
 import HandleMessageUtils from '../event/HandleMessageUtils'
+import { LayaHttpClient } from '../system/network/LayaHttpClient'
 
 export class NapiHelper {
   // 需要将JS代码执行在worker线程的在此处注册方法
@@ -28,7 +29,7 @@ export class NapiHelper {
     laya.JSBind.bindFunction('DeviceUtils.setKeepScreenOn', DeviceUtils.setKeepScreenOn);
     laya.JSBind.bindFunction('DeviceUtils.setPreferredOrientation', DeviceUtils.setPreferredOrientation);
     laya.JSBind.bindFunction("ApplicationManager.exit", ApplicationManager.exit);
-    laya.JSBind.bindFunction("HandleMessageUtils.handleMessage", HandleMessageUtils.handleMessage);
+    laya.JSBind.bindFunction("HandleMessageUtils.handleAsyncMessage", HandleMessageUtils.handleAsyncMessage);
     laya.JSBind.bindFunction("HandleMessageUtils.handleSyncMessage", HandleMessageUtils.handleSyncMessage);
   }
 
@@ -45,6 +46,11 @@ export class NapiHelper {
     laya.JSBind.bindFunction("Accelerometer.disable", Accelerometer.disable);
     laya.JSBind.bindFunction("Orientation.enable", Orientation.enable);
     laya.JSBind.bindFunction("Orientation.disable", Orientation.disable);
+    laya.JSBind.bindFunction("LayaHttpClient.create", LayaHttpClient.create);
+    laya.JSBind.bindFunction("LayaHttpClient.cancel", LayaHttpClient.cancel);
+    laya.JSBind.bindFunction("LayaHttpClient.setReadTimeout", LayaHttpClient.setReadTimeout);
+    laya.JSBind.bindFunction("LayaHttpClient.setConnectTimeout", LayaHttpClient.setConnectTimeout);
+    laya.JSBind.bindFunction("LayaHttpClient.doRequest", LayaHttpClient.doRequest);
   }
 
   private static registerVideoPlay() {

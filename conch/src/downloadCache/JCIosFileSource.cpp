@@ -7,7 +7,7 @@ namespace laya
     {
 		bool bRet = false;
         std::string sFullName = m_sRootPath +"/"+ sFileName;
-        #ifdef WIN32
+        #ifdef OS_WINDOWS
         FILE* fp = _wfopen(utf8ToWide(sFullName).c_str(), L"rb");
         #else
         FILE* fp = fopen(sFullName.c_str(), "rb");
@@ -37,7 +37,7 @@ namespace laya
     {
         bool bRet = false;
         std::string sFullName = m_sRootPath + "/"+sFileName;
-        #ifdef WIN32
+        #ifdef OS_WINDOWS
         FILE* fp = _wfopen(utf8ToWide(sFullName).c_str(), L"rb");
         #else
         FILE* fp = fopen(sFullName.c_str(), "rb");

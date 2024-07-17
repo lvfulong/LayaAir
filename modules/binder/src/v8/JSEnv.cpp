@@ -7,7 +7,7 @@
 #include <binder/v8/Converter.h>
 #include <utils/Log.h>
 #include <v8-profiler.h>
-#ifdef WIN32
+#ifdef OS_WINDOWS
 #include <process.h>
 #include <windows.h>
 #endif
@@ -33,7 +33,7 @@ Javascript::Javascript()
         v8::V8::InitializePlatform(m_pPlatform);
         v8::V8::Initialize();
         std::string flags;
-#if __APPLE__
+#if OS_IOS
         flags.append(" --jitless ");
 #endif
         flags.append(" --expose-gc ");
@@ -257,13 +257,13 @@ JSV8Worker::~JSV8Worker()
 }
 void JSV8Worker::_defRunLoop()
 {
-#ifdef WIN32
+#ifdef OS_WINDOWS
     {
         DWORD thid = GetCurrentThreadId();
         SetNameInternal(thid, m_strName.c_str());
         // threadInfoLog("start thread:%s,%d", m_strName.c_str(), thid);
     }
-#elif __ANDROID__
+#elif OS_ANDROID
     {
         // threadInfoLog("start thread:%s,%ld", m_strName.c_str(), gettidv1());
     }

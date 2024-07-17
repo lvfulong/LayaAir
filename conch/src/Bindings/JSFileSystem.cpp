@@ -28,7 +28,7 @@ namespace laya
 			return JSP_TO_JS_NULL;
 		//try {
 			std::time_t wtime;
-//#ifdef WIN32
+//#ifdef OS_WINDOWS
             wtime = FileSystem::last_write_time(path);
 //#else
 //            wtime = FileSystem::last_write_time(path);

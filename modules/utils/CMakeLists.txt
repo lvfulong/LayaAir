@@ -63,12 +63,12 @@ set(SOURCES
 
 set(DEPS_GL)
 
-if(MSVC)
+if(OS_WINDOWS)
     list(APPEND DEPS_GL
         egl
         gles
     )
-elseif(LINUX AND NOT OHOS)
+elseif(OS_LINUX)
     list(APPEND DEPS_GL
         glad
     )

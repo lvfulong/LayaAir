@@ -24,29 +24,32 @@
 #include <Audio/JCAudioManager.h>
 #include <Bindings/JSInput.h>
 #include <thread>
-
-#ifdef __ANDROID__
+#include <platform/OS.h>
+#ifdef OS_ANDROID
     #include "WebSocket/WebSocket.h"
     #include "CToJavaBridge.h"
     #include <dlfcn.h>
     #include <pthread.h>
     #include <sys/types.h>
     #include <unistd.h>
-#elif __APPLE__
+#elif OS_IOS
     #include "CToObjectC.h"
     #include "pthread.h"
-#elif WIN32
+#elif OS_WINDOWS
     #include <windows.h>
-#include "2D\CanvasRenderingContext2DWin.h"
 #endif
-#ifdef __APPLE__
+#ifdef OS_IOS
 #include "OpenGLBackendiOS.h"
-#elif __ANDROID__
+#elif OS_ANDROID
 #include "OpenGLBackendAndroidEGL.h"
-#elif WIN32
+#elif OS_WINDOWS
 #include "OpenGLBackendWinEGL.h"
+#elif OS_OHOS
+#include "aki/jsbind.h"
+#include <string>
+#include "platform/ohos/napi/helper/NapiHelper.h"
 #endif
-#ifdef WIN32
+#ifdef OS_WINDOWS
 HWND g_hWnd;
 #endif
 std::string gRedistPath = "";
@@ -68,9 +71,11 @@ namespace laya
     std::shared_ptr<JCScriptRuntime> JCConch::s_pScriptRuntime;
     void _vibrate()
     {
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
         CToJavaBridge::JavaRet kRet;
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "vibrate", kRet);
+#elif OS_OHOS
+        NapiHelper::GetInstance()->startVibration(0.1f);
 #endif
     }
     JCConch::JCConch()
@@ -81,10 +86,10 @@ namespace laya
             FileSystem::mkdir(m_sCachePath);
         }
         laya::g_kSystemConfig.loadConfigIniFile();
-#ifdef __APPLE__
-#elif WIN32
+#ifdef OS_APPLE
+#elif OS_WINDOWS
         HMODULE libHandle = LoadLibrary(L"libGLESv2.dll");
-#elif __ANDROID__
+#elif OS_ANDROID
         //void *libhandle = dlopen("libGLESv2.so", RTLD_LAZY);
 #endif
         m_nUrlHistoryPos = -1;
@@ -161,9 +166,7 @@ namespace laya
         {
             return;
         }
-#ifdef WIN32
-        CanvasRenderingContext2DWin::clearAllBuffer();
-#endif
+
 
         JCAudioManager::GetInstance();
         m_isAppStarted = true;
@@ -189,7 +192,7 @@ namespace laya
     }
     void JCConch::urlGo(int s) 
     {
-#ifdef __APPLE__
+#ifdef OS_IOS
         CToObjectCRunStopJSLoop();
 #endif
         int sz = m_vUrlHistory.size();
@@ -298,7 +301,7 @@ namespace laya
         m_semaphore.setDataNum(0);
         m_semaphoreFramePacer.stop();
         postToJS([]() {
-#ifdef __ANDROID__||OHOS
+#if defined(OS_ANDROID) || defined(OS_OHOS)  
             if( laya::JCAudioManager::GetInstance()->getMp3Mute() == false && laya::JCAudioManager::GetInstance()->getMp3Stopped() == false)
             {
                 JCAudioManager::GetInstance()->pauseMp3();
@@ -320,7 +323,7 @@ namespace laya
         m_semaphore.setDataNum(1);
         m_semaphoreFramePacer.resume();
         postToJS([]() {
-#ifdef __ANDROID__||OHOS
+#if defined(OS_ANDROID) || defined(OS_OHOS)  
             //继续声音
             if( laya::JCAudioManager::GetInstance()->getMp3Mute() == false && laya::JCAudioManager::GetInstance()->getMp3Stopped() == false)
             {
@@ -334,6 +337,14 @@ namespace laya
                 pScriptRuntime->onFocus();
             }
         });
+    }
+    OS* JCConch::getOS()
+    {
+        if (!m_OS)
+        {
+            m_OS = createOS();
+        }
+        return m_OS.get();
     }
 };
 //------------------------------------------------------------------------------

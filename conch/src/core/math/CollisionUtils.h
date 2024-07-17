@@ -8,14 +8,8 @@
 #include "BoundBox.h"
 #include "BoundSphere.h"
 #include "ContainmentType.h"
-#ifdef WIN32
-#ifdef min
-#undef min
-#endif
-#ifdef max
-#undef max
-#endif
-#endif
+#include <utils/Preprocessor.h>
+
 namespace laya
 {
 	class CollisionUtils

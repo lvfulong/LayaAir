@@ -7,10 +7,10 @@
 #include <math.h>
 #include "../../JCScriptRuntime.h"
 #include <utils/Log.h>
-#ifdef __APPLE__
+#ifdef OS_IOS
 #include "../../IOSFreetype/JCIOSFreeType.h"
 #endif
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
 #include "../../JCSystemConfig.h"
 #include "CToJavaBridge.h"
 #endif   
@@ -32,7 +32,7 @@ namespace laya
 		m_pCurrentFontInfo = NULL;
 		m_pFontManager = new JCFontManager();
 		m_pFreeTypeRender = new JCFreeTypeFontRender();
-#ifdef __APPLE__
+#ifdef OS_IOS
 		m_pIOSFreeType = new JCIOSFreeType();
 		m_pFreeTypeRender->setIOSFTInterface(m_pIOSFreeType);
 #endif
@@ -51,7 +51,7 @@ namespace laya
 	JCTextMemoryCanvas::~JCTextMemoryCanvas()
 	{
 		clearAllData();
-#ifdef __APPLE__
+#ifdef OS_IOS
 		if (m_pIOSFreeType)
 		{
 			delete m_pIOSFreeType;

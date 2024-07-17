@@ -1,14 +1,7 @@
 #include "Bounds.h"
 #include <utils/Log.h>
 #include <utils/JCMemorySurvey.h>
-#ifdef WIN32
-#ifdef min
-#undef min
-#endif
-#ifdef max
-#undef max
-#endif
-#endif
+#include <utils/Preprocessor.h>
 
 namespace laya
 {

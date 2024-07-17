@@ -47,9 +47,6 @@ public class ConchJNI
 	//启动前的配置
 	public static native void configSetURL(String p_strUrl);
 	
-	public static native void configSetIsPlug(boolean p_bIsPlug);
-	
-	//
 	public static native void configSetParamExt(String p_strExt);
 	
 	//初始化

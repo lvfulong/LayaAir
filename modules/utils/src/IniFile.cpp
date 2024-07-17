@@ -6,7 +6,7 @@ namespace laya
 {
 IniFile::IniFile(const std::string &filePath)
 {
-#ifdef WIN32
+#ifdef OS_WINDOWS
     FILE* in;
     if ((in = _wfopen(utf8ToWide(filePath).c_str(), L"r")) == NULL)
     {

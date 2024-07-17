@@ -151,7 +151,7 @@ namespace laya
 				sT[p3] = 0;
 			}
 
-#ifdef WIN32
+#ifdef OS_WINDOWS
 			//windows下可以直接使用这个文件
 			// 不行，需要扩展名
 			//localFilePathUrl = pFileRes->m_strLocalPath;

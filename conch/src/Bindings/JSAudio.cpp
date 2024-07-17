@@ -31,7 +31,7 @@ namespace laya
 	    m_sSrc = "";
 	    m_sLocalFileName = "";
 	    m_bDownloaded = false;
-        #ifdef OHOS
+        #ifdef OS_OHOS
 		audioRenderInfo = NULL;
 		#else
         m_pOpenALInfo = NULL;
@@ -102,7 +102,7 @@ namespace laya
 	    }
 	    else*/
 	    {
-            #ifdef OHOS
+            #ifdef OS_OHOS
             if (audioRenderInfo && audioRenderInfo->m_pAudio == this)
             {
                 JCAudioManager::GetInstance()->setWavVolume(audioRenderInfo, m_bMuted ? 0 : m_nVolume);
@@ -294,7 +294,7 @@ namespace laya
                     //char tmpBuf[32];
                     //sprintf(tmpBuf, "%x_", hash);
                     //m_sLocalFileName = JCConch::s_pScriptRuntime->m_pFileResMgr->m_pFileCache->getAppPath() + "/" + tmpBuf + audiofile;
-#ifdef WIN32
+#ifdef OS_WINDOWS
 					//windows下可以直接使用这个文件
 					// 不行，需要扩展名
 					//m_sLocalFileName = pFileRes->m_strLocalPath;
@@ -362,7 +362,7 @@ namespace laya
 	    }
 	    else*/
 	    {
-           	#ifdef OHOS
+           	#ifdef OS_OHOS
             if (audioRenderInfo && audioRenderInfo->m_pAudio == this)
             {
                 JCAudioManager::GetInstance()->setWavVolume(audioRenderInfo,m_nVolume);
@@ -424,19 +424,19 @@ namespace laya
 	    }
 	    else */if (m_nType == EXT_MP3/* && !m_bIsBackgroundMusic*/)
 	    {			
-#if !defined(__LINUX__) && !defined(OHOS)//todo
+#if !defined(OS_LINUX) && !defined(OS_OHOS)//todo
 		    m_pOpenALInfo = JCAudioManager::GetInstance()->playWavMp3( this, m_sSrc, m_sLocalFileName.c_str(), m_nCurrentTime);
 #endif
 	    }
 		else
 		{
-			#ifdef OHOS
+			#ifdef OS_OHOS
 			audioRenderInfo = JCAudioManager::GetInstance()->playWav( this,m_sSrc, m_nType == EXT_OGG, m_nCurrentTime);
 			#else
 			m_pOpenALInfo = JCAudioManager::GetInstance()->playWav(this, m_sSrc, m_nType == EXT_OGG, m_nCurrentTime);
 			#endif
 		}
-		#ifdef OHOS
+		#ifdef OS_OHOS
 		if (audioRenderInfo){
 			if (m_bMuted) {
 				JCAudioManager::GetInstance()->setWavVolume(audioRenderInfo, 0);
@@ -480,7 +480,7 @@ namespace laya
 			}
 
 			m_nState = EXT_STATE_PAUSE;
-			#ifdef OHOS
+			#ifdef OS_OHOS
             if (audioRenderInfo && audioRenderInfo->m_pAudio == this)
             {
                 JCAudioManager::GetInstance()->stopWav(audioRenderInfo);
@@ -516,7 +516,7 @@ namespace laya
 			}
 			m_bShouldStop = false;//正确执行stop了，不需要记录了
 			m_nState = EXT_STATE_STOP;
-			#ifdef OHOS
+			#ifdef OS_OHOS
             if (audioRenderInfo && audioRenderInfo->m_pAudio == this)
             {
                 JCAudioManager::GetInstance()->stopWav(audioRenderInfo);
@@ -538,7 +538,7 @@ namespace laya
     }
     float JSAudio::getCurrentTime()
     {
-	#ifdef OHOS
+	#ifdef OS_OHOS
 		if (audioRenderInfo && audioRenderInfo->m_pAudio == this)
 		{
             return JCAudioManager::GetInstance()->getCurrentTime(audioRenderInfo);

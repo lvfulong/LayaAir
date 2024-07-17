@@ -30,7 +30,7 @@ set(SOURCES
     src/v8/Context.cpp
 )
 
-if(MSVC AND USE_JS_V8_DEBUGGER)
+if(OS_WINDOWS AND USE_JS_V8_DEBUGGER)
     list(APPEND SOURCES
         src/v8/v8debug/V8Win32Socket.cpp
     )
@@ -52,22 +52,26 @@ include_directories(${PUBLIC_HEADER_DIR})
 
 set(DEPS_V8)
 
-if(MSVC)
+if(OS_WINDOWS)
     list(APPEND DEPS_V8
         v8
         v8_libbase
         v8_libplatform
     )
-elseif(ANDROID)
+elseif(OS_ANDROID)
     list(APPEND DEPS_V8
         v8_monolith
         v8inspector
     )
-elseif(LINUX)
+elseif(OS_LINUX)
     list(APPEND DEPS_V8
         v8_monolith
     )
-elseif(IOS)
+elseif(OS_IOS)
+    list(APPEND DEPS_V8
+        v8_monolith
+    )
+elseif(OS_OHOS)
     list(APPEND DEPS_V8
         v8_monolith
     )
@@ -90,7 +94,7 @@ target_precompile_headers(${TARGET} PRIVATE ${HEADERS})
 
 message("benchmark :${CMAKE_GENERATOR}")
 ####  benchmark
-if(MSVC OR (ANDROID AND ANDROID_ABI STREQUAL "arm64-v8a" OR ANDROID_ABI STREQUAL "armeabi-v7a") OR (CMAKE_GENERATOR MATCHES "Xcode"))
+if(OS_WINDOWS OR (OS_ANDROID AND ANDROID_ABI STREQUAL "arm64-v8a" OR ANDROID_ABI STREQUAL "armeabi-v7a") OR (CMAKE_GENERATOR MATCHES "Xcode"))
     set(BENCHMARK_SOURCES benchmark/benchmark.cpp)
     add_executable(benchmark_${TARGET} ${BENCHMARK_SOURCES})
     #target_compile_options(benchmark_${TARGET} PRIVATE ${OPTIMIZATION_FLAGS})

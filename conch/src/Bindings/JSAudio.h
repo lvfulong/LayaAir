@@ -10,7 +10,7 @@
 
 namespace laya 
 {
-    #ifdef OHOS
+    #ifdef OS_OHOS
     class OHAudioRenderInfo;
     #else
     class OpenALSourceInfo;
@@ -126,7 +126,7 @@ namespace laya
         Persistent		    m_pJSFunctionAudioEnd;	//JS的回调
         Persistent         m_pJSFunctionCanPlay;   //JS的回调
         Persistent         m_pJSFunctionError;     //JS的回调
-        #ifdef OHOS
+        #ifdef OS_OHOS
         OHAudioRenderInfo* audioRenderInfo;
         #else
         OpenALSourceInfo*   m_pOpenALInfo;          //openAL的指针

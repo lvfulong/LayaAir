@@ -4,7 +4,7 @@
 #include <binder/v8/v8debug/V8Socket.h>
 #include <memory>
 
-#ifdef WIN32
+#ifdef OS_WINDOWS
 #else
 #include <unistd.h>
 #include <stdio.h>
@@ -85,7 +85,7 @@ namespace laya {
 		if (IsValid()) {
 			// Shutdown socket for both read and write.
 			int status = shutdown(socket_, 2);// SD_BOTH);
-#ifdef WIN32
+#ifdef OS_WINDOWS
 			closesocket(socket_);
 #else
 			close(socket_);
@@ -130,7 +130,7 @@ namespace laya {
 
 	bool V8Socket::SetUp() {
 		// Initialize Winsock32
-#ifdef WIN32
+#ifdef OS_WINDOWS
 		int err;
 		WSADATA winsock_data;
 		WORD version_requested = MAKEWORD(1, 0);
@@ -145,7 +145,7 @@ namespace laya {
 	}
 
 	int V8Socket::LastError() {
-#ifdef WIN32
+#ifdef OS_WINDOWS
 		return WSAGetLastError();
 #endif
 		return 0;

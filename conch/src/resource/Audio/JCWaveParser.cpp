@@ -58,7 +58,7 @@ void JCWaveParser::TestWave( const char* p_sFileName,const char* p_sOutFileName 
 	JCWaveInfo* pInfo = GetWaveInfoFromFile( p_sFileName );
 	if( pInfo )
 	{
-		#ifdef WIN32
+		#ifdef OS_WINDOWS
     	FILE* fp = _wfopen(utf8ToWide(p_sOutFileName).c_str(), L"a+");
     	#else
     	FILE* fp = fopen(p_sOutFileName, "a+");

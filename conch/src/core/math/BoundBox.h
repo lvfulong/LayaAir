@@ -6,14 +6,8 @@
 #include "Matrix4x4.h"
 #include <vector>
 #include <limits>
-#ifdef WIN32
-#ifdef min
-#undef min
-#endif
-#ifdef max
-#undef max
-#endif
-#endif
+#include <utils/Preprocessor.h>
+
 namespace laya
 {
 	class BoundBox

@@ -3,12 +3,17 @@
 #include "downloadMgr/JCDownloadMgr.h"
 #include "../../JCConch.h"
 #include <utils/JCFileSource.h>
-#ifdef __APPLE__ 
+#ifdef OS_IOS 
     #include "CToObjectC.h"
 #endif
-#ifdef __ANDROID__ 
+#ifdef OS_ANDROID 
 #include "CToJavaBridge.h"
+#elif OS_OHOS
+    #include "aki/jsbind.h"
+    #include <string>
+    #include "platform/ohos/napi/helper/NapiHelper.h"
 #endif
+#include "platform/OS.h"
 #include "../../JCSystemConfig.h"
 #include "JSInput.h"
 #include "JSConchConfig.h"
@@ -115,7 +120,7 @@ namespace laya
 
                 std::string cookiefile = JSConchConfig::getLocalStoragePath() + ss + "_curlcookie.txt";
                 pdm->setCookieFile(cookiefile.c_str());
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
                 CToJavaBridge::JavaRet kRet;
                 CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setHrefToJava", url.c_str(), kRet);
 #endif
@@ -189,23 +194,33 @@ namespace laya
     }
     void JSRuntime::setScreenWakeLock(bool p_bWakeLock)
     {
-#ifdef __APPLE__
+#ifdef OS_IOS
         CToObjectCSetScreenWakeLock(p_bWakeLock);
-#elif __ANDROID__
+#elif OS_ANDROID
         CToJavaBridge::JavaRet kRet;
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setScreenWakeLock", p_bWakeLock, kRet);
-#elif WIN32
+#elif OS_OHOS
+        NapiHelper::GetInstance()->setKeepScreenOn(p_bWakeLock);
+#elif OS_WINDOWS
 
 #endif
     }
     void JSRuntime::setSensorAble(bool p_bSensorAble)
     {
-#ifdef __APPLE__
+#ifdef OS_IOS
         CToObjectCSetSensorAble(p_bSensorAble);
-#elif __ANDROID__
+#elif OS_ANDROID
         CToJavaBridge::JavaRet kRet;
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setSensorAble", p_bSensorAble, kRet);
-#elif WIN32
+#elif OS_OHOS
+        if(p_bSensorAble) {
+            NapiHelper::GetInstance()->enableAccelerometer();
+            NapiHelper::GetInstance()->enableOrientation();
+        } else {
+            NapiHelper::GetInstance()->disableAccelerometer();
+            NapiHelper::GetInstance()->disableOrientation();
+        }
+#elif OS_WINDOWS
 
 #endif
     }
@@ -227,7 +242,7 @@ namespace laya
     }
     const char* JSRuntime::callMethod(int objid,bool isSyn,const char*clsName, const char* methodName, const char* paramStr)
     {
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
         CToJavaBridge::JavaRet kRet;
         if (CToJavaBridge::GetInstance()->callMethodRefection(objid, isSyn, clsName, methodName, paramStr, kRet))
         {
@@ -236,9 +251,9 @@ namespace laya
             return m_strReturn.c_str();
         }
         return "";
-#elif WIN32
+#elif OS_WINDOWS
         
-#elif __APPLE__
+#elif OS_IOS
         m_strReturn = CToObjectCCallMethod( objid, isSyn, clsName, methodName,paramStr);
         LOGI("JSRuntime::callMethod %s", m_strReturn.c_str());
         return m_strReturn.c_str();
@@ -299,12 +314,7 @@ namespace laya
     }
 	void JSRuntime::exit()
     {
-#ifdef __ANDROID__
-        CToJavaBridge::JavaRet ret;
-        CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "exit", ret);
-#elif __APPLE__
-#elif WIN32
-#endif
+        JCConch::s_pConch->getOS()->exit();
     }
 	int JSRuntime::getSafeInsetTop()
 	{
@@ -312,11 +322,11 @@ namespace laya
         int safeInsetLeft = 0;
         int safeInsetBottom = 0;
         int safeInsetRight = 0;
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
 		CToJavaBridge::GetInstance()->getSafeInsetRect(safeInsetLeft, safeInsetTop, safeInsetRight, safeInsetBottom);
-#elif __APPLE__
+#elif OS_IOS
         CToObjectCGetSafeAreaInsets(&safeInsetTop, &safeInsetLeft, &safeInsetBottom, &safeInsetRight);
-#elif WIN32
+#elif OS_WINDOWS
 #endif
 		return safeInsetTop;
 	}
@@ -326,11 +336,11 @@ namespace laya
         int safeInsetLeft = 0;
         int safeInsetBottom = 0;
         int safeInsetRight = 0;
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
 		CToJavaBridge::GetInstance()->getSafeInsetRect(safeInsetLeft, safeInsetTop, safeInsetRight, safeInsetBottom);
-#elif __APPLE__
+#elif OS_IOS
         CToObjectCGetSafeAreaInsets(&safeInsetTop, &safeInsetLeft, &safeInsetBottom, &safeInsetRight);
-#elif WIN32
+#elif OS_WINDOWS
 #endif
 		return safeInsetLeft;
 	}
@@ -340,11 +350,11 @@ namespace laya
         int safeInsetLeft = 0;
         int safeInsetBottom = 0;
         int safeInsetRight = 0;
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
 		CToJavaBridge::GetInstance()->getSafeInsetRect(safeInsetLeft, safeInsetTop, safeInsetRight, safeInsetBottom);
-#elif __APPLE__
+#elif OS_IOS
         CToObjectCGetSafeAreaInsets(&safeInsetTop, &safeInsetLeft, &safeInsetBottom, &safeInsetRight);
-#elif WIN32
+#elif OS_WINDOWS
 #endif
 		return safeInsetBottom;
 	}
@@ -354,11 +364,11 @@ namespace laya
         int safeInsetLeft = 0;
         int safeInsetBottom = 0;
         int safeInsetRight = 0;
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
 		CToJavaBridge::GetInstance()->getSafeInsetRect(safeInsetLeft, safeInsetTop, safeInsetRight, safeInsetBottom);
-#elif __APPLE__
+#elif OS_IOS
         CToObjectCGetSafeAreaInsets(&safeInsetTop, &safeInsetLeft, &safeInsetBottom, &safeInsetRight);
-#elif WIN32
+#elif OS_WINDOWS
 #endif
 		return safeInsetRight;
 	}
@@ -513,15 +523,15 @@ namespace laya
     }
     bool JSRuntime::registerFont(JSValueAsParam jsFamily, JSValueAsParam pathOrArrayBuffer)
     {
-        bool familyIsNull = jsFamily->IsNull() || jsFamily->IsUndefined();
-        Local value(pathOrArrayBuffer);
-        if (value.isString())
+        Local valueFamily(jsFamily);
+        Local valuePathOrArrayBuffer(pathOrArrayBuffer);
+        if (valueFamily.isString() && valuePathOrArrayBuffer.isString())
         {
-            std::string path = value.as<std::string>();
+            std::string path = valuePathOrArrayBuffer.as<std::string>();
             std::string family = Converter<std::string>::ToCpp(jsFamily);
-            return FontManager::getInstance()->registerFont(familyIsNull ? "" : family, path);
+            return FontManager::getInstance()->registerFont(family, path);
         }
-        else if (value.isArrayBuffer())
+        else if (valueFamily.isString() && valuePathOrArrayBuffer.isArrayBuffer())
         {
             char* ab = NULL;
             int byte = 0;
@@ -529,7 +539,7 @@ namespace laya
             if (isab)
             {
                 std::string family = Converter<std::string>::ToCpp(jsFamily);
-                return FontManager::getInstance()->registerFont(familyIsNull ? "" : family, (uint8_t*)ab, byte);
+                return FontManager::getInstance()->registerFont(family, (uint8_t*)ab, byte);
             }
         }
         LOGI("registerFont failed");
@@ -693,11 +703,21 @@ namespace laya
         JCFileResManager* pfsMgr = JCConch::s_pScriptRuntime->m_pFileResMgr;
         pfsMgr->m_pDownloader = jsdownloader;
     }
-
+    //todo 刷新生命周期
+    std::shared_ptr<int> callbackRef(new int(1));
+    JsValue JSRuntime::postAsyncMessage(const std::string &eventName, const std::string &data)
+    {
+        return JCConch::s_pConch->getOS()->postAsyncMessage(callbackRef, eventName, data);
+    }
+    std::string JSRuntime::postSyncMessage(const std::string &eventName, const std::string &data)
+    {
+        return JCConch::s_pConch->getOS()->postSyncMessage(eventName, data);
+    }
     void JSRuntime::exportJS(Context& context)
     {
         class_<JSRuntime> class_binding;
-		//class_binding.class_function("computeSubSkinnedDataForNative", &JSRuntime::computeSubSkinnedDataForNative)TODO;
+		class_binding.class_function("postAsyncMessage", &JSRuntime::postAsyncMessage);
+        class_binding.class_function("postSyncMessage", &JSRuntime::postSyncMessage);
 		class_binding.class_function("setGlobalRepaint", &JSRuntime::setGlobalRepaint);
 		class_binding.class_function("setScreenOrientation", &JSRuntime::setScreenOrientation);
 		class_binding.class_function("getLaunchOptionsSync", &JSRuntime::getLaunchOptionsSync);

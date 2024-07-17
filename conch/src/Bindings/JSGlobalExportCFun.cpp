@@ -32,19 +32,19 @@
 #include "JSTextDecoder.h"
 
 #include "JSCanvasRenderingContext2D.h"
-#ifdef __ANDROID__
+#ifdef OS_ANDROID
     #include "JSAndroidEditBox.h"
 	#include "CToJavaBridge.h"
-#elif OHOS
+#elif OS_OHOS
     #include "JSOHOSEditBox.h"
     #include "aki/jsbind.h"
     #include "platform/ohos/napi/helper/NapiHelper.h"
-#elif WIN32
+#elif OS_WINDOWS
 	#include <Windows.h>
     #include "JSWindowEditBox.h"
-#elif __LINUX__
+#elif OS_LINUX
     #include "JSLinuxEditBox.h"
-#elif __APPLE__
+#elif OS_IOS
     #include "JSIOSEditBox.h"
     #include "CToObjectC.h"
 #endif
@@ -62,12 +62,11 @@
 #include "Video/JSVideo.h"
 #include <LayaGL/JCLayaGLDispatch.h>
 #include "Bullet/LayaBulletExport.h"
-#if !defined(__LINUX__) && !defined(WIN32) && !defined(OHOS)//todo
+#if !defined(OS_LINUX) && !defined(OS_WINDOWS) && !defined(OS_OHOS)//todo
 #include "PhysX/LayaPhysXExport.h"
 #endif
 #include "JSArrayBufferRef.h"
 #include "JSLaunchOptions.h"
-#include "JSStat.h"
 #include "JSPromiseRejectionEvent.h"
 #include "JSFile.h"
 #include "JSFileReader.h"
@@ -85,15 +84,15 @@
 extern int g_nInnerWidth ;
 extern int g_nInnerHeight ;
 extern bool g_bGLCanvasSizeChanged;
-#ifdef WIN32
+#ifdef OS_WINDOWS
 	int g_bEnableTouch = false;
-#elif __ANDROID__
+#elif OS_ANDROID
 	int g_bEnableTouch = true;
-#elif __APPLE__
+#elif OS_IOS
 	int g_bEnableTouch = true;
-#elif OHOS
+#elif OS_OHOS
 	int g_bEnableTouch = true;
-#elif __LINUX__
+#elif OS_LINUX
 	int g_bEnableTouch = false;
 #endif
  std::string g_sExePath = "";
@@ -240,12 +239,12 @@ namespace laya
     }
 	void copy(const char* data)
 	{
-#ifdef WIN32
-#elif __ANDROID__
+#ifdef OS_WINDOWS
+#elif OS_ANDROID
 		std::string strBuffer = data;
 		CToJavaBridge::JavaRet kRet;
 		CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "copy", strBuffer.c_str(), kRet);
-#elif __APPLE__
+#elif OS_IOS
 		CToObjectCopy(data);
 #endif
 	}
@@ -265,7 +264,7 @@ namespace laya
     }
     void LayaAlert(const char* p_sBuffer)
     {
-#ifdef WIN32
+#ifdef OS_WINDOWS
         int nLen = strlen(p_sBuffer) + 3;
         unsigned short* ucStr = new unsigned short[nLen];
         int nlen = UTF8StrToUnicodeStr((unsigned char*)p_sBuffer, ucStr, nLen);
@@ -273,20 +272,20 @@ namespace laya
         ucStr = NULL;
         std::wstring wsBuffer = (wchar_t*)utf8_unicode(p_sBuffer).c_str();
         MessageBoxW(NULL, wsBuffer.c_str(), L"alert", MB_OK);
-#elif __ANDROID__
+#elif OS_ANDROID
         std::string strBuffer = p_sBuffer;
         CToJavaBridge::JavaRet kRet;
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "alert", strBuffer.c_str(), kRet);
-#elif OHOS
+#elif OS_OHOS
         NapiHelper::GetInstance()->showDialog(p_sBuffer);
-#elif __APPLE__
+#elif OS_IOS
         CToObjectCAlert(p_sBuffer);
 #endif
     }
     void JSAlert(const char* p_sBuffer)
     {
         LayaAlert(p_sBuffer);
-#ifndef WIN32
+#ifndef OS_WINDOWS
         LOGI("alert=%s", p_sBuffer);
 #endif
     }
@@ -300,13 +299,15 @@ namespace laya
     }
     int getDevicePixelRatio()
     {
-#ifdef WIN32
+#ifdef OS_WINDOWS
         return 1.0;
-#elif __ANDROID__
+#elif OS_ANDROID
         return 1.0;
-#elif __APPLE__
+#elif OS_IOS
 		return 1.0;// CToObjectCGetDevicePixelRatio();
-#elif __LINUX__
+#elif OS_OHOS
+        return 1.0;
+#elif OS_LINUX
         return 1.0;
 #endif
     }
@@ -328,12 +329,12 @@ namespace laya
     }
 	void open(const char* p_pszUrl)
 	{
-#ifdef WIN32
-#elif __ANDROID__
+#ifdef OS_WINDOWS
+#elif OS_ANDROID
 		std::string strBuffer = p_pszUrl;
 		CToJavaBridge::JavaRet kRet;
 		CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "open", strBuffer.c_str(), kRet);
-#elif __APPLE__
+#elif OS_IOS
         CToObjectCOpenUrl(p_pszUrl);
 #endif
 	}
@@ -490,19 +491,18 @@ namespace laya
 		JSLaunchOptions::exportJS(context);
         JSPromiseRejectionEvent::exportJS(context);
         JSImageBitmap::exportJS(context);
-#ifdef WIN32
+#ifdef OS_WINDOWS
         JSWindowEditBox::exportJS(context);
-#elif __LINUX__
+#elif OS_LINUX
         JSLinuxEditBox::exportJS(context);
-#elif __ANDROID__
+#elif OS_ANDROID
         JSAndroidEditBox::exportJS(context);
-#elif OHOS
+#elif OS_OHOS
         JSOHOSEditBox::exportJS(context);
-#elif __APPLE__
+#elif OS_IOS
         JSIOSEditBox::exportJS(context);
 #endif
         //JSTextBitmapInfo::exportJS(context);
-		JSStat::exportJS(context);
         //JSTextMemoryCanvas::getInstance()->exportJS(context);
         JSArrayBufferRef::exportJS(context);
 
@@ -562,7 +562,7 @@ namespace laya
         context.function("atob", &atob);
         context.function("_createImageBitmap", &createImageBitmap);
         JSLayaConchBullet::exportJS(context);
- #if !defined(__LINUX__) && !defined(WIN32) && !defined(OHOS)//TODO
+ #if !defined(OS_LINUX) && !defined(OS_WINDOWS) && !defined(OS_OHOS)//TODO
         JSLayaConchPhysX::exportJS(context);
 #endif
 	}

@@ -9,19 +9,11 @@ bool NAPIFun::m_bTakeScreenshot = false;
 void NAPIFun::postCmdToMainThread(int p_nCmd, int p_nParam1, int p_nParam2)
 {
 }
-void NAPIFun::ConchNAPI_configSetParamExt(std::string p_strParamExt)
-{
-    g_kSystemConfig.m_jsonparamExt = p_strParamExt;
-}
 void NAPIFun::ConchNAPI_configSetURL(std::string p_strUrl)
 {
     g_kSystemConfig.m_strStartURL = p_strUrl;
 }
-void NAPIFun::ConchNAPI_configSetIsPlug(bool p_bIsPlug)
-{
-    JCSystemConfig::s_bIsPlug = p_bIsPlug;
-}
-void NAPIFun::ConchNAPI_InitDLib(napi_value assetManager, int nThreadNum, std::string p_strAssetRootPath, std::string p_strCachePath, int threadMode, int debugMode, int debugPort)
+void NAPIFun::ConchNAPI_InitDLib(napi_value assetManager, int nThreadNum, std::string p_strAssetRootPath, std::string p_strCachePath)
 {
     auto fun = NAPIFun::GetInstance();
     LOGI("NAPI InitDLib");
@@ -249,9 +241,7 @@ void NAPIFun::ConchNAPI_handleDeviceOrientationEvent(float ra, float rb, float r
 }
 JSBIND_GLOBAL()
 {
-    JSBIND_FUNCTION(NAPIFun::ConchNAPI_configSetParamExt, "ConchNAPI_configSetParamExt");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_configSetURL, "ConchNAPI_configSetURL");
-    JSBIND_FUNCTION(NAPIFun::ConchNAPI_configSetIsPlug, "ConchNAPI_configSetIsPlug");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_InitDLib, "ConchNAPI_InitDLib");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_SetLocalStoragePath, "ConchNAPI_SetLocalStoragePath");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_ReleaseDLib, "ConchNAPI_ReleaseDLib");

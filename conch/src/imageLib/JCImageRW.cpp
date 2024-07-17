@@ -7,8 +7,6 @@
 //------------------------------------------------------------------------------
 namespace laya
 {
-
-#ifndef WEBASM
 	unsigned char* ReadPNGFromMem(unsigned char* data, int dataSize, PNG_UINT32* w, PNG_UINT32* h);
 	int LoadJpegFromMem (BitmapData* pBitmapData,unsigned  char * memData, int size );
     int LoadGif(BitmapData* pBitmapData, unsigned  char * memData, int size);
@@ -452,7 +450,6 @@ namespace laya
             psrc += srcPitch;
         }
     }
-#endif
     void convertRGBA8888ToRGB888(const unsigned char* data, size_t dataLen, unsigned char* outData)
     {
         for (size_t i = 0, l = dataLen - 3; i < l; i += 4)

@@ -11,7 +11,7 @@ bool readFileSync(const char *p_pszFile, JCBuffer &p_buf, int p_nEncode)
 {
     if (!p_pszFile)
         return false;
-    #ifdef WIN32
+    #ifdef OS_WINDOWS
     FILE* pf = _wfopen(utf8ToWide(p_pszFile).c_str(), L"rb");
     #else
     FILE* pf = fopen(p_pszFile, "rb");
@@ -49,7 +49,7 @@ bool writeFileSync1(const char *p_pszFile, char *p_pBuff, int p_nLen, int p_nEnc
 {
     if (!p_pszFile || strlen(p_pszFile) <= 1)
         return false;
-    #ifdef WIN32
+    #ifdef OS_WINDOWS
     FILE* pFile = _wfopen(utf8ToWide(p_pszFile).c_str(), L"wb");
     #else
     FILE* pFile = fopen(p_pszFile, "wb");
@@ -77,7 +77,7 @@ namespace FileSystem
 {
 bool exists(const std::string &path)
 {
-#if WIN32
+#if OS_WINDOWS
     std::wstring wide_path = utf8ToWide(path);
     std::error_code error;
     return fs::exists(wide_path, error);
@@ -88,7 +88,7 @@ bool exists(const std::string &path)
 }
 bool mkdir(const std::string &path)
 {
-#if WIN32
+#if OS_WINDOWS
     std::wstring wide_path = utf8ToWide(path);
     std::error_code error;
     return fs::create_directories(wide_path, error);
@@ -99,7 +99,7 @@ bool mkdir(const std::string &path)
 }
 bool rm(const std::string &path)
 {
-#if WIN32
+#if OS_WINDOWS
     std::wstring wide_path = utf8ToWide(path);
     std::error_code error;
     return fs::remove(wide_path, error);
@@ -114,7 +114,7 @@ std::vector<std::string> readdirSync(const std::string &path)
     if (!FileSystem::exists(path))
         return paths;
     std::error_code error;
-#if WIN32
+#if OS_WINDOWS
     std::wstring wide_path = utf8ToWide(path);
     fs::directory_iterator item_begin(wide_path, error);
 #else
@@ -124,7 +124,7 @@ std::vector<std::string> readdirSync(const std::string &path)
     for (; item_begin != item_end; item_begin.increment(error))
     {
         auto pp = (*item_begin).path().filename();
-#if WIN32
+#if OS_WINDOWS
         paths.push_back(wideToUtf8(pp.wstring()));
 #else
         paths.push_back(pp.generic_string());
@@ -134,7 +134,7 @@ std::vector<std::string> readdirSync(const std::string &path)
 }
 bool is_directory(const std::string &path)
 {
-#if WIN32
+#if OS_WINDOWS
     std::wstring wide_path = utf8ToWide(path);
     std::error_code error;
     return fs::is_directory(wide_path, error);
@@ -145,7 +145,7 @@ bool is_directory(const std::string &path)
 }
 bool is_regular_file(const std::string &path)
 {
-#if WIN32
+#if OS_WINDOWS
     std::wstring wide_path = utf8ToWide(path);
     std::error_code error;
     return fs::is_regular_file(wide_path, error);
@@ -156,7 +156,7 @@ bool is_regular_file(const std::string &path)
 }
 uintmax_t file_size(const std::string &path)
 {
-#if WIN32
+#if OS_WINDOWS
     std::wstring wide_path = utf8ToWide(path);
     std::error_code error;
     return fs::is_regular_file(wide_path, error);
@@ -167,7 +167,7 @@ uintmax_t file_size(const std::string &path)
 }
 std::time_t last_write_time(const std::string &path)
 {
-#if WIN32
+#if OS_WINDOWS
     std::wstring wide_path = utf8ToWide(path);
     std::error_code error;
     return std::chrono::system_clock::to_time_t(fs::last_write_time(wide_path, error));
@@ -179,7 +179,7 @@ std::time_t last_write_time(const std::string &path)
 
 std::string filename(const std::string &path)
 {
-#if WIN32
+#if OS_WINDOWS
     std::wstring wide_path = utf8ToWide(path);
     fs::path p(wide_path);
     std::error_code error;
@@ -191,7 +191,7 @@ std::string filename(const std::string &path)
 }
 std::string remove_filename(const std::string &path)
 {
-#if WIN32
+#if OS_WINDOWS
     std::wstring wide_path = utf8ToWide(path);
     fs::path p(wide_path);
     std::error_code error;

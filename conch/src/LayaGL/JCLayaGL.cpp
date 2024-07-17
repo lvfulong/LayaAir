@@ -43,7 +43,7 @@ namespace laya
         m_pImageManager = pImageManager;
         m_nCurrentBuffer = 0;
         m_nCurrentProgram = 0;
-#ifdef __APPLE__
+#ifdef OS_IOS
         //glGetIntegerv(GL_FRAMEBUFFER_BINDING, &g_nMainFrameBuffer);
 		g_nRealMainFrameBuffer = 1;
 		g_nMainFrameBuffer = g_nRealMainFrameBuffer;
@@ -1334,7 +1334,7 @@ namespace laya
         {
             ::glViewport(x, y, width,height);
         }
-//#ifdef __APPLE__
+//#ifdef OS_IOS
 //        saveViewPortRect(x,y,width,height);
 //#endif
 #ifdef DEBUG_WEBGL

@@ -27,7 +27,7 @@ namespace laya
 
         static unsigned int hashMem(const unsigned char* mem, int len);
     };
-#ifndef WEBASM
+
     struct MD5_DATA
     {
         unsigned long data[4];
@@ -106,7 +106,7 @@ namespace laya
     };
     uint32_t crc32(const unsigned char *buf, uint32_t size);
 
-#endif
+
 }
 //------------------------------------------------------------------------------
 

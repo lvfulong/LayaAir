@@ -13,19 +13,13 @@
 namespace laya
 {
     class IConchThreadCmdMgr;
-#ifndef WEBASM
 	class JSImage
-#else
-    class JSImage
-#endif
 	{
     public:
 
         JSImage();
 
         ~JSImage();
-
-#ifndef WEBASM
 
 	public:
 		enum { onloadid, onerrorid, thisid, objid };
@@ -85,7 +79,6 @@ namespace laya
 
         bool downloadImage(bool p_bSyncDecode);
 
-#endif
 
     public:
 
@@ -95,17 +88,11 @@ namespace laya
 
         void releaseTexture();
 
-        void setImageInfo(const char* sUrl,int w, int h);
-
         void createImageOnRenderThread(int nID,std::shared_ptr<JCImage> pImage);
 
         void deleteImageOnRenderThread(int nID);
 
         void releaseImageOnRenderThread(int nID);
-
-
-#ifndef WEBASM
-
 	public:
 		Persistent		                m_pOnLoad;
 		Persistent		                m_pOnError;
@@ -114,8 +101,6 @@ namespace laya
         std::shared_ptr<int>	        m_CallbackRef;
         std::string                     m_sUrl;
         int                             m_nDownloadState;
-#endif
-
     public:
         std::shared_ptr<JCImage>	    m_pImage;
         int                             m_nID;

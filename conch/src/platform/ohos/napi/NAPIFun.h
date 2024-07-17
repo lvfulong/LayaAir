@@ -32,10 +32,8 @@ public:
     }
 
     static void postCmdToMainThread(int p_nCmd, int p_nParam1,int p_nParam2);
-    static void ConchNAPI_configSetParamExt(std::string p_strParamExt);
     static void ConchNAPI_configSetURL(std::string p_strUrl);
-    static void ConchNAPI_configSetIsPlug(bool p_bIsPlug);
-    static void ConchNAPI_InitDLib(napi_value assetManager,int nThreadNum,std::string p_strAssetRootPath,std::string p_strCachePath,int threadMode, int debugMode, int debugPort);
+    static void ConchNAPI_InitDLib(napi_value assetManager,int nThreadNum,std::string p_strAssetRootPath,std::string p_strCachePath);
     static void ConchNAPI_SetLocalStoragePath(std::string p_strLocalStorage);
     static void ConchNAPI_ReleaseDLib();
     static void ConchNAPI_OnAppDestroy();

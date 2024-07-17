@@ -1,26 +1,25 @@
 #ifndef __CanvasRenderingContext2DOHOS_H__
 #define __CanvasRenderingContext2DOHOS_H__
 
-
 #include "CanvasRenderingContext2D.h"
-#include <optional>
-#include <string>
-#include <ace/xcomponent/native_interface_xcomponent.h>
 #include "napi/native_api.h"
-#include <native_window/external_window.h>
-#include <native_drawing/drawing_bitmap.h>
-#include <native_drawing/drawing_color.h>
-#include <native_drawing/drawing_canvas.h>
-#include <native_drawing/drawing_pen.h>
-#include <native_drawing/drawing_brush.h>
-#include <native_drawing/drawing_path.h>
-#include <native_drawing/drawing_text_typography.h>
-#include <native_drawing/drawing_font_collection.h>
-#include <cmath>
+#include <ace/xcomponent/native_interface_xcomponent.h>
 #include <algorithm>
+#include <cmath>
+#include <native_drawing/drawing_bitmap.h>
+#include <native_drawing/drawing_brush.h>
+#include <native_drawing/drawing_canvas.h>
+#include <native_drawing/drawing_color.h>
+#include <native_drawing/drawing_font_collection.h>
+#include <native_drawing/drawing_path.h>
+#include <native_drawing/drawing_pen.h>
+#include <native_drawing/drawing_register_font.h>
+#include <native_drawing/drawing_text_typography.h>
+#include <native_window/external_window.h>
+#include <optional>
 #include <stdint.h>
+#include <string>
 #include <sys/mman.h>
-
 
 namespace laya
 {
@@ -46,6 +45,8 @@ class CanvasRenderingContext2DOHOS : public CanvasRenderingContext2D
     void setLineWidth(double lineWidth) override;
     void setLineJoin(const char *lineJoin) override;
     static bool registerFontFromPath(const std::string &fontName, const std::string &path);
+    void setFillStyle(const char *color) override;
+    void setStrokeStyle(const char *color) override;
 
   protected:
     void getTextPosition(const std::string &text, double x, double y, double &outX, double &outY) override;
@@ -55,9 +56,9 @@ class CanvasRenderingContext2DOHOS : public CanvasRenderingContext2D
     OH_Drawing_Canvas *m_canvas;
     OH_Drawing_TextStyle *m_fontTextStyle;
     OH_Drawing_TypographyStyle *m_fontTypography;
-    static OH_Drawing_FontCollection *m_fontCollection;
+    OH_Drawing_FontCollection *m_fontCollection;
     OH_Drawing_TypographyCreate *m_typographyCreate;
-    
+
     BitmapData m_bitmapData;
 };
 } // namespace laya

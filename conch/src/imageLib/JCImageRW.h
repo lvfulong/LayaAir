@@ -16,7 +16,7 @@
 #include "BitmapData.h"
 namespace laya
 {
-#ifndef WEBASM
+
 
 	//�����Ƕ���ʵ�����������á���Ϊʵ�ʶ����������ʱ����
 	typedef std::function<void(BitmapData bmp)> imgDecodeCB;
@@ -115,7 +115,7 @@ namespace laya
     std::pair<unsigned char*, unsigned long> convertBitmapToPng(const char* p_pData, int nWidth, int nHeight, int nBitDepth);
 
     void convertRGBA8888ToFormat(const unsigned char* data, size_t dataLen, GLenum format, unsigned char** outData, size_t* outDataLen);
-#endif
+
 }
 //------------------------------------------------------------------------------
 

@@ -136,7 +136,7 @@ namespace laya
     (((unsigned char *) b)[(i)+2]) = (unsigned char) (((n) >> 16) & 0xFF);      \
     (((unsigned char *) b)[(i)+3]) = (unsigned char) (((n) >> 24) & 0xFF);      \
 }
-#ifndef WEBASM
+
     void JCMD5::md5_starts(struct md5_context *ctx)
     {
         ctx->total[0] = 0;
@@ -484,7 +484,6 @@ namespace laya
             return false;
         }
     }
-#endif
 
     unsigned int JCBKDRHash::hashStr(const unsigned char* str){
         unsigned int seed = 131; // 31 131 1313 13131 131313 etc..

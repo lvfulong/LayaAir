@@ -93,6 +93,9 @@ namespace laya
 
         static void downloadFile(JSValueAsParam url, JSValueAsParam onProgress, JSValueAsParam onComplete, JSValueAsParam onError);
         static void setDownloader(JSValueAsParam obj);
+
+        static JsValue postAsyncMessage(const std::string &eventName, const std::string &data);
+        static std::string postSyncMessage(const std::string &eventName, const std::string &data);
     public:
 
         static JsValue readFileFromAsset(const char* file, const char* encode);

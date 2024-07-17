@@ -194,7 +194,7 @@ template <> class Converter<const int32_t &> : public Converter<int32_t>
 {
 };
 
-#ifdef __APPLE__
+#ifdef OS_IOS
 template <> class Converter<long>
 {
   public:

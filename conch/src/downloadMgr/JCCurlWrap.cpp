@@ -12,7 +12,7 @@
 #include "../downloadMgr/JCDownloadMgr.h"
 #include <utils/JCLayaUrl.h>
 #include <cmath>
-#ifdef WIN32
+#ifdef OS_WINDOWS
 //#ifdef _DEBUG
 //#pragma comment(lib,"libcurl.lib")
 //#else
@@ -405,7 +405,7 @@ namespace laya{
         return size*nmemb;
     }
     long GetLocalFileLenth(const char* fileName) {
-        #ifdef WIN32
+        #ifdef OS_WINDOWS
         FILE* fp = _wfopen(utf8ToWide(fileName).c_str(), L"rb");
         #else
         FILE* fp = fopen(fileName, "rb");

@@ -66,7 +66,6 @@ public class GameEngine implements IPlugin {
 	public void game_plugin_init(int nDownloadThreadNum) {
 	    Log.d(TAG,"game_plugin_init url = " + mGameUrl);
 	    String gameUrl = mGameUrl;
-	    mLayaGameEngine.setIsPlugin(false);
 	    mLayaGameEngine.setGameUrl(gameUrl);
 		//mLayaGameEngine.setResolution(600,200);
 	    Log.d(TAG,"url="+gameUrl);
