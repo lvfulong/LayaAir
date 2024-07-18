@@ -225,6 +225,7 @@ jmethodID CToJavaBridge::addStaticMethod( JNIEnv* p_Env, const char* p_sCls){
         jclass tmp = p_Env->FindClass(CToJavaBridge::JavaClass.c_str()); 
 		LOGI("[########]  %s", CToJavaBridge::JavaClass.c_str());
     	m_jClass  =(jclass)p_Env->NewGlobalRef(tmp);
+		m_classMap.insert(std::make_pair(CToJavaBridge::JavaClass.c_str(), m_jClass));
         m_jMethodID = p_Env->GetStaticMethodID(m_jClass, "callMethod", "(IZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;");
 		m_jMethodIDRefection = p_Env->GetStaticMethodID(m_jClass, "callMethodRefection", "(IZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;");
         m_jNativeMethodStrId = p_Env->GetStaticMethodID(m_jClass, "callMethod", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;");

@@ -23,7 +23,8 @@ class HttpClientOHOS : public IHttpClient
     void cancel() override;
 
   private:
-    aki::Value m_object;
+    int m_tag;
+    static int ms_handleIdx;
 };
 
 } // namespace laya

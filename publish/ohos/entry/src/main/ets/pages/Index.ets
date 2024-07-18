@@ -16,6 +16,7 @@ import { Dialog } from "@ohos/libSysCapabilities"
 import deviceInfo from '@ohos.deviceInfo';
 import promptAction from '@ohos.promptAction'
 import process from '@ohos.process';
+import { LayaHttpClient } from '@ohos/libSysCapabilities/src/main/ets/system/network/LayaHttpClient'
 
 const nativePageLifecycle: laya.CPPFunctions = laya.getContext(ContextType.JSPAGE_LIFECYCLE);
 NapiHelper.registerUIFunctions();
@@ -34,6 +35,10 @@ struct Index {
   // videoPlayer
   @State videoPlayerInfoArray: VideoPlayerInfo[] = [];
   private videoPlayerIndexMap: Map<number, VideoPlayerInfo> = new Map;
+
+  // videoPlayer
+  @State layaHttpClientArray: LayaHttpClient[] = [];
+  private layaHttpClientIndexMap: Map<number, LayaHttpClient> = new Map;
 
   private pro = new process.ProcessManager();
   private m_nBackPressTime = 0;
@@ -61,6 +66,8 @@ struct Index {
     GlobalContext.storeGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_INDEX_MAP, this.videoPlayerIndexMap);
     GlobalContext.storeGlobalThis(GlobalContextConstants.LAYA_DIALOG_CONTROLLER, this.dialogController);
     GlobalContext.storeGlobalThis(GlobalContextConstants.LAYA_SHOW_MESSAGE, this.showMessage);
+    GlobalContext.storeGlobalThis(GlobalContextConstants.LAYA_HTTP_CLIENT_ARRAY, this.layaHttpClientArray);
+    GlobalContext.storeGlobalThis(GlobalContextConstants.LAYA_HTTP_CLIENT_INDEX_MAP, this.layaHttpClientIndexMap);
     nativePageLifecycle.onPageShow();
     Dialog.setTitle(getContext(this).resourceManager.getStringSync($r('app.string.Dialog_Title').id));
   }

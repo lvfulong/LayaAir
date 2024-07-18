@@ -67,8 +67,10 @@ namespace laya {
     需要切换版本。
     */
 
-    per_session_data__v8dbg* pCurPss = nullptr;
+    //per_session_data__v8dbg* pCurPss = nullptr;
+    per_session_data__v8dbg* frontUser = nullptr;
     DebuggerAgent* gpDbgAgent = nullptr;
+    int gSessionID=0;
     static int callback_def(
         struct lws *wsi, enum lws_callback_reasons reason,
         void *user, void *in, size_t len) {
@@ -78,19 +80,39 @@ namespace laya {
         per_session_data__v8dbg *pss = (per_session_data__v8dbg *)user;
 
         switch (reason) {
+        case LWS_CALLBACK_FILTER_PROTOCOL_CONNECTION:
+            char buffer[256];
+            lws_hdr_copy(wsi, buffer, sizeof(buffer), WSI_TOKEN_GET_URI);
+            lwsl_notice("Header URI: %s\n", buffer);
+            if(strcmp(buffer,"/a9f0cbe3-46ba-4b94-b937-fa254f5974e2")==0){
+                printf("前端请求调试native，user:%x\n",user);
+                frontUser = pss;
+            }
+            return 0;//都同意，有的是http 1.1
+            break;
+        case LWS_CALLBACK_FILTER_NETWORK_CONNECTION:
+            printf("filter connection %x\n",user);
+            //返回非0拒绝连接
+            break;
         case LWS_CALLBACK_PROTOCOL_INIT:
             break;
         case LWS_CALLBACK_ESTABLISHED:  //有人连进来了
-            printf("connection established\n");
-            pss->pRecvBuff = nullptr;
-            pss->index = 0;
-            pss->nRecvLen = 0;
-            pss->pDbgAgent = gpDbgAgent;
-            new (&pss->pTaskLock) std::recursive_mutex();
-            new (&pss->pSendTask) std::deque<std::string>();
-            //new (&pss->pSendTask) std::vector<std::string>();
-            gpDbgAgent->onAcceptNewFrontend(pss);
-            pCurPss = pss;
+            printf("connection established, %x, %d\n",pss, pss->id);
+            if(pss && pss==frontUser){
+                pss->pRecvBuff = nullptr;
+                pss->index = 0;
+                pss->id = gSessionID++;
+                pss->nRecvLen = 0;
+                pss->pDbgAgent = gpDbgAgent;
+                new (&pss->pTaskLock) std::recursive_mutex();
+                new (&pss->pSendTask) std::deque<std::string>();
+                //new (&pss->pSendTask) std::vector<std::string>();
+                gpDbgAgent->onAcceptNewFrontend(pss);
+
+            }else{
+                printf("另一个连接建立 %x\n", pss);
+                int a = 0;
+            }
             break;
 
         case LWS_CALLBACK_SERVER_WRITEABLE: //可以发送了
@@ -136,6 +158,7 @@ namespace laya {
                     //这里直接返回，这样pss->continuation就是1了，是故意的么
                     return -1;
                 }
+                //printf("write  %x\n",user);
             }
             if (pss->final)
                 pss->continuation = 0;
@@ -200,12 +223,15 @@ namespace laya {
                         lwsl_err("Receive buffer overflow\n");
                         return -1;
                     }
-                    memcpy(&pss->RecvBuf[LWS_PRE] + pss->nRecvLen, in, len);
-                    pss->nRecvLen += (unsigned int)len;
-                    pss->RecvBuf[LWS_PRE + pss->nRecvLen] = 0;
-                    pss->rx += len;
-                    pss->pDbgAgent->onDbgMsg((char*)(pss->RecvBuf + LWS_PRE), pss->nRecvLen);
-                    pss->nRecvLen = 0;  //完整了，清零
+                    if (pss->pDbgAgent) {
+                        memcpy(&pss->RecvBuf[LWS_PRE] + pss->nRecvLen, in, len);
+                        pss->nRecvLen += (unsigned int)len;
+                        pss->RecvBuf[LWS_PRE + pss->nRecvLen] = 0;
+                        pss->rx += len;
+                        pss->pDbgAgent->onDbgMsg((char*)(pss->RecvBuf + LWS_PRE), pss->nRecvLen);
+                        pss->nRecvLen = 0;  //完整了，清零
+                        //printf("read  %x\n",user);
+                    }
                 }
             }
 
@@ -217,9 +243,12 @@ namespace laya {
         case LWS_CALLBACK_CLOSED:
         case LWS_CALLBACK_CLIENT_CONNECTION_ERROR:
             lwsl_debug("closed\n");
-            pCurPss = nullptr;
-            if (gpDbgAgent) {
-                gpDbgAgent->onFrontEndClose();
+            printf("closed %x\n",pss);
+            if(pss && pss==frontUser){
+                if ( frontUser->pDbgAgent) {
+                    frontUser->pDbgAgent->onFrontEndClose();
+                }
+                frontUser=nullptr;
             }
             //state = 0;
             break;
@@ -279,7 +308,7 @@ namespace laya {
             MAX_V8DBG_PAYLOAD
         },
         {
-            NULL, NULL, 0   /* End of list */
+            NULL, NULL, 0,0   /* End of list */
         }
     };
 
@@ -292,12 +321,12 @@ namespace laya {
             //nWSSVSleep 是 timeout_ms: 等待超时时间，即没有找到需要处理的连接需要等待的时间，为0则立即返回；
             //这个会一通过回调处理消息。
             int nSleep = 10;
-            if (pCurPss) {
-                pCurPss->pTaskLock.lock();
-                if (pCurPss->pSendTask.size() > 0) {
+            if (frontUser) {
+                frontUser->pTaskLock.lock();
+                if (frontUser->pSendTask.size() > 0) {
                     nSleep = 0;
                 }
-                pCurPss->pTaskLock.unlock();
+                frontUser->pTaskLock.unlock();
             }
             n = lws_service(context, nSleep);
         }
@@ -338,6 +367,12 @@ namespace laya {
         //}
         cinfo.gid = -1;
         cinfo.uid = -1;
+        // 设置TCP Keep-Alive参数
+        //cinfo.ka_time = 60;  // 如果60秒内没有数据交换，就发送一个Keep-Alive探针
+        //cinfo.ka_probes = 10; // 发送Keep-Alive探针的最大次数
+        //cinfo.ka_interval = 10;  // 每个Keep-Alive探针之间间隔10秒        
+        cinfo.timeout_secs = 3000;
+
         cinfo.options |= LWS_SERVER_OPTION_DISABLE_IPV6;
 
 

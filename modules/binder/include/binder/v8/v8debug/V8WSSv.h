@@ -17,6 +17,7 @@ namespace laya {
         unsigned char RecvBuf[LWS_PRE + MAX_V8DBG_PAYLOAD];
         unsigned int nRecvLen;   //接收的长度
         unsigned int index;
+        unsigned int id;
         unsigned char* pSendBuff;
         int final;
         int continuation;

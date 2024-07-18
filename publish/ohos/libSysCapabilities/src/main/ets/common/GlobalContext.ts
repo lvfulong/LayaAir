@@ -18,6 +18,8 @@ export class GlobalContextConstants {
   static readonly LAYA_VIDEO_PLAYER_INDEX_MAP = "laya.VideoPlayerIndexMap";
   static readonly LAYA_DIALOG_CONTROLLER = "laya.dialogController";
   static readonly LAYA_SHOW_MESSAGE = "laya.showMessage";
+  static readonly LAYA_HTTP_CLIENT_ARRAY = "laya.LayaHttpClientArray";
+  static readonly LAYA_HTTP_CLIENT_INDEX_MAP = "laya.LayaHttpClientIndexMap";
 
   static readonly LAYA_ABILITY_CONTEXT = "laya.abilityContext";
   static readonly LAYA_ABILITY_WANT = "laya.abilityWant";

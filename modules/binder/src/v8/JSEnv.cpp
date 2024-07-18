@@ -40,6 +40,7 @@ Javascript::Javascript()
         //flags.append(" --expose-gc-as=gc ");
         flags.append(" --no-flush-bytecode ");
        flags.append(" --no-lazy ");
+       flags.append(" --turbo-fast-api-calls ");
         v8::V8::SetFlagsFromString(flags.c_str(), (size_t)flags.length());
     }
 }

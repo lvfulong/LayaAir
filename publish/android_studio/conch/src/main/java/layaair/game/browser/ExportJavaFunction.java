@@ -49,6 +49,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.concurrent.CountDownLatch;
 
 
 public class ExportJavaFunction 
@@ -60,8 +61,23 @@ public class ExportJavaFunction
 	private			boolean					m_bShowWating = false;
 	public 			Handler					m_Handler = new Handler();
 	public LayaConch5 m_pEngine= null;
-   static public 	String					m_sHref="";
-   static public	int 					m_nState=0;		//是否是第一次创建。0 还没创建 ， 1 已经创建， 2被删除了
+   	static public 	String					m_sHref="";
+   	static public	int 					m_nState=0;		//是否是第一次创建。0 还没创建 ， 1 已经创建， 2被删除了
+   	private static Class<?> sHandleMessageUtilsClass = null;
+    private static Method sHandleSyncMessageMethod = null;
+
+	private static final String LOG_TAG = "ExportJavaFunction";
+
+	static {
+        try {
+			sHandleMessageUtilsClass = Class.forName("demo.HandleMessageUtils");
+			sHandleSyncMessageMethod = sHandleMessageUtilsClass.getMethod("handleSyncMessage", String.class, String.class);
+        } catch (ClassNotFoundException e) {
+			Log.e(LOG_TAG, "Could not find class", e);
+        } catch (NoSuchMethodException e) {
+			Log.e(LOG_TAG, "Could not find method", e);
+		}
+    }
 	
 	//------------------------------------------------------------------------------
 	public static ExportJavaFunction GetInstance()
@@ -1177,5 +1193,29 @@ public class ExportJavaFunction
 		int[] ret = { rect.left, rect.top, rect.right, rect.bottom };
 		Log.d("","getSafeInsetRect " + rect.toString());
 		return ret;
+	}
+	public static String postSyncMessage(String eventName, String data) {
+		CountDownLatch latch = new CountDownLatch(1);
+		final String[] resultHolder = {""};
+		ExportJavaFunction.GetInstance().m_Handler.post(new Runnable() {
+            @Override
+            public void run() {
+				try {
+					resultHolder[0] = ExportJavaFunction.sHandleSyncMessageMethod.invoke(null, eventName, data).toString();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					e.printStackTrace();
+				}
+				latch.countDown();
+            }
+        });
+
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+		return resultHolder[0];
 	}
 }
