@@ -544,6 +544,7 @@ class RenderBindings
             class_binding.property("stencilTest", &RenderState::getStencilTest, &RenderState::setStencilTest);
             class_binding.property("stencilRef", &RenderState::getStencilRef, &RenderState::setStencilRef);
             class_binding.function("setStencilOp", &RenderState::setStencilOp);
+            class_binding.function("getStencilOp", &RenderState::getStencilOp);
             class_binding.function("setNull", &RenderState::setNull);
             context.class_("conchRenderState", class_binding);
         }

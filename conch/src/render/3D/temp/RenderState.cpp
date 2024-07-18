@@ -231,5 +231,9 @@ namespace laya
 
 		this->stencilOp = &this->m_stencilOp;
 	}
+
+	Vector3* RenderState::getStencilOp() {
+		return stencilOp;
+	}
 }
 //------------------------------------------------------------------------------

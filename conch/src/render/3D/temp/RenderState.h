@@ -138,6 +138,7 @@ namespace laya
 		void setStencilRef(int32_t value);
 		//void setBlendConstColor(float r, float g, float b, float a);
 		void setStencilOp(const Vector3& value);
+		Vector3* getStencilOp();
 		void setNull();
 		static RenderState Default;
 	public:
