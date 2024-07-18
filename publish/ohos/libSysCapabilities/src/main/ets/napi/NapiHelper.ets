@@ -31,10 +31,16 @@ export class NapiHelper {
     laya.JSBind.bindFunction("ApplicationManager.exit", ApplicationManager.exit);
     laya.JSBind.bindFunction("HandleMessageUtils.handleAsyncMessage", HandleMessageUtils.handleAsyncMessage);
     laya.JSBind.bindFunction("HandleMessageUtils.handleSyncMessage", HandleMessageUtils.handleSyncMessage);
+
+    laya.JSBind.bindFunction("LayaHttpClient.create", LayaHttpClient.create);
+    laya.JSBind.bindFunction("LayaHttpClient.destroy", LayaHttpClient.destroy);
+    laya.JSBind.bindFunction("LayaHttpClient.cancel", LayaHttpClient.cancel);
+    laya.JSBind.bindFunction("LayaHttpClient.setReadTimeout", LayaHttpClient.setReadTimeout);
+    laya.JSBind.bindFunction("LayaHttpClient.setConnectTimeout", LayaHttpClient.setConnectTimeout);
+    laya.JSBind.bindFunction("LayaHttpClient.doRequest", LayaHttpClient.doRequest);
   }
 
   private static registerLayaWorkerFunc() {
-    console.log("register getAvalidMem");
     laya.JSBind.bindFunction("DeviceUtils.startVibration", DeviceUtils.startVibration);
     laya.JSBind.bindFunction("DeviceUtils.getDeviceInfo", DeviceUtils.getDeviceInfo);
     laya.JSBind.bindFunction("ApplicationManager.getApplicationInfo", ApplicationManager.getApplicationInfo);
@@ -46,11 +52,8 @@ export class NapiHelper {
     laya.JSBind.bindFunction("Accelerometer.disable", Accelerometer.disable);
     laya.JSBind.bindFunction("Orientation.enable", Orientation.enable);
     laya.JSBind.bindFunction("Orientation.disable", Orientation.disable);
-    laya.JSBind.bindFunction("LayaHttpClient.create", LayaHttpClient.create);
-    laya.JSBind.bindFunction("LayaHttpClient.cancel", LayaHttpClient.cancel);
-    laya.JSBind.bindFunction("LayaHttpClient.setReadTimeout", LayaHttpClient.setReadTimeout);
-    laya.JSBind.bindFunction("LayaHttpClient.setConnectTimeout", LayaHttpClient.setConnectTimeout);
-    laya.JSBind.bindFunction("LayaHttpClient.doRequest", LayaHttpClient.doRequest);
+
+
   }
 
   private static registerVideoPlay() {

@@ -1,16 +1,22 @@
 #include "JCConch.h"
+#include <aki/jsbind.h>
 #include <hilog/log.h>
+// using namespace laya;
 
-//using namespace laya;
-
-class NapiHelper{
-public:
-    ~NapiHelper(){}
-    static NapiHelper *GetInstance(){return &NapiHelper::help_;}
+class NapiHelper
+{
+  public:
+    ~NapiHelper()
+    {
+    }
+    static NapiHelper *GetInstance()
+    {
+        return &NapiHelper::help_;
+    }
     std::string getDeviceInfo();
     int getNetworkType();
     void startVibration(float duration);
-    void playBackgroundMusic(const char *p_sUrl,int p_nTimes,float nCurrentTime);
+    void playBackgroundMusic(const char *p_sUrl, int p_nTimes, float nCurrentTime);
     void pauseBackgroundMusic();
     void stopBackgroundMusic();
     void setBackgroundMusicVolume(float p_nVolume);
@@ -23,18 +29,18 @@ public:
 
     void createVideoPlayer(int m_tag);
     void removeVideoPlayer(int m_tag);
-    void setURL(int m_tag,std::string path,int isurl);
+    void setURL(int m_tag, std::string path, int isurl);
     void play(int m_tag);
     void pause(int m_tag);
     void stop(int m_tag);
-    void setLooping(int m_tag,bool value);
-    void setAutoplay(int m_tag,bool value);
-    void setX(int m_tag,double value);
-    void setY(int m_tag,double value);
-    void setWidth(int m_tag,double value);
-    void setHeight(int m_tag,double value);
-    void setVideoCurrentTime(int m_tag,double value);
-    void setVolume(int m_tag,double value);
+    void setLooping(int m_tag, bool value);
+    void setAutoplay(int m_tag, bool value);
+    void setX(int m_tag, double value);
+    void setY(int m_tag, double value);
+    void setWidth(int m_tag, double value);
+    void setHeight(int m_tag, double value);
+    void setVideoCurrentTime(int m_tag, double value);
+    void setVolume(int m_tag, double value);
     int getVolume(int m_tag);
     void showDialog(const char *p_sBuffer);
     void setKeepScreenOn(bool value);
@@ -45,12 +51,26 @@ public:
     void disableAccelerometer();
     void enableOrientation();
     void disableOrientation();
+    static inline std::string Utf8Value(napi_env _env, napi_value _value)
+    {
+        size_t length;
+        napi_status status = napi_get_value_string_utf8(_env, _value, nullptr, 0, &length);
 
-private:
+        // NAPI_THROW_IF_FAILED(_env, status, "");
+
+        std::string value;
+        value.reserve(length + 1);
+        value.resize(length);
+        status = napi_get_value_string_utf8(_env, _value, &value[0], value.capacity(), &length); // cjh add &length
+        // NAPI_THROW_IF_FAILED(_env, status, "");
+        return value;
+    }
+
+  private:
     std::string __getDeviceInfo();
     int __getNetworkType();
     void __startVibration(float duration);
-    void __playBackgroundMusic(const char *p_sUrl,int p_nTimes,float nCurrentTime);
+    void __playBackgroundMusic(const char *p_sUrl, int p_nTimes, float nCurrentTime);
     void __pauseBackgroundMusic();
     void __stopBackgroundMusic();
     void __setBackgroundMusicVolume(float p_nVolume);
@@ -63,18 +83,18 @@ private:
 
     void __createVideoPlayer(int m_tag);
     void __removeVideoPlayer(int m_tag);
-    void __setURL(int m_tag,std::string path,int isurl);
+    void __setURL(int m_tag, std::string path, int isurl);
     void __play(int m_tag);
     void __pause(int m_tag);
     void __stop(int m_tag);
-    void __setLooping(int m_tag,bool value);
-    void __setAutoplay(int m_tag,bool value);
-    void __setX(int m_tag,double value);
-    void __setY(int m_tag,double value);
-    void __setWidth(int m_tag,double value);
-    void __setHeight(int m_tag,double value);
-    void __setVideoCurrentTime(int m_tag,double value);
-    void __setVolume(int m_tag,double value);
+    void __setLooping(int m_tag, bool value);
+    void __setAutoplay(int m_tag, bool value);
+    void __setX(int m_tag, double value);
+    void __setY(int m_tag, double value);
+    void __setWidth(int m_tag, double value);
+    void __setHeight(int m_tag, double value);
+    void __setVideoCurrentTime(int m_tag, double value);
+    void __setVolume(int m_tag, double value);
     int __getVolume(int m_tag);
     void __showDialog(const char *p_sBuffer);
     void __setKeepScreenOn(bool value);
@@ -87,7 +107,7 @@ private:
     void __disableOrientation();
     static NapiHelper help_;
 
-private:
+  private:
     std::string deviceInfo;
     std::string appVersion;
     std::string appLocalVersion;
@@ -97,5 +117,4 @@ private:
     double duration;
     float screenInch;
     int usedMem;
-
 };
