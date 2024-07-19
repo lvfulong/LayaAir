@@ -19,7 +19,7 @@
 
 namespace laya{
 
-#ifdef CURL_DOWNLOAD
+#ifdef CURL_OLD_DOWNLOAD
 	class Curl;
     struct _QueryBase;
 #else
@@ -200,7 +200,7 @@ namespace laya{
         std::string		m_strCookieFile;
         typedef std::map<std::string, maskinfo> maskMap;
         maskMap			m_maskInfo;
-#ifdef CURL_DOWNLOAD
+#ifdef CURL_OLD_DOWNLOAD
         JCThreadPool<_QueryBase*>	m_ThreadPool; 
 #else
         std::shared_ptr<HttpClientManager> m_httpClientManager;

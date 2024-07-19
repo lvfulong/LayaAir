@@ -30,17 +30,20 @@ list(APPEND CONCH_INCLUDE
 	${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-if(CONCH_USE_CURL_DOWNLOAD)
+if(CONCH_USE_OLD_CURL_DOWNLOAD)
 	list(APPEND CONCH_SRC
 
 	src/downloadMgr/JCCurlWrap.h
 	src/downloadMgr/JCCurlWrap.cpp)
 endif()
 
-if(CONCH_USE_NEW_CURL_DOWNLOAD)
+if(CONCH_USE_CURL_DOWNLOAD)
 	list(APPEND CONCH_SRC
+	src/network/curl/CurlContext.cpp
+	src/network/curl/CurlHandle.cpp
 	src/network/curl/CurlMultiHandle.cpp
-	src/network/curl/Scheduler.cpp)
+	src/network/curl/CurlShareHandle.cpp
+	src/network/curl/CurlScheduler.cpp)
 endif()
 
 list(APPEND CONCH_SRC
@@ -606,6 +609,7 @@ elseif(OS_WINDOWS)
 		src/resource/Audio/JCAudioWavPlayer.h
 		src/resource/Audio/JCAudioWavPlayer.cpp
 		src/platform/src/OSWin.cpp
+		src/network/HttpClientCurl.cpp
 	)
 elseif(OS_OHOS)
 	list(APPEND PLATFORM_HEADER_DIR
@@ -807,6 +811,9 @@ elseif(OS_IOS)
 elseif(OS_WINDOWS)
 	#target_compile_definitions(${PROJECT_NAME} PRIVATE GL_GLEXT_PROTOTYPES)
 	target_link_libraries(${PROJECT_NAME} PUBLIC
+		#crypt32.lib
+		#WS2_32.lib
+		#wldap32.lib
 		version.lib
 		Setupapi.lib
 		imm32.lib

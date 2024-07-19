@@ -7,6 +7,7 @@
 #elif OS_OHOS
 #include "network/HttpClientOHOS.h"
 #elif OS_WINDOWS
+#include "network/HttpClientCurl.h"
 #endif
 
 namespace laya
@@ -35,7 +36,7 @@ IHttpClient *HttpClientManager::createHttpClient(const char *url, const char *lo
 #elif OS_IOS
     httpClient = new HttpClientiOS(url, localFilePath, functionOnProgress, functionOnEnd, shared_from_this());
 #elif OS_WINDOWS
-    httpClient = nullptr; // TODO
+    httpClient = new HttpClientCurl(url, localFilePath, functionOnProgress, functionOnEnd, shared_from_this());
 #elif OS_OHOS
     httpClient = new HttpClientOHOS(url, localFilePath, functionOnProgress, functionOnEnd, shared_from_this());
 #endif

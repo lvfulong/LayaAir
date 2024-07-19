@@ -8,7 +8,7 @@
 
 #include "../downloadMgr/JCDownloadMgr.h"
 #include <ctime>
-#ifdef CURL_DOWNLOAD
+#ifdef CURL_OLD_DOWNLOAD
 #include "../downloadMgr/JCCurlWrap.h"
 #else
 #include <network/IHttpClient.h>
@@ -52,7 +52,7 @@ namespace laya{
     JCDownloadMgr* gDownloadMgr = NULL;
     int _OnProgress(unsigned int total, unsigned int now, float p_fSpeed, void* p_userData);
     std::string JCDownloadMgr::s_curlProxyString = "";
-#ifdef CURL_DOWNLOAD
+#ifdef CURL_OLD_DOWNLOAD
 	class _QueryBase {
 	public:
 		virtual ~_QueryBase() {
@@ -267,7 +267,7 @@ namespace laya{
 		m_nThreadNum = 0;
 		m_pCurDownloadingUrl=NULL;
 		m_nTimeout = 0;
-#ifndef CURL_DOWNLOAD
+#ifndef CURL_OLD_DOWNLOAD
 		m_httpClientManager = std::shared_ptr<HttpClientManager>(new HttpClientManager());
 #endif
 	}
@@ -320,7 +320,7 @@ namespace laya{
         const char* p_pLocalFile,                 //一边下载，一边保存，一般用在大文件下载，0则忽略
         bool p_bChkRemoteChange             //检查远端文件是否改变了，大文件用
         ) {
-#ifndef CURL_DOWNLOAD
+#ifndef CURL_OLD_DOWNLOAD
         m_bCancelTask = false;
 		if (0 != p_pszURL) {
 			if (strlen(p_pszURL) <= 0) {
@@ -476,7 +476,7 @@ namespace laya{
 	}
 	void JCDownloadMgr::postData(const char* p_pszURL,const char* p_Buffer, int p_nLength, onEndFunc p_completeCb,
 		std::map<std::string, std::string>& p_headers){
-#ifndef CURL_DOWNLOAD
+#ifndef CURL_OLD_DOWNLOAD
 		m_bCancelTask = false;
         IHttpClient* httpClient = m_httpClientManager->createHttpClient(p_pszURL, "", {}, p_completeCb);
 
@@ -510,7 +510,7 @@ namespace laya{
 	}
 
 	void JCDownloadMgr::clearAllAsyncTask(){
-#ifdef CURL_DOWNLOAD
+#ifdef CURL_OLD_DOWNLOAD
 		int num = m_ThreadPool.getThreadNum();
 		for( int i=0; i<num; i++){
 			//_l_PoolQuery->ClearDataOfThread(i);
@@ -551,7 +551,7 @@ namespace laya{
     }
 
 	void JCDownloadMgr::init(int p_nWorkThreadNum) {
-#ifdef CURL_DOWNLOAD
+#ifdef CURL_OLD_DOWNLOAD
 		Curl::global_init();
 //#endif
 		//等10ms是为了防止上一个线程还没有起来（假如存在的话）。
@@ -607,7 +607,7 @@ namespace laya{
 	}
 
 	void JCDownloadMgr::__WorkThread(){
-#ifdef CURL_DOWNLOAD
+#ifdef CURL_OLD_DOWNLOAD
 		_l_ServerStop = false;
 		_QueryBase* pQuery;
 #ifdef OS_WINDOWS
