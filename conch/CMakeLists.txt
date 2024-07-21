@@ -526,7 +526,7 @@ if(OS_IOS)
 		src/platform/iOS/LayaOpenGLESView.mm
 		src/platform/iOS/Utils.h
 		src/platform/iOS/Utils.mm
-		src/platform/src/OSiOS.mm
+		src/platform/src/OSiOS.cpp
 		src/Backend/src/OpenGLBackendiOS.h
 		src/Backend/src/OpenGLBackendiOS.mm
 		src/network/HttpClientiOS.h

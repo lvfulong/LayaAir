@@ -79,6 +79,7 @@ if(OS_IOS)
 		proj.ios/ViewController.mm
 		proj.ios/iap/IAPManager.h
 		proj.ios/iap/IAPManager.m
+		proj.ios/HandleMessageUtils.mm
 		proj.ios/main.m
 	)
 	list(APPEND PROJECT_RESOURCES

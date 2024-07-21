@@ -199,6 +199,7 @@ float CToObjectCGetDevicePixelRatio();
 void CToObjectCOnBlur();
 void CToObjectCOnFocus();
 void CToObjectCGetSafeAreaInsets(int *top, int *left, int *bottom, int *right);
+std::string CToObjectCPostSyncMessage(const std::string &eventName, const std::string &data);
 #endif //_CToObjectC_H_
 
 //-----------------------------END FILE--------------------------------

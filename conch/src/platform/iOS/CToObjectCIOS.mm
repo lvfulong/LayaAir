@@ -1382,6 +1382,47 @@ void CToObjectCGetSafeAreaInsets(int *top, int *left, int *bottom, int *right) {
         });
     }
 }
+NSString *callClassMethodWithReflection(NSString *className, NSString *methodName, NSArray *params) {
+    Class ns_class = NSClassFromString(className);
+    SEL selector = NSSelectorFromString(methodName);
+    NSString *result = @"";
+    if ([ns_class respondsToSelector:selector]) {
+        NSMethodSignature *signature = [ns_class methodSignatureForSelector:selector];
+        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+        [invocation setTarget:ns_class];
+        [invocation setSelector:selector];
+        
+        NSInteger index = 2; // 参数在NSInvocation中的起始索引是2
+        for (id arg in params) {
+            if ([arg isKindOfClass:[NSObject class]]) {
+                NSObject *object = arg;
+                [invocation setArgument:&object atIndex:index];
+            } else {
+                NSLog(@"error");
+            }
+            index++;
+        }
+        [invocation invoke];
+        if ([signature methodReturnLength] > 0) { // 如果有返回值
+            [invocation getReturnValue:&result];
+        }
+    } else {
+        NSLog(@"Class %@ does not respond to selector %@", className, methodName);
+    }
+    return result;
+}
+
+std::string CToObjectCPostSyncMessage(const std::string &eventName, const std::string &data)
+{
+    __block NSString* result = @"";
+    __block NSString* nsEventName = [NSString stringWithUTF8String:eventName.c_str()];
+    __block NSString* nsData = [NSString stringWithUTF8String:data.c_str()];
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        NSArray *params = @[nsEventName, nsData];
+        result = callClassMethodWithReflection(@"HandleMessageUtils", @"handleSyncMessageWithEventName:data:", params);
+    });
+    return [result UTF8String];
+}
 
 // end video player
 //-------------------------------

@@ -28,6 +28,8 @@ JsValue OSiOS::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eve
 }
 std::string OSiOS::postSyncMessage(const std::string &eventName, const std::string &data)
 {
-    return ""; // todo
+    //handleSyncMessage is called in platform os ui thread
+    std::string eventResult = CToObjectCPostSyncMessage(eventName, data);
+    return eventResult;
 }
 } // namespace laya
