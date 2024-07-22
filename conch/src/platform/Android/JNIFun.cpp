@@ -36,7 +36,7 @@
 #include <imageLib/JCImageRW.h>
 #include "network/HttpClientAndroid.h"
 #include "2D/CanvasRenderingContext2DAndroid.h"
-
+#include "HandleAsyncMessageMethodRecord.h"
 
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
@@ -91,6 +91,7 @@ extern "C"
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleKeyboardComplete(JNIEnv* env, jobject obj, jstring strValue);
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_reloadJS(JNIEnv* env, jobject obj);
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_urlBack(JNIEnv* env, jobject obj);
+	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleAsyncMessageMethodNative(JNIEnv* env, jobject obj, jlong nativeHandle, jstring result);
 };
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_configSetURL(JNIEnv * env, jobject obj,jstring p_strUrl)
 {
@@ -539,5 +540,15 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_urlBack(JNIEnv* env, j
 {
 	EngineEventUrlBack e;
     JCConch::s_pConch->dispatchEngineEvent(e);
+}
+JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleAsyncMessageMethodNative(JNIEnv* env, jobject obj, jlong nativeHandle, jstring result)
+{
+	const char* strResult = env->GetStringUTFChars(result, NULL);
+	HandleAsyncMessageMethodRecord* pHandleAsyncMessageMethodRecord = reinterpret_cast<HandleAsyncMessageMethodRecord*>(nativeHandle);
+	if(pHandleAsyncMessageMethodRecord)
+	{
+		pHandleAsyncMessageMethodRecord->m_callback(strResult);
+	}
+	env->ReleaseStringUTFChars(result, strResult);
 }
 

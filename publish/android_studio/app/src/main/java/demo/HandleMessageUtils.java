@@ -1,8 +1,7 @@
 package demo;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
+import layaair.game.browser.HandleMessageCallback;
 
 
 public class HandleMessageUtils {
@@ -11,6 +10,8 @@ public class HandleMessageUtils {
         Log.d(LOG_TAG, eventName +" " + data);
         return "sync result";
     }
-    public static void handleAsyncMessage(String eventName, String data) {
+    public static void handleAsyncMessage(String eventName, String data, HandleMessageCallback cb) {
+        Log.d(LOG_TAG, eventName +" " + data);
+        cb.callback("async result");
     }
 }

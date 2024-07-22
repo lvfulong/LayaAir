@@ -66,12 +66,14 @@ public class ExportJavaFunction
    	private static Class<?> sHandleMessageUtilsClass = null;
     private static Method sHandleSyncMessageMethod = null;
 
+	private static Method sHandleAsyncMessageMethod = null;
 	private static final String LOG_TAG = "ExportJavaFunction";
 
 	static {
         try {
 			sHandleMessageUtilsClass = Class.forName("demo.HandleMessageUtils");
 			sHandleSyncMessageMethod = sHandleMessageUtilsClass.getMethod("handleSyncMessage", String.class, String.class);
+			sHandleAsyncMessageMethod = sHandleMessageUtilsClass.getMethod("handleAsyncMessage", String.class, String.class, HandleMessageCallback.class);
         } catch (ClassNotFoundException e) {
 			Log.e(LOG_TAG, "Could not find class", e);
         } catch (NoSuchMethodException e) {
@@ -1217,5 +1219,26 @@ public class ExportJavaFunction
             e.printStackTrace();
         }
 		return resultHolder[0];
+	}
+	public static void postAsyncMessage(String eventName, String data, long nativeHandle) {
+		ExportJavaFunction.GetInstance().m_Handler.post(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					class HandleMessageCallbackImpl implements HandleMessageCallback {
+
+						@Override
+						public void callback(String result) {
+							ConchJNI.handleAsyncMessageMethodNative(nativeHandle, result);
+						}
+					}
+					ExportJavaFunction.sHandleAsyncMessageMethod.invoke(null, eventName, data, new HandleMessageCallbackImpl());
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 }

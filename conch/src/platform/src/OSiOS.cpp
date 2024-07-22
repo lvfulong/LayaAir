@@ -1,7 +1,7 @@
 #include "OSiOS.h"
 #include "CToObjectC.h"
-#include <utils/Log.h>
 #include <JCConch.h>
+#include <utils/Log.h>
 namespace laya
 {
 
@@ -48,7 +48,7 @@ JsValue OSiOS::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eve
 }
 std::string OSiOS::postSyncMessage(const std::string &eventName, const std::string &data)
 {
-    //handleSyncMessage is called in platform os ui thread
+    // handleSyncMessage is called in platform os ui thread
     std::string eventResult = CToObjectCPostSyncMessage(eventName, data);
     return eventResult;
 }
