@@ -230,11 +230,14 @@ v8::Local<v8::Value> v8_call(v8::Local<v8::Value> self, v8::Function *func, cons
 
     v8::Local<v8::Value> v8_args[num_args + 1] = {ToJSValue(args)...};
 
-    v8::TryCatch tc(v8::Isolate::GetCurrent());
+    v8::TryCatch try_catch(v8::Isolate::GetCurrent());
 
     auto result = func->Call(v8::Isolate::GetCurrent()->GetCurrentContext(), self, num_args, v8_args);
 
-    // if (tc.HasCaught()) report_exception(tc);
+    if (try_catch.HasCaught())
+    {
+        __JSRun::ReportException(v8::Isolate::GetCurrent(), &try_catch);
+    }
 
     if (result.IsEmpty())
         return v8::Undefined(v8::Isolate::GetCurrent());

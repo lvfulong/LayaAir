@@ -1,11 +1,11 @@
 function download(url, cachePkgPath) {
     console.log("start download " + url);
+    var lastPercent = -1;
     downloadBigFile(url, cachePkgPath, (total, now, speed) => {
         let percent = Math.floor((now / total) * 100);
         if (percent > lastPercent) {
-            console.log('downloading' + percent, null);
+            console.log('downloading ' + percent, null);
         }
-        console.log('downloading' + percent);
         lastPercent = percent;
         return false;
     }, (curlret, httpret) => {
@@ -13,7 +13,7 @@ function download(url, cachePkgPath) {
             console.log('download Error ' + httpret + " " + url);
         }
         else {
-            console.log('downloaded ' + url);
+            console.log('downloaded ccc ' + url);
         }
     }, 10, 100000000);
 }

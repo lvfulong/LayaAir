@@ -98,13 +98,13 @@ export class LayaHttpClient {
         streamInfo, (err: BusinessError, data: number) => {
         if (err) {
           napiHttp.HttpClientOHOS_onFailure(connection.ptr, err.code);
+          console.error('error:' + JSON.stringify(err));
         }
         else {
           outputStream.closeSync();
           napiHttp.HttpClientOHOS_onResponse(connection.ptr, res, data, resHeader);
         }
-
-        console.error('error:' + JSON.stringify(err));
+        
         console.info('ResponseCode :' + JSON.stringify(data));
         httpRequest.off('headersReceive');
         httpRequest.off('dataReceive');
