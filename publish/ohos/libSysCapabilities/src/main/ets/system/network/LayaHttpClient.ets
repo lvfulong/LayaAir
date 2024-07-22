@@ -4,6 +4,7 @@ import { Logger } from '../../utils/Logger'
 import laya from "liblaya.so";
 import { ContextType } from '../../common/Constants';
 import { GlobalContext, GlobalContextConstants } from '../../common/GlobalContext';
+import fs, { ReadOptions } from '@ohos.file.fs';
 
 let log: Logger = new Logger(0x0001, "LayaHttpClient");
 const napiHttp: laya.CPPFunctions = laya.getContext(ContextType.HTTP_NAPI);
@@ -59,34 +60,89 @@ export class LayaHttpClient {
     }
   }
   public static doRequest(tag: number) {
-    let connection: LayaHttpClient = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_HTTP_CLIENT_INDEX_MAP).get(tag);
-    connection.httpRequest.request(
-      connection.url,
-      {
+    let connection: LayaHttpClient =
+      GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_HTTP_CLIENT_INDEX_MAP).get(tag);
+    if (connection.localFilePath !== "") {
+      let httpRequest = http.createHttp();
+      let resHeader = "";
+      let res = new ArrayBuffer(0);
+      httpRequest.on('headersReceive', (header: Object) => {
+        resHeader = JSON.stringify(header);
+      });
+      let outputStream = fs.createStreamSync(connection.localFilePath, "w+");
+      httpRequest.on('dataReceive', (data: ArrayBuffer) => {
+         outputStream.write(data);
+      });
+      httpRequest.on('dataEnd', () => {
+
+      });
+      class Data {
+        receiveSize: number = 0;
+        totalSize: number = 0;
+      }
+      httpRequest.on('dataReceiveProgress', (data: Data) => {
+        napiHttp.HttpClientOHOS_onProgress(connection.ptr, data.totalSize, data.receiveSize, 0);
+      });
+      let streamInfo: http.HttpRequestOptions = {
         method: connection.method,
-        header: connection.header,
-        extraData: connection.postData != null ? connection.postData : null,
-        expectDataType: http.HttpDataType.ARRAY_BUFFER,
+        header:connection.header,
+        extraData: undefined,
+        expectDataType:  http.HttpDataType.ARRAY_BUFFER,
         usingCache: false,
         priority: 1,
         connectTimeout: connection.connectTimeout,
         readTimeout: connection.readTimeout,
-      }, (err: BusinessError, data: http.HttpResponse) => {
-      if (!err) {
-        if (data.result instanceof ArrayBuffer) {
-          napiHttp.HttpClientOHOS_onResponse(connection.ptr, data.result, data.responseCode, JSON.stringify(data.header));
+      }
+      httpRequest.requestInStream(
+        connection.url,
+        streamInfo, (err: BusinessError, data: number) => {
+        if (err) {
+          napiHttp.HttpClientOHOS_onFailure(connection.ptr, err.code);
         }
         else {
-          log.error("LayaHttpClient.HttpResponse not ArrayBuffer")
+          outputStream.closeSync();
+          napiHttp.HttpClientOHOS_onResponse(connection.ptr, res, data, resHeader);
         }
-        connection.httpRequest.destroy();
+
+        console.error('error:' + JSON.stringify(err));
+        console.info('ResponseCode :' + JSON.stringify(data));
+        httpRequest.off('headersReceive');
+        httpRequest.off('dataReceive');
+        httpRequest.off('dataReceiveProgress');
+        httpRequest.off('dataEnd');
+        httpRequest.destroy();
       }
-      else {
-        log.error("LayaHttpClient.HttpResponse " + err.message + " " +  err.code)
-        napiHttp.HttpClientOHOS_onFailure(connection.ptr, err.code);
-        connection.httpRequest.destroy();
-      }
-    });
+      );
+    }
+    else {
+      connection.httpRequest.request(
+        connection.url,
+        {
+          method: connection.method,
+          header: connection.header,
+          extraData: connection.postData != null ? connection.postData : undefined,
+          expectDataType: http.HttpDataType.ARRAY_BUFFER,
+          usingCache: false,
+          priority: 1,
+          connectTimeout: connection.connectTimeout,
+          readTimeout: connection.readTimeout,
+        }, (err: BusinessError, data: http.HttpResponse) => {
+        if (!err) {
+          if (data.result instanceof ArrayBuffer) {
+            napiHttp.HttpClientOHOS_onResponse(connection.ptr, data.result, data.responseCode, JSON.stringify(data.header));
+          }
+          else {
+            log.error("LayaHttpClient.HttpResponse not ArrayBuffer")
+          }
+          connection.httpRequest.destroy();
+        }
+        else {
+          log.error("LayaHttpClient.HttpResponse " + err.message + " " +  err.code)
+          napiHttp.HttpClientOHOS_onFailure(connection.ptr, err.code);
+          connection.httpRequest.destroy();
+        }
+      });
+    }
   }
   public static setReadTimeout(tag: number, miliseconds: number) {
     let connection: LayaHttpClient = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_HTTP_CLIENT_INDEX_MAP).get(tag);

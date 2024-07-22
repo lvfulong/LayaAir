@@ -230,7 +230,11 @@ napi_value HttpClientOHOS_onResponse(napi_env env, napi_callback_info info)
     {
         return nullptr;
     }
-    if (!is_arraybuffer)
+    status = napi_typeof(env, args[1], &valuetype);
+    if (status != napi_ok) {
+        return nullptr;
+    }
+    if (!(is_arraybuffer || valuetype == napi_null || valuetype == napi_undefined))
     {
         napi_throw_type_error(env, NULL, "Wrong arguments");
         return nullptr;
