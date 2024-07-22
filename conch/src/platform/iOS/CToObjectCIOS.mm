@@ -1423,6 +1423,20 @@ std::string CToObjectCPostSyncMessage(const std::string &eventName, const std::s
     });
     return [result UTF8String];
 }
-
+void CToObjectCPostAsyncMessage(const std::string &eventName, const std::string &data, std::function<void(std::string)> cb)
+{
+    __block NSString* nsEventName = [NSString stringWithUTF8String:eventName.c_str()];
+    __block NSString* nsData = [NSString stringWithUTF8String:data.c_str()];
+    typedef void (^TypeName)(NSString *);
+    __block TypeName callback = ^void (NSString *result) {
+        NSLog(@"cnm %@", result);
+        cb([result UTF8String]);
+    };
+    
+     dispatch_async(dispatch_get_main_queue(), ^{
+        NSArray *params = @[nsEventName, nsData, callback];
+        callClassMethodWithReflection(@"HandleMessageUtils", @"handleAsyncMessageWithEventName:data:callback:", params);
+    });
+}
 // end video player
 //-------------------------------

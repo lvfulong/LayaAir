@@ -1,6 +1,7 @@
 #include "OSiOS.h"
 #include "CToObjectC.h"
 #include <utils/Log.h>
+#include <JCConch.h>
 namespace laya
 {
 
@@ -24,7 +25,26 @@ void OSiOS::exit()
 }
 JsValue OSiOS::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
-    return JSP_TO_JS_NULL; // todo
+    auto isolate = v8::Isolate::GetCurrent();
+    auto context = isolate->GetCurrentContext();
+
+    napi_deferred deferred;
+    napi_value promise;
+
+    napi_create_promise(context, &deferred, &promise);
+
+    std::function<void(std::string)> cb = [deferred, cbref](std::string message) {
+        postToJS([deferred, message, cbref]() {
+            if (!cbref.lock())
+                return;
+            auto isolate = v8::Isolate::GetCurrent();
+            auto context = isolate->GetCurrentContext();
+            napi_value v = JsValueFromV8LocalValue(Converter<const char *>::ToJs(message));
+            napi_resolve_deferred(context, deferred, v);
+        });
+    };
+    CToObjectCPostAsyncMessage(eventName, data, cb);
+    return V8LocalValueFromJsValue(promise);
 }
 std::string OSiOS::postSyncMessage(const std::string &eventName, const std::string &data)
 {
