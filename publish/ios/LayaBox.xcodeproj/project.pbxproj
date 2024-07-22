@@ -14,6 +14,7 @@
 		5E6CC3BB1EA4F60500FA49A3 /* libbz2.1.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E6CC3BA1EA4F60500FA49A3 /* libbz2.1.0.tbd */; };
 		5EAE9BE01D6FFF6E00BDC3F5 /* IAPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EAE9BDF1D6FFF6E00BDC3F5 /* IAPManager.m */; };
 		5EAEEAA81D8E6C1000F2A257 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EAEEAA71D8E6C1000F2A257 /* CoreMotion.framework */; };
+		8AB91D7E2C4E0C360093E491 /* HandleMessageUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8AB91D7C2C4E0C360093E491 /* HandleMessageUtils.mm */; };
 		8AC6E3602A28B7EC00CCB117 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8AC6E3622A28B7EC00CCB117 /* Localizable.strings */; };
 		8AF2AAFE2959716A009F77F8 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AF2AAFD2959716A009F77F8 /* CoreMedia.framework */; };
 		8AF2AB002959718A009F77F8 /* CoreHaptics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AF2AAFF2959718A009F77F8 /* CoreHaptics.framework */; };
@@ -70,6 +71,8 @@
 		5EAE9BDE1D6FFF6E00BDC3F5 /* IAPManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IAPManager.h; path = iap/IAPManager.h; sourceTree = "<group>"; };
 		5EAE9BDF1D6FFF6E00BDC3F5 /* IAPManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IAPManager.m; path = iap/IAPManager.m; sourceTree = "<group>"; };
 		5EAEEAA71D8E6C1000F2A257 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		8AB91D7C2C4E0C360093E491 /* HandleMessageUtils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HandleMessageUtils.mm; sourceTree = "<group>"; };
+		8AB91D7D2C4E0C360093E491 /* HandleMessageUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HandleMessageUtils.h; sourceTree = "<group>"; };
 		8AC6E3612A28B7EC00CCB117 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8AC6E3652A28B89300CCB117 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		8AF2AAFD2959716A009F77F8 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
@@ -224,6 +227,8 @@
 		A2460A1E1C8DAF710032CD8D /* LayaBox */ = {
 			isa = PBXGroup;
 			children = (
+				8AB91D7D2C4E0C360093E491 /* HandleMessageUtils.h */,
+				8AB91D7C2C4E0C360093E491 /* HandleMessageUtils.mm */,
 				24B1796E20E4F17100AF57C9 /* JSBridge.h */,
 				24B1796D20E4F17100AF57C9 /* JSBridge.mm */,
 				5EAE9BDB1D6FFEB800BDC3F5 /* iap */,
@@ -425,6 +430,7 @@
 				A2460A241C8DAF710032CD8D /* AppDelegate.mm in Sources */,
 				24B1796F20E4F17100AF57C9 /* JSBridge.mm in Sources */,
 				A2460A211C8DAF710032CD8D /* main.m in Sources */,
+				8AB91D7E2C4E0C360093E491 /* HandleMessageUtils.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
