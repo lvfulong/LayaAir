@@ -36,7 +36,7 @@ export class LayaHttpClient {
   }
   public static postData(tag: number, postData: ArrayBuffer) {
     let connection: LayaHttpClient = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_HTTP_CLIENT_INDEX_MAP).get(tag);
-    connection.method = http.RequestMethod.POST;
+    connection.postData = postData;
   }
   public static addHeader(tag: number, key: string, value: string) {
     let connection: LayaHttpClient = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_HTTP_CLIENT_INDEX_MAP).get(tag);
@@ -47,6 +47,16 @@ export class LayaHttpClient {
     connection.header[key] = value;
   }
   public static setMethod(tag: number, method: string) {
+    let connection: LayaHttpClient = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_HTTP_CLIENT_INDEX_MAP).get(tag);
+    if (method.toUpperCase() === "POST") {
+      connection.method = http.RequestMethod.POST;
+    }
+    else if (method.toUpperCase() === "GET") {
+      connection.method = http.RequestMethod.GET;
+    }
+    else if (method.toUpperCase() === "HEAD") {
+      connection.method = http.RequestMethod.HEAD;
+    }
   }
   public static doRequest(tag: number) {
     let connection: LayaHttpClient = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_HTTP_CLIENT_INDEX_MAP).get(tag);
@@ -72,6 +82,7 @@ export class LayaHttpClient {
         connection.httpRequest.destroy();
       }
       else {
+        log.error("LayaHttpClient.HttpResponse " + err.message + " " +  err.code)
         napiHttp.HttpClientOHOS_onFailure(connection.ptr, err.code);
         connection.httpRequest.destroy();
       }

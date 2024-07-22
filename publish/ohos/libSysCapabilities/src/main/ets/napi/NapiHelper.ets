@@ -35,6 +35,9 @@ export class NapiHelper {
     laya.JSBind.bindFunction("LayaHttpClient.create", LayaHttpClient.create);
     laya.JSBind.bindFunction("LayaHttpClient.destroy", LayaHttpClient.destroy);
     laya.JSBind.bindFunction("LayaHttpClient.cancel", LayaHttpClient.cancel);
+    laya.JSBind.bindFunction("LayaHttpClient.postData", LayaHttpClient.postData);
+    laya.JSBind.bindFunction("LayaHttpClient.addHeader", LayaHttpClient.addHeader);
+    laya.JSBind.bindFunction("LayaHttpClient.setMethod", LayaHttpClient.setMethod);
     laya.JSBind.bindFunction("LayaHttpClient.setReadTimeout", LayaHttpClient.setReadTimeout);
     laya.JSBind.bindFunction("LayaHttpClient.setConnectTimeout", LayaHttpClient.setConnectTimeout);
     laya.JSBind.bindFunction("LayaHttpClient.doRequest", LayaHttpClient.doRequest);

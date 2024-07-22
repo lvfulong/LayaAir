@@ -47,6 +47,10 @@ void HttpClientOHOS::doRequest()
 
 void HttpClientOHOS::setMethod(const char *method)
 {
+    if (auto setMethod = aki::JSBind::GetJSFunction("LayaHttpClient.setMethod"))
+    {
+        setMethod->Invoke<void>(m_tag, method);
+    }
 }
 
 void HttpClientOHOS::addHeader(const char *key, const char *value)
@@ -60,7 +64,9 @@ void HttpClientOHOS::postData(const char *pData, int nLen)
 {
     if (auto postData = aki::JSBind::GetJSFunction("LayaHttpClient.postData"))
     {
-        postData->Invoke<void>(m_tag);
+        aki::ArrayBuffer arrayBuffer((uint8_t *)pData, nLen);
+        arrayBuffer.Commit();
+        postData->Invoke<void>(m_tag, arrayBuffer);
     }
 }
 
