@@ -11,6 +11,7 @@
 #include <native_drawing/drawing_canvas.h>
 #include <native_drawing/drawing_color.h>
 #include <native_drawing/drawing_font_collection.h>
+#include <native_drawing/drawing_matrix.h>
 #include <native_drawing/drawing_path.h>
 #include <native_drawing/drawing_pen.h>
 #include <native_drawing/drawing_register_font.h>
@@ -23,6 +24,7 @@
 
 namespace laya
 {
+class ScopedTypography;
 class CanvasRenderingContext2DOHOS : public CanvasRenderingContext2D
 {
   public:
@@ -49,6 +51,7 @@ class CanvasRenderingContext2DOHOS : public CanvasRenderingContext2D
     void setStrokeStyle(const char *color) override;
 
   protected:
+    std::unique_ptr<ScopedTypography> createTypography(const std::string &text);
     void getTextPosition(const std::string &text, double x, double y, double &outX, double &outY) override;
     TextMetrics measureTextUtf16(wchar_t *pwszBuffer, int bufferLen);
     OH_Drawing_Typography *realDraw(const char *text);
@@ -58,7 +61,7 @@ class CanvasRenderingContext2DOHOS : public CanvasRenderingContext2D
     OH_Drawing_TypographyStyle *m_fontTypography;
     OH_Drawing_FontCollection *m_fontCollection;
     OH_Drawing_TypographyCreate *m_typographyCreate;
-
+    OH_Drawing_Matrix *m_matrix = nullptr;
     BitmapData m_bitmapData;
 };
 } // namespace laya
