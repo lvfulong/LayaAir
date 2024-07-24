@@ -14,25 +14,22 @@ GLESSkinRenderElement::~GLESSkinRenderElement()
 {
 }
 
-void GLESSkinRenderElement::drawGeometry(GLESShaderInstance *shaderIns)
+void GLESSkinRenderElement::drawGeometry(GLESShaderInstance* shaderIns)
 {
-    int length = _shaderInstances.getLength();
 
-    std::vector<int> &element = geometry->m_pDrawParams->m_vElements;
+    std::vector<int>& element = geometry->m_pDrawParams->m_vElements;
     if (m_vSkinData.empty())
         return;
     geometry->_bufferState->bind();
-    for (int i = 0, n = length; i < n; i++)
+
+    for (int j = 0, m = geometry->m_pDrawParams->getLength() / 2; j < m; j++)
     {
-        for (int j = 0, m = geometry->m_pDrawParams->getLength() / 2; j < m; j++)
-        {
-            std::pair<char *, int> &subSkinnedDatas = m_vSkinData[j];
-            shaderIns->uploadCustomUniforms(SkinnedMeshSprite3DProperty::BONES, subSkinnedDatas.first,
-                                            subSkinnedDatas.second);
-            int offset = j * 2;
-            LayaGL::m_pWebglEngine->getDrawContext()->drawElements(geometry->_glmode, element[offset + 1],
-                                                                   geometry->_glindexFormat, element[offset]);
-        }
+        std::pair<char*, int>& subSkinnedDatas = m_vSkinData[j];
+        shaderIns->uploadCustomUniforms(SkinnedMeshSprite3DProperty::BONES, subSkinnedDatas.first,
+            subSkinnedDatas.second);
+        int offset = j * 2;
+        LayaGL::m_pWebglEngine->getDrawContext()->drawElements(geometry->_glmode, element[offset + 1],
+            geometry->_glindexFormat, element[offset]);
     }
 }
 void GLESSkinRenderElement::setSkinnedData(JSValueAsParam pData)
