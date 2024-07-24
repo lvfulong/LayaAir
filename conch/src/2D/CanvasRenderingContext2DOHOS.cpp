@@ -49,7 +49,7 @@ CanvasRenderingContext2DOHOS::CanvasRenderingContext2DOHOS(int width, int height
 
     m_fontTypography = OH_Drawing_CreateTypographyStyle();
     OH_Drawing_SetTypographyTextDirection(m_fontTypography, TEXT_DIRECTION_LTR);
-    OH_Drawing_SetTypographyTextAlign(m_fontTypography, TEXT_ALIGN_LEFT);
+    //OH_Drawing_SetTypographyTextAlign(m_fontTypography, TEXT_ALIGN_LEFT);
 
     m_fontTextStyle = OH_Drawing_CreateTextStyle();
     // OH_Drawing_SetTextStyleBaseLine(m_fontTextStyle, TEXT_BASELINE_ALPHABETIC);
@@ -215,7 +215,7 @@ void CanvasRenderingContext2DOHOS::scale(double x, double y)
     {
         return;
     }
-    OH_Drawing_CanvasScale(m_canvas, x, x);
+    OH_Drawing_CanvasScale(m_canvas, x, y);
 }
 void CanvasRenderingContext2DOHOS::setTextAlign(const char *textAlign)
 {
