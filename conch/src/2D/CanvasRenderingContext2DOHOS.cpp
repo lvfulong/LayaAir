@@ -48,8 +48,8 @@ CanvasRenderingContext2DOHOS::CanvasRenderingContext2DOHOS(int width, int height
     OH_Drawing_CanvasClear(m_canvas, OH_Drawing_ColorSetArgb(0x00, 0x00, 0x00, 0x00));
 
     m_fontTypography = OH_Drawing_CreateTypographyStyle();
-    OH_Drawing_SetTypographyTextDirection(m_fontTypography, TEXT_DIRECTION_LTR);
-    //OH_Drawing_SetTypographyTextAlign(m_fontTypography, TEXT_ALIGN_LEFT);
+    // OH_Drawing_SetTypographyTextDirection(m_fontTypography, TEXT_DIRECTION_LTR);
+    OH_Drawing_SetTypographyTextAlign(m_fontTypography, TEXT_ALIGN_LEFT);
 
     m_fontTextStyle = OH_Drawing_CreateTextStyle();
     // OH_Drawing_SetTextStyleBaseLine(m_fontTextStyle, TEXT_BASELINE_ALPHABETIC);
@@ -205,9 +205,8 @@ void CanvasRenderingContext2DOHOS::setTransform(double a, double b, double c, do
     {
         return;
     }
-    OH_Drawing_CanvasScale(m_canvas, a, d);
-    OH_Drawing_CanvasTranslate(m_canvas, e, f);
-    // OH_Drawing_MatrixSetMatrix(m_matrix, a, b, e, c, d, f, 0.0f, 0.0f, 0.0f);
+    OH_Drawing_MatrixSetMatrix(m_matrix, a, b, e, c, d, f, 0.0f, 0.0f, 1.0f);
+    OH_Drawing_CanvasSetMatrix(m_canvas, m_matrix);
 }
 void CanvasRenderingContext2DOHOS::scale(double x, double y)
 {
