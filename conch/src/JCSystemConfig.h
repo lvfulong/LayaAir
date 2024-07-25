@@ -8,35 +8,43 @@
 namespace laya
 {
 
-    enum FRAME_TYPE
-    {
-        FT_SLOW = 0,
-        FT_FAST,
-        FT_MOUSE,
-    };
-	class JCSystemConfig 
-	{
-	public:
-		JCSystemConfig();
-		void reset();
-	public:
-		std::string     m_strStartURL;
-		bool	        m_bPerfStat;			        //����Ч��ͳ��
-        FRAME_TYPE      m_nFrameType;
-        double          m_nFrameThreshold;
-        int             m_nSleepTime;
-		int		        m_nPerf_UpdateNum;
-		std::string	    m_strPerfOut;
-        bool            m_bShowInternalPerBar;          //�Ƿ���ʾjs ondraw���ֺ�gl����״����ͼ��
-        static bool     s_bIsPlug;                      //��Ϊ��ʼ��̫���ˣ�����static
-        static bool     s_bLocalizable;                 //�����Ƿ��Ǳ��ذ�
-		GraphicsAPI     m_graphicsAPI = GraphicsAPI::OpenGLES;
-		int 			m_nOrientationType = 24;
-		void 			loadConfigIniFile();
-        int 			m_nJSDebugMode = 0;
-    	int 			m_nJSDebugPort = 5959;
-	};
-	extern JCSystemConfig g_kSystemConfig;
-}
+enum FRAME_TYPE
+{
+    FT_SLOW = 0,
+    FT_FAST,
+    FT_MOUSE,
+};
+enum class WindowMode
+{
+    WM_Window,
+    WM_WindowResizable,
+    WM_FullScreen
+};
+class JCSystemConfig
+{
+  public:
+    JCSystemConfig();
+    void reset();
+
+  public:
+    std::string m_strStartURL;
+    bool m_bPerfStat;
+    FRAME_TYPE m_nFrameType;
+    double m_nFrameThreshold;
+    int m_nSleepTime;
+    int m_nPerf_UpdateNum;
+    std::string m_strPerfOut;
+    bool m_bShowInternalPerBar;
+    static bool s_bIsPlug;
+    static bool s_bLocalizable;
+    GraphicsAPI m_graphicsAPI = GraphicsAPI::OpenGLES;
+    int m_nOrientationType = 24;
+    void loadConfigIniFile();
+    int m_nJSDebugMode = 0;
+    int m_nJSDebugPort = 5959;
+    WindowMode m_windowMode{WindowMode::WM_WindowResizable};
+};
+extern JCSystemConfig g_kSystemConfig;
+} // namespace laya
 
 #endif

@@ -1,9 +1,9 @@
 #include "JCSystemConfig.h"
+#include <utils/IniFile.h>
+#include <utils/JCBuffer.h>
 #include <utils/JCCommonMethod.h>
 #include <utils/JCFileSystem.h>
 #include <utils/Log.h>
-#include <utils/IniFile.h>
-#include <utils/JCBuffer.h>
 #ifdef OS_WINDOWS
 #include <windows.h>
 #endif
@@ -17,6 +17,25 @@ extern int g_nInnerHeight;
 
 namespace laya
 {
+static WindowMode stringToWindowMode(const std::string &mode)
+{
+    if (compareStrings(mode, "Window", false))
+    {
+        return WindowMode::WM_Window;
+    }
+    else if (compareStrings(mode, "WindowResizable", false))
+    {
+        return WindowMode::WM_WindowResizable;
+    }
+    else if (compareStrings(mode, "FullScreen", false))
+    {
+        return WindowMode::WM_FullScreen;
+    }
+    else
+    {
+        return WindowMode::WM_Window;
+    }
+}
 JCSystemConfig g_kSystemConfig;
 JCSystemConfig::JCSystemConfig()
 {
@@ -35,22 +54,21 @@ void JCSystemConfig::reset()
     m_bShowInternalPerBar = false;
 }
 
-
 void JCSystemConfig::loadConfigIniFile()
 {
     // ���������ļ����ÿ���
-    std::string configpath = gAssetRootPath; 
+    std::string configpath = gAssetRootPath;
     configpath += "config.ini";
 #if defined(OS_IOS) || defined(OS_ANDROID) || defined(OS_OHOS)
     std::string content = JCConch::s_pAssetsFiles->readTextAsset("config.ini");
-    JCBuffer buf((char*)content.c_str(), strlen(content.c_str()), false, false);
-    std::string tempFilePath = gRedistPath + "appCache" +  std::string("/tmp_config.ini");
-    writeFileSync(tempFilePath.c_str(), buf, JCBuffer::utf8); 
+    JCBuffer buf((char *)content.c_str(), strlen(content.c_str()), false, false);
+    std::string tempFilePath = gRedistPath + "appCache" + std::string("/tmp_config.ini");
+    writeFileSync(tempFilePath.c_str(), buf, JCBuffer::utf8);
     configpath = tempFilePath;
 #endif
     if (!FileSystem::exists(configpath))
     {
-       LOGE("No config.ini file found!");
+        LOGE("No config.ini file found!");
     }
     IniFile configIni(configpath.c_str());
 
@@ -74,6 +92,18 @@ void JCSystemConfig::loadConfigIniFile()
     {
         LOGW("Warning: can not find desktop:height use default %d", defaultHeight);
     }
+
+    std::string defaultWindowMode = "";
+    if (configIni.hasEntry("desktop:WindowMode"))
+    {
+        defaultWindowMode = configIni.getStringOrDefault("desktop:WindowMode", defaultWindowMode);
+        m_windowMode = stringToWindowMode(defaultWindowMode);
+    }
+    else
+    {
+        LOGW("Warning: can not find desktop:WindowMode use default %d", defaultWindowMode);
+    }
+
 #endif
 #ifdef OS_IOS
     if (configIni.hasEntry("ios:orientation"))

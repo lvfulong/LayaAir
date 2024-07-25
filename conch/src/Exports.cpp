@@ -7,9 +7,9 @@
 #include "JCSystemConfig.h"
 #include <Application/App.h>
 #include <downloadCache/JCIosFileSource.h>
-#include <utils/JCFileSystem.h>
 #include <string>
 #include <utils/JCCommonMethod.h>
+#include <utils/JCFileSystem.h>
 
 extern std::string gRedistPath;
 extern std::string gAssetRootPath;
@@ -18,7 +18,8 @@ extern std::string gAssetRootPath;
 handleSyncMessageCallback g_handleSyncMessageCb;
 handleAsyncMessageCallback g_handleAsyncMessageCb;
 
-void conchSetHandleMessageCallback(handleSyncMessageCallback handleSyncMessageCb, handleAsyncMessageCallback handleAsyncMessageCb)
+void conchSetHandleMessageCallback(handleSyncMessageCallback handleSyncMessageCb,
+                                   handleAsyncMessageCallback handleAsyncMessageCb)
 {
     g_handleSyncMessageCb = handleSyncMessageCb;
     g_handleAsyncMessageCb = handleAsyncMessageCb;
@@ -33,8 +34,9 @@ int mainImpl()
     pAssets->Init(gRedistPath.c_str());
     laya::JCConch::s_pAssetsFiles = pAssets;
     laya::App app;
-    Config config;
+    laya::App::Config config;
     config.title = exeName;
+
     app.run(config);
     return 0;
 }
