@@ -14,7 +14,7 @@
     #include <xaudio2.h>
     #include <AL/al.h>
     #include <AL/alc.h>
-#elif OS_IOS
+#elif defined(OS_IOS)
     #include <OpenAL/al.h>
     #include <OpenAl/alc.h>
 #else

@@ -1,12 +1,12 @@
 #include <utils/Log.h>
 #include <network/IHttpClient.h>
-#if OS_ANDROID
+#if defined(OS_ANDROID)
 #include "network/HttpClientAndroid.h"
-#elif OS_IOS
+#elif defined(OS_IOS)
 #include "network/HttpClientiOS.h"
-#elif OS_OHOS
+#elif defined(OS_OHOS)
 #include "network/HttpClientOHOS.h"
-#elif OS_WINDOWS
+#elif defined(OS_WINDOWS)
 #include "network/HttpClientCurl.h"
 #endif
 
@@ -31,13 +31,13 @@ IHttpClient *HttpClientManager::createHttpClient(const char *url, const char *lo
                                                  const IHttpClient::onEndFunction &functionOnEnd)
 {
     IHttpClient *httpClient = nullptr;
-#if OS_ANDROID
+#if defined(OS_ANDROID)
     httpClient = new HttpClientAndroid(url, localFilePath, functionOnProgress, functionOnEnd, shared_from_this());
-#elif OS_IOS
+#elif defined(OS_IOS)
     httpClient = new HttpClientiOS(url, localFilePath, functionOnProgress, functionOnEnd, shared_from_this());
-#elif OS_WINDOWS
+#elif defined(OS_WINDOWS)
     httpClient = new HttpClientCurl(url, localFilePath, functionOnProgress, functionOnEnd, shared_from_this());
-#elif OS_OHOS
+#elif defined(OS_OHOS)
     httpClient = new HttpClientOHOS(url, localFilePath, functionOnProgress, functionOnEnd, shared_from_this());
 #endif
     addHttpClient(httpClient);

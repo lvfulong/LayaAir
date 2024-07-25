@@ -7,14 +7,14 @@ extern std::string gRedistPath;
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
 extern bool g_bGLCanvasSizeChanged;
-#ifdef OS_WINDOWS
+#if defined(OS_WINDOWS)
 #include <Windows.h>
 
 #include <objidlbase.h>
 #include <gdiplus.h>
 
 extern HWND g_hWnd;
-#elif OS_LINUX
+#elif defined(OS_LINUX)
 #include <SDL2/SDL_syswm.h>
 #include <X11/Xlib.h>
 Display *g_X11_display;
@@ -130,11 +130,11 @@ void App::run(const Config &config)
     SDL_VERSION(&sys.version);
     if (SDL_FALSE != SDL_GetWindowWMInfo(m_sdlWindow, &sys))
     {
-#ifdef OS_WINDOWS
+#if defined(OS_WINDOWS)
         g_hWnd = sys.info.win.window;
         // HINSTANCE hInstance = sys.info.win.hinstance;
 
-#elif OS_LINUX
+#elif defined(OS_LINUX)
         g_X11_display = sys.info.x11.display;
         g_X11_window = sys.info.x11.window;
 #endif
@@ -145,9 +145,9 @@ void App::run(const Config &config)
     }
 
     laya::BackendOptions options;
-#ifdef OS_WINDOWS
+#if defined(OS_WINDOWS)
     options.nativeLayer = g_hWnd;
-#elif OS_LINUX
+#elif defined(OS_LINUX)
     options.nativeLayer = m_sdlWindow;
 #endif
 

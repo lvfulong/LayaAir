@@ -3,13 +3,13 @@
 #include "resource/JCFileResManager.h"
 #include "../../JCScriptRuntime.h"
 #include "JCConch.h"
-#ifdef OS_ANDROID
+#if defined(OS_ANDROID)
     #include "CToJavaBridge.h"
-#elif OS_WINDOWS
+#elif defined(OS_WINDOWS)
     #include <Windows.h>
-#elif OS_IOS
+#elif defined(OS_IOS)
     #include "CToObjectC.h"
-#elif OS_OHOS
+#elif defined(OS_OHOS)
     #include "aki/jsbind.h"
     #include <string>
     #include "platform/ohos/napi/helper/NapiHelper.h"

@@ -13,13 +13,13 @@
 #include <utils/JCLayaUrl.h>
 #include <algorithm>
 #include <utils/Log.h>
-#if OS_IOS
+#if defined(OS_IOS)
 #include <mach/mach_time.h>
 #include <sys/time.h>
 #include <time.h>
 #elif defined(OS_ANDROID) || defined(OS_OHOS)
 #include <time.h>
-#elif OS_WINDOWS
+#elif defined(OS_WINDOWS)
 #include <iostream>
 #include <psapi.h>
 #include <windows.h>
@@ -903,7 +903,7 @@ std::string getExePath()
     }
     std::string ret(buf);
     return ret;
-#elif OS_WINDOWS
+#elif defined(OS_WINDOWS)
     WCHAR szPath[MAX_PATH];
     ::GetModuleFileNameW(NULL, szPath, MAX_PATH);
     std::string path = wideToUtf8(szPath);

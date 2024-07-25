@@ -834,6 +834,9 @@ void GLTextureContext::setTextureSubPixelsData(GLESInternalTex *texture, char *s
 void GLTextureContext::setTextureDDSData(GLESInternalTex *texture, const DDSTextureInfo &ddsInfo)
 {
 
+    bool premultiplyAlpha = false;
+    bool invertY = false;
+
     int target = texture->m_target;
     int internalFormat = texture->m_internalFormat;
     int format = texture->m_format;
@@ -848,6 +851,7 @@ void GLTextureContext::setTextureDDSData(GLESInternalTex *texture, const DDSText
     int mipmapCount = ddsInfo.mipmapCount;
     bool compressed = ddsInfo.compressed;
 
+    texture->setMaxMipmapLevel(mipmapCount - 1);
     bool fourSize = width % 4 == 0 && height % 4 == 0;
 
     if (!fourSize)
@@ -859,7 +863,9 @@ void GLTextureContext::setTextureDDSData(GLESInternalTex *texture, const DDSText
 
     FormatPixelsParams formatParams;
     getFormatPixelsParams(ddsInfo.format, formatParams);
-   
+    int channelsByte = formatParams.bytesPerPixel / formatParams.channels;
+    //let dataTypeConstur = formatParams.dataTypedCons;
+
 
     int mipmapWidth = width;
     int mipmapHeight = height;
@@ -868,18 +874,17 @@ void GLTextureContext::setTextureDDSData(GLESInternalTex *texture, const DDSText
     for (int index = 0; index < mipmapCount; index++)
     {
         if (compressed) {
-            int32_t dataLength = std::max(4, mipmapWidth) / 4 * std::max(4, mipmapWidth) / 4 * blocksBytes;
+            int32_t dataLength = std::max(4, mipmapWidth) / 4 * std::max(4, mipmapHeight) / 4 * blocksBytes;
             glCompressedTexImage2D(target, index, internalFormat, mipmapWidth, mipmapHeight, 0, dataLength, source + dataOffset);
 
             memory += dataLength;
             dataOffset += bpp ? (mipmapWidth * mipmapHeight * (bpp / 8)) : dataLength;
         }
         else {
-            int channelsByte = formatParams.bytesPerPixel / formatParams.channels;
             int dataLength = mipmapWidth * mipmapHeight * formatParams.channels;
-
-            glTexImage2D(target, index, internalFormat, mipmapWidth, mipmapHeight, 0, format, type, source+ dataOffset);
             memory += dataLength;
+            glTexImage2D(target, index, internalFormat, mipmapWidth, mipmapHeight, 0, format, type, source+ dataOffset);
+            
             dataOffset += dataLength * channelsByte;
         }
        

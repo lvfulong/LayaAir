@@ -90,15 +90,15 @@ namespace laya
 		ObjectManager<UniformBufferObject>*	    m_pUniformBufferObjectManager;
         ScreenCanvasContext2D*                  m_pScreenContext = nullptr;
 
-#ifdef OS_IOS
+#if defined(OS_IOS)
         OpenGLBackendiOS*                       m_GfxBackend = { nullptr };
-#elif OS_LINUX
+#elif defined(OS_LINUX)
 		OpenGLBackendLinuxEGLX11*                m_GfxBackend = { nullptr };
-#elif OS_ANDROID
+#elif defined(OS_ANDROID)
 		OpenGLBackendAndroidEGL*                m_GfxBackend = { nullptr };
-#elif OS_WINDOWS
+#elif defined(OS_WINDOWS)
         OpenGLBackendWinEGL*   m_GfxBackend = { nullptr };
-#elif OS_OHOS
+#elif defined(OS_OHOS)
         OpenGLBackendOHOSEGL*   m_GfxBackend = { nullptr };
 #endif
         WebGLThread*                            m_WebGLThread = nullptr;

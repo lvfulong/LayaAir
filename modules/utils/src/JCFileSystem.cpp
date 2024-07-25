@@ -77,7 +77,7 @@ namespace FileSystem
 {
 bool exists(const std::string &path)
 {
-#if OS_WINDOWS
+#if defined(OS_WINDOWS)
     std::wstring wide_path = utf8ToWide(path);
     std::error_code error;
     return fs::exists(wide_path, error);
@@ -88,7 +88,7 @@ bool exists(const std::string &path)
 }
 bool mkdir(const std::string &path)
 {
-#if OS_WINDOWS
+#if defined(OS_WINDOWS)
     std::wstring wide_path = utf8ToWide(path);
     std::error_code error;
     return fs::create_directories(wide_path, error);
@@ -99,7 +99,7 @@ bool mkdir(const std::string &path)
 }
 bool rm(const std::string &path)
 {
-#if OS_WINDOWS
+#if defined(OS_WINDOWS)
     std::wstring wide_path = utf8ToWide(path);
     std::error_code error;
     return fs::remove(wide_path, error);
@@ -114,7 +114,7 @@ std::vector<std::string> readdirSync(const std::string &path)
     if (!FileSystem::exists(path))
         return paths;
     std::error_code error;
-#if OS_WINDOWS
+#if defined(OS_WINDOWS)
     std::wstring wide_path = utf8ToWide(path);
     fs::directory_iterator item_begin(wide_path, error);
 #else
@@ -124,7 +124,7 @@ std::vector<std::string> readdirSync(const std::string &path)
     for (; item_begin != item_end; item_begin.increment(error))
     {
         auto pp = (*item_begin).path().filename();
-#if OS_WINDOWS
+#if defined(OS_WINDOWS)
         paths.push_back(wideToUtf8(pp.wstring()));
 #else
         paths.push_back(pp.generic_string());
@@ -134,7 +134,7 @@ std::vector<std::string> readdirSync(const std::string &path)
 }
 bool is_directory(const std::string &path)
 {
-#if OS_WINDOWS
+#if defined(OS_WINDOWS)
     std::wstring wide_path = utf8ToWide(path);
     std::error_code error;
     return fs::is_directory(wide_path, error);
@@ -145,7 +145,7 @@ bool is_directory(const std::string &path)
 }
 bool is_regular_file(const std::string &path)
 {
-#if OS_WINDOWS
+#if defined(OS_WINDOWS)
     std::wstring wide_path = utf8ToWide(path);
     std::error_code error;
     return fs::is_regular_file(wide_path, error);
@@ -156,7 +156,7 @@ bool is_regular_file(const std::string &path)
 }
 uintmax_t file_size(const std::string &path)
 {
-#if OS_WINDOWS
+#if defined(OS_WINDOWS)
     std::wstring wide_path = utf8ToWide(path);
     std::error_code error;
     return fs::is_regular_file(wide_path, error);
@@ -167,7 +167,7 @@ uintmax_t file_size(const std::string &path)
 }
 std::time_t last_write_time(const std::string &path)
 {
-#if OS_WINDOWS
+#if defined(OS_WINDOWS)
     std::wstring wide_path = utf8ToWide(path);
     std::error_code error;
     return std::chrono::system_clock::to_time_t(fs::last_write_time(wide_path, error));
@@ -179,7 +179,7 @@ std::time_t last_write_time(const std::string &path)
 
 std::string filename(const std::string &path)
 {
-#if OS_WINDOWS
+#if defined(OS_WINDOWS)
     std::wstring wide_path = utf8ToWide(path);
     fs::path p(wide_path);
     std::error_code error;
@@ -191,7 +191,7 @@ std::string filename(const std::string &path)
 }
 std::string remove_filename(const std::string &path)
 {
-#if OS_WINDOWS
+#if defined(OS_WINDOWS)
     std::wstring wide_path = utf8ToWide(path);
     fs::path p(wide_path);
     std::error_code error;

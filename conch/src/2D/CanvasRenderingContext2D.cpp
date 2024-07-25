@@ -1,13 +1,13 @@
 #include "CanvasRenderingContext2D.h"
-#ifdef OS_ANDROID
+#if defined(OS_ANDROID)
 #include "CanvasRenderingContext2DAndroid.h"
-#elif OS_WINDOWS
+#elif defined(OS_WINDOWS)
 #include "CanvasRenderingContext2DWin.h"
-#elif OS_IOS
+#elif defined(OS_IOS)
 #include "CanvasRenderingContext2DCG.h"
-#elif OS_OHOS
+#elif defined(OS_OHOS)
 #include "CanvasRenderingContext2DOHOS.h"
-#elif OS_LINUX
+#elif defined(OS_LINUX)
 #include "CanvasRenderingContext2DLinux.h"
 #endif
 #include <utils/ColorParser.h>
@@ -19,15 +19,15 @@ static int32_t s_id = 0;
 static std::unordered_map<int32_t, CanvasRenderingContext2D *> s_canvasRenderingContext2DMap;
 CanvasRenderingContext2D *CanvasRenderingContext2D::create(int width, int height)
 {
-#ifdef OS_ANDROID
+#if defined(OS_ANDROID)
     return new CanvasRenderingContext2DAndroid(width, height);
-#elif OS_WINDOWS
+#elif defined(OS_WINDOWS)
     return new CanvasRenderingContext2DWin(width, height);
-#elif OS_IOS
+#elif defined(OS_IOS)
     return new CanvasRenderingContext2DCG(width, height);
-#elif OS_LINUX
+#elif defined(OS_LINUX)
     return new CanvasRenderingContext2DLinux(width, height);
-#elif OS_OHOS
+#elif defined(OS_OHOS)
     return new CanvasRenderingContext2DOHOS(width, height);
 #endif
 }

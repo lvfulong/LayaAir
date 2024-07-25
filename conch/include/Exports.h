@@ -1,20 +1,20 @@
 #pragma once
 
-#if OS_WINDOWS
+#if defined(OS_WINDOWS)
 #include <functional>
 #include <string>
 #include <tchar.h>
 #include <windows.h>
 #include <wtypes.h>
-#elif OS_LINUX
+#elif defined(OS_LINUX)
 #include <functional>
 #include <string>
 #endif
 
-#if OS_WINDOWS
+#if defined(OS_WINDOWS)
 extern int conchMainConsole(int argc, _TCHAR *argv[]);
 extern int conchMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nShowCmd);
-#elif OS_LINUX
+#elif defined(OS_LINUX)
 extern int conchMain(int argc, char *argv[]);
 #endif
 

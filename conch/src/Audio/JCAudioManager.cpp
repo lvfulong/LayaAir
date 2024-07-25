@@ -117,13 +117,13 @@ namespace laya
     //------------------------------------------------------------------------------
     void JCAudioManager::createMp3player()
     {
-    #ifdef OS_WINDOWS
+    #if defined(OS_WINDOWS)
 	    m_pMp3Player = new JCAudioMp3Player();
-    #elif OS_ANDROID
+    #elif defined(OS_ANDROID)
 	    m_pMp3Player = new JCAudioMp3Media();
-    #elif OS_IOS
+    #elif defined(OS_IOS)
         m_pMp3Player = new JCAudioMp3Player();
-    #elif OS_OHOS
+    #elif defined(OS_OHOS)
 	    m_pMp3Player = new JCAudioMp3Player();
     #endif
     }

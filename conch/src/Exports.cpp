@@ -1,4 +1,4 @@
-#if BUILDING_CONCH_FROME_SOURCE
+#ifdef BUILDING_CONCH_FROME_SOURCE
 #include "Exports.h"
 #else
 #include "ExportsShared.h"
@@ -40,7 +40,7 @@ int mainImpl()
     app.run(config);
     return 0;
 }
-#if OS_WINDOWS
+#if defined(OS_WINDOWS)
 int conchMainConsole(int argc, WCHAR *argv[])
 {
     bool bRunTest = false;
@@ -118,7 +118,7 @@ int conchMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, in
     LocalFree(strCmdLineWide);
     return ret;
 }
-#elif OS_LINUX
+#elif defined(OS_LINUX)
 int conchMain(int argc, char *argv[])
 {
     return mainImpl();

@@ -29,7 +29,7 @@
 #define P_PRIORITY_NORMAL 0
 #define P_PRIORITY_LOW 1
 #define P_NOLOCALFILE nullptr
-#if OS_WINDOWS
+#if defined(OS_WINDOWS)
 #include "timeapi.h"
 #endif
 #include <cctype>

@@ -19,7 +19,7 @@
 #include <stdio.h>
 #include <string>
 #include <vector>
-#if OS_WINDOWS
+#if defined(OS_WINDOWS)
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #endif
@@ -232,7 +232,7 @@ template <> class ToString<bool>
         return value ? "true" : "false";
     }
 };
-#if OS_WINDOWS
+#if defined(OS_WINDOWS)
 inline std::wstring utf8ToWide(const std::string &utf8Text)
 {
     if (utf8Text.empty())

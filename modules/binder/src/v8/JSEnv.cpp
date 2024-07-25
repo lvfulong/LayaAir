@@ -33,7 +33,7 @@ Javascript::Javascript()
         v8::V8::InitializePlatform(m_pPlatform);
         v8::V8::Initialize();
         std::string flags;
-#if OS_IOS
+#if defined(OS_IOS)
         flags.append(" --jitless ");
 #endif
         flags.append(" --expose-gc ");
@@ -263,7 +263,7 @@ void JSV8Worker::_defRunLoop()
         SetNameInternal(thid, m_strName.c_str());
         // threadInfoLog("start thread:%s,%d", m_strName.c_str(), thid);
     }
-#elif OS_ANDROID
+#elif defined(OS_ANDROID)
     {
         // threadInfoLog("start thread:%s,%ld", m_strName.c_str(), gettidv1());
     }

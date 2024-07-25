@@ -1,5 +1,5 @@
 
-#if BUILDING_CONCH_FROME_SOURCE
+#if defined(BUILDING_CONCH_FROME_SOURCE)
 #include "Exports.h"
 #else
 #include "ExportsShared.h"

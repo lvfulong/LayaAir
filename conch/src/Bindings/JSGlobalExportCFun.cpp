@@ -32,19 +32,19 @@
 #include "JSTextDecoder.h"
 
 #include "JSCanvasRenderingContext2D.h"
-#ifdef OS_ANDROID
+#if defined(OS_ANDROID)
     #include "JSAndroidEditBox.h"
 	#include "CToJavaBridge.h"
-#elif OS_OHOS
+#elif defined(OS_OHOS)
     #include "JSOHOSEditBox.h"
     #include "aki/jsbind.h"
     #include "platform/ohos/napi/helper/NapiHelper.h"
-#elif OS_WINDOWS
+#elif defined(OS_WINDOWS)
 	#include <Windows.h>
     #include "JSWindowEditBox.h"
-#elif OS_LINUX
+#elif defined(OS_LINUX)
     #include "JSLinuxEditBox.h"
-#elif OS_IOS
+#elif defined(OS_IOS)
     #include "JSIOSEditBox.h"
     #include "CToObjectC.h"
 #endif
@@ -86,13 +86,13 @@ extern int g_nInnerHeight ;
 extern bool g_bGLCanvasSizeChanged;
 #ifdef OS_WINDOWS
 	int g_bEnableTouch = false;
-#elif OS_ANDROID
+#elif defined(OS_ANDROID)
 	int g_bEnableTouch = true;
-#elif OS_IOS
+#elif defined(OS_IOS)
 	int g_bEnableTouch = true;
-#elif OS_OHOS
+#elif defined(OS_OHOS)
 	int g_bEnableTouch = true;
-#elif OS_LINUX
+#elif defined(OS_LINUX)
 	int g_bEnableTouch = false;
 #endif
  std::string g_sExePath = "";
@@ -493,13 +493,13 @@ namespace laya
         JSImageBitmap::exportJS(context);
 #ifdef OS_WINDOWS
         JSWindowEditBox::exportJS(context);
-#elif OS_LINUX
+#elif defined(OS_LINUX)
         JSLinuxEditBox::exportJS(context);
-#elif OS_ANDROID
+#elif defined(OS_ANDROID)
         JSAndroidEditBox::exportJS(context);
-#elif OS_OHOS
+#elif defined(OS_OHOS)
         JSOHOSEditBox::exportJS(context);
-#elif OS_IOS
+#elif defined(OS_IOS)
         JSIOSEditBox::exportJS(context);
 #endif
         //JSTextBitmapInfo::exportJS(context);

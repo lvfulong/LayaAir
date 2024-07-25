@@ -16,7 +16,7 @@
 
 #ifdef OS_ANDROID
     #include "../JCAndroidFileSource.h"
-#elif OS_OHOS
+#elif defined(OS_OHOS)
     #include <downloadCache/JCOHOSFileSource.h>
     #include "platform/ohos/napi/plugin_manager.h"
 #else
@@ -331,7 +331,7 @@ namespace laya
 		/*
 #ifdef OS_ANDROID
 		m_pAssets = new JCAndroidFileSource();
-#elif OS_OHOS
+#elif defined(OS_OHOS)
 		m_pAssets = new JCOHOSFileSource();
 #else
 		m_pAssets = new JCIosFileSource();
@@ -467,7 +467,7 @@ namespace laya
 				delete pfr;
 			}
 		}
-#elif OS_OHOS
+#elif defined(OS_OHOS)
 		JCOHOSFileSource* pAssets = new JCOHOSFileSource();
 		pAssets->Init((NativeResourceManager*)g_pAssetManager, assetsPath.c_str());
 		pFileReader = pAssets;

@@ -25,26 +25,26 @@
 #include <Bindings/JSInput.h>
 #include <thread>
 #include <platform/OS.h>
-#ifdef OS_ANDROID
+#if defined(OS_ANDROID)
     #include "WebSocket/WebSocket.h"
     #include "CToJavaBridge.h"
     #include <dlfcn.h>
     #include <pthread.h>
     #include <sys/types.h>
     #include <unistd.h>
-#elif OS_IOS
+#elif defined(OS_IOS)
     #include "CToObjectC.h"
     #include "pthread.h"
-#elif OS_WINDOWS
+#elif defined(OS_WINDOWS)
     #include <windows.h>
 #endif
-#ifdef OS_IOS
+#if defined(OS_IOS)
 #include "OpenGLBackendiOS.h"
-#elif OS_ANDROID
+#elif defined(OS_ANDROID)
 #include "OpenGLBackendAndroidEGL.h"
-#elif OS_WINDOWS
+#elif defined(OS_WINDOWS)
 #include "OpenGLBackendWinEGL.h"
-#elif OS_OHOS
+#elif defined(OS_OHOS)
 #include "aki/jsbind.h"
 #include <string>
 #include "platform/ohos/napi/helper/NapiHelper.h"
@@ -71,10 +71,10 @@ namespace laya
     std::shared_ptr<JCScriptRuntime> JCConch::s_pScriptRuntime;
     void _vibrate()
     {
-#ifdef OS_ANDROID
+#if defined(OS_ANDROID)
         CToJavaBridge::JavaRet kRet;
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "vibrate", kRet);
-#elif OS_OHOS
+#elif defined(OS_OHOS)
         NapiHelper::GetInstance()->startVibration(0.1f);
 #endif
     }
@@ -87,9 +87,9 @@ namespace laya
         }
         laya::g_kSystemConfig.loadConfigIniFile();
 #ifdef OS_APPLE
-#elif OS_WINDOWS
+#elif defined(OS_WINDOWS)
         HMODULE libHandle = LoadLibrary(L"libGLESv2.dll");
-#elif OS_ANDROID
+#elif defined(OS_ANDROID)
         //void *libhandle = dlopen("libGLESv2.so", RTLD_LAZY);
 #endif
         m_nUrlHistoryPos = -1;

@@ -16,11 +16,11 @@
 #include <utils/JCCommonMethod.h>
 #include <vector>
 
-#ifdef OS_ANDROID
+#if defined(OS_ANDROID)
     #include <Bindings/JSAndroidEditBox.h>
-#elif OS_OHOS
+#elif defined(OS_OHOS)
     #include <Bindings/JSOHOSEditBox.h>   
-#elif OS_IOS
+#elif defined(OS_IOS)
     #include <Bindings/JSIOSEditBox.h>
 #endif
 
@@ -157,11 +157,11 @@ namespace laya
         */
         //int                                 m_nThreadState;                 
         JCArrayBufferManager*               m_pArrayBufferManager;          ///<ArrayBufferManager
-#ifdef OS_ANDROID
+#if defined(OS_ANDROID)
         JSAndroidEditBox*                   m_pCurEditBox;
-#elif OS_OHOS
+#elif defined(OS_OHOS)
         JSOHOSEditBox*                      m_pCurEditBox;
-#elif OS_IOS
+#elif defined(OS_IOS)
         JSIOSEditBox *                      m_pCurEditBox;
 #endif
 #ifdef JS_V8

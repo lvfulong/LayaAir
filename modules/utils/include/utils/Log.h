@@ -9,10 +9,10 @@
 extern int g_nDebugLevel;
 
 #define LOG_TAG "LayaBox"
-#if OS_ANDROID
+#if defined(OS_ANDROID)
 #include <android/log.h>
 #include <jni.h>
-#elif OS_OHOS
+#elif defined(OS_OHOS)
 #include <hilog/log.h>
 #endif
 namespace laya
@@ -40,7 +40,7 @@ extern void (*gLayaLogNoParam)(int level, const char *file, int line, const char
 extern void (*gLayaLogBin)(int level, const char *file, int line, void *pData, int len);
 
 void alert(const char *fmt, ...);
-#if OS_OHOS
+#if defined(OS_OHOS)
 void logMessage(laya::LogType logType, const char *file, int line, const char *fmt, ...);
 #endif
 

@@ -1,13 +1,13 @@
 #include "FontManager.h"
 #include <utils/Log.h>
 #include <utils/JCFileSystem.h>
-#ifdef OS_ANDROID
+#if defined(OS_ANDROID)
 #include "CanvasRenderingContext2DAndroid.h"
-#elif OS_IOS
+#elif defined(OS_IOS)
 #include <CoreGraphics/CGDataProvider.h>
 #include <CoreGraphics/CGFont.h>
 #include <CoreText/CTFontManager.h>
-#elif OS_WINDOWS
+#elif defined(OS_WINDOWS)
 #include "CanvasRenderingContext2DWin.h"
 #else
 #endif
@@ -16,12 +16,12 @@
 extern std::string gRedistPath;
 namespace laya
 {
-#ifdef OS_ANDROID
+#if defined(OS_ANDROID)
 class NativeInfoImpl
 {
     
 };
-#elif OS_IOS
+#elif defined(OS_IOS)
 struct NativeInfoImpl
 {
     CGFontRef m_registerfont;
@@ -91,15 +91,11 @@ static bool registerFontIOS(const std::string &family, CGDataProviderRef fontDat
 #endif
 FontManager *g_pFontManager = nullptr;
 FontManager::FontManager(){
-#ifdef OS_ANDROID
-#elif OS_IOS
-#else
-#endif
 } FontManager::~FontManager()
 {
     m_fontName2RealName.clear();
-#ifdef OS_ANDROID
-#elif OS_IOS
+#if defined(OS_ANDROID)
+#elif defined(OS_IOS)
     CFErrorRef error = nullptr;
     std::unordered_map<std::string, NativeInfoImpl*>::iterator it = m_fontName2NativeInfoImpl.begin();
     for (; it != m_fontName2NativeInfoImpl.end(); it++)
@@ -125,9 +121,9 @@ void FontManager::deleteInstance()
 }
 bool FontManager::registerFont(const std::string &family, const std::string &path)
 {
-#ifdef OS_ANDROID
+#if defined(OS_ANDROID)
     return CanvasRenderingContext2DAndroid::registerFontFromPath(family, path);
-#elif OS_IOS
+#elif defined(OS_IOS)
     CGDataProviderRef fontDataProvider = CGDataProviderCreateWithFilename(path.c_str());
     if (fontDataProvider == nullptr)
     {
@@ -135,7 +131,7 @@ bool FontManager::registerFont(const std::string &family, const std::string &pat
         return false;
     }
     return registerFontIOS(family, fontDataProvider);
-#elif OS_WINDOWS
+#elif defined(OS_WINDOWS)
     return CanvasRenderingContext2DWin::registerFontFromPath(family, path);
 #else
     return true;
@@ -146,12 +142,12 @@ bool FontManager::registerFont(const std::string &family, const std::string &pat
 
 bool FontManager::registerFont(const std::string &family, const uint8_t *data, int32_t byteLength)
 {
-#ifdef OS_ANDROID
+#if defined(OS_ANDROID)
     JCBuffer buf((char *)data, byteLength, false, false);
     std::string tempFilePath = gRedistPath + "/appCache" +  std::string("/tmp_") + family;
     writeFileSync(tempFilePath.c_str(), buf);
     return CanvasRenderingContext2DAndroid::registerFontFromPath(family, tempFilePath);
-#elif OS_IOS
+#elif defined(OS_IOS)
     JCBuffer buf((char *)data, byteLength, false, false);
     std::string tempFilePath = gRedistPath + "/appCache" +  std::string("/tmp_") + family;
     writeFileSync(tempFilePath.c_str(), buf);
@@ -165,7 +161,7 @@ bool FontManager::registerFont(const std::string &family, const uint8_t *data, i
     bool ret = registerFontIOS(family, fontDataProvider);
     CGDataProviderRelease(fontDataProvider);
     return ret;
-#elif OS_WINDOWS
+#elif defined(OS_WINDOWS)
     return CanvasRenderingContext2DWin::registerFontFromBuffer(family,data, byteLength);
 #else
     return true;
@@ -173,9 +169,9 @@ bool FontManager::registerFont(const std::string &family, const uint8_t *data, i
 }
 std::vector<std::string> FontManager::getAllSystemFonts()
 {
-#ifdef OS_ANDROID
+#if defined(OS_ANDROID)
     return std::vector<std::string>();
-#elif OS_IOS
+#elif defined(OS_IOS)
     return getAllSystemFontsIOS();
 #else
     return std::vector<std::string>();

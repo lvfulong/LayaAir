@@ -8,7 +8,7 @@
 #endif
 #ifdef OS_ANDROID 
 #include "CToJavaBridge.h"
-#elif OS_OHOS
+#elif defined(OS_OHOS)
     #include "aki/jsbind.h"
     #include <string>
     #include "platform/ohos/napi/helper/NapiHelper.h"

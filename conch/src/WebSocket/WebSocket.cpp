@@ -20,9 +20,9 @@
 #include <algorithm>
 #ifdef OS_ANDROID
 #include <downloadCache/JCAndroidFileSource.h>
-#elif OS_IOS
+#elif defined(OS_IOS)
 #include <downloadCache/JCIosFileSource.h>
-#elif OS_OHOS
+#elif defined(OS_OHOS)
 #include <downloadCache/JCOHOSFileSource.h>
 #endif
 #include <utils/Log.h>
@@ -368,7 +368,7 @@ int WebSocket::onSubThreadLoop()
 
 	return 0;
 }
-#if OS_WINDOWS
+#if defined(OS_WINDOWS)
 void WebSocket::onSubThreadStarted() {
 
 
@@ -772,7 +772,7 @@ lws_vhost* WebSocket::createVhost(struct lws_protocols* protocols, int& sslConne
     static std::string caFilePath = gRedistPath + std::string("ca\\") + caFileName;
     bool isCAFileExist = FileSystem::exists(caFilePath);
 
-#elif OS_LINUX
+#elif defined(OS_LINUX)
     static std::string caFilePath = gRedistPath + std::string("ca/") + caFileName;
     bool isCAFileExist = FileSystem::exists(caFilePath);
 #else
