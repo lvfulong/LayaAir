@@ -422,7 +422,6 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 				return;
 			}
 		}
-		ConchJNI.SetLocalStoragePath(strLayaCache + "/localstorage");
 
 		String cachePath = getAppCacheDir() + "/LayaCache";
 		if (m_AM != null) {

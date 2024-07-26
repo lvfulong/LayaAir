@@ -43,11 +43,6 @@ void NAPIFun::ConchNAPI_InitDLib(napi_value assetManager, int nThreadNum, std::s
 
     laya::JCConch::s_pConch.reset(new laya::JCConch());
 }
-
-void NAPIFun::ConchNAPI_SetLocalStoragePath(std::string p_strLocalStorage)
-{
-    LOGI("NAPI localStoragePath=%{public}s", p_strLocalStorage.c_str());
-}
 void NAPIFun::ConchNAPI_ReleaseDLib()
 {
     LOGI("NAPI del engine");
@@ -204,11 +199,6 @@ void NAPIFun::ConchNAPI_inputChange(int keycode)
         JCConch::s_pScriptRuntime->m_pCurEditBox->onInput();
     }
 }
-void NAPIFun::ConchNAPI_setLocalizable(bool p_bIsLocalPackage)
-{
-    JCSystemConfig::s_bLocalizable = p_bIsLocalPackage;
-    LOGI("setLocalizable: %d", p_bIsLocalPackage);
-}
 void NAPIFun::ConchNAPI_captureScreenCallBack(int w, int h, std::string byteArray)
 {
 }
@@ -247,7 +237,6 @@ JSBIND_GLOBAL()
 {
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_configSetURL, "ConchNAPI_configSetURL");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_InitDLib, "ConchNAPI_InitDLib");
-    JSBIND_FUNCTION(NAPIFun::ConchNAPI_SetLocalStoragePath, "ConchNAPI_SetLocalStoragePath");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_ReleaseDLib, "ConchNAPI_ReleaseDLib");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_OnAppDestroy, "ConchNAPI_OnAppDestroy");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_OnAppPause, "ConchNAPI_OnAppPause");
@@ -259,7 +248,6 @@ JSBIND_GLOBAL()
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_audioMusicPlayEnd, "ConchNAPI_audioMusicPlayEnd");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_networkChanged, "ConchNAPI_networkChanged");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_inputChange, "ConchNAPI_inputChange");
-    JSBIND_FUNCTION(NAPIFun::ConchNAPI_setLocalizable, "ConchNAPI_setLocalizable");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_captureScreenCallBack, "ConchNAPI_captureScreenCallBack");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_handleDeviceMotionEvent, "ConchNAPI_handleDeviceMotionEvent");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_handleDeviceOrientationEvent, "ConchNAPI_handleDeviceOrientationEvent");

@@ -102,8 +102,6 @@ export default class MainAbility extends UIAbility {
   initEngine() {
     let var1 = this.context.filesDir + "/LayaCache";
     //laya.ConchNAPI_configSetURL('http://nativetest.layabox.com/layaplayer2.0.1/index.js');
-    laya.ConchNAPI_SetLocalStoragePath(var1 + "/localstorage");
-    laya.ConchNAPI_setLocalizable(false);
     laya.ConchNAPI_InitDLib(this.context.resourceManager, 3, "cache", var1);
   }
 };

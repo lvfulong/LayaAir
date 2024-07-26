@@ -67,8 +67,6 @@ public class ConchJNI
 	//@param[in] p_am
 	//@param[in] p_strAssetRoot 相对于assets目录的路径，可以是网站的hash，现在是固定值
 	public static native void InitDownLoadManager( int p_bForceLocal,String p_pszRoot, AssetManager p_am, String p_strAssetRoot );
-	
-	public static native void SetLocalStoragePath( String p_strLocalStorage );
 	 
 	//释放gl资源
 	public static native void ReleaseDLib();

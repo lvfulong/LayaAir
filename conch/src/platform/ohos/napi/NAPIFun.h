@@ -37,7 +37,6 @@ class NAPIFun
     static void ConchNAPI_configSetURL(std::string p_strUrl);
     static void ConchNAPI_InitDLib(napi_value assetManager, int nThreadNum, std::string p_strAssetRootPath,
                                    std::string p_strCachePath);
-    static void ConchNAPI_SetLocalStoragePath(std::string p_strLocalStorage);
     static void ConchNAPI_ReleaseDLib();
     static void ConchNAPI_OnAppDestroy();
     static void ConchNAPI_OnAppPause();
@@ -50,7 +49,6 @@ class NAPIFun
     static void ConchNAPI_audioMusicPlayEnd();
     static void ConchNAPI_networkChanged(int nNetworkType);
     static void ConchNAPI_inputChange(int keycode);
-    static void ConchNAPI_setLocalizable(bool p_bIsLocalPackage);
     static void ConchNAPI_captureScreenCallBack(int w, int h, std::string byteArray);
     static void ConchNAPI_handleDeviceMotionEvent(float ax, float ay, float az, float agx, float agy, float agz,
                                                   float ra, float rb, float rg, float interval);
