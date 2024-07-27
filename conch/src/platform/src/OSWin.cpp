@@ -37,9 +37,13 @@ void OSWin::exit()
 }
 int OSWin::getNetworkType()
 {
-    return 1;// todo
+    return 1; // todo
 }
 void OSWin::setScreenWakeLock(bool bWakeLock)
+{
+    // todo
+}
+void OSWin::setSensorAble(bool bSensorAble)
 {
     // todo
 }

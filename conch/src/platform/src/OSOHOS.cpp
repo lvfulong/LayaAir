@@ -46,6 +46,32 @@ void OSOHOS::setScreenWakeLock(bool bWakeLock)
         setKeepScreenOn->Invoke<void>(bWakeLock);
     }
 }
+void OSOHOS::setSensorAble(bool bSensorAble)
+{
+    if (bSensorAble)
+    {
+        if (auto accelerometerEnable = aki::JSBind::GetJSFunction("Accelerometer.enable"))
+        {
+            accelerometerEnable->Invoke<void>();
+        }
+        if (auto orientationEnable = aki::JSBind::GetJSFunction("Orientation.enable"))
+        {
+            orientationEnable->Invoke<void>();
+        }
+    }
+    else
+    {
+        if (auto accelerometerDisable = aki::JSBind::GetJSFunction("Accelerometer.disable"))
+        {
+            accelerometerDisable->Invoke<void>();
+        }
+        if (auto orientationDisable = aki::JSBind::GetJSFunction("Orientation.disable"))
+        {
+            orientationDisable->Invoke<void>();
+        }
+    }
+}
+}
 JsValue OSOHOS::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
     auto isolate = v8::Isolate::GetCurrent();

@@ -61,6 +61,11 @@ void OSAndroid::setScreenWakeLock(bool bWakeLock)
     CToJavaBridge::JavaRet kRet;
     CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setScreenWakeLock", bWakeLock, kRet);
 }
+void OSAndroid::setSensorAble(bool bSensorAble)
+{
+    CToJavaBridge::JavaRet kRet;
+    CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setSensorAble", bSensorAble, kRet);
+}
 JsValue OSAndroid::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
     std::string result;

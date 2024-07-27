@@ -45,10 +45,6 @@ class NapiHelper
     void setPreferredOrientation(int orientation);
     float getScreenInch();
     int getUsedMem();
-    void enableAccelerometer();
-    void disableAccelerometer();
-    void enableOrientation();
-    void disableOrientation();
     static inline std::string Utf8Value(napi_env _env, napi_value _value)
     {
         size_t length;
@@ -97,10 +93,6 @@ class NapiHelper
     void __setPreferredOrientation(int orientation);
     float __getScreenInch();
     int __getUsedMem();
-    void __enableAccelerometer();
-    void __disableAccelerometer();
-    void __enableOrientation();
-    void __disableOrientation();
     static NapiHelper help_;
 
   private:

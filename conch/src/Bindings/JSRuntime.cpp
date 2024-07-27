@@ -192,24 +192,9 @@ namespace laya
     {
         JCConch::s_pConch->getOS()->setScreenWakeLock(bWakeLock);
     }
-    void JSRuntime::setSensorAble(bool p_bSensorAble)
+    void JSRuntime::setSensorAble(bool bSensorAble)
     {
-#ifdef OS_IOS
-        CToObjectCSetSensorAble(p_bSensorAble);
-#elif OS_ANDROID
-        CToJavaBridge::JavaRet kRet;
-        CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setSensorAble", p_bSensorAble, kRet);
-#elif OS_OHOS
-        if(p_bSensorAble) {
-            NapiHelper::GetInstance()->enableAccelerometer();
-            NapiHelper::GetInstance()->enableOrientation();
-        } else {
-            NapiHelper::GetInstance()->disableAccelerometer();
-            NapiHelper::GetInstance()->disableOrientation();
-        }
-#elif OS_WINDOWS
-
-#endif
+        JCConch::s_pConch->getOS()->setSensorAble(bSensorAble);
     }
     JsValue JSRuntime::strTobufer(const char* s)
     {

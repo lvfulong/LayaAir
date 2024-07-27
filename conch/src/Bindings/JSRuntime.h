@@ -45,7 +45,7 @@ namespace laya
 
         static void setScreenWakeLock(bool bWakeLock);
 
-        static void setSensorAble(bool p_bSensorAble);
+        static void setSensorAble(bool bSensorAble);
 
         static void setBuffer(JSValueAsParam pArrayBuffer);
 

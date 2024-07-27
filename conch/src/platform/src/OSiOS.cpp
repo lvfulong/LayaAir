@@ -29,7 +29,11 @@ int OSiOS::getNetworkType()
 }
 void OSiOS::setScreenWakeLock(bool bWakeLock)
 {
-     CToObjectCSetScreenWakeLock(bWakeLock);
+    CToObjectCSetScreenWakeLock(bWakeLock);
+}
+void OSiOS::setSensorAble(bool bSensorAble)
+{
+    CToObjectCSetSensorAble(bSensorAble);
 }
 JsValue OSiOS::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
