@@ -83,7 +83,7 @@ namespace laya{
                 }
                 RawFile *fp = OH_ResourceManager_OpenRawFile(nativeResourceManager_,pathfile);
                 if(!fp){
-                    LOGI("JCOHOSFileSource::loadFileContent1 fp is nullptr");
+                    LOGI("JCOHOSFileSource::loadFileContent1 fp is nullptr %s", p_pszFile);
                     return false;
                 }
                 p_iBuffSize = OH_ResourceManager_GetRawFileSize(fp);
