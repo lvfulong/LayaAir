@@ -41,6 +41,22 @@ void OSLinux::setSensorAble(bool bSensorAble)
 {
     // todo
 }
+int OSLinux::getSafeInsetTop()
+{
+    return 0;
+}
+int OSLinux::getSafeInsetLeft()
+{
+    return 0;
+}
+int OSLinux::getSafeInsetBottom()
+{
+    return 0;
+}
+int OSLinux::getSafeInsetRight()
+{
+    return 0;
+}
 JsValue OSLinux::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
     auto isolate = v8::Isolate::GetCurrent();

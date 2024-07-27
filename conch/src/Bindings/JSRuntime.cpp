@@ -290,59 +290,19 @@ namespace laya
     }
 	int JSRuntime::getSafeInsetTop()
 	{
-        int safeInsetTop = 0;
-        int safeInsetLeft = 0;
-        int safeInsetBottom = 0;
-        int safeInsetRight = 0;
-#ifdef OS_ANDROID
-		CToJavaBridge::GetInstance()->getSafeInsetRect(safeInsetLeft, safeInsetTop, safeInsetRight, safeInsetBottom);
-#elif OS_IOS
-        CToObjectCGetSafeAreaInsets(&safeInsetTop, &safeInsetLeft, &safeInsetBottom, &safeInsetRight);
-#elif OS_WINDOWS
-#endif
-		return safeInsetTop;
+        return JCConch::s_pConch->getOS()->getSafeInsetTop();
 	}
 	int JSRuntime::GetSafeInsetLeft()
 	{
-        int safeInsetTop = 0;
-        int safeInsetLeft = 0;
-        int safeInsetBottom = 0;
-        int safeInsetRight = 0;
-#ifdef OS_ANDROID
-		CToJavaBridge::GetInstance()->getSafeInsetRect(safeInsetLeft, safeInsetTop, safeInsetRight, safeInsetBottom);
-#elif OS_IOS
-        CToObjectCGetSafeAreaInsets(&safeInsetTop, &safeInsetLeft, &safeInsetBottom, &safeInsetRight);
-#elif OS_WINDOWS
-#endif
-		return safeInsetLeft;
+        return JCConch::s_pConch->getOS()->getSafeInsetLeft();
 	}
 	int JSRuntime::GetSafeInsetBottom()
 	{
-        int safeInsetTop = 0;
-        int safeInsetLeft = 0;
-        int safeInsetBottom = 0;
-        int safeInsetRight = 0;
-#ifdef OS_ANDROID
-		CToJavaBridge::GetInstance()->getSafeInsetRect(safeInsetLeft, safeInsetTop, safeInsetRight, safeInsetBottom);
-#elif OS_IOS
-        CToObjectCGetSafeAreaInsets(&safeInsetTop, &safeInsetLeft, &safeInsetBottom, &safeInsetRight);
-#elif OS_WINDOWS
-#endif
-		return safeInsetBottom;
+        return JCConch::s_pConch->getOS()->getSafeInsetBottom();
 	}
 	int JSRuntime::GetSafeInsetRight()
 	{
-        int safeInsetTop = 0;
-        int safeInsetLeft = 0;
-        int safeInsetBottom = 0;
-        int safeInsetRight = 0;
-#ifdef OS_ANDROID
-		CToJavaBridge::GetInstance()->getSafeInsetRect(safeInsetLeft, safeInsetTop, safeInsetRight, safeInsetBottom);
-#elif OS_IOS
-        CToObjectCGetSafeAreaInsets(&safeInsetTop, &safeInsetLeft, &safeInsetBottom, &safeInsetRight);
-#elif OS_WINDOWS
-#endif
-		return safeInsetRight;
+        return JCConch::s_pConch->getOS()->getSafeInsetRight();
 	}
 
 	JsValue JSRuntime::getLaunchOptionsSync()

@@ -71,6 +71,21 @@ void OSOHOS::setSensorAble(bool bSensorAble)
         }
     }
 }
+int OSOHOS::getSafeInsetTop()
+{
+    return 0;
+}
+int OSOHOS::getSafeInsetLeft()
+{
+    return 0;
+}
+int OSOHOS::getSafeInsetBottom()
+{
+    return 0;
+}
+int OSOHOS::getSafeInsetRight()
+{
+    return 0;
 }
 JsValue OSOHOS::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {

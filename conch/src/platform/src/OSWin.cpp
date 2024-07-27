@@ -47,6 +47,22 @@ void OSWin::setSensorAble(bool bSensorAble)
 {
     // todo
 }
+int OSWin::getSafeInsetTop()
+{
+    return 0;
+}
+int OSWin::getSafeInsetLeft()
+{
+    return 0;
+}
+int OSWin::getSafeInsetBottom()
+{
+    return 0;
+}
+int OSWin::getSafeInsetRight()
+{
+    return 0;
+}
 JsValue OSWin::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
     auto isolate = v8::Isolate::GetCurrent();

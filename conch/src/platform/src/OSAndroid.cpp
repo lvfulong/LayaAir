@@ -66,6 +66,42 @@ void OSAndroid::setSensorAble(bool bSensorAble)
     CToJavaBridge::JavaRet kRet;
     CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setSensorAble", bSensorAble, kRet);
 }
+int OSAndroid::getSafeInsetTop()
+{
+    int safeInsetTop = 0;
+    int safeInsetLeft = 0;
+    int safeInsetBottom = 0;
+    int safeInsetRight = 0;
+    CToJavaBridge::GetInstance()->getSafeInsetRect(safeInsetLeft, safeInsetTop, safeInsetRight, safeInsetBottom);
+    return safeInsetTop;
+}
+int OSAndroid::getSafeInsetLeft()
+{
+    int safeInsetTop = 0;
+    int safeInsetLeft = 0;
+    int safeInsetBottom = 0;
+    int safeInsetRight = 0;
+    CToJavaBridge::GetInstance()->getSafeInsetRect(safeInsetLeft, safeInsetTop, safeInsetRight, safeInsetBottom);
+    return safeInsetLeft;
+}
+int OSAndroid::getSafeInsetBottom()
+{
+    int safeInsetTop = 0;
+    int safeInsetLeft = 0;
+    int safeInsetBottom = 0;
+    int safeInsetRight = 0;
+    CToJavaBridge::GetInstance()->getSafeInsetRect(safeInsetLeft, safeInsetTop, safeInsetRight, safeInsetBottom);
+    return safeInsetBottom;
+}
+int OSAndroid::getSafeInsetRight()
+{
+    int safeInsetTop = 0;
+    int safeInsetLeft = 0;
+    int safeInsetBottom = 0;
+    int safeInsetRight = 0;
+    CToJavaBridge::GetInstance()->getSafeInsetRect(safeInsetLeft, safeInsetTop, safeInsetRight, safeInsetBottom);
+    return safeInsetRight;
+}
 JsValue OSAndroid::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
     std::string result;
