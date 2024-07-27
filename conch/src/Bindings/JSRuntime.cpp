@@ -120,10 +120,6 @@ namespace laya
 
                 std::string cookiefile = JSConchConfig::getLocalStoragePath() + ss + "_curlcookie.txt";
                 pdm->setCookieFile(cookiefile.c_str());
-#ifdef OS_ANDROID
-                CToJavaBridge::JavaRet kRet;
-                CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setHrefToJava", url.c_str(), kRet);
-#endif
             }
         }
     }

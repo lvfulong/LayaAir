@@ -60,7 +60,6 @@ public class ExportJavaFunction
 	private			boolean					m_bShowWating = false;
 	public 			Handler					m_Handler = new Handler();
 	public LayaConch5 m_pEngine= null;
-   static public 	String					m_sHref="";
    static public	int 					m_nState=0;		//是否是第一次创建。0 还没创建 ， 1 已经创建， 2被删除了
 	
 	//------------------------------------------------------------------------------
@@ -811,11 +810,6 @@ public class ExportJavaFunction
 			runnable.m_sAlertTitle = LayaConch5.GetInstance().m_strAlertTitle;
 			pExport.JSAlert(runnable);
 		}
-	}
-	//------------------------------------------------------------------------------
-	public static void setHrefToJava(String href)
-	{
-		m_sHref = href;
 	}
 	//------------------------------------------------------------------------------
 	public void JSAlert(AlertRunnable runnable)
