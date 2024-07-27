@@ -14,7 +14,6 @@ class NapiHelper
         return &NapiHelper::help_;
     }
     std::string getDeviceInfo();
-    int getNetworkType();
     void startVibration(float duration);
     void playBackgroundMusic(const char *p_sUrl, int p_nTimes, float nCurrentTime);
     void pauseBackgroundMusic();
@@ -68,7 +67,6 @@ class NapiHelper
 
   private:
     std::string __getDeviceInfo();
-    int __getNetworkType();
     void __startVibration(float duration);
     void __playBackgroundMusic(const char *p_sUrl, int p_nTimes, float nCurrentTime);
     void __pauseBackgroundMusic();

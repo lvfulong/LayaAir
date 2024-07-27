@@ -35,6 +35,10 @@ void OSWin::exit()
 {
     // todo
 }
+int OSWin::getNetworkType()
+{
+    return 1;// todo
+}
 JsValue OSWin::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
     auto isolate = v8::Isolate::GetCurrent();
@@ -64,7 +68,7 @@ JsValue OSWin::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eve
 }
 std::string OSWin::postSyncMessage(const std::string &eventName, const std::string &data)
 {
-    //handleSyncMessage is called in platform os ui thread
+    // handleSyncMessage is called in platform os ui thread
     std::string eventResult;
     std::promise<std::string> promise;
     if (g_handleSyncMessageCb)

@@ -196,21 +196,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 
     int JSConchConfig::getNetworkType()
     {
-#ifdef OS_ANDROID
-        CToJavaBridge::JavaRet kRet;
-        if (CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "getContextedType", kRet, CToJavaBridge::JavaRet::RT_Int))
-        {
-            return kRet.intRet;
-        }
-        return 1;
-#elif OS_WINDOWS
-        return 1;
-#elif OS_IOS
-        return CToObjectCGetNetworkType();
-#elif OS_OHOS
-        return NapiHelper::GetInstance()->getNetworkType();
-#endif
-        return 0;
+        return JCConch::s_pConch->getOS()->getNetworkType();
     }
 
 	const char* JSConchConfig::getIPAddress()

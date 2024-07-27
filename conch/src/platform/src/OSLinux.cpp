@@ -29,6 +29,10 @@ void OSLinux::exit()
 {
     // todo
 }
+int OSLinux::getNetworkType()
+{
+    return 1;// todo
+}
 JsValue OSLinux::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
     auto isolate = v8::Isolate::GetCurrent();

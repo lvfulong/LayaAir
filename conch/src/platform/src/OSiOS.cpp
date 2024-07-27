@@ -23,6 +23,10 @@ int OSiOS::getMemoryUsageInByte()
 void OSiOS::exit()
 {
 }
+int OSiOS::getNetworkType()
+{
+    return CToObjectCGetNetworkType();
+}
 JsValue OSiOS::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
     auto isolate = v8::Isolate::GetCurrent();

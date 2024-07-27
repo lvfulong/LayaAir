@@ -20,23 +20,6 @@ std::string NapiHelper::__getDeviceInfo()
     }
     return deviceInfo;
 }
-
-int NapiHelper::getNetworkType()
-{
-   // JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__getNetworkType, this));
-   // return networkType;
-   return 0;
-}
-
-int NapiHelper::__getNetworkType()
-{
-    if (auto getNetworkType = aki::JSBind::GetJSFunction("NetworkUtils.getNetworkType"))
-    {
-        networkType = getNetworkType->Invoke<int>();
-    }
-    return networkType;
-}
-
 void NapiHelper::playBackgroundMusic(const char *p_sUrl, int p_nTimes, float nCurrentTime)
 {
     //JCConch::s_pConchRender->setInterruptFunc(

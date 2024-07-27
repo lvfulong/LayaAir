@@ -31,6 +31,14 @@ void OSOHOS::exit()
         exit->Invoke<void>();
     }
 }
+int OSOHOS::getNetworkType()
+{
+    if (auto getNetworkType = aki::JSBind::GetJSFunction("NetworkUtils.getNetworkType"))
+    {
+        networkType = getNetworkType->Invoke<int>();
+    }
+    return networkType;
+}
 JsValue OSOHOS::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
     auto isolate = v8::Isolate::GetCurrent();
@@ -59,7 +67,7 @@ JsValue OSOHOS::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &ev
 }
 std::string OSOHOS::postSyncMessage(const std::string &eventName, const std::string &data)
 {
-    //handleSyncMessage is called in ohos ui thread
+    // handleSyncMessage is called in ohos ui thread
     std::string eventResult;
     if (auto post = aki::JSBind::GetJSFunction("HandleMessageUtils.handleSyncMessage"))
     {

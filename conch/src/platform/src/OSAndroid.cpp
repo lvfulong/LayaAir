@@ -46,6 +46,16 @@ void OSAndroid::exit()
     CToJavaBridge::JavaRet ret;
     CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "exit", ret);
 }
+int OSAndroid::getNetworkType()
+{
+    CToJavaBridge::JavaRet kRet;
+    if (CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "getContextedType", kRet,
+                                                 CToJavaBridge::JavaRet::RT_Int))
+    {
+        return kRet.intRet;
+    }
+    return 1;
+}
 JsValue OSAndroid::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
     std::string result;
