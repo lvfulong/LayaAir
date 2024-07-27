@@ -192,18 +192,9 @@ namespace laya
         }
         return JSP_TO_JS_NULL;
     }
-    void JSRuntime::setScreenWakeLock(bool p_bWakeLock)
+    void JSRuntime::setScreenWakeLock(bool bWakeLock)
     {
-#ifdef OS_IOS
-        CToObjectCSetScreenWakeLock(p_bWakeLock);
-#elif OS_ANDROID
-        CToJavaBridge::JavaRet kRet;
-        CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setScreenWakeLock", p_bWakeLock, kRet);
-#elif OS_OHOS
-        NapiHelper::GetInstance()->setKeepScreenOn(p_bWakeLock);
-#elif OS_WINDOWS
-
-#endif
+        JCConch::s_pConch->getOS()->setScreenWakeLock(bWakeLock);
     }
     void JSRuntime::setSensorAble(bool p_bSensorAble)
     {

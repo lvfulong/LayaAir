@@ -39,6 +39,13 @@ int OSOHOS::getNetworkType()
     }
     return networkType;
 }
+void OSOHOS::setScreenWakeLock(bool bWakeLock)
+{
+    if (auto setKeepScreenOn = aki::JSBind::GetJSFunction("DeviceUtils.setKeepScreenOn"))
+    {
+        setKeepScreenOn->Invoke<void>(bWakeLock);
+    }
+}
 JsValue OSOHOS::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
     auto isolate = v8::Isolate::GetCurrent();

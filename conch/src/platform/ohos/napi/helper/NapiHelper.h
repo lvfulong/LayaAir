@@ -42,7 +42,6 @@ class NapiHelper
     void setVolume(int m_tag, double value);
     int getVolume(int m_tag);
     void showDialog(const char *p_sBuffer);
-    void setKeepScreenOn(bool value);
     void setPreferredOrientation(int orientation);
     float getScreenInch();
     int getUsedMem();
@@ -95,7 +94,6 @@ class NapiHelper
     void __setVolume(int m_tag, double value);
     int __getVolume(int m_tag);
     void __showDialog(const char *p_sBuffer);
-    void __setKeepScreenOn(bool value);
     void __setPreferredOrientation(int orientation);
     float __getScreenInch();
     int __getUsedMem();

@@ -43,7 +43,7 @@ namespace laya
 
         static void setNetworkEvtFunction(JSValueAsParam p_pFunction);
 
-        static void setScreenWakeLock(bool p_bWakeLock);
+        static void setScreenWakeLock(bool bWakeLock);
 
         static void setSensorAble(bool p_bSensorAble);
 

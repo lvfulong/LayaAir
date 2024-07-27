@@ -27,6 +27,10 @@ int OSiOS::getNetworkType()
 {
     return CToObjectCGetNetworkType();
 }
+void OSiOS::setScreenWakeLock(bool bWakeLock)
+{
+     CToObjectCSetScreenWakeLock(bWakeLock);
+}
 JsValue OSiOS::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
     auto isolate = v8::Isolate::GetCurrent();

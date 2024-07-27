@@ -384,20 +384,6 @@ void NapiHelper::__showDialog(const char *p_sBuffer)
         showDialog->Invoke<void>(strBuffer.c_str());
     }
 }
-
-void NapiHelper::setKeepScreenOn(bool value)
-{
-    //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__setKeepScreenOn, this, value));
-}
-
-void NapiHelper::__setKeepScreenOn(bool value)
-{
-    if (auto setKeepScreenOn = aki::JSBind::GetJSFunction("DeviceUtils.setKeepScreenOn"))
-    {
-        setKeepScreenOn->Invoke<void>(value);
-    }
-}
-
 void NapiHelper::setPreferredOrientation(int orientation)
 {
     //JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__setPreferredOrientation, this, orientation));
