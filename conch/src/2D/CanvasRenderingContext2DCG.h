@@ -7,6 +7,7 @@
 namespace laya
 {
 class CanvasRenderingContext2DCGImpl;
+class NativeInfoImpl;
 class CanvasRenderingContext2DCG : public CanvasRenderingContext2D
 {
   public:
@@ -24,11 +25,19 @@ class CanvasRenderingContext2DCG : public CanvasRenderingContext2D
     void scale(double x, double y) override;
     void setFont(const char *font) override;
     const BitmapData &getBitmapData() const override;
-
+    static bool registerFontFromPath(const std::string &fontName, const std::string &path);
+    static bool registerFontFromBuffer(const std::string& fontName, uint8_t* buff, int len);
   protected:
     void getTextPosition(const std::string &text, double x, double y, double &outX, double &outY) override;
     void chooseFont(const std::string& strFontName);
     CanvasRenderingContext2DCGImpl *m_impl = {nullptr};
+
+
+    
+  private:
+    static std::unordered_map<std::string, std::string> m_fontName2RealName;
+    static std::unordered_map<std::string, NativeInfoImpl*> m_fontName2NativeInfoImpl;
+    static std::pair<bool, std::string> getRealFontName(const std::string &family);
 };
 } // namespace laya
 #endif

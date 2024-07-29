@@ -9,6 +9,9 @@
 #include <utils/JCCrypto.h>
 #include <utils/Log.h>
 #include "FontManager.h"
+#include <CoreGraphics/CGDataProvider.h>
+#include <CoreGraphics/CGFont.h>
+#include <CoreText/CTFontManager.h>
 
 namespace laya
 {
@@ -62,6 +65,34 @@ class CanvasRenderingContext2DCGImpl
     uint32_t m_width;
     uint32_t m_height;
 };
+struct NativeInfoImpl
+{
+    CGFontRef m_registerfont;
+};
+std::pair<bool, std::string> CanvasRenderingContext2DCG::getRealFontName(const std::string &family)
+{
+    auto it = CanvasRenderingContext2DCG::m_fontName2RealName.find(family);
+    if (it != CanvasRenderingContext2DCG::m_fontName2RealName.end())
+    {
+        return std::make_pair(true, it->second);
+    }
+    return std::make_pair(false, "");
+}
+void CanvasRenderingContext2DCG::init()
+{
+}
+void CanvasRenderingContext2DCG::destroy()
+{
+    m_fontName2RealName.clear();
+    CFErrorRef error = nullptr;
+    std::unordered_map<std::string, NativeInfoImpl*>::iterator it = m_fontName2NativeInfoImpl.begin();
+    for (; it != m_fontName2NativeInfoImpl.end(); it++)
+    {
+        CTFontManagerUnregisterGraphicsFont(it->second->m_registerfont, &error);
+        CGFontRelease(it->second->m_registerfont);
+        delete it->second;
+    }
+}
 CanvasRenderingContext2DCG::CanvasRenderingContext2DCG(int width, int height)
     : CanvasRenderingContext2D(width, height), m_impl(new CanvasRenderingContext2DCGImpl(width, height))
 {
@@ -374,5 +405,92 @@ std::vector<std::string> getAllSystemFontsIOS()
     for(NSString* familyName in _fontFamilyArray) {
         vec.emplace_back(std::string([familyName UTF8String]));
     }   
+}
+static bool registerFontIOS(const std::string &family, CGDataProviderRef fontDataProvider)
+{
+    CGFontRef registerfont = CGFontCreateWithDataProvider(fontDataProvider);
+
+
+    CFStringRef fontName = CGFontCopyFullName(registerfont);
+
+    ssize_t maxSize = CFStringGetMaximumSizeForEncoding(CFStringGetLength(fontName), kCFStringEncodingUTF8);
+
+    char *buffer = new char[maxSize];
+    memset(buffer, 0, maxSize);
+
+    CFStringGetCString(fontName, buffer, maxSize, kCFStringEncodingUTF8);
+    std::string strRealFontName = buffer;
+
+    CFRelease(fontName);
+
+    if (strRealFontName.empty())
+    {
+        LOGE("registerFont error: %s", " invalid ttf file with no font name");
+        return false;
+    }
+
+    //LOGE("registerFont family: %s strRealFontName: %s", family.c_str(), strRealFontName.c_str());
+
+    CFErrorRef error = nullptr;
+    auto it = FontManager::getInstance()->m_fontName2NativeInfoImpl.find(family);
+    if (it != FontManager::getInstance()->m_fontName2NativeInfoImpl.end())
+    {
+        CTFontManagerUnregisterGraphicsFont(it->second->m_registerfont, &error);
+        CGFontRelease(it->second->m_registerfont);
+        delete it->second;
+        FontManager::getInstance()->m_fontName2NativeInfoImpl.erase(it);
+    }
+    
+    CTFontManagerRegisterGraphicsFont(registerfont, &error);
+
+    if (error)
+    {
+        CFStringRef errorDescription = CFErrorCopyDescription(error);
+        //kCTFontManagerErrorDuplicatedName = 305
+        if (CFErrorGetCode(error) == 305) {
+            LOGE("registerFont error: %s", "the file can't register because of a duplicate font name");
+        }
+        else {
+            LOGE("registerFont error: %s", errorDescription);
+        }
+        CFRelease(errorDescription);
+        //CTFontManagerUnregisterGraphicsFont(registerfont, &error);
+        //CTFontManagerRegisterGraphicsFont(registerfont, &error);
+        return false;
+    }
+
+    
+    FontManager::getInstance()->m_fontName2RealName.insert(std::make_pair(family, strRealFontName));
+    NativeInfoImpl* info = new NativeInfoImpl;
+    info->m_registerfont = registerfont;
+    FontManager::getInstance()->m_fontName2NativeInfoImpl.insert(std::make_pair(family, info));
+    LOGI("registerFont succeed: %s", family.c_str());
+    return true;
+}
+bool CanvasRenderingContext2DCG::registerFontFromPath(const std::string &fontName, const std::string &path)
+{
+    CGDataProviderRef fontDataProvider = CGDataProviderCreateWithFilename(path.c_str());
+    if (fontDataProvider == nullptr)
+    {
+        LOGI("registerFont failes fontDataProvider == nullptr");
+        return false;
+    }
+    return registerFontIOS(fontName, fontDataProvider);
+}
+bool CanvasRenderingContext2DCG::registerFontFromBuffer(const std::string& fontName, uint8_t* buff, int len)
+{
+    JCBuffer buffer((char *)buff, len, false, false);
+    std::string tempFilePath = gRedistPath + "/appCache" +  std::string("/tmp_") + fontName;
+    writeFileSync(tempFilePath.c_str(), buffer);
+    CGDataProviderRef fontDataProvider = CGDataProviderCreateWithFilename(tempFilePath.c_str());
+    //CGDataProviderRef fontDataProvider = CGDataProviderCreateWithData(nullptr, data, byteLength, nullptr);
+    if (fontDataProvider == nullptr)
+    {
+        LOGI("registerFont failes fontDataProvider == nullptr");
+        return false;
+    }
+    bool ret = registerFontIOS(fontName, fontDataProvider);
+    CGDataProviderRelease(fontDataProvider);
+    return ret;
 }
 } // namespace laya

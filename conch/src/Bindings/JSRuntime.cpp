@@ -461,7 +461,7 @@ namespace laya
         {
             std::string path = valuePathOrArrayBuffer.as<std::string>();
             std::string family = Converter<std::string>::ToCpp(jsFamily);
-            return FontManager::getInstance()->registerFont(family, path);
+            return FontManager::registerFont(family, path);
         }
         else if (valueFamily.isString() && valuePathOrArrayBuffer.isArrayBuffer())
         {
@@ -471,7 +471,7 @@ namespace laya
             if (isab)
             {
                 std::string family = Converter<std::string>::ToCpp(jsFamily);
-                return FontManager::getInstance()->registerFont(family, (uint8_t*)ab, byte);
+                return FontManager::registerFont(family, (uint8_t*)ab, byte);
             }
         }
         LOGI("registerFont failed");
