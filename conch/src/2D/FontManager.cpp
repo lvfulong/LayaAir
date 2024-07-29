@@ -9,7 +9,8 @@
 #include <CoreText/CTFontManager.h>
 #elif defined(OS_WINDOWS)
 #include "CanvasRenderingContext2DWin.h"
-#else
+#elif defined(OS_OHOS)
+#include "CanvasRenderingContext2DOHOS.h"
 #endif
 
 
@@ -90,6 +91,22 @@ static bool registerFontIOS(const std::string &family, CGDataProviderRef fontDat
 }
 #endif
 FontManager *g_pFontManager = nullptr;
+void FontManager::init()
+{
+#if defined(OS_OHOS)
+    CanvasRenderingContext2DOHOS::init();
+#elif defined(OS_WINDOWS)
+    CanvasRenderingContext2DWin::init();
+#endif
+}
+void FontManager::destroy()
+{
+#if defined(OS_OHOS)
+    CanvasRenderingContext2DOHOS::destroy();
+#elif defined(OS_WINDOWS)
+    CanvasRenderingContext2DWin::clearAllBuffer();
+#endif
+}
 FontManager::FontManager(){
 } FontManager::~FontManager()
 {
@@ -133,6 +150,8 @@ bool FontManager::registerFont(const std::string &family, const std::string &pat
     return registerFontIOS(family, fontDataProvider);
 #elif defined(OS_WINDOWS)
     return CanvasRenderingContext2DWin::registerFontFromPath(family, path);
+#elif defined(OS_OHOS)
+    return CanvasRenderingContext2DOHOS::registerFontFromPath(family, path);
 #else
     return true;
 #endif
@@ -140,7 +159,7 @@ bool FontManager::registerFont(const std::string &family, const std::string &pat
 
 
 
-bool FontManager::registerFont(const std::string &family, const uint8_t *data, int32_t byteLength)
+bool FontManager::registerFont(const std::string &family, uint8_t *data, int32_t byteLength)
 {
 #if defined(OS_ANDROID)
     JCBuffer buf((char *)data, byteLength, false, false);
@@ -163,6 +182,8 @@ bool FontManager::registerFont(const std::string &family, const uint8_t *data, i
     return ret;
 #elif defined(OS_WINDOWS)
     return CanvasRenderingContext2DWin::registerFontFromBuffer(family,data, byteLength);
+#elif defined(OS_OHOS)
+    return CanvasRenderingContext2DOHOS::registerFontFromBuffer(family,data, byteLength);
 #else
     return true;
 #endif

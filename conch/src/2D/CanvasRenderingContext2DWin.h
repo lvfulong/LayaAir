@@ -33,7 +33,8 @@ class CanvasRenderingContext2DWin : public CanvasRenderingContext2D
     void setLineWidth(double lineWidth) override;
     void setLineJoin(const char *lineJoin) override;
     static bool registerFontFromPath(const std::string &fontName, const std::string &path);
-    static bool registerFontFromBuffer(const std::string& fontName, const uint8_t* buff, int len);
+    static bool registerFontFromBuffer(const std::string& fontName, uint8_t* buff, int len);
+    static void init();
     static void clearAllBuffer();
 
   protected:

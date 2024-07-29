@@ -17,6 +17,14 @@ std::map<std::string, std::wstring> fontAliasMap;
 
 namespace laya
 {
+void CanvasRenderingContext2DWin::init()
+{
+    ULONG_PTR gdiplusToken;
+    Gdiplus::GdiplusStartupInput gdiStartupInput;
+    Gdiplus::Status gdiStatus = Gdiplus::GdiplusStartup(&gdiplusToken, &gdiStartupInput, NULL);
+    if (Gdiplus::Status::Ok != gdiStatus)
+        return;
+}
 CanvasRenderingContext2DWin::CanvasRenderingContext2DWin(int width, int height)
     : CanvasRenderingContext2D(width, height)
 {
@@ -480,7 +488,7 @@ std::wstring getMemFontFamilyFromBuffer(const uint8_t* buff, int len) {
 }
 
 
-bool CanvasRenderingContext2DWin::registerFontFromBuffer(const std::string& fontName, const uint8_t* buff, int len) {
+bool CanvasRenderingContext2DWin::registerFontFromBuffer(const std::string& fontName, uint8_t* buff, int len) {
     // 创建一个PrivateFontCollection对象 
     if (CanvasRenderingContext2DWin::gFontCollection == nullptr) {
         CanvasRenderingContext2DWin::gFontCollection = new PrivateFontCollection();

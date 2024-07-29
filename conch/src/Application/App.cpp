@@ -116,13 +116,6 @@ void App::run(const Config &config)
     {
         windowFlags |= SDL_WINDOW_FULLSCREEN;
     }
-#ifdef OS_WINDOWS
-    ULONG_PTR gdiplusToken;
-    Gdiplus::GdiplusStartupInput gdiStartupInput;
-    Gdiplus::Status gdiStatus = Gdiplus::GdiplusStartup(&gdiplusToken, &gdiStartupInput, NULL);
-    if (Gdiplus::Status::Ok != gdiStatus)
-        return;
-#endif
 
     m_sdlWindow = SDL_CreateWindow(config.title.c_str(), x, y, (int)g_nInnerWidth, (int)g_nInnerHeight, windowFlags);
 

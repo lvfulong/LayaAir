@@ -31,9 +31,8 @@
 #include "LayaAir/2D/RenderTexture2D.h"
 //#include "btBulletDynamicsCommon.h"
 #include <cstdarg>
-#ifdef OS_WINDOWS
-#include "2D/CanvasRenderingContext2DWin.h"
-#endif
+#include "2D/FontManager.h"
+
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
 extern bool g_bGLCanvasSizeChanged;
@@ -143,6 +142,7 @@ namespace laya
         m_pConch = pConch;
         m_pFileResMgr = pFileMgr;
         m_pAssetsRes = pAssetRes;
+        FontManager::init();
     }
     static void onUnhandledRejection(JSValueAsParam pPromise, JSValueAsParam pReason, const char* type)
     {
@@ -204,9 +204,7 @@ namespace laya
     void JCScriptRuntime::reload() 
     {
         stop();
-#ifdef OS_WINDOWS
-        CanvasRenderingContext2DWin::clearAllBuffer();
-#endif
+        FontManager::destroy();
         //为了避免上个js的下载的影响，去掉下载任务
         //这个必须在stop之后做，且保证stop确实会停止线程，包括还没有启动的线程。
         //如果线程还没有启动，stop会等待线程先启动。这样就可能会执行脚本，所以，清理必须放在stop之后。

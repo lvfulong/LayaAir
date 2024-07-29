@@ -13,8 +13,10 @@ class FontManager
   public:
     FontManager();
     ~FontManager();
+    static void init();
+    static void destroy();
     bool registerFont(const std::string &family, const std::string &path);
-    bool registerFont(const std::string &family, const uint8_t *data, int32_t byteLength);
+    bool registerFont(const std::string &family, uint8_t *data, int32_t byteLength);
     std::vector<std::string> getAllSystemFonts();
     std::pair<bool, std::string> getRealFontName(const std::string &family);
 

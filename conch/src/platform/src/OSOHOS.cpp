@@ -10,6 +10,7 @@ OSOHOS::~OSOHOS()
 }
 int OSOHOS::getUsedMem()
 {
+    int usedMem = 0;
     if (auto getUsedMem = aki::JSBind::GetJSFunction("DeviceUtils.getPrivateDirty"))
     {
         usedMem = getUsedMem->Invoke<int>();
@@ -41,6 +42,7 @@ void OSOHOS::exit()
 }
 int OSOHOS::getNetworkType()
 {
+    int networkType = 0;
     if (auto getNetworkType = aki::JSBind::GetJSFunction("NetworkUtils.getNetworkType"))
     {
         networkType = getNetworkType->Invoke<int>();

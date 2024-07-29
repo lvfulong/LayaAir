@@ -31,6 +31,19 @@ class ScopedTypography
   private:
     OH_Drawing_Typography *m_typegraphy{nullptr};
 };
+OH_Drawing_FontCollection *CanvasRenderingContext2DOHOS::m_fontCollection{nullptr};
+void CanvasRenderingContext2DOHOS::init()
+{
+    m_fontCollection = OH_Drawing_CreateSharedFontCollection();
+}
+void CanvasRenderingContext2DOHOS::destroy()
+{
+    if (m_fontCollection)
+    {
+        OH_Drawing_DestroyFontCollection(m_fontCollection);
+        m_fontCollection = nullptr;
+    }
+}
 CanvasRenderingContext2DOHOS::CanvasRenderingContext2DOHOS(int width, int height)
     : CanvasRenderingContext2D(width, height)
 {
@@ -55,7 +68,7 @@ CanvasRenderingContext2DOHOS::CanvasRenderingContext2DOHOS(int width, int height
     // OH_Drawing_SetTextStyleBaseLine(m_fontTextStyle, TEXT_BASELINE_ALPHABETIC);
     // OH_Drawing_SetTextStyleBaseLine(m_fontTextStyle, TEXT_BASELINE_IDEOGRAPHIC);
     OH_Drawing_SetTextStyleFontHeight(m_fontTextStyle, 0);
-    m_fontCollection = OH_Drawing_CreateFontCollection();
+    //m_fontCollection = OH_Drawing_CreateFontCollection();
 
     m_bitmapData.m_nWidth = width;
     m_bitmapData.m_nHeight = height;
@@ -76,10 +89,7 @@ CanvasRenderingContext2DOHOS::~CanvasRenderingContext2DOHOS()
         OH_Drawing_MatrixDestroy(m_matrix);
         m_canvas = nullptr;
     }
-    if (m_fontCollection)
-    {
-        OH_Drawing_DestroyFontCollection(m_fontCollection);
-    }
+
     if (m_fontTextStyle)
     {
         OH_Drawing_DestroyTextStyle(m_fontTextStyle);
@@ -342,14 +352,20 @@ bool CanvasRenderingContext2DOHOS::registerFontFromPath(const std::string &fontN
     if (rawFile != nullptr)
     {
         LOGE("OH_ResourceManager_OpenRawFile success");
+        return false;
     }
     size_t len = OH_ResourceManager_GetRawFileSize(rawFile);
     std::unique_ptr<uint8_t[]> data = std::make_unique<uint8_t[]>(len);
     uint8_t *outdata = data.get();
     int res = OH_ResourceManager_ReadRawFile(rawFile, outdata, len);
 
-    // OH_Drawing_RegisterFontBuffer(m_fontCollection, fontName.c_str(), outdata, len);
+    OH_Drawing_RegisterFontBuffer(m_fontCollection, fontName.c_str(), outdata, len);
     OH_ResourceManager_CloseRawFile(rawFile);
+    return true;
+}
+bool CanvasRenderingContext2DOHOS::registerFontFromBuffer(const std::string &fontName, uint8_t *buff, int len)
+{
+    OH_Drawing_RegisterFontBuffer(m_fontCollection, fontName.c_str(), buff, len);
     return true;
 }
 } // namespace laya

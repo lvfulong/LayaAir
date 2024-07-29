@@ -31,7 +31,8 @@ class CanvasRenderingContext2DOHOS : public CanvasRenderingContext2D
     CanvasRenderingContext2DOHOS(int width, int height);
     ~CanvasRenderingContext2DOHOS();
     void fillText(const std::string &text, double x, double y, std::optional<double> maxWidth) override;
-
+    static void init();
+    static void destroy();
     void strokeText(const std::string &text, double x, double y, std::optional<double> maxWidth) override;
     TextMetrics measureText(const std::string &text) override;
     void clearRect(double x, double y, double width, double height) override;
@@ -47,6 +48,7 @@ class CanvasRenderingContext2DOHOS : public CanvasRenderingContext2D
     void setLineWidth(double lineWidth) override;
     void setLineJoin(const char *lineJoin) override;
     static bool registerFontFromPath(const std::string &fontName, const std::string &path);
+    static bool registerFontFromBuffer(const std::string& fontName, uint8_t* buff, int len);
     void setFillStyle(const char *color) override;
     void setStrokeStyle(const char *color) override;
 
@@ -59,7 +61,7 @@ class CanvasRenderingContext2DOHOS : public CanvasRenderingContext2D
     OH_Drawing_Canvas *m_canvas;
     OH_Drawing_TextStyle *m_fontTextStyle;
     OH_Drawing_TypographyStyle *m_fontTypography;
-    OH_Drawing_FontCollection *m_fontCollection;
+    static OH_Drawing_FontCollection *m_fontCollection;
     OH_Drawing_TypographyCreate *m_typographyCreate;
     OH_Drawing_Matrix *m_matrix = nullptr;
     BitmapData m_bitmapData;

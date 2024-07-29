@@ -320,6 +320,8 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         return "window";
 #elif OS_LINUX
         return "linux";
+    #else
+    return "";
 #endif
     }
     const char* JSConchConfig::getRuntimeVersion()
