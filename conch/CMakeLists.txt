@@ -630,6 +630,7 @@ elseif(OS_OHOS)
 		src/resource/Audio/JCAudioWavplayer-openharmony.cpp
 		src/Audio/ohos/JCAudioMp3Player.cpp
 		src/network/HttpClientOHOS.cpp
+		src/resource/Audio/JCMp3Parser.cpp
 	)
 elseif(OS_LINUX)
 	list(APPEND PLATFORM_HEADER_DIR
@@ -879,6 +880,7 @@ elseif(OS_OHOS)
 		aki_jsbind
 		ssl
 		crypto
+		mpg123
 		) 
 elseif(OS_LINUX)
 	find_package(X11 REQUIRED)

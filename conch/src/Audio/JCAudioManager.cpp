@@ -71,7 +71,7 @@ namespace laya
                 for (int i = 0; i < nALCount; i++)
 			    {
 					if( pWavPlayer->m_pAudioRenderSource[i]->m_bPlaying == true ) {
-						OHAudioRenderInfo* pAudioRenderInfo = pWavPlayer->m_pAudioRenderSource[i];
+						AudioRenderInfo* pAudioRenderInfo = pWavPlayer->m_pAudioRenderSource[i];
 						if(pAudioRenderInfo->_audioRender != nullptr) {
 							OH_AudioRenderer_Stop(pAudioRenderInfo->_audioRender);
 							OH_AudioRenderer_Release(pAudioRenderInfo->_audioRender);
@@ -218,44 +218,23 @@ namespace laya
 		    m_pMp3Player->resume();
 	    }
     }
-   	#ifdef OS_OHOS
-    OHAudioRenderInfo* JCAudioManager::playWav(JCAudioInterface* p_pAudio, const std::string& p_sUrl, bool bIsOgg, float currentTime)
-    {
-        return m_pWavPlayer->playAudio(p_pAudio, p_sUrl, bIsOgg);//todo  currentTime
-    }
-    void JCAudioManager::stopWav(OHAudioRenderInfo* audioRenderInfo)
-    {
-        m_pWavPlayer->stop(audioRenderInfo);
-    }
-    void JCAudioManager::setWavVolume(OHAudioRenderInfo* audioRenderInfo, float nVolume)
-    {
-        m_pWavPlayer->setVolume(audioRenderInfo, nVolume);
-    }
-    float JCAudioManager::getCurrentTime(OHAudioRenderInfo* pOpenALInfo)
-	{
-        //todo
-        return 0;
-		//return m_pWavPlayer->getCurrentTime(pOpenALInfo);
-	}
-	#else
-    OpenALSourceInfo* JCAudioManager::playWav(JCAudioInterface* p_pAudio, const std::string& p_sUrl, bool bIsOgg, float currentTime)
+	AudioRenderInfo* JCAudioManager::playWav(JCAudioInterface* p_pAudio, const std::string& p_sUrl, bool bIsOgg, float currentTime)
     {
         return m_pWavPlayer->playAudio(p_pAudio, p_sUrl, bIsOgg, currentTime);
     }
-    void JCAudioManager::stopWav(OpenALSourceInfo* pOpenALInfo)
+    void JCAudioManager::stopWav(AudioRenderInfo* pOpenALInfo)
     {
         m_pWavPlayer->stop(pOpenALInfo);
     }
 
-    void JCAudioManager::setWavVolume(OpenALSourceInfo* pOpenALInfo, float nVolume)
+    void JCAudioManager::setWavVolume(AudioRenderInfo* pOpenALInfo, float nVolume)
     {
         m_pWavPlayer->setVolume(pOpenALInfo, nVolume);
     }
-    float JCAudioManager::getCurrentTime(OpenALSourceInfo* pOpenALInfo)
+    float JCAudioManager::getCurrentTime(AudioRenderInfo* pOpenALInfo)
 	{
 		return m_pWavPlayer->getCurrentTime(pOpenALInfo);
 	}
-    #endif  
     void JCAudioManager::stopAllWav()
     {
         m_pWavPlayer->stopAll();
@@ -289,8 +268,8 @@ namespace laya
     {
 	    return m_pWavPlayer->FindWaveInfo( p_sUrl );
     }
-#if !defined(OS_LINUX) && !defined(OS_OHOS)//todo
-    OpenALSourceInfo*  JCAudioManager::playWavMp3(JCAudioInterface* p_pAudio, const std::string& p_sUrl, const char* p_sFilePath, float currentTime)
+#if !defined(OS_LINUX)
+    AudioRenderInfo*  JCAudioManager::playWavMp3(JCAudioInterface* p_pAudio, const std::string& p_sUrl, const char* p_sFilePath, float currentTime)
 	{
 		return m_pWavPlayer->playAudioMp3(p_pAudio, p_sUrl, p_sFilePath, currentTime);
 	}
@@ -298,11 +277,7 @@ namespace laya
 	//------------------------------------------------------------------------------
 	JCWaveInfo* JCAudioManager::AddWaveInfoMp3(const std::string& p_sUrl, const std::string& p_sFilePath, void* p_pExternalMark)
 	{
-#if defined(OS_OHOS)
-        return nullptr;//todo
-#else
 		return m_pWavPlayer->AddWaveInfoMp3(p_sUrl, p_sFilePath, p_pExternalMark);
-#endif
 	}
 
 }

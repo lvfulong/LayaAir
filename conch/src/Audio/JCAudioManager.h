@@ -94,22 +94,14 @@ namespace laya
          *  @param[in] 声音interface
         */
       
-		#ifdef OS_OHOS
-		OHAudioRenderInfo* playWav(JCAudioInterface* p_pAudio, const std::string& p_sUrl,bool bIsOgg, float currentTime);
-	    void setWavVolume(OHAudioRenderInfo* audioRenderInfo,float nVolume );
+  		AudioRenderInfo* playWav(JCAudioInterface* p_pAudio, const std::string& p_sUrl,bool bIsOgg, float currentTime);
 
-        void stopWav(OHAudioRenderInfo* audioRenderInfo );
-		float getCurrentTime(OHAudioRenderInfo* pOpenALInfo);
-		#else
-  		OpenALSourceInfo* playWav(JCAudioInterface* p_pAudio, const std::string& p_sUrl,bool bIsOgg, float currentTime);
+	    void setWavVolume(AudioRenderInfo* pOpenALInfo,float nVolume );
 
-	    void setWavVolume(OpenALSourceInfo* pOpenALInfo,float nVolume );
-
-        void stopWav(OpenALSourceInfo* pOpenALInfo );
+        void stopWav(AudioRenderInfo* pOpenALInfo );
 		
-		OpenALSourceInfo* playWavMp3(JCAudioInterface* p_pAudio, const std::string& p_sUrl, const char* p_sFilePath, float currentTime);
-		float getCurrentTime(OpenALSourceInfo* pOpenALInfo);
-		#endif
+		AudioRenderInfo* playWavMp3(JCAudioInterface* p_pAudio, const std::string& p_sUrl, const char* p_sFilePath, float currentTime);
+		float getCurrentTime(AudioRenderInfo* pOpenALInfo);
 
 		
 

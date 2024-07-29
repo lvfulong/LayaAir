@@ -4,6 +4,7 @@
 #include "JCWaveParser.h"
 #include "JCOggParser.h"
 #include "../JCFileResManager.h"
+#include "JCMp3Parser.h"
 
 namespace laya{
     int JCAudioWavPlayer::s_nGarbageCollectionTime = 30000;//30秒
@@ -17,7 +18,52 @@ namespace laya{
     void JCAudioWavPlayer::checkWavePlayEnd(){
 
     }
-    OHAudioRenderInfo* JCAudioWavPlayer::playAudio(JCAudioInterface* p_pAudio, const std::string& p_sSrc, bool bIsOgg){
+    float JCAudioWavPlayer::getCurrentTime(AudioRenderInfo* pOpenALInfo)
+    {
+        //todo
+    }
+    JCWaveInfo* JCAudioWavPlayer::AddWaveInfoMp3(const std::string& p_sUrl, const std::string& p_sFilePath, void* p_pExternalMark)
+    { 
+	JCWaveInfo* pInfo = FindWaveInfo( p_sUrl );
+    if( pInfo == NULL )
+    {
+        pInfo = JCMp3Parser::GetInstance()->GetWaveInfo(p_sFilePath.c_str());
+        if( pInfo != NULL )
+        {
+            pInfo->m_sUrl = p_sUrl;
+            pInfo->m_sLocalFile = p_sFilePath;
+            pInfo->m_nTouchTime = tmGetCurms();
+            pInfo->m_pExternalMark = p_pExternalMark;
+            m_vWaveInfos[ p_sUrl ] = pInfo;
+        }
+        else
+        {
+            LOGE( "JCAudioWavPlayer::AddWaveInfoMp3 wave paser err" );
+        }
+    }
+    return pInfo;
+}
+    AudioRenderInfo* JCAudioWavPlayer::playAudioMp3(JCAudioInterface* p_pAudio, const std::string& p_sSrc, const char* p_sFilePath, float currentTime)
+    {
+        JCWaveInfo* pInfo = NULL;
+        MapWaveInfoIter iter = m_vWaveInfos.find( p_sSrc );
+        if( iter != m_vWaveInfos.end() )
+        {
+            pInfo = iter->second;
+        }   
+        else
+        {
+            pInfo = AddWaveInfoMp3(p_sSrc, p_sFilePath, p_pAudio);
+         }
+        if (pInfo != NULL)
+        {
+            pInfo->m_nTouchTime = tmGetCurms();
+            WAVE_FORMAT* pFormat = &(pInfo->m_kFmtBlock.wavFormat);
+            return playAudioFromBuffer(p_pAudio, (char*)(pInfo->m_pData), pInfo->m_nRealDataSize, pFormat->dwSamplesPerSec, pFormat->wBitsPerSample, pFormat->wChannels);// todo  currentTime
+        }
+        return NULL;
+    }
+    AudioRenderInfo* JCAudioWavPlayer::playAudio(JCAudioInterface* p_pAudio, const std::string& p_sSrc, bool bIsOgg, float currentTime){
         JCWaveInfo* pInfo = NULL;
         MapWaveInfoIter iter = m_vWaveInfos.find(p_sSrc);
         if(iter != m_vWaveInfos.end()){
@@ -34,7 +80,7 @@ namespace laya{
         if(pInfo!=NULL){
             pInfo -> m_nTouchTime = tmGetCurms();
             WAVE_FORMAT* pFormat = &(pInfo->m_kFmtBlock.wavFormat);
-            return playAudioFromBuffer(p_pAudio,(char*)(pInfo->m_pData),pInfo->m_nRealDataSize,pFormat->dwSamplesPerSec,pFormat->wBitsPerSample,pFormat->wChannels);
+            return playAudioFromBuffer(p_pAudio,(char*)(pInfo->m_pData),pInfo->m_nRealDataSize,pFormat->dwSamplesPerSec,pFormat->wBitsPerSample,pFormat->wChannels);// todo  currentTime
         }
         return NULL;
     }
@@ -47,9 +93,9 @@ namespace laya{
         }
     }
     //----------------------------------------------------------------------------------
-    OHAudioRenderInfo* JCAudioWavPlayer::playAudioFromBuffer(JCAudioInterface* p_pAudio,const char* p_pBuffer, unsigned int p_nBufferSize,
+    AudioRenderInfo* JCAudioWavPlayer::playAudioFromBuffer(JCAudioInterface* p_pAudio,const char* p_pBuffer, unsigned int p_nBufferSize,
                     int p_nRate, int nBitsPerSample, int nChannels){
-        OHAudioRenderInfo* audioRenderInfo = new OHAudioRenderInfo;
+        AudioRenderInfo* audioRenderInfo = new AudioRenderInfo;
         OH_AudioStream_Result ret;
         OH_AudioStream_Type type = AUDIOSTREAM_TYPE_RENDERER;
         OH_AudioStreamBuilder* _builder;
@@ -102,7 +148,7 @@ namespace laya{
         return audioRenderInfo;
     }
     int32_t JCAudioWavPlayer::AudioRendererOnWriteData(OH_AudioRenderer *renderer, void *userData, void *buffer, int32_t bufferLen){
-        OHAudioRenderInfo *audioRenderInfo = (OHAudioRenderInfo *)userData;
+        AudioRenderInfo *audioRenderInfo = (AudioRenderInfo *)userData;
         const char *dataBuffer = audioRenderInfo->pcmBuffer;
         if(dataBuffer == nullptr){
             return 0;
@@ -136,7 +182,7 @@ namespace laya{
         for (int i = 0; i < m_ohAudioCount; i++)
         {
             if(m_pAudioRenderSource[i]->m_bPlaying == true){
-                OHAudioRenderInfo *pAudioRenderInfo = m_pAudioRenderSource[i];
+                AudioRenderInfo *pAudioRenderInfo = m_pAudioRenderSource[i];
                 if(pAudioRenderInfo->_audioRender != nullptr){
                     OH_AudioRenderer_Stop(pAudioRenderInfo->_audioRender);
                     OH_AudioRenderer_Release(pAudioRenderInfo->_audioRender);
@@ -174,7 +220,7 @@ namespace laya{
         }
     }
     
-    void JCAudioWavPlayer::stop(OHAudioRenderInfo * pAudioRenderInfo){
+    void JCAudioWavPlayer::stop(AudioRenderInfo * pAudioRenderInfo){
         if(pAudioRenderInfo->m_bPlaying==true){
             if(pAudioRenderInfo->_audioRender!=nullptr){
                 OH_AudioRenderer_Stop(pAudioRenderInfo->_audioRender);
@@ -187,7 +233,7 @@ namespace laya{
             pAudioRenderInfo->m_bPlaying = false;
         }
     }
-    void JCAudioWavPlayer::setVolume(OHAudioRenderInfo * pAudioRenderInfo, float p_nVolume){
+    void JCAudioWavPlayer::setVolume(AudioRenderInfo * pAudioRenderInfo, float p_nVolume){
         //todo OHAudio设置音量接口暂不支持，后续补充
     }
     void JCAudioWavPlayer::Release(){

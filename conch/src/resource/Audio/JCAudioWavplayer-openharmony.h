@@ -13,7 +13,7 @@
 
 namespace laya{
     class JCFileResManager;
-    class OHAudioRenderInfo
+    class AudioRenderInfo
     {
         public:
             OH_AudioRenderer* _audioRender;
@@ -25,7 +25,7 @@ namespace laya{
             int32_t writeOffset = 0;
             std::function<int32_t(OH_AudioRenderer* renderer, void* userData, void* buffer, int32_t bufferLen)> writeDataCallback;
         public:
-            void operator=(const OHAudioRenderInfo &other){
+            void operator=(const AudioRenderInfo &other){
                 m_bPlaying = other.m_bPlaying;
                 _audioRender = other._audioRender;
                 m_pAudio = other.m_pAudio;
@@ -40,17 +40,20 @@ namespace laya{
             ~JCAudioWavPlayer();
             void Release();
         public:
-            OHAudioRenderInfo* playAudio(JCAudioInterface* p_pAudio, const std::string& p_sSrc, bool bIsOgg);
+            JCWaveInfo* AddWaveInfoMp3(const std::string& p_sUrl, const std::string& p_sFilePath, void* p_pExternalMark);
+            AudioRenderInfo* playAudioMp3(JCAudioInterface* p_pAudio, const std::string& p_sSrc, const char* p_sFilePath, float currentTime);
+            AudioRenderInfo* playAudio(JCAudioInterface* p_pAudio, const std::string& p_sSrc, bool bIsOgg, float currentTime);
             void delAudio(JCAudioInterface* p_pAudio);
-            OHAudioRenderInfo* playAudioFromBuffer(JCAudioInterface* p_pAudio, const char* p_pBuffer, unsigned int p_nBufferSize, int p_nRate, int p_nBitsPerSample, int nChannels);
-            void setVolume(OHAudioRenderInfo* pAudioRenderInfo, float p_nVolume);
-            void stop(OHAudioRenderInfo* pAudioRenderInfo);
+            AudioRenderInfo* playAudioFromBuffer(JCAudioInterface* p_pAudio, const char* p_pBuffer, unsigned int p_nBufferSize, int p_nRate, int p_nBitsPerSample, int nChannels);
+            void setVolume(AudioRenderInfo* pAudioRenderInfo, float p_nVolume);
+            void stop(AudioRenderInfo* pAudioRenderInfo);
             void setAllVolume(float p_nVolume);
             void stopAll();
             void checkWavePlayEnd();
             void pause();
             void resume();
             static int32_t AudioRendererOnWriteData(OH_AudioRenderer *renderer, void *userData, void *buffer, int32_t bufferLen);
+            float getCurrentTime(AudioRenderInfo* pOpenALInfo);
         public:
             /**
              * @brief 添加资源
@@ -74,7 +77,7 @@ namespace laya{
         public:
             JCFileResManager* m_pFileResManager;
             OH_AudioRenderer *audioRenderer;
-            std::vector<OHAudioRenderInfo*> m_pAudioRenderSource; //播放声音用的
+            std::vector<AudioRenderInfo*> m_pAudioRenderSource; //播放声音用的
     };
 }
 #endif //__JCAudioWavPlayer_H__

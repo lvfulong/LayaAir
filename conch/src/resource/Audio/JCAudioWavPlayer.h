@@ -33,7 +33,7 @@ namespace laya
 class JCFileResManager;
 #define OPENAL_SOURCE_NUM	10
 
-struct OpenALSourceInfo
+struct AudioRenderInfo
 {
 	ALuint				m_nOpenALSouceID;	//OpenAl的ID
 	ALuint				m_nBufferID;		//bufferID
@@ -41,7 +41,7 @@ struct OpenALSourceInfo
 	ALfloat				m_vSourceVel[3];	//源声音的速度
 	bool				m_bPlaying;			//是否为播放状态
 	JCAudioInterface*	m_pAudio;			//Audio 为了回调使用
-    void operator=(const OpenALSourceInfo& other)
+    void operator=(const AudioRenderInfo& other)
     {
         m_nOpenALSouceID = other.m_nOpenALSouceID;
         m_nBufferID = other.m_nBufferID;
@@ -72,17 +72,17 @@ public:
 
 public:
 
-	OpenALSourceInfo* playAudioMp3(JCAudioInterface* p_pAudio, const std::string& p_sSrc, const char* p_sFilePath, float currentTime);
+	AudioRenderInfo* playAudioMp3(JCAudioInterface* p_pAudio, const std::string& p_sSrc, const char* p_sFilePath, float currentTime);
 
-    OpenALSourceInfo* playAudio( JCAudioInterface* p_pAudio,const std::string& p_sSrc,bool bIsOgg, float currentTime);
+    AudioRenderInfo* playAudio( JCAudioInterface* p_pAudio,const std::string& p_sSrc,bool bIsOgg, float currentTime);
 
 	void delAudio(JCAudioInterface* p_pAudio);
 
-    OpenALSourceInfo* playAudioFromBuffer( JCAudioInterface* p_pAudio,const char* p_pBuffer,unsigned int p_nBufferSize,int p_nRate, int p_nBitsPerSample, int nChannels, float currentTime);
+    AudioRenderInfo* playAudioFromBuffer( JCAudioInterface* p_pAudio,const char* p_pBuffer,unsigned int p_nBufferSize,int p_nRate, int p_nBitsPerSample, int nChannels, float currentTime);
 
-	void setVolume(OpenALSourceInfo* pOpenALInfo,float p_nVolume );
+	void setVolume(AudioRenderInfo* pOpenALInfo,float p_nVolume );
 
-	void stop(OpenALSourceInfo* pOpenALInfo);
+	void stop(AudioRenderInfo* pOpenALInfo);
 
     void setAllVolume(float p_nVolume);
 
@@ -94,7 +94,7 @@ public:
 
     void resume();
 
-	float getCurrentTime(OpenALSourceInfo* pOpenALInfo);
+	float getCurrentTime(AudioRenderInfo* pOpenALInfo);
 
 public:
 
@@ -119,11 +119,11 @@ public:
 
 private:
 
-	void releaseOpenAL( OpenALSourceInfo* pOpenALInfo );
+	void releaseOpenAL(AudioRenderInfo* pOpenALInfo);
 
     void createOpenALSource();
 
-    OpenALSourceInfo* getOpenALSource();
+    AudioRenderInfo* getOpenALSource();
 
 public:
 
@@ -136,7 +136,7 @@ public:
     JCFileResManager*               m_pFileResManager;
 	ALCdevice*						m_pDevice;								// 打开默认音频设备
     ALCcontext*						m_pContext;								// context
-	std::vector<OpenALSourceInfo*>  m_pOpenALSource;	                    // 播放声音用的
+	std::vector<AudioRenderInfo*>   m_pOpenALSource;	                    // 播放声音用的
     int                             m_nCurrentIndex;                        // 记录上次的位置
 	bool							m_bStop;
 
