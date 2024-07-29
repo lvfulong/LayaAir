@@ -44,7 +44,6 @@ class NapiHelper
     void showDialog(const char *p_sBuffer);
     void setPreferredOrientation(int orientation);
     float getScreenInch();
-    int getUsedMem();
     static inline std::string Utf8Value(napi_env _env, napi_value _value)
     {
         size_t length;
@@ -61,48 +60,5 @@ class NapiHelper
     }
 
   private:
-    std::string __getDeviceInfo();
-    void __startVibration(float duration);
-    void __playBackgroundMusic(const char *p_sUrl, int p_nTimes, float nCurrentTime);
-    void __pauseBackgroundMusic();
-    void __stopBackgroundMusic();
-    void __setBackgroundMusicVolume(float p_nVolume);
-    void __resumeBackgroundMusic();
-    void __setCurrentTime(double nCurrentTime);
-    double __getCurrentTime();
-    double __getDuration();
-    std::string __getAppVersion();
-    std::string __getAppLocalVersion();
-
-    void __createVideoPlayer(int m_tag);
-    void __removeVideoPlayer(int m_tag);
-    void __setURL(int m_tag, std::string path, int isurl);
-    void __play(int m_tag);
-    void __pause(int m_tag);
-    void __stop(int m_tag);
-    void __setLooping(int m_tag, bool value);
-    void __setAutoplay(int m_tag, bool value);
-    void __setX(int m_tag, double value);
-    void __setY(int m_tag, double value);
-    void __setWidth(int m_tag, double value);
-    void __setHeight(int m_tag, double value);
-    void __setVideoCurrentTime(int m_tag, double value);
-    void __setVolume(int m_tag, double value);
-    int __getVolume(int m_tag);
-    void __showDialog(const char *p_sBuffer);
-    void __setPreferredOrientation(int orientation);
-    float __getScreenInch();
-    int __getUsedMem();
     static NapiHelper help_;
-
-  private:
-    std::string deviceInfo;
-    std::string appVersion;
-    std::string appLocalVersion;
-    int networkType;
-    int volume;
-    double currentTime;
-    double duration;
-    float screenInch;
-    int usedMem;
 };

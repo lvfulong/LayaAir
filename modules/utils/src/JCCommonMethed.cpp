@@ -714,25 +714,6 @@ double tmGetCurms()
     return 0;
 #endif
 }
-
-int getAppUsedMem()
-{
-#ifdef OS_WINDOWS
-    HANDLE handle = GetCurrentProcess();
-    PROCESS_MEMORY_COUNTERS pmc;
-    GetProcessMemoryInfo(handle, &pmc, sizeof(pmc));
-    // WorkingSetSize 使用的内存
-    // PeakWorkingSetSize 峰值内存
-    // PagefileUsage 虚拟内存
-    // PeakPagefileUsage 峰值虚拟内存
-    return pmc.WorkingSetSize / 1024;
-#elif OS_ANDROID
-    return 0;
-#elif OS_IOS
-    return 0;
-#endif
-}
-
 int hashstr(const char *s)
 {
     int even, odd;

@@ -9,7 +9,10 @@ extern handleAsyncMessageCallback g_handleAsyncMessageCb;
 
 namespace laya
 {
-
+int OSLinux::getUsedMem()
+{
+    return 0; // todo
+}
 OSLinux::~OSLinux()
 {
 }
@@ -31,7 +34,7 @@ void OSLinux::exit()
 }
 int OSLinux::getNetworkType()
 {
-    return 1;// todo
+    return 1; // todo
 }
 void OSLinux::setScreenWakeLock(bool bWakeLock)
 {

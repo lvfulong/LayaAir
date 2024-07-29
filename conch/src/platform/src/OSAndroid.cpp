@@ -9,6 +9,16 @@ namespace laya
 OSAndroid::~OSAndroid()
 {
 }
+int OSAndroid::getUsedMem()
+{
+    CToJavaBridge::JavaRet kRet;
+    if (CToJavaBridge::GetInstance()->callMethod("layaair.game.utility.ProcessInfo", "getUsedMem", kRet,
+                                                 CToJavaBridge::JavaRet::RT_Float))
+    {
+        return (int)(kRet.floatRet);
+    }
+    return 0;
+}
 float OSAndroid::getTotalMem()
 {
     CToJavaBridge::JavaRet kRet;

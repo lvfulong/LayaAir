@@ -4,6 +4,10 @@
 #include <Windows.h>
 #include <future>
 #include <utils/Log.h>
+#if defined(OS_WINDOWS)
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#endif
 
 extern handleSyncMessageCallback g_handleSyncMessageCb;
 extern handleAsyncMessageCallback g_handleAsyncMessageCb;
@@ -12,6 +16,17 @@ namespace laya
 
 OSWin::~OSWin()
 {
+}
+int OSWin::getUsedMem()
+{
+    HANDLE handle = GetCurrentProcess();
+    PROCESS_MEMORY_COUNTERS pmc;
+    GetProcessMemoryInfo(handle, &pmc, sizeof(pmc));
+    // WorkingSetSize 使用的内存
+    // PeakWorkingSetSize 峰值内存
+    // PagefileUsage 虚拟内存
+    // PeakPagefileUsage 峰值虚拟内存
+    return pmc.WorkingSetSize / 1024;
 }
 float OSWin::getTotalMem()
 {

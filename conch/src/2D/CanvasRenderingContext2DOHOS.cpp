@@ -66,17 +66,35 @@ CanvasRenderingContext2DOHOS::CanvasRenderingContext2DOHOS(int width, int height
 }
 CanvasRenderingContext2DOHOS::~CanvasRenderingContext2DOHOS()
 {
+    if (m_typographyCreate)
+    {
+        OH_Drawing_DestroyTypographyHandler(m_typographyCreate);
+        m_typographyCreate = nullptr;
+    }
     if (m_matrix)
     {
         OH_Drawing_MatrixDestroy(m_matrix);
         m_canvas = nullptr;
+    }
+    if (m_fontCollection)
+    {
+        OH_Drawing_DestroyFontCollection(m_fontCollection);
+    }
+    if (m_fontTextStyle)
+    {
+        OH_Drawing_DestroyTextStyle(m_fontTextStyle);
+        m_fontTextStyle = nullptr;
+    }
+    if (m_fontTypography)
+    {
+        OH_Drawing_DestroyTypographyStyle(m_fontTypography);
+        m_fontTypography = nullptr;
     }
     if (m_canvas)
     {
         OH_Drawing_CanvasDestroy(m_canvas);
         m_canvas = nullptr;
     }
-
     if (m_bitmap)
     {
         OH_Drawing_BitmapDestroy(m_bitmap);

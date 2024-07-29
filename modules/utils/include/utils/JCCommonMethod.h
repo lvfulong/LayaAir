@@ -174,11 +174,6 @@ std::string UrlDecode(const char *str);
  */
 double tmGetCurms();
 
-/** @brief 获得app使用的内存
- *  @return 返回内存值
- */
-int getAppUsedMem();
-
 int hashstr(const char *s);
 
 void mulMatrixArray(float *leftMatrixE, float *rightMatrix, float *outArray, int nOffset);

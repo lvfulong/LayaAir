@@ -8,6 +8,14 @@ namespace laya
 OSOHOS::~OSOHOS()
 {
 }
+int OSOHOS::getUsedMem()
+{
+    if (auto getUsedMem = aki::JSBind::GetJSFunction("DeviceUtils.getPrivateDirty"))
+    {
+        usedMem = getUsedMem->Invoke<int>();
+    }
+    return usedMem;
+}
 float OSOHOS::getTotalMem()
 {
     return 0; // todo

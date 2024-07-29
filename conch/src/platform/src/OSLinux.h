@@ -7,6 +7,7 @@ class OSLinux : public OS
 {
   public:
     ~OSLinux();
+    int getUsedMem() override;
     float getTotalMem() override;
     int getAvalidMem() override;
     int getMemoryUsageInByte() override;

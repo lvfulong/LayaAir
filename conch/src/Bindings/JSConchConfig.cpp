@@ -70,21 +70,7 @@ namespace laya
     }
     int JSConchConfig::getUsedMem()
     {
-#ifdef OS_ANDROID
-        CToJavaBridge::JavaRet kRet;
-        if (CToJavaBridge::GetInstance()->callMethod("layaair.game.utility.ProcessInfo", "getUsedMem", kRet, CToJavaBridge::JavaRet::RT_Float))
-        {
-            return (int)(kRet.floatRet);
-        }
-        return 0;
-#elif OS_IOS
-        return CToObjectCGetUsedMem();
-#elif OS_WINDOWS
-        return getAppUsedMem();
-#elif OS_OHOS
-        return NapiHelper::GetInstance()->getUsedMem();
-#endif
-        return 0;
+        return JCConch::s_pConch->getOS()->getUsedMem();
     }
     int JSConchConfig::getAvalidMem()
     {

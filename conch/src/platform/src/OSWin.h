@@ -7,6 +7,7 @@ class OSWin : public OS
 {
   public:
     ~OSWin();
+    int getUsedMem() override;
     float getTotalMem() override;
     int getAvalidMem() override;
     int getMemoryUsageInByte() override;

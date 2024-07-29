@@ -8,6 +8,10 @@ namespace laya
 OSiOS::~OSiOS()
 {
 }
+int OSiOS::getUsedMem()
+{
+    return CToObjectCGetUsedMem();
+}
 float OSiOS::getTotalMem()
 {
     return CToObjectCGetTotalMem();

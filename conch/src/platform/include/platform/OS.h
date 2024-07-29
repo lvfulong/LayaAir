@@ -12,6 +12,7 @@ class OS
     virtual ~OS()
     {
     }
+    virtual int getUsedMem() = 0;
     virtual float getTotalMem() = 0;
     virtual int getAvalidMem() = 0;
     virtual int getMemoryUsageInByte() = 0;

@@ -7,6 +7,7 @@ class OSAndroid : public OS
 {
   public:
     ~OSAndroid();
+    int getUsedMem() override;
     float getTotalMem() override;
     int getAvalidMem() override;
     int getMemoryUsageInByte() override;

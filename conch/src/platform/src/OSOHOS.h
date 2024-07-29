@@ -7,6 +7,7 @@ class OSOHOS : public OS
 {
   public:
     ~OSOHOS();
+    int getUsedMem() override;
     float getTotalMem() override;
     int getAvalidMem() override;
     int getMemoryUsageInByte() override;
