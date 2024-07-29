@@ -349,9 +349,9 @@ void CanvasRenderingContext2DOHOS::setFont(const char *font)
 bool CanvasRenderingContext2DOHOS::registerFontFromPath(const std::string &fontName, const std::string &path)
 {
     RawFile *rawFile = OH_ResourceManager_OpenRawFile(g_pAssetManager, path.c_str());
-    if (rawFile != nullptr)
+    if (rawFile == nullptr)
     {
-        LOGE("OH_ResourceManager_OpenRawFile success");
+        LOGE("OH_ResourceManager_OpenRawFile failed");
         return false;
     }
     size_t len = OH_ResourceManager_GetRawFileSize(rawFile);
