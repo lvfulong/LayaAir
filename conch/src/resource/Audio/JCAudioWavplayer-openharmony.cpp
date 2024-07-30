@@ -21,6 +21,7 @@ namespace laya{
     float JCAudioWavPlayer::getCurrentTime(AudioRenderInfo* pOpenALInfo)
     {
         //todo
+        return 0.0f;
     }
     JCWaveInfo* JCAudioWavPlayer::AddWaveInfoMp3(const std::string& p_sUrl, const std::string& p_sFilePath, void* p_pExternalMark)
     { 
