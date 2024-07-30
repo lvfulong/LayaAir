@@ -39,6 +39,7 @@ extern int g_nInnerHeight;
 namespace laya
 {
 	extern int g_nMainFrameBuffer;
+	extern GLESInternalRT* g_target;
 	static float INV_UV[8] = { 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f };
 	//------------------------------------------------------------------------------
 	ScreenCanvasContext2D::ScreenCanvasContext2D(GLESEngine* pGLESEngine)
@@ -46,9 +47,9 @@ namespace laya
 		m_pGLESEngine = pGLESEngine;
 		m_width = g_nInnerWidth;
 		m_height = g_nInnerHeight;
-		m_target = m_pGLESEngine->getTextureContext()->createRenderTargetInternal(m_width, m_height, RenderTargetFormat::R8G8B8A8, RenderTargetFormat::None, false, false, 1);
+		g_target =m_target = m_pGLESEngine->getTextureContext()->createRenderTargetInternal(m_width, m_height, RenderTargetFormat::R8G8B8A8, RenderTargetFormat::None, false, false, 1);
 		m_texture = m_target->m_textures[0];
-		
+
 
 		m_submits.reserve(8);
 		m_mesh = MeshQuadTexture::getAMesh(m_pGLESEngine, false);
@@ -229,9 +230,9 @@ namespace laya
 			{
 				delete m_target;
 				m_target = nullptr;
-				m_target = m_pGLESEngine->getTextureContext()->createRenderTargetInternal(w, h, RenderTargetFormat::R8G8B8A8, RenderTargetFormat::None, false, false, 1);
-				m_texture = m_target->m_textures[0];
-				g_nMainFrameBuffer = m_target->getGLFramebuffer();
+				g_target = m_pGLESEngine->getTextureContext()->createRenderTargetInternal(w, h, RenderTargetFormat::R8G8B8A8, RenderTargetFormat::None, false, false, 1);
+				m_texture = g_target->m_textures[0];
+				g_nMainFrameBuffer = g_target->getGLFramebuffer();
 			}
 		}
 		if (w == 0 && h == 0)

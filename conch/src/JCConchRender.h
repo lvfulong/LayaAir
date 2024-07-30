@@ -35,6 +35,7 @@ namespace laya
     class OpenGLBackendWinEGL;
     class OpenGLBackendLinuxEGLX11;
     class OpenGLBackendOHOSEGL;
+    class GLESRenderContext2D;
     class JCConchRender
     {
     public:
@@ -89,7 +90,7 @@ namespace laya
 		//ObjectManager<WordText>*				m_pWordTextManager;
 		ObjectManager<UniformBufferObject>*	    m_pUniformBufferObjectManager;
         ScreenCanvasContext2D*                  m_pScreenContext = nullptr;
-
+        GLESRenderContext2D*                    m_blitContext = nullptr;
 #if defined(OS_IOS)
         OpenGLBackendiOS*                       m_GfxBackend = { nullptr };
 #elif defined(OS_LINUX)

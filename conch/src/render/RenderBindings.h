@@ -719,6 +719,7 @@ class RenderBindings
             class_binding.function("setRenderTarget", &GLESRenderContext2D::setRenderTarget);
             class_binding.function("setOffscreenView", &GLESRenderContext2D::setOffscreenView);
             class_binding.function("drawRenderElementOne", &GLESRenderContext2D::drawRenderElementOne);
+            class_binding.function("setBlitScreenElement", &GLESRenderContext2D::setBlitScreenElement);
             class_binding.property_field("invertY", &GLESRenderContext2D::invertY);
             class_binding.property_field("pipelineMode", &GLESRenderContext2D::pipelineMode);
             class_binding.function_optional_override(

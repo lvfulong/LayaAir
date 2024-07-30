@@ -118,6 +118,8 @@ GLESEngine::~GLESEngine()
         m_GL2DRenderContext = nullptr;
     }
 }
+
+
 void GLESEngine::initRenderEngine()
 {
 
@@ -195,6 +197,7 @@ void GLESEngine::resizeOffScreen(uint32_t width, uint32_t height) {
     //laya::m_pScreenContext
     if (JCConch::s_pConchRender->m_pScreenContext != nullptr)
         JCConch::s_pConchRender->m_pScreenContext->size(width, height);
+
 }
 
 

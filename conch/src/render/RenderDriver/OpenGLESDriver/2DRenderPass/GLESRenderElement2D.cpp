@@ -65,8 +65,9 @@ namespace laya
 			}
 			else
 			{
-				context->globalConfigShaderData->cloneTo(comDef);
+				if(context->globalConfigShaderData) context->globalConfigShaderData->cloneTo(comDef);
 			}
+
 			bool returnGamma;
 			if (context->destRT)
 				returnGamma = static_cast<bool>(context->destRT->m_textures.front()->gammaCorrection != 1);
@@ -105,6 +106,7 @@ namespace laya
 		if (!shader->complete())
 			return;
 		shader->bind();
+		if(value2DShaderData)
 		shader->uploadUniforms(&(shader->m_sprite2DUniformParamsMap), value2DShaderData, true);
 		if (context->sceneData) {
 			shader->uploadUniforms(&(shader->m_sceneUniformParamsMap), context->sceneData, true);

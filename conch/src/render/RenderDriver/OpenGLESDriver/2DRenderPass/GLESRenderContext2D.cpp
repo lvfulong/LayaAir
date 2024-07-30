@@ -6,6 +6,7 @@
 
 namespace laya
 {
+	GLESRenderElement2D* GLESRenderContext2D::blitscreenElement2D = nullptr;
 	GLESRenderContext2D::GLESRenderContext2D() {
 
 	}
@@ -42,6 +43,11 @@ namespace laya
 	{
 		node->_preUpdatePre(this);
 		node->_render(this);
+	}
+
+	void GLESRenderContext2D::setBlitScreenElement(GLESRenderElement2D* node)
+	{
+		GLESRenderContext2D::blitscreenElement2D = node;
 	}
 
 

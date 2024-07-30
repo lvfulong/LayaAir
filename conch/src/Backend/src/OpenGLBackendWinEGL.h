@@ -19,6 +19,7 @@ class OpenGLBackendWinEGL
     void createScreenSurface(void *nativeHandle);
     void destroyScreenSurface();
     void onScreenSurfaceResize(int width, int height);
+    void getScreenSurfaceSize(int* width, int* height);
     void preserveBackBuffer();
     void resetRenderStates();
 

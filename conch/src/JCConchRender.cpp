@@ -19,6 +19,9 @@
 #include "../../LayaAir/2D/RenderTexture2D.h"
 #include "LayaAir/2D/RenderState2D.h"
 #include <render/3D/temp/RenderStateContext.h>
+#include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderContext2D.h>
+#include "render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.h"
+#include <render/Property.h>
 #if defined(OS_IOS)
 #include "OpenGLBackendiOS.h"
 #elif defined(OS_LINUX)
@@ -38,6 +41,7 @@ namespace laya
 {
     extern int g_nMainFrameBuffer;
     extern int g_nRealMainFrameBuffer;
+    extern GLESInternalRT* g_target;
 
 	JCConchRender::JCConchRender(void* pFileResManager)
 	{
@@ -45,6 +49,8 @@ namespace laya
         m_nFrameCount = 0;
 		m_fShowPerfScale = 0;
         m_pFileResManager = (JCFileResManager*)pFileResManager;
+        m_blitContext = new GLESRenderContext2D();
+        m_blitContext->pipelineMode = "Forward";
 	}
     void JCConchRender::init()
     {
@@ -66,6 +72,8 @@ namespace laya
         if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL) { 
             m_WebGLThread = new WebGLThread();
         }
+
+       
     }
 	JCConchRender::~JCConchRender()
 	{
@@ -213,103 +221,17 @@ void JCConchRender::end()
     {
         return;
     }
-    GLenum last_active_texture;
-    GLint last_program;
-    GLint last_texture;
-    GLint last_sampler;
-    GLint last_array_buffer;
-    GLint last_element_array_buffer;
-    GLint last_vertex_array;
-    GLint last_polygon_mode[2];
-    GLint last_viewport[4];
-    GLint last_scissor_box[4];
-    GLenum last_blend_src_rgb;
-    GLenum last_blend_dst_rgb;
-    GLenum last_blend_src_alpha;
-    GLenum last_blend_dst_alpha;
-    GLenum last_blend_equation_rgb;
-    GLenum last_blend_equation_alpha;
-    GLboolean last_enable_blend;
-    GLboolean last_enable_cull_face;
-    GLboolean last_enable_depth_test;
-    GLboolean last_enable_scissor_test;
     int last_width;
     int last_height;
-    if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
-    {
-        glGetIntegerv(GL_ACTIVE_TEXTURE, (GLint*)&last_active_texture);
-        glActiveTexture(GL_TEXTURE0);
-        glGetIntegerv(GL_CURRENT_PROGRAM, &last_program);
-        glGetIntegerv(GL_TEXTURE_BINDING_2D, &last_texture);
-        glGetIntegerv(GL_SAMPLER_BINDING, &last_sampler);
-        glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &last_array_buffer);
-        glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &last_element_array_buffer);
-        glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &last_vertex_array);
-        //glGetIntegerv(GL_POLYGON_MODE, last_polygon_mode);
-        glGetIntegerv(GL_VIEWPORT, last_viewport);
-        glGetIntegerv(GL_SCISSOR_BOX, last_scissor_box);
-        glGetIntegerv(GL_BLEND_SRC_RGB, (GLint*)&last_blend_src_rgb);
-        glGetIntegerv(GL_BLEND_DST_RGB, (GLint*)&last_blend_dst_rgb);
-        glGetIntegerv(GL_BLEND_SRC_ALPHA, (GLint*)&last_blend_src_alpha);
-        glGetIntegerv(GL_BLEND_DST_ALPHA, (GLint*)&last_blend_dst_alpha);
-        glGetIntegerv(GL_BLEND_EQUATION_RGB, (GLint*)&last_blend_equation_rgb);
-        glGetIntegerv(GL_BLEND_EQUATION_ALPHA, (GLint*)&last_blend_equation_alpha);
-        last_enable_blend = glIsEnabled(GL_BLEND);
-        last_enable_cull_face = glIsEnabled(GL_CULL_FACE);
-        last_enable_depth_test = glIsEnabled(GL_DEPTH_TEST);
-        last_enable_scissor_test = glIsEnabled(GL_SCISSOR_TEST);
-    }
-    last_width = RenderState2D::width;
-    last_height = RenderState2D::height;
+    int width, height;
     int last_main_frame_buffer = g_nMainFrameBuffer;
     g_nMainFrameBuffer = g_nRealMainFrameBuffer;
-    m_pScreenContext->endForMainCanvas();
-    //int width = m_pScreenContext->m_target->getWidth();
-    //int height = m_pScreenContext->m_target->getHeight();
-    Matrix m(JCLayaGL::s_fMainCanvasScaleX, 0.0f, 0.0f, JCLayaGL::s_fMainCanvasScaleY, JCLayaGL::s_fMainCanvasTX, JCLayaGL::s_fMainCanvasTY);
-    static float INV_UV[8] = { 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f };
-    LayaGL::m_pWebglEngine->viewport(0, 0, g_nInnerWidth, g_nInnerHeight);
-    LayaGL::m_pWebglEngine->scissor(0, 0, g_nInnerWidth, g_nInnerHeight);
-    //glClearColor(1, 1, 1, 1);
-    //glClear(GL_COLOR_BUFFER_BIT);
-    RenderState2D::width = g_nInnerWidth;
-    RenderState2D::height = g_nInnerHeight;
-    m_pScreenContext->clear();
-    //m_pScreenContext->size(g_nInnerWidth, g_nInnerHeight);
-    //
-    //临时在最好的渲染前恢复状态
-    RenderStateContext::setDepthTest(false);
-    RenderStateContext::setCullFace(false);
-    RenderStateContext::setBlend(false);
-    RenderStateContext::setDepthFunc(CompareFunction::Always);
-    RenderStateContext::setStencilTest(false);
-    m_pScreenContext->drawToScreen(m);
-    //m_pScreenContext->drawTarget(m_pScreenContext->m_target, 0, 0, width, height, m, INV_UV, BlendMode::disable);
-    m_pScreenContext->flush();
-    m_pScreenContext->clear();
-    if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
-    {
-        glUseProgram(last_program);
-        glBindTexture(GL_TEXTURE_2D, last_texture);
-        glBindSampler(0, last_sampler);
-        glActiveTexture(last_active_texture);
-        glBindVertexArray(last_vertex_array);
-        glBindBuffer(GL_ARRAY_BUFFER, last_array_buffer);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, last_element_array_buffer);
-        glBlendEquationSeparate(last_blend_equation_rgb, last_blend_equation_alpha);
-        glBlendFuncSeparate(last_blend_src_rgb, last_blend_dst_rgb, last_blend_src_alpha, last_blend_dst_alpha);
-        if (last_enable_blend) glEnable(GL_BLEND); else glDisable(GL_BLEND);
-        if (last_enable_cull_face) glEnable(GL_CULL_FACE); else glDisable(GL_CULL_FACE);
-        if (last_enable_depth_test) glEnable(GL_DEPTH_TEST); else glDisable(GL_DEPTH_TEST);
-        if (last_enable_scissor_test) glEnable(GL_SCISSOR_TEST); else glDisable(GL_SCISSOR_TEST);
-        //glPolygonMode(GL_FRONT_AND_BACK, (GLenum)last_polygon_mode[0]);
-        LayaGL::m_pWebglEngine->viewport(last_viewport[0], last_viewport[1], (GLsizei)last_viewport[2], (GLsizei)last_viewport[3]);
-        LayaGL::m_pWebglEngine->scissor(last_scissor_box[0], last_scissor_box[1], (GLsizei)last_scissor_box[2], (GLsizei)last_scissor_box[3]);
-        
-    }
+    m_GfxBackend->getScreenSurfaceSize(&width, &height);
+    m_blitContext->setOffscreenView(width, height);
+    m_blitContext->setRenderTarget(nullptr, false, Color::BLACK);
+    GLESRenderContext2D::blitscreenElement2D->materialShaderData->setInternalTexture(CommandProperty::SCREENTEXTURE_ID, g_target->m_textures[0]);
+    m_blitContext->drawRenderElementOne(GLESRenderContext2D::blitscreenElement2D);
     g_nMainFrameBuffer = last_main_frame_buffer;
-    RenderState2D::width = last_width;
-    RenderState2D::height = last_height;
 }
 void JCConchRender::swapBuffer()
 {

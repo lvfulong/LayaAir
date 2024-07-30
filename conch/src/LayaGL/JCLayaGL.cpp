@@ -25,6 +25,7 @@ namespace laya
 {
 	int g_nMainFrameBuffer = 0;
 	int g_nRealMainFrameBuffer = 0;
+    GLESInternalRT* g_target = nullptr;
     char JCLayaGL::m_pDummyData[TEX_IMAGE2D_DUMMY_MAX_SIZE];
     float JCLayaGL::s_fMainCanvasScaleX = 1.0f;
     float JCLayaGL::s_fMainCanvasScaleY = 1.0f;

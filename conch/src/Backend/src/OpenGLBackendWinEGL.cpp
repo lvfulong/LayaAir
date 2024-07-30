@@ -43,6 +43,12 @@ void OpenGLBackendWinEGL::destroyScreenSurface()
 void OpenGLBackendWinEGL::onScreenSurfaceResize(int width, int height)
 {
 }
+
+void OpenGLBackendWinEGL::getScreenSurfaceSize(int* width, int* height) {
+    eglQuerySurface(m_esContext.eglDisplay, m_esContext.eglSurface, EGL_WIDTH, width);
+    eglQuerySurface(m_esContext.eglDisplay, m_esContext.eglSurface, EGL_HEIGHT, height);
+}
+
 void OpenGLBackendWinEGL::preserveBackBuffer()
 {
 }

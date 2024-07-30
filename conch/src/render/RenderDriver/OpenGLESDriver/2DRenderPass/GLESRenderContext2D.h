@@ -9,12 +9,16 @@ namespace laya
 	class GLESRenderElement2D;
 	class GLESRenderContext2D {
 	public:
+		static GLESRenderElement2D* blitscreenElement2D;
+	public:
 		GLESRenderContext2D();
 		~GLESRenderContext2D();
 		void setRenderTarget(GLESInternalRT* renderRT, bool clear, const Color &clearColor);
 		void setOffscreenView(uint32_t width, uint32_t height);
 		void drawRenderElementList(const JCSingletonList<GLESRenderElement2D*>& list);
 		void drawRenderElementOne(GLESRenderElement2D* node);
+
+		void setBlitScreenElement(GLESRenderElement2D* node);
 
 		void setSceneShaderData(GLESShaderData* value)
 		{
