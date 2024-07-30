@@ -33,7 +33,7 @@ class CanvasRenderingContext2DAndroid : public CanvasRenderingContext2D
 
     static void addStaticMethod(JNIEnv *env, const char *className);
     static bool registerFontFromPath(const std::string &fontName, const std::string &path);
-
+    static bool registerFontFromBuffer(const std::string& fontName, uint8_t* buff, int len);
   protected:
     void setTextSize(JNIEnv *env, float size);
     void setTypeface(JNIEnv *env, const std::string &fontName, int style);

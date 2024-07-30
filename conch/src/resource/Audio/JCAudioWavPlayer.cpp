@@ -45,7 +45,7 @@ void JCAudioWavPlayer::createOpenALSource()
     alGenSources(OPENAL_SOURCE_NUM, pOpenALSouceID);
     for (int i = 0; i < OPENAL_SOURCE_NUM; i++)
     {
-        m_pOpenALSource[m_nALCount + i] = new OpenALSourceInfo;
+        m_pOpenALSource[m_nALCount + i] = new AudioRenderInfo;
         m_pOpenALSource[m_nALCount + i]->m_nOpenALSouceID = pOpenALSouceID[i];
         m_pOpenALSource[m_nALCount + i]->m_nBufferID = 0;
         for (int j = 0; j < 3; j++)
@@ -64,11 +64,11 @@ JCAudioWavPlayer::~JCAudioWavPlayer()
 	Release();
 }
 //------------------------------------------------------------------------------
-OpenALSourceInfo* JCAudioWavPlayer::getOpenALSource()
+AudioRenderInfo* JCAudioWavPlayer::getOpenALSource()
 {
     int m_nALCount = m_pOpenALSource.size();
     bool bFind = false;
-    OpenALSourceInfo* pInfo = NULL;
+    AudioRenderInfo* pInfo = NULL;
 	for( int i = 0; i < m_nALCount; i++ )
 	{
         int n = (m_nCurrentIndex + i) % m_nALCount;
@@ -113,7 +113,7 @@ void JCAudioWavPlayer::checkWavePlayEnd()
 	}
 }
 //------------------------------------------------------------------------------
-OpenALSourceInfo* JCAudioWavPlayer::playAudio( JCAudioInterface* p_pAudio,const std::string& p_sSrc, bool bIsOgg, float currentTime)
+AudioRenderInfo* JCAudioWavPlayer::playAudio(JCAudioInterface* p_pAudio,const std::string& p_sSrc, bool bIsOgg, float currentTime)
 {
     JCWaveInfo* pInfo = NULL;
 	MapWaveInfoIter iter = m_vWaveInfos.find( p_sSrc );
@@ -143,7 +143,7 @@ OpenALSourceInfo* JCAudioWavPlayer::playAudio( JCAudioInterface* p_pAudio,const 
     return NULL;
 }
 //------------------------------------------------------------------------------
-OpenALSourceInfo* JCAudioWavPlayer::playAudioMp3(JCAudioInterface* p_pAudio, const std::string& p_sSrc, const char* p_sFilePath, float currentTime)
+AudioRenderInfo* JCAudioWavPlayer::playAudioMp3(JCAudioInterface* p_pAudio, const std::string& p_sSrc, const char* p_sFilePath, float currentTime)
 {
     JCWaveInfo* pInfo = NULL;
     MapWaveInfoIter iter = m_vWaveInfos.find( p_sSrc );
@@ -173,7 +173,7 @@ void JCAudioWavPlayer::delAudio(JCAudioInterface* p_pAudio)
 	}
 }
 //------------------------------------------------------------------------------
-void JCAudioWavPlayer::releaseOpenAL( OpenALSourceInfo* pOpenALInfo )
+void JCAudioWavPlayer::releaseOpenAL(AudioRenderInfo* pOpenALInfo)
 {
 #ifdef OS_IOS
     // some specific OpenAL implement defects existed on iOS platform
@@ -204,10 +204,10 @@ void JCAudioWavPlayer::releaseOpenAL( OpenALSourceInfo* pOpenALInfo )
     }
 }
 //------------------------------------------------------------------------------
-OpenALSourceInfo* JCAudioWavPlayer::playAudioFromBuffer( JCAudioInterface* p_pAudio,const char* p_pBuffer,unsigned int p_nBufferSize,
+AudioRenderInfo* JCAudioWavPlayer::playAudioFromBuffer( JCAudioInterface* p_pAudio,const char* p_pBuffer,unsigned int p_nBufferSize,
                     int p_nRate,int nBitsPerSample, int nChannels, float currentTime)
 {
-	OpenALSourceInfo* pOpenALInfo = getOpenALSource();
+	AudioRenderInfo* pOpenALInfo = getOpenALSource();
 	alSourceStop( pOpenALInfo->m_nOpenALSouceID );
 	releaseOpenAL( pOpenALInfo );
 	alSourcef ( pOpenALInfo->m_nOpenALSouceID, AL_PITCH, 1.0 );
@@ -305,7 +305,7 @@ void JCAudioWavPlayer::setAllVolume( float p_nVolume )
 	}
 }
 //------------------------------------------------------------------------------
-void JCAudioWavPlayer::stop(OpenALSourceInfo* pOpenALInfo)
+void JCAudioWavPlayer::stop(AudioRenderInfo* pOpenALInfo)
 {
     if (pOpenALInfo->m_bPlaying == true)
     {
@@ -316,7 +316,7 @@ void JCAudioWavPlayer::stop(OpenALSourceInfo* pOpenALInfo)
     }
 }
 //------------------------------------------------------------------------------
-void JCAudioWavPlayer::setVolume(OpenALSourceInfo* pOpenALInfo,float p_nVolume)
+void JCAudioWavPlayer::setVolume(AudioRenderInfo* pOpenALInfo,float p_nVolume)
 {
     alSourcef(pOpenALInfo->m_nOpenALSouceID, AL_GAIN, p_nVolume);
 }
@@ -474,7 +474,7 @@ void JCAudioWavPlayer::resume()
         alcDeviceResumeSOFT(m_pDevice);
     #endif
 }
-float JCAudioWavPlayer::getCurrentTime(OpenALSourceInfo* pOpenALInfo)
+float JCAudioWavPlayer::getCurrentTime(AudioRenderInfo* pOpenALInfo)
 {
 	float currentTime = 0; 
 	alGetSourcef(pOpenALInfo->m_nOpenALSouceID, AL_SEC_OFFSET, &currentTime );

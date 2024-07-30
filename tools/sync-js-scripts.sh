@@ -9,7 +9,7 @@ dist0=${root_dir}/template/resource
 dist1=${root_dir}/publish/android_studio/app/src/main/assets
 dist2=${root_dir}/publish/ios/resource
 dist3=${root_dir}/publish/windows/resource
-dist4=${root_dir}/ohos/entry/src/main/resources/rawfile
+dist4=${root_dir}/publish/ohos/entry/src/main/resources/rawfile
 dist5=${root_dir}/layaPlayer/proj.android/app/src/main/assets
 dist6=${root_dir}/layaPlayer/proj.ios/resource
 

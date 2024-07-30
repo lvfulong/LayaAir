@@ -11,9 +11,10 @@
 #include <map>
 
 extern HWND g_hWnd;
+extern std::string gRedistPath;
 
 using namespace Gdiplus;
-std::map<std::string, std::wstring> fontAliasMap;
+std::map<std::wstring, Gdiplus::FontFamily*> privateFontMap;
 
 namespace laya
 {
@@ -44,7 +45,7 @@ CanvasRenderingContext2DWin::CanvasRenderingContext2DWin(int width, int height)
     // matrix.Translate(0.0f, height);
     // matrix.Scale(1.0f, -1.0f);
     // m_gdiGraphics->SetTransform(&matrix);
-    //m_stringFormat.SetAlignment(Gdiplus::StringAlignmentNear);       // 水平
+    // m_stringFormat.SetAlignment(Gdiplus::StringAlignmentNear);       // 水平
     m_stringFormat.SetLineAlignment(Gdiplus::StringAlignmentNear); // 垂直
     setDefault();
 }
@@ -102,13 +103,16 @@ void CanvasRenderingContext2DWin::strokeText(const std::string &text, double x, 
     //                          &Gdiplus::SolidBrush(Gdiplus::SolidBrush(
     //                              Gdiplus::Color(m_strokeColorA, m_strokeColorR, m_strokeColorG, m_strokeColorB))));
 
-    FontFamily fontFamily;
-    m_font->GetFamily(&fontFamily);
-    
+    Gdiplus::FontFamily* pCurFamily = m_pCustomFamily;
+    if (!pCurFamily) {
+        pCurFamily = new Gdiplus::FontFamily();
+        m_font->GetFamily(pCurFamily);
+    }
+
     int size = m_font->GetSize();
 
     Gdiplus::GraphicsPath path;
-    path.AddString(strWide.data(), -1, &fontFamily, m_font->GetStyle(), size, PointF(outX, outY), Gdiplus::StringFormat::GenericTypographic());
+    path.AddString(strWide.data(), -1, pCurFamily, m_font->GetStyle(), size, PointF(outX, outY), Gdiplus::StringFormat::GenericTypographic());
     Pen pen(Color(m_strokeColorR, m_strokeColorG, m_strokeColorB), m_lineWidth);
     //SolidBrush brush(Color(255, 255, 255, 255)); // 白色填充
     m_gdiGraphics->DrawPath(&pen, &path); // 绘制描边
@@ -119,28 +123,36 @@ TextMetrics CanvasRenderingContext2DWin::measureTextUtf16(wchar_t *pwszBuffer, i
     TextMetrics metrics;
 
     Gdiplus::GraphicsPath graphicsPathObj;
-    Gdiplus::FontFamily fontFamily;
-    m_font->GetFamily(&fontFamily);
+    Gdiplus::FontFamily* pCurFamily = m_pCustomFamily;
+    if (!pCurFamily) {
+        pCurFamily = new Gdiplus::FontFamily();
+        m_font->GetFamily(pCurFamily);
+    }
+    //fontFamily.Clone();
 
-    graphicsPathObj.AddString(pwszBuffer, bufferLen /* -1 */, &fontFamily, m_font->GetStyle(), m_font->GetSize(),
+    graphicsPathObj.AddString(pwszBuffer, bufferLen /* -1 */, pCurFamily, m_font->GetStyle(), m_font->GetSize(),
                               Gdiplus::PointF(0, 0), &m_stringFormat);
     Gdiplus::RectF rcBound;
     graphicsPathObj.GetBounds(&rcBound);
 
-    //测量不能用layout来限制，设置一个很大的范围避免超过（希望实际的measure不要依赖实际画布大小）
+    // 测量不能用layout来限制，设置一个很大的范围避免超过（希望实际的measure不要依赖实际画布大小）
     Gdiplus::RectF layoutRect(0, 0, 100000, 100000);
-    //m_gdiGraphics->MeasureString(pwszBuffer, bufferLen, m_font, layoutRect, &m_stringFormat, &rcBound);
-    //stringFormat必须用StringFormat::GenericTypographic(), 否则偏大
-    m_gdiGraphics->MeasureString(pwszBuffer, bufferLen, m_font, layoutRect, Gdiplus::StringFormat::GenericTypographic(), &rcBound);
+    // m_gdiGraphics->MeasureString(pwszBuffer, bufferLen, m_font, layoutRect, &m_stringFormat, &rcBound);
+    // stringFormat必须用StringFormat::GenericTypographic(), 否则偏大
+    m_gdiGraphics->MeasureString(pwszBuffer, bufferLen, m_font, layoutRect, Gdiplus::StringFormat::GenericTypographic(),
+                                 &rcBound);
     metrics.m_width = rcBound.Width;
     metrics.m_height = rcBound.Height;
     // UINT16 desent = fontFamily.GetCellDescent(m_fontStyle);
     // UINT16 descentPixel = m_font->GetSize() * desent / fontFamily.GetEmHeight(m_fontStyle);
-    UINT16 ascender = fontFamily.GetCellAscent(m_fontStyle);
-    UINT16 ascenderPixel = m_font->GetSize() * ascender / fontFamily.GetEmHeight(m_fontStyle);
+    UINT16 ascender = pCurFamily->GetCellAscent(m_fontStyle);
+    UINT16 ascenderPixel = m_font->GetSize() * ascender / pCurFamily->GetEmHeight(m_fontStyle);
     metrics.m_ascender = ascenderPixel;
-    metrics.m_descender = fontFamily.GetCellDescent(m_fontStyle);
+    metrics.m_descender = pCurFamily->GetCellDescent(m_fontStyle);
     // LOGI("measureText %f %f", rcBound.Width, rcBound.Height);
+    if (pCurFamily && pCurFamily != m_pCustomFamily) {
+        delete pCurFamily;
+    }
     return metrics;
 }
 TextMetrics CanvasRenderingContext2DWin::measureText(const std::string &text)
@@ -154,7 +166,7 @@ void CanvasRenderingContext2DWin::clearRect(double x, double y, double width, do
     {
         return;
     }
-    
+
     m_gdiGraphics->Clear(Gdiplus::Color(0, 0, 0, 0));
 }
 void CanvasRenderingContext2DWin::save()
@@ -176,8 +188,8 @@ ImageData CanvasRenderingContext2DWin::getImageData(double x, double y, double w
 {
     int clampedX = std::clamp(x, 0.0, static_cast<double>(m_width));
     int clampedY = std::clamp(y, 0.0, static_cast<double>(m_height));
-    int clampedW = std::clamp(width, 0.0, static_cast<double>(m_width)-x);
-    int clampedH = std::clamp(height, 0.0, static_cast<double>(m_height)-y);
+    int clampedW = std::clamp(width, 0.0, static_cast<double>(m_width) - x);
+    int clampedH = std::clamp(height, 0.0, static_cast<double>(m_height) - y);
 
     if (clampedW > 0 && clampedH > 0)
     {
@@ -186,57 +198,38 @@ ImageData CanvasRenderingContext2DWin::getImageData(double x, double y, double w
         data.m_height = clampedH;
         data.m_data.resize(clampedW * clampedH * 4);
         unsigned char *glImageData = &data.m_data[0];
-        //ZeroMemory(glImageData, clampedW * clampedH * 4);
+        // ZeroMemory(glImageData, clampedW * clampedH * 4);
 
         Gdiplus::Rect rect(clampedX, clampedY, clampedW, clampedH);
 
         Status status;
-        Gdiplus::BitmapData  lockedbmp;
-        status = m_gdiBitmap->LockBits(&rect, Gdiplus::ImageLockModeRead, PixelFormat32bppARGB,&lockedbmp);
-        if (status != Ok) {
+        Gdiplus::BitmapData lockedbmp;
+        status = m_gdiBitmap->LockBits(&rect, Gdiplus::ImageLockModeRead, PixelFormat32bppARGB, &lockedbmp);
+        if (status != Ok)
+        {
             LOGE("CanvasRenderingContext2DWin::getImageData GDI+ error %d", static_cast<int>(status));
             return ImageData();
         }
 
-        byte* pixels = static_cast<byte*>(lockedbmp.Scan0);
+        byte *pixels = static_cast<byte *>(lockedbmp.Scan0);
         UINT rowBytes = lockedbmp.Stride; // 扫描线宽度，可能会包含填充字节
 
-        for (int y = 0; y < rect.Height; ++y) {
-            byte* row = pixels + (y * rowBytes);
-            for (int x = 0; x < rect.Width; ++x) {
+        for (int y = 0; y < rect.Height; ++y)
+        {
+            byte *row = pixels + (y * rowBytes);
+            for (int x = 0; x < rect.Width; ++x)
+            {
                 // Pixels stored in BGRA order
-                BYTE* pixel = row + (x * 4);
+                BYTE *pixel = row + (x * 4);
                 float alpha = pixel[3] / 255.0;
 
-                glImageData[(x + y * clampedW) * 4 + 0]/*r*/ = pixel[2]/*r*/;
-                glImageData[(x + y * clampedW) * 4 + 1]/*g*/ = pixel[1] ;
-                glImageData[(x + y * clampedW) * 4 + 2]/*b*/ = pixel[0] ;
+                glImageData[(x + y * clampedW) * 4 + 0] /*r*/ = pixel[2] /*r*/;
+                glImageData[(x + y * clampedW) * 4 + 1] /*g*/ = pixel[1];
+                glImageData[(x + y * clampedW) * 4 + 2] /*b*/ = pixel[0];
                 glImageData[(x + y * clampedW) * 4 + 3] = pixel[3]; // a
 
-                //if (pixel[3] > 0 || pixel[2] > 0 || pixel[1] > 0 || pixel[0] > 0)
-                //    printf("+");
-                //else 
-                //    printf("-");
             }
-            //printf("\n");
         }
-
-        //for (auto y = 0; y < clampedH; y++)
-        //{
-        //    for (auto x = 0; x < clampedW; x++)
-        //    {
-        //        Gdiplus::Color color;
-        //        m_gdiBitmap->GetPixel(x, y, &color); // m_gdiBitmap->GetPixel(x, clampedH - y - 1, &color);
-        //        BYTE a = color.GetA();
-        //        if (a < 255 && a>0) {
-        //            int a = 0;
-        //        }
-        //        glImageData[(x + y * clampedW) * 4 + 0] = color.GetA();
-        //        glImageData[(x + y * clampedW) * 4 + 1] = color.GetA();
-        //        glImageData[(x + y * clampedW) * 4 + 2] = color.GetA();
-        //        glImageData[(x + y * clampedW) * 4 + 3] = color.GetA();
-        //    }
-        //}
         m_gdiBitmap->UnlockBits(&lockedbmp);
 
         return data;
@@ -258,8 +251,8 @@ void CanvasRenderingContext2DWin::setTransform(double a, double b, double c, dou
     {
         return;
     }
-    //Gdiplus::Matrix m(a,  b,  c,  d,  e,  f);
-    //m_gdiGraphics->SetTransform(&m);
+    // Gdiplus::Matrix m(a,  b,  c,  d,  e,  f);
+    // m_gdiGraphics->SetTransform(&m);
 }
 void CanvasRenderingContext2DWin::scale(double x, double y)
 {
@@ -267,7 +260,7 @@ void CanvasRenderingContext2DWin::scale(double x, double y)
     {
         return;
     }
-    //m_gdiGraphics->ScaleTransform(x, y);
+    // m_gdiGraphics->ScaleTransform(x, y);
 }
 /*void CanvasRenderingContext2DWin::setTextAlign(const char* textAlign)
 {
@@ -352,16 +345,16 @@ void CanvasRenderingContext2DWin::getTextPosition(const std::string &text, doubl
     }
     else if (m_textBaseline == TextBaseline::Bottom)
     {
-        //TODO outY = y + textMetrics.m_height;
+        // TODO outY = y + textMetrics.m_height;
     }
     else if (m_textBaseline == TextBaseline::Alphabetic)
     {
-        //TODO outY = y + textMetrics.m_ascender;
+        // TODO outY = y + textMetrics.m_ascender;
     }
 }
 void CanvasRenderingContext2DWin::setFont(const char *font)
 {
-    if (strcmp(font, getFont())==0)
+    if (strcmp(font, getFont()) == 0)
         return;
     CanvasRenderingContext2D::setFont(font);
     bool isBold = m_fontDescription.isBold();
@@ -384,127 +377,81 @@ void CanvasRenderingContext2DWin::setFont(const char *font)
         m_fontStyle = Gdiplus::FontStyle::FontStyleRegular;
     }
 
-    const Gdiplus::FontFamily* pFontFamily = nullptr;
-    auto it = fontAliasMap.find(m_fontDescription.m_family);
-    if (it == fontAliasMap.end()) {
-        std::wstring strWide = utf8ToWide(m_fontDescription.m_family);
-        pFontFamily = new  Gdiplus::FontFamily(strWide.data());
-    }
-    else {
-        pFontFamily = new  Gdiplus::FontFamily(it->second.data());
-    }
     if (m_font != nullptr){
         delete m_font;
     }
-    if (pFontFamily->GetLastStatus() != Gdiplus::Ok) {
-        delete pFontFamily;
-        //回退到通用无衬线字体
-        pFontFamily = Gdiplus::FontFamily::GenericSansSerif();
-    }
-    else {
+
+    std::wstring strWide = utf8ToWide(m_fontDescription.m_family);
+    const Gdiplus::FontFamily* pFontFamily = nullptr;
+    auto it = privateFontMap.find(strWide);
+    if (it == privateFontMap.end()) {
+        pFontFamily = new  Gdiplus::FontFamily(strWide.data());
+        if (pFontFamily->GetLastStatus() != Gdiplus::Ok) {
+            delete pFontFamily;
+            //回退到通用无衬线字体
+            pFontFamily = nullptr;
+        }
         if (m_pLastFontFamily) {
             delete m_pLastFontFamily;
         }
         m_pLastFontFamily = pFontFamily;
+        if(!pFontFamily){
+            pFontFamily = Gdiplus::FontFamily::GenericSansSerif();
+        }
+        m_font = new Gdiplus::Font(pFontFamily, m_fontDescription.m_size, m_fontStyle, Gdiplus::UnitPixel);
+        m_pCustomFamily = nullptr;
     }
-    m_font = new Gdiplus::Font(pFontFamily, m_fontDescription.m_size, m_fontStyle, Gdiplus::UnitPixel);
+    else {
+        //family要clone，后面会删掉m_font，会顺便把family也删掉
+        m_pCustomFamily = it->second->Clone();
+        m_font = new Gdiplus::Font(m_pCustomFamily, m_fontDescription.m_size, m_fontStyle, Gdiplus::UnitPixel);
+        //这里是测试GetFamily的，下面的会导致异常，不知道为什么
+        //for( int i=0; i<10; i++)
+        //{
+        //    Gdiplus::FontFamily fontFamily;
+        //    m_font->GetFamily(&fontFamily);
+        //}
+
+    }
     // LOGI("setFont %s %f", font, m_fontDescription.m_size);
 }
 
-std::wstring getMemFontFamilyFromFile(const std::string& path) {
-    PrivateFontCollection fontCollection;
-    std::wstring strWide = utf8ToWide(path.c_str());
-    fontCollection.AddFontFile(strWide.data());
-    int familyCount = fontCollection.GetFamilyCount();
-    if (familyCount > 0) {
-        // 创建FontFamily对象 
-        FontFamily* fontFamilies = new FontFamily[familyCount];
-        int found = 0;
-
-        fontCollection.GetFamilies(familyCount, fontFamilies, &found);
-        if (found > 0) {
-            WCHAR familyName[LF_FACESIZE];
-            fontFamilies[0].GetFamilyName(familyName);
-            delete[] fontFamilies;
-            return familyName;
-        }
-        // 释放资源 
-        delete[] fontFamilies;
-    }
-    return L"";
-}
-
-bool CanvasRenderingContext2DWin::registerFontFromPath(const std::string& fontName, const std::string& path)
+bool CanvasRenderingContext2DWin::registerFontFromPath(const std::string &fontName, const std::string &path)
 {
+    bool isAbsPath = (path[0]=='/' || path[1]==':');
+    std::wstring nameW = utf8ToWide(fontName.c_str());
 	// 创建一个PrivateFontCollection对象 
-    if (CanvasRenderingContext2DWin::gFontCollection == nullptr) {
-        CanvasRenderingContext2DWin::gFontCollection = new PrivateFontCollection();
-    }
-    auto fontCollection = CanvasRenderingContext2DWin::gFontCollection;
-	// 添加字体到PrivateFontCollection 
-	// 假设字体文件名为 "YourFont.ttf"，并且位于当前可执行文件的同一目录中 
+    std::wstring strWide = utf8ToWide(isAbsPath?path.c_str():(gRedistPath+path).c_str());
+    auto coll = new PrivateFontCollection();
+	coll->AddFontFile(strWide.data());
 
-    auto familyName = getMemFontFamilyFromFile(path);
-    if (familyName == L"")
-        return false;
-    if (fontName.length() > 1) {
-        fontAliasMap[fontName] = familyName;
+    Gdiplus::FontFamily fontFamilies[1];
+    int findNum = 0;
+    Gdiplus::Status status = coll->GetFamilies(1, fontFamilies, &findNum); // 从字体集中获取字体家族
+    if (status == Gdiplus::Ok) {
+        privateFontMap[nameW] = fontFamilies[0].Clone();
     }
-
-    std::wstring strWide = utf8ToWide(path.c_str());
-	fontCollection->AddFontFile(strWide.data());
-    //delete pwszBuffer;
-    //fontCollection.AddFontFile(L"D:\\work\\laya\\native3.0\\LayaNative3.0\\template\\build\\bin\\Debug\\appCache\\tmp_Palatino Linotype.ttf");
-    //fontCollection.AddFontFile(L"C:/Windows/Fonts/HYZhongHeiTi-197.ttf");
-    //fontCollection.AddFontFile(L"D:\\work\\laya\\native3.0\\LayaNative3.0\\template\\build\\bin\\Debug\\font/layabox.ttf");
 
     return true;
 }
 
-PrivateFontCollection* CanvasRenderingContext2DWin::gFontCollection=nullptr;
 std::vector<char*> CanvasRenderingContext2DWin::fontBuffers;
-
-//这个破API实在是没有办法知道新加的字体的名字，只好再次创建一个临时来获得。
-std::wstring getMemFontFamilyFromBuffer(const uint8_t* buff, int len) {
-    PrivateFontCollection fontCollection;
-    fontCollection.AddMemoryFont(buff, len);
-    int familyCount = fontCollection.GetFamilyCount();
-    if (familyCount > 0) {
-        // 创建FontFamily对象 
-        FontFamily* fontFamilies = new FontFamily[familyCount];
-        int found = 0;
-
-        fontCollection.GetFamilies(familyCount, fontFamilies, &found);
-        if (found > 0) {
-            WCHAR familyName[LF_FACESIZE];
-            fontFamilies[0].GetFamilyName(familyName);
-            delete[] fontFamilies;
-            return familyName;
-        }
-        // 释放资源 
-        delete[] fontFamilies;
-    }
-    return L"";
-}
-
-
-bool CanvasRenderingContext2DWin::registerFontFromBuffer(const std::string& fontName, uint8_t* buff, int len) {
-    // 创建一个PrivateFontCollection对象 
-    if (CanvasRenderingContext2DWin::gFontCollection == nullptr) {
-        CanvasRenderingContext2DWin::gFontCollection = new PrivateFontCollection();
-    }
-    auto fontCollection = CanvasRenderingContext2DWin::gFontCollection;
-
-    auto familyName = getMemFontFamilyFromBuffer(buff, len);
-    if (familyName == L"")
-        return false;
-    if (fontName.length() > 1) {
-        fontAliasMap[fontName] = familyName;
-    }
+bool CanvasRenderingContext2DWin::registerFontFromBuffer(const std::string& fontName, const uint8_t* buff, int len) {
+    std::wstring nameW = utf8ToWide(fontName.c_str());
+    auto coll = new PrivateFontCollection();    //先用new，防止被释放，释放了的话family就都无效了
     // AddMemoryFont 需要引用这个内存，所以new一个
-    char* pmem = new char[len];
+    char *pmem = new char[len];
     memcpy(pmem, buff, len);
-    fontCollection->AddMemoryFont(pmem,len);
+    coll->AddMemoryFont(pmem,len);
+
+     Gdiplus::FontFamily fontFamilies[1];
+     int findNum = 0;
+     Gdiplus::Status status = coll->GetFamilies(1, fontFamilies, &findNum); // 从字体集中获取字体家族
+     if (status == Gdiplus::Ok) {
+         privateFontMap[nameW] = fontFamilies[0].Clone();
+     }
+
+    //privateFontMap[nameW] = coll;
     CanvasRenderingContext2DWin::fontBuffers.push_back(pmem);
     return true;
 }

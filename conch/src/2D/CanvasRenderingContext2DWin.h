@@ -33,12 +33,11 @@ class CanvasRenderingContext2DWin : public CanvasRenderingContext2D
     void setLineWidth(double lineWidth) override;
     void setLineJoin(const char *lineJoin) override;
     static bool registerFontFromPath(const std::string &fontName, const std::string &path);
-    static bool registerFontFromBuffer(const std::string& fontName, uint8_t* buff, int len);
+    static bool registerFontFromBuffer(const std::string& fontName, const uint8_t* buff, int len);
     static void init();
     static void clearAllBuffer();
 
   protected:
-    static Gdiplus::PrivateFontCollection* gFontCollection;
     //为了释放用
     static std::vector<char*> fontBuffers;
     void getTextPosition(const std::string &text, double x, double y, double &outX, double &outY);
@@ -47,6 +46,9 @@ class CanvasRenderingContext2DWin : public CanvasRenderingContext2D
     Gdiplus::Bitmap *m_gdiBitmap;
     Gdiplus::Graphics *m_gdiGraphics;
     Gdiplus::Font *m_font = nullptr;
+    //如果是自定义字体，用记录的family，而不要调用 GetFamily ，因为GetFamily后会在删除的时候真的删除字体（感觉没有加引用）
+    //正常字体没有问题，具体怎么回事文档太少搞不清楚，崩溃。
+    Gdiplus::FontFamily* m_pCustomFamily = nullptr;
     const Gdiplus::FontFamily* m_pLastFontFamily=nullptr;
     Gdiplus::StringFormat m_stringFormat;
     Gdiplus::FontStyle m_fontStyle;

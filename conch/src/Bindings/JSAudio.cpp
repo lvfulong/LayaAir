@@ -31,11 +31,7 @@ namespace laya
 	    m_sSrc = "";
 	    m_sLocalFileName = "";
 	    m_bDownloaded = false;
-        #ifdef OS_OHOS
-		audioRenderInfo = NULL;
-		#else
-        m_pOpenALInfo = NULL;
-		#endif
+        m_audioRenderInfo = NULL;
 		m_fDuration = std::numeric_limits<double>::quiet_NaN();
 	    AdjustAmountOfExternalAllocatedMemory( 534 );
 	    JCMemorySurvey::GetInstance()->newClass( "audio",534,this );
@@ -102,17 +98,10 @@ namespace laya
 	    }
 	    else*/
 	    {
-            #ifdef OS_OHOS
-            if (audioRenderInfo && audioRenderInfo->m_pAudio == this)
+            if (m_audioRenderInfo && m_audioRenderInfo->m_pAudio == this)
             {
-                JCAudioManager::GetInstance()->setWavVolume(audioRenderInfo, m_bMuted ? 0 : m_nVolume);
+                JCAudioManager::GetInstance()->setWavVolume(m_audioRenderInfo, m_bMuted ? 0 : m_nVolume);
             }
-			#else
-            if (m_pOpenALInfo && m_pOpenALInfo->m_pAudio == this)
-            {
-                JCAudioManager::GetInstance()->setWavVolume(m_pOpenALInfo, m_bMuted ? 0 : m_nVolume);
-            }
-			#endif
 	    }
     }
     //------------------------------------------------------------------------------
@@ -362,17 +351,10 @@ namespace laya
 	    }
 	    else*/
 	    {
-           	#ifdef OS_OHOS
-            if (audioRenderInfo && audioRenderInfo->m_pAudio == this)
+            if (m_audioRenderInfo && m_audioRenderInfo->m_pAudio == this)
             {
-                JCAudioManager::GetInstance()->setWavVolume(audioRenderInfo,m_nVolume);
+                JCAudioManager::GetInstance()->setWavVolume(m_audioRenderInfo,m_nVolume);
             }
-			#else
-            if (m_pOpenALInfo && m_pOpenALInfo->m_pAudio == this)
-            {
-                JCAudioManager::GetInstance()->setWavVolume(m_pOpenALInfo,m_nVolume);
-            }
-			#endif
 	    }
     }
     //------------------------------------------------------------------------------
@@ -424,37 +406,25 @@ namespace laya
 	    }
 	    else */if (m_nType == EXT_MP3/* && !m_bIsBackgroundMusic*/)
 	    {			
-#if !defined(OS_LINUX) && !defined(OS_OHOS)//todo
-		    m_pOpenALInfo = JCAudioManager::GetInstance()->playWavMp3( this, m_sSrc, m_sLocalFileName.c_str(), m_nCurrentTime);
+#if !defined(OS_LINUX)
+		    m_audioRenderInfo = JCAudioManager::GetInstance()->playWavMp3( this, m_sSrc, m_sLocalFileName.c_str(), m_nCurrentTime);
 #endif
 	    }
 		else
 		{
-			#ifdef OS_OHOS
-			audioRenderInfo = JCAudioManager::GetInstance()->playWav( this,m_sSrc, m_nType == EXT_OGG, m_nCurrentTime);
-			#else
-			m_pOpenALInfo = JCAudioManager::GetInstance()->playWav(this, m_sSrc, m_nType == EXT_OGG, m_nCurrentTime);
-			#endif
+			m_audioRenderInfo = JCAudioManager::GetInstance()->playWav(this, m_sSrc, m_nType == EXT_OGG, m_nCurrentTime);
 		}
-		#ifdef OS_OHOS
-		if (audioRenderInfo){
-			if (m_bMuted) {
-				JCAudioManager::GetInstance()->setWavVolume(audioRenderInfo, 0);
+		if (m_audioRenderInfo)
+		{
+			if (m_bMuted) 
+			{
+				JCAudioManager::GetInstance()->setWavVolume(m_audioRenderInfo, 0);
 			}
-			else {
-				JCAudioManager::GetInstance()->setWavVolume(audioRenderInfo, m_nVolume);
+			else 
+			{
+				JCAudioManager::GetInstance()->setWavVolume(m_audioRenderInfo, m_nVolume);
 			}
 		}
-		#else
-		if (m_pOpenALInfo){
-			if (m_bMuted) {
-				JCAudioManager::GetInstance()->setWavVolume(m_pOpenALInfo, 0);
-			}
-			else {
-				JCAudioManager::GetInstance()->setWavVolume(m_pOpenALInfo, m_nVolume);
-			}
-		}
-		#endif
 
     }
     //------------------------------------------------------------------------------
@@ -480,20 +450,12 @@ namespace laya
 			}
 
 			m_nState = EXT_STATE_PAUSE;
-			#ifdef OS_OHOS
-            if (audioRenderInfo && audioRenderInfo->m_pAudio == this)
-            {
-                JCAudioManager::GetInstance()->stopWav(audioRenderInfo);
-                audioRenderInfo = NULL;
-            }
-			#else
-            if (m_pOpenALInfo && m_pOpenALInfo->m_pAudio == this)
+            if (m_audioRenderInfo && m_audioRenderInfo->m_pAudio == this)
             {
 				m_nCurrentTime = getCurrentTime();
-                JCAudioManager::GetInstance()->stopWav(m_pOpenALInfo);
-                m_pOpenALInfo = NULL;
+                JCAudioManager::GetInstance()->stopWav(m_audioRenderInfo);
+                m_audioRenderInfo = NULL;
             }
-			#endif
         }
     }
     //------------------------------------------------------------------------------
@@ -516,20 +478,12 @@ namespace laya
 			}
 			m_bShouldStop = false;//正确执行stop了，不需要记录了
 			m_nState = EXT_STATE_STOP;
-			#ifdef OS_OHOS
-            if (audioRenderInfo && audioRenderInfo->m_pAudio == this)
-            {
-                JCAudioManager::GetInstance()->stopWav(audioRenderInfo);
-                audioRenderInfo = NULL;
-            }
-			#else
-            if (m_pOpenALInfo && m_pOpenALInfo->m_pAudio == this)
+            if (m_audioRenderInfo && m_audioRenderInfo->m_pAudio == this)
             {
 				m_nCurrentTime = getCurrentTime();
-                JCAudioManager::GetInstance()->stopWav(m_pOpenALInfo);
-                m_pOpenALInfo = NULL;
+                JCAudioManager::GetInstance()->stopWav(m_audioRenderInfo);
+                m_audioRenderInfo = NULL;
             }
-			#endif
         }
     }
     void JSAudio::setCurrentTime(float nCurrentTime)
@@ -538,17 +492,10 @@ namespace laya
     }
     float JSAudio::getCurrentTime()
     {
-	#ifdef OS_OHOS
-		if (audioRenderInfo && audioRenderInfo->m_pAudio == this)
+		if (m_audioRenderInfo && m_audioRenderInfo->m_pAudio == this)
 		{
-            return JCAudioManager::GetInstance()->getCurrentTime(audioRenderInfo);
+			return JCAudioManager::GetInstance()->getCurrentTime(m_audioRenderInfo);
         }
-	#else
-		if (m_pOpenALInfo && m_pOpenALInfo->m_pAudio == this)
-		{
-			return JCAudioManager::GetInstance()->getCurrentTime(m_pOpenALInfo);
-        }
-	#endif
 		else if (m_nState == EXT_STATE_STOP || m_nState == EXT_STATE_PAUSE)
 		{
 			return m_nCurrentTime;

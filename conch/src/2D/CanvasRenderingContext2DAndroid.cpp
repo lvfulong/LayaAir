@@ -382,4 +382,11 @@ bool CanvasRenderingContext2DAndroid::registerFontFromPath(const std::string &fo
     env->DeleteLocalRef(jPath);
     return ok;
 }
+bool CanvasRenderingContext2DAndroid::registerFontFromBuffer(const std::string& fontName, uint8_t* buff, int len) 
+{
+    JCBuffer buf((char *)buff, len, false, false);
+    std::string tempFilePath = gRedistPath + "/appCache" +  std::string("/tmp_") + fontName;
+    writeFileSync(tempFilePath.c_str(), buf);
+    return CanvasRenderingContext2DAndroid::registerFontFromPath(fontName, tempFilePath);
+}
 } // namespace laya

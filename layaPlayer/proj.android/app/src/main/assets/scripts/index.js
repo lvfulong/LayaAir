@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 window._conchInfo = { version: '2.1.3.1' };
-var _inline = !conchConfig.localizable;
 console.log('======================================================  ');
 console.log('             LAYA CONCH            ');
 console.log('     runtimeversion:' + conchConfig.getRuntimeVersion());
@@ -61,19 +60,12 @@ Object.defineProperty(window, 'screenOrientation', {
 });
 async function loadApp(url) {
     url = url.trim();
-    if (!url || url.length < 2 || url.indexOf('http://stand.alone.version') == 0)
-        _inline = false;
     console.log("loadApp:" + url || "单机版");
     location.setHref(url);
     var urlpath = location.fullpath + '/';
-    try {
-        require("config");
-    }
-    catch (e) { }
+    require("config");
     document.loadCookie();
     registerAllFonts();
-    if (_inline) {
-    }
     var data = await asyncs.loadText(url);
     for (var n = 0; n < 3 && !data; n++) {
         data = await asyncs.loadText(url);
@@ -127,7 +119,7 @@ function getBaseUrl(url) {
 }
 window.loadConchUrl = loadApp;
 var enableDcc2 = true;
-var appUrl = 'http://stand.alone.version/index.js';
+var appUrl = 'http://layabox.com/layanative3.0/demo/index.js';
 var dccHead = '';
 var dccUrl = null;
 var mapToDCC = null;

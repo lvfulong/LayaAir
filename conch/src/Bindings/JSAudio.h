@@ -10,11 +10,7 @@
 
 namespace laya 
 {
-    #ifdef OS_OHOS
-    class OHAudioRenderInfo;
-    #else
-    class OpenALSourceInfo;
-    #endif
+    class AudioRenderInfo;
     class JSAudio : public JCAudioInterface
     {
     public:
@@ -126,11 +122,7 @@ namespace laya
         Persistent		    m_pJSFunctionAudioEnd;	//JS的回调
         Persistent         m_pJSFunctionCanPlay;   //JS的回调
         Persistent         m_pJSFunctionError;     //JS的回调
-        #ifdef OS_OHOS
-        OHAudioRenderInfo* audioRenderInfo;
-        #else
-        OpenALSourceInfo*   m_pOpenALInfo;          //openAL的指针
-        #endif
+        AudioRenderInfo* m_audioRenderInfo;
 
     private:
 
