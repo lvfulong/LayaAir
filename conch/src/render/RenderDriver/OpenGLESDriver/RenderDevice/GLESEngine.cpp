@@ -4,7 +4,6 @@
 #include "GLTextureContext.h"
 #include "JCSystemConfig.h"
 #include "LayaAir/2D/BufferStateBase.h"
-#include "LayaAir/2D/ScreenCanvasContext2D.h"
 #include "render/LayaGL.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLBuffer.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLCapable.h"
