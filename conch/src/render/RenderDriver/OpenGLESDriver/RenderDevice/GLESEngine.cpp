@@ -195,8 +195,8 @@ GLBuffer *GLESEngine::_getbindBuffer(BufferTargetType target)
 
 void GLESEngine::resizeOffScreen(uint32_t width, uint32_t height) {
     //laya::m_pScreenContext
-    if (JCConch::s_pConchRender->m_pScreenContext != nullptr)
-        JCConch::s_pConchRender->m_pScreenContext->size(width, height);
+    //if (JCConch::s_pConchRender->m_pScreenContext != nullptr)
+    //    JCConch::s_pConchRender->m_pScreenContext->size(width, height);
 
 }
 

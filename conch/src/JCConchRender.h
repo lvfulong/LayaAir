@@ -89,7 +89,7 @@ namespace laya
         //ResourceManager<RenderGeometryElement>* m_pRenderGeometryElementManager;
 		//ObjectManager<WordText>*				m_pWordTextManager;
 		ObjectManager<UniformBufferObject>*	    m_pUniformBufferObjectManager;
-        ScreenCanvasContext2D*                  m_pScreenContext = nullptr;
+        //ScreenCanvasContext2D*                  m_pScreenContext = nullptr;
         GLESRenderContext2D*                    m_blitContext = nullptr;
 #if defined(OS_IOS)
         OpenGLBackendiOS*                       m_GfxBackend = { nullptr };

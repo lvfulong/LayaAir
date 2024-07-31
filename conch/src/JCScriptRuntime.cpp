@@ -26,9 +26,6 @@
 #include <zip/JCZip.h>
 #include <Bindings/JSLaunchOptions.h>
 #include <Bindings/JSPromiseRejectionEvent.h>
-#include "LayaAir/2D/RenderState2D.h"
-#include "LayaAir/2D/Context2D.h"
-#include "LayaAir/2D/RenderTexture2D.h"
 //#include "btBulletDynamicsCommon.h"
 #include <cstdarg>
 #include "2D/FontManager.h"

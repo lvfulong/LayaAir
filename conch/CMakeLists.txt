@@ -275,61 +275,10 @@ list(APPEND CONCH_SRC
 	src/imageLib/JCPngImg.cpp
 
 	# LayaAir相关的
-	src/LayaAir/2D/Rectangle.h
-	src/LayaAir/2D/Rectangle.cpp
-	src/LayaAir/2D/RenderTexture2D.h
-	src/LayaAir/2D/RenderTexture2D.cpp
-	src/LayaAir/2D/Context2D.h
-	src/LayaAir/2D/Context2D.cpp
-	src/LayaAir/2D/Matrix.h
-	src/LayaAir/2D/Matrix.cpp
-	src/LayaAir/2D/SubmitBase.h
-	src/LayaAir/2D/SubmitBase.cpp
-	src/LayaAir/2D/Shader2DCompile.h
-	src/LayaAir/2D/Shader2DCompile.cpp
-	src/LayaAir/2D/Shader2DNode.h
-	src/LayaAir/2D/Shader2DNode.cpp
-	src/LayaAir/2D/Shader2D.h
-	src/LayaAir/2D/Shader2D.cpp
-	src/LayaAir/2D/MeshTexture.h
-	src/LayaAir/2D/MeshTexture.cpp
-	src/LayaAir/2D/Mesh2D.h
-	src/LayaAir/2D/Mesh2D.cpp
-	src/LayaAir/2D/VertexBuffer2D.h
-	src/LayaAir/2D/VertexBuffer2D.cpp
-	src/LayaAir/2D/IndexBuffer2D.h
-	src/LayaAir/2D/IndexBuffer2D.cpp
-	src/LayaAir/2D/Buffer2D.h
-	src/LayaAir/2D/Buffer2D.cpp
-	src/LayaAir/2D/BufferStateBase.h
 	src/LayaAir/2D/BufferStateBase.cpp
-	src/LayaAir/2D/Shader2DDefines.h
-	src/LayaAir/2D/Shader2DDefines.cpp
-	src/LayaAir/2D/BlendMode.h
-	src/LayaAir/2D/BlendMode.cpp
-	src/LayaAir/2D/SubmitTexture.h
-	src/LayaAir/2D/SubmitTexture.cpp
-	src/LayaAir/2D/SubmitVG.h
-	src/LayaAir/2D/SubmitVG.cpp
-	src/LayaAir/2D/SubmitCMD.h
-	src/LayaAir/2D/SubmitCMD.cpp
-	src/LayaAir/2D/SubmitTarget.h
-	src/LayaAir/2D/SubmitTarget.cpp
-	src/LayaAir/2D/MeshQuadTexture.h
-	src/LayaAir/2D/MeshQuadTexture.cpp
-	src/LayaAir/2D/RenderState2D.h
-	src/LayaAir/2D/RenderState2D.cpp
-	src/LayaAir/2D/Point.h
-	src/LayaAir/2D/Path.h
-	src/LayaAir/2D/Path.cpp
-	src/LayaAir/2D/MeshVG.h
-	src/LayaAir/2D/MeshVG.cpp
-	src/LayaAir/2D/earcut.hpp
-	src/LayaAir/2D/Bezier.h
-	src/LayaAir/2D/Bezier.cpp
-	src/LayaAir/2D/ScreenCanvasContext2D.h
-	src/LayaAir/2D/ScreenCanvasContext2D.cpp
-	src/LayaAir/2D/Buffer.h
+	src/LayaAir/2D/VertexBuffer2D.cpp
+	src/LayaAir/2D/IndexBuffer2D.cpp
+	src/LayaAir/2D/Buffer2D.cpp
 	src/LayaAir/2D/Buffer.cpp
    
 	src/2D/CanvasRenderingContext2D.h
