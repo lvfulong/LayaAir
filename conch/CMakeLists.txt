@@ -801,7 +801,7 @@ elseif(OS_WINDOWS)
 		gdiplus
 		SDL2
 		SDL2main
-		#mdk
+		video
 	)
 elseif(OS_OHOS)
 	target_link_libraries(${PROJECT_NAME} PUBLIC

@@ -74,7 +74,7 @@ if(OS_WINDOWS)
 		${CMAKE_CURRENT_SOURCE_DIR}/third_party/v8/lib/win64/*.dll 
 		${CMAKE_CURRENT_SOURCE_DIR}/third_party/angle/lib/win64/*.dll
 		${CMAKE_CURRENT_SOURCE_DIR}/third_party/openal/lib/win64/*.dll
-		${CMAKE_CURRENT_SOURCE_DIR}/third_party/mdk/bin/win64/*.dll
+		${CMAKE_CURRENT_SOURCE_DIR}/third_party/ffmpeg/bin/win64/*.dll
 	)
 else()
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
@@ -95,8 +95,16 @@ endif()
 
 add_subdirectory(modules/utils)
 add_subdirectory(modules/binder)
+if(OS_WINDOWS)
+add_subdirectory(modules/video)
+endif()
 add_subdirectory(conch)
 
+
+
+if(OS_WINDOWS)
+add_subdirectory(third_party/ffmpeg ffmpeg)
+endif()
 add_subdirectory(third_party/iniparser iniparser)
 add_subdirectory(third_party/zlib zlib)
 add_subdirectory(third_party/zip zip)
