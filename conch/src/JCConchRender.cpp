@@ -227,7 +227,7 @@ void JCConchRender::end()
     int width, height;
     int last_main_frame_buffer = g_nMainFrameBuffer;
     g_nMainFrameBuffer = g_nRealMainFrameBuffer;
-    m_GfxBackend->getScreenSurfaceSize(&width, &height);
+    //m_GfxBackend->getScreenSurfaceSize(&width, &height);
     m_blitContext->setOffscreenView(width, height);
     m_blitContext->setRenderTarget(nullptr, false, Color::BLACK);
     GLESRenderContext2D::blitscreenElement2D->materialShaderData->setInternalTexture(CommandProperty::SCREENTEXTURE_ID, g_target->m_textures[0]);

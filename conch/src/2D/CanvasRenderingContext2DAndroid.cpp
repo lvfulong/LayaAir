@@ -1,6 +1,10 @@
 #include "CanvasRenderingContext2DAndroid.h"
 #include <utils/Log.h>
 #include <cassert>
+#include <utils/JCBuffer.h>
+#include <utils/JCFileSystem.h>
+
+extern std::string gRedistPath;
 namespace laya
 {
 jclass CanvasRenderingContext2DAndroid::s_cls = nullptr;
