@@ -68,17 +68,18 @@ if(OS_WINDOWS)
 	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT launcher)
 	# set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++latest /W0 /Zc:__cplusplus")
-	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -std=c++17 -O0")
-	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG -std=c++17")
+	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG /std:c++17")
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG /std:c++17")
 	file(GLOB WIN_DLLS 
 		${CMAKE_CURRENT_SOURCE_DIR}/third_party/v8/lib/win64/*.dll 
 		${CMAKE_CURRENT_SOURCE_DIR}/third_party/angle/lib/win64/*.dll
 		${CMAKE_CURRENT_SOURCE_DIR}/third_party/openal/lib/win64/*.dll
+		${CMAKE_CURRENT_SOURCE_DIR}/third_party/mdk/bin/win64/*.dll
 	)
 else()
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -std=c++17")
-	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -std=c++17 -O0")
+	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -std=c++17")
 	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG -std=c++17")
 endif()
 
@@ -111,6 +112,7 @@ endif()
 if(OS_OHOS)
 add_subdirectory(third_party/aki aki_jsbind)
 endif()
+
 add_subdirectory(third_party/openal openal)
 add_subdirectory(third_party/ogg ogg)
 add_subdirectory(third_party/freetype freetype)

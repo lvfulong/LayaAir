@@ -280,6 +280,7 @@ list(APPEND CONCH_SRC
 	src/LayaAir/2D/IndexBuffer2D.cpp
 	src/LayaAir/2D/Buffer2D.cpp
 	src/LayaAir/2D/Buffer.cpp
+	src/LayaAir/2D/ScreenCanvasContext2D.cpp
    
 	src/2D/CanvasRenderingContext2D.h
 	src/2D/CanvasRenderingContext2D.cpp
@@ -800,6 +801,7 @@ elseif(OS_WINDOWS)
 		gdiplus
 		SDL2
 		SDL2main
+		#mdk
 	)
 elseif(OS_OHOS)
 	target_link_libraries(${PROJECT_NAME} PUBLIC

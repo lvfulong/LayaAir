@@ -72,11 +72,7 @@
 #include "JSFileReader.h"
 #include "JSImageBitmap.h"
 
-#include "LayaAir/2D/Shader2D.h"
 #include "LayaAir/3D/JSSubmitScene3D.h"
-#include "LayaAir/3D/JSUniformBufferObject.h"
-#include "2D/FontDescriptionParser.h"
-#include <utils/ColorParser.h>
 #include "2D/FontManager.h"
 #include <stdarg.h>
 #include <render/RenderBindings.h>

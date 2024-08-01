@@ -15,13 +15,11 @@
 #include "JCConch.h"
 #include <Bindings/JSLayaGL.h>
 #include <LayaGL/JCLayaGLDispatch.h>
-#include "../../LayaAir/2D/ScreenCanvasContext2D.h"
-#include "../../LayaAir/2D/RenderTexture2D.h"
-#include "LayaAir/2D/RenderState2D.h"
 #include <render/3D/temp/RenderStateContext.h>
 #include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderContext2D.h>
 #include "render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.h"
 #include <render/Property.h>
+#include "../../LayaAir/2D/ScreenCanvasContext2D.h"
 #if defined(OS_IOS)
 #include "OpenGLBackendiOS.h"
 #elif defined(OS_LINUX)
@@ -112,11 +110,11 @@ namespace laya
         }
         
          auto  func = [this]()->bool {
-            //if (m_pScreenContext)
-            //{
-                //delete m_pScreenContext;
-                //m_pScreenContext = 0;
-            //}
+            if (m_pScreenContext)
+            {
+                delete m_pScreenContext;
+                m_pScreenContext = 0;
+            }
              /*if (m_pWordTextManager)
             {
                 delete m_pWordTextManager;
@@ -195,9 +193,9 @@ void JCConchRender::setMainContextSize(int width,int height)
     postTaskFromJSToRenderAsync([width, height, this]() {
         JCConch::s_pConchRender->m_pLayaGL->m_nMainCanvasWidth = width;
         JCConch::s_pConchRender->m_pLayaGL->m_nMainCanvasHeight = height;
-        //if (m_pScreenContext) {
-            //m_pScreenContext->size(width, height);
-        //}
+        if (m_pScreenContext) {
+            m_pScreenContext->size(width, height);
+        }
     });
 }
 void JCConchRender::start()
@@ -207,12 +205,12 @@ void JCConchRender::start()
         return;
     }
     //webgl mode need restore gl state
-    //if (m_pScreenContext == nullptr)
-    //{
-       // m_pScreenContext = new ScreenCanvasContext2D(LayaGL::m_pWebglEngine);
-    //}
+    if (m_pScreenContext == nullptr)
+    {
+       m_pScreenContext = new ScreenCanvasContext2D(LayaGL::m_pWebglEngine);
+    }
     //m_pMainContext->m_target->start();
-    //m_pScreenContext->startForMainCanvas();
+    m_pScreenContext->startForMainCanvas();
     //m_pMainContext->m_target->clear(0.0f, 0.0f, 0.0f, 1.0f);
 }
 void JCConchRender::end()
@@ -245,7 +243,7 @@ void JCConchRender::swapBuffer()
 }
 void JCConchRender::requestCaptureScreen()
 {
-   // m_pScreenContext->requestCaptureScreen();
+   m_pScreenContext->requestCaptureScreen();
 }
     void JCConchRender::createScreenSurface(void *nativeHandle)
     {
