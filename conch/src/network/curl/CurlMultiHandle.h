@@ -1,6 +1,15 @@
 #ifndef __CURL_MULTI_HANDLE_H__
 #define __CURL_MULTI_HANDLE_H__
+// 这个宏指示是在使用 CURL 的静态库，必须要有
+#define CURL_STATICLIB
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 #include <curl/curl.h>
+#ifdef __cplusplus
+}
+#endif
 #include <vector>
 namespace laya
 {

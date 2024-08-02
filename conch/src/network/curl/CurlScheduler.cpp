@@ -7,6 +7,7 @@ namespace laya
 CurlScheduler::CurlScheduler(long maxConnects, long maxTotalConnections, long maxHostConnections)
     : m_maxConnects(maxConnects), m_maxTotalConnections(maxTotalConnections), m_maxHostConnections(maxHostConnections)
 {
+    startOrWakeUpThread();
 }
 
 bool CurlScheduler::add(CurlSchedulerClient *client)

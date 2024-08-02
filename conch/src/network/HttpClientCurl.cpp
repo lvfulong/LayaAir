@@ -1,6 +1,7 @@
 #include "HttpClientCurl.h"
 #include <utils/JCCommonMethod.h>
 #include <utils/Log.h>
+#include "curl/CurlContext.h"
 
 namespace laya
 {
@@ -14,6 +15,7 @@ HttpClientCurl::HttpClientCurl(const char *url, const char *localFilePath, const
     m_functionOnProgress = functionOnProgress;
 
     m_recieveData.reserve(1024);
+    CurlContext::GetInstance();//≥ı ºªØ
 }
 
 HttpClientCurl::~HttpClientCurl()
@@ -23,8 +25,7 @@ HttpClientCurl::~HttpClientCurl()
 void HttpClientCurl::doRequest()
 {
     // ASSERT(isMainThread());
-
-    // scheduler().add(this);
+    CurlContext::GetInstance().getScheduler().add(this);
 }
 
 void HttpClientCurl::setMethod(const char *method)
@@ -34,6 +35,7 @@ void HttpClientCurl::setMethod(const char *method)
 
 void HttpClientCurl::addHeader(const char *key, const char *value)
 {
+    LOGI("HttpClientCurl addHeader");
 }
 void HttpClientCurl::postData(const char *pData, int nLen)
 {
@@ -52,13 +54,16 @@ void HttpClientCurl::setConnectTimeout(int miliseconds)
 }
 void HttpClientCurl::cancel()
 {
+    LOGI("HttpClientCurl cancel");
 }
 CURL *HttpClientCurl::handle()
 {
+    LOGI("HttpClientCurl handle");
     return nullptr;
 }
 size_t HttpClientCurl::willSendData(char *buffer, size_t blockSize, size_t numberOfBlocks)
 {
+    LOGI("HttpClientCurl willSendData");
     // todo
     return 0;
 }
@@ -109,6 +114,7 @@ void HttpClientCurl::setupPOST()
 void HttpClientCurl::setupPUT()
 {
     // todo
+    LOGI("HttpClientCurl setupPUT");
 }
 CURL *HttpClientCurl::setupTransfer()
 {
@@ -145,8 +151,10 @@ CURL *HttpClientCurl::setupTransfer()
 }
 void HttpClientCurl::didCompleteTransfer(CURLcode)
 {
+    LOGI("HttpClientCurl didCompleteTransfer");
 }
 void HttpClientCurl::didCancelTransfer()
 {
+    LOGI("HttpClientCurl didCancelTransfer");
 }
 } // namespace laya

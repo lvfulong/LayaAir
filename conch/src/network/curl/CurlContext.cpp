@@ -1,10 +1,6 @@
 #include "CurlContext.h"
 #include <utils/Log.h>
 
-const long CurlDefaultMaxConnects{-1};
-const long CurlDefaultMaxTotalConnections{17};
-const long CurlDefaultMaxHostConnections{6};
-
 namespace laya
 {
 CurlContext::CurlContext()
@@ -16,7 +12,11 @@ CurlContext::CurlContext()
     long maxHostConnections{CurlDefaultMaxHostConnections};
     m_scheduler = std::make_unique<CurlScheduler>(maxConnects, maxTotalConnections, maxHostConnections);
 }
-
+CurlContext &CurlContext::GetInstance()
+{
+    static CurlContext sharedInstance;
+    return sharedInstance;
+}
 CurlContext::~CurlContext()
 {
     curl_global_cleanup();

@@ -1,12 +1,12 @@
 #ifndef __HTTP_CLIENT_H__
 #define __HTTP_CLIENT_H__
 
-#include <utils/JCBuffer.h>
 #include <functional>
 #include <memory>
 #include <mutex>
 #include <set>
 #include <string>
+#include <utils/JCBuffer.h>
 
 namespace laya
 {

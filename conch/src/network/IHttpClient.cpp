@@ -1,5 +1,5 @@
-#include <utils/Log.h>
 #include <network/IHttpClient.h>
+#include <utils/Log.h>
 #if defined(OS_ANDROID)
 #include "network/HttpClientAndroid.h"
 #elif defined(OS_IOS)
