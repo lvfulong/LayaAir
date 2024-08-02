@@ -21,6 +21,7 @@
 #include <render/Property.h>
 #include <unordered_map>
 #include "JCConch.h"
+#include "LayaAir/2D/ScreenCanvasContext2D.h"
 namespace laya
 {
 std::unordered_map<std::string, RTShaderDefine> GLESEngine::_defineMap;
@@ -193,9 +194,10 @@ GLBuffer *GLESEngine::_getbindBuffer(BufferTargetType target)
 }
 
 void GLESEngine::resizeOffScreen(uint32_t width, uint32_t height) {
-    //laya::m_pScreenContext
-    //if (JCConch::s_pConchRender->m_pScreenContext != nullptr)
-    //    JCConch::s_pConchRender->m_pScreenContext->size(width, height);
+    if (JCConch::s_pConchRender->m_pScreenContext != nullptr)
+    {
+        JCConch::s_pConchRender->m_pScreenContext->size(width, height);
+    }
 
 }
 
