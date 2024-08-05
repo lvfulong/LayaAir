@@ -372,7 +372,10 @@ namespace laya
         JCConch::s_pConch->m_semaphoreFramePacer.setDataNum(0);
         
         JCConch::s_pConchRender->postTaskFromJSToRenderSync([this]()->bool {
-            JCConch::s_pConchRender->start();
+            if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::OpenGLES) {
+                JCConch::s_pConchRender->start();
+            }
+            
             return true;
         }).get();
         

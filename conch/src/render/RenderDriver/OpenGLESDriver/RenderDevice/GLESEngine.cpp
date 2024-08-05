@@ -285,6 +285,7 @@ void GLESEngine::colorMask(bool r, bool g, bool b, bool a)
 }
 void GLESEngine::clearRenderTexture(uint32_t clearFlag, const Color *clearcolor, float clearDepth)
 {
+
     uint32_t flag = 0;
     // glEnable(GL_SCISSOR_TEST);
     if ((uint32_t)clearFlag & (uint32_t)RenderClearFlag::Color)

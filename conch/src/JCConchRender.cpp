@@ -70,8 +70,6 @@ namespace laya
         if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL) { 
             m_WebGLThread = new WebGLThread();
         }
-
-       
     }
 	JCConchRender::~JCConchRender()
 	{
@@ -220,7 +218,9 @@ void JCConchRender::end()
         return;
     }
 
-
+    if (g_kSystemConfig.m_graphicsAPI != GraphicsAPI::OpenGLES) {
+        return;
+    }
 
     int last_width;
     int last_height;
@@ -229,10 +229,11 @@ void JCConchRender::end()
     g_nMainFrameBuffer = g_nRealMainFrameBuffer;
     //m_GfxBackend->getScreenSurfaceSize(&width, &height);
     m_blitContext->setOffscreenView(g_nInnerWidth, g_nInnerHeight);
-    m_blitContext->setRenderTarget(nullptr, false, Color::BLACK);
+    m_blitContext->setRenderTarget(nullptr, true, Color::BLACK);
     GLESRenderContext2D::blitscreenElement2D->materialShaderData->setInternalTexture(CommandProperty::SCREENTEXTURE_ID, g_target->m_textures[0]);
     m_blitContext->drawRenderElementOne(GLESRenderContext2D::blitscreenElement2D);
     g_nMainFrameBuffer = last_main_frame_buffer;
+
 }
 void JCConchRender::swapBuffer()
 {
@@ -240,6 +241,8 @@ void JCConchRender::swapBuffer()
     {
         m_GfxBackend->swapBuffer();
     }
+
+
 }
 void JCConchRender::requestCaptureScreen()
 {
