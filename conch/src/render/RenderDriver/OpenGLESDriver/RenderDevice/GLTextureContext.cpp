@@ -863,7 +863,7 @@ void GLTextureContext::setTextureDDSData(GLESInternalTex *texture, const DDSText
 
     FormatPixelsParams formatParams;
     getFormatPixelsParams(ddsInfo.format, formatParams);
-    int channelsByte = formatParams.bytesPerPixel / formatParams.channels;
+    int channelsByte = compressed ? 0 : formatParams.bytesPerPixel / formatParams.channels;
     //let dataTypeConstur = formatParams.dataTypedCons;
 
 
