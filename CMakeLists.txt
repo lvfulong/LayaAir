@@ -96,7 +96,7 @@ endif()
 add_subdirectory(modules/utils)
 add_subdirectory(modules/binder)
 if(OS_WINDOWS)
-add_subdirectory(modules/video)
+#add_subdirectory(modules/video)
 endif()
 add_subdirectory(conch)
 

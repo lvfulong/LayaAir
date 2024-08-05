@@ -2,7 +2,7 @@
 #include <string.h>
 #include <video/VideoPlayer.h>
 
-namespace laya
+namespace ffplay
 {
 VideoPlayer::VideoPlayer()
 {
@@ -11,4 +11,4 @@ VideoPlayer::VideoPlayer()
 VideoPlayer::~VideoPlayer()
 {
 }
-} // namespace laya
+} // namespace ffplay

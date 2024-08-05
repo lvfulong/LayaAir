@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace laya
+namespace ffplay
 {
 class VideoPlayer
 {

@@ -11,6 +11,11 @@ set(HEADERS
 
 set(SOURCES
     src/VideoPlayer.cpp
+    src/ffplay.cpp
+    src/ffplay_Clock.cpp
+    src/ffplay_PacketQueue.cpp
+    src/ffplay_FrameQueue.cpp
+    src/ffplay_Decoder.cpp
 )
 
 include_directories(${PUBLIC_HEADER_DIR})
@@ -24,6 +29,8 @@ target_link_libraries(${TARGET}
     avfilter
     avformat
     avutil
+    SDL2
+    SDL2main
 )
 
 target_precompile_headers(${TARGET} PRIVATE ${HEADERS})
