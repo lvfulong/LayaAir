@@ -1,7 +1,7 @@
 #ifndef __CanvasRenderingContext2DAndroid_H__
 #define __CanvasRenderingContext2DAndroid_H__
 #include "CToJavaBridge.h"
-#include "CanvasRenderingContext2D.h"
+#include "2D/CanvasRenderingContext2D.h"
 #include <optional>
 #include <string>
 namespace laya

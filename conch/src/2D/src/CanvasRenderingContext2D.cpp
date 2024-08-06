@@ -1,4 +1,4 @@
-#include "CanvasRenderingContext2D.h"
+#include "2D/CanvasRenderingContext2D.h"
 #if defined(OS_ANDROID)
 #include "CanvasRenderingContext2DAndroid.h"
 #elif defined(OS_WINDOWS)

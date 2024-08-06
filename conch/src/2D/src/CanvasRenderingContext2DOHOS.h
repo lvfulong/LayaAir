@@ -1,7 +1,7 @@
 #ifndef __CanvasRenderingContext2DOHOS_H__
 #define __CanvasRenderingContext2DOHOS_H__
 
-#include "CanvasRenderingContext2D.h"
+#include "2D/CanvasRenderingContext2D.h"
 #include "napi/native_api.h"
 #include <ace/xcomponent/native_interface_xcomponent.h>
 #include <algorithm>

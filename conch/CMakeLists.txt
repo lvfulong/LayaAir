@@ -27,6 +27,7 @@ list(APPEND CONCH_INCLUDE
 	src/WebGL/include
 	src/Backend/src
 	src/Bindings/PhysX
+	src/2D/include
 	${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
@@ -274,13 +275,9 @@ list(APPEND CONCH_SRC
 	src/LayaAir/2D/Buffer.cpp
 	src/LayaAir/2D/ScreenCanvasContext2D.cpp
    
-	src/2D/CanvasRenderingContext2D.h
-	src/2D/CanvasRenderingContext2D.cpp
-	src/2D/FontDescription.h
-	src/2D/FontDescriptionParser.h
-	src/2D/FontDescriptionParser.cpp
-	src/2D/FontManager.h
-	src/2D/FontManager.cpp
+	src/2D/src/CanvasRenderingContext2D.cpp
+	src/2D/src/FontDescriptionParser.cpp
+	src/2D/src/FontManager.cpp
 
 	# 暴露给JS的类
 	src/Bindings/Bullet/LayaBulletExport.h
@@ -470,8 +467,7 @@ if(OS_IOS)
 		src/Backend/src/OpenGLBackendiOS.h
 		src/Backend/src/OpenGLBackendiOS.mm
 		src/network/src/HttpClientiOS.mm
-		src/2D/CanvasRenderingContext2DCG.h
-		src/2D/CanvasRenderingContext2DCG.mm
+		src/2D/src/CanvasRenderingContext2DCG.mm
 		src/Bindings/PhysX/LayaPhysXExport.h
 		src/Bindings/PhysX/LayaPhysXExport.cpp
 		src/Bindings/PhysX/PxWebBindings.cpp
@@ -538,8 +534,7 @@ elseif(OS_WINDOWS)
 		src/Backend/src/OpenGLBackendWinEGL.cpp
 		src/Backend/src/esUtil.h
 		src/Backend/src/esUtil.c
-		src/2D/CanvasRenderingContext2DWin.h
-		src/2D/CanvasRenderingContext2DWin.cpp
+		src/2D/src/CanvasRenderingContext2DWin.cpp
 		src/resource/Audio/JCMp3Parser.h
 		src/resource/Audio/JCMp3Parser.cpp
 		src/Exports.cpp
@@ -567,7 +562,7 @@ elseif(OS_OHOS)
 		src/platform/src/OSOHOS.cpp
 		src/Backend/src/OpenGLBackendOHOSEGL.cpp
 		src/Bindings/Video/JSVideo_OHOSImpl.cpp
-		src/2D/CanvasRenderingContext2DOHOS.cpp
+		src/2D/src/CanvasRenderingContext2DOHOS.cpp
 		src/Bindings/JSOHOSEditBox.cpp
 		src/resource/Audio/JCAudioWavplayer-openharmony.cpp
 		src/Audio/ohos/JCAudioMp3Player.cpp
@@ -584,8 +579,7 @@ elseif(OS_LINUX)
 		src/Backend/src/OpenGLBackendLinuxEGLX11.h
 		src/Backend/src/OpenGLBackendLinuxEGLX11.cpp
 		src/Bindings/Video/JSVideo_LinuxImpl.cpp
-		src/2D/CanvasRenderingContext2DLinux.h
-		src/2D/CanvasRenderingContext2DLinux.cpp
+		src/2D/src/CanvasRenderingContext2DLinux.cpp
 		src/Bindings/JSLinuxEditBox.h
 		src/Bindings/JSLinuxEditBox.cpp
 		src/Exports.cpp
