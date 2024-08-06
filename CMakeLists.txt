@@ -98,6 +98,9 @@ add_subdirectory(modules/binder)
 if(OS_WINDOWS)
 #add_subdirectory(modules/video)
 endif()
+if(CONCH_USE_CURL_DOWNLOAD)
+add_subdirectory(modules/network)
+endif()
 add_subdirectory(conch)
 
 

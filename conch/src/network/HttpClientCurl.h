@@ -1,9 +1,9 @@
 #ifndef __HTTP_CLIENT_CURL_H__
 #define __HTTP_CLIENT_CURL_H__
 
-#include "curl/CurlHandle.h"
-#include "curl/CurlScheduler.h"
-#include "curl/CurlSchedulerClient.h"
+#include <network/curl/CurlHandle.h>
+#include <network/curl/CurlScheduler.h>
+#include <network/curl/CurlSchedulerClient.h>
 #include "network/IHttpClient.h"
 #include <string>
 #include <vector>

@@ -1,4 +1,4 @@
-#include "CurlShareHandle.h"
+#include <network/curl/CurlShareHandle.h>
 #include <utils/Log.h>
 
 namespace laya

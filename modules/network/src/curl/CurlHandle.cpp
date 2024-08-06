@@ -1,5 +1,5 @@
-#include "CurlHandle.h"
-#include "CurlContext.h"
+#include <network/curl/CurlHandle.h>
+#include <network/curl/CurlContext.h>
 #include <utils/Log.h>
 
 namespace laya

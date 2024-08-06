@@ -1,5 +1,5 @@
-#include "CurlScheduler.h"
-#include "CurlSchedulerClient.h"
+#include <network/curl/CurlScheduler.h>
+#include <network/curl/CurlSchedulerClient.h>
 #include <utils/Log.h>
 
 namespace laya

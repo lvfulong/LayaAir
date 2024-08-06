@@ -37,14 +37,6 @@ if(CONCH_USE_OLD_CURL_DOWNLOAD)
 	src/downloadMgr/JCCurlWrap.cpp)
 endif()
 
-if(CONCH_USE_CURL_DOWNLOAD)
-	list(APPEND CONCH_SRC
-	src/network/curl/CurlContext.cpp
-	src/network/curl/CurlHandle.cpp
-	src/network/curl/CurlMultiHandle.cpp
-	src/network/curl/CurlShareHandle.cpp
-	src/network/curl/CurlScheduler.cpp)
-endif()
 
 list(APPEND CONCH_SRC
 
@@ -406,6 +398,7 @@ list(APPEND CONCH_SRC
 	src/JCSystemConfig.cpp
 	src/platform/src/OS.cpp
 )
+
 list(APPEND PLATFORM_HEADER_DIR
 		src/platform/include
 	)
@@ -555,8 +548,12 @@ elseif(OS_WINDOWS)
 		src/resource/Audio/JCAudioWavPlayer.h
 		src/resource/Audio/JCAudioWavPlayer.cpp
 		src/platform/src/OSWin.cpp
-		src/network/HttpClientCurl.cpp
 	)
+	if(CONCH_USE_CURL_DOWNLOAD)
+		list(APPEND CONCH_SRC
+		src/network/HttpClientCurl.cpp
+		)
+	endif()
 elseif(OS_OHOS)
 	list(APPEND PLATFORM_HEADER_DIR
 		src/Backend/src
@@ -635,7 +632,11 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 	LINK_FLAGS_RELEASE "${CONCH_PLATFORM_LINK_FLAGS_RELEASE}"
 	OUTPUT_NAME "conch"
 )
-
+if(CONCH_USE_CURL_DOWNLOAD)
+	set(LINK_LIBS
+		network
+	)
+endif()
 if(OS_ANDROID)
 	# if(ANDROID_ABI STREQUAL "x86")
 	# set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-warn-shared-textrel")
@@ -756,11 +757,13 @@ elseif(OS_IOS)
 	)
 	set_property(TARGET ${PROJECT_NAME} PROPERTY XCODE_ATTRIBUTE_ENABLE_BITCODE "NO")
 elseif(OS_WINDOWS)
+	
 	#target_compile_definitions(${PROJECT_NAME} PRIVATE GL_GLEXT_PROTOTYPES)
 	target_link_libraries(${PROJECT_NAME} PUBLIC
 		#crypt32.lib
 		#WS2_32.lib
 		#wldap32.lib
+		${LINK_LIBS}
 		version.lib
 		Setupapi.lib
 		imm32.lib
@@ -784,7 +787,6 @@ elseif(OS_WINDOWS)
 		vorbis
 		ogg
 		freetype
-		curl
 		v8
 		v8_libbase
 		v8_libplatform
@@ -798,6 +800,7 @@ elseif(OS_WINDOWS)
 		SDL2
 		SDL2main
 		#video
+		curl
 	)
 elseif(OS_OHOS)
 	target_link_libraries(${PROJECT_NAME} PUBLIC

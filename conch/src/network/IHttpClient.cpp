@@ -6,7 +6,7 @@
 #include "network/HttpClientiOS.h"
 #elif defined(OS_OHOS)
 #include "network/HttpClientOHOS.h"
-#elif defined(OS_WINDOWS)
+#elif defined(OS_WINDOWS) && defined(CURL_DOWNLOAD)
 #include "network/HttpClientCurl.h"
 #include "network/curl/CurlContext.h"
 #endif
@@ -22,7 +22,7 @@ IHttpClient::~IHttpClient()
 }
 HttpClientManager::HttpClientManager()
 {
-#if defined(OS_WINDOWS)
+#if defined(OS_WINDOWS) && defined(CURL_DOWNLOAD)
     CurlContext::GetInstance();
 #endif
 }
@@ -39,7 +39,7 @@ IHttpClient *HttpClientManager::createHttpClient(const std::string &url, const s
     httpClient = new HttpClientAndroid(url, localFilePath, functionOnProgress, functionOnEnd, shared_from_this());
 #elif defined(OS_IOS)
     httpClient = new HttpClientiOS(url, localFilePath, functionOnProgress, functionOnEnd, shared_from_this());
-#elif defined(OS_WINDOWS)
+#elif defined(OS_WINDOWS) && defined(CURL_DOWNLOAD)
     httpClient = new HttpClientCurl(url, localFilePath, functionOnProgress, functionOnEnd, shared_from_this());
 #elif defined(OS_OHOS)
     httpClient = new HttpClientOHOS(url, localFilePath, functionOnProgress, functionOnEnd, shared_from_this());
