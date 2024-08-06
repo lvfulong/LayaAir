@@ -7,8 +7,6 @@ import layaair.game.conch.LayaConch5;
 public class ConchJNI
 {
 	public static boolean g_bInitialized=false;
-	//kuo add code for plugin implement 
-	//{{begin
 	public static boolean initNativeLibrary(String library,boolean plugin)
 	{
 		try
@@ -17,22 +15,8 @@ public class ConchJNI
 				System.load(library);
 			}
 			else {
-				/*if (android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1) {//android 4.2
-					System.loadLibrary("c++_shared");
-					System.loadLibrary("v8_libbase.cr");
-					System.loadLibrary("v8.cr");
-					System.loadLibrary("v8_libplatform.cr");
-					System.loadLibrary("avutil");
-					System.loadLibrary("avcodec");
-					System.loadLibrary("swresample");
-					System.loadLibrary("avformat");
-					System.loadLibrary("swscale");
-					System.loadLibrary("avfilter");
-					System.loadLibrary("ffmpeg-invoke");
-				}*/
 				System.loadLibrary(library);
 			}
-			ConchJNI.setLocalizable(LayaConch5.GetInstance().localizable);
 			g_bInitialized = true;
 		}
 		catch(Exception e)
@@ -42,16 +26,12 @@ public class ConchJNI
 		}
 		return g_bInitialized;
 	}
-	//}}end
-	//------------------------------------------------------------------------------
-	//启动前的配置
 	public static native void configSetURL(String p_strUrl);
 	
 	public static native void configSetParamExt(String p_strExt);
 	
-	//初始化
     public static native void InitDLib( AssetManager p_am,int nDownloadThreadNum, String p_strAssetRoot, String p_strCachePath, String p_strAPKExpansionMainPath, String p_strAPKExpansionPatchPath);
-	//touch
+
 	public static native void handleTouch( int type,int id,int x,int y );
 
 	public static native void handleKeyEvent(int keyCode, int actionType);
@@ -111,8 +91,6 @@ public class ConchJNI
 	public static native void networkChanged( int p_nNetworkType );
 
 	public static native void inputChange(int keyCode);
-
-	public static native void setLocalizable(boolean isLocalPackage);
 	//调用Conch的JS函数
 	public static native void callConchJSFunction( String sFunctionName,String sJsonParam,String sCallbackFunction );
 

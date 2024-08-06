@@ -92,4 +92,29 @@ void CurlHandle::enableAllowedProtocols()
     auto allowedProtocols = "file,http,https";
     curl_easy_setopt(m_handle, CURLOPT_PROTOCOLS_STR, allowedProtocols);
 }
+std::optional<long> CurlHandle::getResponseCode()
+{
+    if (!m_handle)
+        return std::nullopt;
+
+    long responseCode;
+    CURLcode errorCode = curl_easy_getinfo(m_handle, CURLINFO_RESPONSE_CODE, &responseCode);
+    if (errorCode != CURLE_OK)
+        return std::nullopt;
+
+    return responseCode;
+}
+
+std::optional<long> CurlHandle::getHttpConnectCode()
+{
+    if (!m_handle)
+        return std::nullopt;
+
+    long httpConnectCode;
+    CURLcode errorCode = curl_easy_getinfo(m_handle, CURLINFO_HTTP_CONNECTCODE, &httpConnectCode);
+    if (errorCode != CURLE_OK)
+        return std::nullopt;
+
+    return httpConnectCode;
+}
 } // namespace laya

@@ -18,7 +18,6 @@
 #include "Audio/JCAudioManager.h"
 #include "JCSystemConfig.h"
 #include "JCConch.h"
-//#include <Performance/JCPerfHUD.h>
 #include <downloadMgr/JCDownloadMgr.h>
 #include <inttypes.h>
 #include <Bindings/JSLayaGL.h>
@@ -223,7 +222,6 @@ namespace laya
         LOGI("js thread started.");
 
         //m_nThreadState = 2;
-        //JCPerfHUD::resetFrame();
 #ifdef JS_V8
         //JSObjNode::s_pListJSObj = new JCSimpList();
 #ifdef JS_V8_DEBUGGER

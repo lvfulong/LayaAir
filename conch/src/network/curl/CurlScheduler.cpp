@@ -148,11 +148,11 @@ void CurlScheduler::finalizeTransfer(CurlSchedulerClient *client, std::function<
     m_activeJobs.erase(client);
 
     auto task = [this, client, completionHandler = std::move(completionHandler)]() {
-        if (client->handle())
+        if (client->getHandle())
         {
             // ASSERT(m_clientMaps.contains(client->handle()));
-            m_clientMaps.erase(client->handle());
-            m_curlMultiHandle->removeHandle(client->handle());
+            m_clientMaps.erase(client->getHandle());
+            m_curlMultiHandle->removeHandle(client->getHandle());
         }
 
         completionHandler();

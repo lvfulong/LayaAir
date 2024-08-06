@@ -509,10 +509,6 @@ declare class ConchVideo {
 }
 
 interface conchConfig{
-	PerfUpdateDt:(id:number,dt:number)=>void;
-	PerfAddData:(id:number,color:number,scale:number,alert:number)=>void;
-	PerfDelData:(id:number)=>void;
-	//PerfShow:(b:number)=>void;
 	//启动程序的时候的额外参数
     //paramExt:string;
     //glCaps:GL_CAPS;
@@ -522,7 +518,6 @@ interface conchConfig{
 	atlasHeight:number;
 	atlasGridSize:number;
 	atlasNum:number;
-    localizable:boolean;
 	pushAtlasMaxWidth:number;
 	maxEJAnimation:number;
     urlIgnoreCase:boolean;
@@ -971,10 +966,6 @@ declare var showAlertOnJsException:(b:boolean)=>void;
 declare var decodeTemp:(s:string)=>string;
 //alert1:(msg:string,func:any)=>void;
 declare var tmGetCurms:()=>number;
-declare var PerfUpdateDt:(id:number, dt:number)=>void;
-declare var PerfAddData:(id:number,color:number,scale:number,alert:number)=>void;
-declare var PerfDelData:(id:number)=>void;
-declare var PerfShow:(b:number)=>void;
 declare var readFileSync:(file:string,encode:string)=>string;
 declare var readBinFileSync:(file:string)=>ArrayBuffer;
 declare var writeStrFileSync:(file:string,content:string)=>void;

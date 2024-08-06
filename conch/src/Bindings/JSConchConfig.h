@@ -70,8 +70,6 @@ namespace laya
 	    static float getScreenInch();
 	    static void setTouchMoveRange( float p_fMM );
 	    static void setScreenOrientation( int p_nOrientation );
-        static bool getLocalable();
-        static void setLocalable(bool isLocalPackage);
         /** 
          *  @brief  如果需要自己管理文件更新的話，就通過url后加版本號的方法，這裡可以設置版本號字符串
          *          只有當searchPart只有版本號字符串的時候，才會緩存到同一個文件。這樣是為了避免一些錯誤
@@ -107,11 +105,6 @@ namespace laya
     
         //打开内存检测
         static void enableMemorySurvey(bool bEnable);
-
-        //打开内部的js和gl条状图
-        static void showInternalPerfBar(int b, float scale);
-
-        static void testSleep(int tm);
 
         static void setImageMisoperationWarningTime( int nSpaceTime );
 

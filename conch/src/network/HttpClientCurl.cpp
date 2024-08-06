@@ -1,12 +1,13 @@
-#include "HttpClientCurl.h"
+﻿#include "HttpClientCurl.h"
 #include "curl/CurlContext.h"
 #include <utils/JCCommonMethod.h>
 #include <utils/Log.h>
 
 namespace laya
 {
-HttpClientCurl::HttpClientCurl(const std::string& url, const std::string&  localFilePath, const onProgressFunction &functionOnProgress,
-                               const onEndFunction &functionOnEnd, std::weak_ptr<HttpClientManager> httpClientManager)
+HttpClientCurl::HttpClientCurl(const std::string &url, const std::string &localFilePath,
+                               const onProgressFunction &functionOnProgress, const onEndFunction &functionOnEnd,
+                               std::weak_ptr<HttpClientManager> httpClientManager)
     : IHttpClient(httpClientManager)
 {
     m_url = encodeURI(url.c_str());
@@ -27,12 +28,12 @@ void HttpClientCurl::doRequest()
     CurlContext::GetInstance().getScheduler().add(this);
 }
 
-void HttpClientCurl::setMethod(const std::string& method)
+void HttpClientCurl::setMethod(const std::string &method)
 {
     m_method = method;
 }
 
-void HttpClientCurl::addHeader(const std::string&  key, const std::string& value)
+void HttpClientCurl::addHeader(const std::string &key, const std::string &value)
 {
     LOGI("HttpClientCurl addHeader");
 }
@@ -55,10 +56,9 @@ void HttpClientCurl::cancel()
 {
     LOGI("HttpClientCurl cancel");
 }
-CURL *HttpClientCurl::handle()
+CURL *HttpClientCurl::getHandle()
 {
-    LOGI("HttpClientCurl handle");
-    return nullptr;
+    return m_curlHandle ? m_curlHandle->handle() : nullptr;
 }
 size_t HttpClientCurl::willSendData(char *buffer, size_t blockSize, size_t numberOfBlocks)
 {
@@ -72,9 +72,28 @@ size_t HttpClientCurl::willSendDataCallback(char *ptr, size_t blockSize, size_t 
 }
 size_t HttpClientCurl::didReceiveHeader(std::string &&header)
 {
-    size_t size = header.size();
-    m_responseHead.append(header.c_str(), size);
-    return size;
+    static constexpr auto emptyLineCRLF = "\r\n";
+    static constexpr auto emptyLineLF = "\n";
+
+    auto receiveBytes = static_cast<size_t>(header.length());
+    if ((header != emptyLineCRLF) && (header != emptyLineLF))
+    {
+        size_t size = header.size();
+        m_responseHead.append(header.c_str(), size);
+        return receiveBytes;
+    }
+
+    long statusCode = 0;
+    if (auto code = m_curlHandle->getResponseCode())
+        statusCode = *code;
+
+    long httpConnectCode = 0;
+    if (auto code = m_curlHandle->getHttpConnectCode())
+        httpConnectCode = *code;
+
+    m_statusCode = statusCode;
+    m_httpConnectCode = httpConnectCode;
+    return receiveBytes;
 }
 size_t HttpClientCurl::didReceiveHeaderCallback(char *ptr, size_t blockSize, size_t numberOfBlocks, void *userData)
 {
@@ -86,11 +105,12 @@ size_t HttpClientCurl::didReceiveData(uint8_t *receivedData, size_t bytes)
     {
         size_t capacity = m_recieveData.capacity();
         size_t size = m_recieveData.size();
-        if (size + bytes < capacity)
+        size_t needSize = size + bytes;
+        if (needSize < capacity)
         {
-            m_recieveData.reserve(capacity << 1);
+            m_recieveData.reserve(needSize << 1);
         }
-        m_recieveData.resize(size + bytes);
+        m_recieveData.resize(needSize);
         memcpy(&m_recieveData[size], receivedData, bytes);
     }
     return bytes;
@@ -136,7 +156,7 @@ CURL *HttpClientCurl::setupTransfer()
         m_curlHandle->setHttpCustomRequest(m_method);
         setupPUT();
     }
-    //curl_easy_setopt(m_curlHandle->handle(), CURLOPT_HTTPHEADER, nullptr);
+    // curl_easy_setopt(m_curlHandle->handle(), CURLOPT_HTTPHEADER, nullptr);
     m_curlHandle->disableServerTrustEvaluation();
     m_curlHandle->setHeaderCallbackFunction(didReceiveHeaderCallback, this);
     m_curlHandle->setWriteCallbackFunction(didReceiveDataCallback, this);
@@ -148,9 +168,44 @@ CURL *HttpClientCurl::setupTransfer()
 
     return m_curlHandle->handle();
 }
-void HttpClientCurl::didCompleteTransfer(CURLcode)
+void HttpClientCurl::didCompleteTransfer(CURLcode result)
 {
-    LOGI("HttpClientCurl didCompleteTransfer");
+    // todo CURLcode ?
+    if (result == CURLE_OK)
+    {
+        LOGI("Download end:%d", m_statusCode); //??
+        bool bBigFile = this->isBigFile();
+        auto bufferBytes = m_recieveData.size();
+        if (bBigFile)
+        {
+            // ���ļ�û��buffer
+            laya::JCBuffer jb;
+            this->m_functionOnEnd(jb, "", "", 0 /*CURLE_OK*/, m_statusCode, m_responseHead);
+        }
+        else
+        {
+            if (bufferBytes <= 0)
+            {
+                laya::JCBuffer jb;
+                this->m_functionOnEnd(jb, "", "", 0 /*CURLE_OK*/, m_statusCode, m_responseHead);
+            }
+            else
+            {
+                char *result = new char[bufferBytes];
+                memcpy(result, m_recieveData.data(), bufferBytes);
+                laya::JCBuffer buf((void *)result, bufferBytes, false, true);
+                // request->m_responseCallback(buf, pCurl->m_strLocalAddr,
+                // pCurl->m_strSvAddr, 0/*CURLE_OK*/, pCurl->m_nResponseCode,
+                // pCurl->m_strResponseHead);
+                this->m_functionOnEnd(buf, "", "", 0 /*CURLE_OK*/, m_statusCode, m_responseHead);
+            }
+        }
+    }
+    else
+    {
+    }
+
+    delete this;
 }
 void HttpClientCurl::didCancelTransfer()
 {

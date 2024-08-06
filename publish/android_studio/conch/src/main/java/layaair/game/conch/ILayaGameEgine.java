@@ -56,9 +56,6 @@ import android.widget.AbsoluteLayout;
 	//	设置是否拦截返回按键 默认不拦截
 	 void setInterceptKey(boolean _intercept);
 
-	 //设置本地包
-	 void setLocalizable(boolean b);
-
 	 void setAlertTitle(String title);
 
 	 void setStringOnBackPressed(String str);

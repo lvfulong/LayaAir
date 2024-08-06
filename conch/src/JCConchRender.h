@@ -12,7 +12,6 @@
 
 #include <resource/JCFileResManager.h>
 #include <utils/thread/JCWorkSemaphore.h>
-//#include <Performance/JCPerfHUD.h>
 #include <LayaGL/JCLayaGL.h>
 #include <utils/thread/JCWorkerThread.h>
 #ifdef OS_IOS

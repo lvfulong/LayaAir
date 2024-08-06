@@ -12,22 +12,23 @@ namespace laya
 class HttpClientCurl : public IHttpClient, public CurlSchedulerClient
 {
   public:
-    HttpClientCurl(const std::string& url, const std::string& localFilePath, const onProgressFunction &functionOnProgress,
-                   const onEndFunction &functionOnEnd, std::weak_ptr<HttpClientManager> httpClientManager);
+    HttpClientCurl(const std::string &url, const std::string &localFilePath,
+                   const onProgressFunction &functionOnProgress, const onEndFunction &functionOnEnd,
+                   std::weak_ptr<HttpClientManager> httpClientManager);
 
     ~HttpClientCurl();
     void doRequest() override;
-    void addHeader(const std::string& key, const std::string& value) override;
+    void addHeader(const std::string &key, const std::string &value) override;
     void postData(const char *pData, int nLen) override;
-    void setMethod(const std::string& method) override;
+    void setMethod(const std::string &method) override;
     void setReadTimeout(int miliseconds) override;
     void setConnectTimeout(int miliseconds) override;
     void cancel() override;
 
   private:
-    CURL *handle() override;
+    CURL * getHandle() override;
     CURL *setupTransfer() override;
-    void didCompleteTransfer(CURLcode) override;
+    void didCompleteTransfer(CURLcode result) override;
     void didCancelTransfer() override;
     void setupPOST();
     void setupPUT();
@@ -48,6 +49,8 @@ class HttpClientCurl : public IHttpClient, public CurlSchedulerClient
     int m_connectTimeout = 0; // todo
     std::string m_responseHead;
     std::vector<uint8_t> m_recieveData;
+    long m_statusCode{0};
+    long m_httpConnectCode{0};
 };
 } // namespace laya
 #endif

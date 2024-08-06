@@ -13,6 +13,7 @@ extern "C"
 #endif
 #include <string>
 #include <vector>
+#include <optional>
 namespace laya
 {
 class CurlHandle
@@ -32,7 +33,9 @@ class CurlHandle
     void setHttpCustomRequest(const std::string &method);
     void setReadCallbackFunction(curl_read_callback callbackFunc, void *userData);
     void setHeaderCallbackFunction(curl_write_callback callbackFunc, void *userData);
-    void CurlHandle::setWriteCallbackFunction(curl_write_callback callbackFunc, void *userData);
+    void setWriteCallbackFunction(curl_write_callback callbackFunc, void *userData);
+    std::optional<long> getResponseCode();
+    std::optional<long> getHttpConnectCode();
 
   private:
     void enableAcceptEncoding();

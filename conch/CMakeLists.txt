@@ -375,10 +375,6 @@ list(APPEND CONCH_SRC
 	src/manager/JCArrayBufferManager.h
 	src/manager/JCArrayBufferManager.cpp
 
-	# Performance/JCPerfHUD.h
-	# Performance/JCPerfHUD.cpp
-	# Performance/JCVBOManager.h
-	# Performance/JCVBOManager.cpp
 	src/resource/JCResource.h
 	src/resource/JCResource.cpp
 	src/resource/JCResManager.h
