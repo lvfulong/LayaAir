@@ -1,13 +1,13 @@
 #include <network/IHttpClient.h>
 #include <utils/Log.h>
 #if defined(OS_ANDROID)
-#include "network/HttpClientAndroid.h"
+#include "HttpClientAndroid.h"
 #elif defined(OS_IOS)
-#include "network/HttpClientiOS.h"
+#include "HttpClientiOS.h"
 #elif defined(OS_OHOS)
-#include "network/HttpClientOHOS.h"
+#include "HttpClientOHOS.h"
 #elif defined(OS_WINDOWS) && defined(CURL_DOWNLOAD)
-#include "network/HttpClientCurl.h"
+#include "HttpClientCurl.h"
 #include "network/curl/CurlContext.h"
 #endif
 

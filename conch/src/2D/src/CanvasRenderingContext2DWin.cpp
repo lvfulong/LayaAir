@@ -9,6 +9,7 @@
 #include <gdiplusenums.h>
 #include <gdiplusgraphics.h>
 #include <map>
+#include "FontDescription.h"
 
 extern HWND g_hWnd;
 extern std::string gRedistPath;
@@ -357,8 +358,8 @@ void CanvasRenderingContext2DWin::setFont(const char *font)
     if (strcmp(font, getFont()) == 0)
         return;
     CanvasRenderingContext2D::setFont(font);
-    bool isBold = m_fontDescription.isBold();
-    bool isItalic = m_fontDescription.isItalic();
+    bool isBold = m_fontDescription->isBold();
+    bool isItalic = m_fontDescription->isItalic();
 
     if (isBold && isItalic)
     {
@@ -381,7 +382,7 @@ void CanvasRenderingContext2DWin::setFont(const char *font)
         delete m_font;
     }
 
-    std::wstring strWide = utf8ToWide(m_fontDescription.m_family);
+    std::wstring strWide = utf8ToWide(m_fontDescription->m_family);
     const Gdiplus::FontFamily* pFontFamily = nullptr;
     auto it = privateFontMap.find(strWide);
     if (it == privateFontMap.end()) {
@@ -398,13 +399,13 @@ void CanvasRenderingContext2DWin::setFont(const char *font)
         if(!pFontFamily){
             pFontFamily = Gdiplus::FontFamily::GenericSansSerif();
         }
-        m_font = new Gdiplus::Font(pFontFamily, m_fontDescription.m_size, m_fontStyle, Gdiplus::UnitPixel);
+        m_font = new Gdiplus::Font(pFontFamily, m_fontDescription->m_size, m_fontStyle, Gdiplus::UnitPixel);
         m_pCustomFamily = nullptr;
     }
     else {
         //family要clone，后面会删掉m_font，会顺便把family也删掉
         m_pCustomFamily = it->second->Clone();
-        m_font = new Gdiplus::Font(m_pCustomFamily, m_fontDescription.m_size, m_fontStyle, Gdiplus::UnitPixel);
+        m_font = new Gdiplus::Font(m_pCustomFamily, m_fontDescription->m_size, m_fontStyle, Gdiplus::UnitPixel);
         //这里是测试GetFamily的，下面的会导致异常，不知道为什么
         //for( int i=0; i<10; i++)
         //{
@@ -413,7 +414,6 @@ void CanvasRenderingContext2DWin::setFont(const char *font)
         //}
 
     }
-    // LOGI("setFont %s %f", font, m_fontDescription.m_size);
 }
 
 bool CanvasRenderingContext2DWin::registerFontFromPath(const std::string &fontName, const std::string &path)

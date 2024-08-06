@@ -7,6 +7,8 @@
 #include <regex>
 #include <utils/JCCrypto.h>
 #include <utils/Log.h>
+#include "FontDescription.h"
+
 extern NativeResourceManager *g_pAssetManager;
 namespace laya
 {
@@ -317,12 +319,12 @@ void CanvasRenderingContext2DOHOS::setFont(const char *font)
     if (strcmp(font, getFont()) == 0)
         return;
     CanvasRenderingContext2D::setFont(font);
-    bool isBold = m_fontDescription.isBold();
-    bool isItalic = m_fontDescription.isItalic();
-    if (!m_fontDescription.m_family.empty())
+    bool isBold = m_fontDescription->isBold();
+    bool isItalic = m_fontDescription->isItalic();
+    if (!m_fontDescription->m_family.empty())
     {
         const char *fontFamilies[1];
-        fontFamilies[0] = m_fontDescription.m_family.c_str();
+        fontFamilies[0] = m_fontDescription->m_family.c_str();
         OH_Drawing_SetTextStyleFontFamilies(m_fontTextStyle, 1, fontFamilies);
         OH_Drawing_SetTextStyleLocale(m_fontTextStyle, "en");
     }
@@ -344,7 +346,7 @@ void CanvasRenderingContext2DOHOS::setFont(const char *font)
     {
         OH_Drawing_SetTextStyleFontStyle(m_fontTextStyle, FONT_STYLE_NORMAL);
     }
-    OH_Drawing_SetTextStyleFontSize(m_fontTextStyle, m_fontDescription.m_size);
+    OH_Drawing_SetTextStyleFontSize(m_fontTextStyle, m_fontDescription->m_size);
 }
 bool CanvasRenderingContext2DOHOS::registerFontFromPath(const std::string &fontName, const std::string &path)
 {

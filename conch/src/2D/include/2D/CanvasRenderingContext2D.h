@@ -1,9 +1,8 @@
 #ifndef __CanvasRenderingContext2D_H__
 #define __CanvasRenderingContext2D_H__
-#include "FontDescription.h"
-#include "FontDescriptionParser.h"
-#include "ImageData.h"
-#include "TextMetrics.h"
+
+#include "2D/ImageData.h"
+#include "2D/TextMetrics.h"
 #include "imageLib/BitmapData.h"
 #include <optional>
 #include <string>
@@ -32,7 +31,7 @@ enum class LineJoin
     Bevel,
     Miter
 };
-
+class FontDescription;
 class CanvasRenderingContext2D
 {
   public:
@@ -54,11 +53,7 @@ class CanvasRenderingContext2D
     {
         return m_font.c_str();
     }
-    virtual void setFont(const char *font)
-    {
-        m_font = font;
-        FontDescriptionParser::parse(font, m_fontDescription);
-    }
+    virtual void setFont(const char* font);
     virtual const BitmapData &getBitmapData() const = 0;
     int getID()
     {
@@ -96,7 +91,7 @@ class CanvasRenderingContext2D
     int m_height;
     int32_t m_id{0};
     std::string m_font;
-    FontDescription m_fontDescription;
+    std::unique_ptr<FontDescription> m_fontDescription;
     TextAlign m_textAlign{TextAlign::Left};
     TextBaseline m_textBaseline{TextBaseline::Alphabetic};
     LineJoin m_lineJoin{LineJoin::Miter};

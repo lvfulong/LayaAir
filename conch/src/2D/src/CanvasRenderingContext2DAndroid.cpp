@@ -3,6 +3,7 @@
 #include <cassert>
 #include <utils/JCBuffer.h>
 #include <utils/JCFileSystem.h>
+#include "FontDescription.h"
 
 extern std::string gRedistPath;
 namespace laya
@@ -349,8 +350,8 @@ void CanvasRenderingContext2DAndroid::setFont(const char *font)
 
     CToJavaBridge::ThreadJNIData *threadJniData = CToJavaBridge::GetInstance()->checkThreadJNI();
     JNIEnv *env = threadJniData->pThreadJNI;
-    bool isBold = m_fontDescription.isBold();
-    bool isItalic = m_fontDescription.isItalic();
+    bool isBold = m_fontDescription->isBold();
+    bool isItalic = m_fontDescription->isItalic();
     int style = 0;
     if (isBold)
     {
@@ -360,8 +361,8 @@ void CanvasRenderingContext2DAndroid::setFont(const char *font)
     {
         style |= 2;
     }
-    setTypeface(env, m_fontDescription.m_family, style);
-    setTextSize(env, m_fontDescription.m_size);
+    setTypeface(env, m_fontDescription->m_family, style);
+    setTextSize(env, m_fontDescription->m_size);
 }
 
 void CanvasRenderingContext2DAndroid::setTextSize(JNIEnv *env, float size)

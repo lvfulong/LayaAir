@@ -11,6 +11,8 @@
 #include "CanvasRenderingContext2DLinux.h"
 #endif
 #include <utils/ColorParser.h>
+#include "FontDescription.h"
+#include "FontDescriptionParser.h"
 #include "JCConch.h"
 
 namespace laya
@@ -40,7 +42,7 @@ CanvasRenderingContext2D *CanvasRenderingContext2D::get(int id)
     }
     return nullptr;
 }
-CanvasRenderingContext2D::CanvasRenderingContext2D(int width, int height) : m_width(width), m_height(height)
+CanvasRenderingContext2D::CanvasRenderingContext2D(int width, int height) : m_width(width), m_height(height), m_fontDescription(std::make_unique<FontDescription>())
 {
     this->m_id = s_id;
     s_id++;
@@ -52,6 +54,11 @@ CanvasRenderingContext2D::~CanvasRenderingContext2D()
 {
     int32_t id = this->m_id;
     JCConch::s_pConchRender->postTaskFromJSToRenderAsync([id]() { s_canvasRenderingContext2DMap.erase(id); });
+}
+void CanvasRenderingContext2D::setFont(const char* font)
+{
+    m_font = font;
+    FontDescriptionParser::parse(font, *m_fontDescription.get());
 }
 void CanvasRenderingContext2D::setDefault()
 {
