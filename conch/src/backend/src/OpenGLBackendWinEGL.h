@@ -1,25 +1,25 @@
 #ifndef __OPENGL_BACKEND_WIN_EGL_H__
 #define __OPENGL_BACKEND_WIN_EGL_H__
 
-#include "Backend.h"
-#include <memory>
+#include "backend/IBackend.h"
 #include "esUtil.h"
+#include <memory>
 
 namespace laya
 {
 
-class OpenGLBackendWinEGL
+class OpenGLBackendWinEGL : public IBackend
 {
   public:
     OpenGLBackendWinEGL();
     ~OpenGLBackendWinEGL();
-    void create(const BackendOptions &options);
-    void makeCurrent();
-    void swapBuffer();
-    void createScreenSurface(void *nativeHandle);
-    void destroyScreenSurface();
-    void onScreenSurfaceResize(int width, int height);
-    void getScreenSurfaceSize(int* width, int* height);
+    void create(const BackendOptions &options) override;
+    void makeCurrent() override;
+    void swapBuffer() override;
+    void createScreenSurface(void *nativeHandle) override;
+    void destroyScreenSurface() override;
+    void onScreenSurfaceResize(int width, int height) override;
+    void getScreenSurfaceSize(int *width, int *height);
     void preserveBackBuffer();
     void resetRenderStates();
 

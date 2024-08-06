@@ -25,7 +25,7 @@ set(PUBLIC_HEADER_DIR include)
 list(APPEND CONCH_INCLUDE
 	./include
 	src/WebGL/include
-	src/Backend/src
+	src/backend/include
 	src/Bindings/PhysX
 	src/2D/include
 	${CMAKE_CURRENT_SOURCE_DIR}/src
@@ -394,11 +394,13 @@ list(APPEND CONCH_SRC
 	src/JCSystemConfig.h
 	src/JCSystemConfig.cpp
 	src/platform/src/OS.cpp
+	src/backend/src/IBackend.cpp
 )
 
 list(APPEND PLATFORM_HEADER_DIR
 		src/platform/include
 		src/network/include
+		src/backend/include
 	)
 if(OS_IOS)
 	list(APPEND PLATFORM_HEADER_DIR
@@ -410,8 +412,6 @@ if(OS_IOS)
 		src/Audio/ios/JCAudioMp3Player.h
 		src/downloadCache/JCIosFileSource.h
 		src/downloadCache/JCIosFileSource.cpp
-		src/IOSFreetype/JCIOSFreeType.h
-		src/IOSFreetype/JCIOSFreeType.cpp
 		src/Bindings/Video/JSVideo_IOSImpl.cpp
 		src/Bindings/JSIOSEditBox.h
 		src/Bindings/JSIOSEditBox.cpp
@@ -464,8 +464,7 @@ if(OS_IOS)
 		src/platform/iOS/Utils.h
 		src/platform/iOS/Utils.mm
 		src/platform/src/OSiOS.cpp
-		src/Backend/src/OpenGLBackendiOS.h
-		src/Backend/src/OpenGLBackendiOS.mm
+		src/backend/src/OpenGLBackendiOS.mm
 		src/network/src/HttpClientiOS.mm
 		src/2D/src/CanvasRenderingContext2DCG.mm
 		src/Bindings/PhysX/LayaPhysXExport.h
@@ -483,7 +482,6 @@ elseif(OS_ANDROID)
 		src/platform/Android
 		src/OpenAL/include
 		src/OpenAL/OpenAL32/Include
-		src/Backend/src
 	)
 	list(APPEND CONCH_SRC
 	src/Audio/android/JCAudioMp3Media.cpp
@@ -500,8 +498,7 @@ elseif(OS_ANDROID)
 		src/Bindings/Video/JSVideo_AndroidImpl.cpp
 		src/Bindings/JSAndroidEditBox.h
 		src/Bindings/JSAndroidEditBox.cpp
-		src/Backend/src/OpenGLBackendAndroidEGL.h
-		src/Backend/src/OpenGLBackendAndroidEGL.cpp
+		src/backend/src/OpenGLBackendAndroidEGL.cpp
 		src/2D/CanvasRenderingContext2DAndroid.h
 		src/2D/CanvasRenderingContext2DAndroid.cpp
 		src/Bindings/PhysX/LayaPhysXExport.h
@@ -530,10 +527,8 @@ elseif(OS_WINDOWS)
 		src/Bindings/Video/JSVideo_Win32Impl.cpp
 		src/Bindings/JSWindowEditBox.h
 		src/Bindings/JSWindowEditBox.cpp
-		src/Backend/src/OpenGLBackendWinEGL.h
-		src/Backend/src/OpenGLBackendWinEGL.cpp
-		src/Backend/src/esUtil.h
-		src/Backend/src/esUtil.c
+		src/backend/src/OpenGLBackendWinEGL.cpp
+		src/backend/src/esUtil.c
 		src/2D/src/CanvasRenderingContext2DWin.cpp
 		src/resource/Audio/JCMp3Parser.h
 		src/resource/Audio/JCMp3Parser.cpp
@@ -550,7 +545,6 @@ elseif(OS_WINDOWS)
 	endif()
 elseif(OS_OHOS)
 	list(APPEND PLATFORM_HEADER_DIR
-		src/Backend/src
 	)
 	list(APPEND CONCH_SRC
 		src/platform/ohos/napi/helper/NapiHelper.cpp
@@ -560,7 +554,7 @@ elseif(OS_OHOS)
     	src/platform/ohos/napi/modules/TouchesNapi.cpp
     	src/platform/ohos/napi/modules/VideoPlayerNapi.cpp
 		src/platform/src/OSOHOS.cpp
-		src/Backend/src/OpenGLBackendOHOSEGL.cpp
+		src/backend/src/OpenGLBackendOHOSEGL.cpp
 		src/Bindings/Video/JSVideo_OHOSImpl.cpp
 		src/2D/src/CanvasRenderingContext2DOHOS.cpp
 		src/Bindings/JSOHOSEditBox.cpp
@@ -571,13 +565,11 @@ elseif(OS_OHOS)
 	)
 elseif(OS_LINUX)
 	list(APPEND PLATFORM_HEADER_DIR
-		src/Backend/src
 	)
 	list(APPEND CONCH_SRC
 		src/downloadCache/JCIosFileSource.h
 		src/downloadCache/JCIosFileSource.cpp
-		src/Backend/src/OpenGLBackendLinuxEGLX11.h
-		src/Backend/src/OpenGLBackendLinuxEGLX11.cpp
+		src/backend/src/OpenGLBackendLinuxEGLX11.cpp
 		src/Bindings/Video/JSVideo_LinuxImpl.cpp
 		src/2D/src/CanvasRenderingContext2DLinux.cpp
 		src/Bindings/JSLinuxEditBox.h

@@ -1,7 +1,7 @@
 #ifndef __OPENGL_BACKEND_OHOS_EGL_H__
 #define __OPENGL_BACKEND_OHOS_EGL_H__
 
-#include "Backend.h"
+#include "backend/IBackend.h"
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 #include <GLES3/gl3.h>
@@ -9,17 +9,17 @@
 namespace laya
 {
 
-class OpenGLBackendOHOSEGL
+class OpenGLBackendOHOSEGL : public IBackend
 {
   public:
     OpenGLBackendOHOSEGL();
     ~OpenGLBackendOHOSEGL();
-    void create(const BackendOptions &options);
-    void makeCurrent();
-    void swapBuffer();
-    void createScreenSurface(void *nativeHandle);
-    void destroyScreenSurface();
-    void onScreenSurfaceResize(int width, int height);
+    void create(const BackendOptions &optionsoverride);
+    void makeCurrent() override;
+    void swapBuffer() override;
+    void createScreenSurface(void *nativeHandle) override;
+    void destroyScreenSurface() override;
+    void onScreenSurfaceResize(int width, int height) override;
     void preserveBackBuffer();
     void resetRenderStates();
 

@@ -20,17 +20,6 @@
 #include "render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.h"
 #include <render/Property.h>
 #include "../../LayaAir/2D/ScreenCanvasContext2D.h"
-#if defined(OS_IOS)
-#include "OpenGLBackendiOS.h"
-#elif defined(OS_LINUX)
-#include "OpenGLBackendLinuxEGLX11.h"
-#elif defined(OS_ANDROID)
-#include "OpenGLBackendAndroidEGL.h"
-#elif defined(OS_WINDOWS)
-#include "OpenGLBackendWinEGL.h"
-#elif defined(OS_OHOS)
-#include "OpenGLBackendOHOSEGL.h"
-#endif
 #include "render/LayaGL.h"
 extern int g_nInnerHeight;
 extern int g_nInnerWidth;
@@ -45,7 +34,6 @@ namespace laya
 	{
         m_pRenderThread = NULL;
         m_nFrameCount = 0;
-		m_fShowPerfScale = 0;
         m_pFileResManager = (JCFileResManager*)pFileResManager;
         m_blitContext = new GLESRenderContext2D();
         m_blitContext->pipelineMode = "Forward";
@@ -296,18 +284,7 @@ void JCConchRender::requestCaptureScreen()
     {
         auto  func = [this, options]() { 
                         if (m_GfxBackend == nullptr) {
- #if defined(OS_IOS)
-                m_GfxBackend = new OpenGLBackendiOS();
-#elif defined(OS_LINUX)
-                m_GfxBackend = new OpenGLBackendLinuxEGLX11();
-#elif defined(OS_ANDROID)
-                m_GfxBackend = new OpenGLBackendAndroidEGL();
-#elif defined(OS_WINDOWS)
-                m_GfxBackend = new OpenGLBackendWinEGL();
-#elif defined(OS_OHOS)
-                m_GfxBackend = new OpenGLBackendOHOSEGL();
-#endif
-                m_GfxBackend->create(options);
+                m_GfxBackend = laya::createBackend(options);
             }
         };
         if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL) {
