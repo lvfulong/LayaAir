@@ -233,7 +233,7 @@ list(APPEND CONCH_SRC
 	src/downloadMgr/JCDownloadMgr.cpp
 	src/downloadMgr/JCHttpHeader.h
 	src/downloadMgr/JCHttpHeader.cpp
-	src/network/IHttpClient.cpp
+	src/network/src/IHttpClient.cpp
 	src/WebGL/include/WebGL/JCGpuProgram.h
 	src/WebGL/source/JCGpuProgram.cpp
 	src/WebGL/include/WebGL/WebGLThread.h
@@ -401,6 +401,7 @@ list(APPEND CONCH_SRC
 
 list(APPEND PLATFORM_HEADER_DIR
 		src/platform/include
+		src/network/include
 	)
 if(OS_IOS)
 	list(APPEND PLATFORM_HEADER_DIR
@@ -468,8 +469,7 @@ if(OS_IOS)
 		src/platform/src/OSiOS.cpp
 		src/Backend/src/OpenGLBackendiOS.h
 		src/Backend/src/OpenGLBackendiOS.mm
-		src/network/HttpClientiOS.h
-		src/network/HttpClientiOS.mm
+		src/network/src/HttpClientiOS.mm
 		src/2D/CanvasRenderingContext2DCG.h
 		src/2D/CanvasRenderingContext2DCG.mm
 		src/Bindings/PhysX/LayaPhysXExport.h
@@ -496,8 +496,7 @@ elseif(OS_ANDROID)
 		# Audio/android/JCAudioMp3Player.cpp
 		# Audio/android/JCAudioMp3Player.h
 		src/downloadCache/JCAndroidFileSource.h
-		src/network/HttpClientAndroid.h
-		src/network/HttpClientAndroid.cpp
+		src/network/src/HttpClientAndroid.cpp
 		src/platform/Android/JNIFun.cpp
 		src/platform/Android/CToJavaBridge.h
 		src/platform/Android/CToJavaBridge.cpp
@@ -551,7 +550,7 @@ elseif(OS_WINDOWS)
 	)
 	if(CONCH_USE_CURL_DOWNLOAD)
 		list(APPEND CONCH_SRC
-		src/network/HttpClientCurl.cpp
+		src/network/src/HttpClientCurl.cpp
 		)
 	endif()
 elseif(OS_OHOS)
@@ -572,7 +571,7 @@ elseif(OS_OHOS)
 		src/Bindings/JSOHOSEditBox.cpp
 		src/resource/Audio/JCAudioWavplayer-openharmony.cpp
 		src/Audio/ohos/JCAudioMp3Player.cpp
-		src/network/HttpClientOHOS.cpp
+		src/network/src/HttpClientOHOS.cpp
 		src/resource/Audio/JCMp3Parser.cpp
 	)
 elseif(OS_LINUX)
