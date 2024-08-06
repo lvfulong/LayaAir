@@ -1,14 +1,34 @@
 #include "CurlHandle.h"
+#include "CurlContext.h"
 #include <utils/Log.h>
 
 namespace laya
 {
 CurlHandle::CurlHandle()
 {
+    m_handle = curl_easy_init();
+    curl_easy_setopt(m_handle, CURLOPT_ERRORBUFFER, m_errorBuffer);
+    curl_easy_setopt(m_handle, CURLOPT_NOSIGNAL, 1L);
+    curl_easy_setopt(m_handle, CURLOPT_COOKIEFILE, nullptr);
+
+    enableShareHandle();
+    enableAcceptEncoding();
+    enableAllowedProtocols();
+    // enableAltSvc();
+
+    // setDnsCacheTimeout(CurlContext::singleton().dnsCacheTimeout());
+    // setConnectTimeout(CurlContext::singleton().connectTimeout());
+
+    // enableProxyIfExists();
 }
 
 CurlHandle::~CurlHandle()
 {
+    if (m_handle)
+    {
+        curl_easy_cleanup(m_handle);
+        m_handle = nullptr;
+    }
 }
 void CurlHandle::setURL(const std::string &url)
 {
@@ -57,5 +77,19 @@ void CurlHandle::setWriteCallbackFunction(curl_write_callback callbackFunc, void
 {
     curl_easy_setopt(m_handle, CURLOPT_WRITEFUNCTION, callbackFunc);
     curl_easy_setopt(m_handle, CURLOPT_WRITEDATA, userData);
+}
+void CurlHandle::enableShareHandle()
+{
+    curl_easy_setopt(m_handle, CURLOPT_SHARE, CurlContext::GetInstance().getShareHandle().handle());
+}
+void CurlHandle::enableAcceptEncoding()
+{
+    curl_easy_setopt(m_handle, CURLOPT_ACCEPT_ENCODING, "");
+}
+void CurlHandle::enableAllowedProtocols()
+{
+    // auto allowedProtocols = "file,ftp,ftps,http,https";
+    auto allowedProtocols = "file,http,https";
+    curl_easy_setopt(m_handle, CURLOPT_PROTOCOLS_STR, allowedProtocols);
 }
 } // namespace laya

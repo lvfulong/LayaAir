@@ -8,6 +8,7 @@
 #include "network/HttpClientOHOS.h"
 #elif defined(OS_WINDOWS)
 #include "network/HttpClientCurl.h"
+#include "network/curl/CurlContext.h"
 #endif
 
 namespace laya
@@ -21,12 +22,15 @@ IHttpClient::~IHttpClient()
 }
 HttpClientManager::HttpClientManager()
 {
+#if defined(OS_WINDOWS)
+    CurlContext::GetInstance();
+#endif
 }
 HttpClientManager::~HttpClientManager()
 {
     cancelAllHttpClients();
 }
-IHttpClient *HttpClientManager::createHttpClient(const char *url, const char *localFilePath,
+IHttpClient *HttpClientManager::createHttpClient(const std::string &url, const std::string &localFilePath,
                                                  const IHttpClient::onProgressFunction &functionOnProgress,
                                                  const IHttpClient::onEndFunction &functionOnEnd)
 {

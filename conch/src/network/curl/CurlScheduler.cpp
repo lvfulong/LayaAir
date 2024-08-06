@@ -80,6 +80,8 @@ void CurlScheduler::startOrWakeUpThread()
 
     // todo thread name
     m_thread = std::thread([this]() { workerThread(); });
+    // wait until loop start
+    m_signal.wait();
 }
 void CurlScheduler::wakeUpThreadIfPossible()
 {
@@ -171,7 +173,7 @@ void CurlScheduler::workerThread()
         m_curlMultiHandle->setMaxTotalConnections(m_maxTotalConnections);
         m_curlMultiHandle->setMaxHostConnections(m_maxHostConnections);
     }
-
+    m_signal.signal();
     while (true)
     {
         {

@@ -1,21 +1,20 @@
 #include "HttpClientCurl.h"
+#include "curl/CurlContext.h"
 #include <utils/JCCommonMethod.h>
 #include <utils/Log.h>
-#include "curl/CurlContext.h"
 
 namespace laya
 {
-HttpClientCurl::HttpClientCurl(const char *url, const char *localFilePath, const onProgressFunction &functionOnProgress,
+HttpClientCurl::HttpClientCurl(const std::string& url, const std::string&  localFilePath, const onProgressFunction &functionOnProgress,
                                const onEndFunction &functionOnEnd, std::weak_ptr<HttpClientManager> httpClientManager)
     : IHttpClient(httpClientManager)
 {
-    m_url = encodeURI(url);
+    m_url = encodeURI(url.c_str());
     m_localFilePath = localFilePath;
     m_functionOnEnd = functionOnEnd;
     m_functionOnProgress = functionOnProgress;
 
     m_recieveData.reserve(1024);
-    CurlContext::GetInstance();//³õÊ¼»¯
 }
 
 HttpClientCurl::~HttpClientCurl()
@@ -28,12 +27,12 @@ void HttpClientCurl::doRequest()
     CurlContext::GetInstance().getScheduler().add(this);
 }
 
-void HttpClientCurl::setMethod(const char *method)
+void HttpClientCurl::setMethod(const std::string& method)
 {
     m_method = method;
 }
 
-void HttpClientCurl::addHeader(const char *key, const char *value)
+void HttpClientCurl::addHeader(const std::string&  key, const std::string& value)
 {
     LOGI("HttpClientCurl addHeader");
 }
@@ -137,7 +136,7 @@ CURL *HttpClientCurl::setupTransfer()
         m_curlHandle->setHttpCustomRequest(m_method);
         setupPUT();
     }
-
+    //curl_easy_setopt(m_curlHandle->handle(), CURLOPT_HTTPHEADER, nullptr);
     m_curlHandle->disableServerTrustEvaluation();
     m_curlHandle->setHeaderCallbackFunction(didReceiveHeaderCallback, this);
     m_curlHandle->setWriteCallbackFunction(didReceiveDataCallback, this);

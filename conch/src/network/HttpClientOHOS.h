@@ -10,14 +10,14 @@ namespace laya
 class HttpClientOHOS : public IHttpClient
 {
   public:
-    HttpClientOHOS(const char *url, const char *localFilePath, const onProgressFunction &functionOnProgress,
+    HttpClientOHOS(const std::string&, const std::string&  localFilePath, const onProgressFunction &functionOnProgress,
                    const onEndFunction &functionOnEnd, std::weak_ptr<HttpClientManager> httpClientManager);
 
     ~HttpClientOHOS();
     void doRequest() override;
-    void addHeader(const char *key, const char *value) override;
+    void addHeader(const std::string&  key, const std::string& value) override;
     void postData(const char *pData, int nLen) override;
-    void setMethod(const char *method) override;
+    void setMethod(const std::string& method) override;
     void setReadTimeout(int miliseconds) override;
     void setConnectTimeout(int miliseconds) override;
     void cancel() override;

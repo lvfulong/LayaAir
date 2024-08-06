@@ -103,11 +103,11 @@ class HttpURLSessionDownloaderImpl
 
     void getResponseData(char **ppData, int &length, const char *localFilePath, int64_t id);
 
-    void addHeader(const char *key, const char *value);
+    void addHeader(const std::string& key, const std::string& value);
 
     void postData(const char *pData, int nLen);
 
-    void setMethod(const char *method);
+    void setMethod(const std::string& method);
 
     int getResponseCode();
 
@@ -174,7 +174,7 @@ HttpURLSessionDownloaderImpl::~HttpURLSessionDownloaderImpl()
     m_task = nil;
 }
 
-void HttpURLSessionDownloaderImpl::addHeader(const char *key, const char *value)
+void HttpURLSessionDownloaderImpl::addHeader(const std::string& key, const std::string& value)
 {
     m_headers.insert(std::make_pair(key, value));
 }
@@ -185,7 +185,7 @@ void HttpURLSessionDownloaderImpl::postData(const char *pData, int nLen)
     m_nLen = nLen;
 }
 
-void HttpURLSessionDownloaderImpl::setMethod(const char *method)
+void HttpURLSessionDownloaderImpl::setMethod(const std::string& method)
 {
     m_method = method;
 }
@@ -323,7 +323,7 @@ void HttpURLSessionDownloaderImpl::cancel()
         [m_task cancel];
     }
 }
-HttpClientiOS::HttpClientiOS(const char *url, const char *localFilePath, const onProgressFunction &functionOnProgress,
+HttpClientiOS::HttpClientiOS(const std::string& url, const std::string&localFilePath, const onProgressFunction &functionOnProgress,
                              const onEndFunction &functionOnEnd, std::weak_ptr<HttpClientManager> httpClientManager)
     : IHttpClient(httpClientManager)
 {
@@ -344,7 +344,7 @@ void HttpClientiOS::doRequest()
     m_impl->doRequest();
 }
 
-void HttpClientiOS::addHeader(const char *key, const char *value)
+void HttpClientiOS::addHeader(const std::string& key, const std::string& value)
 {
     m_impl->addHeader(key, value);
 }
@@ -353,7 +353,7 @@ void HttpClientiOS::postData(const char *pData, int nLen)
     m_impl->postData(pData, nLen);
 }
 
-void HttpClientiOS::setMethod(const char *method)
+void HttpClientiOS::setMethod(const std::string& method)
 {
     m_impl->setMethod(method);
 }

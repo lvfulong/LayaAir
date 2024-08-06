@@ -10,15 +10,16 @@ namespace laya
 class HttpClientAndroid : public IHttpClient
 {
   public:
-    HttpClientAndroid(const char *url, const char *localFilePath, const onProgressFunction &functionOnProgress,
-                      const onEndFunction &functionOnEnd, std::weak_ptr<HttpClientManager> httpClientManager);
+    HttpClientAndroid(const std::string &url, const std::string &localFilePath,
+                      const onProgressFunction &functionOnProgress, const onEndFunction &functionOnEnd,
+                      std::weak_ptr<HttpClientManager> httpClientManager);
 
     ~HttpClientAndroid();
     static void addStaticMethod(JNIEnv *env, const char *className);
     void doRequest() override;
-    void addHeader(const char *key, const char *value) override;
+    void addHeader(const std::string &key, const std::string &value) override;
     void postData(const char *pData, int nLen) override;
-    void setMethod(const char *method) override;
+    void setMethod(const std::string &method) override;
     void setReadTimeout(int miliseconds) override;
     void setConnectTimeout(int miliseconds) override;
     void cancel() override;

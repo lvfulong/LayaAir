@@ -8,6 +8,7 @@
 #include <optional>
 #include <set>
 #include <unordered_map>
+#include <utils/thread/Signal.h>
 #include <vector>
 
 namespace laya
@@ -50,6 +51,7 @@ class CurlScheduler
     std::optional<CurlMultiHandle> m_curlMultiHandle;
     std::mutex m_multiHandleMutex;
     std::thread m_thread;
+    AutoResetSignal m_signal;
 };
 } // namespace laya
 #endif

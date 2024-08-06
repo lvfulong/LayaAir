@@ -11,11 +11,12 @@
 namespace laya
 {
 static int curIndex = 0;
-HttpClientOHOS::HttpClientOHOS(const char *url, const char *localFilePath, const onProgressFunction &functionOnProgress,
-                               const onEndFunction &functionOnEnd, std::weak_ptr<HttpClientManager> httpClientManager)
+HttpClientOHOS::HttpClientOHOS(const std::string &url, const std::string &localFilePath,
+                               const onProgressFunction &functionOnProgress, const onEndFunction &functionOnEnd,
+                               std::weak_ptr<HttpClientManager> httpClientManager)
     : IHttpClient(httpClientManager)
 {
-    m_url = encodeURI(url);
+    m_url = encodeURI(url.c_str());
     m_localFilePath = localFilePath;
     m_functionOnEnd = functionOnEnd;
     m_functionOnProgress = functionOnProgress;
@@ -231,7 +232,8 @@ napi_value HttpClientOHOS_onResponse(napi_env env, napi_callback_info info)
         return nullptr;
     }
     status = napi_typeof(env, args[1], &valuetype);
-    if (status != napi_ok) {
+    if (status != napi_ok)
+    {
         return nullptr;
     }
     if (!(is_arraybuffer || valuetype == napi_null || valuetype == napi_undefined))

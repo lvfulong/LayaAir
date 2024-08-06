@@ -31,7 +31,15 @@ class CurlContext
     CurlContext();
     ~CurlContext();
     static CurlContext &GetInstance();
-    CurlScheduler& getScheduler() { return *m_scheduler; }
+    CurlScheduler &getScheduler()
+    {
+        return *m_scheduler;
+    }
+    const CurlShareHandle &getShareHandle()
+    {
+        return m_shareHandle;
+    }
+
   private:
     void initShareHandle();
     CurlShareHandle m_shareHandle;

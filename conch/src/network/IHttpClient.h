@@ -20,9 +20,9 @@ class IHttpClient
     }
     virtual ~IHttpClient();
     virtual void doRequest() = 0;
-    virtual void addHeader(const char *key, const char *value) = 0;
+    virtual void addHeader(const std::string& key, const std::string&  value) = 0;
     virtual void postData(const char *pData, int nLen) = 0;
-    virtual void setMethod(const char *method) = 0;
+    virtual void setMethod(const std::string& method) = 0;
     virtual void setReadTimeout(int miliseconds) = 0;
     virtual void setConnectTimeout(int miliseconds) = 0;
     virtual void cancel() = 0;
@@ -46,7 +46,7 @@ class HttpClientManager : public std::enable_shared_from_this<HttpClientManager>
   public:
     HttpClientManager();
     ~HttpClientManager();
-    IHttpClient *createHttpClient(const char *url, const char *localFilePath,
+    IHttpClient *createHttpClient(const std::string& url, const std::string& localFilePath,
                                   const IHttpClient::onProgressFunction &functionOnProgress,
                                   const IHttpClient::onEndFunction &functionOnEnd);
     void cancelAllHttpClients();

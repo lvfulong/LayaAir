@@ -1,6 +1,6 @@
 #include "HttpClientAndroid.h"
-#include <utils/Log.h>
 #include <utils/JCCommonMethod.h>
+#include <utils/Log.h>
 
 static const char *s_className = "layaair/game/browser/LayaHttpClient";
 
@@ -33,12 +33,12 @@ void HttpClientAndroid::addStaticMethod(JNIEnv *env, const char *className)
     s_cancel = env->GetStaticMethodID(s_cls, "cancel", "(Llayaair/game/browser/LayaHttpClient;)V");
 }
 
-HttpClientAndroid::HttpClientAndroid(const char *url, const char *localFilePath,
+HttpClientAndroid::HttpClientAndroid(const std::string &url, const std::string &localFilePath,
                                      const onProgressFunction &functionOnProgress, const onEndFunction &functionOnEnd,
                                      std::weak_ptr<HttpClientManager> httpClientManager)
     : IHttpClient(httpClientManager)
 {
-    m_url = encodeURI(url);
+    m_url = encodeURI(url.c_str());
     m_localFilePath = localFilePath;
     m_functionOnEnd = functionOnEnd;
     m_functionOnProgress = functionOnProgress;
@@ -75,19 +75,19 @@ void HttpClientAndroid::doRequest()
     env->CallStaticVoidMethod(s_cls, s_doRequest, m_downloader);
 }
 
-void HttpClientAndroid::setMethod(const char *method)
+void HttpClientAndroid::setMethod(const std::string &method)
 {
     // static const char* s_methodSign =
     // "(Llayaair/game/browser/LayaHttpClient;Ljava/lang/String;)V";
 }
 
-void HttpClientAndroid::addHeader(const char *key, const char *value)
+void HttpClientAndroid::addHeader(const std::string &key, const std::string &value)
 {
     CToJavaBridge::ThreadJNIData *threadJniData = CToJavaBridge::GetInstance()->checkThreadJNI();
     JNIEnv *env = threadJniData->pThreadJNI;
 
-    jstring jKey = env->NewStringUTF(key);
-    jstring jVal = env->NewStringUTF(value);
+    jstring jKey = env->NewStringUTF(key.c_str());
+    jstring jVal = env->NewStringUTF(value.c_str());
     env->CallStaticVoidMethod(s_cls, s_addHeader, m_downloader, jKey, jVal);
     env->DeleteLocalRef(jKey);
     env->DeleteLocalRef(jVal);
@@ -153,7 +153,7 @@ extern "C"
         {
             // ���ļ�û��buffer
             JCBuffer jb;
-            downloader->m_functionOnEnd(jb, "", "", 0/*CURLE_OK*/, responseCode, header);
+            downloader->m_functionOnEnd(jb, "", "", 0 /*CURLE_OK*/, responseCode, header);
         }
         else
         {
@@ -162,7 +162,7 @@ extern "C"
             if (len <= 0)
             {
                 JCBuffer jb;
-                downloader->m_functionOnEnd(jb, "", "", 0/*CURLE_OK*/, responseCode, header);
+                downloader->m_functionOnEnd(jb, "", "", 0 /*CURLE_OK*/, responseCode, header);
             }
             else
             {
@@ -174,7 +174,7 @@ extern "C"
                 // request->m_responseCallback(buf, pCurl->m_strLocalAddr,
                 // pCurl->m_strSvAddr, 0/*CURLE_OK*/, pCurl->m_nResponseCode,
                 // pCurl->m_strResponseHead);
-                downloader->m_functionOnEnd(buf, "", "", 0/*CURLE_OK*/, responseCode, header);
+                downloader->m_functionOnEnd(buf, "", "", 0 /*CURLE_OK*/, responseCode, header);
 
                 env->ReleaseByteArrayElements(byteArray, ba, 0);
             }
@@ -195,7 +195,7 @@ extern "C"
             // curl ִ��ʧ��
             static std::string nullstr;
             JCBuffer jb;
-            downloader->m_functionOnEnd(jb, "", "", 7/*CURLE_COULDNT_CONNECT*/, code, nullstr);
+            downloader->m_functionOnEnd(jb, "", "", 7 /*CURLE_COULDNT_CONNECT*/, code, nullstr);
         }
 
         delete downloader;

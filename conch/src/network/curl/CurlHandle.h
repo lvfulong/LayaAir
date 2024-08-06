@@ -35,10 +35,14 @@ class CurlHandle
     void CurlHandle::setWriteCallbackFunction(curl_write_callback callbackFunc, void *userData);
 
   private:
+    void enableAcceptEncoding();
+    void enableShareHandle();
+    void enableAllowedProtocols();
     void enableHttp();
 
   private:
     CURL *m_handle{nullptr};
+    char m_errorBuffer[CURL_ERROR_SIZE]{};
 };
 } // namespace laya
 #endif
