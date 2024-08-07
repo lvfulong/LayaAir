@@ -46,7 +46,7 @@ void HttpClientOHOS::doRequest()
     }
 }
 
-void HttpClientOHOS::setMethod(const char *method)
+void HttpClientOHOS::setMethod(const std::string &method)
 {
     if (auto setMethod = aki::JSBind::GetJSFunction("LayaHttpClient.setMethod"))
     {
@@ -54,7 +54,7 @@ void HttpClientOHOS::setMethod(const char *method)
     }
 }
 
-void HttpClientOHOS::addHeader(const char *key, const char *value)
+void HttpClientOHOS::addHeader(const std::string &key, const std::string &value)
 {
     if (auto addHeader = aki::JSBind::GetJSFunction("LayaHttpClient.addHeader"))
     {

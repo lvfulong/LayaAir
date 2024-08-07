@@ -8,7 +8,7 @@
 #include "plugin_manager.h"
 #include <aki/jsbind.h>
 #include "utils/Log.h"
-#include "network/HttpClientOHOS.h"
+#include "network/src/HttpClientOHOS.h"
 
 enum ContextType
 {
