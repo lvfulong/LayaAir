@@ -35,7 +35,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_thread.h>
-
+#include <utils/Log.h>
 namespace ffplay
 {
 #define MAX_QUEUE_SIZE (15 * 1024 * 1024)
@@ -44,9 +44,9 @@ namespace ffplay
 // #define EXTERNAL_CLOCK_MAX_FRAMES 10
 
 /* Minimum SDL audio buffer size, in samples. */
-// #define SDL_AUDIO_MIN_BUFFER_SIZE 512
+#define SDL_AUDIO_MIN_BUFFER_SIZE 512
 /* Calculate actual buffer size keeping in mind not cause too frequent audio callbacks */
-// #define SDL_AUDIO_MAX_CALLBACKS_PER_SEC 30
+#define SDL_AUDIO_MAX_CALLBACKS_PER_SEC 30
 
 /* Step size for volume control in dB */
 // #define SDL_VOLUME_STEP (0.75)
@@ -61,7 +61,7 @@ namespace ffplay
 #define AV_NOSYNC_THRESHOLD 10.0
 
 /* maximum audio speed change to get correct sync */
-// #define SAMPLE_CORRECTION_PERCENT_MAX 10
+#define SAMPLE_CORRECTION_PERCENT_MAX 10
 
 /* external clock speed adjustment constants for realtime sources based on buffer fullness */
 // #define EXTERNAL_CLOCK_SPEED_MIN 0.900
@@ -69,7 +69,7 @@ namespace ffplay
 // #define EXTERNAL_CLOCK_SPEED_STEP 0.001
 
 /* we use about AUDIO_DIFF_AVG_NB A-V differences to make the average */
-// #define AUDIO_DIFF_AVG_NB 20
+#define AUDIO_DIFF_AVG_NB 20
 
 /* polls for possible required screen refresh at least this often, should be less than 1/fps */
 // #define REFRESH_RATE 0.01
@@ -91,7 +91,8 @@ namespace ffplay
 
 inline void print_error(const char *filename, int err)
 {
-    av_log(NULL, AV_LOG_ERROR, "%s: %s\n", filename, av_err2str(err));
+    // av_log(NULL, AV_LOG_ERROR, "%s: %s\n", filename, av_err2str(err));
+    LOGE("");
 }
 
 } // namespace ffplay

@@ -16,6 +16,7 @@ set(SOURCES
     src/ffplay_PacketQueue.cpp
     src/ffplay_FrameQueue.cpp
     src/ffplay_Decoder.cpp
+    src/ffplay_cmdutils.cpp
 )
 
 include_directories(${PUBLIC_HEADER_DIR})
@@ -31,6 +32,7 @@ target_link_libraries(${TARGET}
     avutil
     SDL2
     SDL2main
+    utils
 )
 
 target_precompile_headers(${TARGET} PRIVATE ${HEADERS})

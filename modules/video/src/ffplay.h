@@ -6,7 +6,7 @@
 #include "ffplay_Decoder.h"
 #include "ffplay_FrameQueue.h"
 #include "ffplay_PacketQueue.h"
-
+#include "ffplay_cmdutils.h"
 namespace ffplay
 {
 
@@ -135,20 +135,39 @@ typedef struct VideoState
 
     SDL_cond *continue_read_thread;
 
+    //
+    AVDictionary *format_opts = nullptr;
+    AVDictionary *codec_opts = nullptr;
+    AVDictionary *swr_opts = nullptr;
     /**/
-    int startup_volume = 100;
-    int decoder_reorder_pts = -1; // let decoder reorder pts 0=off 1=on -1=auto
-    SDL_AudioDeviceID audio_dev;
-    int audio_disable = 0;
-    int video_disable = 0;
-    int64_t start_time = AV_NOPTS_VALUE;
-    int64_t duration = AV_NOPTS_VALUE;
-    int autoexit = 1; //??
-    int loop = 1;
-    int infinite_buffer = -1;
-    int subtitle_disable = 0; //??
-    const char *wanted_stream_spec[AVMEDIA_TYPE_NB] = {0};
-    int seek_by_bytes = -1; // seek by bytes 0=off 1=on -1=auto
+    static int startup_volume;
+    static int decoder_reorder_pts;
+    static SDL_AudioDeviceID audio_dev;
+    static int audio_disable;
+    static int video_disable;
+    ;
+    static int64_t start_time;
+    static int64_t duration;
+    static int autoexit;
+    static int loop;
+    static int infinite_buffer;
+    static int subtitle_disable;
+    static const char *wanted_stream_spec[AVMEDIA_TYPE_NB];
+    static int seek_by_bytes;
+    static int genpts;
+    static int find_stream_info;
+    static int lowres;
+    static const char *audio_codec_name;
+    static const char *subtitle_codec_name;
+    static const char *video_codec_name;
+    static int fast;
+    static const char *hwaccel;
+    static int filter_nbthreads;
+    static char *afilters;
+
+    /* current context */
+    // int is_full_screen;
+    int64_t audio_callback_time;
 
 } VideoState;
 
