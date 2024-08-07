@@ -131,11 +131,6 @@ namespace laya
                 delete m_pUniformBufferObjectManager;
                 m_pUniformBufferObjectManager = NULL;
             }
-            if (LayaGL::m_pWebglEngine)
-            {   
-                delete LayaGL::m_pWebglEngine;
-                LayaGL::m_pWebglEngine = nullptr;
-            }
 
             delete m_GfxBackend;
             m_GfxBackend = nullptr;
@@ -164,7 +159,6 @@ namespace laya
 	void JCConchRender::clearAllData()
 	{
         LOGI(">>>JCConchRender::clearAllData = %s", ToString<std::thread::id >::convert(std::this_thread::get_id()).c_str());
-        //m_kPerfRender.invalidGLRes();
         m_pLayaGL->deleteAllGLRes();
         //图片全部清空
         if (m_pImageManager) {
@@ -186,6 +180,9 @@ void JCConchRender::setMainContextSize(int width,int height)
 }
 void JCConchRender::start()
 {
+    if (g_kSystemConfig.m_graphicsAPI != GraphicsAPI::OpenGLES) {
+        return;
+    }
     if (!LayaGL::m_pWebglEngine)
     {
         return;
@@ -201,14 +198,16 @@ void JCConchRender::start()
 }
 void JCConchRender::end()
 {
+    
+    if (g_kSystemConfig.m_graphicsAPI != GraphicsAPI::OpenGLES) {
+        return;
+    }
     if (!LayaGL::m_pWebglEngine)
     {
         return;
     }
 
-    if (g_kSystemConfig.m_graphicsAPI != GraphicsAPI::OpenGLES) {
-        return;
-    }
+    
 
     int last_width;
     int last_height;
@@ -241,13 +240,6 @@ void JCConchRender::requestCaptureScreen()
         auto  func = [this, nativeHandle]() {
             m_GfxBackend->createScreenSurface(nativeHandle);
             m_GfxBackend->makeCurrent();
-            if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL && LayaGL::m_pWebglEngine == nullptr)
-            {
-                WebGLConfig config;
-                LayaGL::m_pWebglEngine = new GLESEngine(config, WebGLMode::Auto);
-                LayaGL::m_pWebglEngine->initRenderEngine();
-                LayaGL::m_pWebglEngine->createTextureContext(LayaGL::m_pWebglEngine->isWebGL2());
-            }
         };
         if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL) {
             m_WebGLThread->postTaskAsync(func);

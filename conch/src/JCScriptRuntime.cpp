@@ -448,7 +448,9 @@ namespace laya
         JCConch::s_pConchRender->postTaskFromJSToRenderSync([this]()->bool {
             JCConch::s_pScriptRuntime->dispatchLayaGLBuffer(false);
             JCConch::s_pConchRender->update();
-            JCConch::s_pConchRender->end();
+            if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::OpenGLES) {
+                JCConch::s_pConchRender->end();
+            }
             JCConch::s_pConchRender->swapBuffer();
             return true;
         }).get();

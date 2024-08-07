@@ -407,7 +407,6 @@ if(OS_IOS)
 		src/platform/iOS
 	)
 	list(APPEND CONCH_SRC
-		src/JCIOSFTInterface.h
 		src/Audio/ios/JCAudioMp3Player.cpp
 		src/Audio/ios/JCAudioMp3Player.h
 		src/downloadCache/JCIosFileSource.h
