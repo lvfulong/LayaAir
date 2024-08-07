@@ -34,8 +34,8 @@
 #include "JCScriptRuntime.h"
 #include <Bindings/Video/JSVideo.h>
 #include <imageLib/JCImageRW.h>
-#include "network/HttpClientAndroid.h"
-#include "2D/CanvasRenderingContext2DAndroid.h"
+#include "network/src/HttpClientAndroid.h"
+#include "2D/src/CanvasRenderingContext2DAndroid.h"
 #include "HandleAsyncMessageMethodRecord.h"
 
 extern int g_nInnerWidth;

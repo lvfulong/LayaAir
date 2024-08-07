@@ -498,8 +498,7 @@ elseif(OS_ANDROID)
 		src/Bindings/JSAndroidEditBox.h
 		src/Bindings/JSAndroidEditBox.cpp
 		src/backend/src/OpenGLBackendAndroidEGL.cpp
-		src/2D/CanvasRenderingContext2DAndroid.h
-		src/2D/CanvasRenderingContext2DAndroid.cpp
+		src/2D/src/CanvasRenderingContext2DAndroid.cpp
 		src/Bindings/PhysX/LayaPhysXExport.h
 		src/Bindings/PhysX/LayaPhysXExport.cpp
 		src/Bindings/PhysX/PxWebBindings.cpp
