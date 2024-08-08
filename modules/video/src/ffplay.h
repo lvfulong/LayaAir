@@ -179,5 +179,6 @@ typedef struct VideoState
 } VideoState;
 
 VideoState *stream_open(const char *filename, const AVInputFormat *iformat);
+void do_exit(VideoState *is);
 } // namespace ffplay
 #endif

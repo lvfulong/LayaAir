@@ -145,6 +145,7 @@ fail:
     av_freep(&opts);
     return ret;
 }
+// turn hwaccel off now
 static int create_hwaccel(AVBufferRef **device_ctx)
 {
     enum AVHWDeviceType type;
@@ -174,8 +175,6 @@ static int create_hwaccel(AVBufferRef **device_ctx)
     av_log(NULL, AV_LOG_WARNING, "Derive %s from vulkan not supported.\n", VideoState::hwaccel);
     ret = av_hwdevice_ctx_create(device_ctx, type, NULL, NULL, 0);
     return ret;*/
-
-    // lvtodo
 }
 /* open a given stream. Return 0 if OK */
 static int stream_component_open(VideoState *is, int stream_index)

@@ -14,78 +14,6 @@ static inline int cmp_audio_fmts(enum AVSampleFormat fmt1, int64_t channel_count
     else
         return channel_count1 != channel_count2 || fmt1 != fmt2;
 }
-int configure_audio_filters(VideoState *is, const char *afilters, int force_output_format)
-{
-    static const enum AVSampleFormat sample_fmts[] = {AV_SAMPLE_FMT_S16, AV_SAMPLE_FMT_NONE};
-    int sample_rates[2] = {0, -1};
-    AVFilterContext *filt_asrc = NULL, *filt_asink = NULL;
-    char aresample_swr_opts[512] = "";
-    const AVDictionaryEntry *e = NULL;
-    AVBPrint bp;
-    char asrc_args[256];
-    int ret;
-
-    avfilter_graph_free(&is->agraph);
-    if (!(is->agraph = avfilter_graph_alloc()))
-        return AVERROR(ENOMEM);
-    is->agraph->nb_threads = VideoState::filter_nbthreads;
-
-    av_bprint_init(&bp, 0, AV_BPRINT_SIZE_AUTOMATIC);
-
-    while ((e = av_dict_iterate(is->swr_opts, e)))
-        av_strlcatf(aresample_swr_opts, sizeof(aresample_swr_opts), "%s=%s:", e->key, e->value);
-    if (strlen(aresample_swr_opts))
-        aresample_swr_opts[strlen(aresample_swr_opts) - 1] = '\0';
-    av_opt_set(is->agraph, "aresample_swr_opts", aresample_swr_opts, 0);
-
-    av_channel_layout_describe_bprint(&is->audio_filter_src.ch_layout, &bp);
-
-    ret = snprintf(asrc_args, sizeof(asrc_args), "sample_rate=%d:sample_fmt=%s:time_base=%d/%d:channel_layout=%s",
-                   is->audio_filter_src.freq, av_get_sample_fmt_name(is->audio_filter_src.fmt), 1,
-                   is->audio_filter_src.freq, bp.str);
-
-    ret = avfilter_graph_create_filter(&filt_asrc, avfilter_get_by_name("abuffer"), "ffplay_abuffer", asrc_args, NULL,
-                                       is->agraph);
-    if (ret < 0)
-        goto end;
-
-    ret = avfilter_graph_create_filter(&filt_asink, avfilter_get_by_name("abuffersink"), "ffplay_abuffersink", NULL,
-                                       NULL, is->agraph);
-    if (ret < 0)
-        goto end;
-
-    if ((ret = av_opt_set_int_list(filt_asink, "sample_fmts", sample_fmts, AV_SAMPLE_FMT_NONE,
-                                   AV_OPT_SEARCH_CHILDREN)) < 0)
-        goto end;
-    if ((ret = av_opt_set_int(filt_asink, "all_channel_counts", 1, AV_OPT_SEARCH_CHILDREN)) < 0)
-        goto end;
-
-    if (force_output_format)
-    {
-        av_bprint_clear(&bp);
-        av_channel_layout_describe_bprint(&is->audio_tgt.ch_layout, &bp);
-        sample_rates[0] = is->audio_tgt.freq;
-        if ((ret = av_opt_set_int(filt_asink, "all_channel_counts", 0, AV_OPT_SEARCH_CHILDREN)) < 0)
-            goto end;
-        if ((ret = av_opt_set(filt_asink, "ch_layouts", bp.str, AV_OPT_SEARCH_CHILDREN)) < 0)
-            goto end;
-        if ((ret = av_opt_set_int_list(filt_asink, "sample_rates", sample_rates, -1, AV_OPT_SEARCH_CHILDREN)) < 0)
-            goto end;
-    }
-
-    if ((ret = configure_filtergraph(is->agraph, afilters, filt_asrc, filt_asink)) < 0)
-        goto end;
-
-    is->in_audio_filter = filt_asrc;
-    is->out_audio_filter = filt_asink;
-
-end:
-    if (ret < 0)
-        avfilter_graph_free(&is->agraph);
-    av_bprint_finalize(&bp, NULL);
-
-    return ret;
-}
 int audio_open(void *opaque, AVChannelLayout *wanted_channel_layout, int wanted_sample_rate,
                struct AudioParams *audio_hw_params)
 {
@@ -256,16 +184,4 @@ the_end:
     av_frame_free(&frame);
     return ret;
 }
-static int decoder_start(Decoder *d, int (*fn)(void *), const char *thread_name, void *arg)
-{
-    packet_queue_start(d->queue);
-    d->decoder_tid = SDL_CreateThread(fn, thread_name, arg);
-    if (!d->decoder_tid)
-    {
-        av_log(NULL, AV_LOG_ERROR, "SDL_CreateThread(): %s\n", SDL_GetError());
-        return AVERROR(ENOMEM);
-    }
-    return 0;
-}
-
 } // namespace ffplay

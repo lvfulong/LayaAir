@@ -33,6 +33,36 @@ VideoState::ShowMode VideoState::s_show_mode = SHOW_MODE_NONE;
 int VideoState::autorotate = 1;
 const char **VideoState::vfilters_list = NULL;
 int VideoState::framedrop = -1;
+void do_exit(VideoState *is)
+{
+    /*
+    if (is)
+    {
+        stream_close(is);
+    }
+    if (renderer)
+        SDL_DestroyRenderer(renderer);
+    if (vk_renderer)
+        vk_renderer_destroy(vk_renderer);
+    if (window)
+        SDL_DestroyWindow(window);
+    uninit_opts();
+    for (int i = 0; i < nb_vfilters; i++)
+        av_freep(&vfilters_list[i]);
+    av_freep(&vfilters_list);
+    av_freep(&video_codec_name);
+    av_freep(&audio_codec_name);
+    av_freep(&subtitle_codec_name);
+    av_freep(&input_filename);
+    avformat_network_deinit();
+    if (show_status)
+        printf("\n");
+    SDL_Quit();
+    av_log(NULL, AV_LOG_QUIET, "%s", "");
+    exit(0);
+    lvtodo
+    */
+}
 static void stream_component_close(VideoState *is, int stream_index)
 {
     AVFormatContext *ic = is->ic;
