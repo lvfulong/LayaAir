@@ -1,6 +1,6 @@
 #include "ffplay_Decoder.h"
+#include "ffplay.h"
 #include "ffplay_Config.h"
-
 namespace ffplay
 {
 int decoder_init(Decoder *d, AVCodecContext *avctx, PacketQueue *queue, SDL_cond *empty_queue_cond)
@@ -36,11 +36,11 @@ int decoder_decode_frame(Decoder *d, AVFrame *frame, AVSubtitle *sub)
                     ret = avcodec_receive_frame(d->avctx, frame);
                     if (ret >= 0)
                     {
-                        if (decoder_reorder_pts == -1)
+                        if (VideoState::decoder_reorder_pts == -1)
                         {
                             frame->pts = frame->best_effort_timestamp;
                         }
-                        else if (!decoder_reorder_pts)
+                        else if (!VideoState::decoder_reorder_pts)
                         {
                             frame->pts = frame->pkt_dts;
                         }

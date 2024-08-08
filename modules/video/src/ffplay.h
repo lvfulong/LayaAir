@@ -6,7 +6,7 @@
 #include "ffplay_Decoder.h"
 #include "ffplay_FrameQueue.h"
 #include "ffplay_PacketQueue.h"
-#include "ffplay_cmdutils.h"
+
 namespace ffplay
 {
 
@@ -139,13 +139,14 @@ typedef struct VideoState
     AVDictionary *format_opts = nullptr;
     AVDictionary *codec_opts = nullptr;
     AVDictionary *swr_opts = nullptr;
+    AVDictionary *sws_dict = nullptr;
+    const char *input_filename = "";
     /**/
     static int startup_volume;
     static int decoder_reorder_pts;
-    static SDL_AudioDeviceID audio_dev;
     static int audio_disable;
     static int video_disable;
-    ;
+    static const char *window_title;
     static int64_t start_time;
     static int64_t duration;
     static int autoexit;
@@ -164,10 +165,16 @@ typedef struct VideoState
     static const char *hwaccel;
     static int filter_nbthreads;
     static char *afilters;
-
+    static int show_status;
+    static enum ShowMode s_show_mode;
+    static int autorotate;
+    static const char **vfilters_list;
+    static int framedrop;
     /* current context */
     // int is_full_screen;
     int64_t audio_callback_time;
+    SDL_AudioDeviceID audio_dev;
+    SDL_RendererInfo renderer_info = {0};
 
 } VideoState;
 

@@ -16,7 +16,13 @@ set(SOURCES
     src/ffplay_PacketQueue.cpp
     src/ffplay_FrameQueue.cpp
     src/ffplay_Decoder.cpp
-    src/ffplay_cmdutils.cpp
+    src/ffplay_VideoThread.cpp
+    src/ffplay_AudioThread.cpp
+    src/ffplay_ReadThread.cpp
+    src/ffplay_AudioRender.cpp
+    src/ffplay_VideoRender.cpp
+    src/ffplay_SubtitleThread.cpp
+    src/ffplay_Utils.cpp
 )
 
 include_directories(${PUBLIC_HEADER_DIR})

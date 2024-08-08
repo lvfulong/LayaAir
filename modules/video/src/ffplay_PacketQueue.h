@@ -1,5 +1,5 @@
-#ifndef __ffplay_PacketQueue _H__
-#define __ffplay_PacketQueue _H__
+#ifndef __ffplay_PacketQueue_H__
+#define __ffplay_PacketQueue_H__
 
 #include "libavcodec/packet.h"
 #include "libavutil/fifo.h"
