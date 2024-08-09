@@ -14,6 +14,9 @@ int configure_audio_filters(VideoState *is, const char *afilters, int force_outp
 void set_default_window_size(int width, int height, AVRational sar);
 double get_master_clock(VideoState *is);
 int get_master_sync_type(VideoState *is);
-
+inline int compute_mod(int a, int b)
+{
+    return a < 0 ? a % b + b : a % b;
+}
 } // namespace ffplay
 #endif
