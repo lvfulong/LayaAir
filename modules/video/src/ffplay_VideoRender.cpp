@@ -366,14 +366,12 @@ static void video_image_display(VideoState *is)
     Frame *vp;
     Frame *sp = NULL;
     SDL_Rect rect;
-#if 0
     vp = frame_queue_peek_last(&is->pictq);
 #if 0
     if (vk_renderer) {
         vk_renderer_display(vk_renderer, vp->frame);
         return;
     }
-#endif
     if (is->subtitle_st) {
         if (frame_queue_nb_remaining(&is->subpq) > 0) {
             sp = frame_queue_peek(&is->subpq);
