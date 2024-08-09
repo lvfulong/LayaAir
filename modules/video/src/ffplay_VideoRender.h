@@ -4,6 +4,6 @@
 #include "ffplay_Config.h"
 namespace ffplay
 {
-
+void video_refresh(void *opaque, double *remaining_time);
 } // namespace ffplay
 #endif

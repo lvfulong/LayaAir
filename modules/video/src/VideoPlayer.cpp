@@ -31,12 +31,16 @@ void VideoPlayer::setMedia(const std::string &url)
     if (m_impl->m_is == nullptr)
     {
         // todo
-        // m_impl->m_is = stream_open(input_filename, file_iformat);
+        AVInputFormat *iformat = nullptr;
+        m_impl->m_is = stream_open(url.c_str(), iformat);
         if (!m_impl->m_is)
         {
             av_log(NULL, AV_LOG_FATAL, "Failed to initialize VideoState!\n");
             do_exit(NULL);
         }
     }
+}
+void VideoPlayer::renderVideo()
+{
 }
 } // namespace ffplay

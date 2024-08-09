@@ -170,6 +170,8 @@ typedef struct VideoState
     static int autorotate;
     static const char **vfilters_list;
     static int framedrop;
+    static int display_disable;
+    static double rdftspeed;
     /* current context */
     // int is_full_screen;
     int64_t audio_callback_time;

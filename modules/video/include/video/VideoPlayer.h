@@ -13,6 +13,7 @@ class VideoPlayer
     VideoPlayer();
     ~VideoPlayer();
     void setMedia(const std::string &url);
+    void renderVideo();
     static void init();
     static void destroy();
 

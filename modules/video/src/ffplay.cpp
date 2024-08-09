@@ -33,6 +33,8 @@ VideoState::ShowMode VideoState::s_show_mode = SHOW_MODE_NONE;
 int VideoState::autorotate = 1;
 const char **VideoState::vfilters_list = NULL;
 int VideoState::framedrop = -1;
+int VideoState::display_disable = 0;
+double VideoState::rdftspeed = 0.02;
 void do_exit(VideoState *is)
 {
     /*
@@ -55,7 +57,7 @@ void do_exit(VideoState *is)
     av_freep(&subtitle_codec_name);
     av_freep(&input_filename);
     avformat_network_deinit();
-    if (show_status)
+    if (VideoState::show_status)
         printf("\n");
     SDL_Quit();
     av_log(NULL, AV_LOG_QUIET, "%s", "");

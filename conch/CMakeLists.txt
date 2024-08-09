@@ -782,7 +782,7 @@ elseif(OS_WINDOWS)
 		gdiplus
 		SDL2
 		SDL2main
-		#video
+		video
 		curl
 	)
 elseif(OS_OHOS)
