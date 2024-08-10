@@ -43,4 +43,7 @@ void VideoPlayer::setMedia(const std::string &url)
 void VideoPlayer::renderVideo()
 {
 }
+void VideoPlayer::setRenderCallback(std::function<void(void *vo_opaque)> cb)
+{
+}
 } // namespace ffplay

@@ -178,6 +178,7 @@ typedef struct VideoState
     SDL_AudioDeviceID audio_dev;
     SDL_RendererInfo renderer_info = {0};
 
+    SwsContext *img_convert_ctx = nullptr;
 } VideoState;
 
 VideoState *stream_open(const char *filename, const AVInputFormat *iformat);

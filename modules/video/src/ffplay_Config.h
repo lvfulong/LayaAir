@@ -29,6 +29,7 @@
 #include "libavutil/tx.h"
 #include "libswresample/swresample.h"
 #include "libswscale/swscale.h"
+#include <libavcodec/avcodec.h>
 
 #include "libavfilter/avfilter.h"
 #include "libavfilter/buffersink.h"
