@@ -2,7 +2,6 @@
 #define __ffplay_Utils_H__
 #include "ffplay.h"
 #include "ffplay_Config.h"
-#include "libavformat/avformat.h"
 namespace ffplay
 {
 double get_rotation(const int32_t *displaymatrix);

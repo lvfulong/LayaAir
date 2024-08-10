@@ -246,10 +246,10 @@ VideoState *stream_open(const char *filename, const AVInputFormat *iformat)
     // is->av_sync_type = av_sync_type;
     is->read_tid = SDL_CreateThread(read_thread, "read_thread", is);
 
-    av_dict_set(&is->swr_opts, "dummy", "dummy", 0);    // create dic
-    av_dict_set(&is->format_opts, "dummy", "dummy", 0); // create dic
-    av_dict_set(&is->codec_opts, "dummy", "dummy", 0);  // create dic
-    av_dict_set(&is->sws_dict, "dummy", "dummy", 0);    // create dic lvtodo
+    av_dict_set(&is->swr_opts, "", nullptr, 0);    // create dic
+    av_dict_set(&is->format_opts, "", nullptr, 0); // create dic
+    av_dict_set(&is->codec_opts, "", nullptr, 0);  // create dic
+    av_dict_set(&is->sws_dict, "", nullptr, 0);    // create dic lvtodo
     if (!is->read_tid)
     {
         av_log(NULL, AV_LOG_FATAL, "SDL_CreateThread(): %s\n", SDL_GetError());

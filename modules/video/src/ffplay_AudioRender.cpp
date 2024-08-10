@@ -2,9 +2,7 @@
 #include "ffplay.h"
 #include "ffplay_Config.h"
 #include "ffplay_Utils.h"
-#include "libavutil/error.h"
-#include "libavutil/log.h"
-#include "libavutil/time.h"
+
 namespace ffplay
 {
 

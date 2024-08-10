@@ -15,7 +15,7 @@ class VideoPlayer
     VideoPlayer();
     ~VideoPlayer();
     void setMedia(const std::string &url);
-    void setRenderCallback(std::function<void(void *vo_opaque)> cb);
+    void setRenderCallback(std::function<void(unsigned char *data, int width, int height, int bufferSize)> cb);
     void renderVideo();
     static void init();
     static void destroy();

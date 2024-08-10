@@ -1,9 +1,7 @@
 #ifndef __ffplay_ReadThread_H__
 #define __ffplay_ReadThread_H__
 
-#include "libavcodec/packet.h"
-#include "libavutil/fifo.h"
-#include <SDL2/SDL_thread.h>
+#include "ffplay_Config.h"
 namespace ffplay
 {
 struct VideoState;

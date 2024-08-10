@@ -1,8 +1,5 @@
 #include "ffplay_PacketQueue.h"
 #include "ffplay_Config.h"
-#include "libavutil/error.h"
-#include "libavutil/log.h"
-#include "libavutil/time.h"
 namespace ffplay
 {
 int packet_queue_put_private(PacketQueue *q, AVPacket *pkt)

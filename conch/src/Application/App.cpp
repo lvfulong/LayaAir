@@ -10,6 +10,7 @@ extern bool g_bGLCanvasSizeChanged;
 #if defined(OS_WINDOWS)
 #include <Windows.h>
 
+
 #include <objidlbase.h>
 #include <gdiplus.h>
 
@@ -102,8 +103,8 @@ void App::run(const Config &config)
     laya::JCConch::s_pConch.reset(new laya::JCConch());
     const int x = SDL_WINDOWPOS_CENTERED;
     const int y = SDL_WINDOWPOS_CENTERED;
-    uint32_t windowFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI;
-
+    uint32_t windowFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI | SDL_INIT_AUDIO;
+    SDL_Init(windowFlags);
 
     if (laya::g_kSystemConfig.m_windowMode == laya::WindowMode::WM_Window)
     {

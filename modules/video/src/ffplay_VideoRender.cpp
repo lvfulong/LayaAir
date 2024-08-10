@@ -455,8 +455,8 @@ static void video_image_display(VideoState *is)
     {
         AVFrame *pFrameRGB = av_frame_alloc();
         AVCodecContext *pCodecCtx = is->viddec.avctx;
-        unsigned char *out_buffer = (unsigned char *)av_malloc(
-            av_image_get_buffer_size(AV_PIX_FMT_RGBA, pCodecCtx->width, pCodecCtx->height, 1));
+        int buffer_size = av_image_get_buffer_size(AV_PIX_FMT_RGBA, pCodecCtx->width, pCodecCtx->height, 1);
+        unsigned char *out_buffer = (unsigned char *)av_malloc(buffer_size);
         av_image_fill_arrays(pFrameRGB->data, pFrameRGB->linesize, out_buffer, AV_PIX_FMT_RGB24, pCodecCtx->width,
                              pCodecCtx->height, 1);
 
@@ -466,6 +466,10 @@ static void video_image_display(VideoState *is)
         sws_scale(is->img_convert_ctx, (const uint8_t *const *)vp->frame->data, vp->frame->linesize, 0,
                   pCodecCtx->height, pFrameRGB->data, pFrameRGB->linesize);
 
+        if (is->render_callback)
+        {
+            is->render_callback(pFrameRGB->data[0], pCodecCtx->width, pCodecCtx->height, buffer_size);
+        }
         vp->uploaded = 1;
         vp->flip_v = vp->frame->linesize[0] < 0;
 

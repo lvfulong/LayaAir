@@ -1,13 +1,9 @@
 #include "ffplay_ReadThread.h"
 #include "ffplay.h"
 #include "ffplay_AudioThread.h"
-#include "ffplay_Config.h"
 #include "ffplay_SubtitleThread.h"
 #include "ffplay_Utils.h"
 #include "ffplay_VideoThread.h"
-#include "libavutil/error.h"
-#include "libavutil/log.h"
-#include "libavutil/time.h"
 namespace ffplay
 {
 static int stream_has_enough_packets(AVStream *st, int stream_id, PacketQueue *queue)

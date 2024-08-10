@@ -1,7 +1,6 @@
 #ifndef __ffplay_Config_H__
 #define __ffplay_Config_H__
 
-#include <libavcodec/avcodec.h>
 // #include "config.h"
 // #include "config_components.h"
 #include <inttypes.h>
@@ -10,16 +9,25 @@
 #include <signal.h>
 #include <stdint.h>
 
+extern "C"
+{
+#include "libavcodec/avcodec.h"
+#include "libavcodec/packet.h"
 #include "libavdevice/avdevice.h"
+#include "libavfilter/avfilter.h"
+#include "libavfilter/buffersink.h"
+#include "libavfilter/buffersrc.h"
 #include "libavformat/avformat.h"
 #include "libavutil/avstring.h"
 #include "libavutil/bprint.h"
 #include "libavutil/channel_layout.h"
 #include "libavutil/dict.h"
 #include "libavutil/display.h"
+#include "libavutil/error.h"
 #include "libavutil/eval.h"
 #include "libavutil/fifo.h"
 #include "libavutil/imgutils.h"
+#include "libavutil/log.h"
 #include "libavutil/mathematics.h"
 #include "libavutil/opt.h"
 #include "libavutil/parseutils.h"
@@ -29,12 +37,7 @@
 #include "libavutil/tx.h"
 #include "libswresample/swresample.h"
 #include "libswscale/swscale.h"
-#include <libavcodec/avcodec.h>
-
-#include "libavfilter/avfilter.h"
-#include "libavfilter/buffersink.h"
-#include "libavfilter/buffersrc.h"
-
+}
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_thread.h>
 #include <utils/Log.h>
@@ -90,11 +93,12 @@ namespace ffplay
 #define FRAME_QUEUE_SIZE FFMAX(SAMPLE_QUEUE_SIZE, FFMAX(VIDEO_PICTURE_QUEUE_SIZE, SUBPICTURE_QUEUE_SIZE))
 
 #define FF_QUIT_EVENT (SDL_USEREVENT + 2)
-
-inline void print_error(const char *filename, int err)
+extern "C"
 {
-    // av_log(NULL, AV_LOG_ERROR, "%s: %s\n", filename, av_err2str(err));
-    LOGE("");
+    inline void print_error(const char *filename, int err)
+    {
+        av_log(NULL, AV_LOG_ERROR, "%s: %s\n", filename, av_err2str(err));
+    }
 }
 
 } // namespace ffplay

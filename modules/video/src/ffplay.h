@@ -179,6 +179,7 @@ typedef struct VideoState
     SDL_RendererInfo renderer_info = {0};
 
     SwsContext *img_convert_ctx = nullptr;
+    std::function<void(unsigned char *data, int width, int height, int bufferSize)> render_callback;
 } VideoState;
 
 VideoState *stream_open(const char *filename, const AVInputFormat *iformat);
