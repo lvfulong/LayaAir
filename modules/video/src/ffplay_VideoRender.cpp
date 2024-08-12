@@ -454,26 +454,34 @@ static void video_image_display(VideoState *is)
     if (!vp->uploaded)
     {
         AVFrame *pFrameRGB = av_frame_alloc();
+        pFrameRGB->format = AV_PIX_FMT_RGBA;
+        pFrameRGB->width = vp->frame->width;
+        pFrameRGB->height = vp->frame->height;
+        av_frame_get_buffer(pFrameRGB, 1);
+
         AVCodecContext *pCodecCtx = is->viddec.avctx;
         int buffer_size = av_image_get_buffer_size(AV_PIX_FMT_RGBA, pCodecCtx->width, pCodecCtx->height, 1);
-        unsigned char *out_buffer = (unsigned char *)av_malloc(buffer_size);
-        av_image_fill_arrays(pFrameRGB->data, pFrameRGB->linesize, out_buffer, AV_PIX_FMT_RGB24, pCodecCtx->width,
-                             pCodecCtx->height, 1);
+        // unsigned char *out_buffer = (unsigned char *)av_malloc(buffer_size);
+        // av_image_fill_arrays(pFrameRGB->data, pFrameRGB->linesize, out_buffer, AV_PIX_FMT_RGBA, pCodecCtx->width,
+        //                     pCodecCtx->height, 1);
 
-        is->img_convert_ctx =
-            sws_getCachedContext(is->img_convert_ctx, pCodecCtx->width, pCodecCtx->height, pCodecCtx->pix_fmt,
-                                 pCodecCtx->width, pCodecCtx->height, AV_PIX_FMT_RGB24, SWS_BICUBIC, NULL, NULL, NULL);
+        is->img_convert_ctx = sws_getCachedContext(
+            is->img_convert_ctx, vp->frame->width, vp->frame->height, (AVPixelFormat)vp->frame->format,
+            pFrameRGB->width, pFrameRGB->height, (AVPixelFormat)pFrameRGB->format, SWS_BILINEAR, NULL, NULL, NULL);
         sws_scale(is->img_convert_ctx, (const uint8_t *const *)vp->frame->data, vp->frame->linesize, 0,
-                  pCodecCtx->height, pFrameRGB->data, pFrameRGB->linesize);
+                  vp->frame->height, pFrameRGB->data, pFrameRGB->linesize);
 
         if (is->render_callback)
         {
-            is->render_callback(pFrameRGB->data[0], pCodecCtx->width, pCodecCtx->height, buffer_size);
+            is->m_videoState = EVideoState::HAVE_ENOUGH_DATA;
+            // is->render_callback(pFrameRGB->data[0], pCodecCtx->width, pCodecCtx->height, buffer_size);
+            is->render_callback(pFrameRGB->data[0], pFrameRGB->width, pFrameRGB->height,
+                                pFrameRGB->height * pFrameRGB->width * 4);
         }
         vp->uploaded = 1;
         vp->flip_v = vp->frame->linesize[0] < 0;
 
-        av_free(out_buffer);
+        // av_free(out_buffer);
         av_free(pFrameRGB);
     }
 }

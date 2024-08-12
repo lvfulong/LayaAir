@@ -17,6 +17,8 @@ class VideoPlayer
     void setMedia(const std::string &url);
     void setRenderCallback(std::function<void(unsigned char *data, int width, int height, int bufferSize)> cb);
     void renderVideo();
+    int getState();
+    void setEmit(std::function<void(const char *)> emitFun);
     static void init();
     static void destroy();
 

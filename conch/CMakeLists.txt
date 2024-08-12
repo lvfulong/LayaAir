@@ -284,8 +284,6 @@ list(APPEND CONCH_SRC
 	src/Bindings/Bullet/LayaBulletExport.cpp
 	src/Bindings/Bullet/LayaBulletExportImp.cpp
 	src/Bindings/Video/JSVideo.h
-	src/Bindings/Video/VideoCache.h
-	src/Bindings/Video/VideoCache.cpp
 	src/Bindings/Video/JSVideo_CommonImpl.cpp
 	src/Bindings/JSAppCache.h
 	src/Bindings/JSAppCache.cpp

@@ -21,12 +21,17 @@ class Win32VideoHandler final : public IVideoHandler
 
     virtual bool isFrameUpdated()
     {
-        NOT_IMPLEMENT_RET(false);
+        return true;
     }
 
     virtual void updateBitmapData(BitmapData *bitmapData)
     {
-        NOT_IMPLEMENT();
+        m_videoPlayer.setRenderCallback([bitmapData](unsigned char *data, int width, int height, int bufferSize) {
+            bitmapData->reconfigure(width, height, sizeof(int) * 8, laya::ImgType_unknow);
+
+            memcpy(bitmapData->m_pImageData, data, bufferSize);
+        });
+        m_videoPlayer.renderVideo();
     }
 
     ffplay::VideoPlayer m_videoPlayer;
@@ -41,6 +46,9 @@ JSVideo::JSVideo()
 
     m_pVideoHandler = new Win32VideoHandler;
     m_pJCVideo->setVideoHandler(m_pVideoHandler);
+
+    ((Win32VideoHandler *)m_pVideoHandler)
+        ->m_videoPlayer.setEmit(std::bind(&JSVideo::CallHandle, this, std::placeholders::_1));
 }
 
 JSVideo::~JSVideo()
@@ -56,9 +64,8 @@ void JSVideo::_releaseHandler()
 
 void JSVideo::LoadInternal(const std::string &path)
 {
-    LOGI("%s", path.c_str());
-    // CallHandle("loadedmetadata");
     ((Win32VideoHandler *)m_pVideoHandler)->m_videoPlayer.setMedia(path);
+    // CallHandle("loadedmetadata");
 }
 
 void JSVideo::Play()
@@ -177,7 +184,7 @@ double JSVideo::GetY()
 
 int32_t JSVideo::GetReadyState()
 {
-    NOT_IMPLEMENT_RET(1);
+    return ((Win32VideoHandler *)m_pVideoHandler)->m_videoPlayer.getState();
 }
 
 }; // namespace laya

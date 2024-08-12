@@ -196,13 +196,13 @@ static int create_hwaccel(AVBufferRef **device_ctx)
     // lvtodo
 }
 
-VideoState *stream_open(const char *filename, const AVInputFormat *iformat)
+bool stream_open(VideoState *is, const char *filename, const AVInputFormat *iformat)
 {
-    VideoState *is;
+    // VideoState *is;
 
-    is = (VideoState *)av_mallocz(sizeof(VideoState));
-    if (!is)
-        return NULL;
+    // is = (VideoState *)av_mallocz(sizeof(VideoState));
+    // if (!is)
+    //     return NULL;
     is->last_video_stream = is->video_stream = -1;
     is->last_audio_stream = is->audio_stream = -1;
     is->last_subtitle_stream = is->subtitle_stream = -1;
@@ -255,8 +255,8 @@ VideoState *stream_open(const char *filename, const AVInputFormat *iformat)
         av_log(NULL, AV_LOG_FATAL, "SDL_CreateThread(): %s\n", SDL_GetError());
     fail:
         stream_close(is);
-        return NULL;
+        return false;
     }
-    return is;
+    return true;
 }
 } // namespace ffplay

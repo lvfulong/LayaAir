@@ -26,6 +26,14 @@ enum
     AV_SYNC_EXTERNAL_CLOCK, /* synchronize to an external clock */
 };
 
+enum class EVideoState
+{
+    HAVE_NOTHING = 0,
+    HAVE_METADATA = 1,
+    HAVE_CURRENT_DATA = 2,
+    HAVE_FUTURE_DATA = 3,
+    HAVE_ENOUGH_DATA = 4,
+};
 typedef struct VideoState
 {
     SDL_Thread *read_tid;
@@ -180,9 +188,12 @@ typedef struct VideoState
 
     SwsContext *img_convert_ctx = nullptr;
     std::function<void(unsigned char *data, int width, int height, int bufferSize)> render_callback;
+
+    EVideoState m_videoState = EVideoState::HAVE_NOTHING;
+    std::function<void(const char *)> m_emitFunc;
 } VideoState;
 
-VideoState *stream_open(const char *filename, const AVInputFormat *iformat);
+bool stream_open(VideoState *is, const char *filename, const AVInputFormat *iformat);
 void do_exit(VideoState *is);
 } // namespace ffplay
 #endif

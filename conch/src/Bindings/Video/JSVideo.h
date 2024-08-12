@@ -3,114 +3,122 @@
 
 #include <binder/JSInterface.h>
 
+#include <Image/JCVideo.h>
 #include <map>
 #include <set>
 #include <string>
-
-#include "VideoCache.h"
-#include <Image/JCVideo.h>
 #ifdef GetCurrentTime
 #undef GetCurrentTime
 #endif
 namespace laya
 {
 
-//#define SHOW_NOT_IMPLEMENT_LOG
+// #define SHOW_NOT_IMPLEMENT_LOG
 
 #ifdef SHOW_NOT_IMPLEMENT_LOG
-	#define NOT_IMPLEMENT() do { LOGW("%s is not implemented", __FUNCTION__); } while(false);
-	#define NOT_IMPLEMENT_RET(value) do { LOGW("%s is not implemented", __FUNCTION__); }  while(false); return value;
+#define NOT_IMPLEMENT()                                                                                                \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        LOGW("%s is not implemented", __FUNCTION__);                                                                   \
+    } while (false);
+#define NOT_IMPLEMENT_RET(value)                                                                                       \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        LOGW("%s is not implemented", __FUNCTION__);                                                                   \
+    } while (false);                                                                                                   \
+    return value;
 #else
-	#define NOT_IMPLEMENT() 
-	#define NOT_IMPLEMENT_RET(value) return value;
+#define NOT_IMPLEMENT()
+#define NOT_IMPLEMENT_RET(value) return value;
 #endif
 
-	class JSVideo
-	{
-	public:
-		static void exportJS(Context& context);
+class JSVideo
+{
+  public:
+    static void exportJS(Context &context);
 
-		JSVideo();
-		~JSVideo();
+    JSVideo();
+    ~JSVideo();
 
-		void AddEvent(const char* evtName);
-		void RemoveEvent(const char* evtName);
-		void _setDispatchEventFunc(JSValueAsParam emitFunc);
+    void AddEvent(const char *evtName);
+    void RemoveEvent(const char *evtName);
+    void _setDispatchEventFunc(JSValueAsParam emitFunc);
 
-		void Load(const char* url);
-		void Play();
-		void Pause();
-		void Stop();
-		bool CanPlayType(const char* type);
+    void Load(const char *url);
+    void Play();
+    void Pause();
+    void Stop();
+    bool CanPlayType(const char *type);
 
-		void SetAutoplay(bool val);
-		bool GetAutoplay();
+    void SetAutoplay(bool val);
+    bool GetAutoplay();
 
-		void SetX(double val);
-		double GetX();
+    void SetX(double val);
+    double GetX();
 
-		void SetY(double val);
-		double GetY();
+    void SetY(double val);
+    double GetY();
 
-		bool GetPaused();
-		
-		bool GetLoop();
-		void SetLoop(bool value);
+    bool GetPaused();
 
-		const char* GetSrc();
-		void SetSrc(const char* url);
+    bool GetLoop();
+    void SetLoop(bool value);
 
-		double GetVideoWidth();
-		double GetVideoHeight();
+    const char *GetSrc();
+    void SetSrc(const char *url);
 
-		double GetWidth();
-		void SetWidth(double val);
+    double GetVideoWidth();
+    double GetVideoHeight();
 
-		double GetHeight();
-		void SetHeight(double val);
+    double GetWidth();
+    void SetWidth(double val);
 
-		double GetCurrentTime();
-		void SetCurrentTime(double val);
+    double GetHeight();
+    void SetHeight(double val);
 
-		double GetDuration();
+    double GetCurrentTime();
+    void SetCurrentTime(double val);
 
-		double GetVolume();
-		void SetVolume(double val);
+    double GetDuration();
 
-		void CallHandle(const char* evtName);
+    double GetVolume();
+    void SetVolume(double val);
 
-		int32_t GetReadyState();
+    void CallHandle(const char *evtName);
 
-		int getImageID();
+    int32_t GetReadyState();
 
-		void _releaseHandler();
+    int getImageID();
 
-		static void executeVideoCallback(int index, int event);
-		static void executeLoadedmetadata(int index, const char* evtName);
-		static void executeDurationBack(int index, int duration);
-		static void executeCurrentTimeBack(int index, int currentTime);
-	private:
-		void Init();
-		void Dispose();
-		void LoadInternal(const std::string& path);
-        void DispatchEvtToJS(const std::string path);
+    void _releaseHandler();
 
-	public:
-		int m_tag; 
-		static int ms_handleIdx;
-		static std::set<std::string> ms_supportFormat;
+    static void executeVideoCallback(int index, int event);
+    static void executeLoadedmetadata(int index, const char *evtName);
+    static void executeDurationBack(int index, int duration);
+    static void executeCurrentTimeBack(int index, int currentTime);
 
-		std::map<std::string, int> m_evtMap;
-        Persistent m_dispatchHandle;
-		std::string m_src;
+  private:
+    void Init();
+    void Dispose();
+    void LoadInternal(const std::string &path);
+    void DispatchEvtToJS(const std::string path);
 
-		bool m_isDownloadWaitLoad;
-		bool m_isDownloadWaitPlay;
+  public:
+    int m_tag;
+    static int ms_handleIdx;
+    static std::set<std::string> ms_supportFormat;
 
-		IVideoHandler* m_pVideoHandler; /// !! released it by JCVideo
+    std::map<std::string, int> m_evtMap;
+    Persistent m_dispatchHandle;
+    std::string m_src;
 
-		std::shared_ptr<JCVideo> m_pJCVideo; 
-		int m_nID;
-	};
+    bool m_isDownloadWaitLoad;
+    bool m_isDownloadWaitPlay;
+
+    IVideoHandler *m_pVideoHandler; /// !! released it by JCVideo
+
+    std::shared_ptr<JCVideo> m_pJCVideo;
+    int m_nID;
 };
+}; // namespace laya
 #endif
