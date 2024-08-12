@@ -22,7 +22,7 @@ class GLVertexState : public GLObject
 {
   public:
     GLVertexState(GLESEngine *engine);
-    ~GLVertexState();
+    virtual ~GLVertexState();
     void applyVertexBuffer(const std::vector<GLESVertexBuffer *> &vertexBuffers);
 
     void applyIndexBuffer(GLESIndexBuffer *indexBuffer);

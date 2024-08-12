@@ -14,6 +14,8 @@ GLESBufferState::GLESBufferState()
 
 GLESBufferState::~GLESBufferState()
 {
+    if(this->_glVertexState) delete this->_glVertexState;
+
 }
 void GLESBufferState::applyVertexBuffers()
 {
