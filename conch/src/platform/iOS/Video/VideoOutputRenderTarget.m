@@ -1,11 +1,3 @@
-//
-//  VideoOutputRenderTarget.m
-//  conchRuntime
-//
-//  Created by LayaBox on 2018/11/13.
-//  Copyright © 2018 LayaBox. All rights reserved.
-//
-
 #import <Foundation/Foundation.h>
 #import "VideoOutputRenderTarget.h"
 #import <GLKit/GLKit.h>
