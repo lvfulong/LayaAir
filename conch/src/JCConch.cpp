@@ -37,20 +37,11 @@
     #include "pthread.h"
 #elif defined(OS_WINDOWS)
     #include <windows.h>
-#endif
-#if defined(OS_IOS)
-#include "OpenGLBackendiOS.h"
-#elif defined(OS_ANDROID)
-#include "OpenGLBackendAndroidEGL.h"
-#elif defined(OS_WINDOWS)
-#include "OpenGLBackendWinEGL.h"
+    HWND g_hWnd;
 #elif defined(OS_OHOS)
 #include "aki/jsbind.h"
 #include <string>
 #include "platform/ohos/napi/helper/NapiHelper.h"
-#endif
-#ifdef OS_WINDOWS
-HWND g_hWnd;
 #endif
 std::string gRedistPath = "";
 std::string gResourcePath = "";

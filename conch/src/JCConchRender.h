@@ -1,26 +1,14 @@
-/**
-@file			JCConchRender.h
-@brief			
-@author			James
-@version		1.0
-@date			2016_5_12
-*/
-
 #ifndef __JCConchRender_H__
 #define __JCConchRender_H__
 
 
 #include <resource/JCFileResManager.h>
 #include <utils/thread/JCWorkSemaphore.h>
-//#include <Performance/JCPerfHUD.h>
 #include <LayaGL/JCLayaGL.h>
 #include <utils/thread/JCWorkerThread.h>
-#ifdef OS_IOS
-#include "IOSFreetype/JCIOSFreeType.h"
-#endif
 #include <atomic>
 #include <WebGL/WebGLThread.h>
-#include <Backend.h>
+#include <backend/IBackend.h>
 #include <render/3D/temp/ObjectBase.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderGeometryElement.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalTex.h>
@@ -75,37 +63,18 @@ namespace laya
         }
     public:
         JCWorkerThread*                         m_pRenderThread;
-        float				                    m_fShowPerfScale;               ///<是否显示性能测试
-        uint64_t				                m_nFrameCount = { 0 };                  ///<frameCount
-        JCImageManager*                         m_pImageManager;                ///<Image管理器
+        uint64_t				                m_nFrameCount = { 0 };                
+        JCImageManager*                         m_pImageManager;      
         JCIDGenerator*                          m_pIDGenerator;
         JCIDGenerator*                          m_pProgramLocationTable;
-        JCLayaGL*                               m_pLayaGL;                      ///<layaGL
-        JCFileResManager*                       m_pFileResManager;              ///<FileResManager 外部设置的
-        //JCPerfDataRender                        m_kPerfRender;                  ///<性能测试
+        JCLayaGL*                               m_pLayaGL;                    
+        JCFileResManager*                       m_pFileResManager;  
 		ObjectManager<GLESInternalTex>*		m_pWebGLInternalTexManager;
-		//ResourceManager<ShaderData>*			m_pShaderDataManager;
-        //ResourceManager<ShaderInstance>*		m_pShaderInstanceManager;
-        //ResourceManager<RenderGeometryElement>* m_pRenderGeometryElementManager;
-		//ObjectManager<WordText>*				m_pWordTextManager;
 		ObjectManager<UniformBufferObject>*	    m_pUniformBufferObjectManager;
         ScreenCanvasContext2D*                  m_pScreenContext = nullptr;
         GLESRenderContext2D*                    m_blitContext = nullptr;
-#if defined(OS_IOS)
-        OpenGLBackendiOS*                       m_GfxBackend = { nullptr };
-#elif defined(OS_LINUX)
-		OpenGLBackendLinuxEGLX11*                m_GfxBackend = { nullptr };
-#elif defined(OS_ANDROID)
-		OpenGLBackendAndroidEGL*                m_GfxBackend = { nullptr };
-#elif defined(OS_WINDOWS)
-        OpenGLBackendWinEGL*   m_GfxBackend = { nullptr };
-#elif defined(OS_OHOS)
-        OpenGLBackendOHOSEGL*   m_GfxBackend = { nullptr };
-#endif
+        IBackend*   m_GfxBackend = { nullptr };
         WebGLThread*                            m_WebGLThread = nullptr;
     };
 }
-//------------------------------------------------------------------------------
-#endif //__JCConchRender_H__
-
-//-----------------------------END FILE--------------------------------
+#endif 

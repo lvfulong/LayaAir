@@ -17,7 +17,6 @@ import layaair.game.conch.ILayaEventListener;
 	 void startGame();
 	 void setInterceptKey(boolean pInterceptKey);
 	 void setOptions(HashMap<String, Object> _option);
-	 void setLocalizable(boolean b);
 	 void checkApkUpdate();
 	 void onPause();
 	 void onResume();

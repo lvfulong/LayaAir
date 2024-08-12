@@ -121,10 +121,6 @@ public class GameEngine implements IPlugin {
 		Log.e(TAG,"game_plugin_set_option key="+key+" value="+value);
 		if( key.equalsIgnoreCase("gameUrl") )
 		    mGameUrl = value;
-		else if(key.equalsIgnoreCase("localize")){
-			boolean l = value.equalsIgnoreCase("true");
-			mLayaGameEngine.setLocalizable(l);
-		}
 	}
 
 	@Override

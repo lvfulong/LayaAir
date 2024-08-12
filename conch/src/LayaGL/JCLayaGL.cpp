@@ -13,7 +13,6 @@
 #include "../JCCmdStruct.h"
 #include <utils/JCCommonMethod.h>
 #include "JCLayaGLDispatch.h"
-//#include "../Performance/JCPerfHUD.h"
 #include <utils/Preprocessor.h>
 #include <JCSystemConfig.h>
 extern int g_nInnerWidth;
@@ -36,7 +35,6 @@ namespace laya
     {
         m_nMainCanvasWidth = nWidth;
         m_nMainCanvasHeight = nHeight;
-        //JCPerfHUD::m_pLayaGL = this;
         m_bFlipY = false;
 		m_bPremultiplyAlpha = false;
         m_pIDGenerator = pIDGenerator;

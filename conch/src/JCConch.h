@@ -13,7 +13,6 @@
 #include <utils/JCCommonMethod.h>
 #include "JCConchRender.h"
 #include "WebGL/WebGLThread.h"
-#include "Backend.h"
 #include <utils/InputTypes.h>
 #include "EngineEvent.h"
 #include <memory>

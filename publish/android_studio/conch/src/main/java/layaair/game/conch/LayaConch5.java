@@ -88,8 +88,7 @@ import static android.content.Context.WINDOW_SERVICE;
 public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.FrameCallback {
 	// view
 	private Choreographer mChoreographer;
-	private static final String TAG = "LayaConch5";
-	public boolean localizable=false;
+	private static final String TAG = "LayaConch";
 	public AbsoluteLayout m_pAbsLayout = null;
 	public LayaEditBox m_pEditBox = null;
 	private AbsoluteLayout m_pEditBoxLayout = null;
@@ -954,11 +953,6 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 
 	public int game_plugin_getTouchMovRange() {
 		return 10;
-	}
-
-	public void setLocalizable(boolean b)
-	{
-		localizable = b;
 	}
 
 	public void setGameUrl(String _param) {

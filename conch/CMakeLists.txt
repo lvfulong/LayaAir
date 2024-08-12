@@ -25,8 +25,9 @@ set(PUBLIC_HEADER_DIR include)
 list(APPEND CONCH_INCLUDE
 	./include
 	src/WebGL/include
-	src/Backend/src
+	src/backend/include
 	src/Bindings/PhysX
+	src/2D/include
 	${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
@@ -37,14 +38,6 @@ if(CONCH_USE_OLD_CURL_DOWNLOAD)
 	src/downloadMgr/JCCurlWrap.cpp)
 endif()
 
-if(CONCH_USE_CURL_DOWNLOAD)
-	list(APPEND CONCH_SRC
-	src/network/curl/CurlContext.cpp
-	src/network/curl/CurlHandle.cpp
-	src/network/curl/CurlMultiHandle.cpp
-	src/network/curl/CurlShareHandle.cpp
-	src/network/curl/CurlScheduler.cpp)
-endif()
 
 list(APPEND CONCH_SRC
 
@@ -241,7 +234,7 @@ list(APPEND CONCH_SRC
 	src/downloadMgr/JCDownloadMgr.cpp
 	src/downloadMgr/JCHttpHeader.h
 	src/downloadMgr/JCHttpHeader.cpp
-	src/network/IHttpClient.cpp
+	src/network/src/IHttpClient.cpp
 	src/WebGL/include/WebGL/JCGpuProgram.h
 	src/WebGL/source/JCGpuProgram.cpp
 	src/WebGL/include/WebGL/WebGLThread.h
@@ -282,13 +275,9 @@ list(APPEND CONCH_SRC
 	src/LayaAir/2D/Buffer.cpp
 	src/LayaAir/2D/ScreenCanvasContext2D.cpp
    
-	src/2D/CanvasRenderingContext2D.h
-	src/2D/CanvasRenderingContext2D.cpp
-	src/2D/FontDescription.h
-	src/2D/FontDescriptionParser.h
-	src/2D/FontDescriptionParser.cpp
-	src/2D/FontManager.h
-	src/2D/FontManager.cpp
+	src/2D/src/CanvasRenderingContext2D.cpp
+	src/2D/src/FontDescriptionParser.cpp
+	src/2D/src/FontManager.cpp
 
 	# 暴露给JS的类
 	src/Bindings/Bullet/LayaBulletExport.h
@@ -375,10 +364,6 @@ list(APPEND CONCH_SRC
 	src/manager/JCArrayBufferManager.h
 	src/manager/JCArrayBufferManager.cpp
 
-	# Performance/JCPerfHUD.h
-	# Performance/JCPerfHUD.cpp
-	# Performance/JCVBOManager.h
-	# Performance/JCVBOManager.cpp
 	src/resource/JCResource.h
 	src/resource/JCResource.cpp
 	src/resource/JCResManager.h
@@ -409,22 +394,23 @@ list(APPEND CONCH_SRC
 	src/JCSystemConfig.h
 	src/JCSystemConfig.cpp
 	src/platform/src/OS.cpp
+	src/backend/src/IBackend.cpp
 )
+
 list(APPEND PLATFORM_HEADER_DIR
 		src/platform/include
+		src/network/include
+		src/backend/include
 	)
 if(OS_IOS)
 	list(APPEND PLATFORM_HEADER_DIR
 		src/platform/iOS
 	)
 	list(APPEND CONCH_SRC
-		src/JCIOSFTInterface.h
 		src/Audio/ios/JCAudioMp3Player.cpp
 		src/Audio/ios/JCAudioMp3Player.h
 		src/downloadCache/JCIosFileSource.h
 		src/downloadCache/JCIosFileSource.cpp
-		src/IOSFreetype/JCIOSFreeType.h
-		src/IOSFreetype/JCIOSFreeType.cpp
 		src/Bindings/Video/JSVideo_IOSImpl.cpp
 		src/Bindings/JSIOSEditBox.h
 		src/Bindings/JSIOSEditBox.cpp
@@ -477,12 +463,9 @@ if(OS_IOS)
 		src/platform/iOS/Utils.h
 		src/platform/iOS/Utils.mm
 		src/platform/src/OSiOS.cpp
-		src/Backend/src/OpenGLBackendiOS.h
-		src/Backend/src/OpenGLBackendiOS.mm
-		src/network/HttpClientiOS.h
-		src/network/HttpClientiOS.mm
-		src/2D/CanvasRenderingContext2DCG.h
-		src/2D/CanvasRenderingContext2DCG.mm
+		src/backend/src/OpenGLBackendiOS.mm
+		src/network/src/HttpClientiOS.mm
+		src/2D/src/CanvasRenderingContext2DCG.mm
 		src/Bindings/PhysX/LayaPhysXExport.h
 		src/Bindings/PhysX/LayaPhysXExport.cpp
 		src/Bindings/PhysX/PxWebBindings.cpp
@@ -498,7 +481,6 @@ elseif(OS_ANDROID)
 		src/platform/Android
 		src/OpenAL/include
 		src/OpenAL/OpenAL32/Include
-		src/Backend/src
 	)
 	list(APPEND CONCH_SRC
 	src/Audio/android/JCAudioMp3Media.cpp
@@ -507,8 +489,7 @@ elseif(OS_ANDROID)
 		# Audio/android/JCAudioMp3Player.cpp
 		# Audio/android/JCAudioMp3Player.h
 		src/downloadCache/JCAndroidFileSource.h
-		src/network/HttpClientAndroid.h
-		src/network/HttpClientAndroid.cpp
+		src/network/src/HttpClientAndroid.cpp
 		src/platform/Android/JNIFun.cpp
 		src/platform/Android/CToJavaBridge.h
 		src/platform/Android/CToJavaBridge.cpp
@@ -516,10 +497,8 @@ elseif(OS_ANDROID)
 		src/Bindings/Video/JSVideo_AndroidImpl.cpp
 		src/Bindings/JSAndroidEditBox.h
 		src/Bindings/JSAndroidEditBox.cpp
-		src/Backend/src/OpenGLBackendAndroidEGL.h
-		src/Backend/src/OpenGLBackendAndroidEGL.cpp
-		src/2D/CanvasRenderingContext2DAndroid.h
-		src/2D/CanvasRenderingContext2DAndroid.cpp
+		src/backend/src/OpenGLBackendAndroidEGL.cpp
+		src/2D/src/CanvasRenderingContext2DAndroid.cpp
 		src/Bindings/PhysX/LayaPhysXExport.h
 		src/Bindings/PhysX/LayaPhysXExport.cpp
 		src/Bindings/PhysX/PxWebBindings.cpp
@@ -546,12 +525,9 @@ elseif(OS_WINDOWS)
 		src/Bindings/Video/JSVideo_Win32Impl.cpp
 		src/Bindings/JSWindowEditBox.h
 		src/Bindings/JSWindowEditBox.cpp
-		src/Backend/src/OpenGLBackendWinEGL.h
-		src/Backend/src/OpenGLBackendWinEGL.cpp
-		src/Backend/src/esUtil.h
-		src/Backend/src/esUtil.c
-		src/2D/CanvasRenderingContext2DWin.h
-		src/2D/CanvasRenderingContext2DWin.cpp
+		src/backend/src/OpenGLBackendWinEGL.cpp
+		src/backend/src/esUtil.c
+		src/2D/src/CanvasRenderingContext2DWin.cpp
 		src/resource/Audio/JCMp3Parser.h
 		src/resource/Audio/JCMp3Parser.cpp
 		src/Exports.cpp
@@ -559,11 +535,14 @@ elseif(OS_WINDOWS)
 		src/resource/Audio/JCAudioWavPlayer.h
 		src/resource/Audio/JCAudioWavPlayer.cpp
 		src/platform/src/OSWin.cpp
-		src/network/HttpClientCurl.cpp
 	)
+	if(CONCH_USE_CURL_DOWNLOAD)
+		list(APPEND CONCH_SRC
+		src/network/src/HttpClientCurl.cpp
+		)
+	endif()
 elseif(OS_OHOS)
 	list(APPEND PLATFORM_HEADER_DIR
-		src/Backend/src
 	)
 	list(APPEND CONCH_SRC
 		src/platform/ohos/napi/helper/NapiHelper.cpp
@@ -573,27 +552,24 @@ elseif(OS_OHOS)
     	src/platform/ohos/napi/modules/TouchesNapi.cpp
     	src/platform/ohos/napi/modules/VideoPlayerNapi.cpp
 		src/platform/src/OSOHOS.cpp
-		src/Backend/src/OpenGLBackendOHOSEGL.cpp
+		src/backend/src/OpenGLBackendOHOSEGL.cpp
 		src/Bindings/Video/JSVideo_OHOSImpl.cpp
-		src/2D/CanvasRenderingContext2DOHOS.cpp
+		src/2D/src/CanvasRenderingContext2DOHOS.cpp
 		src/Bindings/JSOHOSEditBox.cpp
 		src/resource/Audio/JCAudioWavplayer-openharmony.cpp
 		src/Audio/ohos/JCAudioMp3Player.cpp
-		src/network/HttpClientOHOS.cpp
+		src/network/src/HttpClientOHOS.cpp
 		src/resource/Audio/JCMp3Parser.cpp
 	)
 elseif(OS_LINUX)
 	list(APPEND PLATFORM_HEADER_DIR
-		src/Backend/src
 	)
 	list(APPEND CONCH_SRC
 		src/downloadCache/JCIosFileSource.h
 		src/downloadCache/JCIosFileSource.cpp
-		src/Backend/src/OpenGLBackendLinuxEGLX11.h
-		src/Backend/src/OpenGLBackendLinuxEGLX11.cpp
+		src/backend/src/OpenGLBackendLinuxEGLX11.cpp
 		src/Bindings/Video/JSVideo_LinuxImpl.cpp
-		src/2D/CanvasRenderingContext2DLinux.h
-		src/2D/CanvasRenderingContext2DLinux.cpp
+		src/2D/src/CanvasRenderingContext2DLinux.cpp
 		src/Bindings/JSLinuxEditBox.h
 		src/Bindings/JSLinuxEditBox.cpp
 		src/Exports.cpp
@@ -639,7 +615,11 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 	LINK_FLAGS_RELEASE "${CONCH_PLATFORM_LINK_FLAGS_RELEASE}"
 	OUTPUT_NAME "conch"
 )
-
+if(CONCH_USE_CURL_DOWNLOAD)
+	set(LINK_LIBS
+		network
+	)
+endif()
 if(OS_ANDROID)
 	# if(ANDROID_ABI STREQUAL "x86")
 	# set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-warn-shared-textrel")
@@ -760,11 +740,13 @@ elseif(OS_IOS)
 	)
 	set_property(TARGET ${PROJECT_NAME} PROPERTY XCODE_ATTRIBUTE_ENABLE_BITCODE "NO")
 elseif(OS_WINDOWS)
+	
 	#target_compile_definitions(${PROJECT_NAME} PRIVATE GL_GLEXT_PROTOTYPES)
 	target_link_libraries(${PROJECT_NAME} PUBLIC
 		#crypt32.lib
 		#WS2_32.lib
 		#wldap32.lib
+		${LINK_LIBS}
 		version.lib
 		Setupapi.lib
 		imm32.lib
@@ -788,7 +770,6 @@ elseif(OS_WINDOWS)
 		vorbis
 		ogg
 		freetype
-		curl
 		v8
 		v8_libbase
 		v8_libplatform
@@ -802,6 +783,7 @@ elseif(OS_WINDOWS)
 		SDL2
 		SDL2main
 		video
+		curl
 	)
 elseif(OS_OHOS)
 	target_link_libraries(${PROJECT_NAME} PUBLIC

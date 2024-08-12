@@ -20,17 +20,6 @@
 #include "render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.h"
 #include <render/Property.h>
 #include "../../LayaAir/2D/ScreenCanvasContext2D.h"
-#if defined(OS_IOS)
-#include "OpenGLBackendiOS.h"
-#elif defined(OS_LINUX)
-#include "OpenGLBackendLinuxEGLX11.h"
-#elif defined(OS_ANDROID)
-#include "OpenGLBackendAndroidEGL.h"
-#elif defined(OS_WINDOWS)
-#include "OpenGLBackendWinEGL.h"
-#elif defined(OS_OHOS)
-#include "OpenGLBackendOHOSEGL.h"
-#endif
 #include "render/LayaGL.h"
 extern int g_nInnerHeight;
 extern int g_nInnerWidth;
@@ -45,7 +34,6 @@ namespace laya
 	{
         m_pRenderThread = NULL;
         m_nFrameCount = 0;
-		m_fShowPerfScale = 0;
         m_pFileResManager = (JCFileResManager*)pFileResManager;
         m_blitContext = new GLESRenderContext2D();
         m_blitContext->pipelineMode = "Forward";
@@ -143,11 +131,6 @@ namespace laya
                 delete m_pUniformBufferObjectManager;
                 m_pUniformBufferObjectManager = NULL;
             }
-            if (LayaGL::m_pWebglEngine)
-            {   
-                delete LayaGL::m_pWebglEngine;
-                LayaGL::m_pWebglEngine = nullptr;
-            }
 
             delete m_GfxBackend;
             m_GfxBackend = nullptr;
@@ -176,7 +159,6 @@ namespace laya
 	void JCConchRender::clearAllData()
 	{
         LOGI(">>>JCConchRender::clearAllData = %s", ToString<std::thread::id >::convert(std::this_thread::get_id()).c_str());
-        //m_kPerfRender.invalidGLRes();
         m_pLayaGL->deleteAllGLRes();
         //图片全部清空
         if (m_pImageManager) {
@@ -198,6 +180,9 @@ void JCConchRender::setMainContextSize(int width,int height)
 }
 void JCConchRender::start()
 {
+    if (g_kSystemConfig.m_graphicsAPI != GraphicsAPI::OpenGLES) {
+        return;
+    }
     if (!LayaGL::m_pWebglEngine)
     {
         return;
@@ -213,14 +198,16 @@ void JCConchRender::start()
 }
 void JCConchRender::end()
 {
+    
+    if (g_kSystemConfig.m_graphicsAPI != GraphicsAPI::OpenGLES) {
+        return;
+    }
     if (!LayaGL::m_pWebglEngine)
     {
         return;
     }
 
-    if (g_kSystemConfig.m_graphicsAPI != GraphicsAPI::OpenGLES) {
-        return;
-    }
+    
 
     int last_width;
     int last_height;
@@ -253,13 +240,6 @@ void JCConchRender::requestCaptureScreen()
         auto  func = [this, nativeHandle]() {
             m_GfxBackend->createScreenSurface(nativeHandle);
             m_GfxBackend->makeCurrent();
-            if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL && LayaGL::m_pWebglEngine == nullptr)
-            {
-                WebGLConfig config;
-                LayaGL::m_pWebglEngine = new GLESEngine(config, WebGLMode::Auto);
-                LayaGL::m_pWebglEngine->initRenderEngine();
-                LayaGL::m_pWebglEngine->createTextureContext(LayaGL::m_pWebglEngine->isWebGL2());
-            }
         };
         if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL) {
             m_WebGLThread->postTaskAsync(func);
@@ -296,18 +276,7 @@ void JCConchRender::requestCaptureScreen()
     {
         auto  func = [this, options]() { 
                         if (m_GfxBackend == nullptr) {
- #if defined(OS_IOS)
-                m_GfxBackend = new OpenGLBackendiOS();
-#elif defined(OS_LINUX)
-                m_GfxBackend = new OpenGLBackendLinuxEGLX11();
-#elif defined(OS_ANDROID)
-                m_GfxBackend = new OpenGLBackendAndroidEGL();
-#elif defined(OS_WINDOWS)
-                m_GfxBackend = new OpenGLBackendWinEGL();
-#elif defined(OS_OHOS)
-                m_GfxBackend = new OpenGLBackendOHOSEGL();
-#endif
-                m_GfxBackend->create(options);
+                m_GfxBackend = laya::createBackend(options);
             }
         };
         if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL) {

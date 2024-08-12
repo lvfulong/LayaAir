@@ -41,17 +41,12 @@ JCSystemConfig::JCSystemConfig()
 {
     reset();
 }
-bool JCSystemConfig::s_bLocalizable = false;
 void JCSystemConfig::reset()
 {
-    m_bPerfStat = false;
     m_nFrameType = FT_FAST;
     m_nFrameThreshold = 2000;
     m_nSleepTime = 0;
     m_strStartURL = "";
-    m_nPerf_UpdateNum = 500;
-    s_bLocalizable = false;
-    m_bShowInternalPerBar = false;
 }
 
 void JCSystemConfig::loadConfigIniFile()

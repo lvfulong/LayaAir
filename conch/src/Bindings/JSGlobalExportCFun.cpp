@@ -529,10 +529,6 @@ namespace laya
         context.function("alert", &JSAlert);
         context.function("print", &JSPrint);
         context.function("evalJS", &evalJS);
-        //JSP_ADD_GLOBAL_FUNCTION(PerfShow, PerfShow, int);
-        //JSP_ADD_GLOBAL_FUNCTION(PerfAddData, PerfAddData, int,int,float,float);
-        //JSP_ADD_GLOBAL_FUNCTION(PerfUpdateDt, PerfUpdateDt, int,float);
-
         context.function("readFileSync", &readFileSync1);
         context.function("writeStrFileSync", &writeStrFileSync);
         context.function("readTextAsset", &readTextAsset);

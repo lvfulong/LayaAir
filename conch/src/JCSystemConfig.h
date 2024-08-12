@@ -28,15 +28,11 @@ class JCSystemConfig
 
   public:
     std::string m_strStartURL;
-    bool m_bPerfStat;
     FRAME_TYPE m_nFrameType;
     double m_nFrameThreshold;
     int m_nSleepTime;
-    int m_nPerf_UpdateNum;
     std::string m_strPerfOut;
-    bool m_bShowInternalPerBar;
     static bool s_bIsPlug;
-    static bool s_bLocalizable;
     GraphicsAPI m_graphicsAPI = GraphicsAPI::OpenGLES;
     int m_nOrientationType = 24;
     void loadConfigIniFile();

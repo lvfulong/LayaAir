@@ -521,14 +521,6 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
     {
         return m_fScreenScaleH;
     }
-    bool JSConchConfig::getLocalable()
-    {
-        return JCSystemConfig::s_bLocalizable;
-    }
-    void JSConchConfig::setLocalable(bool isLocalPackage)
-    {
-        JCSystemConfig::s_bLocalizable = isLocalPackage;
-    }
     void JSConchConfig::setMouseFrame(double thredholdms)
     {
         g_kSystemConfig.m_nFrameType = FT_MOUSE;
@@ -587,30 +579,6 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
     void JSConchConfig::enableMemorySurvey(bool bEnable)
     {
         JCMemorySurvey::GetInstance()->setEnable(bEnable);
-    }
-    void JSConchConfig::showInternalPerfBar(int b, float scale) 
-    {
-        if (scale == 0.0f)scale = 10.0f;
-
-        if (b > 0) {
-            g_kSystemConfig.m_bShowInternalPerBar = true;
-
-            //JCPerfHUD::addData(new perfBarData(JCPerfHUD::PHUD_BAR_JS_ONDRAW, 0x6600ff00, "jsbar", scale));
-            //JCPerfHUD::addData(new perfBarData(JCPerfHUD::PHUD_BAR_RENDER, 0x66ff0000, "renderbar", scale));
-            //JCPerfHUD::addData(new perfBarData(JCPerfHUD::PHUD_BAR_JSWAIT, 0x66003300, "jswait", scale));
-            //JCPerfHUD::addData(new perfBarData(JCPerfHUD::PHUD_BAR_GLWAIT, 0x66330000, "glwait", scale));
-        }
-        else {
-            g_kSystemConfig.m_bShowInternalPerBar = false;
-            //JCPerfHUD::delData(JCPerfHUD::PHUD_BAR_JS_ONDRAW);
-            //JCPerfHUD::delData(JCPerfHUD::PHUD_BAR_RENDER);
-            //JCPerfHUD::delData(JCPerfHUD::PHUD_BAR_JSWAIT);
-            //JCPerfHUD::delData(JCPerfHUD::PHUD_BAR_GLWAIT);
-        }
-    }
-    void JSConchConfig::testSleep(int tm) 
-    {
-        std::this_thread::sleep_for(std::chrono::milliseconds(tm));
     }
     void JSConchConfig::setDownloadConnTimeout(int tm) 
     {
@@ -714,9 +682,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 		 class_binding.class_function("setDebugLevel", &JSConchConfig::setDebugLevel);
 		 class_binding.class_function("setImageReleaseSpaceTime", &JSConchConfig::setImageReleaseSpaceTime);
 		 class_binding.class_function("enableMemorySurvey", &JSConchConfig::enableMemorySurvey);
-		 class_binding.class_function("showInternalPerfBar", &JSConchConfig::showInternalPerfBar);
 		 class_binding.class_function("getIPAddress", &JSConchConfig::getIPAddress);
-		 class_binding.class_function("test_sleep", &JSConchConfig::testSleep);
 		 class_binding.class_function("setDownloadConnTimeout", &JSConchConfig::setDownloadConnTimeout);
 		 class_binding.class_function("setDownloadOptTimeout", &JSConchConfig::setDownloadOptTimeout);
 		 class_binding.class_function("printAllMemorySurvey", &JSConchConfig::printAllMemorySurvey);
@@ -734,7 +700,6 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         class_binding.class_property("JSDebugPort", &JSConchConfig::getJSDebugPort, &JSConchConfig::setJSDebugPort);
         class_binding.class_property("conchWebGL", &JSConchConfig::getConchWebGL);
         class_binding.class_property("urlIgnoreCase", &JSConchConfig::getUrlIgnoreCase, &JSConchConfig::setUrlIgnoreCase);
-        class_binding.class_property("localizable", &JSConchConfig::getLocalable, &JSConchConfig::setLocalable);
         context.class_("conchConfig", class_binding);
     }
 }

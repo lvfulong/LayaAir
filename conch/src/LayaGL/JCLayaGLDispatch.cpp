@@ -1,17 +1,8 @@
-/**
-@file			JCLayaGLDispatch.cpp
-@brief			
-@author			James
-@version		1.0
-@date			2018_5_25
-*/
-
 #include "JCLayaGLDispatch.h"
 #include "../JCCmdStruct.h"
 #include <utils/Log.h>
 #include <manager/JCArrayBufferManager.h>
 #include <utils/JCCommonMethod.h>
-//#include "Performance/JCPerfHUD.h"
 #include "2D/CanvasRenderingContext2D.h"
 
 namespace laya

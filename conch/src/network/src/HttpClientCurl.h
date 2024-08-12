@@ -1,0 +1,56 @@
+#ifndef __HTTP_CLIENT_CURL_H__
+#define __HTTP_CLIENT_CURL_H__
+
+#include <network/curl/CurlHandle.h>
+#include <network/curl/CurlScheduler.h>
+#include <network/curl/CurlSchedulerClient.h>
+#include "network/IHttpClient.h"
+#include <string>
+#include <vector>
+namespace laya
+{
+class HttpClientCurl : public IHttpClient, public CurlSchedulerClient
+{
+  public:
+    HttpClientCurl(const std::string &url, const std::string &localFilePath,
+                   const onProgressFunction &functionOnProgress, const onEndFunction &functionOnEnd,
+                   std::weak_ptr<HttpClientManager> httpClientManager);
+
+    ~HttpClientCurl();
+    void doRequest() override;
+    void addHeader(const std::string &key, const std::string &value) override;
+    void postData(const char *pData, int nLen) override;
+    void setMethod(const std::string &method) override;
+    void setReadTimeout(int miliseconds) override;
+    void setConnectTimeout(int miliseconds) override;
+    void cancel() override;
+
+  private:
+    CURL * getHandle() override;
+    CURL *setupTransfer() override;
+    void didCompleteTransfer(CURLcode result) override;
+    void didCancelTransfer() override;
+    void setupPOST();
+    void setupPUT();
+
+    static size_t willSendDataCallback(char *ptr, size_t blockSize, size_t numberOfBlocks, void *userData);
+    static size_t didReceiveHeaderCallback(char *ptr, size_t blockSize, size_t numberOfBlocks, void *userData);
+    static size_t didReceiveDataCallback(char *ptr, size_t blockSize, size_t numberOfBlocks, void *userData);
+    size_t willSendData(char *buffer, size_t blockSize, size_t numberOfBlocks);
+    size_t didReceiveHeader(std::string &&header);
+
+    size_t didReceiveData(uint8_t *receivedData, size_t bytes);
+
+  private:
+    std::unique_ptr<CurlHandle> m_curlHandle;
+    std::string m_method;
+    std::vector<uint8_t> m_data;
+    int m_readTimeout = 0;    // todo
+    int m_connectTimeout = 0; // todo
+    std::string m_responseHead;
+    std::vector<uint8_t> m_recieveData;
+    long m_statusCode{0};
+    long m_httpConnectCode{0};
+};
+} // namespace laya
+#endif
