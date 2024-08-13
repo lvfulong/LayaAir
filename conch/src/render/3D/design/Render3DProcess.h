@@ -11,7 +11,6 @@ namespace laya
 {
 
 class GLESBaseRenderNode;
-class JSTransform;
 /*class CameraNode
 {
   public:

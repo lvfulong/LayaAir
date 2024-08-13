@@ -4,7 +4,7 @@
 #include <render/Property.h>
 #include <render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.h>
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderGeometryElement.h"
-#include "Bindings/LayaAir/3D/JSTransform.h"
+#include "Bindings/LayaAir/3D/JSRTTransform.h"
 namespace laya
 {
 	uint32_t GLESInstanceRenderElement3D::maxInstanceCount = 1024;

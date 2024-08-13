@@ -9,11 +9,11 @@
 
 namespace laya
 {
-  class JSTransform;
+  class JSRTTransform;
 class RTCameraNodeData
 {
   public:
-    JSTransform *transform;
+      JSRTTransform* transform;
     float farplane;
     float nearplane;
     float fieldOfView;
@@ -23,7 +23,7 @@ class RTCameraNodeData
     {
         projectViewMatrix = value;
     }
-    void setTransform(JSTransform* value)
+    void setTransform(JSRTTransform* value)
     {
         transform = value;
     }

@@ -328,8 +328,8 @@ list(APPEND CONCH_SRC
 	src/Bindings/JSShaderActiveInfo.cpp
 	src/Bindings/JSShaderPrecisionFormat.h
 	src/Bindings/JSShaderPrecisionFormat.cpp
-	src/Bindings/LayaAir/3D/JSTransform.h
-	src/Bindings/LayaAir/3D/JSTransform.cpp
+	src/Bindings/LayaAir/3D/JSRTTransform.h
+	src/Bindings/LayaAir/3D/JSRTTransform.cpp
 	src/Bindings/LayaAir/3D/JSBounds.h
 	src/Bindings/LayaAir/3D/JSBounds.cpp
 	src/Bindings/LayaAir/3D/JSSubmitScene3D.h

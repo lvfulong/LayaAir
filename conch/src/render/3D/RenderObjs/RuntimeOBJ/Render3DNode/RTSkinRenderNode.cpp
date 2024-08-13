@@ -1,6 +1,6 @@
 #include "RTSkinRenderNode.h"
 #include "render/Utils3D.h"
-#include "Bindings/LayaAir/3D/JSTransform.h"
+#include "Bindings/LayaAir/3D/JSRTTransform.h"
 #include <render/Property.h>
 
 namespace laya
@@ -35,7 +35,7 @@ namespace laya
 			else {
 				if (bones.size() == 0)
 					return;
-				JSTransform* bone = bones[index];
+				JSRTTransform* bone = bones[index];
 				if (bone) {
 					laya::Utils3D::_mulMatrixArray(bone->getWorldMatrix().elements, inverseBindPose[index].elements, 0, data, k * 16);
 				}
@@ -90,7 +90,7 @@ namespace laya
 		bones.clear();
 	}
 
-	void RTSkinRenderNode::addBoneTransform(JSTransform* value)
+	void RTSkinRenderNode::addBoneTransform(JSRTTransform* value)
 	{
 		bones.push_back(value);
 	}

@@ -1,5 +1,5 @@
 #include "RTSimpleSkinRenderNode.h"
-#include "Bindings/LayaAir/3D/JSTransform.h"
+#include "Bindings/LayaAir/3D/JSRTTransform.h"
 #include <render/Property.h>
 
 namespace laya
@@ -12,4 +12,5 @@ namespace laya
         _applyLightProb();
         shaderData->setVector(SimpleSkinRender3DProperty::SIMPLE_SIMPLEANIMATORPARAMS, simpleAnimatorParams);
     };
+
 }// namespace laya
