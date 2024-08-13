@@ -2,8 +2,6 @@
 #define __ffplay_FrameQueue_H__
 #include "ffplay_Config.h"
 #include "ffplay_PacketQueue.h"
-#include "libavutil/frame.h"
-#include <libavcodec/avcodec.h>
 namespace ffplay
 {
 /* Common struct for handling all types of decoded data and allocated render buffers. */

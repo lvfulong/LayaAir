@@ -82,7 +82,7 @@ void RTBaseRenderNode::_renderUpdate(GLESRenderContext3D *context)
     }
     _applyReflection();
     _applyLightProb();
-    this->shaderData->setMatrix4x4(Sprite3DProperty::WORLDMATRIX, transform->getWorldMatrix());//TODO ²»±ä²»ÓÃÉèÖÃÓÅ»¯
+    this->shaderData->setMatrix4x4(Sprite3DProperty::WORLDMATRIX, transform->getWorldMatrix());//TODO ï¿½ï¿½ï¿½ä²»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å»ï¿½
     if (this->worldParams.x != transform->getFrontFaceValue()) {
         this->worldParams.x = transform->getFrontFaceValue();
         this->shaderData->setVector(Sprite3DProperty::WORLDINVERTFRONT, this->worldParams);
@@ -146,5 +146,7 @@ void RTBaseRenderNode::setRenderElements(const std::vector<GLESRenderElement3D *
 void RTBaseRenderNode::destroy()
 {
     // TODO
+    m_JSFunctionRenderUpdatePre.reset();
+    m_JSFunctionCalculateBoundingBox.reset();
 }
 } // namespace laya

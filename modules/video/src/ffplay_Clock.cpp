@@ -1,6 +1,5 @@
 #include "ffplay_Clock.h"
 #include "ffplay_Config.h"
-#include "libavutil/time.h"
 namespace ffplay
 {
 double get_clock(Clock *c)

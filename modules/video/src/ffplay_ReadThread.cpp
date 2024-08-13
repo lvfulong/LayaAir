@@ -1,13 +1,9 @@
 #include "ffplay_ReadThread.h"
 #include "ffplay.h"
 #include "ffplay_AudioThread.h"
-#include "ffplay_Config.h"
 #include "ffplay_SubtitleThread.h"
 #include "ffplay_Utils.h"
 #include "ffplay_VideoThread.h"
-#include "libavutil/error.h"
-#include "libavutil/log.h"
-#include "libavutil/time.h"
 namespace ffplay
 {
 static int stream_has_enough_packets(AVStream *st, int stream_id, PacketQueue *queue)
@@ -145,6 +141,7 @@ fail:
     av_freep(&opts);
     return ret;
 }
+// turn hwaccel off now
 static int create_hwaccel(AVBufferRef **device_ctx)
 {
     enum AVHWDeviceType type;
@@ -174,8 +171,6 @@ static int create_hwaccel(AVBufferRef **device_ctx)
     av_log(NULL, AV_LOG_WARNING, "Derive %s from vulkan not supported.\n", VideoState::hwaccel);
     ret = av_hwdevice_ctx_create(device_ctx, type, NULL, NULL, 0);
     return ret;*/
-
-    // lvtodo
 }
 /* open a given stream. Return 0 if OK */
 static int stream_component_open(VideoState *is, int stream_index)
@@ -648,7 +643,8 @@ int read_thread(void *arg)
              (is->auddec.finished == is->audioq.serial && frame_queue_nb_remaining(&is->sampq) == 0)) &&
             (!is->video_st || (is->viddec.finished == is->videoq.serial && frame_queue_nb_remaining(&is->pictq) == 0)))
         {
-            if (is->loop != 1 && (!is->loop || --is->loop))
+            // if (is->loop != 1 && (!is->loop || --is->loop))
+            if (is->m_loop)
             {
                 stream_seek(is, is->start_time != AV_NOPTS_VALUE ? is->start_time : 0, 0, 0);
             }

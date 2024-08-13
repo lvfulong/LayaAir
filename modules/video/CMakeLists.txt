@@ -7,6 +7,19 @@ set(PUBLIC_HEADER_DIR include)
 
 set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/VideoPlayer.h
+    src/ffplay.h
+    src/ffplay_Config.h
+    src/ffplay_Clock.h
+    src/ffplay_PacketQueue.h
+    src/ffplay_FrameQueue.h
+    src/ffplay_Decoder.h
+    src/ffplay_VideoThread.h
+    src/ffplay_AudioThread.h
+    src/ffplay_ReadThread.h
+    src/ffplay_AudioRender.h
+    src/ffplay_VideoRender.h
+    src/ffplay_SubtitleThread.h
+    src/ffplay_Utils.h
 )
 
 set(SOURCES
@@ -36,6 +49,8 @@ target_link_libraries(${TARGET}
     avfilter
     avformat
     avutil
+    swresample
+    swscale
     SDL2
     SDL2main
     utils

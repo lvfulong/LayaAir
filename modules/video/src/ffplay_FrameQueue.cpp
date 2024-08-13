@@ -1,7 +1,5 @@
 #include "ffplay_FrameQueue.h"
 #include "ffplay_Config.h"
-#include "libavutil/time.h"
-#include <libavcodec/avcodec.h>
 namespace ffplay
 {
 static void frame_queue_unref_item(Frame *vp)

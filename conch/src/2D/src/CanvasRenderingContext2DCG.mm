@@ -8,15 +8,18 @@
 #include <utils/JCCommonMethod.h>
 #include <utils/JCCrypto.h>
 #include <utils/Log.h>
-#include "FontManager.h"
-#include <CoreGraphics/CGDataProvider.h>
-#include <CoreGraphics/CGFont.h>
+#include <utils/JCBuffer.h>
+#include "2D/FontManager.h"
 #include <CoreText/CTFontManager.h>
 #include "FontDescription.h"
+#include <utils/JCFileSystem.h>
+
+extern std::string gRedistPath;
 
 namespace laya
 {
-
+std::unordered_map<std::string, std::string> CanvasRenderingContext2DCG::m_fontName2RealName;
+std::unordered_map<std::string, NativeInfoImpl*> CanvasRenderingContext2DCG::m_fontName2NativeInfoImpl;
 class CanvasRenderingContext2DCGImpl
 {
   public:
@@ -292,7 +295,7 @@ void CanvasRenderingContext2DCG::chooseFont(const std::string& strFontName)
     }
     else*/ if (isBold)
     {
-        auto pair = FontManager::getInstance()->getRealFontName(strFontName + "-Bold");
+        auto pair = CanvasRenderingContext2DCG::getRealFontName(strFontName + "-Bold");
         //real name is not xx-Bold is some like xx Bold
         if (pair.first) {
             NSString *fontNameBold = [NSString stringWithUTF8String:pair.second.c_str()];
@@ -318,7 +321,7 @@ void CanvasRenderingContext2DCG::setFont(const char *font)
     bool isBold = m_fontDescription->isBold();
     bool isItalic = m_fontDescription->isItalic();
     
-    auto pair = FontManager::getInstance()->getRealFontName(m_fontDescription->m_family);
+    auto pair = CanvasRenderingContext2DCG::getRealFontName(m_fontDescription->m_family);
     
     if (pair.first) {
         chooseFont(pair.second);
@@ -407,7 +410,7 @@ std::vector<std::string> getAllSystemFontsIOS()
         vec.emplace_back(std::string([familyName UTF8String]));
     }   
 }
-static bool registerFontIOS(const std::string &family, CGDataProviderRef fontDataProvider)
+bool CanvasRenderingContext2DCG::registerFontIOS(const std::string &family, CGDataProviderRef fontDataProvider)
 {
     CGFontRef registerfont = CGFontCreateWithDataProvider(fontDataProvider);
 
@@ -433,13 +436,13 @@ static bool registerFontIOS(const std::string &family, CGDataProviderRef fontDat
     //LOGE("registerFont family: %s strRealFontName: %s", family.c_str(), strRealFontName.c_str());
 
     CFErrorRef error = nullptr;
-    auto it = FontManager::getInstance()->m_fontName2NativeInfoImpl.find(family);
-    if (it != FontManager::getInstance()->m_fontName2NativeInfoImpl.end())
+    auto it = CanvasRenderingContext2DCG::m_fontName2NativeInfoImpl.find(family);
+    if (it != CanvasRenderingContext2DCG::m_fontName2NativeInfoImpl.end())
     {
         CTFontManagerUnregisterGraphicsFont(it->second->m_registerfont, &error);
         CGFontRelease(it->second->m_registerfont);
         delete it->second;
-        FontManager::getInstance()->m_fontName2NativeInfoImpl.erase(it);
+        CanvasRenderingContext2DCG::m_fontName2NativeInfoImpl.erase(it);
     }
     
     CTFontManagerRegisterGraphicsFont(registerfont, &error);
@@ -461,10 +464,10 @@ static bool registerFontIOS(const std::string &family, CGDataProviderRef fontDat
     }
 
     
-    FontManager::getInstance()->m_fontName2RealName.insert(std::make_pair(family, strRealFontName));
+    CanvasRenderingContext2DCG::m_fontName2RealName.insert(std::make_pair(family, strRealFontName));
     NativeInfoImpl* info = new NativeInfoImpl;
     info->m_registerfont = registerfont;
-    FontManager::getInstance()->m_fontName2NativeInfoImpl.insert(std::make_pair(family, info));
+    CanvasRenderingContext2DCG::m_fontName2NativeInfoImpl.insert(std::make_pair(family, info));
     LOGI("registerFont succeed: %s", family.c_str());
     return true;
 }

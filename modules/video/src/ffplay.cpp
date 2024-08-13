@@ -7,12 +7,12 @@ namespace ffplay
 
 int VideoState::startup_volume = 100;
 int VideoState::decoder_reorder_pts = -1; // let decoder reorder pts 0=off 1=on -1=auto
-int VideoState::audio_disable = 0;
+// int VideoState::audio_disable = 0;
 int VideoState::video_disable = 0;
 int64_t VideoState::start_time = AV_NOPTS_VALUE;
 int64_t VideoState::duration = AV_NOPTS_VALUE;
 int VideoState::autoexit = 1; //??
-int VideoState::loop = 1;
+// int VideoState::loop = 1;
 int VideoState::infinite_buffer = -1;
 int VideoState::subtitle_disable = 0; //??
 const char *VideoState::wanted_stream_spec[AVMEDIA_TYPE_NB] = {0};
@@ -33,6 +33,9 @@ VideoState::ShowMode VideoState::s_show_mode = SHOW_MODE_NONE;
 int VideoState::autorotate = 1;
 const char **VideoState::vfilters_list = NULL;
 int VideoState::framedrop = -1;
+int VideoState::display_disable = 0;
+double VideoState::rdftspeed = 0.02;
+
 static void stream_component_close(VideoState *is, int stream_index)
 {
     AVFormatContext *ic = is->ic;
@@ -127,8 +130,37 @@ static void stream_close(VideoState *is)
     if (is->sub_texture)
         SDL_DestroyTexture(is->sub_texture);
     av_free(is);
-}
 
+    sws_freeContext(is->img_convert_ctx);
+}
+void do_exit(VideoState *is)
+{
+    if (is)
+    {
+        stream_close(is);
+    }
+    /*if (renderer)
+        SDL_DestroyRenderer(renderer);
+    if (vk_renderer)
+        vk_renderer_destroy(vk_renderer);
+    if (window)
+        SDL_DestroyWindow(window);
+
+    uninit_opts();
+    for (int i = 0; i < nb_vfilters; i++)
+        av_freep(&vfilters_list[i]);
+    av_freep(&vfilters_list);
+    av_freep(&video_codec_name);
+    av_freep(&audio_codec_name);
+    av_freep(&subtitle_codec_name);
+    av_freep(&input_filename);
+    avformat_network_deinit();
+    if (VideoState::show_status)
+        printf("\n");*/
+    // SDL_Quit();
+    // av_log(NULL, AV_LOG_QUIET, "%s", "");
+    // exit(0);
+}
 static int create_hwaccel(AVBufferRef **device_ctx)
 {
     enum AVHWDeviceType type;
@@ -161,14 +193,49 @@ static int create_hwaccel(AVBufferRef **device_ctx)
 
     // lvtodo
 }
-
-VideoState *stream_open(const char *filename, const AVInputFormat *iformat)
+/* pause or resume the video */
+static void stream_toggle_pause(VideoState *is)
 {
-    VideoState *is;
+    if (is->paused)
+    {
+        is->frame_timer += av_gettime_relative() / 1000000.0 - is->vidclk.last_updated;
+        if (is->read_pause_return != AVERROR(ENOSYS))
+        {
+            is->vidclk.paused = 0;
+        }
+        set_clock(&is->vidclk, get_clock(&is->vidclk), is->vidclk.serial);
+    }
+    set_clock(&is->extclk, get_clock(&is->extclk), is->extclk.serial);
+    is->paused = is->audclk.paused = is->vidclk.paused = is->extclk.paused = !is->paused;
+}
+void toggle_pause(VideoState *is)
+{
+    stream_toggle_pause(is);
+    is->step = 0;
+}
+void do_pause(VideoState *is)
+{
+    set_clock(&is->extclk, get_clock(&is->extclk), is->extclk.serial);
+    is->paused = is->audclk.paused = is->vidclk.paused = is->extclk.paused = !is->paused;
+    is->step = 0;
 
-    is = (VideoState *)av_mallocz(sizeof(VideoState));
-    if (!is)
-        return NULL;
+    is->muted = 1;
+}
+void do_play(VideoState *is)
+{
+    if (is->paused)
+    {
+        toggle_pause(is);
+    }
+    is->muted = 0;
+}
+bool stream_open(VideoState *is, const char *filename, const AVInputFormat *iformat)
+{
+    // VideoState *is;
+
+    // is = (VideoState *)av_mallocz(sizeof(VideoState));
+    // if (!is)
+    //     return NULL;
     is->last_video_stream = is->video_stream = -1;
     is->last_audio_stream = is->audio_stream = -1;
     is->last_subtitle_stream = is->subtitle_stream = -1;
@@ -208,21 +275,37 @@ VideoState *stream_open(const char *filename, const AVInputFormat *iformat)
     is->startup_volume = av_clip(is->startup_volume, 0, 100);
     is->startup_volume = av_clip(SDL_MIX_MAXVOLUME * is->startup_volume / 100, 0, SDL_MIX_MAXVOLUME);
     is->audio_volume = is->startup_volume;
-    is->muted = 0;
+    is->muted = 1;
     // is->av_sync_type = av_sync_type;
     is->read_tid = SDL_CreateThread(read_thread, "read_thread", is);
 
-    av_dict_set(&is->swr_opts, "dummy", "dummy", 0);    // create dic
-    av_dict_set(&is->format_opts, "dummy", "dummy", 0); // create dic
-    av_dict_set(&is->codec_opts, "dummy", "dummy", 0);  // create dic
-    av_dict_set(&is->sws_dict, "dummy", "dummy", 0);    // create dic lvtodo
+    av_dict_set(&is->swr_opts, "", nullptr, 0);    // create dic
+    av_dict_set(&is->format_opts, "", nullptr, 0); // create dic
+    av_dict_set(&is->codec_opts, "", nullptr, 0);  // create dic
+    av_dict_set(&is->sws_dict, "", nullptr, 0);    // create dic lvtodo
     if (!is->read_tid)
     {
         av_log(NULL, AV_LOG_FATAL, "SDL_CreateThread(): %s\n", SDL_GetError());
     fail:
         stream_close(is);
-        return NULL;
+        return false;
     }
-    return is;
+    is->m_videoState = EVideoState::HAVE_ENOUGH_DATA;
+    /*************************************************************** */
+    if (is->m_emitFunc)
+    {
+        if (is->m_autoplay)
+        {
+            do_play(is);
+        }
+        else
+        {
+            do_pause(is);
+        }
+        is->m_emitFunc("loadedmetadata");
+        is->m_emitFunc("canplay");
+    }
+    /*************************************************************** */
+    return true;
 }
 } // namespace ffplay

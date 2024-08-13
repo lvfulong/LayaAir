@@ -26,6 +26,14 @@ enum
     AV_SYNC_EXTERNAL_CLOCK, /* synchronize to an external clock */
 };
 
+enum class EVideoState
+{
+    HAVE_NOTHING = 0,
+    HAVE_METADATA = 1,
+    HAVE_CURRENT_DATA = 2,
+    HAVE_FUTURE_DATA = 3,
+    HAVE_ENOUGH_DATA = 4,
+};
 typedef struct VideoState
 {
     SDL_Thread *read_tid;
@@ -144,13 +152,13 @@ typedef struct VideoState
     /**/
     static int startup_volume;
     static int decoder_reorder_pts;
-    static int audio_disable;
+    int audio_disable = 0;
     static int video_disable;
     static const char *window_title;
     static int64_t start_time;
     static int64_t duration;
     static int autoexit;
-    static int loop;
+    // static int loop;
     static int infinite_buffer;
     static int subtitle_disable;
     static const char *wanted_stream_spec[AVMEDIA_TYPE_NB];
@@ -170,14 +178,27 @@ typedef struct VideoState
     static int autorotate;
     static const char **vfilters_list;
     static int framedrop;
+    static int display_disable;
+    static double rdftspeed;
     /* current context */
     // int is_full_screen;
     int64_t audio_callback_time;
     SDL_AudioDeviceID audio_dev;
     SDL_RendererInfo renderer_info = {0};
 
+    SwsContext *img_convert_ctx = nullptr;
+    std::function<void(unsigned char *data, int width, int height, int bufferSize)> render_callback;
+
+    EVideoState m_videoState = EVideoState::HAVE_NOTHING;
+    std::function<void(const char *)> m_emitFunc;
+
+    bool m_loop = false;
+    bool m_autoplay = false;
 } VideoState;
 
-VideoState *stream_open(const char *filename, const AVInputFormat *iformat);
+bool stream_open(VideoState *is, const char *filename, const AVInputFormat *iformat);
+void do_pause(VideoState *is);
+void do_play(VideoState *is);
+void do_exit(VideoState *is);
 } // namespace ffplay
 #endif
