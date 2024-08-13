@@ -21,6 +21,12 @@ class VideoPlayer
     void setEmit(std::function<void(const char *)> emitFun);
     void setLoop(bool loop);
     bool getLoop();
+    void play();
+    void pause();
+    bool getPause();
+    bool getAutoplay();
+    void setAutoplay(bool value);
+    void stop();
     static void init();
     static void destroy();
 

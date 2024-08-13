@@ -92,14 +92,6 @@ int video_thread(void *arg)
     if (!frame)
         return AVERROR(ENOMEM);
 
-    is->m_videoState = EVideoState::HAVE_ENOUGH_DATA;
-
-    if (is->m_emitFunc)
-    {
-        is->m_emitFunc("loadedmetadata");
-        is->m_emitFunc("canplay");
-    }
-
     for (;;)
     {
         ret = get_video_frame(is, frame);

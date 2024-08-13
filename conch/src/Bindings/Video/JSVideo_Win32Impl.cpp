@@ -60,6 +60,7 @@ JSVideo::~JSVideo()
 
 void JSVideo::_releaseHandler()
 {
+    ((Win32VideoHandler *)m_pVideoHandler)->m_videoPlayer.stop();
 }
 
 void JSVideo::LoadInternal(const std::string &path)
@@ -70,40 +71,40 @@ void JSVideo::LoadInternal(const std::string &path)
 
 void JSVideo::Play()
 {
-    NOT_IMPLEMENT();
+    ((Win32VideoHandler *)m_pVideoHandler)->m_videoPlayer.play();
 }
 
 void JSVideo::Pause()
 {
-    NOT_IMPLEMENT();
+    ((Win32VideoHandler *)m_pVideoHandler)->m_videoPlayer.pause();
 }
 
 void JSVideo::Stop()
 {
-    NOT_IMPLEMENT();
+    ((Win32VideoHandler *)m_pVideoHandler)->m_videoPlayer.stop();
 }
 
 bool JSVideo::GetPaused()
 {
-    NOT_IMPLEMENT_RET(true);
+    return ((Win32VideoHandler *)m_pVideoHandler)->m_videoPlayer.getPause();
 }
 
 bool JSVideo::GetLoop()
 {
-    return ((Win32VideoHandler*)m_pVideoHandler)->m_videoPlayer.getLoop();
+    return ((Win32VideoHandler *)m_pVideoHandler)->m_videoPlayer.getLoop();
 }
 void JSVideo::SetLoop(bool value)
 {
-    ((Win32VideoHandler*)m_pVideoHandler)->m_videoPlayer.setLoop(value);
+    ((Win32VideoHandler *)m_pVideoHandler)->m_videoPlayer.setLoop(value);
 }
 void JSVideo::SetAutoplay(bool value)
 {
-    NOT_IMPLEMENT();
+    ((Win32VideoHandler *)m_pVideoHandler)->m_videoPlayer.setAutoplay(value);
 }
 
 bool JSVideo::GetAutoplay()
 {
-    NOT_IMPLEMENT_RET(false);
+    return ((Win32VideoHandler *)m_pVideoHandler)->m_videoPlayer.getAutoplay();
 }
 
 double JSVideo::GetVideoWidth()

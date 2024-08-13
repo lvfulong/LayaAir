@@ -15,6 +15,7 @@ VideoPlayer::VideoPlayer() : m_impl(new VideoPlayerImpl())
 }
 VideoPlayer::~VideoPlayer()
 {
+    stop();
 }
 void VideoPlayer::init()
 {
@@ -28,42 +29,112 @@ void VideoPlayer::destroy()
 }
 void VideoPlayer::setMedia(const std::string &url)
 {
-
-    // todo
-    AVInputFormat *iformat = nullptr;
-    if (!stream_open(&m_impl->m_is, url.c_str(), iformat))
+    if (m_impl)
     {
-        av_log(NULL, AV_LOG_FATAL, "Failed to initialize VideoState!\n");
-        do_exit(NULL);
+        // todo
+        AVInputFormat *iformat = nullptr;
+        if (!stream_open(&m_impl->m_is, url.c_str(), iformat))
+        {
+            av_log(NULL, AV_LOG_FATAL, "Failed to initialize VideoState!\n");
+            do_exit(NULL);
+        }
     }
 }
 void VideoPlayer::renderVideo()
 {
-    double remaining_time = 0.0;
-    if (m_impl->m_is.show_mode != VideoState::SHOW_MODE_NONE && (!m_impl->m_is.paused || m_impl->m_is.force_refresh))
+    if (m_impl)
     {
-        video_refresh(&m_impl->m_is, &remaining_time);
+        double remaining_time = 0.0;
+        if (m_impl->m_is.show_mode != VideoState::SHOW_MODE_NONE &&
+            (!m_impl->m_is.paused || m_impl->m_is.force_refresh))
+        {
+            video_refresh(&m_impl->m_is, &remaining_time);
+        }
     }
 }
 void VideoPlayer::setRenderCallback(std::function<void(unsigned char *data, int width, int height, int bufferSize)> cb)
 {
-    m_impl->m_is.render_callback = cb;
+    if (m_impl)
+    {
+        m_impl->m_is.render_callback = cb;
+    }
 }
 int VideoPlayer::getState()
 {
-    return (int)m_impl->m_is.m_videoState;
+    if (m_impl)
+    {
+        return (int)m_impl->m_is.m_videoState;
+    }
+    return 0;
 }
 void VideoPlayer::setEmit(std::function<void(const char *)> emitFun)
 {
-    m_impl->m_is.m_emitFunc = emitFun;
+    if (m_impl)
+    {
+        m_impl->m_is.m_emitFunc = emitFun;
+    }
 }
 void VideoPlayer::setLoop(bool loop)
 {
-    m_impl->m_is.m_loop = loop;
+    if (m_impl)
+    {
+        m_impl->m_is.m_loop = loop;
+    }
 }
 bool VideoPlayer::getLoop()
 {
-    return m_impl->m_is.m_loop;
+    if (m_impl)
+    {
+        return m_impl->m_is.m_loop;
+    }
+    return false;
 }
-
+void VideoPlayer::play()
+{
+    if (m_impl)
+    {
+        do_play(&m_impl->m_is);
+    }
+}
+void VideoPlayer::pause()
+{
+    if (m_impl)
+    {
+        do_pause(&m_impl->m_is);
+    }
+}
+bool VideoPlayer::getPause()
+{
+    if (m_impl)
+    {
+        if (m_impl->m_is.paused)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+bool VideoPlayer::getAutoplay()
+{
+    if (m_impl)
+    {
+        return m_impl->m_is.m_autoplay;
+    }
+    return false;
+}
+void VideoPlayer::setAutoplay(bool value)
+{
+    if (m_impl)
+    {
+        m_impl->m_is.m_autoplay = value;
+    }
+}
+void VideoPlayer::stop()
+{
+    if (m_impl)
+    {
+        do_exit(&m_impl->m_is);
+        m_impl.reset();
+    }
+}
 } // namespace ffplay

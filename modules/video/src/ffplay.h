@@ -152,7 +152,7 @@ typedef struct VideoState
     /**/
     static int startup_volume;
     static int decoder_reorder_pts;
-    static int audio_disable;
+    int audio_disable = 0;
     static int video_disable;
     static const char *window_title;
     static int64_t start_time;
@@ -193,9 +193,12 @@ typedef struct VideoState
     std::function<void(const char *)> m_emitFunc;
 
     bool m_loop = false;
+    bool m_autoplay = false;
 } VideoState;
 
 bool stream_open(VideoState *is, const char *filename, const AVInputFormat *iformat);
+void do_pause(VideoState *is);
+void do_play(VideoState *is);
 void do_exit(VideoState *is);
 } // namespace ffplay
 #endif
