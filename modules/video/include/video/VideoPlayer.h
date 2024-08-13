@@ -19,6 +19,8 @@ class VideoPlayer
     void renderVideo();
     int getState();
     void setEmit(std::function<void(const char *)> emitFun);
+    void setLoop(bool loop);
+    bool getLoop();
     static void init();
     static void destroy();
 

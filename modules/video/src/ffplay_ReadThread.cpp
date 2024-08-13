@@ -643,7 +643,8 @@ int read_thread(void *arg)
              (is->auddec.finished == is->audioq.serial && frame_queue_nb_remaining(&is->sampq) == 0)) &&
             (!is->video_st || (is->viddec.finished == is->videoq.serial && frame_queue_nb_remaining(&is->pictq) == 0)))
         {
-            if (is->loop != 1 && (!is->loop || --is->loop))
+            // if (is->loop != 1 && (!is->loop || --is->loop))
+            if (is->m_loop)
             {
                 stream_seek(is, is->start_time != AV_NOPTS_VALUE ? is->start_time : 0, 0, 0);
             }

@@ -57,4 +57,13 @@ void VideoPlayer::setEmit(std::function<void(const char *)> emitFun)
 {
     m_impl->m_is.m_emitFunc = emitFun;
 }
+void VideoPlayer::setLoop(bool loop)
+{
+    m_impl->m_is.m_loop = loop;
+}
+bool VideoPlayer::getLoop()
+{
+    return m_impl->m_is.m_loop;
+}
+
 } // namespace ffplay

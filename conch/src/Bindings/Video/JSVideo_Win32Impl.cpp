@@ -90,14 +90,12 @@ bool JSVideo::GetPaused()
 
 bool JSVideo::GetLoop()
 {
-    NOT_IMPLEMENT_RET(false);
+    return ((Win32VideoHandler*)m_pVideoHandler)->m_videoPlayer.getLoop();
 }
-
 void JSVideo::SetLoop(bool value)
 {
-    NOT_IMPLEMENT();
+    ((Win32VideoHandler*)m_pVideoHandler)->m_videoPlayer.setLoop(value);
 }
-
 void JSVideo::SetAutoplay(bool value)
 {
     NOT_IMPLEMENT();

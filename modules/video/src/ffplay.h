@@ -158,7 +158,7 @@ typedef struct VideoState
     static int64_t start_time;
     static int64_t duration;
     static int autoexit;
-    static int loop;
+    // static int loop;
     static int infinite_buffer;
     static int subtitle_disable;
     static const char *wanted_stream_spec[AVMEDIA_TYPE_NB];
@@ -191,6 +191,8 @@ typedef struct VideoState
 
     EVideoState m_videoState = EVideoState::HAVE_NOTHING;
     std::function<void(const char *)> m_emitFunc;
+
+    bool m_loop = false;
 } VideoState;
 
 bool stream_open(VideoState *is, const char *filename, const AVInputFormat *iformat);
