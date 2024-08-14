@@ -78,7 +78,10 @@ void GLESInternalRT::dispose()
 
     _changeTexMemory(0);
     m_gpuMemory = 0;
-    m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::RC_ALLRenderTexture, -1);
+    if (LayaGL::m_pWebglEngine != nullptr)
+    {
+        LayaGL::m_pWebglEngine->_addStatisticsInfo(GPUEngineStatisticsInfo::RC_ALLRenderTexture, -1);
+    }
 }
 
 

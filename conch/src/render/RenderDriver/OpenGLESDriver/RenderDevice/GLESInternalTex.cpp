@@ -184,7 +184,10 @@ void GLESInternalTex::dispose()
         m_resource = 0;
         _changeTexMemory(0);
         m_gpuMemory = 0;
-        m_engine->_addStatisticsInfo(_statistics_RC_Texture, -1);
+        if (LayaGL::m_pWebglEngine != nullptr)
+        {
+            m_engine->_addStatisticsInfo(_statistics_RC_Texture, -1);
+        }
     }
 }
 void GLESInternalTex::setBaseMipmapLevel(int value)
