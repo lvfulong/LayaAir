@@ -33,7 +33,7 @@ Javascript::Javascript()
         v8::V8::InitializePlatform(m_pPlatform);
         v8::V8::Initialize();
         std::string flags;
-#if defined(OS_IOS)
+#if defined(OS_IOS) || defined(OS_OHOS)
         flags.append(" --jitless ");
 #endif
         flags.append(" --expose-gc ");
