@@ -170,9 +170,12 @@ void GLESInternalTex::_setTexParametexf(GLenum pname, GLfloat param)
 }
 
 void GLESInternalTex::_changeTexMemory(int memory) {
-   m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::M_GPUMemory, -m_gpuMemory + memory);
-   m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::M_ALLTexture, -m_gpuMemory + memory);
-   m_engine->_addStatisticsInfo(_statistics_M_Texture, -m_gpuMemory + memory);
+    if (LayaGL::m_pWebglEngine != nullptr)
+    {
+        LayaGL::m_pWebglEngine->_addStatisticsInfo(GPUEngineStatisticsInfo::M_GPUMemory, -m_gpuMemory + memory);
+        LayaGL::m_pWebglEngine->_addStatisticsInfo(GPUEngineStatisticsInfo::M_ALLTexture, -m_gpuMemory + memory);
+        LayaGL::m_pWebglEngine->_addStatisticsInfo(_statistics_M_Texture, -m_gpuMemory + memory);
+    }
 }
 
 void GLESInternalTex::dispose()
@@ -186,7 +189,7 @@ void GLESInternalTex::dispose()
         m_gpuMemory = 0;
         if (LayaGL::m_pWebglEngine != nullptr)
         {
-            m_engine->_addStatisticsInfo(_statistics_RC_Texture, -1);
+            LayaGL::m_pWebglEngine->_addStatisticsInfo(_statistics_RC_Texture, -1);
         }
     }
 }
