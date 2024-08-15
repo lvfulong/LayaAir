@@ -99,6 +99,16 @@ void JCSystemConfig::loadConfigIniFile()
         LOGW("Warning: can not find desktop:WindowMode use default %d", defaultWindowMode);
     }
 
+    bool showDebugConsole = false;
+    if (configIni.hasEntry("desktop:ShowDebugConsole"))
+    {
+        m_showDebugConsole = configIni.getBoolOrDefault("desktop:ShowDebugConsole", showDebugConsole);
+    }
+    else
+    {
+        LOGW("Warning: can not find desktop:ShowDebugConsole use default %d", showDebugConsole);
+    }
+
 #endif
 #ifdef OS_IOS
     if (configIni.hasEntry("ios:orientation"))

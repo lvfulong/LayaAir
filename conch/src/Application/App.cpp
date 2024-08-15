@@ -9,11 +9,9 @@ extern int g_nInnerHeight;
 extern bool g_bGLCanvasSizeChanged;
 #if defined(OS_WINDOWS)
 #include <Windows.h>
-
-
+#include <io.h>
 #include <objidlbase.h>
 #include <gdiplus.h>
-
 extern HWND g_hWnd;
 #elif defined(OS_LINUX)
 #include <SDL2/SDL_syswm.h>
@@ -24,7 +22,27 @@ Window g_X11_window;
 
 namespace laya
 {
-
+#if defined(OS_WINDOWS)
+static void createAndAttachConsole()
+{
+    if (!::AttachConsole(ATTACH_PARENT_PROCESS) && (::IsDebuggerPresent() || laya::g_kSystemConfig.m_showDebugConsole))
+    {
+        if (::AllocConsole())
+        {
+            FILE *unused;
+            if (freopen_s(&unused, "CONOUT$", "w", stdout))
+            {
+                _dup2(_fileno(stdout), 1);
+            }
+            if (freopen_s(&unused, "CONOUT$", "w", stderr))
+            {
+                _dup2(_fileno(stdout), 2);
+            }
+            std::ios::sync_with_stdio();
+        }
+    }
+}
+#endif
 App::App()
 {
     SDL_Init(SDL_INIT_EVENTS);
@@ -101,6 +119,11 @@ void App::run(const Config &config)
     keycodeMap[SDL_SCANCODE_KP_PERIOD] = 0x6E;    // VK_DECIMAL //小键盘的‘.’
 
     laya::JCConch::s_pConch.reset(new laya::JCConch());
+
+#if defined(OS_WINDOWS)
+    createAndAttachConsole();
+#endif
+
     const int x = SDL_WINDOWPOS_CENTERED;
     const int y = SDL_WINDOWPOS_CENTERED;
     SDL_Init(SDL_INIT_AUDIO);

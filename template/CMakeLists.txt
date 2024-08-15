@@ -152,6 +152,7 @@ elseif(OS_WINDOWS)
 		)
 	endforeach()
 	target_link_libraries(${PROJECT_NAME} PRIVATE conch)
+	set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS")
 elseif(OS_LINUX)
 	list(APPEND PROJECT_SOURCES
 		proj.linux/Conch6.cpp

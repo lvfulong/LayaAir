@@ -12,7 +12,6 @@
 #endif
 
 #if defined(OS_WINDOWS)
-extern int conchMainConsole(int argc, _TCHAR *argv[]);
 extern int conchMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nShowCmd);
 #elif defined(OS_LINUX)
 extern int conchMain(int argc, char *argv[]);
