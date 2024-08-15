@@ -166,6 +166,12 @@ namespace laya
         }
         m_pIDGenerator->reset();
         m_pProgramLocationTable->reset();
+        
+        if (m_pScreenContext)
+        {
+            delete m_pScreenContext;
+            m_pScreenContext = 0;
+        }
 	}
 
 void JCConchRender::setMainContextSize(int width,int height)

@@ -170,9 +170,12 @@ void GLESInternalTex::_setTexParametexf(GLenum pname, GLfloat param)
 }
 
 void GLESInternalTex::_changeTexMemory(int memory) {
-   m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::M_GPUMemory, -m_gpuMemory + memory);
-   m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::M_ALLTexture, -m_gpuMemory + memory);
-   m_engine->_addStatisticsInfo(_statistics_M_Texture, -m_gpuMemory + memory);
+    if (LayaGL::m_pWebglEngine != nullptr)
+    {
+        LayaGL::m_pWebglEngine->_addStatisticsInfo(GPUEngineStatisticsInfo::M_GPUMemory, -m_gpuMemory + memory);
+        LayaGL::m_pWebglEngine->_addStatisticsInfo(GPUEngineStatisticsInfo::M_ALLTexture, -m_gpuMemory + memory);
+        LayaGL::m_pWebglEngine->_addStatisticsInfo(_statistics_M_Texture, -m_gpuMemory + memory);
+    }
 }
 
 void GLESInternalTex::dispose()
@@ -184,7 +187,10 @@ void GLESInternalTex::dispose()
         m_resource = 0;
         _changeTexMemory(0);
         m_gpuMemory = 0;
-        m_engine->_addStatisticsInfo(_statistics_RC_Texture, -1);
+        if (LayaGL::m_pWebglEngine != nullptr)
+        {
+            LayaGL::m_pWebglEngine->_addStatisticsInfo(_statistics_RC_Texture, -1);
+        }
     }
 }
 void GLESInternalTex::setBaseMipmapLevel(int value)

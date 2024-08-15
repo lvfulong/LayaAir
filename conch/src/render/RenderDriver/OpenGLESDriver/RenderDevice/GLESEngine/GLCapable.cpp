@@ -286,7 +286,7 @@ namespace laya
 			return &m_compressedTexturePvrtcExt;
 		}
 		else if (strcmp(name, "WEBGL_compressed_texture_etc") == 0 
-			&& strcmp(strOS, "Conch-android") == 0 && strstr(version, "OpenGL ES 3.") != nullptr)
+			&& (strcmp(strOS, "Conch-android") == 0 || strcmp(strOS, "Conch-ohos") == 0)&& strstr(version, "OpenGL ES 3.") != nullptr)
 		{
 			return &m_compressedTextureETCExt;
 		}
@@ -296,7 +296,7 @@ namespace laya
 			return &m_compressedTextureEtc1Ext;
 		}
 		else if (strcmp(name, "WEBGL_compressed_texture_astc") == 0 
-			&& (strstr(extention, "GL_OES_texture_compression_astc") != nullptr || strstr(extention, "GL_KHR_texture_compression_astc") != nullptr || (strcmp(strOS, "Conch-android") == 0 && strstr(version, "OpenGL ES 3.") != nullptr && strstr(version, "OpenGL ES 3.0") == nullptr)))
+			&& (strstr(extention, "GL_OES_texture_compression_astc") != nullptr || strstr(extention, "GL_KHR_texture_compression_astc") != nullptr || ((strcmp(strOS, "Conch-android") == 0 || strcmp(strOS, "Conch-ohos") == 0)&& strstr(version, "OpenGL ES 3.") != nullptr && strstr(version, "OpenGL ES 3.0") == nullptr)))
 		{
 			return &m_compressedTextureASTCExt;
 		}

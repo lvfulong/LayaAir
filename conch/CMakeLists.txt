@@ -524,7 +524,6 @@ elseif(OS_WINDOWS)
 		src/Bindings/JSWindowEditBox.h
 		src/Bindings/JSWindowEditBox.cpp
 		src/backend/src/OpenGLBackendWinEGL.cpp
-		src/backend/src/esUtil.c
 		src/2D/src/CanvasRenderingContext2DWin.cpp
 		src/resource/Audio/JCMp3Parser.h
 		src/resource/Audio/JCMp3Parser.cpp

@@ -3,6 +3,7 @@
 #include <utils/Preprocessor.h>
 #include <Bindings/JSConchConfig.h>
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.h"
+#include "render/LayaGL.h"
 
 namespace laya
 {
@@ -58,7 +59,10 @@ namespace laya
 	}
 	void GLBuffer::_memorychange(int bytelength)
 	{
-		m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::M_GPUBuffer, -m_byteLength+ bytelength);
+        if (LayaGL::m_pWebglEngine != nullptr)
+        {
+            LayaGL::m_pWebglEngine->_addStatisticsInfo(GPUEngineStatisticsInfo::M_GPUBuffer, -m_byteLength+ bytelength);
+        }
 	}
 	bool GLBuffer::bindBuffer()
 	{
@@ -132,7 +136,10 @@ namespace laya
 	{
 		if (m_glBuffer != 0)
 		{
-			m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::RC_GPUBuffer, -1);
+            if (LayaGL::m_pWebglEngine != nullptr)
+            {
+                LayaGL::m_pWebglEngine->_addStatisticsInfo(GPUEngineStatisticsInfo::RC_GPUBuffer, -1);
+            }
 			glDeleteBuffers(1, &m_glBuffer);
 			_memorychange(0);
 			m_byteLength = 0;

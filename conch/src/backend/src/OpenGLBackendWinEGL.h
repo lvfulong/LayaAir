@@ -2,12 +2,11 @@
 #define __OPENGL_BACKEND_WIN_EGL_H__
 
 #include "backend/IBackend.h"
-#include "esUtil.h"
 #include <memory>
 
 namespace laya
 {
-
+class OpenGLBackendWinEGLImpl;
 class OpenGLBackendWinEGL : public IBackend
 {
   public:
@@ -24,8 +23,7 @@ class OpenGLBackendWinEGL : public IBackend
     void resetRenderStates();
 
   private:
-    ESContext m_esContext;
-    ;
+    std::unique_ptr<OpenGLBackendWinEGLImpl> m_impl;
 };
 } // namespace laya
 #endif
