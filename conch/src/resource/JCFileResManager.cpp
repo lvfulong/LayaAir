@@ -80,7 +80,7 @@ namespace laya
         if (it == m_ResMap.end()) {
 
             if(JSConchConfig::s_useDCC2){
-                auto dcc2 = new JCFileResDCC2();
+                auto dcc2 = new JCFileResDCC2(this);
                 dcc2->setDownloader(m_pDownloader.get());
                 pRes = dcc2;
                 m_ResMap[url] = pRes;

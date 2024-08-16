@@ -332,10 +332,8 @@ list(APPEND CONCH_SRC
 	src/Bindings/LayaAir/3D/JSBounds.cpp
 	src/Bindings/LayaAir/3D/JSSubmitScene3D.h
 	src/Bindings/LayaAir/3D/JSSubmitScene3D.cpp
-	# Bindings/JSTextBitmapInfo.h
-	# Bindings/JSTextBitmapInfo.cpp
-	# Bindings/JSTextMemoryCanvas.h
-	# Bindings/JSTextMemoryCanvas.cpp
+	src/Bindings/JSWX.h
+	src/Bindings/JSWX.cpp
 	src/Bindings/JSWebSocket.h
 	src/Bindings/JSWebSocket.cpp
 	src/Bindings/JSXmlAttr.h

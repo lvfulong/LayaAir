@@ -2,11 +2,12 @@
 #include "JCFileResDCC2.h"
 #include "../../downloadMgr/JCDownloadMgr.h"
 #include "JCConch.h"
+#include <resource/JCFileResManager.h>
 #include <utils/JCFileSystem.h>
 
 namespace laya
 {
-JCFileResDCC2::JCFileResDCC2()
+JCFileResDCC2::JCFileResDCC2(JCFileResManager *manager) : m_manager(manager)
 {
     m_pDownloader = nullptr;
     m_bSendToJS_complete = false;
@@ -126,33 +127,66 @@ void JCFileResDCC2::load(const char *p_pszURL, JCSharedBuffer *pSyncResult)
 {
     m_strURL = p_pszURL;
     std::weak_ptr<int> wptr(m_CallbackRef);
-    if (m_pDownloader)
+    if (m_url.m_nProto == JCUrl::wxblob)
     {
-        // 有人接管
-        m_pDownloader->download(p_pszURL, std::bind(&JCFileResDCC2::onDownloaded, this, std::placeholders::_1, "", "",
-                                                    0, 0, "", 1, std::placeholders::_2, wptr));
+        JCBuffer buffer;
+        int bytes;
+        if (m_manager->searchBufferURL(m_strURL, &buffer.m_pPtr, bytes))
+        {
+            buffer.m_nLen = bytes;
+            LOGI("found file local blob %s", m_strURL.c_str());
+            onDownloaded(buffer, "", "", 0, 0, "", 0, "", wptr);
+        }
+        else
+        {
+            onDownloadError(0, 404, wptr); // lvtodo 错误码
+        }
     }
     else
     {
-        // 直接下载
-        JCDownloadMgr *pNetLoader = JCDownloadMgr::getInstance();
-        pNetLoader->download(p_pszURL, 0,
-                             std::bind(&JCFileResDCC2::onProgress, this, std::placeholders::_1, std::placeholders::_2,
-                                       std::placeholders::_3, wptr),
-                             std::bind(&JCFileResDCC2::onDownloaded, this, std::placeholders::_1, std::placeholders::_2,
-                                       std::placeholders::_3, std::placeholders::_4, std::placeholders::_5,
-                                       std::placeholders::_6, 1, nullptr, wptr),
-                             m_nOptTimeout, m_nConnTimeout);
+        if (m_pDownloader)
+        {
+            // 有人接管
+            m_pDownloader->download(p_pszURL, std::bind(&JCFileResDCC2::onDownloaded, this, std::placeholders::_1, "",
+                                                        "", 0, 0, "", 1, std::placeholders::_2, wptr));
+        }
+        else
+        {
+            // 直接下载
+            JCDownloadMgr *pNetLoader = JCDownloadMgr::getInstance();
+            pNetLoader->download(p_pszURL, 0,
+                                 std::bind(&JCFileResDCC2::onProgress, this, std::placeholders::_1,
+                                           std::placeholders::_2, std::placeholders::_3, wptr),
+                                 std::bind(&JCFileResDCC2::onDownloaded, this, std::placeholders::_1,
+                                           std::placeholders::_2, std::placeholders::_3, std::placeholders::_4,
+                                           std::placeholders::_5, std::placeholders::_6, 1, nullptr, wptr),
+                                 m_nOptTimeout, m_nConnTimeout);
+        }
     }
 }
 
 bool JCFileResDCC2::loadFromCache(JCBuffer &buff, bool bDoCheckSum)
 {
-    if (m_strLocalPath.length() > 0)
+    if (m_url.m_nProto == JCUrl::wxblob)
     {
-        return readFileSync(m_strLocalPath.c_str(), buff);
+        int bytes;
+        if (m_manager->searchBufferURL(m_strURL, &buff.m_pPtr, bytes))
+        {
+            LOGI("found file local blob %s", m_strURL.c_str());
+            buff.m_nLen = bytes;
+            return true;
+        }
+        LOGI("not found file local blob %s", m_strURL.c_str());
+        return false;
     }
-    return false;
+    else
+    {
+        if (m_strLocalPath.length() > 0)
+        {
+            return readFileSync(m_strLocalPath.c_str(), buff);
+        }
+        return false;
+    }
 }
 
 bool JCFileResDCC2::restoreRes()
