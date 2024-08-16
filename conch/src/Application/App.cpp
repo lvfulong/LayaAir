@@ -385,5 +385,8 @@ void App::run(const Config &config)
         SDL_Delay(delay);
         laya::JCConch::s_pConch->update();
     }
+    laya::JCConch::s_pConch->onAppDestroy();
+    SDL_DestroyWindow(m_sdlWindow);
+    SDL_Quit();
 }
 } // namespace laya

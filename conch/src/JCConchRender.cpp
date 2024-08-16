@@ -1,11 +1,3 @@
-/**
-@file			JCConchRender.cpp
-@brief			
-@author			James
-@version		1.0
-@date			2016_5_12
-*/
-
 #include "JCConchRender.h"
 #include <utils/Log.h>
 #include <utils/JCCommonMethod.h>
@@ -95,7 +87,12 @@ namespace laya
             m_pProgramLocationTable = NULL;
         }
         
-         auto  func = [this]()->bool {
+
+        if (m_WebGLThread != nullptr)
+        {
+            delete m_WebGLThread;
+            m_WebGLThread = nullptr;
+        }
             if (m_pScreenContext)
             {
                 delete m_pScreenContext;
@@ -134,20 +131,7 @@ namespace laya
 
             delete m_GfxBackend;
             m_GfxBackend = nullptr;
-            return true;
-        };
-        if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL) {
-            m_WebGLThread->postTaskSync(func).get();
-        }
-        else {
-            JCConch::s_pScriptRuntime->m_pScriptThread->postTaskSync(func).get();
-        }
 
-        if (m_WebGLThread != nullptr)
-        {
-            delete m_WebGLThread;
-            m_WebGLThread = nullptr;
-        }
 	}
     void JCConchRender::update() {
         m_nFrameCount++;
@@ -293,7 +277,3 @@ void JCConchRender::requestCaptureScreen()
         }
     }
 }
-//------------------------------------------------------------------------------
-
-
-//-----------------------------END FILE--------------------------------
