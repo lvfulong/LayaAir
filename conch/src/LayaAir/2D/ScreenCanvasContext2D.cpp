@@ -73,7 +73,7 @@ namespace laya
 		{
 			m_width = w;
 			m_height = h;
-			if (m_target != nullptr)
+			if (m_target != nullptr && m_width > 0 && m_height > 0)
 			{
 				m_pGLESEngine->getTextureContext()->unbindRenderTarget(m_target);
 				delete m_target;

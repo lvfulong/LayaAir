@@ -1686,7 +1686,7 @@ namespace laya
 			break;
 		case GL_HALF_FLOAT:
 		//case GL_HALF_FLOAT_OES: // OES_texture_half_float
-		//	*bytesPerComponent = sizeof(GLhalffloat);
+            *bytesPerComponent = 2;// sizeof(GLhalffloat);
 			break;
 		case GL_FLOAT_32_UNSIGNED_INT_24_8_REV:
 			*bytesPerComponent = sizeof(GLfloat) + sizeof(GLuint);
