@@ -109,12 +109,12 @@ bool JSVideo::GetAutoplay()
 
 double JSVideo::GetVideoWidth()
 {
-    NOT_IMPLEMENT_RET(0);
+    return ((Win32VideoHandler*)m_pVideoHandler)->m_videoPlayer.getVideoWidth();
 }
 
 double JSVideo::GetVideoHeight()
 {
-    NOT_IMPLEMENT_RET(0);
+    return ((Win32VideoHandler*)m_pVideoHandler)->m_videoPlayer.getVideoHeight();
 }
 
 double JSVideo::GetWidth()

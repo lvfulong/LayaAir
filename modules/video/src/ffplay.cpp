@@ -123,15 +123,19 @@ static void stream_close(VideoState *is)
     SDL_DestroyCond(is->continue_read_thread);
     sws_freeContext(is->sub_convert_ctx);
     av_free(is->filename);
+    if (is->img_convert_ctx)
+    {
+        sws_freeContext(is->img_convert_ctx);
+    }
     if (is->vis_texture)
         SDL_DestroyTexture(is->vis_texture);
     if (is->vid_texture)
         SDL_DestroyTexture(is->vid_texture);
     if (is->sub_texture)
         SDL_DestroyTexture(is->sub_texture);
-    av_free(is);
+    //av_free(is);
 
-    sws_freeContext(is->img_convert_ctx);
+    
 }
 void do_exit(VideoState *is)
 {
@@ -290,22 +294,7 @@ bool stream_open(VideoState *is, const char *filename, const AVInputFormat *ifor
         stream_close(is);
         return false;
     }
-    is->m_videoState = EVideoState::HAVE_ENOUGH_DATA;
-    /*************************************************************** */
-    if (is->m_emitFunc)
-    {
-        if (is->m_autoplay)
-        {
-            do_play(is);
-        }
-        else
-        {
-            do_pause(is);
-        }
-        is->m_emitFunc("loadedmetadata");
-        is->m_emitFunc("canplay");
-    }
-    /*************************************************************** */
+    
     return true;
 }
 } // namespace ffplay

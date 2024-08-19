@@ -27,6 +27,8 @@ class VideoPlayer
     bool getAutoplay();
     void setAutoplay(bool value);
     void stop();
+    double getVideoWidth();
+    double getVideoHeight();
     static void init();
     static void destroy();
 

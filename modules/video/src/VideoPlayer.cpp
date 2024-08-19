@@ -137,4 +137,20 @@ void VideoPlayer::stop()
         m_impl.reset();
     }
 }
+double VideoPlayer::getVideoWidth()
+{
+    if (m_impl)
+    {
+        return m_impl->m_is.videoWidth;
+    }
+    return 0;
+}
+double VideoPlayer::getVideoHeight()
+{
+    if (m_impl)
+    {
+        return m_impl->m_is.videoHeight;
+    }
+    return 0;
+}
 } // namespace ffplay

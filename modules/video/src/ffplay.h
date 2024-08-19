@@ -131,7 +131,7 @@ typedef struct VideoState
     char *filename;
     int width, height, xleft, ytop;
     int step;
-
+        
     int vfilter_idx;
     AVFilterContext *in_video_filter;  // the first filter in the video chain
     AVFilterContext *out_video_filter; // the last filter in the video chain
@@ -194,6 +194,9 @@ typedef struct VideoState
 
     bool m_loop = false;
     bool m_autoplay = false;
+
+    int videoWidth = 0;
+    int videoHeight = 0;
 } VideoState;
 
 bool stream_open(VideoState *is, const char *filename, const AVInputFormat *iformat);
