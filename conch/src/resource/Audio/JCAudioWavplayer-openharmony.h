@@ -10,6 +10,7 @@
 #include <vector>
 #include <ohaudio/native_audiostreambuilder.h>
 #include <ohaudio/native_audiorenderer.h>
+#include <ohaudio/native_audiostream_base.h>
 
 namespace laya{
     class JCFileResManager;
@@ -20,10 +21,10 @@ namespace laya{
             OH_AudioStreamBuilder* _builder;
             JCAudioInterface* m_pAudio; //Audio 为了回调使用
             bool m_bPlaying; //是否为播放状态
+            bool m_bPlayOver; // 是否播放完成
             const char* pcmBuffer;
             int32_t m_pBufferSize;
             int32_t writeOffset = 0;
-            std::function<int32_t(OH_AudioRenderer* renderer, void* userData, void* buffer, int32_t bufferLen)> writeDataCallback;
         public:
             void operator=(const AudioRenderInfo &other){
                 m_bPlaying = other.m_bPlaying;
@@ -54,6 +55,7 @@ namespace laya{
             void resume();
             static int32_t AudioRendererOnWriteData(OH_AudioRenderer *renderer, void *userData, void *buffer, int32_t bufferLen);
             float getCurrentTime(AudioRenderInfo* pOpenALInfo);
+            static int32_t AudioRendererOnInterrupt(OH_AudioRenderer *renderer, void *userData, OH_AudioInterrupt_ForceType type, OH_AudioInterrupt_Hint hint);
         public:
             /**
              * @brief 添加资源
