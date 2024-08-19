@@ -299,7 +299,7 @@ namespace laya
                 JCAudioManager::GetInstance()->pauseMp3();
                 #endif
                 #if defined(OS_OHOS)
-               NapiHelper::GetInstance()->__pauseBackgroundMusic();
+                NapiHelper::GetInstance()->pauseBackgroundMusic();
                 #endif
             }
             laya::JCAudioManager::GetInstance()->m_pWavPlayer->pause();
@@ -323,11 +323,11 @@ namespace laya
             //继续声音
             if( laya::JCAudioManager::GetInstance()->getMp3Mute() == false && laya::JCAudioManager::GetInstance()->getMp3Stopped() == false)
             {
-                 #if defined(OS_ANDROID)
+                #if defined(OS_ANDROID)
                 laya::JCAudioManager::GetInstance()->resumeMp3();
-                 #endif
-                 #if defined(OS_OHOS)
-               NapiHelper::GetInstance()->__resumeBackgroundMusic();
+                #endif
+                #if defined(OS_OHOS)
+                NapiHelper::GetInstance()->resumeBackgroundMusic();
                 #endif
             }
             laya::JCAudioManager::GetInstance()->m_pWavPlayer->resume();

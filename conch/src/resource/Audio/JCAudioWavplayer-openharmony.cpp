@@ -189,7 +189,7 @@ namespace laya{
     int32_t JCAudioWavPlayer::AudioRendererOnInterrupt(OH_AudioRenderer *renderer, void *userData, OH_AudioInterrupt_ForceType type,
         OH_AudioInterrupt_Hint hint) {
         if (hint == AUDIOSTREAM_INTERRUPT_HINT_RESUME) {
-            OHAudioRenderInfo *audioRenderInfo = (OHAudioRenderInfo *)userData;
+            AudioRenderInfo *audioRenderInfo = (AudioRenderInfo *)userData;
             OH_AudioRenderer_Start(audioRenderInfo->_audioRender);
         }
         return 0;
@@ -198,7 +198,7 @@ namespace laya{
         int m_ohAudioCount = m_pAudioRenderSource.size();
         for (int i = 0; i < m_ohAudioCount; i++)
         {
-            if(m_pAudioRenderSource[i]->m_bPlaying == true
+            if(m_pAudioRenderSource[i]->m_bPlaying == true) {
 				m_pAudioRenderSource[i]->m_bPlaying = false;
                 m_pAudioRenderSource[i]->m_pAudio = NULL;
                 AudioRenderInfo *pAudioRenderInfo = m_pAudioRenderSource[i];
