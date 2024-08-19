@@ -119,7 +119,7 @@ function getBaseUrl(url) {
 }
 window.loadConchUrl = loadApp;
 var enableDcc2 = true;
-var appUrl = 'http://10.10.20.22:8899/index.js';
+var appUrl = 'http://layabox.com/layanative3.0/demo/index.js';
 var dccHead = '';
 var dccUrl = null;
 var mapToDCC = null;
