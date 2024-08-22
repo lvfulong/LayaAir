@@ -10,6 +10,7 @@
 #include <unordered_map>
 #include <utils/thread/Signal.h>
 #include <vector>
+#include <thread>
 
 namespace laya
 {

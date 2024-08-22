@@ -9,6 +9,7 @@
 #include <string>
 #include <memory>
 #include <iostream>
+#include "FontDescription.h"
 /*
 使用了 cairo库，需要 apt-get install libcairo2-dev
 */
@@ -555,7 +556,7 @@ void CanvasRenderingContext2DLinux::scale(double x, double y)
 void CanvasRenderingContext2DLinux::setFont(const char *font)
 {
     CanvasRenderingContext2D::setFont(font);
-    m_pTextRender->setFont(m_fontDescription.m_family,(int)m_fontDescription.m_size,m_fontDescription.isBold());
+    m_pTextRender->setFont(m_fontDescription->m_family,(int)m_fontDescription->m_size,m_fontDescription->isBold());
 }
 void CanvasRenderingContext2DLinux::getTextPosition(const std::string &text, double x, double y, double &outX,
                                                     double &outY)

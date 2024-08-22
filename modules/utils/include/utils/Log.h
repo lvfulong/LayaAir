@@ -193,11 +193,11 @@ void CToObjectCLogIExt(const char *str);
         }                                                                                                              \
     }
 #elif OS_OHOS
-#define LOGI(...)   \                                                                                                   
+#define LOGI(...)   \
     logMessage(laya::LogType::Info, __FILE__, __LINE__, __VA_ARGS__);                                                  
     #define LOGW(...)\
      logMessage(laya::LogType::Warn, __FILE__, __LINE__, __VA_ARGS__);                               
-    #define LOGE(...)\ 
+    #define LOGE(...)\
     logMessage(laya::LogType::Error, __FILE__, __LINE__, __VA_ARGS__);
 #elif OS_WINDOWS
 #define LOGI(...)                                                                                                      \

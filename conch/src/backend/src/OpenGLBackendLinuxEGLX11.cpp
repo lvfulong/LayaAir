@@ -145,16 +145,13 @@ void OpenGLBackendLinuxEGLX11::create(const BackendOptions &options)
      LOGE("eglInitialize  %d %d %d", majorVersion, minorVersion, eglGetError());
     assert(result != EGL_FALSE);
 
-    result = eglBindAPI(EGL_OPENGL_ES_API);
-    assert(result != EGL_FALSE && "eglBindAPI failed");
-
-
     egl_version = gladLoaderLoadEGL(m_impl->m_eglDisplay);
     assert(egl_version != 0 && "Unable to load EGL.\n");
     LOGE("egl_version  %d", egl_version);
 
+    result = eglBindAPI(EGL_OPENGL_ES_API);
+    assert(result != EGL_FALSE && "eglBindAPI failed");
     
-
     bool use_es3 = false;//true;
     // chooseConfig(options);
     m_impl->m_EGLConfig = GetConfig(m_impl->m_eglDisplay, &use_es3);
