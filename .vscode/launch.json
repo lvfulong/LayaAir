@@ -21,16 +21,20 @@
             "address": "localhost",
         },      
         {
-            "name": "(gdb) 启动",
+            "name": "gdb",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/builddbg/template/Debug/launcher",
+            "program": "${workspaceFolder}/template/build/bin/launcher",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
-            "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
+            "environment":[{
+                "name":"DISPLAY",
+                "value": "10.10.20.26:0.0"
+            }
+            ],
             "setupCommands": [
                 {
                     "description": "为 gdb 启用整齐打印",
@@ -42,13 +46,17 @@
                     "text": "-gdb-set disassembly-flavor intel",
                     "ignoreFailures": true
                 }
-            ]
+            ],
         }
     ],
     "compounds": [
         {
             "name": "C++和v8",
             "configurations": ["Windows Launch", "conchjs"]
+        },
+        {
+            "name": "C++和v8(linux)",
+            "configurations": ["gdb", "conchjs"]
         }
     ]    
 }

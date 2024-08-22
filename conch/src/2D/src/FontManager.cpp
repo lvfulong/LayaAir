@@ -9,6 +9,8 @@
 #include "CanvasRenderingContext2DWin.h"
 #elif defined(OS_OHOS)
 #include "CanvasRenderingContext2DOHOS.h"
+#elif defined(OS_LINUX)
+#include "CanvasRenderingContext2DLinux.h"
 #endif
 
 extern std::string gRedistPath;
@@ -47,6 +49,8 @@ bool FontManager::registerFont(const std::string &family, const std::string &pat
     return CanvasRenderingContext2DWin::registerFontFromPath(family, path);
 #elif defined(OS_OHOS)
     return CanvasRenderingContext2DOHOS::registerFontFromPath(family, path);
+#elif defined(OS_LINUX)
+    return CanvasRenderingContext2DLinux::registerFontFromPath(family,path);
 #else
     return true;
 #endif
@@ -62,6 +66,8 @@ bool FontManager::registerFont(const std::string &family, uint8_t *data, int32_t
     return CanvasRenderingContext2DWin::registerFontFromBuffer(family, data, byteLength);
 #elif defined(OS_OHOS)
     return CanvasRenderingContext2DOHOS::registerFontFromBuffer(family, data, byteLength);
+#elif defined(OS_LINUX)
+    return CanvasRenderingContext2DLinux::registerFontFromBuffer(family,data,byteLength);
 #else
     return true;
 #endif

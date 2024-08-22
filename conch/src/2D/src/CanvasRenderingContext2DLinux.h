@@ -7,7 +7,7 @@
 
 namespace laya
 {
-class CanvasRenderingContext2DLinuxImpl;
+class xftTextRender;
 class CanvasRenderingContext2DLinux : public CanvasRenderingContext2D
 {
   public:
@@ -28,11 +28,13 @@ class CanvasRenderingContext2DLinux : public CanvasRenderingContext2D
     void setLineWidth(double lineWidth) override;
     void setLineJoin(const char *lineJoin) override;
     static bool registerFontFromPath(const std::string &fontName, const std::string &path);
+    static bool registerFontFromBuffer(const std::string& fontName, const uint8_t* buff, int len);
+    static void cleanAllRes();
 
   protected:
     void getTextPosition(const std::string &text, double x, double y, double &outX, double &outY) override;
-    CanvasRenderingContext2DLinuxImpl *m_impl = {nullptr};
     BitmapData m_bitmapData;
+    xftTextRender* m_pTextRender;
 };
 } // namespace laya
 #endif
