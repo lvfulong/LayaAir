@@ -125,6 +125,8 @@ namespace laya
         m_pMp3Player = new JCAudioMp3Player();
     #elif defined(OS_OHOS)
 	    m_pMp3Player = new JCAudioMp3Player();
+	#else
+		m_pMp3Player = nullptr;
     #endif
     }
     //------------------------------------------------------------------------------
