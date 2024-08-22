@@ -26,7 +26,10 @@ void GLESVertexBuffer::destroy()
 {
     _glBuffer->destroy();
     _changeMemory(0);
-    LayaGL::m_pWebglEngine->_addStatisticsInfo(GPUEngineStatisticsInfo::RC_VertexBuffer, -1);
+    if (LayaGL::m_pWebglEngine != nullptr)
+    {
+        LayaGL::m_pWebglEngine->_addStatisticsInfo(GPUEngineStatisticsInfo::RC_VertexBuffer, -1);
+    }
 }
 void GLESVertexBuffer::setDataLength(int byteLength)
 {

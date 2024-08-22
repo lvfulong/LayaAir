@@ -39,6 +39,7 @@ class JCSystemConfig
     int m_nJSDebugMode = 0;
     int m_nJSDebugPort = 5959;
     WindowMode m_windowMode{WindowMode::WM_WindowResizable};
+    bool m_showDebugConsole = false;
 };
 extern JCSystemConfig g_kSystemConfig;
 } // namespace laya

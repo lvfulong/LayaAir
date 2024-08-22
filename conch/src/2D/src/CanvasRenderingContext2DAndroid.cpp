@@ -248,8 +248,8 @@ ImageData CanvasRenderingContext2DAndroid::getImageData(double x, double y, doub
 {
     int clampedX = std::clamp(x, 0.0, static_cast<double>(m_width));
     int clampedY = std::clamp(y, 0.0, static_cast<double>(m_height));
-    int clampedW = std::clamp(width, 0.0, static_cast<double>(m_width));
-    int clampedH = std::clamp(height, 0.0, static_cast<double>(m_height));
+    int clampedW = std::clamp(width, 0.0, static_cast<double>(m_width) - x);
+    int clampedH = std::clamp(height, 0.0, static_cast<double>(m_height) - y);
 
     if (clampedW > 0 && clampedH > 0)
     {

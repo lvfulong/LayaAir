@@ -65,7 +65,30 @@ static int queue_picture(VideoState *is, AVFrame *src_frame, double pts, double 
     vp->serial = serial;
 
     set_default_window_size(vp->width, vp->height, vp->sar);
-
+    if (is->videoWidth == 0)
+    {
+        is->videoWidth = vp->width;
+        is->videoHeight = vp->height;
+        if (is->videoWidth != 0)
+        {
+            is->m_videoState = EVideoState::HAVE_ENOUGH_DATA;
+            /*************************************************************** */
+            if (is->m_emitFunc)
+            {
+                if (is->m_autoplay)
+                {
+                    do_play(is);
+                }
+                else
+                {
+                    do_pause(is);
+                }
+                is->m_emitFunc("loadedmetadata");
+                is->m_emitFunc("canplay");
+            }
+            /*************************************************************** */
+        }
+    }
     av_frame_move_ref(vp->frame, src_frame);
     frame_queue_push(&is->pictq);
     return 0;
@@ -91,14 +114,6 @@ int video_thread(void *arg)
 
     if (!frame)
         return AVERROR(ENOMEM);
-
-    is->m_videoState = EVideoState::HAVE_ENOUGH_DATA;
-
-    if (is->m_emitFunc)
-    {
-        is->m_emitFunc("loadedmetadata");
-        is->m_emitFunc("canplay");
-    }
 
     for (;;)
     {

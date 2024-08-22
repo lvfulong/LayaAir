@@ -295,7 +295,12 @@ namespace laya
 #if defined(OS_ANDROID) || defined(OS_OHOS)  
             if( laya::JCAudioManager::GetInstance()->getMp3Mute() == false && laya::JCAudioManager::GetInstance()->getMp3Stopped() == false)
             {
+                #if defined(OS_ANDROID)
                 JCAudioManager::GetInstance()->pauseMp3();
+                #endif
+                #if defined(OS_OHOS)
+                NapiHelper::GetInstance()->pauseBackgroundMusic();
+                #endif
             }
             laya::JCAudioManager::GetInstance()->m_pWavPlayer->pause();
 #endif
@@ -318,7 +323,12 @@ namespace laya
             //继续声音
             if( laya::JCAudioManager::GetInstance()->getMp3Mute() == false && laya::JCAudioManager::GetInstance()->getMp3Stopped() == false)
             {
+                #if defined(OS_ANDROID)
                 laya::JCAudioManager::GetInstance()->resumeMp3();
+                #endif
+                #if defined(OS_OHOS)
+                NapiHelper::GetInstance()->resumeBackgroundMusic();
+                #endif
             }
             laya::JCAudioManager::GetInstance()->m_pWavPlayer->resume();
 #endif

@@ -1,5 +1,5 @@
 #include "RTBaseRenderNode.h"
-#include "Bindings/LayaAir/3D/JSTransform.h"
+#include "Bindings/LayaAir/3D/JSRTTransform.h"
 #include <render/Property.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 #include "render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTLightmapData.h"
@@ -21,6 +21,7 @@ JSBounds *RTBaseRenderNode::getBounds()
 {
     if (this->boundsChange)
     {
+
         this->_calculateBoundingBox();
         this->boundsChange = false;
     }

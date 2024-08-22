@@ -326,16 +326,14 @@ list(APPEND CONCH_SRC
 	src/Bindings/JSShaderActiveInfo.cpp
 	src/Bindings/JSShaderPrecisionFormat.h
 	src/Bindings/JSShaderPrecisionFormat.cpp
-	src/Bindings/LayaAir/3D/JSTransform.h
-	src/Bindings/LayaAir/3D/JSTransform.cpp
+	src/Bindings/LayaAir/3D/JSRTTransform.h
+	src/Bindings/LayaAir/3D/JSRTTransform.cpp
 	src/Bindings/LayaAir/3D/JSBounds.h
 	src/Bindings/LayaAir/3D/JSBounds.cpp
 	src/Bindings/LayaAir/3D/JSSubmitScene3D.h
 	src/Bindings/LayaAir/3D/JSSubmitScene3D.cpp
-	# Bindings/JSTextBitmapInfo.h
-	# Bindings/JSTextBitmapInfo.cpp
-	# Bindings/JSTextMemoryCanvas.h
-	# Bindings/JSTextMemoryCanvas.cpp
+	src/Bindings/JSWX.h
+	src/Bindings/JSWX.cpp
 	src/Bindings/JSWebSocket.h
 	src/Bindings/JSWebSocket.cpp
 	src/Bindings/JSXmlAttr.h
@@ -524,7 +522,6 @@ elseif(OS_WINDOWS)
 		src/Bindings/JSWindowEditBox.h
 		src/Bindings/JSWindowEditBox.cpp
 		src/backend/src/OpenGLBackendWinEGL.cpp
-		src/backend/src/esUtil.c
 		src/2D/src/CanvasRenderingContext2DWin.cpp
 		src/resource/Audio/JCMp3Parser.h
 		src/resource/Audio/JCMp3Parser.cpp

@@ -73,19 +73,15 @@ namespace laya
 		{
 			m_width = w;
 			m_height = h;
-			if (m_target != nullptr)
+			if (m_target != nullptr && m_width > 0 && m_height > 0)
 			{
+				m_pGLESEngine->getTextureContext()->unbindRenderTarget(m_target);
 				delete m_target;
-				m_target = nullptr;
-				g_target = m_pGLESEngine->getTextureContext()->createRenderTargetInternal(w, h, RenderTargetFormat::R8G8B8A8, RenderTargetFormat::None, false, false, 1);
+				g_target = m_target = m_pGLESEngine->getTextureContext()->createRenderTargetInternal(w, h, RenderTargetFormat::R8G8B8A8, RenderTargetFormat::None, false, false, 1);
 				m_texture = g_target->m_textures[0];
+				m_pGLESEngine->getTextureContext()->bindRenderTarget(g_target, 0);
 				g_nMainFrameBuffer = g_target->getGLFramebuffer();
 			}
-		}
-		if (w == 0 && h == 0)
-		{
-			//this._releaseMem();TODO
-			LOGI("dd");
 		}
 	}
     void ScreenCanvasContext2D::requestCaptureScreen()

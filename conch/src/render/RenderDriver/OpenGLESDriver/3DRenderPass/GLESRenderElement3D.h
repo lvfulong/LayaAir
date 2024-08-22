@@ -13,7 +13,7 @@ namespace laya
 class ComposeData;
 class RenderInstanceData;
 class RTBaseRenderNode;
-class JSTransform;
+class JSRTTransform;
 class GLESRenderElement3D
 {
   public:
@@ -29,7 +29,7 @@ class GLESRenderElement3D
     {
         materialShaderData = value;
     }
-    void setTransform(JSTransform *value)
+    void setTransform(JSRTTransform*value)
     {
         transform = value;
     }
@@ -65,7 +65,7 @@ class GLESRenderElement3D
     uint32_t materialRenderQueue;
     uint32_t materialId;
     GLESShaderData *renderShaderData = nullptr;
-    JSTransform *transform = nullptr;
+    JSRTTransform*transform = nullptr;
     RTBaseRenderNode *owner = nullptr;
     bool isRender;
     bool canDynamicBatch = false;

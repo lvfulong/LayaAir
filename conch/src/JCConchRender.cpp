@@ -1,226 +1,217 @@
-/**
-@file			JCConchRender.cpp
-@brief			
-@author			James
-@version		1.0
-@date			2016_5_12
-*/
-
 #include "JCConchRender.h"
-#include <utils/Log.h>
-#include <utils/JCCommonMethod.h>
-#include "JCSystemConfig.h"
-#include "JCScriptRuntime.h"
-#include <Bindings/JSConchConfig.h>
+#include "../../LayaAir/2D/ScreenCanvasContext2D.h"
 #include "JCConch.h"
+#include "JCScriptRuntime.h"
+#include "JCSystemConfig.h"
+#include "render/LayaGL.h"
+#include "render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.h"
+#include <Bindings/JSConchConfig.h>
 #include <Bindings/JSLayaGL.h>
 #include <LayaGL/JCLayaGLDispatch.h>
 #include <render/3D/temp/RenderStateContext.h>
-#include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderContext2D.h>
-#include "render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.h"
 #include <render/Property.h>
-#include "../../LayaAir/2D/ScreenCanvasContext2D.h"
-#include "render/LayaGL.h"
+#include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderContext2D.h>
+#include <utils/JCCommonMethod.h>
+#include <utils/Log.h>
 extern int g_nInnerHeight;
 extern int g_nInnerWidth;
 
 namespace laya
 {
-    extern int g_nMainFrameBuffer;
-    extern int g_nRealMainFrameBuffer;
-    extern GLESInternalRT* g_target;
+extern int g_nMainFrameBuffer;
+extern int g_nRealMainFrameBuffer;
+extern GLESInternalRT *g_target;
 
-	JCConchRender::JCConchRender(void* pFileResManager)
-	{
-        m_pRenderThread = NULL;
-        m_nFrameCount = 0;
-        m_pFileResManager = (JCFileResManager*)pFileResManager;
-        m_blitContext = new GLESRenderContext2D();
-        m_blitContext->pipelineMode = "Forward";
-	}
-    void JCConchRender::init()
+JCConchRender::JCConchRender(void *pFileResManager)
+{
+    m_pRenderThread = NULL;
+    m_nFrameCount = 0;
+    m_pFileResManager = (JCFileResManager *)pFileResManager;
+    m_blitContext = new GLESRenderContext2D();
+    m_blitContext->pipelineMode = "Forward";
+}
+void JCConchRender::init()
+{
+    m_pImageManager = new JCImageManager();
+    m_pIDGenerator = new JCIDGenerator();
+    m_pProgramLocationTable = new JCIDGenerator();
+    m_pIDGenerator->reset();
+    m_pProgramLocationTable->reset();
+    m_pLayaGL = new JCLayaGL(g_nInnerWidth, g_nInnerHeight, m_pImageManager, m_pIDGenerator, m_pProgramLocationTable);
+    JCLayaGLDispatch::ms_pLayaGL = m_pLayaGL;
+
+    m_pWebGLInternalTexManager = new ObjectManager<GLESInternalTex>();
+    // m_pShaderDataManager = new ResourceManager<ShaderData>();
+    // m_pShaderInstanceManager = new ResourceManager<ShaderInstance>();
+    // m_pRenderGeometryElementManager = new ResourceManager<RenderGeometryElement>();
+    // m_pWordTextManager = new ObjectManager<WordText>();
+    m_pUniformBufferObjectManager = new ObjectManager<UniformBufferObject>();
+    if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
     {
-        m_pImageManager = new JCImageManager();
-        m_pIDGenerator = new JCIDGenerator();
-        m_pProgramLocationTable = new JCIDGenerator();
-        m_pIDGenerator->reset();
-        m_pProgramLocationTable->reset();
-        m_pLayaGL = new JCLayaGL(g_nInnerWidth, g_nInnerHeight,m_pImageManager, m_pIDGenerator, m_pProgramLocationTable);
-        JCLayaGLDispatch::ms_pLayaGL = m_pLayaGL;
-        
-
-        m_pWebGLInternalTexManager = new ObjectManager<GLESInternalTex>();
-        //m_pShaderDataManager = new ResourceManager<ShaderData>();
-        //m_pShaderInstanceManager = new ResourceManager<ShaderInstance>();
-        //m_pRenderGeometryElementManager = new ResourceManager<RenderGeometryElement>();
-        //m_pWordTextManager = new ObjectManager<WordText>();
-        m_pUniformBufferObjectManager = new ObjectManager<UniformBufferObject>();
-        if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL) { 
-            m_WebGLThread = new WebGLThread();
-        }
+        m_WebGLThread = new WebGLThread();
     }
-	JCConchRender::~JCConchRender()
-	{
-        //这个是在JCConch中传过来的，但是为了确保最后一帧，在这释放了，因为JCConchRender全局只有一个
-        if (m_pFileResManager)
+}
+JCConchRender::~JCConchRender()
+{
+    // 这个是在JCConch中传过来的，但是为了确保最后一帧，在这释放了，因为JCConchRender全局只有一个
+    if (m_pFileResManager)
+    {
+        // 这个fileCache也是同理，需要在这删除，
+        if (m_pFileResManager->m_pFileCache)
         {
-            //这个fileCache也是同理，需要在这删除，
-            if (m_pFileResManager->m_pFileCache)
-            {
-                delete m_pFileResManager->m_pFileCache;
-                m_pFileResManager->m_pFileCache = NULL;
-            }
-            delete m_pFileResManager;
-            m_pFileResManager = NULL;
+            delete m_pFileResManager->m_pFileCache;
+            m_pFileResManager->m_pFileCache = NULL;
         }
-        if (m_pImageManager)
-        {
-            delete m_pImageManager;
-            m_pImageManager = NULL;
-        }
-        if (m_pLayaGL)
-        {
-            delete m_pLayaGL;
-            m_pLayaGL = NULL;
-        }
-
-        if (m_pIDGenerator)
-        {
-            delete m_pIDGenerator;
-            m_pIDGenerator = NULL;
-        }
-        if (m_pProgramLocationTable)
-        {
-            delete m_pProgramLocationTable;
-            m_pProgramLocationTable = NULL;
-        }
-        
-         auto  func = [this]()->bool {
-            if (m_pScreenContext)
-            {
-                delete m_pScreenContext;
-                m_pScreenContext = 0;
-            }
-             /*if (m_pWordTextManager)
-            {
-                delete m_pWordTextManager;
-                m_pWordTextManager = NULL;
-            }
-           if (m_pRenderGeometryElementManager)
-            {
-                delete m_pRenderGeometryElementManager;
-                m_pRenderGeometryElementManager = NULL;
-            }
-            if (m_pShaderInstanceManager)
-            {
-                delete m_pShaderInstanceManager;
-                m_pShaderInstanceManager = NULL;
-            }
-            if (m_pShaderDataManager)
-            {
-                delete m_pShaderDataManager;
-                m_pShaderDataManager = NULL;
-            }*/
-            if (m_pWebGLInternalTexManager)
-            {
-                delete m_pWebGLInternalTexManager;
-                m_pWebGLInternalTexManager = NULL;
-            }
-            if (m_pUniformBufferObjectManager)
-            {
-                delete m_pUniformBufferObjectManager;
-                m_pUniformBufferObjectManager = NULL;
-            }
-
-            delete m_GfxBackend;
-            m_GfxBackend = nullptr;
-            return true;
-        };
-        if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL) {
-            m_WebGLThread->postTaskSync(func).get();
-        }
-        else {
-            JCConch::s_pScriptRuntime->m_pScriptThread->postTaskSync(func).get();
-        }
-
-        if (m_WebGLThread != nullptr)
-        {
-            delete m_WebGLThread;
-            m_WebGLThread = nullptr;
-        }
-	}
-    void JCConchRender::update() {
-        m_nFrameCount++;
-        if (m_nFrameCount % 60 == 0)
-        {
-            m_pImageManager->update(m_nFrameCount);
-        }
+        delete m_pFileResManager;
+        m_pFileResManager = NULL;
     }
-	void JCConchRender::clearAllData()
-	{
-        LOGI(">>>JCConchRender::clearAllData = %s", ToString<std::thread::id >::convert(std::this_thread::get_id()).c_str());
-        m_pLayaGL->deleteAllGLRes();
-        //图片全部清空
-        if (m_pImageManager) {
-            m_pImageManager->resetRenderThread();
-        }
-        m_pIDGenerator->reset();
-        m_pProgramLocationTable->reset();
-	}
+    if (m_pImageManager)
+    {
+        delete m_pImageManager;
+        m_pImageManager = NULL;
+    }
+    if (m_pLayaGL)
+    {
+        delete m_pLayaGL;
+        m_pLayaGL = NULL;
+    }
 
-void JCConchRender::setMainContextSize(int width,int height)
+    if (m_pIDGenerator)
+    {
+        delete m_pIDGenerator;
+        m_pIDGenerator = NULL;
+    }
+    if (m_pProgramLocationTable)
+    {
+        delete m_pProgramLocationTable;
+        m_pProgramLocationTable = NULL;
+    }
+
+    if (m_WebGLThread != nullptr)
+    {
+        delete m_WebGLThread;
+        m_WebGLThread = nullptr;
+    }
+    if (m_pScreenContext)
+    {
+        delete m_pScreenContext;
+        m_pScreenContext = 0;
+    }
+    /*if (m_pWordTextManager)
+   {
+       delete m_pWordTextManager;
+       m_pWordTextManager = NULL;
+   }
+  if (m_pRenderGeometryElementManager)
+   {
+       delete m_pRenderGeometryElementManager;
+       m_pRenderGeometryElementManager = NULL;
+   }
+   if (m_pShaderInstanceManager)
+   {
+       delete m_pShaderInstanceManager;
+       m_pShaderInstanceManager = NULL;
+   }
+   if (m_pShaderDataManager)
+   {
+       delete m_pShaderDataManager;
+       m_pShaderDataManager = NULL;
+   }*/
+    if (m_pWebGLInternalTexManager)
+    {
+        delete m_pWebGLInternalTexManager;
+        m_pWebGLInternalTexManager = NULL;
+    }
+    if (m_pUniformBufferObjectManager)
+    {
+        delete m_pUniformBufferObjectManager;
+        m_pUniformBufferObjectManager = NULL;
+    }
+
+    delete m_GfxBackend;
+    m_GfxBackend = nullptr;
+}
+void JCConchRender::update()
+{
+    m_nFrameCount++;
+    if (m_nFrameCount % 60 == 0)
+    {
+        m_pImageManager->update(m_nFrameCount);
+    }
+}
+void JCConchRender::clearAllData()
+{
+    LOGI(">>>JCConchRender::clearAllData = %s", ToString<std::thread::id>::convert(std::this_thread::get_id()).c_str());
+    m_pLayaGL->deleteAllGLRes();
+    // 图片全部清空
+    if (m_pImageManager)
+    {
+        m_pImageManager->resetRenderThread();
+    }
+    m_pIDGenerator->reset();
+    m_pProgramLocationTable->reset();
+
+    if (m_pScreenContext)
+    {
+        delete m_pScreenContext;
+        m_pScreenContext = 0;
+    }
+}
+
+void JCConchRender::setMainContextSize(int width, int height)
 {
     postTaskFromJSToRenderAsync([width, height, this]() {
         JCConch::s_pConchRender->m_pLayaGL->m_nMainCanvasWidth = width;
         JCConch::s_pConchRender->m_pLayaGL->m_nMainCanvasHeight = height;
-        if (m_pScreenContext) {
+        if (m_pScreenContext)
+        {
             m_pScreenContext->size(width, height);
         }
     });
 }
 void JCConchRender::start()
 {
-    if (g_kSystemConfig.m_graphicsAPI != GraphicsAPI::OpenGLES) {
+    if (g_kSystemConfig.m_graphicsAPI != GraphicsAPI::OpenGLES)
+    {
         return;
     }
     if (!LayaGL::m_pWebglEngine)
     {
         return;
     }
-    //webgl mode need restore gl state
+    // webgl mode need restore gl state
     if (m_pScreenContext == nullptr)
     {
-       m_pScreenContext = new ScreenCanvasContext2D(LayaGL::m_pWebglEngine);
+        m_pScreenContext = new ScreenCanvasContext2D(LayaGL::m_pWebglEngine);
     }
-    //m_pMainContext->m_target->start();
+    // m_pMainContext->m_target->start();
     m_pScreenContext->startForMainCanvas();
-    //m_pMainContext->m_target->clear(0.0f, 0.0f, 0.0f, 1.0f);
+    // m_pMainContext->m_target->clear(0.0f, 0.0f, 0.0f, 1.0f);
 }
 void JCConchRender::end()
 {
-    
-    if (g_kSystemConfig.m_graphicsAPI != GraphicsAPI::OpenGLES) {
+
+    if (g_kSystemConfig.m_graphicsAPI != GraphicsAPI::OpenGLES)
+    {
         return;
     }
     if (!LayaGL::m_pWebglEngine)
     {
         return;
     }
-
-    
 
     int last_width;
     int last_height;
     int width, height;
     int last_main_frame_buffer = g_nMainFrameBuffer;
     g_nMainFrameBuffer = g_nRealMainFrameBuffer;
-    //m_GfxBackend->getScreenSurfaceSize(&width, &height);
+    // m_GfxBackend->getScreenSurfaceSize(&width, &height);
     m_blitContext->setOffscreenView(g_nInnerWidth, g_nInnerHeight);
     m_blitContext->setRenderTarget(nullptr, true, Color::BLACK);
-    GLESRenderContext2D::blitscreenElement2D->materialShaderData->setInternalTexture(CommandProperty::SCREENTEXTURE_ID, g_target->m_textures[0]);
+    GLESRenderContext2D::blitscreenElement2D->materialShaderData->setInternalTexture(CommandProperty::SCREENTEXTURE_ID,
+                                                                                     g_target->m_textures[0]);
     m_blitContext->drawRenderElementOne(GLESRenderContext2D::blitscreenElement2D);
     g_nMainFrameBuffer = last_main_frame_buffer;
-
 }
 void JCConchRender::swapBuffer()
 {
@@ -228,66 +219,65 @@ void JCConchRender::swapBuffer()
     {
         m_GfxBackend->swapBuffer();
     }
-
-
 }
 void JCConchRender::requestCaptureScreen()
 {
-   m_pScreenContext->requestCaptureScreen();
+    m_pScreenContext->requestCaptureScreen();
 }
-    void JCConchRender::createScreenSurface(void *nativeHandle)
+void JCConchRender::createScreenSurface(void *nativeHandle)
+{
+    auto func = [this, nativeHandle]() {
+        m_GfxBackend->createScreenSurface(nativeHandle);
+        m_GfxBackend->makeCurrent();
+    };
+    if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
     {
-        auto  func = [this, nativeHandle]() {
-            m_GfxBackend->createScreenSurface(nativeHandle);
-            m_GfxBackend->makeCurrent();
-        };
-        if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL) {
-            m_WebGLThread->postTaskAsync(func);
-        }
-        else {
-            JCConch::s_pScriptRuntime->m_pScriptThread->post(func);
-        }
+        m_WebGLThread->postTaskAsync(func);
     }
-    void JCConchRender::onScreenSurfaceResize(int width, int height)
+    else
     {
-         auto  func = [this, width, height]() { 
-            m_GfxBackend->onScreenSurfaceResize(width, height);
-        };
-        if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL) {
-             m_WebGLThread->postTaskAsync(func);
-        }
-        else {
-            JCConch::s_pScriptRuntime->m_pScriptThread->post(func);
-        }
-    }
-    void JCConchRender::destroyScreenSurface()
-    {
-        auto  func = [this]() {
-            m_GfxBackend->destroyScreenSurface();
-        };
-        if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL) {
-            m_WebGLThread->postTaskAsync(func);
-        }
-        else {
-            JCConch::s_pScriptRuntime->m_pScriptThread->post(func);
-        }
-    }
-    void JCConchRender::createBackend(const BackendOptions& options)
-    {
-        auto  func = [this, options]() { 
-                        if (m_GfxBackend == nullptr) {
-                m_GfxBackend = laya::createBackend(options);
-            }
-        };
-        if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL) {
-            m_WebGLThread->postTaskAsync(func);
-        }
-        else {
-            JCConch::s_pScriptRuntime->m_pScriptThread->post(func);
-        }
+        JCConch::s_pScriptRuntime->m_pScriptThread->post(func);
     }
 }
-//------------------------------------------------------------------------------
-
-
-//-----------------------------END FILE--------------------------------
+void JCConchRender::onScreenSurfaceResize(int width, int height)
+{
+    auto func = [this, width, height]() { m_GfxBackend->onScreenSurfaceResize(width, height); };
+    if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
+    {
+        m_WebGLThread->postTaskAsync(func);
+    }
+    else
+    {
+        JCConch::s_pScriptRuntime->m_pScriptThread->post(func);
+    }
+}
+void JCConchRender::destroyScreenSurface()
+{
+    auto func = [this]() { m_GfxBackend->destroyScreenSurface(); };
+    if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
+    {
+        m_WebGLThread->postTaskAsync(func);
+    }
+    else
+    {
+        JCConch::s_pScriptRuntime->m_pScriptThread->post(func);
+    }
+}
+void JCConchRender::createBackend(const BackendOptions &options)
+{
+    auto func = [this, options]() {
+        if (m_GfxBackend == nullptr)
+        {
+            m_GfxBackend = laya::createBackend(options);
+        }
+    };
+    if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
+    {
+        m_WebGLThread->postTaskAsync(func);
+    }
+    else
+    {
+        JCConch::s_pScriptRuntime->m_pScriptThread->post(func);
+    }
+}
+} // namespace laya

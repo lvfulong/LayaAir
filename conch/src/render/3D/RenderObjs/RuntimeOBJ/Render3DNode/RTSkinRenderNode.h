@@ -18,15 +18,15 @@ namespace laya
         void _renderUpdate(GLESRenderContext3D* context) override;
     public://binding
         void computeSkinnedData(int loopCount);
-        void setRootBoneTransfom(JSTransform* value) { rootBoneTransform = value; };
-        void setOwnerTransform(JSTransform* value) { ownerTransform = value; }
+        void setRootBoneTransfom(JSRTTransform* value) { rootBoneTransform = value; };
+        void setOwnerTransform(JSRTTransform* value) { ownerTransform = value; }
 
         //SkinnedMatrixData
         void resizeSkinnedData(uint32_t dataArrayLength);
         void setSkinnedDataByIndex(uint32_t index, JSValueAsParam pData);
         //bones
         void clearBoneTransform();
-        void addBoneTransform(JSTransform* value);
+        void addBoneTransform(JSRTTransform* value);
         //--------cacheMeshData--------
         //cacheMesh._inverseBindPoses
         void resizeCacheMeshInverseBindPoes(uint32_t value);
@@ -42,9 +42,9 @@ namespace laya
     private:
         void _computeSubSkinnedData(uint16_t* boneIndices, int boneIndicesLength, float* data, int loopCount);
     public://Property
-        JSTransform* rootBoneTransform = nullptr;
-        JSTransform* ownerTransform = nullptr;
-        std::vector<JSTransform*> bones{};
+        JSRTTransform* rootBoneTransform = nullptr;
+        JSRTTransform* ownerTransform = nullptr;
+        std::vector<JSRTTransform*> bones{};
         std::vector<std::vector<std::pair<float*, int>>> skinnedData{};
         std::vector<Matrix4x4> inverseBindPose{};
         std::vector<std::vector<std::pair<uint16_t*, int>>> boneIndicesList{};

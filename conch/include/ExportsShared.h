@@ -21,7 +21,6 @@ typedef std::function<void(const std::string &eventName, const std::string &data
     handleAsyncMessageCallback;
 
 #if defined(OS_WINDOWS)
-extern "C" CONCH_API int conchMainConsole(int argc, WCHAR *argv[]);
 extern "C" CONCH_API int conchMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nShowCmd);
 extern "C" CONCH_API void conchSetHandleMessageCallback(handleSyncMessageCallback handleSyncMessageCb,
                                                         handleAsyncMessageCallback handleAsyncMessageCb);

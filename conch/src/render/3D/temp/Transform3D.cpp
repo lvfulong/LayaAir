@@ -107,11 +107,10 @@ namespace laya
 		//if (this._localPosition != = value)
 		//	value.cloneTo(this._localPosition);
 		m_localPosition = value;
-
 		_setTransformFlag(Transform3D::TRANSFORM_LOCALMATRIX, true);
 		_onWorldPositionTransform();
 
-
+		_setTransformFlag(Transform3D::TRANSFORM_LOCALPOS, false);
 		m_bLocalPositionNeedSync = true;
 	}
 
@@ -260,6 +259,7 @@ namespace laya
 		//	value.cloneTo(this._localScale);
 		m_localScale = value;
 		_setTransformFlag(Transform3D::TRANSFORM_LOCALMATRIX, true);
+		_setTransformFlag(Transform3D::TRANSFORM_LOCALSCALE, false);
 		_onWorldScaleTransform();
 
 		m_bLocalScaleNeedSync = true;
@@ -736,6 +736,7 @@ namespace laya
 	}
 	void Transform3D::sendEvent()
 	{
+		if(m_pListener)
 		m_pListener->sendEvent(TRANSFORM_CHANGED, m_transformFlag);
 	}
 	/**

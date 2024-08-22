@@ -30,7 +30,7 @@ enum class IrradianceMode
 class Bounds;
 class GLESShaderData;
 class GLESRenderElement3D;
-class JSTransform;
+class JSRTTransform;
 class GLESRenderContext3D;
 class RTLightmapData;
 class RTReflectionProb;
@@ -41,7 +41,7 @@ public:
     RTBaseRenderNode();
     ~RTBaseRenderNode() {};
 public: //binding
-    void setTransform(laya::JSTransform* value) { transform = value; }
+    void setTransform(laya::JSRTTransform* value) { transform = value; }
     JSBounds* getBounds();
     void setBounds(JSBounds* bounds);
     void setBaseGeometryBounds(JSBounds* bounds);
@@ -67,7 +67,7 @@ public:
 public://bind
     void _calculateBoundingBox();
     uint32_t renderNodeType;
-    JSTransform* transform = nullptr;
+    JSRTTransform* transform = nullptr;
     float distanceForSort;
     float sortingFudge = 0;
     bool castShadow;

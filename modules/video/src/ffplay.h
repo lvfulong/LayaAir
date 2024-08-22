@@ -131,7 +131,7 @@ typedef struct VideoState
     char *filename;
     int width, height, xleft, ytop;
     int step;
-
+        
     int vfilter_idx;
     AVFilterContext *in_video_filter;  // the first filter in the video chain
     AVFilterContext *out_video_filter; // the last filter in the video chain
@@ -152,13 +152,13 @@ typedef struct VideoState
     /**/
     static int startup_volume;
     static int decoder_reorder_pts;
-    static int audio_disable;
+    int audio_disable = 0;
     static int video_disable;
     static const char *window_title;
     static int64_t start_time;
     static int64_t duration;
     static int autoexit;
-    static int loop;
+    // static int loop;
     static int infinite_buffer;
     static int subtitle_disable;
     static const char *wanted_stream_spec[AVMEDIA_TYPE_NB];
@@ -191,9 +191,17 @@ typedef struct VideoState
 
     EVideoState m_videoState = EVideoState::HAVE_NOTHING;
     std::function<void(const char *)> m_emitFunc;
+
+    bool m_loop = false;
+    bool m_autoplay = false;
+
+    int videoWidth = 0;
+    int videoHeight = 0;
 } VideoState;
 
 bool stream_open(VideoState *is, const char *filename, const AVInputFormat *iformat);
+void do_pause(VideoState *is);
+void do_play(VideoState *is);
 void do_exit(VideoState *is);
 } // namespace ffplay
 #endif

@@ -2,7 +2,7 @@
 #define __RenderBindings_H__
 
 #include "Bindings/LayaAir/3D/JSBounds.h"
-#include "Bindings/LayaAir/3D/JSTransform.h"
+#include "Bindings/LayaAir/3D/JSRTTransform.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GL2TextureContext.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESBufferState.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/WebGLConfig.h"
@@ -202,37 +202,32 @@ class RenderBindings
             context.class_("conchBounds", class_binding);
         }
         {
-            class_<JSTransform> class_binding;
-            class_binding.constructor<>();
-            class_binding.constructor<JSValueAsParam, JSValueAsParam>();
-            class_binding.function("setParent", &JSTransform::setParent);
-            class_binding.property("_isFrontFaceInvert", &JSTransform::_isFrontFaceInvert);
-            class_binding.function("getLocalPosition", &JSTransform::_getLocalPosition);
-            class_binding.function("setLocalPosition", &JSTransform::setLocalPosition);
-            class_binding.function("getLocalRotation", &JSTransform::_getLocalRotation);
-            class_binding.function("setLocalRotation", &JSTransform::setLocalRotation);
-            class_binding.function("getLocalScale", &JSTransform::_getLocalScale);
-            class_binding.function("setLocalScale", &JSTransform::setLocalScale);
-            class_binding.function("getLocalRotationEuler", &JSTransform::_getLocalRotationEuler);
-            class_binding.function("setLocalRotationEuler", &JSTransform::setLocalRotationEuler);
-            class_binding.function("getRotation", &JSTransform::_getRotation);
-            class_binding.function("setRotation", &JSTransform::setRotation);
-            class_binding.function("getPosition", &JSTransform::_getPosition);
-            class_binding.function("setPosition", &JSTransform::setPosition);
-            class_binding.function("getRotationEuler", &JSTransform::_getRotationEuler);
-            class_binding.function("setRotationEuler", &JSTransform::setRotationEuler);
-            class_binding.function("getWorldLossyScale", &JSTransform::_getWorldLossyScale);
-            class_binding.function("setWorldLossyScale", &JSTransform::setWorldLossyScale);
-            class_binding.function("getWorldMatrix", &JSTransform::_getWorldMatrix);
-            class_binding.function("setWorldMatrix", &JSTransform::setWorldMatrix);
-            class_binding.function("getLocalMatrix", &JSTransform::_getLocalMatrix);
-            class_binding.function("setLocalMatrix", &JSTransform::setLocalMatrix);
-            class_binding.function("translate", &JSTransform::translate);
-            class_binding.function("lookAt", &JSTransform::lookAt);
-            class_binding.function("rotate", &JSTransform::rotate);
-            class_binding.function("_setTransformFlag", &JSTransform::_setTransformFlag);
-            class_binding.function("_getTransformFlag", &JSTransform::_getTransformFlag);
-            context.class_("conchTransform", class_binding);
+              class_<JSRTTransform> class_binding;
+              class_binding.constructor<>();
+              class_binding.constructor <JSValueAsParam>();
+              class_binding.function("setParent", &JSRTTransform::rt_setParent);
+              class_binding.function("getWorldLossyScale", &JSRTTransform::rt_getWorldLossyScale);
+              class_binding.function("setWorldLossyScale", &JSRTTransform::rt_setWorldLossyScale);
+              class_binding.function("setWorldMatrix", &JSRTTransform::rt_setWorldMatrix);
+              class_binding.function("getWorldMatrix", &JSRTTransform::rt_getWorldMatrix);
+              class_binding.function("setRotationEuler", &JSRTTransform::rt_setRotationEuler);
+              class_binding.function("getRotationEuler", &JSRTTransform::rt_getRotationEuler);
+              class_binding.function("getRotation", &JSRTTransform::rt_getRotation);
+              class_binding.function("setRotation", &JSRTTransform::rt_setRotation);
+              class_binding.function("setPosition", &JSRTTransform::rt_setPosition);
+              class_binding.function("getPosition", &JSRTTransform::rt_getPosition);
+              class_binding.function("setLocalMatrix", &JSRTTransform::rt_setLocalMatrix);
+              class_binding.function("getLocalMatrix", &JSRTTransform::rt_getLocalMatrix);
+              class_binding.function("getLocalRotationEuler", &JSRTTransform::rt_getLocalRotationEuler);
+              class_binding.function("setLocalRotationEuler", &JSRTTransform::rt_setLocalRotationEuler);
+              class_binding.function("getLocalRotation", &JSRTTransform::rt_getLocalRotation);
+              class_binding.function("setLocalRotation", &JSRTTransform::rt_setLocalRotation);
+              class_binding.function("setLocalPosition", &JSRTTransform::rt_setLocalPosition);
+              class_binding.function("getLocalPosition", &JSRTTransform::rt_getLocalPosition);
+              class_binding.function("setLocalScale", &JSRTTransform::rt_setLocalScale);
+              class_binding.function("getLocalScale", &JSRTTransform::rt_getLocalScale);
+              class_binding.function("setTransformFlag", &JSRTTransform::_setTransformFlag);
+              context.class_("conchRTTransform", class_binding);
         }
         {
             class_<GLTextureContext> class_binding;
@@ -697,6 +692,8 @@ class RenderBindings
             class_binding.constructor<>();
             class_binding.inherit<RTBaseRenderNode>();
             class_binding.function("setSimpleAnimatorParams", &RTSimpleSkinRenderNode::setSimpleAnimatorParams);
+            class_binding.function("setSimpleAnimatorParamsByBuffer", &RTSimpleSkinRenderNode::setSimpleAnimatorParamsByBuffer);
+            class_binding.function("setShareBuffer", &RTSimpleSkinRenderNode::setShareBuffer);
             context.class_("conchRTSimpleSkinRenderNode", class_binding);
         }
 

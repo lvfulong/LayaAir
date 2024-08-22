@@ -5,12 +5,12 @@
 #include "ExportsShared.h"
 #endif
 
-int main(int argc, _TCHAR *argv[])
+int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nShowCmd)
 {
     conchSetHandleMessageCallback(
         [](const std::string &eventName, const std::string &data) -> std::string { return "sync result"; },
         [](const std::string &eventName, const std::string &data, handleResultCallback resultCallback) -> void {
             resultCallback("async result");
         });
-    return conchMainConsole(argc, argv);
+    return conchMain(hInstance, hPrevInstance, lpCmdLine, nShowCmd);
 }

@@ -73,7 +73,7 @@ namespace laya
 					if( pWavPlayer->m_pAudioRenderSource[i]->m_bPlaying == true ) {
 						AudioRenderInfo* pAudioRenderInfo = pWavPlayer->m_pAudioRenderSource[i];
 						if(pAudioRenderInfo->_audioRender != nullptr) {
-							OH_AudioRenderer_Stop(pAudioRenderInfo->_audioRender);
+							//OH_AudioRenderer_Stop(pAudioRenderInfo->_audioRender);
 							OH_AudioRenderer_Release(pAudioRenderInfo->_audioRender);
 						}
 						if(pAudioRenderInfo->_builder != nullptr) {

@@ -1,10 +1,9 @@
 #include "GLESInstanceRenderBatch.h"
 #include "GLESInstanceRenderElement3D.h"
-#include "Bindings/LayaAir/3D/JSTransform.h"
+#include "Bindings/LayaAir/3D/JSRTTransform.h"
 #include "render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTReflectionProb.h"
 #include "render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTVolumetricGI.h"
 #include "render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderElement3D.h"
-#include "Bindings/LayaAir/3D/JSTransform.h"
 namespace laya
 {
 	GLESInstanceRenderBatch::GLESInstanceRenderBatch() :_recoverList(JCSingletonList<GLESInstanceRenderElement3D*>(false))

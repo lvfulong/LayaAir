@@ -66,7 +66,7 @@ int OSiOS::getSafeInsetBottom()
     CToObjectCGetSafeAreaInsets(&safeInsetTop, &safeInsetLeft, &safeInsetBottom, &safeInsetRight);
     return safeInsetBottom;
 }
-int OSiOS::GetSafeInsetRight()
+int OSiOS::getSafeInsetRight()
 {
     int safeInsetTop = 0;
     int safeInsetLeft = 0;

@@ -11,7 +11,10 @@ namespace laya
 GLESIndexBuffer::GLESIndexBuffer(BufferTargetType targetType, BufferUsage bufferUsageType)
 {
     this->_glBuffer = (GLBuffer *)LayaGL::m_pWebglEngine->createBuffer(targetType, bufferUsageType);
-    LayaGL::m_pWebglEngine->_addStatisticsInfo(GPUEngineStatisticsInfo::RC_IndexBuffer, 1);
+    if (LayaGL::m_pWebglEngine != nullptr)
+    {
+        LayaGL::m_pWebglEngine->_addStatisticsInfo(GPUEngineStatisticsInfo::RC_IndexBuffer, 1);
+    }
 }
 
 GLESIndexBuffer::~GLESIndexBuffer()
@@ -20,7 +23,10 @@ GLESIndexBuffer::~GLESIndexBuffer()
 }
 
 void GLESIndexBuffer::_changeMemory(int bytelength) {
-    LayaGL::m_pWebglEngine->_addStatisticsInfo(GPUEngineStatisticsInfo::M_IndexBuffer, -_glBuffer->m_byteLength + bytelength);
+    if (LayaGL::m_pWebglEngine != nullptr)
+    {
+        LayaGL::m_pWebglEngine->_addStatisticsInfo(GPUEngineStatisticsInfo::M_IndexBuffer, -_glBuffer->m_byteLength + bytelength);
+    }
 }
 
 void GLESIndexBuffer::_setIndexDataLength(uint32_t data)
@@ -75,7 +81,10 @@ void GLESIndexBuffer::destroy()
 {
     if (_glBuffer != nullptr)
     {
-        LayaGL::m_pWebglEngine->_addStatisticsInfo(GPUEngineStatisticsInfo::RC_IndexBuffer, -1);
+        if (LayaGL::m_pWebglEngine != nullptr)
+        {
+            LayaGL::m_pWebglEngine->_addStatisticsInfo(GPUEngineStatisticsInfo::RC_IndexBuffer, -1);
+        }
         _changeMemory(0);
         this->_glBuffer->destroy();
         delete _glBuffer;

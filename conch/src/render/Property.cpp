@@ -77,13 +77,13 @@ namespace laya
         RenderableSprite3DProperty::AMBIENTINTENSITY = LayaGL::m_pWebglEngine->propertyNameToID("u_AmbientIntensity");
         RenderableSprite3DProperty::REFLECTIONINTENSITY = LayaGL::m_pWebglEngine->propertyNameToID("u_ReflectionIntensity");
         RenderableSprite3DProperty::VOLUMETRICGI_PROBECOUNTS =
-            LayaGL::m_pWebglEngine->propertyNameToID("u_VolumetricGI.probeCounts");
+            LayaGL::m_pWebglEngine->propertyNameToID("u_VolGIProbeCounts");
         RenderableSprite3DProperty::VOLUMETRICGI_PROBESTEPS =
-            LayaGL::m_pWebglEngine->propertyNameToID("u_VolumetricGI.probeStep");
+            LayaGL::m_pWebglEngine->propertyNameToID("u_VolGIProbeStep");
         RenderableSprite3DProperty::VOLUMETRICGI_PROBESTARTPOS =
-            LayaGL::m_pWebglEngine->propertyNameToID("u_VolumetricGI.probeStartPosition");
+            LayaGL::m_pWebglEngine->propertyNameToID("u_VolGIProbeStartPosition");
         RenderableSprite3DProperty::VOLUMETRICGI_PROBEPARAMS =
-            LayaGL::m_pWebglEngine->propertyNameToID("u_VolumetricGI.probeParams");
+            LayaGL::m_pWebglEngine->propertyNameToID("u_VolGIProbeParams");
         RenderableSprite3DProperty::VOLUMETRICGI_IRRADIANCE = LayaGL::m_pWebglEngine->propertyNameToID("u_ProbeIrradiance");
         RenderableSprite3DProperty::VOLUMETRICGI_DISTANCE = LayaGL::m_pWebglEngine->propertyNameToID("u_ProbeDistance");
     }

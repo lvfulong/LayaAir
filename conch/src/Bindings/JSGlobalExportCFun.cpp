@@ -71,7 +71,7 @@
 #include "JSFile.h"
 #include "JSFileReader.h"
 #include "JSImageBitmap.h"
-
+#include "JSWX.h"
 #include "LayaAir/3D/JSSubmitScene3D.h"
 #include "2D/FontManager.h"
 #include <stdarg.h>
@@ -501,7 +501,7 @@ namespace laya
         //JSTextBitmapInfo::exportJS(context);
         //JSTextMemoryCanvas::getInstance()->exportJS(context);
         JSArrayBufferRef::exportJS(context);
-
+        JSWX::exportJS(context);
 
 	
         

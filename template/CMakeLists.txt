@@ -124,7 +124,7 @@ if(OS_IOS)
 	)
 elseif(OS_WINDOWS)
 	list(APPEND PROJECT_SOURCES
-		proj.win64/conch6.cpp
+		proj.win64/main.cpp
 		proj.win64/stdafx.h
 		proj.win64/stdafx.cpp
 	)
@@ -152,9 +152,10 @@ elseif(OS_WINDOWS)
 		)
 	endforeach()
 	target_link_libraries(${PROJECT_NAME} PRIVATE conch)
+	set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS")
 elseif(OS_LINUX)
 	list(APPEND PROJECT_SOURCES
-		proj.linux/Conch6.cpp
+		proj.linux/main.cpp
 	)
 	#add_subdirectory(${CONCH_PATH} ${PROJECT_BINARY_DIR}/conch)
 	add_executable(${PROJECT_NAME}

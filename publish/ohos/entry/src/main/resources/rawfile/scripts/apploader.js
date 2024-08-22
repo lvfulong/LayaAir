@@ -815,6 +815,8 @@ class Navigator {
             return "LayaBox(iPhone; CPU iPhone OS Mac OS X)";
         else if (os == "android")
             return "LayaBox Android";
+        else if (os == "OpenHarmony")
+            return "OpenHarmony";
         else
             return 'LayaBox/2.1';
     }

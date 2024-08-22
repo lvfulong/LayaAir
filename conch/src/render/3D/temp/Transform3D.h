@@ -35,6 +35,8 @@ namespace laya
 			TRANSFORM_WORLDSCALE = 0x20,
 			TRANSFORM_WORLDMATRIX = 0x40,
 			TRANSFORM_WORLDEULER = 0x80,
+			TRANSFORM_LOCALPOS = 0x100,
+			TRANSFORM_LOCALSCALE = 0x200
 		};
 
 		Vector3 m_localPosition = Vector3(0.0f, 0.0f, 0.0f);
@@ -133,22 +135,23 @@ namespace laya
 
 		void getRight(Vector3& right);
 
-		void _onWorldPositionRotationTransform();
+		
+		virtual void _onWorldPositionRotationTransform();
 
-		void _onWorldPositionScaleTransform();
+		virtual void _onWorldPositionScaleTransform();
 
-		void _onWorldPositionTransform();
+		virtual void _onWorldPositionTransform();
 
-		void _onWorldRotationTransform();
+		virtual void _onWorldRotationTransform();
 
-		void _onWorldScaleTransform();
+		virtual void _onWorldScaleTransform();
 
-		void _onWorldTransform();
+		virtual void _onWorldTransform();
 
 		void sendEvent();
 
 		const Matrix3x3& _getScaleMatrix();
-		void _setTransformFlag(uint32_t type, bool value);
+		virtual void _setTransformFlag(uint32_t type, bool value);
 		bool _getTransformFlag(uint32_t type);
 		
 		int32_t getFrontFaceValue();
@@ -168,7 +171,7 @@ namespace laya
 
 private:
 private:
-		Listener* m_pListener;
+		Listener* m_pListener = nullptr;
 
 		
 	};

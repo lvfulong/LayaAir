@@ -35,8 +35,11 @@ void GLESInternalRT::setGpuMemory(int value)
 }
 
 void GLESInternalRT::_changeTexMemory(int byteLength) {
-    m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::M_GPUMemory, -m_gpuMemory + byteLength);
-    m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::M_ALLRenderTexture, -m_gpuMemory + byteLength);
+    if (LayaGL::m_pWebglEngine != nullptr)
+    {
+        LayaGL::m_pWebglEngine->_addStatisticsInfo(GPUEngineStatisticsInfo::M_GPUMemory, -m_gpuMemory + byteLength);
+        LayaGL::m_pWebglEngine->_addStatisticsInfo(GPUEngineStatisticsInfo::M_ALLRenderTexture, -m_gpuMemory + byteLength);
+    }
 }
 
 GLESInternalRT::~GLESInternalRT()
@@ -78,7 +81,10 @@ void GLESInternalRT::dispose()
 
     _changeTexMemory(0);
     m_gpuMemory = 0;
-    m_engine->_addStatisticsInfo(GPUEngineStatisticsInfo::RC_ALLRenderTexture, -1);
+    if (LayaGL::m_pWebglEngine != nullptr)
+    {
+        LayaGL::m_pWebglEngine->_addStatisticsInfo(GPUEngineStatisticsInfo::RC_ALLRenderTexture, -1);
+    }
 }
 
 

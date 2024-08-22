@@ -60,6 +60,10 @@ namespace laya
 
 	void JSVideo::SetSrc(const char* url)
 	{
+		if (!m_src.empty())
+		{
+			return;
+		}
 		m_src = url;
 		Load(url);
 	}
