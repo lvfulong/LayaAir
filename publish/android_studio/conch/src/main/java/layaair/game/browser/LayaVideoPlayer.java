@@ -215,6 +215,14 @@ public class LayaVideoPlayer implements IVideoRenderTarget.Callback{
                 public void onPrepared(MediaPlayer mediaPlayer) {
                     m_curStatus = MediaPlayerStatus.Prepared;
                     m_readyState = ReadyState.HAVE_ENOUGH_DATA;
+
+                    // 获取视频的实际宽高
+                    int videoWidth = mediaPlayer.getVideoWidth();
+                    int videoHeight = mediaPlayer.getVideoHeight();
+
+                    m_renderTarget.setWidth(videoWidth);
+                    m_renderTarget.setHeight(videoHeight);
+
                     //setCurrentTime(m_currentTime);
                     emit("loadedmetadata");
                     emit("canplay");
@@ -367,13 +375,13 @@ public class LayaVideoPlayer implements IVideoRenderTarget.Callback{
 
     public int getVideoWidth()
     {
- //       Log.i(TAG, "[Debug][Video]getVideoWidth: " + m_mediaPlayer.getVideoWidth());
+        //Log.i(TAG, "[Debug][Video]getVideoWidth: " + m_mediaPlayer.getVideoWidth());
         return m_mediaPlayer.getVideoWidth();
     }
 
     public int getVideoHeight()
     {
- //       Log.i(TAG, "[Debug][Video]getVideoHeight: " + m_mediaPlayer.getVideoHeight());
+        //Log.i(TAG, "[Debug][Video]getVideoHeight: " + m_mediaPlayer.getVideoHeight());
         return m_mediaPlayer.getVideoHeight();
     }
 
