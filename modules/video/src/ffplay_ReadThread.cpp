@@ -4,6 +4,8 @@
 #include "ffplay_SubtitleThread.h"
 #include "ffplay_Utils.h"
 #include "ffplay_VideoThread.h"
+
+#include <utils/JCFileSystem.h>
 namespace ffplay
 {
 static int stream_has_enough_packets(AVStream *st, int stream_id, PacketQueue *queue)
@@ -359,6 +361,45 @@ static int is_realtime(AVFormatContext *s)
         return 1;
     return 0;
 }
+static int io_read_buffer(void *opaque, uint8_t *buf, int buf_size)
+{
+    VideoState *ctx = (VideoState *)opaque;
+    int size = FFMIN(buf_size, ctx->m_video_buffer_size - ctx->m_position);
+
+    if (size <= 0)
+        return AVERROR_EOF;
+
+    memcpy(buf, ctx->m_video_buffer + ctx->m_position, size);
+    ctx->m_position += size;
+    return size;
+}
+
+static int64_t io_seek_buffer(void *opaque, int64_t offset, int whence)
+{
+    VideoState *ctx = (VideoState *)opaque;
+
+    switch (whence)
+    {
+    case AVSEEK_SIZE:
+        return ctx->m_video_buffer_size;
+    case SEEK_SET:
+        ctx->m_position = offset;
+        break;
+    case SEEK_CUR:
+        ctx->m_position += offset;
+        break;
+    case SEEK_END:
+        ctx->m_position = ctx->m_video_buffer_size + offset;
+        break;
+    default:
+        return -1;
+    }
+
+    if (ctx->m_position < 0 || ctx->m_position > ctx->m_video_buffer_size)
+        return -1;
+
+    return ctx->m_position;
+}
 /*this thread gets the stream from the disk or the network */
 int read_thread(void *arg)
 {
@@ -405,7 +446,22 @@ int read_thread(void *arg)
         av_dict_set(&is->format_opts, "scan_all_pmts", "1", AV_DICT_DONT_OVERWRITE);
         scan_all_pmts_set = 1;
     }
-    err = avformat_open_input(&ic, is->filename, is->iformat, &is->format_opts);
+    if (is->m_video_buffer != nullptr && is->m_video_buffer_size > 0)
+    {
+        is->m_position = 0;
+        // laya::writeFileSync1("f://test.mp4", (char *)is->m_buffer, is->m_length, 0);
+        AVIOContext *avio =
+            avio_alloc_context(is->m_iobuffer_ptr, IO_BUFFER_SIZE, 0, is, &io_read_buffer, NULL, io_seek_buffer);
+        ic->pb = avio;
+        ic->flags = AVFMT_FLAG_CUSTOM_IO;
+        // err = avformat_open_input(&ic, NULL , is->iformat, &is->format_opts);
+        err = avformat_open_input(&ic, "", NULL, NULL);
+    }
+    else
+    {
+
+        err = avformat_open_input(&ic, is->filename, is->iformat, &is->format_opts);
+    }
     if (err < 0)
     {
         print_error(is->filename, err);

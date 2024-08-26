@@ -101,7 +101,11 @@ class JSVideo
     void Init();
     void Dispose();
     void LoadInternal(const std::string &path);
+    void LoadInternal(char *buffer, int length);
     void DispatchEvtToJS(const std::string path);
+
+    void onDownloadOK(JCResStateDispatcher *p_pRes, bool p_bDecodeSync, std::weak_ptr<int> &callbackref);
+    void onDownloadError(JCResStateDispatcher *, int e, std::weak_ptr<int> &callbackref);
 
   public:
     int m_tag;
@@ -119,6 +123,8 @@ class JSVideo
 
     std::shared_ptr<JCVideo> m_pJCVideo;
     int m_nID;
+    std::shared_ptr<int> m_CallbackRef;
+    std::shared_ptr<char> m_buffer;
 };
 }; // namespace laya
 #endif

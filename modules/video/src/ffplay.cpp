@@ -133,9 +133,12 @@ static void stream_close(VideoState *is)
         SDL_DestroyTexture(is->vid_texture);
     if (is->sub_texture)
         SDL_DestroyTexture(is->sub_texture);
-    //av_free(is);
+    // av_free(is);
 
-    
+    if (is->m_iobuffer_ptr)
+    {
+        av_freep(is->m_iobuffer_ptr);
+    }
 }
 void do_exit(VideoState *is)
 {
@@ -233,7 +236,7 @@ void do_play(VideoState *is)
     }
     is->muted = 0;
 }
-bool stream_open(VideoState *is, const char *filename, const AVInputFormat *iformat)
+static bool stream_open(VideoState *is, const AVInputFormat *iformat)
 {
     // VideoState *is;
 
@@ -243,9 +246,9 @@ bool stream_open(VideoState *is, const char *filename, const AVInputFormat *ifor
     is->last_video_stream = is->video_stream = -1;
     is->last_audio_stream = is->audio_stream = -1;
     is->last_subtitle_stream = is->subtitle_stream = -1;
-    is->filename = av_strdup(filename);
-    if (!is->filename)
-        goto fail;
+    // is->filename = av_strdup(filename);
+    // if (!is->filename)
+    //     goto fail;
     is->iformat = iformat;
     is->ytop = 0;
     is->xleft = 0;
@@ -294,7 +297,29 @@ bool stream_open(VideoState *is, const char *filename, const AVInputFormat *ifor
         stream_close(is);
         return false;
     }
-    
+
     return true;
+}
+
+bool stream_open(VideoState *is, const char *filename, const AVInputFormat *iformat)
+{
+    is->filename = av_strdup(filename);
+    if (!is->filename)
+    {
+        return false;
+    }
+    return stream_open(is, iformat);
+}
+bool stream_open(VideoState *is, unsigned char *buffer, int length, const AVInputFormat *iformat)
+{
+    is->m_video_buffer = buffer;
+    is->m_video_buffer_size = length;
+    if (buffer == nullptr || length <= 0)
+    {
+        return false;
+    }
+
+    is->m_iobuffer_ptr = (unsigned char *)av_malloc(IO_BUFFER_SIZE);
+    return stream_open(is, iformat);
 }
 } // namespace ffplay

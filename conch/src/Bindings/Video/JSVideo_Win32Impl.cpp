@@ -40,7 +40,7 @@ class Win32VideoHandler final : public IVideoHandler
 JSVideo::JSVideo()
 {
     Init();
-
+    m_CallbackRef.reset(new int(1));
     AdjustAmountOfExternalAllocatedMemory(sizeof(JSVideo));
     JCMemorySurvey::GetInstance()->newClass("JSVideo", sizeof(JSVideo), this);
 
@@ -68,7 +68,10 @@ void JSVideo::LoadInternal(const std::string &path)
     ((Win32VideoHandler *)m_pVideoHandler)->m_videoPlayer.setMedia(path);
     // CallHandle("loadedmetadata");
 }
-
+void JSVideo::LoadInternal(char *buffer, int length)
+{
+    ((Win32VideoHandler *)m_pVideoHandler)->m_videoPlayer.setMedia((unsigned char *)buffer, length);
+}
 void JSVideo::Play()
 {
     ((Win32VideoHandler *)m_pVideoHandler)->m_videoPlayer.play();
@@ -109,12 +112,12 @@ bool JSVideo::GetAutoplay()
 
 double JSVideo::GetVideoWidth()
 {
-    return ((Win32VideoHandler*)m_pVideoHandler)->m_videoPlayer.getVideoWidth();
+    return ((Win32VideoHandler *)m_pVideoHandler)->m_videoPlayer.getVideoWidth();
 }
 
 double JSVideo::GetVideoHeight()
 {
-    return ((Win32VideoHandler*)m_pVideoHandler)->m_videoPlayer.getVideoHeight();
+    return ((Win32VideoHandler *)m_pVideoHandler)->m_videoPlayer.getVideoHeight();
 }
 
 double JSVideo::GetWidth()

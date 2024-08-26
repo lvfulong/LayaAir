@@ -28,7 +28,7 @@
 //#include "btBulletDynamicsCommon.h"
 #include <cstdarg>
 #include "2D/FontManager.h"
-
+#include "video/VideoPlayer.h"
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
 extern bool g_bGLCanvasSizeChanged;
@@ -139,6 +139,7 @@ namespace laya
         m_pFileResMgr = pFileMgr;
         m_pAssetsRes = pAssetRes;
         FontManager::init();
+        ffplay::VideoPlayer::init();
     }
     static void onUnhandledRejection(JSValueAsParam pPromise, JSValueAsParam pReason, const char* type)
     {

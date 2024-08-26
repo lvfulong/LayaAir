@@ -40,6 +40,19 @@ void VideoPlayer::setMedia(const std::string &url)
         }
     }
 }
+void VideoPlayer::setMedia(unsigned char *buffer, int length)
+{
+    if (m_impl)
+    {
+        // todo
+        AVInputFormat *iformat = nullptr;
+        if (!stream_open(&m_impl->m_is, buffer, length, iformat))
+        {
+            av_log(NULL, AV_LOG_FATAL, "Failed to initialize VideoState!\n");
+            do_exit(NULL);
+        }
+    }
+}
 void VideoPlayer::renderVideo()
 {
     if (m_impl)

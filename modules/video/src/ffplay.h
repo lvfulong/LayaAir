@@ -9,7 +9,7 @@
 
 namespace ffplay
 {
-
+constexpr int IO_BUFFER_SIZE = 4096;
 typedef struct AudioParams
 {
     int freq;
@@ -131,7 +131,7 @@ typedef struct VideoState
     char *filename;
     int width, height, xleft, ytop;
     int step;
-        
+
     int vfilter_idx;
     AVFilterContext *in_video_filter;  // the first filter in the video chain
     AVFilterContext *out_video_filter; // the last filter in the video chain
@@ -197,9 +197,18 @@ typedef struct VideoState
 
     int videoWidth = 0;
     int videoHeight = 0;
+
+    unsigned char *m_video_buffer = nullptr;
+    int m_video_buffer_size = 0;
+
+    // unsigned char *m_currentReadPtr = nullptr;
+    // int m_leftSize = 0;
+    unsigned char *m_iobuffer_ptr = nullptr;
+    int m_position = 0;
 } VideoState;
 
 bool stream_open(VideoState *is, const char *filename, const AVInputFormat *iformat);
+bool stream_open(VideoState *is, unsigned char *buffer, int length, const AVInputFormat *iformat);
 void do_pause(VideoState *is);
 void do_play(VideoState *is);
 void do_exit(VideoState *is);
