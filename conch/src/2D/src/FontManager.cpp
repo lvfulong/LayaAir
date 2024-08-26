@@ -37,6 +37,8 @@ void FontManager::destroy()
     CanvasRenderingContext2DWin::clearAllBuffer();
 #elif defined(OS_IOS)
     CanvasRenderingContext2DCG::destroy();
+#elif defined(OS_LINUX)
+    CanvasRenderingContext2DLinux::destroy();
 #endif
 }
 bool FontManager::registerFont(const std::string &family, const std::string &path)

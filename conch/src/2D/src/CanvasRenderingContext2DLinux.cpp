@@ -683,7 +683,7 @@ bool CanvasRenderingContext2DLinux::registerFontFromBuffer(const std::string& fo
 }
 
 //TODO 在哪里调用这个释放
-void CanvasRenderingContext2DLinux::cleanAllRes(){
+void CanvasRenderingContext2DLinux::destroy(){
     // auto it = privateFontMap.begin();
     // for(;it!=privateFontMap.end(); it++){
     //     FT_Done_Face(it->second);

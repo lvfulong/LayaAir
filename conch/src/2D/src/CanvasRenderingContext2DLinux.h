@@ -29,7 +29,7 @@ class CanvasRenderingContext2DLinux : public CanvasRenderingContext2D
     void setLineJoin(const char *lineJoin) override;
     static bool registerFontFromPath(const std::string &fontName, const std::string &path);
     static bool registerFontFromBuffer(const std::string& fontName, const uint8_t* buff, int len);
-    static void cleanAllRes();
+    static void destroy();
 
   protected:
     void getTextPosition(const std::string &text, double x, double y, double &outX, double &outY) override;
