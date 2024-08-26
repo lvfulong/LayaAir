@@ -94,7 +94,10 @@ namespace laya
 //		LOGI("[Debug][Video]call Load:  obj id is %d", GetObj(m_pVideoHandler));
 		CToJavaBridge::GetInstance()->callObjVoidMethod(GetObj(m_pVideoHandler), s_className, "Load", path.c_str());
 	}
-
+	void JSVideo::LoadInternal(char *buffer, int length)
+	{
+		
+	}
 	void JSVideo::Play()
 	{
 		if (m_isDownloadWaitLoad)

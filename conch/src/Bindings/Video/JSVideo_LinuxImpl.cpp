@@ -59,7 +59,10 @@ namespace laya
 		LOGI("%s", path.c_str());
 		CallHandle("loadedmetadata");
 	}
-
+	void JSVideo::LoadInternal(char *buffer, int length)
+	{
+		
+	}
 	void JSVideo::Play()
 	{
 		NOT_IMPLEMENT();

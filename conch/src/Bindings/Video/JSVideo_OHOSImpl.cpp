@@ -47,7 +47,11 @@ namespace laya
     void JSVideo::LoadInternal(const std::string& path){
         int isurl =1;
         NapiHelper::GetInstance()->setURL(m_tag,path,isurl);
-    } 
+    }
+    void JSVideo::LoadInternal(char *buffer, int length)
+	{
+		
+	}
     void JSVideo::Play(){
         _isPause = false;
         NapiHelper::GetInstance()->play(m_tag);

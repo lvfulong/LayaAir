@@ -97,7 +97,10 @@ namespace laya {
     {
         CToObjectVideoPlayerLoad(GetObj(m_pVideoHandler), path.c_str());
     }
-    
+    void JSVideo::LoadInternal(char *buffer, int length)
+	{
+		
+	}
     void JSVideo::Play()
     {
         if(m_isDownloadWaitLoad)
