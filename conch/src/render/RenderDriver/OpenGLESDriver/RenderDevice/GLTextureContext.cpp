@@ -1657,6 +1657,10 @@ void GLTextureContext::updateVideoTexture(GLESInternalTex *texture, JCImage *sou
                                           bool invertY)
 {
 
+    if (source == nullptr)
+    {
+        return;
+    }
     source->enableImage();
     source->updateTexImage();
 
