@@ -257,8 +257,9 @@ void App::run(const Config &config)
                 inputEvent e;
                 e.nTouchType = e.nType = E_ONMOUSEWHEEL;
                 strncpy(e.type, "wheel", 256);
-                e.posX = event.wheel.mouseX;
-                e.posY = event.wheel.mouseY;
+//                e.posX = event.wheel.mouseX;
+//                e.posY = event.wheel.mouseY;
+                SDL_GetMouseState(&e.posX, &e.posY);
                 e.deltaMode = 0;
                 e.deltaX = -event.wheel.x * 100.0f; // 凑的
                 e.deltaY = -event.wheel.y * 100.0f; // 凑的

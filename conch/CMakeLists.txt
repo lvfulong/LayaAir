@@ -813,7 +813,9 @@ elseif(OS_OHOS)
 elseif(OS_LINUX)
 	find_package(X11 REQUIRED)
 	find_package(Freetype REQUIRED)
+	find_package(SDL2 REQUIRED)
 	include_directories(${FREETYPE_INCLUDE_DIRS})
+	include_directories(${SDL2_INCLUDE_DIRS})
 	find_package(Fontconfig REQUIRED)	
 	pkg_check_modules(CAIRO REQUIRED cairo)
 	add_subdirectory("../third_party/glad/glad-2.0.4/cmake" glad_cmake)
@@ -825,12 +827,11 @@ elseif(OS_LINUX)
 		X11
 		${FREETYPE_LIBRARIES}
 		${FONTCONFIG_LIBRARIES}
+  		${SDL2_LIBRARIES}
 		Xft
 		Xrender
 		cairo
 		fontconfig
-		SDL2
-		SDL2main
 		utils
 		binder
 		zlib
@@ -855,8 +856,6 @@ elseif(OS_LINUX)
 		ssl
 		crypto
 		pthread
-		SDL2
-		SDL2main
 	)
 endif()
 
