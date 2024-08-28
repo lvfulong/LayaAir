@@ -62,7 +62,7 @@ void GLESSpotLightShadowRP::render(GLESRenderContext3D* context, std::vector<RTB
     _renderQueue.renderQueue(context);
     // TODOthis->_applyCasterPassCommandBuffer(context);
     this->_applyRenderData(context->sceneData, context->cameraData);
-
+    this->_renderQueue._batch.recoverData();
     context->cameraData = originCameraData;
     context->_cameraUpdateMask++;
 }

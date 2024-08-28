@@ -141,6 +141,7 @@ void GLESDirectLightShadowRP::render(GLESRenderContext3D *context, std::vector<R
         GLESRenderCMD::applyCommandBuffers(context, _shadowCastCMDS);
     }
     this->_applyRenderData(context->sceneData, context->cameraData);
+    this->_renderQueue._batch.recoverData();
     context->cameraData = originCameraData;
     context->_cameraUpdateMask++;
 
