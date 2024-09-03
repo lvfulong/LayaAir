@@ -273,10 +273,11 @@ void JSV8Worker::_defRunLoop()
     startEvt->m_nID = JCWorkerThread::Event_threadStart;
     emit(startEvt);
     JCWorkerThread::runObj task;
+    auto isolate = v8::Isolate::GetCurrent();
     while (!m_bStop)
     {
-        v8::HandleScope handle_scope(v8::Isolate::GetCurrent());
-        v8::TryCatch trycatch(v8::Isolate::GetCurrent());
+        v8::HandleScope handle_scope(isolate);
+        v8::TryCatch trycatch(isolate);
         if (!m_funcLoop)
         {
             // 现在的waitdata返回false不再表示要退出。事件唤醒流程
@@ -285,6 +286,13 @@ void JSV8Worker::_defRunLoop()
         }
         else
         {
+            while (v8::platform::PumpMessageLoop(
+                m_pJS->m_pPlatform,
+                isolate,
+                v8::platform::MessageLoopBehavior::kDoNotWait)) {
+                continue;
+            }
+            isolate->PerformMicrotaskCheckpoint();
             // 固定循环流程
             runQueue();
             if (!m_funcLoop())
