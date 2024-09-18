@@ -186,7 +186,6 @@ class Document extends Node implements GlobalEventHandlers, NodeSelector, Docume
             if(!t) return;
             console.log(">>>>>>>>>>>>>>>eval src=" + t.src);
             var t1=Date.now();
-            window.document["currentScript"] = t;
             window.evalJS(t._stext);
             console.log(">>>>>>>>>>>>>>>>>eval take time:"+(Date.now()-t1));
             var e:Event=new Event("load");

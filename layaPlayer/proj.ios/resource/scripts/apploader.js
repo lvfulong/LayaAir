@@ -6244,7 +6244,6 @@ class Document extends Node {
                 return;
             console.log(">>>>>>>>>>>>>>>eval src=" + t.src);
             var t1 = Date.now();
-            window.document["currentScript"] = t;
             window.evalJS(t._stext);
             console.log(">>>>>>>>>>>>>>>>>eval take time:" + (Date.now() - t1));
             var e = new Event("load");

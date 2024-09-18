@@ -84,7 +84,10 @@ async function loadApp(url) {
         window.eval(data + `
         //@ sourceURL=${url}
         `);
-        document.createElement("script").text = "window.onload&&window.onload()";
+        let currentScript = document.createElement("script");
+        currentScript._src = url;
+        currentScript.text = "window.onload&&window.onload()";
+        window.document["currentScript"] = currentScript;
     }
     else {
         console.log('url must be a js file');
