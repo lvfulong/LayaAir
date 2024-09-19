@@ -11,6 +11,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CONCH_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
 include(${CONCH_ROOT_DIR}/cmake/preprocessor.cmake)
 
+option(CONCH_TRACE_ENABLED "Trace enabled" ON)
 if(OS_ANDROID)
 	add_definitions(-DJS_V8)
 	option(CONCH_USE_CURL_DOWNLOAD "Use NEW CURL" OFF)
@@ -61,6 +62,10 @@ if(CONCH_USE_CURL_DOWNLOAD)
 endif()
 if(CONCH_USE_OLD_CURL_DOWNLOAD)
 	add_definitions(-DCURL_OLD_DOWNLOAD)
+endif()
+
+if(CONCH_TRACE_ENABLED)
+	add_definitions(-DTRACE_ENABLED)
 endif()
 
 if(OS_WINDOWS)

@@ -696,7 +696,7 @@ double tmGetCurms()
     struct timespec now;
     clock_gettime(CLOCK_MONOTONIC, &now);
     return now.tv_sec * 1000.0 + now.tv_nsec / 1e6;
-#elif OS_WINDOWS
+#elif defined(OS_WINDOWS)
     static __int64 freq = 0;
     if (freq == 0)
     {
@@ -710,7 +710,7 @@ double tmGetCurms()
     ret = tm.QuadPart * 1000.0 / freq;
     return ret; // GetTickCount();
                 // return ret;
-#elif OS_LINUX
+#elif defined(OS_LINUX)
     struct timespec now;
     clock_gettime(CLOCK_MONOTONIC, &now);
     return now.tv_sec * 1000.0 + now.tv_nsec / 1e6;

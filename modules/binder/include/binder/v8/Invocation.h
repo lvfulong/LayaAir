@@ -116,7 +116,23 @@ void InvokeClassMethodOptionalOverride(const v8::FunctionCallbackInfo<v8::Value>
     tuple_call_optional_override<ClassType, std::tuple<Args...>>(pObj, funcInfo->func, args,
                                                                  std::make_index_sequence<sizeof...(Args)>());
 }
+template <typename ReturnType, typename... Args>
+void InvokeGlobalMethodOptionalOverride(const v8::FunctionCallbackInfo<v8::Value> &args)
+{
+    void *data = args.Data().As<v8::External>()->Value();
+    typedef ReturnType (*FunctorType)(Args...);
+    FuncInfo<FunctorType> *funcInfo = (FuncInfo<FunctorType> *)data;
+    v8::Local<v8::Object> pthis = args.This();
+    if ((unsigned long)args.Length() < sizeof...(Args))
+    {
+        LOGE("Not enough arguments for function  %s", funcInfo->name.c_str());
+        args.GetIsolate()->ThrowException(
+            v8::String::NewFromUtf8(args.GetIsolate(), "Not enough arguments for function.").ToLocalChecked());
+        return;
+    }
 
+    tuple_call<std::tuple<Args...>>(funcInfo->func, args, std::make_index_sequence<sizeof...(Args)>());
+}
 template <typename ClassType, typename... Args>
 ClassType *InvokeClassConstructor(const v8::FunctionCallbackInfo<v8::Value> &args)
 {

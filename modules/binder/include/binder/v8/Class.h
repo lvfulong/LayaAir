@@ -16,7 +16,7 @@ namespace laya
 {
 namespace internal
 {
-template <typename ClassType> void raw_destructor(ClassType* pointer)
+template <typename ClassType> void raw_destructor(ClassType *pointer)
 {
     delete pointer;
 }
@@ -113,12 +113,11 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
 
             if (it->second.callDestructor)
             {
-                internal::raw_destructor((ClassType*)it->first);
+                internal::raw_destructor((ClassType *)it->first);
             }
 
             it->second.pobj.ClearWeak();
             it->second.pobj.Reset();
-
         }
         objects_.clear();
 
@@ -231,7 +230,8 @@ class ClassRegistryManager
         assert(objectRegistry != nullptr);
         objectRegistry->pobj.SetWeak(&classRegistry, WeakCallback, v8::WeakCallbackType::kInternalFields);
     }
-    template <typename ClassType> static v8::Local<v8::Object> wrapCppObject(ClassType *objectPointer, bool callDestructor = true)
+    template <typename ClassType>
+    static v8::Local<v8::Object> wrapCppObject(ClassType *objectPointer, bool callDestructor = true)
     {
         ClassRegistry<ClassType> &classRegistry = getClassRegistry<ClassType>(type_id<ClassType>());
         return classRegistry.wrapCppObject(objectPointer, callDestructor);
@@ -283,7 +283,7 @@ template <typename ClassType> class class_
   public:
     class_()
         : classRegistry_(ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>())),
-          isolate_(v8::Isolate::GetCurrent()){};
+          isolate_(v8::Isolate::GetCurrent()) {};
     class_(class_ const &) = delete;
     class_ &operator=(class_ const &) = delete;
 
@@ -474,7 +474,7 @@ template <typename ClassType> static void WeakCallback(const v8::WeakCallbackInf
 {
     ClassType *object = static_cast<ClassType *>(data.GetInternalField(0));
     ClassRegistry<ClassType> *this_ = static_cast<ClassRegistry<ClassType> *>(data.GetInternalField(1));
-    ObjectRegistry* objectRegistry = this_->getObjectRegistry(object);
+    ObjectRegistry *objectRegistry = this_->getObjectRegistry(object);
     assert(object != nullptr);
     assert(this_ != nullptr);
     this_->removeObject(object, objectRegistry->callDestructor);

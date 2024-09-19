@@ -36,6 +36,8 @@ set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/IniFile.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Types.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Data.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/Tracer.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/Trace.h
 )
 
 set(SOURCES
@@ -61,6 +63,7 @@ set(SOURCES
     src/IniFile.cpp
     src/Types.cpp
     src/Data.cpp
+    src/Tracer.cpp
 )
 
 set(DEPS_GL)

@@ -16,6 +16,7 @@
 #include <utils/JCCrypto.h>
 #include <utils/Log.h>
 #include <utils/Base64.h>
+#include <utils/Trace.h>
 #include "JSConsole.h"
 #include "XMLHttpRequest.h"
 #include "JSFetch.h"
@@ -50,6 +51,7 @@
 #include "JSRuntime.h"
 #include "../../JCConch.h"
 #include <utils/JCFileSource.h>
+#include <utils/Trace.h>
 #include "JSImage.h"
 #include "JSHistory.h"
 //#include "JSTextMemoryCanvas.h"
@@ -551,6 +553,15 @@ namespace laya
         context.function("btoa", &btoa);
         context.function("atob", &atob);
         context.function("_createImageBitmap", &createImageBitmap);
+        context.function_optional_override("TRACE_BEGIN", optional_override([](const std::string& name) {
+            TRACE_NAME_BEGIN(name.c_str());
+        }));
+         context.function_optional_override("TRACE_END", optional_override([](const std::string& name) {
+            TRACE_NAME_END(name.c_str());
+        }));
+         context.function_optional_override("TRACE_DUMP", optional_override([]() {
+            TRACE_NAME_DUMP();
+         }));
         JSLayaConchBullet::exportJS(context);
  #if !defined(OS_LINUX) && !defined(OS_WINDOWS) && !defined(OS_OHOS)//TODO
         JSLayaConchPhysX::exportJS(context);
