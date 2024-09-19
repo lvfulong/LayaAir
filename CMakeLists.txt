@@ -148,6 +148,6 @@ message("CMAKE_C_FLAGS_DEBUG:${CMAKE_C_FLAGS_DEBUG}")
 message("CMAKE_CXX_FLAGS_DEBUG:${CMAKE_CXX_FLAGS_DEBUG}")
 
 
-if(NOT OS_OHOS)
-install(DIRECTORY ./modules/binder/include/binder DESTINATION ./include)
-endif()
+#if(NOT OS_OHOS)
+install(DIRECTORY ./modules/binder/include/binder DESTINATION include)
+#endif()
