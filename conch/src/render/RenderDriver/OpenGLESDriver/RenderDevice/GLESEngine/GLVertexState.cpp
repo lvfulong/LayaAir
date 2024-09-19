@@ -113,49 +113,6 @@ void GLVertexState::applyIndexBuffer(GLESIndexBuffer *indexBuffer)
         assert("BufferState: must call bind() function first.");
     }
 }
-void GLVertexState::applyVertexBufferTemp2d(int stride, const std::vector<AttribInfo> &attribInfo,
-                                            VertexBuffer2D *vertexBuffers)
-{
-    // this._vertexBuffers = vertexBuffer;
-    if (m_engine->m_GLBindVertexArray == this)
-    {
-        VertexBuffer2D *element = vertexBuffers;
-        element->bind();
-        int attribNum = attribInfo.size();
-        for (int i = 0; i < attribNum; i++)
-        {
-            glEnableVertexAttribArray(i);
-            glVertexAttribPointer(
-                i, attribInfo[i]._size, attribInfo[i]._type, GL_FALSE, stride,
-                (const void *)attribInfo[i]._off); // 注意 normalize都设置为false了，想必没人要用这个功能把。
-        }
-    }
-    else
-    {
-        assert("BufferState: must call bind() function first.");
-    }
-}
-void GLVertexState::applyIndexBufferTemp2d(IndexBuffer2D *indexBuffer)
-{
-    // 需要强制更新IndexBuffer
-
-    if (indexBuffer == nullptr)
-    {
-        return;
-    }
-    if (m_engine->m_GLBindVertexArray == this)
-    {
-        // if (m_bindedIndexBuffer2D != indexBuffer)
-        {
-            indexBuffer->bind(); // TODO:可和vao合并bind
-            // m_bindedIndexBuffer2D = indexBuffer;
-        }
-    }
-    else
-    {
-        assert("BufferState: must call bind() function first.");
-    }
-}
 void GLVertexState::vertexAttribDivisor(int index, int divisor)
 {
     if (m_engine->isWebGL2())

@@ -2,7 +2,7 @@
 #define __JCFileSystem_H__
 
 #include <utils/JCBuffer.h>
-
+#include <utils/Data.h>
 //#ifdef OS_IOS
 // https://github.com/gulrak/filesystem.git
 #include "ghc/filesystem.hpp"
@@ -24,11 +24,11 @@ namespace laya
 {
 
 bool readFileSync(const char *p_pszFile, JCBuffer &p_buf, int p_nEncode = JCBuffer::raw);
-
+bool readFileSync(const char* p_pszFile, std::shared_ptr<Data>& p_buf, int p_nEncode = JCBuffer::raw);
 std::string readFileSync1(const char *p_pszFile, const char *p_pszEncode);
 
 bool writeFileSync(const char *p_pszFile, JCBuffer &p_buf, int p_nEncode = JCBuffer::raw);
-
+bool writeFileSync(const char* p_pszFile, std::shared_ptr<Data> p_buf, int p_nEncode = JCBuffer::raw);
 bool writeFileSync1(const char *p_pszFile, char *p_pBuff, int p_nLen, int p_nEncode = JCBuffer::raw);
 
 // typedef void(*GLOBAL_ONCREATEFILEERROR)();

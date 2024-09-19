@@ -1,15 +1,7 @@
-﻿/**
-@file			JCBuffer.h
-@brief			
-@author			James
-@version		1.0
-@date			2016_5_11
-*/
-
-#ifndef __JCBuffer_H__
+﻿#ifndef __JCBuffer_H__
 #define __JCBuffer_H__
 
-#include <memory.h>
+#include "utils/Data.h"
 #include <memory>
 namespace laya
 {
@@ -395,10 +387,50 @@ namespace laya
 		std::shared_ptr<char>		m_pBuffer;//注意，必须是array类型的，构造的时候必须有第二个参数，std::default_delete<char[]>()
 		int								m_nLen;
 	};
-};
-//------------------------------------------------------------------------------
 
+    class Buffer {
+    public:
+        Buffer() = default;
+        explicit Buffer(size_t size);
+        Buffer(const void* data, size_t size);
+        explicit Buffer(std::shared_ptr<Data> data);
+        ~Buffer();
+        bool alloc(size_t size);
+        void* data() const 
+        {
+            return m_data;
+        }
+        uint8_t* bytes() const
+        {
+            return m_data;
+        }
+        size_t size() const 
+        {
+            return m_size;
+        }
+        bool isEmpty() const
+        {
+            return m_size == 0;
+        }
+        void reset();
+        void clear();
+        std::shared_ptr<Data> copyRange(size_t offset, size_t length);
+        void writeRange(size_t offset, size_t length, const void* bytes);
+        void writeRange(size_t offset, std::shared_ptr<Data> data)
+        {
+            writeRange(offset, data->size(), data->data());
+        }
+        std::shared_ptr<Data> release();
+        uint8_t operator[](size_t index) const;
+        uint8_t& operator[](size_t index);
 
-#endif //__JCBuffer_H__
+    private:
+        uint8_t* m_data = nullptr;
+        size_t m_size = 0;
 
-//-----------------------------END FILE--------------------------------
+        Buffer(Buffer&) = delete;
+        Buffer& operator=(Buffer&) = delete;
+        size_t getClampedLength(size_t offset, size_t length) const;
+    };
+}
+#endif

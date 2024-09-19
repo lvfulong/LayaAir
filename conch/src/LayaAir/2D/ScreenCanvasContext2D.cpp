@@ -10,7 +10,6 @@
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLTextureContext.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalRT.h>
 #include <Bindings/JSLayaGL.h>
-#include "BufferStateBase.h"
 #include "JCSystemConfig.h"
 #include <Bindings/JSInput.h>
 

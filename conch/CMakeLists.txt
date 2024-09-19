@@ -268,11 +268,6 @@ list(APPEND CONCH_SRC
 	src/imageLib/JCPngImg.cpp
 
 	# LayaAir相关的
-	src/LayaAir/2D/BufferStateBase.cpp
-	src/LayaAir/2D/VertexBuffer2D.cpp
-	src/LayaAir/2D/IndexBuffer2D.cpp
-	src/LayaAir/2D/Buffer2D.cpp
-	src/LayaAir/2D/Buffer.cpp
 	src/LayaAir/2D/ScreenCanvasContext2D.cpp
    
 	src/2D/src/CanvasRenderingContext2D.cpp
@@ -285,8 +280,6 @@ list(APPEND CONCH_SRC
 	src/Bindings/Bullet/LayaBulletExportImp.cpp
 	src/Bindings/Video/JSVideo.h
 	src/Bindings/Video/JSVideo_CommonImpl.cpp
-	src/Bindings/JSAppCache.h
-	src/Bindings/JSAppCache.cpp
 	src/Bindings/JSArrayBufferRef.h
 	src/Bindings/JSArrayBufferRef.cpp
 	src/Bindings/JSAudio.h

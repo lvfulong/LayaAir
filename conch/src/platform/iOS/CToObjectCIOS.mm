@@ -1429,7 +1429,6 @@ void CToObjectCPostAsyncMessage(const std::string &eventName, const std::string 
     __block NSString* nsData = [NSString stringWithUTF8String:data.c_str()];
     typedef void (^TypeName)(NSString *);
     __block TypeName callback = ^void (NSString *result) {
-        NSLog(@"cnm %@", result);
         cb([result UTF8String]);
     };
     

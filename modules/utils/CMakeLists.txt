@@ -35,6 +35,7 @@ set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/ColorParser.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/IniFile.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Types.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/Data.h
 )
 
 set(SOURCES
@@ -59,6 +60,7 @@ set(SOURCES
     src/ColorParser.cpp
     src/IniFile.cpp
     src/Types.cpp
+    src/Data.cpp
 )
 
 set(DEPS_GL)

@@ -3,7 +3,6 @@
 #include "GLESInternalTex.h"
 #include "GLTextureContext.h"
 #include "JCSystemConfig.h"
-#include "LayaAir/2D/BufferStateBase.h"
 #include "render/LayaGL.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLBuffer.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLCapable.h"
@@ -583,11 +582,6 @@ void GLESEngine::copySubFrameBuffertoTex(GLESInternalTex *texture, int level, in
 }
 void GLESEngine::unbindVertexState()
 {
-    if (BufferStateBase::m_curBindedBufferState != nullptr)
-    {
-        BufferStateBase::m_curBindedBufferState->unBind();
-    }
-
     if (isWebGL2())
         glBindVertexArray(0);
     else

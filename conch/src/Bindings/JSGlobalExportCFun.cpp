@@ -24,7 +24,6 @@
 #include "JSXmlAttr.h"
 #include "JSDOMParser.h"
 #include "JSAudio.h"
-#include "JSAppCache.h"
 #include "JSWebSocket.h"
 #include "JSFileSystem.h"
 #include "JSZip.h"
@@ -477,7 +476,6 @@ namespace laya
         JSXmlAttr::exportJS(context);
         JSDOMParser::exportJS(context);
         JSAudio::exportJS(context);
-        JsAppCache::exportJS(context);
         JSWebSocket::exportJS(context);
         JSZip::exportJS(context);
         JSNotify::exportJS(context);

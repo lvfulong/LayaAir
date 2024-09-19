@@ -193,12 +193,9 @@ void CToObjectCLogIExt(const char *str);
         }                                                                                                              \
     }
 #elif OS_OHOS
-#define LOGI(...)   \
-    logMessage(laya::LogType::Info, __FILE__, __LINE__, __VA_ARGS__);                                                  
-    #define LOGW(...)\
-     logMessage(laya::LogType::Warn, __FILE__, __LINE__, __VA_ARGS__);                               
-    #define LOGE(...)\
-    logMessage(laya::LogType::Error, __FILE__, __LINE__, __VA_ARGS__);
+#define LOGI(...) logMessage(laya::LogType::Info, __FILE__, __LINE__, __VA_ARGS__);
+#define LOGW(...) logMessage(laya::LogType::Warn, __FILE__, __LINE__, __VA_ARGS__);
+#define LOGE(...) logMessage(laya::LogType::Error, __FILE__, __LINE__, __VA_ARGS__);
 #elif OS_WINDOWS
 #define LOGI(...)                                                                                                      \
     {                                                                                                                  \
@@ -253,6 +250,28 @@ void CToObjectCLogIExt(const char *str);
             alert(__VA_ARGS__);                                                                                        \
         }                                                                                                              \
     }
+
+#endif
+
+#define ABORT(msg)                                                                                                     \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        LOGE("%s:%d: fatal error: \"%s\"\n", __FILE__, __LINE__, #msg);                                                \
+        ::abort();                                                                                                     \
+    } while (false)
+
+#define CHECK(assertion)                                                                                               \
+    if (!(assertion))                                                                                                  \
+    {                                                                                                                  \
+        ABORT(#assertion);                                                                                             \
+    }
+#if _DEBUG
+
+#define DEBUG_CHECK(assertion) CHECK(assertion)
+
+#else
+
+#define DEBUG_CHECK(assertion)
 
 #endif
 #endif //__Log_H__

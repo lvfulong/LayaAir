@@ -1,12 +1,5 @@
-/**
-@file			JCBuffer.cpp
-@brief			
-@author			James
-@version		1.0
-@date			2016_5_11
-*/
-
 #include <utils/JCBuffer.h>
+#include <utils/Log.h>
 
 namespace laya
 {
@@ -126,8 +119,126 @@ namespace laya
     {
 		return false;
 	}
-};
-//------------------------------------------------------------------------------
 
 
-//-----------------------------END FILE--------------------------------
+	Buffer::Buffer(size_t size)
+	{
+		alloc(size);
+	}
+
+	Buffer::Buffer(const void* data, size_t size)
+	{
+		DEBUG_CHECK(data != nullptr || size != 0);
+		alloc(size);
+		if (m_data != nullptr) 
+		{
+			memcpy(m_data, data, size);
+		}
+	}
+
+	Buffer::Buffer(std::shared_ptr<Data> data) : Buffer(data->data(), data->size())
+	{
+	}
+
+	Buffer::~Buffer() 
+	{
+		delete[] m_data;
+	}
+
+	bool Buffer::alloc(size_t size) 
+	{
+		if (m_data != nullptr)
+		{
+			delete[] m_data;
+			m_data = nullptr;
+			m_size = 0;
+		}
+		m_data = size > 0 ? new (std::nothrow) uint8_t[size] : nullptr;
+		if (m_data != nullptr) 
+		{
+			m_size = size;
+		}
+		return m_data != nullptr;
+	}
+
+	std::shared_ptr<Data> Buffer::release() 
+	{
+		if (isEmpty()) 
+		{
+			return nullptr;
+		}
+		auto data = Data::makeAdopted(m_data, m_size, Data::DeleteProc);
+		m_data = nullptr;
+		m_size = 0;
+		return data;
+	}
+
+	void Buffer::reset() 
+	{
+		if (isEmpty())
+		{
+			return;
+		}
+		delete[] m_data;
+		m_data = nullptr;
+		m_size = 0;
+	}
+
+	void Buffer::clear()
+	{
+		if (isEmpty()) 
+		{
+			return;
+		}
+		memset(m_data, 0, m_size);
+	}
+
+	std::shared_ptr<Data> Buffer::copyRange(size_t offset, size_t length) 
+	{
+		length = getClampedLength(offset, length);
+		if (length == 0) 
+		{
+			return nullptr;
+		}
+		return Data::makeWithCopy(m_data + offset, length);
+	}
+
+	void Buffer::writeRange(size_t offset, size_t length, const void* bytes)
+	{
+		length = getClampedLength(offset, length);
+		if (length == 0) 
+		{
+			return;
+		}
+		memcpy(m_data + offset, bytes, length);
+	}
+
+	uint8_t Buffer::operator[](size_t index) const
+	{
+		DEBUG_CHECK(index >= 0 && index < m_size);
+		return m_data[index];
+	}
+
+	uint8_t& Buffer::operator[](size_t index) 
+	{
+		DEBUG_CHECK(index >= 0 && index < m_size);
+		return m_data[index];
+	}
+
+	size_t Buffer::getClampedLength(size_t offset, size_t length) const
+	{
+		size_t available = m_size;
+		if (offset >= available || length == 0)
+		{
+			return 0;
+		}
+		available -= offset;
+		if (length > available) 
+		{
+			length = available;
+		}
+		return length;
+	}
+}
+
+

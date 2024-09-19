@@ -36,6 +36,37 @@ bool readFileSync(const char *p_pszFile, JCBuffer &p_buf, int p_nEncode)
         p_buf.m_pPtr[len] = 0;
     return true;
 }
+bool readFileSync(const char* p_pszFile, std::shared_ptr<Data>& p_buf, int p_nEncode)
+{
+    if (!p_pszFile)
+        return false;
+#ifdef OS_WINDOWS
+    FILE* pf = _wfopen(utf8ToWide(p_pszFile).c_str(), L"rb");
+#else
+    FILE* pf = fopen(p_pszFile, "rb");
+#endif
+
+    if (pf == NULL)
+        return false;
+    fseek(pf, 0, SEEK_END);
+    int len = ftell(pf);
+    bool bAsText = p_nEncode != JCBuffer::raw;
+    fseek(pf, 0, SEEK_SET);
+    size_t size = len + (bAsText ? 1 : 0);
+    char* charArray = new char[size];
+    int readlen = fread(charArray, 1, len, pf);
+    if (readlen != len)
+    {
+        delete [] charArray;
+        fclose(pf);
+        return false;
+    }
+    fclose(pf);
+    if (bAsText)
+        charArray[len] = 0;
+    p_buf = Data::makeAdopted(charArray, size);
+    return true;
+}
 std::string readFileSync1(const char *p_pszFile, const char *p_pszEncode)
 {
     JCBuffer buf;
@@ -72,6 +103,10 @@ bool writeFileSync1(const char *p_pszFile, char *p_pBuff, int p_nLen, int p_nEnc
 bool writeFileSync(const char *p_pszFile, JCBuffer &p_buf, int p_nEncode)
 {
     return writeFileSync1(p_pszFile, p_buf.m_pPtr, p_buf.m_nLen, p_nEncode);
+}
+bool writeFileSync(const char* p_pszFile, std::shared_ptr<Data> p_buf, int p_nEncode)
+{
+    return writeFileSync1(p_pszFile, (char*)p_buf->data(), p_buf->size(), p_nEncode);
 }
 namespace FileSystem
 {

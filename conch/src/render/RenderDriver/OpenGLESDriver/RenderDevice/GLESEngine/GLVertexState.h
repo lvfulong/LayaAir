@@ -3,8 +3,6 @@
 
 #include "GLCapable.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLObject.h"
-#include "LayaAir/2D/IndexBuffer2D.h"
-#include "LayaAir/2D/VertexBuffer2D.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESIndexBuffer.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESVertexBuffer.h"
 #include <string>
@@ -27,14 +25,9 @@ class GLVertexState : public GLObject
 
     void applyIndexBuffer(GLESIndexBuffer *indexBuffer);
 
-    void applyVertexBufferTemp2d(int stride, const std::vector<AttribInfo> &attribInfo,
-                                 VertexBuffer2D *vertexBuffers); // TODO
-
-    void applyIndexBufferTemp2d(IndexBuffer2D *indexBuffer); // TODO
     void destroy();
 
   private:
-    friend class BufferStateBase;
     friend class GLESBufferState;
     void createVertexArray();
 
