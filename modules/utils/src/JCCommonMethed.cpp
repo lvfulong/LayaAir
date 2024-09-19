@@ -710,6 +710,10 @@ double tmGetCurms()
     ret = tm.QuadPart * 1000.0 / freq;
     return ret; // GetTickCount();
                 // return ret;
+#elif OS_LINUX
+    struct timespec now;
+    clock_gettime(CLOCK_MONOTONIC, &now);
+    return now.tv_sec * 1000.0 + now.tv_nsec / 1e6;
 #else
     return 0;
 #endif

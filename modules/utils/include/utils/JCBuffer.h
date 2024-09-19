@@ -3,6 +3,7 @@
 
 #include "utils/Data.h"
 #include <memory>
+#include <cstring>
 namespace laya
 {
 	/** 
