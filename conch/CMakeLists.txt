@@ -342,6 +342,7 @@ list(APPEND CONCH_SRC
 	src/Bindings/JSCanvasRenderingContext2D.cpp
 	src/Bindings/JSTextDecoder.h
 	src/Bindings/JSTextDecoder.cpp
+	src/Extention/LayaExtWind.cpp
 	
 	src/OpenAL/
 	src/LayaGL/JCIDGenerator.h

@@ -30,11 +30,13 @@
 #include "2D/FontManager.h"
 #if defined(OS_WINDOWS)
 #include "video/VideoPlayer.h"
+#include "Extention/LayaExtWin.h"
 #endif
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
 extern bool g_bGLCanvasSizeChanged;
 extern laya::JCZip *g_ZipPackage;
+extern std::string gRedistPath;
 
 namespace laya 
 {
@@ -265,7 +267,7 @@ namespace laya
         
 
         JSGlobalExportC();
-        
+        importAllDynaLib(gRedistPath,nullptr);
 
     }
     void JCScriptRuntime::loadJSScript() {
