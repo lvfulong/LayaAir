@@ -23,6 +23,7 @@ namespace laya
 		}
 		else
 		{
+
 			std::vector<float>* dataArray = new std::vector<float>();
 			dataArray->resize(length);
 			return dataArray;
@@ -98,21 +99,18 @@ namespace laya
 
 	}
 
-	void GLESInstanceRenderElement3D::addUpdateBuffer(GLESVertexBuffer* vb, uint32_t length)
+	std::vector<float>* GLESInstanceRenderElement3D::addUpdateBuffer(GLESVertexBuffer* vb, uint32_t elementLength, uint32_t maxInsrtanceCount)
 	{
 		if (_vertexBuffers.size() < updateNums + 1) {
 			_vertexBuffers.resize(updateNums + 1);
-			_updateDataNum.resize(updateNums + 1);
-		}
-		_vertexBuffers[updateNums] = vb;
-		_updateDataNum[updateNums] = length;
-		updateNums++;
-	}
 
-	std::vector<float>* GLESInstanceRenderElement3D::getUpdateData(uint32_t index, uint32_t length)
-	{
-		_updateData[index] = GLESInstanceRenderElement3D::_instanceBufferCreate(length);
-		return _updateData.at(index);
+		}			
+		_updateDataNum.resize(updateNums + 1);
+		_vertexBuffers[updateNums] = vb;
+		_updateDataNum[updateNums] = elementLength;
+		_updateData[updateNums] = GLESInstanceRenderElement3D::_instanceBufferCreate(elementLength* maxInsrtanceCount);
+		updateNums++;
+		return _updateData.at(updateNums - 1);
 	}
 
 	void GLESInstanceRenderElement3D::setGeometry(GLESRenderGeometryElement* value)
@@ -126,6 +124,21 @@ namespace laya
 		geometry->setDrawType(DrawType::DrawElementInstance);
 		_instanceStateInfo = GLESInstanceRenderElement3D::getInstanceBufferState(value, (BaseRenderType)owner->renderNodeType, renderShaderData->_defineDatas);
 		geometry->_bufferState = _instanceStateInfo->state;
+	}
+
+	void GLESInstanceRenderElement3D::_render(GLESRenderContext3D* context)
+	{
+		for (int i = 0; i < updateNums; i++) {
+			GLESVertexBuffer* buffer = _vertexBuffers[i];
+			if (buffer == nullptr)
+				break;
+			std::vector<float>* data = _updateData[i];
+
+			buffer->orphanStorage();
+			buffer->setData(reinterpret_cast<char*>(data->data()), data->size() * 4, 0, 0, drawCount * _updateDataNum[i] * 4);
+		}
+		GLESRenderElement3D::_render(context);
+		clearRenderData();
 	}
 
 	void GLESInstanceRenderElement3D::clearRenderData()
@@ -186,7 +199,7 @@ namespace laya
 			}
 			comDef->addDefineDatas(materialShaderData->_defineDatas);
 			comDef->add(MeshSprite3DShaderDeclaration::SHADERDEFINE_GPU_INSTANCE);
-			_updateInstanceData();
+			
 			RTShaderPass::CacheShaderItem* item = pass->getCacheShader(comDef);
 			GLESShaderInstance* shader;
 			if (item)
@@ -196,20 +209,8 @@ namespace laya
 			assert(shader != nullptr);
 			_addShaderInstance(shader);
 		}
-	}
-
-	void GLESInstanceRenderElement3D::drawGeometry(GLESShaderInstance* shaderIns)
-	{
-		for (int i = 0; i < updateNums; i++) {
-			GLESVertexBuffer* buffer = _vertexBuffers[i];
-			if (buffer == nullptr)
-				break;
-			std::vector<float>* data = _updateData[i];
-
-			buffer->orphanStorage();
-			buffer->setData(reinterpret_cast<char*>(data->data()), data->size() * 4, 0, 0, drawCount * _updateDataNum[i] * 4);
-		}
-		LayaGL::m_pWebglEngine->getDrawContext()->drawGeometryElement(geometry);
+		if (_shaderInstances.getLength() > 0)
+			_updateInstanceData();
 	}
 
 	void GLESInstanceRenderElement3D::_updateInstanceData()
@@ -219,9 +220,8 @@ namespace laya
 
 		case BaseRenderType::MeshRender: 
 		{
-			worldMatrixData = getUpdateData(0, GLESInstanceRenderElement3D::maxInstanceCount * 16)->data();
+			worldMatrixData = addUpdateBuffer(_instanceStateInfo->worldInstanceVB,16, GLESInstanceRenderElement3D::maxInstanceCount)->data();
 
-			addUpdateBuffer(_instanceStateInfo->worldInstanceVB, 16);
 			drawCount = _instanceElementList.size();
 			geometry->setInstanceCount(drawCount);
 			for (uint32_t i = 0; i < drawCount; i++) {
@@ -229,7 +229,7 @@ namespace laya
 			}
 			bool haveLightMap = renderShaderData->hasDefine(RenderableSprite3D::SAHDERDEFINE_LIGHTMAP) && renderShaderData->hasDefine(MeshSprite3DShaderDeclaration::SHADERDEFINE_UV1);
 			if (haveLightMap) {
-				float* lightMapData = getUpdateData(1, 4 * GLESInstanceRenderElement3D::maxInstanceCount)->data();
+				float* lightMapData = addUpdateBuffer(_instanceStateInfo->lightmapScaleOffsetVB, 4,GLESInstanceRenderElement3D::maxInstanceCount)->data();
 				for (uint32_t i = 0; i < drawCount; i++) {
 					Vector4* v4 = &(_instanceElementList[i]->owner->lightmapScaleOffset);
 					uint32_t offset = i * 4;
@@ -238,22 +238,20 @@ namespace laya
 					lightMapData[offset + 2] = v4->z;
 					lightMapData[offset + 3] = v4->w;
 				}
-				addUpdateBuffer(_instanceStateInfo->lightmapScaleOffsetVB, 4);
 			}
 		}
 		break;
 		case BaseRenderType::SimpleSkinRender: 
 		{
 
-			worldMatrixData = getUpdateData(0, GLESInstanceRenderElement3D::maxInstanceCount * 16)->data();
-			addUpdateBuffer(_instanceStateInfo->worldInstanceVB, 16);
+			worldMatrixData = addUpdateBuffer(_instanceStateInfo->worldInstanceVB, 16, GLESInstanceRenderElement3D::maxInstanceCount)->data();
 			drawCount = _instanceElementList.size();
 			geometry->setInstanceCount(drawCount);
 			for (uint32_t i = 0; i < drawCount; i++) {
 				memcpy(worldMatrixData + i * 16, _instanceElementList[i]->transform->getWorldMatrix().elements, 16 * sizeof(float));
 			}
 			//simpleAnimationData
-			float* simpleAnimatorData = getUpdateData(1, 4 * GLESInstanceRenderElement3D::maxInstanceCount)->data();
+			float* simpleAnimatorData = addUpdateBuffer(_instanceStateInfo->simpleAnimatorVB, 4, GLESInstanceRenderElement3D::maxInstanceCount)->data();
 			for (uint32_t i = 0; i < drawCount; i++) {
 				Vector4* v4 = _instanceElementList[i]->renderShaderData->getVector(RenderableSprite3D::SIMPLESKINNEDMESHRENDERER_SIMPLE_SIMPLEANIMATORPARAMS);
 				uint32_t offset = i * 4;
@@ -262,9 +260,8 @@ namespace laya
 				simpleAnimatorData[offset + 2] = v4->z;
 				simpleAnimatorData[offset + 3] = v4->w;
 			}
-			addUpdateBuffer(_instanceStateInfo->simpleAnimatorVB, 4);
 		}
-			break;
+		break;
 		default:
 			break;
 		}

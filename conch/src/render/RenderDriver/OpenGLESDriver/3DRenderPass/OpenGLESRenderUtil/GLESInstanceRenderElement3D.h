@@ -36,15 +36,14 @@ namespace laya
 	public:
 		GLESInstanceRenderElement3D();
 		~GLESInstanceRenderElement3D();
-		void addUpdateBuffer(GLESVertexBuffer* vb, uint32_t length);
-		std::vector<float>* getUpdateData(uint32_t index, uint32_t length);
+		std::vector<float>* addUpdateBuffer(GLESVertexBuffer* vb, uint32_t elementLength, uint32_t maxInsrtanceCount);
 		void setGeometry(GLESRenderGeometryElement* geometry);
+		void _render(GLESRenderContext3D* context) override;
 		void clearRenderData();
 		void recover();
 	protected:
 		bool _getInvertFront() override;
 		void _compileShader(GLESRenderContext3D* context) override;
-		void drawGeometry(GLESShaderInstance* shaderIns) override;
 	private:
 		void _updateInstanceData();
 
