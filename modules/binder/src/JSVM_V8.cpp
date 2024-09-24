@@ -43,6 +43,12 @@ inline Value JsValueFromV8LocalValue(v8::Local<v8::Value> local)
 {
     return reinterpret_cast<Value>(*local);
 }
+inline v8::Local<v8::Value> V8LocalValueFromJsValue(Value v)
+{
+    v8::Local<v8::Value> local;
+    memcpy(static_cast<void *>(&local), &v, sizeof(v));
+    return local;
+}
 
 } // namespace v8impl
 
@@ -147,6 +153,30 @@ class TryCatch : public v8::TryCatch
   private:
     Env _env;
 };
+inline v8impl::Persistent<v8::Value> *NodePersistentFromJsDeferred(Deferred local)
+{
+    return reinterpret_cast<v8impl::Persistent<v8::Value> *>(local);
+}
+inline Status ConcludeDeferred(Env env, Deferred deferred, Value result, bool is_resolved)
+{
+    NAPI_PREAMBLE(env);
+    // CHECK_ARG(env, result);
+
+    v8::Local<v8::Context> context = env->context();
+    v8impl::Persistent<v8::Value> *deferred_ref = NodePersistentFromJsDeferred(deferred);
+    v8::Local<v8::Value> v8_deferred = v8::Local<v8::Value>::New(env->isolate, *deferred_ref);
+
+    auto v8_resolver = v8_deferred.As<v8::Promise::Resolver>();
+
+    v8::Maybe<bool> success = is_resolved ? v8_resolver->Resolve(context, v8impl::V8LocalValueFromJsValue(result))
+                                          : v8_resolver->Reject(context, v8impl::V8LocalValueFromJsValue(result));
+
+    delete deferred_ref;
+
+    // RETURN_STATUS_IF_FALSE(env, success.FromMaybe(false), napi_generic_failure);
+
+    return GET_RETURN_STATUS(env);
+}
 } // namespace v8impl
 /*JSVM_EXTERN*/ Status CreatePromise(Env env, Deferred *deferred, Value *promise)
 {
@@ -164,5 +194,25 @@ class TryCatch : public v8::TryCatch
     *deferred = v8impl::JsDeferredFromNodePersistent(v8_deferred);
     *promise = v8impl::JsValueFromV8LocalValue(v8_resolver->GetPromise());
     return GET_RETURN_STATUS(env);
+}
+/*JSVM_EXTERN*/ Status ResolveDeferred(Env env, Deferred deferred, Value resolution)
+{
+    return v8impl::ConcludeDeferred(env, deferred, resolution, true);
+}
+
+/*JSVM_EXTERN*/ Status RejectDeferred(Env env, Deferred deferred, Value resolution)
+{
+    return v8impl::ConcludeDeferred(env, deferred, resolution, false);
+}
+
+/*JSVM_EXTERN*/ Status IsPromise(Env env, Value value, bool *isPromise)
+{
+    // CHECK_ENV_NOT_IN_GC(env);
+    // CHECK_ARG(env, value);
+    // CHECK_ARG(env, isPromise);
+
+    *isPromise = v8impl::V8LocalValueFromJsValue(value)->IsPromise();
+
+    return clear_last_error(env);
 }
 } // namespace JSVM

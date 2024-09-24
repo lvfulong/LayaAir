@@ -16,6 +16,9 @@ using Value = JSVM_Value;
 #endif
 
 /*JSVM_EXTERN*/ Status CreatePromise(Env env, Deferred *deferred, Value *promise);
+/*JSVM_EXTERN*/ Status ResolveDeferred(Env env, Deferred deferred, Value resolution);
+/*JSVM_EXTERN*/ Status RejectDeferred(Env env, Deferred deferred, Value resolution);
+/*JSVM_EXTERN*/ Status IsPromise(Env env, Value value, bool *isPromise);
 
 #if defined(OS_OHOS)
 inline JSVM_Status ConvertToJSVM_Status(Status value)
@@ -136,6 +139,18 @@ inline Status ConvertToStatus(JSVM_Status value)
 inline /*JSVM_EXTERN*/ Status CreatePromise(Env env, Deferred *deferred, Value *promise)
 {
     return ConvertToStatus(OH_JSVM_CreatePromise(env, deferred, promise));
+}
+inline /*JSVM_EXTERN*/ Status ResolveDeferred(Env env, Deferred deferred, Value resolution)
+{
+    return ConvertToStatus(OH_JSVM_ResolveDeferred(env, deferred, resolution));
+}
+inline /*JSVM_EXTERN*/ Status RejectDeferred(Env env, Deferred deferred, Value resolution)
+{
+    return ConvertToStatus(OH_JSVM_RejectDeferred(env, deferred, resolution));
+}
+inline /*JSVM_EXTERN*/ Status IsPromise(Env env, Value value, bool *isPromise)
+{
+    return ConvertToStatus(OH_JSVM_IsPromise(env, value, isPromise));
 }
 #endif
 } // namespace JSVM
