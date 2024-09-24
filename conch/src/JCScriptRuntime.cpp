@@ -30,8 +30,8 @@
 #include "2D/FontManager.h"
 #if defined(OS_WINDOWS)
 #include "video/VideoPlayer.h"
-#include "Extention/LayaExtWin.h"
 #endif
+#include "Extention/LayaExtWin.h"
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
 extern bool g_bGLCanvasSizeChanged;

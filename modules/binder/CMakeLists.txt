@@ -58,6 +58,15 @@ if(OS_WINDOWS)
         v8_libbase
         v8_libplatform
     )
+
+    list(APPEND HEADERS
+        ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM.h
+        ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM_Types.h
+    )
+
+    list(APPEND SOURCES
+        src/JSVM_V8.cpp
+    )
 elseif(OS_ANDROID)
     list(APPEND DEPS_V8
         v8_monolith
@@ -74,6 +83,14 @@ elseif(OS_IOS)
 elseif(OS_OHOS)
     list(APPEND DEPS_V8
         v8_monolith
+    )
+    list(APPEND HEADERS
+        ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM.h
+        ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM_Types.h
+    )
+
+    list(APPEND SOURCES
+        src/JSVM_OHOS.cpp
     )
 endif()
 

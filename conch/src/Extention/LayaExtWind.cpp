@@ -1,5 +1,6 @@
 
 #include "LayaExtWin.h"
+#if 0
 #include <windows.h>
 #include <string>
 #include <filesystem>
@@ -9,13 +10,14 @@
 #include <locale>
 
 namespace fs = std::filesystem;
-
+#endif
 namespace laya{
 
     typedef void (*LayaInitFunc)(void *);
 
     void importAllDynaLib(std::string exePath, void *ctx)
     {
+    #if 0
         // 将 std::string 转换为 std::wstring
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
         std::wstring wExePath = converter.from_bytes(exePath);        
@@ -57,5 +59,6 @@ namespace laya{
                 }
             }
         }
+    #endif
 }    
 }
