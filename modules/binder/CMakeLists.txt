@@ -65,7 +65,9 @@ if(OS_WINDOWS)
     )
 
     list(APPEND SOURCES
-        src/JSVM_V8.cpp
+        src/JSVM_NAPI.cpp
+        src/napi/js_native_api_v8.cc
+        #src/napi/util.cc
     )
 elseif(OS_ANDROID)
     list(APPEND DEPS_V8

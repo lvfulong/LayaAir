@@ -91,8 +91,8 @@ struct napi_env__ {
     int open_callback_scopes_before = open_callback_scopes;
     napi_clear_last_error(this);
     call(this);
-    CHECK_EQ(open_handle_scopes, open_handle_scopes_before);
-    CHECK_EQ(open_callback_scopes, open_callback_scopes_before);
+    //CHECK_EQ(open_handle_scopes, open_handle_scopes_before);
+    //CHECK_EQ(open_callback_scopes, open_callback_scopes_before);
     if (!last_exception.IsEmpty()) {
       handle_exception(this, last_exception.Get(this->isolate));
       last_exception.Reset();

@@ -2,10 +2,10 @@
 #include <climits>  // INT_MAX
 #include <cmath>
 #define NAPI_EXPERIMENTAL
-#include "env-inl.h"
-#include "js_native_api.h"
-#include "js_native_api_v8.h"
-#include "util-inl.h"
+//#include "env-inl.h"
+#include "binder/napi/js_native_api.h"
+#include "binder/napi/js_native_api_v8.h"
+//#include "util-inl.h"
 
 #define CHECK_MAYBE_NOTHING(env, maybe, status)                                \
   RETURN_STATUS_IF_FALSE((env), !((maybe).IsNothing()), (status))
@@ -69,6 +69,7 @@
   } while (0)
 
 void napi_env__::InvokeFinalizerFromGC(v8impl::RefTracker* finalizer) {
+#if 0
   if (module_api_version != NAPI_VERSION_EXPERIMENTAL) {
     EnqueueFinalizer(finalizer);
   } else {
@@ -81,6 +82,7 @@ void napi_env__::InvokeFinalizerFromGC(v8impl::RefTracker* finalizer) {
     in_gc_finalizer = true;
     finalizer->Finalize();
   }
+#endif
 }
 
 namespace v8impl {
@@ -333,7 +335,7 @@ inline napi_status ConcludeDeferred(napi_env env,
 }
 
 enum UnwrapAction { KeepWrap, RemoveWrap };
-
+#if 0
 inline napi_status Unwrap(napi_env env,
                           napi_value js_object,
                           void** result,
@@ -373,7 +375,7 @@ inline napi_status Unwrap(napi_env env,
 
   return GET_RETURN_STATUS(env);
 }
-
+#endif
 //=== Function napi_callback wrapper =================================
 
 // Use this data structure to associate callback data with each N-API function
@@ -518,7 +520,7 @@ class FunctionCallbackWrapper {
   const v8::FunctionCallbackInfo<v8::Value>& cbinfo_;
   CallbackBundle* bundle_;
 };
-
+#if 0
 inline napi_status Wrap(napi_env env,
                         napi_value js_object,
                         void* native_object,
@@ -579,7 +581,7 @@ inline napi_status Wrap(napi_env env,
 
   return GET_RETURN_STATUS(env);
 }
-
+#endif
 // In JavaScript, weak references can be created for object types (Object,
 // Function, and external Object) and for local symbols that are created with
 // the `Symbol` function call. Global symbols created with the `Symbol.for`
@@ -920,7 +922,7 @@ napi_status NAPI_CDECL napi_get_last_error_info(
 
   static_assert(NAPI_ARRAYSIZE(error_messages) == last_status + 1,
                 "Count of error messages must match count of error values");
-  CHECK_LE(env->last_error.error_code, last_status);
+  //CHECK_LE(env->last_error.error_code, last_status);
   // Wait until someone requests the last error information to fetch the error
   // message string
   env->last_error.error_message = error_messages[env->last_error.error_code];
@@ -2578,7 +2580,7 @@ GEN_COERCE_FUNCTION(OBJECT, Object, object)
 GEN_COERCE_FUNCTION(STRING, String, string)
 
 #undef GEN_COERCE_FUNCTION
-
+#if 0
 napi_status NAPI_CDECL napi_wrap(napi_env env,
                                  napi_value js_object,
                                  void* native_object,
@@ -2602,7 +2604,7 @@ napi_status NAPI_CDECL napi_remove_wrap(napi_env env,
                                         void** result) {
   return v8impl::Unwrap(env, obj, result, v8impl::RemoveWrap);
 }
-
+#endif
 napi_status NAPI_CDECL
 napi_create_external(napi_env env,
                      void* data,
@@ -2634,7 +2636,7 @@ napi_create_external(napi_env env,
   return napi_clear_last_error(env);
 }
 
-napi_status NAPI_CDECL napi_type_tag_object(napi_env env,
+/*napi_status NAPI_CDECL napi_type_tag_object(napi_env env,
                                             napi_value object_or_external,
                                             const napi_type_tag* type_tag) {
   NAPI_PREAMBLE(env);
@@ -2672,8 +2674,8 @@ napi_status NAPI_CDECL napi_type_tag_object(napi_env env,
 
   return GET_RETURN_STATUS(env);
 }
-
-napi_status NAPI_CDECL napi_check_object_type_tag(napi_env env,
+*/
+/*napi_status NAPI_CDECL napi_check_object_type_tag(napi_env env,
                                                   napi_value object_or_external,
                                                   const napi_type_tag* type_tag,
                                                   bool* result) {
@@ -2724,7 +2726,7 @@ napi_status NAPI_CDECL napi_check_object_type_tag(napi_env env,
 
   return GET_RETURN_STATUS(env);
 }
-
+*/
 napi_status NAPI_CDECL napi_get_value_external(napi_env env,
                                                napi_value value,
                                                void** result) {
@@ -3040,13 +3042,13 @@ napi_status NAPI_CDECL napi_create_arraybuffer(napi_env env,
   // Optionally return a pointer to the buffer's data, to avoid another call to
   // retrieve it.
   if (data != nullptr) {
-    *data = buffer->Data();
+    *data = buffer->GetBackingStore()->Data();
   }
 
   *result = v8impl::JsValueFromV8LocalValue(buffer);
   return GET_RETURN_STATUS(env);
 }
-
+#if 0
 napi_status NAPI_CDECL
 napi_create_external_arraybuffer(napi_env env,
                                  void* external_data,
@@ -3063,7 +3065,7 @@ napi_create_external_arraybuffer(napi_env env,
   return napi_get_typedarray_info(
       env, buffer, nullptr, nullptr, nullptr, result, nullptr);
 }
-
+#endif
 napi_status NAPI_CDECL napi_get_arraybuffer_info(napi_env env,
                                                  napi_value arraybuffer,
                                                  void** data,
@@ -3077,7 +3079,7 @@ napi_status NAPI_CDECL napi_get_arraybuffer_info(napi_env env,
   v8::Local<v8::ArrayBuffer> ab = value.As<v8::ArrayBuffer>();
 
   if (data != nullptr) {
-    *data = ab->Data();
+    *data = ab->GetBackingStore()->Data();
   }
 
   if (byte_length != nullptr) {
@@ -3222,7 +3224,7 @@ napi_status NAPI_CDECL napi_get_typedarray_info(napi_env env,
   }
 
   if (data != nullptr) {
-    *data = static_cast<uint8_t*>(buffer->Data()) + array->ByteOffset();
+    *data = static_cast<uint8_t*>(buffer->GetBackingStore()->Data()) + array->ByteOffset();
   }
 
   if (arraybuffer != nullptr) {
@@ -3302,7 +3304,7 @@ napi_status NAPI_CDECL napi_get_dataview_info(napi_env env,
   }
 
   if (data != nullptr) {
-    *data = static_cast<uint8_t*>(buffer->Data()) + array->ByteOffset();
+    *data = static_cast<uint8_t*>(buffer->GetBackingStore()->Data()) + array->ByteOffset();
   }
 
   if (arraybuffer != nullptr) {
@@ -3315,7 +3317,7 @@ napi_status NAPI_CDECL napi_get_dataview_info(napi_env env,
 
   return napi_clear_last_error(env);
 }
-
+#if 0
 napi_status NAPI_CDECL napi_get_version(node_api_basic_env env,
                                         uint32_t* result) {
   CHECK_ENV(env);
@@ -3323,7 +3325,7 @@ napi_status NAPI_CDECL napi_get_version(node_api_basic_env env,
   *result = NODE_API_SUPPORTED_VERSION_MAX;
   return napi_clear_last_error(env);
 }
-
+#endif
 napi_status NAPI_CDECL napi_create_promise(napi_env env,
                                            napi_deferred* deferred,
                                            napi_value* promise) {
@@ -3540,11 +3542,11 @@ napi_status NAPI_CDECL napi_detach_arraybuffer(napi_env env,
   RETURN_STATUS_IF_FALSE(
       env, it->IsDetachable(), napi_detachable_arraybuffer_expected);
 
-  it->Detach(v8::Local<v8::Value>()).Check();
+  it->Detach(/*v8::Local<v8::Value>()*/)/*.Check()*/;
 
   return napi_clear_last_error(env);
 }
-
+#if 0
 napi_status NAPI_CDECL napi_is_detached_arraybuffer(napi_env env,
                                                     napi_value arraybuffer,
                                                     bool* result) {
@@ -3559,3 +3561,4 @@ napi_status NAPI_CDECL napi_is_detached_arraybuffer(napi_env env,
 
   return napi_clear_last_error(env);
 }
+#endif
