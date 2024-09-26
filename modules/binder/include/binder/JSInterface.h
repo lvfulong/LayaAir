@@ -16,7 +16,6 @@
 #include <binder/v8/Module.h>
 #include <binder/v8/Object.h>
 #include <binder/v8/Value.h>
-#include <binder/v8/Promise.h>
 #ifdef JS_V8_DEBUGGER
 #include <binder/v8/v8debug/debug-agent.h>
 #endif
