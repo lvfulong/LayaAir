@@ -41,7 +41,6 @@ typedef JsObjHandleJSC JsObjHandle;
 #define JSP_TO_JS_STR(str) (laya::__TransferToJs<const char *>::ToJs(str))
 #define JS_TRY
 #define JS_CATCH
-JsValue getNativeObj(JSValueAsParam p_pJsObj, char *p_strName);
 #elif JS_V8
 typedef v8::Local<v8::Value> JsValue;
 typedef v8::Local<v8::String> JsString;
@@ -69,9 +68,11 @@ typedef v8::Local<v8::Object> JsObject;
         LOGE("JS onFrame error\n");                                                                                    \
         __JSRun::ReportException(isolate, &try_catch);                                                                 \
     }
-JsValue getNativeObj(JSValueAsParam p_pJsObj, char *p_strName);
 #endif
-void AdjustAmountOfExternalAllocatedMemory(int p_nMemorySize);
+void AdjustAmountOfExternalAllocatedMemory(int p_nMemorySize)
+{
+    //todo
+}
 
 } // namespace laya
 #endif

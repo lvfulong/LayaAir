@@ -19,12 +19,10 @@ set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Value.h
 )
 
-set(SOURCES
-    src/JSInterface.cpp
+set(SOURCE
     src/v8/IsolateData.cpp
     src/v8/JSArrayBuffer.cpp
     src/v8/JSEnv.cpp
-    src/v8/Promise.cpp
     src/v8/Class.cpp
     src/v8/Module.cpp
     src/v8/Context.cpp

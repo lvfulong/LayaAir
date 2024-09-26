@@ -1,5 +1,5 @@
-#ifndef __V8_CONVERTER__H__
-#define __V8_CONVERTER__H__
+#ifndef __CONVERTER__H__
+#define __CONVERTER__H__
 
 #include "JSArrayBuffer.h"
 #include "Utility.h"
@@ -11,15 +11,15 @@
 #include <v8.h>
 #include <vector>
 
-namespace laya
+namespace jsvm
 {
 
 namespace internal
 {
-template <typename T> T convert_value_object_from_v8(v8::Local<v8::Value> value);
+template <typename T> T convert_value_object_from_v8(Env env, Value value);
 
-template <typename T> v8::Local<v8::Value> convert_value_object_to_v8(const T &t);
-template <typename T> v8::Local<v8::Value> convert_value_object_to_v8(T *t);
+template <typename T> Value convert_value_object_to_v8(Env env, const T &t);
+template <typename T> Value convert_value_object_to_v8(Env env, T *t);
 template <class T> struct is_value_object;
 
 template <typename T>
@@ -55,11 +55,10 @@ template <typename T> class Converter<T, std::enable_if_t<internal::is_value_obj
     }
 };
 
-
-template <typename T> class Converter<T*, std::enable_if_t<internal::is_value_object<T>::value>>
+template <typename T> class Converter<T *, std::enable_if_t<internal::is_value_object<T>::value>>
 {
   public:
-    static v8::Local<v8::Value> ToJs(T* value, bool callDestructor = true)
+    static v8::Local<v8::Value> ToJs(T *value, bool callDestructor = true)
     {
         return internal::convert_value_object_to_v8(value);
     }
@@ -112,7 +111,8 @@ template <typename T> class Converter<T *, std::enable_if_t<internal::is_wrapped
   public:
     static v8::Local<v8::Value> ToJs(T *value, bool callDestructor = true)
     {
-        if (value == nullptr) {
+        if (value == nullptr)
+        {
             return v8::Null(v8::Isolate::GetCurrent());
         }
         return wrapCppObject<T>(value, callDestructor);
@@ -147,48 +147,60 @@ template <typename T> struct Converter<const T &> : Converter<T>
 template <> class Converter<int32_t>
 {
   public:
-    static int32_t ToCpp(v8::Local<v8::Value> p_vl)
+    static int32_t ToCpp(Env env, Value value)
     {
-        return p_vl.As<v8::Int32>()->Value();
-        // return p_vl->Int32Value(isolate->GetCurrentContext()).ToChecked();
+        int32_t result{0};
+        GetValueInt32(env, value, &result);
+        // CHECK todo
+
+        return result;
     }
-    static v8::Local<v8::Value> ToJs(int32_t p_vl, bool callDestructor = true)
+    static Value ToJs(Env env, int32_t value, bool callDestructor = true)
     {
-        return v8::Int32::New(v8::Isolate::GetCurrent(), p_vl);
+        Value result;
+        CreateInt32(env, value, &result);
+        // CHECK todo
+        return result;
     }
-    static v8::Local<v8::Value> ToJsDate(int32_t p_vl)
+    /*static v8::Local<v8::Value> ToJsDate(int32_t p_vl)
     {
         return v8::Date::New(v8::Isolate::GetCurrent()->GetCurrentContext(), (double)p_vl).ToLocalChecked();
     }
-    static bool is(v8::Local<v8::Value> p_vl)
+    static bool is(Env env, Value value)
     {
         return p_vl->IsInt32();
-    }
+    }*/
 };
-template <> class Converter<int32_t*>
+template <> class Converter<int32_t *>
 {
   public:
-    static int32_t ToCpp(v8::Local<v8::Value> p_vl)
+    static int32_t ToCpp(Env env, Value value)
     {
-        return p_vl.As<v8::Int32>()->Value();
-        // return p_vl->Int32Value(isolate->GetCurrentContext()).ToChecked();
+        int32_t result{0};
+        GetValueInt32(env, value, &result);
+        // CHECK todo
+
+        return result;
     }
-    static v8::Local<v8::Value> ToJs(int32_t* p_vl, bool callDestructor = true)
+    static Value ToJs(Env env, int32_t *value, bool callDestructor = true)
     {
-        if (p_vl == nullptr)
+        /*if (p_vl == nullptr)
         {
             return v8::Null(v8::Isolate::GetCurrent());
-        }
-        return v8::Int32::New(v8::Isolate::GetCurrent(), *p_vl);
+        }*/
+        Value result;
+        CreateInt32(env, *value, &result);
+        // CHECK todo
+        return result;
     }
-    static v8::Local<v8::Value> ToJsDate(int32_t* p_vl)
+    /*static v8::Local<v8::Value> ToJsDate(int32_t* p_vl)
     {
         return v8::Date::New(v8::Isolate::GetCurrent()->GetCurrentContext(), (double)(*p_vl)).ToLocalChecked();
     }
     static bool is(v8::Local<v8::Value> p_vl)
     {
         return p_vl->IsInt32();
-    }
+    }*/
 };
 template <> class Converter<const int32_t &> : public Converter<int32_t>
 {
@@ -222,8 +234,8 @@ template <> class Converter<long>
     }
 };
 #endif
-// 目前只适用于裸指针reinterpret_cast
-template <> class Converter<int64_t>
+// lvtodo 目前只适用于裸指针reinterpret_cast
+/*template <> class Converter<int64_t>
 {
   public:
     static int64_t ToCpp(v8::Local<v8::Value> value)
@@ -249,26 +261,67 @@ template <> class Converter<int64_t>
     {
         return p_vl->IsNumber();
     }
+};*/
+
+
+template <> class Converter<int64_t>
+{
+  public:
+    static int64_t ToCpp(Env env, Value value)
+    {
+        /*if (!value->IsNumber() || value->IsNullOrUndefined())
+        {
+            return 0;
+        }*/
+        int64_t result{0};
+        GetValueInt64(env, value, &result);
+        // CHECK todo
+
+        return result;
+    }
+    static Value ToJs(Env env,  int64_t value, bool callDestructor = true)
+    {
+         Value result;
+        CreateInt64(env, value, &result);
+        // CHECK todo
+        return result;
+    }
+
+    /*static v8::Local<v8::Value> ToJsDate(int64_t p_vl)
+    {
+
+        return v8::Date::New(v8::Isolate::GetCurrent()->GetCurrentContext(), (double)p_vl).ToLocalChecked();
+    }
+    static bool is(v8::Local<v8::Value> p_vl)
+    {
+        return p_vl->IsNumber();
+    }*/
 };
 
 template <> class Converter<uint32_t>
 {
   public:
-    static uint32_t ToCpp(v8::Local<v8::Value> p_vl)
+    static uint32_t ToCpp(Env env, Value value)
     {
-        return p_vl.As<v8::Uint32>()->Value();
-        // return p_vl->Uint32Value();
+        uint32_t result{0};
+        GetValueUint32(env, value, &result);
+        // CHECK todo
+
+        return result;
     }
-    static v8::Local<v8::Value> ToJs(uint32_t p_vl, bool callDestructor = true)
+    static Value ToJs(Env env, uint32_t value, bool callDestructor = true)
     {
-        return v8::Uint32::NewFromUnsigned(v8::Isolate::GetCurrent(), p_vl);
+        Value result;
+        CreateUint32(env, value, &result);
+        // CHECK todo
+        return result;
     }
-    static bool is(v8::Local<v8::Value> p_vl)
+    /*static bool is(v8::Local<v8::Value> p_vl)
     {
         return p_vl->IsUint32();
-    }
+    }*/
 };
-template <> class Converter<uint16_t>
+/*template <> class Converter<uint16_t>
 {
   public:
     static uint16_t ToCpp(v8::Local<v8::Value> p_vl)
@@ -302,9 +355,9 @@ template <> class Converter<uint8_t>
 };
 template <> class Converter<const uint8_t &> : public Converter<uint8_t>
 {
-};
+};*/
 // 目前只适用于裸指针reinterpret_cast
-template <> class Converter<uint64_t>
+/*template <> class Converter<uint64_t>
 {
   public:
     static uint64_t ToCpp(v8::Local<v8::Value> value)
@@ -329,46 +382,58 @@ template <> class Converter<uint64_t>
     {
         return p_vl->IsNumber();
     }
-};
+};*/
 template <> class Converter<bool>
 {
   public:
-    static bool ToCpp(v8::Local<v8::Value> p_vl)
+    static bool ToCpp(Env env, Value value)
     {
-        return p_vl->BooleanValue(v8::Isolate::GetCurrent());
+        bool result{ false };
+        GetValueBool(env, value, &result);
+        // CHECK todo
+        return result;
     }
-    static v8::Local<v8::Value> ToJs(bool p_vl, bool callDestructor = true)
+    static Value ToJs(Env env,  bool value, bool callDestructor = true)
     {
-        return v8::Boolean::New(v8::Isolate::GetCurrent(), p_vl);
+        Value result;
+        CreateUint32(env, static_cast<uint32_t>(value), &result);// why no create bool
+        // CHECK todo
+        return result;
     }
-    static bool is(v8::Local<v8::Value> p_vl)
+    /*static bool is(v8::Local<v8::Value> p_vl)
     {
         return p_vl->IsBoolean();
-    }
+    }*/
 };
 
-template <> class Converter<bool*>
+template <> class Converter<bool *>
 {
   public:
-    static bool ToCpp(v8::Local<v8::Value> p_vl)
+    static bool ToCpp(Env env, Value value)
     {
-        return p_vl->BooleanValue(v8::Isolate::GetCurrent());
+        bool result{ false };
+        GetValueBool(env, value, &result);
+        // CHECK todo
+        return result;
     }
-    static v8::Local<v8::Value> ToJs(bool* p_vl, bool callDestructor = true)
+    static Value ToJs(Env env, bool *p_vl, bool callDestructor = true)
     {
-        if (p_vl == nullptr)
+        /*if (p_vl == nullptr)
         {
             return v8::Null(v8::Isolate::GetCurrent());
-        }
-        return v8::Boolean::New(v8::Isolate::GetCurrent(), *p_vl);
+        }*/
+        Value result;
+        CreateUint32(env, static_cast<uint32_t>(*value), &result);// why no create bool
+        // CHECK todo
+        return result;
     }
-    static bool is(v8::Local<v8::Value> p_vl)
+    /*static bool is(v8::Local<v8::Value> p_vl)
     {
         return p_vl->IsBoolean();
-    }
+    }*/
 };
 
-template <> class Converter<float>
+/*template <> class Converter<float>
 {
   public:
     static float ToCpp(v8::Local<v8::Value> p_vl)
@@ -385,7 +450,7 @@ template <> class Converter<float>
         return p_vl->IsNumber();
     }
 };
-template <> class Converter<float*>
+template <> class Converter<float *>
 {
   public:
     static float ToCpp(v8::Local<v8::Value> p_vl)
@@ -393,7 +458,7 @@ template <> class Converter<float*>
         return static_cast<float>(p_vl->NumberValue(v8::Isolate::GetCurrent()->GetCurrentContext()).ToChecked());
         // return static_cast<float>(val.As<Number>()->Value());
     }
-    static v8::Local<v8::Value> ToJs(float* p_vl, bool callDestructor = true)
+    static v8::Local<v8::Value> ToJs(float *p_vl, bool callDestructor = true)
     {
         if (p_vl == nullptr)
         {
@@ -405,19 +470,25 @@ template <> class Converter<float*>
     {
         return p_vl->IsNumber();
     }
-};
+};*/
 template <> class Converter<double>
 {
   public:
-    static double ToCpp(v8::Local<v8::Value> p_vl)
+    static double ToCpp(Env env, Value value)
     {
-        return p_vl->NumberValue(v8::Isolate::GetCurrent()->GetCurrentContext()).ToChecked();
+        double result{ 0.0 };
+        GetValueDouble(env, value, &result);
+        // CHECK todo
+        return result;
     }
-    static v8::Local<v8::Value> ToJs(double p_vl, bool callDestructor = true)
+    static Value ToJs(Env env, double value, bool callDestructor = true)
     {
-        return v8::Number::New(v8::Isolate::GetCurrent(), p_vl);
+        Value result;
+        CreateDouble(env, value, &result);
+        // CHECK todo
+        return result;
     }
-    static v8::Local<v8::Value> ToJsDate(double p_vl)
+    /*static v8::Local<v8::Value> ToJsDate(double p_vl)
     {
 
         return v8::Date::New(v8::Isolate::GetCurrent()->GetCurrentContext(), (double)p_vl).ToLocalChecked();
@@ -425,27 +496,27 @@ template <> class Converter<double>
     static bool is(v8::Local<v8::Value> p_vl)
     {
         return p_vl->IsNumber();
-    }
+    }*/
 };
 
-template <> class Converter<v8::Local<v8::Value>>
+template <> class Converter<Value>
 {
   public:
-    static v8::Local<v8::Value> ToCpp(v8::Local<v8::Value> p_vl)
+    static Value ToCpp(Env env, Value value)
     {
-        return p_vl;
+        return value;
     }
-    static v8::Local<v8::Value> ToJs(v8::Local<v8::Value> p_vl, bool callDestructor = true)
+    static Value ToJs(Env env, Value value, bool callDestructor = true)
     {
-        return p_vl;
+        return value;
     }
-    static bool is(v8::Local<v8::Value> p_vl)
+    /*static bool is(v8::Local<v8::Value> p_vl)
     {
         return true;
-    }
+    }*/
 };
 
-template <> class Converter<v8::Local<v8::ArrayBuffer>>
+/*template <> class Converter<v8::Local<v8::ArrayBuffer>>
 {
   public:
     static v8::Local<v8::ArrayBuffer> ToCpp(v8::Local<v8::Value> p_vl)
@@ -460,12 +531,12 @@ template <> class Converter<v8::Local<v8::ArrayBuffer>>
     {
         return true;
     }
-};
+};*/
 
 template <> class Converter<void>
 {
   public:
-    static void ToCpp(v8::Local<v8::Value> p_vl)
+    static void ToCpp(Env env, Value value)
     {
         return;
     }
@@ -476,14 +547,14 @@ template <> class Converter<void>
         else
             return Null(v8::Isolate::GetCurrent());
     }
-    static bool is(v8::Local<v8::Value> p_vl)
+    /*static bool is(v8::Local<v8::Value> p_vl)
     {
         return p_vl->IsNullOrUndefined();
-    }
+    }*/
 };
-//const char* sColor = Converter<const char*>::ToCpp(args);         error  get right value address
-//const std::string sColor = Converter<std::string>::ToCpp(args);   ok
-//const std::string sColor = Converter<const char*>::ToCpp(args);   ok
+// const char* sColor = Converter<const char*>::ToCpp(args);         error  get right value address
+// const std::string sColor = Converter<std::string>::ToCpp(args);   ok
+// const std::string sColor = Converter<const char*>::ToCpp(args);   ok
 template <> class Converter<const char *>
 {
   public:
@@ -503,20 +574,20 @@ template <> class Converter<const char *>
         std::string realString;
     };
     using from_type = convertible_string;
-    static from_type ToCpp(v8::Local<v8::Value> value)
+    static from_type ToCpp(Env env, Value value)
     {
         v8::String::Utf8Value const str(v8::Isolate::GetCurrent(), value);
         return from_type(reinterpret_cast<char const *>(*str));
     }
-    static v8::Local<v8::Value> ToJs(std::string_view p_vl, bool callDestructor = true)
+    static Value ToJs(Env env, std::string_view p_vl, bool callDestructor = true)
     {
         return v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), p_vl.data(), v8::NewStringType::kNormal, p_vl.size())
             .ToLocalChecked();
     }
-    static bool is(v8::Local<v8::Value> p_vl)
+    /*static bool is(v8::Local<v8::Value> p_vl)
     {
         return p_vl->IsString();
-    }
+    }*/
 };
 
 template <> class Converter<std::string>
@@ -545,7 +616,7 @@ template <> class Converter<std::string>
 //	static laya::JSArrayBuffer* ToCpp(Local<Value> p_vl) { return laya::JSArrayBuffer::fromeJSObj(p_vl); };
 // };
 
-template <> class Converter<v8::Local<v8::Primitive>>
+/*template <> class Converter<v8::Local<v8::Primitive>>
 {
   public:
     static v8::Local<v8::Value> ToJs(v8::Local<v8::Primitive> p_vl, bool callDestructor = true)
@@ -561,7 +632,7 @@ template <> class Converter<v8::Local<v8::Object>>
     {
         return p_vl;
     }
-};
+};*/
 
 // template <> class __TransferToJs<laya::JSArrayBuffer*>
 //{public:static Handle<Value> ToJs( laya::JSArrayBuffer* p_vl ){return p_vl->toLocal();}};
@@ -816,6 +887,6 @@ template <class T> v8::Local<v8::Value> ToJSValue(T t, bool callDestructor = tru
 {
     return Converter<T>::ToJs(t, callDestructor);
 }
-} // namespace laya
+} // namespace jsvm
 
 #endif

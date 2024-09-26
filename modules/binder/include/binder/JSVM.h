@@ -7,7 +7,7 @@
 #endif
 #include "JSVM_Types.h"
 
-namespace JSVM
+namespace jsvm
 {
 /*JSVM_EXTERN*/ // Status Init(const InitOptions *options);
 /*JSVM_EXTERN*/ Status CreatePromise(Env env, Deferred *deferred, Value *promise);
@@ -19,6 +19,18 @@ namespace JSVM
 /*JSVM_EXTERN*/ Status DefineProperties(Env env, Value object, size_t propertyCount,
                                         const PropertyDescriptor *properties);
 /*JSVM_EXTERN*/ Status SetProperty(Env env, Value object, Value key, Value value);
+/*JSVM_EXTERN*/ Status  CreateDouble(Env env, double value, Value* result);
+/*JSVM_EXTERN*/ Status  CreateInt32(Env env, int32_t value, Value* result);
+/*JSVM_EXTERN*/ Status  CreateUint32(Env env, int32_t value, Value* result);
+/*JSVM_EXTERN*/ Status  CreateInt64(Env env, int64_t value, Value* result);
+/*JSVM_EXTERN*/ Status  GetValueInt32(Env env, Value value, int32_t* result);
+/*JSVM_EXTERN*/ Status  GetValueUint32(Env env, Value value, int32_t* result);
+/*JSVM_EXTERN*/ Status  GetValueInt64(Env env, Value value, int64_t* result);
+/*JSVM_EXTERN*/ Status  GetValueBool(Env env, Value value, bool* result);
+
+/*JSVM_EXTERN*/ Status  CreateStringUtf8(Env env, const char* value, size_t length, Value* result);
+/*JSVM_EXTERN*/ Status  GetValueStringUtf8(Env env, Value value, char* buf, size_t bufsize, size_t* result);
+/*JSVM_EXTERN*/ Status  AdjustExternalMemory(Env env, int64_t changeInBytes, int64_t* result);
 } // namespace JSVM
 
 #endif

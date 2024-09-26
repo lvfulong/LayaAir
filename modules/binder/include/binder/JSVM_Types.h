@@ -7,7 +7,7 @@
 #include "napi/js_native_api.h"
 #endif
 
-namespace JSVM
+namespace jsvm
 {
 
 enum class Status
