@@ -116,7 +116,7 @@ class WebSocket extends EventTarget {
          this._nativeObj.onopen=function(){
             var e=new Event("open");
             e.target=e.currentTarget=this;
-            f(e);
+            f && f(e);
         };
     }
     set onclose(f:()=>void){
