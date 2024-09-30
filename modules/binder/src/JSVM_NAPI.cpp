@@ -159,16 +159,24 @@ inline /*JSVM_EXTERN*/ Status GetValueBool(Env env, Value value, bool *result)
 {
     return ConvertToStatus(napi_get_value_bool(env, value, result));
 }
-inline /*JSVM_EXTERN*/ Status  CreateStringUtf8(Env env, const char* value, size_t length, Value* result)
+inline /*JSVM_EXTERN*/ Status GetNull(Env env, Value *result)
+{
+    return ConvertToStatus(napi_get_null(env, result));
+}
+inline /*JSVM_EXTERN*/ Status GetUndefined(Env env, Value *result)
+{
+    return ConvertToStatus(napi_get_undefined(env, result));
+}
+inline /*JSVM_EXTERN*/ Status CreateStringUtf8(Env env, const char *value, size_t length, Value *result)
 {
     return ConvertToStatus(napi_create_string_utf8(env, value, result));
 }
-inline /*JSVM_EXTERN*/ Status  GetValueStringUtf8(Env env, Value value, char* buf, size_t bufsize, size_t* result)
+inline /*JSVM_EXTERN*/ Status GetValueStringUtf8(Env env, Value value, char *buf, size_t bufsize, size_t *result)
 {
-    return ConvertToStatus(napi_get_value_string_utf8( env,  value, buf,  bufsize,  result));
+    return ConvertToStatus(napi_get_value_string_utf8(env, value, buf, bufsize, result));
 }
-inline /*JSVM_EXTERN*/ Status  AdjustExternalMemory(Env env, int64_t changeInBytes, int64_t* adjustedValue)
+inline /*JSVM_EXTERN*/ Status AdjustExternalMemory(Env env, int64_t changeInBytes, int64_t *adjustedValue)
 {
-    return ConvertToStatus(napi_adjust_external_memory( env,changeInBytes,adjustedValue));
+    return ConvertToStatus(napi_adjust_external_memory(env, changeInBytes, adjustedValue));
 }
 } // namespace jsvm

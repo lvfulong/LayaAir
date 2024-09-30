@@ -7,9 +7,11 @@
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
-#include <utils/Preprocessor.h>
 #include <v8.h>
 #include <vector>
+#include "binder/napi/js_native_api.h"
+#include "binder/JSVM.h"
+#include "binder/JSVM_Types.h"
 
 namespace jsvm
 {
@@ -416,7 +418,7 @@ template <> class Converter<bool *>
         // CHECK todo
         return result;
     }
-    static Value ToJs(Env env, bool *p_vl, bool callDestructor = true)
+    static Value ToJs(Env env, bool * value, bool callDestructor = true)
     {
         /*if (p_vl == nullptr)
         {
@@ -540,12 +542,22 @@ template <> class Converter<void>
     {
         return;
     }
-    static v8::Local<v8::Value> ToJs(int p_vl, bool callDestructor = true)
+    static Value ToJs(Env env, int value, bool callDestructor = true)
     {
-        if (0 == p_vl)
-            return Undefined(v8::Isolate::GetCurrent());
+        if (0 == value)
+        {
+            Value result;
+            GetUndefined( env, &result);
+            // CHECK todo
+            return result;
+        }
         else
-            return Null(v8::Isolate::GetCurrent());
+        {
+            Value result;
+            GetNull( env, &result);
+            // CHECK todo
+            return result;
+        }
     }
     /*static bool is(v8::Local<v8::Value> p_vl)
     {
@@ -878,14 +890,14 @@ template <typename T, typename R> class Converter<const std::unordered_map<T, R>
     }
 };
 
-inline v8::Local<v8::String> Js_Str(v8::Isolate *pIso, const char *str)
+/*inline v8::Local<v8::String> Js_Str(v8::Isolate* pIso, const char* str)
 {
     return v8::String::NewFromUtf8(pIso, str).ToLocalChecked();
-}
+}*/
 
-template <class T> v8::Local<v8::Value> ToJSValue(T t, bool callDestructor = true)
+template <class T>  Value ToJSValue(Env env, T t, bool callDestructor = true)
 {
-    return Converter<T>::ToJs(t, callDestructor);
+    return Converter<T>::ToJs(env, t, callDestructor);
 }
 } // namespace jsvm
 

@@ -4,9 +4,11 @@
 #include <map>
 #include <string>
 #include <v8.h>
-namespace laya
+namespace jsvm
 {
-
+    template <class T> inline void UNUSED(T const&)
+    {
+    }
 template <class G, class S> struct PropFuncInfo
 {
     G fGet;
