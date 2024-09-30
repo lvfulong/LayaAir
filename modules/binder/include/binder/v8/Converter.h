@@ -3,15 +3,15 @@
 
 #include "JSArrayBuffer.h"
 #include "Utility.h"
+#include "binder/JSVM.h"
+#include "binder/JSVM_Types.h"
+#include "binder/napi/js_native_api.h"
 #include <assert.h>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <v8.h>
 #include <vector>
-#include "binder/napi/js_native_api.h"
-#include "binder/JSVM.h"
-#include "binder/JSVM_Types.h"
 
 namespace jsvm
 {
@@ -265,7 +265,6 @@ template <> class Converter<long>
     }
 };*/
 
-
 template <> class Converter<int64_t>
 {
   public:
@@ -281,9 +280,9 @@ template <> class Converter<int64_t>
 
         return result;
     }
-    static Value ToJs(Env env,  int64_t value, bool callDestructor = true)
+    static Value ToJs(Env env, int64_t value, bool callDestructor = true)
     {
-         Value result;
+        Value result;
         CreateInt64(env, value, &result);
         // CHECK todo
         return result;
@@ -390,15 +389,15 @@ template <> class Converter<bool>
   public:
     static bool ToCpp(Env env, Value value)
     {
-        bool result{ false };
+        bool result{false};
         GetValueBool(env, value, &result);
         // CHECK todo
         return result;
     }
-    static Value ToJs(Env env,  bool value, bool callDestructor = true)
+    static Value ToJs(Env env, bool value, bool callDestructor = true)
     {
         Value result;
-        CreateUint32(env, static_cast<uint32_t>(value), &result);// why no create bool
+        CreateUint32(env, static_cast<uint32_t>(value), &result); // why no create bool
         // CHECK todo
         return result;
     }
@@ -413,19 +412,19 @@ template <> class Converter<bool *>
   public:
     static bool ToCpp(Env env, Value value)
     {
-        bool result{ false };
+        bool result{false};
         GetValueBool(env, value, &result);
         // CHECK todo
         return result;
     }
-    static Value ToJs(Env env, bool * value, bool callDestructor = true)
+    static Value ToJs(Env env, bool *value, bool callDestructor = true)
     {
         /*if (p_vl == nullptr)
         {
             return v8::Null(v8::Isolate::GetCurrent());
         }*/
         Value result;
-        CreateUint32(env, static_cast<uint32_t>(*value), &result);// why no create bool
+        CreateUint32(env, static_cast<uint32_t>(*value), &result); // why no create bool
         // CHECK todo
         return result;
     }
@@ -478,7 +477,7 @@ template <> class Converter<double>
   public:
     static double ToCpp(Env env, Value value)
     {
-        double result{ 0.0 };
+        double result{0.0};
         GetValueDouble(env, value, &result);
         // CHECK todo
         return result;
@@ -547,14 +546,14 @@ template <> class Converter<void>
         if (0 == value)
         {
             Value result;
-            GetUndefined( env, &result);
+            GetUndefined(env, &result);
             // CHECK todo
             return result;
         }
         else
         {
             Value result;
-            GetNull( env, &result);
+            GetNull(env, &result);
             // CHECK todo
             return result;
         }
@@ -591,7 +590,7 @@ template <> class Converter<const char *>
         v8::String::Utf8Value const str(v8::Isolate::GetCurrent(), value);
         return from_type(reinterpret_cast<char const *>(*str));
     }*/
-    static const char* ToCpp(Env env, Value value) = delete;
+    static const char *ToCpp(Env env, Value value) = delete;
     static Value ToJs(Env env, std::string_view value, bool callDestructor = true)
     {
         Value result;
@@ -610,16 +609,16 @@ template <> class Converter<const char *>
 template <> class Converter<std::string>
 {
   public:
-    static std::string ToCpp(Env env,   Value value)
+    static std::string ToCpp(Env env, Value value)
     {
         size_t len = 0;
         // Get the length
         Status status = GetValueStringUtf8(env, value, NULL, 0, &len);
-        //assert(status == napi_ok);
-        char* buf =new char[len + 1];
-        
+        // assert(status == napi_ok);
+        char *buf = new char[len + 1];
+
         status = GetValueStringUtf8(env, value, buf, len + 1, &len);
-        //assert(status == napi_ok);
+        // assert(status == napi_ok);
         std::string utf8str(buf);
         delete[] buf;
         return utf8str;
@@ -667,93 +666,99 @@ template <> class Converter<v8::Local<v8::Object>>
 template <typename T> class __JsArray
 {
   public:
-    static v8::Local<v8::Value> ToJsArray(const std::vector<T *> &p_v1, bool callDestructor = true)
+    static Value ToJsArray(Env env, const std::vector<T *> &value, bool callDestructor = true)
     {
-        v8::Isolate *isolate = v8::Isolate::GetCurrent();
-        v8::Local<v8::Context> context = isolate->GetCurrentContext();
-        int size = p_v1.size();
+        Value result;
+        Status status;
+
+        int size = value.size();
         if (0 == size)
         {
-            v8::Local<v8::Array> __array = v8::Array::New(isolate, 0);
-            return __array;
+            status = CreateArrayWithLength(env, 0, &result);
+            // CHECK todo
+            return result;
         }
         else
         {
-            v8::Local<v8::Array> __array = v8::Array::New(isolate, size);
+            status = CreateArrayWithLength(env, size, &result);
+            // CHECK todo
             for (int i = 0; i < size; i++)
             {
-                //__array->Set(i, __JSCProxy_class<T>::GetInstance()->TransferObjPtrToJS(p_v1.at(i)));
-                __array->Set(context, i, Converter<T *>::ToJs(p_v1.at(i), callDestructor));
+                SetElement(env, result, i, Converter<T *>::ToJs(env, value.at(i), callDestructor));
             }
-            return __array;
+            return result;
         }
     }
-    static v8::Local<v8::Value> ToJsArray(const std::vector<T> &p_v1, bool callDestructor = true)
+    static Value ToJsArray(Env env, const std::vector<T> &value, bool callDestructor = true)
     {
-        v8::Isolate *isolate = v8::Isolate::GetCurrent();
-        v8::Local<v8::Context> context = isolate->GetCurrentContext();
-        int size = p_v1.size();
+        Value result;
+        Status status;
+        int size = value.size();
         if (0 == size)
         {
-            v8::Local<v8::Array> __array = v8::Array::New(isolate, 0);
-            return __array;
+            status = CreateArrayWithLength(env, 0, &result);
+            // CHECK todo
+            return result;
         }
         else
         {
-            v8::Local<v8::Array> __array = v8::Array::New(isolate, size);
+            status = CreateArrayWithLength(env, size, &result);
+            // CHECK todo
             for (int i = 0; i < size; i++)
             {
-                //__array->Set(i, __JSCProxy_class<T>::GetInstance()->TransferObjPtrToJS(p_v1.at(i)));
-                __array->Set(context, i, Converter<T>::ToJs(p_v1.at(i), callDestructor));
+                SetElement(env, result, i, Converter<T>::ToJs(env, value.at(i), callDestructor));
             }
-            return __array;
+            return result;
         }
     }
-    static void FillJsArray(const std::vector<T> &p_v1, v8::Local<v8::Value> array, bool callDestructor = true)
+    static void FillJsArray(Env env, const std::vector<T> &value, Value array, bool callDestructor = true)
     {
-        v8::Isolate *isolate = v8::Isolate::GetCurrent();
-        v8::Local<v8::Context> context = isolate->GetCurrentContext();
-        int size = p_v1.size();
-        v8::Local<v8::Array> __array = array.As<v8::Array>();
-        //__array length = 0 ???
+        Value result;
+        Status status;
+        int size = value.size();
         for (int i = 0; i < size; i++)
         {
-            __array->Set(context, i, Converter<T>::ToJs(p_v1.at(i), callDestructor));
+            SetElement(env, result, i, Converter<T>::ToJs(env, value.at(i), callDestructor));
         }
     }
-    static void FromJsArray(v8::Local<v8::Value> value, std::vector<T *> &p_v1)
+    static void FromJsArray(Env env, Value array, std::vector<T *> &result)
     {
-        if (value->IsArray())
+        bool isArray{false};
+        IsArray(env, array, isArray);
+        // CHECK todo
+        if (isArray)
         {
-
-            v8::Isolate *isolate = v8::Isolate::GetCurrent();
-            v8::Local<v8::Context> context = isolate->GetCurrentContext();
-            p_v1.clear();
-            v8::Local<v8::Array> __array = value.As<v8::Array>();
-            uint32_t length = __array->Length();
-            p_v1.reserve(length);
+            value.clear();
+            uint32_t length{0};
+            GetArrayLength(env, array, &length)
+                // CHECK todo
+                result.reserve(length);
             for (int i = 0; i < length; i++)
             {
-                T *pValue = Converter<T *>::ToCpp(__array->Get(context, i).ToLocalChecked());
-                p_v1.push_back(pValue);
+                Value element;
+                GetElement(env, array, i, &element);
+                result.push_back(Converter<T *>::ToCpp(env, element));
             }
         }
     }
-    static void FromJsArray(v8::Local<v8::Value> value, std::vector<T> &p_v1)
+    static void FromJsArray(Env env, Value array, std::vector<T> &result)
     {
-        if (value->IsArray())
+        bool isArray{false};
+        IsArray(env, array, isArray);
+        // CHECK todo
+        if (isArray)
         {
-
-            v8::Isolate *isolate = v8::Isolate::GetCurrent();
-            v8::Local<v8::Context> context = isolate->GetCurrentContext();
-            p_v1.clear();
-            v8::Local<v8::Array> __array = value.As<v8::Array>();
-            uint32_t length = __array->Length();
-            p_v1.reserve(length);
+            result.clear();
+            uint32_t length{0};
+            GetArrayLength(env, array, &length)
+            // CHECK todo
+            result.reserve(length);
             for (int i = 0; i < length; i++)
             {
-                T pValue = Converter<T>::ToCpp(__array->Get(context, i).ToLocalChecked());
-                p_v1.push_back(pValue);
+                Value element;
+                GetElement(env, array, i, &element);
+                // CHECK todo
+                result.push_back(Converter<T>::ToCpp(env, element));
             }
         }
     }
@@ -805,7 +810,7 @@ template <typename T, typename R> class __JsMap
         }
     }
 };
-class __JsByteArray
+/*class __JsByteArray
 {
   public:
     static v8::Local<v8::Value> ToJsByteArray(const unsigned char *p_vl, int p_iSize)
@@ -825,44 +830,44 @@ class __JsByteArray
             return __array;
         }
     }
-};
+};*/
 
 template <typename T> class Converter<std::vector<T>>
 {
   public:
-    static std::vector<T> ToCpp(v8::Local<v8::Value> p_vl)
+    static std::vector<T> ToCpp(Env env, Value value)
     {
         std::vector<T> vec;
-        __JsArray<T>::FromJsArray(p_vl, vec);
+        __JsArray<T>::FromJsArray(env, value, vec);
         return vec;
     }
-    static v8::Local<v8::Value> ToJs(const std::vector<T> &p_vl, bool callDestructor = true)
+    static Value ToJs(Env env, const std::vector<T> &value, bool callDestructor = true)
     {
-        return __JsArray<T>::ToJsArray(p_vl);
+        return __JsArray<T>::ToJsArray(env, value);
     }
 };
 template <typename T> class Converter<std::vector<T *>>
 {
   public:
-    static std::vector<T *> ToCpp(v8::Local<v8::Value> p_vl)
+    static std::vector<T *> ToCpp(Env env, Value)
     {
         std::vector<T *> vec;
-        __JsArray<T>::FromJsArray(p_vl, vec);
+        __JsArray<T>::FromJsArray(env, Value, vec);
         return vec;
     }
-    static v8::Local<v8::Value> ToJs(const std::vector<T *> &p_vl, bool callDestructor = true)
+    static Value ToJs(Env env, const std::vector<T *> &value, bool callDestructor = true)
     {
-        return __JsArray<T>::ToJsArray(p_vl, callDestructor);
+        return __JsArray<T>::ToJsArray(env, value, callDestructor);
     }
     /*static void ToCpp(v8::Local<v8::Value> p_vl, std::vector<T*>& vec)
     {
         return __JsArray<T>::FromJsArray(p_vl, vec);
     }*/
 
-    static bool is(v8::Local<v8::Value> p_vl)
+    /*static bool is(v8::Local<v8::Value> p_vl)
     {
         return p_vl->IsArray();
-    }
+    }*/
 };
 template <typename T> class Converter<std::unordered_set<T>>
 {
@@ -911,7 +916,7 @@ template <typename T, typename R> class Converter<const std::unordered_map<T, R>
     return v8::String::NewFromUtf8(pIso, str).ToLocalChecked();
 }*/
 
-template <class T>  Value ToJSValue(Env env, T t, bool callDestructor = true)
+template <class T> Value ToJSValue(Env env, T t, bool callDestructor = true)
 {
     return Converter<T>::ToJs(env, t, callDestructor);
 }

@@ -117,9 +117,25 @@ inline Status ConvertToStatus(napi_status value)
         break;
     }
 }
+inline /*JSVM_EXTERN*/ Status GetArrayLength(Env env, Value value, uint32_t *result)
+{
+    return ConvertToStatus(napi_get_array_length(env, value, result));
+}
+inline /*JSVM_EXTERN*/ Status IsArray(Env env, Value value, bool *result)
+{
+    return ConvertToStatus(napi_is_array(env, value, result));
+}
 inline /*JSVM_EXTERN*/ Status CreatePromise(Env env, Deferred *deferred, Value *promise)
 {
     return ConvertToStatus(napi_create_promise(env, deferred, promise));
+}
+inline /*JSVM_EXTERN*/ Status CreateArray(Env env, Value *result)
+{
+    return ConvertToStatus(napi_create_array(env, result));
+}
+inline /*JSVM_EXTERN*/ Status CreateArrayWithLength(Env env, size_t length, Value *result)
+{
+    return ConvertToStatus(napi_create_array_with_length(env, length, result));
 }
 inline /*JSVM_EXTERN*/ Status CreateDouble(Env env, double value, Value *result)
 {
@@ -167,6 +183,14 @@ inline /*JSVM_EXTERN*/ Status GetUndefined(Env env, Value *result)
 {
     return ConvertToStatus(napi_get_undefined(env, result));
 }
+inline /*JSVM_EXTERN*/ Status GetElement(Env env, Value object, uint32_t index, Value *result)
+{
+    return ConvertToStatus(napi_get_element(env, object, index, result));
+}
+inline /*JSVM_EXTERN*/ Status SetElement(Env env, Value object, uint32_t index, Value value)
+{
+    return ConvertToStatus(napi_set_element(env, object, index, value));
+}
 inline /*JSVM_EXTERN*/ Status CreateStringUtf8(Env env, const char *value, size_t length, Value *result)
 {
     return ConvertToStatus(napi_create_string_utf8(env, value, result));
@@ -178,5 +202,25 @@ inline /*JSVM_EXTERN*/ Status GetValueStringUtf8(Env env, Value value, char *buf
 inline /*JSVM_EXTERN*/ Status AdjustExternalMemory(Env env, int64_t changeInBytes, int64_t *adjustedValue)
 {
     return ConvertToStatus(napi_adjust_external_memory(env, changeInBytes, adjustedValue));
+}
+inline /*JSVM_EXTERN*/ Status IsSet ( Env env,  Value value, bool *isSet)
+{
+return ConvertToStatus(napi_adjust_external_memory(env, changeInBytes, adjustedValue));
+}
+inline /*JSVM_EXTERN*/ Status CreateSet ( Env env,  Value *result)
+{
+return ConvertToStatus(napi_adjust_external_memory(env, changeInBytes, adjustedValue));
+
+
+inline /*JSVM_EXTERN*/ Status IsSet(Env env, Value value, bool *isSet)
+{
+//todo
+}
+inline /*JSVM_EXTERN*/ Status CreateSet(Env env, Value *result)
+{
+//todo
+}
+
+
 }
 } // namespace jsvm
