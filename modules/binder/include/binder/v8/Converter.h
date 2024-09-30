@@ -570,7 +570,7 @@ template <> class Converter<void>
 template <> class Converter<const char *>
 {
   public:
-    class convertible_string
+    /*class convertible_string
     {
       public:
         convertible_string(const char *str) : realString(str)
@@ -590,11 +590,16 @@ template <> class Converter<const char *>
     {
         v8::String::Utf8Value const str(v8::Isolate::GetCurrent(), value);
         return from_type(reinterpret_cast<char const *>(*str));
-    }
-    static Value ToJs(Env env, std::string_view p_vl, bool callDestructor = true)
+    }*/
+    static const char* ToCpp(Env env, Value value) = delete;
+    static Value ToJs(Env env, std::string_view value, bool callDestructor = true)
     {
-        return v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), p_vl.data(), v8::NewStringType::kNormal, p_vl.size())
-            .ToLocalChecked();
+        Value result;
+        Status status;
+
+        status = CreateStringUtf8(env, value.data(), value.size(), &result);
+        // CHECK todo
+        return result;
     }
     /*static bool is(v8::Local<v8::Value> p_vl)
     {
@@ -605,22 +610,33 @@ template <> class Converter<const char *>
 template <> class Converter<std::string>
 {
   public:
-    static std::string ToCpp(v8::Local<v8::Value> p_vl)
+    static std::string ToCpp(Env env,   Value value)
     {
-        v8::String::Utf8Value utf8str(v8::Isolate::GetCurrent(),
-                                      p_vl->ToString(v8::Isolate::GetCurrent()->GetCurrentContext()).ToLocalChecked());
-        return std::string(*utf8str);
+        size_t len = 0;
+        // Get the length
+        Status status = GetValueStringUtf8(env, value, NULL, 0, &len);
+        //assert(status == napi_ok);
+        char* buf =new char[len + 1];
+        
+        status = GetValueStringUtf8(env, value, buf, len + 1, &len);
+        //assert(status == napi_ok);
+        std::string utf8str(buf);
+        delete[] buf;
+        return utf8str;
     }
-    static v8::Local<v8::Value> ToJs(std::string p_vl, bool callDestructor = true)
+    static Value ToJs(Env env, std::string value, bool callDestructor = true)
     {
-        return v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), p_vl.c_str(), v8::NewStringType::kNormal,
-                                       static_cast<uint32_t>(p_vl.length()))
-            .ToLocalChecked();
+        Value result;
+        Status status;
+
+        status = CreateStringUtf8(env, value.c_str(), value.length(), &result);
+        // CHECK todo
+        return result;
     }
-    static bool is(v8::Local<v8::Value> p_vl)
+    /*static bool is(v8::Local<v8::Value> p_vl)
     {
         return p_vl->IsString();
-    }
+    }*/
 };
 
 // template<> class __TransferToCpp<laya::JSArrayBuffer*>{public:
