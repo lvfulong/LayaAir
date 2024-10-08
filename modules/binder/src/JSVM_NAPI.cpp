@@ -203,24 +203,25 @@ inline /*JSVM_EXTERN*/ Status AdjustExternalMemory(Env env, int64_t changeInByte
 {
     return ConvertToStatus(napi_adjust_external_memory(env, changeInBytes, adjustedValue));
 }
-inline /*JSVM_EXTERN*/ Status IsSet ( Env env,  Value value, bool *isSet)
-{
-return ConvertToStatus(napi_adjust_external_memory(env, changeInBytes, adjustedValue));
-}
-inline /*JSVM_EXTERN*/ Status CreateSet ( Env env,  Value *result)
-{
-return ConvertToStatus(napi_adjust_external_memory(env, changeInBytes, adjustedValue));
-
-
 inline /*JSVM_EXTERN*/ Status IsSet(Env env, Value value, bool *isSet)
 {
-//todo
+    return ConvertToStatus(napi_adjust_external_memory(env, changeInBytes, adjustedValue));
 }
 inline /*JSVM_EXTERN*/ Status CreateSet(Env env, Value *result)
 {
-//todo
+    return ConvertToStatus(napi_adjust_external_memory(env, changeInBytes, adjustedValue));
 }
 
-
+inline /*JSVM_EXTERN*/ Status IsSet(Env env, Value value, bool *isSet)
+{
+    // todo
+}
+inline /*JSVM_EXTERN*/ Status CreateSet(Env env, Value *result)
+{
+    // todo
+}
+inline /*JSVM_EXTERN*/ Status GetCbInfo(Env env, CallbackInfo cbinfo, size_t *argc, Value *argv, Value *thisArg, void **data)
+{
+    return ConvertToStatus(napi_get_cb_info(env, cbinfo, argc, argv, thisArg, data));
 }
 } // namespace jsvm

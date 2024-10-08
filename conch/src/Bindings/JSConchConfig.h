@@ -11,7 +11,7 @@ namespace laya
     class JSConchConfig
     {
     public:
-	    static void exportJS(Context& context);
+	    static void exportJS(binder::Context& context);
 	    static bool getUrlIgnoreCase();
 	    static void setUrlIgnoreCase(bool b);
 	    static int getNetworkType();

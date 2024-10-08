@@ -6,8 +6,9 @@
 
 #include "Class.h"
 #include <v8.h>
+#include  <binder/JSVM_Types.h>
 
-namespace laya
+namespace binder
 {
 class Module;
 class Context
@@ -59,47 +60,29 @@ class Context
     Context &function(std::string_view name, ReturnType (*func)(Args...))
     {
 
-        v8::HandleScope scope(isolate());
-
-        FuncInfo<decltype(func)> *info = new FuncInfo<decltype(func)>(func);
-        internal::addDeinitializer([info]() { delete info; });
-        info->name = name;
-        v8::Local<v8::Value> data = v8::External::New(isolate(), info);
-
-        v8::Local<v8::FunctionTemplate> t =
-            v8::FunctionTemplate::New(isolate(), internal::InvokeFunction<ReturnType, Args...>, data);
-        v8::Local<v8::String> name_string =
-            v8::String::NewFromUtf8(isolate(), name.data(), v8::NewStringType::kInternalized).ToLocalChecked();
-
-        global()
-            ->Set(isolate()->GetCurrentContext(), name_string,
-                  t->GetFunction(isolate()->GetCurrentContext()).ToLocalChecked())
-            .FromJust();
+        FuncInfo<decltype(func)>* data = new FuncInfo<decltype(func)>(func);
+        internal::addDeinitializer([data]() { delete data; });
+        data->name = name;
+        m_propertyDescriptorVector.emplace_back(PropertyDescriptor{ (name), NULL, (internal::InvokeFunction<ReturnType, Args...>), NULL, NULL, NULL, napi_default, data });
         return *this;
     }
     template <typename ReturnType, typename... Args>
     Context &function_optional_override(std::string_view name, ReturnType (*func)(Args...))
     {
+        FuncInfo<decltype(func)>* data = new FuncInfo<decltype(func)>(func);
+        internal::addDeinitializer([data]() { delete data; });
+        data->name = name;
+        m_propertyDescriptorVector.emplace_back(PropertyDescriptor{ (name), NULL, (internal::InvokeGlobalMethodOptionalOverride<ReturnType, Args...>), NULL, NULL, NULL, napi_default, data });
 
-        v8::HandleScope scope(isolate());
-
-        FuncInfo<decltype(func)> *info = new FuncInfo<decltype(func)>(func);
-        internal::addDeinitializer([info]() { delete info; });
-        info->name = name;
-        v8::Local<v8::Value> data = v8::External::New(isolate(), info);
-
-        v8::Local<v8::FunctionTemplate> t = v8::FunctionTemplate::New(
-            isolate(), internal::InvokeGlobalMethodOptionalOverride<ReturnType, Args...>, data);
-        v8::Local<v8::String> name_string =
-            v8::String::NewFromUtf8(isolate(), name.data(), v8::NewStringType::kInternalized).ToLocalChecked();
-
-        global()
-            ->Set(isolate()->GetCurrentContext(), name_string,
-                  t->GetFunction(isolate()->GetCurrentContext()).ToLocalChecked())
-            .FromJust();
         return *this;
     }
+    void export()
+    {
+        //todos
+    }
+private:
+    std::vector<jsvm::PropertyDescriptor> m_propertyDescriptorVector;
 };
 Context &getCurrentContext();
-} // namespace laya
+} // namespace jsvm
 #endif

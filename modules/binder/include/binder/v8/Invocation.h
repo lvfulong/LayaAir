@@ -7,7 +7,7 @@
 #include <type_traits>
 #include <utils/FunctionTraits.h>
 #include <v8.h>
-namespace laya
+namespace binder
 {
 namespace internal
 {
@@ -62,19 +62,25 @@ typename std::enable_if<laya::internal::is_void_return<Func>::value, void>::type
     func(*thisObject, laya::Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...);
 }
 
-template <typename ReturnType, typename... Args> void InvokeFunction(const v8::FunctionCallbackInfo<v8::Value> &args)
+template <typename ReturnType, typename... Args> void InvokeFunction(jsvm::Env env, jsvm::CallbackInfo info)
 {
-    void *data = args.Data().As<v8::External>()->Value();
+
+    size_t argc = 0;
+    jsvm::Value argv[128];
+    jsvm::Value _this;
+    void* data;
+    NODE_API_CALL(env, GetCbInfo(env, info, &argc, argv, &_this, &data));
+    //NODE_API_ASSERT(env, argc >= 1, "Not enough arguments, expected 1.");
     typedef ReturnType (*FunctorType)(Args...);
     FuncInfo<FunctorType> *funcInfo = (FuncInfo<FunctorType> *)data;
-    if ((unsigned long)args.Length() < sizeof...(Args))
+    /*if ((unsigned long)args.Length() < sizeof...(Args))
     {
         LOGE("Not enough arguments for function  %s", funcInfo->name.c_str());
         args.GetIsolate()->ThrowException(
             v8::String::NewFromUtf8(args.GetIsolate(), "Not enough arguments for function.").ToLocalChecked());
         return;
     }
-
+*/
     tuple_call<std::tuple<Args...>>(funcInfo->func, args, std::make_index_sequence<sizeof...(Args)>());
 }
 
@@ -117,19 +123,26 @@ void InvokeClassMethodOptionalOverride(const v8::FunctionCallbackInfo<v8::Value>
                                                                  std::make_index_sequence<sizeof...(Args)>());
 }
 template <typename ReturnType, typename... Args>
-void InvokeGlobalMethodOptionalOverride(const v8::FunctionCallbackInfo<v8::Value> &args)
+void InvokeGlobalMethodOptionalOverride(jsvm::Env env, jsvm::CallbackInfo info)
 {
-    void *data = args.Data().As<v8::External>()->Value();
+    size_t argc = 0;
+    jsvm::Value argv[128];
+    jsvm::Value _this;
+    void* data;
+    NODE_API_CALL(env, GetCbInfo(env, info, &argc, argv, &_this, &data));
+    //NODE_API_ASSERT(env, argc >= 1, "Not enough arguments, expected 1.");
+
+
     typedef ReturnType (*FunctorType)(Args...);
     FuncInfo<FunctorType> *funcInfo = (FuncInfo<FunctorType> *)data;
-    v8::Local<v8::Object> pthis = args.This();
+    /*v8::Local<v8::Object> pthis = args.This();
     if ((unsigned long)args.Length() < sizeof...(Args))
     {
         LOGE("Not enough arguments for function  %s", funcInfo->name.c_str());
         args.GetIsolate()->ThrowException(
             v8::String::NewFromUtf8(args.GetIsolate(), "Not enough arguments for function.").ToLocalChecked());
         return;
-    }
+    }*/
 
     tuple_call<std::tuple<Args...>>(funcInfo->func, args, std::make_index_sequence<sizeof...(Args)>());
 }

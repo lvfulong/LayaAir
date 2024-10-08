@@ -154,4 +154,8 @@ namespace JSVM
     {
         // todo
     }
+    inline /*JSVM_EXTERN*/ Status GetCbInfo (Env env, CallbackInfo cbinfo, size_t *argc,  Value *argv,  Value *thisArg, void **data)
+{
+    
+}
 } // namespace JSVM

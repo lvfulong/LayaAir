@@ -41,6 +41,7 @@ namespace jsvm
 /*JSVM_EXTERN*/ Status CreateStringUtf8(Env env, const char *value, size_t length, Value *result);
 /*JSVM_EXTERN*/ Status GetValueStringUtf8(Env env, Value value, char *buf, size_t bufsize, size_t *result);
 /*JSVM_EXTERN*/ Status AdjustExternalMemory(Env env, int64_t changeInBytes, int64_t *result);
+/*JSVM_EXTERN*/ Status GetCbInfo (Env env, CallbackInfo cbinfo, size_t *argc,  Value *argv,  Value *thisArg, void **data);
 } // namespace jsvm
 
 #endif

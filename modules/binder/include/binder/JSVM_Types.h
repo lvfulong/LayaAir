@@ -85,13 +85,13 @@ using Env = JSVM_Env;
 using Deferred = JSVM_Deferred;
 using Value = JSVM_Value;
 using PropertyDescriptor = JSVM_PropertyDescriptor;
-// using CallbackInfo=  JSVM_CallbackInfo;
+using CallbackInfo=  JSVM_CallbackInfo;
 #else
 using Env = napi_env;
 using Deferred = napi_deferred;
 using Value = napi_value;
 using PropertyDescriptor = napi_property_descriptor;
-//using CallbackInfo = struct CallbackInfo__ *;
+using CallbackInfo = napi_callback_info;
 //typedef Value(/*NAPI_CDECL*/ *Callback)(Env env, CallbackInfo info);
 
 
