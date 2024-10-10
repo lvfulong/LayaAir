@@ -773,6 +773,7 @@ elseif(OS_WINDOWS)
 		SDL2main
 		video
 		curl
+		#jxl
 	)
 elseif(OS_OHOS)
 	target_link_libraries(${PROJECT_NAME} PUBLIC
@@ -874,7 +875,7 @@ install(FILES ${WIN_DLLS} DESTINATION lib/x64)
 endif()
 #if(NOT OS_OHOS)
 install(TARGETS ${PROJECT_NAME} DESTINATION lib/${BUILDING_ARCH})
-install(DIRECTORY include DESTINATION ${CMAKE_CURRENT_SOURCE_DIR})
+install(FILES include/ExportsShared.h DESTINATION include)
 #endif()
 message("CMAKE_BUILD_TYPE:${CMAKE_BUILD_TYPE}")
 message("CMAKE_C_FLAGS:${CMAKE_C_FLAGS}")

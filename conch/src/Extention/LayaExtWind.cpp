@@ -1,4 +1,4 @@
-
+#if defined(OS_WINDOWS)
 #include "LayaExtWin.h"
 #include <windows.h>
 #include <string>
@@ -59,3 +59,4 @@ namespace laya{
         }
 }    
 }
+#endif
