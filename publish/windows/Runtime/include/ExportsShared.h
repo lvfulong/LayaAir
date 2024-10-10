@@ -1,33 +1,39 @@
 #pragma once
 
 #if defined(OS_WINDOWS)
-#include <functional>
-#include <string>
 #include <tchar.h>
 #include <wtypes.h>
-#ifdef BUILDING_CONCH_SHARED
-#define CONCH_API __declspec(dllexport)
-#else
-#define CONCH_API __declspec(dllimport)
-#endif
+#define CONCH_API_EXTERN __declspec(dllexport)
+#define CONCH_API_CDECL __cdecl
 #elif defined(OS_LINUX)
-#include <functional>
-#include <string>
+#define CONCH_API_EXTERN
+#define CONCH_API_CDECL
 #endif
 
-typedef std::function<void(const std::string &result)> handleResultCallback;
-typedef std::function<std::string(const std::string &eventName, const std::string &data)> handleSyncMessageCallback;
-typedef std::function<void(const std::string &eventName, const std::string &data, handleResultCallback resultCallback)>
-    handleAsyncMessageCallback;
+#ifdef __cplusplus
+#define EXTERN_C_START                                                                                                 \
+    extern "C"                                                                                                         \
+    {
+#define EXTERN_C_END }
+#else
+#define EXTERN_C_START
+#define EXTERN_C_END
+#endif
+
+typedef void(CONCH_API_CDECL *handleSyncMessageCallback)(const char *eventName, const char *data);
+typedef void(CONCH_API_CDECL *handleAsyncMessageCallback)(const char *eventName, const char *data);
 
 #if defined(OS_WINDOWS)
-extern "C" CONCH_API int conchMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nShowCmd);
-extern "C" CONCH_API void conchSetHandleMessageCallback(handleSyncMessageCallback handleSyncMessageCb,
-                                                        handleAsyncMessageCallback handleAsyncMessageCb);
+EXTERN_C_START
+CONCH_API_EXTERN int CONCH_API_CDECL conchMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine,
+                                               int nShowCmd);
+CONCH_API_EXTERN void CONCH_API_CDECL conchSetHandleMessageCallback(handleSyncMessageCallback handleSyncMessageCb,
+                                                                    handleAsyncMessageCallback handleAsyncMessageCb);
+CONCH_API_EXTERN void CONCH_API_CDECL conchSendHandleMessageResult(const char *eventName, const char *result);
+EXTERN_C_END
 #elif defined(OS_LINUX)
-#include <functional>
-#include <string>
 extern int conchMain(int argc, char *argv[]);
 extern void conchSetHandleMessageCallback(handleSyncMessageCallback handleSyncMessageCb,
                                           handleAsyncMessageCallback handleAsyncMessageCb);
+extern void conchSendHandleMessageResult(const char *eventName, const char *result);
 #endif

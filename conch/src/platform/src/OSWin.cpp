@@ -1,17 +1,22 @@
 #include "OSWin.h"
+#ifdef BUILDING_CONCH_FROME_SOURCE
 #include "Exports.h"
+#else
+#include "ExportsShared.h"
+#endif
 #include <JCConch.h>
 #include <Windows.h>
 #include <future>
 #include <utils/Log.h>
 #if defined(OS_WINDOWS)
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h>
 #include <psapi.h>
+#include <windows.h>
 #endif
 
 extern handleSyncMessageCallback g_handleSyncMessageCb;
 extern handleAsyncMessageCallback g_handleAsyncMessageCb;
+extern void conchRegisterHandleMessageHandler(const char *eventName, std::function<void(const char *)> cb);
 namespace laya
 {
 
@@ -89,7 +94,7 @@ JsValue OSWin::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eve
 
     napi_create_promise(context, &deferred, &promise);
 
-    std::function<void(std::string)> cb = [deferred, cbref](std::string message) {
+    conchRegisterHandleMessageHandler(eventName.c_str(), [deferred, cbref](const char *message) {
         postToJS([deferred, message, cbref]() {
             if (!cbref.lock())
                 return;
@@ -98,11 +103,11 @@ JsValue OSWin::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eve
             napi_value v = JsValueFromV8LocalValue(Converter<const char *>::ToJs(message));
             napi_resolve_deferred(context, deferred, v);
         });
-    };
+    });
     if (g_handleAsyncMessageCb)
     {
         // handleAsyncMessage is called in platform os ui thread
-        postToPlatform([eventName, data, cb]() { g_handleAsyncMessageCb(eventName, data, cb); });
+        postToPlatform([eventName, data]() { g_handleAsyncMessageCb(eventName.c_str(), data.c_str()); });
     }
     return V8LocalValueFromJsValue(promise);
 }
@@ -113,12 +118,12 @@ std::string OSWin::postSyncMessage(const std::string &eventName, const std::stri
     std::promise<std::string> promise;
     if (g_handleSyncMessageCb)
     {
-        postToPlatform([eventName, data, &promise]() {
-            std::string eventResult = g_handleSyncMessageCb(eventName, data);
-            promise.set_value(eventResult);
-        });
+        conchRegisterHandleMessageHandler(eventName.c_str(),
+                                          [&promise](const char *message) { promise.set_value(message); });
+        postToPlatform([eventName, data]() { g_handleSyncMessageCb(eventName.c_str(), data.c_str()); });
     }
     eventResult = promise.get_future().get();
+
     return eventResult;
 }
 } // namespace laya

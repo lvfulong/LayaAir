@@ -24,6 +24,31 @@ void conchSetHandleMessageCallback(handleSyncMessageCallback handleSyncMessageCb
     g_handleSyncMessageCb = handleSyncMessageCb;
     g_handleAsyncMessageCb = handleAsyncMessageCb;
 }
+std::unordered_map<std::string, std::function<void(const char *)>> g_sendHandleMessageResultMap;
+static std::mutex s_sendHandleMessageResultMapLock;
+void conchSendHandleMessageResult(const char *eventName, const char *result)
+{
+    std::unique_lock<std::mutex> lock(s_sendHandleMessageResultMapLock);
+    auto it = g_sendHandleMessageResultMap.find(eventName);
+    if (it != g_sendHandleMessageResultMap.end())
+    {
+        it->second(result);
+        g_sendHandleMessageResultMap.erase(it);
+    }
+    else
+    {
+        LOGE("conchSendHandleMessageResult find no event %s handler", eventName);
+    }
+}
+void conchRegisterHandleMessageHandler(const char *eventName, std::function<void(const char *)> cb)
+{
+    std::unique_lock<std::mutex> lock(s_sendHandleMessageResultMapLock);
+    auto it = g_sendHandleMessageResultMap.insert(std::make_pair(eventName, cb));
+    if (!it.second)
+    {
+        LOGE("event with name %s already existed", eventName);
+    }
+}
 int mainImpl()
 {
     std::string exePath = laya::getExePath();

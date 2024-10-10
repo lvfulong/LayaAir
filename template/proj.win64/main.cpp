@@ -8,9 +8,9 @@
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nShowCmd)
 {
     conchSetHandleMessageCallback(
-        [](const std::string &eventName, const std::string &data) -> std::string { return "sync result"; },
-        [](const std::string &eventName, const std::string &data, handleResultCallback resultCallback) -> void {
-            resultCallback("async result");
+        [](const char *eventName, const char *data) -> void { conchSendHandleMessageResult(eventName, "sync result"); },
+        [](const char *eventName, const char *data) -> void {
+            conchSendHandleMessageResult(eventName, "async result");
         });
     return conchMain(hInstance, hPrevInstance, lpCmdLine, nShowCmd);
 }
