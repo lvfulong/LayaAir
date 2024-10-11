@@ -38,7 +38,11 @@ if(CONCH_USE_OLD_CURL_DOWNLOAD)
 	src/downloadMgr/JCCurlWrap.cpp)
 endif()
 
-
+if(CONCH_USE_JPEG_XL)
+	list(APPEND CONCH_SRC
+	src/imageLib/JPEGXLImageDecoder.cpp
+	src/imageLib/JPEGXLImageDecoder.cpp)
+endif()
 list(APPEND CONCH_SRC
 
 	# 分开数据库类core/Math 和相关方法类core/Util
@@ -609,6 +613,11 @@ if(CONCH_USE_CURL_DOWNLOAD)
 		network
 	)
 endif()
+if(CONCH_USE_JPEG_XL)
+	set(LINK_LIBS
+		jxl
+	)
+endif()
 if(OS_ANDROID)
 	# if(ANDROID_ABI STREQUAL "x86")
 	# set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-warn-shared-textrel")
@@ -773,7 +782,6 @@ elseif(OS_WINDOWS)
 		SDL2main
 		video
 		curl
-		#jxl
 	)
 elseif(OS_OHOS)
 	target_link_libraries(${PROJECT_NAME} PUBLIC
