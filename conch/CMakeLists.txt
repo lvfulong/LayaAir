@@ -40,7 +40,7 @@ endif()
 
 if(CONCH_USE_JPEG_XL)
 	list(APPEND CONCH_SRC
-	src/imageLib/JPEGXLImageDecoder.cpp
+	src/imageLib/JPEGXLImageDecoder.h
 	src/imageLib/JPEGXLImageDecoder.cpp)
 endif()
 list(APPEND CONCH_SRC

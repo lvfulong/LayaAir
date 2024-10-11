@@ -17,3 +17,4 @@ typedef void (*handleAsyncMessageCallback)(const char *eventName, const char *da
 extern void conchSetHandleMessageCallback(handleSyncMessageCallback handleSyncMessageCb,
                                           handleAsyncMessageCallback handleAsyncMessageCb);
 extern void conchSendHandleMessageResult(const char *eventName, const char *result);
+extern void conchRunJS(const char *sourceCode);

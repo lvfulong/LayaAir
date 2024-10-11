@@ -30,10 +30,12 @@ CONCH_API_EXTERN int CONCH_API_CDECL conchMain(HINSTANCE hInstance, HINSTANCE hP
 CONCH_API_EXTERN void CONCH_API_CDECL conchSetHandleMessageCallback(handleSyncMessageCallback handleSyncMessageCb,
                                                                     handleAsyncMessageCallback handleAsyncMessageCb);
 CONCH_API_EXTERN void CONCH_API_CDECL conchSendHandleMessageResult(const char *eventName, const char *result);
+CONCH_API_EXTERN void CONCH_API_CDECL conchRunJS(const char *sourceCode);
 EXTERN_C_END
 #elif defined(OS_LINUX)
 extern int conchMain(int argc, char *argv[]);
 extern void conchSetHandleMessageCallback(handleSyncMessageCallback handleSyncMessageCb,
                                           handleAsyncMessageCallback handleAsyncMessageCb);
 extern void conchSendHandleMessageResult(const char *eventName, const char *result);
+extern void conchRunJS(const char *sourceCode);
 #endif

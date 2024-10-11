@@ -10,6 +10,7 @@
 #include <string>
 #include <utils/JCCommonMethod.h>
 #include <utils/JCFileSystem.h>
+#include "JCScriptRuntime.h"
 
 extern std::string gRedistPath;
 extern std::string gAssetRootPath;
@@ -23,6 +24,13 @@ void conchSetHandleMessageCallback(handleSyncMessageCallback handleSyncMessageCb
 {
     g_handleSyncMessageCb = handleSyncMessageCb;
     g_handleAsyncMessageCb = handleAsyncMessageCb;
+}
+void conchRunJS(const char *sourceCode)
+{
+    if (laya::JCConch::s_pScriptRuntime)
+    {
+        laya::JCConch::s_pScriptRuntime->callJSString(sourceCode);
+    }
 }
 std::unordered_map<std::string, std::function<void(const char *)>> g_sendHandleMessageResultMap;
 static std::mutex s_sendHandleMessageResultMapLock;
