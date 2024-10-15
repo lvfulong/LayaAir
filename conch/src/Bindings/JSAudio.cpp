@@ -112,6 +112,7 @@ namespace laya
     //------------------------------------------------------------------------------
     void JSAudio::setSrc( const char* p_sSrc )
     {
+		m_sLocalFileName = "";
 	    //如果和原来播放的一样，直接播放就行了
         std::string sSrc = p_sSrc;
 	    if( m_sSrc == sSrc )
@@ -295,9 +296,10 @@ namespace laya
 						const char* local = tmpBuf;
 						m_sLocalFileName = JCFileResManager::getAppCachePath() + "/" + local + audiofile;
 						writeFileSync(m_sLocalFileName.c_str(), p_buf);
+						ms_vSaveMp3File[m_sSrc] = m_sLocalFileName;
 					}
 					
-                    ms_vSaveMp3File[m_sSrc] = m_sLocalFileName;
+                   
                 }
 	    }
 
