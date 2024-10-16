@@ -18,23 +18,23 @@ namespace laya
 {
 
 
-	//�����Ƕ���ʵ�����������á���Ϊʵ�ʶ����������ʱ����
+	//参数是对象实例而不是引用。因为实际对象可能是临时对象
 	typedef std::function<void(BitmapData bmp)> imgDecodeCB;
 
-    /** @brief �ں����ڲ���� p_pData ����ռ䡣ע����һά���飬���Ƕ�ά�� ����ֻ�������ͼƬ��û�л�������ȹ��ܡ�
-     *         ���ص��Ǻ����ڲ������ָ�롣��Ҫ�ⲿ�ͷ�
-     *  @param[in] �ڴ�����
-     *  @param[in] ����
-     *  @param[in] ��õ���bitmap
-     *  @return �Ƿ����ɹ�
+    /** @brief 在函数内部会给 p_pData 分配空间。注意是一维数组，不是二维的 这里只负责解码图片，没有缓存管理等功能。
+     *         返回的是函数内部分配的指针。需要外部释放
+     *  @param[in] 内存数据
+     *  @param[in] 长度
+     *  @param[in] 获得到的bitmap
+     *  @return 是否解码成功
     */
 	bool loadImageMemSync( const char* p_pMem, int p_nLenth, BitmapData& p_bmp );
 
     /** @brief
-         ֱ�Ӽ���һ��ͼƬ�ļ���
-     *  @param[in] p_pszFile �����ļ���·��������·����
+         直接加载一个图片文件。
+     *  @param[in] p_pszFile 本地文件的路径，绝对路径。
      *  @return 
-            ����һ��Bitmap����ע����Ҫ�Լ��ֶ�ɾ�����е�ָ�롣
+            返回一个Bitmap对象，注意需要自己手动删除其中的指针。
     */
     BitmapData loadLocalImageSync( const char* p_pszFile );
 
@@ -43,48 +43,48 @@ namespace laya
 
 	ImageType getImgType( const char* p_pMem, int p_nLength );
 
-    /** @brief ���ͼƬ�Ļ�����Ϣ��Ҫ����٣�������ؽ���Ͳ�Ҫ���� ͬ������
-     *  @param[in] �ڴ�����
-     *  @param[in] �ڴ泤��
-     *  @param[in] ͼƬ������Ϣ
-     *  @return �Ƿ����ɹ�
+    /** @brief 获得图片的基本信息。要求快速，如果不必解码就不要解码 同步函数
+     *  @param[in] 内存数据
+     *  @param[in] 内存长度
+     *  @param[in] 图片基本信息
+     *  @return 是否解码成功
     */
 	bool getImageBaseInfo( const char* p_pMem, int p_nLength, ImageBaseInfo& p_Info );
 
-	/** @brief ����png
-	 *  @param[in] ͼƬ����
+	/** @brief 保存png
+	 *  @param[in] 图片数据
 	 *  @param[in] w
 	 *  @param[in] h
-	 *  @param[in] �ļ�����
-	 *  @return �Ƿ񱣴�ɹ�
+	 *  @param[in] 文件名字
+	 *  @return 是否保存成功
 	*/
 	bool saveAsPng(const char* p_pData, int w, int h, const char* p_pszFile );
 
-    /** @brief ����jpg
-    *  @param[in] ͼƬ����
-    *  @param[in] ͼƬ��Ϣ
-    *  @param[in] �ļ�����
-    *  @return �Ƿ񱣴�ɹ�
+    /** @brief 保存jpg
+    *  @param[in] 图片数据
+    *  @param[in] 图片信息
+    *  @param[in] 文件名字
+    *  @return 是否保存成功
     */
 	bool saveAsJpeg(const char* p_pData, ImageBaseInfo& p_Info, const char* p_pszFile );
 
-    /** @brief ����bmp
-    *  @param[in] ͼƬ����
-    *  @param[in] ͼƬ��Ϣ
-    *  @return �Ƿ񱣴�ɹ�
+    /** @brief 保存bmp
+    *  @param[in] 图片数据
+    *  @param[in] 图片信息
+    *  @return 是否保存成功
     */
 	bool saveAsBmp(const char* p_pData, ImageBaseInfo& p_Info);
 
-    /** @brief windw��ÿ����������һ����windh���ơ�
+    /** @brief windw是每隔几个采样一个。windh类推。
      *  @param[in] 
      *  @param[in]
      *  @param[in]
      *  @param[out] 
-     *  @return  ���ص�dst���ں����ڲ������
+     *  @return  返回的dst是在函数内部分配的
     */
 	bool downsampleBmp( BitmapData& src, BitmapData& dst, int windw, int windh, bool rbBorder );
 	
-    /** @brief pFrcation ��4��int��ʾ�Ŀ������š�[�����ӣ�����ĸ���߷��ӣ��߷�ĸ]
+    /** @brief pFrcation 是4个int表示的宽高缩放。[宽分子，宽分母，高分子，高分母]
      *  @param[in] 
      *  @param[in]
      *  @param[in]
@@ -96,14 +96,14 @@ namespace laya
 	void createGridBmp( BitmapData& out, int w, int h, int gridw);
 
     /** @brief
-     *      ��һ���Ҷ�ͼת����ĳ����ɫ��������dst�С�
-     *  @param[in] dst Ŀ��BitmapData��
-     *  @param[in] nSx Ŀ��bmp�����x
-     *  @param[in] nSy Ŀ��bmp�����y
-     *  @param[in] pSrc  ԴͼƬ����һ���Ҷ�ͼ���Ҷ�ֵ��ʾ��ɫ����ǳ��
-     *  @param[in] nSrcW  ԴͼƬ�Ŀ�
-     *  @param[in] nSrcH  ԴͼƬ�ĸ�
-     *  @param[in] nSrcColor  ��ɫ��
+     *      把一个灰度图转换成某种颜色，拷贝到dst中。
+     *  @param[in] dst 目标BitmapData。
+     *  @param[in] nSx 目标bmp的起点x
+     *  @param[in] nSy 目标bmp的起点y
+     *  @param[in] pSrc  源图片。是一个灰度图。灰度值表示颜色的深浅。
+     *  @param[in] nSrcW  源图片的宽
+     *  @param[in] nSrcH  源图片的高
+     *  @param[in] nSrcColor  颜色。
      *  @return void
     */
     void copy8BitBmp( BitmapData& dst, int nSx, int nSy, unsigned char* pSrc, int nSrcW, int nSrcH, int nSrcColor );

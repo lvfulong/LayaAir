@@ -15,6 +15,7 @@ namespace laya
         ImgType_ETC1,
         ImgType_ETC2,
         ImgType_PVR,
+		ImgType_JXL,
 	};
 
 	struct ImageBaseInfo

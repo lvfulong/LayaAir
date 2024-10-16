@@ -10,7 +10,7 @@ namespace laya
 {
 	void test()
 	{
-		auto enc = JxlEncoderMake(/*memory_manager=*/nullptr);
+		//auto enc = JxlEncoderMake(/*memory_manager=*/nullptr);
 	}
 }
 
