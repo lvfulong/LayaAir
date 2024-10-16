@@ -13,12 +13,12 @@
 #include <v8.h>
 #include <vector>
 
-namespace jsvm
+namespace binder
 {
 
 namespace internal
 {
-template <typename T> T convert_value_object_from_v8(Env env, Value value);
+template <typename T> T convert_value_object_from_v8(jsvm::Env env, jsvm::Value value);
 
 template <typename T> Value convert_value_object_to_v8(Env env, const T &t);
 template <typename T> Value convert_value_object_to_v8(Env env, T *t);
@@ -111,7 +111,7 @@ template <typename T> class Converter<T, std::enable_if_t<internal::is_wrapped_c
 template <typename T> class Converter<T *, std::enable_if_t<internal::is_wrapped_class<T>::value>>
 {
   public:
-    static v8::Local<v8::Value> ToJs(T *value, bool callDestructor = true)
+    static jsvm::Value ToJs(jsvm::Env env, T *value, bool callDestructor = true)
     {
         if (value == nullptr)
         {
@@ -120,7 +120,7 @@ template <typename T> class Converter<T *, std::enable_if_t<internal::is_wrapped
         return wrapCppObject<T>(value, callDestructor);
     }
 
-    static T *ToCpp(v8::Local<v8::Value> value)
+    static T *ToCpp(jsvm::Env env, jsvm::Value value)
     {
         if (!value.IsEmpty() && value->IsObject())
         {

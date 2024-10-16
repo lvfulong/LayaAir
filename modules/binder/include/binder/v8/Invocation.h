@@ -13,9 +13,16 @@ namespace internal
 {
 
 template <typename T, typename Tuple, size_t... Seq>
-T *tuple_call_class_constructor(const v8::FunctionCallbackInfo<v8::Value> &args, std::index_sequence<Seq...>)
+T *tuple_call_class_constructor(jsvm::Env env, jsvm::CallbackInfo info, std::index_sequence<Seq...>)
 {
-    return new T(::laya::Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...);
+
+    size_t argc = 0;
+    jsvm::Value argv[128];
+    jsvm::Value _this;
+    void* data;
+    NODE_API_CALL(env, GetCbInfo(env, info, &argc, argv, &_this, &data));
+
+    return new T(::laya::Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(env, argv[Seq])...);
 }
 
 template <typename Tuple, typename Func, size_t... Seq>
@@ -69,7 +76,7 @@ template <typename ReturnType, typename... Args> void InvokeFunction(jsvm::Env e
     jsvm::Value argv[128];
     jsvm::Value _this;
     void* data;
-    NODE_API_CALL(env, GetCbInfo(env, info, &argc, argv, &_this, &data));
+    NODE_API_CALL(env, jsvm::GetCbInfo(env, info, &argc, argv, &_this, &data));
     //NODE_API_ASSERT(env, argc >= 1, "Not enough arguments, expected 1.");
     typedef ReturnType (*FunctorType)(Args...);
     FuncInfo<FunctorType> *funcInfo = (FuncInfo<FunctorType> *)data;
@@ -147,9 +154,9 @@ void InvokeGlobalMethodOptionalOverride(jsvm::Env env, jsvm::CallbackInfo info)
     tuple_call<std::tuple<Args...>>(funcInfo->func, args, std::make_index_sequence<sizeof...(Args)>());
 }
 template <typename ClassType, typename... Args>
-ClassType *InvokeClassConstructor(const v8::FunctionCallbackInfo<v8::Value> &args)
+ClassType *InvokeClassConstructor(jsvm::Env env, jsvm::CallbackInfo info)
 {
-    return tuple_call_class_constructor<ClassType, std::tuple<Args...>>(args,
+    return tuple_call_class_constructor<ClassType, std::tuple<Args...>>(env, info,
                                                                         std::make_index_sequence<sizeof...(Args)>());
 }
 

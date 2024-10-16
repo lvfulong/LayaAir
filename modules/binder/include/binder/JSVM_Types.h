@@ -85,17 +85,20 @@ using Env = JSVM_Env;
 using Deferred = JSVM_Deferred;
 using Value = JSVM_Value;
 using PropertyDescriptor = JSVM_PropertyDescriptor;
-using CallbackInfo=  JSVM_CallbackInfo;
+using CallbackInfo = JSVM_CallbackInfo;
+using Finalize = JSVM_Finalize;
+using Ref = JSVM_Ref;
 #else
 using Env = napi_env;
 using Deferred = napi_deferred;
 using Value = napi_value;
 using PropertyDescriptor = napi_property_descriptor;
 using CallbackInfo = napi_callback_info;
-//typedef Value(/*NAPI_CDECL*/ *Callback)(Env env, CallbackInfo info);
-
+using Finalize = node_api_basic_finalize;
+using Ref = napi_ref;
+// typedef Value(/*NAPI_CDECL*/ *Callback)(Env env, CallbackInfo info);
 
 #endif
-} // namespace JSVM
+} // namespace jsvm
 
 #endif

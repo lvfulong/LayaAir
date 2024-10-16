@@ -220,8 +220,55 @@ inline /*JSVM_EXTERN*/ Status CreateSet(Env env, Value *result)
 {
     // todo
 }
-inline /*JSVM_EXTERN*/ Status GetCbInfo(Env env, CallbackInfo cbinfo, size_t *argc, Value *argv, Value *thisArg, void **data)
+inline /*JSVM_EXTERN*/ Status GetCbInfo(Env env, CallbackInfo cbinfo, size_t *argc, Value *argv, Value *thisArg,
+                                        void **data)
 {
     return ConvertToStatus(napi_get_cb_info(env, cbinfo, argc, argv, thisArg, data));
+}
+inline /*JSVM_EXTERN*/ Status SetNamedProperty(Env env, Value object, const char *utf8name, Value value)
+{
+    return ConvertToStatus(napi_set_named_property(env, object, utf8name, value));
+}
+inline /*JSVM_EXTERN*/ Status GetNewTarget(Env env, CallbackInfo cbinfo, Value *result)
+{
+    return ConvertToStatus(napi_get_new_target(env, cbinfo, result));
+}
+inline /*JSVM_EXTERN*/ Status Wrap(Env env, Value jsObject, void *nativeObject, Finalize finalizeCb, void *finalizeHint,
+                                   Ref *result)
+{
+    return ConvertToStatus(napi_wrap(env, jsObject, nativeObject, finalizeCb, finalizeHint, result));
+}
+inline /*JSVM_EXTERN*/ Status Unwrap(Env env, Value jsObject, void **result)
+{
+    return ConvertToStatus(napi_unwrap(env, jsObject, result));
+}
+inline /*JSVM_EXTERN*/ Status CreateReference(Env env, Value value, uint32_t initialRefcount, Ref *result)
+{
+    return ConvertToStatus(napi_create_reference(env, value, initialRefcount, result));
+}
+inline /*JSVM_EXTERN*/ Status DeleteReference(Env env, Ref ref)
+{
+    return ConvertToStatus(napi_delete_reference(env, ref));
+}
+inline /*JSVM_EXTERN*/ Status ReferenceRef(Env env, Ref ref, uint32_t *result)
+{
+    return ConvertToStatus(napi_reference_ref(env, ref, result));
+}
+inline /*JSVM_EXTERN*/ Status ReferenceUnref(Env env, Ref ref, uint32_t *result)
+{
+    return ConvertToStatus(napi_reference_unref(env, ref, result));
+}
+inline /*JSVM_EXTERN*/ Status GetReferenceValue(Env env, Ref ref, Value *result)
+{
+    return ConvertToStatus(napi_get_reference_value(env, ref, Value * result));
+}
+inline /*JSVM_EXTERN*/ Status NewInstance(Env env, Value constructor, size_t argc, const Value *argv, Value *result)
+{
+    return ConvertToStatus(napi_new_instance(env, constructor, argc, argv, result));
+}
+inline /*JSVM_EXTERN*/ Status DefineClass(Env env, const char *utf8name, size_t length, Callback constructor,
+                                          size_t propertyCount, const PropertyDescriptor *properties, Value *result)
+{
+    return ConvertToStatus(napi_define_class(env, utf8name, length, constructor, propertyCount, properties, result));
 }
 } // namespace jsvm

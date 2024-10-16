@@ -41,7 +41,20 @@ namespace jsvm
 /*JSVM_EXTERN*/ Status CreateStringUtf8(Env env, const char *value, size_t length, Value *result);
 /*JSVM_EXTERN*/ Status GetValueStringUtf8(Env env, Value value, char *buf, size_t bufsize, size_t *result);
 /*JSVM_EXTERN*/ Status AdjustExternalMemory(Env env, int64_t changeInBytes, int64_t *result);
-/*JSVM_EXTERN*/ Status GetCbInfo (Env env, CallbackInfo cbinfo, size_t *argc,  Value *argv,  Value *thisArg, void **data);
+/*JSVM_EXTERN*/ Status GetCbInfo(Env env, CallbackInfo cbinfo, size_t *argc, Value *argv, Value *thisArg, void **data);
+/*JSVM_EXTERN*/ Status SetNamedProperty(Env env, Value object, const char *utf8name, Value value);
+/*JSVM_EXTERN*/ Status GetNewTarget(Env env, CallbackInfo cbinfo, Value *result);
+/*JSVM_EXTERN*/ Status Wrap(Env env, Value jsObject, void *nativeObject, Finalize finalizeCb, void *finalizeHint,
+                            Ref *result);
+/*JSVM_EXTERN*/ Status Unwrap(Env env, Value jsObject, void **result);
+/*JSVM_EXTERN*/ Status CreateReference(Env env, Value value, uint32_t initialRefcount, Ref *result);
+/*JSVM_EXTERN*/ Status DeleteReference(Env env, Ref ref);
+/*JSVM_EXTERN*/ Status ReferenceRef(Env env, Ref ref, uint32_t *result);
+/*JSVM_EXTERN*/ Status ReferenceUnref(Env env, Ref ref, uint32_t *result);
+/*JSVM_EXTERN*/ Status GetReferenceValue(Env env, Ref ref, Value *result);
+/*JSVM_EXTERN*/ Status NewInstance(Env env, Value constructor, size_t argc, const Value *argv, Value *result);
+/*JSVM_EXTERN*/ Status DefineClass(Env env, const char *utf8name, size_t length, Callback constructor,
+                                   size_t propertyCount, const PropertyDescriptor *properties, Value *result);
 } // namespace jsvm
 
 #endif

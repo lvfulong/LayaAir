@@ -14,7 +14,7 @@ class Module;
 class Context
 {
   public:
-    explicit Context()
+    explicit Context(jsvm::Value exports):exports_(exports)
     {
     }
 
@@ -28,7 +28,7 @@ class Context
     {
     }
 
-    v8::Isolate *isolate() const
+    /*v8::Isolate* isolate() const
     {
         return v8::Isolate::GetCurrent();
     } // TODO
@@ -39,13 +39,13 @@ class Context
     v8::Local<v8::Object> global()
     {
         return context()->Global();
-    }
+    }*/
 
     Context &module(std::string_view name, Module &m);
 
     template <typename T> Context &class_(std::string_view name, laya::class_<T> &cl)
     {
-        v8::HandleScope scope(isolate());
+        /*v8::HandleScope scope(isolate());
         v8::Local<v8::String> name_string =
             v8::String::NewFromUtf8(isolate(), name.data(), v8::NewStringType::kInternalized).ToLocalChecked();
         cl.class_function_template()->SetClassName(name_string);
@@ -53,6 +53,10 @@ class Context
             ->Set(isolate()->GetCurrentContext(), name_string,
                   cl.js_function_template()->GetFunction(isolate()->GetCurrentContext()).ToLocalChecked())
             .FromJust();
+*/
+
+
+        NODE_API_CALL(env, SetNamedProperty(env, exports_, name.data(), cl.ctor_));
         return *this;
     }
 
@@ -63,7 +67,7 @@ class Context
         FuncInfo<decltype(func)>* data = new FuncInfo<decltype(func)>(func);
         internal::addDeinitializer([data]() { delete data; });
         data->name = name;
-        m_propertyDescriptorVector.emplace_back(PropertyDescriptor{ (name), NULL, (internal::InvokeFunction<ReturnType, Args...>), NULL, NULL, NULL, napi_default, data });
+        propertyDescriptorVector_.emplace_back(PropertyDescriptor{ (name), NULL, (internal::InvokeFunction<ReturnType, Args...>), NULL, NULL, NULL, napi_default, data });
         return *this;
     }
     template <typename ReturnType, typename... Args>
@@ -72,7 +76,7 @@ class Context
         FuncInfo<decltype(func)>* data = new FuncInfo<decltype(func)>(func);
         internal::addDeinitializer([data]() { delete data; });
         data->name = name;
-        m_propertyDescriptorVector.emplace_back(PropertyDescriptor{ (name), NULL, (internal::InvokeGlobalMethodOptionalOverride<ReturnType, Args...>), NULL, NULL, NULL, napi_default, data });
+        propertyDescriptorVector_.emplace_back(PropertyDescriptor{ (name), NULL, (internal::InvokeGlobalMethodOptionalOverride<ReturnType, Args...>), NULL, NULL, NULL, napi_default, data });
 
         return *this;
     }
@@ -81,7 +85,8 @@ class Context
         //todos
     }
 private:
-    std::vector<jsvm::PropertyDescriptor> m_propertyDescriptorVector;
+    std::vector<jsvm::PropertyDescriptor>  propertyDescriptorVector_;
+    jsvm::Value exports_;
 };
 Context &getCurrentContext();
 } // namespace jsvm

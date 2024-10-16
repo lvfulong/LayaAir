@@ -12,7 +12,7 @@
 #include <utils/RTTI.h>
 #include <v8.h>
 
-namespace laya
+namespace binder
 {
 namespace internal
 {
@@ -103,7 +103,7 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
 {
   public:
     typedef ClassType *(*ConstructorFunctionType)(const v8::FunctionCallbackInfo<v8::Value> &info);
-    ClassRegistry();
+    ClassRegistry(jsvm::Env env) : env_(env) {}
     virtual ~ClassRegistry()
     {
         auto it = objects_.begin();
@@ -121,18 +121,11 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
         }
         objects_.clear();
 
-        func_.Reset();
-        js_func_.Reset();
-    }
-    v8::Local<v8::FunctionTemplate> class_function_template()
-    {
-        return v8::Local<v8::FunctionTemplate>::New(v8::Isolate::GetCurrent(), func_);
+        //func_.Reset();
+        //js_func_.Reset();
+        jsvm::DeleteReference(env_, classRef_);
     }
 
-    v8::Local<v8::FunctionTemplate> js_function_template()
-    {
-        return v8::Local<v8::FunctionTemplate>::New(v8::Isolate::GetCurrent(), js_func_);
-    }
     void registerConstructor(uint32_t numPara, ConstructorFunctionType func)
     {
         assert(constructorFunctionMap_.find(numPara) == constructorFunctionMap_.end());
@@ -154,7 +147,7 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
         return nullptr;
     }
 
-    v8::Local<v8::Object> wrapCppObject(ClassType *objectPointer, bool callDestructor = true)
+    jsvm::Value wrapCppObject(ClassType *objectPointer, bool callDestructor = true)
     {
         /*auto it = objects_.find((void *)objectPointer);
         if (it != objects_.end())
@@ -162,7 +155,7 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
             assert(false && "duplicate object");
         }*/
 
-        v8::EscapableHandleScope scope(isolate_);
+        /*v8::EscapableHandleScope scope(isolate_);
 
         v8::Local<v8::Context> context = isolate_->GetCurrentContext();
         v8::Local<v8::Function> func;
@@ -178,8 +171,20 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
             this->objects_.emplace(objectPointer, ObjectRegistry{std::move(pobj), callDestructor});
             return scope.Escape(obj);
         }
+        */
+        size_t argc = 0;
+        jsvm::Value args[1];
 
-        return scope.Escape(obj);
+        jsvm::Value cons;
+        jsvm::GetReferenceValue(env, classRef_, &cons);
+        jsvm::Value instance;
+        jsvm::NewInstance(env, cons, argc, args, &instance);
+
+        jsvm::Wrap(env, jsThis, reinterpret_cast<void *>(objectPointer), MyObject::Destructor,
+                  nullptr, // finalize_hint
+                  &obj->wrapper_);
+
+        return instance;
     }
     void addBase(ClassRegistryBase *info)
     {
@@ -200,6 +205,8 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
     v8::Isolate *isolate_;
     v8::Global<v8::FunctionTemplate> func_;
     v8::Global<v8::FunctionTemplate> js_func_;
+    
+    jsvm::Ref classRef_ = nullptr;
 };
 
 class ClassRegistryManager
@@ -281,27 +288,18 @@ template <typename ClassType> Local toLocal(ClassType *objectPointer)
 template <typename ClassType> class class_
 {
   public:
-    class_()
-        : classRegistry_(ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>())),
-          isolate_(v8::Isolate::GetCurrent()) {};
+    class_() : classRegistry_(ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>())) {};
     class_(class_ const &) = delete;
     class_ &operator=(class_ const &) = delete;
 
     class_(class_ &&) = default;
     class_ &operator=(class_ &&) = delete;
     ClassRegistry<ClassType> &classRegistry_;
-    v8::Isolate *isolate_;
+    // v8::Isolate *isolate_;
+
+    jsvm::Value ctor_;
 
   public:
-    v8::Local<v8::FunctionTemplate> class_function_template()
-    {
-        return classRegistry_.class_function_template();
-    }
-
-    v8::Local<v8::FunctionTemplate> js_function_template()
-    {
-        return classRegistry_.js_function_template();
-    }
     template <typename... Args> class_ &constructor()
     {
         classRegistry_.registerConstructor(sizeof...(Args), internal::InvokeClassConstructor<ClassType, Args...>);
@@ -447,6 +445,18 @@ template <typename ClassType> class class_
         classRegistry_.js_function_template()->Inherit(baseClassRegistry.class_function_template());
         return *this;
     }
+    static napi_value MyObject(napi_env env, napi_callback_info info)
+    {
+        napi_value js_this;
+        napi_ref *ref = malloc(sizeof(*ref));
+        NODE_API_CALL(env, napi_get_cb_info(env, info, NULL, NULL, &js_this, NULL));
+        NODE_API_CALL(env, napi_wrap(env, js_this, ref, MyObject_fini, NULL, ref));
+        return NULL;
+    }
+    void exports()
+    {
+        // todo
+    }
 };
 template <typename ClassType> void ClassRegistry<ClassType>::removeObject(ClassType *objectPointer, bool callDestructor)
 {
@@ -470,7 +480,7 @@ template <typename ClassType> void ClassRegistry<ClassType>::removeObject(ClassT
     }
 }
 
-template <typename ClassType> static void WeakCallback(const v8::WeakCallbackInfo<ClassRegistry<ClassType>> &data)
+/*template <typename ClassType> static void WeakCallback(const v8::WeakCallbackInfo<ClassRegistry<ClassType>>& data)
 {
     ClassType *object = static_cast<ClassType *>(data.GetInternalField(0));
     ClassRegistry<ClassType> *this_ = static_cast<ClassRegistry<ClassType> *>(data.GetInternalField(1));
@@ -478,12 +488,69 @@ template <typename ClassType> static void WeakCallback(const v8::WeakCallbackInf
     assert(object != nullptr);
     assert(this_ != nullptr);
     this_->removeObject(object, objectRegistry->callDestructor);
+}*/
+template <typename ClassType>
+static void WeakCallback(napi_env env, void *nativeObject, [[maybe_unused]] void *finalize_hint)
+{
+    // OH_LOG_INFO(LOG_APP, "MyObject::Destructor called");
+    reinterpret_cast<MyObject *>(nativeObject)->~MyObject();
+}
+template <typename ClassType> static void New(jsvm::Env env, jsvm::CallbackInfo info)
+{
+
+    jsvm::Value newTarget;
+    jsvm::GetNewTarget(env, info, &newTarget);
+    // if (newTarget != nullptr)
+    {
+        // new MyObject(...) 
+        size_t argc = 1;
+        jsvm::Value args[1];
+        jsvm::Value jsThis;
+        jsvm::GetCbInfo(env, info, &argc, args, &jsThis, nullptr);
+
+        /*double value = 0.0;
+        napi_valuetype valuetype;
+        napi_typeof(env, args[0], &valuetype);
+        if (valuetype != napi_undefined) {
+            napi_get_value_double(env, args[0], &value);
+        }*/
+
+        ClassType *object = this_->ConstructObject(args.Length(), args);
+
+        // v8::Global<v8::Object> pobj(isolate, obj);
+        // pobj.SetWeak(this_, WeakCallback<ClassType>, v8::WeakCallbackType::kInternalFields);
+        this_->objects_.emplace(object, ObjectRegistry{std::move(pobj)});
+
+        MyObject *obj = new MyObject(value);
+
+        obj->env_ = env;
+        // ͨ��napi_wrap��ArkTS����jsThis��C++����obj��
+        svm::Wrap(env, jsThis, reinterpret_cast<void *>(obj), MyObject::Destructor,
+                  nullptr, // finalize_hint
+                  &obj->wrapper_);
+
+        return jsThis;
+    }
+#if 0
+    else 
+    {
+        // ʹ��`MyObject(...)`���÷�ʽ
+        size_t argc = 1;
+        napi_value args[1];
+        napi_get_cb_info(env, info, &argc, args, nullptr, nullptr);
+
+        napi_value cons;
+        napi_get_reference_value(env, g_ref, &cons);
+        napi_value instance;
+        napi_new_instance(env, cons, argc, args, &instance);
+
+        return instance;
+
+    }
+#endif
 }
 
-template <typename ClassType> ClassRegistry<ClassType>::ClassRegistry() : isolate_(v8::Isolate::GetCurrent())
-
-{
-    v8::HandleScope scope(isolate_);
+ /*   v8::HandleScope scope(isolate_);
 
     v8::Local<v8::FunctionTemplate> func = v8::FunctionTemplate::New(isolate_);
     v8::Local<v8::FunctionTemplate> js_func = v8::FunctionTemplate::New(
@@ -516,7 +583,7 @@ template <typename ClassType> ClassRegistry<ClassType>::ClassRegistry() : isolat
     js_func_.Reset(isolate_, js_func);
     func->InstanceTemplate()->SetInternalFieldCount(2);
     func->Inherit(js_func);
-}
+}*/
 template <typename ClassType> v8::Local<v8::Object> wrapCppObject(ClassType *objectPointer, bool callDestructor)
 {
     return ClassRegistryManager::wrapCppObject<ClassType>(objectPointer, callDestructor);
@@ -526,5 +593,5 @@ template <typename ClassType> bool isWrappedClassOf()
     return ClassRegistryManager::isWrappedClassOf<ClassType>();
 }
 
-} // namespace laya
+} // namespace binder
 #endif
