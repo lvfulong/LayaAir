@@ -6,7 +6,14 @@
 #include "binder/napi/js_native_api.h"
 #include "binder/napi/js_native_api_v8.h"
 //#include "util-inl.h"
-
+#ifdef OS_WINDOWS
+#ifdef min
+#undef min
+#endif
+#ifdef max
+#undef max
+#endif
+#endif
 #define CHECK_MAYBE_NOTHING(env, maybe, status)                                \
   RETURN_STATUS_IF_FALSE((env), !((maybe).IsNothing()), (status))
 

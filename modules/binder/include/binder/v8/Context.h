@@ -27,23 +27,9 @@ class Context
     ~Context()
     {
     }
-
-    /*v8::Isolate* isolate() const
-    {
-        return v8::Isolate::GetCurrent();
-    } // TODO
-    v8::Local<v8::Context> context() const
-    {
-        return isolate()->GetCurrentContext();
-    };
-    v8::Local<v8::Object> global()
-    {
-        return context()->Global();
-    }*/
-
     Context &module(std::string_view name, Module &m);
 
-    template <typename T> Context &class_(std::string_view name, laya::class_<T> &cl)
+    template <typename T> Context &class_(std::string_view name, class_<T> &cl)
     {
         /*v8::HandleScope scope(isolate());
         v8::Local<v8::String> name_string =
@@ -80,14 +66,14 @@ class Context
 
         return *this;
     }
-    void export()
+    /*void export()
     {
         //todos
-    }
+    }*/
 private:
     std::vector<jsvm::PropertyDescriptor>  propertyDescriptorVector_;
     jsvm::Value exports_;
 };
-Context &getCurrentContext();
+//Context &getCurrentContext();
 } // namespace jsvm
 #endif

@@ -193,7 +193,7 @@ inline /*JSVM_EXTERN*/ Status SetElement(Env env, Value object, uint32_t index, 
 }
 inline /*JSVM_EXTERN*/ Status CreateStringUtf8(Env env, const char *value, size_t length, Value *result)
 {
-    return ConvertToStatus(napi_create_string_utf8(env, value, result));
+    return ConvertToStatus(napi_create_string_utf8(env, value, length, result));
 }
 inline /*JSVM_EXTERN*/ Status GetValueStringUtf8(Env env, Value value, char *buf, size_t bufsize, size_t *result)
 {
@@ -205,20 +205,11 @@ inline /*JSVM_EXTERN*/ Status AdjustExternalMemory(Env env, int64_t changeInByte
 }
 inline /*JSVM_EXTERN*/ Status IsSet(Env env, Value value, bool *isSet)
 {
-    return ConvertToStatus(napi_adjust_external_memory(env, changeInBytes, adjustedValue));
+    return Status::OK;//todo
 }
 inline /*JSVM_EXTERN*/ Status CreateSet(Env env, Value *result)
 {
-    return ConvertToStatus(napi_adjust_external_memory(env, changeInBytes, adjustedValue));
-}
-
-inline /*JSVM_EXTERN*/ Status IsSet(Env env, Value value, bool *isSet)
-{
-    // todo
-}
-inline /*JSVM_EXTERN*/ Status CreateSet(Env env, Value *result)
-{
-    // todo
+    return Status::OK;//todo
 }
 inline /*JSVM_EXTERN*/ Status GetCbInfo(Env env, CallbackInfo cbinfo, size_t *argc, Value *argv, Value *thisArg,
                                         void **data)
@@ -260,7 +251,7 @@ inline /*JSVM_EXTERN*/ Status ReferenceUnref(Env env, Ref ref, uint32_t *result)
 }
 inline /*JSVM_EXTERN*/ Status GetReferenceValue(Env env, Ref ref, Value *result)
 {
-    return ConvertToStatus(napi_get_reference_value(env, ref, Value * result));
+    return ConvertToStatus(napi_get_reference_value(env, ref, result));
 }
 inline /*JSVM_EXTERN*/ Status NewInstance(Env env, Value constructor, size_t argc, const Value *argv, Value *result)
 {
@@ -269,6 +260,6 @@ inline /*JSVM_EXTERN*/ Status NewInstance(Env env, Value constructor, size_t arg
 inline /*JSVM_EXTERN*/ Status DefineClass(Env env, const char *utf8name, size_t length, Callback constructor,
                                           size_t propertyCount, const PropertyDescriptor *properties, Value *result)
 {
-    return ConvertToStatus(napi_define_class(env, utf8name, length, constructor, propertyCount, properties, result));
+    return ConvertToStatus(napi_define_class(env, utf8name, length, constructor, nullptr, propertyCount, properties, result));
 }
 } // namespace jsvm

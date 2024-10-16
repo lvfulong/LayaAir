@@ -20,8 +20,8 @@ namespace internal
 {
 template <typename T> T convert_value_object_from_v8(jsvm::Env env, jsvm::Value value);
 
-template <typename T> Value convert_value_object_to_v8(Env env, const T &t);
-template <typename T> Value convert_value_object_to_v8(Env env, T *t);
+template <typename T> jsvm::Value convert_value_object_to_v8(jsvm::Env env, const T &t);
+template <typename T> jsvm::Value convert_value_object_to_v8(jsvm::Env env, T *t);
 template <class T> struct is_value_object;
 
 template <typename T>
@@ -149,18 +149,18 @@ template <typename T> struct Converter<const T &> : Converter<T>
 template <> class Converter<int32_t>
 {
   public:
-    static int32_t ToCpp(Env env, Value value)
+    static int32_t ToCpp(jsvm::Env env, jsvm::Value value)
     {
         int32_t result{0};
-        GetValueInt32(env, value, &result);
+        jsvm::GetValueInt32(env, value, &result);
         // CHECK todo
 
         return result;
     }
-    static Value ToJs(Env env, int32_t value, bool callDestructor = true)
+    static jsvm::Value ToJs(jsvm::Env env, int32_t value, bool callDestructor = true)
     {
-        Value result;
-        CreateInt32(env, value, &result);
+        jsvm::Value result;
+        jsvm::CreateInt32(env, value, &result);
         // CHECK todo
         return result;
     }
@@ -176,22 +176,22 @@ template <> class Converter<int32_t>
 template <> class Converter<int32_t *>
 {
   public:
-    static int32_t ToCpp(Env env, Value value)
+    static int32_t ToCpp(jsvm::Env env, jsvm::Value value)
     {
         int32_t result{0};
-        GetValueInt32(env, value, &result);
+        jsvm::GetValueInt32(env, value, &result);
         // CHECK todo
 
         return result;
     }
-    static Value ToJs(Env env, int32_t *value, bool callDestructor = true)
+    static jsvm::Value ToJs(jsvm::Env env, int32_t *value, bool callDestructor = true)
     {
         /*if (p_vl == nullptr)
         {
             return v8::Null(v8::Isolate::GetCurrent());
         }*/
-        Value result;
-        CreateInt32(env, *value, &result);
+        jsvm::Value result;
+        jsvm::CreateInt32(env, *value, &result);
         // CHECK todo
         return result;
     }
@@ -268,22 +268,22 @@ template <> class Converter<long>
 template <> class Converter<int64_t>
 {
   public:
-    static int64_t ToCpp(Env env, Value value)
+    static int64_t ToCpp(jsvm::Env env, jsvm::Value value)
     {
         /*if (!value->IsNumber() || value->IsNullOrUndefined())
         {
             return 0;
         }*/
         int64_t result{0};
-        GetValueInt64(env, value, &result);
+        jsvm::GetValueInt64(env, value, &result);
         // CHECK todo
 
         return result;
     }
-    static Value ToJs(Env env, int64_t value, bool callDestructor = true)
+    static jsvm::Value ToJs(jsvm::Env env, int64_t value, bool callDestructor = true)
     {
-        Value result;
-        CreateInt64(env, value, &result);
+        jsvm::Value result;
+        jsvm::CreateInt64(env, value, &result);
         // CHECK todo
         return result;
     }
@@ -302,18 +302,18 @@ template <> class Converter<int64_t>
 template <> class Converter<uint32_t>
 {
   public:
-    static uint32_t ToCpp(Env env, Value value)
+    static uint32_t ToCpp(jsvm::Env env, jsvm::Value value)
     {
         uint32_t result{0};
-        GetValueUint32(env, value, &result);
+        jsvm::GetValueUint32(env, value, &result);
         // CHECK todo
 
         return result;
     }
-    static Value ToJs(Env env, uint32_t value, bool callDestructor = true)
+    static jsvm::Value ToJs(jsvm::Env env, uint32_t value, bool callDestructor = true)
     {
-        Value result;
-        CreateUint32(env, value, &result);
+        jsvm::Value result;
+        jsvm::CreateUint32(env, value, &result);
         // CHECK todo
         return result;
     }
@@ -387,17 +387,17 @@ template <> class Converter<const uint8_t &> : public Converter<uint8_t>
 template <> class Converter<bool>
 {
   public:
-    static bool ToCpp(Env env, Value value)
+    static bool ToCpp(jsvm::Env env, jsvm::Value value)
     {
         bool result{false};
-        GetValueBool(env, value, &result);
+        jsvm::GetValueBool(env, value, &result);
         // CHECK todo
         return result;
     }
-    static Value ToJs(Env env, bool value, bool callDestructor = true)
+    static jsvm::Value ToJs(jsvm::Env env, bool value, bool callDestructor = true)
     {
-        Value result;
-        CreateUint32(env, static_cast<uint32_t>(value), &result); // why no create bool
+        jsvm::Value result;
+        jsvm::CreateUint32(env, static_cast<uint32_t>(value), &result); // why no create bool
         // CHECK todo
         return result;
     }
@@ -410,21 +410,21 @@ template <> class Converter<bool>
 template <> class Converter<bool *>
 {
   public:
-    static bool ToCpp(Env env, Value value)
+    static bool ToCpp(jsvm::Env env, jsvm::Value value)
     {
         bool result{false};
-        GetValueBool(env, value, &result);
+        jsvm::GetValueBool(env, value, &result);
         // CHECK todo
         return result;
     }
-    static Value ToJs(Env env, bool *value, bool callDestructor = true)
+    static jsvm::Value ToJs(jsvm::Env env, bool *value, bool callDestructor = true)
     {
         /*if (p_vl == nullptr)
         {
             return v8::Null(v8::Isolate::GetCurrent());
         }*/
-        Value result;
-        CreateUint32(env, static_cast<uint32_t>(*value), &result); // why no create bool
+        jsvm::Value result;
+        jsvm::CreateUint32(env, static_cast<uint32_t>(*value), &result); // why no create bool
         // CHECK todo
         return result;
     }
@@ -475,17 +475,17 @@ template <> class Converter<float *>
 template <> class Converter<double>
 {
   public:
-    static double ToCpp(Env env, Value value)
+    static double ToCpp(jsvm::Env env, jsvm::Value value)
     {
         double result{0.0};
-        GetValueDouble(env, value, &result);
+        jsvm::GetValueDouble(env, value, &result);
         // CHECK todo
         return result;
     }
-    static Value ToJs(Env env, double value, bool callDestructor = true)
+    static jsvm::Value ToJs(jsvm::Env env, double value, bool callDestructor = true)
     {
-        Value result;
-        CreateDouble(env, value, &result);
+        jsvm::Value result;
+        jsvm::CreateDouble(env, value, &result);
         // CHECK todo
         return result;
     }
@@ -500,14 +500,14 @@ template <> class Converter<double>
     }*/
 };
 
-template <> class Converter<Value>
+template <> class Converter<jsvm::Value>
 {
   public:
-    static Value ToCpp(Env env, Value value)
+    static jsvm::Value ToCpp(jsvm::Env env, jsvm::Value value)
     {
         return value;
     }
-    static Value ToJs(Env env, Value value, bool callDestructor = true)
+    static jsvm::Value ToJs(jsvm::Env env, jsvm::Value value, bool callDestructor = true)
     {
         return value;
     }
@@ -537,23 +537,23 @@ template <> class Converter<Value>
 template <> class Converter<void>
 {
   public:
-    static void ToCpp(Env env, Value value)
+    static void ToCpp(jsvm::Env env, jsvm::Value value)
     {
         return;
     }
-    static Value ToJs(Env env, int value, bool callDestructor = true)
+    static jsvm::Value ToJs(jsvm::Env env, int value, bool callDestructor = true)
     {
         if (0 == value)
         {
-            Value result;
-            GetUndefined(env, &result);
+            jsvm::Value result;
+            jsvm::GetUndefined(env, &result);
             // CHECK todo
             return result;
         }
         else
         {
-            Value result;
-            GetNull(env, &result);
+            jsvm::Value result;
+            jsvm::GetNull(env, &result);
             // CHECK todo
             return result;
         }
@@ -590,13 +590,13 @@ template <> class Converter<const char *>
         v8::String::Utf8Value const str(v8::Isolate::GetCurrent(), value);
         return from_type(reinterpret_cast<char const *>(*str));
     }*/
-    static const char *ToCpp(Env env, Value value) = delete;
-    static Value ToJs(Env env, std::string_view value, bool callDestructor = true)
+    static const char *ToCpp(jsvm::Env env, jsvm::Value value) = delete;
+    static jsvm::Value ToJs(jsvm::Env env, std::string_view value, bool callDestructor = true)
     {
-        Value result;
-        Status status;
+        jsvm::Value result;
+        jsvm::Status status;
 
-        status = CreateStringUtf8(env, value.data(), value.size(), &result);
+        status = jsvm::CreateStringUtf8(env, value.data(), value.size(), &result);
         // CHECK todo
         return result;
     }
@@ -609,26 +609,26 @@ template <> class Converter<const char *>
 template <> class Converter<std::string>
 {
   public:
-    static std::string ToCpp(Env env, Value value)
+    static std::string ToCpp(jsvm::Env env, jsvm::Value value)
     {
         size_t len = 0;
         // Get the length
-        Status status = GetValueStringUtf8(env, value, NULL, 0, &len);
+        jsvm::Status status = jsvm::GetValueStringUtf8(env, value, NULL, 0, &len);
         // assert(status == napi_ok);
         char *buf = new char[len + 1];
 
-        status = GetValueStringUtf8(env, value, buf, len + 1, &len);
+        status = jsvm::GetValueStringUtf8(env, value, buf, len + 1, &len);
         // assert(status == napi_ok);
         std::string utf8str(buf);
         delete[] buf;
         return utf8str;
     }
-    static Value ToJs(Env env, std::string value, bool callDestructor = true)
+    static jsvm::Value ToJs(jsvm::Env env, std::string value, bool callDestructor = true)
     {
-        Value result;
-        Status status;
+        jsvm::Value result;
+        jsvm::Status status;
 
-        status = CreateStringUtf8(env, value.c_str(), value.length(), &result);
+        status = jsvm::CreateStringUtf8(env, value.c_str(), value.length(), &result);
         // CHECK todo
         return result;
     }
@@ -666,37 +666,37 @@ template <> class Converter<v8::Local<v8::Object>>
 template <typename T> class __JsArray
 {
   public:
-    static Value ToJsArray(Env env, const std::vector<T *> &value, bool callDestructor = true)
+    static jsvm::Value ToJsArray(jsvm::Env env, const std::vector<T *> &value, bool callDestructor = true)
     {
-        Value result;
-        Status status;
+        jsvm::Value result;
+        jsvm::Status status;
 
         int size = value.size();
         if (0 == size)
         {
-            status = CreateArrayWithLength(env, 0, &result);
+            status = jsvm::CreateArrayWithLength(env, 0, &result);
             // CHECK todo
             return result;
         }
         else
         {
-            status = CreateArrayWithLength(env, size, &result);
+            status = jsvm::CreateArrayWithLength(env, size, &result);
             // CHECK todo
             for (int i = 0; i < size; i++)
             {
-                SetElement(env, result, i, Converter<T *>::ToJs(env, value.at(i), callDestructor));
+                jsvm::SetElement(env, result, i, Converter<T *>::ToJs(env, value.at(i), callDestructor));
             }
             return result;
         }
     }
-    static Value ToJsArray(Env env, const std::vector<T> &value, bool callDestructor = true)
+    static jsvm::Value ToJsArray(jsvm::Env env, const std::vector<T> &value, bool callDestructor = true)
     {
-        Value result;
-        Status status;
+        jsvm::Value result;
+        jsvm::Status status;
         int size = value.size();
         if (0 == size)
         {
-            status = CreateArrayWithLength(env, 0, &result);
+            status = jsvm::CreateArrayWithLength(env, 0, &result);
             // CHECK todo
             return result;
         }
@@ -706,57 +706,57 @@ template <typename T> class __JsArray
             // CHECK todo
             for (int i = 0; i < size; i++)
             {
-                SetElement(env, result, i, Converter<T>::ToJs(env, value.at(i), callDestructor));
+                jsvm::SetElement(env, result, i, Converter<T>::ToJs(env, value.at(i), callDestructor));
             }
             return result;
         }
     }
-    static void FillJsArray(Env env, const std::vector<T> &value, Value array, bool callDestructor = true)
+    static void FillJsArray(jsvm::Env env, const std::vector<T> &value, jsvm::Value array, bool callDestructor = true)
     {
-        Value result;
-        Status status;
+        jsvm::Value result;
+        jsvm::Status status;
         int size = value.size();
         for (int i = 0; i < size; i++)
         {
-            SetElement(env, result, i, Converter<T>::ToJs(env, value.at(i), callDestructor));
+            jsvm::SetElement(env, result, i, Converter<T>::ToJs(env, value.at(i), callDestructor));
         }
     }
-    static void FromJsArray(Env env, Value array, std::vector<T *> &result)
+    static void FromJsArray(jsvm::Env env, jsvm::Value array, std::vector<T *> &result)
     {
         bool isArray{false};
-        IsArray(env, array, isArray);
+        jsvm::IsArray(env, array, isArray);
         // CHECK todo
         if (isArray)
         {
             value.clear();
             uint32_t length{0};
-            GetArrayLength(env, array, &length)
+            jsvm::GetArrayLength(env, array, &length)
                 // CHECK todo
                 result.reserve(length);
             for (int i = 0; i < length; i++)
             {
-                Value element;
-                GetElement(env, array, i, &element);
+                jsvm::Value element;
+                jsvm::GetElement(env, array, i, &element);
                 result.push_back(Converter<T *>::ToCpp(env, element));
             }
         }
     }
-    static void FromJsArray(Env env, Value array, std::vector<T> &result)
+    static void FromJsArray(jsvm::Env env, jsvm::Value array, std::vector<T> &result)
     {
         bool isArray{false};
-        IsArray(env, array, isArray);
+        jsvm::IsArray(env, array, isArray);
         // CHECK todo
         if (isArray)
         {
             result.clear();
             uint32_t length{0};
-            GetArrayLength(env, array, &length)
+            jsvm::GetArrayLength(env, array, &length)
             // CHECK todo
             result.reserve(length);
             for (int i = 0; i < length; i++)
             {
-                Value element;
-                GetElement(env, array, i, &element);
+                jsvm::Value element;
+                jsvm::GetElement(env, array, i, &element);
                 // CHECK todo
                 result.push_back(Converter<T>::ToCpp(env, element));
             }
@@ -835,13 +835,13 @@ template <typename T, typename R> class __JsMap
 template <typename T> class Converter<std::vector<T>>
 {
   public:
-    static std::vector<T> ToCpp(Env env, Value value)
+    static std::vector<T> ToCpp(jsvm::Env env, jsvm::Value value)
     {
         std::vector<T> vec;
         __JsArray<T>::FromJsArray(env, value, vec);
         return vec;
     }
-    static Value ToJs(Env env, const std::vector<T> &value, bool callDestructor = true)
+    static jsvm::Value ToJs(jsvm::Env env, const std::vector<T> &value, bool callDestructor = true)
     {
         return __JsArray<T>::ToJsArray(env, value);
     }
@@ -849,13 +849,13 @@ template <typename T> class Converter<std::vector<T>>
 template <typename T> class Converter<std::vector<T *>>
 {
   public:
-    static std::vector<T *> ToCpp(Env env, Value)
+    static std::vector<T *> ToCpp(jsvm::Env env, jsvm::Value)
     {
         std::vector<T *> vec;
         __JsArray<T>::FromJsArray(env, Value, vec);
         return vec;
     }
-    static Value ToJs(Env env, const std::vector<T *> &value, bool callDestructor = true)
+    static jsvm::Value ToJs(jsvm::Env env, const std::vector<T *> &value, bool callDestructor = true)
     {
         return __JsArray<T>::ToJsArray(env, value, callDestructor);
     }
@@ -916,7 +916,7 @@ template <typename T, typename R> class Converter<const std::unordered_map<T, R>
     return v8::String::NewFromUtf8(pIso, str).ToLocalChecked();
 }*/
 
-template <class T> Value ToJSValue(Env env, T t, bool callDestructor = true)
+template <class T> jsvm::Value ToJSValue(jsvm::Env env, T t, bool callDestructor = true)
 {
     return Converter<T>::ToJs(env, t, callDestructor);
 }

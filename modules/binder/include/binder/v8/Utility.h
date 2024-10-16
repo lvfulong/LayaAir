@@ -4,7 +4,7 @@
 #include <map>
 #include <string>
 #include <v8.h>
-namespace jsvm
+namespace binder
 {
     template <class T> inline void UNUSED(T const&)
     {

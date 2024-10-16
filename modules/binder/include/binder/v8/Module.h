@@ -9,7 +9,7 @@
 #include <v8.h>
 #include <vector>
 
-namespace laya
+namespace binder
 {
 class Module;
 class Enum_

@@ -74,10 +74,11 @@ struct ObjectRegistry
 };
 class ClassRegistryBase
 {
-  public:
+  protected:
     std::unordered_map<void *, ObjectRegistry> objects_;
     std::vector<ClassRegistryBase *> bases_;
     std::vector<ClassRegistryBase *> derivatives_;
+public:
     virtual ~ClassRegistryBase()
     {
     }
@@ -202,10 +203,7 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
     // ObjectRegistry *getObjectRegistry(ClassType *objectPointer);
 
     std::map<uint32_t, ConstructorFunctionType> constructorFunctionMap_;
-    v8::Isolate *isolate_;
-    v8::Global<v8::FunctionTemplate> func_;
-    v8::Global<v8::FunctionTemplate> js_func_;
-    
+    jsvm::Env env_ = nullptr;
     jsvm::Ref classRef_ = nullptr;
 };
 
@@ -276,14 +274,14 @@ template <typename ClassType> void makeStrong(ClassType *objectPointer)
 {
     ClassRegistryManager::makeStrong<ClassType>(objectPointer);
 }
-template <typename ClassType> Local toLocal(ClassType *objectPointer)
+/*template <typename ClassType> Local toLocal(ClassType* objectPointer)
 {
     ClassRegistry<ClassType> &classRegistry = ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
     auto objectRegistry = classRegistry.getObjectRegistry(objectPointer);
     assert(objectRegistry != nullptr);
 
     return Local(v8::Local<v8::Object>::New(v8::Isolate::GetCurrent(), objectRegistry->pobj));
-}
+}*/
 
 template <typename ClassType> class class_
 {
@@ -584,13 +582,73 @@ template <typename ClassType> static void New(jsvm::Env env, jsvm::CallbackInfo 
     func->InstanceTemplate()->SetInternalFieldCount(2);
     func->Inherit(js_func);
 }*/
-template <typename ClassType> v8::Local<v8::Object> wrapCppObject(ClassType *objectPointer, bool callDestructor)
+template <typename ClassType> jsvm::Value wrapCppObject(ClassType *objectPointer, bool callDestructor)
 {
     return ClassRegistryManager::wrapCppObject<ClassType>(objectPointer, callDestructor);
 }
 template <typename ClassType> bool isWrappedClassOf()
 {
     return ClassRegistryManager::isWrappedClassOf<ClassType>();
+}
+
+
+
+template <typename T> jsvm::Value bind_class_(jsvm::Value exports, std::string_view name, class_<T>& cl)
+{
+    v8::HandleScope scope(isolate());
+    v8::Local<v8::String> name_string =
+        v8::String::NewFromUtf8(isolate(), name.data(), v8::NewStringType::kInternalized).ToLocalChecked();
+    cl.class_function_template()->SetClassName(name_string);
+    global()
+        ->Set(isolate()->GetCurrentContext(), name_string,
+            cl.js_function_template()->GetFunction(isolate()->GetCurrentContext()).ToLocalChecked())
+        .FromJust();
+    return exports;
+}
+
+template <typename ReturnType, typename... Args>
+jsvm::Value function(jsvm::Value exports, std::string_view name, ReturnType(*func)(Args...))
+{
+
+    v8::HandleScope scope(isolate());
+
+    FuncInfo<decltype(func)>* info = new FuncInfo<decltype(func)>(func);
+    internal::addDeinitializer([info]() { delete info; });
+    info->name = name;
+    v8::Local<v8::Value> data = v8::External::New(isolate(), info);
+
+    v8::Local<v8::FunctionTemplate> t =
+        v8::FunctionTemplate::New(isolate(), internal::InvokeFunction<ReturnType, Args...>, data);
+    v8::Local<v8::String> name_string =
+        v8::String::NewFromUtf8(isolate(), name.data(), v8::NewStringType::kInternalized).ToLocalChecked();
+
+    global()
+        ->Set(isolate()->GetCurrentContext(), name_string,
+            t->GetFunction(isolate()->GetCurrentContext()).ToLocalChecked())
+        .FromJust();
+    return exports;
+}
+template <typename ReturnType, typename... Args>
+jsvm::Value function_optional_override(jsvm::Value exports, std::string_view name, ReturnType(*func)(Args...))
+{
+
+    v8::HandleScope scope(isolate());
+
+    FuncInfo<decltype(func)>* info = new FuncInfo<decltype(func)>(func);
+    internal::addDeinitializer([info]() { delete info; });
+    info->name = name;
+    v8::Local<v8::Value> data = v8::External::New(isolate(), info);
+
+    v8::Local<v8::FunctionTemplate> t = v8::FunctionTemplate::New(
+        isolate(), internal::InvokeGlobalMethodOptionalOverride<ReturnType, Args...>, data);
+    v8::Local<v8::String> name_string =
+        v8::String::NewFromUtf8(isolate(), name.data(), v8::NewStringType::kInternalized).ToLocalChecked();
+
+    global()
+        ->Set(isolate()->GetCurrentContext(), name_string,
+            t->GetFunction(isolate()->GetCurrentContext()).ToLocalChecked())
+        .FromJust();
+    return exports;
 }
 
 } // namespace binder
