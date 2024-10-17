@@ -2,11 +2,11 @@
 #define __V8_INVOCATION_H__
 
 #include "Converter.h"
+#include <binder/JSVM_Types.h>
 #include <map>
 #include <string>
 #include <type_traits>
 #include <utils/FunctionTraits.h>
-#include  <binder/JSVM_Types.h>
 
 namespace binder
 {
@@ -20,7 +20,7 @@ T *tuple_call_class_constructor(jsvm::Env env, jsvm::CallbackInfo info, std::ind
     size_t argc = 0;
     jsvm::Value argv[128];
     jsvm::Value _this;
-    void* data;
+    void *data;
     NODE_API_CALL(env, GetCbInfo(env, info, &argc, argv, &_this, &data));
 
     return new T(::laya::Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(env, argv[Seq])...);
@@ -76,9 +76,9 @@ template <typename ReturnType, typename... Args> void InvokeFunction(jsvm::Env e
     size_t argc = 0;
     jsvm::Value argv[128];
     jsvm::Value _this;
-    void* data;
+    void *data;
     NODE_API_CALL(env, jsvm::GetCbInfo(env, info, &argc, argv, &_this, &data));
-    //NODE_API_ASSERT(env, argc >= 1, "Not enough arguments, expected 1.");
+    // NODE_API_ASSERT(env, argc >= 1, "Not enough arguments, expected 1.");
     typedef ReturnType (*FunctorType)(Args...);
     FuncInfo<FunctorType> *funcInfo = (FuncInfo<FunctorType> *)data;
     /*if ((unsigned long)args.Length() < sizeof...(Args))
@@ -136,10 +136,9 @@ void InvokeGlobalMethodOptionalOverride(jsvm::Env env, jsvm::CallbackInfo info)
     size_t argc = 0;
     jsvm::Value argv[128];
     jsvm::Value _this;
-    void* data;
+    void *data;
     NODE_API_CALL(env, GetCbInfo(env, info, &argc, argv, &_this, &data));
-    //NODE_API_ASSERT(env, argc >= 1, "Not enough arguments, expected 1.");
-
+    // NODE_API_ASSERT(env, argc >= 1, "Not enough arguments, expected 1.");
 
     typedef ReturnType (*FunctorType)(Args...);
     FuncInfo<FunctorType> *funcInfo = (FuncInfo<FunctorType> *)data;
@@ -258,8 +257,7 @@ void InvokeSetPropertyField(v8::Local<v8::String> property, v8::Local<v8::Value>
 
 template <typename ReturnType, typename... Args> struct V8Call;
 
-template <typename... Args>
-jsvm::Value v8_call(jsvm::Env env, jsvm::Value self, jsvm::Value func, const Args &...args)
+template <typename... Args> jsvm::Value v8_call(jsvm::Env env, jsvm::Value self, jsvm::Value func, const Args &...args)
 {
     /*v8::EscapableHandleScope scope(v8::Isolate::GetCurrent());
 
@@ -280,20 +278,13 @@ jsvm::Value v8_call(jsvm::Env env, jsvm::Value self, jsvm::Value func, const Arg
         return v8::Undefined(v8::Isolate::GetCurrent());
 
     return scope.Escape(result.ToLocalChecked());*/
-
-
-
- 
     const size_t argc = sizeof...(Args);
-    jsvm::Value argv[argc] = { ToJSValue(env, args)... };
+    jsvm::Value argv[argc] = {ToJSValue(env, args)...};
 
     jsvm::Value result = nullptr;
-    // 调用napi_call_function时传入的argv的长度必须大于等于argc声明的数量，且被初始化成nullptr
     jsvm::CallFunction(env, self, func, argc, argv, &result);
     return result;
-
-
 }
 } // namespace internal
-} // namespace laya
+} // namespace binder
 #endif

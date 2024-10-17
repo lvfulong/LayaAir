@@ -2,11 +2,11 @@
 #define __V8_VALUE_H__
 
 #include <assert.h>
-#include  <binder/JSVM_Types.h>
+#include <binder/JSVM_Types.h>
 
 namespace laya
 {
-class Local
+/*class Local
 {
   public:
       jsvm::Value handle_;
@@ -24,7 +24,7 @@ class Local
     {
     }
 
-    /*template <typename ReturnType, typename... Args> ReturnType call(const jsvm::Value& this_, const Args &...args)
+    template <typename ReturnType, typename... Args> ReturnType call(const jsvm::Value& this_, const Args &...args)
     {
         if (!this->handle_.IsEmpty() && this->handle_->IsFunction())
         {
@@ -36,7 +36,7 @@ class Local
         {
             return ReturnType();
         }
-    }*/
+    }
     template <typename ReturnType, typename... Args> ReturnType call(  jsvm::Value this_, const Args &...args)
     {
         if (!this->handle_.IsEmpty() && this->handle_->IsFunction())
@@ -93,65 +93,107 @@ class Local
     }
   private:
     friend class Persistent;
-};
+}; */
 class Persistent
 {
   public:
     ~Persistent()
     {
-        reset();
+        ///////////////reset();
     }
     Persistent() = default;
-    explicit Persistent(jsvm::Value val) : handle_(v8::Isolate::GetCurrent(), val)
+    /*explicit Persistent(jsvm::Value val) : handle_(val)
     {
-        handle_.ClearWeak();
+         handle_.ClearWeak();
     }
     explicit Persistent(const Local &local)
     {
         reset(local);
-    }
+    }*/
 
-    //Persistent(Persistent const &) = delete;
-    //Persistent &operator=(Persistent const &) = delete;
+    Persistent(Persistent const &) = delete;
+    Persistent &operator=(Persistent const &) = delete;
 
-    //Persistent(Persistent &&) = delete;
-    //Persistent &operator=(Persistent &&) = delete;
+    Persistent(Persistent &&) = delete;
+    Persistent &operator=(Persistent &&) = delete;
 
-    void reset()
+    void reset(jsvm::Env env)
     {
-        if (!handle_.IsEmpty())
+        /*if (!handle_.IsEmpty())
         {
             handle_.ClearWeak();
             handle_.Reset();
+        }*/
+
+        jsvm::Status status = jsvm::DeleteReference(env, ref_);
+        if (status != jsvm::Status::OK)
+        {
+            napi_throw_error(env, nullptr, "napi_delete_reference fail");
         }
     }
 
-    void reset(const Local &l)
+    /*void reset(const Local &l)
     {
-        handle_.Reset(v8::Isolate::GetCurrent(), l.handle_);
-        handle_.ClearWeak();
+         handle_.Reset(v8::Isolate::GetCurrent(), l.handle_);
+         handle_.ClearWeak();
+    }*/
+
+    bool reset(jsvm::Env env, jsvm::Value val)
+    {
+        // handle_.Reset(v8::Isolate::GetCurrent(), val);
+        // handle_.ClearWeak();
+
+        jsvm::Status status = jsvm::CreateReference(env, val, 1, &ref_);
+        if (status != jsvm::Status::OK)
+        {
+            napi_throw_error(env, nullptr, "napi_create_reference fail");
+            return false;
+        }
+        return true;
     }
 
-    void reset(v8::Local<v8::Value> val)
-    {
-        handle_.Reset(v8::Isolate::GetCurrent(), val);
-        handle_.ClearWeak();
-    }
-
-    Local toLocal() const
+    /*Local toLocal() const
     {
         // return *reinterpret_cast<const Local *>(&handle_);
         return Local(v8::Local<v8::Value>::New(v8::Isolate::GetCurrent(), handle_));
-    }
+    }*/
 
+    jsvm::Value toLocal(jsvm::Env env) const
+    {
+        jsvm::Value obj = nullptr;
+        // ͨ������napi_get_reference_value��ȡ���õ�ArkTS����
+        jsvm::Status status = jsvm::GetReferenceValue(env, ref_, &obj);
+        assert(status != jsvm::Status::OK);
+        //{
+        //    napi_throw_error(env, nullptr, "napi_get_reference_value fail");
+        //    return nullptr;
+        //}
+        return obj;
+    }
     bool isEmpty() const
     {
-        return handle_.IsEmpty();
+        // return handle_.IsEmpty();
+        return true;
     }
 
-    template <typename ReturnType, typename... Args> ReturnType call(const Local &this_, const Args &...args)
+    template <typename ReturnType, typename... Args>
+    ReturnType call(jsvm::Env env, jsvm::Value this_, const Args &...args)
     {
-        return toLocal().call<ReturnType>(this_, args...);
+        // return toLocal().call<ReturnType>(this_, args...);
+
+        jsvm::Value func = toLocal(env);
+        jsvm::ValueType valueType;
+        jsvm::Status status = Typeof(env, func, &valueType)
+
+            if (func != nullptr && status == jsvm::Status::OK && valueType == jsvm::ValueType::FUNCTION)
+        {
+            auto result = internal::v8_call(this_, func, args...);
+            return Converter<ReturnType>::ToCpp(result);
+        }
+        else
+        {
+            return ReturnType();
+        }
     }
     /*template <typename ReturnType, typename... Args> ReturnType call(v8::Local<v8::Value> this_, const Args &...args)
     {
@@ -160,7 +202,7 @@ class Persistent
     template <typename ReturnType, typename... Args> ReturnType call(v8::Local<v8::Object> this_, const Args &...args)
     {
         return toLocal().call<ReturnType>(this_.As<v8::Value>(), args...);
-    }*/
+    }
     template <typename ReturnType, typename... Args> ReturnType call(const char *name, const Args &...args)
     {
         return toLocal().call<ReturnType>(name, args...);
@@ -168,11 +210,12 @@ class Persistent
     template <typename ReturnType, typename... Args> ReturnType call(const char *name, const Args &...args) const
     {
         return toLocal().call<ReturnType>(name, args...);
-    }
+    }*/
 
   private:
-    //v8::CopyablePersistentTraits<v8::Value>::CopyablePersistent handle_;
-    jsvm::Value handle_;
+    // v8::CopyablePersistentTraits<v8::Value>::CopyablePersistent handle_;
+    // jsvm::Value handle_;
+    jsvm::Ref ref_ = nullptr;
 };
 
 } // namespace laya

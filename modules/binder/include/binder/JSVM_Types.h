@@ -37,6 +37,19 @@ enum class Status
     NO_EXTERNAL_BUFFERS_ALLOWED,     //	不允许外部缓冲区。
     CANNOT_RUN_JS,                   //	不能执行JS。
 };
+enum class ValueType
+{
+     UNDEFINED,// 未定义类型。
+     Null,// Null类型。
+     BOOLEAN,//	布尔类型。
+     NUMBER,//	数字类型。
+     STRING,//	字符串类型。
+     SYMBOL,//	符号类型。
+     OBJECT,//	对象类型。
+     FUNCTION,//	函数类型。
+     EXTERNAL,//	外部类型。
+     BIGINT,//	bigint类型。
+};
 #if 0
 enum PropertyAttributes
 {
@@ -98,7 +111,6 @@ using CallbackInfo = napi_callback_info;
 using Finalize = node_api_basic_finalize;
 using Ref = napi_ref;
 using Callback = napi_callback;
-
 #endif
 } // namespace jsvm
 

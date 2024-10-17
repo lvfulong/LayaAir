@@ -6,7 +6,7 @@
 #include <v8.h>
 
 #include "Converter.h"
-#include  <binder/JSVM_Types.h>
+#include <binder/JSVM_Types.h>
 
 namespace laya
 {
@@ -179,26 +179,25 @@ template <typename T> v8::Local<v8::Value> convert_value_object_to_v8(T *value)
 
 } // namespace internal
 
-
 class Object
 {
-public:
-    explicit Object(jsvm::Value object): object_(object)
+  public:
+    explicit Object(jsvm::Value object) : object_(object)
     {
     }
 
-    Object(Object const&) = delete;
-    Object& operator=(Object const&) = delete;
+    Object(Object const &) = delete;
+    Object &operator=(Object const &) = delete;
 
-    Object(Object&&) = delete;
-    Object& operator=(Object&&) = delete;
+    Object(Object &&) = delete;
+    Object &operator=(Object &&) = delete;
 
     ~Object()
     {
     }
-    //Object& module(std::string_view name, Module& m);
+    // Object& module(std::string_view name, Module& m);
 
-    template <typename T> Object& class_(std::string_view name, laya::class_<T>& cl)
+    template <typename T> Object &class_(std::string_view name, laya::class_<T> &cl)
     {
         /*v8::HandleScope scope(isolate());
         v8::Local<v8::String> name_string =
@@ -213,7 +212,7 @@ public:
     }
 
     template <typename ReturnType, typename... Args>
-    Object& function(std::string_view name, ReturnType(*func)(Args...))
+    Object &function(std::string_view name, ReturnType (*func)(Args...))
     {
 
         /*v8::HandleScope scope(isolate());
@@ -232,14 +231,15 @@ public:
             ->Set(isolate()->GetCurrentContext(), name_string,
                 t->GetFunction(isolate()->GetCurrentContext()).ToLocalChecked())
             .FromJust();*/
-        FuncInfo<decltype(func)>* data = new FuncInfo<decltype(func)>(func);
+        FuncInfo<decltype(func)> *data = new FuncInfo<decltype(func)>(func);
         internal::addDeinitializer([data]() { delete data; });
         data->name = name;
-        propertyDescriptorVector_.emplace_back(PropertyDescriptor{ (name), NULL, (internal::InvokeFunction<ReturnType, Args...>), NULL, NULL, NULL, napi_default, data });
+        propertyDescriptorVector_.emplace_back(PropertyDescriptor{
+            (name), NULL, (internal::InvokeFunction<ReturnType, Args...>), NULL, NULL, NULL, napi_default, data});
         return *this;
     }
     template <typename ReturnType, typename... Args>
-    Object& function_optional_override(std::string_view name, ReturnType(*func)(Args...))
+    Object &function_optional_override(std::string_view name, ReturnType (*func)(Args...))
     {
 
         /*v8::HandleScope scope(isolate());
@@ -258,10 +258,12 @@ public:
             ->Set(isolate()->GetCurrentContext(), name_string,
                 t->GetFunction(isolate()->GetCurrentContext()).ToLocalChecked())
             .FromJust();*/
-        FuncInfo<decltype(func)>* data = new FuncInfo<decltype(func)>(func);
+        FuncInfo<decltype(func)> *data = new FuncInfo<decltype(func)>(func);
         internal::addDeinitializer([data]() { delete data; });
         data->name = name;
-        propertyDescriptorVector_.emplace_back(PropertyDescriptor{ (name), NULL, (internal::InvokeGlobalMethodOptionalOverride<ReturnType, Args...>), NULL, NULL, NULL, napi_default, data });
+        propertyDescriptorVector_.emplace_back(
+            PropertyDescriptor{(name), NULL, (internal::InvokeGlobalMethodOptionalOverride<ReturnType, Args...>), NULL,
+                               NULL, NULL, napi_default, data});
 
         return *this;
     }
@@ -269,8 +271,8 @@ public:
     {
         //todos
     }*/
-private:
-    std::vector<jsvm::PropertyDescriptor>  propertyDescriptorVector_;
+  private:
+    std::vector<jsvm::PropertyDescriptor> propertyDescriptorVector_;
     jsvm::Value object_ = nullptr;
 };
 } // namespace laya

@@ -117,6 +117,67 @@ inline Status ConvertToStatus(napi_status value)
         break;
     }
 }
+
+inline napi_valuetype ConvertTo_NapiValueType(ValueType value)
+{
+
+    switch (value)
+    {
+    case ValueType::UNDEFINED:
+        return napi_undefined;
+    case ValueType::Null:
+        return napi_null;
+    case ValueType::BOOLEAN:
+        return napi_boolean;
+    case ValueType::NUMBER:
+        return napi_number;
+    case ValueType::STRING:
+        return napi_string;
+    case ValueType::SYMBOL:
+        return napi_symbol;
+    case ValueType::OBJECT:
+        return napi_object;
+    case ValueType::FUNCTION:
+        return napi_function;
+    case ValueType::EXTERNAL:
+        return napi_external;
+    case ValueType::BIGINT:
+        return napi_bigint;
+    default:
+        DEBUG_CHECK(false);
+        break;
+    }
+}
+
+inline ValueType ConvertToValueType(napi_valuetype value)
+{
+    switch (value)
+    {
+    case napi_undefined:
+        return ValueType::UNDEFINED;
+    case napi_null:
+        return ValueType::Null;
+    case napi_boolean:
+        return ValueType::BOOLEAN;
+    case napi_number:
+        return ValueType::NUMBER;
+    case napi_string:
+        return ValueType::STRING;
+    case napi_symbol:
+        return ValueType::SYMBOL;
+    case napi_object:
+        return ValueType::OBJECT;
+    case napi_function:
+        return ValueType::FUNCTION;
+    case napi_external:
+        return ValueType::EXTERNAL;
+    case napi_bigint:
+        return ValueType::BIGINT;
+    default:
+        DEBUG_CHECK(false);
+        break;
+    }
+}
 inline /*JSVM_EXTERN*/ Status GetArrayLength(Env env, Value value, uint32_t *result)
 {
     return ConvertToStatus(napi_get_array_length(env, value, result));
@@ -263,12 +324,20 @@ inline /*JSVM_EXTERN*/ Status DefineClass(Env env, const char *utf8name, size_t 
     return ConvertToStatus(
         napi_define_class(env, utf8name, length, constructor, nullptr, propertyCount, properties, result));
 }
-inline /*JSVM_EXTERN*/ Status CallFunction(Env env, Value recv, Value func, size_t argc, const Value *argv,Value *result)
+inline /*JSVM_EXTERN*/ Status CallFunction(Env env, Value recv, Value func, size_t argc, const Value *argv,
+                                           Value *result)
 {
     return ConvertToStatus(napi_call_function(env, recv, func, argc, argv, result));
 }
 inline /*JSVM_EXTERN*/ Status CreateFunction(Env env, const char *utf8name, size_t length, Callback cb, Value *result)
 {
-    return ConvertToStatus(napi_create_function(env, utf8name, length, cb, result));
+    return ConvertToStatus(napi_create_function(env, utf8name, length, cb, result, nullptr));
+}
+inline /*JSVM_EXTERN*/ Status Typeof(Env env, Value value, ValueType *result)
+{
+    napi_valuetype napi_result;
+    auto status = napi_typeof(env, value, &napi_result);
+    *result = ConvertToValueType(napi_result);
+    return ConvertToStatus(status);
 }
 } // namespace jsvm
