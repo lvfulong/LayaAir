@@ -608,16 +608,19 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 	LINK_FLAGS_RELEASE "${CONCH_PLATFORM_LINK_FLAGS_RELEASE}"
 	OUTPUT_NAME "conch"
 )
+
+set(LINK_LIBS)
 if(CONCH_USE_CURL_DOWNLOAD)
-	set(LINK_LIBS
+	list(APPEND LINK_LIBS
 		network
 	)
 endif()
 if(CONCH_USE_JPEG_XL)
-	set(LINK_LIBS
+	list(APPEND LINK_LIBS
 		jxl
 	)
 endif()
+
 if(OS_ANDROID)
 	# if(ANDROID_ABI STREQUAL "x86")
 	# set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-warn-shared-textrel")
@@ -826,6 +829,7 @@ elseif(OS_LINUX)
 	set(LINKER_FLAGS ${LINKER_FLAGS} "-Wl,--push-state,-Bstatic,-lstdc++,--pop-state")
 	#target_compile_definitions(${PROJECT_NAME} PRIVATE GL_GLEXT_PROTOTYPES)
 	target_link_libraries(${PROJECT_NAME} PUBLIC
+	    ${LINK_LIBS}
 		${LINKER_FLAGS}
 		X11
 		${FREETYPE_LIBRARIES}

@@ -96,7 +96,7 @@ void JCSystemConfig::loadConfigIniFile()
     }
     else
     {
-        LOGW("Warning: can not find desktop:WindowMode use default %d", defaultWindowMode);
+        LOGW("Warning: can not find desktop:WindowMode use default %s", defaultWindowMode.c_str());
     }
 
     bool showDebugConsole = false;

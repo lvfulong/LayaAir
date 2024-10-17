@@ -56,7 +56,7 @@ elseif(OS_OHOS)
 elseif(OS_LINUX)
 	add_definitions(-DJS_V8)
 	option(CONCH_USE_OLD_CURL_DOWNLOAD "Use CURL" ON)
-	option(CONCH_USE_JPEG_XL "USE JPEG XL" OFF)
+	option(CONCH_USE_JPEG_XL "USE JPEG XL" ON)
 endif()
 
 if(USE_JS_V8_DEBUGGER)
