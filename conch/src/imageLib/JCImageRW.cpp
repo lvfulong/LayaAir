@@ -4,37 +4,120 @@
 #include <utils/JCFileSystem.h>
 #include <cmath>
 #include <utils/Preprocessor.h>
+
+#include <jxl/decode.h>
+#include <jxl/decode_cxx.h>
 //------------------------------------------------------------------------------
 namespace laya
 {
 	unsigned char* ReadPNGFromMem(unsigned char* data, int dataSize, PNG_UINT32* w, PNG_UINT32* h);
 	int LoadJpegFromMem (BitmapData* pBitmapData,unsigned  char * memData, int size );
-    int LoadGif(BitmapData* pBitmapData, unsigned  char * memData, int size);
-	bool saveJpeg(int width ,int height,int bpp, char *buffer, int quality, const char*filename);
-	std::shared_ptr<JCWorkerThread> g_DecThread=NULL;	//全局的解码线程
-	
-	bool loadImageMemSync( const char* p_pMem, int p_nLenth, BitmapData& p_bmp ){
+	int LoadGif(BitmapData *pBitmapData, unsigned char *memData, int size);
+	bool saveJpeg(int width, int height, int bpp, char *buffer, int quality, const char *filename);
+	std::shared_ptr<JCWorkerThread> g_DecThread = NULL; // 全局的解码线程
+
+	bool LoadJXLFromMem(BitmapData *pBitmapData, unsigned char *memData, int size){
+		printf("Starting to load JXL from memory...\n");
+
+		auto dec = JxlDecoderMake(nullptr);
+		if (JXL_DEC_SUCCESS != JxlDecoderSubscribeEvents(dec.get(),
+														 JXL_DEC_BASIC_INFO | JXL_DEC_COLOR_ENCODING | JXL_DEC_FULL_IMAGE))
+		{
+			printf("Failed to subscribe to decoder events\n");
+			return false;
+		}
+
+		JxlBasicInfo info;
+		JxlPixelFormat format = {4, JXL_TYPE_UINT8, JXL_LITTLE_ENDIAN, 0};
+
+		JxlDecoderSetInput(dec.get(), memData, size);
+
+		JxlDecoderStatus status = JXL_DEC_NEED_MORE_INPUT;
+		while (status != JXL_DEC_SUCCESS)
+		{
+			status = JxlDecoderProcessInput(dec.get());
+
+			if (status == JXL_DEC_ERROR)
+			{
+				printf("Decoder error\n");
+				return false;
+			}
+			else if (status == JXL_DEC_NEED_MORE_INPUT)
+			{
+				printf("Error: need more input, but we provided all data\n");
+				return false;
+			}
+			else if (status == JXL_DEC_BASIC_INFO)
+			{
+				if (JXL_DEC_SUCCESS != JxlDecoderGetBasicInfo(dec.get(), &info))
+				{
+					printf("Failed to get basic info\n");
+					return false;
+				}
+				pBitmapData->m_nWidth = info.xsize;
+				pBitmapData->m_nHeight = info.ysize;
+				pBitmapData->m_nBpp = 4; // RGBA
+
+				printf("Image dimensions: %d x %d\n", pBitmapData->m_nWidth, pBitmapData->m_nHeight);
+				printf("Channels: %d\n", pBitmapData->m_nBpp);
+			}
+			else if (status == JXL_DEC_NEED_IMAGE_OUT_BUFFER)
+			{
+				size_t buffer_size;
+				if (JXL_DEC_SUCCESS != JxlDecoderImageOutBufferSize(dec.get(), &format, &buffer_size))
+				{
+					printf("Failed to get output buffer size\n");
+					return false;
+				}
+				pBitmapData->m_pImageData = new char[buffer_size];
+				if (JXL_DEC_SUCCESS != JxlDecoderSetImageOutBuffer(dec.get(), &format, pBitmapData->m_pImageData, buffer_size))
+				{
+					printf("Failed to set output buffer\n");
+					delete[] pBitmapData->m_pImageData;
+					return false;
+				}
+				printf("Allocated output buffer of size: %zu bytes\n", buffer_size);
+			}
+			else if (status == JXL_DEC_FULL_IMAGE)
+			{
+				printf("Full image decoded successfully\n");
+			}
+		}
+
+		JxlDecoderCloseInput(dec.get());
+
+		printf("JXL loading complete\n");
+		return true;
+	}
+
+	bool loadImageMemSync(const char *p_pMem, int p_nLenth, BitmapData &p_bmp)
+	{
 		ImageType imgType = getImgType(p_pMem, p_nLenth);
-        p_bmp.m_nImageType = imgType;
+		p_bmp.m_nImageType = imgType;
 		p_bmp.m_nBpp = 32;
-		switch( imgType ){
+		switch (imgType)
+		{
 		case ImgType_jpeg:
-			return LoadJpegFromMem(&p_bmp,(unsigned char*)p_pMem,p_nLenth)!=0;
+			return LoadJpegFromMem(&p_bmp, (unsigned char *)p_pMem, p_nLenth) != 0;
 			break;
 		case ImgType_png:
-			p_bmp.m_pImageData = (char*)ReadPNGFromMem((unsigned char*)p_pMem, p_nLenth, (PNG_UINT32*)&p_bmp.m_nWidth, (PNG_UINT32*)&p_bmp.m_nHeight);
-			return p_bmp.m_pImageData!=0;
+			p_bmp.m_pImageData = (char *)ReadPNGFromMem((unsigned char *)p_pMem, p_nLenth, (PNG_UINT32 *)&p_bmp.m_nWidth, (PNG_UINT32 *)&p_bmp.m_nHeight);
+			return p_bmp.m_pImageData != 0;
 			break;
-        case ImgType_gif:
-            return LoadGif(&p_bmp, (unsigned char*)p_pMem, p_nLenth) != 0;
-            break;
-        case ImgType_unknow:
-        default:
-            break;
+		case ImgType_gif:
+			return LoadGif(&p_bmp, (unsigned char *)p_pMem, p_nLenth) != 0;
+			break;
+		case ImgType_JXL:
+			return LoadJXLFromMem(&p_bmp, (unsigned char *)p_pMem, p_nLenth);
+			break;
+		case ImgType_unknow:
+		default:
+			break;
 		}
 		return false;
 	}
-    BitmapData loadLocalImageSync( const char* p_pszFile ){
+
+	BitmapData loadLocalImageSync( const char* p_pszFile ){
         BitmapData bmp;
         JCBuffer buf;
         readFileSync(p_pszFile,buf);
@@ -70,6 +153,12 @@ namespace laya
 		if( idval == pngID )return ImgType_png;
 		else if( idval==gifID ) return ImgType_gif;
 		else if( (idval &0xffffff) == jpegID ) return ImgType_jpeg;
+
+		 // 使用 libjxl 检查文件格式
+    	JxlSignature signature = JxlSignatureCheck(reinterpret_cast<const uint8_t*>(p_pMem), p_nLength);
+		if(signature == JXL_SIG_CODESTREAM || signature == JXL_SIG_CONTAINER){
+			return ImgType_JXL;
+		}
 		return ImgType_unknow;
 	}
 	bool getImageBaseInfo( const char* p_pMem, int p_nLength, ImageBaseInfo& p_Info ){

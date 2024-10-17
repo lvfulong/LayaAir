@@ -249,15 +249,15 @@ public:
 
     void setColor(unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255)
     {
-        m_FillColor[2]=r/255.0d;
-        m_FillColor[1]=g/255.0d;
-        m_FillColor[0]=b/255.0d;
+        m_FillColor[2]=r/255.0;
+        m_FillColor[1]=g/255.0;
+        m_FillColor[0]=b/255.0;
     }
 
     void setStrokeColor(unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255){
-        m_BorderColor[2]=r/255.0d;
-        m_BorderColor[1]=g/255.0d;
-        m_BorderColor[0]=b/255.0d;
+        m_BorderColor[2]=r/255.0;
+        m_BorderColor[1]=g/255.0;
+        m_BorderColor[0]=b/255.0;
     }
 
     void scale(double x, double y){
