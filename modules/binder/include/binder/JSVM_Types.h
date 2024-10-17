@@ -39,17 +39,33 @@ enum class Status
 };
 enum class ValueType
 {
-     UNDEFINED,// 未定义类型。
-     Null,// Null类型。
-     BOOLEAN,//	布尔类型。
-     NUMBER,//	数字类型。
-     STRING,//	字符串类型。
-     SYMBOL,//	符号类型。
-     OBJECT,//	对象类型。
-     FUNCTION,//	函数类型。
-     EXTERNAL,//	外部类型。
-     BIGINT,//	bigint类型。
+    UNDEFINED, // 未定义类型。
+    Null,      // Null类型。
+    BOOLEAN,   //	布尔类型。
+    NUMBER,    //	数字类型。
+    STRING,    //	字符串类型。
+    SYMBOL,    //	符号类型。
+    OBJECT,    //	对象类型。
+    FUNCTION,  //	函数类型。
+    EXTERNAL,  //	外部类型。
+    BIGINT,    //	bigint类型。
 };
+
+enum class TypedArrayType
+{
+    INT8_ARRAY,
+    UINT8_ARRAY,
+    UINT8_CLAMPED_ARRAY,
+    INT16_ARRAY,
+    UINT16_ARRAY,
+    INT32_ARRAY,
+    UINT32_ARRAY,
+    FLOAT32_ARRAY,
+    FLOAT64_ARRAY,
+    BIGINT64_ARRAY,
+    BIGUINT64_ARRAY,
+};
+
 #if 0
 enum PropertyAttributes
 {

@@ -178,6 +178,70 @@ inline ValueType ConvertToValueType(napi_valuetype value)
         break;
     }
 }
+
+inline napi_typedarray_type ConvertTo_NapiTypedArrayType(TypedArrayType value)
+{
+    switch (value)
+    {
+    case TypedArrayType::INT8_ARRAY:
+        return napi_int8_array;
+    case TypedArrayType::UINT8_ARRAY:
+        return napi_uint8_array;
+    case TypedArrayType::UINT8_CLAMPED_ARRAY:
+        return napi_uint8_clamped_array;
+    case TypedArrayType::INT16_ARRAY:
+        return napi_int16_array;
+    case TypedArrayType::UINT16_ARRAY:
+        return napi_uint16_array;
+    case TypedArrayType::INT32_ARRAY:
+        return napi_int32_array;
+    case TypedArrayType::UINT32_ARRAY:
+        return napi_uint32_array;
+    case TypedArrayType::FLOAT32_ARRAY:
+        return napi_float32_array;
+    case TypedArrayType::FLOAT64_ARRAY:
+        return napi_float64_array;
+    case TypedArrayType::BIGINT64_ARRAY:
+        return napi_bigint64_array;
+    case TypedArrayType::BIGUINT64_ARRAY:
+        return napi_biguint64_array;
+    default:
+        DEBUG_CHECK(false);
+        break;
+    }
+}
+inline TypedArrayType ConvertToTypedArrayType(napi_typedarray_type value)
+{
+    switch (value)
+    {
+    case napi_int8_array:
+        return TypedArrayType::INT8_ARRAY;
+    case napi_uint8_array:
+        return TypedArrayType::UINT8_ARRAY;
+    case napi_uint8_clamped_array:
+        return TypedArrayType::UINT8_CLAMPED_ARRAY;
+    case napi_int16_array:
+        return TypedArrayType::INT16_ARRAY;
+    case napi_uint16_array:
+        return TypedArrayType::UINT16_ARRAY;
+    case napi_int32_array:
+        return TypedArrayType::INT32_ARRAY;
+    case napi_uint32_array:
+        return TypedArrayType::UINT32_ARRAY;
+    case napi_float32_array:
+        return TypedArrayType::FLOAT32_ARRAY;
+    case napi_float64_array:
+        return TypedArrayType::FLOAT64_ARRAY;
+    case napi_bigint64_array:
+        return TypedArrayType::BIGINT64_ARRAY;
+    case napi_biguint64_array:
+        return TypedArrayType::BIGUINT64_ARRAY;
+    default:
+        DEBUG_CHECK(false);
+        break;
+    }
+}
+
 inline /*JSVM_EXTERN*/ Status GetArrayLength(Env env, Value value, uint32_t *result)
 {
     return ConvertToStatus(napi_get_array_length(env, value, result));
