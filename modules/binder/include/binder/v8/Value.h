@@ -2,14 +2,14 @@
 #define __V8_VALUE_H__
 
 #include <assert.h>
-#include <v8.h>
+#include  <binder/JSVM_Types.h>
 
 namespace laya
 {
 class Local
 {
   public:
-    v8::Local<v8::Value> handle_;
+      jsvm::Value handle_;
 
     Local() = delete;
     ~Local() = default;
@@ -20,11 +20,11 @@ class Local
     Local(Local &&) = delete;
     Local &operator=(Local &&) = delete;
 
-    template <typename ValueType> explicit Local(const v8::Local<ValueType> &val) : handle_(val)
+    template <typename ValueType> explicit Local(  jsvm::Value val) : handle_(val)
     {
     }
 
-    template <typename ReturnType, typename... Args> ReturnType call(const Local &this_, const Args &...args)
+    /*template <typename ReturnType, typename... Args> ReturnType call(const jsvm::Value& this_, const Args &...args)
     {
         if (!this->handle_.IsEmpty() && this->handle_->IsFunction())
         {
@@ -36,8 +36,8 @@ class Local
         {
             return ReturnType();
         }
-    }
-    template <typename ReturnType, typename... Args> ReturnType call(v8::Local<v8::Value> this_, const Args &...args)
+    }*/
+    template <typename ReturnType, typename... Args> ReturnType call(  jsvm::Value this_, const Args &...args)
     {
         if (!this->handle_.IsEmpty() && this->handle_->IsFunction())
         {
@@ -102,7 +102,7 @@ class Persistent
         reset();
     }
     Persistent() = default;
-    explicit Persistent(v8::Local<v8::Value> val) : handle_(v8::Isolate::GetCurrent(), val)
+    explicit Persistent(jsvm::Value val) : handle_(v8::Isolate::GetCurrent(), val)
     {
         handle_.ClearWeak();
     }
@@ -153,14 +153,14 @@ class Persistent
     {
         return toLocal().call<ReturnType>(this_, args...);
     }
-    template <typename ReturnType, typename... Args> ReturnType call(v8::Local<v8::Value> this_, const Args &...args)
+    /*template <typename ReturnType, typename... Args> ReturnType call(v8::Local<v8::Value> this_, const Args &...args)
     {
         return toLocal().call<ReturnType>(this_, args...);
     }
     template <typename ReturnType, typename... Args> ReturnType call(v8::Local<v8::Object> this_, const Args &...args)
     {
         return toLocal().call<ReturnType>(this_.As<v8::Value>(), args...);
-    }
+    }*/
     template <typename ReturnType, typename... Args> ReturnType call(const char *name, const Args &...args)
     {
         return toLocal().call<ReturnType>(name, args...);
@@ -171,7 +171,8 @@ class Persistent
     }
 
   private:
-    v8::CopyablePersistentTraits<v8::Value>::CopyablePersistent handle_;
+    //v8::CopyablePersistentTraits<v8::Value>::CopyablePersistent handle_;
+    jsvm::Value handle_;
 };
 
 } // namespace laya

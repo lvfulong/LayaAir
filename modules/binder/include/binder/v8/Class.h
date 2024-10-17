@@ -488,7 +488,7 @@ template <typename ClassType> void ClassRegistry<ClassType>::removeObject(ClassT
     this_->removeObject(object, objectRegistry->callDestructor);
 }*/
 template <typename ClassType>
-static void WeakCallback(napi_env env, void *nativeObject, [[maybe_unused]] void *finalize_hint)
+static void WeakCallback(jsvm::Env env, void *nativeObject, [[maybe_unused]] void *finalize_hint)
 {
     // OH_LOG_INFO(LOG_APP, "MyObject::Destructor called");
     reinterpret_cast<MyObject *>(nativeObject)->~MyObject();
@@ -589,66 +589,6 @@ template <typename ClassType> jsvm::Value wrapCppObject(ClassType *objectPointer
 template <typename ClassType> bool isWrappedClassOf()
 {
     return ClassRegistryManager::isWrappedClassOf<ClassType>();
-}
-
-
-
-template <typename T> jsvm::Value bind_class_(jsvm::Value exports, std::string_view name, class_<T>& cl)
-{
-    v8::HandleScope scope(isolate());
-    v8::Local<v8::String> name_string =
-        v8::String::NewFromUtf8(isolate(), name.data(), v8::NewStringType::kInternalized).ToLocalChecked();
-    cl.class_function_template()->SetClassName(name_string);
-    global()
-        ->Set(isolate()->GetCurrentContext(), name_string,
-            cl.js_function_template()->GetFunction(isolate()->GetCurrentContext()).ToLocalChecked())
-        .FromJust();
-    return exports;
-}
-
-template <typename ReturnType, typename... Args>
-jsvm::Value function(jsvm::Value exports, std::string_view name, ReturnType(*func)(Args...))
-{
-
-    v8::HandleScope scope(isolate());
-
-    FuncInfo<decltype(func)>* info = new FuncInfo<decltype(func)>(func);
-    internal::addDeinitializer([info]() { delete info; });
-    info->name = name;
-    v8::Local<v8::Value> data = v8::External::New(isolate(), info);
-
-    v8::Local<v8::FunctionTemplate> t =
-        v8::FunctionTemplate::New(isolate(), internal::InvokeFunction<ReturnType, Args...>, data);
-    v8::Local<v8::String> name_string =
-        v8::String::NewFromUtf8(isolate(), name.data(), v8::NewStringType::kInternalized).ToLocalChecked();
-
-    global()
-        ->Set(isolate()->GetCurrentContext(), name_string,
-            t->GetFunction(isolate()->GetCurrentContext()).ToLocalChecked())
-        .FromJust();
-    return exports;
-}
-template <typename ReturnType, typename... Args>
-jsvm::Value function_optional_override(jsvm::Value exports, std::string_view name, ReturnType(*func)(Args...))
-{
-
-    v8::HandleScope scope(isolate());
-
-    FuncInfo<decltype(func)>* info = new FuncInfo<decltype(func)>(func);
-    internal::addDeinitializer([info]() { delete info; });
-    info->name = name;
-    v8::Local<v8::Value> data = v8::External::New(isolate(), info);
-
-    v8::Local<v8::FunctionTemplate> t = v8::FunctionTemplate::New(
-        isolate(), internal::InvokeGlobalMethodOptionalOverride<ReturnType, Args...>, data);
-    v8::Local<v8::String> name_string =
-        v8::String::NewFromUtf8(isolate(), name.data(), v8::NewStringType::kInternalized).ToLocalChecked();
-
-    global()
-        ->Set(isolate()->GetCurrentContext(), name_string,
-            t->GetFunction(isolate()->GetCurrentContext()).ToLocalChecked())
-        .FromJust();
-    return exports;
 }
 
 } // namespace binder

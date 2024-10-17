@@ -55,6 +55,8 @@ namespace jsvm
 /*JSVM_EXTERN*/ Status NewInstance(Env env, Value constructor, size_t argc, const Value *argv, Value *result);
 /*JSVM_EXTERN*/ Status DefineClass(Env env, const char *utf8name, size_t length, Callback constructor,
                                    size_t propertyCount, const PropertyDescriptor *properties, Value *result);
+/*JSVM_EXTERN*/ Status CallFunction ( Env env, Value recv,  Value func, size_t argc, const  Value *argv,  Value *result);
+/*JSVM_EXTERN*/ Status CreateFunction (Env env, const char *utf8name, size_t length,  Callback cb,  Value *result);
 } // namespace jsvm
 
 #endif

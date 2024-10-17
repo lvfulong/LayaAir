@@ -6,6 +6,7 @@
 #include <v8.h>
 
 #include "Converter.h"
+#include  <binder/JSVM_Types.h>
 
 namespace laya
 {
@@ -177,6 +178,101 @@ template <typename T> v8::Local<v8::Value> convert_value_object_to_v8(T *value)
 }
 
 } // namespace internal
+
+
+class Object
+{
+public:
+    explicit Object(jsvm::Value object): object_(object)
+    {
+    }
+
+    Object(Object const&) = delete;
+    Object& operator=(Object const&) = delete;
+
+    Object(Object&&) = delete;
+    Object& operator=(Object&&) = delete;
+
+    ~Object()
+    {
+    }
+    //Object& module(std::string_view name, Module& m);
+
+    template <typename T> Object& class_(std::string_view name, laya::class_<T>& cl)
+    {
+        /*v8::HandleScope scope(isolate());
+        v8::Local<v8::String> name_string =
+            v8::String::NewFromUtf8(isolate(), name.data(), v8::NewStringType::kInternalized).ToLocalChecked();
+        cl.class_function_template()->SetClassName(name_string);
+        global()
+            ->Set(isolate()->GetCurrentContext(), name_string,
+                cl.js_function_template()->GetFunction(isolate()->GetCurrentContext()).ToLocalChecked())
+            .FromJust();*/
+        NODE_API_CALL(env, SetNamedProperty(env, exports_, name.data(), cl.ctor_));
+        return *this;
+    }
+
+    template <typename ReturnType, typename... Args>
+    Object& function(std::string_view name, ReturnType(*func)(Args...))
+    {
+
+        /*v8::HandleScope scope(isolate());
+
+        FuncInfo<decltype(func)>* info = new FuncInfo<decltype(func)>(func);
+        internal::addDeinitializer([info]() { delete info; });
+        info->name = name;
+        v8::Local<v8::Value> data = v8::External::New(isolate(), info);
+
+        v8::Local<v8::FunctionTemplate> t =
+            v8::FunctionTemplate::New(isolate(), internal::InvokeFunction<ReturnType, Args...>, data);
+        v8::Local<v8::String> name_string =
+            v8::String::NewFromUtf8(isolate(), name.data(), v8::NewStringType::kInternalized).ToLocalChecked();
+
+        global()
+            ->Set(isolate()->GetCurrentContext(), name_string,
+                t->GetFunction(isolate()->GetCurrentContext()).ToLocalChecked())
+            .FromJust();*/
+        FuncInfo<decltype(func)>* data = new FuncInfo<decltype(func)>(func);
+        internal::addDeinitializer([data]() { delete data; });
+        data->name = name;
+        propertyDescriptorVector_.emplace_back(PropertyDescriptor{ (name), NULL, (internal::InvokeFunction<ReturnType, Args...>), NULL, NULL, NULL, napi_default, data });
+        return *this;
+    }
+    template <typename ReturnType, typename... Args>
+    Object& function_optional_override(std::string_view name, ReturnType(*func)(Args...))
+    {
+
+        /*v8::HandleScope scope(isolate());
+
+        FuncInfo<decltype(func)>* info = new FuncInfo<decltype(func)>(func);
+        internal::addDeinitializer([info]() { delete info; });
+        info->name = name;
+        v8::Local<v8::Value> data = v8::External::New(isolate(), info);
+
+        v8::Local<v8::FunctionTemplate> t = v8::FunctionTemplate::New(
+            isolate(), internal::InvokeGlobalMethodOptionalOverride<ReturnType, Args...>, data);
+        v8::Local<v8::String> name_string =
+            v8::String::NewFromUtf8(isolate(), name.data(), v8::NewStringType::kInternalized).ToLocalChecked();
+
+        global()
+            ->Set(isolate()->GetCurrentContext(), name_string,
+                t->GetFunction(isolate()->GetCurrentContext()).ToLocalChecked())
+            .FromJust();*/
+        FuncInfo<decltype(func)>* data = new FuncInfo<decltype(func)>(func);
+        internal::addDeinitializer([data]() { delete data; });
+        data->name = name;
+        propertyDescriptorVector_.emplace_back(PropertyDescriptor{ (name), NULL, (internal::InvokeGlobalMethodOptionalOverride<ReturnType, Args...>), NULL, NULL, NULL, napi_default, data });
+
+        return *this;
+    }
+    /*void export()
+    {
+        //todos
+    }*/
+private:
+    std::vector<jsvm::PropertyDescriptor>  propertyDescriptorVector_;
+    jsvm::Value object_ = nullptr;
+};
 } // namespace laya
 
 #endif

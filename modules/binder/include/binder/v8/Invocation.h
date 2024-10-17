@@ -6,7 +6,8 @@
 #include <string>
 #include <type_traits>
 #include <utils/FunctionTraits.h>
-#include <v8.h>
+#include  <binder/JSVM_Types.h>
+
 namespace binder
 {
 namespace internal
@@ -258,9 +259,9 @@ void InvokeSetPropertyField(v8::Local<v8::String> property, v8::Local<v8::Value>
 template <typename ReturnType, typename... Args> struct V8Call;
 
 template <typename... Args>
-v8::Local<v8::Value> v8_call(v8::Local<v8::Value> self, v8::Function *func, const Args &...args)
+jsvm::Value v8_call(jsvm::Env env, jsvm::Value self, jsvm::Value func, const Args &...args)
 {
-    v8::EscapableHandleScope scope(v8::Isolate::GetCurrent());
+    /*v8::EscapableHandleScope scope(v8::Isolate::GetCurrent());
 
     const int num_args = sizeof...(Args);
 
@@ -278,7 +279,20 @@ v8::Local<v8::Value> v8_call(v8::Local<v8::Value> self, v8::Function *func, cons
     if (result.IsEmpty())
         return v8::Undefined(v8::Isolate::GetCurrent());
 
-    return scope.Escape(result.ToLocalChecked());
+    return scope.Escape(result.ToLocalChecked());*/
+
+
+
+ 
+    const size_t argc = sizeof...(Args);
+    jsvm::Value argv[argc] = { ToJSValue(env, args)... };
+
+    jsvm::Value result = nullptr;
+    // 调用napi_call_function时传入的argv的长度必须大于等于argc声明的数量，且被初始化成nullptr
+    jsvm::CallFunction(env, self, func, argc, argv, &result);
+    return result;
+
+
 }
 } // namespace internal
 } // namespace laya

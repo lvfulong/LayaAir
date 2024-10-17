@@ -205,11 +205,11 @@ inline /*JSVM_EXTERN*/ Status AdjustExternalMemory(Env env, int64_t changeInByte
 }
 inline /*JSVM_EXTERN*/ Status IsSet(Env env, Value value, bool *isSet)
 {
-    return Status::OK;//todo
+    return Status::OK; // todo
 }
 inline /*JSVM_EXTERN*/ Status CreateSet(Env env, Value *result)
 {
-    return Status::OK;//todo
+    return Status::OK; // todo
 }
 inline /*JSVM_EXTERN*/ Status GetCbInfo(Env env, CallbackInfo cbinfo, size_t *argc, Value *argv, Value *thisArg,
                                         void **data)
@@ -260,6 +260,15 @@ inline /*JSVM_EXTERN*/ Status NewInstance(Env env, Value constructor, size_t arg
 inline /*JSVM_EXTERN*/ Status DefineClass(Env env, const char *utf8name, size_t length, Callback constructor,
                                           size_t propertyCount, const PropertyDescriptor *properties, Value *result)
 {
-    return ConvertToStatus(napi_define_class(env, utf8name, length, constructor, nullptr, propertyCount, properties, result));
+    return ConvertToStatus(
+        napi_define_class(env, utf8name, length, constructor, nullptr, propertyCount, properties, result));
+}
+inline /*JSVM_EXTERN*/ Status CallFunction(Env env, Value recv, Value func, size_t argc, const Value *argv,Value *result)
+{
+    return ConvertToStatus(napi_call_function(env, recv, func, argc, argv, result));
+}
+inline /*JSVM_EXTERN*/ Status CreateFunction(Env env, const char *utf8name, size_t length, Callback cb, Value *result)
+{
+    return ConvertToStatus(napi_create_function(env, utf8name, length, cb, result));
 }
 } // namespace jsvm
