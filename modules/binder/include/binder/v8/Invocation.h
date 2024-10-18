@@ -234,25 +234,33 @@ void InvokeSetProperty(v8::Local<v8::Name> property, v8::Local<v8::Value> value,
 }
 
 template <typename ClassType, typename PropertyType>
-void InvokeGetPropertyField(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value> &info)
+jsvm::Value InvokeClassGetPropertyField(jsvm::Env env, jsvm::CallbackInfo info)
 {
-    v8::Local<v8::Object> pthis = info.This();
-    ClassType *pObj = (ClassType *)pthis->GetAlignedPointerFromInternalField(0);
+    napi_value js_this;
+    void* data;
+    jsvm::GetCbInfo(env, info, nullptr, nullptr, &js_this, &data);
+    // NODE_API_ASSERT(env, argc == 0, "Wrong number of arguments");
+    ClassType* pObj;
+    jsvm::Unwrap(env, wrapped, reinterpret_cast<void**>(&pObj));
+    auto funcInfo = (FuncInfo<PropertyType ClassType::*> *)data;
 
-    auto funcInfo = (FuncInfo<PropertyType ClassType::*> *)v8::External::Cast(*info.Data())->Value();
-    info.GetReturnValue().Set(laya::Converter<PropertyType>::ToJs(pObj->*(funcInfo->func)));
+    return laya::Converter<PropertyType>::ToJs(pObj->*(funcInfo->func));
 }
 
 template <typename ClassType, typename PropertyType>
-void InvokeSetPropertyField(v8::Local<v8::String> property, v8::Local<v8::Value> value,
-                            const v8::PropertyCallbackInfo<void> &info)
+jsvm::Value InvokeClassSetPropertyField(jsvm::Env env, jsvm::CallbackInfo info)
 {
-    v8::Local<v8::Object> pthis = info.This();
-    ClassType *pObj = (ClassType *)pthis->GetAlignedPointerFromInternalField(0);
-
-    auto funcInfo = (FuncInfo<PropertyType ClassType::*> *)v8::External::Cast(*info.Data())->Value();
-
-    (pObj->*(funcInfo->func)) = (Converter<PropertyType>::ToCpp(value));
+    size_t argc = 1;
+    napi_value args[1];
+    napi_value js_this;
+    void *data;
+    jsvm::GetCbInfo(env, info, argc, args, &js_this, &data);
+    // NODE_API_ASSERT(env, argc >= 1, "Wrong number of arguments");
+    ClassType *pObj;
+    jsvm::Unwrap(env, wrapped, reinterpret_cast<void **>(&pObj));
+    auto funcInfo = (FuncInfo<PropertyType ClassType::*> *)data;
+    (pObj->*(funcInfo->func)) = (Converter<PropertyType>::ToCpp(args[0]));
+    return NULL;
 }
 
 template <typename ReturnType, typename... Args> struct V8Call;

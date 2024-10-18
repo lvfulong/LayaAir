@@ -296,7 +296,7 @@ template <typename ClassType> class class_
     // v8::Isolate *isolate_;
 
     jsvm::Value ctor_;
-
+    std::vector<jsvm::PropertyDescriptor> propertyDescriptorVector_;
   public:
     template <typename... Args> class_ &constructor()
     {
@@ -411,9 +411,13 @@ template <typename ClassType> class class_
     {
         auto info = new FuncInfo<decltype(field)>(field);
         internal::addDeinitializer([info]() { delete info; });
-        classRegistry_.class_function_template()->PrototypeTemplate()->SetAccessor(
+        /*classRegistry_.class_function_template()->PrototypeTemplate()->SetAccessor(
             Js_Str(isolate_, name.data()), internal::InvokeGetPropertyField<ClassType, PropertyType>,
-            internal::InvokeSetPropertyField<ClassType, PropertyType>, v8::External::New(isolate_, (void *)info));
+            internal::InvokeSetPropertyField<ClassType, PropertyType>, v8::External::New(isolate_, (void *)info));*/
+        propertyDescriptorVector_.emplace_back(
+            PropertyDescriptor{ (name), NULL , NULL,  internal::InvokeGetPropertyField<ClassType, PropertyType>,
+            internal::InvokeSetPropertyField<ClassType, PropertyType>, NULL, napi_default, info });
+
         return *this;
     }
     template <typename PropertyType>
