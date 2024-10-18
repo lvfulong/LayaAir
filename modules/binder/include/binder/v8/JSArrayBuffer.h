@@ -2,7 +2,7 @@
 #ifndef _JS_ARRAYBUFFER_H_
 #define _JS_ARRAYBUFFER_H_
 
-#include <v8.h>
+#include <binder/JSVM_Types.h>
 #include <vector>
 
 /*
@@ -12,6 +12,7 @@
 namespace laya
 {
 
+#if 0
 // 这个要在v8线程外分配和释放，因为v8析构的时候会调用这个对象提供的 Free 接口
 class ArrayBufferAllocator : public v8::ArrayBuffer::Allocator
 {
@@ -31,14 +32,15 @@ class ArrayBufferAllocator : public v8::ArrayBuffer::Allocator
   protected:
     // std::vector<char*> m_vAliveBuffer;
 };
-v8::Local<v8::Value> createUint8ClampedArray(v8::Local<v8::Value> jsval, size_t byte_offset, size_t length);
-v8::Local<v8::Value> createUint8Array(v8::Local<v8::Value> jsval, size_t byte_offset, size_t length);
-v8::Local<v8::Value> createUint16Array(v8::Local<v8::Value> jsval, size_t byte_offset, size_t length);
-v8::Local<v8::Value> createFloat32Array(v8::Local<v8::Value> jsval, size_t byte_offset, size_t length);
-bool writeToJSAB(v8::Local<v8::Value> jsval, const char *data, int len);
-v8::Local<v8::ArrayBuffer> createJSAB(char *pData, int len);
-v8::Local<v8::ArrayBuffer> createJSABAligned(char *pData, int len);
-bool extractJSAB(v8::Local<v8::Value> ab, char *&data, int &len);
+#endif
+jsvm::Value createUint8ClampedArray(jsvm::Env env, jsvm::Value jsval, size_t byte_offset, size_t length);
+jsvm::Value createUint8Array(jsvm::Env env, jsvm::Value jsval, size_t byte_offset, size_t length);
+jsvm::Value createUint16Array(jsvm::Env env, jsvm::Value jsval, size_t byte_offset, size_t length);
+jsvm::Value createFloat32Array(jsvm::Env env, jsvm::Value jsval, size_t byte_offset, size_t length);
+bool writeToJSAB(jsvm::Env env, jsvm::Value jsval, const void *data, size_t length);
+jsvm::Value createJSAB(jsvm::Env env, void *data, size_t length);
+// jsvm::Value createJSABAligned(jsvm::Env env, void* data, int length);
+bool extractJSAB(jsvm::Env env, jsvm::Value ab, void **data, size_t *length);
 } // namespace laya
 
 #endif

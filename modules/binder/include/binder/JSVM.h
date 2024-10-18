@@ -58,6 +58,18 @@ namespace jsvm
 /*JSVM_EXTERN*/ Status CallFunction(Env env, Value recv, Value func, size_t argc, const Value *argv, Value *result);
 /*JSVM_EXTERN*/ Status CreateFunction(Env env, const char *utf8name, size_t length, Callback cb, Value *result);
 /*JSVM_EXTERN*/ Status Typeof(Env env, Value value, ValueType *result);
+/*JSVM_EXTERN*/ Status CreateArraybuffer(Env env, size_t byteLength, void **data, Value *result);
+/*JSVM_EXTERN*/ Status IsArraybuffer(Env env, Value value, bool *result);
+/*JSVM_EXTERN*/ Status IsTypedarray(Env env, Value value, bool *result);
+/*JSVM_EXTERN*/ Status IsDataview(Env env, Value value, bool *result);
+/*JSVM_EXTERN*/ Status CreateTypedarray(Env env, TypedarrayType type, size_t length, Value arraybuffer,
+                                        size_t byteOffset, Value *result);
+/*JSVM_EXTERN*/ Status CreateDataview(Env env, size_t length, Value arraybuffer, size_t byteOffset, Value *result);
+/*JSVM_EXTERN*/ Status GetArraybufferInfo(Env env, Value arraybuffer, void **data, size_t *byteLength);
+/*JSVM_EXTERN*/ Status GetTypedarrayInfo(Env env, Value typedarray, TypedarrayType *type, size_t *length, void **data,
+                                         Value *arraybuffer, size_t *byteOffset);
+/*JSVM_EXTERN*/ Status GetDataviewInfo(Env env, Value dataview, size_t *bytelength, void **data, Value *arraybuffer,
+                                       size_t *byteOffset);
 } // namespace jsvm
 
 #endif

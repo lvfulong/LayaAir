@@ -1,13 +1,14 @@
 
 
-#include <binder/v8/JSArrayBuffer.h>
 #include <binder/JSInterface.h>
 #include <binder/v8/Converter.h>
+#include <binder/v8/JSArrayBuffer.h>
 #include <utils/JCMemorySurvey.h>
 #include <utils/Log.h>
 
 namespace laya
 {
+#if 0
 ArrayBufferAllocator::ArrayBufferAllocator()
 {
 }
@@ -43,72 +44,82 @@ ArrayBufferAllocator *ArrayBufferAllocator::getInstance()
 {
     return new ArrayBufferAllocator();
 }
-bool writeToJSAB(v8::Local<v8::Value> jsval, const char *data, int len)
+#endif
+bool writeToJSAB(jsvm::Env env, jsvm::Value jsval, const void *data, size_t length)
 {
-    v8::Local<v8::ArrayBuffer> ab;
-    if (jsval->IsArrayBufferView())
+    size_t destLength = 0;
+    void *destData = nullptr;
+    auto status = extractJSAB(env, j jsval, &desData, &destLength);
+    if (status)
     {
-        v8::Local<v8::ArrayBufferView> abv = v8::Local<v8::ArrayBufferView>::Cast(jsval);
-        ab = abv->Buffer();
-        // len = contents.ByteLength();  这种情况下，用view的长度，因为可能多个view公用一个大buffer
-        char *pDestData = (char *)ab->GetBackingStore()->Data() + abv->ByteOffset();
-        if (len <= ab->GetBackingStore()->ByteLength())
+        if (length <= destLength)
         {
-            memcpy(pDestData, data, len);
-            return true;
-        }
-    }
-    else if (jsval->IsArrayBuffer())
-    {
-        ab = v8::Local<v8::ArrayBuffer>::Cast(jsval);
-        char *pDestData = (char *)ab->GetBackingStore()->Data();
-        if (len <= ab->GetBackingStore()->ByteLength())
-        {
-            memcpy(pDestData, data, len);
+            memcpy(destData, data, length);
             return true;
         }
     }
     return false;
 }
-v8::Local<v8::Value> createUint8ClampedArray(JsValue jsval, size_t byte_offset, size_t length)
+jsvm::Value createUint8ClampedArray(jsvm::Env env, jsvm::Value jsval, size_t byte_offset, size_t length)
 {
-    v8::Local<v8::ArrayBuffer> ab = v8::Local<v8::ArrayBuffer>::Cast(jsval);
-    v8::Local<v8::Uint8ClampedArray> view = v8::Uint8ClampedArray::New(ab, byte_offset, length);
-    return view.As<v8::Value>();
+    // v8::Local<v8::ArrayBuffer> ab = v8::Local<v8::ArrayBuffer>::Cast(jsval);
+    // v8::Local<v8::Uint8ClampedArray> view = v8::Uint8ClampedArray::New(ab, byte_offset, length);
+    // return view.As<v8::Value>();
+
+    jsvm::Value output_array;
+    jsvm::CreateTypedArray(env, TypedArrayType::UINT8_CLAMPED_ARRAY, length, jsval, byte_offset, &output_array));
+    return output_array;
 }
 
-v8::Local<v8::Value> createUint8Array(JsValue jsval, size_t byte_offset, size_t length)
+jsvm::Value createUint8Array(jsvm::Env env, jsvm::Value jsval, size_t byte_offset, size_t length)
 {
-    v8::Local<v8::ArrayBuffer> ab = v8::Local<v8::ArrayBuffer>::Cast(jsval);
-    v8::Local<v8::Uint8Array> view = v8::Uint8Array::New(ab, byte_offset, length);
-    return view.As<v8::Value>();
+    // v8::Local<v8::ArrayBuffer> ab = v8::Local<v8::ArrayBuffer>::Cast(jsval);
+    // v8::Local<v8::Uint8Array> view = v8::Uint8Array::New(ab, byte_offset, length);
+    // return view.As<v8::Value>();
+
+    jsvm::Value output_array;
+    jsvm::CreateTypedArray(env, TypedArrayType::UINT8_ARRAY, length, jsval, byte_offset, &output_array));
+    return output_array;
 }
 
-v8::Local<v8::Value> createUint16Array(JsValue jsval, size_t byte_offset, size_t length)
+jsvm::Value createUint16Array(jsvm::Env env, jsvm::Value jsval, size_t byte_offset, size_t length)
 {
-    v8::Local<v8::ArrayBuffer> ab = v8::Local<v8::ArrayBuffer>::Cast(jsval);
-    v8::Local<v8::Uint16Array> view = v8::Uint16Array::New(ab, byte_offset, length);
-    return view.As<v8::Value>();
+    // v8::Local<v8::ArrayBuffer> ab = v8::Local<v8::ArrayBuffer>::Cast(jsval);
+    // v8::Local<v8::Uint16Array> view = v8::Uint16Array::New(ab, byte_offset, length);
+    // return view.As<v8::Value>();
+
+    jsvm::Value output_array;
+    jsvm::CreateTypedArray(env, TypedArrayType::UINT16_ARRAY, length, jsval, byte_offset, &output_array));
+    return output_array;
 }
 
-v8::Local<v8::Value> createFloat32Array(JsValue jsval, size_t byte_offset, size_t length)
+jsvm::Value createFloat32Array(jsvm::Env env, jsvm::Value jsval, size_t byte_offset, size_t length)
 {
-    v8::Local<v8::ArrayBuffer> ab = v8::Local<v8::ArrayBuffer>::Cast(jsval);
-    v8::Local<v8::Float32Array> view = v8::Float32Array::New(ab, byte_offset, length);
-    return view.As<v8::Value>();
+    // v8::Local<v8::ArrayBuffer> ab = v8::Local<v8::ArrayBuffer>::Cast(jsval);
+    // v8::Local<v8::Float32Array> view = v8::Float32Array::New(ab, byte_offset, length);
+    // return view.As<v8::Value>();
+
+    jsvm::Value output_array;
+    jsvm::CreateTypedArray(env, TypedArrayType::FLOAT32_ARRAY, length, jsval, byte_offset, &output_array));
+    return output_array;
 }
 
-v8::Local<v8::ArrayBuffer> createJSAB(char *pData, int len)
+jsvm::Value createJSAB(jsvm::Env env, void *data, int length)
 {
-    v8::Local<v8::ArrayBuffer> ab = v8::ArrayBuffer::New(v8::Isolate::GetCurrent(), len);
-    char *pPtr = (char *)ab->GetBackingStore()->Data();
-    memcpy(pPtr, pData, len);
-    // Externalize 以后会减去内存占用，导致不能正确GC，所以再给加回来。不知道管理ArrayBuffer的正确方法是什么。
-    // v8::Isolate::GetCurrent()->AdjustAmountOfExternalAllocatedMemory(len);
-    return ab;
+    // v8::Local<v8::ArrayBuffer> ab = v8::ArrayBuffer::New(v8::Isolate::GetCurrent(), len);
+    // char *pPtr = (char *)ab->GetBackingStore()->Data();
+    // memcpy(pPtr, pData, len);
+    //  Externalize 以后会减去内存占用，导致不能正确GC，所以再给加回来。不知道管理ArrayBuffer的正确方法是什么。
+    //  v8::Isolate::GetCurrent()->AdjustAmountOfExternalAllocatedMemory(len);
+    // return ab;
+    void *dataBackingStore = nullptr;
+    jsvm::Value result = nullptr;
+    jsvm::CreateArraybuffer(env, length, &dataBackingStore, &result);
+    memcpy(dataBackingStore, data, length);
+    return result;
 }
 
-v8::Local<v8::ArrayBuffer> createJSABAligned(char *pData, int len)
+/*jsvm::Value createJSABAligned(jsvm::Env env, char* pData, int len)
 {
     int asz = (len + 3) & 0xfffffffc;
     v8::Local<v8::ArrayBuffer> ab = v8::ArrayBuffer::New(v8::Isolate::GetCurrent(), asz);
@@ -118,24 +129,37 @@ v8::Local<v8::ArrayBuffer> createJSABAligned(char *pData, int len)
     // Externalize 以后会减去内存占用，导致不能正确GC，所以再给加回来。不知道管理ArrayBuffer的正确方法是什么。
     // v8::Isolate::GetCurrent()->AdjustAmountOfExternalAllocatedMemory(asz);
     return ab;
-}
+}*/
 
-bool extractJSAB(JsValue jsval, char *&data, int &len)
+bool extractJSAB(jsvm::Env env, jsvm::Value jsval, void **data, size_t *length)
 {
-    v8::Local<v8::ArrayBuffer> ab;
-    if (jsval->IsArrayBufferView())
+    bool is_arraybuffer;
+    jsvm::IsArraybuffer(env, jsval, &is_arraybuffer);
+
+    bool is_typedarray;
+    jsvm::IsTypedarray(env, jsval, &is_typedarray);
+
+    bool is_dataview;
+    jsvm::IsDataview(env, jsval, &is_dataview);
+
+    if (is_typedarray)
     {
-        v8::Local<v8::ArrayBufferView> abv = v8::Local<v8::ArrayBufferView>::Cast(jsval);
-        len = abv->ByteLength();
-        ab = abv->Buffer();
-        // len = contents.ByteLength();  这种情况下，用view的长度，因为可能多个view公用一个大buffer
-        data = (char *)ab->GetBackingStore()->Data() + abv->ByteOffset();
+        jsvm::TypedarrayType type;
+        jsvm::Value buffer;
+        size_t byte_offset;
+        jsvm::GetTypedarrayInfo(env, jsval, &type, length, data, &buffer, &byte_offset);
     }
-    else if (jsval->IsArrayBuffer())
+    else if (is_dataview)
     {
-        ab = v8::Local<v8::ArrayBuffer>::Cast(jsval);
-        len = ab->GetBackingStore()->ByteLength();
-        data = (char *)ab->GetBackingStore()->Data();
+
+        size_t byte_offset = 0;
+        size_t length = 0;
+        jsvm::Value buffer;
+        jsvm::GetDataviewInfo(env, jsval, &length, data, &buffer, &byte_offset);
+    }
+    else if (is_arraybuffer)
+    {
+        jsvm::GetArraybufferInfo(env, jsval, data, length);
     }
     else
     {
@@ -144,19 +168,6 @@ bool extractJSAB(JsValue jsval, char *&data, int &len)
         return false;
     }
 
-    /*
-    if (ab->IsExternal()) {
-        v8::ArrayBuffer::Contents contents = ab->GetContents();
-        len = contents.ByteLength();
-        data = (char*)contents.Data();
-    }
-    else {
-        v8::ArrayBuffer::Contents contents = ab->Externalize();
-        len = contents.ByteLength();
-        v8::Isolate::GetCurrent()->AdjustAmountOfExternalAllocatedMemory(len);
-        data = (char*)contents.Data();
-    }
-    */
     return true;
 }
 

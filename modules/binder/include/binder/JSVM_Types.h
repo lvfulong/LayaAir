@@ -51,7 +51,7 @@ enum class ValueType
     BIGINT,    //	bigint类型。
 };
 
-enum class TypedArrayType
+enum class TypedarrayType
 {
     INT8_ARRAY,
     UINT8_ARRAY,

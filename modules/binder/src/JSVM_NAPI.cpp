@@ -179,63 +179,63 @@ inline ValueType ConvertToValueType(napi_valuetype value)
     }
 }
 
-inline napi_typedarray_type ConvertTo_NapiTypedArrayType(TypedArrayType value)
+inline napi_typedarray_type ConvertTo_NapiTypedarrayType(TypedarrayType value)
 {
     switch (value)
     {
-    case TypedArrayType::INT8_ARRAY:
+    case TypedarrayType::INT8_ARRAY:
         return napi_int8_array;
-    case TypedArrayType::UINT8_ARRAY:
+    case TypedarrayType::UINT8_ARRAY:
         return napi_uint8_array;
-    case TypedArrayType::UINT8_CLAMPED_ARRAY:
+    case TypedarrayType::UINT8_CLAMPED_ARRAY:
         return napi_uint8_clamped_array;
-    case TypedArrayType::INT16_ARRAY:
+    case TypedarrayType::INT16_ARRAY:
         return napi_int16_array;
-    case TypedArrayType::UINT16_ARRAY:
+    case TypedarrayType::UINT16_ARRAY:
         return napi_uint16_array;
-    case TypedArrayType::INT32_ARRAY:
+    case TypedarrayType::INT32_ARRAY:
         return napi_int32_array;
-    case TypedArrayType::UINT32_ARRAY:
+    case TypedarrayType::UINT32_ARRAY:
         return napi_uint32_array;
-    case TypedArrayType::FLOAT32_ARRAY:
+    case TypedarrayType::FLOAT32_ARRAY:
         return napi_float32_array;
-    case TypedArrayType::FLOAT64_ARRAY:
+    case TypedarrayType::FLOAT64_ARRAY:
         return napi_float64_array;
-    case TypedArrayType::BIGINT64_ARRAY:
+    case TypedarrayType::BIGINT64_ARRAY:
         return napi_bigint64_array;
-    case TypedArrayType::BIGUINT64_ARRAY:
+    case TypedarrayType::BIGUINT64_ARRAY:
         return napi_biguint64_array;
     default:
         DEBUG_CHECK(false);
         break;
     }
 }
-inline TypedArrayType ConvertToTypedArrayType(napi_typedarray_type value)
+inline TypedarrayType ConvertToTypedarrayType(napi_typedarray_type value)
 {
     switch (value)
     {
     case napi_int8_array:
-        return TypedArrayType::INT8_ARRAY;
+        return TypedarrayType::INT8_ARRAY;
     case napi_uint8_array:
-        return TypedArrayType::UINT8_ARRAY;
+        return TypedarrayType::UINT8_ARRAY;
     case napi_uint8_clamped_array:
-        return TypedArrayType::UINT8_CLAMPED_ARRAY;
+        return TypedarrayType::UINT8_CLAMPED_ARRAY;
     case napi_int16_array:
-        return TypedArrayType::INT16_ARRAY;
+        return TypedarrayType::INT16_ARRAY;
     case napi_uint16_array:
-        return TypedArrayType::UINT16_ARRAY;
+        return TypedarrayType::UINT16_ARRAY;
     case napi_int32_array:
-        return TypedArrayType::INT32_ARRAY;
+        return TypedarrayType::INT32_ARRAY;
     case napi_uint32_array:
-        return TypedArrayType::UINT32_ARRAY;
+        return TypedarrayType::UINT32_ARRAY;
     case napi_float32_array:
-        return TypedArrayType::FLOAT32_ARRAY;
+        return TypedarrayType::FLOAT32_ARRAY;
     case napi_float64_array:
-        return TypedArrayType::FLOAT64_ARRAY;
+        return TypedarrayType::FLOAT64_ARRAY;
     case napi_bigint64_array:
-        return TypedArrayType::BIGINT64_ARRAY;
+        return TypedarrayType::BIGINT64_ARRAY;
     case napi_biguint64_array:
-        return TypedArrayType::BIGUINT64_ARRAY;
+        return TypedarrayType::BIGUINT64_ARRAY;
     default:
         DEBUG_CHECK(false);
         break;
@@ -403,5 +403,51 @@ inline /*JSVM_EXTERN*/ Status Typeof(Env env, Value value, ValueType *result)
     auto status = napi_typeof(env, value, &napi_result);
     *result = ConvertToValueType(napi_result);
     return ConvertToStatus(status);
+}
+inline /*JSVM_EXTERN*/ Status CreateArraybuffer(Env env, size_t byteLength, void **data, Value *result)
+{
+    return ConvertToStatus(napi_create_arraybuffer(env, byteLength, data, result));
+}
+inline /*JSVM_EXTERN*/ Status IsArraybuffer(Env env, Value value, bool *result)
+{
+    return ConvertToStatus(napi_is_arraybuffer(env, value, result));
+}
+inline /*JSVM_EXTERN*/ Status IsTypedarray(Env env, Value value, bool *result)
+{
+    return ConvertToStatus(napi_is_typedarray(env, value, result));
+}
+inline /*JSVM_EXTERN*/ Status IsDataview(Env env, Value value, bool *result)
+{
+    return ConvertToStatus(napi_is_dataview(env, value, result));
+}
+inline /*JSVM_EXTERN*/ Status CreateTypedarray(Env env, TypedarrayType type, size_t length, Value arraybuffer,
+                                               size_t byteOffset, Value *result)
+{
+    return ConvertToStatus(
+        napi_create_typedarray(env, ConvertTo_NapiTypedarrayType(type), length, arraybuffer, byteOffset, result));
+}
+inline /*JSVM_EXTERN*/ Status CreateDataview(Env env, size_t length, Value arraybuffer, size_t byteOffset,
+                                             Value *result)
+{
+    return ConvertToStatus(napi_create_dataview(env, length, arraybuffer, byteOffset, result));
+}
+inline /*JSVM_EXTERN*/ Status GetArraybufferInfo(Env env, Value arraybuffer, void **data, size_t *byteLength)
+{
+    return ConvertToStatus(napi_get_arraybuffer_info(env, arraybuffer, data, byteLength));
+}
+inline /*JSVM_EXTERN*/ Status GetTypedarrayInfo(Env env, Value typedarray, TypedarrayType *type, size_t *length,
+                                                void **data, Value *arraybuffer, size_t *byteOffset)
+{
+    napi_typedarray_type napi_type;
+    auto status =
+        ConvertToStatus(napi_get_typedarray_info(env, typedarray, &napi_type, length, data, arraybuffer, byteOffset));
+    *type = ConvertToTypedarrayType(napi_type);
+    return status;
+}
+inline /*JSVM_EXTERN*/ Status GetDataviewInfo(Env env, Value dataview, size_t *bytelength, void **data,
+                                              Value *arraybuffer, size_t *byteOffset)
+{
+
+    return ConvertToStatus(napi_get_dataview_info(env, dataview, bytelength, data, arraybuffer, byteOffset));
 }
 } // namespace jsvm
