@@ -242,6 +242,29 @@ inline TypedarrayType ConvertToTypedarrayType(napi_typedarray_type value)
     }
 }
 
+napi_property_attributes convertTo(PropertyAttributes value)
+{
+    switch (value)
+    {
+    case PropertyAttributes::DEFAULT:
+        return napi_default;
+    case PropertyAttributes::WRITABLE:
+        return napi_writable;
+    case PropertyAttributes::ENUMERABLE:
+        return napi_enumerable;
+    case PropertyAttributes::CONFIGURABLE:
+        return napi_configurable;
+    case PropertyAttributes::STATIC:
+        return napi_static;
+    case PropertyAttributes::DEFAULT_METHOD:
+        return napi_default_method;
+    case PropertyAttributes::DEFAULT_JSPROPERTY:
+        return napi_default_jsproperty;
+    default:
+        DEBUG_CHECK(false);
+        break;
+    }
+}
 inline /*JSVM_EXTERN*/ Status GetArrayLength(Env env, Value value, uint32_t *result)
 {
     return ConvertToStatus(napi_get_array_length(env, value, result));
@@ -385,8 +408,17 @@ inline /*JSVM_EXTERN*/ Status NewInstance(Env env, Value constructor, size_t arg
 inline /*JSVM_EXTERN*/ Status DefineClass(Env env, const char *utf8name, size_t length, Callback constructor,
                                           size_t propertyCount, const PropertyDescriptor *properties, Value *result)
 {
+    napi_property_descriptor napi_properties;
+    napi_properties.utf8name = properties->utf8name;
+    napi_properties.name = properties->name;
+    napi_properties.method = properties->method;
+    napi_properties.getter = properties->getter;
+    napi_properties.setter = properties->setter;
+    napi_properties.value = properties->value;
+    napi_properties.attributes = convertTo(properties->attributes);
+    napi_properties.data = properties->data;
     return ConvertToStatus(
-        napi_define_class(env, utf8name, length, constructor, nullptr, propertyCount, properties, result));
+        napi_define_class(env, utf8name, length, constructor, nullptr, propertyCount, &napi_properties, result));
 }
 inline /*JSVM_EXTERN*/ Status CallFunction(Env env, Value recv, Value func, size_t argc, const Value *argv,
                                            Value *result)

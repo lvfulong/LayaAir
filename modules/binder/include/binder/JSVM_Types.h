@@ -67,25 +67,6 @@ enum class TypedarrayType
 };
 
 #if 0
-enum PropertyAttributes
-{
-    DEFAULT = 0,
-    WRITABLE = 1 << 0,
-    ENUMERABLE = 1 << 1,
-    CONFIGURABLE = 1 << 2,
-
-    // Used with napi_define_class to distinguish static properties
-    // from instance properties. Ignored by napi_define_properties.
-    STATIC = 1 << 10,
-
-    // #if NAPI_VERSION >= 8
-    //  Default for class methods.
-    DEFAULT_METHOD = WRITABLE | CONFIGURABLE,
-
-    // Default for object properties, like in JS obj[prop].
-    DEFAULT_JSPROPERTY = WRITABLE | ENUMERABLE | CONFIGURABLE,
-    // #endif  // NAPI_VERSION >= 8
-};
 
 struct ExtendedErrorInfo
 {
@@ -94,9 +75,43 @@ struct ExtendedErrorInfo
     uint32_t engine_error_code;
     Status error_code;
 };
+
+#endif
+#if defined(OS_OHOS)
+using Env = JSVM_Env;
+using Deferred = JSVM_Deferred;
+using Value = JSVM_Value;
+using CallbackInfo = JSVM_CallbackInfo;
+using Finalize = JSVM_Finalize;
+using Ref = JSVM_Ref;
+// using Callback = JSVM_Callback;
+// using CDECL = JSVM_CDECL;
+typedef Value(JSVM_CDECL *Callback)(Env env, CallbackInfo info);
+#else
+using Env = napi_env;
+using Deferred = napi_deferred;
+using Value = napi_value;
+using CallbackInfo = napi_callback_info;
+using Finalize = node_api_basic_finalize;
+using Ref = napi_ref;
+// using Callback = napi_callback;
+// using CDECL = NAPI_CDECL;
+typedef Value(NAPI_CDECL *Callback)(Env env, CallbackInfo info);
+
+#endif
+enum class PropertyAttributes
+{
+    DEFAULT = 0,
+    WRITABLE = 1 << 0,
+    ENUMERABLE = 1 << 1,
+    CONFIGURABLE = 1 << 2,
+    STATIC = 1 << 10,
+    DEFAULT_METHOD = WRITABLE | CONFIGURABLE,
+    DEFAULT_JSPROPERTY = WRITABLE | ENUMERABLE | CONFIGURABLE,
+};
+
 struct PropertyDescriptor
 {
-    // One of utf8name or name should be NULL.
     const char *utf8name;
     Value name;
 
@@ -108,26 +123,7 @@ struct PropertyDescriptor
     PropertyAttributes attributes;
     void *data;
 };
-#endif
-#if defined(OS_OHOS)
-using Env = JSVM_Env;
-using Deferred = JSVM_Deferred;
-using Value = JSVM_Value;
-using PropertyDescriptor = JSVM_PropertyDescriptor;
-using CallbackInfo = JSVM_CallbackInfo;
-using Finalize = JSVM_Finalize;
-using Ref = JSVM_Ref;
-using Callback = JSVM_Callback;
-#else
-using Env = napi_env;
-using Deferred = napi_deferred;
-using Value = napi_value;
-using PropertyDescriptor = napi_property_descriptor;
-using CallbackInfo = napi_callback_info;
-using Finalize = node_api_basic_finalize;
-using Ref = napi_ref;
-using Callback = napi_callback;
-#endif
+
 } // namespace jsvm
 
 #endif

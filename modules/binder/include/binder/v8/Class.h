@@ -173,13 +173,13 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
             return scope.Escape(obj);
         }
         */
-        size_t argc = 0;
-        jsvm::Value args[1];
+        //size_t argc = 0;
+        //jsvm::Value args[1];
 
         jsvm::Value cons;
         jsvm::GetReferenceValue(env, classRef_, &cons);
         jsvm::Value instance;
-        jsvm::NewInstance(env, cons, argc, args, &instance);
+        jsvm::NewInstance(env, cons, 0, nullptr, &instance);
 
         jsvm::Wrap(env, jsThis, reinterpret_cast<void *>(objectPointer), MyObject::Destructor,
                   nullptr, // finalize_hint
