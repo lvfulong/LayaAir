@@ -33,22 +33,6 @@ typename std::enable_if<!laya::internal::is_void_return<Func>::value, jsvm::Valu
     return laya::Converter<typename function_traits<Func>::return_type>::ToJs(
         func(laya::Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...));
 }
-template <typename ClassType, typename Tuple, typename Func, size_t... Seq>
-typename std::enable_if<!laya::internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call_with_this(
-    ClassType *thisObject, Func func, jsvm::Value *args, std::index_sequence<Seq...>)
-{
-    returnlaya::Converter<typename function_traits<Func>::return_type>::ToJs(
-        (thisObject->*func)(laya::Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...));
-}
-
-template <typename ClassType, typename Tuple, typename Func, size_t... Seq>
-typename std::enable_if<!laya::internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call_optional_override(
-    ClassType *thisObject, Func func, jsvm::Value *args, std::index_sequence<Seq...>)
-{
-    returnlaya::Converter<typename function_traits<Func>::return_type>::ToJs(
-        func(*thisObject, laya::Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...));
-}
-
 template <typename Tuple, typename Func, size_t... Seq>
 typename std::enable_if<laya::internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call(
     Func func, jsvm::Value *args, std::index_sequence<Seq...>)
@@ -56,7 +40,13 @@ typename std::enable_if<laya::internal::is_void_return<Func>::value, jsvm::Value
     func(laya::Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...);
     return nullptr;
 }
-
+template <typename ClassType, typename Tuple, typename Func, size_t... Seq>
+typename std::enable_if<!laya::internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call_with_this(
+    ClassType *thisObject, Func func, jsvm::Value *args, std::index_sequence<Seq...>)
+{
+    returnlaya::Converter<typename function_traits<Func>::return_type>::ToJs(
+        (thisObject->*func)(laya::Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...));
+}
 template <typename ClassType, typename Tuple, typename Func, size_t... Seq>
 typename std::enable_if<laya::internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call_with_this(
     ClassType *thisObject, Func func, jsvm::Value *args, std::index_sequence<Seq...>)
@@ -64,7 +54,13 @@ typename std::enable_if<laya::internal::is_void_return<Func>::value, jsvm::Value
     (thisObject->*func)(laya::Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...);
     return nullptr;
 }
-
+template <typename ClassType, typename Tuple, typename Func, size_t... Seq>
+typename std::enable_if<!laya::internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call_optional_override(
+    ClassType *thisObject, Func func, jsvm::Value *args, std::index_sequence<Seq...>)
+{
+    returnlaya::Converter<typename function_traits<Func>::return_type>::ToJs(
+        func(*thisObject, laya::Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...));
+}
 template <typename ClassType, typename Tuple, typename Func, size_t... Seq>
 typename std::enable_if<laya::internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call_optional_override(
     ClassType *thisObject, Func func, jsvm::Value *args, std::index_sequence<Seq...>)
@@ -92,7 +88,7 @@ template <typename ReturnType, typename... Args> void InvokeFunction(jsvm::Env e
         return;
     }
 */
-    tuple_call<std::tuple<Args...>>(funcInfo->func, args, std::make_index_sequence<sizeof...(Args)>());
+    tuple_call<std::tuple<Args...>>(funcInfo->func, argv, std::make_index_sequence<sizeof...(Args)>());
 }
 
 template <typename ClassType, typename ReturnType, typename... Args>
