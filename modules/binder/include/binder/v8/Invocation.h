@@ -21,63 +21,66 @@ T *tuple_call_class_constructor(jsvm::Env env, jsvm::CallbackInfo info, std::ind
     jsvm::Value argv[128];
     jsvm::Value _this;
     void *data;
-    NODE_API_CALL(env, GetCbInfo(env, info, &argc, argv, &_this, &data));
+    GetCbInfo(env, info, &argc, argv, &_this, &data);
 
     return new T(::laya::Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(env, argv[Seq])...);
 }
 
 template <typename Tuple, typename Func, size_t... Seq>
-typename std::enable_if<!laya::internal::is_void_return<Func>::value, void>::type tuple_call(
-    Func func, const v8::FunctionCallbackInfo<v8::Value> &args, std::index_sequence<Seq...>)
+typename std::enable_if<!laya::internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call(
+    Func func, jsvm::Value *args, std::index_sequence<Seq...>)
 {
-    args.GetReturnValue().Set(laya::Converter<typename function_traits<Func>::return_type>::ToJs(
-        func(laya::Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...)));
+    return laya::Converter<typename function_traits<Func>::return_type>::ToJs(
+        func(laya::Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...));
 }
 template <typename ClassType, typename Tuple, typename Func, size_t... Seq>
-typename std::enable_if<!laya::internal::is_void_return<Func>::value, void>::type tuple_call_with_this(
-    ClassType *thisObject, Func func, const v8::FunctionCallbackInfo<v8::Value> &args, std::index_sequence<Seq...>)
+typename std::enable_if<!laya::internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call_with_this(
+    ClassType *thisObject, Func func, jsvm::Value *args, std::index_sequence<Seq...>)
 {
-    args.GetReturnValue().Set(laya::Converter<typename function_traits<Func>::return_type>::ToJs(
-        (thisObject->*func)(laya::Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...)));
+    returnlaya::Converter<typename function_traits<Func>::return_type>::ToJs(
+        (thisObject->*func)(laya::Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...));
 }
 
 template <typename ClassType, typename Tuple, typename Func, size_t... Seq>
-typename std::enable_if<!laya::internal::is_void_return<Func>::value, void>::type tuple_call_optional_override(
-    ClassType *thisObject, Func func, const v8::FunctionCallbackInfo<v8::Value> &args, std::index_sequence<Seq...>)
+typename std::enable_if<!laya::internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call_optional_override(
+    ClassType *thisObject, Func func, jsvm::Value *args, std::index_sequence<Seq...>)
 {
-    args.GetReturnValue().Set(laya::Converter<typename function_traits<Func>::return_type>::ToJs(
-        func(*thisObject, laya::Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...)));
+    returnlaya::Converter<typename function_traits<Func>::return_type>::ToJs(
+        func(*thisObject, laya::Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...));
 }
 
 template <typename Tuple, typename Func, size_t... Seq>
-typename std::enable_if<laya::internal::is_void_return<Func>::value, void>::type tuple_call(
-    Func func, const v8::FunctionCallbackInfo<v8::Value> &args, std::index_sequence<Seq...>)
+typename std::enable_if<laya::internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call(
+    Func func, jsvm::Value *args, std::index_sequence<Seq...>)
 {
     func(laya::Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...);
+    return nullptr;
 }
 
 template <typename ClassType, typename Tuple, typename Func, size_t... Seq>
-typename std::enable_if<laya::internal::is_void_return<Func>::value, void>::type tuple_call_with_this(
-    ClassType *thisObject, Func func, const v8::FunctionCallbackInfo<v8::Value> &args, std::index_sequence<Seq...>)
+typename std::enable_if<laya::internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call_with_this(
+    ClassType *thisObject, Func func, jsvm::Value *args, std::index_sequence<Seq...>)
 {
     (thisObject->*func)(laya::Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...);
+    return nullptr;
 }
 
 template <typename ClassType, typename Tuple, typename Func, size_t... Seq>
-typename std::enable_if<laya::internal::is_void_return<Func>::value, void>::type tuple_call_optional_override(
-    ClassType *thisObject, Func func, const v8::FunctionCallbackInfo<v8::Value> &args, std::index_sequence<Seq...>)
+typename std::enable_if<laya::internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call_optional_override(
+    ClassType *thisObject, Func func, jsvm::Value *args, std::index_sequence<Seq...>)
 {
     func(*thisObject, laya::Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...);
+    return nullptr;
 }
 
 template <typename ReturnType, typename... Args> void InvokeFunction(jsvm::Env env, jsvm::CallbackInfo info)
 {
 
-    size_t argc = 0;
-    jsvm::Value argv[128];
+    size_t argc = sizeof...(Args);
+    jsvm::Value argv[sizeof...(Args)];
     jsvm::Value _this;
     void *data;
-    NODE_API_CALL(env, jsvm::GetCbInfo(env, info, &argc, argv, &_this, &data));
+    jsvm::GetCbInfo(env, info, &argc, argv, &_this, &data);
     // NODE_API_ASSERT(env, argc >= 1, "Not enough arguments, expected 1.");
     typedef ReturnType (*FunctorType)(Args...);
     FuncInfo<FunctorType> *funcInfo = (FuncInfo<FunctorType> *)data;
@@ -237,11 +240,11 @@ template <typename ClassType, typename PropertyType>
 jsvm::Value InvokeClassGetPropertyField(jsvm::Env env, jsvm::CallbackInfo info)
 {
     napi_value js_this;
-    void* data;
+    void *data;
     jsvm::GetCbInfo(env, info, nullptr, nullptr, &js_this, &data);
     // NODE_API_ASSERT(env, argc == 0, "Wrong number of arguments");
-    ClassType* pObj;
-    jsvm::Unwrap(env, wrapped, reinterpret_cast<void**>(&pObj));
+    ClassType *pObj;
+    jsvm::Unwrap(env, wrapped, reinterpret_cast<void **>(&pObj));
     auto funcInfo = (FuncInfo<PropertyType ClassType::*> *)data;
 
     return laya::Converter<PropertyType>::ToJs(pObj->*(funcInfo->func));
