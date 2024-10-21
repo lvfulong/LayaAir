@@ -42,12 +42,12 @@ typedef JsObjHandleJSC JsObjHandle;
 #define JS_TRY
 #define JS_CATCH
 #elif JS_V8
-/*typedef v8::Local<v8::Value> JsValue;
-typedef v8::Local<v8::String> JsString;
-typedef v8::FunctionCallbackInfo<v8::Value> JsFuncArgs;
+typedef jsvm::Value JsValue;
+//typedef v8::Local<v8::String> JsString;
+//typedef v8::FunctionCallbackInfo<v8::Value> JsFuncArgs;
 typedef v8::Local<v8::Function> JsFunction;
-typedef v8::Local<v8::Value> JSValueAsParam;
-typedef v8::Local<v8::Object> JsObject;*/
+typedef jsvm::Value JSValueAsParam;
+//typedef v8::Local<v8::Object> JsObject;
 //#define JSP_THROW(str) __JsThrow::Throw(str);
 #define JSP_RUN_SCRIPT(script) laya::__JSRun::Run(script);
 #define JSP_TO_JS_NULL ((v8::Null(v8::Isolate::GetCurrent())))

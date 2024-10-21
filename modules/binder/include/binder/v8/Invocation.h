@@ -179,7 +179,7 @@ ClassType *InvokeClassConstructor(jsvm::Env env, jsvm::CallbackInfo info)
                                                                         std::make_index_sequence<sizeof...(Args)>());
 }
 
-template <typename ClassType, typename PropertyType> jsvm::Value InvokeClassGetter(Env env, CallbackInfo info)
+template <typename ClassType, typename PropertyType> jsvm::Value InvokeClassGetter(jsvm::Env env, jsvm::CallbackInfo info)
 {
     // size_t argc = 1;
     // napi_value args[1];
@@ -198,7 +198,7 @@ template <typename ClassType, typename PropertyType> jsvm::Value InvokeClassGett
 }
 
 template <typename ClassType, typename PropertyType>
-jsvm::Value InvokeClassGetterOptionalOverride(Env env, CallbackInfo info)
+jsvm::Value InvokeClassGetterOptionalOverride(jsvm::Env env, jsvm::CallbackInfo info)
 {
 
     // size_t argc = 1;
@@ -216,7 +216,7 @@ jsvm::Value InvokeClassGetterOptionalOverride(Env env, CallbackInfo info)
     return laya::Converter<PropertyType>::ToJs((*funcInfo->fGet)(*pObj));
 }
 
-template <typename ClassType, typename PropertyType> jsvm::Value InvokeClassSetter(Env env, CallbackInfo info)
+template <typename ClassType, typename PropertyType> jsvm::Value InvokeClassSetter(jsvm::Env env, jsvm::CallbackInfo info)
 {
 
     size_t argc = 1;
@@ -235,7 +235,7 @@ template <typename ClassType, typename PropertyType> jsvm::Value InvokeClassSett
 }
 
 template <typename ClassType, typename PropertyType>
-jsvm::Value InvokeClassSetterOptionalOverride(Env env, CallbackInfo info)
+jsvm::Value InvokeClassSetterOptionalOverride(jsvm::Env env, jsvm::CallbackInfo info)
 {
     size_t argc = 1;
     napi_value args[1];
@@ -252,7 +252,7 @@ jsvm::Value InvokeClassSetterOptionalOverride(Env env, CallbackInfo info)
     return nullptr;
 }
 
-template <typename PropertyType> jsvm::Value InvokeClassGetterStatic(Env env, CallbackInfo info)
+template <typename PropertyType> jsvm::Value InvokeClassGetterStatic(jsvm::Env env, jsvm::CallbackInfo info)
 {
 
     // size_t argc = 1;
@@ -268,7 +268,7 @@ template <typename PropertyType> jsvm::Value InvokeClassGetterStatic(Env env, Ca
     return laya::Converter<PropertyType>::ToJs((funcInfo->fGet)());
 }
 
-template <typename PropertyType> jsvm::Value InvokeClassSetterStatic(Env env, CallbackInfo info)
+template <typename PropertyType> jsvm::Value InvokeClassSetterStatic(jsvm::Env env, jsvm::CallbackInfo info)
 {
     size_t argc = 1;
     napi_value args[1];
