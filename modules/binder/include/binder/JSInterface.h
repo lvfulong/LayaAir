@@ -36,7 +36,7 @@ typedef JsObjHandleJSC JsObjHandle;
 #define JSP_TO_JS(tp, v) (laya::__TransferToJs<tp>::ToJs(v))
 #define JSP_TO_JS_NULL JSP_TO_JS(void, 1)
 #define JSP_TO_JS_UNDEFINE JSP_TO_JS(void, 0)
-#define JSP_THROW(str) (laya::__JsThrow::GetInstance()->RuntimeThrow(str))
+//#define JSP_THROW(str) (laya::__JsThrow::GetInstance()->RuntimeThrow(str))
 #define JSP_RUN_SCRIPT(script) (laya::__JSRun::Run(script))
 #define JSP_TO_JS_STR(str) (laya::__TransferToJs<const char *>::ToJs(str))
 #define JS_TRY
@@ -48,7 +48,7 @@ typedef v8::FunctionCallbackInfo<v8::Value> JsFuncArgs;
 typedef v8::Local<v8::Function> JsFunction;
 typedef v8::Local<v8::Value> JSValueAsParam;
 typedef v8::Local<v8::Object> JsObject;*/
-#define JSP_THROW(str) __JsThrow::Throw(str);
+//#define JSP_THROW(str) __JsThrow::Throw(str);
 #define JSP_RUN_SCRIPT(script) laya::__JSRun::Run(script);
 #define JSP_TO_JS_NULL ((v8::Null(v8::Isolate::GetCurrent())))
 #define JSP_TO_JS_UNDEFINE ((v8::Undefined(v8::Isolate::GetCurrent())))

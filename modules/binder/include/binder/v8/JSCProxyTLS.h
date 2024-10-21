@@ -19,7 +19,7 @@
 namespace laya
 {
 extern void JSAlert(const char *p_sBuffer);
-class __JsThrow
+/*class __JsThrow
 {
   public:
     static void Throw(const char *p_pszInfo)
@@ -28,7 +28,7 @@ class __JsThrow
             v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), (0 == p_pszInfo) ? "unknown error" : p_pszInfo)
                 .ToLocalChecked());
     }
-};
+};*/
 extern bool gbAlertException;
 class __JSRun
 {

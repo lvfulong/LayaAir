@@ -80,7 +80,7 @@ namespace laya
         }
         void abort()
         {
-            JSP_THROW("abort not impl");
+            //JSP_THROW("abort not impl");todo
         }
         void OnFinishedSafe(bool p_bSuccess, const char *p_pszError, std::weak_ptr<int> callbackref)
         {
