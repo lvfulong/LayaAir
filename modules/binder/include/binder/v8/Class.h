@@ -311,74 +311,91 @@ template <typename ClassType> class class_
     const class_ &function(std::string_view name, ReturnType (ClassType::*func)(Args...)) const
     {
 
-        v8::HandleScope scope(isolate_);
+        // v8::HandleScope scope(isolate_);
 
-        FuncInfo<decltype(func)> *info = new FuncInfo<decltype(func)>(func);
-        internal::addDeinitializer([info]() { delete info; });
-        info->name = name;
-        v8::Local<v8::Value> data = v8::External::New(isolate_, info);
+        FuncInfo<decltype(func)> *data = new FuncInfo<decltype(func)>(func);
+        internal::addDeinitializer([data]() { delete data; });
+        data->name = name;
+        /*v8::Local<v8::Value> data = v8::External::New(isolate_, info);
 
         v8::Local<v8::FunctionTemplate> t =
             v8::FunctionTemplate::New(isolate_, internal::InvokeClassMethod<ClassType, ReturnType, Args...>, data);
         v8::Local<v8::String> name_string =
             v8::String::NewFromUtf8(isolate_, name.data(), v8::NewStringType::kInternalized).ToLocalChecked();
-        classRegistry_.class_function_template()->PrototypeTemplate()->Set(name_string, t);
+        classRegistry_.class_function_template()->PrototypeTemplate()->Set(name_string, t);*/
+
+        propertyDescriptorVector_.emplace_back(
+            PropertyDescriptor{(name), NULL, internal::InvokeClassMethod<ClassType, ReturnType, Args...>, nullptr,
+                               nullptr, NULL, PropertyAttributes::DEFAULT, data});
         return *this;
     }
     template <typename ReturnType, typename... Args>
     const class_ &function(std::string_view name, ReturnType (ClassType::*func)(Args...) const) const
     {
 
-        v8::HandleScope scope(isolate_);
+        // v8::HandleScope scope(isolate_);
 
-        FuncInfo<decltype(func)> *info = new FuncInfo<decltype(func)>(func);
-        internal::addDeinitializer([info]() { delete info; });
-        info->name = name;
-        v8::Local<v8::Value> data = v8::External::New(isolate_, info);
+        FuncInfo<decltype(func)> *data = new FuncInfo<decltype(func)>(func);
+        internal::addDeinitializer([data]() { delete data; });
+        data->name = name;
+        /*v8::Local<v8::Value> data = v8::External::New(isolate_, info);
 
         v8::Local<v8::FunctionTemplate> t =
             v8::FunctionTemplate::New(isolate_, internal::InvokeClassMethod<ClassType, ReturnType, Args...>, data);
         v8::Local<v8::String> name_string =
             v8::String::NewFromUtf8(isolate_, name.data(), v8::NewStringType::kInternalized).ToLocalChecked();
-        classRegistry_.class_function_template()->PrototypeTemplate()->Set(name_string, t);
+        classRegistry_.class_function_template()->PrototypeTemplate()->Set(name_string, t);*/
+
+        propertyDescriptorVector_.emplace_back(
+            PropertyDescriptor{(name), NULL, internal::InvokeClassMethod<ClassType, ReturnType, Args...>, nullptr,
+                               nullptr, NULL, PropertyAttributes::DEFAULT, data});
         return *this;
     }
     template <typename ReturnType, typename... Args>
     const class_ &function_optional_override(std::string_view name, ReturnType (*func)(ClassType &, Args...)) const
     {
 
-        v8::HandleScope scope(isolate_);
+        // v8::HandleScope scope(isolate_);
 
-        FuncInfo<decltype(func)> *info = new FuncInfo<decltype(func)>(func);
-        internal::addDeinitializer([info]() { delete info; });
-        info->name = name;
-        v8::Local<v8::Value> data = v8::External::New(isolate_, info);
+        FuncInfo<decltype(func)> *data = new FuncInfo<decltype(func)>(func);
+        internal::addDeinitializer([data]() { delete data; });
+        indatao->name = name;
+        /*v8::Local<v8::Value> data = v8::External::New(isolate_, info);
 
         v8::Local<v8::FunctionTemplate> t = v8::FunctionTemplate::New(
             isolate_, internal::InvokeClassMethodOptionalOverride<ClassType, ReturnType, Args...>, data);
         v8::Local<v8::String> name_string =
             v8::String::NewFromUtf8(isolate_, name.data(), v8::NewStringType::kInternalized).ToLocalChecked();
-        classRegistry_.class_function_template()->PrototypeTemplate()->Set(name_string, t);
+        classRegistry_.class_function_template()->PrototypeTemplate()->Set(name_string, t);*/
+
+        propertyDescriptorVector_.emplace_back(PropertyDescriptor{
+            (name), NULL, internal::InvokeClassMethodOptionalOverride<ClassType, ReturnType, Args...>, nullptr, nullptr,
+            NULL, PropertyAttributes::DEFAULT, data});
+
         return *this;
     }
     template <typename ReturnType, typename... Args>
     const class_ &class_function(std::string_view name, ReturnType (*func)(Args...)) const
     {
 
-        v8::HandleScope scope(isolate_);
+        // v8::HandleScope scope(isolate_);
 
-        FuncInfo<decltype(func)> *info = new FuncInfo<decltype(func)>(func);
-        internal::addDeinitializer([info]() { delete info; });
-#if 0
-        pData->name = name;
-#endif
-        v8::Local<v8::Value> data = v8::External::New(isolate_, info);
+        FuncInfo<decltype(func)> *data = new FuncInfo<decltype(func)>(func);
+        internal::addDeinitializer([data]() { delete data; });
+        data->name = name;
+
+        /*v8::Local<v8::Value> data = v8::External::New(isolate_, info);
 
         v8::Local<v8::FunctionTemplate> t =
             v8::FunctionTemplate::New(isolate_, internal::InvokeFunction<ReturnType, Args...>, data);
         v8::Local<v8::String> name_string =
             v8::String::NewFromUtf8(isolate_, name.data(), v8::NewStringType::kInternalized).ToLocalChecked();
         classRegistry_.js_function_template()->Set(name_string, t);
+        */
+        propertyDescriptorVector_.emplace_back(
+            PropertyDescriptor{(name), NULL, internal::InvokeMethodStatic<ReturnType, Args...>, nullptr, nullptr, NULL,
+                               PropertyAttributes::DEFAULT, data});
+
         return *this;
     }
     template <typename PropertyType>

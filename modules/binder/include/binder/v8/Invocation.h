@@ -69,7 +69,7 @@ typename std::enable_if<laya::internal::is_void_return<Func>::value, jsvm::Value
     return nullptr;
 }
 
-template <typename ReturnType, typename... Args> void InvokeFunction(jsvm::Env env, jsvm::CallbackInfo info)
+template <typename ReturnType, typename... Args> jsvm::Value InvokeMethodStatic(jsvm::Env env, jsvm::CallbackInfo info)
 {
 
     size_t argc = sizeof...(Args);
@@ -88,55 +88,17 @@ template <typename ReturnType, typename... Args> void InvokeFunction(jsvm::Env e
         return;
     }
 */
-    tuple_call<std::tuple<Args...>>(funcInfo->func, argv, std::make_index_sequence<sizeof...(Args)>());
+    return tuple_call<std::tuple<Args...>>(funcInfo->func, argv, std::make_index_sequence<sizeof...(Args)>());
 }
-
-template <typename ClassType, typename ReturnType, typename... Args>
-void InvokeClassMethod(const v8::FunctionCallbackInfo<v8::Value> &args)
-{
-    void *data = args.Data().As<v8::External>()->Value();
-    typedef ReturnType (ClassType::*FunctorType)(Args...);
-    FuncInfo<FunctorType> *funcInfo = (FuncInfo<FunctorType> *)data;
-    v8::Local<v8::Object> pthis = args.This();
-    ClassType *pObj = (ClassType *)pthis->GetAlignedPointerFromInternalField(0);
-    if ((unsigned long)args.Length() < sizeof...(Args))
-    {
-        LOGE("Not enough arguments for function  %s", funcInfo->name.c_str());
-        args.GetIsolate()->ThrowException(
-            v8::String::NewFromUtf8(args.GetIsolate(), "Not enough arguments for function.").ToLocalChecked());
-        return;
-    }
-    tuple_call_with_this<ClassType, std::tuple<Args...>>(pObj, funcInfo->func, args,
-                                                         std::make_index_sequence<sizeof...(Args)>());
-}
-
-template <typename ClassType, typename ReturnType, typename... Args>
-void InvokeClassMethodOptionalOverride(const v8::FunctionCallbackInfo<v8::Value> &args)
-{
-    void *data = args.Data().As<v8::External>()->Value();
-    typedef ReturnType (*FunctorType)(ClassType &, Args...);
-    FuncInfo<FunctorType> *funcInfo = (FuncInfo<FunctorType> *)data;
-    v8::Local<v8::Object> pthis = args.This();
-    ClassType *pObj = (ClassType *)pthis->GetAlignedPointerFromInternalField(0);
-    if ((unsigned long)args.Length() < sizeof...(Args))
-    {
-        LOGE("Not enough arguments for function  %s", funcInfo->name.c_str());
-        args.GetIsolate()->ThrowException(
-            v8::String::NewFromUtf8(args.GetIsolate(), "Not enough arguments for function.").ToLocalChecked());
-        return;
-    }
-
-    tuple_call_optional_override<ClassType, std::tuple<Args...>>(pObj, funcInfo->func, args,
-                                                                 std::make_index_sequence<sizeof...(Args)>());
-}
+#if 0
 template <typename ReturnType, typename... Args>
 void InvokeGlobalMethodOptionalOverride(jsvm::Env env, jsvm::CallbackInfo info)
 {
-    size_t argc = 0;
-    jsvm::Value argv[128];
+    size_t argc = sizeof...(Args);
+    jsvm::Value argv[sizeof...(Args)];
     jsvm::Value _this;
     void *data;
-    NODE_API_CALL(env, GetCbInfo(env, info, &argc, argv, &_this, &data));
+    GetCbInfo(env, info, &argc, argv, &_this, &data);
     // NODE_API_ASSERT(env, argc >= 1, "Not enough arguments, expected 1.");
 
     typedef ReturnType (*FunctorType)(Args...);
@@ -152,6 +114,64 @@ void InvokeGlobalMethodOptionalOverride(jsvm::Env env, jsvm::CallbackInfo info)
 
     tuple_call<std::tuple<Args...>>(funcInfo->func, args, std::make_index_sequence<sizeof...(Args)>());
 }
+#endif
+template <typename ClassType, typename ReturnType, typename... Args>
+jsvm::Value InvokeClassMethod(jsvm::Env env, jsvm::CallbackInfo info)
+{
+    size_t argc = sizeof...(Args);
+    jsvm::Value argv[sizeof...(Args)];
+    jsvm::Value _this;
+    void *data;
+    jsvm::GetCbInfo(env, info, &argc, argv, &_this, &data);
+    // NODE_API_ASSERT(env, argc >= 1, "Wrong number of arguments");
+    ClassType *pObj;
+    jsvm::Unwrap(env, wrapped, reinterpret_cast<void **>(&pObj));
+    // void *data = args.Data().As<v8::External>()->Value();
+    typedef ReturnType (ClassType::*FunctorType)(Args...);
+    FuncInfo<FunctorType> *funcInfo = (FuncInfo<FunctorType> *)data;
+    // v8::Local<v8::Object> pthis = args.This();
+    // ClassType *pObj = (ClassType *)pthis->GetAlignedPointerFromInternalField(0);
+    /*if ((unsigned long)args.Length() < sizeof...(Args))
+    {
+        LOGE("Not enough arguments for function  %s", funcInfo->name.c_str());
+        args.GetIsolate()->ThrowException(
+            v8::String::NewFromUtf8(args.GetIsolate(), "Not enough arguments for function.").ToLocalChecked());
+        return nullptr;
+    }*/
+    return tuple_call_with_this<ClassType, std::tuple<Args...>>(pObj, funcInfo->func, args,
+                                                                std::make_index_sequence<sizeof...(Args)>());
+}
+
+template <typename ClassType, typename ReturnType, typename... Args>
+jsvm::Value InvokeClassMethodOptionalOverride(jsvm::Env env, jsvm::CallbackInfo info)
+{
+    size_t argc = sizeof...(Args);
+    jsvm::Value argv[sizeof...(Args)];
+    jsvm::Value _this;
+    void *data;
+    jsvm::GetCbInfo(env, info, &argc, argv, &_this, &data);
+    // NODE_API_ASSERT(env, argc >= 1, "Wrong number of arguments");
+    ClassType *pObj;
+    jsvm::Unwrap(env, wrapped, reinterpret_cast<void **>(&pObj));
+
+    // void *data = args.Data().As<v8::External>()->Value();
+    typedef ReturnType (*FunctorType)(ClassType &, Args...);
+    FuncInfo<FunctorType> *funcInfo = (FuncInfo<FunctorType> *)data;
+
+    // v8::Local<v8::Object> pthis = args.This();
+    // ClassType *pObj = (ClassType *)pthis->GetAlignedPointerFromInternalField(0);
+    /*if ((unsigned long)args.Length() < sizeof...(Args))
+    {
+        LOGE("Not enough arguments for function  %s", funcInfo->name.c_str());
+        args.GetIsolate()->ThrowException(
+            v8::String::NewFromUtf8(args.GetIsolate(), "Not enough arguments for function.").ToLocalChecked());
+        return nullptr;
+    }*/
+
+    return tuple_call_optional_override<ClassType, std::tuple<Args...>>(pObj, funcInfo->func, args,
+                                                                        std::make_index_sequence<sizeof...(Args)>());
+}
+
 template <typename ClassType, typename... Args>
 ClassType *InvokeClassConstructor(jsvm::Env env, jsvm::CallbackInfo info)
 {
@@ -159,31 +179,44 @@ ClassType *InvokeClassConstructor(jsvm::Env env, jsvm::CallbackInfo info)
                                                                         std::make_index_sequence<sizeof...(Args)>());
 }
 
-template <typename ClassType, typename PropertyType> void InvokeClassGetter(Env env, CallbackInfo info)
+template <typename ClassType, typename PropertyType> jsvm::Value InvokeClassGetter(Env env, CallbackInfo info)
 {
-    auto funcInfo =
-        (PropFuncInfo<PropertyType (ClassType::*)(), void (ClassType::*)(PropertyType data)> *)v8::External::Cast(
-            *info.Data())
-            ->Value();
-    v8::Local<v8::Object> pthis = info.This();
-    ClassType *pObj = (ClassType *)pthis->GetAlignedPointerFromInternalField(0);
-    info.GetReturnValue().Set(laya::Converter<PropertyType>::ToJs((pObj->*funcInfo->fGet)()));
+    // size_t argc = 1;
+    // napi_value args[1];
+    napi_value js_this;
+    void *data;
+    jsvm::GetCbInfo(env, info, nullptr, nullptr, &js_this, &data);
+    // NODE_API_ASSERT(env, argc >= 1, "Wrong number of arguments");
+    ClassType *pObj;
+    jsvm::Unwrap(env, wrapped, reinterpret_cast<void **>(&pObj));
+
+    auto funcInfo = (PropFuncInfo<PropertyType (ClassType::*)(), void (ClassType::*)(PropertyType data)> *)data;
+
+    // v8::Local<v8::Object> pthis = info.This();
+    // ClassType *pObj = (ClassType *)pthis->GetAlignedPointerFromInternalField(0);
+    return laya::Converter<PropertyType>::ToJs((pObj->*funcInfo->fGet)());
 }
 
 template <typename ClassType, typename PropertyType>
-void InvokeClassGetPropertyOptionalOverride(v8::Local<v8::String> property,
-                                            const v8::PropertyCallbackInfo<v8::Value> &info)
+jsvm::Value InvokeClassGetterOptionalOverride(Env env, CallbackInfo info)
 {
-    auto funcInfo =
-        (PropFuncInfo<PropertyType (*)(ClassType &), void (*)(ClassType &, PropertyType data)> *)v8::External::Cast(
-            *info.Data())
-            ->Value();
-    v8::Local<v8::Object> pthis = info.This();
-    ClassType *pObj = (ClassType *)pthis->GetAlignedPointerFromInternalField(0);
-    info.GetReturnValue().Set(laya::Converter<PropertyType>::ToJs((*funcInfo->fGet)(*pObj)));
+
+    // size_t argc = 1;
+    // napi_value args[1];
+    napi_value js_this;
+    void *data;
+    jsvm::GetCbInfo(env, info, nullptr, nullptr, &js_this, &data);
+    // NODE_API_ASSERT(env, argc >= 1, "Wrong number of arguments");
+    ClassType *pObj;
+    jsvm::Unwrap(env, wrapped, reinterpret_cast<void **>(&pObj));
+
+    auto funcInfo = (PropFuncInfo<PropertyType (*)(ClassType &), void (*)(ClassType &, PropertyType data)> *)data;
+    // v8::Local<v8::Object> pthis = info.This();
+    // ClassType *pObj = (ClassType *)pthis->GetAlignedPointerFromInternalField(0);
+    return laya::Converter<PropertyType>::ToJs((*funcInfo->fGet)(*pObj));
 }
 
-template <typename ClassType, typename PropertyType> void InvokeClassSetter(Env env, CallbackInfo info)
+template <typename ClassType, typename PropertyType> jsvm::Value InvokeClassSetter(Env env, CallbackInfo info)
 {
 
     size_t argc = 1;
@@ -198,9 +231,11 @@ template <typename ClassType, typename PropertyType> void InvokeClassSetter(Env 
     auto funcInfo = (PropFuncInfo<PropertyType (ClassType::*)(), void (ClassType::*)(PropertyType data)> *)data;
 
     (pObj->*funcInfo->fSet)(Converter<PropertyType>::ToCpp(args[0]));
+    return nullptr;
 }
 
-template <typename ClassType, typename PropertyType> void InvokeClassSetterOptionalOverride(Env env, CallbackInfo info)
+template <typename ClassType, typename PropertyType>
+jsvm::Value InvokeClassSetterOptionalOverride(Env env, CallbackInfo info)
 {
     size_t argc = 1;
     napi_value args[1];
@@ -214,6 +249,7 @@ template <typename ClassType, typename PropertyType> void InvokeClassSetterOptio
     auto funcInfo = (PropFuncInfo<PropertyType (*)(ClassType &), void (*)(ClassType &, PropertyType data)> *)data;
 
     (*funcInfo->fSet)(*pObj, Converter<PropertyType>::ToCpp(value));
+    return nullptr;
 }
 
 template <typename PropertyType> jsvm::Value InvokeClassGetterStatic(Env env, CallbackInfo info)
@@ -232,7 +268,7 @@ template <typename PropertyType> jsvm::Value InvokeClassGetterStatic(Env env, Ca
     return laya::Converter<PropertyType>::ToJs((funcInfo->fGet)());
 }
 
-template <typename PropertyType> void InvokeClassSetterStatic(Env env, CallbackInfo info)
+template <typename PropertyType> jsvm::Value InvokeClassSetterStatic(Env env, CallbackInfo info)
 {
     size_t argc = 1;
     napi_value args[1];
@@ -246,6 +282,7 @@ template <typename PropertyType> void InvokeClassSetterStatic(Env env, CallbackI
     auto funcInfo = (PropFuncInfo<PropertyType (*)(), void (*)(PropertyType data)> *)data;
 
     (funcInfo->fSet)(Converter<PropertyType>::ToCpp(args[0]));
+    return nullptr;
 }
 
 template <typename ClassType, typename PropertyType>
@@ -278,7 +315,7 @@ jsvm::Value InvokeClassSetterField(jsvm::Env env, jsvm::CallbackInfo info)
     return NULL;
 }
 
-template <typename ReturnType, typename... Args> struct V8Call;
+// template <typename ReturnType, typename... Args> struct V8Call;
 
 template <typename... Args> jsvm::Value v8_call(jsvm::Env env, jsvm::Value self, jsvm::Value func, const Args &...args)
 {

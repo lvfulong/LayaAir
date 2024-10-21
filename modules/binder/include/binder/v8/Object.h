@@ -231,12 +231,14 @@ class Object
             ->Set(isolate()->GetCurrentContext(), name_string,
                 t->GetFunction(isolate()->GetCurrentContext()).ToLocalChecked())
             .FromJust();*/
-        FuncInfo<decltype(func)> *data = new FuncInfo<decltype(func)>(func);
+        /*FuncInfo<decltype(func)> *data = new FuncInfo<decltype(func)>(func);
         internal::addDeinitializer([data]() { delete data; });
         data->name = name;
         propertyDescriptorVector_.emplace_back(PropertyDescriptor{
             (name), NULL, (internal::InvokeFunction<ReturnType, Args...>), NULL, NULL, NULL, napi_default, data});
-        return *this;
+        return *this;*/
+
+        return function(name, func)
     }
     template <typename ReturnType, typename... Args>
     Object &function_optional_override(std::string_view name, ReturnType (*func)(Args...))
