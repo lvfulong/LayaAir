@@ -78,7 +78,8 @@ class ClassRegistryBase
     std::unordered_map<void *, ObjectRegistry> objects_;
     std::vector<ClassRegistryBase *> bases_;
     std::vector<ClassRegistryBase *> derivatives_;
-public:
+
+  public:
     virtual ~ClassRegistryBase()
     {
     }
@@ -104,7 +105,9 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
 {
   public:
     typedef ClassType *(*ConstructorFunctionType)(const v8::FunctionCallbackInfo<v8::Value> &info);
-    ClassRegistry(jsvm::Env env) : env_(env) {}
+    ClassRegistry(jsvm::Env env) : env_(env)
+    {
+    }
     virtual ~ClassRegistry()
     {
         auto it = objects_.begin();
@@ -122,8 +125,8 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
         }
         objects_.clear();
 
-        //func_.Reset();
-        //js_func_.Reset();
+        // func_.Reset();
+        // js_func_.Reset();
         jsvm::DeleteReference(env_, classRef_);
     }
 
@@ -173,8 +176,8 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
             return scope.Escape(obj);
         }
         */
-        //size_t argc = 0;
-        //jsvm::Value args[1];
+        // size_t argc = 0;
+        // jsvm::Value args[1];
 
         jsvm::Value cons;
         jsvm::GetReferenceValue(env, classRef_, &cons);
@@ -182,8 +185,8 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
         jsvm::NewInstance(env, cons, 0, nullptr, &instance);
 
         jsvm::Wrap(env, jsThis, reinterpret_cast<void *>(objectPointer), MyObject::Destructor,
-                  nullptr, // finalize_hint
-                  &obj->wrapper_);
+                   nullptr, // finalize_hint
+                   &obj->wrapper_);
 
         return instance;
     }
@@ -297,6 +300,7 @@ template <typename ClassType> class class_
 
     jsvm::Value ctor_;
     std::vector<jsvm::PropertyDescriptor> propertyDescriptorVector_;
+
   public:
     template <typename... Args> class_ &constructor()
     {
@@ -379,29 +383,34 @@ template <typename ClassType> class class_
     }
     template <typename PropertyType>
     class_ &property(std::string_view name, PropertyType (ClassType::*get)(void),
-                     void (ClassType::*set)(PropertyType data) = nullptr)
+                     void (ClassType::*set)(PropertyType value) = nullptr)
     {
 
-        auto info = new PropFuncInfo<decltype(get), decltype(set)>(get, set);
-        internal::addDeinitializer([info]() { delete info; });
-        classRegistry_.class_function_template()->PrototypeTemplate()->SetAccessor(
+        auto data = new PropFuncInfo<decltype(get), decltype(set)>(get, set);
+        internal::addDeinitializer([data]() { delete data; });
+        /*classRegistry_.class_function_template()->PrototypeTemplate()->SetAccessor(
             Js_Str(isolate_, name.data()), internal::InvokeClassGetProperty<ClassType, PropertyType>,
             set == nullptr ? nullptr : internal::InvokeClassSetProperty<ClassType, PropertyType>,
-            v8::External::New(isolate_, (void *)info));
-
+            v8::External::New(isolate_, (void *)info));*/
+        propertyDescriptorVector_.emplace_back(PropertyDescriptor{
+            (name), NULL, NULL, internal::InvokeClassGetter<ClassType, PropertyType>,
+            internal::InvokeClassSetter<ClassType, PropertyType>, NULL, PropertyAttributes::DEFAULT, data});
         return *this;
     }
     template <typename PropertyType>
     class_ &property_optional_override(std::string_view name, PropertyType (*get)(ClassType &),
-                                       void (*set)(ClassType &, PropertyType data) = nullptr)
+                                       void (*set)(ClassType &, PropertyType value) = nullptr)
     {
 
-        auto info = new PropFuncInfo<decltype(get), decltype(set)>(get, set);
-        internal::addDeinitializer([info]() { delete info; });
-        classRegistry_.class_function_template()->PrototypeTemplate()->SetAccessor(
+        auto data = new PropFuncInfo<decltype(get), decltype(set)>(get, set);
+        internal::addDeinitializer([data]() { delete data; });
+        /*classRegistry_.class_function_template()->PrototypeTemplate()->SetAccessor(
             Js_Str(isolate_, name.data()), internal::InvokeClassGetPropertyOptionalOverride<ClassType, PropertyType>,
             set == nullptr ? nullptr : internal::InvokeClassSetPropertyOptionalOverride<ClassType, PropertyType>,
-            v8::External::New(isolate_, (void *)info));
+            v8::External::New(isolate_, (void *)info));*/
+        propertyDescriptorVector_.emplace_back(PropertyDescriptor{
+            (name), NULL, NULL, internal::InvokeClassGetterOverride<ClassType, PropertyType>,
+            internal::InvokeClassSetterOverride<ClassType, PropertyType>, NULL, PropertyAttributes::DEFAULT, data});
 
         return *this;
     }
@@ -409,31 +418,35 @@ template <typename ClassType> class class_
         typename PropertyType /*, typename = typename std::enable_if<!std::is_function<PropertyType>::value>::type>*/>
     const class_ &property_field(std::string_view name, PropertyType ClassType::*field) const
     {
-        auto info = new FuncInfo<decltype(field)>(field);
-        internal::addDeinitializer([info]() { delete info; });
+        auto data = new FuncInfo<decltype(field)>(field);
+        internal::addDeinitializer([data]() { delete data; });
         /*classRegistry_.class_function_template()->PrototypeTemplate()->SetAccessor(
             Js_Str(isolate_, name.data()), internal::InvokeGetPropertyField<ClassType, PropertyType>,
             internal::InvokeSetPropertyField<ClassType, PropertyType>, v8::External::New(isolate_, (void *)info));*/
-        propertyDescriptorVector_.emplace_back(
-            PropertyDescriptor{ (name), NULL , NULL,  internal::InvokeGetPropertyField<ClassType, PropertyType>,
-            internal::InvokeSetPropertyField<ClassType, PropertyType>, NULL, napi_default, info });
+        propertyDescriptorVector_.emplace_back(PropertyDescriptor{
+            (name), NULL, NULL, internal::InvokeClassGetterField<ClassType, PropertyType>,
+            internal::InvokeClassSetterField<ClassType, PropertyType>, NULL, PropertyAttributes::DEFAULT, data});
 
         return *this;
     }
     template <typename PropertyType>
-    class_ &class_property(std::string_view name, PropertyType (*get)(void), void (*set)(PropertyType data) = nullptr)
+    class_ &class_property(std::string_view name, PropertyType (*get)(void), void (*set)(PropertyType value) = nullptr)
     {
 
-        auto info = new PropFuncInfo<decltype(get), decltype(set)>(get, set);
-        internal::addDeinitializer([info]() { delete info; });
-        v8::Local<v8::String> name_string =
+        auto data = new PropFuncInfo<decltype(get), decltype(set)>(get, set);
+        internal::addDeinitializer([data]() { delete data; });
+        /*v8::Local<v8::String> name_string =
             v8::String::NewFromUtf8(isolate_, name.data(), v8::NewStringType::kInternalized).ToLocalChecked();
         classRegistry_.js_function_template()
             ->GetFunction(isolate_->GetCurrentContext())
             .ToLocalChecked()
             ->SetAccessor(isolate_->GetCurrentContext(), name_string, internal::InvokeGetProperty<PropertyType>,
                           set == nullptr ? nullptr : internal::InvokeSetProperty<PropertyType>,
-                          v8::External::New(isolate_, (void *)info));
+                          v8::External::New(isolate_, (void *)info));*/
+
+        propertyDescriptorVector_.emplace_back(PropertyDescriptor{
+            (name), NULL, NULL, internal::InvokeClassGetterStatic<PropertyType>,
+            internal::InvokeClassSetterStatic<PropertyType>, NULL, PropertyAttributes::STATIC, data});
         return *this;
     }
 
@@ -504,7 +517,7 @@ template <typename ClassType> static void New(jsvm::Env env, jsvm::CallbackInfo 
     jsvm::GetNewTarget(env, info, &newTarget);
     // if (newTarget != nullptr)
     {
-        // new MyObject(...) 
+        // new MyObject(...)
         size_t argc = 1;
         jsvm::Value args[1];
         jsvm::Value jsThis;
@@ -552,39 +565,39 @@ template <typename ClassType> static void New(jsvm::Env env, jsvm::CallbackInfo 
 #endif
 }
 
- /*   v8::HandleScope scope(isolate_);
+/*   v8::HandleScope scope(isolate_);
 
-    v8::Local<v8::FunctionTemplate> func = v8::FunctionTemplate::New(isolate_);
-    v8::Local<v8::FunctionTemplate> js_func = v8::FunctionTemplate::New(
-        isolate_,
-        [](v8::FunctionCallbackInfo<v8::Value> const &args) {
-            v8::Isolate *isolate = args.GetIsolate();
-            v8::EscapableHandleScope scope(isolate);
-            ClassRegistry<ClassType> *this_ = (ClassRegistry<ClassType> *)v8::External::Cast(*args.Data())->Value();
+   v8::Local<v8::FunctionTemplate> func = v8::FunctionTemplate::New(isolate_);
+   v8::Local<v8::FunctionTemplate> js_func = v8::FunctionTemplate::New(
+       isolate_,
+       [](v8::FunctionCallbackInfo<v8::Value> const &args) {
+           v8::Isolate *isolate = args.GetIsolate();
+           v8::EscapableHandleScope scope(isolate);
+           ClassRegistry<ClassType> *this_ = (ClassRegistry<ClassType> *)v8::External::Cast(*args.Data())->Value();
 
-            v8::Local<v8::Context> context = isolate->GetCurrentContext();
-            v8::Local<v8::Function> func;
-            v8::Local<v8::Object> obj;
-            if (this_->class_function_template()->GetFunction(context).ToLocal(&func) &&
-                func->NewInstance(context).ToLocal(&obj))
-            {
-                ClassType *object = this_->ConstructObject(args.Length(), args);
-                obj->SetAlignedPointerInInternalField(0, object);
-                obj->SetAlignedPointerInInternalField(1, this_);
+           v8::Local<v8::Context> context = isolate->GetCurrentContext();
+           v8::Local<v8::Function> func;
+           v8::Local<v8::Object> obj;
+           if (this_->class_function_template()->GetFunction(context).ToLocal(&func) &&
+               func->NewInstance(context).ToLocal(&obj))
+           {
+               ClassType *object = this_->ConstructObject(args.Length(), args);
+               obj->SetAlignedPointerInInternalField(0, object);
+               obj->SetAlignedPointerInInternalField(1, this_);
 
-                v8::Global<v8::Object> pobj(isolate, obj);
-                pobj.SetWeak(this_, WeakCallback<ClassType>, v8::WeakCallbackType::kInternalFields);
-                this_->objects_.emplace(object, ObjectRegistry{std::move(pobj)});
-            }
+               v8::Global<v8::Object> pobj(isolate, obj);
+               pobj.SetWeak(this_, WeakCallback<ClassType>, v8::WeakCallbackType::kInternalFields);
+               this_->objects_.emplace(object, ObjectRegistry{std::move(pobj)});
+           }
 
-            args.GetReturnValue().Set(scope.Escape(obj));
-        },
-        v8::External::New(isolate_, this));
+           args.GetReturnValue().Set(scope.Escape(obj));
+       },
+       v8::External::New(isolate_, this));
 
-    func_.Reset(isolate_, func);
-    js_func_.Reset(isolate_, js_func);
-    func->InstanceTemplate()->SetInternalFieldCount(2);
-    func->Inherit(js_func);
+   func_.Reset(isolate_, func);
+   js_func_.Reset(isolate_, js_func);
+   func->InstanceTemplate()->SetInternalFieldCount(2);
+   func->Inherit(js_func);
 }*/
 template <typename ClassType> jsvm::Value wrapCppObject(ClassType *objectPointer, bool callDestructor)
 {

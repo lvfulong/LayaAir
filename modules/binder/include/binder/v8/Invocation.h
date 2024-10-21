@@ -159,8 +159,7 @@ ClassType *InvokeClassConstructor(jsvm::Env env, jsvm::CallbackInfo info)
                                                                         std::make_index_sequence<sizeof...(Args)>());
 }
 
-template <typename ClassType, typename PropertyType>
-void InvokeClassGetProperty(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value> &info)
+template <typename ClassType, typename PropertyType> void InvokeClassGetter(Env env, CallbackInfo info)
 {
     auto funcInfo =
         (PropFuncInfo<PropertyType (ClassType::*)(), void (ClassType::*)(PropertyType data)> *)v8::External::Cast(
@@ -184,56 +183,73 @@ void InvokeClassGetPropertyOptionalOverride(v8::Local<v8::String> property,
     info.GetReturnValue().Set(laya::Converter<PropertyType>::ToJs((*funcInfo->fGet)(*pObj)));
 }
 
-template <typename ClassType, typename PropertyType>
-void InvokeClassSetProperty(v8::Local<v8::String> property, v8::Local<v8::Value> value,
-                            const v8::PropertyCallbackInfo<void> &info)
+template <typename ClassType, typename PropertyType> void InvokeClassSetter(Env env, CallbackInfo info)
 {
-    auto funcInfo =
-        (PropFuncInfo<PropertyType (ClassType::*)(), void (ClassType::*)(PropertyType data)> *)v8::External::Cast(
-            *info.Data())
-            ->Value();
 
-    v8::Local<v8::Object> pthis = info.This();
-    ClassType *pObj = (ClassType *)pthis->GetAlignedPointerFromInternalField(0);
+    size_t argc = 1;
+    napi_value args[1];
+    napi_value js_this;
+    void *data;
+    jsvm::GetCbInfo(env, info, argc, args, &js_this, &data);
+    // NODE_API_ASSERT(env, argc >= 1, "Wrong number of arguments");
+    ClassType *pObj;
+    jsvm::Unwrap(env, wrapped, reinterpret_cast<void **>(&pObj));
 
-    (pObj->*funcInfo->fSet)(Converter<PropertyType>::ToCpp(value));
+    auto funcInfo = (PropFuncInfo<PropertyType (ClassType::*)(), void (ClassType::*)(PropertyType data)> *)data;
+
+    (pObj->*funcInfo->fSet)(Converter<PropertyType>::ToCpp(args[0]));
 }
 
-template <typename ClassType, typename PropertyType>
-void InvokeClassSetPropertyOptionalOverride(v8::Local<v8::String> property, v8::Local<v8::Value> value,
-                                            const v8::PropertyCallbackInfo<void> &info)
+template <typename ClassType, typename PropertyType> void InvokeClassSetterOptionalOverride(Env env, CallbackInfo info)
 {
-    auto funcInfo =
-        (PropFuncInfo<PropertyType (*)(ClassType &), void (*)(ClassType &, PropertyType data)> *)v8::External::Cast(
-            *info.Data())
-            ->Value();
+    size_t argc = 1;
+    napi_value args[1];
+    napi_value js_this;
+    void *data;
+    jsvm::GetCbInfo(env, info, argc, args, &js_this, &data);
+    // NODE_API_ASSERT(env, argc >= 1, "Wrong number of arguments");
+    ClassType *pObj;
+    jsvm::Unwrap(env, wrapped, reinterpret_cast<void **>(&pObj));
 
-    v8::Local<v8::Object> pthis = info.This();
-    ClassType *pObj = (ClassType *)pthis->GetAlignedPointerFromInternalField(0);
+    auto funcInfo = (PropFuncInfo<PropertyType (*)(ClassType &), void (*)(ClassType &, PropertyType data)> *)data;
 
     (*funcInfo->fSet)(*pObj, Converter<PropertyType>::ToCpp(value));
 }
 
-template <typename PropertyType>
-void InvokeGetProperty(v8::Local<v8::Name> property, const v8::PropertyCallbackInfo<v8::Value> &info)
+template <typename PropertyType> jsvm::Value InvokeClassGetterStatic(Env env, CallbackInfo info)
 {
-    auto funcInfo =
-        (PropFuncInfo<PropertyType (*)(), void (*)(PropertyType data)> *)v8::External::Cast(*info.Data())->Value();
-    info.GetReturnValue().Set(laya::Converter<PropertyType>::ToJs((funcInfo->fGet)()));
+
+    // size_t argc = 1;
+    // napi_value args[1];
+    napi_value js_this;
+    void *data;
+    jsvm::GetCbInfo(env, info, nullptr, nullptr, &js_this, &data);
+    // NODE_API_ASSERT(env, argc >= 1, "Wrong number of arguments");
+    ClassType *pObj;
+    jsvm::Unwrap(env, wrapped, reinterpret_cast<void **>(&pObj));
+
+    auto funcInfo = (PropFuncInfo<PropertyType (*)(), void (*)(PropertyType data)> *)data;
+    return laya::Converter<PropertyType>::ToJs((funcInfo->fGet)());
 }
 
-template <typename PropertyType>
-void InvokeSetProperty(v8::Local<v8::Name> property, v8::Local<v8::Value> value,
-                       const v8::PropertyCallbackInfo<void> &info)
+template <typename PropertyType> void InvokeClassSetterStatic(Env env, CallbackInfo info)
 {
-    auto funcInfo =
-        (PropFuncInfo<PropertyType (*)(), void (*)(PropertyType data)> *)v8::External::Cast(*info.Data())->Value();
+    size_t argc = 1;
+    napi_value args[1];
+    napi_value js_this;
+    void *data;
+    jsvm::GetCbInfo(env, info, argc, args, &js_this, &data);
+    // NODE_API_ASSERT(env, argc >= 1, "Wrong number of arguments");
+    ClassType *pObj;
+    jsvm::Unwrap(env, wrapped, reinterpret_cast<void **>(&pObj));
 
-    (funcInfo->fSet)(Converter<PropertyType>::ToCpp(value));
+    auto funcInfo = (PropFuncInfo<PropertyType (*)(), void (*)(PropertyType data)> *)data;
+
+    (funcInfo->fSet)(Converter<PropertyType>::ToCpp(args[0]));
 }
 
 template <typename ClassType, typename PropertyType>
-jsvm::Value InvokeClassGetPropertyField(jsvm::Env env, jsvm::CallbackInfo info)
+jsvm::Value InvokeClassGetterField(jsvm::Env env, jsvm::CallbackInfo info)
 {
     napi_value js_this;
     void *data;
@@ -247,7 +263,7 @@ jsvm::Value InvokeClassGetPropertyField(jsvm::Env env, jsvm::CallbackInfo info)
 }
 
 template <typename ClassType, typename PropertyType>
-jsvm::Value InvokeClassSetPropertyField(jsvm::Env env, jsvm::CallbackInfo info)
+jsvm::Value InvokeClassSetterField(jsvm::Env env, jsvm::CallbackInfo info)
 {
     size_t argc = 1;
     napi_value args[1];
