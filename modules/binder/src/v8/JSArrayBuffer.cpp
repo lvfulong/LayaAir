@@ -5,8 +5,8 @@
 #include <binder/v8/JSArrayBuffer.h>
 #include <utils/JCMemorySurvey.h>
 #include <utils/Log.h>
-
-namespace laya
+#include <binder/v8/JSEnv.h>
+namespace jsbind
 {
 #if 0
 ArrayBufferAllocator::ArrayBufferAllocator()
@@ -131,8 +131,9 @@ jsvm::Value createJSAB(jsvm::Env env, void *data, int length)
     return ab;
 }*/
 
-bool extractJSAB(jsvm::Env env, jsvm::Value jsval, void **data, size_t *length)
+bool extractJSAB(jsvm::Value jsval, void **data, size_t *length)
 {
+    jsvm::Env env = JSEnv::getCurrent()->getEnv();
     bool is_arraybuffer;
     jsvm::IsArraybuffer(env, jsval, &is_arraybuffer);
 

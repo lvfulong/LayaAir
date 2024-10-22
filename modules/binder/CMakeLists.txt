@@ -12,8 +12,8 @@ set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/JSCProxyTLS.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Converter.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/JSEnv.h
-    #${PUBLIC_HEADER_DIR}/${TARGET}/v8/Context.h
-    #${PUBLIC_HEADER_DIR}/${TARGET}/v8/Module.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Local.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Persistent.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Class.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Value.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Utility.h
@@ -24,7 +24,8 @@ set(SOURCE
     src/v8/JSArrayBuffer.cpp
     src/v8/JSEnv.cpp
     src/v8/Class.cpp
-    #src/v8/Module.cpp
+    src/v8/Persistent.cpp
+    src/v8/Local.cpp
     src/v8/Context.cpp
 )
 

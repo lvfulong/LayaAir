@@ -8,7 +8,7 @@
 #include <v8.h>
 #include  <binder/JSVM_Types.h>
 
-namespace binder
+namespace jsbind
 {
 class Module;
 class Context

@@ -16,7 +16,7 @@
 #include <utils/Log.h>
 #include <v8.h>
 
-namespace laya
+namespace jsbind
 {
 extern void JSAlert(const char *p_sBuffer);
 /*class __JsThrow

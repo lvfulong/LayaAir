@@ -265,6 +265,14 @@ napi_property_attributes convertTo(PropertyAttributes value)
         break;
     }
 }
+inline /*JSVM_EXTERN*/ Status CreateEnv(VM vm, size_t propertyCount, const PropertyDescriptor *properties, Env *result)
+{
+
+}
+inline /*JSVM_EXTERN*/ Status DestroyEnv(Env env)
+{
+    
+}
 inline /*JSVM_EXTERN*/ Status GetArrayLength(Env env, Value value, uint32_t *result)
 {
     return ConvertToStatus(napi_get_array_length(env, value, result));
@@ -481,5 +489,17 @@ inline /*JSVM_EXTERN*/ Status GetDataviewInfo(Env env, Value dataview, size_t *b
 {
 
     return ConvertToStatus(napi_get_dataview_info(env, dataview, bytelength, data, arraybuffer, byteOffset));
+}
+inline /*JSVM_EXTERN*/ Status GetGlobal(Env env, Value *result)
+{
+    return ConvertToStatus(napi_get_global(env, result));
+}
+inline /*JSVM_EXTERN*/ Status SetInstanceData(Env env, void *data, Finalize finalizeCb, void *finalizeHint)
+{
+    return ConvertToStatus(napi_set_instance_data(env, data, finalizeCb, finalizeHint));
+}
+inline /*JSVM_EXTERN*/ Status GetInstanceData(Env env, void **data)
+{
+    return ConvertToStatus(napi_get_instance_data(env, data));
 }
 } // namespace jsvm

@@ -4,7 +4,7 @@
 #include <map>
 #include <v8.h>
 
-namespace laya
+namespace jsbind
 {
 enum Embedder : uint16_t
 {

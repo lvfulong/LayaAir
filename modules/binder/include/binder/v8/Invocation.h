@@ -8,7 +8,7 @@
 #include <type_traits>
 #include <utils/FunctionTraits.h>
 
-namespace binder
+namespace jsbind
 {
 namespace internal
 {

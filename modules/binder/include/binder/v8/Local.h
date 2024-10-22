@@ -1,0 +1,75 @@
+#ifndef __JSBIND_LOCAL_H__
+#define __JSBIND_LOCAL_H__
+
+#include <assert.h>
+#include <binder/JSVM_Types.h>
+#include <binder/v8/Class.h>
+
+namespace jsbind
+{
+class Local
+{
+  public:
+    Local();
+    Local(jsvm::Value);
+    Local(Local const &) = default;
+    Local &operator=(Local const &) = default;
+
+    Local(Local &&) = default;
+    Local &operator=(Local &&) = default;
+    template <typename ReturnType, typename... Args> ReturnType call(jsvm::Value recv, const Args &...args)
+    {
+        auto JSEnv = JSEnv::getCurrent();
+        DEBUG_CHECK(nullptr != JSEnv);
+        jsvm::Env env = JSEnv->getEnv();
+        DEBUG_CHECK(nullptr != env);
+
+        return call(env, recv, ... args)
+    }
+    template <typename ClassType, typename ReturnType, typename... Args>
+    ReturnType call(ClassType *recv, const Args &...args)
+    {
+        auto JSEnv = JSEnv::getCurrent();
+        DEBUG_CHECK(nullptr != JSEnv);
+        jsvm::Env env = JSEnv->getEnv();
+        DEBUG_CHECK(nullptr != env);
+
+        ClassRegistry<ClassType> &classRegistry =
+            ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
+        auto objectRegistry = classRegistry.getObjectRegistry(recv);
+        DEBUG_CHECK(objectRegistry != nullptr);
+        svm::Value result_recv;
+        Status status = GetReferenceValue(env, objectRegistry, &result_recv);
+        DEBUG_CHECK(status == jsvm::Status::OK);
+
+        return call(env, result_recv, ... args)
+    }
+    jsvm::Value getHandle() const
+    {
+        return handle_;
+    }
+
+  private:
+    template <typename ClassType, typename ReturnType, typename... Args>
+    ReturnType call(jsvm::Env env, jsvm::Value recv, const Args &...args)
+    {
+        jsvm::Value func = getHandle(env);
+        jsvm::ValueType valueType;
+        jsvm::Status status = Typeof(env, func, &valueType)
+
+            if (func != nullptr && status == jsvm::Status::OK && valueType == jsvm::ValueType::FUNCTION)
+        {
+            auto result = internal::v8_call(recv, func, args...);
+            return Converter<ReturnType>::ToCpp(result);
+        }
+        else
+        {
+            return ReturnType();
+        }
+    }
+
+  private:
+    jsvm::Value handle_ = nullptr;
+};
+} // namespace jsbind
+#endif

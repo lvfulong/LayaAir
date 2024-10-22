@@ -13,9 +13,9 @@
 #include <binder/v8/Converter.h>
 #include <binder/v8/Class.h>
 #include <binder/v8/Context.h>
-//include <binder/v8/Module.h>
-//#include <binder/v8/Object.h>
-#include <binder/v8/Value.h>
+#include <binder/v8/Persistent.h>
+#include <binder/v8/Object.h>
+#include <binder/v8/Local.h>
 #ifdef JS_V8_DEBUGGER
 #include <binder/v8/v8debug/debug-agent.h>
 #endif

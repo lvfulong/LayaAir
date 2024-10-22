@@ -1,7 +1,7 @@
 #include <binder/v8/Context.h>
 #include <binder/v8/Module.h>
 
-namespace laya
+namespace jsbind
 {
 Context &Context::module(std::string_view name, Module &m)
 {

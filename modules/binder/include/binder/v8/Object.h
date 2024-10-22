@@ -8,7 +8,7 @@
 #include "Converter.h"
 #include <binder/JSVM_Types.h>
 
-namespace laya
+namespace jsbind
 {
 
 template <typename T>
@@ -197,7 +197,7 @@ class Object
     }
     // Object& module(std::string_view name, Module& m);
 
-    template <typename T> Object &class_(std::string_view name, laya::class_<T> &cl)
+    template <typename T> Object &class_(std::string_view name, jsbind::class_<T> &cl)
     {
         /*v8::HandleScope scope(isolate());
         v8::Local<v8::String> name_string =
@@ -207,7 +207,7 @@ class Object
             ->Set(isolate()->GetCurrentContext(), name_string,
                 cl.js_function_template()->GetFunction(isolate()->GetCurrentContext()).ToLocalChecked())
             .FromJust();*/
-        NODE_API_CALL(env, SetNamedProperty(env, exports_, name.data(), cl.ctor_));
+        SetNamedProperty(env, exports_, name.data(), cl.ctor_);
         return *this;
     }
 

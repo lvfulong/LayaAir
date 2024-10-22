@@ -1,5 +1,5 @@
 #include <binder/v8/IsolateData.h>
-namespace laya
+namespace jsbind
 {
 IsolateData::IsolateData(v8::Isolate *isolate, v8::ArrayBuffer::Allocator *allocator)
     : m_isolate(isolate), m_allocator(allocator)

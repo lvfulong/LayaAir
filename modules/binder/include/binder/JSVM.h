@@ -9,6 +9,8 @@
 
 namespace jsvm
 {
+/*JSVM_EXTERN*/ Status CreateEnv(VM vm, size_t propertyCount, const PropertyDescriptor *properties, Env *result);
+/*JSVM_EXTERN*/ Status DestroyEnv(Env env);
 /*JSVM_EXTERN*/ // Status Init(const InitOptions *options);
 /*JSVM_EXTERN*/ Status CreatePromise(Env env, Deferred *deferred, Value *promise);
 /*JSVM_EXTERN*/ Status ResolveDeferred(Env env, Deferred deferred, Value resolution);
@@ -70,6 +72,9 @@ namespace jsvm
                                          Value *arraybuffer, size_t *byteOffset);
 /*JSVM_EXTERN*/ Status GetDataviewInfo(Env env, Value dataview, size_t *bytelength, void **data, Value *arraybuffer,
                                        size_t *byteOffset);
+/*JSVM_EXTERN*/ Status GetGlobal(Env env, Value *result);
+/*JSVM_EXTERN*/ Status SetInstanceData(Env env, void *data, Finalize finalizeCb, void *finalizeHint);
+/*JSVM_EXTERN*/ Status GetInstanceData(Env env, void **data);
 } // namespace jsvm
 
 #endif

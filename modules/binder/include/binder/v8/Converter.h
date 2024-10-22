@@ -13,7 +13,7 @@
 #include <v8.h>
 #include <vector>
 
-namespace binder
+namespace jsbind
 {
 
 namespace internal

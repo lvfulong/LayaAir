@@ -13,7 +13,7 @@
 #endif
 // #define V8PROFILE
 
-namespace laya
+namespace jsbind
 {
 v8::Persistent<v8::Context> Javascript::m_DebugMessageContext;
 const char *ToCString(const v8::String::Utf8Value &value)
@@ -322,6 +322,10 @@ void JSV8Worker::_runLoop()
     m_pJS->initJSEngine();
     m_pJS->run(call_JSThread__defRunLoop, this);
     m_pJS->uninitJSEngine();
+}
+JSEnv* JSEnv::getCurrent()
+{
+    return nullptr;//todo
 }
 } // namespace laya
 

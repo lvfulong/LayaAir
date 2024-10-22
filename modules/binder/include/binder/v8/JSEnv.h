@@ -12,20 +12,34 @@
 #include "JSArrayBuffer.h"
 #include "JSCProxyTLS.h"
 #include <libplatform/libplatform.h>
-#include <utils/thread/JCWorkerThread.h>
 #include <mutex>
 #include <thread>
 #include <utils/ListNode.h>
 #include <utils/Log.h>
+#include <utils/thread/JCWorkerThread.h>
 #include <v8.h>
 
-namespace laya
+namespace jsbind
 {
 void JSPrint(const char *p_sBuffer);
 void JSAlert(const char *p_sBuffer);
 void evalJS(const char *p_sSource);
 const char *ToCString(const v8::String::Utf8Value &value);
 class IsolateData;
+
+class JSEnv
+{
+  public:
+    static JSEnv *getCurrent();
+    jsvm::Env getEnv()
+    {
+        return env_;
+    }
+
+  private:
+    jsvm::Env env_;
+};
+
 class Javascript
 {
   public:
@@ -76,7 +90,7 @@ class JSThreadInterface
     {
     }
     virtual void post(std::function<void(void)> func) = 0;
-    virtual void on(int nEvent, JCEventEmitter::EventHandler func, void *pInThread = 0) = 0;
+    virtual void on(int nEvent, laya::JCEventEmitter::EventHandler func, void *pInThread = 0) = 0;
     virtual void start() = 0;
     virtual void stop() = 0;
     virtual void initialize(int nPort,
@@ -87,12 +101,12 @@ class JSThreadInterface
     virtual void runDbgFuncs() = 0;
     virtual void waitAndRunDbgFuncs() = 0;
     virtual bool hasDbgFuncs() = 0;
-    virtual JCWorkerThread *getWorker() = 0;
+    virtual laya::JCWorkerThread *getWorker() = 0;
     virtual void run(Javascript::voidfun func, void *pData) = 0;
     virtual void clearFunc() = 0;
 };
 
-class JSV8Worker : public JCWorkerThread
+class JSV8Worker : public laya::JCWorkerThread
 {
   public:
     JSV8Worker();
@@ -127,9 +141,9 @@ class JSMulThread : public JSThreadInterface
     {
         m_kWorker.post(func);
     }
-    void on(int nEvent, JCEventEmitter::EventHandler func, void *pInThread = 0)
+    void on(int nEvent, laya::JCEventEmitter::EventHandler func, void *pInThread = 0)
     {
-        m_kWorker.on(nEvent, func, (JCWorkerThread *)pInThread);
+        m_kWorker.on(nEvent, func, (laya::JCWorkerThread *)pInThread);
     }
     void start()
     {
@@ -180,7 +194,7 @@ class JSMulThread : public JSThreadInterface
         m_DbgFuncLock.unlock();
         return bRet;
     }
-    JCWorkerThread *getWorker()
+    laya::JCWorkerThread *getWorker()
     {
         return &m_kWorker;
     }
@@ -207,7 +221,7 @@ class JSMulThread : public JSThreadInterface
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 // 把Javascript对象放到一个单独的线程中执行。
-class JSSingleThread : public JSThreadInterface
+/*class JSSingleThread : public JSThreadInterface
 {
   public:
     JSSingleThread()
@@ -337,8 +351,8 @@ class JSSingleThread : public JSThreadInterface
     JCEventEmitter::EvtHandlerPack m_kStopFunc;
     std::vector<std::function<void(void)>> m_vFuncQueue; // 需要在此线程执行的函数的队列
     std::mutex m_kQueueLock;
-};
-}; // namespace laya
+};*/
+}; // namespace binder
 //------------------------------------------------------------------------------
 
 #endif //__JSEnv_H__

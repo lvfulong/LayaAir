@@ -97,7 +97,11 @@ using Ref = napi_ref;
 // using Callback = napi_callback;
 // using CDECL = NAPI_CDECL;
 typedef Value(NAPI_CDECL *Callback)(Env env, CallbackInfo info);
+struct VM__
+{
 
+};
+typedef struct  VM__*  VM;
 #endif
 enum class PropertyAttributes
 {

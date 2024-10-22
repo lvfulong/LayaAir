@@ -1,7 +1,7 @@
 #include <binder/v8/Module.h>
 #include <binder/v8/Context.h>
 
-namespace laya
+namespace jsbind
 {
 Enum_::Enum_(Module *owner, std::string_view name, v8::Isolate *isolate)
     : owner_(owner), name_(name), module_(new Module(isolate))

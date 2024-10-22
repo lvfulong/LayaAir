@@ -5,7 +5,7 @@ namespace
 std::vector<std::function<void()>> m_deinitializers;
 }
 
-namespace laya
+namespace jsbind
 {
 
 std::unordered_map<std::string, ClassRegistryBase *> ClassRegistryManager::classRegistryMap_;
