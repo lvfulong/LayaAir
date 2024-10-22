@@ -34,12 +34,12 @@ namespace laya
     std::string JSRuntime::m_strReturn;
     void JSRuntime::setOnFrameFunction(JSValueAsParam p_pFunction)
     {
-        JCConch::s_pScriptRuntime->m_pJSOnFrameFunction.reset(p_pFunction);
+        JCConch::s_pScriptRuntime->m_pJSOnFrameFunction = jsbind::Persistent(p_pFunction);
     }
     void JSRuntime::setZipPackage(JSValueAsParam p_pFunction)
     {
-        JCConch::s_pScriptRuntime->m_pJSZipPackage.reset(p_pFunction);
-        JSZip* zip = (JSZip*)Converter<JSZip*>::ToCpp(JCConch::s_pScriptRuntime->m_pJSZipPackage.toLocal().handle_);
+        JCConch::s_pScriptRuntime->m_pJSZipPackage = jsbind::Persistent(p_pFunction);
+        JSZip* zip = (JSZip*)Converter<JSZip*>::ToCpp(JCConch::s_pScriptRuntime->m_pJSZipPackage.toLocal());
 		if (zip)
 		{
 			g_ZipPackage = &zip->m_zip;
@@ -47,35 +47,35 @@ namespace laya
     }
     void JSRuntime::setOnDrawFunction(JSValueAsParam p_pFunction) 
     {
-        JCConch::s_pScriptRuntime->m_pJSOnDrawFunction.reset(p_pFunction);
+        JCConch::s_pScriptRuntime->m_pJSOnDrawFunction = jsbind::Persistent(p_pFunction);
     }
     void JSRuntime::setOnResizeFunction(JSValueAsParam p_onresize)
     {
-        JCConch::s_pScriptRuntime->m_pJSOnResizeFunction.reset(p_onresize);
+        JCConch::s_pScriptRuntime->m_pJSOnResizeFunction = jsbind::Persistent(p_onresize);
     }
     void JSRuntime::setOnBlurFunction(JSValueAsParam p_pFunction)
     {
-        JCConch::s_pScriptRuntime->m_pJSOnBlurFunction.reset(p_pFunction);
+        JCConch::s_pScriptRuntime->m_pJSOnBlurFunction = jsbind::Persistent(p_pFunction);
     }
     void JSRuntime::setOnFocusFunction(JSValueAsParam p_pFunction)
     {
-        JCConch::s_pScriptRuntime->m_pJSOnFocusFunction.reset(p_pFunction);
+        JCConch::s_pScriptRuntime->m_pJSOnFocusFunction = jsbind::Persistent(p_pFunction);
     }
     void  JSRuntime::setGetWorldTransformFunction(JSValueAsParam p_pFunction)
     {
-        JCConch::s_pScriptRuntime->m_bJSBulletGetWorldTransformHandle.reset(p_pFunction);
+        JCConch::s_pScriptRuntime->m_bJSBulletGetWorldTransformHandle = jsbind::Persistent(p_pFunction);
     }
     void  JSRuntime::setSetWorldTransformFunction(JSValueAsParam p_pFunction)
     {
-        JCConch::s_pScriptRuntime->m_bJSBulletSetWorldTransformHandle.reset(p_pFunction);
+        JCConch::s_pScriptRuntime->m_bJSBulletSetWorldTransformHandle = jsbind::Persistent(p_pFunction);
     }
 	void  JSRuntime::setBulletDrawLineFunction(JSValueAsParam p_pFunction)
 	{
-		JCConch::s_pScriptRuntime->m_bJSBulletDrawLineHandle.reset(p_pFunction);
+		JCConch::s_pScriptRuntime->m_bJSBulletDrawLineHandle = jsbind::Persistent(p_pFunction);
 	}
 	void  JSRuntime::setBulletClearLineFunction(JSValueAsParam p_pFunction)
 	{
-		JCConch::s_pScriptRuntime->m_bJSBulletClearLineHandle.reset(p_pFunction);
+		JCConch::s_pScriptRuntime->m_bJSBulletClearLineHandle = jsbind::Persistent(p_pFunction);
 	}
     void JSRuntime::setBuffer(JSValueAsParam pArrayBuffer) 
     {
@@ -92,7 +92,7 @@ namespace laya
     }
     void JSRuntime::setHref(JSValueAsParam p_sHref)
     {
-        Local href(p_sHref);
+        jsbind::Local href(p_sHref);
         if (href.isString())
         {
             std::string strHef = href.as<std::string>();
@@ -315,11 +315,11 @@ namespace laya
     }
     JsValue JSRuntime::getOnUnhandledRejection()
     {
-        return JCConch::s_pScriptRuntime->m_pJSOnUnhandledRejectionFunction.toLocal().handle_;
+        return JCConch::s_pScriptRuntime->m_pJSOnUnhandledRejectionFunction.getHandle();
     }
 	void JSRuntime::setScreenOrientation(const char* p_strOrientation, JSValueAsParam p_pFunction)
 	{
-		JCConch::s_pScriptRuntime->m_pJSOnScreenOrientationChanged.reset(p_pFunction);
+		JCConch::s_pScriptRuntime->m_pJSOnScreenOrientationChanged = jsbind::Persistent(p_pFunction);
 		static std::unordered_map<std::string, int> nameToVal = {
 			{"landscape", 0},{ "portrait", 1 }, {"user", 2 },{ "behind", 3 }, {"sensor", 4 },{ "nosensor", 5 }, {"sensor_landscape", 6 },{ "sensorLandscape", 6 },
 		{"sensor_portrait", 7 }, {"sensorPortrait", 7 },{ "reverse_landscape", 8 }, {"reverseLandscape", 8 },{ "reverse_portrait", 9 }, {"reversePortrait", 9 },{ "full_sensor", 10 }, {"fullSensor", 10 },
@@ -335,11 +335,11 @@ namespace laya
 	}
 	void JSRuntime::setGlobalRepaint(JSValueAsParam p_pFunction)
 	{
-		JCConch::s_pScriptRuntime->m_pJSSetGlobalRepaintFunction.reset(p_pFunction);
+		JCConch::s_pScriptRuntime->m_pJSSetGlobalRepaintFunction = jsbind::Persistent(p_pFunction);
 	}
 	void JSRuntime::setGlobalRepaintCall()
 	{
-		if (!JCConch::s_pScriptRuntime->m_pJSSetGlobalRepaintFunction.isEmpty())
+		if (!JCConch::s_pScriptRuntime->m_pJSSetGlobalRepaintFunction.isValid())
 		{
 			JCConch::s_pScriptRuntime->m_pJSSetGlobalRepaintFunction.call<void>(getCurrentContext().global());
 		}
@@ -538,7 +538,7 @@ namespace laya
             auto v8function = v8::Local<v8::Function>::Cast(func);
             const unsigned argc = 3;
             v8::Local<v8::Value> argv[argc] = {
-                laya::createJSAB(p_Buff.m_pPtr, p_Buff.m_nLen),
+                createJSAB(p_Buff.m_pPtr, p_Buff.m_nLen),
                 v8::String::NewFromUtf8(isolate, pLocalAddr.c_str(), v8::NewStringType::kNormal).ToLocalChecked(),
                 v8::String::NewFromUtf8(isolate, pSvAddr.c_str(), v8::NewStringType::kNormal).ToLocalChecked()
             };
@@ -645,9 +645,9 @@ namespace laya
     {
         return JCConch::s_pConch->getOS()->postSyncMessage(eventName, data);
     }
-    void JSRuntime::exportJS(Context& context)
+    void JSRuntime::exportJS(jsbind::Object& context)
     {
-        class_<JSRuntime> class_binding;
+        jsbind::class_<JSRuntime> class_binding;
 		class_binding.class_function("postAsyncMessage", &JSRuntime::postAsyncMessage);
         class_binding.class_function("postSyncMessage", &JSRuntime::postSyncMessage);
 		class_binding.class_function("setGlobalRepaint", &JSRuntime::setGlobalRepaint);

@@ -76,9 +76,9 @@ namespace laya
         #endif
     }
     //------------------------------------------------------------------------------
-    void JSNotify::exportJS(Context& context) 
+    void JSNotify::exportJS(jsbind::Object& context) 
     {
-        class_<JSNotify> class_binding;
+        jsbind::class_<JSNotify> class_binding;
         class_binding.class_function("setRepeatNotify", &JSNotify::setRepeatNotify);
         class_binding.class_function("setOnceNotify", &JSNotify::setOnceNotify);
         class_binding.class_function("deleteOnceNotify", &JSNotify::deleteOnceNotify);

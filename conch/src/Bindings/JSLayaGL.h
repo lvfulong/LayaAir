@@ -24,7 +24,7 @@ class JSLayaGL
 
     ~JSLayaGL();
 
-    void exportJS(Context &context);
+    void exportJS(jsbind::Object &context);
 
     void setSyncArrayBufferID(int nSyncArrayBufferID);
 

@@ -117,16 +117,16 @@ namespace laya
             }
         }
     }
-    void JsFile::exportJS(Context& context)
+    void JsFile::exportJS(jsbind::Object& context)
     {
-        class_<JsBlob> class_binding_blob;
+        jsbind::class_<JsBlob> class_binding_blob;
         class_binding_blob.property("size", &JsBlob::GetSize);
         class_binding_blob.property("type", &JsBlob::GetType);
         class_binding_blob.function("close", &JsBlob::close);
         class_binding_blob.function("slice", &JsBlob::slice);
         class_binding_blob.constructor<>();
 
-        class_<JsFile> class_binding_file;
+        jsbind::class_<JsFile> class_binding_file;
         class_binding_file.inherit<JsBlob>();
         class_binding_file.property("lastModifiedDate", &JsFile::GetlastModifiedDate);
         class_binding_file.property("name", &JsFile::GetName);

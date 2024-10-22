@@ -18,7 +18,7 @@ namespace laya
 	void layaDrawline(float sx, float sy, float sz, float ex, float ey, float ez, int color)
 	{
 		auto pScriptRuntime = JCConch::s_pScriptRuntime;
-		if (pScriptRuntime && !pScriptRuntime->m_bJSBulletDrawLineHandle.isEmpty())
+		if (pScriptRuntime && !pScriptRuntime->m_bJSBulletDrawLineHandle.isValid())
 		{
 			pScriptRuntime->m_bJSBulletDrawLineHandle.call<void>(getCurrentContext().global(), sx, sy, sz, ex, ey, ez, color);
 		}
@@ -26,7 +26,7 @@ namespace laya
 	void layaClearLine()
 	{
         auto pScriptRuntime = JCConch::s_pScriptRuntime;
-		if (pScriptRuntime && !pScriptRuntime->m_bJSBulletClearLineHandle.isEmpty())
+		if (pScriptRuntime && !pScriptRuntime->m_bJSBulletClearLineHandle.isValid())
 		{
 			pScriptRuntime->m_bJSBulletClearLineHandle.call<void>(getCurrentContext().global());
 		}

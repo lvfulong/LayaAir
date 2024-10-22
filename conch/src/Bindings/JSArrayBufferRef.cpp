@@ -30,9 +30,9 @@ namespace laya
         return m_bSyncToRender;
     }
 
-    void JSArrayBufferRef::exportJS(Context& context)
+    void JSArrayBufferRef::exportJS(jsbind::Object& context)
     {
-        class_<JSArrayBufferRef> class_binding;
+        jsbind::class_<JSArrayBufferRef> class_binding;
 		class_binding.property("id", &JSArrayBufferRef::getID);
 		class_binding.function("isSyncToRender", &JSArrayBufferRef::getIsSyncToRender);
         class_binding.constructor<>();

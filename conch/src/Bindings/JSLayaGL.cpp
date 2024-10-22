@@ -412,9 +412,9 @@ void JSLayaGL::setMainContextSize(int width, int height)
     JCConch::s_pConchRender->setMainContextSize(width, height);
 }
 
-void JSLayaGL::exportJS(Context &context)
+void JSLayaGL::exportJS(jsbind::Object &context)
 {
-    class_<JSLayaGLWrapper> class_binding;
+    jsbind::class_<JSLayaGLWrapper> class_binding;
     class_binding.class_function("setFrameAndSyncCountArrayBufferID",
                                  &JSLayaGLWrapper::setFrameAndSyncCountArrayBufferID);
     class_binding.class_function("setSyncArrayBufferID", &JSLayaGLWrapper::setSyncArrayBufferID);

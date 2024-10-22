@@ -42,7 +42,7 @@ namespace laya
             m_bEnableCache = b;
         }
 
-        static void exportJS(Context& context);
+        static void exportJS(jsbind::Object& context);
 
     public:
         friend class JsFileReader;

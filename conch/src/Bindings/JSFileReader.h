@@ -13,10 +13,10 @@ namespace laya
 {
     #define __Js_FileReader_Property_Func(pfn,n)  \
             JsValue Get_##pfn() \
-            {return (pfn.toLocal().handle_);} \
+            {return (pfn.getHandle());} \
             void Set_##pfn( JSValueAsParam p_pfn)  \
             {   \
-                pfn.reset(p_pfn);    \
+                pfn = jsbind::Persistent(p_pfn);    \
             }
 
     class JsFileReader
@@ -48,7 +48,7 @@ namespace laya
 
         JsValue GetResult();
 
-        static void exportJS(Context& context);
+        static void exportJS(jsbind::Object& context);
 
         //如果需要下载的话，设置超时参数。非标准
         void setConnTimeout(int tm);
@@ -91,7 +91,7 @@ namespace laya
         void OnStart()
         {
             readyState = LOADING;
-            onloadstart.call<void>(toLocal(this));
+            onloadstart.call<void>(this);
         }
         void OnProgress(size_t p_iSaved, size_t p_iTotal)
         {
@@ -138,13 +138,13 @@ namespace laya
         #define JsFileReaderErr_SecurityError "SecurityError"
         #define JsFileReaderErr_NotReadableError "NotReadableError"
         JsFile*                 m_pFile;
-        Persistent             m_hFileObject;
-        Persistent             onloadstart;	// 在读取开始时触发
-        Persistent             onprogress;	// 在读取进行中定时触发
-        Persistent             onload;		// 在读取成功结束后触发
-        Persistent             onabort;		// 在读取中断时触发
-        Persistent             onerror;		// 在读取错误时触发
-        Persistent             onloadend;		// 在读取结束后，无论成功或者失败都会触发
+        jsbind::Persistent             m_hFileObject;
+        jsbind::Persistent             onloadstart;	// 在读取开始时触发
+        jsbind::Persistent             onprogress;	// 在读取进行中定时触发
+        jsbind::Persistent             onload;		// 在读取成功结束后触发
+        jsbind::Persistent             onabort;		// 在读取中断时触发
+        jsbind::Persistent             onerror;		// 在读取错误时触发
+        jsbind::Persistent             onloadend;		// 在读取结束后，无论成功或者失败都会触发
         const char*             m_pszError;
         unsigned int            readyState;
         static const char*      s_ErrorStr[];

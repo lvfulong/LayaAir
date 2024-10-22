@@ -39,9 +39,9 @@ namespace laya
             return JCConch::s_pConch->urlHistoryPush(strUrl);
         }
     }
-    void JSHistory::exportJS(Context& context)
+    void JSHistory::exportJS(jsbind::Object& context)
     {
-        class_<JSHistory> class_binding;
+        jsbind::class_<JSHistory> class_binding;
 		class_binding.class_function("back", &JSHistory::back);
 		class_binding.class_function("forward", &JSHistory::forward);
 		class_binding.class_function("go", &JSHistory::go);

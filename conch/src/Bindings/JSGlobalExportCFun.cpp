@@ -122,14 +122,14 @@ namespace laya
     //下载大文件，zip用的
     struct JSFuncWrapper
     {
-        Persistent funcOnProg;
-        Persistent funcOnComp;
+        jsbind::Persistent funcOnProg;
+        jsbind::Persistent funcOnComp;
         bool stop;
         JSFuncWrapper(JSValueAsParam onprog, JSValueAsParam onComp)
         {
 
-            funcOnProg.reset(onprog);
-            funcOnComp.reset(onComp);
+            funcOnProg = jsbind::Persistent(onprog);
+            funcOnComp = jsbind::Persistent(onComp);
             stop = false;
         }
 		~JSFuncWrapper()
@@ -141,7 +141,7 @@ namespace laya
 
     void downloadBig_onProg_js(JSFuncWrapper* pWrapper, unsigned int total, unsigned int now, float speed)
     {
-        if (pWrapper->funcOnProg.isEmpty())return;
+        if (pWrapper->funcOnProg.isValid())return;
         pWrapper->stop = pWrapper->funcOnProg.call<bool>(getCurrentContext().global(), total, now, speed);
     }
     int downloadBig_onProg(unsigned int total, unsigned int now, float speed, JSFuncWrapper* pWrapper)
@@ -156,7 +156,7 @@ namespace laya
             delete pWrapper;
             return;
         }*/
-        if (!pWrapper->funcOnComp.isEmpty())
+        if (!pWrapper->funcOnComp.isValid())
         {
             pWrapper->funcOnComp.call<void>(getCurrentContext().global(), curlret,httpret);
         }
@@ -189,7 +189,7 @@ namespace laya
             delete pWrapper;
             return;
         }*/
-        if (!pWrapper->funcOnComp.isEmpty())
+        if (!pWrapper->funcOnComp.isValid())
         {
             if (pBuff) 
             {
@@ -460,7 +460,7 @@ namespace laya
 
         v8::Isolate* isolate = v8::Isolate::GetCurrent();
 	    v8::HandleScope scope(isolate);
-        Context context;
+        jsbind::Object context(nullptr);//TODO
         ///Module global(context.isolate());
         JSCanvasRenderingContext2D::exportJS(context);
         JsFile::exportJS(context);

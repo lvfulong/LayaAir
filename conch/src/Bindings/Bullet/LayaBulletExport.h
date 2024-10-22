@@ -44,7 +44,7 @@ namespace laya
     class JSLayaConchBullet
     {
     public:
-        static void exportJS(Context& context);
+        static void exportJS(jsbind::Object& context);
 
         static void  btGImpactCollisionAlgorithm_RegisterAlgorithm(pointer_t dispatcher);
         static pointer_t  btVector3_create(btScalar x, btScalar y, btScalar z);

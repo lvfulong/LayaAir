@@ -9,7 +9,7 @@ namespace laya
     class JSHistory
     {
     public:
-        static void exportJS(Context& context);
+        static void exportJS(jsbind::Object& context);
     public:
         static int getLength();
         static void back();

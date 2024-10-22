@@ -300,9 +300,9 @@ void JSLinuxEditBox::setConfirmType(const char* p_sType)
 		bSearch = true;
 	}
 }
-void JSLinuxEditBox::exportJS(Context& context) 
+void JSLinuxEditBox::exportJS(jsbind::Object& context) 
 {
-	class_<JSLinuxEditBox> class_binding;
+	jsbind::class_<JSLinuxEditBox> class_binding;
 	class_binding.constructor<>();
     class_binding.property("left", &JSLinuxEditBox::get_Left, &JSLinuxEditBox::set_Left);
     class_binding.property("top", &JSLinuxEditBox::get_Top, &JSLinuxEditBox::set_Top);

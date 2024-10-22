@@ -12,7 +12,7 @@ namespace laya
     class JSPromiseRejectionEvent
     {
     public:
-	    static void exportJS(Context& context);
+	    static void exportJS(jsbind::Object& context);
 
         JSPromiseRejectionEvent();
 
@@ -31,8 +31,8 @@ namespace laya
 		void setType(const char* strType);
     public:
 		std::string m_strType;
-		Persistent m_pReason;
-		Persistent m_pPromise;
+		jsbind::Persistent m_pReason;
+		jsbind::Persistent m_pPromise;
     };
 }
 #endif

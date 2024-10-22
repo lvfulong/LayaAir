@@ -15,7 +15,7 @@ public:
 
 	~JSIOSEditBox();
     
-    static void exportJS(Context& context);
+    static void exportJS(jsbind::Object& context);
 
 public:
 
@@ -132,7 +132,7 @@ public:
 	bool				m_bForbidEdit;
 private:
     std::shared_ptr<int> m_CallbackRef;
-    Persistent            m_pJSFunctionOnInput;
+    jsbind::Persistent            m_pJSFunctionOnInput;
 };
 }
 

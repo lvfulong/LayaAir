@@ -19,19 +19,19 @@ namespace laya
     }
     JsValue JSPromiseRejectionEvent::getReason()
     {
-	    return m_pReason.toLocal().handle_;
+	    return m_pReason.toLocal();
     }
     JsValue JSPromiseRejectionEvent::getPromise()
     {
-        return m_pPromise.toLocal().handle_;
+        return m_pPromise.toLocal();
     }
 	void JSPromiseRejectionEvent::setReason(JSValueAsParam pObj)
 	{
-		m_pReason.reset(pObj);
+		m_pReason = jsbind::Persistent(pObj);
 	}
 	void JSPromiseRejectionEvent::setPromise(JSValueAsParam pObj)
 	{
-		m_pPromise.reset(pObj);
+		m_pPromise = jsbind::Persistent(pObj);
 	}
 	void JSPromiseRejectionEvent::setType(const char* strType)
 	{
@@ -41,9 +41,9 @@ namespace laya
 	{
 		return m_strType.c_str();
 	}
-    void JSPromiseRejectionEvent::exportJS(Context& context)
+    void JSPromiseRejectionEvent::exportJS(jsbind::Object& context)
     {
-		class_<JSPromiseRejectionEvent> class_binding;
+		jsbind::class_<JSPromiseRejectionEvent> class_binding;
 		class_binding.constructor<>();
         class_binding.property("reason", &JSPromiseRejectionEvent::getReason);
         class_binding.property("promise", &JSPromiseRejectionEvent::getPromise);

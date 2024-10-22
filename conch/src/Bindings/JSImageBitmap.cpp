@@ -31,9 +31,9 @@ int JSImageBitmap::getImageID()
 {
     return m_ImageBitmap.getImageID();
 }
-void JSImageBitmap::exportJS(Context &context)
+void JSImageBitmap::exportJS(jsbind::Object &context)
 {
-    class_<JSImageBitmap> class_binding;
+    jsbind::class_<JSImageBitmap> class_binding;
     class_binding.constructor<>();
     class_binding.property("width", &JSImageBitmap::getWidth);
     class_binding.property("height", &JSImageBitmap::getHeight);

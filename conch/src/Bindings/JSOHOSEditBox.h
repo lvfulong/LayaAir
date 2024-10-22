@@ -17,7 +17,7 @@ enum EditBoxType{
 class JSOHOSEditBox
 {
     public:
-       static void exportJS(Context& context);
+       static void exportJS(jsbind::Object& context);
         JSOHOSEditBox();
         ~JSOHOSEditBox();
     public:
@@ -86,7 +86,7 @@ class JSOHOSEditBox
     private:
         int m_tag;
         std::shared_ptr<int> m_CallbackRef;
-        Persistent m_pJSFunctionOnInput;//JS的回调
+        jsbind::Persistent m_pJSFunctionOnInput;//JS的回调
 };
 }
 #endif //__JSOHOSEditBox_H__

@@ -26,9 +26,9 @@ namespace laya
     {
         return m_sName.c_str();
     }
-    void JSShaderActiveInfo::exportJS(Context& context)
+    void JSShaderActiveInfo::exportJS(jsbind::Object& context)
     {
-        class_<JSShaderActiveInfo> class_binding;
+        jsbind::class_<JSShaderActiveInfo> class_binding;
         class_binding.constructor<>();
         class_binding.property("type", &JSShaderActiveInfo::getType);
         class_binding.property("size", &JSShaderActiveInfo::getSize);

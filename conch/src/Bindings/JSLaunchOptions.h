@@ -12,7 +12,7 @@ namespace laya
     class JSLaunchOptions
     {
     public:
-	    static void exportJS(Context& context);
+	    static void exportJS(jsbind::Object& context);
 
 		JSLaunchOptions();
 

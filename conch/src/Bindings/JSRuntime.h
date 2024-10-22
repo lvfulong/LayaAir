@@ -16,7 +16,7 @@ namespace laya
             onframeid, ondrawid, onresizeid, ontouchevtid,ondevicemotionevtid, onkeyevtid, onmouseevtid, oninvalidglid,onotherevtid,onnetworkevt,onblurid,onfocusid, bulletsetid, bulletgetid, zippackageid,onunhandledrejection, screenorientationchangeid, setglobalrepaintid, bulletdrawlineid, bulletclearlineid
         };
     
-	    static void exportJS(Context& context);
+	    static void exportJS(jsbind::Object& context);
 	    
     public:
 

@@ -96,7 +96,7 @@ namespace laya
         {
             return;
         }
-        m_hFileObject.reset(p_pFile);
+        m_hFileObject = jsbind::Persistent(p_pFile);
         __LoadRemoteFile(m_pFile);
     }
     void JsFileReader::readAsText(JSValueAsParam p_pFile)
@@ -107,12 +107,12 @@ namespace laya
         {
             return;
         }
-        m_hFileObject.reset(p_pFile);
+        m_hFileObject = jsbind::Persistent(p_pFile);
         __LoadRemoteFile(m_pFile);
     }
     void JsFileReader::readAsDataURL(JSValueAsParam p_pFile)
     {
-        m_hFileObject.reset(p_pFile);
+        m_hFileObject = jsbind::Persistent(p_pFile);
         return;
     }
     void JsFileReader::__LoadLocalFile(JsFile *p_pFile)
@@ -203,7 +203,7 @@ namespace laya
     */
     void JsFileReader::__LoadRemoteFile(JsFile *p_pFile)
     {
-		makeStrong(this);	//防止被釋放
+		jsbind::makeStrong(this);	//防止被釋放
         OnStart();
         if (m_bSync)
         {
@@ -330,7 +330,7 @@ namespace laya
             readyState = DONE;
             if (m_pFile)
                 m_pFile->UpdateTime();
-            onload.call<void>(toLocal(this));
+            onload.call<void>(this);
         }
         else
         {
@@ -338,14 +338,14 @@ namespace laya
                 m_pFile->close();
             m_pszError = JsFileReaderErr_NotReadableError;
             readyState = DONE;
-            onerror.call<void>(toLocal(this), p_pszError);
+            onerror.call<void>(this, p_pszError);
         }
-        onloadend.call<void>(toLocal(this));
+        onloadend.call<void>(this);
         m_pszError = 0;
         readyState = EMPTY;
         m_hFileObject.reset();	//完成后，要把对File的引用去掉
         m_pFile = 0;
-		makeWeak(this);
+        jsbind::makeWeak(this);
     }
     JsValue JsFileReader::GetResult()
     {
@@ -365,7 +365,7 @@ namespace laya
                 LOGE("文件太大，无法返回！%s", (char*)m_pFile->m_FullName.c_str());
                 return JSP_TO_JS_NULL;;//throw - 1;
             }
-            return createJSAB(m_pFile->m_pBuffer, (int)m_pFile->m_i64Size);
+            return jsbind::createJSAB(m_pFile->m_pBuffer, (int)m_pFile->m_i64Size);
             //JSArrayBuffer* pAB = JSArrayBuffer::create((int)m_pFile->m_i64Size);
             //memcpy( pAB->getPtr(),m_pFile->m_pBuffer,(int)m_pFile->m_i64Size);
             //return (pAB->toLocal());
@@ -378,7 +378,7 @@ namespace laya
                     LOGE("文件太大，无法返回！%s", (char*)m_pFile->m_FullName.c_str());
                     return JSP_TO_JS_NULL;//throw - 1;
                 }
-                return createJSAB(m_pFile->m_pBuffer, (int)m_pFile->m_i64Size);
+                return jsbind::createJSAB(m_pFile->m_pBuffer, (int)m_pFile->m_i64Size);
                 //JSArrayBuffer* pAB = JSArrayBuffer::create((int)m_pFile->m_i64Size);
                 //memcpy( pAB->getPtr(),m_pFile->m_pBuffer,(int)m_pFile->m_i64Size);
                 //return (pAB->toLocal());
@@ -407,9 +407,9 @@ namespace laya
         return m_strSvIP.c_str();
     }
 
-    void JsFileReader::exportJS(Context& context)
+    void JsFileReader::exportJS(jsbind::Object& context)
     {
-        class_<JsFileReader> class_binding;
+        jsbind::class_<JsFileReader> class_binding;
         class_binding.constructor<>();
         //TODO JSP_ADD_FIXED_PROPERTY(EMPTY, JsFileReader, (int)JsFileReader::EMPTY);
          //TODO JSP_ADD_FIXED_PROPERTY(LOADING, JsFileReader, (int)JsFileReader::LOADING);

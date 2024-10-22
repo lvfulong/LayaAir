@@ -11,7 +11,7 @@ namespace laya
 	class JSDOMParser
 	{
 	public:
-		static void exportJS(Context& context);
+		static void exportJS(jsbind::Object& context);
 		JSDOMParser();
 		~JSDOMParser();
 		JsValue parseFromString(const char * str,const char *type);
@@ -31,8 +31,8 @@ namespace laya
 
 	public:
 		std::string		m_sUrl;
-		Persistent		m_pOnLoadJSFunction;
-		Persistent		m_pOnErrorJSFunction;
+		jsbind::Persistent		m_pOnLoadJSFunction;
+		jsbind::Persistent		m_pOnErrorJSFunction;
 	private:
 		JSXmlDocument* jsDOC;
 	};

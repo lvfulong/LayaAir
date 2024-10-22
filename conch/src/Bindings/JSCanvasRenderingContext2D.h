@@ -48,7 +48,7 @@ class JSCanvasRenderingContext2D
     void setLineJoin(const char *lineJoin);
     const char *getLineJoin();
 
-    static void exportJS(Context &context);
+    static void exportJS(jsbind::Object &context);
 
   public:
     CanvasRenderingContext2D *m_context;

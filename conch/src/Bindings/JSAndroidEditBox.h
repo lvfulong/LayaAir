@@ -12,7 +12,7 @@ class JSAndroidEditBox
 {
 public:
 
-	static void exportJS(Context& context);
+	static void exportJS(jsbind::Object& context);
 
 	JSAndroidEditBox();
 
@@ -133,7 +133,7 @@ public:
 	bool				m_bForbidEdit;
 private:
     std::shared_ptr<int>  m_CallbackRef;
-	Persistent     m_pJSFunctionOnInput;//JS的回调                                //4
+	jsbind::Persistent     m_pJSFunctionOnInput;//JS的回调                                //4
 };
 }
 #endif

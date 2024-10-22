@@ -226,9 +226,9 @@ namespace laya{
     bool JSOHOSEditBox::getForbidEdit(){
         return m_bForbidEdit;
     }
-    void JSOHOSEditBox::exportJS(Context& context)
+    void JSOHOSEditBox::exportJS(jsbind::Object& context)
     {
-        class_<JSOHOSEditBox> class_binding;
+        jsbind::class_<JSOHOSEditBox> class_binding;
 	    class_binding.constructor<>();
         class_binding.property("left", &JSOHOSEditBox::get_Left, &JSOHOSEditBox::set_Left);//2
         class_binding.property("top", &JSOHOSEditBox::get_Top, &JSOHOSEditBox::set_Top);//2

@@ -312,7 +312,7 @@ void  JSAndroidEditBox::onInputCallJSFunction(std::weak_ptr<int> callbackref)
 {
     if( !callbackref.lock())
         return;
-    m_pJSFunctionOnInput.call<void>(toLocal(this));
+    m_pJSFunctionOnInput.call<void>(this);
 }
 //------------------------------------------------------------------------------
 void JSAndroidEditBox::onInput()
@@ -346,9 +346,9 @@ void JSAndroidEditBox::setConfirmType(const char* p_sType)
 	CToJavaBridge::JavaRet kRet;
 	CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setConfirmTypeSearch", bSearch, kRet);
 }
-void JSAndroidEditBox::exportJS(Context& context) 
+void JSAndroidEditBox::exportJS(jsbinder::Object& context) 
 {
-	class_<JSAndroidEditBox> class_binding;
+	jsbinder::class_<JSAndroidEditBox> class_binding;
 	class_binding.constructor<>();
     class_binding.property("left", &JSAndroidEditBox::get_Left, &JSAndroidEditBox::set_Left);
     class_binding.property("top", &JSAndroidEditBox::get_Top, &JSAndroidEditBox::set_Top);

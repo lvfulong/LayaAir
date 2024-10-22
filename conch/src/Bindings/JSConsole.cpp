@@ -87,9 +87,9 @@ namespace laya
 	    }
     #endif
     }
-    void JSConsole::exportJS(Context& context)
+    void JSConsole::exportJS(jsbind::Object& context)
     {
-        class_<JSConsole> class_binding;
+        jsbind::class_<JSConsole> class_binding;
         class_binding.class_function("log", &JSConsole::log);
         context.class_("_console", class_binding);
     }

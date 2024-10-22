@@ -2,9 +2,9 @@
 
 namespace laya
 {
-    void JSLayaConchBullet::exportJS(Context& context)
+    void JSLayaConchBullet::exportJS(jsbind::Object& context)
     {
-		class_<JSLayaConchBullet> class_binding;
+		jsbind::class_<JSLayaConchBullet> class_binding;
 		class_binding.class_function("btGImpactCollisionAlgorithm_RegisterAlgorithm", &JSLayaConchBullet::btGImpactCollisionAlgorithm_RegisterAlgorithm);
 		class_binding.class_function("btVector3_create", &JSLayaConchBullet::btVector3_create);
 		class_binding.class_function("btVector3_setValue", &JSLayaConchBullet::btVector3_setValue);

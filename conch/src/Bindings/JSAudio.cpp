@@ -49,15 +49,15 @@ namespace laya
     {
 	    if( strcmp( p_sName,"ended" ) == 0 )
 	    {
-		    m_pJSFunctionAudioEnd.reset(p_pFunction);
+		    m_pJSFunctionAudioEnd = jsbind::Persistent(p_pFunction);
 	    }
 	    else if(strcmp(p_sName,"canplaythrough")==0)
 	    {
-		    m_pJSFunctionCanPlay.reset(p_pFunction);
+		    m_pJSFunctionCanPlay = jsbind::Persistent(p_pFunction);
 	    }
 	    else if (strcmp(p_sName, "error") == 0)
 	    {
-		    m_pJSFunctionError.reset(p_pFunction);
+		    m_pJSFunctionError = jsbind::Persistent(p_pFunction);
 	    }
         else
         {
@@ -514,19 +514,19 @@ namespace laya
     void JSAudio::onPlayEndCallJSFunction( std::weak_ptr<int> callbackref)
     {
 	    if( !callbackref.lock())return;
-	    m_pJSFunctionAudioEnd.call<void>(toLocal(this));
+	    m_pJSFunctionAudioEnd.call<void>(this);
     }
     //------------------------------------------------------------------------------
     void JSAudio::onCanplayCallJSFunction( std::weak_ptr<int> callbackref)
     {
         if( !callbackref.lock())
             return;
-        m_pJSFunctionCanPlay.call<void>(toLocal(this));
+        m_pJSFunctionCanPlay.call<void>(this);
     }
     void JSAudio::onErrorCallJSFunction(int p_nErrorCode,std::weak_ptr<int> callbackref)
     {
 	    if (!callbackref.lock())return;
-	    m_pJSFunctionError.call<void>(toLocal(this), p_nErrorCode);
+	    m_pJSFunctionError.call<void>(this, p_nErrorCode);
     }
 	void JSAudio::setIsBackgroundMusic(bool p_bIsBackgroundMusic)
 	{
@@ -537,9 +537,9 @@ namespace laya
 	{
 		return m_bIsBackgroundMusic;
 	}
-    void JSAudio::exportJS(Context& context) 
+    void JSAudio::exportJS(jsbind::Object& context)
     {
-		class_<JSAudio> class_binding;
+		jsbind::class_<JSAudio> class_binding;
         class_binding.property("autoplay", &JSAudio::getAutoPlay, &JSAudio::setAutoPlay);
         class_binding.property("loop", &JSAudio::getLoop, &JSAudio::setLoop);
         class_binding.property("muted", &JSAudio::getMuted, &JSAudio::setMuted);

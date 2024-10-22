@@ -637,9 +637,9 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
     {
         return JCConch::s_pConch->getOS()->getMemoryUsageInByte();
     }
-    void JSConchConfig::exportJS(Context& context)
+    void JSConchConfig::exportJS(jsbind::Object& context)
     {
-        class_<JSConchConfig> class_binding;
+        jsbind::class_<JSConchConfig> class_binding;
 
 		class_binding.class_function("getStoragePath", &JSConchConfig::getLocalStoragePath);
 		class_binding.class_function("getTotalMem", &JSConchConfig::getTotalMem);

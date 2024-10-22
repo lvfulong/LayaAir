@@ -69,7 +69,7 @@ namespace laya
         if (!p_sUrl) return false;
         char* pABPtr = NULL;
         int nABLen = 0;
-        bool bisab = extractJSAB(args, pABPtr, nABLen);
+        bool bisab = jsbind::extractJSAB(args, pABPtr, nABLen);
         bool bret = false;
         if (bisab) 
         {
@@ -80,7 +80,7 @@ namespace laya
         }
         else 
         {
-			Local value(args);
+			jsbind::Local value(args);
             if (value.isString())
             {
                 std::string pData = Converter<std::string>::ToCpp(args);
@@ -99,7 +99,7 @@ namespace laya
         JCBuffer buf;
 		if (readFileSync(p_pszFile, buf, JCBuffer::raw))
         {
-			return laya::createJSAB(buf.m_pPtr, buf.m_nLen);
+			return jsbind::createJSAB(buf.m_pPtr, buf.m_nLen);
 		}
 		else 
         {

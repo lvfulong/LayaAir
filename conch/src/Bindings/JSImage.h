@@ -23,7 +23,7 @@ namespace laya
 
 	public:
 		enum { onloadid, onerrorid, thisid, objid };
-        static void exportJS(Context& context);
+        static void exportJS(jsbind::Object& context);
 
         void onLoaded(std::weak_ptr<int> callbackref);
 
@@ -94,9 +94,9 @@ namespace laya
 
         void releaseImageOnRenderThread(int nID);
 	public:
-		Persistent		                m_pOnLoad;
-		Persistent		                m_pOnError;
-		Persistent                     m_pObj;
+		jsbind::Persistent		                m_pOnLoad;
+		jsbind::Persistent		                m_pOnError;
+		jsbind::Persistent                     m_pObj;
         bool			                m_bComplete;
         std::shared_ptr<int>	        m_CallbackRef;
         std::string                     m_sUrl;

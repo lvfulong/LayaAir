@@ -63,7 +63,7 @@ namespace laya
         //if (!IsMyJsEnv()) return;
 
         if (GetWidth() <= 0 || GetHeight() <= 0|| m_pImage->m_kBitmapData.m_pImageData==NULL) {
-            m_pOnError.call<void>(toLocal(this), 500);
+            m_pOnError.call<void>(this, 500);
         }
         else {
             int nMemSize = GetWidth() * GetHeight() * 4 + 272;
@@ -73,9 +73,9 @@ namespace laya
             //通知渲染线程
             createImageOnRenderThread(m_nID, m_pImage);
             m_bComplete = true;
-            m_pOnLoad.call<void>(toLocal(this));
+            m_pOnLoad.call<void>(this);
         }
-		makeWeak(this);
+        jsbind::makeWeak(this);
     }
     void JSImage::onErrorCallJSFunction( int p_nError,std::weak_ptr<int> callbackref )
     {
@@ -83,8 +83,8 @@ namespace laya
         //if (JCScriptRuntime::s_JSRT->m_bIsExit == true)return;
 	    //if (!IsMyJsEnv())return;
         LOGW("download image file error! %s\n", m_sUrl.c_str());
-        m_pOnError.call<void>(toLocal(this), p_nError);
-		makeWeak(this);
+        m_pOnError.call<void>(this, p_nError);
+        jsbind::makeWeak(this);
     }
     bool JSImage::getComplete()
     {
@@ -92,27 +92,27 @@ namespace laya
     }
     void JSImage::SetOnload(JSValueAsParam p_pFunction )
     {
-	    m_pOnLoad.reset(p_pFunction);
+	    m_pOnLoad = jsbind::Persistent(p_pFunction);
     }
     JsValue JSImage::GetOnload()
     {
-	    return m_pOnLoad.toLocal().handle_;
+	    return m_pOnLoad.getHandle();
     }
     void JSImage::SetOnError(JSValueAsParam p_pFunction )
     {
-	    m_pOnError.reset(p_pFunction);
+	    m_pOnError = jsbind::Persistent(p_pFunction);
     }
     JsValue JSImage::GetOnError()
     {
-        return m_pOnError.toLocal().handle_;
+        return m_pOnError.getHandle();
     }
     JsValue JSImage::getObj()
     {
-        return m_pObj.toLocal().handle_;
+        return m_pObj.getHandle();
     }
     void JSImage::setObj(JSValueAsParam obj)
     {
-        m_pObj.reset(obj);
+        m_pObj = jsbind::Persistent(obj);
     }
     const char* JSImage::getSrc()
     {
@@ -194,7 +194,7 @@ namespace laya
         JCFileRes* pRes = JCConch::s_pScriptRuntime->m_pFileResMgr->getRes(m_sUrl);
         pRes->setOnReadyCB(std::bind(&JSImage::onDownloadOK, this, std::placeholders::_1, false, cbref));
         pRes->setOnErrorCB(std::bind(&JSImage::onDownloadError, this, std::placeholders::_1, std::placeholders::_2, cbref));
-		makeStrong(this);
+        jsbind::makeStrong(this);
         return true;
     }
     int JSImage::GetWidth()
@@ -330,9 +330,9 @@ namespace laya
 	    return m_nID;
     }
 
-    void JSImage::exportJS(Context& context) 
+    void JSImage::exportJS(jsbind::Object& context) 
     {
-        class_<JSImage> class_binding;
+        jsbind::class_<JSImage> class_binding;
         class_binding.constructor<>();
         class_binding.property("conchImgId", &JSImage::getImageID);
         class_binding.property("width", &JSImage::GetWidth);

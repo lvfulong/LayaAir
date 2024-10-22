@@ -31,9 +31,9 @@ namespace laya
 	{
 		return JSP_TO_JS_UNDEFINE;
 	}
-    void JSLaunchOptions::exportJS(Context& context)
+    void JSLaunchOptions::exportJS(jsbind::Object& context)
     {
-		class_<JSLaunchOptions> class_binding;
+		jsbind::class_<JSLaunchOptions> class_binding;
 		class_binding.constructor<>();
 		class_binding.property("scene", &JSLaunchOptions::getScene);
 		class_binding.property("query", &JSLaunchOptions::getQuery);

@@ -128,9 +128,9 @@ const char *JSCanvasRenderingContext2D::getLineJoin()
 {
     return m_context->getLineJoin();
 }
-void JSCanvasRenderingContext2D::exportJS(Context &context)
+void JSCanvasRenderingContext2D::exportJS(jsbind::Object &context)
 {
-    class_<ImageData> class_binding_image_data;
+    jsbind::class_<ImageData> class_binding_image_data;
     class_binding_image_data.constructor<>();
     class_binding_image_data.property_field("width", &ImageData::m_width);
     class_binding_image_data.property_field("height", &ImageData::m_height);
@@ -142,12 +142,12 @@ void JSCanvasRenderingContext2D::exportJS(Context &context)
         }));
     context.class_("ImageData", class_binding_image_data);
 
-    class_<TextMetrics> class_binding_text_metrics;
+    jsbind::class_<TextMetrics> class_binding_text_metrics;
     class_binding_text_metrics.constructor<>();
     class_binding_text_metrics.property_field("width", &TextMetrics::m_width);
     context.class_("TextMetrics", class_binding_text_metrics);
 
-    class_<JSCanvasRenderingContext2D> class_binding;
+    jsbind::class_<JSCanvasRenderingContext2D> class_binding;
     class_binding.constructor<>();
     class_binding.constructor<int, int>();
     class_binding.property("fillStyle", &JSCanvasRenderingContext2D::getFillStyle,

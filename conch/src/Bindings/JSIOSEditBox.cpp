@@ -303,9 +303,9 @@ bool JSIOSEditBox::getForbidEdit()
 {
 	return m_bForbidEdit;
 }
-void JSIOSEditBox::exportJS(Context& context)
+void JSIOSEditBox::exportJS(jsbind::Object& context)
 {
-	class_<JSIOSEditBox> class_binding;
+	jsbind::class_<JSIOSEditBox> class_binding;
 	class_binding.constructor<>();
     class_binding.property("left", &JSIOSEditBox::get_Left, &JSIOSEditBox::set_Left);
     class_binding.property("top", &JSIOSEditBox::get_Top, &JSIOSEditBox::set_Top);
