@@ -38,9 +38,9 @@ namespace laya
 
 	}
 	//------------------------------------------------------------------------------
-	void JSSubmitScene3D::exportJS(Context& context)
+	void JSSubmitScene3D::exportJS(jsbind::Object& context)
 	{
-		class_<JSSubmitScene3D> class_binding;
+		jsbind::class_<JSSubmitScene3D> class_binding;
 		class_binding.constructor<>();
 		class_binding.constructor<JSValueAsParam>();
 		context.class_("conchSubmitScene3D", class_binding);

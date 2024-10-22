@@ -11,7 +11,7 @@ class JSWX
 {
 
   public:
-    static void exportJS(Context &context);
+    static void exportJS(jsbind::Object &context);
 
     static std::string createBufferURL(JSValueAsParam param);
 

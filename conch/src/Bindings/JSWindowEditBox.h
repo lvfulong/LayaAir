@@ -13,7 +13,7 @@ namespace laya
     {
     public:
 
-	    static void exportJS(Context& context);
+	    static void exportJS(jsbind::Object& context);
 
 	    JSWindowEditBox();
 
@@ -175,8 +175,8 @@ namespace laya
     private:
 	    enum{oninputid,onkeydownid};
         std::shared_ptr<int>        m_CallbackRef;
-        Persistent                 m_pJSFunctionOnInput;       //JS的回调
-        Persistent                 m_pJSFunctionOnKeydown;     //JS的回调
+        jsbind::Persistent                 m_pJSFunctionOnInput;       //JS的回调
+        jsbind::Persistent                 m_pJSFunctionOnKeydown;     //JS的回调
 
 		static WinEditBox*     ms_EditBoxInst;
     };

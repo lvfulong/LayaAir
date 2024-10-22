@@ -83,7 +83,7 @@ namespace laya
             m_jsChildNodes.reset(pJSValue);
             m_bCreateChilds = true;
         }
-        return m_jsChildNodes.toLocal().handle_;
+        return m_jsChildNodes.getHandle();
     }
     JsValue JSXmlNode::getAttributes()
     {
@@ -93,7 +93,7 @@ namespace laya
             JsValue pJSValue = JSP_TO_JS(std::vector<JSXmlAttr*>, m_attributes);
             m_jsAttribs.reset(pJSValue);
         }
-        return m_jsAttribs.toLocal().handle_;
+        return m_jsAttribs.getHandle();
     }
 	void JSXmlNode::initXmlNode(rapidxml::xml_node<>* node,bool isRoot)
 	{
@@ -161,9 +161,9 @@ namespace laya
     {
         return JSXmlNode::getChildNodes();
     }
-    void JSXmlNode::exportJS(Context& context)
+    void JSXmlNode::exportJS(jsbind::Object& context)
     {
-        class_<JSXmlNode> class_binding;
+        jsbind::class_<JSXmlNode> class_binding;
         class_binding.constructor<>();
         class_binding.property("nodeValue", &JSXmlNode::getNodeValue);
         class_binding.property("nodeName", &JSXmlNode::getNodeName);
@@ -172,9 +172,9 @@ namespace laya
         class_binding.property("attributes", &JSXmlNode::getAttributes);
         context.class_("_XmlNode", class_binding);
     }
-    void JSXmlDocument::exportJS(Context& context)
+    void JSXmlDocument::exportJS(jsbind::Object& context)
     {
-        class_<JSXmlDocument> class_binding;
+        jsbind::class_<JSXmlDocument> class_binding;
         class_binding.constructor<>();
         class_binding.property("childNodes", &JSXmlDocument::getChildNodes);
         context.class_("_XmlDocument", class_binding);

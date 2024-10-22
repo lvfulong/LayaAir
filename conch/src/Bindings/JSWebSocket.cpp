@@ -165,42 +165,42 @@ namespace laya
     //------------------------------------------------------------------------------
     void JSWebSocket::SetOnOpen(JSValueAsParam p_pFunction)
     {
-        m_pJSFunctionOnOpen.reset(p_pFunction);
+        m_pJSFunctionOnOpen = jsbind::Persistent(p_pFunction);
     }
     //------------------------------------------------------------------------------
     JsValue JSWebSocket::GetOnOpen()
     {
-        return m_pJSFunctionOnOpen.toLocal().handle_;
+        return m_pJSFunctionOnOpen.getHandle();
     }
     //------------------------------------------------------------------------------
     void JSWebSocket::SetOnMessage(JSValueAsParam p_pFunction)
     {
-        m_pJSFunctionOnMessage.reset(p_pFunction);
+        m_pJSFunctionOnMessage = jsbind::Persistent(p_pFunction);
     }
     //------------------------------------------------------------------------------
     JsValue JSWebSocket::GetOnMessage()
     {
-        return m_pJSFunctionOnMessage.toLocal().handle_;
+        return m_pJSFunctionOnMessage.getHandle();
     }
     //------------------------------------------------------------------------------
-    void JSWebSocket::SetOnClose(JSValueAsParam p_pFunction)
+    void JSWebSocket::SetOnClose(JSValueAsParam function)
     {
-        m_pJSFunctionOnClose.reset(p_pFunction);
+        m_pJSFunctionOnClose = jsbind::Persistent(function);
     }
     //------------------------------------------------------------------------------
     JsValue JSWebSocket::GetOnClose()
     {
-        return m_pJSFunctionOnClose.toLocal().handle_;
+        return m_pJSFunctionOnClose.getHandle();
     }
     //------------------------------------------------------------------------------
-    void JSWebSocket::SetOnError(JSValueAsParam p_pFunction)
+    void JSWebSocket::SetOnError(JSValueAsParam function)
     {
-        m_pJSFunctionOnError.reset(p_pFunction);
+        m_pJSFunctionOnError = jsbind::Persistent(function);
     }
     //------------------------------------------------------------------------------
     JsValue JSWebSocket::GetOnError()
     {
-        return m_pJSFunctionOnError.toLocal().handle_;
+        return m_pJSFunctionOnError.getHandle();
     }
     //------------------------------------------------------------------------------
     void JSWebSocket::send(const char* p_sMessage)
@@ -290,9 +290,9 @@ namespace laya
         else
             return int(tmGetCurms() - closeTime);
     }
-    void JSWebSocket::exportJS(Context& context)
+    void JSWebSocket::exportJS(jsbind::Object& context)
     {
-        class_<JSWebSocket> class_binding;
+        jsbind::class_<JSWebSocket> class_binding;
         class_binding.property("onopen", &JSWebSocket::GetOnOpen, &JSWebSocket::SetOnOpen);
         class_binding.property("_onmessage", &JSWebSocket::GetOnMessage, &JSWebSocket::SetOnMessage);
         class_binding.property("onclose", &JSWebSocket::GetOnClose, &JSWebSocket::SetOnClose);

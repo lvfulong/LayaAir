@@ -14,7 +14,7 @@ public:
     // 假设decode方法只是简单地返回传入的字节数组（Uint8Array）作为字符串
     //std::string decode(JSValueAsParam args);
     std::string decode(JSValueAsParam args);
-    static void exportJS(Context& context);
+    static void exportJS(jsbind::Object& context);
 
 };
 }

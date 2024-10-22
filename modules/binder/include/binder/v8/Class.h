@@ -9,10 +9,9 @@
 #include <map>
 #include <string>
 #include <utils/Log.h>
-#include <utils/RTTI.h>
 #include <v8.h>
 
-namespace binder
+namespace jsbind
 {
 namespace internal
 {
@@ -69,7 +68,11 @@ template <typename ClassType> class ClassRegistry;
 template <typename ClassType> static void WeakCallback(const v8::WeakCallbackInfo<ClassRegistry<ClassType>> &data);
 struct ObjectRegistry
 {
-    v8::Global<v8::Object> pobj;
+    // v8::Global<v8::Object> pobj;
+
+    // jsvm::Env env_;
+    jsvm::Ref objectRef_;
+    // jsvm::Value object_;
     bool callDestructor = true;
 };
 class ClassRegistryBase
@@ -135,12 +138,12 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
         assert(constructorFunctionMap_.find(numPara) == constructorFunctionMap_.end());
         constructorFunctionMap_.insert(std::make_pair(numPara, func));
     }
-    ClassType *ConstructObject(uint32_t numPara, const v8::FunctionCallbackInfo<v8::Value> &info)
+    ClassType *ConstructObject(uint32_t numPara, jsvm::Value *info)
     {
         auto it = constructorFunctionMap_.find(numPara);
         if (it != constructorFunctionMap_.end())
         {
-            info.GetIsolate()->AdjustAmountOfExternalAllocatedMemory(static_cast<int64_t>(sizeof(ClassType)));
+            // info.GetIsolate()->AdjustAmountOfExternalAllocatedMemory(static_cast<int64_t>(sizeof(ClassType)));
             return (it->second)(info);
         }
         /*else
@@ -228,14 +231,14 @@ class ClassRegistryManager
     {
         ClassRegistry<ClassType> &classRegistry = getClassRegistry<ClassType>(type_id<ClassType>());
         auto objectRegistry = classRegistry.getObjectRegistry(objectPointer);
-        assert(objectRegistry != nullptr);
+        DEBUG_CHECK(objectRegistry != nullptr);
         objectRegistry->pobj.ClearWeak();
     }
     template <typename ClassType> static void makeWeak(ClassType *objectPointer)
     {
         ClassRegistry<ClassType> &classRegistry = getClassRegistry<ClassType>(type_id<ClassType>());
         auto objectRegistry = classRegistry.getObjectRegistry(objectPointer);
-        assert(objectRegistry != nullptr);
+        DEBUG_CHECK(objectRegistry != nullptr);
         objectRegistry->pobj.SetWeak(&classRegistry, WeakCallback, v8::WeakCallbackType::kInternalFields);
     }
     template <typename ClassType>
@@ -277,15 +280,24 @@ template <typename ClassType> void makeStrong(ClassType *objectPointer)
 {
     ClassRegistryManager::makeStrong<ClassType>(objectPointer);
 }
-/*template <typename ClassType> Local toLocal(ClassType* objectPointer)
+/*template <typename ClassType> jsvm::Value toLocal(ClassType *objectPointer)
 {
     ClassRegistry<ClassType> &classRegistry = ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
     auto objectRegistry = classRegistry.getObjectRegistry(objectPointer);
-    assert(objectRegistry != nullptr);
-
-    return Local(v8::Local<v8::Object>::New(v8::Isolate::GetCurrent(), objectRegistry->pobj));
+    DEBUG_CHECK(objectRegistry != nullptr);
+    svm::Value result;
+    Status status = GetReferenceValue(objectRegistry.env_, objectRegistry, &result);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+    return result;
 }*/
+template <typename ClassType> jsvm::Value getGlobal(jsvm::Env env)
+{
 
+    svm::Value result;
+    Status status GetGlobal(env, &result);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+    return result;
+}
 template <typename ClassType> class class_
 {
   public:
@@ -409,9 +421,9 @@ template <typename ClassType> class class_
             Js_Str(isolate_, name.data()), internal::InvokeClassGetProperty<ClassType, PropertyType>,
             set == nullptr ? nullptr : internal::InvokeClassSetProperty<ClassType, PropertyType>,
             v8::External::New(isolate_, (void *)info));*/
-        propertyDescriptorVector_.emplace_back(PropertyDescriptor{
+        propertyDescriptorVector_.emplace_back(jsvm::PropertyDescriptor{
             (name), NULL, NULL, internal::InvokeClassGetter<ClassType, PropertyType>,
-            internal::InvokeClassSetter<ClassType, PropertyType>, NULL, PropertyAttributes::DEFAULT, data});
+            internal::InvokeClassSetter<ClassType, PropertyType>, NULL, jsvm::PropertyAttributes::DEFAULT, data});
         return *this;
     }
     template <typename PropertyType>
@@ -477,14 +489,6 @@ template <typename ClassType> class class_
         classRegistry_.js_function_template()->Inherit(baseClassRegistry.class_function_template());
         return *this;
     }
-    static napi_value MyObject(napi_env env, napi_callback_info info)
-    {
-        napi_value js_this;
-        napi_ref *ref = malloc(sizeof(*ref));
-        NODE_API_CALL(env, napi_get_cb_info(env, info, NULL, NULL, &js_this, NULL));
-        NODE_API_CALL(env, napi_wrap(env, js_this, ref, MyObject_fini, NULL, ref));
-        return NULL;
-    }
     void exports()
     {
         // todo
@@ -527,7 +531,7 @@ static void WeakCallback(jsvm::Env env, void *nativeObject, [[maybe_unused]] voi
     // OH_LOG_INFO(LOG_APP, "MyObject::Destructor called");
     reinterpret_cast<MyObject *>(nativeObject)->~MyObject();
 }
-template <typename ClassType> static void New(jsvm::Env env, jsvm::CallbackInfo info)
+template <typename ClassType> static napi_value New(jsvm::Env env, jsvm::CallbackInfo info)
 {
 
     jsvm::Value newTarget;
@@ -547,20 +551,17 @@ template <typename ClassType> static void New(jsvm::Env env, jsvm::CallbackInfo 
             napi_get_value_double(env, args[0], &value);
         }*/
 
-        ClassType *object = this_->ConstructObject(args.Length(), args);
+        ClassType *object = this_->ConstructObject(argc, args);
 
         // v8::Global<v8::Object> pobj(isolate, obj);
         // pobj.SetWeak(this_, WeakCallback<ClassType>, v8::WeakCallbackType::kInternalFields);
-        this_->objects_.emplace(object, ObjectRegistry{std::move(pobj)});
 
-        MyObject *obj = new MyObject(value);
+        // MyObject *obj = new MyObject(value);
 
-        obj->env_ = env;
-        // ͨ��napi_wrap��ArkTS����jsThis��C++����obj��
-        svm::Wrap(env, jsThis, reinterpret_cast<void *>(obj), MyObject::Destructor,
-                  nullptr, // finalize_hint
-                  &obj->wrapper_);
-
+        jsvm::Ref objectRef_;
+        svm::Wrap(env, jsThis, reinterpret_cast<void *>(object), MyObject::Destructor, nullptr, // finalize_hint
+                  &objectRef_);
+        this_->objects_.emplace(object, ObjectRegistry{env, objectRef_, true});
         return jsThis;
     }
 #if 0
@@ -625,5 +626,5 @@ template <typename ClassType> bool isWrappedClassOf()
     return ClassRegistryManager::isWrappedClassOf<ClassType>();
 }
 
-} // namespace binder
+} // namespace jsbind
 #endif

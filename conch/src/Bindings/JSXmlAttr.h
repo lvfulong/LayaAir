@@ -9,7 +9,7 @@ namespace laya
     class  JSXmlAttr
     {
     public:
-        static void exportJS(Context& context);
+        static void exportJS(jsbind::Object& context);
 
         JSXmlAttr();
         ~JSXmlAttr();

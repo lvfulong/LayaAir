@@ -145,7 +145,7 @@ class GLESEngine
     typedef std::unordered_map<GPUEngineStatisticsInfo, int> RenderStatisticsInfoMapType;
     RenderStatisticsInfoMapType m_GLStatisticsInfo;
     std::unordered_map<int, GLBuffer *> _GLBindPointerUBOMap;
-    Persistent m_pJSTextureContext;
+    jsbind::Persistent m_pJSTextureContext;
     static std::unordered_map<std::string, RTShaderDefine> _defineMap;
     static int32_t _defineCounter;
     static std::vector<std::unordered_map<int32_t, std::string>> _maskMap;

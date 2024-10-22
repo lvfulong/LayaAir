@@ -271,7 +271,7 @@ template <typename T> class wrapper : public T, public internal::WrapperBase
     }
 
   private:
-    Persistent wrapped_;
+    jsbind::Persistent wrapped_;
 };
 #define EMSCRIPTEN_WRAPPER(T)                                                                                          \
     template <typename... Args> T(JsValue v, Args &&...args) : wrapper(v, std::forward<Args>(args)...)                 \

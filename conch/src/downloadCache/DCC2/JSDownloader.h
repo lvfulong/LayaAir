@@ -6,7 +6,7 @@
 namespace laya{
     class JSDownloader :public IDownloader{
     private:
-        Persistent  m_jsDownloader;
+        jsbind::Persistent  m_jsDownloader;
         //std::vector<Persistent>  m_onEndCBs;
         bool m_inited=false;
 
@@ -15,7 +15,7 @@ namespace laya{
         struct jsCallbackData{
             JSDownloader* pThis;
             onDownloadedFunc cFunc;
-            Persistent      jsFunc;
+            jsbind::Persistent      jsFunc;
         };
         JSDownloader();
         virtual ~JSDownloader();

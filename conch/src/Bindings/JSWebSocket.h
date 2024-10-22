@@ -42,7 +42,7 @@ namespace laya
 		};
 	public:
 
-		static void exportJS(Context& context);
+		static void exportJS(jsbind::Object& context);
 
 		JSWebSocket();
 
@@ -105,13 +105,13 @@ namespace laya
 	public:
 		int64_t                 closeTime;                      //断开时间
 		
-		Persistent			    m_pJSFunctionOnOpen;			//JS连接上了，回调该JS方法
+		jsbind::Persistent			    m_pJSFunctionOnOpen;			//JS连接上了，回调该JS方法
 
-		Persistent			    m_pJSFunctionOnMessage;			//收到消息了，回调该JS方法
+		jsbind::Persistent			    m_pJSFunctionOnMessage;			//收到消息了，回调该JS方法
 
-		Persistent			    m_pJSFunctionOnClose;			//关闭socket，回调该JS方法
+		jsbind::Persistent			    m_pJSFunctionOnClose;			//关闭socket，回调该JS方法
 
-		Persistent			    m_pJSFunctionOnError;			//出错socket，回调该JS方法
+		jsbind::Persistent			    m_pJSFunctionOnError;			//出错socket，回调该JS方法
 
 	public:
         WEB_SOCKET_STATE	    m_nWebSocketState;				//是否初始化

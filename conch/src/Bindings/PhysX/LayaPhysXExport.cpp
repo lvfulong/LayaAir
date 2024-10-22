@@ -16,7 +16,7 @@ void JSLayaConchPhysX::onMalloc(JSValueAsParam ab)
     assert(isab && len > 0);
     PHYSX_HEAP_BASE_ADDRESS = data;
 }
-void JSLayaConchPhysX::exportJS(Context &context)
+void JSLayaConchPhysX::exportJS(jsbind::Object &context)
 {
     EMSCRIPTEN_BINDINGS_EXPORT_JS_START
     EMSCRIPTEN_BINDINGS_EXPORT_JS(physx)

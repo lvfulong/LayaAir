@@ -29,14 +29,14 @@ void GLESShaderData::destroy()
 
 JsValue GLESShaderData::getOwnerDefineDataJS()
 {
-    if (m_pJSDefineDatas.isEmpty())
+    if (m_pJSDefineDatas.isValid())
     {
         m_pJSDefineDatas.reset(Converter<RTDefineDatas *>::ToJs(_defineDatas, false));
-        return m_pJSDefineDatas.toLocal().handle_;
+        return m_pJSDefineDatas.getHandle();
     }
     else
     {
-        return m_pJSDefineDatas.toLocal().handle_;
+        return m_pJSDefineDatas.getHandle();
     }
 }*/
 

@@ -26,9 +26,9 @@ namespace laya
     {
         return m_nPrecision;
     }
-    void JSShaderPrecisionFormat::exportJS(Context& context)
+    void JSShaderPrecisionFormat::exportJS(jsbind::Object& context)
     {
-        class_<JSShaderPrecisionFormat> class_binding;
+        jsbind::class_<JSShaderPrecisionFormat> class_binding;
         class_binding.constructor<>();
         class_binding.property("rangeMin", &JSShaderPrecisionFormat::getRangeMin);
         class_binding.property("rangeMax", &JSShaderPrecisionFormat::getRangeMax);

@@ -84,8 +84,8 @@ public://bind
     int lightProbUpdateMark = -1;
     IrradianceMode irradianceMode;
     GLESShaderData* shaderData;
-    Persistent	m_JSFunctionRenderUpdatePre;//js call
-    Persistent	m_JSFunctionCalculateBoundingBox;//js call
+    jsbind::Persistent	m_JSFunctionRenderUpdatePre;//js call
+    jsbind::Persistent	m_JSFunctionCalculateBoundingBox;//js call
     std::vector<std::string> commonUniformMap;
     //---------------------
     bool customCull = false;//TODO

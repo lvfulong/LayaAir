@@ -110,7 +110,7 @@ void RTBaseRenderNode::_renderUpdatePre(GLESRenderContext3D *context3D)
 {
     if (this->_updateMark == context3D->_cameraUpdateMask)
         return;
-    if (!m_JSFunctionRenderUpdatePre.isEmpty())
+    if (!m_JSFunctionRenderUpdatePre.isValid())
     {
         m_JSFunctionRenderUpdatePre.call<void>(getCurrentContext().global());
     }
@@ -129,11 +129,11 @@ bool RTBaseRenderNode::_needRender(BoundFrustum *pBoundFrustum)
 }
 void RTBaseRenderNode::setRenderUpdatePre(JSValueAsParam function)
 {
-    m_JSFunctionRenderUpdatePre.reset(function);
+    m_JSFunctionRenderUpdatePre = jsbind::Persistent(function);
 }
 void RTBaseRenderNode::setCalculateBoundingBox(JSValueAsParam function)
 {
-    m_JSFunctionCalculateBoundingBox.reset(function);
+    m_JSFunctionCalculateBoundingBox = jsbind::Persistent(function);
 }
 void RTBaseRenderNode::setCommonUniformMap(const std::vector<std::string> &value)
 {

@@ -12,21 +12,21 @@ RTShaderPass::~RTShaderPass()
 }
 void RTShaderPass::setCacheShaderJS(RTDefineDatas *compileDefine, GLESShaderInstance* shader, JSValueAsParam jsShaderInstanceWrapper)
 {
-    setCacheShader(compileDefine, shader, Persistent(jsShaderInstanceWrapper));
+    setCacheShader(compileDefine, shader, jsbind::Persistent(jsShaderInstanceWrapper));
 }
 JsValue RTShaderPass::getCacheShaderJS(RTDefineDatas *compileDefine)
 {
     RTShaderPass::CacheShaderItem *item = getCacheShader(compileDefine);
     if (item != nullptr)
     {
-        return item->_jsShaderInstance.toLocal().handle_;
+        return item->_jsShaderInstance.getHandle();
     }
     else
     {
         return JSP_TO_JS_NULL;
     }
 }
-void RTShaderPass::setCacheShader(RTDefineDatas *compileDefine, GLESShaderInstance *shader, Persistent jsShaderInstance)
+void RTShaderPass::setCacheShader(RTDefineDatas *compileDefine, GLESShaderInstance *shader, jsbind::Persistent jsShaderInstance)
 {
     void *cacheShaders = &_cacheSharders;
     // var mask : Array<number> = compileDefine._mask;
@@ -141,7 +141,7 @@ void RTShaderPass::_resizeCacheShaderMap(void *cacheMap, uint32_t hierarchy, uin
 // }
 void RTShaderPass::setCreateShaderInstanceFunction(JSValueAsParam value)
 {
-    m_createShaderInstanceFunctionJS.reset(value);
+    m_createShaderInstanceFunctionJS = jsbind::Persistent(value);
 }
 GLESShaderInstance *RTShaderPass::callCreateShaderInstanceFunction()
 {

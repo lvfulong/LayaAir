@@ -10,7 +10,7 @@ namespace laya
 	class JSZip
     {
 	public:
-		static void exportJS(Context& context);
+		static void exportJS(jsbind::Object& context);
 		JSZip();
 		~JSZip();
 		bool openZip(const char* p_pszFile);

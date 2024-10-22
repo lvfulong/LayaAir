@@ -34,8 +34,8 @@ namespace laya{
     //    return "";
     //}
 
-    void TextDecoderWrapper::exportJS(Context& context){
-            class_<TextDecoderWrapper> class_binding;
+    void TextDecoderWrapper::exportJS(jsbind::Object& context){
+            jsbind::class_<TextDecoderWrapper> class_binding;
             class_binding.function("decode", &TextDecoderWrapper::decode);
             class_binding.constructor<>();
             class_binding.constructor<const char*>();

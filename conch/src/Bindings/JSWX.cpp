@@ -10,7 +10,7 @@ std::string JSWX::createBufferURL(JSValueAsParam param)
 {
     char *pArrayBuffer = NULL;
     int nArrayBufferSize = 0;
-    bool bIsArrayBuffer = extractJSAB(param, pArrayBuffer, nArrayBufferSize);
+    bool bIsArrayBuffer = jsbind::extractJSAB(param, pArrayBuffer, nArrayBufferSize);
     if (bIsArrayBuffer)
     {
         JCMD5 md5;
@@ -28,9 +28,9 @@ void JSWX::revokeBufferURL(const char *url)
     pfsMgr->revokeBufferURL(url);
 }
 
-void JSWX::exportJS(Context &context)
+void JSWX::exportJS(jsbind::Object &context)
 {
-    class_<JSWX> class_binding;
+    jsbind::class_<JSWX> class_binding;
     class_binding.class_function("createBufferURL", &JSWX::createBufferURL);
     class_binding.class_function("revokeBufferURL", &JSWX::revokeBufferURL);
     context.class_("wx", class_binding);

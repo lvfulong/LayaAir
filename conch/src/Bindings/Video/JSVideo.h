@@ -35,7 +35,7 @@ namespace laya
 class JSVideo
 {
   public:
-    static void exportJS(Context &context);
+    static void exportJS(jsbind::Object &context);
 
     JSVideo();
     ~JSVideo();
@@ -113,7 +113,7 @@ class JSVideo
     static std::set<std::string> ms_supportFormat;
 
     std::map<std::string, int> m_evtMap;
-    Persistent m_dispatchHandle;
+    jsbind::Persistent m_dispatchHandle;
     std::string m_src;
 
     bool m_isDownloadWaitLoad;

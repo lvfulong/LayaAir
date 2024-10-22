@@ -340,14 +340,14 @@ namespace laya
     {
         if (!callbackref.lock())
             return;
-        m_pJSFunctionOnInput.call<void>(toLocal(this));
+        m_pJSFunctionOnInput.call<void>(this);
     }
 
     void JSWindowEditBox::onKeyDownCallJSFunction(int keyCode, std::weak_ptr<int> callbackref)
     {
         if (!callbackref.lock())
             return;
-        m_pJSFunctionOnKeydown.call<void>(toLocal(this), keyCode);
+        m_pJSFunctionOnKeydown.call<void>(this, keyCode);
     }
 
     void JSWindowEditBox::setSelectionRange(int start, int end)
@@ -515,9 +515,9 @@ namespace laya
     }
 
     //------------------------------------------------------------------------------
-    void JSWindowEditBox::exportJS(Context& context)
+    void JSWindowEditBox::exportJS(jsbind::Object& context)
     {
-        class_<JSWindowEditBox> class_binding;
+        jsbind::class_<JSWindowEditBox> class_binding;
         class_binding.constructor<>();
         class_binding.property("left", &JSWindowEditBox::get_Left, &JSWindowEditBox::set_Left);
         class_binding.property("top", &JSWindowEditBox::get_Top, &JSWindowEditBox::set_Top);

@@ -10,7 +10,7 @@ namespace laya
     class  JSXmlNode
     {
     public:
-        static void exportJS(Context& context);
+        static void exportJS(jsbind::Object& context);
         JSXmlNode();
         virtual ~JSXmlNode();
         bool  hasChildNodes();
@@ -33,8 +33,8 @@ namespace laya
         std::vector<JSXmlNode*> m_childNodes;
         std::vector<JSXmlAttr*> m_attributes;
         enum { allchildsid, allattribid };
-        Persistent m_jsChildNodes; bool m_bCreateChilds;
-        Persistent m_jsAttribs; bool m_bCreateAttribs;
+        jsbind::Persistent m_jsChildNodes; bool m_bCreateChilds;
+        jsbind::Persistent m_jsAttribs; bool m_bCreateAttribs;
         JSXmlNode* m_parentNode;
         std::string  m_nodeName;
         std::string  m_nodeValue;
@@ -42,7 +42,7 @@ namespace laya
     class JSXmlDocument :public JSXmlNode
     {
     public:
-        static void exportJS(Context& context);
+        static void exportJS(jsbind::Object& context);
         JSXmlDocument();
         ~JSXmlDocument();
         void parse(const char* str);

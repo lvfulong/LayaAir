@@ -275,7 +275,7 @@ namespace laya
         }
         else 
         {
-			makeStrong(this);
+			jsbind::makeStrong(this);
 
             std::weak_ptr<int> cbref(m_CallbackRef);
             pdmgr->postData(p_pszUrl, p_pszString, strlen(p_pszString), 
@@ -399,9 +399,9 @@ namespace laya
             }
         }
     }
-    void XMLHttpRequest::exportJS(Context& context)
+    void XMLHttpRequest::exportJS(jsbind::Object& context)
     {
-        class_<XMLHttpRequest> class_binding;
+        jsbind::class_<XMLHttpRequest> class_binding;
         class_binding.constructor<>();
         class_binding.function("get_readyState", &XMLHttpRequest::getReadyState);
         class_binding.function("get_status", &XMLHttpRequest::getStatus);

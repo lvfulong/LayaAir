@@ -392,7 +392,7 @@ namespace laya
         bool bRunOnDraw = false;
         double nTime = tmGetCurms();
 
-        if (!m_pJSOnDrawFunction.isEmpty())
+        if (!m_pJSOnDrawFunction.isValid())
         {
 			
             JS_TRY;
@@ -579,7 +579,7 @@ namespace laya
     }*/
 	void JCScriptRuntime::onBlur()
 	{
-        if (!this->m_pJSOnBlurFunction.isEmpty())
+        if (!this->m_pJSOnBlurFunction.isValid())
         {
             this->m_pJSOnBlurFunction.call<void>(getCurrentContext().global());
 			
@@ -587,7 +587,7 @@ namespace laya
 	}
 	void JCScriptRuntime::onFocus()
 	{
-        if (!this->m_pJSOnFocusFunction.isEmpty())
+        if (!this->m_pJSOnFocusFunction.isValid())
         {
             this->m_pJSOnFocusFunction.call<void>(getCurrentContext().global(), JSP_TO_JS(JSLaunchOptions*, new JSLaunchOptions()));
         }

@@ -3,7 +3,7 @@
 namespace laya
 {
 std::unordered_map<std::string, GLESCommandUniformMap *> GLESCommandUniformMap::m_globalBlockMap;
-std::unordered_map<std::string, Persistent*> GLESCommandUniformMap::m_globalBlockMapJS;
+std::unordered_map<std::string, jsbind::Persistent*> GLESCommandUniformMap::m_globalBlockMapJS;
 
 GLESCommandUniformMap::GLESCommandUniformMap()
 {
@@ -26,15 +26,15 @@ GLESCommandUniformMap *GLESCommandUniformMap::createGlobalUniformMap(const char 
 JsValue GLESCommandUniformMap::createGlobalUniformMapJS(const char* blockName)
 {
     GLESCommandUniformMap* data = GLESCommandUniformMap::createGlobalUniformMap(blockName);
-    std::unordered_map<std::string, Persistent*>::iterator it = m_globalBlockMapJS.find(blockName);
+    std::unordered_map<std::string, jsbind::Persistent*>::iterator it = m_globalBlockMapJS.find(blockName);
     if (it != m_globalBlockMapJS.end())
     {
-        return it->second->toLocal().handle_;
+        return it->second->getHandle();
     }
-    Persistent* comMap = new Persistent();
+    jsbind::Persistent* comMap = new jsbind::Persistent();
     comMap->reset(Converter<GLESCommandUniformMap*>::ToJs(data, false));
     m_globalBlockMapJS[blockName] = comMap;
-    return comMap->toLocal().handle_;
+    return comMap->getHandle();
 }
 bool GLESCommandUniformMap::hasPtrID(int propertyID)
 {

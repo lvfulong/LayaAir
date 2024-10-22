@@ -78,7 +78,7 @@ GLESEngine::GLESEngine(WebGLConfig config, WebGLMode webglMode)
 GLESEngine::~GLESEngine()
 {
     LayaGL::m_pWebglEngine = nullptr;
-    if (!m_pJSTextureContext.isEmpty())
+    if (!m_pJSTextureContext.isValid())
     {
         m_pJSTextureContext.reset();
     }
@@ -590,14 +590,14 @@ void GLESEngine::unbindVertexState()
 }
 JsValue GLESEngine::getTextureContextJS()
 {
-    if (m_pJSTextureContext.isEmpty())
+    if (m_pJSTextureContext.isValid())
     {
         m_pJSTextureContext.reset(JSP_TO_JS(GLTextureContext *, m_textureContext));
-        return m_pJSTextureContext.toLocal().handle_;
+        return m_pJSTextureContext.getHandle();
     }
     else
     {
-        return m_pJSTextureContext.toLocal().handle_;
+        return m_pJSTextureContext.getHandle();
     }
 }
 void GLESEngine::regGlobalVertexDeclaration(std::string name, int32_t key, const VertexStateContext& declarations)

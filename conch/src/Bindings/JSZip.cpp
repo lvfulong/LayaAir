@@ -193,9 +193,9 @@ namespace laya
     {
         return m_zip.exists(pName);
     }
-	void JSZip::exportJS(Context& context) 
+	void JSZip::exportJS(jsbind::Object& context) 
     {
-        class_<JSZip> class_binding;
+        jsbind::class_<JSZip> class_binding;
         class_binding.constructor<>();
 		class_binding.function("setSrc", &JSZip::setSrc);
 		class_binding.function("forEach", &JSZip::enumFiles);

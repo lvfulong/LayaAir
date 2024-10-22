@@ -118,7 +118,7 @@ namespace laya
         //回调也是走 setPostCB设置的函数
         void getData(const char* p_sUrl);
 		
-        static void exportJS(Context& context);
+        static void exportJS(jsbind::Object& context);
 
 	private:
         typedef std::map<std::string, std::string> HTTPHeaderMap;
@@ -135,10 +135,10 @@ namespace laya
 		
 	public:
 		
-		Persistent		        m_funcOnStateChg;
-		Persistent		        m_This;// this 的 JS 对象
-		Persistent		        m_jsfunPostComplete;
-		Persistent		        m_jsfunPostError;
+		jsbind::Persistent		        m_funcOnStateChg;
+		//jsbind::Persistent		        m_This;// this 的 JS 对象
+		jsbind::Persistent		        m_jsfunPostComplete;
+		jsbind::Persistent		        m_jsfunPostError;
 		std::shared_ptr<int>	m_CallbackRef;
     };
 }

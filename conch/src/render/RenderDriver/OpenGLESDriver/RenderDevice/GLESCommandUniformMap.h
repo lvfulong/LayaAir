@@ -62,7 +62,7 @@ class GLESCommandUniformMap
     static std::unordered_map<std::string, GLESCommandUniformMap *> m_globalBlockMap;
     std::string m_stateName;
     std::unordered_map<int, CommandUniformData> m_vData;
-    static std::unordered_map<std::string, Persistent *> m_globalBlockMapJS;
+    static std::unordered_map<std::string, jsbind::Persistent *> m_globalBlockMapJS;
 };
 } // namespace laya
 #endif //__GLESCommandUniformMap_H__

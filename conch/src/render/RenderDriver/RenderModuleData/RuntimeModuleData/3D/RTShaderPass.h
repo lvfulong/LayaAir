@@ -16,11 +16,11 @@ class RTShaderPass
     struct CacheShaderItem
     {
         GLESShaderInstance *_glesShaderInstance;
-        Persistent _jsShaderInstance;
+        jsbind::Persistent _jsShaderInstance;
     };
     RTShaderPass();
     ~RTShaderPass();
-    void setCacheShader(RTDefineDatas *compileDefine, GLESShaderInstance *shader, Persistent jsShaderInstance);
+    void setCacheShader(RTDefineDatas *compileDefine, GLESShaderInstance *shader, jsbind::Persistent jsShaderInstance);
     void setCacheShaderJS(RTDefineDatas* compileDefine, GLESShaderInstance* shader, JSValueAsParam jsShaderInstanceWrapper);
     RTShaderPass::CacheShaderItem *getCacheShader(RTDefineDatas *compileDefine);
     JsValue getCacheShaderJS(RTDefineDatas *compileDefine);
@@ -59,7 +59,7 @@ class RTShaderPass
   private:
     std::unordered_map<uint32_t, void *> _cacheSharders{};
     uint32_t _cacheShaderHierarchy = 1;
-    Persistent m_createShaderInstanceFunctionJS;
+    jsbind::Persistent m_createShaderInstanceFunctionJS;
 };
 } // namespace laya
 
