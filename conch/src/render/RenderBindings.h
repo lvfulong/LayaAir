@@ -366,7 +366,7 @@ class RenderBindings
                     if (isArrayBuffer)
                     {
                         char *arrayBuffer = reinterpret_cast<char*>(pixels.getData());
-                        int abLength = arrayBuffer.getLength();
+                        int abLength = pixels.getLength();
                         ctx.setTexture3DPixelsData(texture, arrayBuffer, abLength, depth, premultiplyAlpha, invertY);
                     }
                 }));

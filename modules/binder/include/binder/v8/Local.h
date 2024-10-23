@@ -52,18 +52,33 @@ class Local
     {
         return handle_ != nullptr;
     }
+    bool isUndefined() const;
+
+    bool isNull() const;
+
+    bool isBool() const;
+
+    bool isNumber() const;
+
+    bool isString() const;
+
+    bool isObject() const;
+
+    bool isArray() const;
+
+    bool isFunction() const;
+
+    bool isError() const;
 
   private:
     template <typename ClassType, typename ReturnType, typename... Args>
     ReturnType call(jsvm::Env env, jsvm::Value recv, const Args &...args)
     {
-        jsvm::Value func = getHandle(env);
         jsvm::ValueType valueType;
-        jsvm::Status status = Typeof(env, func, &valueType)
-
-            if (func != nullptr && status == jsvm::Status::OK && valueType == jsvm::ValueType::FUNCTION)
+        jsvm::Status status = jsvm::Typeof(env, func, &valueType) DEBUG_CHECK(status == jsvm::Status::OK);
+        if (handle_ != nullptr && valueType == jsvm::ValueType::FUNCTION)
         {
-            auto result = internal::v8_call(recv, func, args...);
+            auto result = internal::v8_call(recv, handle_, args...);
             return Converter<ReturnType>::ToCpp(result);
         }
         else

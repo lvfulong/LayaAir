@@ -207,7 +207,7 @@ class Object
             ->Set(isolate()->GetCurrentContext(), name_string,
                 cl.js_function_template()->GetFunction(isolate()->GetCurrentContext()).ToLocalChecked())
             .FromJust();*/
-        SetNamedProperty(env, exports_, name.data(), cl.ctor_);
+        jsvm::SetNamedProperty(env, exports_, name.data(), cl.ctor_);
         return *this;
     }
 
