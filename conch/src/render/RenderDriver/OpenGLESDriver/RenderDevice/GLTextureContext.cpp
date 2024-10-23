@@ -9,6 +9,7 @@
 #include <Bindings/JSImage.h>
 #include <assert.h>
 #include <utils/Preprocessor.h>
+#include <utils/Log.h>
 
 namespace laya
 {
@@ -1767,36 +1768,22 @@ void GLTextureContext::getRenderTextureData(GLESInternalRT *internalTex, int x, 
     glBindFramebuffer(GL_FRAMEBUFFER, g_nMainFrameBuffer);
     return;
 }
-void GLTextureContext::setTexturePixelsDataJS(GLESInternalTex *texture, JSValueAsParam pixels, bool premultiplyAlpha,
+void GLTextureContext::setTexturePixelsDataJS(GLESInternalTex *texture, jsbind::ArrayBuffer arrayBuffer, bool premultiplyAlpha,
                                               bool invertY)
 {
     if (texture)
     {
-        char *pArrayBufferPtr = NULL;
-        int nABLen = 0;
-        bool bIsArrayBuffer = extractJSAB(pixels, pArrayBufferPtr, nABLen);
-        if (bIsArrayBuffer)
-        {
-            this->setTexturePixelsData(texture, pArrayBufferPtr, nABLen, premultiplyAlpha, invertY);
-        }
-        else
-        {
-            this->setTexturePixelsData(texture, nullptr, 0, premultiplyAlpha, invertY);
-        }
+        DEBUG_CHECK(arrayBuffer.isValid());
+        this->setTexturePixelsData(texture, reinterpret_cast<char*>(arrayBuffer.getData()), arrayBuffer.getLength(), premultiplyAlpha, invertY);
     }
 }
-void GLTextureContext::setTextureSubPixelsDataJS(GLESInternalTex *texture, JSValueAsParam source, int mipmapLevel,
+void GLTextureContext::setTextureSubPixelsDataJS(GLESInternalTex *texture, jsbind::ArrayBuffer source, int mipmapLevel,
                                                  bool generateMipmap, int xOffset, int yOffset, int width, int height,
                                                  bool premultiplyAlpha, bool invertY)
 {
-    char *pArrayBufferPtr = NULL;
-    int nABLen = 0;
-    bool bIsArrayBuffer = extractJSAB(source, pArrayBufferPtr, nABLen);
-    if (bIsArrayBuffer)
-    {
-        this->setTextureSubPixelsData(texture, pArrayBufferPtr, mipmapLevel, generateMipmap, xOffset, yOffset, width,
+    DEBUG_CHECK(source.isValid());
+    this->setTextureSubPixelsData(texture, reinterpret_cast<char*>(source.getData()), mipmapLevel, generateMipmap, xOffset, yOffset, width,
                                       height, premultiplyAlpha, invertY);
-    }
 }
 void GLTextureContext::setCubePixelsDataJS(GLESInternalTex *texture, JSValueAsParam source, bool premultiplyAlpha,
                                            bool invertY)

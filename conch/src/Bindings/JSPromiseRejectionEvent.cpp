@@ -19,11 +19,11 @@ namespace laya
     }
     JsValue JSPromiseRejectionEvent::getReason()
     {
-	    return m_pReason.toLocal();
+	    return m_pReason.getHandle();
     }
     JsValue JSPromiseRejectionEvent::getPromise()
     {
-        return m_pPromise.toLocal();
+        return m_pPromise.getHandle();
     }
 	void JSPromiseRejectionEvent::setReason(JSValueAsParam pObj)
 	{

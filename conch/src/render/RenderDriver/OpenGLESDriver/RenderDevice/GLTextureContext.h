@@ -118,8 +118,8 @@ class GLTextureContext : public GLObject
                                       std::vector<uint8_t> &out);
     virtual void updateVideoTexture(GLESInternalTex *texture, JCImage *video, bool premultiplyAlpha, bool invertY);
 
-    void setTexturePixelsDataJS(GLESInternalTex *texture, JSValueAsParam pixels, bool premultiplyAlpha, bool invertY);
-    void setTextureSubPixelsDataJS(GLESInternalTex *texture, JSValueAsParam source, int mipmapLevel,
+    void setTexturePixelsDataJS(GLESInternalTex *texture, jsbind::ArrayBuffer arrayBuffer, bool premultiplyAlpha, bool invertY);
+    void setTextureSubPixelsDataJS(GLESInternalTex *texture, jsbind::ArrayBuffer source, int mipmapLevel,
                                    bool generateMipmap, int xOffset, int yOffset, int width, int height,
                                    bool premultiplyAlpha, bool invertY);
     void setCubePixelsDataJS(GLESInternalTex *texture, JSValueAsParam source, bool premultiplyAlpha, bool invertY);

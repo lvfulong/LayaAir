@@ -70,15 +70,10 @@ void GLESVertexBuffer::orphanStorage()
     bind();
     this->_glBuffer->setDataLength(this->_glBuffer->m_byteLength);
 }
-void GLESVertexBuffer::setDataJS(JSValueAsParam data, int bufferOffset /* = 0*/, int dataStartIndex /* = 0*/,
+void GLESVertexBuffer::setDataJS(jsbind::ArrayBuffer arrayBuffer, int bufferOffset /* = 0*/, int dataStartIndex /* = 0*/,
                                  double dataCount /*= Number.MAX_SAFE_INTEGER*/)
 {
-    char *pArrayBufferPtr = NULL;
-    int nABLen = 0;
-    bool bIsArrayBuffer = extractJSAB(data, pArrayBufferPtr, nABLen);
-    if (bIsArrayBuffer)
-    {
-        setData(pArrayBufferPtr, nABLen, bufferOffset, dataStartIndex, dataCount);
-    }
+    DEBUG_CHECK(arrayBuffer.isValid());
+    setData(reinterpret_cast<const char*>(arrayBuffer.getData()), arrayBuffer.getLength(), bufferOffset, dataStartIndex, dataCount);
 }
 } // namespace laya

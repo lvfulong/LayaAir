@@ -148,8 +148,8 @@ namespace laya
     }
     void XMLHttpRequest::callReadyStateChangeListener() 
     {
-        if (!m_funcOnStateChg.isEmpty()) {
-            m_funcOnStateChg.call<void>(toLocal(this), (int)m_state);
+        if (!m_funcOnStateChg.isValid()) {
+            m_funcOnStateChg.call<void>(this, (int)m_state);
         }
     }
     void XMLHttpRequest::setRequestHeaderInternal(const std::string& name, const std::string& value) 
@@ -161,7 +161,7 @@ namespace laya
     }
     void XMLHttpRequest::set_onreadystatechange(JSValueAsParam pObj)
     {
-        m_funcOnStateChg.reset(pObj);
+        m_funcOnStateChg = jsbind::Persistent(pObj);
     }
     void _onPostComplete_JSThread(XMLHttpRequest* pxhr, char* p_Buff, int p_nLen, bool p_bBin, std::weak_ptr<int> cbref) 
     {
@@ -201,9 +201,9 @@ namespace laya
         }
         else 
         {
-            pxhr->m_jsfunPostError.call<void>(toLocal(pxhr), -1);
+            pxhr->m_jsfunPostError.call<void>(pxhr, -1);
         }
-        makeWeak(pxhr);
+        jsbind::makeWeak(pxhr);
     }
     void _onPostError_JSThread(XMLHttpRequest* pxhr, int curle, int httpresponse, std::weak_ptr<int> cbref)
     {
@@ -212,8 +212,8 @@ namespace laya
         //if (!pxhr->IsMyJsEnv())
         //    return;
        
-        pxhr->m_jsfunPostError.call<void>(toLocal(pxhr), curle, httpresponse);
-        makeWeak(pxhr);
+        pxhr->m_jsfunPostError.call<void>(pxhr, curle, httpresponse);
+        jsbind::makeWeak(pxhr);
     }
     void _onPostError(XMLHttpRequest* xhr, int curle, int httpresponse, std::weak_ptr<int> cbref) 
     {
@@ -307,7 +307,7 @@ namespace laya
     void XMLHttpRequest::setPostCB(JSValueAsParam p_onOK, JSValueAsParam p_onError) 
     {
         m_jsfunPostComplete = jsbind::Persistent(p_onOK);
-        m_jsfunPostError = jsbind::Persistentt(p_onError);
+        m_jsfunPostError = jsbind::Persistent(p_onError);
         std::weak_ptr<int> cbref(m_CallbackRef);
         m_funcPostComplete = std::bind(_onPostComplete, this, isBin(),
             std::placeholders::_1, 
