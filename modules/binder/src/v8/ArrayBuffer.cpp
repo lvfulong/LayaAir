@@ -362,6 +362,7 @@ ArrayBuffer ArrayBuffer::MakeFromLocal(jsvm::Value arrayBuffer);
     }
     else
     {
+        //todo js exception
         return ArrayBuffer(nullptr, nullptr, 0, 0, ArrayBuffer::ARRAY_BUFFER);
     }
 }

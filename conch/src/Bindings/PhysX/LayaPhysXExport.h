@@ -15,7 +15,7 @@ namespace laya
 
         static void exportJS(jsbind::Object& context);
 
-        static void onMalloc(JSValueAsParam ab);
+        static void onMalloc(jsbind::ArrayBuffer arrayBuffer);
     };
 }
 #endif

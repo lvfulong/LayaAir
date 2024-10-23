@@ -205,25 +205,18 @@ namespace laya
     {
 	    return m_pImage->getHeight();
     }
-    void JSImage::putBitmapDataJS(JSValueAsParam pArrayBuffer, int width, int height)
+    void JSImage::putBitmapDataJS(jsbind::ArrayBuffer arrayBuffer, int width, int height)
     {
-        char* pArrayBufferPtr = NULL;
-        int nABLen = 0;
-        bool bIsArrayBuffer = extractJSAB(pArrayBuffer, pArrayBufferPtr, nABLen);
-        if (bIsArrayBuffer)
+        DEBUG_CHECK(arrayBuffer.isValid());
+        char* pArrayBufferPtr = reinterpret_cast<char*>(arrayBuffer.getData();
+        int nABLen = arrayBuffer.getLength();
+        if (nABLen >= width * height * 4)
         {
-            if (nABLen >= width * height * 4)
-            {
-                putBitmapData(pArrayBufferPtr,width, height);
-            }
-            else
-            {
-                LOGE("JSImage::pushBitmapData array buffer size < width * height * 4");
-            }
+            putBitmapData(pArrayBufferPtr,width, height);
         }
-        else 
+        else
         {
-            LOGE("JSImage::pushBitmapData param is not an ArrayBuffer!");
+            LOGE("JSImage::pushBitmapData array buffer size < width * height * 4");
         }
     }
 
@@ -232,29 +225,24 @@ namespace laya
         //不删除 JS保证在onDecodeEndDecThread前pArrayBuffer不垃圾回收
     }
 
-    void JSImage::putDataJS(JSValueAsParam pArrayBuffer)
+    void JSImage::putDataJS(jsbind::ArrayBuffer arrayBuffer)
     {
-        char* pArrayBufferPtr = NULL;
-        int nABLen = 0;
-        bool bIsArrayBuffer = extractJSAB(pArrayBuffer, pArrayBufferPtr, nABLen);
-        if (bIsArrayBuffer)
-        {
-            if (nABLen <= 0)
-                return;
-            //设置url的名字
-            char sCachePath[1024];
-            memset(sCachePath, 0, 1024);
-            sprintf(sCachePath, "%s/%d.LayaBoxImg", JCConch::s_pConch->m_sCachePath.c_str(), m_nID);
-            m_sUrl = sCachePath;
-            std::weak_ptr<int> cbref(m_CallbackRef);
-            imgDecodeCB cb = std::bind(&JSImage::onDecodeEndDecThread, this, std::placeholders::_1, cbref);
-            std::shared_ptr<char> pBuffer(pArrayBufferPtr, deleter);
-            loadImageMemASync(pBuffer, nABLen, cb);
-        }
-        else
-        {
-            LOGE("JSImage::putData param is not an ArrayBuffer!");
-        }
+        DEBUG_CHECK(arrayBuffer.isValid());
+        char* pArrayBufferPtr = reinterpret_cast<char*>(arrayBuffer.getData());
+        int nABLen = arrayBuffer.getLength();
+
+        if (nABLen <= 0)
+            return;
+        //设置url的名字
+        char sCachePath[1024];
+        memset(sCachePath, 0, 1024);
+        sprintf(sCachePath, "%s/%d.LayaBoxImg", JCConch::s_pConch->m_sCachePath.c_str(), m_nID);
+        m_sUrl = sCachePath;
+        std::weak_ptr<int> cbref(m_CallbackRef);
+        imgDecodeCB cb = std::bind(&JSImage::onDecodeEndDecThread, this, std::placeholders::_1, cbref);
+        std::shared_ptr<char> pBuffer(pArrayBufferPtr, deleter);
+        loadImageMemASync(pBuffer, nABLen, cb);
+
     }
     void JSImage::setBase64(const char* base64)
     {

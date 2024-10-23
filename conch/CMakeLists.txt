@@ -340,8 +340,6 @@ list(APPEND CONCH_SRC
 	src/Bindings/JSPromiseRejectionEvent.h
 	src/Bindings/JSPromiseRejectionEvent.cpp
 	src/Bindings/JSCanvasRenderingContext2D.cpp
-	src/Bindings/JSTextDecoder.h
-	src/Bindings/JSTextDecoder.cpp
 	src/Extention/LayaExtWind.cpp
 	
 	src/OpenAL/

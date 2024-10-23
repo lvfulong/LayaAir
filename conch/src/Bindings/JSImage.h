@@ -61,9 +61,9 @@ namespace laya
 
         void putBitmapData( char* pData,int width, int height);
 
-        void putBitmapDataJS( JSValueAsParam pArrayBuffer, int width, int height );
+        void putBitmapDataJS(jsbind::ArrayBuffer arrayBufferr, int width, int height );
 
-        void putDataJS(JSValueAsParam pArrayBuffer);
+        void putDataJS(jsbind::ArrayBuffer arrayBuffer);
 
         void setBase64(const char* base64);
 

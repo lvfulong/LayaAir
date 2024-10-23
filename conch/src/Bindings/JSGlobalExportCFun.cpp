@@ -29,7 +29,6 @@
 #include "JSFileSystem.h"
 #include "JSZip.h"
 #include "JSNotify.h"
-#include "JSTextDecoder.h"
 
 #include "JSCanvasRenderingContext2D.h"
 #if defined(OS_ANDROID)
@@ -348,12 +347,10 @@ namespace laya
         imd5.GenerateMD5(buf, len);
         return imd5.ToString();
     }
-    std::string calcMD5_JSAB(JSValueAsParam pjs)
+    std::string calcMD5_JSAB(jsbind::ArrayBuffer arrayBuffer)
     {
-        char* pABPtr = NULL;
-        int nABLen = 0;
-        if (!extractJSAB(pjs, pABPtr, nABLen))return "";
-        std::string ret = calcMD5((unsigned char*)pABPtr, nABLen);
+        DEBUG_CHECK(arrayBuffer.isValid());
+        std::string ret = calcMD5(reinterpret_cast<unsigned char* >(arrayBuffer.getData()), arrayBuffer.getLength());
         return ret;
     }
     static std::string toBase64(const char* type, float encoderOptions, JSValueAsParam ab, int w, int h, bool flipY)
@@ -473,7 +470,6 @@ namespace laya
         JSImage::exportJS(context);
         XMLHttpRequest::exportJS(context);
         //Fetch::exportJS(context);
-        TextDecoderWrapper::exportJS(context);
         JSConchConfig::exportJS(context);
         JSXmlNode::exportJS(context);
         JSXmlDocument::exportJS(context);
