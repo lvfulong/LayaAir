@@ -274,13 +274,11 @@ class RenderBindings
             class_binding.function_optional_override(
                 "setTextureDDSData",
                 optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, const DDSTextureInfoJS &ddsInfo) {
-                    char *pArrayBufferPtr = NULL;
-                    int nABLen = 0;
-                    bool bIsArrayBuffer = extractJSAB(ddsInfo.sourceAB, pArrayBufferPtr, nABLen);
+                    bool bIsArrayBuffer = ddsInfo.sourceAB.isValid();
                     if (bIsArrayBuffer)
                     {
                         DDSTextureInfo info;
-                        info.source = pArrayBufferPtr;
+                        info.source = reinterpret_cast<char*>(ddsInfo.sourceAB.getData());
                         info.compressed = ddsInfo.compressed;
                         info.dataOffset = ddsInfo.dataOffset;
                         info.blockBytes = ddsInfo.blockBytes;
@@ -297,13 +295,11 @@ class RenderBindings
             class_binding.function_optional_override(
                 "setTextureKTXData",
                 optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, const KTXTextureInfoJS &ktxInfo) {
-                    char *pArrayBufferPtr = NULL;
-                    int nABLen = 0;
-                    bool bIsArrayBuffer = extractJSAB(ktxInfo.sourceAB, pArrayBufferPtr, nABLen);
+                    bool bIsArrayBuffer = ktxInfo.sourceAB.isValid();
                     if (bIsArrayBuffer)
                     {
                         KTXTextureInfo info;
-                        info.source = pArrayBufferPtr;
+                        info.source = reinterpret_cast<char*>(ktxInfo.sourceAB.getData());
                         info.compress = ktxInfo.compress;
                         info.sRGB = ktxInfo.sRGB;
                         info.dimension = ktxInfo.dimension;
@@ -321,13 +317,11 @@ class RenderBindings
             class_binding.function_optional_override(
                 "setCubeKTXData",
                 optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, const KTXTextureInfoJS &ktxInfo) {
-                    char *pArrayBufferPtr = NULL;
-                    int nABLen = 0;
-                    bool bIsArrayBuffer = extractJSAB(ktxInfo.sourceAB, pArrayBufferPtr, nABLen);
+                    bool bIsArrayBuffer = ktxInfo.sourceAB.isValid();
                     if (bIsArrayBuffer)
                     {
                         KTXTextureInfo info;
-                        info.source = pArrayBufferPtr;
+                        info.source = reinterpret_cast<char*>(ktxInfo.sourceAB.getData());
                         info.compress = ktxInfo.compress;
                         info.sRGB = ktxInfo.sRGB;
                         info.dimension = ktxInfo.dimension;
@@ -344,10 +338,10 @@ class RenderBindings
             class_binding.function_optional_override(
                 "readRenderTargetPixelData",
                 optional_override([](GLTextureContext &ctx, GLESInternalRT *renderTarget, int xOffset, int yOffset,
-                                     int width, int height, JSValueAsParam out) {
+                                     int width, int height, jsbind::ArrayBuffer out) {
                     std::vector<uint8_t> buffer;
                     ctx.readRenderTargetPixelData(renderTarget, xOffset, yOffset, width, height, buffer);
-                    writeToJSAB(out, (const char *)buffer.data(), buffer.size());
+                    out.upload(buffer.data(), buffer.size());
                     return out;
                 }));
             class_binding.function("createTexture3DInternal", &GLTextureContext::createTexture3DInternal);
@@ -361,40 +355,35 @@ class RenderBindings
 
             class_binding.function_optional_override(
                 "setTexture3DPixelsData",
-                optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, JSValueAsParam pixels, int depth,
+                optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, jsbind::ArrayBuffer pixels, int depth,
                                      bool premultiplyAlpha, bool invertY) {
                     if (texture == nullptr)
                     {
                         return;
                     }
-                    char *arrayBuffer;
-                    int abLength;
-                    bool isArrayBuffer = extractJSAB(pixels, arrayBuffer, abLength);
+                    
+                    bool isArrayBuffer = pixels.isValid();
                     if (isArrayBuffer)
                     {
+                        char *arrayBuffer = reinterpret_cast<char*>(pixels.getData());
+                        int abLength = arrayBuffer.getLength();
                         ctx.setTexture3DPixelsData(texture, arrayBuffer, abLength, depth, premultiplyAlpha, invertY);
-                    }
-                    else
-                    {
-                        ctx.setTexture3DPixelsData(texture, nullptr, abLength, depth, premultiplyAlpha, invertY);
                     }
                 }));
 
             class_binding.function_optional_override(
                 "setTexture3DSubPixelsData",
-                optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, JSValueAsParam pixels,
+                optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, jsbind::ArrayBuffer pixels,
                                      int mipmapLevel, bool generateMipmap, int xOffset, int yOffset, int zOffset,
                                      int width, int height, int depth, bool premultiplyAlpha, bool invertY) {
                     if (texture == nullptr)
                     {
                         return;
                     }
-                    char *arrayBuffer;
-                    int abLength;
-                    bool isArrayBuffer = extractJSAB(pixels, arrayBuffer, abLength);
+                    bool isArrayBuffer = pixels.isValid();
                     if (isArrayBuffer)
                     {
-                        ctx.setTexture3DSubPixelsData(texture, arrayBuffer, mipmapLevel, generateMipmap, xOffset,
+                        ctx.setTexture3DSubPixelsData(texture, reinterpret_cast<char*>(arrayBuffer.getData()), mipmapLevel, generateMipmap, xOffset,
                                                       yOffset, zOffset, width, height, depth, premultiplyAlpha,
                                                       invertY);
                     }
@@ -916,14 +905,12 @@ class RenderBindings
             class_binding.property_field("_boxProjection", &RTReflectionProb::boxProjection);
             class_binding.property_field("_ambientIntensity", &RTReflectionProb::ambientIntensity);
             class_binding.function_optional_override(
-                "setAmbientSH", optional_override([](RTReflectionProb &ctx, JSValueAsParam value) {
-                    char *pArrayBufferPtr = NULL;
-                    int nABLen = 0;
-                    bool bIsArrayBuffer = extractJSAB(value, pArrayBufferPtr, nABLen);
+                "setAmbientSH", optional_override([](RTReflectionProb &ctx, jsbind::ArrayBuffer arrayBuffer) {
+                    bool bIsArrayBuffer = arrayBuffer.isValid();
                     if (bIsArrayBuffer)
                     {
-                        ctx.setAmbientSH((float *)pArrayBufferPtr);
-                        ctx.ambientSHByteLength = nABLen;
+                        ctx.setAmbientSH(reinterpret_cast<float*>(arrayBuffer.getData()));
+                        ctx.ambientSHByteLength = arrayBuffer.getLength();
                     }
                 }));
             class_binding.function("setReflectionTexture", &RTReflectionProb::setReflectionTexture);
@@ -1018,14 +1005,9 @@ class RenderBindings
             class_binding.function("destroy", &GLESShaderData::destroy);
             class_binding.function_optional_override(
 
-                "setBuffer", optional_override([](GLESShaderData &data, int32_t propertyIndex, JSValueAsParam value) {
-                    char *pArrayBufferPtr = NULL;
-                    int nABLen = 0;
-                    bool bIsArrayBuffer = extractJSAB(value, pArrayBufferPtr, nABLen);
-                    if (bIsArrayBuffer)
-                    {
-                        data.setBuffer(propertyIndex, (uint8_t *)pArrayBufferPtr, nABLen);
-                    }
+                "setBuffer", optional_override([](GLESShaderData &data, int32_t propertyIndex, jsbind::ArrayBuffer arrayBuffer) {
+                    DEBUG_CHECK(arrayBuffer.isValid());
+                    data.setBuffer(propertyIndex, arrayBuffer.getData(), arrayBuffer.getLength());
                 }));
             context.class_("conchGLESShaderData", class_binding);
         }

@@ -13,7 +13,7 @@ class JSWX
   public:
     static void exportJS(jsbind::Object &context);
 
-    static std::string createBufferURL(JSValueAsParam param);
+    static std::string createBufferURL(jsbind::ArrayBuffer arrayBuffer);
 
     static void revokeBufferURL(const char *url);
 

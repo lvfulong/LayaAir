@@ -77,14 +77,12 @@ namespace laya
 	{
 		JCConch::s_pScriptRuntime->m_bJSBulletClearLineHandle = jsbind::Persistent(p_pFunction);
 	}
-    void JSRuntime::setBuffer(JSValueAsParam pArrayBuffer) 
+    void JSRuntime::setBuffer(jsbind::ArrayBuffer arrayBuffer) 
     {
-        char* pArrayBufferPtr = NULL;
-        int nABLen = 0;
-        bool bIsArrayBuffer = extractJSAB(pArrayBuffer, pArrayBufferPtr, nABLen);
+        bool bIsArrayBuffer = arrayBuffer.isValid();
         if (bIsArrayBuffer)
         {
-            JCConch::s_pScriptRuntime->m_pOtherBufferSharedWidthJS = pArrayBufferPtr;
+            JCConch::s_pScriptRuntime->m_pOtherBufferSharedWidthJS = reinterpret_cast<char*>(arrayBuffer.getData());
         }
         else {
             LOGE("JSRuntime::setCmdBuffer param is not an ArrayBuffer!");
@@ -232,55 +230,51 @@ namespace laya
 #endif
         return "";
     }
-    bool JSRuntime::saveAsPng(JSValueAsParam pArrayBufferArgs, int w, int h, const char* p_pszFile)
+    bool JSRuntime::saveAsPng(jsbind::ArrayBuffer arrayBuffer, int w, int h, const char* p_pszFile)
     {
-        char* pArrayBuffer = NULL;
-        int nArrayBufferSize = 0;
-        bool bIsArrayBuffer = extractJSAB(pArrayBufferArgs, pArrayBuffer, nArrayBufferSize);
+        bool bIsArrayBuffer = arrayBuffer.isValid();
         if (bIsArrayBuffer)
-        {
-            return laya::saveAsPng(pArrayBuffer, w, h, p_pszFile);
+        { 
+            return laya::saveAsPng(reinterpret_cast<char*>(arrayBuffer.getData()), w, h, p_pszFile);
         }
         return false;
     }
-    bool JSRuntime::saveAsJpeg(JSValueAsParam pArrayBufferArgs, int w, int h, const char* p_pszFile)
+    bool JSRuntime::saveAsJpeg(jsbind::ArrayBuffer arrayBuffer, int w, int h, const char* p_pszFile)
     {
-        char* pArrayBuffer = NULL;
-        int nArrayBufferSize = 0;
-        bool bIsArrayBuffer = extractJSAB(pArrayBufferArgs, pArrayBuffer, nArrayBufferSize);
+        bool bIsArrayBuffer = arrayBuffer.isValid();
         if (bIsArrayBuffer)
         {
             ImageBaseInfo info;
             info.m_nBpp = 32;
             info.m_nWidth = w;
             info.m_nHeight = h;
-            return laya::saveAsJpeg(pArrayBuffer, info, p_pszFile);
+            return laya::saveAsJpeg(reinterpret_cast<char*>(arrayBuffer.getData()), info, p_pszFile);
         }
         return false;
     }
-    JsValue JSRuntime::convertBitmapToPng(JSValueAsParam pArrayBufferArgs, int w, int h)
+    JsValue JSRuntime::convertBitmapToPng(jsbind::ArrayBuffer arrayBuffer, int w, int h)
     {
-        char* pArrayBuffer = NULL;
-        int nArrayBufferSize = 0;
-        bool bIsArrayBuffer = extractJSAB(pArrayBufferArgs, pArrayBuffer, nArrayBufferSize);
+        bool bIsArrayBuffer = arrayBuffer.isValid();
         if (bIsArrayBuffer)
         {
-            std::pair<unsigned char*, unsigned long> ret = laya::convertBitmapToPng((const char*)pArrayBuffer, w, h, 8);
+            std::pair<unsigned char*, unsigned long> ret = laya::convertBitmapToPng(reinterpret_cast<const char*>(arrayBuffer.getData()), w, h, 8);
             if (ret.first != nullptr)
-                return  createJSAB((char*)ret.first, ret.second);
+            {
+                return jsbind::ArrayBuffer::MakeArrayBuffer(reinterpret_cast<uint8_t*>(ret.first), ret.second).getHandle();
+            }
         }
         return JSP_TO_JS_NULL;
     }
-    JsValue JSRuntime::convertBitmapToJpeg(JSValueAsParam pArrayBufferArgs, int w, int h)
+    JsValue JSRuntime::convertBitmapToJpeg(jsbind::ArrayBuffer arrayBuffer, int w, int h)
     {
-        char* pArrayBuffer = NULL;
-        int nArrayBufferSize = 0;
-        bool bIsArrayBuffer = extractJSAB(pArrayBufferArgs, pArrayBuffer, nArrayBufferSize);
+        bool bIsArrayBuffer = arrayBuffer.isValid();
         if (bIsArrayBuffer)
         {
-            std::pair<unsigned char*, unsigned long> ret = laya::convertBitmapToJpeg((const char*)pArrayBuffer, w, h, 32);
+            std::pair<unsigned char*, unsigned long> ret = laya::convertBitmapToJpeg(reinterpret_cast<const char*>(arrayBuffer.getData()), w, h, 32);
             if (ret.first != nullptr)
-                return  createJSAB((char*)ret.first, ret.second);
+            {
+                return jsbind::ArrayBuffer::MakeArrayBuffer(reinterpret_cast<uint8_t*>(ret.first), ret.second).getHandle();
+            }
         }
         return JSP_TO_JS_NULL;
     }
@@ -436,13 +430,14 @@ namespace laya
 			}
 		}
 	}*/
-    JsValue JSRuntime::createArrayBufferRef(JSValueAsParam pArrayBuffer, int nType, bool bSyncToRender, int nRefType)
+    JsValue JSRuntime::createArrayBufferRef(jsbind::ArrayBuffer arrayBuffer, int nType, bool bSyncToRender, int nRefType)
     {
-        char* pBuffer = NULL;
-        int nABLen = 0;
-        bool bIsArrayBuffer = extractJSAB(pArrayBuffer, pBuffer, nABLen);
+       
+        bool bIsArrayBuffer = arrayBuffer.isValid();
         if (bIsArrayBuffer)
-        {
+        { 
+            char* pBuffer = reinterpret_cast<char*>(arrayBuffer.getData());
+            int nABLen = arrayBuffer.getLength();
             JSArrayBufferRef* pArrayBufferRef = new JSArrayBufferRef();
             pArrayBufferRef->m_bSyncToRender = bSyncToRender;
             {

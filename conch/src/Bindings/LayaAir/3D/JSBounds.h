@@ -12,7 +12,7 @@ namespace laya
 	{
 	public:
 		JSBounds();
-		JSBounds(JSValueAsParam pSharedData);
+		JSBounds(jsbind::ArrayBuffer pSharedData);
 		~JSBounds();
 		void setMin();
 		const Vector3& getMin();

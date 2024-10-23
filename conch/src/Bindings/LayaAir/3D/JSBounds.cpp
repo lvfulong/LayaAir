@@ -11,11 +11,12 @@ namespace laya
 		JCMemorySurvey::GetInstance()->newClass("conchBounds", 128, this);
 	}
 	//------------------------------------------------------------------------------
-	JSBounds::JSBounds(JSValueAsParam pSharedData)
+	JSBounds::JSBounds(jsbind::ArrayBuffer pSharedData)
 	{
-		char* pArrayBuffer = NULL;
-		int nArrayBufferSize = 0;
-		bool bIsArrayBuffer = extractJSAB(pSharedData, pArrayBuffer, nArrayBufferSize);
+		DEBUG_CHECK(pSharedData.isValid());
+		char* pArrayBuffer = reinterpret_cast<char*>(arrayBuffer.getData();
+		int nArrayBufferSize = arrayBuffer.getLength();
+
 		//assert(bIsArrayBuffer && nArrayBufferSize >= sizeof(float) * 4);
 		m_float64Array = (double*)pArrayBuffer;
 		m_float32Array = (float*)pArrayBuffer;

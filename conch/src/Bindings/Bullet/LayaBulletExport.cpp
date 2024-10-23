@@ -2100,11 +2100,11 @@ pointer_t WASM_EXP _malloc(int size)
 
 
 // runtime要实现这个接口
-void WASM_EXP copyJSArray(pointer_t ptr, JSValueAsParam jsarray)
+void WASM_EXP copyJSArray(pointer_t ptr, jsbind::ArrayBuffer arrayBuffer)
 {
-    char* data = NULL;
-    int dataLength = 0;
-    bool bIsArrayBuffer = extractJSAB(jsarray, data, dataLength);
+    char* data = reinterpret_cast<char*>(arrayBuffer.getData());
+    int dataLength = arrayBuffer.getLength();
+    bool bIsArrayBuffer = arrayBuffer.isValid();
     if (bIsArrayBuffer && dataLength > 0)
     {
         memcpy((void*)ptr, data, dataLength);

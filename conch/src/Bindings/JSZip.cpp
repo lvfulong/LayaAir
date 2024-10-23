@@ -148,16 +148,12 @@ namespace laya
     {
 		m_zip.close();
 	}
-    bool JSZip::setBuffer(JSValueAsParam pArrayBuffer)
+    bool JSZip::setBuffer(jsbind::ArrayBuffer arrayBuffer)
     {
-        char* pArrayBufferPtr = NULL;
-        int nABLen = 0;
-        bool bIsArrayBuffer = extractJSAB(pArrayBuffer, pArrayBufferPtr, nABLen);
-        if (!bIsArrayBuffer)
-        {
-            LOGE("JSZip::setBuffer param is not an ArrayBuffer!");
-            return false;
-        }
+        DEBUG_CHECK(arrayBuffer.isValid());
+        char* pArrayBufferPtr = reinterpret_cast<char*>(arrayBuffer.getData());
+        int nABLen = arrayBuffer.getLength();
+
         if (nABLen <= 0)
         {
             return false;

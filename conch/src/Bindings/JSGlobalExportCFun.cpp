@@ -353,11 +353,13 @@ namespace laya
         std::string ret = calcMD5(reinterpret_cast<unsigned char* >(arrayBuffer.getData()), arrayBuffer.getLength());
         return ret;
     }
-    static std::string toBase64(const char* type, float encoderOptions, JSValueAsParam ab, int w, int h, bool flipY)
+    static std::string toBase64(const char* type, float encoderOptions, jsbind::ArrayBuffer arrayBuffer, int w, int h, bool flipY)
     {
-        char* pPixels = NULL;
-        int nABLen = 0;
-        bool bIsArrayBuffer = extractJSAB(ab, pPixels, nABLen);
+
+
+        char* pPixels = reinterpret_cast<char*>(arrayBuffer.getData());
+        int nABLen = arrayBuffer.getLength();
+        bool bIsArrayBuffer = arrayBuffer.isValid()；
         int size = sizeof(GLubyte) * w * h * 4;
         if (!bIsArrayBuffer || w == 0 || h == 0 || size != nABLen)
         {

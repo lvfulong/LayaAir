@@ -47,15 +47,15 @@ namespace laya
 
         static void setSensorAble(bool bSensorAble);
 
-        static void setBuffer(JSValueAsParam pArrayBuffer);
+        static void setBuffer(jsbind::ArrayBuffer arrayBuffer);
 
-        static bool saveAsPng(JSValueAsParam pArrayBufferArgs, int w, int h, const char* p_pszFile);
+        static bool saveAsPng(jsbind::ArrayBuffer arrayBuffer, int w, int h, const char* p_pszFile);
 
-        static bool saveAsJpeg(JSValueAsParam pArrayBufferArgs, int w, int h, const char* p_pszFile);
+        static bool saveAsJpeg(jsbind::ArrayBuffer arrayBuffer, int w, int h, const char* p_pszFile);
         
-        static JsValue convertBitmapToPng(JSValueAsParam pArrayBufferArgs, int w, int h);
+        static JsValue convertBitmapToPng(jsbind::ArrayBuffer arrayBuffer, int w, int h);
         
-        static JsValue convertBitmapToJpeg(JSValueAsParam pArrayBufferArgs, int w, int h);
+        static JsValue convertBitmapToJpeg(jsbind::ArrayBuffer arrayBuffer, int w, int h);
 
         static void setGetWorldTransformFunction(JSValueAsParam p_pFunction);
 
@@ -112,7 +112,7 @@ namespace laya
 
 	    static void exit();
 
-        static JsValue createArrayBufferRef(JSValueAsParam pArrayBuffer, int nType, bool bSyncToRender, int nRefType);
+        static JsValue createArrayBufferRef(jsbind::ArrayBuffer arrayBuffer, int nType, bool bSyncToRender, int nRefType);
         
 
         static std::string m_strReturn;

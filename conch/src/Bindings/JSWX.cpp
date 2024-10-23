@@ -6,13 +6,14 @@
 #include "JCScriptRuntime.h"
 namespace laya
 {
-std::string JSWX::createBufferURL(JSValueAsParam param)
+std::string JSWX::createBufferURL(jsbind::ArrayBuffer arrayBuffer)
 {
-    char *pArrayBuffer = NULL;
-    int nArrayBufferSize = 0;
-    bool bIsArrayBuffer = jsbind::extractJSAB(param, pArrayBuffer, nArrayBufferSize);
+   
+    bool bIsArrayBuffer = arrayBuffer.isValid();
     if (bIsArrayBuffer)
-    {
+    { 
+        char *pArrayBuffer = reinterpret_cast<char*>(arrayBuffer.getData());
+        int nArrayBufferSize = arrayBuffer.getLength();
         JCMD5 md5;
         md5.GenerateMD5((unsigned char *)pArrayBuffer, nArrayBufferSize);
         std::string url = "wxblob://" + md5.ToString();

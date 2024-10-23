@@ -23,7 +23,7 @@ struct KTXTextureInfo
 };
 struct KTXTextureInfoJS
 {
-    JsValue sourceAB;
+    jsbind::ArrayBuffer sourceAB;
     bool compress;
     bool sRGB;
     TextureDimension dimension;
@@ -50,7 +50,7 @@ struct DDSTextureInfo
 };
 struct DDSTextureInfoJS
 {
-    JsValue sourceAB;
+    jsbind::ArrayBuffer sourceAB;
     bool compressed;
     int dataOffset;
     int blockBytes;

@@ -29,14 +29,7 @@ class ArrayBufferAllocator : public v8::ArrayBuffer::Allocator
     // std::vector<char*> m_vAliveBuffer;
 };
 #endif
-// jsvm::Value createUint8ClampedArray(jsvm::Env env, jsvm::Value jsval, size_t byte_offset, size_t length);
-// jsvm::Value createUint8Array(jsvm::Env env, jsvm::Value jsval, size_t byte_offset, size_t length);
-// jsvm::Value createUint16Array(jsvm::Env env, jsvm::Value jsval, size_t byte_offset, size_t length);
-// jsvm::Value createFloat32Array(jsvm::Env env, jsvm::Value jsval, size_t byte_offset, size_t length);
-bool writeToJSAB(jsvm::Env env, jsvm::Value jsval, const void *data, size_t length);
-// jsvm::Value createJSAB(jsvm::Env env, void *data, size_t length);
-//  jsvm::Value createJSABAligned(jsvm::Env env, void* data, int length);
-// bool extractJSAB(jsvm::Env env, jsvm::Value ab, void **data, size_t *length);
+
 
 // a local ArrayBuffer
 class ArrayBuffer
@@ -118,11 +111,14 @@ class ArrayBuffer
     }
     inline bool isValid() const
     {
-        return handle_ != nullptr;
+        return handle_ != nullptr && data_ != nullptr;
     }
+    bool commit(uint8_t *inputBuffer, size_t length);
+
   private:
     ArrayBuffer(uint8_t *inputBuffer, size_t length, Type type);
     ArrayBuffer(jsvm::Value arrayBuffer, uint8_t *inputBuffer, size_t length, size_t byteOffset, Type type);
+
   private:
     uint8_t *data_ = nullptr;
     size_t length_ = 0;

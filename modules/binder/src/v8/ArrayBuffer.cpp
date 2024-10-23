@@ -1,6 +1,6 @@
 #include <binder/JSInterface.h>
-#include <binder/v8/Converter.h>
 #include <binder/v8/ArrayBuffer.h>
+#include <binder/v8/Converter.h>
 #include <binder/v8/JSEnv.h>
 #include <utils/JCMemorySurvey.h>
 #include <utils/Log.h>
@@ -44,22 +44,8 @@ ArrayBufferAllocator *ArrayBufferAllocator::getInstance()
     return new ArrayBufferAllocator();
 }
 #endif
-bool writeToJSAB(jsvm::Env env, jsvm::Value jsval, const void *data, size_t length)
-{
-    size_t destLength = 0;
-    void *destData = nullptr;
-    auto status = extractJSAB(env, j jsval, &desData, &destLength);
-    if (status)
-    {
-        if (length <= destLength)
-        {
-            memcpy(destData, data, length);
-            return true;
-        }
-    }
-    return false;
-}
-/*jsvm::Value createUint8ClampedArray(jsvm::Env env, jsvm::Value jsval, size_t byte_offset, size_t length)
+/*
+jsvm::Value createUint8ClampedArray(jsvm::Env env, jsvm::Value jsval, size_t byte_offset, size_t length)
 {
     // v8::Local<v8::ArrayBuffer> ab = v8::Local<v8::ArrayBuffer>::Cast(jsval);
     // v8::Local<v8::Uint8ClampedArray> view = v8::Uint8ClampedArray::New(ab, byte_offset, length);
@@ -129,45 +115,7 @@ jsvm::Value createJSAB(jsvm::Env env, void* data, int length)
     // v8::Isolate::GetCurrent()->AdjustAmountOfExternalAllocatedMemory(asz);
     return ab;
 }
-
-bool extractJSAB(jsvm::Value jsval, void **data, size_t *length)
-{
-    jsvm::Env env = JSEnv::getCurrent()->getEnv();
-    bool is_arraybuffer;
-    jsvm::IsArraybuffer(env, jsval, &is_arraybuffer);
-
-    bool is_typedarray;
-    jsvm::IsTypedarray(env, jsval, &is_typedarray);
-
-    bool is_dataview;
-    jsvm::IsDataview(env, jsval, &is_dataview);
-
-    if (is_typedarray)
-    {
-        jsvm::TypedarrayType type;
-        jsvm::Value buffer;
-        size_t byte_offset;
-        jsvm::GetTypedarrayInfo(env, jsval, &type, length, data, &buffer, &byte_offset);
-    }
-    else if (is_dataview)
-    {
-        size_t byte_offset = 0;
-        jsvm::Value buffer;
-        jsvm::GetDataviewInfo(env, jsval, &length, data, &buffer, &byte_offset);
-    }
-    else if (is_arraybuffer)
-    {
-        jsvm::GetArraybufferInfo(env, jsval, data, length);
-    }
-    else
-    {
-        data = NULL;
-        len = 0;
-        return false;
-    }
-
-    return true;
-}*/
+*/
 
 void __JSRun::ReportException(v8::Isolate *isolate, v8::TryCatch *try_catch)
 {
@@ -282,9 +230,20 @@ void __JSRun::ReportException(v8::Isolate *isolate, v8::TryCatch *try_catch)
     }
     LOGE("==JSERROR:\n%s", errInfo);
 }
-
+bool ArrayBuffer::upload(uint8_t *inputBuffer, size_t length)
+{
+    if (isValid())
+    {
+        if (length <= length_)
+        {
+            memcpy(data_, inputBuffer, length);
+            return true;
+        }
+    }
+    return false;
+}
 ArrayBuffer::ArrayBuffer(uint8_t *inputBuffer, size_t length, size_t byteOffset, Type type)
-    : data_(nullptr), length_(len), type_(type)
+    : data_(nullptr), length_(length), type_(type)
 {
     auto JSEnv = JSEnv::getCurrent();
     DEBUG_CHECK(nullptr != JSEnv);
@@ -362,7 +321,7 @@ ArrayBuffer ArrayBuffer::MakeFromLocal(jsvm::Value arrayBuffer);
     }
     else
     {
-        //todo js exception
+        // todo js exception
         return ArrayBuffer(nullptr, nullptr, 0, 0, ArrayBuffer::ARRAY_BUFFER);
     }
 }

@@ -45,7 +45,7 @@ namespace laya
 		// JSRTTransform(JSValueAsParam pSharedData, JSValueAsParam pEvent);
 		~JSRTTransform();
 
-		JSRTTransform(JSValueAsParam pSharedData);
+		JSRTTransform(jsbind::ArrayBuffer pSharedData);
 		void rt_setParent(JSValueAsParam pParent);
 		void rt_getWorldLossyScale();
 		void rt_setWorldLossyScale();

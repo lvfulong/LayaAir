@@ -16,7 +16,7 @@ namespace laya
 		bool openZip(const char* p_pszFile);
 		void enumFiles( JSValueAsParam pObj);
 		bool setSrc(const char* p_pSrc);
-        bool setBuffer(JSValueAsParam pArrayBuffer);
+        bool setBuffer(jsbind::ArrayBuffer arrayBuffer);
 		JsValue readFile(int idx);
         JsValue readFileByName(const char* pName);
         JsValue readFileAsText(int idx);

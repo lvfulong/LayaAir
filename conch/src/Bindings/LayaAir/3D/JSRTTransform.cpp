@@ -59,13 +59,11 @@ namespace laya
 
 	};
 
-	JSRTTransform::JSRTTransform(JSValueAsParam pSharedData) :Transform3D(nullptr)
+	JSRTTransform::JSRTTransform(jsbind::ArrayBuffer pSharedData) :Transform3D(nullptr)
 	{
-		char* pArrayBuffer = NULL;
-		int nArrayBufferSize = 0;
-		bool bIsArrayBuffer = extractJSAB(pSharedData, pArrayBuffer, nArrayBufferSize);
-		m_float32Array = (float*)pArrayBuffer;
-		m_int32Array = (uint32_t*)pArrayBuffer;
+		DEBUG_CHECK(pSharedData.isValid());
+		m_float32Array = reinterpret_cast<float*>(pSharedData.getData());
+		m_int32Array = reinterpret_cast<uint32_t*>(pSharedData.getData());
 		m_pTransform3D = this;
 		uint32_t bytelength = JSRTTransform::TRANSFORM_SHARE_MEMORY_SIZE * sizeof(float);
 		AdjustAmountOfExternalAllocatedMemory(bytelength * sizeof(float));
