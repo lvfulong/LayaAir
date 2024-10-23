@@ -148,7 +148,8 @@ namespace laya
     }
     void XMLHttpRequest::callReadyStateChangeListener() 
     {
-        if (!m_funcOnStateChg.isValid()) {
+        if (m_funcOnStateChg.isValid()) 
+        {
             m_funcOnStateChg.call<void>(this, (int)m_state);
         }
     }

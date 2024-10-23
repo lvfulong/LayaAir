@@ -339,7 +339,7 @@ namespace laya
 	}
 	void JSRuntime::setGlobalRepaintCall()
 	{
-		if (!JCConch::s_pScriptRuntime->m_pJSSetGlobalRepaintFunction.isValid())
+		if (JCConch::s_pScriptRuntime->m_pJSSetGlobalRepaintFunction.isValid())
 		{
 			JCConch::s_pScriptRuntime->m_pJSSetGlobalRepaintFunction.call<void>(getCurrentContext().global());
 		}

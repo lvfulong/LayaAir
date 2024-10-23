@@ -141,8 +141,10 @@ namespace laya
 
     void downloadBig_onProg_js(JSFuncWrapper* pWrapper, unsigned int total, unsigned int now, float speed)
     {
-        if (pWrapper->funcOnProg.isValid())return;
-        pWrapper->stop = pWrapper->funcOnProg.call<bool>(getCurrentContext().global(), total, now, speed);
+        if (pWrapper->funcOnProg.isValid())
+        {
+            pWrapper->stop = pWrapper->funcOnProg.call<bool>(getCurrentContext().global(), total, now, speed);
+        }
     }
     int downloadBig_onProg(unsigned int total, unsigned int now, float speed, JSFuncWrapper* pWrapper)
     {
@@ -156,7 +158,7 @@ namespace laya
             delete pWrapper;
             return;
         }*/
-        if (!pWrapper->funcOnComp.isValid())
+        if (pWrapper->funcOnComp.isValid())
         {
             pWrapper->funcOnComp.call<void>(getCurrentContext().global(), curlret,httpret);
         }
@@ -189,7 +191,7 @@ namespace laya
             delete pWrapper;
             return;
         }*/
-        if (!pWrapper->funcOnComp.isValid())
+        if (pWrapper->funcOnComp.isValid())
         {
             if (pBuff) 
             {

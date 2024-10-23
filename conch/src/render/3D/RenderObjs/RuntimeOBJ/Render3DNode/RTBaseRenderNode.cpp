@@ -110,7 +110,7 @@ void RTBaseRenderNode::_renderUpdatePre(GLESRenderContext3D *context3D)
 {
     if (this->_updateMark == context3D->_cameraUpdateMask)
         return;
-    if (!m_JSFunctionRenderUpdatePre.isValid())
+    if (m_JSFunctionRenderUpdatePre.isValid())
     {
         m_JSFunctionRenderUpdatePre.call<void>(getCurrentContext().global());
     }

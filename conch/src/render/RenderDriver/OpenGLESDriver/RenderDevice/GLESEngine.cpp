@@ -78,7 +78,7 @@ GLESEngine::GLESEngine(WebGLConfig config, WebGLMode webglMode)
 GLESEngine::~GLESEngine()
 {
     LayaGL::m_pWebglEngine = nullptr;
-    if (!m_pJSTextureContext.isValid())
+    if (m_pJSTextureContext.isValid())
     {
         m_pJSTextureContext.reset();
     }
@@ -590,9 +590,9 @@ void GLESEngine::unbindVertexState()
 }
 JsValue GLESEngine::getTextureContextJS()
 {
-    if (m_pJSTextureContext.isValid())
+    if (!m_pJSTextureContext.isValid())
     {
-        m_pJSTextureContext.reset(JSP_TO_JS(GLTextureContext *, m_textureContext));
+        m_pJSTextureContext = jsbind::Persistent(JSP_TO_JS(GLTextureContext *, m_textureContext));
         return m_pJSTextureContext.getHandle();
     }
     else
