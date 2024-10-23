@@ -1,11 +1,10 @@
-
-
 #include <binder/JSInterface.h>
 #include <binder/v8/Converter.h>
-#include <binder/v8/JSArrayBuffer.h>
+#include <binder/v8/ArrayBuffer.h>
+#include <binder/v8/JSEnv.h>
 #include <utils/JCMemorySurvey.h>
 #include <utils/Log.h>
-#include <binder/v8/JSEnv.h>
+
 namespace jsbind
 {
 #if 0
@@ -60,7 +59,7 @@ bool writeToJSAB(jsvm::Env env, jsvm::Value jsval, const void *data, size_t leng
     }
     return false;
 }
-jsvm::Value createUint8ClampedArray(jsvm::Env env, jsvm::Value jsval, size_t byte_offset, size_t length)
+/*jsvm::Value createUint8ClampedArray(jsvm::Env env, jsvm::Value jsval, size_t byte_offset, size_t length)
 {
     // v8::Local<v8::ArrayBuffer> ab = v8::Local<v8::ArrayBuffer>::Cast(jsval);
     // v8::Local<v8::Uint8ClampedArray> view = v8::Uint8ClampedArray::New(ab, byte_offset, length);
@@ -104,7 +103,7 @@ jsvm::Value createFloat32Array(jsvm::Env env, jsvm::Value jsval, size_t byte_off
     return output_array;
 }
 
-jsvm::Value createJSAB(jsvm::Env env, void *data, int length)
+jsvm::Value createJSAB(jsvm::Env env, void* data, int length)
 {
     // v8::Local<v8::ArrayBuffer> ab = v8::ArrayBuffer::New(v8::Isolate::GetCurrent(), len);
     // char *pPtr = (char *)ab->GetBackingStore()->Data();
@@ -117,7 +116,7 @@ jsvm::Value createJSAB(jsvm::Env env, void *data, int length)
     jsvm::CreateArraybuffer(env, length, &dataBackingStore, &result);
     memcpy(dataBackingStore, data, length);
     return result;
-}
+}*/
 
 /*jsvm::Value createJSABAligned(jsvm::Env env, char* pData, int len)
 {
@@ -129,7 +128,7 @@ jsvm::Value createJSAB(jsvm::Env env, void *data, int length)
     // Externalize 以后会减去内存占用，导致不能正确GC，所以再给加回来。不知道管理ArrayBuffer的正确方法是什么。
     // v8::Isolate::GetCurrent()->AdjustAmountOfExternalAllocatedMemory(asz);
     return ab;
-}*/
+}
 
 bool extractJSAB(jsvm::Value jsval, void **data, size_t *length)
 {
@@ -152,9 +151,7 @@ bool extractJSAB(jsvm::Value jsval, void **data, size_t *length)
     }
     else if (is_dataview)
     {
-
         size_t byte_offset = 0;
-        size_t length = 0;
         jsvm::Value buffer;
         jsvm::GetDataviewInfo(env, jsval, &length, data, &buffer, &byte_offset);
     }
@@ -170,7 +167,7 @@ bool extractJSAB(jsvm::Value jsval, void **data, size_t *length)
     }
 
     return true;
-}
+}*/
 
 void __JSRun::ReportException(v8::Isolate *isolate, v8::TryCatch *try_catch)
 {
@@ -285,4 +282,101 @@ void __JSRun::ReportException(v8::Isolate *isolate, v8::TryCatch *try_catch)
     }
     LOGE("==JSERROR:\n%s", errInfo);
 }
-} // namespace laya
+
+ArrayBuffer::ArrayBuffer(uint8_t *inputBuffer, size_t length, size_t byteOffset, Type type)
+    : data_(nullptr), length_(len), type_(type)
+{
+    auto JSEnv = JSEnv::getCurrent();
+    DEBUG_CHECK(nullptr != JSEnv);
+    jsvm::Env env = JSEnv->getEnv();
+    DEBUG_CHECK(nullptr != env);
+
+    jsvm::Status status;
+    jsvm::Value arrayBuffer;
+    uint8_t *outputBuffer = nullptr;
+
+    status = jsvm::CreateArraybuffer(env, this->getLength(), reinterpret_cast<void **>(&outputBuff), &arrayBuffer);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+
+    memcpy(outputBuffer, inputBuffer, this->getLength());
+
+    if (this->getType() == ArrayBuffer::DATA_VIEW)
+    {
+        // todo
+    }
+    else
+    {
+        jsvm::Value typedArray;
+        jsvm::TypedArrayType type = static_cast<jsvm::TypedArrayType>(this->getType());
+
+        status = jsvm::CreateTypedArray(env, type, this->getCount(), arrayBuffer, byteOffset, &typedArray);
+        DEBUG_CHECK(status == jsvm::Status::OK);
+        arrayBuffer = typedArray;
+    }
+
+    data_ = outputBuff;
+    handle_ = arrayBuffer;
+}
+ArrayBuffer::ArrayBuffer(jsvm::Value arrayBuffer, uint8_t *inputBuffer, size_t length, Type type = ARRAY_BUFFER)
+    : data_(inputBuffer), length_(length), type_(type), handle_(arrayBuffer)
+{
+}
+
+ArrayBuffer ArrayBuffer::MakeFromLocal(jsvm::Value arrayBuffer);
+{
+    auto JSEnv = JSEnv::getCurrent();
+    DEBUG_CHECK(nullptr != JSEnv);
+    jsvm::Env env = JSEnv->getEnv();
+    DEBUG_CHECK(nullptr != env);
+
+    bool isArraybuffer;
+    jsvm::IsArraybuffer(env, arrayBuffer, &isArraybuffer);
+
+    bool isTypedarray;
+    jsvm::IsTypedarray(env, arrayBuffer, &isTypedarray);
+
+    bool isDataview;
+    jsvm::IsDataview(env, arrayBuffer, &isDataview);
+
+    void *data = nullptr;
+    size_t length = 0;
+    if (isTypedarray)
+    {
+        jsvm::TypedarrayType type;
+        jsvm::Value buffer;
+        size_t byteOffset = 0;
+        jsvm::GetTypedarrayInfo(env, arrayBuffer, &type, length, &data, &buffer, &byteOffset);
+        return ArrayBuffer(arrayBuffer, data, length, byteOffset, static_cast<ArrayBuffer::Type>(type));
+    }
+    else if (isDataview)
+    {
+        jsvm::Value buffer;
+        size_t byteOffset = 0;
+        jsvm::GetDataviewInfo(env, arrayBuffer, &length, &data, &buffer, &byteOffset);
+        return ArrayBuffer(arrayBuffer, data, length, byteOffset, ArrayBuffer::DATA_VIEW);
+    }
+    else if (isArraybuffer)
+    {
+        jsvm::GetArraybufferInfo(env, arrayBuffer, &data, &length);
+        return ArrayBuffer(arrayBuffer, data, length, 0, ArrayBuffer::ARRAY_BUFFER);
+    }
+    else
+    {
+        return ArrayBuffer(nullptr, nullptr, 0, 0, ArrayBuffer::ARRAY_BUFFER);
+    }
+}
+ArrayBuffer ArrayBuffer::MakeArrayBuffer(uint8_t *inputBuffer, size_t length)
+{
+    return ArrayBuffer(inputBuffer, length, 0, ArrayBuffer::ARRAY_BUFFER);
+}
+ArrayBuffer ArrayBuffer::MakeDataView(uint8_t *inputBuffer, size_t length, size_t byteOffset)
+{
+    return ArrayBuffer(inputBuffer, length, byteOffset, ArrayBuffer::DATA_VIEW);
+}
+ArrayBuffer ArrayBuffer::MakeTypedArray(uint8_t *inputBuffer, size_t length, size_t byteOffset, Type type)
+{
+    DEBUG_CHECK(type != ArrayBuffer::ARRAY_BUFFER && type != ArrayBuffer::DATA_VIEW);
+
+    return ArrayBuffer(inputBuffer, length, byteOffset, type);
+}
+} // namespace jsbind

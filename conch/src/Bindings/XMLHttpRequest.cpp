@@ -178,7 +178,7 @@ namespace laya
                 v8::HandleScope scope(v8::Isolate::GetCurrent());
 #endif
                 JsValue ab = createJSAB(p_Buff, p_nLen);
-                pxhr->m_jsfunPostComplete.call<void>(toLocal(pxhr), ab, (const char*)p_Buff);
+                pxhr->m_jsfunPostComplete.call<void>(pxhr, ab, (const char*)p_Buff);
             }
             else 
             {
@@ -190,11 +190,11 @@ namespace laya
                         strBuff.append(p_Buff + 3);
                     }
                     else strBuff = p_Buff;
-                    pxhr->m_jsfunPostComplete.call<void>(toLocal(pxhr), strBuff);
+                    pxhr->m_jsfunPostComplete.call<void>(pxhr, strBuff);
                 }
                 else
                 {
-                    pxhr->m_jsfunPostComplete.call<void>(toLocal(pxhr), "");
+                    pxhr->m_jsfunPostComplete.call<void>(pxhr, "");
                 }
             }
             delete[] p_Buff;
@@ -264,12 +264,12 @@ namespace laya
     void XMLHttpRequest::postString(const char* p_pszUrl, const char* p_pszString, JSValueAsParam p_funOnOK, JSValueAsParam p_funOnErr) 
     {
         JCDownloadMgr* pdmgr = JCDownloadMgr::getInstance();
-        m_jsfunPostError.reset(p_funOnErr);
-        m_jsfunPostComplete.reset(p_funOnOK);
+        m_jsfunPostError = jsbind::Persistent(p_funOnErr);
+        m_jsfunPostComplete = jsbind::Persistent(p_funOnOK);
         if (!pdmgr) 
         {
             //error
-            m_jsfunPostError.call<void>(toLocal(this), -1);
+            m_jsfunPostError.call<void>(this, -1);
             //if(p_funOnErr)p_funOnErr->Call(-1);
             return;
         }
@@ -306,8 +306,8 @@ namespace laya
     */
     void XMLHttpRequest::setPostCB(JSValueAsParam p_onOK, JSValueAsParam p_onError) 
     {
-        m_jsfunPostComplete.reset(p_onOK);
-        m_jsfunPostError.reset(p_onError);
+        m_jsfunPostComplete = jsbind::Persistent(p_onOK);
+        m_jsfunPostError = jsbind::Persistentt(p_onError);
         std::weak_ptr<int> cbref(m_CallbackRef);
         m_funcPostComplete = std::bind(_onPostComplete, this, isBin(),
             std::placeholders::_1, 
@@ -339,7 +339,7 @@ namespace laya
             else
                 pDMgr->postData(p_pszURL, p_pData, p_nLen, m_funcPostComplete);
 
-			makeStrong(this);
+           jsbind::makeStrong(this);
         }
     }
     void XMLHttpRequest::getData(const char* p_sUrl) 
@@ -376,7 +376,7 @@ namespace laya
         }
         else
         {
-            Local value(arg1);
+            jsbind::Local value(arg1);
             if (value.isString())
             {
                 std::string pData = Converter<std::string>::ToCpp(arg1);

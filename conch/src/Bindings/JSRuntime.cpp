@@ -125,27 +125,27 @@ namespace laya
     }
     void JSRuntime::setMouseEvtFunction(JSValueAsParam p_pFunction)
     {
-        JCConch::s_pScriptRuntime->m_pJSMouseEvtFunction.reset(p_pFunction);
+        JCConch::s_pScriptRuntime->m_pJSMouseEvtFunction = jsbind::Persistent(p_pFunction);
     }
     void JSRuntime::setTouchEvtFunction(JSValueAsParam p_pFunction)
     {
-        JCConch::s_pScriptRuntime->m_pJSTouchEvtFunction.reset(p_pFunction);
+        JCConch::s_pScriptRuntime->m_pJSTouchEvtFunction = jsbind::Persistent(p_pFunction);
     }
     void JSRuntime::setDeviceMotionEvtFunction(JSValueAsParam p_pFunction)
     {
-        JCConch::s_pScriptRuntime->m_pJSDeviceMotionEvtFunction.reset(p_pFunction);
+        JCConch::s_pScriptRuntime->m_pJSDeviceMotionEvtFunction = jsbind::Persistent(p_pFunction);
     }
     void JSRuntime::setKeyEvtFunction(JSValueAsParam p_pFunction)
     {
-        JCConch::s_pScriptRuntime->m_pJSKeyEvtFunction.reset(p_pFunction);
+        JCConch::s_pScriptRuntime->m_pJSKeyEvtFunction = jsbind::Persistent(p_pFunction);
     }
     void JSRuntime::setNetworkEvtFunction(JSValueAsParam p_pFunction)
     {
-        JCConch::s_pScriptRuntime->m_pJSNetworkEvtFunction.reset(p_pFunction);
+        JCConch::s_pScriptRuntime->m_pJSNetworkEvtFunction = jsbind::Persistent(p_pFunction);
     }
     void JSRuntime::captureScreen(JSValueAsParam p_pFunction)
     {
-        JCConch::s_pScriptRuntime->m_pJSOnceOtherEvtFuction.reset(p_pFunction);
+        JCConch::s_pScriptRuntime->m_pJSOnceOtherEvtFuction = jsbind::Persistent(p_pFunction);
         JCConch::s_pConchRender->requestCaptureScreen();
     }
     const char* JSRuntime::getCachePath() 

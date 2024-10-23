@@ -1,7 +1,7 @@
-#ifndef __CONVERTER__H__
-#define __CONVERTER__H__
+#ifndef __JSBIND_CONVERTER__H__
+#define __JSBIND_CONVERTER__H__
 
-#include "JSArrayBuffer.h"
+#include "ArrayBuffer.h"
 #include "Utility.h"
 #include "binder/JSVM.h"
 #include "binder/JSVM_Types.h"

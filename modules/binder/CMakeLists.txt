@@ -8,7 +8,7 @@ set(PUBLIC_HEADER_DIR include)
 set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/JSInterface.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/IsolateData.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/JSArrayBuffer.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/ArrayBuffer.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/JSCProxyTLS.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Converter.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/JSEnv.h
@@ -21,7 +21,7 @@ set(HEADERS
 
 set(SOURCE
     src/v8/IsolateData.cpp
-    src/v8/JSArrayBuffer.cpp
+    src/v8/ArrayBuffer.cpp
     src/v8/JSEnv.cpp
     src/v8/Class.cpp
     src/v8/Persistent.cpp

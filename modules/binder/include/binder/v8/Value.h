@@ -1,5 +1,5 @@
-#ifndef __V8_VALUE_H__
-#define __V8_VALUE_H__
+#ifndef __JSBIND__VALUE_H__
+#define __JSBIND__VALUE_H__
 
 #include <assert.h>
 #include <binder/JSVM_Types.h>

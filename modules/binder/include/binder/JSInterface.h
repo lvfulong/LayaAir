@@ -7,7 +7,7 @@
 #include "jsc/JSCBinder.h"
 #include "jsc/JSCEnv.h"
 #elif JS_V8
-#include <binder/v8/JSArrayBuffer.h>
+#include <binder/v8/ArrayBuffer.h>
 #include <binder/v8/JSEnv.h>
 #include <v8.h>
 #include <binder/v8/Converter.h>

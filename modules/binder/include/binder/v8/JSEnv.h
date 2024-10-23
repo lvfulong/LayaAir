@@ -9,7 +9,7 @@
 #ifndef __JSEnv_H__
 #define __JSEnv_H__
 
-#include "JSArrayBuffer.h"
+#include "ArrayBuffer.h"
 #include "JSCProxyTLS.h"
 #include <libplatform/libplatform.h>
 #include <mutex>

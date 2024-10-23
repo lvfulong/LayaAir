@@ -48,6 +48,10 @@ class Local
     {
         return handle_;
     }
+    inline bool isValid() const
+    {
+        return handle_ != nullptr;
+    }
 
   private:
     template <typename ClassType, typename ReturnType, typename... Args>

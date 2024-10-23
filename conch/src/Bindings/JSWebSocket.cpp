@@ -96,7 +96,7 @@ namespace laya
     void JSWebSocket::onSocketOpenCallJSFunction(std::string p_sEvent, std::weak_ptr<int> cbref)
     {
         if (!cbref.lock())return;
-        m_pJSFunctionOnOpen.call<void>(toLocal(this), p_sEvent.c_str());
+        m_pJSFunctionOnOpen.call<void>(this, p_sEvent.c_str());
     }
     //------------------------------------------------------------------------------
     void JSWebSocket::onSocketCloseCallJSFunction(std::string p_sEvent, double closetm, std::weak_ptr<int> cbref)
@@ -140,13 +140,13 @@ namespace laya
         {
             JsValue ab = createJSAB((char*)pBuf, p_nLen);
             delete[] pBuf;
-            m_pJSFunctionOnMessage.call<void>(toLocal(this), ab);
+            m_pJSFunctionOnMessage.call<void>(this, ab);
         }
         else
         {
             std::string strMsg;
             strMsg.append(pBuf, p_nLen);	//怕有0的問題，就新建一個string了
-            m_pJSFunctionOnMessage.call<void>(toLocal(this), strMsg.c_str());
+            m_pJSFunctionOnMessage.call<void>(this, strMsg.c_str());
             delete[] pBuf;
         }
     }
@@ -253,7 +253,7 @@ namespace laya
         enBinaryType type = m_nBinaryType;
         char* pABPtr = NULL;
         int nABLen = 0;
-        Local value(args);
+        jsbind::Local value(args);
         if (value.isString())
         {
             type = Type_String;

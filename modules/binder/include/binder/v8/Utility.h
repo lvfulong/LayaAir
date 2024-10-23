@@ -1,5 +1,5 @@
-#ifndef __BIND_CORE_H__
-#define __BIND_CORE_H__
+#ifndef __JSBIND_UTILITY_H__
+#define __JSBIND_UTILITY_H__
 #include <assert.h>
 #include <map>
 #include <string>
