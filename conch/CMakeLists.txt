@@ -630,6 +630,7 @@ if(OS_ANDROID)
 	# for openal
 	target_compile_definitions(${PROJECT_NAME} PRIVATE AL_ALEXT_PROTOTYPES)
 	target_link_libraries(${PROJECT_NAME}
+		${LINK_LIBS}
 		android
 		log
 		m
