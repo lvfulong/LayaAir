@@ -58,7 +58,11 @@ class ArrayBuffer
     static ArrayBuffer ArrayBuffer::MakeDataView(uint8_t *inputBuffer, size_t length, size_t byteOffset);
     static ArrayBuffer ArrayBuffer::MakeTypedArray(uint8_t *inputBuffer, size_t length, size_t byteOffset, Type type);
 
-    inline uint8_t *getData()
+    inline uint8_t* getData()
+    {
+        return data_;
+    }
+    inline const uint8_t* getData()const
     {
         return data_;
     }

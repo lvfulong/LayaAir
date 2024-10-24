@@ -68,17 +68,13 @@ namespace laya
 		skinnedData.resize(dataArrayLength);
 	}
 
-	void RTSkinRenderNode::setSkinnedDataByIndex(uint32_t index, JSValueAsParam pData)
+	void RTSkinRenderNode::setSkinnedDataByIndex(uint32_t index, std::vector<jsbind::ArrayBuffer>& pData)
 	{
-		std::vector<JsValue> vecDatas;
-		__JsArray<JsValue>::FromJsArray(pData, vecDatas);
 		std::vector<std::pair<float*, int>> skinData ;
-		for (int i = 0, size = vecDatas.size(); i < size; i++)
+		for (int i = 0, size = pData.size(); i < size; i++)
 		{
-			char* pArrayBufferPtr = NULL;
-			int nABLen = 0;
-			bool bIsArrayBuffer = extractJSAB(vecDatas[i], pArrayBufferPtr, nABLen);
-			float* data = static_cast<float*>(static_cast<void*> (pArrayBufferPtr));
+			int nABLen = pData[i].getLength();
+			float* data = reinterpret_cast<float*>(pData[i].getData());
 			
 			skinData.push_back(std::make_pair(data, nABLen / 4));
 		}
@@ -125,18 +121,13 @@ namespace laya
 		boneIndicesList.resize(value);
 	}
 
-	void RTSkinRenderNode::setBoneIndicesList(uint32_t index, JSValueAsParam pData)
+	void RTSkinRenderNode::setBoneIndicesList(uint32_t index, std::vector<jsbind::ArrayBuffer>& pData)
 	{
-		std::vector<JsValue> vecDatas;
-		__JsArray<JsValue>::FromJsArray(pData, vecDatas);
 		std::vector<std::pair<uint16_t*, int>> boneIndexData;
-		for (int i = 0, size = vecDatas.size(); i < size; i++)
+		for (int i = 0, size = pData.size(); i < size; i++)
 		{
-			char* pArrayBufferPtr = NULL;
-			int nABLen = 0;
-			bool bIsArrayBuffer = extractJSAB(vecDatas[i], pArrayBufferPtr, nABLen);
-			uint16_t* data = static_cast<uint16_t*>(static_cast<void*> (pArrayBufferPtr));
-
+			int nABLen = pData[i].getLength();
+			uint16_t* data = reinterpret_cast<uint16_t*>(pData[i].getData());
 			boneIndexData.push_back(std::make_pair(data, nABLen / 2));
 		}
 		boneIndicesList[index] = boneIndexData;

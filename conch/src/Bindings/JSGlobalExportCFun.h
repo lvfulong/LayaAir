@@ -19,9 +19,9 @@ namespace laya
 
     void JSGlobalDisExportC();
 
-    std::string conchToBase64(const char* type, float encoderOptions, JSValueAsParam ab, int w, int h);
+    std::string conchToBase64(const char* type, float encoderOptions, jsbind::ArrayBuffer ab, int w, int h);
 
-    std::string conchToBase64FlipY(const char* type, float encoderOptions, JSValueAsParam ab, int w, int h);
+    std::string conchToBase64FlipY(const char* type, float encoderOptions, jsbind::ArrayBuffer ab, int w, int h);
 
 }
 #endif

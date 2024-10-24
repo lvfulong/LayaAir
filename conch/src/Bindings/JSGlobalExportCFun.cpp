@@ -355,8 +355,6 @@ namespace laya
     }
     static std::string toBase64(const char* type, float encoderOptions, jsbind::ArrayBuffer arrayBuffer, int w, int h, bool flipY)
     {
-
-
         char* pPixels = reinterpret_cast<char*>(arrayBuffer.getData());
         int nABLen = arrayBuffer.getLength();
         bool bIsArrayBuffer = arrayBuffer.isValid()；
@@ -409,11 +407,11 @@ namespace laya
         delete[] result.first;
         return std::string(pDest.get());
     }
-    std::string conchToBase64FlipY(const char* type, float encoderOptions, JSValueAsParam ab, int w, int h)
+    std::string conchToBase64FlipY(const char* type, float encoderOptions, jsbind::ArrayBuffer ab, int w, int h)
     {
         return toBase64(type, encoderOptions, ab, w, h, true);
     }
-    std::string conchToBase64(const char* type, float encoderOptions, JSValueAsParam ab, int w, int h)
+    std::string conchToBase64(const char* type, float encoderOptions, jsbind::ArrayBuffer ab, int w, int h)
     {
         return toBase64(type, encoderOptions, ab, w, h, false);
     }

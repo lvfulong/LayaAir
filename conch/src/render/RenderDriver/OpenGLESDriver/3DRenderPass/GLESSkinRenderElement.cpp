@@ -32,18 +32,12 @@ void GLESSkinRenderElement::drawGeometry(GLESShaderInstance* shaderIns)
             geometry->_glindexFormat, element[offset]);
     }
 }
-void GLESSkinRenderElement::setSkinnedData(JSValueAsParam pData)
+void GLESSkinRenderElement::setSkinnedData(std::vector<jsbind::ArrayBuffer>& pData)
 {
-
-    std::vector<JsValue> vecDatas;
-    __JsArray<JsValue>::FromJsArray(pData, vecDatas);
     m_vSkinData.clear();
-    for (int i = 0, size = vecDatas.size(); i < size; i++)
+    for (int i = 0, size = pData.size(); i < size; i++)
     {
-        char *pArrayBufferPtr = NULL;
-        int nABLen = 0;
-        bool bIsArrayBuffer = extractJSAB(vecDatas[i], pArrayBufferPtr, nABLen);
-        m_vSkinData.push_back(std::make_pair(pArrayBufferPtr, nABLen));
+        m_vSkinData.push_back(std::make_pair(reinterpret_cast<char*>(pData[i].getData()), pData[i].getLength()));
     }
 }
 } // namespace laya

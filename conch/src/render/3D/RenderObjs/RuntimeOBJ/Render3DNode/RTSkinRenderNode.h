@@ -23,7 +23,7 @@ namespace laya
 
         //SkinnedMatrixData
         void resizeSkinnedData(uint32_t dataArrayLength);
-        void setSkinnedDataByIndex(uint32_t index, JSValueAsParam pData);
+        void setSkinnedDataByIndex(uint32_t index, std::vector<jsbind::ArrayBuffer>& pData);
         //bones
         void clearBoneTransform();
         void addBoneTransform(JSRTTransform* value);
@@ -38,7 +38,7 @@ namespace laya
         void setSubMeshCount(int value) { subMeshCount = value; };
         //cacheMesh._boneIndicesList
         void resizeBoneIndicesList(uint32_t value);
-        void setBoneIndicesList(uint32_t index, JSValueAsParam pData);
+        void setBoneIndicesList(uint32_t index, std::vector<jsbind::ArrayBuffer>& pData);
     private:
         void _computeSubSkinnedData(uint16_t* boneIndices, int boneIndicesLength, float* data, int loopCount);
     public://Property

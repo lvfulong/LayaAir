@@ -305,7 +305,7 @@ namespace laya
 	}
     void JSRuntime::setOnUnhandledRejection(JSValueAsParam p_pFunction)
     {
-	    JCConch::s_pScriptRuntime->m_pJSOnUnhandledRejectionFunction.reset(p_pFunction);
+	    JCConch::s_pScriptRuntime->m_pJSOnUnhandledRejectionFunction = jsbind::Persistent(p_pFunction);
     }
     JsValue JSRuntime::getOnUnhandledRejection()
     {
@@ -325,7 +325,7 @@ namespace laya
 			nOrientation = it->second;
 		}
 		JSConchConfig::setScreenOrientation(nOrientation);
-		JCConch::s_pScriptRuntime->m_pJSOnScreenOrientationChanged.call<void>(getCurrentContext().global());
+		JCConch::s_pScriptRuntime->m_pJSOnScreenOrientationChanged.call<void>(jsbind::global());
 	}
 	void JSRuntime::setGlobalRepaint(JSValueAsParam p_pFunction)
 	{
@@ -335,7 +335,7 @@ namespace laya
 	{
 		if (JCConch::s_pScriptRuntime->m_pJSSetGlobalRepaintFunction.isValid())
 		{
-			JCConch::s_pScriptRuntime->m_pJSSetGlobalRepaintFunction.call<void>(getCurrentContext().global());
+			JCConch::s_pScriptRuntime->m_pJSSetGlobalRepaintFunction.call<void>(jsbind::global());
 		}
 	}
 	struct SkinnedMatrixCache

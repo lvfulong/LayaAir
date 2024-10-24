@@ -346,7 +346,7 @@ namespace laya
 		static pointer_t btHeightfieldTerrainShape_create(int heightStickWidth, int heightStickLength, const pointer_t heightfieldData, btScalar heightScale,
 			btScalar minHeight, btScalar maxHeight, int datatype);
 		static pointer_t _malloc(int size);
-		static void copyJSArray(pointer_t ptr, JSValueAsParam jsarray);
+		static void copyJSArray(pointer_t ptr, jsbind::ArrayBuffer jsarray);
 		static void _free(pointer_t ptr);
 		static void setDrawlineFunction(JSValueAsParam pFunction);
 		static void setClearlineFunction(JSValueAsParam pFunction);

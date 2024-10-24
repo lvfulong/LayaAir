@@ -21,7 +21,7 @@ class GLESSkinRenderElement : public GLESRenderElement3D
     ~GLESSkinRenderElement();
 
     void drawGeometry(GLESShaderInstance *shaderIns) override;
-    void setSkinnedData(JSValueAsParam pData);
+    void setSkinnedData(std::vector<jsbind::ArrayBuffer>& pData);
 
   public:
     std::vector<std::pair<char *, int>> m_vSkinData;

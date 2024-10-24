@@ -1785,35 +1785,25 @@ void GLTextureContext::setTextureSubPixelsDataJS(GLESInternalTex *texture, jsbin
     this->setTextureSubPixelsData(texture, reinterpret_cast<char*>(source.getData()), mipmapLevel, generateMipmap, xOffset, yOffset, width,
                                       height, premultiplyAlpha, invertY);
 }
-void GLTextureContext::setCubePixelsDataJS(GLESInternalTex *texture, JSValueAsParam source, bool premultiplyAlpha,
+void GLTextureContext::setCubePixelsDataJS(GLESInternalTex *texture, std::vector<jsbind::ArrayBuffer>& source, bool premultiplyAlpha,
                                            bool invertY)
 {
-    std::vector<JsValue> vecSources;
-    __JsArray<JsValue>::FromJsArray(source, vecSources);
-
     std::vector<char *> vecDatas;
-    for (int i = 0, size = vecSources.size(); i < size; i++)
+    for (int i = 0, size = source.size(); i < size; i++)
     {
-        char *pArrayBufferPtr = NULL;
-        int nABLen = 0;
-        bool bIsArrayBuffer = extractJSAB(vecSources[i], pArrayBufferPtr, nABLen);
+        char *pArrayBufferPtr = reinterpret_cast<char*>(source[i].getData());
         vecDatas.push_back(pArrayBufferPtr);
     }
     this->setCubePixelsData(texture, vecDatas, premultiplyAlpha, invertY);
 }
-void GLTextureContext::setCubeSubPixelDataJS(GLESInternalTex *texture, JSValueAsParam source, int mipmapLevel,
+void GLTextureContext::setCubeSubPixelDataJS(GLESInternalTex *texture, std::vector<jsbind::ArrayBuffer>& source, int mipmapLevel,
                                              bool generateMipmap, int xOffset, int yOffset, int width, int height,
                                              bool premultiplyAlpha, bool invertY)
 {
-    std::vector<JsValue> vecSources;
-    __JsArray<JsValue>::FromJsArray(source, vecSources);
-
     std::vector<char *> vecDatas;
-    for (int i = 0, size = vecSources.size(); i < size; i++)
+    for (int i = 0, size = source.size(); i < size; i++)
     {
-        char *pArrayBufferPtr = NULL;
-        int nABLen = 0;
-        bool bIsArrayBuffer = extractJSAB(vecSources[i], pArrayBufferPtr, nABLen);
+        char *pArrayBufferPtr = reinterpret_cast<char*>(source[i].getData());
         vecDatas.push_back(pArrayBufferPtr);
 
     }
