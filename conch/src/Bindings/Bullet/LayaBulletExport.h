@@ -20,11 +20,11 @@ namespace laya
 {
     inline void layaMotionStateGetWorldTransform(int32_t rigidBodyID, pointer_t worldTrans)
     {
-		JCConch::s_pScriptRuntime->m_bJSBulletGetWorldTransformHandle.call<void>(getCurrentContext().global(),rigidBodyID, worldTrans);
+		JCConch::s_pScriptRuntime->m_bJSBulletGetWorldTransformHandle.call<void>(jsbind::global(),rigidBodyID, worldTrans);
     }
     inline void layaMotionStateSetWorldTransform(int32_t rigidBodyID, const pointer_t worldTrans)
     {
-		JCConch::s_pScriptRuntime->m_bJSBulletSetWorldTransformHandle.call<void>(getCurrentContext().global(),rigidBodyID, worldTrans);
+		JCConch::s_pScriptRuntime->m_bJSBulletSetWorldTransformHandle.call<void>(jsbind::global(),rigidBodyID, worldTrans);
     }
 
 

@@ -142,7 +142,7 @@ namespace laya
     {
         if (pWrapper->funcOnProg.isValid())
         {
-            pWrapper->stop = pWrapper->funcOnProg.call<bool>(getCurrentContext().global(), total, now, speed);
+            pWrapper->stop = pWrapper->funcOnProg.call<bool>(jsbind::global(), total, now, speed);
         }
     }
     int downloadBig_onProg(unsigned int total, unsigned int now, float speed, JSFuncWrapper* pWrapper)
@@ -159,7 +159,7 @@ namespace laya
         }*/
         if (pWrapper->funcOnComp.isValid())
         {
-            pWrapper->funcOnComp.call<void>(getCurrentContext().global(), curlret,httpret);
+            pWrapper->funcOnComp.call<void>(jsbind::global(), curlret,httpret);
         }
         delete pWrapper;
     }
@@ -194,12 +194,12 @@ namespace laya
         {
             if (pBuff) 
             {
-                pWrapper->funcOnComp.call<void>(getCurrentContext().global(), curlret, httpret, (const char*)pBuff);
+                pWrapper->funcOnComp.call<void>(jsbind::global(), curlret, httpret, (const char*)pBuff);
                 delete [] pBuff;
             }
             else 
             {
-                pWrapper->funcOnComp.call<void>(getCurrentContext().global(), curlret, httpret);
+                pWrapper->funcOnComp.call<void>(jsbind::global(), curlret, httpret);
             }
         }
         delete pWrapper;

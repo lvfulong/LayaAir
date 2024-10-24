@@ -91,4 +91,59 @@ bool Local::isError() const
     jsvm::Status status = jsvm::IsError(env, handle_, &result) DEBUG_CHECK(status == jsvm::Status::OK);
     return result;
 }
+
+bool IsArrayBuffer() const
+{
+    auto JSEnv = JSEnv::getCurrent();
+    DEBUG_CHECK(nullptr != JSEnv);
+    jsvm::Env env = JSEnv->getEnv();
+    DEBUG_CHECK(nullptr != env);
+
+    DEBUG_CHECK(isValid());
+    bool isArraybuffer;
+    jsvm::IsArraybuffer(env, handle_, &isArraybuffer);
+}
+
+bool IsArrayBufferView() const
+{
+    auto JSEnv = JSEnv::getCurrent();
+    DEBUG_CHECK(nullptr != JSEnv);
+    jsvm::Env env = JSEnv->getEnv();
+    DEBUG_CHECK(nullptr != env);
+
+    DEBUG_CHECK(isValid());
+
+    bool isTypedarray;
+    jsvm::IsTypedarray(env, handle_, &isTypedarray);
+    bool isDataview;
+    jsvm::IsDataview(env, handle_, &isDataview);
+    return isTypedarray && isDataview;
+}
+
+bool IsTypedArray() const
+{
+    auto JSEnv = JSEnv::getCurrent();
+    DEBUG_CHECK(nullptr != JSEnv);
+    jsvm::Env env = JSEnv->getEnv();
+    DEBUG_CHECK(nullptr != env);
+
+    DEBUG_CHECK(isValid());
+    bool isTypedarray;
+    jsvm::IsTypedarray(env, handle_, &isTypedarray);
+    return isTypedarray;
+}
+
+bool IsDataView() const
+{
+    auto JSEnv = JSEnv::getCurrent();
+    DEBUG_CHECK(nullptr != JSEnv);
+    jsvm::Env env = JSEnv->getEnv();
+    DEBUG_CHECK(nullptr != env);
+
+    DEBUG_CHECK(isValid());
+    bool isDataview;
+    jsvm::IsDataview(env, handle_, &isDataview);
+    return isDataview;
+}
+
 } // namespace jsbind

@@ -13,7 +13,7 @@ namespace laya
 		static JsValue readBinFileSync(const char* p_pszFile);
 		static JsValue readdirSync(const std::string &path);
 		static JsValue lstatSync(const std::string &path);
-        static bool JSWriteFileSync(const char* p_sUrl, JSValueAsParam args);
+        static bool JSWriteFileSync(const char* p_sUrl, jsbind::Local args);
 	};
 }
 #endif 

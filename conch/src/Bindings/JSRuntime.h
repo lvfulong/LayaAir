@@ -91,7 +91,7 @@ namespace laya
 
         static bool registerFont(JSValueAsParam jsFamily, JSValueAsParam pathOrArrayBuffer);
 
-        static void downloadFile(JSValueAsParam url, JSValueAsParam onProgress, JSValueAsParam onComplete, JSValueAsParam onError);
+        static void downloadFile(const std::string& url, JSValueAsParam onProgress, JSValueAsParam onComplete, JSValueAsParam onError);
         static void setDownloader(JSValueAsParam obj);
 
         static JsValue postAsyncMessage(const std::string &eventName, const std::string &data);

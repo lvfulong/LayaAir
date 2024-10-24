@@ -70,6 +70,26 @@ class Local
 
     bool isError() const;
 
+    bool isArrayBuffer() const;
+
+    bool isArrayBufferView() const;
+
+    bool isTypedArray() const;
+
+    bool isDataView() const;
+
+    template <typename T> T as() const
+    {
+        DEBUG_CHECK(isValid());
+
+        auto JSEnv = JSEnv::getCurrent();
+        DEBUG_CHECK(nullptr != JSEnv);
+        jsvm::Env env = JSEnv->getEnv();
+        DEBUG_CHECK(nullptr != env);
+
+        return Converter<T>::ToCpp(env, this->handle_);
+    }
+
   private:
     template <typename ClassType, typename ReturnType, typename... Args>
     ReturnType call(jsvm::Env env, jsvm::Value recv, const Args &...args)

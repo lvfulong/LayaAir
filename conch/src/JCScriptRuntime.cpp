@@ -396,7 +396,7 @@ namespace laya
         {
 			
             JS_TRY;
-            m_pJSOnDrawFunction.call<void>(getCurrentContext().global(), nTime);
+            m_pJSOnDrawFunction.call<void>(jsbind::global(), nTime);
             JS_CATCH;
 
             JCConch::s_pConchRender->postTaskFromJSToRenderSync([this]()->bool {
@@ -415,7 +415,7 @@ namespace laya
                 for (int i = 0, nSize = (int)pInput->m_vInputEventsJS.size(); i < nSize; i++ )
                 {
                     TouchEventInfo* touchEvent = &pInput->m_vInputEventsJS[i];
-                    m_pJSTouchEvtFunction.call<void>(getCurrentContext().global(), touchEvent->nType, touchEvent->nID,"type",touchEvent->x, touchEvent->y);
+                    m_pJSTouchEvtFunction.call<void>(jsbind::global(), touchEvent->nType, touchEvent->nID,"type",touchEvent->x, touchEvent->y);
                 }
             }
             if( pInput->m_nTouchFrame > 0 )
@@ -426,7 +426,7 @@ namespace laya
 
         if (g_bGLCanvasSizeChanged)
         {
-            m_pJSOnResizeFunction.call<void>(getCurrentContext().global(), g_nInnerWidth, g_nInnerHeight);
+            m_pJSOnResizeFunction.call<void>(jsbind::global(), g_nInnerWidth, g_nInnerHeight);
             //m_pRootCanvas->size( g_nInnerWidth,g_nInnerHeight );
             g_bGLCanvasSizeChanged = false;
         }
@@ -446,7 +446,7 @@ namespace laya
         }
 		
         JS_TRY;
-            m_pJSOnFrameFunction.call<void>(getCurrentContext().global());
+            m_pJSOnFrameFunction.call<void>(jsbind::global());
         JS_CATCH;
 		
         //float dt = tmGetCurms() - nBenginTime;
@@ -499,7 +499,7 @@ namespace laya
     }
     void JCScriptRuntime::onNetworkChangedCallJSFunction(int nType)
     {
-        m_pJSNetworkEvtFunction.call<void>(getCurrentContext().global(), nType);
+        m_pJSNetworkEvtFunction.call<void>(jsbind::global(), nType);
     }
     void JCScriptRuntime::jsGC()
     {
@@ -581,7 +581,7 @@ namespace laya
 	{
         if (this->m_pJSOnBlurFunction.isValid())
         {
-            this->m_pJSOnBlurFunction.call<void>(getCurrentContext().global());
+            this->m_pJSOnBlurFunction.call<void>(jsbind::global());
 			
         }
 	}
@@ -589,7 +589,7 @@ namespace laya
 	{
         if (this->m_pJSOnFocusFunction.isValid())
         {
-            this->m_pJSOnFocusFunction.call<void>(getCurrentContext().global(), JSP_TO_JS(JSLaunchOptions*, new JSLaunchOptions()));
+            this->m_pJSOnFocusFunction.call<void>(jsbind::global(), JSP_TO_JS(JSLaunchOptions*, new JSLaunchOptions()));
         }
 	}
 

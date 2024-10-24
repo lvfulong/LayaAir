@@ -383,7 +383,7 @@ class RenderBindings
                     bool isArrayBuffer = pixels.isValid();
                     if (isArrayBuffer)
                     {
-                        ctx.setTexture3DSubPixelsData(texture, reinterpret_cast<char*>(arrayBuffer.getData()), mipmapLevel, generateMipmap, xOffset,
+                        ctx.setTexture3DSubPixelsData(texture, reinterpret_cast<char*>(pixels.getData()), mipmapLevel, generateMipmap, xOffset,
                                                       yOffset, zOffset, width, height, depth, premultiplyAlpha,
                                                       invertY);
                     }

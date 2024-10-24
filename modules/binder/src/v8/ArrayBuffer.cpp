@@ -281,7 +281,7 @@ ArrayBuffer::ArrayBuffer(jsvm::Value arrayBuffer, uint8_t *inputBuffer, size_t l
 {
 }
 
-ArrayBuffer ArrayBuffer::MakeFromLocal(jsvm::Value arrayBuffer);
+ArrayBuffer ArrayBuffer::MakeFromLocal(jsvm::Value arrayBuffer)
 {
     auto JSEnv = JSEnv::getCurrent();
     DEBUG_CHECK(nullptr != JSEnv);

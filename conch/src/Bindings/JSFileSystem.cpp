@@ -64,15 +64,17 @@ namespace laya
 		//}
 		return JSP_TO_JS_NULL;
 	}
-    bool JSFileSystem::JSWriteFileSync(const char* p_sUrl, JSValueAsParam args)
+    bool JSFileSystem::JSWriteFileSync(const char* p_sUrl, jsbind::Local args)
     {
         if (!p_sUrl) return false;
-        char* pABPtr = NULL;
-        int nABLen = 0;
-        bool bisab = jsbind::extractJSAB(args, pABPtr, nABLen);
+      
+        bool bisab = args.isArrayBuffer() || args.isArrayBufferView();
         bool bret = false;
         if (bisab) 
-        {
+		{
+			auto arrayBuffer = args.as<jsbind::ArrayBuffer>();
+			char* pABPtr = reinterpret_cast<char*>(arrayBuffer.getData());
+			int nABLen = arrayBuffer.getLength();
             if (pABPtr && nABLen > 0)
             {
                 bret = writeFileSync1(p_sUrl, pABPtr, nABLen, 0);
@@ -80,10 +82,9 @@ namespace laya
         }
         else 
         {
-			jsbind::Local value(args);
-            if (value.isString())
+            if (args.isString())
             {
-                std::string pData = Converter<std::string>::ToCpp(args);
+                std::string pData = args.as<std::string>();
                 if (!pData.empty())
                 {
                     int len = pData.length();

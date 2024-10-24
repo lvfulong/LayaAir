@@ -638,10 +638,6 @@ template <> class Converter<std::string>
     }*/
 };
 
-// template<> class __TransferToCpp<laya::JSArrayBuffer*>{public:
-//	static bool is(Local<Value> p_vl) { return p_vl->IsArrayBuffer() || p_vl->IsArrayBufferView(); }
-//	static laya::JSArrayBuffer* ToCpp(Local<Value> p_vl) { return laya::JSArrayBuffer::fromeJSObj(p_vl); };
-// };
 
 /*template <> class Converter<v8::Local<v8::Primitive>>
 {

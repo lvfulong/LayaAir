@@ -587,11 +587,9 @@ namespace laya
     /**
     *   不带dcc和缓存的下载
     */
-    void JSRuntime::downloadFile(JSValueAsParam url, JSValueAsParam onProgress, JSValueAsParam onComplete, JSValueAsParam onError) {
-        Local v8url(url);
-        if (!v8url.isString())return;
-        std::string strUrl = v8url.as<std::string>();
-        if (strUrl.empty()) return;
+    void JSRuntime::downloadFile(const std::string& url, JSValueAsParam onProgress, JSValueAsParam onComplete, JSValueAsParam onError) {
+        if (url.empty()) 
+            return;
 
         auto isolate = v8::Isolate::GetCurrent();
         //v8::Persistent<v8::Value> onCompleteP(isolate, onComplete);  
@@ -613,7 +611,7 @@ namespace laya
             std::placeholders::_3,
             onProgP);
 
-        pNetLoader->download(strUrl.c_str(), 0, onProg, onComp, 0, 0);
+        pNetLoader->download(url.c_str(), 0, onProg, onComp, 0, 0);
     }
 
     // 下载完成后在 JS 线程调用回调

@@ -73,7 +73,7 @@ namespace laya
 
 		void setBinaryType( const char* p_pszBinaryType );
 
-		void JsSend(JSValueAsParam args );
+		void JsSend(jsbind::Local args );
 
 	public:
 

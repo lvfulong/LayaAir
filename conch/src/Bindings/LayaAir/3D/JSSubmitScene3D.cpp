@@ -15,7 +15,7 @@ namespace laya
 	//------------------------------------------------------------------------------
 	JSSubmitScene3D::JSSubmitScene3D(JSValueAsParam pCallback) : ISubmit(SubmitType::ThreeDimension)
 	{
-		m_pJSFunctionRenderSubmit.reset(pCallback);
+		m_pJSFunctionRenderSubmit = jsbind::Persistent(pCallback);
 		AdjustAmountOfExternalAllocatedMemory(128);
 		JCMemorySurvey::GetInstance()->newClass("conchSubmitScene3D", 128, this);
 	}
@@ -27,9 +27,9 @@ namespace laya
 	}
 	int JSSubmitScene3D::renderSubmit()
 	{
-		if (!m_pJSFunctionRenderSubmit.isEmpty())
+		if (!m_pJSFunctionRenderSubmit.isValid())
 		{
-			m_pJSFunctionRenderSubmit.call<void>(toLocal(this));
+			m_pJSFunctionRenderSubmit.call<void>(this);
 		}
 		return 1;
 	}

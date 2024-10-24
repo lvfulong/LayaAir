@@ -30,7 +30,6 @@ class ArrayBufferAllocator : public v8::ArrayBuffer::Allocator
 };
 #endif
 
-
 // a local ArrayBuffer
 class ArrayBuffer
 {
@@ -113,7 +112,7 @@ class ArrayBuffer
     {
         return handle_ != nullptr && data_ != nullptr;
     }
-    bool commit(uint8_t *inputBuffer, size_t length);
+    bool upload(uint8_t *inputBuffer, size_t length);
 
   private:
     ArrayBuffer(uint8_t *inputBuffer, size_t length, Type type);

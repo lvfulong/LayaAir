@@ -18,6 +18,7 @@
 #include <utils/Log.h>
 #include <utils/thread/JCWorkerThread.h>
 #include <v8.h>
+#include <binder/JSVM.h>
 
 namespace jsbind
 {
@@ -39,7 +40,20 @@ class JSEnv
   private:
     jsvm::Env env_;
 };
+jsvm::Value global()
+{
 
+    auto JSEnv = JSEnv::getCurrent();
+    DEBUG_CHECK(nullptr != JSEnv);
+    jsvm::Env env = JSEnv->getEnv();
+    DEBUG_CHECK(nullptr != env);
+
+
+    jsvm::Value result;
+    jsvm::Status status = jsvm::GetGlobal(env, &result);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+    return result;
+}
 class Javascript
 {
   public:

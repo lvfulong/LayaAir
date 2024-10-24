@@ -107,7 +107,7 @@ namespace laya
         if (m_nWebSocketState == WSS_OPEN || m_nWebSocketState == WSS_CLOSEING)
         {  
             m_nWebSocketState = WSS_CLOSE;
-            m_pJSFunctionOnClose.call<void>(toLocal(this), p_sEvent.c_str());
+            m_pJSFunctionOnClose.call<void>(this, p_sEvent.c_str());
         }
         else
         {
@@ -248,19 +248,16 @@ namespace laya
             m_nBinaryType = Type_ArrayBuffer;
         }
     }
-    void JSWebSocket::JsSend(JSValueAsParam args)
+    void JSWebSocket::JsSend(jsbind::Local args)
     {
         enBinaryType type = m_nBinaryType;
-        char* pABPtr = NULL;
-        int nABLen = 0;
-        jsbind::Local value(args);
-        if (value.isString())
+        if (args.isString())
         {
             type = Type_String;
         }
         else
         {
-            bool bisab = extractJSAB(args, pABPtr, nABLen);
+            bool bisab = args.isArrayBuffer() || args.isArrayBufferView();
             type = bisab ? Type_ArrayBuffer : Type_Unknown;
         }
         switch (type)
@@ -268,13 +265,14 @@ namespace laya
         case Type_ArrayBuffer:
             if (m_nWebSocketState == WSS_OPEN && m_pWebSocket)
             {
-                m_pWebSocket->send((const unsigned char*)pABPtr, (unsigned int)nABLen);
+                jsbind::ArrayBuffer ab = args.as<jsbind::ArrayBuffer>();
+                m_pWebSocket->send((const unsigned char*)ab.getData(), (unsigned int)ab.getLength());
             }
             break;
         case Type_String:
             if (m_nWebSocketState == WSS_OPEN && m_pWebSocket)
             {
-                std::string sColor = Converter<std::string>::ToCpp(args);
+                std::string sColor = args.as<std::string>();
                 m_pWebSocket->send(sColor);
             }
             break;

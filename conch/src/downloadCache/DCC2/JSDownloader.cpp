@@ -81,7 +81,7 @@ namespace laya{
 
     void JSDownloader::setJSDownloader(JSValueAsParam obj){
         //转成持久句柄。
-        m_jsDownloader.reset(obj);
+        m_jsDownloader = jsbind::Persistent(obj);
     }
 
     void JSDownloader::download(const char* pszUrl, onDownloadedFunc onok){
@@ -96,7 +96,7 @@ namespace laya{
         jsCallbackData* data = new jsCallbackData();
         data->pThis = this;
         data->cFunc = onok;
-        data->jsFunc.reset(func);
+        data->jsFunc = jsbind::Persistent(func);
         //auto onok_shared = std::make_shared<onDownloadedFunc>(data);
 
         // 创建 External 对象封装 onok。 注意这里是new的，要正确删除
@@ -116,6 +116,6 @@ namespace laya{
         obj->Set(ctx, external_onok_key, external_onok).FromJust();
 
         //m_jsDownloader.call<void>(ctx->Global(), pszUrl, func.As<v8::Object>(), external_onok.As<v8::Value>());
-        m_jsDownloader.call<void>(ctx->Global(), pszUrl, obj);
+        m_jsDownloader.call<void>(jsbind::global(), pszUrl, obj);
     }
 }
