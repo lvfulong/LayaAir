@@ -659,11 +659,17 @@ template <> class Converter<v8::Local<v8::Object>>
 
 // template <> class __TransferToJs<laya::JSArrayBuffer*>
 //{public:static Handle<Value> ToJs( laya::JSArrayBuffer* p_vl ){return p_vl->toLocal();}};
-template <typename T> class __JsArray
+template <typename T> class Array
 {
   public:
-    static jsvm::Value ToJsArray(jsvm::Env env, const std::vector<T *> &value, bool callDestructor = true)
+    static jsvm::Value ToJs(const std::vector<T *> &value, bool callDestructor = true)
     {
+        auto JSEnv = JSEnv::getCurrent();
+        DEBUG_CHECK(nullptr != JSEnv);
+        jsvm::Env env = JSEnv->getEnv();
+        DEBUG_CHECK(nullptr != env);
+
+
         jsvm::Value result;
         jsvm::Status status;
 
@@ -685,8 +691,15 @@ template <typename T> class __JsArray
             return result;
         }
     }
-    static jsvm::Value ToJsArray(jsvm::Env env, const std::vector<T> &value, bool callDestructor = true)
+    static jsvm::Value ToJs(const std::vector<T> &value, bool callDestructor = true)
     {
+
+        auto JSEnv = JSEnv::getCurrent();
+        DEBUG_CHECK(nullptr != JSEnv);
+        jsvm::Env env = JSEnv->getEnv();
+        DEBUG_CHECK(nullptr != env);
+
+
         jsvm::Value result;
         jsvm::Status status;
         int size = value.size();
@@ -707,8 +720,14 @@ template <typename T> class __JsArray
             return result;
         }
     }
-    static void FillJsArray(jsvm::Env env, const std::vector<T> &value, jsvm::Value array, bool callDestructor = true)
+    static void setData(const std::vector<T> &value, jsvm::Value array, bool callDestructor = true)
     {
+        auto JSEnv = JSEnv::getCurrent();
+        DEBUG_CHECK(nullptr != JSEnv);
+        jsvm::Env env = JSEnv->getEnv();
+        DEBUG_CHECK(nullptr != env);
+
+
         jsvm::Value result;
         jsvm::Status status;
         int size = value.size();

@@ -421,7 +421,7 @@ void GLESEngine::getNamesByDefineDataJS(RTDefineDatas* defineData, JSValueAsPara
 {
     std::vector<std::string> outVec;
     getNamesByDefineData(defineData, outVec);
-    __JsArray<std::string>::FillJsArray(outVec, out);
+    jsbind::Array<std::string>::setData(outVec, out);
 }
 void GLESEngine::getNamesByDefineData(RTDefineDatas *defineData, std::vector<std::string> &out)
 {

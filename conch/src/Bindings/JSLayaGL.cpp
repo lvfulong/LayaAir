@@ -271,7 +271,7 @@ JsValue JSLayaGL::getUniform(const char *locationName)
 {
     std::string strLocName = locationName;
     JCConch::s_pConchRender->m_pLayaGL->getUniform(m_nParameterResultArray, strLocName);
-    return __JsArray<float>::ToJsArray(m_nParameterResultArray);
+    return jsbind::Array<float>::ToJs(m_nParameterResultArray);
 }
 
 int JSLayaGL::getParameter(int name)
@@ -293,7 +293,7 @@ int JSLayaGL::getIntegerv(int name)
 JsValue JSLayaGL::getIntegerArrayv(int name)
 {
     JCConch::s_pConchRender->m_pLayaGL->getIntegerArrayv(m_nParameterResultArrayInt, name);
-    return __JsArray<int32_t>::ToJsArray(m_nParameterResultArrayInt);
+    return jsbind::Array<int32_t>::ToJs(m_nParameterResultArrayInt);
 }
 
 float JSLayaGL::getFloatv(int name)
@@ -305,7 +305,7 @@ float JSLayaGL::getFloatv(int name)
 JsValue JSLayaGL::getFloatArrayv(int name)
 {
     JCConch::s_pConchRender->m_pLayaGL->getFloatArrayv(m_nParameterResultArray, name);
-    return __JsArray<float>::ToJsArray(m_nParameterResultArray);
+    return jsbind::Array<float>::ToJs(m_nParameterResultArray);
 }
 
 JsValue JSLayaGL::readPixels(int x, int y, int width, int height, int format, int type)
@@ -377,7 +377,7 @@ JsValue JSLayaGL::getVertexAttribExfv(int index, int target)
 {
     static float ret[4] = {0.0};
     JCConch::s_pConchRender->m_pLayaGL->getVertexAttribfv(m_nParameterResultArray, index, target);
-    return __JsArray<float>::ToJsArray(m_nParameterResultArray);
+    return jsbind::Array<float>::ToJs(m_nParameterResultArray);
 }
 
 int JSLayaGL::getVertexAttribOffset(int index, int name)

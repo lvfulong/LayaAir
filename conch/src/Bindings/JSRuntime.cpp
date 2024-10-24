@@ -448,26 +448,17 @@ namespace laya
         LOGE("JSRuntime::createArrayBufferRef type error");
         return JSP_TO_JS(JSArrayBufferRef*, NULL);
     }
-    bool JSRuntime::registerFont(JSValueAsParam jsFamily, JSValueAsParam pathOrArrayBuffer)
+    bool JSRuntime::registerFont(const std::string& family, jsbind::Local pathOrArrayBuffer)
     {
-        Local valueFamily(jsFamily);
-        Local valuePathOrArrayBuffer(pathOrArrayBuffer);
-        if (valueFamily.isString() && valuePathOrArrayBuffer.isString())
+        if (pathOrArrayBuffer.isString())
         {
-            std::string path = valuePathOrArrayBuffer.as<std::string>();
-            std::string family = Converter<std::string>::ToCpp(jsFamily);
+            std::string path = pathOrArrayBuffer.as<std::string>();
             return FontManager::registerFont(family, path);
         }
-        else if (valueFamily.isString() && valuePathOrArrayBuffer.isArrayBuffer())
+        else if (pathOrArrayBuffer.isArrayBuffer() || pathOrArrayBuffer.isArrayBufferView())
         {
-            char* ab = NULL;
-            int byte = 0;
-            bool isab = extractJSAB(pathOrArrayBuffer, ab, byte);
-            if (isab)
-            {
-                std::string family = Converter<std::string>::ToCpp(jsFamily);
-                return FontManager::registerFont(family, (uint8_t*)ab, byte);
-            }
+            auto arrayBuffer = pathOrArrayBuffer.as<jsbind::ArrayBuffer>();
+            return FontManager::registerFont(family, arrayBuffer.getData(), arrayBuffer.getLength());
         }
         LOGI("registerFont failed");
         return false;
