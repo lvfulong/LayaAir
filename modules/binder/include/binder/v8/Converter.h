@@ -736,7 +736,7 @@ template <typename T> class Array
             jsvm::SetElement(env, result, i, Converter<T>::ToJs(env, value.at(i), callDestructor));
         }
     }
-    static void FromJsArray(jsvm::Env env, jsvm::Value array, std::vector<T *> &result)
+    static void getData(jsvm::Env env, jsvm::Value array, std::vector<T *> &result)
     {
         bool isArray{false};
         jsvm::IsArray(env, array, isArray);
@@ -756,7 +756,7 @@ template <typename T> class Array
             }
         }
     }
-    static void FromJsArray(jsvm::Env env, jsvm::Value array, std::vector<T> &result)
+    static void getData(jsvm::Env env, jsvm::Value array, std::vector<T> &result)
     {
         bool isArray{false};
         jsvm::IsArray(env, array, isArray);
@@ -853,12 +853,12 @@ template <typename T> class Converter<std::vector<T>>
     static std::vector<T> ToCpp(jsvm::Env env, jsvm::Value value)
     {
         std::vector<T> vec;
-        __JsArray<T>::FromJsArray(env, value, vec);
+        Array<T>::getData(env, value, vec);
         return vec;
     }
     static jsvm::Value ToJs(jsvm::Env env, const std::vector<T> &value, bool callDestructor = true)
     {
-        return __JsArray<T>::ToJsArray(env, value);
+        return Array<T>::ToJs(env, value);
     }
 };
 template <typename T> class Converter<std::vector<T *>>
@@ -867,16 +867,16 @@ template <typename T> class Converter<std::vector<T *>>
     static std::vector<T *> ToCpp(jsvm::Env env, jsvm::Value)
     {
         std::vector<T *> vec;
-        __JsArray<T>::FromJsArray(env, Value, vec);
+        Array<T>::getData(env, Value, vec);
         return vec;
     }
     static jsvm::Value ToJs(jsvm::Env env, const std::vector<T *> &value, bool callDestructor = true)
     {
-        return __JsArray<T>::ToJsArray(env, value, callDestructor);
+        return Array<T>::ToJs(env, value, callDestructor);
     }
     /*static void ToCpp(v8::Local<v8::Value> p_vl, std::vector<T*>& vec)
     {
-        return __JsArray<T>::FromJsArray(p_vl, vec);
+        return Array<T>::getData(p_vl, vec);
     }*/
 
     /*static bool is(v8::Local<v8::Value> p_vl)

@@ -136,9 +136,8 @@ void JSCanvasRenderingContext2D::exportJS(jsbind::Object &context)
     class_binding_image_data.property_field("height", &ImageData::m_height);
     class_binding_image_data.property_optional_override(
         "data", optional_override([](ImageData &imageData) {
-            JsValue ab = createJSAB((char *)imageData.m_data.data(), imageData.m_data.size());
-
-            return createUint8ClampedArray(ab, 0, imageData.m_data.size());
+            auto ab = jsbind::ArrayBuffer::MakeTypedArray(imageData.m_data.data(), imageData.m_data.size(), 0, jsbind::ArrayBuffer::UINT8_CLAMPED_ARRAY);
+            return ab.getHandle();
         }));
     context.class_("ImageData", class_binding_image_data);
 

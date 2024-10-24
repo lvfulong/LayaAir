@@ -122,7 +122,7 @@ namespace laya
 
         return readFileAsText(idx);
     }
-	void JSZip::enumFiles( JSValueAsParam pObj)
+	void JSZip::enumFiles(jsbind::Local callback)
     {
 		if (!m_zip.m_pZip)
 			return;
@@ -138,8 +138,7 @@ namespace laya
 			else 
             {
 				bool bDir = sb.name[strlen(sb.name) - 1] == '/';
-                Local onEnumFiles(pObj);
-                onEnumFiles.call<void>(toLocal(this), i, sb.name, bDir, sb.size);
+                callback.call<void>(this, i, sb.name, bDir, sb.size);
 			}
 		}
 		//zip_close(pZip);
