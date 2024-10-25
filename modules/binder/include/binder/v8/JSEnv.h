@@ -11,6 +11,7 @@
 
 #include "ArrayBuffer.h"
 #include "JSCProxyTLS.h"
+#include <binder/JSVM.h>
 #include <libplatform/libplatform.h>
 #include <mutex>
 #include <thread>
@@ -18,7 +19,6 @@
 #include <utils/Log.h>
 #include <utils/thread/JCWorkerThread.h>
 #include <v8.h>
-#include <binder/JSVM.h>
 
 namespace jsbind
 {
@@ -40,15 +40,17 @@ class JSEnv
   private:
     jsvm::Env env_;
 };
+
+#define GET_ENV                                                                                                        \
+    auto JSEnv = JSEnv::getCurrent();                                                                                  \
+    DEBUG_CHECK(nullptr != JSEnv);                                                                                     \
+    jsvm::Env env = JSEnv->getEnv();                                                                                   \
+    DEBUG_CHECK(nullptr != env);
+
 jsvm::Value global()
 {
 
-    auto JSEnv = JSEnv::getCurrent();
-    DEBUG_CHECK(nullptr != JSEnv);
-    jsvm::Env env = JSEnv->getEnv();
-    DEBUG_CHECK(nullptr != env);
-
-
+    GET_ENV
     jsvm::Value result;
     jsvm::Status status = jsvm::GetGlobal(env, &result);
     DEBUG_CHECK(status == jsvm::Status::OK);
@@ -366,7 +368,7 @@ class JSMulThread : public JSThreadInterface
     std::vector<std::function<void(void)>> m_vFuncQueue; // 需要在此线程执行的函数的队列
     std::mutex m_kQueueLock;
 };*/
-}; // namespace binder
+}; // namespace jsbind
 //------------------------------------------------------------------------------
 
 #endif //__JSEnv_H__

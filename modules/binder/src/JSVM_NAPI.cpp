@@ -502,4 +502,16 @@ inline /*JSVM_EXTERN*/ Status GetInstanceData(Env env, void **data)
 {
     return ConvertToStatus(napi_get_instance_data(env, data));
 }
+inline /*JSVM_EXTERN*/ Status CreateDate(Env env, double time, Value* result)
+{
+    return ConvertToStatus(napi_create_date(env, time, result));
+}
+inline /*JSVM_EXTERN*/ Status IsDate(Env env, Value value, bool* isDate)
+{
+    return ConvertToStatus(napi_is_date(env, value, isDate));
+}
+inline /*JSVM_EXTERN*/ Status GetDateValue(Env env, Value value, double* result)
+{
+    return ConvertToStatus(napi_get_date_value(env, value, result));
+}
 } // namespace jsvm

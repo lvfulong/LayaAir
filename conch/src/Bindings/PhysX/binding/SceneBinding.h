@@ -80,7 +80,7 @@ struct ContactReportCallback : public wrapper<PxSimulationEventCallback>
         #ifdef CONCH
         VectorWrapper<int>* pWakeActor = new VectorWrapper<int>();
         pWakeActor->data_ = std::move(wakeActor);
-        call<void>("onWake", Converter<VectorWrapper<int>*>::ToJs(pWakeActor));
+        call<void>("onWake", MakeJSValue<VectorWrapper<int>*>(pWakeActor));
         #else 
         call<void>("onWake",wakeActor);
         #endif
@@ -102,7 +102,7 @@ struct ContactReportCallback : public wrapper<PxSimulationEventCallback>
         #ifdef CONCH
         VectorWrapper<int>* pSleepActor = new VectorWrapper<int>();
         pSleepActor->data_ = std::move(sleepActor);
-        call<void>("onSleep", Converter<VectorWrapper<int>*>::ToJs(pSleepActor));
+        call<void>("onSleep", MakeJSValue<VectorWrapper<int>*>(pSleepActor));
         #else 
         call<void>("onSleep",sleepActor);
         #endif
@@ -130,7 +130,7 @@ struct ContactReportCallback : public wrapper<PxSimulationEventCallback>
                 #ifdef CONCH
                 VectorWrapper<LayaTriggerInfo>* pStartTrigger = new VectorWrapper<LayaTriggerInfo>();
                 pStartTrigger->data_ = std::move(startTrigger);
-                call<void>("onTriggerBegin", Converter<VectorWrapper<LayaTriggerInfo>*>::ToJs(pStartTrigger));
+                call<void>("onTriggerBegin", MakeJSValue<VectorWrapper<LayaTriggerInfo>*>(pStartTrigger));
                 #else 
                 call<void>("onTriggerBegin",startTrigger);
                 #endif
@@ -139,7 +139,7 @@ struct ContactReportCallback : public wrapper<PxSimulationEventCallback>
                 #ifdef CONCH
                 VectorWrapper<LayaTriggerInfo>* pLostTrigger = new VectorWrapper<LayaTriggerInfo>();
                 pLostTrigger->data_ = std::move(lostTrigger);
-                call<void>("onTriggerBegin", Converter<VectorWrapper<LayaTriggerInfo>*>::ToJs(pLostTrigger));
+                call<void>("onTriggerBegin", MakeJSValue<VectorWrapper<LayaTriggerInfo>*>(pLostTrigger));
                 #else 
                 call<void>("onTriggerEnd",lostTrigger);
                 #endif
@@ -195,7 +195,7 @@ struct ContactReportCallback : public wrapper<PxSimulationEventCallback>
                 #ifdef CONCH
                 VectorWrapper<LayaContactPairInfo>* pStartContact = new VectorWrapper<LayaContactPairInfo>();
                 pStartContact->data_ = std::move(startContact);
-                call<void>("onContactBegin", Converter<VectorWrapper<LayaContactPairInfo>*>::ToJs(pStartContact));
+                call<void>("onContactBegin", MakeJSValue<VectorWrapper<LayaContactPairInfo>*>(pStartContact));
                 #else
                 call<void>("onContactBegin",startContact);
                 #endif
@@ -204,7 +204,7 @@ struct ContactReportCallback : public wrapper<PxSimulationEventCallback>
                 #ifdef CONCH
                 VectorWrapper<LayaContactPairInfo>* pPersistsContact = new VectorWrapper<LayaContactPairInfo>();
                 pPersistsContact->data_ = std::move(persistsContact);
-                call<void>("onContactPersist", Converter<VectorWrapper<LayaContactPairInfo>*>::ToJs(pPersistsContact));
+                call<void>("onContactPersist", MakeJSValue<VectorWrapper<LayaContactPairInfo>*>(pPersistsContact));
                 #else
                 call<void>("onContactPersist",persistsContact);
                 #endif
@@ -213,7 +213,7 @@ struct ContactReportCallback : public wrapper<PxSimulationEventCallback>
                 #ifdef CONCH
                 VectorWrapper<LayaContactPairInfo>* pLostContact = new VectorWrapper<LayaContactPairInfo>();
                 pLostContact->data_ = std::move(lostContact);
-                call<void>("onContactEnd", Converter<VectorWrapper<LayaContactPairInfo>*>::ToJs(pLostContact));
+                call<void>("onContactEnd", MakeJSValue<VectorWrapper<LayaContactPairInfo>*>(pLostContact));
                 #else
                 call<void>("onContactEnd",lostContact);
                 #endif

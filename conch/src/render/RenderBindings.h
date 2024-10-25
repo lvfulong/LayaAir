@@ -46,62 +46,64 @@
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTShaderPass.h>
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h>
 
+namespace jsbind
+{
+    template <> class Converter<laya::Matrix3x3>
+    {
+    public:
+        static laya::Matrix3x3 ToCpp(JSValueAsParam obj)
+        {
+            jsbind::Local value(obj);
+            char* pArrayBufferPtr = NULL;
+            int nABLen = 0;
+            bool bIsArrayBuffer = extractJSAB(value[std::string("elements")].handle_, pArrayBufferPtr, nABLen);
+            if (bIsArrayBuffer)
+            {
+                Matrix3x3 mat;
+                memcpy(mat.elements, pArrayBufferPtr, sizeof(float) * 9);
+                return mat;
+            }
+            else
+            {
+                return Matrix3x3();
+            }
+        }
+        static JsValue ToJs(const Matrix3x3& p_vl)
+        {
+            assert(true && "not implemented");
+            return jsbind::MakeUndefined();
+        }
+    };
+    template <> class Converter<laya::Matrix4x4>
+    {
+    public:
+        static laya::Matrix4x4 ToCpp(JSValueAsParam obj)
+        {
+            Local value(obj);
+
+            char* pArrayBufferPtr = NULL;
+            int nABLen = 0;
+            bool bIsArrayBuffer = extractJSAB(value[std::string("elements")].handle_, pArrayBufferPtr, nABLen);
+            if (bIsArrayBuffer)
+            {
+                Matrix4x4 mat;
+                memcpy(mat.elements, pArrayBufferPtr, sizeof(float) * 16);
+                return mat;
+            }
+            else
+            {
+                return Matrix4x4();
+            }
+        }
+        static JsValue ToJs(const laya::Matrix4x4& p_vl)
+        {
+            assert(true && "not implemented");
+            return jsbind::MakeUndefined();
+        }
+    };
+}
 namespace laya
 {
-template <> class Converter<Matrix3x3>
-{
-  public:
-    static Matrix3x3 ToCpp(JSValueAsParam obj)
-    {
-        jsbind::Local value(obj);
-        char *pArrayBufferPtr = NULL;
-        int nABLen = 0;
-        bool bIsArrayBuffer = extractJSAB(value[std::string("elements")].handle_, pArrayBufferPtr, nABLen);
-        if (bIsArrayBuffer)
-        {
-            Matrix3x3 mat;
-            memcpy(mat.elements, pArrayBufferPtr, sizeof(float) * 9);
-            return mat;
-        }
-        else
-        {
-            return Matrix3x3();
-        }
-    }
-    static JsValue ToJs(const Matrix3x3 &p_vl)
-    {
-        assert(true && "not implemented");
-        return JSP_TO_JS_UNDEFINE;
-    }
-};
-template <> class Converter<Matrix4x4>
-{
-  public:
-    static Matrix4x4 ToCpp(JSValueAsParam obj)
-    {
-        Local value(obj);
-
-        char *pArrayBufferPtr = NULL;
-        int nABLen = 0;
-        bool bIsArrayBuffer = extractJSAB(value[std::string("elements")].handle_, pArrayBufferPtr, nABLen);
-        if (bIsArrayBuffer)
-        {
-            Matrix4x4 mat;
-            memcpy(mat.elements, pArrayBufferPtr, sizeof(float) * 16);
-            return mat;
-        }
-        else
-        {
-            return Matrix4x4();
-        }
-    }
-    static JsValue ToJs(const Matrix4x4 &p_vl)
-    {
-        assert(true && "not implemented");
-        return JSP_TO_JS_UNDEFINE;
-    }
-};
-
 class RenderBindings
 {
   public:
@@ -349,7 +351,7 @@ class RenderBindings
                 "setTexture3DImageData",
                 optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, JSValueAsParam jsSources,
                                      int depth, bool premultiplyAlpha, bool invertY) {
-                    std::vector<JSImage *> sources = Converter<std::vector<JSImage *>>::ToCpp(jsSources);
+                    std::vector<JSImage *> sources = jsbind::Converter<std::vector<JSImage *>>::ToCpp(jsSources);
                     ctx.setTexture3DImageData(texture, sources, depth, premultiplyAlpha, invertY);
                 }));
 
@@ -954,11 +956,11 @@ class RenderBindings
                     bool *ret = ctx.getBool(index);
                     if (ret != nullptr)
                     {
-                        return Converter<int>::ToJs(*ret);
+                        return jsbind::MakeJSValue<int>(*ret);
                     }
                     else
                     {
-                        return JSP_TO_JS_UNDEFINE;
+                        return jsbind::MakeUndefined();
                     }
                 }));
             class_binding.function("setInt", &GLESShaderData::setInt);
@@ -967,11 +969,11 @@ class RenderBindings
                     int *ret = ctx.getInt(index);
                     if (ret != nullptr)
                     {
-                        return Converter<int>::ToJs(*ret);
+                        return jsbind::MakeJSValue<int>(*ret);
                     }
                     else
                     {
-                        return JSP_TO_JS_UNDEFINE;
+                        return jsbind::MakeUndefined();
                     }
                 }));
             class_binding.function("setNumber", &GLESShaderData::setNumber);
@@ -980,11 +982,11 @@ class RenderBindings
                     float *ret = ctx.getNumber(index);
                     if (ret != nullptr)
                     {
-                        return Converter<float>::ToJs(*ret);
+                        return jsbind::MakeJSValue<float>(*ret);
                     }
                     else
                     {
-                        return JSP_TO_JS_UNDEFINE;
+                        return jsbind::MakeUndefined();
                     }
                 }));
             class_binding.function("setVector2", &GLESShaderData::setVector2);

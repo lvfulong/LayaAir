@@ -79,7 +79,7 @@ namespace laya
         }
         JsValue slice(uint64_t p_iBegin = 0, uint64_t p_iEnd = -1)
         {
-            return JSP_TO_JS_NULL;
+            return jsbind::MakeNull();
         }
         const char *GetType()
         {

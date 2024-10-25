@@ -28,7 +28,7 @@ namespace laya
     {
         jsDOC = new JSXmlDocument();
         jsDOC->parse(str);
-        return JSP_TO_JS(JSXmlDocument*, jsDOC);
+        return jsbind::MakeJSValue<JSXmlDocument*>(jsDOC);
     }
     const char* JSDOMParser::getSrc()
     {
@@ -96,7 +96,7 @@ namespace laya
     }
     JsValue JSDOMParser::getXml()
     {
-        return JSP_TO_JS(JSXmlDocument*, jsDOC);
+        return jsbind::MakeJSValue<JSXmlDocument*>(jsDOC);
     }
     void JSDOMParser::exportJS(jsbind::Object& context)
     {

@@ -91,7 +91,7 @@ namespace laya
     void JsFileReader::readAsArrayBuffer(JSValueAsParam p_pFile)
     {
         m_iContentType = content_type_buffer;
-        m_pFile = (JsFile*)Converter<JsFile*>::ToCpp(p_pFile);
+        m_pFile = jsbind::Converter<JsFile*>::ToCpp(p_pFile);
         if (m_pFile == nullptr)
         {
             return;
@@ -102,7 +102,7 @@ namespace laya
     void JsFileReader::readAsText(JSValueAsParam p_pFile)
     {
         m_iContentType = content_type_string;
-        m_pFile = (JsFile*)Converter<JsFile*>::ToCpp(p_pFile);
+        m_pFile = jsbind::Converter<JsFile*>::ToCpp(p_pFile);
         if (m_pFile == nullptr)
         {
             return;
@@ -350,20 +350,20 @@ namespace laya
     JsValue JsFileReader::GetResult()
     {
         if (DONE != readyState) {
-            return JSP_TO_JS_UNDEFINE;
+            return jsbind::MakeUndefined();
         }
         //else if (0 == m_pFile || 0 == m_pFile->m_i64Size) {
-        //    return JSP_TO_JS_NULL;
+        //    return jsbind::MakeNull();
         //}
         else if (content_type_buffer == m_iContentType)
         {
             //if (m_pFile->m_i64Size <= 0 || m_pFile->m_pBuffer == NULL) {
-            //    return JSP_TO_JS_NULL;
+            //    return jsbind::MakeNull();
             //}
 
             if (m_pFile->m_i64Size > 0x7fffffff) {
                 LOGE("文件太大，无法返回！%s", (char*)m_pFile->m_FullName.c_str());
-                return JSP_TO_JS_NULL;;//throw - 1;
+                return jsbind::MakeNull();
             }
             return jsbind::createJSAB(m_pFile->m_pBuffer, (int)m_pFile->m_i64Size);
             //JSArrayBuffer* pAB = JSArrayBuffer::create((int)m_pFile->m_i64Size);
@@ -376,7 +376,7 @@ namespace laya
             {
                 if (m_pFile->m_i64Size > 0x7fffffff) {
                     LOGE("文件太大，无法返回！%s", (char*)m_pFile->m_FullName.c_str());
-                    return JSP_TO_JS_NULL;//throw - 1;
+                    return jsbind::MakeNull();
                 }
                 return jsbind::createJSAB(m_pFile->m_pBuffer, (int)m_pFile->m_i64Size);
                 //JSArrayBuffer* pAB = JSArrayBuffer::create((int)m_pFile->m_i64Size);

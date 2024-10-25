@@ -380,7 +380,7 @@ namespace laya
             jsbind::Local value(arg1);
             if (value.isString())
             {
-                std::string pData = Converter<std::string>::ToCpp(arg1);
+                std::string pData = jsbind::Converter<std::string>::ToCpp(arg1);
                 postData(pdmgr, p_sUrl, (char*)pData.c_str(), pData.length());
             }
             else

@@ -14,7 +14,7 @@ namespace laya
 	JSBounds::JSBounds(jsbind::ArrayBuffer pSharedData)
 	{
 		DEBUG_CHECK(pSharedData.isValid());
-		char* pArrayBuffer = reinterpret_cast<char*>(pSharedData.getData();
+		char* pArrayBuffer = reinterpret_cast<char*>(pSharedData.getData());
 		int nArrayBufferSize = pSharedData.getLength();
 
 		//assert(bIsArrayBuffer && nArrayBufferSize >= sizeof(float) * 4);
@@ -109,7 +109,7 @@ namespace laya
 	{
 		Matrix4x4 matrix;
 		memcpy(matrix.elements, m_float32Array, sizeof(float) * 16);
-		JSBounds* pBounds = Converter<JSBounds*>::ToCpp(out);
+		JSBounds* pBounds = jsbind::Converter<JSBounds*>::ToCpp(out);
 		m_bounds._tranform(matrix, pBounds->m_bounds);
 	}
 	void JSBounds::_tranform(const Matrix4x4& matrix, JSBounds& out)
@@ -118,7 +118,7 @@ namespace laya
 	}
 	void JSBounds::cloneTo(JSValueAsParam destBounds)
 	{
-		JSBounds* pBounds = Converter<JSBounds*>::ToCpp(destBounds);
+		JSBounds* pBounds = jsbind::Converter<JSBounds*>::ToCpp(destBounds);
 		m_bounds.cloneTo(pBounds->m_bounds);
 	}
 	void JSBounds::getBoundBox()

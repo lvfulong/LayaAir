@@ -91,7 +91,7 @@ JsValue OSiOS::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eve
                 return;
             auto isolate = v8::Isolate::GetCurrent();
             auto context = isolate->GetCurrentContext();
-            napi_value v = JsValueFromV8LocalValue(Converter<const char *>::ToJs(message));
+            napi_value v = JsValueFromV8LocalValue(MakeJSValue<const char *>(message));
             napi_resolve_deferred(context, deferred, v);
         });
     };

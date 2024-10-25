@@ -357,7 +357,7 @@ namespace laya
     {
         char* pPixels = reinterpret_cast<char*>(arrayBuffer.getData());
         int nABLen = arrayBuffer.getLength();
-        bool bIsArrayBuffer = arrayBuffer.isValid()；
+        bool bIsArrayBuffer = arrayBuffer.isValid();
         int size = sizeof(GLubyte) * w * h * 4;
         if (!bIsArrayBuffer || w == 0 || h == 0 || size != nABLen)
         {
@@ -440,19 +440,19 @@ namespace laya
     {
         return g_bEnableTouch;
     }
-    JsValue createImageBitmap(JsValue image, JsValue options)
+    JsValue createImageBitmap(jsbind::Local image, jsbind::Local options)
     {
-        if (Converter<JSImage>::is(image))
+        if (image.is<JSImage>())
         {
-            JSImage* jsImage = Converter<JSImage*>::ToCpp(image);
+            JSImage* jsImage = image.as<JSImage*>();
             assert(jsImage != nullptr);
             JSImageBitmap* jsImageBitmap = new JSImageBitmap();
             jsImageBitmap->m_ImageBitmap.m_image = jsImage->m_pImage;
             //return laya::Promise::resolve(Converter<JSImageBitmap*>::ToJs(jsImageBitmap)).getV8Promise();
-            return Converter<JSImageBitmap*>::ToJs(jsImageBitmap);
+            return jsbind::MakeJSValue<JSImageBitmap*>(jsImageBitmap);
         }
         //return JSP_TO_JS_PROMISE;
-        return JSP_TO_JS_NULL;
+        return jsbind::MakeNull();
     }
 	void JSGlobalExportC()	
     {
@@ -551,13 +551,13 @@ namespace laya
         context.function("btoa", &btoa);
         context.function("atob", &atob);
         context.function("_createImageBitmap", &createImageBitmap);
-        context.function_optional_override("TRACE_BEGIN", optional_override([](const std::string& name) {
+        context.function_optional_override("TRACE_BEGIN", jsbind::optional_override([](const std::string& name) {
             TRACE_NAME_BEGIN(name.c_str());
         }));
-         context.function_optional_override("TRACE_END", optional_override([](const std::string& name) {
+         context.function_optional_override("TRACE_END", jsbind::optional_override([](const std::string& name) {
             TRACE_NAME_END(name.c_str());
         }));
-         context.function_optional_override("TRACE_DUMP", optional_override([]() {
+         context.function_optional_override("TRACE_DUMP", jsbind::optional_override([]() {
             TRACE_NAME_DUMP();
          }));
         JSLayaConchBullet::exportJS(context);

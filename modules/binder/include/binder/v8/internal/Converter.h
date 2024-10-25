@@ -558,7 +558,7 @@ public:
     static bool is(jsvm::Value value)
     {
         Local localValue(value);
-        return localValue.isArrayBuffer() || localValue.isArrayBufferView();
+        return localValue.isArrayBuffer() || localValue.isArrayBufferView()
     }
 };
 

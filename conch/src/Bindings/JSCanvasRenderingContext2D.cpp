@@ -39,7 +39,7 @@ JsValue JSCanvasRenderingContext2D::measureText(const std::string &text)
 {
     TextMetrics metrics = m_context->measureText(text);
     TextMetrics *copy = new TextMetrics(metrics);
-    return Converter<TextMetrics *>::ToJs(copy);
+    return jsbind::MakeJSValue<TextMetrics *>(copy);
 }
 int JSCanvasRenderingContext2D::getID()
 {
@@ -61,7 +61,7 @@ JsValue JSCanvasRenderingContext2D::getImageData(double x, double y, double widt
 {
     ImageData data = m_context->getImageData(x, y, width, height);
     ImageData *copy = new ImageData(std::move(data));
-    return Converter<ImageData *>::ToJs(copy);
+    return jsbind::MakeJSValue<ImageData*>(copy);
 }
 void JSCanvasRenderingContext2D::setTransform(double a, double b, double c, double d, double e, double f)
 {
@@ -135,7 +135,7 @@ void JSCanvasRenderingContext2D::exportJS(jsbind::Object &context)
     class_binding_image_data.property_field("width", &ImageData::m_width);
     class_binding_image_data.property_field("height", &ImageData::m_height);
     class_binding_image_data.property_optional_override(
-        "data", optional_override([](ImageData &imageData) {
+        "data", jsbind::optional_override([](ImageData &imageData) {
             auto ab = jsbind::ArrayBuffer::MakeTypedArray(imageData.m_data.data(), imageData.m_data.size(), 0, jsbind::ArrayBuffer::UINT8_CLAMPED_ARRAY);
             return ab.getHandle();
         }));

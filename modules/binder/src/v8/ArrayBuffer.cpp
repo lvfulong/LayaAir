@@ -2,6 +2,7 @@
 #include <binder/v8/ArrayBuffer.h>
 #include <binder/v8/Converter.h>
 #include <binder/v8/JSEnv.h>
+#include <binder/v8/Local.h>
 #include <utils/JCMemorySurvey.h>
 #include <utils/Log.h>
 
@@ -245,10 +246,7 @@ bool ArrayBuffer::upload(uint8_t *inputBuffer, size_t length)
 ArrayBuffer::ArrayBuffer(uint8_t *inputBuffer, size_t length, size_t byteOffset, Type type)
     : data_(nullptr), length_(length), type_(type)
 {
-    auto JSEnv = JSEnv::getCurrent();
-    DEBUG_CHECK(nullptr != JSEnv);
-    jsvm::Env env = JSEnv->getEnv();
-    DEBUG_CHECK(nullptr != env);
+    GET_ENV
 
     jsvm::Status status;
     jsvm::Value arrayBuffer;
@@ -281,25 +279,13 @@ ArrayBuffer::ArrayBuffer(jsvm::Value arrayBuffer, uint8_t *inputBuffer, size_t l
 {
 }
 
-ArrayBuffer ArrayBuffer::MakeFromLocal(jsvm::Value arrayBuffer)
+ArrayBuffer ArrayBuffer::Make(jsvm::Value arrayBuffer)
 {
-    auto JSEnv = JSEnv::getCurrent();
-    DEBUG_CHECK(nullptr != JSEnv);
-    jsvm::Env env = JSEnv->getEnv();
-    DEBUG_CHECK(nullptr != env);
-
-    bool isArraybuffer;
-    jsvm::IsArraybuffer(env, arrayBuffer, &isArraybuffer);
-
-    bool isTypedarray;
-    jsvm::IsTypedarray(env, arrayBuffer, &isTypedarray);
-
-    bool isDataview;
-    jsvm::IsDataview(env, arrayBuffer, &isDataview);
-
+    GET_ENV
+    Local localValue(arrayBuffer);
     void *data = nullptr;
     size_t length = 0;
-    if (isTypedarray)
+    if (localValue.isTypedArray())
     {
         jsvm::TypedarrayType type;
         jsvm::Value buffer;
@@ -307,14 +293,14 @@ ArrayBuffer ArrayBuffer::MakeFromLocal(jsvm::Value arrayBuffer)
         jsvm::GetTypedarrayInfo(env, arrayBuffer, &type, length, &data, &buffer, &byteOffset);
         return ArrayBuffer(arrayBuffer, data, length, byteOffset, static_cast<ArrayBuffer::Type>(type));
     }
-    else if (isDataview)
+    else if (localValue.isDataView())
     {
         jsvm::Value buffer;
         size_t byteOffset = 0;
         jsvm::GetDataviewInfo(env, arrayBuffer, &length, &data, &buffer, &byteOffset);
         return ArrayBuffer(arrayBuffer, data, length, byteOffset, ArrayBuffer::DATA_VIEW);
     }
-    else if (isArraybuffer)
+    else if (localValue.isArrayBuffer())
     {
         jsvm::GetArraybufferInfo(env, arrayBuffer, &data, &length);
         return ArrayBuffer(arrayBuffer, data, length, 0, ArrayBuffer::ARRAY_BUFFER);

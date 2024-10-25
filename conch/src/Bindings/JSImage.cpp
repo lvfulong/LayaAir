@@ -208,7 +208,7 @@ namespace laya
     void JSImage::putBitmapDataJS(jsbind::ArrayBuffer arrayBuffer, int width, int height)
     {
         DEBUG_CHECK(arrayBuffer.isValid());
-        char* pArrayBufferPtr = reinterpret_cast<char*>(arrayBuffer.getData();
+        char* pArrayBufferPtr = reinterpret_cast<char*>(arrayBuffer.getData());
         int nABLen = arrayBuffer.getLength();
         if (nABLen >= width * height * 4)
         {
@@ -282,13 +282,13 @@ namespace laya
     }
     JsValue JSImage::getImageData( int p_nX,int p_nY,int p_nW,int p_nH )
     {
-	    if( m_bComplete == false ) return JSP_TO_JS_NULL;
-	    if( m_pImage == NULL ) return JSP_TO_JS_NULL;
+	    if( m_bComplete == false ) return jsbind::MakeNull();
+	    if( m_pImage == NULL ) return jsbind::MakeNull();
 	    BitmapData* pImg = &(m_pImage->m_kBitmapData);
 	    if( pImg  )
 	    {
-		    if( p_nX < 0 || p_nY < 0 || p_nX >= pImg->m_nWidth || p_nY >= pImg->m_nHeight )return JSP_TO_JS_NULL;
-		    if( ( p_nX + p_nW ) > pImg->m_nWidth || ( p_nY + p_nH ) > pImg->m_nHeight  )return JSP_TO_JS_NULL;
+		    if( p_nX < 0 || p_nY < 0 || p_nX >= pImg->m_nWidth || p_nY >= pImg->m_nHeight )return jsbind::MakeNull();
+		    if( ( p_nX + p_nW ) > pImg->m_nWidth || ( p_nY + p_nH ) > pImg->m_nHeight  )return jsbind::MakeNull();
 
             if (pImg->m_pImageData != NULL || (pImg->m_pImageData == NULL && m_pImage->enableImage()))
             {
@@ -311,7 +311,7 @@ namespace laya
 		        }
             }
 	    }
-	    return JSP_TO_JS_NULL;
+	    return jsbind::MakeNull();
     }
     int JSImage::getImageID()
     {

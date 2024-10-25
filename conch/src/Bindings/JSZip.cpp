@@ -27,7 +27,7 @@ namespace laya
 	JsValue JSZip::readFile(int idx) 
     {
 		if (!m_zip.m_pZip)
-			return JSP_TO_JS_NULL;
+			return jsbind::MakeNull();
 		zip* pZip = (zip*)m_zip.m_pZip;
 		struct zip_stat sb;
 		zip_stat_init(&sb);
@@ -53,28 +53,28 @@ namespace laya
 				return ab;
 			}
 		}
-		return JSP_TO_JS_NULL;
+		return jsbind::MakeNull();
 	}
     JsValue JSZip::readFileByName(const char* pName)
     {
         if (!pName)
-            return JSP_TO_JS_NULL;
+            return jsbind::MakeNull();
 
         if (!m_zip.m_pZip)
-            return JSP_TO_JS_NULL;
+            return jsbind::MakeNull();
 
         zip* pZip = (zip*)m_zip.m_pZip;
         zip_int64_t idx = zip_name_locate(pZip, pName, 0);
 
         if (idx == -1)
-            return JSP_TO_JS_NULL;
+            return jsbind::MakeNull();
 
         return readFile(idx);
     }
     JsValue JSZip::readFileAsText(int idx)
     {
         if (!m_zip.m_pZip)
-            return JSP_TO_JS_NULL;
+            return jsbind::MakeNull();
         zip* pZip = (zip*)m_zip.m_pZip;
         struct zip_stat sb;
         zip_stat_init(&sb);
@@ -104,21 +104,21 @@ namespace laya
                 return (JSP_TO_JS_STR(pBuff.get()));
             }
         }
-        return JSP_TO_JS_NULL;
+        return jsbind::MakeNull();
     }
     JsValue JSZip::readFileAsTextByName(const char* pName)
     {
         if (!pName)
-            return JSP_TO_JS_NULL;
+            return jsbind::MakeNull();
 
         if (!m_zip.m_pZip)
-            return JSP_TO_JS_NULL;
+            return jsbind::MakeNull();
 
         zip* pZip = (zip*)m_zip.m_pZip;
         zip_int64_t idx = zip_name_locate(pZip, pName, 0);
 
         if (idx == -1)
-            return JSP_TO_JS_NULL;
+            return jsbind::MakeNull();
 
         return readFileAsText(idx);
     }

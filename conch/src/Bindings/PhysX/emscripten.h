@@ -48,7 +48,7 @@ template <typename T> class VectorWrapper
     {
         if (index < data_.size())
         {
-            return Converter<T>::ToJs(data_[index]);
+            return MakeJSValue<T>(data_[index]);
         }
         else
         {

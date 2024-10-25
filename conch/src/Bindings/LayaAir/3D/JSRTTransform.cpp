@@ -73,7 +73,7 @@ namespace laya
 
 
 	void JSRTTransform::rt_setParent(JSValueAsParam pParent) {
-		m_parent = Converter<JSRTTransform*>::ToCpp(pParent);
+		m_parent = jsbind::Converter<JSRTTransform*>::ToCpp(pParent);
 		m_pTransform3D->_setParent(m_parent ? m_parent->m_pTransform3D : nullptr);
 	};
 

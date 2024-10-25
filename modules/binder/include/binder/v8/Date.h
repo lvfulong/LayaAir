@@ -1,0 +1,27 @@
+#ifndef __JSBIND_DATE_H__
+#define __JSBIND_DATE_H__
+
+#include <binder/JSVM_Types.h>
+
+namespace jsbind
+{
+class Date
+{
+  public:
+    static Date Make(jsvm::Value date);
+    static Date Make(double date);
+    jsvm::Value getHandle() const
+    {
+        return handle_;
+    }
+    inline bool isValid() const
+    {
+        return handle_ != nullptr;
+    }
+
+  private:
+    jsvm::Value handle_ = nullptr;
+};
+
+} // namespace jsbind
+#endif

@@ -6,7 +6,7 @@ namespace jsbind
 Context &Context::module(std::string_view name, Module &m)
 {
     v8::HandleScope scope(isolate());
-    global()->Set(context(), Converter<const char *>::ToJs(name), m.newInstance());
+    global()->Set(context(), MakeJSValue<const char *>(name), m.newInstance());
     return *this;
 
     // return value(name, m.new_instance());

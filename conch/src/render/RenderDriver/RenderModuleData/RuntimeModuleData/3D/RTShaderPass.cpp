@@ -23,7 +23,7 @@ JsValue RTShaderPass::getCacheShaderJS(RTDefineDatas *compileDefine)
     }
     else
     {
-        return JSP_TO_JS_NULL;
+        return jsbind::MakeNull();
     }
 }
 void RTShaderPass::setCacheShader(RTDefineDatas *compileDefine, GLESShaderInstance *shader, jsbind::Persistent jsShaderInstance)

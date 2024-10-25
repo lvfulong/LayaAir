@@ -104,12 +104,12 @@ template <typename T> class value_object : public value_object_base<T>
         // Field field = reinterpret_cast<Field>(pfield);
         using FieldType = typename internal::function_traits<Field>::return_type;
         // return internal::to_v8(obj->*field);
-        return Converter<FieldType>::ToJs(t->*field);
+        return MakeJSValue<FieldType>(t->*field);
     }
     template <typename Field> value_object &field(const char *js_name, Field field)
     {
         internal::value_object_field f = {
-            js_name, v8::Global<v8::Value>(v8::Isolate::GetCurrent(), laya::Converter<const char *>::ToJs(js_name)),
+            js_name, v8::Global<v8::Value>(v8::Isolate::GetCurrent(), MakeJSValue<const char *>(js_name)),
             internal::ptr_cast<Field>(field), value_object::field_from_v8<Field>, value_object::field_to_v8<Field>};
         fields.emplace_back(std::move(f));
         return *this;
@@ -207,7 +207,8 @@ class Object
             ->Set(isolate()->GetCurrentContext(), name_string,
                 cl.js_function_template()->GetFunction(isolate()->GetCurrentContext()).ToLocalChecked())
             .FromJust();*/
-        jsvm::SetNamedProperty(env, exports_, name.data(), cl.ctor_);
+        GET_ENV
+        jsvm::SetNamedProperty(env, object_, name.data(), cl.ctor_);
         return *this;
     }
 
@@ -277,6 +278,6 @@ class Object
     std::vector<jsvm::PropertyDescriptor> propertyDescriptorVector_;
     jsvm::Value object_ = nullptr;
 };
-} // namespace laya
+} // namespace jsbind
 
 #endif

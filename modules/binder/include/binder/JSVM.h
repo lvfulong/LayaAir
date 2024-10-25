@@ -21,6 +21,8 @@ namespace jsvm
 /*JSVM_EXTERN*/ Status GetArrayLength(Env env, Value value, uint32_t *result);
 /*JSVM_EXTERN*/ Status CreateObject(Env env, Value *result);
 /*JSVM_EXTERN*/ Status IsSet(Env env, Value value, bool *isSet);
+/*JSVM_EXTERN*/ Status IsDate(Env env, Value value, bool* isDate);
+/*JSVM_EXTERN*/ Status GetDateValue(Env env, Value value, double* result);
 /*JSVM_EXTERN*/ Status CreateSet(Env env, Value *result);
 /*JSVM_EXTERN*/ Status DefineProperties(Env env, Value object, size_t propertyCount,
                                         const PropertyDescriptor *properties);
@@ -31,6 +33,7 @@ namespace jsvm
 /*JSVM_EXTERN*/ Status CreateInt32(Env env, int32_t value, Value *result);
 /*JSVM_EXTERN*/ Status CreateUint32(Env env, int32_t value, Value *result);
 /*JSVM_EXTERN*/ Status CreateInt64(Env env, int64_t value, Value *result);
+/*JSVM_EXTERN*/ Status CreateDate(Env env, double time, Value* result);
 /*JSVM_EXTERN*/ Status GetValueDouble(Env env, Value value, double *result);
 /*JSVM_EXTERN*/ Status GetValueInt32(Env env, Value value, int32_t *result);
 /*JSVM_EXTERN*/ Status GetValueUint32(Env env, Value value, uint32_t *result);

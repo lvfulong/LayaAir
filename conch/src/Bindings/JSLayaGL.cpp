@@ -245,7 +245,7 @@ JsValue JSLayaGL::getActiveAttribEx(const char *vs, const char *ps, const char *
     pActiveInfo->m_sName = m_pShaderActiveInfo->name;
     pActiveInfo->m_nType = m_pShaderActiveInfo->type;
     pActiveInfo->m_nSize = m_pShaderActiveInfo->size;
-    return JSP_TO_JS(JSShaderActiveInfo *, pActiveInfo);
+    return jsbind::MakeJSValue<JSShaderActiveInfo*>(pActiveInfo);
 }
 JsValue JSLayaGL::getActiveUniformEx(const char *vs, const char *ps, const char *define, int nIndex)
 {
@@ -254,7 +254,7 @@ JsValue JSLayaGL::getActiveUniformEx(const char *vs, const char *ps, const char 
     pActiveInfo->m_sName = m_pShaderActiveInfo->name;
     pActiveInfo->m_nType = m_pShaderActiveInfo->type;
     pActiveInfo->m_nSize = m_pShaderActiveInfo->size;
-    return JSP_TO_JS(JSShaderActiveInfo *, pActiveInfo);
+    return jsbind::MakeJSValue<JSShaderActiveInfo*>(pActiveInfo);
 }
 JsValue JSLayaGL::getShaderPrecisionFormat(int shaderType, int precisionType)
 {
@@ -264,7 +264,7 @@ JsValue JSLayaGL::getShaderPrecisionFormat(int shaderType, int precisionType)
     pShaderPrecision->m_nPrecision = m_pShaderPrecisionFormat->precision[0];
     pShaderPrecision->m_nRangeMin = m_pShaderPrecisionFormat->range[0];
     pShaderPrecision->m_nRangeMax = m_pShaderPrecisionFormat->range[1];
-    return JSP_TO_JS(JSShaderPrecisionFormat *, pShaderPrecision);
+    return jsbind::MakeJSValue<JSShaderPrecisionFormat*>(pShaderPrecision);
 }
 
 JsValue JSLayaGL::getUniform(const char *locationName)

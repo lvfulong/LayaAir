@@ -123,7 +123,7 @@ namespace laya
         if (m_nWebSocketState == WSS_OPEN) 
         {
             m_nWebSocketState = WSS_CLOSE;
-            m_pJSFunctionOnError.call<void>(toLocal(this), p_sEvent.c_str());
+            m_pJSFunctionOnError.call<void>(this, p_sEvent.c_str());
         }
         else
         {
@@ -133,12 +133,10 @@ namespace laya
     void JSWebSocket::onSocketMessageCallJSFunctionArrayBuffer(const char* pBuf, int p_nLen, bool isBin, std::weak_ptr<int> cbref)
     {
         if (!cbref.lock()) return;
-#ifdef JS_V8
-        v8::HandleScope scope(v8::Isolate::GetCurrent());
-#endif
+
         if (isBin)
         {
-            JsValue ab = createJSAB((char*)pBuf, p_nLen);
+            auto ab = jsbind::ArrayBuffer::MakeArrayBuffer((uint8_t*)pBuf, p_nLen);
             delete[] pBuf;
             m_pJSFunctionOnMessage.call<void>(this, ab);
         }

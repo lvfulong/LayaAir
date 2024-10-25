@@ -19,20 +19,13 @@ class Local
     Local &operator=(Local &&) = default;
     template <typename ReturnType, typename... Args> ReturnType call(jsvm::Value recv, const Args &...args)
     {
-        auto JSEnv = JSEnv::getCurrent();
-        DEBUG_CHECK(nullptr != JSEnv);
-        jsvm::Env env = JSEnv->getEnv();
-        DEBUG_CHECK(nullptr != env);
-
+        GET_ENV
         return call(env, recv, ... args)
     }
     template <typename ClassType, typename ReturnType, typename... Args>
     ReturnType call(ClassType *recv, const Args &...args)
     {
-        auto JSEnv = JSEnv::getCurrent();
-        DEBUG_CHECK(nullptr != JSEnv);
-        jsvm::Env env = JSEnv->getEnv();
-        DEBUG_CHECK(nullptr != env);
+        GET_ENV
 
         ClassRegistry<ClassType> &classRegistry =
             ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
@@ -81,13 +74,14 @@ class Local
     template <typename T> T as() const
     {
         DEBUG_CHECK(isValid());
-
-        auto JSEnv = JSEnv::getCurrent();
-        DEBUG_CHECK(nullptr != JSEnv);
-        jsvm::Env env = JSEnv->getEnv();
-        DEBUG_CHECK(nullptr != env);
-
+        GET_ENV
         return Converter<T>::ToCpp(env, this->handle_);
+    }
+    template <typename T> bool is()
+    {
+        DEBUG_CHECK(isValid());
+        GET_ENV
+        return Converter<T>::is(env);
     }
 
   private:

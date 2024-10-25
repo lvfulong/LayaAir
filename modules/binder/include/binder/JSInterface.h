@@ -16,6 +16,7 @@
 #include <binder/v8/Persistent.h>
 #include <binder/v8/Object.h>
 #include <binder/v8/Local.h>
+#include <binder/v8/Value.h>
 #ifdef JS_V8_DEBUGGER
 #include <binder/v8/v8debug/debug-agent.h>
 #endif
@@ -24,23 +25,6 @@
 namespace laya
 {
 #ifdef JS_JSC
-struct JsFuncArgs
-{
-};
-typedef JSValueRef JSValueAsParam;
-typedef JSValueRef JsValue;
-typedef JsObjHandleJSC JsObjHandle;
-#define JSP_RESET_GLOBAL_FUNCTION JSCGlobal::getInstance()->reset()
-//#define JS_TO_CPP(tp, v) laya::__TransferToCpp<tp>::ToCpp(v)
-#define JSP_TO_JS_BYTE_ARRAY(vl, sz) (laya::__JsByteArray::ToJsByteArray(vl, sz))
-#define JSP_TO_JS(tp, v) (laya::__TransferToJs<tp>::ToJs(v))
-#define JSP_TO_JS_NULL JSP_TO_JS(void, 1)
-#define JSP_TO_JS_UNDEFINE JSP_TO_JS(void, 0)
-//#define JSP_THROW(str) (laya::__JsThrow::GetInstance()->RuntimeThrow(str))
-#define JSP_RUN_SCRIPT(script) (laya::__JSRun::Run(script))
-#define JSP_TO_JS_STR(str) (laya::__TransferToJs<const char *>::ToJs(str))
-#define JS_TRY
-#define JS_CATCH
 #elif JS_V8
 typedef jsvm::Value JsValue;
 //typedef v8::Local<v8::String> JsString;
@@ -50,7 +34,6 @@ typedef jsvm::Value JSValueAsParam;
 //typedef v8::Local<v8::Object> JsObject;
 //#define JSP_THROW(str) __JsThrow::Throw(str);
 #define JSP_RUN_SCRIPT(script) laya::__JSRun::Run(script);
-#define JSP_TO_JS_NULL ((v8::Null(v8::Isolate::GetCurrent())))
 #define JSP_TO_JS_UNDEFINE ((v8::Undefined(v8::Isolate::GetCurrent())))
 #define JSP_TO_JS_PROMISE (v8::Local<v8::Promise>().As<v8::Value>())
 #define JSP_TO_JS_BYTE_ARRAY(vl, sz) (__JsByteArray::ToJsByteArray(vl, sz))
