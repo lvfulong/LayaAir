@@ -104,7 +104,7 @@ class ClassRegistryBase
 template <typename ClassType> class ClassRegistry : public ClassRegistryBase
 {
   public:
-    typedef ClassType *(*ConstructorFunctionType)(const v8::FunctionCallbackInfo<v8::Value> &info);
+    typedef ClassType *(*ConstructorFunctionType)(jsvm::Env env, jsvm::CallbackInfo info);
     ClassRegistry()
     {
     }
@@ -191,9 +191,9 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
             {
                 internal::raw_destructor(objectPointer);
             }
-            isolate_->AdjustAmountOfExternalAllocatedMemory(-static_cast<int64_t>(sizeof(ClassType)));
-            it->second.pobj.ClearWeak();
-            it->second.pobj.Reset();
+            //isolate_->AdjustAmountOfExternalAllocatedMemory(-static_cast<int64_t>(sizeof(ClassType)));
+            //todo it->second.pobj.ClearWeak();
+            //todo it->second.pobj.Reset();
             // if (erase)
             //{
             objects_.erase(it);
@@ -302,7 +302,7 @@ template <typename ClassType> class class_
     ClassRegistry<ClassType> &classRegistry_;
 
     jsvm::Value ctor_;
-    std::vector<jsvm::PropertyDescriptor> propertyDescriptorVector_;
+    mutable std::vector<jsvm::PropertyDescriptor> propertyDescriptorVector_;
 
   public:
     template <typename... Args> class_ &constructor()
@@ -587,7 +587,7 @@ template <typename ClassType> static void destructor(jsvm::Env env, void *native
     DEBUG_CHECK(object != nullptr);
     // DEBUG_CHECK(objectRegistry != nullptr);
 
-    classRegistry->removeObject(object);
+    classRegistry.removeObject(object);
 }
 } // namespace internal
 } // namespace jsbind

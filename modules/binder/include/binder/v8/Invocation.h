@@ -194,7 +194,7 @@ template <typename ClassType, typename PropertyType> jsvm::Value InvokeClassGett
 
     // v8::Local<v8::Object> pthis = info.This();
     // ClassType *pObj = (ClassType *)pthis->GetAlignedPointerFromInternalField(0);
-    return laya::Converter<PropertyType>::ToJs((pObj->*funcInfo->fGet)());
+    return Converter<PropertyType>::ToJs((pObj->*funcInfo->fGet)());
 }
 
 template <typename ClassType, typename PropertyType>
@@ -223,7 +223,7 @@ template <typename ClassType, typename PropertyType> jsvm::Value InvokeClassSett
     napi_value args[1];
     napi_value js_this;
     void *data;
-    jsvm::GetCbInfo(env, info, argc, args, &js_this, &data);
+    jsvm::GetCbInfo(env, info, &argc, args, &js_this, &data);
     // NODE_API_ASSERT(env, argc >= 1, "Wrong number of arguments");
     ClassType *pObj;
     jsvm::Unwrap(env, wrapped, reinterpret_cast<void **>(&pObj));
@@ -296,7 +296,7 @@ jsvm::Value InvokeClassGetterField(jsvm::Env env, jsvm::CallbackInfo info)
     jsvm::Unwrap(env, wrapped, reinterpret_cast<void **>(&pObj));
     auto funcInfo = (FuncInfo<PropertyType ClassType::*> *)data;
 
-    return laya::Converter<PropertyType>::ToJs(pObj->*(funcInfo->func));
+    return Converter<PropertyType>::ToJs(pObj->*(funcInfo->func));
 }
 
 template <typename ClassType, typename PropertyType>
