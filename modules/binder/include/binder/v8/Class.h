@@ -15,6 +15,7 @@ namespace jsbind
 {
 namespace internal
 {
+template <typename ClassType> static void destructor(jsvm::Env env, void *nativeObject, void * /*finalize_hint*/);
 template <typename ClassType> void raw_destructor(ClassType *pointer)
 {
     delete pointer;
@@ -65,22 +66,18 @@ auto select_const(ReturnType (ClassType::*method)(Args...) const) -> decltype(me
 }
 
 template <typename ClassType> class ClassRegistry;
-template <typename ClassType> static void WeakCallback(const v8::WeakCallbackInfo<ClassRegistry<ClassType>> &data);
+// template <typename ClassType> static void WeakCallback(const v8::WeakCallbackInfo<ClassRegistry<ClassType>> &data);
 struct ObjectRegistry
 {
-    // v8::Global<v8::Object> pobj;
-
-    // jsvm::Env env_;
     jsvm::Ref objectRef_;
-    // jsvm::Value object_;
     bool callDestructor = true;
 };
 class ClassRegistryBase
 {
   protected:
     std::unordered_map<void *, ObjectRegistry> objects_;
-    std::vector<ClassRegistryBase *> bases_;
-    std::vector<ClassRegistryBase *> derivatives_;
+    // std::vector<ClassRegistryBase *> bases_;
+    // std::vector<ClassRegistryBase *> derivatives_;
 
   public:
     virtual ~ClassRegistryBase()
@@ -94,12 +91,12 @@ class ClassRegistryBase
             return &it->second;
         }
 
-        for (auto const info : derivatives_)
-        {
-            ObjectRegistry *result = info->getObjectRegistry(objectPointer);
-            if (result != nullptr)
-                return result;
-        }
+        /*for (auto const info : derivatives_)
+         {
+             ObjectRegistry *result = info->getObjectRegistry(objectPointer);
+             if (result != nullptr)
+                 return result;
+         }*/
 
         return nullptr;
     }
@@ -108,7 +105,7 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
 {
   public:
     typedef ClassType *(*ConstructorFunctionType)(const v8::FunctionCallbackInfo<v8::Value> &info);
-    ClassRegistry(jsvm::Env env) : env_(env)
+    ClassRegistry()
     {
     }
     virtual ~ClassRegistry()
@@ -116,21 +113,20 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
         auto it = objects_.begin();
         for (; it != objects_.end(); it++)
         {
-            v8::HandleScope scope(isolate_);
-
             if (it->second.callDestructor)
             {
                 internal::raw_destructor((ClassType *)it->first);
             }
 
-            it->second.pobj.ClearWeak();
-            it->second.pobj.Reset();
+            // it->second.pobj.ClearWeak();
+            // it->second.pobj.Reset();
         }
         objects_.clear();
 
         // func_.Reset();
         // js_func_.Reset();
-        jsvm::DeleteReference(env_, classRef_);
+        GET_ENV
+        jsvm::DeleteReference(env, classRef_);
     }
 
     void registerConstructor(uint32_t numPara, ConstructorFunctionType func)
@@ -156,60 +152,57 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
 
     jsvm::Value wrapCppObject(ClassType *objectPointer, bool callDestructor = true)
     {
-        /*auto it = objects_.find((void *)objectPointer);
-        if (it != objects_.end())
-        {
-            assert(false && "duplicate object");
-        }*/
-
-        /*v8::EscapableHandleScope scope(isolate_);
-
-        v8::Local<v8::Context> context = isolate_->GetCurrentContext();
-        v8::Local<v8::Function> func;
-        v8::Local<v8::Object> obj;
-        if (class_function_template()->GetFunction(context).ToLocal(&func) && func->NewInstance(context).ToLocal(&obj))
-        {
-            obj->SetAlignedPointerInInternalField(0, objectPointer);
-            obj->SetAlignedPointerInInternalField(1, this);
-            isolate_->AdjustAmountOfExternalAllocatedMemory(static_cast<int64_t>(sizeof(ClassType)));
-            v8::Global<v8::Object> pobj(isolate_, obj);
-
-            pobj.SetWeak(this, WeakCallback<ClassType>, v8::WeakCallbackType::kInternalFields);
-            this->objects_.emplace(objectPointer, ObjectRegistry{std::move(pobj), callDestructor});
-            return scope.Escape(obj);
-        }
-        */
-        // size_t argc = 0;
-        // jsvm::Value args[1];
-
+        GET_ENV
+        auto it = objects_.find((void *)objectPointer);
+        DEBUG_CHECK(it != objects_.end());
         jsvm::Value cons;
         jsvm::GetReferenceValue(env, classRef_, &cons);
         jsvm::Value instance;
         jsvm::NewInstance(env, cons, 0, nullptr, &instance);
 
-        jsvm::Wrap(env, jsThis, reinterpret_cast<void *>(objectPointer), MyObject::Destructor,
-                   nullptr, // finalize_hint
-                   &obj->wrapper_);
-
+        jsvm::Ref wrapper;
+        jsvm::Wrap(env, instance, reinterpret_cast<void *>(objectPointer), internal::destructor<ClassType>, nullptr,
+                   &wrapper);
+        this->objects_.emplace(objectPointer, ObjectRegistry{wrapper, callDestructor});
         return instance;
     }
     void addBase(ClassRegistryBase *info)
     {
-        auto it = std::find(bases_.begin(), bases_.end(), info);
+        /*auto it = std::find(bases_.begin(), bases_.end(), info);
         if (it != bases_.end())
         {
             assert(false && "duplicated inheritance");
             // throw std::runtime_error(class_name()+ " is already inherited from " + info.class_name());
         }
         bases_.emplace_back(info);
-        info->derivatives_.emplace_back(this);
+        info->derivatives_.emplace_back(this);*/
     }
 
-    void removeObject(ClassType *objectPointer, bool callDestructor);
-    // ObjectRegistry *getObjectRegistry(ClassType *objectPointer);
+    void removeObject(ClassType *objectPointer)
+    {
 
+        auto it = objects_.find((void *)objectPointer);
+        DEBUG_CHECK(it != objects_.end());
+        if (it != objects_.end())
+        {
+            // v8::HandleScope scope(isolate_);
+
+            if (it->second.callDestructor)
+            {
+                internal::raw_destructor(objectPointer);
+            }
+            isolate_->AdjustAmountOfExternalAllocatedMemory(-static_cast<int64_t>(sizeof(ClassType)));
+            it->second.pobj.ClearWeak();
+            it->second.pobj.Reset();
+            // if (erase)
+            //{
+            objects_.erase(it);
+            // }
+        }
+    }
+
+  private:
     std::map<uint32_t, ConstructorFunctionType> constructorFunctionMap_;
-    jsvm::Env env_ = nullptr;
     jsvm::Ref classRef_ = nullptr;
 };
 
@@ -246,11 +239,11 @@ class ClassRegistryManager
         ClassRegistry<ClassType> &classRegistry = getClassRegistry<ClassType>(type_id<ClassType>());
         return classRegistry.wrapCppObject(objectPointer, callDestructor);
     }
-    template <typename ClassType> static void removeObject(ClassType *objectPointer, bool callDestructor)
+    /*template <typename ClassType> static void removeObject(ClassType* objectPointer, bool callDestructor)
     {
         ClassRegistry<ClassType> &classRegistry = getClassRegistry<ClassType>(type_id<ClassType>());
         classRegistry.removeObject(objectPointer, callDestructor);
-    }
+    }*/
     template <typename ClassType> static bool isWrappedClassOf()
     {
         auto it = classRegistryMap_.find(type_id<ClassType>().name().data());
@@ -307,7 +300,6 @@ template <typename ClassType> class class_
     class_(class_ &&) = default;
     class_ &operator=(class_ &&) = delete;
     ClassRegistry<ClassType> &classRegistry_;
-    // v8::Isolate *isolate_;
 
     jsvm::Value ctor_;
     std::vector<jsvm::PropertyDescriptor> propertyDescriptorVector_;
@@ -319,162 +311,160 @@ template <typename ClassType> class class_
         return *this;
     }
     template <typename ReturnType, typename... Args>
-    const class_ &function(std::string_view name, ReturnType (ClassType::*func)(Args...)) const
+    const class_ &function(const char *name, ReturnType (ClassType::*func)(Args...)) const
     {
-
         // v8::HandleScope scope(isolate_);
-
         FuncInfo<decltype(func)> *data = new FuncInfo<decltype(func)>(func);
         internal::addDeinitializer([data]() { delete data; });
         data->name = name;
-        /*v8::Local<v8::Value> data = v8::External::New(isolate_, info);
 
-        v8::Local<v8::FunctionTemplate> t =
-            v8::FunctionTemplate::New(isolate_, internal::InvokeClassMethod<ClassType, ReturnType, Args...>, data);
-        v8::Local<v8::String> name_string =
-            v8::String::NewFromUtf8(isolate_, name.data(), v8::NewStringType::kInternalized).ToLocalChecked();
-        classRegistry_.class_function_template()->PrototypeTemplate()->Set(name_string, t);*/
-
-        propertyDescriptorVector_.emplace_back(
-            PropertyDescriptor{(name), NULL, internal::InvokeClassMethod<ClassType, ReturnType, Args...>, nullptr,
-                               nullptr, NULL, PropertyAttributes::DEFAULT, data});
+        jsvm::PropertyDescriptor descriptor;
+        descriptor.utf8name = name;
+        descriptor.name = NULL;
+        descriptor.method = internal::InvokeClassMethod<ClassType, ReturnType, Args...>;
+        descriptor.getter = NULL;
+        descriptor.setter = NULL;
+        descriptor.value = NULL;
+        descriptor.attributes = jsvm::PropertyAttributes::DEFAULT;
+        descriptor.data = data;
+        propertyDescriptorVector_.push_back(descriptor);
         return *this;
     }
     template <typename ReturnType, typename... Args>
-    const class_ &function(std::string_view name, ReturnType (ClassType::*func)(Args...) const) const
+    const class_ &function(const char *name, ReturnType (ClassType::*func)(Args...) const) const
     {
-
         // v8::HandleScope scope(isolate_);
-
         FuncInfo<decltype(func)> *data = new FuncInfo<decltype(func)>(func);
         internal::addDeinitializer([data]() { delete data; });
         data->name = name;
-        /*v8::Local<v8::Value> data = v8::External::New(isolate_, info);
 
-        v8::Local<v8::FunctionTemplate> t =
-            v8::FunctionTemplate::New(isolate_, internal::InvokeClassMethod<ClassType, ReturnType, Args...>, data);
-        v8::Local<v8::String> name_string =
-            v8::String::NewFromUtf8(isolate_, name.data(), v8::NewStringType::kInternalized).ToLocalChecked();
-        classRegistry_.class_function_template()->PrototypeTemplate()->Set(name_string, t);*/
-
-        propertyDescriptorVector_.emplace_back(
-            PropertyDescriptor{(name), NULL, internal::InvokeClassMethod<ClassType, ReturnType, Args...>, nullptr,
-                               nullptr, NULL, PropertyAttributes::DEFAULT, data});
+        jsvm::PropertyDescriptor descriptor;
+        descriptor.utf8name = name;
+        descriptor.name = NULL;
+        descriptor.method = internal::InvokeClassMethod<ClassType, ReturnType, Args...>;
+        descriptor.getter = NULL;
+        descriptor.setter = NULL;
+        descriptor.value = NULL;
+        descriptor.attributes = jsvm::PropertyAttributes::DEFAULT;
+        descriptor.data = data;
+        propertyDescriptorVector_.push_back(descriptor);
         return *this;
     }
     template <typename ReturnType, typename... Args>
-    const class_ &function_optional_override(std::string_view name, ReturnType (*func)(ClassType &, Args...)) const
+    const class_ &function_optional_override(const char *name, ReturnType (*func)(ClassType &, Args...)) const
     {
-
         // v8::HandleScope scope(isolate_);
-
         FuncInfo<decltype(func)> *data = new FuncInfo<decltype(func)>(func);
         internal::addDeinitializer([data]() { delete data; });
         indatao->name = name;
-        /*v8::Local<v8::Value> data = v8::External::New(isolate_, info);
 
-        v8::Local<v8::FunctionTemplate> t = v8::FunctionTemplate::New(
-            isolate_, internal::InvokeClassMethodOptionalOverride<ClassType, ReturnType, Args...>, data);
-        v8::Local<v8::String> name_string =
-            v8::String::NewFromUtf8(isolate_, name.data(), v8::NewStringType::kInternalized).ToLocalChecked();
-        classRegistry_.class_function_template()->PrototypeTemplate()->Set(name_string, t);*/
-
-        propertyDescriptorVector_.emplace_back(PropertyDescriptor{
-            (name), NULL, internal::InvokeClassMethodOptionalOverride<ClassType, ReturnType, Args...>, nullptr, nullptr,
-            NULL, PropertyAttributes::DEFAULT, data});
-
+        jsvm::PropertyDescriptor descriptor;
+        descriptor.utf8name = name;
+        descriptor.name = NULL;
+        descriptor.method = internal::InvokeClassMethodOptionalOverride<ClassType, ReturnType, Args...>;
+        descriptor.getter = NULL;
+        descriptor.setter = NULL;
+        descriptor.value = NULL;
+        descriptor.attributes = jsvm::PropertyAttributes::DEFAULT;
+        descriptor.data = data;
+        propertyDescriptorVector_.push_back(descriptor);
         return *this;
     }
     template <typename ReturnType, typename... Args>
-    const class_ &class_function(std::string_view name, ReturnType (*func)(Args...)) const
+    const class_ &class_function(const char *name, ReturnType (*func)(Args...)) const
     {
-
         // v8::HandleScope scope(isolate_);
-
         FuncInfo<decltype(func)> *data = new FuncInfo<decltype(func)>(func);
         internal::addDeinitializer([data]() { delete data; });
         data->name = name;
 
-        /*v8::Local<v8::Value> data = v8::External::New(isolate_, info);
-
-        v8::Local<v8::FunctionTemplate> t =
-            v8::FunctionTemplate::New(isolate_, internal::InvokeFunction<ReturnType, Args...>, data);
-        v8::Local<v8::String> name_string =
-            v8::String::NewFromUtf8(isolate_, name.data(), v8::NewStringType::kInternalized).ToLocalChecked();
-        classRegistry_.js_function_template()->Set(name_string, t);
-        */
-        propertyDescriptorVector_.emplace_back(
-            PropertyDescriptor{(name), NULL, internal::InvokeMethodStatic<ReturnType, Args...>, nullptr, nullptr, NULL,
-                               PropertyAttributes::DEFAULT, data});
-
+        jsvm::PropertyDescriptor descriptor;
+        descriptor.utf8name = name;
+        descriptor.name = NULL;
+        descriptor.method = internal::InvokeMethodStatic<ReturnType, Args...>;
+        descriptor.getter = NULL;
+        descriptor.setter = NULL;
+        descriptor.value = NULL;
+        descriptor.attributes = jsvm::PropertyAttributes::DEFAULT;
+        descriptor.data = data;
+        propertyDescriptorVector_.push_back(descriptor);
         return *this;
     }
     template <typename PropertyType>
-    class_ &property(std::string_view name, PropertyType (ClassType::*get)(void),
+    class_ &property(const char *name, PropertyType (ClassType::*get)(void),
                      void (ClassType::*set)(PropertyType value) = nullptr)
     {
-
         auto data = new PropFuncInfo<decltype(get), decltype(set)>(get, set);
         internal::addDeinitializer([data]() { delete data; });
-        /*classRegistry_.class_function_template()->PrototypeTemplate()->SetAccessor(
-            Js_Str(isolate_, name.data()), internal::InvokeClassGetProperty<ClassType, PropertyType>,
-            set == nullptr ? nullptr : internal::InvokeClassSetProperty<ClassType, PropertyType>,
-            v8::External::New(isolate_, (void *)info));*/
-        propertyDescriptorVector_.emplace_back(jsvm::PropertyDescriptor{
-            (name), NULL, NULL, internal::InvokeClassGetter<ClassType, PropertyType>,
-            internal::InvokeClassSetter<ClassType, PropertyType>, NULL, jsvm::PropertyAttributes::DEFAULT, data});
+
+        jsvm::PropertyDescriptor descriptor;
+        descriptor.utf8name = name;
+        descriptor.name = NULL;
+        descriptor.method = NULL;
+        descriptor.getter = internal::InvokeClassGetter<ClassType, PropertyType>;
+        descriptor.setter = internal::InvokeClassSetter<ClassType, PropertyType>;
+        descriptor.value = NULL;
+        descriptor.attributes = jsvm::PropertyAttributes::DEFAULT;
+        descriptor.data = data;
+        propertyDescriptorVector_.push_back(descriptor);
         return *this;
     }
     template <typename PropertyType>
-    class_ &property_optional_override(std::string_view name, PropertyType (*get)(ClassType &),
+    class_ &property_optional_override(const char *name, PropertyType (*get)(ClassType &),
                                        void (*set)(ClassType &, PropertyType value) = nullptr)
     {
 
         auto data = new PropFuncInfo<decltype(get), decltype(set)>(get, set);
         internal::addDeinitializer([data]() { delete data; });
-        /*classRegistry_.class_function_template()->PrototypeTemplate()->SetAccessor(
-            Js_Str(isolate_, name.data()), internal::InvokeClassGetPropertyOptionalOverride<ClassType, PropertyType>,
-            set == nullptr ? nullptr : internal::InvokeClassSetPropertyOptionalOverride<ClassType, PropertyType>,
-            v8::External::New(isolate_, (void *)info));*/
-        propertyDescriptorVector_.emplace_back(PropertyDescriptor{
-            (name), NULL, NULL, internal::InvokeClassGetterOverride<ClassType, PropertyType>,
-            internal::InvokeClassSetterOverride<ClassType, PropertyType>, NULL, PropertyAttributes::DEFAULT, data});
 
+        jsvm::PropertyDescriptor descriptor;
+        descriptor.utf8name = name;
+        descriptor.name = NULL;
+        descriptor.method = NULL;
+        descriptor.getter = internal::InvokeClassGetterOptionalOverride<ClassType, PropertyType>;
+        descriptor.setter = internal::InvokeClassSetterOptionalOverride<ClassType, PropertyType>;
+        descriptor.value = NULL;
+        descriptor.attributes = jsvm::PropertyAttributes::DEFAULT;
+        descriptor.data = data;
+        propertyDescriptorVector_.push_back(descriptor);
         return *this;
     }
     template <
         typename PropertyType /*, typename = typename std::enable_if<!std::is_function<PropertyType>::value>::type>*/>
-    const class_ &property_field(std::string_view name, PropertyType ClassType::*field) const
+    const class_ &property_field(const char *name, PropertyType ClassType::*field) const
     {
         auto data = new FuncInfo<decltype(field)>(field);
         internal::addDeinitializer([data]() { delete data; });
-        /*classRegistry_.class_function_template()->PrototypeTemplate()->SetAccessor(
-            Js_Str(isolate_, name.data()), internal::InvokeGetPropertyField<ClassType, PropertyType>,
-            internal::InvokeSetPropertyField<ClassType, PropertyType>, v8::External::New(isolate_, (void *)info));*/
-        propertyDescriptorVector_.emplace_back(PropertyDescriptor{
-            (name), NULL, NULL, internal::InvokeClassGetterField<ClassType, PropertyType>,
-            internal::InvokeClassSetterField<ClassType, PropertyType>, NULL, PropertyAttributes::DEFAULT, data});
 
+        jsvm::PropertyDescriptor descriptor;
+        descriptor.utf8name = name;
+        descriptor.name = NULL;
+        descriptor.method = NULL;
+        descriptor.getter = internal::InvokeClassGetterField<ClassType, PropertyType>;
+        descriptor.setter = internal::InvokeClassSetterField<ClassType, PropertyType>;
+        descriptor.value = NULL;
+        descriptor.attributes = jsvm::PropertyAttributes::DEFAULT;
+        descriptor.data = data;
+        propertyDescriptorVector_.push_back(descriptor);
         return *this;
     }
     template <typename PropertyType>
-    class_ &class_property(std::string_view name, PropertyType (*get)(void), void (*set)(PropertyType value) = nullptr)
+    class_ &class_property(const char *name, PropertyType (*get)(void), void (*set)(PropertyType value) = nullptr)
     {
 
         auto data = new PropFuncInfo<decltype(get), decltype(set)>(get, set);
         internal::addDeinitializer([data]() { delete data; });
-        /*v8::Local<v8::String> name_string =
-            v8::String::NewFromUtf8(isolate_, name.data(), v8::NewStringType::kInternalized).ToLocalChecked();
-        classRegistry_.js_function_template()
-            ->GetFunction(isolate_->GetCurrentContext())
-            .ToLocalChecked()
-            ->SetAccessor(isolate_->GetCurrentContext(), name_string, internal::InvokeGetProperty<PropertyType>,
-                          set == nullptr ? nullptr : internal::InvokeSetProperty<PropertyType>,
-                          v8::External::New(isolate_, (void *)info));*/
 
-        propertyDescriptorVector_.emplace_back(PropertyDescriptor{
-            (name), NULL, NULL, internal::InvokeClassGetterStatic<PropertyType>,
-            internal::InvokeClassSetterStatic<PropertyType>, NULL, PropertyAttributes::STATIC, data});
+        jsvm::PropertyDescriptor descriptor;
+        descriptor.utf8name = name;
+        descriptor.name = NULL;
+        descriptor.method = NULL;
+        descriptor.getter = internal::InvokeClassGetterStatic<PropertyType>;
+        descriptor.setter = internal::InvokeClassSetterStatic<PropertyType>;
+        descriptor.value = NULL;
+        descriptor.attributes = jsvm::PropertyAttributes::STATIC;
+        descriptor.data = data;
+        propertyDescriptorVector_.push_back(descriptor);
         return *this;
     }
 
@@ -493,44 +483,8 @@ template <typename ClassType> class class_
         // todo
     }
 };
-template <typename ClassType> void ClassRegistry<ClassType>::removeObject(ClassType *objectPointer, bool callDestructor)
-{
-    auto it = objects_.find((void *)objectPointer);
-    // assert(it != objects_.end());
-    if (it != objects_.end())
-    {
-        v8::HandleScope scope(isolate_);
 
-        if (callDestructor)
-        {
-            internal::raw_destructor(objectPointer);
-        }
-        isolate_->AdjustAmountOfExternalAllocatedMemory(-static_cast<int64_t>(sizeof(ClassType)));
-        it->second.pobj.ClearWeak();
-        it->second.pobj.Reset();
-        // if (erase)
-        //{
-        objects_.erase(it);
-        // }
-    }
-}
-
-/*template <typename ClassType> static void WeakCallback(const v8::WeakCallbackInfo<ClassRegistry<ClassType>>& data)
-{
-    ClassType *object = static_cast<ClassType *>(data.GetInternalField(0));
-    ClassRegistry<ClassType> *this_ = static_cast<ClassRegistry<ClassType> *>(data.GetInternalField(1));
-    ObjectRegistry *objectRegistry = this_->getObjectRegistry(object);
-    assert(object != nullptr);
-    assert(this_ != nullptr);
-    this_->removeObject(object, objectRegistry->callDestructor);
-}*/
-template <typename ClassType>
-static void WeakCallback(jsvm::Env env, void *nativeObject, [[maybe_unused]] void *finalize_hint)
-{
-    // OH_LOG_INFO(LOG_APP, "MyObject::Destructor called");
-    reinterpret_cast<MyObject *>(nativeObject)->~MyObject();
-}
-template <typename ClassType> static napi_value New(jsvm::Env env, jsvm::CallbackInfo info)
+template <typename ClassType> static jsvm::Value New(jsvm::Env env, jsvm::CallbackInfo info)
 {
 
     jsvm::Value newTarget;
@@ -558,9 +512,8 @@ template <typename ClassType> static napi_value New(jsvm::Env env, jsvm::Callbac
         // MyObject *obj = new MyObject(value);
 
         jsvm::Ref objectRef_;
-        svm::Wrap(env, jsThis, reinterpret_cast<void *>(object), MyObject::Destructor, nullptr, // finalize_hint
-                  &objectRef_);
-        this_->objects_.emplace(object, ObjectRegistry{env, objectRef_, true});
+        svm::Wrap(env, jsThis, reinterpret_cast<void *>(object), internal::destructor<ClassType>, nullptr, &objectRef_);
+        this_->objects_.emplace(object, ObjectRegistry{objectRef_, true});
         return jsThis;
     }
 #if 0
@@ -624,6 +577,18 @@ template <typename ClassType> bool isWrappedClassOf()
 {
     return ClassRegistryManager::isWrappedClassOf<ClassType>();
 }
+namespace internal
+{
+template <typename ClassType> static void destructor(jsvm::Env env, void *nativeObject, void * /*finalize_hint*/)
+{
+    ClassRegistry<ClassType> &classRegistry = ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
+    ClassType *object = static_cast<ClassType *>(nativeObject);
+    // ObjectRegistry* objectRegistry = classRegistry.getObjectRegistry(object);
+    DEBUG_CHECK(object != nullptr);
+    // DEBUG_CHECK(objectRegistry != nullptr);
 
+    classRegistry->removeObject(object);
+}
+} // namespace internal
 } // namespace jsbind
 #endif

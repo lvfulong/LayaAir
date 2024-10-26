@@ -125,7 +125,6 @@ class ArrayBuffer
   private:
     uint8_t *data_ = nullptr;
     size_t length_ = 0;
-    // std::vector<uint8_t> staging_;
     Type type_ = ARRAY_BUFFER;
     jsvm::Value handle_ = nullptr;
 };
