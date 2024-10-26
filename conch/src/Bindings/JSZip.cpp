@@ -27,7 +27,7 @@ namespace laya
 	JsValue JSZip::readFile(int idx) 
     {
 		if (!m_zip.m_pZip)
-			return jsbind::MakeNull();
+			return jsbind::Local::MakeNull();
 		zip* pZip = (zip*)m_zip.m_pZip;
 		struct zip_stat sb;
 		zip_stat_init(&sb);
@@ -47,34 +47,34 @@ namespace laya
 				char* pBuff = new char[(unsigned int)sb.size];
 				zip_fread(pzf, pBuff, sb.size);
 				zip_fclose(pzf);
-				JsValue ab = createJSAB(pBuff,(int)sb.size);
+				JsValue ab = jsbind::ArrayBuffer::MakeArrayBuffer((uint8_t*)pBuff,(int)sb.size).getHandle();
 				delete [] pBuff;
 				//return pAB;
 				return ab;
 			}
 		}
-		return jsbind::MakeNull();
+		return jsbind::Local::MakeNull();
 	}
     JsValue JSZip::readFileByName(const char* pName)
     {
         if (!pName)
-            return jsbind::MakeNull();
+            return jsbind::Local::MakeNull();
 
         if (!m_zip.m_pZip)
-            return jsbind::MakeNull();
+            return jsbind::Local::MakeNull();
 
         zip* pZip = (zip*)m_zip.m_pZip;
         zip_int64_t idx = zip_name_locate(pZip, pName, 0);
 
         if (idx == -1)
-            return jsbind::MakeNull();
+            return jsbind::Local::MakeNull();
 
         return readFile(idx);
     }
     JsValue JSZip::readFileAsText(int idx)
     {
         if (!m_zip.m_pZip)
-            return jsbind::MakeNull();
+            return jsbind::Local::MakeNull();
         zip* pZip = (zip*)m_zip.m_pZip;
         struct zip_stat sb;
         zip_stat_init(&sb);
@@ -104,21 +104,21 @@ namespace laya
                 return (JSP_TO_JS_STR(pBuff.get()));
             }
         }
-        return jsbind::MakeNull();
+        return jsbind::Local::MakeNull();
     }
     JsValue JSZip::readFileAsTextByName(const char* pName)
     {
         if (!pName)
-            return jsbind::MakeNull();
+            return jsbind::Local::MakeNull();
 
         if (!m_zip.m_pZip)
-            return jsbind::MakeNull();
+            return jsbind::Local::MakeNull();
 
         zip* pZip = (zip*)m_zip.m_pZip;
         zip_int64_t idx = zip_name_locate(pZip, pName, 0);
 
         if (idx == -1)
-            return jsbind::MakeNull();
+            return jsbind::Local::MakeNull();
 
         return readFileAsText(idx);
     }

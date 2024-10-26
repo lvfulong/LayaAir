@@ -449,10 +449,10 @@ namespace laya
             JSImageBitmap* jsImageBitmap = new JSImageBitmap();
             jsImageBitmap->m_ImageBitmap.m_image = jsImage->m_pImage;
             //return laya::Promise::resolve(Converter<JSImageBitmap*>::ToJs(jsImageBitmap)).getV8Promise();
-            return jsbind::MakeJSValue<JSImageBitmap*>(jsImageBitmap);
+            return jsbind::Local::Make<JSImageBitmap*>(jsImageBitmap);
         }
         //return JSP_TO_JS_PROMISE;
-        return jsbind::MakeNull();
+        return jsbind::Local::MakeNull();
     }
 	void JSGlobalExportC()	
     {

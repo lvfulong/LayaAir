@@ -10,7 +10,6 @@
 #include <binder/v8/ArrayBuffer.h>
 #include <binder/v8/JSEnv.h>
 #include <v8.h>
-#include <binder/v8/Converter.h>
 #include <binder/v8/Class.h>
 #include <binder/v8/Context.h>
 #include <binder/v8/Persistent.h>

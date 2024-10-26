@@ -160,7 +160,7 @@ namespace laya
     {
         if (!JCConch::s_pScriptRuntime->m_pAssetsRes)
         {
-            return jsbind::MakeNull();
+            return jsbind::Local::MakeNull();
         }
         int sz = 0;
         unsigned char* pBuff = NULL;
@@ -171,20 +171,20 @@ namespace laya
                 std::string str;
                 str.assign((char*)pBuff, sz);
                 delete[] pBuff;
-                return jsbind::MakeJSValue<std::string>(str);
+                return jsbind::Local::Make<std::string>(str);
             }
             else 
             {
                 //TODO 写一个不用自己保留的AB
-                JsValue ab = createJSAB((char*)pBuff, sz);
+                auto ab = jsbind::ArrayBuffer::MakeArrayBuffer((uint8_t*)pBuff, sz);
                 //JSArrayBuffer* pab = JSArrayBuffer::create(sz);
                 //memcpy(pab->getPtr(), pBuff, sz);
                 delete[] pBuff;
                 //return (pab->toLocal());;
-                return ab;
+                return ab.getHandle();
             }
         }
-        return jsbind::MakeNull();
+        return jsbind::Local::MakeNull();
     }
     void JSRuntime::setScreenWakeLock(bool bWakeLock)
     {
@@ -263,7 +263,7 @@ namespace laya
                 return jsbind::ArrayBuffer::MakeArrayBuffer(reinterpret_cast<uint8_t*>(ret.first), ret.second).getHandle();
             }
         }
-        return jsbind::MakeNull();
+        return jsbind::Local::MakeNull();
     }
     JsValue JSRuntime::convertBitmapToJpeg(jsbind::ArrayBuffer arrayBuffer, int w, int h)
     {
@@ -276,7 +276,7 @@ namespace laya
                 return jsbind::ArrayBuffer::MakeArrayBuffer(reinterpret_cast<uint8_t*>(ret.first), ret.second).getHandle();
             }
         }
-        return jsbind::MakeNull();
+        return jsbind::Local::MakeNull();
     }
 	void JSRuntime::exit()
     {
@@ -301,7 +301,7 @@ namespace laya
 
 	JsValue JSRuntime::getLaunchOptionsSync()
 	{
-        return jsbind::MakeJSValue<JSLaunchOptions*>(new JSLaunchOptions());
+        return jsbind::Local::Make<JSLaunchOptions*>(new JSLaunchOptions());
 	}
     void JSRuntime::setOnUnhandledRejection(JSValueAsParam p_pFunction)
     {
@@ -443,10 +443,10 @@ namespace laya
             {
                 pArrayBufferRef->m_nID = JCConch::s_pScriptRuntime->m_pArrayBufferManager->createArrayBuffer(pBuffer, nABLen, (JCArrayBufferManager::ARRAY_BUFFER_TYPE)nType, (JCArrayBufferManager::ARRAY_BUFFER_REF_TYPE)nRefType);
             }
-            return jsbind::MakeJSValue<JSArrayBufferRef*>(pArrayBufferRef);
+            return jsbind::Local::Make<JSArrayBufferRef*>(pArrayBufferRef);
         }
         LOGE("JSRuntime::createArrayBufferRef type error");
-        return jsbind::MakeNull();
+        return jsbind::Local::MakeNull();
     }
     bool JSRuntime::registerFont(const std::string& family, jsbind::Local pathOrArrayBuffer)
     {

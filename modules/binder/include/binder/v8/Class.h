@@ -241,8 +241,7 @@ class ClassRegistryManager
         DEBUG_CHECK(objectRegistry != nullptr);
         objectRegistry->pobj.SetWeak(&classRegistry, WeakCallback, v8::WeakCallbackType::kInternalFields);
     }
-    template <typename ClassType>
-    static v8::Local<v8::Object> wrapCppObject(ClassType *objectPointer, bool callDestructor = true)
+    template <typename ClassType> static jsvm::Value wrapCppObject(ClassType *objectPointer, bool callDestructor = true)
     {
         ClassRegistry<ClassType> &classRegistry = getClassRegistry<ClassType>(type_id<ClassType>());
         return classRegistry.wrapCppObject(objectPointer, callDestructor);
@@ -625,7 +624,6 @@ template <typename ClassType> bool isWrappedClassOf()
 {
     return ClassRegistryManager::isWrappedClassOf<ClassType>();
 }
-
 
 } // namespace jsbind
 #endif

@@ -267,11 +267,9 @@ napi_property_attributes convertTo(PropertyAttributes value)
 }
 inline /*JSVM_EXTERN*/ Status CreateEnv(VM vm, size_t propertyCount, const PropertyDescriptor *properties, Env *result)
 {
-
 }
 inline /*JSVM_EXTERN*/ Status DestroyEnv(Env env)
 {
-    
 }
 inline /*JSVM_EXTERN*/ Status GetArrayLength(Env env, Value value, uint32_t *result)
 {
@@ -502,16 +500,20 @@ inline /*JSVM_EXTERN*/ Status GetInstanceData(Env env, void **data)
 {
     return ConvertToStatus(napi_get_instance_data(env, data));
 }
-inline /*JSVM_EXTERN*/ Status CreateDate(Env env, double time, Value* result)
+inline /*JSVM_EXTERN*/ Status CreateDate(Env env, double time, Value *result)
 {
     return ConvertToStatus(napi_create_date(env, time, result));
 }
-inline /*JSVM_EXTERN*/ Status IsDate(Env env, Value value, bool* isDate)
+inline /*JSVM_EXTERN*/ Status IsDate(Env env, Value value, bool *isDate)
 {
     return ConvertToStatus(napi_is_date(env, value, isDate));
 }
-inline /*JSVM_EXTERN*/ Status GetDateValue(Env env, Value value, double* result)
+inline /*JSVM_EXTERN*/ Status GetDateValue(Env env, Value value, double *result)
 {
     return ConvertToStatus(napi_get_date_value(env, value, result));
+}
+inline /*JSVM_EXTERN*/ Status IsError(Env env, Value value, bool *result)
+{
+    return ConvertToStatus(napi_is_error(env, value, result));
 }
 } // namespace jsvm

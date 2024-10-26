@@ -245,7 +245,7 @@ JsValue JSLayaGL::getActiveAttribEx(const char *vs, const char *ps, const char *
     pActiveInfo->m_sName = m_pShaderActiveInfo->name;
     pActiveInfo->m_nType = m_pShaderActiveInfo->type;
     pActiveInfo->m_nSize = m_pShaderActiveInfo->size;
-    return jsbind::MakeJSValue<JSShaderActiveInfo*>(pActiveInfo);
+    return jsbind::Local::Make<JSShaderActiveInfo*>(pActiveInfo);
 }
 JsValue JSLayaGL::getActiveUniformEx(const char *vs, const char *ps, const char *define, int nIndex)
 {
@@ -254,7 +254,7 @@ JsValue JSLayaGL::getActiveUniformEx(const char *vs, const char *ps, const char 
     pActiveInfo->m_sName = m_pShaderActiveInfo->name;
     pActiveInfo->m_nType = m_pShaderActiveInfo->type;
     pActiveInfo->m_nSize = m_pShaderActiveInfo->size;
-    return jsbind::MakeJSValue<JSShaderActiveInfo*>(pActiveInfo);
+    return jsbind::Local::Make<JSShaderActiveInfo*>(pActiveInfo);
 }
 JsValue JSLayaGL::getShaderPrecisionFormat(int shaderType, int precisionType)
 {
@@ -264,7 +264,7 @@ JsValue JSLayaGL::getShaderPrecisionFormat(int shaderType, int precisionType)
     pShaderPrecision->m_nPrecision = m_pShaderPrecisionFormat->precision[0];
     pShaderPrecision->m_nRangeMin = m_pShaderPrecisionFormat->range[0];
     pShaderPrecision->m_nRangeMax = m_pShaderPrecisionFormat->range[1];
-    return jsbind::MakeJSValue<JSShaderPrecisionFormat*>(pShaderPrecision);
+    return jsbind::Local::Make<JSShaderPrecisionFormat*>(pShaderPrecision);
 }
 
 JsValue JSLayaGL::getUniform(const char *locationName)
@@ -311,7 +311,7 @@ JsValue JSLayaGL::getFloatArrayv(int name)
 JsValue JSLayaGL::readPixels(int x, int y, int width, int height, int format, int type)
 {
     JCConch::s_pConchRender->m_pLayaGL->readPixels(m_nParameterResultByteArray, x, y, width, height, format, type);
-    return createJSAB((char *)m_nParameterResultByteArray.data(), m_nParameterResultByteArray.size());
+    return jsbind::ArrayBuffer::MakeArrayBuffer((uint8_t*)m_nParameterResultByteArray.data(), m_nParameterResultByteArray.size()).getHandle();
 }
 
 int JSLayaGL::getAttribLocationEx(const char *vs, const char *ps, const char *define, const char *sName)

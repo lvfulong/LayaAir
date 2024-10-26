@@ -133,7 +133,7 @@ namespace laya
 #ifdef JS_V8
         v8::HandleScope scope(v8::Isolate::GetCurrent());
 #endif
-        JsValue ab = createJSAB(p_pBuffer, p_nlen);
+        auto ab = jsbind::ArrayBuffer::MakeArrayBuffer((uint8_t*)p_pBuffer, p_nlen).getHandle();
 		delete[] p_pBuffer;
         JCConch::s_pScriptRuntime->m_pJSOnceOtherEvtFuction.call<void>(jsbind::global(), ab, p_nW,p_nH);
     }

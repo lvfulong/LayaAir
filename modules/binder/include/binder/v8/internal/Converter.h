@@ -6,6 +6,7 @@
 #include "binder/JSVM.h"
 #include "binder/JSVM_Types.h"
 #include "binder/napi/js_native_api.h"
+#include "binder/v8/internal/Value.h"
 #include <assert.h>
 #include <string>
 #include <unordered_map>
@@ -15,24 +16,7 @@
 
 namespace jsbind
 {
-    inline jsvm::Value MakeNull()
-    {
-        GET_ENV
-            jsvm::Value result;
-        jsvm::Status status;
-        status = jsvm::GetNull(env, &result);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        return result;
-    }
-    inline jsvm::Value MakeUndefined()
-    {
-        GET_ENV
-            jsvm::Value result;
-        jsvm::Status status;
-        status = jsvm::GetUndefined(env, &result);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        return result;
-    }
+
 namespace internal
 {
 template <typename T> T convert_value_object_from_v8(jsvm::Env env, jsvm::Value value);
@@ -143,7 +127,7 @@ template <typename T> class Converter<T *, std::enable_if_t<internal::is_wrapped
     {
         if (value == nullptr)
         {
-            return MAKE_NULL();
+            internal::makeNull();
         }
         return wrapCppObject<T>(value, callDestructor);
     }
@@ -213,10 +197,10 @@ template <> class Converter<int32_t *>
     static jsvm::Value ToJs(int32_t *value, bool callDestructor = true)
     {
         GET_ENV
-        /*if (p_vl == nullptr)
+        if (value == nullptr)
         {
-            return v8::Null(v8::Isolate::GetCurrent());
-        }*/
+            internal::makeNull();
+        }
         jsvm::Value result;
         jsvm::Status status;
         status = jsvm::CreateInt32(env, *value, &result);
@@ -420,59 +404,40 @@ template <> class Converter<const uint8_t &> : public Converter<uint8_t>
     }
 };*/
 
-//bool Converter
 template <> class Converter<bool>
 {
   public:
     static bool ToCpp(jsvm::Value value)
     {
-        GET_ENV
-        bool result;
-        jsvm::Status status;
-        status = jsvm::GetValueBool(env, value, &result);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        return result;
+        return internal::getBool(value);
     }
     static jsvm::Value ToJs(bool value, bool callDestructor = true)
     {
-        GET_ENV
-        jsvm::Value result;
-        jsvm::Status status;
-        status = jsvm::CreateUint32(env, static_cast<uint32_t>(value), &result); // why not create bool ?????
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        return result;
+        return internal::makeBool(value);
     }
     static bool is(jsvm::Value value)
     {
-        GET_ENV
-        DEBUG_CHECK(nullptr != value);
-        jsvm::ValueType valueType;
-        jsvm::Status status;
-        status = jsvm::Typeof(env, value, &valueType);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        return valueType == jsvm::ValueType::BOOLEAN;
+        return internal::isBool(value);
     }
 };
-//bool Converter
 template <> class Converter<bool *>
 {
   public:
     static bool ToCpp( jsvm::Value value)
     {
-        return Converter<bool>::ToCpp(value);;
+        return internal::getBool(value);
     }
     static jsvm::Value ToJs( bool *value, bool callDestructor = true)
     {
-        GET_ENV
         if (value == nullptr)
         {
-            return MakeNull();
+            internal::makeNull();
         }
-        return Converter<bool>::ToJs(*value, callDestructor);
+        return internal::makeBool(*value);
     }
     static bool is(jsvm::Value value)
     {
-        return Converter<bool>::is(value);
+        return internal::isBool(value);
     }
 };
 
@@ -519,31 +484,18 @@ template <> class Converter<double>
   public:
     static double ToCpp(jsvm::Value value)
     {
-        double result;
-        jsvm::Status status;
-        status = jsvm::GetValueDouble(env, value, &result);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        return result;
+        return internal::getDouble(value);
     }
     static jsvm::Value ToJs(double value, bool callDestructor = true)
     {
-        jsvm::Value result;
-        jsvm::Status status;
-        status = jsvm::CreateDouble(env, value, &result);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        return result;
+        return internal::makeDouble(value);
     }
-    /*static v8::Local<v8::Value> ToJsDate(double p_vl)
-    {
 
-        return v8::Date::New(v8::Isolate::GetCurrent()->GetCurrentContext(), (double)p_vl).ToLocalChecked();
-    }*/
     static bool is(jsvm::Value value)
     {
-        return p_vl->IsNumber();
+        return internal::isNumber(value);
     }
 };
-//ArrayBuffer Converter
 template <> class Converter<ArrayBuffer>
 {
 public:
@@ -557,8 +509,7 @@ public:
     }
     static bool is(jsvm::Value value)
     {
-        Local localValue(value);
-        return localValue.isArrayBuffer() || localValue.isArrayBufferView()
+        return internal::isArrayBuffer(value) || internal::isArrayBufferView(value);
     }
 };
 

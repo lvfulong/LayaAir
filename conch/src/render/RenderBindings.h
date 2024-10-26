@@ -71,7 +71,7 @@ namespace jsbind
         static JsValue ToJs(const Matrix3x3& p_vl)
         {
             assert(true && "not implemented");
-            return jsbind::MakeUndefined();
+            return jsbind::Local::MakeUndefined();
         }
     };
     template <> class Converter<laya::Matrix4x4>
@@ -98,7 +98,7 @@ namespace jsbind
         static JsValue ToJs(const laya::Matrix4x4& p_vl)
         {
             assert(true && "not implemented");
-            return jsbind::MakeUndefined();
+            return jsbind::Local::MakeUndefined();
         }
     };
 }
@@ -956,11 +956,11 @@ class RenderBindings
                     bool *ret = ctx.getBool(index);
                     if (ret != nullptr)
                     {
-                        return jsbind::MakeJSValue<int>(*ret);
+                        return jsbind::Local::Make<int>(*ret);
                     }
                     else
                     {
-                        return jsbind::MakeUndefined();
+                        return jsbind::Local::MakeUndefined();
                     }
                 }));
             class_binding.function("setInt", &GLESShaderData::setInt);
@@ -969,11 +969,11 @@ class RenderBindings
                     int *ret = ctx.getInt(index);
                     if (ret != nullptr)
                     {
-                        return jsbind::MakeJSValue<int>(*ret);
+                        return jsbind::Local::Make<int>(*ret);
                     }
                     else
                     {
-                        return jsbind::MakeUndefined();
+                        return jsbind::Local::MakeUndefined();
                     }
                 }));
             class_binding.function("setNumber", &GLESShaderData::setNumber);
@@ -982,11 +982,11 @@ class RenderBindings
                     float *ret = ctx.getNumber(index);
                     if (ret != nullptr)
                     {
-                        return jsbind::MakeJSValue<float>(*ret);
+                        return jsbind::Local::Make<float>(*ret);
                     }
                     else
                     {
-                        return jsbind::MakeUndefined();
+                        return jsbind::Local::MakeUndefined();
                     }
                 }));
             class_binding.function("setVector2", &GLESShaderData::setVector2);

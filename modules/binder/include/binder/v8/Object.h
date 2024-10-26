@@ -5,7 +5,7 @@
 
 #include <v8.h>
 
-#include "Converter.h"
+#include "internal/Converter.h"
 #include <binder/JSVM_Types.h>
 
 namespace jsbind

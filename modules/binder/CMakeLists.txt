@@ -30,7 +30,6 @@ set(SOURCE
     src/v8/Local.cpp
     src/v8/Context.cpp
     src/v8/Date.cpp
-    src/internal/Value.cpp
 )
 
 if(OS_WINDOWS AND USE_JS_V8_DEBUGGER)

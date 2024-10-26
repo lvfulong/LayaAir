@@ -41,23 +41,23 @@ namespace laya
     }
     JsValue  JSXmlNode::getParentNode()
     {
-         return JSP_TO_JS(JSXmlNode*, m_parentNode);
+         return jsbind::Local::Make<JSXmlNode*>(m_parentNode);
     }
     JsValue  JSXmlNode::getFirstChild()
     {
-        return jsbind::MakeNull();
+        return jsbind::Local::MakeNull();
     }
     JsValue JSXmlNode::getLastChild()
     {
-        return jsbind::MakeNull();
+        return jsbind::Local::MakeNull();
     }
     JsValue  JSXmlNode::getPreviousSibling()
     {
-        return jsbind::MakeNull();
+        return jsbind::Local::MakeNull();
     }
     JsValue  JSXmlNode::getNextSibling()
     {
-        return jsbind::MakeNull();
+        return jsbind::Local::MakeNull();
     }
     const char * JSXmlNode::getNodeName()
     {

@@ -17,15 +17,15 @@ namespace laya
 	JsValue JSFileSystem::readdirSync(const std::string &path) 
     {
 		if (!FileSystem::exists(path))
-			return jsbind::MakeNull();
+			return jsbind::Local::MakeNull();
 		std::vector<std::string> paths = FileSystem::readdirSync(path);
-		return jsbind::MakeJSValue<std::vector<std::string> >(paths);
+		return jsbind::Local::Make<std::vector<std::string> >(paths);
 	}
 	JsValue JSFileSystem::lstatSync(const std::string &path) 
     {
 		std::vector<std::string> paths;
 		if (!FileSystem::exists(path))
-			return jsbind::MakeNull();
+			return jsbind::Local::MakeNull();
 		//try {
 			std::time_t wtime;
 //#ifdef OS_WINDOWS
@@ -62,7 +62,7 @@ namespace laya
         //{
 		//	JSP_THROW("lstatSync error!");
 		//}
-		return jsbind::MakeNull();
+		return jsbind::Local::MakeNull();
 	}
     bool JSFileSystem::JSWriteFileSync(const char* p_sUrl, jsbind::Local args)
     {
@@ -100,11 +100,11 @@ namespace laya
         JCBuffer buf;
 		if (readFileSync(p_pszFile, buf, JCBuffer::raw))
         {
-			return jsbind::createJSAB(buf.m_pPtr, buf.m_nLen);
+			return jsbind::ArrayBuffer::MakeArrayBuffer((uint8_t*)buf.m_pPtr, buf.m_nLen).getHandle();
 		}
 		else 
         {
-			return jsbind::MakeNull();
+			return jsbind::Local::MakeNull();
 		}
     }
 };

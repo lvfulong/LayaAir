@@ -282,19 +282,19 @@ namespace laya
     }
     JsValue JSImage::getImageData( int p_nX,int p_nY,int p_nW,int p_nH )
     {
-	    if( m_bComplete == false ) return jsbind::MakeNull();
-	    if( m_pImage == NULL ) return jsbind::MakeNull();
+	    if( m_bComplete == false ) return jsbind::Local::MakeNull();
+	    if( m_pImage == NULL ) return jsbind::Local::MakeNull();
 	    BitmapData* pImg = &(m_pImage->m_kBitmapData);
 	    if( pImg  )
 	    {
-		    if( p_nX < 0 || p_nY < 0 || p_nX >= pImg->m_nWidth || p_nY >= pImg->m_nHeight )return jsbind::MakeNull();
-		    if( ( p_nX + p_nW ) > pImg->m_nWidth || ( p_nY + p_nH ) > pImg->m_nHeight  )return jsbind::MakeNull();
+		    if( p_nX < 0 || p_nY < 0 || p_nX >= pImg->m_nWidth || p_nY >= pImg->m_nHeight )return jsbind::Local::MakeNull();
+		    if( ( p_nX + p_nW ) > pImg->m_nWidth || ( p_nY + p_nH ) > pImg->m_nHeight  )return jsbind::Local::MakeNull();
 
             if (pImg->m_pImageData != NULL || (pImg->m_pImageData == NULL && m_pImage->enableImage()))
             {
 		        if( p_nX == 0 && p_nY == 0 && p_nW == pImg->m_nWidth && p_nH == pImg->m_nHeight )
 		        {
-			        return createJSAB( (char *)(pImg->m_pImageData),pImg->m_nWidth * pImg->m_nHeight * 4 );
+			        return jsbind::ArrayBuffer::MakeArrayBuffer((uint8_t*)(pImg->m_pImageData),pImg->m_nWidth * pImg->m_nHeight * 4 ).getHandle();
 		        }
 		        else
 		        {
@@ -307,11 +307,11 @@ namespace laya
 			        {
 				        memcpy(&pBuffer[nDstLine*i],&pTemp[nSrcLine*(i+p_nY)+p_nX*4],nDstLine);
 			        }
-			        return createJSAB( (char*)pBuffer,nSize );
+			        return jsbind::ArrayBuffer::MakeArrayBuffer((uint8_t*)pBuffer, nSize).getHandle();
 		        }
             }
 	    }
-	    return jsbind::MakeNull();
+	    return jsbind::Local::MakeNull();
     }
     int JSImage::getImageID()
     {

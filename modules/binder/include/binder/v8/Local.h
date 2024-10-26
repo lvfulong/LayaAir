@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <binder/JSVM_Types.h>
 #include <binder/v8/Class.h>
+#include <binder/v8/internal/Value.h>
 
 namespace jsbind
 {
@@ -45,31 +46,83 @@ class Local
     {
         return handle_ != nullptr;
     }
-    bool isUndefined() const;
+    inline bool isUndefined() const
+    {
+        DEBUG_CHECK(isValid());
+        return internal::isUndefined(this->handle_);
+    }
 
-    bool isNull() const;
+    inline bool isNull() const
+    {
+        DEBUG_CHECK(isValid());
+        return internal::isNull(this->handle_);
+    }
 
-    bool isBool() const;
+    inline bool isBool() const
+    {
+        DEBUG_CHECK(isValid());
+        return internal::isBool(this->handle_);
+    }
 
-    bool isNumber() const;
+    inline bool isNumber() const
+    {
+        DEBUG_CHECK(isValid());
+        return internal::isNumber(this->handle_);
+    }
 
-    bool isString() const;
+    inline bool isString() const
+    {
+        DEBUG_CHECK(isValid());
+        return internal::isString(this->handle_);
+    }
 
-    bool isObject() const;
+    inline bool isObject() const
+    {
+        DEBUG_CHECK(isValid());
+        return internal::isObject(this->handle_);
+    }
 
-    bool isArray() const;
+    inline bool isArray() const
+    {
+        DEBUG_CHECK(isValid());
+        return internal::isArray(this->handle_);
+    }
 
-    bool isFunction() const;
+    inline bool isFunction() const
+    {
+        DEBUG_CHECK(isValid());
+        return internal::isFunction(this->handle_);
+    }
 
-    bool isError() const;
+    inline bool isError() const
+    {
+        DEBUG_CHECK(isValid());
+        return internal::isError(this->handle_);
+    }
 
-    bool isArrayBuffer() const;
+    inline bool isArrayBuffer() const
+    {
+        DEBUG_CHECK(isValid());
+        return internal::isArrayBuffer(this->handle_);
+    }
 
-    bool isArrayBufferView() const;
+    inline bool isArrayBufferView() const
+    {
+        DEBUG_CHECK(isValid());
+        return internal::isArrayBufferView(this->handle_);
+    }
 
-    bool isTypedArray() const;
+    inline bool isTypedArray() const
+    {
+        DEBUG_CHECK(isValid());
+        return internal::isTypedArray(this->handle_);
+    }
 
-    bool isDataView() const;
+    inline bool isDataView() const
+    {
+        DEBUG_CHECK(isValid());
+        return internal::isDataView(this->handle_);
+    }
 
     template <typename T> T as() const
     {
@@ -82,6 +135,18 @@ class Local
         DEBUG_CHECK(isValid());
         GET_ENV
         return Converter<T>::is(env);
+    }
+    template <class T> static jsvm::Value Make(T t, bool callDestructor = true)
+    {
+        return Converter<T>::ToJs(t, callDestructor);
+    }
+    static inline jsvm::Value MakeNull()
+    {
+        return internal::makeNull();
+    }
+    static inline jsvm::Value MakeUndefined()
+    {
+        return internal::makeUndefined();
     }
 
   private:
