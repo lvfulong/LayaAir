@@ -56,6 +56,70 @@ static inline int32_t getInt32(jsvm::Value value)
     DEBUG_CHECK(status == jsvm::Status::OK);
     return result;
 }
+static inline jsvm::Value makeInt32(int32_t value)
+{
+    GET_ENV
+    jsvm::Value result;
+    jsvm::Status status;
+    status = jsvm::CreateInt32(env, value, &result);
+    return result;
+}
+static uint32_t getUint32(jsvm::Value value)
+{
+    GET_ENV
+    uint32_t result;
+    jsvm::Status status;
+    status = jsvm::GetValueUint32(env, value, &result);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+    return result;
+}
+static jsvm::Value makeUint32(uint32_t value)
+{
+    GET_ENV
+    jsvm::Value result;
+    jsvm::Status status;
+    status = jsvm::CreateUint32(env, value, &result);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+    return result;
+}
+static inline int64_t getInt64Noloss(jsvm::Value value)
+{
+    GET_ENV
+    int64_t result;
+    jsvm::Status status;
+    bool lossless;
+    status = jsvm::GetValueBigintInt64(env, value, &result, &lossless);
+    DEBUG_CHECK(lossless == false);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+    return result;
+}
+static inline jsvm::Value makeInt64Noloss(int64_t value)
+{
+    GET_ENV
+    jsvm::Value result;
+    jsvm::Status status;
+    status = jsvm::CreateBigintInt64(env, value, &result);
+    return result;
+}
+static inline uint64_t getUint64Noloss(jsvm::Value value)
+{
+    GET_ENV
+    uint64_t result;
+    jsvm::Status status;
+    bool lossless;
+    status = jsvm::GetValueBigintUint64(env, value, &result, &lossless);
+    DEBUG_CHECK(lossless == false);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+    return result;
+}
+static inline jsvm::Value makeUint64Noloss(uint64_t value)
+{
+    GET_ENV
+    jsvm::Value result;
+    jsvm::Status status;
+    status = jsvm::CreateBigintUint64(env, value, &result);
+    return result;
+}
 static std::string getStringLatin1(jsvm::Value value)
 {
     GET_ENV
@@ -68,7 +132,7 @@ static std::string getStringLatin1(jsvm::Value value)
     DEBUG_CHECK(status == jsvm::Status::OK);
     return latin1Str;
 }
-static jsvm::Value makeStringLatin1(const std::string& value)
+static jsvm::Value makeStringLatin1(const std::string &value)
 {
     GET_ENV
     jsvm::Value result;
@@ -89,7 +153,7 @@ static std::string getStringUtf8(jsvm::Value value)
     DEBUG_CHECK(status == jsvm::Status::OK);
     return utf8str;
 }
-static jsvm::Value makeStringUtf8(const std::string& value)
+static jsvm::Value makeStringUtf8(const std::string &value)
 {
     GET_ENV
     jsvm::Value result;
@@ -110,7 +174,7 @@ static std::u16string getStringUtf16(jsvm::Value value)
     DEBUG_CHECK(status == jsvm::Status::OK);
     return utf16str;
 }
-static jsvm::Value makeStringUtf16(const std::u16string& value)
+static jsvm::Value makeStringUtf16(const std::u16string &value)
 {
     GET_ENV
     jsvm::Value result;
@@ -119,14 +183,7 @@ static jsvm::Value makeStringUtf16(const std::u16string& value)
     DEBUG_CHECK(status == jsvm::Status::OK);
     return result;
 }
-static inline jsvm::Value makeInt32(int32_t value)
-{
-    GET_ENV
-    jsvm::Value result;
-    jsvm::Status status;
-    status = jsvm::CreateInt32(env, value, &result);
-    return result;
-}
+
 static inline double getDate(jsvm::Value value)
 {
     GET_ENV

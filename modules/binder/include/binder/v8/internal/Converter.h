@@ -177,8 +177,25 @@ template <> class Converter<int32_t *>
         return p_vl->IsInt32();
     }*/
 };
+
 template <> class Converter<const int32_t &> : public Converter<int32_t>
 {
+};
+template <> class Converter<uint32_t>
+{
+public:
+    static uint32_t ToCpp(jsvm::Value value)
+    {
+        return internal::getUint32(value);
+    }
+    static jsvm::Value ToJs(uint32_t value, bool callDestructor = true)
+    {
+        return internal::makeUint32(value);
+    }
+    /*static bool is(v8::Local<v8::Value> p_vl)
+    {
+        return p_vl->IsUint32();
+    }*/
 };
 
 #ifdef OS_IOS
@@ -203,105 +220,50 @@ template <> class Converter<long>
     {
         return p_vl->IsNumber();
     }
-    static v8::Local<v8::Value> ToJsDate(long p_vl)
-    {
-        return v8::Date::New(v8::Isolate::GetCurrent()->GetCurrentContext(), (double)p_vl).ToLocalChecked();
-    }
 };
 #endif
-// lvtodo 目前只适用于裸指针reinterpret_cast
-/*template <> class Converter<int64_t>
-{
-  public:
-    static int64_t ToCpp(v8::Local<v8::Value> value)
-    {
-        if (!value->IsNumber() || value->IsNullOrUndefined())
-        {
-            return 0;
-        }
-        double v = value->NumberValue(v8::Isolate::GetCurrent()->GetCurrentContext()).ToChecked();
-        return *reinterpret_cast<int64_t *>(&v);
-    }
-    static v8::Local<v8::Value> ToJs(int64_t p_vl, bool callDestructor = true)
-    {
-        return v8::Number::New(v8::Isolate::GetCurrent(), *reinterpret_cast<double *>(&p_vl));
-    }
-
-    static v8::Local<v8::Value> ToJsDate(int64_t p_vl)
-    {
-
-        return v8::Date::New(v8::Isolate::GetCurrent()->GetCurrentContext(), (double)p_vl).ToLocalChecked();
-    }
-    static bool is(v8::Local<v8::Value> p_vl)
-    {
-        return p_vl->IsNumber();
-    }
-};*/
-
+//用bigint 保证精度不丢失,可以用于bullet对象指针
 template <> class Converter<int64_t>
 {
   public:
     static int64_t ToCpp(jsvm::Value value)
     {
-        GET_ENV
+        //if (!value->IsNumber() || value->IsNullOrUndefined())
+        //{
+            //return 0;
+        //}
+        return internal::getInt64Noloss(value);
+    }
+    static jsvm::Value ToJs(int64_t value, bool callDestructor = true)
+    {
+        return internal::makeInt64Noloss(value);
+    }
+     /*static bool is(v8::Local<v8::Value> p_vl)
+    {
+        return p_vl->IsNumber();
+    }*/
+};
+template <> class Converter<uint64_t>
+{
+  public:
+    static uint64_t ToCpp(jsvm::Value value)
+    {
         /*if (!value->IsNumber() || value->IsNullOrUndefined())
         {
             return 0;
         }*/
-        int64_t result;
-        jsvm::Status status;
-        status = jsvm::GetValueInt64(env, value, &result);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-
-        return result;
+       return internal::getUint64Noloss(value);
     }
-    static jsvm::Value ToJs(int64_t value, bool callDestructor = true)
+    static jsvm::Value  ToJs(uint64_t value, bool callDestructor = true)
     {
-        GET_ENV
-        jsvm::Value result;
-        jsvm::Status status;
-        status = jsvm::CreateInt64(env, value, &result);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        return result;
+        return internal::makeUint64Noloss(value);
     }
-
-    /*static v8::Local<v8::Value> ToJsDate(int64_t p_vl)
-    {
-
-        return v8::Date::New(v8::Isolate::GetCurrent()->GetCurrentContext(), (double)p_vl).ToLocalChecked();
-    }
-    static bool is(v8::Local<v8::Value> p_vl)
+    /*static bool is(jsvm::Value value)
     {
         return p_vl->IsNumber();
     }*/
 };
 
-template <> class Converter<uint32_t>
-{
-  public:
-    static uint32_t ToCpp(jsvm::Value value)
-    {
-        GET_ENV
-        uint32_t result;
-        jsvm::Status status;
-        status = jsvm::GetValueUint32(env, value, &result);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        return result;
-    }
-    static jsvm::Value ToJs(uint32_t value, bool callDestructor = true)
-    {
-        GET_ENV
-        jsvm::Value result;
-        jsvm::Status status;
-        status = jsvm::CreateUint32(env, value, &result);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        return result;
-    }
-    /*static bool is(v8::Local<v8::Value> p_vl)
-    {
-        return p_vl->IsUint32();
-    }*/
-};
 /*template <> class Converter<uint16_t>
 {
   public:
@@ -337,33 +299,7 @@ template <> class Converter<uint8_t>
 template <> class Converter<const uint8_t &> : public Converter<uint8_t>
 {
 };*/
-// 目前只适用于裸指针reinterpret_cast
-/*template <> class Converter<uint64_t>
-{
-  public:
-    static uint64_t ToCpp(v8::Local<v8::Value> value)
-    {
-        if (!value->IsNumber() || value->IsNullOrUndefined())
-        {
-            return 0;
-        }
-        double v = value->NumberValue(v8::Isolate::GetCurrent()->GetCurrentContext()).ToChecked();
-        return *reinterpret_cast<uint64_t *>(&v);
-    }
-    static v8::Local<v8::Value> ToJs(uint64_t p_vl, bool callDestructor = true)
-    {
-        return v8::Number::New(v8::Isolate::GetCurrent(), *reinterpret_cast<double *>(&p_vl));
-    }
 
-    static v8::Local<v8::Value> ToJsDate(uint64_t p_vl)
-    {
-        return v8::Date::New(v8::Isolate::GetCurrent()->GetCurrentContext(), (double)p_vl).ToLocalChecked();
-    }
-    static bool is(v8::Local<v8::Value> p_vl)
-    {
-        return p_vl->IsNumber();
-    }
-};*/
 
 template <> class Converter<bool>
 {
@@ -571,21 +507,13 @@ template <> class Converter<const char *>
 template <> class Converter<jsvm::Value>
 {
   public:
-    static jsvm::Value ToCpp(jsvm::Env env, jsvm::Value value)
-    {
-        return value;
-    }
     static jsvm::Value ToCpp(jsvm::Value value)
-    {
-        return ToCpp(nullptr, value);
-    }
-    static jsvm::Value ToJs(jsvm::Env env, jsvm::Value value, bool callDestructor = true)
     {
         return value;
     }
     static jsvm::Value ToJs(jsvm::Value value, bool callDestructor = true)
     {
-        return ToJs(nullptr, value, callDestructor);
+        return value;
     }
     /*static bool is(jsvm::Value value)
  {
@@ -614,7 +542,7 @@ template <typename T> class Array
             DEBUG_CHECK(status == jsvm::Status::OK);
             for (int i = 0; i < size; i++)
             {
-                jsvm::SetElement(env, result, i, Converter<T *>::ToJs(env, value.at(i), callDestructor));
+                jsvm::SetElement(env, result, i, Converter<T *>::ToJs(value.at(i), callDestructor));
             }
             return result;
         }
@@ -767,29 +695,29 @@ template <typename T, typename R> class __JsMap
 template <typename T> class Converter<std::vector<T>>
 {
   public:
-    static std::vector<T> ToCpp(jsvm::Env env, jsvm::Value value)
+    static std::vector<T> ToCpp(jsvm::Value value)
     {
         std::vector<T> vec;
-        Array<T>::getData(env, value, vec);
+        Array<T>::getData(value, vec);
         return vec;
     }
-    static jsvm::Value ToJs(jsvm::Env env, const std::vector<T> &value, bool callDestructor = true)
+    static jsvm::Value ToJs(const std::vector<T> &value, bool callDestructor = true)
     {
-        return Array<T>::ToJs(env, value);
+        return Array<T>::ToJs(value);
     }
 };
 template <typename T> class Converter<std::vector<T *>>
 {
   public:
-    static std::vector<T *> ToCpp(jsvm::Env env, jsvm::Value)
+    static std::vector<T *> ToCpp(jsvm::Value)
     {
         std::vector<T *> vec;
-        Array<T>::getData(env, Value, vec);
+        Array<T>::getData(Value, vec);
         return vec;
     }
-    static jsvm::Value ToJs(jsvm::Env env, const std::vector<T *> &value, bool callDestructor = true)
+    static jsvm::Value ToJs(const std::vector<T *> &value, bool callDestructor = true)
     {
-        return Array<T>::ToJs(env, value, callDestructor);
+        return Array<T>::ToJs(value, callDestructor);
     }
     /*static void ToCpp(v8::Local<v8::Value> p_vl, std::vector<T*>& vec)
     {
@@ -842,11 +770,6 @@ template <typename T, typename R> class Converter<const std::unordered_map<T, R>
         return Undefined(v8::Isolate::GetCurrent());
     }
 };
-
-/*inline v8::Local<v8::String> Js_Str(v8::Isolate* pIso, const char* str)
-{
-    return v8::String::NewFromUtf8(pIso, str).ToLocalChecked();
-}*/
 
 } // namespace jsbind
 

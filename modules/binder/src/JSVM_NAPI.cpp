@@ -532,4 +532,20 @@ inline /*JSVM_EXTERN*/ Status GetValueStringLatin1(Env env, Value value, char* b
 {
     return ConvertToStatus(napi_get_value_string_latin1(env, value, buf, bufsize, result));
 }
+inline /*JSVM_EXTERN*/ Status CreateBigintInt64(Env env, int64_t value, Value *result)
+{
+    return ConvertToStatus(napi_create_bigint_int64(env, value, result));
+}
+inline /*JSVM_EXTERN*/ Status GetValueBigintInt64(Env env, Value value, int64_t *result, bool *lossless)
+{
+    return ConvertToStatus(napi_get_value_bigint_int64(env, value, result, lossless));
+}
+inline /*JSVM_EXTERN*/ Status CreateBigintUint64(Env env, uint64_t value, Value *result)
+{
+    return ConvertToStatus(napi_create_bigint_uint64(env, value, result));
+}
+inline /*JSVM_EXTERN*/ Status GetValueBigintUint64(Env env, Value value, uint64_t *result, bool *lossless)
+{
+    return ConvertToStatus(napi_get_value_bigint_uint64(env, value, result, lossless));
+}
 } // namespace jsvm

@@ -38,10 +38,10 @@ namespace jsvm
 /*JSVM_EXTERN*/ Status GetValueDouble(Env env, Value value, double *result);
 /*JSVM_EXTERN*/ Status GetValueInt32(Env env, Value value, int32_t *result);
 /*JSVM_EXTERN*/ Status GetValueUint32(Env env, Value value, uint32_t *result);
-/*JSVM_EXTERN*/ Status CreateStringLatin1(Env env, const char* str, size_t length, Value* result);
-/*JSVM_EXTERN*/ Status GetValueStringLatin1(Env env, Value value, char* buf, size_t bufsize, size_t* result);
-/*JSVM_EXTERN*/ Status CreateStringUtf16(Env env, const char16_t* str, size_t length, Value* result);
-/*JSVM_EXTERN*/ Status GetValueStringUtf16(Env env, Value value, char16_t* buf, size_t bufsize, size_t* result);
+/*JSVM_EXTERN*/ Status CreateStringLatin1(Env env, const char *str, size_t length, Value *result);
+/*JSVM_EXTERN*/ Status GetValueStringLatin1(Env env, Value value, char *buf, size_t bufsize, size_t *result);
+/*JSVM_EXTERN*/ Status CreateStringUtf16(Env env, const char16_t *str, size_t length, Value *result);
+/*JSVM_EXTERN*/ Status GetValueStringUtf16(Env env, Value value, char16_t *buf, size_t bufsize, size_t *result);
 /*JSVM_EXTERN*/ Status GetValueInt64(Env env, Value value, int64_t *result);
 /*JSVM_EXTERN*/ Status GetValueBool(Env env, Value value, bool *result);
 /*JSVM_EXTERN*/ Status GetNull(Env env, Value *result);
@@ -83,6 +83,10 @@ namespace jsvm
 /*JSVM_EXTERN*/ Status GetGlobal(Env env, Value *result);
 /*JSVM_EXTERN*/ Status SetInstanceData(Env env, void *data, Finalize finalizeCb, void *finalizeHint);
 /*JSVM_EXTERN*/ Status GetInstanceData(Env env, void **data);
+/*JSVM_EXTERN*/ Status CreateBigintInt64(Env env, int64_t value, Value *result);
+/*JSVM_EXTERN*/ Status GetValueBigintInt64(Env env, Value value, int64_t *result, bool *lossless);
+/*JSVM_EXTERN*/ Status CreateBigintUint64(Env env, uint64_t value, Value *result);
+/*JSVM_EXTERN*/ Status GetValueBigintUint64(Env env, Value value, uint64_t *result, bool *lossless);
 } // namespace jsvm
 
 #endif
