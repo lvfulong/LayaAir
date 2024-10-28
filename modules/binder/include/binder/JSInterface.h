@@ -15,7 +15,7 @@
 #include <binder/v8/Persistent.h>
 #include <binder/v8/Object.h>
 #include <binder/v8/Local.h>
-#include <binder/v8/Value.h>
+#include <binder/v8/Array.h>
 #include <binder/v8/Date.h>
 #include <binder/v8/String.h>
 #ifdef JS_V8_DEBUGGER

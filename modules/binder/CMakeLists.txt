@@ -16,7 +16,7 @@ set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Local.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Persistent.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Class.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Value.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Array.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Utility.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Date.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/String.h

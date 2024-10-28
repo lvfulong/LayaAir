@@ -7,6 +7,7 @@
 #include "binder/JSVM_Types.h"
 #include "binder/napi/js_native_api.h"
 #include "binder/v8/internal/Value.h"
+#include <binder/v8/Array.h>
 #include <assert.h>
 #include <string>
 #include <unordered_map>
@@ -160,6 +161,7 @@ template <> class Converter<int32_t>
         return p_vl->IsInt32();
     }*/
 };
+#if 0
 template <> class Converter<int32_t *>
 {
   public:
@@ -177,7 +179,7 @@ template <> class Converter<int32_t *>
         return p_vl->IsInt32();
     }*/
 };
-
+#endif
 template <> class Converter<const int32_t &> : public Converter<int32_t>
 {
 };
@@ -317,6 +319,7 @@ template <> class Converter<bool>
         return internal::isBool(value);
     }
 };
+#if 0
 template <> class Converter<bool *>
 {
   public:
@@ -337,7 +340,7 @@ template <> class Converter<bool *>
         return internal::isBool(value);
     }
 };
-
+#endif
 template <> class Converter<float>
 {
   public:
@@ -520,109 +523,8 @@ template <> class Converter<jsvm::Value>
      return true;
  }*/
 };
-template <typename T> class Array
-{
-  public:
-    static jsvm::Value ToJs(const std::vector<T *> &value, bool callDestructor = true)
-    {
-        GET_ENV
-        jsvm::Value result;
-        jsvm::Status status;
 
-        int size = value.size();
-        if (0 == size)
-        {
-            status = jsvm::CreateArrayWithLength(env, 0, &result);
-            DEBUG_CHECK(status == jsvm::Status::OK);
-            return result;
-        }
-        else
-        {
-            status = jsvm::CreateArrayWithLength(env, size, &result);
-            DEBUG_CHECK(status == jsvm::Status::OK);
-            for (int i = 0; i < size; i++)
-            {
-                jsvm::SetElement(env, result, i, Converter<T *>::ToJs(value.at(i), callDestructor));
-            }
-            return result;
-        }
-    }
-    static jsvm::Value ToJs(const std::vector<T> &value, bool callDestructor = true)
-    {
-        GET_ENV
-
-        jsvm::Value result;
-        jsvm::Status status;
-        int size = value.size();
-        if (0 == size)
-        {
-            status = jsvm::CreateArrayWithLength(env, 0, &result);
-            DEBUG_CHECK(status == jsvm::Status::OK);
-            return result;
-        }
-        else
-        {
-            status = jsvm::CreateArrayWithLength(env, size, &result);
-            DEBUG_CHECK(status == jsvm::Status::OK);
-            for (int i = 0; i < size; i++)
-            {
-                jsvm::SetElement(env, result, i, Converter<T>::ToJs(value.at(i), callDestructor));
-            }
-            return result;
-        }
-    }
-    static void setData(const std::vector<T> &value, jsvm::Value array, bool callDestructor = true)
-    {
-        GET_ENV
-
-        jsvm::Value result;
-        jsvm::Status status;
-        int size = value.size();
-        for (int i = 0; i < size; i++)
-        {
-            jsvm::SetElement(env, result, i, Converter<T>::ToJs(value.at(i), callDestructor));
-        }
-    }
-    static void getData(jsvm::Env env, jsvm::Value array, std::vector<T *> &result)
-    {
-        bool isArray{false};
-        jsvm::IsArray(env, array, isArray);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        if (isArray)
-        {
-            value.clear();
-            uint32_t length{0};
-            jsvm::GetArrayLength(env, array, &length) DEBUG_CHECK(status == jsvm::Status::OK);
-            result.reserve(length);
-            for (int i = 0; i < length; i++)
-            {
-                jsvm::Value element;
-                jsvm::GetElement(env, array, i, &element);
-                result.push_back(Converter<T *>::ToCpp(element));
-            }
-        }
-    }
-    static void getData(jsvm::Env env, jsvm::Value array, std::vector<T> &result)
-    {
-        bool isArray{false};
-        jsvm::IsArray(env, array, isArray);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        if (isArray)
-        {
-            result.clear();
-            uint32_t length{0};
-            jsvm::GetArrayLength(env, array, &length) DEBUG_CHECK(status == jsvm::Status::OK);
-            result.reserve(length);
-            for (int i = 0; i < length; i++)
-            {
-                jsvm::Value element;
-                jsvm::GetElement(env, array, i, &element);
-                DEBUG_CHECK(status == jsvm::Status::OK);
-                result.push_back(Converter<T>::ToCpp(element));
-            }
-        }
-    }
-};
+#if 0
 template <typename T> class __JsSet
 {
   public:
@@ -670,6 +572,7 @@ template <typename T, typename R> class __JsMap
         }
     }
 };
+#endif
 /*class __JsByteArray
 {
   public:
@@ -729,6 +632,7 @@ template <typename T> class Converter<std::vector<T *>>
         return p_vl->IsArray();
     }*/
 };
+#if 0
 template <typename T> class Converter<std::unordered_set<T>>
 {
   public:
@@ -770,7 +674,7 @@ template <typename T, typename R> class Converter<const std::unordered_map<T, R>
         return Undefined(v8::Isolate::GetCurrent());
     }
 };
-
+#endif
 } // namespace jsbind
 
 #endif
