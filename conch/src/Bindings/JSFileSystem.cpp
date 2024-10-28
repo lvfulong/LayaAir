@@ -48,7 +48,8 @@ namespace laya
 			retobj->Set(context, Js_Str(pIso, "size"), v8::Number::New(pIso, sz));
 			retobj->Set(context, Js_Str(pIso, "mtime"), v8::Date::New(context, (double)(wtime*1000)).ToLocalChecked());
 			return retobj;
-#elif defined(JS_JSC)
+#endif
+#if 0
             JSContextRef ctx = laya::__TlsData::GetInstance()->GetCurContext();
 			JSObjectRef retobj = JSObjectMake(ctx, nullptr, nullptr);
 			JSObjectSetProperty(ctx, retobj, JSStringCreateWithUTF8CString("isDirectory"), JSValueMakeBoolean(ctx, isDir), kJSPropertyAttributeNone, nullptr);

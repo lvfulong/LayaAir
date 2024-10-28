@@ -7,7 +7,55 @@
 namespace jsbind
 {
 
+namespace internal
+{
 
+template <typename Func> struct function_traits;
+
+template <typename R, typename... Args> struct function_traits<R(Args...)>
+{
+    using return_type = R;
+    using arguments = std::tuple<Args...>;
+};
+
+// function pointer
+template <typename R, typename... Args> struct function_traits<R (*)(Args...)> : function_traits<R(Args...)>
+{
+};
+
+// member function pointer
+template <typename C, typename R, typename... Args>
+struct function_traits<R (C::*)(Args...)> : function_traits<R(C &, Args...)>
+{
+};
+
+// const member function pointer
+template <typename C, typename R, typename... Args>
+struct function_traits<R (C::*)(Args...) const> : function_traits<R(const C &, Args...)>
+{
+};
+
+// volatile member function pointer
+template <typename C, typename R, typename... Args>
+struct function_traits<R (C::*)(Args...) volatile> : function_traits<R(volatile C &, Args...)>
+{
+};
+
+// const volatile member function pointer
+template <typename C, typename R, typename... Args>
+struct function_traits<R (C::*)(Args...) const volatile> : function_traits<R(const volatile C &, Args...)>
+{
+};
+
+// member object pointer
+template <typename C, typename R> struct function_traits<R(C::*)> : function_traits<R(C &)>
+{
+};
+
+///////////////////////////////////////////////////////////////////////////
+
+template <typename F> using is_void_return = std::is_same<void, typename function_traits<F>::return_type>;
+} // namespace internal
 #define ABORT(msg)                                                                                                     \
     do                                                                                                                 \
     {                                                                                                                  \
@@ -29,9 +77,9 @@ namespace jsbind
 #define DEBUG_CHECK(assertion)
 
 #endif
-    template <class T> inline void UNUSED(T const&)
-    {
-    }
+template <class T> inline void UNUSED(T const &)
+{
+}
 template <class G, class S> struct PropFuncInfo
 {
     G fGet;
@@ -44,7 +92,7 @@ template <class G, class S> struct PropFuncInfo
     PropFuncInfo(G g)
     {
         fGet = g;
-        fSet = 0; 
+        fSet = 0;
     }
 };
 
@@ -115,7 +163,6 @@ template <> struct is_string<wchar_t const *> : std::true_type
 {
 };
 
-
 template <typename T, typename U = void> struct is_sequence_impl : std::false_type
 {
 };
@@ -133,21 +180,21 @@ template <typename T> using is_sequence = is_sequence_impl<T>;
 
 class type_info
 {
-public:
+  public:
     constexpr std::string_view name() const
     {
         return name_;
     }
-    constexpr bool operator==(type_info const& other) const
+    constexpr bool operator==(type_info const &other) const
     {
         return name_ == other.name_;
     }
-    constexpr bool operator!=(type_info const& other) const
+    constexpr bool operator!=(type_info const &other) const
     {
         return name_ != other.name_;
     }
 
-private:
+  private:
     template <typename T> constexpr friend type_info type_id();
 
     constexpr explicit type_info(std::string_view name) : name_(name)
@@ -163,16 +210,16 @@ template <typename T> constexpr type_info type_id()
 {
 #if defined(_MSC_VER) && !defined(__clang__)
     std::string_view name = __FUNCSIG__;
-    const std::initializer_list<std::string_view> all_prefixes{ "type_id<", "struct ", "class " };
-    const std::initializer_list<std::string_view> any_suffixes{ ">" };
+    const std::initializer_list<std::string_view> all_prefixes{"type_id<", "struct ", "class "};
+    const std::initializer_list<std::string_view> any_suffixes{">"};
 #elif defined(__clang__) || defined(__GNUC__)
     std::string_view name = __PRETTY_FUNCTION__;
-    const std::initializer_list<std::string_view> all_prefixes{ "T = " };
-    const std::initializer_list<std::string_view> any_suffixes{ ";", "]" };
+    const std::initializer_list<std::string_view> all_prefixes{"T = "};
+    const std::initializer_list<std::string_view> any_suffixes{";", "]"};
 #else
 #error "Unknown compiler"
 #endif
-    for (auto&& prefix : all_prefixes)
+    for (auto &&prefix : all_prefixes)
     {
         const auto p = name.find(prefix);
         if (p != name.npos)
@@ -181,7 +228,7 @@ template <typename T> constexpr type_info type_id()
         }
     }
 
-    for (auto&& suffix : any_suffixes)
+    for (auto &&suffix : any_suffixes)
     {
         const auto p = name.rfind(suffix);
         if (p != name.npos)
@@ -193,6 +240,6 @@ template <typename T> constexpr type_info type_id()
 
     return type_info(name);
 }
-} // namespace laya
+} // namespace jsbind
 
 #endif

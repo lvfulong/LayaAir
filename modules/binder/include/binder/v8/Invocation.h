@@ -6,7 +6,7 @@
 #include <map>
 #include <string>
 #include <type_traits>
-#include <utils/FunctionTraits.h>
+
 
 namespace jsbind
 {
@@ -21,59 +21,58 @@ T *tuple_call_class_constructor(jsvm::Env env, jsvm::CallbackInfo info, std::ind
     jsvm::Value argv[128];
     jsvm::Value _this;
     void *data;
-    GetCbInfo(env, info, &argc, argv, &_this, &data);
+    jsvm::GetCbInfo(env, info, &argc, argv, &_this, &data);
 
-    return new T(::laya::Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(env, argv[Seq])...);
+    return new T(Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(env, argv[Seq])...);
 }
 
 template <typename Tuple, typename Func, size_t... Seq>
-typename std::enable_if<!laya::internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call(
+typename std::enable_if<!internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call(
     Func func, jsvm::Value *args, std::index_sequence<Seq...>)
 {
-    return laya::Converter<typename function_traits<Func>::return_type>::ToJs(
-        func(laya::Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...));
+    return Converter<typename function_traits<Func>::return_type>::ToJs(
+        func( Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...));
 }
 template <typename Tuple, typename Func, size_t... Seq>
-typename std::enable_if<laya::internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call(
+typename std::enable_if<internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call(
     Func func, jsvm::Value *args, std::index_sequence<Seq...>)
 {
-    func(laya::Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...);
+    func( Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...);
     return nullptr;
 }
 template <typename ClassType, typename Tuple, typename Func, size_t... Seq>
-typename std::enable_if<!laya::internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call_with_this(
+typename std::enable_if<!internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call_with_this(
     ClassType *thisObject, Func func, jsvm::Value *args, std::index_sequence<Seq...>)
 {
-    returnlaya::Converter<typename function_traits<Func>::return_type>::ToJs(
-        (thisObject->*func)(laya::Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...));
+    return Converter<typename function_traits<Func>::return_type>::ToJs((thisObject->*func)(Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...));
 }
 template <typename ClassType, typename Tuple, typename Func, size_t... Seq>
-typename std::enable_if<laya::internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call_with_this(
+typename std::enable_if<internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call_with_this(
     ClassType *thisObject, Func func, jsvm::Value *args, std::index_sequence<Seq...>)
 {
-    (thisObject->*func)(laya::Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...);
+    (thisObject->*func)( Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...);
     return nullptr;
 }
 template <typename ClassType, typename Tuple, typename Func, size_t... Seq>
-typename std::enable_if<!laya::internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call_optional_override(
+typename std::enable_if<!internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call_optional_override(
     ClassType *thisObject, Func func, jsvm::Value *args, std::index_sequence<Seq...>)
 {
-    returnlaya::Converter<typename function_traits<Func>::return_type>::ToJs(
-        func(*thisObject, laya::Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...));
+    return Converter<typename function_traits<Func>::return_type>::ToJs(
+        func(*thisObject, Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...));
 }
 template <typename ClassType, typename Tuple, typename Func, size_t... Seq>
-typename std::enable_if<laya::internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call_optional_override(
+typename std::enable_if<internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call_optional_override(
     ClassType *thisObject, Func func, jsvm::Value *args, std::index_sequence<Seq...>)
 {
-    func(*thisObject, laya::Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...);
+    func(*thisObject, Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...);
     return nullptr;
 }
 
 template <typename ReturnType, typename... Args> jsvm::Value InvokeMethodStatic(jsvm::Env env, jsvm::CallbackInfo info)
 {
 
-    size_t argc = sizeof...(Args);
-    jsvm::Value argv[sizeof...(Args)];
+    size_t argc;
+    jsvm::Value argv[sizeof...(Args) + 1];
     jsvm::Value _this;
     void *data;
     jsvm::GetCbInfo(env, info, &argc, argv, &_this, &data);
@@ -118,14 +117,14 @@ void InvokeGlobalMethodOptionalOverride(jsvm::Env env, jsvm::CallbackInfo info)
 template <typename ClassType, typename ReturnType, typename... Args>
 jsvm::Value InvokeClassMethod(jsvm::Env env, jsvm::CallbackInfo info)
 {
-    size_t argc = sizeof...(Args);
-    jsvm::Value argv[sizeof...(Args)];
+    size_t argc;
+    jsvm::Value argv[sizeof...(Args) + 1];
     jsvm::Value _this;
     void *data;
     jsvm::GetCbInfo(env, info, &argc, argv, &_this, &data);
     // NODE_API_ASSERT(env, argc >= 1, "Wrong number of arguments");
     ClassType *pObj;
-    jsvm::Unwrap(env, wrapped, reinterpret_cast<void **>(&pObj));
+    jsvm::Unwrap(env, _this, reinterpret_cast<void **>(&pObj));
     // void *data = args.Data().As<v8::External>()->Value();
     typedef ReturnType (ClassType::*FunctorType)(Args...);
     FuncInfo<FunctorType> *funcInfo = (FuncInfo<FunctorType> *)data;
@@ -138,15 +137,15 @@ jsvm::Value InvokeClassMethod(jsvm::Env env, jsvm::CallbackInfo info)
             v8::String::NewFromUtf8(args.GetIsolate(), "Not enough arguments for function.").ToLocalChecked());
         return nullptr;
     }*/
-    return tuple_call_with_this<ClassType, std::tuple<Args...>>(pObj, funcInfo->func, args,
+    return tuple_call_with_this<ClassType, std::tuple<Args...>>(pObj, funcInfo->func, argv,
                                                                 std::make_index_sequence<sizeof...(Args)>());
 }
 
 template <typename ClassType, typename ReturnType, typename... Args>
 jsvm::Value InvokeClassMethodOptionalOverride(jsvm::Env env, jsvm::CallbackInfo info)
 {
-    size_t argc = sizeof...(Args);
-    jsvm::Value argv[sizeof...(Args)];
+    size_t argc;
+    jsvm::Value argv[sizeof...(Args) + 1];
     jsvm::Value _this;
     void *data;
     jsvm::GetCbInfo(env, info, &argc, argv, &_this, &data);
@@ -183,12 +182,12 @@ template <typename ClassType, typename PropertyType> jsvm::Value InvokeClassGett
 {
     // size_t argc = 1;
     // napi_value args[1];
-    napi_value js_this;
+    jsvm::Value js_this;
     void *data;
     jsvm::GetCbInfo(env, info, nullptr, nullptr, &js_this, &data);
     // NODE_API_ASSERT(env, argc >= 1, "Wrong number of arguments");
     ClassType *pObj;
-    jsvm::Unwrap(env, wrapped, reinterpret_cast<void **>(&pObj));
+    jsvm::Unwrap(env, js_this, reinterpret_cast<void **>(&pObj));
 
     auto funcInfo = (PropFuncInfo<PropertyType (ClassType::*)(), void (ClassType::*)(PropertyType data)> *)data;
 
@@ -203,30 +202,30 @@ jsvm::Value InvokeClassGetterOptionalOverride(jsvm::Env env, jsvm::CallbackInfo 
 
     // size_t argc = 1;
     // napi_value args[1];
-    napi_value js_this;
+    jsvm::Value js_this;
     void *data;
     jsvm::GetCbInfo(env, info, nullptr, nullptr, &js_this, &data);
     // NODE_API_ASSERT(env, argc >= 1, "Wrong number of arguments");
     ClassType *pObj;
-    jsvm::Unwrap(env, wrapped, reinterpret_cast<void **>(&pObj));
+    jsvm::Unwrap(env, js_this, reinterpret_cast<void **>(&pObj));
 
     auto funcInfo = (PropFuncInfo<PropertyType (*)(ClassType &), void (*)(ClassType &, PropertyType data)> *)data;
     // v8::Local<v8::Object> pthis = info.This();
     // ClassType *pObj = (ClassType *)pthis->GetAlignedPointerFromInternalField(0);
-    return laya::Converter<PropertyType>::ToJs((*funcInfo->fGet)(*pObj));
+    return Converter<PropertyType>::ToJs((*funcInfo->fGet)(*pObj));
 }
 
 template <typename ClassType, typename PropertyType> jsvm::Value InvokeClassSetter(jsvm::Env env, jsvm::CallbackInfo info)
 {
 
-    size_t argc = 1;
-    napi_value args[1];
-    napi_value js_this;
+    size_t argc;
+    jsvm::Value args[1];
+    jsvm::Value js_this;
     void *data;
     jsvm::GetCbInfo(env, info, &argc, args, &js_this, &data);
     // NODE_API_ASSERT(env, argc >= 1, "Wrong number of arguments");
     ClassType *pObj;
-    jsvm::Unwrap(env, wrapped, reinterpret_cast<void **>(&pObj));
+    jsvm::Unwrap(env, js_this, reinterpret_cast<void **>(&pObj));
 
     auto funcInfo = (PropFuncInfo<PropertyType (ClassType::*)(), void (ClassType::*)(PropertyType data)> *)data;
 
@@ -237,14 +236,14 @@ template <typename ClassType, typename PropertyType> jsvm::Value InvokeClassSett
 template <typename ClassType, typename PropertyType>
 jsvm::Value InvokeClassSetterOptionalOverride(jsvm::Env env, jsvm::CallbackInfo info)
 {
-    size_t argc = 1;
-    napi_value args[1];
-    napi_value js_this;
+    size_t argc;
+    jsvm::Value args[1];
+    jsvm::Value js_this;
     void *data;
-    jsvm::GetCbInfo(env, info, argc, args, &js_this, &data);
+    jsvm::GetCbInfo(env, info, &argc, args, &js_this, &data);
     // NODE_API_ASSERT(env, argc >= 1, "Wrong number of arguments");
     ClassType *pObj;
-    jsvm::Unwrap(env, wrapped, reinterpret_cast<void **>(&pObj));
+    jsvm::Unwrap(env, js_this, reinterpret_cast<void **>(&pObj));
 
     auto funcInfo = (PropFuncInfo<PropertyType (*)(ClassType &), void (*)(ClassType &, PropertyType data)> *)data;
 
@@ -257,27 +256,23 @@ template <typename PropertyType> jsvm::Value InvokeClassGetterStatic(jsvm::Env e
 
     // size_t argc = 1;
     // napi_value args[1];
-    napi_value js_this;
+    jsvm::Value js_this;
     void *data;
     jsvm::GetCbInfo(env, info, nullptr, nullptr, &js_this, &data);
     // NODE_API_ASSERT(env, argc >= 1, "Wrong number of arguments");
-    ClassType *pObj;
-    jsvm::Unwrap(env, wrapped, reinterpret_cast<void **>(&pObj));
 
     auto funcInfo = (PropFuncInfo<PropertyType (*)(), void (*)(PropertyType data)> *)data;
-    return laya::Converter<PropertyType>::ToJs((funcInfo->fGet)());
+    return Converter<PropertyType>::ToJs((funcInfo->fGet)());
 }
 
 template <typename PropertyType> jsvm::Value InvokeClassSetterStatic(jsvm::Env env, jsvm::CallbackInfo info)
 {
-    size_t argc = 1;
-    napi_value args[1];
-    napi_value js_this;
+    size_t argc;
+    jsvm::Value args[1];
+    jsvm::Value js_this;
     void *data;
-    jsvm::GetCbInfo(env, info, argc, args, &js_this, &data);
+    jsvm::GetCbInfo(env, info, &argc, args, &js_this, &data);
     // NODE_API_ASSERT(env, argc >= 1, "Wrong number of arguments");
-    ClassType *pObj;
-    jsvm::Unwrap(env, wrapped, reinterpret_cast<void **>(&pObj));
 
     auto funcInfo = (PropFuncInfo<PropertyType (*)(), void (*)(PropertyType data)> *)data;
 
@@ -288,12 +283,12 @@ template <typename PropertyType> jsvm::Value InvokeClassSetterStatic(jsvm::Env e
 template <typename ClassType, typename PropertyType>
 jsvm::Value InvokeClassGetterField(jsvm::Env env, jsvm::CallbackInfo info)
 {
-    napi_value js_this;
+    jsvm::Value js_this;
     void *data;
     jsvm::GetCbInfo(env, info, nullptr, nullptr, &js_this, &data);
     // NODE_API_ASSERT(env, argc == 0, "Wrong number of arguments");
     ClassType *pObj;
-    jsvm::Unwrap(env, wrapped, reinterpret_cast<void **>(&pObj));
+    jsvm::Unwrap(env, js_this, reinterpret_cast<void **>(&pObj));
     auto funcInfo = (FuncInfo<PropertyType ClassType::*> *)data;
 
     return Converter<PropertyType>::ToJs(pObj->*(funcInfo->func));
@@ -302,14 +297,14 @@ jsvm::Value InvokeClassGetterField(jsvm::Env env, jsvm::CallbackInfo info)
 template <typename ClassType, typename PropertyType>
 jsvm::Value InvokeClassSetterField(jsvm::Env env, jsvm::CallbackInfo info)
 {
-    size_t argc = 1;
-    napi_value args[1];
-    napi_value js_this;
+    size_t argc;
+    jsvm::Value args[1];
+    jsvm::Value js_this;
     void *data;
-    jsvm::GetCbInfo(env, info, argc, args, &js_this, &data);
+    jsvm::GetCbInfo(env, info, &argc, args, &js_this, &data);
     // NODE_API_ASSERT(env, argc >= 1, "Wrong number of arguments");
     ClassType *pObj;
-    jsvm::Unwrap(env, wrapped, reinterpret_cast<void **>(&pObj));
+    jsvm::Unwrap(env, js_this, reinterpret_cast<void **>(&pObj));
     auto funcInfo = (FuncInfo<PropertyType ClassType::*> *)data;
     (pObj->*(funcInfo->func)) = (Converter<PropertyType>::ToCpp(args[0]));
     return NULL;

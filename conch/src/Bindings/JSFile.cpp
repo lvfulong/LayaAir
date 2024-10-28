@@ -52,7 +52,7 @@ namespace laya
     }
     JsValue JsFile::GetlastModifiedDate()
     {
-        return (Converter<int64_t>::ToJsDate(lastModifiedDate));
+        return jsbind::Date::Make(lastModifiedDate).getHandle();
     }
     const char *JsFile::GetName()
     {

@@ -89,7 +89,7 @@ namespace laya
 
 		static void computeSubSkinnedDataForNative(JSValueAsParam inverseBindPosesBuffer, JSValueAsParam boneIndices, JSValueAsParam subData, JSValueAsParam skinnedMatrixCaches, JSValueAsParam bonesTransform, JSValueAsParam skinnedDataLoopMarks, JSValueAsParam skinnedData);
 
-        static bool registerFont(const std::string family, jsbind::Local pathOrArrayBuffer);
+        static bool registerFont(const std::string& family, jsbind::Local pathOrArrayBuffer);
 
         static void downloadFile(const std::string& url, JSValueAsParam onProgress, JSValueAsParam onComplete, JSValueAsParam onError);
         static void setDownloader(JSValueAsParam obj);

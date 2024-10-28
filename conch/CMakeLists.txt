@@ -39,6 +39,18 @@ if(CONCH_USE_OLD_CURL_DOWNLOAD)
 endif()
 
 
+if(CONCH_USE_DCC)
+	list(APPEND CONCH_SRC
+
+	src/downloadCache/DCC1/JCFileTable.cpp
+	src/downloadCache/DCC1/JCServerFileCache.h
+	src/downloadCache/DCC1/JCServerFileCache.cpp
+	src/downloadCache/DCC1/JCFileResDCC.cpp
+	src/downloadCache/DCC2/JCFileResDCC2.cpp
+	src/downloadCache/DCC2/JSDownloader.cpp
+	src/downloadCache/DCC2/DirectDownloader.cpp)
+endif()
+
 list(APPEND CONCH_SRC
 
 	# 分开数据库类core/Math 和相关方法类core/Util
@@ -223,13 +235,6 @@ list(APPEND CONCH_SRC
 
 	src/Audio/JCAudioManager.cpp
 	src/Audio/JCAudioManager.h
-	src/downloadCache/DCC1/JCFileTable.cpp
-	src/downloadCache/DCC1/JCServerFileCache.h
-	src/downloadCache/DCC1/JCServerFileCache.cpp
-	src/downloadCache/DCC1/JCFileResDCC.cpp
-	src/downloadCache/DCC2/JCFileResDCC2.cpp
-	src/downloadCache/DCC2/JSDownloader.cpp
-	src/downloadCache/DCC2/DirectDownloader.cpp
 	src/downloadMgr/JCDownloadMgr.h
 	src/downloadMgr/JCDownloadMgr.cpp
 	src/downloadMgr/JCHttpHeader.h

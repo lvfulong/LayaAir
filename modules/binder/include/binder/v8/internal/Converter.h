@@ -48,11 +48,11 @@ template <typename T> class value_object;
 template <typename T> class Converter<T, std::enable_if_t<internal::is_value_object<T>::value>>
 {
   public:
-    static v8::Local<v8::Value> ToJs(T value, bool callDestructor = true)
+    static jsvm::Value ToJs(T value, bool callDestructor = true)
     {
         return internal::convert_value_object_to_v8(value);
     }
-    static T ToCpp(v8::Local<v8::Value> value)
+    static T ToCpp(jsvm::Value value)
     {
         return internal::convert_value_object_from_v8<T>(value);
     }
@@ -61,11 +61,11 @@ template <typename T> class Converter<T, std::enable_if_t<internal::is_value_obj
 template <typename T> class Converter<T *, std::enable_if_t<internal::is_value_object<T>::value>>
 {
   public:
-    static v8::Local<v8::Value> ToJs(T *value, bool callDestructor = true)
+    static jsvm::Value ToJs(T *value, bool callDestructor = true)
     {
         return internal::convert_value_object_to_v8(value);
     }
-    static T ToCpp(v8::Local<v8::Value> value)
+    static T ToCpp(jsvm::Value value)
     {
         return internal::convert_value_object_from_v8<T>(value);
     }
@@ -76,22 +76,13 @@ template <typename T> class Converter<T, std::enable_if_t<std::is_enum<T>::value
   public:
     static T ToCpp(jsvm::Value value)
     {
-        GET_ENV
-        int32_t result;
-        jsvm::Status status;
-        status = jsvm::GetValueInt32(env, value ,&result);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        return static_cast<T>(result);
+        return static_cast<T>(internal::getInt32(value));
     }
     static jsvm::Value ToJs(T value, bool callDestructor = true)
     {
-        GET_ENV
-            jsvm::Value result;
-        jsvm::Status status;
-         status = jsvm::CreateInt32(env, static_cast<int32_t>(value) , &result);
-        DEBUG_CHECK(status == jsvm::Status::OK);
+        return internal::makeInt32(static_cast<int32_t>(value));
     }
-    /*static bool is(v8::Local<v8::Value> p_vl)
+    /*static bool is(jsvm::Value value)
     {
         return p_vl->IsInt32();
     }*/
@@ -108,10 +99,10 @@ template <typename T> class Converter<T, std::enable_if_t<internal::is_wrapped_c
 
     static T &ToCpp(jsvm::Value value)
     {
-        //assert(!value.IsEmpty() && value->IsObject());
+        // assert(!value.IsEmpty() && value->IsObject());
         GET_ENV
-        T* obj;
-        jsvm::Unwrap(env, value, reinterpret_cast<void**>(&obj));
+        T *obj;
+        jsvm::Unwrap(env, value, reinterpret_cast<void **>(&obj));
         return *obj;
     }
     static bool is(jsvm::Value value)
@@ -134,8 +125,8 @@ template <typename T> class Converter<T *, std::enable_if_t<internal::is_wrapped
     static T *ToCpp(jsvm::Value value)
     {
         GET_ENV
-        T* obj;
-        jsvm::Unwrap(env, value, reinterpret_cast<void**>(&obj));
+        T *obj;
+        jsvm::Unwrap(env, value, reinterpret_cast<void **>(&obj));
         return obj;
     }
     static bool is(jsvm::Value value)
@@ -157,26 +148,13 @@ template <> class Converter<int32_t>
   public:
     static int32_t ToCpp(jsvm::Value value)
     {
-        GET_ENV
-        int32_t result;
-        jsvm::Status status;
-        status = jsvm::GetValueInt32(env, value, &result);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        return result;
+        return internal::getInt32(value);
     }
     static jsvm::Value ToJs(int32_t value, bool callDestructor = true)
     {
-        GET_ENV
-        jsvm::Value result;
-        jsvm::Status status;
-        status = jsvm::CreateInt32(env, value, &result);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        return result;
+        return internal::makeInt32(value);
     }
-    /*static v8::Local<v8::Value> ToJsDate(int32_t p_vl)
-    {
-        return v8::Date::New(v8::Isolate::GetCurrent()->GetCurrentContext(), (double)p_vl).ToLocalChecked();
-    }
+    /*
     static bool is(Env env, Value value)
     {
         return p_vl->IsInt32();
@@ -187,30 +165,13 @@ template <> class Converter<int32_t *>
   public:
     static int32_t ToCpp(jsvm::Value value)
     {
-        GET_ENV
-        int32_t result;
-        jsvm::Status status;
-        jsvm::GetValueInt32(env, value, &result);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        return result;
+        return internal::getInt32(value);
     }
     static jsvm::Value ToJs(int32_t *value, bool callDestructor = true)
     {
-        GET_ENV
-        if (value == nullptr)
-        {
-            internal::makeNull();
-        }
-        jsvm::Value result;
-        jsvm::Status status;
-        status = jsvm::CreateInt32(env, *value, &result);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        return result;
+        return internal::makeInt32(*value);
     }
-    /*static v8::Local<v8::Value> ToJsDate(int32_t* p_vl)
-    {
-        return v8::Date::New(v8::Isolate::GetCurrent()->GetCurrentContext(), (double)(*p_vl)).ToLocalChecked();
-    }
+    /*
     static bool is(v8::Local<v8::Value> p_vl)
     {
         return p_vl->IsInt32();
@@ -423,11 +384,11 @@ template <> class Converter<bool>
 template <> class Converter<bool *>
 {
   public:
-    static bool ToCpp( jsvm::Value value)
+    static bool ToCpp(jsvm::Value value)
     {
         return internal::getBool(value);
     }
-    static jsvm::Value ToJs( bool *value, bool callDestructor = true)
+    static jsvm::Value ToJs(bool *value, bool callDestructor = true)
     {
         if (value == nullptr)
         {
@@ -441,23 +402,23 @@ template <> class Converter<bool *>
     }
 };
 
-/*template <> class Converter<float>
+template <> class Converter<float>
 {
   public:
-    static float ToCpp(v8::Local<v8::Value> p_vl)
+    static float ToCpp(jsvm::Value value)
     {
-        return static_cast<float>(p_vl->NumberValue(v8::Isolate::GetCurrent()->GetCurrentContext()).ToChecked());
-        // return static_cast<float>(val.As<Number>()->Value());
+        return static_cast<float>(internal::getDouble(value));
     }
-    static v8::Local<v8::Value> ToJs(float p_vl, bool callDestructor = true)
+    static jsvm::Value ToJs(float value, bool callDestructor = true)
     {
-        return v8::Number::New(v8::Isolate::GetCurrent(), p_vl);
+        return internal::makeDouble(static_cast<float>(value));
     }
-    static bool is(v8::Local<v8::Value> p_vl)
+    /*static bool is(jsvm::Value value)
     {
         return p_vl->IsNumber();
-    }
+    }*/
 };
+/*
 template <> class Converter<float *>
 {
   public:
@@ -498,7 +459,7 @@ template <> class Converter<double>
 };
 template <> class Converter<ArrayBuffer>
 {
-public:
+  public:
     static ArrayBuffer ToCpp(jsvm::Value value)
     {
         return ArrayBuffer::Make(value);

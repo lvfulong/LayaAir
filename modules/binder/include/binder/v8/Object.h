@@ -27,7 +27,7 @@ bool get_option(v8::Isolate *isolate, v8::Local<v8::Object> options, std::string
     {
         return false;
     }
-    value = laya::Converter<T>::ToCpp(val);
+    value = Converter<T>::ToCpp(val);
     return true;
 }
 
@@ -94,7 +94,7 @@ template <typename T> class value_object : public value_object_base<T>
         // Field field = reinterpret_cast<Field>(pfield);
         using FieldType = typename internal::function_traits<Field>::return_type;
         // obj->*field = internal::from_v8<FieldType>(value);
-        t->*field = laya::Converter<FieldType>::ToCpp(value);
+        t->*field = Converter<FieldType>::ToCpp(value);
     }
 
     template <typename Field> static v8::Local<v8::Value> field_to_v8(const void *obj, void *pfield)

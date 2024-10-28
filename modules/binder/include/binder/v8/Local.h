@@ -123,7 +123,11 @@ class Local
         DEBUG_CHECK(isValid());
         return internal::isDataView(this->handle_);
     }
-
+    inline bool isDate() const
+    {
+        DEBUG_CHECK(isValid());
+        return internal::isDate(this->handle_);
+    }
     template <typename T> T as() const
     {
         DEBUG_CHECK(isValid());

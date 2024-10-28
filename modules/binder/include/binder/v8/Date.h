@@ -20,7 +20,12 @@ class Date
     }
 
   private:
+    Date() = default;
+    Date(jsvm::Value date, double value) : handle_(date), value_(value)
+    {
+    }
     jsvm::Value handle_ = nullptr;
+    double value_;
 };
 
 } // namespace jsbind

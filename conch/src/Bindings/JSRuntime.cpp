@@ -196,7 +196,9 @@ namespace laya
     }
     JsValue JSRuntime::strTobufer(const char* s)
     {
-        return createJSABAligned((char*)s, (strlen(s)+1));
+        int size = (strlen(s)+1)
+        int alignedSize = (size + 3) & 0xfffffffc;
+        return createJSABAligned((char*)s, alignedSize);
     }
     const char* JSRuntime::getPresetUrl()
     {
@@ -463,7 +465,7 @@ namespace laya
         LOGI("registerFont failed");
         return false;
     }
-
+#if defined(USE_DCC)
     void onProgJS(unsigned int now, unsigned int total, float speed, std::shared_ptr<v8::Persistent<v8::Value>>& jsOnProg) {
         auto isolate = v8::Isolate::GetCurrent();
         v8::HandleScope handleScope(isolate); // 创建 HandleScope
@@ -619,6 +621,7 @@ namespace laya
         JCFileResManager* pfsMgr = JCConch::s_pScriptRuntime->m_pFileResMgr;
         pfsMgr->m_pDownloader = jsdownloader;
     }
+#endif
     //todo 刷新生命周期
     std::shared_ptr<int> callbackRef(new int(1));
     JsValue JSRuntime::postAsyncMessage(const std::string &eventName, const std::string &data)
@@ -669,8 +672,10 @@ namespace laya
 		class_binding.class_function("exit", &JSRuntime::exit);
         class_binding.class_function("createArrayBufferRef", &JSRuntime::createArrayBufferRef);
         class_binding.class_function("registerFont", &JSRuntime::registerFont);
+#if defined(USE_DCC)
         class_binding.class_function("downloadNoCache", &JSRuntime::downloadFile);
         class_binding.class_function("setDownloader", &JSRuntime::setDownloader);
+#endif
         //class_property必须在下面，否则导不出class_function
         class_binding.class_property("onunhandledrejection", &JSRuntime::getOnUnhandledRejection, &JSRuntime::setOnUnhandledRejection);
 		class_binding.class_property("safeInsetTop", &JSRuntime::getSafeInsetTop);

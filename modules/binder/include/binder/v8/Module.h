@@ -74,7 +74,7 @@ class Module
 #endif
         v8::Local<v8::Value> data = v8::External::New(isolate_, info);
 
-        auto ft = v8::FunctionTemplate::New(isolate_, laya::internal::InvokeFunction<ReturnType, Args...>, data);
+        auto ft = v8::FunctionTemplate::New(isolate_, internal::InvokeFunction<ReturnType, Args...>, data);
         getLocal()->Set(isolate_, name.data(), ft);
         return *this;
     }

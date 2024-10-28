@@ -79,7 +79,7 @@ namespace laya
     {
         if (!m_bCreateChilds)
         {
-            JsValue pJSValue = JSP_TO_JS(std::vector<JSXmlNode*>, m_childNodes);
+            JsValue pJSValue = jsbind::Local::Make<std::vector<JSXmlNode*>>(m_childNodes);
             m_jsChildNodes = jsbind::Persistent(pJSValue);
             m_bCreateChilds = true;
         }
@@ -90,7 +90,7 @@ namespace laya
         if (!m_bCreateAttribs)
         {
             m_bCreateAttribs = true;
-            JsValue pJSValue = JSP_TO_JS(std::vector<JSXmlAttr*>, m_attributes);
+            JsValue pJSValue = jsbind::Local::Make<std::vector<JSXmlAttr*>>(m_attributes);
             m_jsAttribs = jsbind::Persistent(pJSValue);
         }
         return m_jsAttribs.getHandle();

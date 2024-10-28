@@ -47,6 +47,50 @@ static inline jsvm::Value makeDouble(double value)
     DEBUG_CHECK(status == jsvm::Status::OK);
     return result;
 }
+static inline int32_t getInt32(jsvm::Value value)
+{
+    GET_ENV
+    int32_t result;
+    jsvm::Status status;
+    status = jsvm::GetValueInt32(env, value, &result);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+    return result;
+}
+static inline jsvm::Value makeInt32(int32_t value)
+{
+    GET_ENV
+    jsvm::Value result;
+    jsvm::Status status;
+    status = jsvm::CreateInt32(env, value, &result);
+    return result;
+}
+static inline double getDate(jsvm::Value value)
+{
+    GET_ENV
+    double result;
+    jsvm::Status status;
+    status = jsvm::GetDateValue(env, value, &result);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+    return result;
+}
+static inline jsvm::Value makeDate(double value)
+{
+    GET_ENV
+    jsvm::Value result;
+    jsvm::Status status;
+    status = jsvm::CreateDate(env, value, &result);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+    return result;
+}
+static inline bool isDate(jsvm::Value value)
+{
+    GET_ENV
+    bool result;
+    jsvm::Status status;
+    status = jsvm::IsDate(env, value, &result);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+    return result;
+}
 static inline jsvm::Value makeNull()
 {
     GET_ENV
@@ -181,7 +225,12 @@ static inline bool isDataView(jsvm::Value value)
 // };
 } // namespace internal
 
-/*static v8::Local<v8::Value> ToJsDate(double p_vl)
+/*
+static v8::Local<v8::Value> ToJsDate(int32_t p_vl)
+    {
+        return v8::Date::New(v8::Isolate::GetCurrent()->GetCurrentContext(), (double)p_vl).ToLocalChecked();
+    }
+static v8::Local<v8::Value> ToJsDate(double p_vl)
 {
 
     return v8::Date::New(v8::Isolate::GetCurrent()->GetCurrentContext(), (double)p_vl).ToLocalChecked();
