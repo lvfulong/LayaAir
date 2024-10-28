@@ -8,8 +8,8 @@ namespace jsbind
 class Date
 {
   public:
-    static Date Make(jsvm::Value date);
-    static Date Make(double date);
+    static Date Make(jsvm::Value value);
+    static Date Make(double value);
     jsvm::Value getHandle() const
     {
         return handle_;

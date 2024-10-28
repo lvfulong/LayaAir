@@ -516,4 +516,20 @@ inline /*JSVM_EXTERN*/ Status IsError(Env env, Value value, bool *result)
 {
     return ConvertToStatus(napi_is_error(env, value, result));
 }
+inline /*JSVM_EXTERN*/ Status CreateStringUtf16(Env env, const char16_t* str, size_t length, Value* result)
+{
+    return ConvertToStatus(napi_create_string_utf16(env, str, length,  result));
+}
+inline /*JSVM_EXTERN*/ Status GetValueStringUtf16(Env env, Value value, char16_t* buf, size_t bufsize, size_t* result)
+{
+    return ConvertToStatus(napi_get_value_string_utf16(env,  value, buf,  bufsize,  result));
+}
+inline /*JSVM_EXTERN*/ Status CreateStringLatin1(Env env, const char* str, size_t length, Value* result)
+{
+    return ConvertToStatus(napi_create_string_latin1(env, str, length, result));
+}
+inline /*JSVM_EXTERN*/ Status GetValueStringLatin1(Env env, Value value, char* buf, size_t bufsize, size_t* result)
+{
+    return ConvertToStatus(napi_get_value_string_latin1(env, value, buf, bufsize, result));
+}
 } // namespace jsvm

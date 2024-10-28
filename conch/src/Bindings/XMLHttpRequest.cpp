@@ -150,7 +150,7 @@ namespace laya
     {
         if (m_funcOnStateChg.isValid()) 
         {
-            m_funcOnStateChg.call<void>(this, (int)m_state);
+            m_funcOnStateChg.call<XMLHttpRequest, void>(this, (int)m_state);
         }
     }
     void XMLHttpRequest::setRequestHeaderInternal(const std::string& name, const std::string& value) 
@@ -179,7 +179,7 @@ namespace laya
                 v8::HandleScope scope(v8::Isolate::GetCurrent());
 #endif
                 JsValue ab = jsbind::ArrayBuffer::MakeArrayBuffer((uint8_t*)p_Buff, p_nLen).getHandle();
-                pxhr->m_jsfunPostComplete.call<void>(pxhr, ab, (const char*)p_Buff);
+                pxhr->m_jsfunPostComplete.call<XMLHttpRequest,void>(pxhr, ab, (const char*)p_Buff);
             }
             else 
             {
@@ -191,18 +191,18 @@ namespace laya
                         strBuff.append(p_Buff + 3);
                     }
                     else strBuff = p_Buff;
-                    pxhr->m_jsfunPostComplete.call<void>(pxhr, strBuff);
+                    pxhr->m_jsfunPostComplete.call<XMLHttpRequest, void>(pxhr, strBuff);
                 }
                 else
                 {
-                    pxhr->m_jsfunPostComplete.call<void>(pxhr, "");
+                    pxhr->m_jsfunPostComplete.call<XMLHttpRequest, void>(pxhr, "");
                 }
             }
             delete[] p_Buff;
         }
         else 
         {
-            pxhr->m_jsfunPostError.call<void>(pxhr, -1);
+            pxhr->m_jsfunPostError.call<XMLHttpRequest, void>(pxhr, -1);
         }
         jsbind::makeWeak(pxhr);
     }
@@ -213,7 +213,7 @@ namespace laya
         //if (!pxhr->IsMyJsEnv())
         //    return;
        
-        pxhr->m_jsfunPostError.call<void>(pxhr, curle, httpresponse);
+        pxhr->m_jsfunPostError.call<XMLHttpRequest, void>(pxhr, curle, httpresponse);
         jsbind::makeWeak(pxhr);
     }
     void _onPostError(XMLHttpRequest* xhr, int curle, int httpresponse, std::weak_ptr<int> cbref) 
@@ -270,7 +270,7 @@ namespace laya
         if (!pdmgr) 
         {
             //error
-            m_jsfunPostError.call<void>(this, -1);
+            m_jsfunPostError.call<XMLHttpRequest, void>(this, -1);
             //if(p_funOnErr)p_funOnErr->Call(-1);
             return;
         }
@@ -366,7 +366,7 @@ namespace laya
             pdmgr->download(p_sUrl, 0, JCDownloadMgr::defProgressFunc, m_funcPostComplete,0, m_requestHeaders);
         }
     }
-    void XMLHttpRequest::JsPostData(const char* p_sUrl, JSValueAsParam arg1)
+    void XMLHttpRequest::JsPostData(const char* p_sUrl, jsbind::Local arg1)
     {
         JCDownloadMgr* pdmgr = JCDownloadMgr::getInstance();
         int nDataLen = 0;
@@ -377,17 +377,16 @@ namespace laya
         }
         else
         {
-            jsbind::Local value(arg1);
-            if (value.isString())
+            if (arg1.isString())
             {
-                std::string pData = jsbind::Converter<std::string>::ToCpp(arg1);
+                std::string pData = arg1.as<std::string>();
                 postData(pdmgr, p_sUrl, (char*)pData.c_str(), pData.length());
             }
             else
             {
                 int nABLen = 0;
                 char* pData = NULL;
-                bool bisab = extractJSAB(arg1, pData, nDataLen);
+                bool bisab = arg1.isArrayBuffer() || arg1.isArrayBufferView();// extractJSAB(arg1, pData, nDataLen);
                 if (bisab)
                 {
                     postData(pdmgr, p_sUrl, (char*)pData, nDataLen);

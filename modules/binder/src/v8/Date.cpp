@@ -3,12 +3,12 @@
 
 namespace jsbind
 {
-Date Date::Make(jsvm::Value date)
+Date Date::Make(jsvm::Value value)
 {
-    return Date(date, internal::getDate(date));
+    return Date(value, internal::getDate(value));
 }
-Date Date::DateMake(double date)
+Date Date::Make(double value)
 {
-    return Date(internal::makeDate(date), date);
+    return Date(internal::makeDate(value), value);
 }
 } // namespace jsbind

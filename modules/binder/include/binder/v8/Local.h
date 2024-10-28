@@ -27,13 +27,14 @@ class Local
     ReturnType call(ClassType *recv, const Args &...args)
     {
         GET_ENV
-
+        
         ClassRegistry<ClassType> &classRegistry =
             ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
         auto objectRegistry = classRegistry.getObjectRegistry(recv);
         DEBUG_CHECK(objectRegistry != nullptr);
-        svm::Value result_recv;
-        Status status = GetReferenceValue(env, objectRegistry, &result_recv);
+        jsvm::Value result_recv;   
+        jsvm::Status status;
+        status = jsvm::GetReferenceValue(env, objectRegistry, &result_recv);
         DEBUG_CHECK(status == jsvm::Status::OK);
 
         return call(env, result_recv, ... args)
@@ -132,13 +133,13 @@ class Local
     {
         DEBUG_CHECK(isValid());
         GET_ENV
-        return Converter<T>::ToCpp(env, this->handle_);
+        return Converter<T>::ToCpp(this->handle_);
     }
     template <typename T> bool is()
     {
         DEBUG_CHECK(isValid());
         GET_ENV
-        return Converter<T>::is(env);
+        return Converter<T>::is();
     }
     template <class T> static jsvm::Value Make(T t, bool callDestructor = true)
     {

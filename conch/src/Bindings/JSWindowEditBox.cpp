@@ -340,14 +340,14 @@ namespace laya
     {
         if (!callbackref.lock())
             return;
-        m_pJSFunctionOnInput.call<void>(this);
+        m_pJSFunctionOnInput.call<JSWindowEditBox, void>(this);
     }
 
     void JSWindowEditBox::onKeyDownCallJSFunction(int keyCode, std::weak_ptr<int> callbackref)
     {
         if (!callbackref.lock())
             return;
-        m_pJSFunctionOnKeydown.call<void>(this, keyCode);
+        m_pJSFunctionOnKeydown.call<JSWindowEditBox, void>(this, keyCode);
     }
 
     void JSWindowEditBox::setSelectionRange(int start, int end)

@@ -19,6 +19,7 @@ set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Value.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Utility.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Date.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/String.h
 )
 
 set(SOURCE
@@ -30,6 +31,7 @@ set(SOURCE
     src/v8/Local.cpp
     src/v8/Context.cpp
     src/v8/Date.cpp
+    src/v8/String.cpp
 )
 
 if(OS_WINDOWS AND USE_JS_V8_DEBUGGER)

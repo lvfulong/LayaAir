@@ -196,9 +196,9 @@ namespace laya
     }
     JsValue JSRuntime::strTobufer(const char* s)
     {
-        int size = (strlen(s)+1)
+        int size = (strlen(s) + 1);
         int alignedSize = (size + 3) & 0xfffffffc;
-        return createJSABAligned((char*)s, alignedSize);
+        return jsbind::ArrayBuffer::MakeArrayBuffer((uint8_t*)s, alignedSize).getHandle();
     }
     const char* JSRuntime::getPresetUrl()
     {

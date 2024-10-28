@@ -101,7 +101,7 @@ namespace laya
                     LOGE("error JSZip readFileAsText %s is not utf8 format", pName);
                 }
 #endif
-                return (JSP_TO_JS_STR(pBuff.get()));
+                jsbind::Local::Make<std::string>(pBuff.get());
             }
         }
         return jsbind::Local::MakeNull();
@@ -138,7 +138,7 @@ namespace laya
 			else 
             {
 				bool bDir = sb.name[strlen(sb.name) - 1] == '/';
-                callback.call<void>(this, i, sb.name, bDir, sb.size);
+                callback.call<JSZip, void>(this, i, sb.name, bDir, sb.size);
 			}
 		}
 		//zip_close(pZip);

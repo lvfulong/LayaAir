@@ -56,6 +56,69 @@ static inline int32_t getInt32(jsvm::Value value)
     DEBUG_CHECK(status == jsvm::Status::OK);
     return result;
 }
+static std::string getStringLatin1(jsvm::Value value)
+{
+    GET_ENV
+    size_t length = 0;
+    jsvm::Status status;
+    status = jsvm::GetValueStringLatin1(env, value, NULL, 0, &length);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+    std::string latin1Str(length, '\0');
+    status = jsvm::GetValueStringLatin1(env, value, latin1Str.data(), length + 1, &length);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+    return latin1Str;
+}
+static jsvm::Value makeStringLatin1(const std::string& value)
+{
+    GET_ENV
+    jsvm::Value result;
+    jsvm::Status status;
+    status = jsvm::CreateStringLatin1(env, value.c_str(), value.length(), &result);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+    return result;
+}
+static std::string getStringUtf8(jsvm::Value value)
+{
+    GET_ENV
+    size_t length = 0;
+    jsvm::Status status;
+    status = jsvm::GetValueStringUtf8(env, value, NULL, 0, &length);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+    std::string utf8str(length, '\0');
+    status = jsvm::GetValueStringUtf8(env, value, utf8str.data(), length + 1, &length);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+    return utf8str;
+}
+static jsvm::Value makeStringUtf8(const std::string& value)
+{
+    GET_ENV
+    jsvm::Value result;
+    jsvm::Status status;
+    status = jsvm::CreateStringUtf8(env, value.c_str(), value.length(), &result);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+    return result;
+}
+static std::u16string getStringUtf16(jsvm::Value value)
+{
+    GET_ENV
+    size_t length = 0;
+    jsvm::Status status;
+    status = jsvm::GetValueStringUtf16(env, value, NULL, 0, &length);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+    std::u16string utf16str(length, '\0');
+    status = jsvm::GetValueStringUtf16(env, value, utf16str.data(), length + 1, &length);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+    return utf16str;
+}
+static jsvm::Value makeStringUtf16(const std::u16string& value)
+{
+    GET_ENV
+    jsvm::Value result;
+    jsvm::Status status;
+    status = jsvm::CreateStringUtf16(env, value.c_str(), value.length(), &result);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+    return result;
+}
 static inline jsvm::Value makeInt32(int32_t value)
 {
     GET_ENV

@@ -472,10 +472,10 @@ template <typename ClassType> class class_
     {
         static_assert(std::is_base_of<BaseType, ClassType>::value, "Class BaseType should be base for class ClassType");
 
-        ClassRegistry<BaseType> &baseClassRegistry =
+        /*ClassRegistry<BaseType>& baseClassRegistry =
             ClassRegistryManager::getClassRegistry<BaseType>(type_id<BaseType>());
         classRegistry_.addBase(&baseClassRegistry);
-        classRegistry_.js_function_template()->Inherit(baseClassRegistry.class_function_template());
+        classRegistry_.js_function_template()->Inherit(baseClassRegistry.class_function_template());*/
         return *this;
     }
     void exports()

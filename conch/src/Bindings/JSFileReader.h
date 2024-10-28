@@ -91,7 +91,7 @@ namespace laya
         void OnStart()
         {
             readyState = LOADING;
-            onloadstart.call<void>(this);
+            onloadstart.call<JsFileReader, void>(this);
         }
         void OnProgress(size_t p_iSaved, size_t p_iTotal)
         {

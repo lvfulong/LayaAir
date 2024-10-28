@@ -29,7 +29,7 @@ namespace laya
 	{
 		if (!m_pJSFunctionRenderSubmit.isValid())
 		{
-			m_pJSFunctionRenderSubmit.call<void>(this);
+			m_pJSFunctionRenderSubmit.call<JSSubmitScene3D, void>(this);
 		}
 		return 1;
 	}

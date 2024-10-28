@@ -23,7 +23,7 @@ T *tuple_call_class_constructor(jsvm::Env env, jsvm::CallbackInfo info, std::ind
     void *data;
     jsvm::GetCbInfo(env, info, &argc, argv, &_this, &data);
 
-    return new T(Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(env, argv[Seq])...);
+    return new T(Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(argv[Seq])...);
 }
 
 template <typename Tuple, typename Func, size_t... Seq>
@@ -247,7 +247,7 @@ jsvm::Value InvokeClassSetterOptionalOverride(jsvm::Env env, jsvm::CallbackInfo 
 
     auto funcInfo = (PropFuncInfo<PropertyType (*)(ClassType &), void (*)(ClassType &, PropertyType data)> *)data;
 
-    (*funcInfo->fSet)(*pObj, Converter<PropertyType>::ToCpp(value));
+    (*funcInfo->fSet)(*pObj, Converter<PropertyType>::ToCpp(args[0]));
     return nullptr;
 }
 

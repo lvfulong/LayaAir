@@ -87,12 +87,12 @@ namespace laya
         LOGI("download xml file seccuss! %s\n", m_sUrl.c_str());
         jsDOC = new JSXmlDocument();
         jsDOC->parse(str.c_str());
-        m_pOnLoadJSFunction.call<void>(this);
+        m_pOnLoadJSFunction.call<JSDOMParser, void>(this);
     }
     void JSDOMParser::onErrorCallJSFunction(int e, std::weak_ptr<int>& callbackref)
     {
         if (!callbackref.lock()) return;
-        m_pOnErrorJSFunction.call<void>(this, e);
+        m_pOnErrorJSFunction.call<JSDOMParser, void>(this, e);
     }
     JsValue JSDOMParser::getXml()
     {

@@ -415,26 +415,20 @@ namespace laya
     {
         return toBase64(type, encoderOptions, ab, w, h, false);
     }
-    std::string btoa(JSValueAsParam val)
+    std::string btoa(const jsbind::StringLatin1& val)
     {
-        std::string temp;
-        v8::Local<v8::String> str = v8::Local<v8::String>::Cast(val);
-        int length = str->Length();
-        temp.resize(length);
-        //str->WriteUtf8(Isolate::GetCurrent(), &temp[0], length, NULL, String::NO_NULL_TERMINATION);
-        str->WriteOneByte(v8::Isolate::GetCurrent(), (uint8_t* )&temp[0], 0, length, v8::String::NO_OPTIONS);
-        
-        if (temp.length() == 0)
+        if (val.getValue().empty())
             return std::string();
-        return base64Encode(temp.data(), temp.length());
+        return base64Encode(val.getValue().data(), val.getValue().length());
     }
     JsValue atob(const char* encodedString)
     {
         std::vector<char> out;
-        if (!base64Decode(std::string(encodedString), out, isHTMLSpace<uint16_t>, Base64ValidatePadding)) {
-            return v8::String::NewFromOneByte(v8::Isolate::GetCurrent(), (const uint8_t*)out.data(), v8::NewStringType::kNormal, 0).ToLocalChecked();
+        if (!base64Decode(std::string(encodedString), out, isHTMLSpace<uint16_t>, Base64ValidatePadding)) 
+        {
+            return jsbind::StringLatin1::Make(std::string(out.data())).getHandle();
         }
-        return v8::String::NewFromOneByte(v8::Isolate::GetCurrent(), (const uint8_t*)out.data(), v8::NewStringType::kNormal, out.size()).ToLocalChecked();
+        return jsbind::StringLatin1::Make(std::string(out.data())).getHandle();
     }
     bool getEnableTouch()
     {

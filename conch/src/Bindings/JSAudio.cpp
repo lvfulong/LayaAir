@@ -514,19 +514,19 @@ namespace laya
     void JSAudio::onPlayEndCallJSFunction( std::weak_ptr<int> callbackref)
     {
 	    if( !callbackref.lock())return;
-	    m_pJSFunctionAudioEnd.call<void>(this);
+	    m_pJSFunctionAudioEnd.call<JSAudio, void>(this);
     }
     //------------------------------------------------------------------------------
     void JSAudio::onCanplayCallJSFunction( std::weak_ptr<int> callbackref)
     {
         if( !callbackref.lock())
             return;
-        m_pJSFunctionCanPlay.call<void>(this);
+        m_pJSFunctionCanPlay.call<JSAudio, void>(this);
     }
     void JSAudio::onErrorCallJSFunction(int p_nErrorCode,std::weak_ptr<int> callbackref)
     {
 	    if (!callbackref.lock())return;
-	    m_pJSFunctionError.call<void>(this, p_nErrorCode);
+	    m_pJSFunctionError.call<JSAudio, void>(this, p_nErrorCode);
     }
 	void JSAudio::setIsBackgroundMusic(bool p_bIsBackgroundMusic)
 	{

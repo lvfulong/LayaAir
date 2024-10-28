@@ -113,7 +113,7 @@ namespace laya
 		//因为不是用v8原生的方法把js函数转换JsObjHandle2所以分成两个函数
         void setPostCB(JSValueAsParam p_onOK, JSValueAsParam p_onError);
 
-		void JsPostData( const char* p_sUrl, JSValueAsParam arg1 );
+		void JsPostData( const char* p_sUrl, jsbind::Local arg1 );
 
         //回调也是走 setPostCB设置的函数
         void getData(const char* p_sUrl);

@@ -330,7 +330,7 @@ namespace laya
             readyState = DONE;
             if (m_pFile)
                 m_pFile->UpdateTime();
-            onload.call<void>(this);
+            onload.call<JsFileReader, void>(this);
         }
         else
         {
@@ -338,9 +338,9 @@ namespace laya
                 m_pFile->close();
             m_pszError = JsFileReaderErr_NotReadableError;
             readyState = DONE;
-            onerror.call<void>(this, p_pszError);
+            onerror.call<JsFileReader, void>(this, p_pszError);
         }
-        onloadend.call<void>(this);
+        onloadend.call<JsFileReader, void>(this);
         m_pszError = 0;
         readyState = EMPTY;
         m_hFileObject.reset();	//完成后，要把对File的引用去掉
@@ -388,9 +388,9 @@ namespace laya
             {
                 if (m_pFile->m_pBuffer == NULL)
                 {
-                    return (JSP_TO_JS_STR(""));
+                    return jsbind::Local::Make<std::string>("");
                 }
-                return (JSP_TO_JS_STR(m_pFile->m_pBuffer));
+                return jsbind::Local::Make<std::string>(m_pFile->m_pBuffer);
             }
         }
     }

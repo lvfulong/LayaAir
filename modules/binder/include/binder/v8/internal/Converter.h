@@ -492,53 +492,49 @@ template <> class Converter<ArrayBuffer>
             return MakeNull();
         }
     }
-    static bool is(v8::Local<v8::Value> p_vl)
+    static bool is(jsvm::Value value)
     {
         return p_vl->IsNullOrUndefined();
     }
 };*/
-
+//utf16 u16string
+template <> class Converter<std::u16string>
+{
+public:
+    static std::u16string ToCpp(jsvm::Value value)
+    {
+        return internal::getStringUtf16(value);
+    }
+    static jsvm::Value ToJs(const std::u16string& value, bool callDestructor = true)
+    {
+        return internal::makeStringUtf16(value);
+    }
+    /*static bool is(jsvm::Value value)
+    {
+        return p_vl->IsString();
+    }*/
+};
+//utf8 string
 template <> class Converter<std::string>
 {
   public:
-    static std::string ToCpp(jsvm::Env env, jsvm::Value value)
-    {
-        size_t length = 0;
-        jsvm::Status status;
-        status = jsvm::GetValueStringUtf8(env, value, NULL, 0, &length);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        std::string utf8str(length, '\0');
-        status = jsvm::GetValueStringUtf8(env, value, utf8str.data(), length + 1, &length);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        return utf8str;
-    }
     static std::string ToCpp(jsvm::Value value)
     {
-        GET_ENV
-        return ToCpp(env, value);
+        return internal::getStringUtf8(value);
     }
-    static jsvm::Value ToJs(jsvm::Env env, std::string value, bool callDestructor = true)
+    static jsvm::Value ToJs(const std::string& value, bool callDestructor = true)
     {
-        jsvm::Value result;
-        jsvm::Status status;
-        status = jsvm::CreateStringUtf8(env, value.c_str(), value.length(), &result);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        return result;
+        return internal::makeStringUtf8(value);
     }
-    static jsvm::Value ToJs(std::string value, bool callDestructor = true)
-    {
-        GET_ENV
-        return ToJs(env, value, callDestructor);
-    }
-    /*static bool is(v8::Local<v8::Value> p_vl)
+    /*static bool is(jsvm::Value value)
     {
         return p_vl->IsString();
     }*/
 };
 
-// const char* sColor = Converter<const char*>::ToCpp(args);         error ?  get right value address
-// const std::string sColor = Converter<std::string>::ToCpp(args);   ok
-// const std::string sColor = Converter<const char*>::ToCpp(args);   ok
+// const char* sColor = Converter<const char*>::ToCpp(args);          so not save sColor for latter use   get right value address
+// const std::string sColor = Converter<std::string>::ToCpp(args);  better
+// const std::string sColor = Converter<const char*>::ToCpp(args);  better
 template <> class Converter<const char *>
 {
   public:
@@ -558,29 +554,15 @@ template <> class Converter<const char *>
         std::string realString;
     };
     using from_type = convertible_string;
-    static from_type ToCpp(jsvm::Env env, jsvm::Value value)
-    {
-        return from_type(Converter<std::string>::ToCpp(env, value));
-    }
     static from_type ToCpp(jsvm::Value value)
     {
-        GET_ENV
-        return ToCpp(env, value);
-    }
-    static jsvm::Value ToJs(jsvm::Env env, std::string_view value, bool callDestructor = true)
-    {
-        jsvm::Value result;
-        jsvm::Status status;
-        status = jsvm::CreateStringUtf8(env, value.data(), value.size(), &result);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        return result;
+        return from_type(internal::getStringUtf8(value));
     }
     static jsvm::Value ToJs(std::string_view value, bool callDestructor = true)
     {
-        GET_ENV
-        return ToJs(env, value, callDestructor);
+        return internal::makeStringUtf8(value.data());
     }
-    /*static bool is(v8::Local<v8::Value> p_vl)
+    /*static bool is(jsvm::Value value)
     {
         return p_vl->IsString();
     }*/
@@ -605,7 +587,7 @@ template <> class Converter<jsvm::Value>
     {
         return ToJs(nullptr, value, callDestructor);
     }
-    /*static bool is(v8::Local<v8::Value> p_vl)
+    /*static bool is(jsvm::Value value)
  {
      return true;
  }*/
@@ -652,11 +634,11 @@ template <typename T> class Array
         }
         else
         {
-            status = CreateArrayWithLength(env, size, &result);
+            status = jsvm::CreateArrayWithLength(env, size, &result);
             DEBUG_CHECK(status == jsvm::Status::OK);
             for (int i = 0; i < size; i++)
             {
-                jsvm::SetElement(env, result, i, Converter<T>::ToJs(env, value.at(i), callDestructor));
+                jsvm::SetElement(env, result, i, Converter<T>::ToJs(value.at(i), callDestructor));
             }
             return result;
         }
@@ -670,7 +652,7 @@ template <typename T> class Array
         int size = value.size();
         for (int i = 0; i < size; i++)
         {
-            jsvm::SetElement(env, result, i, Converter<T>::ToJs(env, value.at(i), callDestructor));
+            jsvm::SetElement(env, result, i, Converter<T>::ToJs(value.at(i), callDestructor));
         }
     }
     static void getData(jsvm::Env env, jsvm::Value array, std::vector<T *> &result)
@@ -688,7 +670,7 @@ template <typename T> class Array
             {
                 jsvm::Value element;
                 jsvm::GetElement(env, array, i, &element);
-                result.push_back(Converter<T *>::ToCpp(env, element));
+                result.push_back(Converter<T *>::ToCpp(element));
             }
         }
     }
@@ -708,7 +690,7 @@ template <typename T> class Array
                 jsvm::Value element;
                 jsvm::GetElement(env, array, i, &element);
                 DEBUG_CHECK(status == jsvm::Status::OK);
-                result.push_back(Converter<T>::ToCpp(env, element));
+                result.push_back(Converter<T>::ToCpp(element));
             }
         }
     }
