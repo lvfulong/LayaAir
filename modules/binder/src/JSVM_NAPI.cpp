@@ -265,10 +265,159 @@ napi_property_attributes convertTo(PropertyAttributes value)
         break;
     }
 }
+#if 0
+// ���Ҫ��v8�߳��������ͷţ���Ϊv8������ʱ��������������ṩ�� Free �ӿ�
+class ArrayBufferAllocator : public v8::ArrayBuffer::Allocator
+{
+public:
+    ArrayBufferAllocator();
+    ~ArrayBufferAllocator();
+    virtual void* Allocate(size_t length);
+    virtual void* AllocateUninitialized(size_t length);
+    virtual void Free(void* data, size_t length);
+    // �������û�����壬v8�����ᶼ�ͷŵ� Heap::FreeDeadArrayBuffers
+    // void FreeAllAlive();//�ͷ����еĻ�û���ͷŵ�ArrayBuffer
+    static ArrayBufferAllocator* getInstance();
+    // int _testGetID(void* pdata);
+    // int getAliveBufferNum() {
+    //     return m_vAliveBuffer.size();
+    // }
+protected:
+    // std::vector<char*> m_vAliveBuffer;
+};
+ArrayBufferAllocator::ArrayBufferAllocator()
+{
+}
+
+ArrayBufferAllocator::~ArrayBufferAllocator()
+{
+}
+
+void* ArrayBufferAllocator::Allocate(size_t length)
+{
+    char* pRet = new char[length];
+    memset(pRet, 0, length);
+    return pRet;
+}
+void* ArrayBufferAllocator::AllocateUninitialized(size_t length)
+{
+    char* pRet = new char[length];
+    return pRet;
+};
+void ArrayBufferAllocator::Free(void* data, size_t length)
+{
+    if (data != NULL || length > 0)
+    {
+        delete[]((char*)data);
+    }
+    else
+    {
+        LOGI("ArrayBufferAllocator::Free data=%d length=%d", (intptr_t)data, length);
+    }
+}
+
+ArrayBufferAllocator* ArrayBufferAllocator::getInstance()
+{
+    return new ArrayBufferAllocator();
+}
+#endif
+
+static v8::Platform *s_pPlatform = NULL;
+static bool s_bV8InitializePlatform = false;
+
+struct VM__
+{
+    v8::Isolate *isolate_;
+};
+struct VMScope__
+{
+    v8::Isolate *isolate_;
+};
+inline /*JSVM_EXTERN*/ Status Init(const InitOptions *options)
+{
+    // m_pIsolate = NULL;
+    // m_nListenPort = 0;
+
+    if (!s_bV8InitializePlatform)
+    {
+        s_bV8InitializePlatform = true;
+        s_pPlatform = v8::platform::NewDefaultPlatform().release();
+        v8::V8::InitializePlatform(s_pPlatform);
+        v8::V8::Initialize();
+        std::string flags;
+#if defined(OS_IOS) || defined(OS_OHOS)
+        flags.append(" --jitless ");
+#endif
+        flags.append(" --expose-gc ");
+        // flags.append(" --expose-gc-as=gc ");
+        flags.append(" --no-flush-bytecode ");
+        flags.append(" --no-lazy ");
+        flags.append(" --turbo-fast-api-calls ");
+        v8::V8::SetFlagsFromString(flags.c_str(), (size_t)flags.length());
+    }
+}
+#if 0
+inline /*JSVM_EXTERN*/ Status UnInit()
+{
+    return;
+    v8::V8::Dispose();
+    v8::V8::ShutdownPlatform();
+    delete s_pPlatform;
+}
+#endif
+inline /*JSVM_EXTERN*/ CreateVM(const CreateVMOptions *options, VM *result)
+{
+    v8::Isolate::CreateParams create_params;
+    create_params.array_buffer_allocator = v8::ArrayBuffer::Allocator::NewDefaultAllocator();
+    result->isolate_ = v8::Isolate::New(create_params);
+    m_pIsolate->Enter();
+    v8::HandleScope handle_scope(m_pIsolate);
+    v8::Local<v8::Context> context = v8::Context::New(m_pIsolate);
+    m_context.Reset(m_pIsolate, context);
+    m_IsolateData = new IsolateData(m_pIsolate, NULL);
+    m_IsolateData->m_data = (void *)this;
+    m_pIsolate->SetPromiseRejectCallback(PromiseRejectHandlerInMainThread);
+    context->Enter();
+}
+inline /*JSVM_EXTERN*/ DestroyVM(VM vm)
+{
+    {
+        v8::HandleScope handle_scope(m_pIsolate);
+        v8::Local<v8::Context> context = m_context.Get(m_pIsolate);
+        context->Exit();
+        m_context.Reset();
+        delete m_IsolateData;
+        m_pIsolate->Exit();
+    }
+    m_pIsolate->Dispose();
+}
+inline /*JSVM_EXTERN*/ Status OpenVMScope(VM vm, VMScope *result)
+{
+    result->isolate_ = vm->isolate_;
+    result->isolate_->Enter();
+}
+inline /*JSVM_EXTERN*/ Status CloseVMScope(VM vm, VMScope scope)
+{
+    result->isolate_ = vm->isolate_;
+    result->isolate_->Exit();
+}
+inline /*JSVM_EXTERN*/ Status OpenEnvScope(Env env, EnvScope *result)
+{
+}
+inline /*JSVM_EXTERN*/ Status CloseEnvScope(Env env, EnvScope scope)
+{
+}
 inline /*JSVM_EXTERN*/ Status CreateEnv(VM vm, size_t propertyCount, const PropertyDescriptor *properties, Env *result)
 {
 }
 inline /*JSVM_EXTERN*/ Status DestroyEnv(Env env)
+{
+}
+
+inline /*JSVM_EXTERN*/ Status OpenHandleScope(Env env, HandleScope *result)
+{
+}
+inline /*JSVM_EXTERN*/ Status CloseHandleScope(Env env, HandleScope scope)
 {
 }
 inline /*JSVM_EXTERN*/ Status GetArrayLength(Env env, Value value, uint32_t *result)
@@ -516,19 +665,19 @@ inline /*JSVM_EXTERN*/ Status IsError(Env env, Value value, bool *result)
 {
     return ConvertToStatus(napi_is_error(env, value, result));
 }
-inline /*JSVM_EXTERN*/ Status CreateStringUtf16(Env env, const char16_t* str, size_t length, Value* result)
+inline /*JSVM_EXTERN*/ Status CreateStringUtf16(Env env, const char16_t *str, size_t length, Value *result)
 {
-    return ConvertToStatus(napi_create_string_utf16(env, str, length,  result));
+    return ConvertToStatus(napi_create_string_utf16(env, str, length, result));
 }
-inline /*JSVM_EXTERN*/ Status GetValueStringUtf16(Env env, Value value, char16_t* buf, size_t bufsize, size_t* result)
+inline /*JSVM_EXTERN*/ Status GetValueStringUtf16(Env env, Value value, char16_t *buf, size_t bufsize, size_t *result)
 {
-    return ConvertToStatus(napi_get_value_string_utf16(env,  value, buf,  bufsize,  result));
+    return ConvertToStatus(napi_get_value_string_utf16(env, value, buf, bufsize, result));
 }
-inline /*JSVM_EXTERN*/ Status CreateStringLatin1(Env env, const char* str, size_t length, Value* result)
+inline /*JSVM_EXTERN*/ Status CreateStringLatin1(Env env, const char *str, size_t length, Value *result)
 {
     return ConvertToStatus(napi_create_string_latin1(env, str, length, result));
 }
-inline /*JSVM_EXTERN*/ Status GetValueStringLatin1(Env env, Value value, char* buf, size_t bufsize, size_t* result)
+inline /*JSVM_EXTERN*/ Status GetValueStringLatin1(Env env, Value value, char *buf, size_t bufsize, size_t *result)
 {
     return ConvertToStatus(napi_get_value_string_latin1(env, value, buf, bufsize, result));
 }
@@ -550,6 +699,6 @@ inline /*JSVM_EXTERN*/ Status GetValueBigintUint64(Env env, Value value, uint64_
 }
 inline /*JSVM_EXTERN*/ Status RunScript(Env env, Script script, Value *result)
 {
-return ConvertToStatus(napi_run_script(env, script, result));
+    return ConvertToStatus(napi_run_script(env, script, result));
 }
 } // namespace jsvm

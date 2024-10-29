@@ -44,7 +44,7 @@ Persistent &Persistent::operator=(const Persistent &that)
         jsvm::Status status;
         uint32_t count;
         status = jsvm::ReferenceRef(env, ref_, &count);
-        AKI_DCHECK(status == jsvm::Status::OK);
+        DEBUG_CHECK(status == jsvm::Status::OK);
     }
 
     return *this;

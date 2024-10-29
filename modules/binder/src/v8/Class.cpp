@@ -9,15 +9,6 @@ namespace jsbind
 {
 
 std::unordered_map<std::string, ClassRegistryBase *> ClassRegistryManager::classRegistryMap_;
-
-namespace internal
-{
-
-void addDeinitializer(std::function<void()> func)
-{
-    m_deinitializers.push_back(func);
-}
-
 void runDeinitializers()
 {
     for (auto &de : m_deinitializers)
@@ -28,6 +19,13 @@ void runDeinitializers()
     m_deinitializers.clear();
     ClassRegistryManager::cleanup();
 }
+namespace internal
+{
+
+void addDeinitializer(std::function<void()> func)
+{
+    m_deinitializers.push_back(func);
+}
 
 } // namespace internal
-} // namespace laya
+} // namespace jsbind

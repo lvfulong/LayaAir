@@ -53,6 +53,8 @@ endif()
 
 list(APPEND CONCH_SRC
 
+	src/ScriptThread/ScriptThread.h
+	src/ScriptThread/ScriptThread.cpp
 	# 分开数据库类core/Math 和相关方法类core/Util
 	src/core/math/Matrix3x3.h
 	src/core/math/Matrix3x3.cpp

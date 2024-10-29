@@ -14,13 +14,13 @@ namespace jsbind
 {
 namespace internal
 {
+    	extern void addDeinitializer(std::function<void()> func);
 template <typename ClassType> static void destructor(jsvm::Env env, void *nativeObject, void * /*finalize_hint*/);
 template <typename ClassType> void raw_destructor(ClassType *pointer)
 {
     delete pointer;
 }
-extern void addDeinitializer(std::function<void()> func);
-extern void runDeinitializers();
+
 template <typename T> struct remove_class;
 template <typename C, typename R, typename... A> struct remove_class<R (C::*)(A...)>
 {

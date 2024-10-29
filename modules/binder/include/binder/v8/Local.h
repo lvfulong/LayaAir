@@ -52,7 +52,7 @@ class Local
         DEBUG_CHECK(isValid());
         return internal::isUndefined(this->handle_);
     }
-
+    
     inline bool isNull() const
     {
         DEBUG_CHECK(isValid());
@@ -129,6 +129,90 @@ class Local
         DEBUG_CHECK(isValid());
         return internal::isDate(this->handle_);
     }
+
+    static inline bool isUndefined(jsvm::Value value)
+    {
+        DEBUG_CHECK(value != nullptr);
+        return internal::isUndefined(value);
+    }
+    static inline bool isNull(jsvm::Value value)
+    {
+        DEBUG_CHECK(value != nullptr);
+        return internal::isNull(value);
+    }
+
+    static inline bool isBool(jsvm::Value value)
+    {
+        DEBUG_CHECK(value != nullptr);
+        return internal::isBool(value);
+    }
+
+    static inline bool isNumber(jsvm::Value value)
+    {
+        DEBUG_CHECK(value != nullptr);
+        return internal::isNumber(value);
+    }
+
+    static inline bool isString(jsvm::Value value)
+    {
+        DEBUG_CHECK(value != nullptr);
+        return internal::isString(value);
+    }
+
+    static inline bool isObject(jsvm::Value value)
+    {
+        DEBUG_CHECK(value != nullptr);
+        return internal::isObject(value);
+    }
+
+    static inline bool isArray(jsvm::Value value)
+    {
+        DEBUG_CHECK(value != nullptr);
+        return internal::isArray(value);
+    }
+
+    static inline bool isFunction(jsvm::Value value)
+    {
+        DEBUG_CHECK(value != nullptr);
+        return internal::isFunction(value);
+    }
+
+    static inline bool isError(jsvm::Value value)
+    {
+        DEBUG_CHECK(value != nullptr);
+        return internal::isError(value);
+    }
+
+    static inline bool isArrayBuffer(jsvm::Value value)
+    {
+        DEBUG_CHECK(value != nullptr);
+        return internal::isArrayBuffer(value);
+    }
+
+    static inline bool isArrayBufferView(jsvm::Value value)
+    {
+        DEBUG_CHECK(value != nullptr);
+        return internal::isArrayBufferView(value);
+    }
+
+    static inline bool isTypedArray(jsvm::Value value)
+    {
+        DEBUG_CHECK(value != nullptr);
+        return internal::isTypedArray(value);
+    }
+
+    static inline bool isDataView(jsvm::Value value)
+    {
+        DEBUG_CHECK(value != nullptr);
+        return internal::isDataView(value);
+    }
+    static inline bool isDate(jsvm::Value value)
+    {
+        DEBUG_CHECK(value != nullptr);
+        return internal::isDate(value);
+    }
+
+
     template <typename T> T as() const
     {
         DEBUG_CHECK(isValid());

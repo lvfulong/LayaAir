@@ -4,7 +4,7 @@
 #endif
 #include <binder/v8/IsolateData.h>
 #include <binder/v8/JSCProxyTLS.h>
-#include <binder/v8/Converter.h>
+#include <binder/v8/internal/Converter.h>
 #include <utils/Log.h>
 #include <v8-profiler.h>
 #ifdef OS_WINDOWS

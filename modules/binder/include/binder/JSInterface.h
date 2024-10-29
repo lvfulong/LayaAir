@@ -20,6 +20,7 @@
 #include <binder/v8/String.h>
 #include <binder/v8/Script.h>
 #include <binder/v8/Promise.h>
+#include <binder/JSBind.h>
 #ifdef JS_V8_DEBUGGER
 #include <binder/v8/v8debug/debug-agent.h>
 #endif
@@ -43,7 +44,7 @@ typedef jsvm::Value JSValueAsParam;
 #define JSP_TO_JS(tp, v) (Converter<tp>::ToJs(v))
 //#define JS_TO_CPP(tp, v) (Converter<tp>::ToCpp(v))
 #define JSP_TO_JS_STR(str) (v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), str).ToLocalChecked())
-#define JS_TRY                                                                                                         \
+/*#define JS_TRY                                                                                                         \
     v8::Isolate *isolate = v8::Isolate::GetCurrent();                                                                  \
     v8::HandleScope handle_scope(isolate);                                                                             \
     v8::TryCatch try_catch(isolate);
@@ -53,7 +54,7 @@ typedef jsvm::Value JSValueAsParam;
     {                                                                                                                  \
         LOGE("JS onFrame error\n");                                                                                    \
         __JSRun::ReportException(isolate, &try_catch);                                                                 \
-    }
+    }*/
 #endif
 void AdjustAmountOfExternalAllocatedMemory(int p_nMemorySize)
 {

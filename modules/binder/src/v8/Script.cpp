@@ -8,11 +8,11 @@ namespace jsbind
         GET_ENV
         jsvm::Value script;
         jsvm::Status status;
-        status = jsvm::CreateStringUtf8(env, value.c_str(), value.length(), &script);
+        status = jsvm::CreateStringUtf8(env, code, strlen(code), &script);
         DEBUG_CHECK(status == jsvm::Status::OK);
         
         jsvm::Value result;
-        status = jsvm::RunScript(env, script, result);
+        status = jsvm::RunScript(env, script, &result);
         DEBUG_CHECK(status == jsvm::Status::OK);
         //todo report exception
         return result;

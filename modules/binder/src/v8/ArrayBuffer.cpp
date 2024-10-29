@@ -1,6 +1,6 @@
 #include <binder/JSInterface.h>
 #include <binder/v8/ArrayBuffer.h>
-#include <binder/v8/Converter.h>
+#include <binder/v8/internal/Converter.h>
 #include <binder/v8/JSEnv.h>
 #include <binder/v8/Local.h>
 #include <utils/JCMemorySurvey.h>
@@ -8,43 +8,7 @@
 
 namespace jsbind
 {
-#if 0
-ArrayBufferAllocator::ArrayBufferAllocator()
-{
-}
 
-ArrayBufferAllocator::~ArrayBufferAllocator()
-{
-}
-
-void *ArrayBufferAllocator::Allocate(size_t length)
-{
-    char *pRet = new char[length];
-    memset(pRet, 0, length);
-    return pRet;
-}
-void *ArrayBufferAllocator::AllocateUninitialized(size_t length)
-{
-    char *pRet = new char[length];
-    return pRet;
-};
-void ArrayBufferAllocator::Free(void *data, size_t length)
-{
-    if (data != NULL || length > 0)
-    {
-        delete[] ((char *)data);
-    }
-    else
-    {
-        LOGI("ArrayBufferAllocator::Free data=%d length=%d", (intptr_t)data, length);
-    }
-}
-
-ArrayBufferAllocator *ArrayBufferAllocator::getInstance()
-{
-    return new ArrayBufferAllocator();
-}
-#endif
 
 void __JSRun::ReportException(v8::Isolate *isolate, v8::TryCatch *try_catch)
 {
@@ -171,8 +135,7 @@ bool ArrayBuffer::upload(uint8_t *inputBuffer, size_t length)
     }
     return false;
 }
-ArrayBuffer::ArrayBuffer(uint8_t *inputBuffer, size_t length, size_t byteOffset, Type type)
-    : data_(nullptr), length_(length), type_(type)
+ArrayBuffer::ArrayBuffer(uint8_t *inputBuffer, size_t length, size_t byteOffset, Type type):data_(nullptr), length_(length), type_(type)
 {
     GET_ENV
 
@@ -180,10 +143,10 @@ ArrayBuffer::ArrayBuffer(uint8_t *inputBuffer, size_t length, size_t byteOffset,
     jsvm::Value arrayBuffer;
     uint8_t *outputBuffer = nullptr;
 
-    status = jsvm::CreateArraybuffer(env, this->getLength(), reinterpret_cast<void **>(&outputBuff), &arrayBuffer);
+    status = jsvm::CreateArraybuffer(env, this->getLength(), reinterpret_cast<void **>(&outputBuffer), &arrayBuffer);
     DEBUG_CHECK(status == jsvm::Status::OK);
 
-    memcpy(outputBuffer, inputBuffer, this->getLength());
+    std::memcpy(outputBuffer, inputBuffer, this->getLength());
 
     if (this->getType() == ArrayBuffer::DATA_VIEW)
     {
@@ -192,17 +155,17 @@ ArrayBuffer::ArrayBuffer(uint8_t *inputBuffer, size_t length, size_t byteOffset,
     else
     {
         jsvm::Value typedArray;
-        jsvm::TypedArrayType type = static_cast<jsvm::TypedArrayType>(this->getType());
+        jsvm::TypedarrayType type = static_cast<jsvm::TypedarrayType>(this->getType());
 
-        status = jsvm::CreateTypedArray(env, type, this->getCount(), arrayBuffer, byteOffset, &typedArray);
+        status = jsvm::CreateTypedarray(env, type, this->getCount(), arrayBuffer, byteOffset, &typedArray);
         DEBUG_CHECK(status == jsvm::Status::OK);
         arrayBuffer = typedArray;
     }
 
-    data_ = outputBuff;
+    data_ = outputBuffer;
     handle_ = arrayBuffer;
 }
-ArrayBuffer::ArrayBuffer(jsvm::Value arrayBuffer, uint8_t *inputBuffer, size_t length, Type type = ARRAY_BUFFER)
+ArrayBuffer::ArrayBuffer(jsvm::Value arrayBuffer, uint8_t *inputBuffer, size_t length, Type type)
     : data_(inputBuffer), length_(length), type_(type), handle_(arrayBuffer)
 {
 }
@@ -210,33 +173,30 @@ ArrayBuffer::ArrayBuffer(jsvm::Value arrayBuffer, uint8_t *inputBuffer, size_t l
 ArrayBuffer ArrayBuffer::Make(jsvm::Value arrayBuffer)
 {
     GET_ENV
-    Local localValue(arrayBuffer);
     void *data = nullptr;
-    size_t length = 0;
-    if (localValue.isTypedArray())
+    size_t length; 
+    jsvm::TypedarrayType type;
+    jsvm::Value buffer;
+    size_t byteOffset;
+    if (Local::isTypedArray(arrayBuffer))
     {
-        jsvm::TypedarrayType type;
-        jsvm::Value buffer;
-        size_t byteOffset = 0;
-        jsvm::GetTypedarrayInfo(env, arrayBuffer, &type, length, &data, &buffer, &byteOffset);
-        return ArrayBuffer(arrayBuffer, data, length, byteOffset, static_cast<ArrayBuffer::Type>(type));
+        jsvm::GetTypedarrayInfo(env, arrayBuffer, &type, &length, &data, &buffer, &byteOffset);
+        return ArrayBuffer(arrayBuffer, static_cast<uint8_t*>(data), length, static_cast<ArrayBuffer::Type>(type) );
     }
-    else if (localValue.isDataView())
+    else if (Local::isDataView(arrayBuffer))
     {
-        jsvm::Value buffer;
-        size_t byteOffset = 0;
         jsvm::GetDataviewInfo(env, arrayBuffer, &length, &data, &buffer, &byteOffset);
-        return ArrayBuffer(arrayBuffer, data, length, byteOffset, ArrayBuffer::DATA_VIEW);
+        return ArrayBuffer(arrayBuffer, static_cast<uint8_t*>(data), length, ArrayBuffer::DATA_VIEW);
     }
-    else if (localValue.isArrayBuffer())
+    else if (Local::isArrayBuffer(arrayBuffer))
     {
         jsvm::GetArraybufferInfo(env, arrayBuffer, &data, &length);
-        return ArrayBuffer(arrayBuffer, data, length, 0, ArrayBuffer::ARRAY_BUFFER);
+        return ArrayBuffer(arrayBuffer, static_cast<uint8_t*>(data), length, ArrayBuffer::ARRAY_BUFFER);
     }
     else
     {
         // todo js exception
-        return ArrayBuffer(nullptr, nullptr, 0, 0, ArrayBuffer::ARRAY_BUFFER);
+        return ArrayBuffer(nullptr, nullptr, 0, ArrayBuffer::ARRAY_BUFFER);
     }
 }
 ArrayBuffer ArrayBuffer::MakeArrayBuffer(uint8_t *inputBuffer, size_t length)

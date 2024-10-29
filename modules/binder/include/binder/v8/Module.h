@@ -2,7 +2,7 @@
 #define __V8_MODULE_H__
 
 #include "Class.h"
-#include "Converter.h"
+#include "internal/Converter.h"
 #include "Invocation.h"
 #include "Utility.h"
 #include <string>

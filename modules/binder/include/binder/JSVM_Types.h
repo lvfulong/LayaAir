@@ -98,11 +98,26 @@ using Ref = napi_ref;
 // using CDECL = NAPI_CDECL;
 typedef Value(NAPI_CDECL *Callback)(Env env, CallbackInfo info);
 using Script = napi_value;
-struct VM__
-{
 
-};
 typedef struct  VM__*  VM;
+typedef struct VMScope__* VMScope;
+struct InitOptions
+{
+    const intptr_t* externalReferences;
+    int* argc;
+    char** argv;
+    bool removeFlags;
+};
+struct CreateVMOptions
+{
+    size_t maxOldGenerationSize;
+    size_t maxYoungGenerationSize;
+    size_t initialOldGenerationSize;
+    size_t initialYoungGenerationSize;
+    const char* snapshotBlobData;
+    size_t snapshotBlobSize;
+    bool isForSnapshotting;
+};
 #endif
 enum class PropertyAttributes
 {

@@ -7,29 +7,6 @@
 
 namespace jsbind
 {
-
-#if 0
-// 这个要在v8线程外分配和释放，因为v8析构的时候会调用这个对象提供的 Free 接口
-class ArrayBufferAllocator : public v8::ArrayBuffer::Allocator
-{
-  public:
-    ArrayBufferAllocator();
-    ~ArrayBufferAllocator();
-    virtual void *Allocate(size_t length);
-    virtual void *AllocateUninitialized(size_t length);
-    virtual void Free(void *data, size_t length);
-    // 这个函数没有意义，v8本身会都释放掉 Heap::FreeDeadArrayBuffers
-    // void FreeAllAlive();//释放所有的还没有释放的ArrayBuffer
-    static ArrayBufferAllocator *getInstance();
-    // int _testGetID(void* pdata);
-    // int getAliveBufferNum() {
-    //     return m_vAliveBuffer.size();
-    // }
-  protected:
-    // std::vector<char*> m_vAliveBuffer;
-};
-#endif
-
 // a local ArrayBuffer
 class ArrayBuffer
 {
@@ -70,7 +47,7 @@ class ArrayBuffer
     {
         return length_;
     }
-    inline Type getTyped() const
+    inline Type getType() const
     {
         return type_;
     }
@@ -119,8 +96,8 @@ class ArrayBuffer
     bool upload(uint8_t *inputBuffer, size_t length);
 
   private:
-    ArrayBuffer(uint8_t *inputBuffer, size_t length, Type type);
-    ArrayBuffer(jsvm::Value arrayBuffer, uint8_t *inputBuffer, size_t length, size_t byteOffset, Type type);
+    ArrayBuffer(uint8_t* inputBuffer, size_t length, size_t byteOffset, Type type);
+    ArrayBuffer(jsvm::Value arrayBuffer, uint8_t* inputBuffer, size_t length, Type type = ARRAY_BUFFER);
 
   private:
     uint8_t *data_ = nullptr;

@@ -290,14 +290,14 @@ namespace laya
             kBuf += sJCBuffer;
             kBuf += "\n})(window);\n//@ sourceURL=apploader.js";
 #ifdef JS_V8
-            v8::Isolate* isolate = v8::Isolate::GetCurrent();
-            v8::HandleScope handle_scope(isolate);
-            v8::TryCatch try_catch(isolate);
+            //v8::Isolate* isolate = v8::Isolate::GetCurrent();
+            //v8::HandleScope handle_scope(isolate);
+            //v8::TryCatch try_catch(isolate);
             jsbind::runScript(kBuf.c_str());
-            if (try_catch.HasCaught())
-            {
-                __JSRun::ReportException(isolate, &try_catch);
-            }
+            //if (try_catch.HasCaught())
+            //{
+            //    __JSRun::ReportException(isolate, &try_catch);
+            //}
 #else
             jsbind::runScript(kBuf.c_str());
 #endif
@@ -338,7 +338,7 @@ namespace laya
 #if !defined(OS_LINUX) && !defined(OS_WINDOWS)
         m_pCurEditBox = NULL;
 #endif
-        internal::runDeinitializers();
+        jsbind::runDeinitializers();
 
         JSGlobalDisExportC();
 #ifdef JS_V8
@@ -395,9 +395,9 @@ namespace laya
         if (m_pJSOnDrawFunction.isValid())
         {
 			
-            JS_TRY;
+            //JS_TRY;
             m_pJSOnDrawFunction.call<void>(jsbind::global(), nTime);
-            JS_CATCH;
+            //JS_CATCH;
 
             JCConch::s_pConchRender->postTaskFromJSToRenderSync([this]()->bool {
                 this->dispatchLayaGLBuffer(true);
@@ -445,9 +445,9 @@ namespace laya
             break;
         }
 		
-        JS_TRY;
+        //JS_TRY;
             m_pJSOnFrameFunction.call<void>(jsbind::global());
-        JS_CATCH;
+        //JS_CATCH;
 		
         //float dt = tmGetCurms() - nBenginTime;
         //PERF_UPDATE_DATA(JCPerfHUD::PHUD_JS_DELAY, (float)dt);

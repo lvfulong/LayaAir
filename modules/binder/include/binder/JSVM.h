@@ -9,9 +9,11 @@
 
 namespace jsvm
 {
+/*JSVM_EXTERN*/ Status CreateVM(const  CreateVMOptions* options, VM* result);
+/*JSVM_EXTERN*/ Status DestroyVM(VM vm);
 /*JSVM_EXTERN*/ Status CreateEnv(VM vm, size_t propertyCount, const PropertyDescriptor *properties, Env *result);
 /*JSVM_EXTERN*/ Status DestroyEnv(Env env);
-/*JSVM_EXTERN*/ // Status Init(const InitOptions *options);
+/*JSVM_EXTERN*/ Status Init(const InitOptions *options);
 /*JSVM_EXTERN*/ Status CreatePromise(Env env, Deferred *deferred, Value *promise);
 /*JSVM_EXTERN*/ Status ResolveDeferred(Env env, Deferred deferred, Value resolution);
 /*JSVM_EXTERN*/ Status RejectDeferred(Env env, Deferred deferred, Value resolution);

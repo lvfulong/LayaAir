@@ -22,9 +22,10 @@ set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/String.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Script.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Promise.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/JSBind.h
 )
 
-set(SOURCE
+set(SOURCES
     src/v8/IsolateData.cpp
     src/v8/ArrayBuffer.cpp
     src/v8/JSEnv.cpp
