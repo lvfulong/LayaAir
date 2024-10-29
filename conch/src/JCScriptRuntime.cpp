@@ -278,7 +278,7 @@ namespace laya
             int nSize = 0;
             if (m_pAssetsRes->loadFileContent("scripts/runtimeInit.js", sJSRuntime, nSize))
             {
-                JSP_RUN_SCRIPT(sJSRuntime);
+                jsbind::runScript(sJSRuntime);
                 delete[] sJSRuntime;
             }
         }
@@ -293,18 +293,18 @@ namespace laya
             v8::Isolate* isolate = v8::Isolate::GetCurrent();
             v8::HandleScope handle_scope(isolate);
             v8::TryCatch try_catch(isolate);
-            JSP_RUN_SCRIPT(kBuf.c_str());
+            jsbind::runScript(kBuf.c_str());
             if (try_catch.HasCaught())
             {
                 __JSRun::ReportException(isolate, &try_catch);
             }
 #else
-            JSP_RUN_SCRIPT(kBuf.c_str());
+            jsbind::runScript(kBuf.c_str());
 #endif
             delete[] sJCBuffer;
             sJCBuffer = NULL;
         }
-        JSP_RUN_SCRIPT("gc();gc();gc();");
+        jsbind::runScript("gc();gc();gc();");
         });
     }
     void JCScriptRuntime::onThreadExit(JCEventEmitter::evtPtr evt)
@@ -508,7 +508,7 @@ namespace laya
     }
     void JCScriptRuntime::jsGCCallJSFunction()
     {
-        JSP_RUN_SCRIPT("gc()");
+        jsbind::runScript("gc()");
     }
     void JCScriptRuntime::callJC(std::string sFunctionName, std::string sJsonParam, std::string sCallbackFunction)
     {
@@ -522,7 +522,7 @@ namespace laya
     }
     void JCScriptRuntime::callJSStringFunction( std::string sBuffer )
     {
-        JSP_RUN_SCRIPT(sBuffer.c_str());
+        jsbind::runScript(sBuffer.c_str());
     }
     void JCScriptRuntime::callJSFuncton(std::string sFunctionName, std::string sJsonParam, std::string sCallbackFunction)
     {
@@ -533,7 +533,7 @@ namespace laya
         sBuffer += sCallbackFunction;
         sBuffer += "\");";
         LOGI("JCScriptRuntime::callJSFuncton buffer=%s",sBuffer.c_str() );
-        JSP_RUN_SCRIPT( sBuffer.c_str() );
+        jsbind::runScript( sBuffer.c_str() );
     }
     void JCScriptRuntime::restoreAudio()
     {
@@ -554,7 +554,7 @@ namespace laya
     }
     void JCScriptRuntime::jsReloadUrlJSFunction()
     {
-        JSP_RUN_SCRIPT("reloadJS(true)");
+        jsbind::runScript("reloadJS(true)");
     }
     void JCScriptRuntime::jsUrlback()
     {
@@ -563,7 +563,7 @@ namespace laya
     }
     void JCScriptRuntime::jsUrlbackJSFunction()
     {
-        JSP_RUN_SCRIPT("history.back()");
+        jsbind::runScript("history.back()");
     }
     void JCScriptRuntime::postToJS(const std::function<void(void)>& func)
     {

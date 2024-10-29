@@ -249,7 +249,7 @@ namespace laya
 
     void evalJS(const char* p_sSource)
     {
-        JSP_RUN_SCRIPT(p_sSource);
+        jsbind::runScript(p_sSource);
     }
     void JSPrint(const char* p_sBuffer)
     {

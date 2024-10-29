@@ -87,6 +87,7 @@ namespace jsvm
 /*JSVM_EXTERN*/ Status GetValueBigintInt64(Env env, Value value, int64_t *result, bool *lossless);
 /*JSVM_EXTERN*/ Status CreateBigintUint64(Env env, uint64_t value, Value *result);
 /*JSVM_EXTERN*/ Status GetValueBigintUint64(Env env, Value value, uint64_t *result, bool *lossless);
+/*JSVM_EXTERN*/ Status RunScript(Env env, Script script, Value *result);
 } // namespace jsvm
 
 #endif

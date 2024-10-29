@@ -548,4 +548,8 @@ inline /*JSVM_EXTERN*/ Status GetValueBigintUint64(Env env, Value value, uint64_
 {
     return ConvertToStatus(napi_get_value_bigint_uint64(env, value, result, lossless));
 }
+inline /*JSVM_EXTERN*/ Status RunScript(Env env, Script script, Value *result)
+{
+return ConvertToStatus(napi_run_script(env, script, result));
+}
 } // namespace jsvm

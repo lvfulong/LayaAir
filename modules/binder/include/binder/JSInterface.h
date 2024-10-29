@@ -18,6 +18,8 @@
 #include <binder/v8/Array.h>
 #include <binder/v8/Date.h>
 #include <binder/v8/String.h>
+#include <binder/v8/Script.h>
+#include <binder/v8/Promise.h>
 #ifdef JS_V8_DEBUGGER
 #include <binder/v8/v8debug/debug-agent.h>
 #endif
@@ -34,7 +36,7 @@ typedef v8::Local<v8::Function> JsFunction;
 typedef jsvm::Value JSValueAsParam;
 //typedef v8::Local<v8::Object> JsObject;
 //#define JSP_THROW(str) __JsThrow::Throw(str);
-#define JSP_RUN_SCRIPT(script) laya::__JSRun::Run(script);
+//#define JSP_RUN_SCRIPT(script) laya::__JSRun::Run(script);
 #define JSP_TO_JS_UNDEFINE ((v8::Undefined(v8::Isolate::GetCurrent())))
 #define JSP_TO_JS_PROMISE (v8::Local<v8::Promise>().As<v8::Value>())
 #define JSP_TO_JS_BYTE_ARRAY(vl, sz) (__JsByteArray::ToJsByteArray(vl, sz))

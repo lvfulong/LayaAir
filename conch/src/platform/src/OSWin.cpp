@@ -81,22 +81,24 @@ int OSWin::getSafeInsetRight()
 }
 JsValue OSWin::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
-    auto isolate = v8::Isolate::GetCurrent();
-    auto context = isolate->GetCurrentContext();
+    //auto isolate = v8::Isolate::GetCurrent();
+    //auto context = isolate->GetCurrentContext();
 
-    napi_deferred deferred;
-    napi_value promise;
+    //napi_deferred deferred;
+    //napi_value promise;
 
-    napi_create_promise(context, &deferred, &promise);
+    //napi_create_promise(context, &deferred, &promise);
 
-    std::function<void(std::string)> cb = [deferred, cbref](std::string message) {
-        postToJS([deferred, message, cbref]() {
+    auto promise = jsbind::Promise::Make();
+    std::function<void(std::string)> cb = [promise, cbref](std::string message) {
+        postToJS([promise, message, cbref]() {
             if (!cbref.lock())
                 return;
-            auto isolate = v8::Isolate::GetCurrent();
-            auto context = isolate->GetCurrentContext();
-            napi_value v = JsValueFromV8LocalValue(jsbind::Local::Make<std::string>(message));
-            napi_resolve_deferred(context, deferred, v);
+            //auto isolate = v8::Isolate::GetCurrent();
+            //auto context = isolate->GetCurrentContext();
+            //napi_value v = JsValueFromV8LocalValue(jsbind::Local::Make<std::string>(message));
+            //napi_resolve_deferred(context, deferred, v);
+            promise.resolve(message);
         });
     };
     if (g_handleAsyncMessageCb)
@@ -104,7 +106,7 @@ JsValue OSWin::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eve
         // handleAsyncMessage is called in platform os ui thread
         postToPlatform([eventName, data, cb]() { g_handleAsyncMessageCb(eventName, data, cb); });
     }
-    return V8LocalValueFromJsValue(promise);
+    return promise.getHandle();
 }
 std::string OSWin::postSyncMessage(const std::string &eventName, const std::string &data)
 {

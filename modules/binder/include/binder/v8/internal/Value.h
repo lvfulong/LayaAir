@@ -9,8 +9,6 @@ namespace jsbind
 {
 namespace internal
 {
-// struct JSVMValue
-//{
 static inline bool getBool(jsvm::Value value)
 {
     GET_ENV
@@ -342,18 +340,6 @@ static inline bool isDataView(jsvm::Value value)
     jsvm::IsDataview(env, value, &isDataview);
     return isDataview;
 }
-// };
 } // namespace internal
-
-/*
-static v8::Local<v8::Value> ToJsDate(int32_t p_vl)
-    {
-        return v8::Date::New(v8::Isolate::GetCurrent()->GetCurrentContext(), (double)p_vl).ToLocalChecked();
-    }
-static v8::Local<v8::Value> ToJsDate(double p_vl)
-{
-
-    return v8::Date::New(v8::Isolate::GetCurrent()->GetCurrentContext(), (double)p_vl).ToLocalChecked();
-}*/
 } // namespace jsbind
 #endif

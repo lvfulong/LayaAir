@@ -34,10 +34,10 @@ class __JSRun
 {
   public:
     // Extracts a C string from a V8 Utf8Value.
-    static const char *ToCString(const v8::String::Utf8Value &value)
-    {
-        return *value ? *value : "<string conversion failed>";
-    }
+    //static const char *ToCString(const v8::String::Utf8Value &value)
+    //{
+    //    return *value ? *value : "<string conversion failed>";
+   // }
 
     static void ReportException(v8::Isolate *isolate, v8::TryCatch *try_catch);
 

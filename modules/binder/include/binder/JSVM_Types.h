@@ -97,6 +97,7 @@ using Ref = napi_ref;
 // using Callback = napi_callback;
 // using CDECL = NAPI_CDECL;
 typedef Value(NAPI_CDECL *Callback)(Env env, CallbackInfo info);
+using Script = napi_value;
 struct VM__
 {
 
