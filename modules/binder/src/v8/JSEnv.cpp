@@ -323,9 +323,14 @@ void JSV8Worker::_runLoop()
     m_pJS->run(call_JSThread__defRunLoop, this);
     m_pJS->uninitJSEngine();
 }
+static thread_local JSEnv* s_threadLocalEnv;
 JSEnv* JSEnv::getCurrent()
 {
-    return nullptr;//todo
+    return s_threadLocalEnv;
+}
+void JSEnv::setCurrent(JSEnv* env)
+{
+    s_threadLocalEnv = env;
 }
 } // namespace laya
 

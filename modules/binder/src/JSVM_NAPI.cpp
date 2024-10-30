@@ -1,5 +1,7 @@
 #include "binder/JSVM.h"
 #include "binder/napi/js_native_api.h"
+#include "binder/napi/js_native_api_v8.h"
+
 namespace jsvm
 {
 inline napi_status ConvertTo_NapiStatus(Status value)
@@ -333,6 +335,12 @@ struct VMScope__
 {
     v8::Isolate *isolate_;
 };
+struct EnvScope__
+{
+};
+struct HandleScope__
+{
+};
 inline /*JSVM_EXTERN*/ Status Init(const InitOptions *options)
 {
     // m_pIsolate = NULL;
@@ -365,41 +373,169 @@ inline /*JSVM_EXTERN*/ Status UnInit()
     delete s_pPlatform;
 }
 #endif
-inline /*JSVM_EXTERN*/ CreateVM(const CreateVMOptions *options, VM *result)
+
+class LayaNapiEnv : public napi_env__
+{
+  public:
+    LayaNapiEnv(v8::Local<v8::Context> context, int32_t module_api_version) : napi_env__(context, module_api_version)
+    {
+    }
+    ~LayaNapiEnv()
+    {
+    }
+    // bool can_call_into_js() const override;
+    void CallFinalizer(napi_finalize cb, void *data, void *hint) override;
+    template <bool enforceUncaughtExceptionPolicy> void CallFinalizer(napi_finalize cb, void *data, void *hint);
+
+    void EnqueueFinalizer(v8impl::RefTracker *finalizer) override;
+    void DrainFinalizerQueue();
+
+    void trigger_fatal_exception(v8::Local<v8::Value> local_err);
+    template <bool enforceUncaughtExceptionPolicy, typename T> void CallbackIntoModule(T &&call);
+
+    void DeleteMe() override;
+
+    /*inline node::Environment* node_env() const {
+        return node::Environment::GetCurrent(context());
+    }*/
+    inline const char *GetFilename() const
+    {
+        return filename.c_str();
+    }
+
+    std::string filename;
+    bool destructing = false;
+    bool finalization_scheduled = false;
+};
+void LayaNapiEnv::DeleteMe()
+{
+    destructing = true;
+    DrainFinalizerQueue();
+    napi_env__::DeleteMe();
+}
+
+// bool LayaNapiEnv::can_call_into_js() const {
+//     return node_env()->can_call_into_js();
+// }
+
+void LayaNapiEnv::CallFinalizer(napi_finalize cb, void *data, void *hint)
+{
+    CallFinalizer<true>(cb, data, hint);
+}
+
+template <bool enforceUncaughtExceptionPolicy> void LayaNapiEnv::CallFinalizer(napi_finalize cb, void *data, void *hint)
+{
+    v8::HandleScope handle_scope(isolate);
+    v8::Context::Scope context_scope(context());
+    CallbackIntoModule<enforceUncaughtExceptionPolicy>([&](napi_env env) { cb(env, data, hint); });
+}
+
+void LayaNapiEnv::EnqueueFinalizer(v8impl::RefTracker *finalizer)
+{
+    napi_env__::EnqueueFinalizer(finalizer);
+    // Schedule a second pass only when it has not been scheduled, and not
+    // destructing the env.
+    // When the env is being destructed, queued finalizers are drained in the
+    // loop of `node_napi_env__::DrainFinalizerQueue`.
+    if (!finalization_scheduled && !destructing)
+    {
+        finalization_scheduled = true;
+        Ref();
+        /////node_env()->SetImmediate([this](node::Environment* node_env) {
+        ////    finalization_scheduled = false;
+        ////    Unref();
+        //////    DrainFinalizerQueue();
+        ///////    });
+    }
+}
+
+void LayaNapiEnv::DrainFinalizerQueue()
+{
+    // As userland code can delete additional references in one finalizer,
+    // the list of pending finalizers may be mutated as we execute them, so
+    // we keep iterating it until it is empty.
+    while (!pending_finalizers.empty())
+    {
+        v8impl::RefTracker *ref_tracker = *pending_finalizers.begin();
+        pending_finalizers.erase(ref_tracker);
+        ref_tracker->Finalize();
+    }
+}
+
+void LayaNapiEnv::trigger_fatal_exception(v8::Local<v8::Value> local_err)
+{
+    v8::Local<v8::Message> local_msg = v8::Exception::CreateMessage(isolate, local_err);
+    //////node::errors::TriggerUncaughtException(isolate, local_err, local_msg);
+}
+
+// The option enforceUncaughtExceptionPolicy is added for not breaking existing
+// running Node-API add-ons.
+template <bool enforceUncaughtExceptionPolicy, typename T> void LayaNapiEnv::CallbackIntoModule(T &&call)
+{
+    /*CallIntoModule(call, [](napi_env env_, v8::Local<v8::Value> local_err) {
+        node_napi_env__* env = static_cast<node_napi_env__*>(env_);
+        if (env->terminatedOrTerminating()) {
+            return;
+        }
+        node::Environment* node_env = env->node_env();
+        // If the module api version is less than NAPI_VERSION_EXPERIMENTAL,
+        // and the option --force-node-api-uncaught-exceptions-policy is not
+        // specified, emit a warning about the uncaught exception instead of
+        // triggering uncaught exception event.
+        if (env->module_api_version < NAPI_VERSION_EXPERIMENTAL &&
+            !node_env->options()->force_node_api_uncaught_exceptions_policy &&
+            !enforceUncaughtExceptionPolicy) {
+            ProcessEmitDeprecationWarning(
+                node_env,
+                "Uncaught N-API callback exception detected, please run node "
+                "with option --force-node-api-uncaught-exceptions-policy=true "
+                "to handle those exceptions properly.",
+                "DEP0168");
+            return;
+        }
+        // If there was an unhandled exception in the complete callback,
+        // report it as a fatal exception. (There is no JavaScript on the
+        // call stack that can possibly handle it.)
+        env->trigger_fatal_exception(local_err);
+        });*/
+}
+inline /*JSVM_EXTERN*/ Status CreateVM(const CreateVMOptions *options, VM *result)
 {
     v8::Isolate::CreateParams create_params;
     create_params.array_buffer_allocator = v8::ArrayBuffer::Allocator::NewDefaultAllocator();
-    result->isolate_ = v8::Isolate::New(create_params);
-    m_pIsolate->Enter();
-    v8::HandleScope handle_scope(m_pIsolate);
-    v8::Local<v8::Context> context = v8::Context::New(m_pIsolate);
-    m_context.Reset(m_pIsolate, context);
-    m_IsolateData = new IsolateData(m_pIsolate, NULL);
-    m_IsolateData->m_data = (void *)this;
-    m_pIsolate->SetPromiseRejectCallback(PromiseRejectHandlerInMainThread);
-    context->Enter();
+    (*result)->isolate_ = v8::Isolate::New(create_params);
+    // m_pIsolate->Enter();
+    // v8::HandleScope handle_scope(m_pIsolate);
+    // v8::Local<v8::Context> context = v8::Context::New(m_pIsolate);
+    // m_context.Reset(m_pIsolate, context);
+    // m_IsolateData = new IsolateData(m_pIsolate, NULL);
+    // m_IsolateData->m_data = (void *)this;
+    // m_pIsolate->SetPromiseRejectCallback(PromiseRejectHandlerInMainThread);
+    // context->Enter();
 }
-inline /*JSVM_EXTERN*/ DestroyVM(VM vm)
+inline /*JSVM_EXTERN*/ Status DestroyVM(VM vm)
 {
     {
-        v8::HandleScope handle_scope(m_pIsolate);
-        v8::Local<v8::Context> context = m_context.Get(m_pIsolate);
-        context->Exit();
-        m_context.Reset();
-        delete m_IsolateData;
-        m_pIsolate->Exit();
+        // v8::HandleScope handle_scope(m_pIsolate);
+        // v8::Local<v8::Context> context = m_context.Get(m_pIsolate);
+        // context->Exit();
+        // m_context.Reset();
+        // delete m_IsolateData;
+        // m_pIsolate->Exit();
     }
-    m_pIsolate->Dispose();
+    DEBUG_CHECK(vm->isolate_ != nullptr);
+    vm->isolate_->Dispose();
+    vm->isolate_ = nullptr;
 }
 inline /*JSVM_EXTERN*/ Status OpenVMScope(VM vm, VMScope *result)
 {
-    result->isolate_ = vm->isolate_;
-    result->isolate_->Enter();
+    (*result)->isolate_ = vm->isolate_;
+    (*result)->isolate_->Enter();
 }
 inline /*JSVM_EXTERN*/ Status CloseVMScope(VM vm, VMScope scope)
 {
-    result->isolate_ = vm->isolate_;
-    result->isolate_->Exit();
+    scope->isolate_ = vm->isolate_;
+    scope->isolate_->Exit();
 }
 inline /*JSVM_EXTERN*/ Status OpenEnvScope(Env env, EnvScope *result)
 {
@@ -409,16 +545,23 @@ inline /*JSVM_EXTERN*/ Status CloseEnvScope(Env env, EnvScope scope)
 }
 inline /*JSVM_EXTERN*/ Status CreateEnv(VM vm, size_t propertyCount, const PropertyDescriptor *properties, Env *result)
 {
+    // todo properties
+    v8::Local<v8::Context> context = v8::Context::New(vm->isolate_);
+    *result = new LayaNapiEnv(context, NAPI_VERSION);
 }
 inline /*JSVM_EXTERN*/ Status DestroyEnv(Env env)
 {
+    DEBUG_CHECK(env != nullptr);
+    env->DeleteMe();
 }
 
 inline /*JSVM_EXTERN*/ Status OpenHandleScope(Env env, HandleScope *result)
 {
+    env->context()->Enter();
 }
 inline /*JSVM_EXTERN*/ Status CloseHandleScope(Env env, HandleScope scope)
 {
+    env->context()->Exit();
 }
 inline /*JSVM_EXTERN*/ Status GetArrayLength(Env env, Value value, uint32_t *result)
 {

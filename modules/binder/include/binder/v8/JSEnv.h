@@ -32,11 +32,12 @@ class JSEnv
 {
   public:
     static JSEnv *getCurrent();
+    static void setCurrent(JSEnv* env);
     jsvm::Env getEnv()
     {
         return env_;
     }
-
+    
   private:
     jsvm::Env env_;
 };

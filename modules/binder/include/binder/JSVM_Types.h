@@ -99,13 +99,15 @@ using Ref = napi_ref;
 typedef Value(NAPI_CDECL *Callback)(Env env, CallbackInfo info);
 using Script = napi_value;
 
-typedef struct  VM__*  VM;
-typedef struct VMScope__* VMScope;
+typedef struct VM__ *VM;
+typedef struct VMScope__ *VMScope;
+typedef struct EnvScope__ *EnvScope;
+typedef struct HandleScope__ *HandleScope;
 struct InitOptions
 {
-    const intptr_t* externalReferences;
-    int* argc;
-    char** argv;
+    const intptr_t *externalReferences;
+    int *argc;
+    char **argv;
     bool removeFlags;
 };
 struct CreateVMOptions
@@ -114,7 +116,7 @@ struct CreateVMOptions
     size_t maxYoungGenerationSize;
     size_t initialOldGenerationSize;
     size_t initialYoungGenerationSize;
-    const char* snapshotBlobData;
+    const char *snapshotBlobData;
     size_t snapshotBlobSize;
     bool isForSnapshotting;
 };
