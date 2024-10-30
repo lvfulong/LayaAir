@@ -519,14 +519,12 @@ namespace laya
     }
 
     void onDownloaded_JS(JCBuffer & p_Buff,
-            const std::string & pLocalAddr,
-            const std::string & pSvAddr,
             int pnCurlRet,
             int pnHttpRet,
-            const std::string & pstrHeader,
             std::shared_ptr<v8::Persistent<v8::Value>>& jsOnComp,
             std::shared_ptr<v8::Persistent<v8::Value>>& jsOnProg
     ) {
+        //pLocalAddr 等都不要了，因为转v8字符串会导致概率崩溃，可能是临时变量导致
         auto isolate = v8::Isolate::GetCurrent();
         v8::HandleScope handleScope(isolate); // 创建 HandleScope
         v8::Local<v8::Context> context = isolate->GetCurrentContext();
@@ -539,8 +537,8 @@ namespace laya
             const unsigned argc = 3;
             v8::Local<v8::Value> argv[argc] = {
                 laya::createJSAB(p_Buff.m_pPtr, p_Buff.m_nLen),
-                v8::String::NewFromUtf8(isolate, pLocalAddr.c_str(), v8::NewStringType::kNormal).ToLocalChecked(),
-                v8::String::NewFromUtf8(isolate, pSvAddr.c_str(), v8::NewStringType::kNormal).ToLocalChecked()
+                v8::String::NewFromUtf8(isolate, "", v8::NewStringType::kNormal).ToLocalChecked(),
+                v8::String::NewFromUtf8(isolate, "", v8::NewStringType::kNormal).ToLocalChecked()
             };
 
             // 调用函数
@@ -586,7 +584,7 @@ namespace laya
         //}
 
         p_Buff.m_bNeedDel = false; //下载线程不要删除，js那边删
-        postToJS(std::bind(onDownloaded_JS, p_Buff, std::ref(pLocalAddr), std::ref(pSvAddr), pnCurlRet, pnHttpRet, pstrHeader, jsOnComp, jsOnProg));
+        postToJS(std::bind(onDownloaded_JS, p_Buff, pnCurlRet, pnHttpRet, jsOnComp, jsOnProg));
     }
 
     /**
