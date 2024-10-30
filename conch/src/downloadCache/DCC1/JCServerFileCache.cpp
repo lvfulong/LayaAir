@@ -453,7 +453,7 @@ namespace laya
 		if(g_pAssetManager)
         {
 			JCAndroidFileSource* pAssets = new JCAndroidFileSource();
-			pAssets->Init((AAssetManager*)g_pAssetManager, assetsPath.c_str(), gAPKExpansionMainPath, gAPKExpansionPatchPath, tmpWebBase);
+			pAssets->Init((AAssetManager*)g_pAssetManager, assetsPath.c_str(), gAPKExpansionMainPath, gAPKExpansionPatchPath);
 			pFileReader = pAssets;
 		}
         else

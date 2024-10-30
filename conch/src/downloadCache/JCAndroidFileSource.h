@@ -46,7 +46,7 @@ namespace laya{
 				m_pZipAPKExpansionPatch = 0;
 			}
 		}
-		bool Init( AAssetManager *p_pMgr, const char *p_pszRoot  ,const std::string& strAPKExpansionMain, const std::string& strAPKExpansionPatch, const std::string& strWebBase)
+		bool Init( AAssetManager *p_pMgr, const char *p_pszRoot  ,const std::string& strAPKExpansionMain, const std::string& strAPKExpansionPatch)
 		{
 			m_pMgr = p_pMgr;
 			if( 0 != m_pszRoot )
@@ -72,8 +72,7 @@ namespace laya{
 				if( m_pZipAPKExpansionMain->open(strAPKExpansionMain.c_str()))
 				{
 					LOGE("打开zip成功：%s", strAPKExpansionMain.c_str());
-					std::string root = "cache/" + strWebBase;
-					m_pZipAPKExpansionMain->InitDir(root.c_str());
+					m_pZipAPKExpansionMain->InitDir("");
 				}
 				else
 				{
@@ -89,8 +88,7 @@ namespace laya{
 				if( m_pZipAPKExpansionPatch->open(strAPKExpansionPatch.c_str()))
 				{
 					LOGE("打开zip成功：%s", strAPKExpansionPatch.c_str());
-					std::string root = "cache/" + strWebBase;
-					m_pZipAPKExpansionPatch->InitDir(root.c_str());
+					m_pZipAPKExpansionPatch->InitDir("");
 				}
 				else
 				{

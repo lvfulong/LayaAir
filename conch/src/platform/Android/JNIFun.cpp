@@ -148,7 +148,7 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_InitDLib(JNIEnv * env,
     else
     {
 		laya::JCAndroidFileSource* pAssets = new laya::JCAndroidFileSource();
-		pAssets->Init(g_pAssetManager, "","", "", "");
+		pAssets->Init(g_pAssetManager, "",gAPKExpansionMainPath, gAPKExpansionPatchPath);
 		JCConch::s_pAssetsFiles = pAssets;
 	}
 	env->ReleaseStringUTFChars(p_strAssetRootPath, pAssetRootPath);
