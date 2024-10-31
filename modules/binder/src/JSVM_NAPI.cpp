@@ -844,4 +844,10 @@ inline /*JSVM_EXTERN*/ Status RunScript(Env env, Script script, Value *result)
 {
     return ConvertToStatus(napi_run_script(env, script, result));
 }
+inline /*JSVM_EXTERN*/ Status PumpMessageLoop(VM vm, bool *result)
+{
+}
+inline /*JSVM_EXTERN*/ Status PerformMicrotaskCheckpoint(VM vm)
+{
+}
 } // namespace jsvm

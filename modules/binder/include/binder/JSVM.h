@@ -9,11 +9,18 @@
 
 namespace jsvm
 {
-/*JSVM_EXTERN*/ Status CreateVM(const  CreateVMOptions* options, VM* result);
+
+/*JSVM_EXTERN*/ Status Init(const InitOptions *options);
+/*JSVM_EXTERN*/ Status CreateVM(const CreateVMOptions *options, VM *result);
 /*JSVM_EXTERN*/ Status DestroyVM(VM vm);
+/*JSVM_EXTERN*/ Status OpenVMScope(VM vm, VMScope *result);
+/*JSVM_EXTERN*/ Status CloseVMScope(VM vm, VMScope scope);
+/*JSVM_EXTERN*/ Status OpenEnvScope(Env env, EnvScope *result);
+/*JSVM_EXTERN*/ Status CloseEnvScope(Env env, EnvScope scope);
 /*JSVM_EXTERN*/ Status CreateEnv(VM vm, size_t propertyCount, const PropertyDescriptor *properties, Env *result);
 /*JSVM_EXTERN*/ Status DestroyEnv(Env env);
-/*JSVM_EXTERN*/ Status Init(const InitOptions *options);
+/*JSVM_EXTERN*/ Status OpenHandleScope(Env env, HandleScope *result);
+/*JSVM_EXTERN*/ Status CloseHandleScope(Env env, HandleScope scope);
 /*JSVM_EXTERN*/ Status CreatePromise(Env env, Deferred *deferred, Value *promise);
 /*JSVM_EXTERN*/ Status ResolveDeferred(Env env, Deferred deferred, Value resolution);
 /*JSVM_EXTERN*/ Status RejectDeferred(Env env, Deferred deferred, Value resolution);
@@ -90,6 +97,8 @@ namespace jsvm
 /*JSVM_EXTERN*/ Status CreateBigintUint64(Env env, uint64_t value, Value *result);
 /*JSVM_EXTERN*/ Status GetValueBigintUint64(Env env, Value value, uint64_t *result, bool *lossless);
 /*JSVM_EXTERN*/ Status RunScript(Env env, Script script, Value *result);
+/*JSVM_EXTERN*/ Status PumpMessageLoop(VM vm, bool *result);
+/*JSVM_EXTERN*/ Status PerformMicrotaskCheckpoint(VM vm);
 } // namespace jsvm
 
 #endif

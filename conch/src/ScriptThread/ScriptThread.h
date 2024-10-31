@@ -1,9 +1,16 @@
 #ifndef __SCRIPT_THREAD_H__
 #define __SCRIPT_THREAD_H__
 
+#include <binder/JSVM.h>
+#include <mutex>
+#include <thread>
+#include <utils/ListNode.h>
+#include <utils/Log.h>
+#include <utils/thread/JCWorkerThread.h>
+
 namespace laya
 {
-class ScriptThread: public laya::JCWorkerThread
+class ScriptThread : public JCWorkerThread
 {
   public:
     virtual ~ScriptThread()
@@ -12,13 +19,12 @@ class ScriptThread: public laya::JCWorkerThread
     ScriptThread()
     {
     }
-        // 因为要trycatch，所以只好再抄一份了
     virtual void _defRunLoop();
 
     virtual void _runLoop();
 
-  public:
-    Javascript *m_pJS;
+  private:
+    jsvm::VM m_vm;
 };
 } // namespace laya
 #endif

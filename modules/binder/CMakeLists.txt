@@ -7,12 +7,10 @@ set(PUBLIC_HEADER_DIR include)
 
 set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/JSInterface.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/IsolateData.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/ArrayBuffer.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/JSCProxyTLS.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/internal/Converter.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/internal/Value.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/JSEnv.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Local.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Persistent.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Class.h
@@ -28,7 +26,6 @@ set(HEADERS
 set(SOURCES
     src/v8/IsolateData.cpp
     src/v8/ArrayBuffer.cpp
-    src/v8/JSEnv.cpp
     src/v8/Class.cpp
     src/v8/Persistent.cpp
     src/v8/Local.cpp
