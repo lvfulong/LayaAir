@@ -1,6 +1,9 @@
 #include "binder/JSVM.h"
 #include "binder/napi/js_native_api.h"
 #include "binder/napi/js_native_api_v8.h"
+#include <v8.h>
+#include <libplatform/libplatform.h>
+
 
 namespace jsvm
 {

@@ -94,7 +94,7 @@ namespace laya
 #endif
     JCScriptRuntime::JCScriptRuntime()
     {
-        m_pScriptThread = new jsbind::JSMulThread();
+        m_pScriptThread = std::make_unique<ScriptThread>();
         m_bHasJSThread = false;
         m_pFileResMgr = NULL;
         m_pAssetsRes = NULL;
@@ -116,8 +116,6 @@ namespace laya
     }
     JCScriptRuntime::~JCScriptRuntime() 
     {
-        delete m_pScriptThread;
-        m_pScriptThread = NULL;
 
         m_pFileResMgr = NULL;
         m_pAssetsRes = NULL;
@@ -178,7 +176,7 @@ namespace laya
 #endif
 
         m_debugPort = g_kSystemConfig.m_nJSDebugMode;
-        m_pScriptThread->initialize(m_debugPort, std::bind(&onUnhandledRejection, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+        //m_pScriptThread->initialize(m_debugPort, std::bind(&onUnhandledRejection, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
         //m_nThreadState = 1;
         m_pScriptThread->setLoopFunc(std::bind(&JCScriptRuntime::onUpdate, JCConch::s_pScriptRuntime.get()));
         m_pScriptThread->start();
@@ -201,7 +199,7 @@ namespace laya
             //std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
         m_pScriptThread->stop();
-        m_pScriptThread->uninitialize();
+        //m_pScriptThread->uninitialize();
         LOGI("Stop js end.");
     }
     void JCScriptRuntime::reload() 
@@ -385,7 +383,7 @@ namespace laya
         }).get();
         
         //PERF_INITVAR(nBenginTime);
-#ifdef JS_V8
+#ifdef JS_V8_DEBUGGER
         m_pScriptThread->runDbgFuncs();
 #endif
         m_nUpdateCount++;

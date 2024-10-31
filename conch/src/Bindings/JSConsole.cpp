@@ -2,6 +2,7 @@
 #include <binder/JSInterface.h>
 #include <utils/Log.h>
 #include <utils/JCMemorySurvey.h>
+#include <utils/JCCommonMethod.h>
 
 namespace laya 
 {
