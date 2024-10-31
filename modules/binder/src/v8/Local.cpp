@@ -15,7 +15,7 @@ Local::Local()
 Local::Local(jsvm::Value handle) : handle_(handle)
 {
 }
-Local Local::operator[](const std::string& key) const
+Local Local::operator[](const std::string &key) const
 {
     DEBUG_CHECK(isValid());
     GET_ENV

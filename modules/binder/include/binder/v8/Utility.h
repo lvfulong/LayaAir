@@ -61,7 +61,7 @@ template <typename F> using is_void_return = std::is_same<void, typename functio
 #define ABORT(msg)                                                                                                     \
     do                                                                                                                 \
     {                                                                                                                  \
-        LOGE("%s:%d: fatal error: \"%s\"\n", __FILE__, __LINE__, #msg);                                               \
+        LOGE("%s:%d: fatal error: \"%s\"\n", __FILE__, __LINE__, #msg);                                                \
         ::abort();                                                                                                     \
     } while (false)
 

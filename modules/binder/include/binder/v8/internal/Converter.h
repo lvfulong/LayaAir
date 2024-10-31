@@ -1,14 +1,14 @@
 #ifndef __JSBIND_CONVERTER__H__
 #define __JSBIND_CONVERTER__H__
 
-#include "ArrayBuffer.h"
-#include "Utility.h"
 #include "binder/JSVM.h"
 #include "binder/JSVM_Types.h"
 #include "binder/napi/js_native_api.h"
 #include "binder/v8/internal/Value.h"
-#include <binder/v8/Array.h>
 #include <assert.h>
+#include <binder/v8/Array.h>
+#include <binder/v8/ArrayBuffer.h>
+#include <binder/v8/Utility.h>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -185,7 +185,7 @@ template <> class Converter<const int32_t &> : public Converter<int32_t>
 };
 template <> class Converter<uint32_t>
 {
-public:
+  public:
     static uint32_t ToCpp(jsvm::Value value)
     {
         return internal::getUint32(value);
@@ -224,15 +224,15 @@ template <> class Converter<long>
     }
 };
 #endif
-//用bigint 保证精度不丢失,可以用于bullet对象指针
+// 用bigint 保证精度不丢失,可以用于bullet对象指针
 template <> class Converter<int64_t>
 {
   public:
     static int64_t ToCpp(jsvm::Value value)
     {
-        //if (!value->IsNumber() || value->IsNullOrUndefined())
+        // if (!value->IsNumber() || value->IsNullOrUndefined())
         //{
-            //return 0;
+        // return 0;
         //}
         return internal::getInt64Noloss(value);
     }
@@ -240,10 +240,10 @@ template <> class Converter<int64_t>
     {
         return internal::makeInt64Noloss(value);
     }
-     /*static bool is(v8::Local<v8::Value> p_vl)
-    {
-        return p_vl->IsNumber();
-    }*/
+    /*static bool is(v8::Local<v8::Value> p_vl)
+   {
+       return p_vl->IsNumber();
+   }*/
 };
 template <> class Converter<uint64_t>
 {
@@ -254,9 +254,9 @@ template <> class Converter<uint64_t>
         {
             return 0;
         }*/
-       return internal::getUint64Noloss(value);
+        return internal::getUint64Noloss(value);
     }
-    static jsvm::Value  ToJs(uint64_t value, bool callDestructor = true)
+    static jsvm::Value ToJs(uint64_t value, bool callDestructor = true)
     {
         return internal::makeUint64Noloss(value);
     }
@@ -301,7 +301,6 @@ template <> class Converter<uint8_t>
 template <> class Converter<const uint8_t &> : public Converter<uint8_t>
 {
 };*/
-
 
 template <> class Converter<bool>
 {
@@ -436,15 +435,15 @@ template <> class Converter<ArrayBuffer>
         return p_vl->IsNullOrUndefined();
     }
 };*/
-//utf16 u16string
+// utf16 u16string
 template <> class Converter<std::u16string>
 {
-public:
+  public:
     static std::u16string ToCpp(jsvm::Value value)
     {
         return internal::getStringUtf16(value);
     }
-    static jsvm::Value ToJs(const std::u16string& value, bool callDestructor = true)
+    static jsvm::Value ToJs(const std::u16string &value, bool callDestructor = true)
     {
         return internal::makeStringUtf16(value);
     }
@@ -453,7 +452,7 @@ public:
         return p_vl->IsString();
     }*/
 };
-//utf8 string
+// utf8 string
 template <> class Converter<std::string>
 {
   public:
@@ -461,7 +460,7 @@ template <> class Converter<std::string>
     {
         return internal::getStringUtf8(value);
     }
-    static jsvm::Value ToJs(const std::string& value, bool callDestructor = true)
+    static jsvm::Value ToJs(const std::string &value, bool callDestructor = true)
     {
         return internal::makeStringUtf8(value);
     }
@@ -471,9 +470,9 @@ template <> class Converter<std::string>
     }*/
 };
 
-// const char* sColor = Converter<const char*>::ToCpp(args);          so not save sColor for latter use   get right value address
-// const std::string sColor = Converter<std::string>::ToCpp(args);  better
-// const std::string sColor = Converter<const char*>::ToCpp(args);  better
+// const char* sColor = Converter<const char*>::ToCpp(args);          so not save sColor for latter use   get right
+// value address const std::string sColor = Converter<std::string>::ToCpp(args);  better const std::string sColor =
+// Converter<const char*>::ToCpp(args);  better
 template <> class Converter<const char *>
 {
   public:

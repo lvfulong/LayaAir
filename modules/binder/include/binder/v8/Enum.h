@@ -2,20 +2,20 @@
 #define __JSBIND_ENUM_H__
 
 #include "Class.h"
-#include "internal/Converter.h"
 #include "Invocation.h"
 #include "Utility.h"
+#include "internal/Converter.h"
 #include <string>
 #include <v8.h>
 #include <vector>
 
 namespace jsbind
 {
-    class Object;
+class Object;
 class Enum_
 {
   public:
-    Enum_(Object*owner, std::string_view name, v8::Isolate *isolate);
+    Enum_(Object *owner, std::string_view name, v8::Isolate *isolate);
     ~Enum_();
     template <typename EnumType> Enum_ &value(std::string_view name, EnumType value);
 
@@ -28,9 +28,9 @@ class Enum_
   private:
     friend class Module;
     std::string name_;
-    Object*owner_;
+    Object *owner_;
     std::unique_ptr<Module> module_;
 };
 
-} // namespace laya
+} // namespace jsbind
 #endif

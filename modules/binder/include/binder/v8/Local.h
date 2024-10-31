@@ -27,19 +27,19 @@ class Local
     ReturnType call(ClassType *recv, const Args &...args)
     {
         GET_ENV
-        
+
         ClassRegistry<ClassType> &classRegistry =
             ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
         auto objectRegistry = classRegistry.getObjectRegistry(recv);
         DEBUG_CHECK(objectRegistry != nullptr);
-        jsvm::Value result_recv;   
+        jsvm::Value result_recv;
         jsvm::Status status;
         status = jsvm::GetReferenceValue(env, objectRegistry, &result_recv);
         DEBUG_CHECK(status == jsvm::Status::OK);
 
         return call(env, result_recv, ... args)
     }
-    Local operator[](const std::string& key) const;
+    Local operator[](const std::string &key) const;
 
     jsvm::Value getHandle() const
     {
@@ -54,7 +54,7 @@ class Local
         DEBUG_CHECK(isValid());
         return internal::isUndefined(this->handle_);
     }
-    
+
     inline bool isNull() const
     {
         DEBUG_CHECK(isValid());
@@ -213,7 +213,6 @@ class Local
         DEBUG_CHECK(value != nullptr);
         return internal::isDate(value);
     }
-
 
     template <typename T> T as() const
     {

@@ -18,8 +18,15 @@ class StringLatin1
     {
         return handle_ != nullptr;
     }
-    const std::string& getValue()const { return value_; }
-    std::string getValue() { return value_; }
+    const std::string &getValue() const
+    {
+        return value_;
+    }
+    std::string getValue()
+    {
+        return value_;
+    }
+
   private:
     StringLatin1() = default;
     StringLatin1(jsvm::Value date, const std::string &value) : handle_(date), value_(value)

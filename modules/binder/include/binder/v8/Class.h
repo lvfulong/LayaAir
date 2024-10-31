@@ -14,7 +14,7 @@ namespace jsbind
 {
 namespace internal
 {
-    	extern void addDeinitializer(std::function<void()> func);
+extern void addDeinitializer(std::function<void()> func);
 template <typename ClassType> static void destructor(jsvm::Env env, void *nativeObject, void * /*finalize_hint*/);
 template <typename ClassType> void raw_destructor(ClassType *pointer)
 {
@@ -190,10 +190,10 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
             {
                 internal::raw_destructor(objectPointer);
             }
-            //isolate_->AdjustAmountOfExternalAllocatedMemory(-static_cast<int64_t>(sizeof(ClassType)));
-            //todo it->second.pobj.ClearWeak();
-            //todo it->second.pobj.Reset();
-            // if (erase)
+            // isolate_->AdjustAmountOfExternalAllocatedMemory(-static_cast<int64_t>(sizeof(ClassType)));
+            // todo it->second.pobj.ClearWeak();
+            // todo it->second.pobj.Reset();
+            //  if (erase)
             //{
             objects_.erase(it);
             // }

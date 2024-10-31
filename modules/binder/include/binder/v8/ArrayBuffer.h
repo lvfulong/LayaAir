@@ -95,8 +95,8 @@ class ArrayBuffer
     bool upload(uint8_t *inputBuffer, size_t length);
 
   private:
-    ArrayBuffer(uint8_t* inputBuffer, size_t length, size_t byteOffset, Type type);
-    ArrayBuffer(jsvm::Value arrayBuffer, uint8_t* inputBuffer, size_t length, Type type = ARRAY_BUFFER);
+    ArrayBuffer(uint8_t *inputBuffer, size_t length, size_t byteOffset, Type type);
+    ArrayBuffer(jsvm::Value arrayBuffer, uint8_t *inputBuffer, size_t length, Type type = ARRAY_BUFFER);
 
   private:
     uint8_t *data_ = nullptr;

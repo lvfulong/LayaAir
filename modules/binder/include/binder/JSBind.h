@@ -3,6 +3,6 @@
 
 namespace jsbind
 {
-	extern void runDeinitializers();
-} // namespace binder
+extern void runDeinitializers();
+} // namespace jsbind
 #endif

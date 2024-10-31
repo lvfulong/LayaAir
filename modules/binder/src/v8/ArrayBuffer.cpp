@@ -1,8 +1,8 @@
 #include <binder/JSInterface.h>
 #include <binder/v8/ArrayBuffer.h>
-#include <binder/v8/internal/Converter.h>
 #include <binder/v8/JSEnv.h>
 #include <binder/v8/Local.h>
+#include <binder/v8/internal/Converter.h>
 #include <utils/JCMemorySurvey.h>
 #include <utils/Log.h>
 
@@ -20,7 +20,8 @@ bool ArrayBuffer::upload(uint8_t *inputBuffer, size_t length)
     }
     return false;
 }
-ArrayBuffer::ArrayBuffer(uint8_t *inputBuffer, size_t length, size_t byteOffset, Type type):data_(nullptr), length_(length), type_(type)
+ArrayBuffer::ArrayBuffer(uint8_t *inputBuffer, size_t length, size_t byteOffset, Type type)
+    : data_(nullptr), length_(length), type_(type)
 {
     GET_ENV
 
@@ -59,24 +60,24 @@ ArrayBuffer ArrayBuffer::Make(jsvm::Value arrayBuffer)
 {
     GET_ENV
     void *data = nullptr;
-    size_t length; 
+    size_t length;
     jsvm::TypedarrayType type;
     jsvm::Value buffer;
     size_t byteOffset;
     if (Local::isTypedArray(arrayBuffer))
     {
         jsvm::GetTypedarrayInfo(env, arrayBuffer, &type, &length, &data, &buffer, &byteOffset);
-        return ArrayBuffer(arrayBuffer, static_cast<uint8_t*>(data), length, static_cast<ArrayBuffer::Type>(type) );
+        return ArrayBuffer(arrayBuffer, static_cast<uint8_t *>(data), length, static_cast<ArrayBuffer::Type>(type));
     }
     else if (Local::isDataView(arrayBuffer))
     {
         jsvm::GetDataviewInfo(env, arrayBuffer, &length, &data, &buffer, &byteOffset);
-        return ArrayBuffer(arrayBuffer, static_cast<uint8_t*>(data), length, ArrayBuffer::DATA_VIEW);
+        return ArrayBuffer(arrayBuffer, static_cast<uint8_t *>(data), length, ArrayBuffer::DATA_VIEW);
     }
     else if (Local::isArrayBuffer(arrayBuffer))
     {
         jsvm::GetArraybufferInfo(env, arrayBuffer, &data, &length);
-        return ArrayBuffer(arrayBuffer, static_cast<uint8_t*>(data), length, ArrayBuffer::ARRAY_BUFFER);
+        return ArrayBuffer(arrayBuffer, static_cast<uint8_t *>(data), length, ArrayBuffer::ARRAY_BUFFER);
     }
     else
     {

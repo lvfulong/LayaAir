@@ -1,4 +1,4 @@
 #include "Invocation.h"
 namespace jsbind
 {
-} // namespace laya
+} // namespace jsbind

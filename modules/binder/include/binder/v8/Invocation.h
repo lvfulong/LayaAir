@@ -7,7 +7,6 @@
 #include <string>
 #include <type_traits>
 
-
 namespace jsbind
 {
 namespace internal
@@ -31,26 +30,27 @@ typename std::enable_if<!internal::is_void_return<Func>::value, jsvm::Value>::ty
     Func func, jsvm::Value *args, std::index_sequence<Seq...>)
 {
     return Converter<typename function_traits<Func>::return_type>::ToJs(
-        func( Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...));
+        func(Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...));
 }
 template <typename Tuple, typename Func, size_t... Seq>
 typename std::enable_if<internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call(
     Func func, jsvm::Value *args, std::index_sequence<Seq...>)
 {
-    func( Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...);
+    func(Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...);
     return nullptr;
 }
 template <typename ClassType, typename Tuple, typename Func, size_t... Seq>
 typename std::enable_if<!internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call_with_this(
     ClassType *thisObject, Func func, jsvm::Value *args, std::index_sequence<Seq...>)
 {
-    return Converter<typename function_traits<Func>::return_type>::ToJs((thisObject->*func)(Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...));
+    return Converter<typename function_traits<Func>::return_type>::ToJs(
+        (thisObject->*func)(Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...));
 }
 template <typename ClassType, typename Tuple, typename Func, size_t... Seq>
 typename std::enable_if<internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call_with_this(
     ClassType *thisObject, Func func, jsvm::Value *args, std::index_sequence<Seq...>)
 {
-    (thisObject->*func)( Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...);
+    (thisObject->*func)(Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...);
     return nullptr;
 }
 template <typename ClassType, typename Tuple, typename Func, size_t... Seq>
@@ -178,7 +178,8 @@ ClassType *InvokeClassConstructor(jsvm::Env env, jsvm::CallbackInfo info)
                                                                         std::make_index_sequence<sizeof...(Args)>());
 }
 
-template <typename ClassType, typename PropertyType> jsvm::Value InvokeClassGetter(jsvm::Env env, jsvm::CallbackInfo info)
+template <typename ClassType, typename PropertyType>
+jsvm::Value InvokeClassGetter(jsvm::Env env, jsvm::CallbackInfo info)
 {
     // size_t argc = 1;
     // napi_value args[1];
@@ -215,7 +216,8 @@ jsvm::Value InvokeClassGetterOptionalOverride(jsvm::Env env, jsvm::CallbackInfo 
     return Converter<PropertyType>::ToJs((*funcInfo->fGet)(*pObj));
 }
 
-template <typename ClassType, typename PropertyType> jsvm::Value InvokeClassSetter(jsvm::Env env, jsvm::CallbackInfo info)
+template <typename ClassType, typename PropertyType>
+jsvm::Value InvokeClassSetter(jsvm::Env env, jsvm::CallbackInfo info)
 {
 
     size_t argc;
@@ -341,5 +343,5 @@ template <typename... Args> jsvm::Value v8_call(jsvm::Env env, jsvm::Value self,
     return result;
 }
 } // namespace internal
-} // namespace binder
+} // namespace jsbind
 #endif

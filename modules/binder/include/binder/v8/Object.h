@@ -5,9 +5,9 @@
 
 #include <v8.h>
 
+#include "Enum.h"
 #include "internal/Converter.h"
 #include <binder/JSVM_Types.h>
-#include "Enum.h"
 
 namespace jsbind
 {
@@ -197,12 +197,12 @@ class Object
     {
     }
     // Object& module(std::string_view name, Module& m);
-    template <typename Value> Object& constant(std::string_view name, Value const& value)
+    template <typename Value> Object &constant(std::string_view name, Value const &value)
     {
-        //todo
-        //v8::HandleScope scope(isolate_);
-        //getLocal()->Set(Converter<const char*>::ToJs(name).As<v8::Name>(), Converter<Value>::ToJs(value),
-        //    v8::PropertyAttribute(v8::ReadOnly | v8::DontDelete));
+        // todo
+        // v8::HandleScope scope(isolate_);
+        // getLocal()->Set(Converter<const char*>::ToJs(name).As<v8::Name>(), Converter<Value>::ToJs(value),
+        //     v8::PropertyAttribute(v8::ReadOnly | v8::DontDelete));
         return *this;
     }
     template <typename T> Object &class_(std::string_view name, jsbind::class_<T> &cl)
@@ -287,7 +287,7 @@ class Object
     jsvm::Value object_ = nullptr;
 };
 
-template <typename EnumType> Enum_& Enum_::value(std::string_view name, EnumType value)
+template <typename EnumType> Enum_ &Enum_::value(std::string_view name, EnumType value)
 {
     module_->constant(name, (int32_t)value);
     return *this;

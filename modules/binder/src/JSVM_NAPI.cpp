@@ -1,9 +1,8 @@
 #include "binder/JSVM.h"
 #include "binder/napi/js_native_api.h"
 #include "binder/napi/js_native_api_v8.h"
-#include <v8.h>
 #include <libplatform/libplatform.h>
-
+#include <v8.h>
 
 namespace jsvm
 {
@@ -853,12 +852,10 @@ inline /*JSVM_EXTERN*/ Status PumpMessageLoop(VM vm, bool *result)
 inline /*JSVM_EXTERN*/ Status PerformMicrotaskCheckpoint(VM vm)
 {
 }
-inline /*JSVM_EXTERN*/ Status GetProperty(Env env, Value object, Value key, Value* result)
+inline /*JSVM_EXTERN*/ Status GetProperty(Env env, Value object, Value key, Value *result)
 {
-
 }
-inline /*JSVM_EXTERN*/ Status GetNamedProperty(Env env, Value object, const char* utf8name, Value* result)
+inline /*JSVM_EXTERN*/ Status GetNamedProperty(Env env, Value object, const char *utf8name, Value *result)
 {
-
 }
 } // namespace jsvm

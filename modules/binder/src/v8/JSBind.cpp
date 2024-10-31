@@ -3,5 +3,4 @@
 namespace jsbind
 {
 
-
 } // namespace jsbind

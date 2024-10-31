@@ -5,6 +5,7 @@
 #include <binder/JSVM_Types.h>
 #include <binder/v8/Class.h>
 #include <binder/v8/Local.h>
+
 namespace jsbind
 {
 class Persistent
