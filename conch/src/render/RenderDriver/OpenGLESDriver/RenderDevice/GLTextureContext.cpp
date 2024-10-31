@@ -845,7 +845,7 @@ void GLTextureContext::setTextureDDSData(GLESInternalTex *texture, const DDSText
     int width = texture->m_width;
     int height = texture->m_height;
 
-    char *source = ddsInfo.source;
+    const char *source = ddsInfo.source;
     int dataOffset = ddsInfo.dataOffset;
     int bpp = ddsInfo.bpp;
     int blocksBytes = ddsInfo.blockBytes;
@@ -913,7 +913,7 @@ void GLTextureContext::setTextureKTXData(GLESInternalTex *texture, const KTXText
     int format = texture->m_format;
     int type = texture->m_type;
 
-    char *source = ktxInfo.source;
+    const char *source = ktxInfo.source;
     bool compressd = ktxInfo.compress;
     bool fourSize = width % 4 == 0 && height % 4 == 0;
 
@@ -1199,7 +1199,7 @@ void GLTextureContext::setCubeDDSData(GLESInternalTex *texture, const DDSTexture
     int width = texture->m_width;
     int height = texture->m_height;
 
-    char *source = ddsInfo.source;
+    const char *source = ddsInfo.source;
     int dataOffset = ddsInfo.dataOffset;
     int bpp = ddsInfo.bpp;
     int blockBytes = ddsInfo.blockBytes;
@@ -1290,7 +1290,7 @@ void GLTextureContext::setCubeKTXData(GLESInternalTex *texture, const KTXTexture
     int mipmapCount = texture->m_mipmapCount;
     int width = texture->m_width;
     int height = texture->m_height;
-    char *source = ktxInfo.source;
+    const char *source = ktxInfo.source;
 
     bool fourSize = width % 4 == 0 && height % 4 == 0;
     if (!fourSize)

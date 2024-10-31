@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <map>
 #include <string>
+#include <utils/Log.h>
 
 namespace jsbind
 {
@@ -60,7 +61,7 @@ template <typename F> using is_void_return = std::is_same<void, typename functio
 #define ABORT(msg)                                                                                                     \
     do                                                                                                                 \
     {                                                                                                                  \
-        /*todo LOGE("%s:%d: fatal error: \"%s\"\n", __FILE__, __LINE__, #msg); */                                               \
+        LOGE("%s:%d: fatal error: \"%s\"\n", __FILE__, __LINE__, #msg);                                               \
         ::abort();                                                                                                     \
     } while (false)
 

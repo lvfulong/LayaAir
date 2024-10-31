@@ -39,6 +39,8 @@ class Local
 
         return call(env, result_recv, ... args)
     }
+    Local operator[](const std::string& key) const;
+
     jsvm::Value getHandle() const
     {
         return handle_;

@@ -612,10 +612,10 @@ template <typename T> class Converter<std::vector<T>>
 template <typename T> class Converter<std::vector<T *>>
 {
   public:
-    static std::vector<T *> ToCpp(jsvm::Value)
+    static std::vector<T *> ToCpp(jsvm::Value value)
     {
         std::vector<T *> vec;
-        Array<T>::getData(Value, vec);
+        Array<T>::getData(value, vec);
         return vec;
     }
     static jsvm::Value ToJs(const std::vector<T *> &value, bool callDestructor = true)

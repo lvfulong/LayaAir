@@ -13,7 +13,7 @@ namespace jsbind
         static jsvm::Value ToJs(const std::vector<T*>& value, bool callDestructor = true)
         {
             GET_ENV
-                jsvm::Value result;
+            jsvm::Value result;
             jsvm::Status status;
 
             int size = value.size();
@@ -37,8 +37,7 @@ namespace jsbind
         static jsvm::Value ToJs(const std::vector<T>& value, bool callDestructor = true)
         {
             GET_ENV
-
-                jsvm::Value result;
+            jsvm::Value result;
             jsvm::Status status;
             int size = value.size();
             if (0 == size)
@@ -61,8 +60,7 @@ namespace jsbind
         static void setData(const std::vector<T>& value, jsvm::Value array, bool callDestructor = true)
         {
             GET_ENV
-
-                jsvm::Value result;
+            jsvm::Value result;
             jsvm::Status status;
             int size = value.size();
             for (int i = 0; i < size; i++)
@@ -70,16 +68,19 @@ namespace jsbind
                 jsvm::SetElement(env, result, i, Converter<T>::ToJs(value.at(i), callDestructor));
             }
         }
-        static void getData(jsvm::Env env, jsvm::Value array, std::vector<T*>& result)
+        static void getData(jsvm::Value array, std::vector<T*>& result)
         {
-            bool isArray{ false };
-            jsvm::IsArray(env, array, isArray);
+            GET_ENV
+            bool isArray;
+            jsvm::Status status;
+            status = jsvm::IsArray(env, array, &isArray);
             DEBUG_CHECK(status == jsvm::Status::OK);
             if (isArray)
             {
-                value.clear();
-                uint32_t length{ 0 };
-                jsvm::GetArrayLength(env, array, &length) DEBUG_CHECK(status == jsvm::Status::OK);
+                result.clear();
+                uint32_t length;
+                jsvm::GetArrayLength(env, array, &length);
+                DEBUG_CHECK(status == jsvm::Status::OK);
                 result.reserve(length);
                 for (int i = 0; i < length; i++)
                 {
@@ -89,15 +90,16 @@ namespace jsbind
                 }
             }
         }
-        static void getData(jsvm::Env env, jsvm::Value array, std::vector<T>& result)
+        static void getData(jsvm::Value array, std::vector<T>& result)
         {
-            bool isArray{ false };
-            jsvm::IsArray(env, array, isArray);
+            GET_ENV
+            bool isArray;
+            jsvm::IsArray(env, array, &isArray);
             DEBUG_CHECK(status == jsvm::Status::OK);
             if (isArray)
             {
                 result.clear();
-                uint32_t length{ 0 };
+                uint32_t length;
                 jsvm::GetArrayLength(env, array, &length) DEBUG_CHECK(status == jsvm::Status::OK);
                 result.reserve(length);
                 for (int i = 0; i < length; i++)

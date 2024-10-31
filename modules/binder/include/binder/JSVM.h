@@ -99,6 +99,8 @@ namespace jsvm
 /*JSVM_EXTERN*/ Status RunScript(Env env, Script script, Value *result);
 /*JSVM_EXTERN*/ Status PumpMessageLoop(VM vm, bool *result);
 /*JSVM_EXTERN*/ Status PerformMicrotaskCheckpoint(VM vm);
+/*JSVM_EXTERN*/ Status GetProperty(Env env, Value object, Value key, Value* result);
+/*JSVM_EXTERN*/ Status GetNamedProperty( Env env,  Value object, const char* utf8name,  Value* result);
 } // namespace jsvm
 
 #endif

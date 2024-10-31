@@ -686,7 +686,7 @@ namespace laya
 
         texture->setMaxMipmapLevel(mipmapCount - 1.0);
 
-        char* source = ktxInfo.source;
+        const char* source = ktxInfo.source;
         bool compressd = ktxInfo.compress;
         bool fourSize = width % 4 == 0 && height % 4 == 0;
         
@@ -890,7 +890,7 @@ namespace laya
         texture->setMaxMipmapLevel(ktxInfo.mipmapCount - 1);
         int width = texture->m_width;
         int height = texture->m_height;
-        char* source = ktxInfo.source;
+        const char* source = ktxInfo.source;
         bool compressed = ktxInfo.compress;
         
         bool fourSize = width % 4 == 0 && height % 4 == 0;

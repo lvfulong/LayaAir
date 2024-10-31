@@ -21,6 +21,8 @@ set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/String.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Script.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Promise.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Object.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Enum.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/JSBind.h
 )
 
@@ -29,12 +31,12 @@ set(SOURCES
     src/v8/Class.cpp
     src/v8/Persistent.cpp
     src/v8/Local.cpp
-    src/v8/Context.cpp
     src/v8/Date.cpp
     src/v8/String.cpp
     src/v8/Script.cpp
     src/v8/Promise.cpp
     src/v8/JSEnv.cpp
+    src/v8/JSBind.cpp
 )
 
 if(OS_WINDOWS AND USE_JS_V8_DEBUGGER)

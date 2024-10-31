@@ -10,7 +10,7 @@ namespace laya
 
 struct KTXTextureInfo
 {
-    char *source;
+    const char *source;
     bool compress;
     bool sRGB;
     TextureDimension dimension;
@@ -37,7 +37,7 @@ struct KTXTextureInfoJS
 
 struct DDSTextureInfo
 {
-    char *source;
+    const char *source;
     bool compressed;
     int dataOffset;
     int blockBytes;

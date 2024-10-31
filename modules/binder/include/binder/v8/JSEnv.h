@@ -1,5 +1,5 @@
-﻿#ifndef __JSENV_H__
-#define __JSENV_H__
+﻿#ifndef __JSBIND_JSENV_H__
+#define __JSBIND_JSENV_H__
 
 #include <binder/JSVM.h>
 #include "Utility.h"

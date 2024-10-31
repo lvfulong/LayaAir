@@ -37,7 +37,8 @@ namespace laya
 			bool isFile = FileSystem::is_regular_file(path);
 			int sz = 0;
 			if (!isDir)sz = (int)FileSystem::file_size(path);
-#ifdef JS_V8
+#if 0
+//#ifdef JS_V8
 			//st.type;
 			v8::Isolate* pIso = v8::Isolate::GetCurrent();
 			v8::Local<v8::Context> context = pIso->GetCurrentContext();

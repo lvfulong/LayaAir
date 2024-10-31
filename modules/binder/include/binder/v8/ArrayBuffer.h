@@ -1,4 +1,3 @@
-
 #ifndef __JSBIND_ARRAYBUFFER_H_
 #define __JSBIND_ARRAYBUFFER_H_
 
