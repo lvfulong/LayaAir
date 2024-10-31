@@ -30,9 +30,9 @@ class ArrayBuffer
     ~ArrayBuffer() = default;
     // if failed ArrayBuffer returned isValid return false
     static ArrayBuffer Make(jsvm::Value arrayBuffer);
-    static ArrayBuffer ArrayBuffer::MakeArrayBuffer(uint8_t *inputBuffer, size_t length);
-    static ArrayBuffer ArrayBuffer::MakeDataView(uint8_t *inputBuffer, size_t length, size_t byteOffset);
-    static ArrayBuffer ArrayBuffer::MakeTypedArray(uint8_t *inputBuffer, size_t length, size_t byteOffset, Type type);
+    static ArrayBuffer MakeArrayBuffer(uint8_t *inputBuffer, size_t length);
+    static ArrayBuffer MakeDataView(uint8_t *inputBuffer, size_t length, size_t byteOffset);
+    static ArrayBuffer MakeTypedArray(uint8_t *inputBuffer, size_t length, size_t byteOffset, Type type);
 
     inline uint8_t *getData()
     {

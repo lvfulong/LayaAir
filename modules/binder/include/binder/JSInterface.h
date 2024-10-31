@@ -8,7 +8,6 @@
 #include "jsc/JSCEnv.h"
 #elif JS_V8
 #include <binder/JSBind.h>
-#include <binder/v8/Array.h>
 #include <binder/v8/ArrayBuffer.h>
 #include <binder/v8/Class.h>
 #include <binder/v8/Date.h>
