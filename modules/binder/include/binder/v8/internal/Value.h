@@ -1,7 +1,7 @@
 #ifndef __JSBIND_INTERNAL_VALUE_H__
 #define __JSBIND_INTERNAL_VALUE_H__
 
-#include <assert.h>
+#include <binder/v8/JSEnv.h>
 #include <binder/JSVM.h>
 #include <binder/JSVM_Types.h>
 
