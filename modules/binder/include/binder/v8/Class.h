@@ -221,17 +221,26 @@ class ClassRegistryManager
     }
     template <typename ClassType> static void makeStrong(ClassType *objectPointer)
     {
+        GET_ENV
+        jsvm::Status status;
         ClassRegistry<ClassType> &classRegistry = getClassRegistry<ClassType>(type_id<ClassType>());
         auto objectRegistry = classRegistry.getObjectRegistry(objectPointer);
         DEBUG_CHECK(objectRegistry != nullptr);
-        objectRegistry->pobj.ClearWeak();
+        uint32_t result;
+        status = jsvm::ReferenceRef(env, objectRegistry->objectRef_, &result);
+        DEBUG_CHECK(result > 0);
+        DEBUG_CHECK(status == jsvm::Status::OK);
     }
     template <typename ClassType> static void makeWeak(ClassType *objectPointer)
     {
+        GET_ENV
+        jsvm::Status status;
         ClassRegistry<ClassType> &classRegistry = getClassRegistry<ClassType>(type_id<ClassType>());
         auto objectRegistry = classRegistry.getObjectRegistry(objectPointer);
         DEBUG_CHECK(objectRegistry != nullptr);
-        objectRegistry->pobj.SetWeak(&classRegistry, WeakCallback, v8::WeakCallbackType::kInternalFields);
+        uint32_t result;
+        status = jsvm::ReferenceUnref(env, objectRegistry->objectRef_, &result);
+        DEBUG_CHECK(status == jsvm::Status::OK);
     }
     template <typename ClassType> static jsvm::Value wrapCppObject(ClassType *objectPointer, bool callDestructor = true)
     {
@@ -355,7 +364,7 @@ template <typename ClassType> class class_
         // v8::HandleScope scope(isolate_);
         FuncInfo<decltype(func)> *data = new FuncInfo<decltype(func)>(func);
         internal::addDeinitializer([data]() { delete data; });
-        indatao->name = name;
+        data->name = name;
 
         jsvm::PropertyDescriptor descriptor;
         descriptor.utf8name = name;
@@ -502,8 +511,8 @@ template <typename ClassType> static jsvm::Value New(jsvm::Env env, jsvm::Callba
         if (valuetype != napi_undefined) {
             napi_get_value_double(env, args[0], &value);
         }*/
-
-        ClassType *object = this_->ConstructObject(argc, args);
+        ClassRegistry<ClassType>& classRegistry = ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
+        ClassType *object = classRegistry.ConstructObject(argc, args);
 
         // v8::Global<v8::Object> pobj(isolate, obj);
         // pobj.SetWeak(this_, WeakCallback<ClassType>, v8::WeakCallbackType::kInternalFields);

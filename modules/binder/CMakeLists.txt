@@ -23,6 +23,7 @@ set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Object.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Enum.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Array.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Invocation.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/JSBind.h
 )
 

@@ -151,7 +151,7 @@ jsvm::Value InvokeClassMethodOptionalOverride(jsvm::Env env, jsvm::CallbackInfo 
     jsvm::GetCbInfo(env, info, &argc, argv, &_this, &data);
     // NODE_API_ASSERT(env, argc >= 1, "Wrong number of arguments");
     ClassType *pObj;
-    jsvm::Unwrap(env, wrapped, reinterpret_cast<void **>(&pObj));
+    jsvm::Unwrap(env, _this, reinterpret_cast<void **>(&pObj));
 
     // void *data = args.Data().As<v8::External>()->Value();
     typedef ReturnType (*FunctorType)(ClassType &, Args...);
@@ -167,7 +167,7 @@ jsvm::Value InvokeClassMethodOptionalOverride(jsvm::Env env, jsvm::CallbackInfo 
         return nullptr;
     }*/
 
-    return tuple_call_optional_override<ClassType, std::tuple<Args...>>(pObj, funcInfo->func, args,
+    return tuple_call_optional_override<ClassType, std::tuple<Args...>>(pObj, funcInfo->func, argv,
                                                                         std::make_index_sequence<sizeof...(Args)>());
 }
 
