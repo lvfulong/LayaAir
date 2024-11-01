@@ -5,6 +5,7 @@
 #include <binder/JSVM_Types.h>
 #include <binder/v8/Class.h>
 #include <binder/v8/internal/Value.h>
+#include <binder/v8/internal/Converter.h>
 
 namespace jsbind
 {
@@ -258,6 +259,22 @@ class Local
 
   private:
     jsvm::Value handle_ = nullptr;
+};
+template <> class Converter<Local>
+{
+public:
+    static Local ToCpp(jsvm::Value value)
+    {
+        return Local(value);
+    }
+    static jsvm::Value ToJs(Local value, bool callDestructor = true)
+    {
+        return value.getHandle();
+    }
+    /*static bool is(jsvm::Value value)
+    {
+        return true;
+    }*/
 };
 } // namespace jsbind
 #endif
