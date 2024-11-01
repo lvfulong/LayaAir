@@ -4,7 +4,6 @@
 #include <binder/JSVM_Types.h>
 #include <binder/v8/internal/Value.h>
 #include <binder/v8/internal/Converter.h>
-#include <vector>
 
 namespace jsbind
 {
@@ -106,7 +105,6 @@ class ArrayBuffer
     Type type_ = ARRAY_BUFFER;
     jsvm::Value handle_ = nullptr;
 };
-
 template <> class Converter<ArrayBuffer>
 {
 public:
@@ -123,6 +121,7 @@ public:
         return internal::isArrayBuffer(value) || internal::isArrayBufferView(value);
     }
 };
+
 } // namespace jsbind
 
 #endif

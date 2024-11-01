@@ -664,10 +664,6 @@ inline /*JSVM_EXTERN*/ Status GetCbInfo(Env env, CallbackInfo cbinfo, size_t *ar
 {
     return ConvertToStatus(napi_get_cb_info(env, cbinfo, argc, argv, thisArg, data));
 }
-inline /*JSVM_EXTERN*/ Status SetNamedProperty(Env env, Value object, const char *utf8name, Value value)
-{
-    return ConvertToStatus(napi_set_named_property(env, object, utf8name, value));
-}
 inline /*JSVM_EXTERN*/ Status GetNewTarget(Env env, CallbackInfo cbinfo, Value *result)
 {
     return ConvertToStatus(napi_get_new_target(env, cbinfo, result));
@@ -854,8 +850,22 @@ inline /*JSVM_EXTERN*/ Status PerformMicrotaskCheckpoint(VM vm)
 }
 inline /*JSVM_EXTERN*/ Status GetProperty(Env env, Value object, Value key, Value *result)
 {
+    return ConvertToStatus(napi_get_property(env, object, key, result));
+}
+inline /*JSVM_EXTERN*/ Status SetNamedProperty(Env env, Value object, const char* utf8name, Value value)
+{
+    return ConvertToStatus(napi_set_named_property(env, object, utf8name, value));
 }
 inline /*JSVM_EXTERN*/ Status GetNamedProperty(Env env, Value object, const char *utf8name, Value *result)
 {
+    return ConvertToStatus(napi_get_named_property(env, object, utf8name, result));
+}
+inline /*JSVM_EXTERN*/ Status HasNamedProperty(Env env, Value object, const char *utf8name, bool *result)
+{
+    return ConvertToStatus(napi_has_named_property(env, object,utf8name, result));
+}
+inline /*JSVM_EXTERN*/ Status CreateObject( Env env,  Value* result)
+{
+    return ConvertToStatus(napi_create_object(env, result));
 }
 } // namespace jsvm

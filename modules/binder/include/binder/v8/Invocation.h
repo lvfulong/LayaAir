@@ -314,6 +314,7 @@ jsvm::Value InvokeClassSetterField(jsvm::Env env, jsvm::CallbackInfo info)
 
 // template <typename ReturnType, typename... Args> struct V8Call;
 
+
 template <typename... Args> jsvm::Value v8_call(jsvm::Env env, jsvm::Value self, jsvm::Value func, const Args &...args)
 {
     /*v8::EscapableHandleScope scope(v8::Isolate::GetCurrent());
@@ -336,7 +337,7 @@ template <typename... Args> jsvm::Value v8_call(jsvm::Env env, jsvm::Value self,
 
     return scope.Escape(result.ToLocalChecked());*/
     const size_t argc = sizeof...(Args);
-    jsvm::Value argv[argc] = {ToJSValue(env, args)...};
+    jsvm::Value argv[argc + 1] = {internal::ToJSValue(args)...};
 
     jsvm::Value result = nullptr;
     jsvm::CallFunction(env, self, func, argc, argv, &result);

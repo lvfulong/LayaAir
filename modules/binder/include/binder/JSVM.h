@@ -44,6 +44,7 @@ namespace jsvm
 /*JSVM_EXTERN*/ Status CreateUint32(Env env, int32_t value, Value *result);
 /*JSVM_EXTERN*/ Status CreateInt64(Env env, int64_t value, Value *result);
 /*JSVM_EXTERN*/ Status CreateDate(Env env, double time, Value *result);
+/*JSVM_EXTERN*/ Status CreateObject( Env env,  Value* result);
 /*JSVM_EXTERN*/ Status GetValueDouble(Env env, Value value, double *result);
 /*JSVM_EXTERN*/ Status GetValueInt32(Env env, Value value, int32_t *result);
 /*JSVM_EXTERN*/ Status GetValueUint32(Env env, Value value, uint32_t *result);
@@ -62,6 +63,8 @@ namespace jsvm
 /*JSVM_EXTERN*/ Status AdjustExternalMemory(Env env, int64_t changeInBytes, int64_t *result);
 /*JSVM_EXTERN*/ Status GetCbInfo(Env env, CallbackInfo cbinfo, size_t *argc, Value *argv, Value *thisArg, void **data);
 /*JSVM_EXTERN*/ Status SetNamedProperty(Env env, Value object, const char *utf8name, Value value);
+/*JSVM_EXTERN*/ Status GetNamedProperty(Env env, Value object, const char *utf8name, Value *result);
+/*JSVM_EXTERN*/ Status HasNamedProperty(Env env, Value object, const char *utf8name, bool *result);
 /*JSVM_EXTERN*/ Status GetNewTarget(Env env, CallbackInfo cbinfo, Value *result);
 /*JSVM_EXTERN*/ Status Wrap(Env env, Value jsObject, void *nativeObject, Finalize finalizeCb, void *finalizeHint,
                             Ref *result);

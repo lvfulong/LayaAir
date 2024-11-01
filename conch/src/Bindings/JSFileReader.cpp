@@ -350,7 +350,7 @@ namespace laya
     JsValue JsFileReader::GetResult()
     {
         if (DONE != readyState) {
-            return jsbind::Local::MakeUndefined();
+            return jsbind::MakeUndefined();
         }
         //else if (0 == m_pFile || 0 == m_pFile->m_i64Size) {
         //    return jsbind::Local::MakeNull();
@@ -363,7 +363,7 @@ namespace laya
 
             if (m_pFile->m_i64Size > 0x7fffffff) {
                 LOGE("文件太大，无法返回！%s", (char*)m_pFile->m_FullName.c_str());
-                return jsbind::Local::MakeNull();
+                return jsbind::MakeNull();
             }
             return jsbind::ArrayBuffer::MakeArrayBuffer((uint8_t*)m_pFile->m_pBuffer, (int)m_pFile->m_i64Size).getHandle();
             //JSArrayBuffer* pAB = JSArrayBuffer::create((int)m_pFile->m_i64Size);
@@ -376,7 +376,7 @@ namespace laya
             {
                 if (m_pFile->m_i64Size > 0x7fffffff) {
                     LOGE("文件太大，无法返回！%s", (char*)m_pFile->m_FullName.c_str());
-                    return jsbind::Local::MakeNull();
+                    return jsbind::MakeNull();
                 }
                 return jsbind::ArrayBuffer::MakeArrayBuffer((uint8_t*)m_pFile->m_pBuffer, (int)m_pFile->m_i64Size).getHandle();
                 //JSArrayBuffer* pAB = JSArrayBuffer::create((int)m_pFile->m_i64Size);
@@ -388,9 +388,9 @@ namespace laya
             {
                 if (m_pFile->m_pBuffer == NULL)
                 {
-                    return jsbind::Local::Make<std::string>("");
+                    return jsbind::Make<std::string>("");
                 }
-                return jsbind::Local::Make<std::string>(m_pFile->m_pBuffer);
+                return jsbind::Make<std::string>(m_pFile->m_pBuffer);
             }
         }
     }

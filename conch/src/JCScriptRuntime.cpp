@@ -152,7 +152,7 @@ namespace laya
         event->setPromise(pPromise);
         event->setReason(pReason);
         event->setType(type);
-        JCConch::s_pScriptRuntime->m_pJSOnUnhandledRejectionFunction.call<void>(jsbind::global(), jsbind::Local::Make<JSPromiseRejectionEvent*>(event));
+        JCConch::s_pScriptRuntime->m_pJSOnUnhandledRejectionFunction.call<void>(jsbind::global(), jsbind::Make<JSPromiseRejectionEvent*>(event));
 #endif
     }
     void JCScriptRuntime::start(const char* pStartJS) 
@@ -587,7 +587,7 @@ namespace laya
 	{
         if (this->m_pJSOnFocusFunction.isValid())
         {
-            this->m_pJSOnFocusFunction.call<void>(jsbind::global(), jsbind::Local::Make<JSLaunchOptions*>(new JSLaunchOptions()));
+            this->m_pJSOnFocusFunction.call<void>(jsbind::global(), jsbind::Make<JSLaunchOptions*>(new JSLaunchOptions()));
         }
 	}
 

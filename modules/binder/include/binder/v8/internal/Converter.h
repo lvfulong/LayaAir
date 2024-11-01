@@ -6,7 +6,6 @@
 #include "binder/napi/js_native_api.h"
 #include "binder/v8/internal/Value.h"
 #include <assert.h>
-#include <binder/v8/ArrayBuffer.h>
 #include <binder/v8/Utility.h>
 #include <string>
 #include <unordered_map>
@@ -18,10 +17,10 @@ namespace jsbind
 
 namespace internal
 {
-template <typename T> T convert_value_object_from_v8(jsvm::Env env, jsvm::Value value);
+//template <typename T> T convert_value_object_from_v8(jsvm::Env env, jsvm::Value value);
 
-template <typename T> jsvm::Value convert_value_object_to_v8(jsvm::Env env, const T &t);
-template <typename T> jsvm::Value convert_value_object_to_v8(jsvm::Env env, T *t);
+//template <typename T> jsvm::Value convert_value_object_to_v8(jsvm::Env env, const T &t);
+//template <typename T> jsvm::Value convert_value_object_to_v8(jsvm::Env env, T *t);
 template <class T> struct is_value_object;
 
 template <typename T>
@@ -44,31 +43,7 @@ template <typename T, typename Enable = void> class Converter;
 
 template <typename T> class value_object;
 
-template <typename T> class Converter<T, std::enable_if_t<internal::is_value_object<T>::value>>
-{
-  public:
-    static jsvm::Value ToJs(T value, bool callDestructor = true)
-    {
-        return internal::convert_value_object_to_v8(value);
-    }
-    static T ToCpp(jsvm::Value value)
-    {
-        return internal::convert_value_object_from_v8<T>(value);
-    }
-};
 
-template <typename T> class Converter<T *, std::enable_if_t<internal::is_value_object<T>::value>>
-{
-  public:
-    static jsvm::Value ToJs(T *value, bool callDestructor = true)
-    {
-        return internal::convert_value_object_to_v8(value);
-    }
-    static T ToCpp(jsvm::Value value)
-    {
-        return internal::convert_value_object_from_v8<T>(value);
-    }
-};
 
 template <typename T> class Converter<T, std::enable_if_t<std::is_enum<T>::value>>
 {
@@ -504,7 +479,29 @@ template <> class Converter<jsvm::Value>
      return true;
  }*/
 };
-
+template <> class Converter<void>
+{
+public:
+    static void ToCpp(jsvm::Value value)
+    {
+        return;
+    }
+    static jsvm::Value ToJs(int value, bool callDestructor = true)
+    {
+        if (0 == value)
+        {
+            return internal::makeUndefined();
+        }
+        else
+        {
+            return internal::makeNull();
+        }
+    }
+    static bool is(jsvm::Value value)
+    {
+        return internal::isNull(value) || internal::isUndefined(value);
+    }
+};
 #if 0
 template <typename T> class __JsSet
 {
@@ -575,10 +572,9 @@ template <typename T, typename R> class __JsMap
         }
     }
 };*/
-namespace internal
-{
 
-} // namespace internal
+
+
 
 #if 0
 template <typename T> class Converter<std::unordered_set<T>>
@@ -623,6 +619,13 @@ template <typename T, typename R> class Converter<const std::unordered_map<T, R>
     }
 };
 #endif
+namespace internal
+{
+    template <class T> jsvm::Value ToJSValue(T t, bool callDestructor = true)
+    {
+        return Converter<T>::ToJs(t, callDestructor);
+    }
+}
 } // namespace jsbind
 
 #endif

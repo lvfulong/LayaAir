@@ -24,7 +24,18 @@ class Persistent
     {
         if (isValid())
         {
-            return getLocal().call(recv, ... args);
+            return getLocal().call<ReturnType>(recv,  args...);
+        }
+        else
+        {
+            return ReturnType();
+        }
+    }
+    template <typename ReturnType, typename... Args> ReturnType call(jsvm::Value recv, const Args &...args) const
+    {
+        if (isValid())
+        {
+            return getLocal().call<ReturnType>(recv, args...);
         }
         else
         {
@@ -36,7 +47,19 @@ class Persistent
     {
         if (isValid())
         {
-            getLocal().call(recv, ... args);
+            return getLocal().call<ClassType, ReturnType>(recv,  args...);
+        }
+        else
+        {
+            return ReturnType();
+        }
+    }
+    template <typename ClassType, typename ReturnType, typename... Args>
+    ReturnType call(ClassType* recv, const Args &...args) const
+    {
+        if (isValid())
+        {
+            return getLocal().call<ClassType, ReturnType>(recv, args...);
         }
         else
         {

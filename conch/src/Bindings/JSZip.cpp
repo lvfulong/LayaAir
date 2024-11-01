@@ -28,7 +28,7 @@ namespace laya
 	JsValue JSZip::readFile(int idx) 
     {
 		if (!m_zip.m_pZip)
-			return jsbind::Local::MakeNull();
+			return jsbind::MakeNull();
 		zip* pZip = (zip*)m_zip.m_pZip;
 		struct zip_stat sb;
 		zip_stat_init(&sb);
@@ -54,28 +54,28 @@ namespace laya
 				return ab;
 			}
 		}
-		return jsbind::Local::MakeNull();
+		return jsbind::MakeNull();
 	}
     JsValue JSZip::readFileByName(const char* pName)
     {
         if (!pName)
-            return jsbind::Local::MakeNull();
+            return jsbind::MakeNull();
 
         if (!m_zip.m_pZip)
-            return jsbind::Local::MakeNull();
+            return jsbind::MakeNull();
 
         zip* pZip = (zip*)m_zip.m_pZip;
         zip_int64_t idx = zip_name_locate(pZip, pName, 0);
 
         if (idx == -1)
-            return jsbind::Local::MakeNull();
+            return jsbind::MakeNull();
 
         return readFile(idx);
     }
     JsValue JSZip::readFileAsText(int idx)
     {
         if (!m_zip.m_pZip)
-            return jsbind::Local::MakeNull();
+            return jsbind::MakeNull();
         zip* pZip = (zip*)m_zip.m_pZip;
         struct zip_stat sb;
         zip_stat_init(&sb);
@@ -102,24 +102,24 @@ namespace laya
                     LOGE("error JSZip readFileAsText %s is not utf8 format", pName);
                 }
 #endif
-                jsbind::Local::Make<std::string>(pBuff.get());
+                jsbind::Make<std::string>(pBuff.get());
             }
         }
-        return jsbind::Local::MakeNull();
+        return jsbind::MakeNull();
     }
     JsValue JSZip::readFileAsTextByName(const char* pName)
     {
         if (!pName)
-            return jsbind::Local::MakeNull();
+            return jsbind::MakeNull();
 
         if (!m_zip.m_pZip)
-            return jsbind::Local::MakeNull();
+            return jsbind::MakeNull();
 
         zip* pZip = (zip*)m_zip.m_pZip;
         zip_int64_t idx = zip_name_locate(pZip, pName, 0);
 
         if (idx == -1)
-            return jsbind::Local::MakeNull();
+            return jsbind::MakeNull();
 
         return readFileAsText(idx);
     }

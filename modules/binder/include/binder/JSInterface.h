@@ -19,6 +19,7 @@
 #include <binder/v8/Script.h>
 #include <binder/v8/String.h>
 #include <binder/v8/Array.h>
+#include <binder/v8/Value.h>
 #include <v8.h>
 #ifdef JS_V8_DEBUGGER
 #include <binder/v8/v8debug/debug-agent.h>

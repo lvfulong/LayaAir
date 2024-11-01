@@ -290,14 +290,6 @@ template <typename ClassType> void makeStrong(ClassType *objectPointer)
     DEBUG_CHECK(status == jsvm::Status::OK);
     return result;
 }*/
-/*template <typename ClassType> jsvm::Value getGlobal(jsvm::Env env)
-{
-
-    svm::Value result;
-    Status status GetGlobal(env, &result);
-    DEBUG_CHECK(status == jsvm::Status::OK);
-    return result;
-}*/
 template <typename ClassType> class class_
 {
   public:

@@ -39,7 +39,7 @@ JsValue JSCanvasRenderingContext2D::measureText(const std::string &text)
 {
     TextMetrics metrics = m_context->measureText(text);
     TextMetrics *copy = new TextMetrics(metrics);
-    return jsbind::Local::Make<TextMetrics *>(copy);
+    return jsbind::Make<TextMetrics *>(copy);
 }
 int JSCanvasRenderingContext2D::getID()
 {
@@ -61,7 +61,7 @@ JsValue JSCanvasRenderingContext2D::getImageData(double x, double y, double widt
 {
     ImageData data = m_context->getImageData(x, y, width, height);
     ImageData *copy = new ImageData(std::move(data));
-    return jsbind::Local::Make<ImageData*>(copy);
+    return jsbind::Make<ImageData*>(copy);
 }
 void JSCanvasRenderingContext2D::setTransform(double a, double b, double c, double d, double e, double f)
 {

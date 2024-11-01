@@ -41,23 +41,23 @@ namespace laya
     }
     JsValue  JSXmlNode::getParentNode()
     {
-         return jsbind::Local::Make<JSXmlNode*>(m_parentNode);
+         return jsbind::Make<JSXmlNode*>(m_parentNode);
     }
     JsValue  JSXmlNode::getFirstChild()
     {
-        return jsbind::Local::MakeNull();
+        return jsbind::MakeNull();
     }
     JsValue JSXmlNode::getLastChild()
     {
-        return jsbind::Local::MakeNull();
+        return jsbind::MakeNull();
     }
     JsValue  JSXmlNode::getPreviousSibling()
     {
-        return jsbind::Local::MakeNull();
+        return jsbind::MakeNull();
     }
     JsValue  JSXmlNode::getNextSibling()
     {
-        return jsbind::Local::MakeNull();
+        return jsbind::MakeNull();
     }
     const char * JSXmlNode::getNodeName()
     {
@@ -79,7 +79,7 @@ namespace laya
     {
         if (!m_bCreateChilds)
         {
-            JsValue pJSValue = jsbind::Local::Make<std::vector<JSXmlNode*>>(m_childNodes);
+            JsValue pJSValue = jsbind::Make<std::vector<JSXmlNode*>>(m_childNodes);
             m_jsChildNodes = jsbind::Persistent(pJSValue);
             m_bCreateChilds = true;
         }
@@ -90,7 +90,7 @@ namespace laya
         if (!m_bCreateAttribs)
         {
             m_bCreateAttribs = true;
-            JsValue pJSValue = jsbind::Local::Make<std::vector<JSXmlAttr*>>(m_attributes);
+            JsValue pJSValue = jsbind::Make<std::vector<JSXmlAttr*>>(m_attributes);
             m_jsAttribs = jsbind::Persistent(pJSValue);
         }
         return m_jsAttribs.getHandle();

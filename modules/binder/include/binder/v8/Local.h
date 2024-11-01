@@ -22,7 +22,36 @@ class Local
     template <typename ReturnType, typename... Args> ReturnType call(jsvm::Value recv, const Args &...args)
     {
         GET_ENV
-        return call(env, recv, args...);
+        DEBUG_CHECK(isValid());
+        jsvm::ValueType valueType;
+        jsvm::Status status = jsvm::Typeof(env, handle_, &valueType);
+        DEBUG_CHECK(status == jsvm::Status::OK);
+        if (valueType == jsvm::ValueType::FUNCTION)
+        {
+            auto result = internal::v8_call(env, recv, handle_, args...);
+            return Converter<ReturnType>::ToCpp(result);
+        }
+        else
+        {
+            return ReturnType();
+        }
+    }
+    template <typename ReturnType, typename... Args> ReturnType call(jsvm::Value recv, const Args &...args) const
+    {
+        GET_ENV
+            DEBUG_CHECK(isValid());
+        jsvm::ValueType valueType;
+        jsvm::Status status = jsvm::Typeof(env, handle_, &valueType);
+        DEBUG_CHECK(status == jsvm::Status::OK);
+        if (valueType == jsvm::ValueType::FUNCTION)
+        {
+            auto result = internal::v8_call(env, recv, handle_, args...);
+            return Converter<ReturnType>::ToCpp(result);
+        }
+        else
+        {
+            return ReturnType();
+        }
     }
     template <typename ClassType, typename ReturnType, typename... Args>
     ReturnType call(ClassType *recv, const Args &...args)
@@ -33,12 +62,57 @@ class Local
             ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
         auto objectRegistry = classRegistry.getObjectRegistry(recv);
         DEBUG_CHECK(objectRegistry != nullptr);
-        jsvm::Value result;
+        jsvm::Value resultRecv;
         jsvm::Status status;
-        status = jsvm::GetReferenceValue(env, objectRegistry, &result);
+        status = jsvm::GetReferenceValue(env, objectRegistry->objectRef_, &resultRecv);
         DEBUG_CHECK(status == jsvm::Status::OK);
 
-        return call(env, result, args...);
+        //return call<ClassType, ReturnType>(env, result, args...);
+        DEBUG_CHECK(isValid());
+        jsvm::ValueType valueType;
+        status = jsvm::Typeof(env, handle_, &valueType);
+        DEBUG_CHECK(status == jsvm::Status::OK);
+        if (valueType == jsvm::ValueType::FUNCTION)
+        {
+            auto result = internal::v8_call(env, resultRecv, handle_, args...);
+            return Converter<ReturnType>::ToCpp(result);
+        }
+        else
+        {
+            return ReturnType();
+        }
+    }
+    template <typename ClassType, typename ReturnType, typename... Args>
+    ReturnType call(ClassType* recv, const Args &...args) const
+    {
+        GET_ENV
+
+            ClassRegistry<ClassType>& classRegistry =
+            ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
+        auto objectRegistry = classRegistry.getObjectRegistry(recv);
+        DEBUG_CHECK(objectRegistry != nullptr);
+        jsvm::Value resultRecv;
+        jsvm::Status status;
+        status = jsvm::GetReferenceValue(env, objectRegistry->objectRef_, &resultRecv);
+        DEBUG_CHECK(status == jsvm::Status::OK);
+
+        //return call<ClassType, ReturnType>(env, result, args...);
+
+        DEBUG_CHECK(isValid());
+        jsvm::ValueType valueType;
+        status = jsvm::Typeof(env, handle_, &valueType);
+        DEBUG_CHECK(status == jsvm::Status::OK);
+        if (valueType == jsvm::ValueType::FUNCTION)
+        {
+            auto result = internal::v8_call(env, resultRecv, handle_, args...);
+            return Converter<ReturnType>::ToCpp(result);
+        }
+        else
+        {
+            return ReturnType();
+        }
+
+
     }
     Local operator[](const std::string &key) const;
 
@@ -225,24 +299,13 @@ class Local
     {
         DEBUG_CHECK(isValid());
         GET_ENV
-        return Converter<T>::is();
-    }
-    template <class T> static jsvm::Value Make(T t, bool callDestructor = true)
-    {
-        return Converter<T>::ToJs(t, callDestructor);
-    }
-    static inline jsvm::Value MakeNull()
-    {
-        return internal::makeNull();
-    }
-    static inline jsvm::Value MakeUndefined()
-    {
-        return internal::makeUndefined();
+        return Converter<T>::is(handle_);
     }
 
+
   private:
-    template <typename ClassType, typename ReturnType, typename... Args>
-    ReturnType call(jsvm::Env env, jsvm::Value recv, const Args &...args)
+    /*template <typename ClassType, typename ReturnType, typename... Args>
+    ReturnType call(jsvm::Env env, jsvm::Value recv, const Args &...args) const
     {
         DEBUG_CHECK(isValid());
         jsvm::ValueType valueType;
@@ -250,14 +313,14 @@ class Local
         DEBUG_CHECK(status == jsvm::Status::OK);
         if (valueType == jsvm::ValueType::FUNCTION)
         {
-            auto result = internal::v8_call(recv, handle_, args...);
+            auto result = internal::v8_call(env, recv, handle_, args...);
             return Converter<ReturnType>::ToCpp(result);
         }
         else
         {
             return ReturnType();
         }
-    }
+    }*/
 
   private:
     jsvm::Value handle_ = nullptr;

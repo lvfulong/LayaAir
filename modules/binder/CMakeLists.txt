@@ -24,6 +24,7 @@ set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Enum.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Array.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Invocation.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Value.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/JSBind.h
 )
 
@@ -38,6 +39,7 @@ set(SOURCES
     src/v8/Promise.cpp
     src/v8/JSEnv.cpp
     src/v8/JSBind.cpp
+    src/v8/Enum.cpp
 )
 
 if(OS_WINDOWS AND USE_JS_V8_DEBUGGER)

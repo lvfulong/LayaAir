@@ -592,7 +592,7 @@ JsValue GLESEngine::getTextureContextJS()
 {
     if (!m_pJSTextureContext.isValid())
     {
-        m_pJSTextureContext = jsbind::Persistent(jsbind::Local::Make<GLTextureContext*>(m_textureContext));
+        m_pJSTextureContext = jsbind::Persistent(jsbind::Make<GLTextureContext*>(m_textureContext));
         return m_pJSTextureContext.getHandle();
     }
     else

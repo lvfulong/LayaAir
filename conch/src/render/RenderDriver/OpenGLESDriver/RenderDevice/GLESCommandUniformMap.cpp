@@ -31,7 +31,7 @@ JsValue GLESCommandUniformMap::createGlobalUniformMapJS(const char* blockName)
     {
         return it->second.getHandle();
     }
-    auto comMap = jsbind::Persistent(jsbind::Local::Make<GLESCommandUniformMap*>(data, false));
+    auto comMap = jsbind::Persistent(jsbind::Make<GLESCommandUniformMap*>(data, false));
     m_globalBlockMapJS[blockName] = comMap;
     return comMap.getHandle();
 }

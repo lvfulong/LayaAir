@@ -17,15 +17,15 @@ namespace laya
 	JsValue JSFileSystem::readdirSync(const std::string &path) 
     {
 		if (!FileSystem::exists(path))
-			return jsbind::Local::MakeNull();
+			return jsbind::MakeNull();
 		std::vector<std::string> paths = FileSystem::readdirSync(path);
-		return jsbind::Local::Make<std::vector<std::string> >(paths);
+		return jsbind::Make<std::vector<std::string> >(paths);
 	}
 	JsValue JSFileSystem::lstatSync(const std::string &path) 
     {
 		std::vector<std::string> paths;
 		if (!FileSystem::exists(path))
-			return jsbind::Local::MakeNull();
+			return jsbind::MakeNull();
 		//try {
 			std::time_t wtime;
 //#ifdef OS_WINDOWS
@@ -64,7 +64,7 @@ namespace laya
         //{
 		//	JSP_THROW("lstatSync error!");
 		//}
-		return jsbind::Local::MakeNull();
+		return jsbind::MakeNull();
 	}
     bool JSFileSystem::JSWriteFileSync(const char* p_sUrl, jsbind::Local args)
     {
@@ -106,7 +106,7 @@ namespace laya
 		}
 		else 
         {
-			return jsbind::Local::MakeNull();
+			return jsbind::MakeNull();
 		}
     }
 };

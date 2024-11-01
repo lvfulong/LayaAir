@@ -6,7 +6,6 @@
 #include "Utility.h"
 #include "internal/Converter.h"
 #include <string>
-#include <v8.h>
 #include <vector>
 
 namespace jsbind
@@ -15,7 +14,7 @@ class Object;
 class Enum_
 {
   public:
-    Enum_(Object *owner, std::string_view name, v8::Isolate *isolate);
+    Enum_(Object *owner, std::string_view name);
     ~Enum_();
     template <typename EnumType> Enum_ &value(std::string_view name, EnumType value);
 
@@ -26,11 +25,15 @@ class Enum_
     Enum_ &operator=(Enum_ &&) = default;
 
   private:
-    friend class Module;
+    //friend class Module;
     std::string name_;
     Object *owner_;
-    std::unique_ptr<Module> module_;
+    std::unique_ptr<Object> object_;
 };
-
+template <typename EnumType> Enum_& Enum_::value(std::string_view name, EnumType value)
+{
+    object_->constant(name, (int32_t)value);
+    return *this;
+}
 } // namespace jsbind
 #endif
