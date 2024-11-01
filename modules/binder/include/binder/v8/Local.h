@@ -22,7 +22,7 @@ class Local
     template <typename ReturnType, typename... Args> ReturnType call(jsvm::Value recv, const Args &...args)
     {
         GET_ENV
-        return call(env, recv, ... args)
+        return call(env, recv, args...);
     }
     template <typename ClassType, typename ReturnType, typename... Args>
     ReturnType call(ClassType *recv, const Args &...args)
@@ -33,12 +33,12 @@ class Local
             ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
         auto objectRegistry = classRegistry.getObjectRegistry(recv);
         DEBUG_CHECK(objectRegistry != nullptr);
-        jsvm::Value result_recv;
+        jsvm::Value result;
         jsvm::Status status;
-        status = jsvm::GetReferenceValue(env, objectRegistry, &result_recv);
+        status = jsvm::GetReferenceValue(env, objectRegistry, &result);
         DEBUG_CHECK(status == jsvm::Status::OK);
 
-        return call(env, result_recv, ... args)
+        return call(env, result, args...);
     }
     Local operator[](const std::string &key) const;
 
@@ -244,9 +244,11 @@ class Local
     template <typename ClassType, typename ReturnType, typename... Args>
     ReturnType call(jsvm::Env env, jsvm::Value recv, const Args &...args)
     {
+        DEBUG_CHECK(isValid());
         jsvm::ValueType valueType;
-        jsvm::Status status = jsvm::Typeof(env, func, &valueType) DEBUG_CHECK(status == jsvm::Status::OK);
-        if (handle_ != nullptr && valueType == jsvm::ValueType::FUNCTION)
+        jsvm::Status status = jsvm::Typeof(env, handle_, &valueType);
+        DEBUG_CHECK(status == jsvm::Status::OK);
+        if (valueType == jsvm::ValueType::FUNCTION)
         {
             auto result = internal::v8_call(recv, handle_, args...);
             return Converter<ReturnType>::ToCpp(result);

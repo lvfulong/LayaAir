@@ -118,7 +118,7 @@ namespace jsbind
         static std::vector<T> ToCpp(jsvm::Value value)
         {
             std::vector<T> vec;
-            internal::Array<T>::getData(value, vec);
+            Array<T>::getData(value, vec);
             return vec;
         }
         static jsvm::Value ToJs(const std::vector<T>& value, bool callDestructor = true)

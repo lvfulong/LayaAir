@@ -247,7 +247,7 @@ class Object
             (name), NULL, (internal::InvokeFunction<ReturnType, Args...>), NULL, NULL, NULL, napi_default, data});
         return *this;*/
 
-        return function(name, func)
+        return function(name, func);
     }
     template <typename ReturnType, typename... Args>
     Object &function_optional_override(std::string_view name, ReturnType (*func)(Args...))

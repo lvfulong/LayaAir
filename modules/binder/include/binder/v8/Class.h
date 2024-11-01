@@ -520,8 +520,8 @@ template <typename ClassType> static jsvm::Value New(jsvm::Env env, jsvm::Callba
         // MyObject *obj = new MyObject(value);
 
         jsvm::Ref objectRef_;
-        svm::Wrap(env, jsThis, reinterpret_cast<void *>(object), internal::destructor<ClassType>, nullptr, &objectRef_);
-        this_->objects_.emplace(object, ObjectRegistry{objectRef_, true});
+        jsvm::Wrap(env, jsThis, reinterpret_cast<void *>(object), internal::destructor<ClassType>, nullptr, &objectRef_);
+        classRegistry.objects_.emplace(object, ObjectRegistry{objectRef_, true});
         return jsThis;
     }
 #if 0
