@@ -62,7 +62,7 @@
 #include "Video/JSVideo.h"
 #include <LayaGL/JCLayaGLDispatch.h>
 #include "Bullet/LayaBulletExport.h"
-#if !defined(OS_LINUX) && !defined(OS_WINDOWS) && !defined(OS_OHOS)//todo
+#if defined(PHYSX)
 #include "PhysX/LayaPhysXExport.h"
 #endif
 #include "JSArrayBufferRef.h"
@@ -555,7 +555,7 @@ namespace laya
             TRACE_NAME_DUMP();
          }));
         JSLayaConchBullet::exportJS(context);
- #if !defined(OS_LINUX) && !defined(OS_WINDOWS) && !defined(OS_OHOS)//TODO
+ #if defined(PHYSX)
         JSLayaConchPhysX::exportJS(context);
 #endif
 	}

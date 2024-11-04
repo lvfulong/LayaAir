@@ -31,6 +31,15 @@ list(APPEND CONCH_INCLUDE
 	${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
+if(USE_PHYSX)
+list(APPEND CONCH_SRC
+src/Bindings/PhysX/LayaPhysXExport.h
+src/Bindings/PhysX/LayaPhysXExport.cpp
+src/Bindings/PhysX/PxWebBindings.cpp
+src/Bindings/PhysX/emscripten.h
+src/Bindings/PhysX/emscripten.cpp)
+endif()
+
 if(CONCH_USE_OLD_CURL_DOWNLOAD)
 	list(APPEND CONCH_SRC
 
@@ -461,11 +470,6 @@ if(OS_IOS)
 		src/backend/src/OpenGLBackendiOS.mm
 		src/network/src/HttpClientiOS.mm
 		src/2D/src/CanvasRenderingContext2DCG.mm
-		src/Bindings/PhysX/LayaPhysXExport.h
-		src/Bindings/PhysX/LayaPhysXExport.cpp
-		src/Bindings/PhysX/PxWebBindings.cpp
-		src/Bindings/PhysX/emscripten.h
-		src/Bindings/PhysX/emscripten.cpp
 		src/resource/Audio/JCMp3Parser.h
 		src/resource/Audio/JCMp3Parser.cpp
 		src/resource/Audio/JCAudioWavPlayer.h
@@ -494,11 +498,6 @@ elseif(OS_ANDROID)
 		src/Bindings/JSAndroidEditBox.cpp
 		src/backend/src/OpenGLBackendAndroidEGL.cpp
 		src/2D/src/CanvasRenderingContext2DAndroid.cpp
-		src/Bindings/PhysX/LayaPhysXExport.h
-		src/Bindings/PhysX/LayaPhysXExport.cpp
-		src/Bindings/PhysX/PxWebBindings.cpp
-		src/Bindings/PhysX/emscripten.h
-		src/Bindings/PhysX/emscripten.cpp
 		src/resource/Audio/JCMp3Parser.h
 		src/resource/Audio/JCMp3Parser.cpp
 		src/resource/Audio/JCAudioWavPlayer.h
@@ -609,6 +608,20 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 	LINK_FLAGS_RELEASE "${CONCH_PLATFORM_LINK_FLAGS_RELEASE}"
 	OUTPUT_NAME "conch"
 )
+if(USE_PHYSX)
+	set(LINK_LIBS
+	PhysXVehicle
+	PhysXVehicle2
+	PhysXCharacterKinematic
+	PhysXExtensions
+	PhysX
+
+	# PhysXPvdSDK
+	PhysXCooking
+	PhysXCommon
+	PhysXFoundation
+	)
+endif()
 if(CONCH_USE_CURL_DOWNLOAD)
 	set(LINK_LIBS
 		network
@@ -623,6 +636,7 @@ if(OS_ANDROID)
 	# for openal
 	target_compile_definitions(${PROJECT_NAME} PRIVATE AL_ALEXT_PROTOTYPES)
 	target_link_libraries(${PROJECT_NAME}
+	${LINK_LIBS}
 		android
 		log
 		m
@@ -656,16 +670,7 @@ if(OS_ANDROID)
 		BulletDynamics
 		BulletCollision
 		LinearMath
-		PhysXVehicle
-		PhysXVehicle2
-		PhysXCharacterKinematic
-		PhysXExtensions
-		PhysX
 
-		# PhysXPvdSDK
-		PhysXCooking
-		PhysXCommon
-		PhysXFoundation
 		ssl
 		crypto
 	)
@@ -696,6 +701,7 @@ elseif(OS_IOS)
 		"-framework CoreImage"
 		"-framework QuartzCore"
 		"-framework CoreHaptics"
+		${LINK_LIBS}
 		utils
 		binder
 		zlib
@@ -720,17 +726,6 @@ elseif(OS_IOS)
 		BulletCollision
 		LinearMath
 
-		# BulletSoftBody
-		PhysX
-		PhysXCharacterKinematic
-		PhysXCommon
-		PhysXCooking
-		PhysXExtensions
-		PhysXFoundation
-
-		# PhysXPvdSDK
-		PhysXVehicle
-		PhysXVehicle2
 	)
 	set_property(TARGET ${PROJECT_NAME} PROPERTY XCODE_ATTRIBUTE_ENABLE_BITCODE "NO")
 elseif(OS_WINDOWS)
@@ -781,6 +776,7 @@ elseif(OS_WINDOWS)
 	)
 elseif(OS_OHOS)
 	target_link_libraries(${PROJECT_NAME} PUBLIC
+	${LINK_LIBS}
 		${EGL-lib}
 		${GLESv3-lib}
 	  	${hilog-lib} 
