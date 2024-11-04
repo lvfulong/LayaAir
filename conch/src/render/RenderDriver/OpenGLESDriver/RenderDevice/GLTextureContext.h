@@ -122,8 +122,8 @@ class GLTextureContext : public GLObject
     void setTextureSubPixelsDataJS(GLESInternalTex *texture, jsbind::ArrayBuffer source, int mipmapLevel,
                                    bool generateMipmap, int xOffset, int yOffset, int width, int height,
                                    bool premultiplyAlpha, bool invertY);
-    void setCubePixelsDataJS(GLESInternalTex *texture, std::vector<jsbind::ArrayBuffer>& source, bool premultiplyAlpha, bool invertY);
-    void setCubeSubPixelDataJS(GLESInternalTex *texture, std::vector<jsbind::ArrayBuffer>& source, int mipmapLevel, bool generateMipmap,
+    void setCubePixelsDataJS(GLESInternalTex *texture, std::vector<jsbind::ArrayBuffer> source, bool premultiplyAlpha, bool invertY);
+    void setCubeSubPixelDataJS(GLESInternalTex *texture, std::vector<jsbind::ArrayBuffer> source, int mipmapLevel, bool generateMipmap,
                                int xOffset, int yOffset, int width, int height, bool premultiplyAlpha, bool invertY);
     virtual GLESInternalTex* createRenderTargetDepthTexture(GLESInternalRT* renderTarget, TextureDimension dimension, int width, int height);
   protected:

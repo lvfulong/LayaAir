@@ -1785,7 +1785,7 @@ void GLTextureContext::setTextureSubPixelsDataJS(GLESInternalTex *texture, jsbin
     this->setTextureSubPixelsData(texture, reinterpret_cast<char*>(source.getData()), mipmapLevel, generateMipmap, xOffset, yOffset, width,
                                       height, premultiplyAlpha, invertY);
 }
-void GLTextureContext::setCubePixelsDataJS(GLESInternalTex *texture, std::vector<jsbind::ArrayBuffer>& source, bool premultiplyAlpha,
+void GLTextureContext::setCubePixelsDataJS(GLESInternalTex *texture, std::vector<jsbind::ArrayBuffer> source, bool premultiplyAlpha,
                                            bool invertY)
 {
     std::vector<char *> vecDatas;
@@ -1796,7 +1796,7 @@ void GLTextureContext::setCubePixelsDataJS(GLESInternalTex *texture, std::vector
     }
     this->setCubePixelsData(texture, vecDatas, premultiplyAlpha, invertY);
 }
-void GLTextureContext::setCubeSubPixelDataJS(GLESInternalTex *texture, std::vector<jsbind::ArrayBuffer>& source, int mipmapLevel,
+void GLTextureContext::setCubeSubPixelDataJS(GLESInternalTex *texture, std::vector<jsbind::ArrayBuffer> source, int mipmapLevel,
                                              bool generateMipmap, int xOffset, int yOffset, int width, int height,
                                              bool premultiplyAlpha, bool invertY)
 {

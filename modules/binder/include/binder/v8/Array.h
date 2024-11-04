@@ -130,6 +130,14 @@ namespace jsbind
             return Array<T>::ToJs(value);
         }
     };
+template <typename T>
+ class Converter<const std::vector<T>&> : public Converter<std::vector<T>>
+{
+};
+template <typename T>
+class Converter<std::vector<T>&> : public Converter<std::vector<T>>
+{
+};
     template <typename T> class Converter<std::vector<T*>>
     {
     public:
@@ -153,6 +161,14 @@ namespace jsbind
             return p_vl->IsArray();
         }*/
     };
+template <typename T>
+ class Converter<const std::vector<T*>&> : public Converter<std::vector<T*>>
+{
+};
+template <typename T>
+class Converter<std::vector<T*>&> : public Converter<std::vector<T*>>
+{
+};
 } // namespace jsbind
 
 #endif

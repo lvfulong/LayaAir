@@ -32,7 +32,7 @@ void GLESSkinRenderElement::drawGeometry(GLESShaderInstance* shaderIns)
             geometry->_glindexFormat, element[offset]);
     }
 }
-void GLESSkinRenderElement::setSkinnedData(std::vector<jsbind::ArrayBuffer>& pData)
+void GLESSkinRenderElement::setSkinnedData(std::vector<jsbind::ArrayBuffer> pData)
 {
     m_vSkinData.clear();
     for (int i = 0, size = pData.size(); i < size; i++)

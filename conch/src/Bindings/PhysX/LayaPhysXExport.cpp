@@ -1,8 +1,5 @@
 #include "LayaPhysXExport.h"
-
-#include <binder/v8/Class.h>
-#include <binder/v8/Context.h>
-#include <binder/v8/Module.h>
+#include <binder/JSInterface.h>
 #include "emscripten.h"
 
 namespace laya

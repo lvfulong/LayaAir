@@ -35,7 +35,7 @@ namespace laya{
     void JSOHOSEditBox::addEventListener(const char* p_sName, JSValueAsParam p_pFunction){
         if(strcmp(p_sName,"input") == 0)
         {
-            m_pJSFunctionOnInput.reset(p_pFunction);
+            m_pJSFunctionOnInput = jsbind::Persistent(p_pFunction);
         } 
         else if (strcmp(p_sName, "keydown") == 0) {
             //m_pJSFunctionOnKeydown = p_pFunction;

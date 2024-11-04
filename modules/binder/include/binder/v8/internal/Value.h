@@ -313,6 +313,7 @@ static inline bool isArrayBuffer(jsvm::Value value)
     GET_ENV
     bool isArraybuffer;
     jsvm::IsArraybuffer(env, value, &isArraybuffer);
+    return isArraybuffer;
 }
 
 static inline bool isArrayBufferView(jsvm::Value value)

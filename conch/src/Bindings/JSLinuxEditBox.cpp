@@ -36,7 +36,7 @@ void JSLinuxEditBox::addEventListener(const char* p_sName, JSValueAsParam p_pFun
 {
     if(strcmp( p_sName,"input" ) == 0)
     {
-        m_pJSFunctionOnInput.reset(p_pFunction);
+        m_pJSFunctionOnInput = jsbind::Persistent(p_pFunction);
     }
     else if(strcmp( p_sName,"keydown" ) == 0)
     {

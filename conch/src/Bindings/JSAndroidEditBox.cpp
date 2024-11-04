@@ -40,7 +40,7 @@ void JSAndroidEditBox::addEventListener(const char* p_sName, JSValueAsParam p_pF
 {
     if(strcmp( p_sName,"input" ) == 0)
     {
-        m_pJSFunctionOnInput.reset(p_pFunction);
+        m_pJSFunctionOnInput = jsbind::Persistent(p_pFunction);
     }
     else if(strcmp( p_sName,"keydown" ) == 0)
     {
@@ -312,7 +312,7 @@ void  JSAndroidEditBox::onInputCallJSFunction(std::weak_ptr<int> callbackref)
 {
     if( !callbackref.lock())
         return;
-    m_pJSFunctionOnInput.call<void>(this);
+    m_pJSFunctionOnInput.call<void, JSAndroidEditBox>(this);
 }
 //------------------------------------------------------------------------------
 void JSAndroidEditBox::onInput()
@@ -346,9 +346,9 @@ void JSAndroidEditBox::setConfirmType(const char* p_sType)
 	CToJavaBridge::JavaRet kRet;
 	CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setConfirmTypeSearch", bSearch, kRet);
 }
-void JSAndroidEditBox::exportJS(jsbinder::Object& context) 
+void JSAndroidEditBox::exportJS(jsbind::Object& context) 
 {
-	jsbinder::class_<JSAndroidEditBox> class_binding;
+	jsbind::class_<JSAndroidEditBox> class_binding;
 	class_binding.constructor<>();
     class_binding.property("left", &JSAndroidEditBox::get_Left, &JSAndroidEditBox::set_Left);
     class_binding.property("top", &JSAndroidEditBox::get_Top, &JSAndroidEditBox::set_Top);

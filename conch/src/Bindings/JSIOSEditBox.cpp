@@ -275,7 +275,7 @@ void JSIOSEditBox::addEventListener(const char* p_sName, JSValueAsParam p_pFunct
 {
     if(strcmp(p_sName,"input")==0)
     {
-        m_pJSFunctionOnInput.reset(p_pFunction);
+        m_pJSFunctionOnInput = jsbind::Persistent(p_pFunction);
     }
 }
 void JSIOSEditBox::onInput()
@@ -288,7 +288,7 @@ void JSIOSEditBox::onInputCallJSFunction(std::weak_ptr<int> callbackref)
 {
     if(!callbackref.lock())
         return;
-    m_pJSFunctionOnInput.call<void>(toLocal(this));
+    m_pJSFunctionOnInput.call<void, JSIOSEditBox>(this);
 }
 void JSIOSEditBox::setMultiAble(bool p_bMultiAble)
 {

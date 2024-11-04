@@ -68,7 +68,7 @@ namespace laya
 		skinnedData.resize(dataArrayLength);
 	}
 
-	void RTSkinRenderNode::setSkinnedDataByIndex(uint32_t index, std::vector<jsbind::ArrayBuffer>& pData)
+	void RTSkinRenderNode::setSkinnedDataByIndex(uint32_t index, std::vector<jsbind::ArrayBuffer> pData)
 	{
 		std::vector<std::pair<float*, int>> skinData ;
 		for (int i = 0, size = pData.size(); i < size; i++)
@@ -121,7 +121,7 @@ namespace laya
 		boneIndicesList.resize(value);
 	}
 
-	void RTSkinRenderNode::setBoneIndicesList(uint32_t index, std::vector<jsbind::ArrayBuffer>& pData)
+	void RTSkinRenderNode::setBoneIndicesList(uint32_t index, std::vector<jsbind::ArrayBuffer> pData)
 	{
 		std::vector<std::pair<uint16_t*, int>> boneIndexData;
 		for (int i = 0, size = pData.size(); i < size; i++)
