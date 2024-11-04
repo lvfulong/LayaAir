@@ -271,24 +271,7 @@ class ClassRegistryManager
     }
     static std::unordered_map<std::string, ClassRegistryBase *> classRegistryMap_;
 };
-template <typename ClassType> void makeWeak(ClassType *objectPointer)
-{
-    ClassRegistryManager::makeWeak<ClassType>(objectPointer);
-}
-template <typename ClassType> void makeStrong(ClassType *objectPointer)
-{
-    ClassRegistryManager::makeStrong<ClassType>(objectPointer);
-}
-/*template <typename ClassType> jsvm::Value toLocal(ClassType *objectPointer)
-{
-    ClassRegistry<ClassType> &classRegistry = ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
-    auto objectRegistry = classRegistry.getObjectRegistry(objectPointer);
-    DEBUG_CHECK(objectRegistry != nullptr);
-    svm::Value result;
-    Status status = GetReferenceValue(objectRegistry.env_, objectRegistry, &result);
-    DEBUG_CHECK(status == jsvm::Status::OK);
-    return result;
-}*/
+
 template <typename ClassType> class class_
 {
   public:

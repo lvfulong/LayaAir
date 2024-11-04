@@ -139,7 +139,7 @@ namespace laya
 			else 
             {
 				bool bDir = sb.name[strlen(sb.name) - 1] == '/';
-                callback.call<JSZip, void>(this, i, sb.name, bDir, sb.size);
+                callback.call<void>(jsbind::toLocal(this), i, sb.name, bDir, sb.size);
 			}
 		}
 		//zip_close(pZip);

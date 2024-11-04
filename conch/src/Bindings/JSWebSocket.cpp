@@ -96,7 +96,7 @@ namespace laya
     void JSWebSocket::onSocketOpenCallJSFunction(std::string p_sEvent, std::weak_ptr<int> cbref)
     {
         if (!cbref.lock())return;
-        m_pJSFunctionOnOpen.call<JSWebSocket, void>(this, p_sEvent.c_str());
+        m_pJSFunctionOnOpen.call<void>(jsbind::toLocal(this), p_sEvent.c_str());
     }
     //------------------------------------------------------------------------------
     void JSWebSocket::onSocketCloseCallJSFunction(std::string p_sEvent, double closetm, std::weak_ptr<int> cbref)
@@ -107,7 +107,7 @@ namespace laya
         if (m_nWebSocketState == WSS_OPEN || m_nWebSocketState == WSS_CLOSEING)
         {  
             m_nWebSocketState = WSS_CLOSE;
-            m_pJSFunctionOnClose.call<JSWebSocket, void>(this, p_sEvent.c_str());
+            m_pJSFunctionOnClose.call<void>(jsbind::toLocal(this), p_sEvent.c_str());
         }
         else
         {
@@ -123,7 +123,7 @@ namespace laya
         if (m_nWebSocketState == WSS_OPEN) 
         {
             m_nWebSocketState = WSS_CLOSE;
-            m_pJSFunctionOnError.call<JSWebSocket, void>(this, p_sEvent.c_str());
+            m_pJSFunctionOnError.call<void>(jsbind::toLocal(this), p_sEvent.c_str());
         }
         else
         {
@@ -138,13 +138,13 @@ namespace laya
         {
             auto ab = jsbind::ArrayBuffer::MakeArrayBuffer((uint8_t*)pBuf, p_nLen);
             delete[] pBuf;
-            m_pJSFunctionOnMessage.call<JSWebSocket, void>(this, ab);
+            m_pJSFunctionOnMessage.call<void>(jsbind::toLocal(this), ab);
         }
         else
         {
             std::string strMsg;
             strMsg.append(pBuf, p_nLen);	//怕有0的問題，就新建一個string了
-            m_pJSFunctionOnMessage.call<JSWebSocket, void>(this, strMsg.c_str());
+            m_pJSFunctionOnMessage.call<void>(jsbind::toLocal(this), strMsg.c_str());
             delete[] pBuf;
         }
     }

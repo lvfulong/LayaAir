@@ -147,7 +147,7 @@ void JSVideo::CallHandle(const char *evtName)
 
 void JSVideo::DispatchEvtToJS(const std::string evtName)
 {
-    m_dispatchHandle.call<JSVideo, void>(this, evtName.c_str());
+    m_dispatchHandle.call<void>(jsbind::toLocal(this), evtName.c_str());
 }
 
 void JSVideo::exportJS(jsbind::Object &context)

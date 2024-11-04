@@ -63,7 +63,7 @@ namespace laya
         //if (!IsMyJsEnv()) return;
 
         if (GetWidth() <= 0 || GetHeight() <= 0|| m_pImage->m_kBitmapData.m_pImageData==NULL) {
-            m_pOnError.call<JSImage, void>(this, 500);
+            m_pOnError.call<void>(jsbind::toLocal(this), 500);
         }
         else {
             int nMemSize = GetWidth() * GetHeight() * 4 + 272;
@@ -73,7 +73,7 @@ namespace laya
             //通知渲染线程
             createImageOnRenderThread(m_nID, m_pImage);
             m_bComplete = true;
-            m_pOnLoad.call<JSImage, void>(this);
+            m_pOnLoad.call<void>(jsbind::toLocal(this));
         }
         jsbind::makeWeak(this);
     }
@@ -83,7 +83,7 @@ namespace laya
         //if (JCScriptRuntime::s_JSRT->m_bIsExit == true)return;
 	    //if (!IsMyJsEnv())return;
         LOGW("download image file error! %s\n", m_sUrl.c_str());
-        m_pOnError.call<JSImage, void>(this, p_nError);
+        m_pOnError.call<void>(jsbind::toLocal(this), p_nError);
         jsbind::makeWeak(this);
     }
     bool JSImage::getComplete()

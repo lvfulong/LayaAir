@@ -312,7 +312,7 @@ void  JSAndroidEditBox::onInputCallJSFunction(std::weak_ptr<int> callbackref)
 {
     if( !callbackref.lock())
         return;
-    m_pJSFunctionOnInput.call<void, JSAndroidEditBox>(this);
+    m_pJSFunctionOnInput.call<void>(jsbind::toLocal(this));
 }
 //------------------------------------------------------------------------------
 void JSAndroidEditBox::onInput()

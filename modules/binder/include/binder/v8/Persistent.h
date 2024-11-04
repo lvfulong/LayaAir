@@ -42,7 +42,7 @@ class Persistent
             return ReturnType();
         }
     }
-    template <typename ClassType, typename ReturnType, typename... Args>
+    /*template <typename ClassType, typename ReturnType, typename... Args>
     ReturnType call(ClassType *recv, const Args &...args)
     {
         if (isValid())
@@ -65,7 +65,7 @@ class Persistent
         {
             return ReturnType();
         }
-    }
+    }*/
     inline bool isValid() const
     {
         return ref_ != nullptr;

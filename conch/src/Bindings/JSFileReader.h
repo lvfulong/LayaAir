@@ -91,7 +91,7 @@ namespace laya
         void OnStart()
         {
             readyState = LOADING;
-            onloadstart.call<JsFileReader, void>(this);
+            onloadstart.call<void>(jsbind::toLocal(this));
         }
         void OnProgress(size_t p_iSaved, size_t p_iTotal)
         {

@@ -7,7 +7,7 @@
 #include "jsc/JSCBinder.h"
 #include "jsc/JSCEnv.h"
 #elif JS_V8
-#include <binder/JSBind.h>
+
 #include <binder/v8/ArrayBuffer.h>
 #include <binder/v8/Class.h>
 #include <binder/v8/Date.h>
@@ -21,6 +21,7 @@
 #include <binder/v8/Array.h>
 #include <binder/v8/Value.h>
 #include <binder/v8/Enum.h>
+#include <binder/JSBind.h>
 #ifdef JS_V8_DEBUGGER
 #include <binder/v8/v8debug/debug-agent.h>
 #endif

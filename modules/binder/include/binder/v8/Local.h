@@ -53,7 +53,7 @@ class Local
             return ReturnType();
         }
     }
-    template <typename ClassType, typename ReturnType, typename... Args>
+    /*template <typename ClassType, typename ReturnType, typename... Args>
     ReturnType call(ClassType *recv, const Args &...args)
     {
         GET_ENV
@@ -113,7 +113,7 @@ class Local
         }
 
 
-    }
+    }*/
     Local operator[](const std::string &key) const;
 
     jsvm::Value getHandle() const
