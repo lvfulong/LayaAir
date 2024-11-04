@@ -618,4 +618,12 @@ Status CreateObject( Env env,  Value* result)
 {
     return static_cast<Status>(napi_create_object(env, result));
 }
+Status ResolveDeferred(Env env, Deferred deferred, Value resolution)
+{
+    return static_cast<Status>(napi_resolve_deferred(env, deferred, resolution));
+}
+Status RejectDeferred(Env env, Deferred deferred, Value resolution)
+{
+    return static_cast<Status>(napi_reject_deferred(env, deferred, resolution));
+}
 } // namespace jsvm
