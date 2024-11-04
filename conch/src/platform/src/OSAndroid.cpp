@@ -122,23 +122,24 @@ JsValue OSAndroid::postAsyncMessage(std::weak_ptr<int> cbref, const std::string 
     jmethodID methodID = NULL;
 
     HandleAsyncMessageMethodRecord *pHandleAsyncMessageMethodRecord = new HandleAsyncMessageMethodRecord();
-    auto isolate = v8::Isolate::GetCurrent();
-    auto context = isolate->GetCurrentContext();
+    //auto isolate = v8::Isolate::GetCurrent();
+    //auto context = isolate->GetCurrentContext();
 
-    napi_deferred deferred;
-    napi_value promise;
+    //napi_deferred deferred;
+    //napi_value promise;
 
-    napi_create_promise(context, &deferred, &promise);
-
-    pHandleAsyncMessageMethodRecord->m_callback = [deferred, cbref,
+    //napi_create_promise(context, &deferred, &promise);
+    auto promise = jsbind::Promise::Make();
+    pHandleAsyncMessageMethodRecord->m_callback = [promise, cbref,
                                                    pHandleAsyncMessageMethodRecord](std::string message) {
-        postToJS([deferred, message, cbref, pHandleAsyncMessageMethodRecord]() {
+        postToJS([promise, message, cbref, pHandleAsyncMessageMethodRecord]() {
             if (!cbref.lock())
                 return;
-            auto isolate = v8::Isolate::GetCurrent();
-            auto context = isolate->GetCurrentContext();
-            napi_value v = JsValueFromV8LocalValue(MakeJSValue<const char *>(message));
-            napi_resolve_deferred(context, deferred, v);
+            //auto isolate = v8::Isolate::GetCurrent();
+            //auto context = isolate->GetCurrentContext();
+            //napi_value v = JsValueFromV8LocalValue(MakeJSValue<const char *>(message));
+            //napi_resolve_deferred(context, deferred, v);
+            promise.resolve(message);
             delete pHandleAsyncMessageMethodRecord;
         });
     };
@@ -158,7 +159,8 @@ JsValue OSAndroid::postAsyncMessage(std::weak_ptr<int> cbref, const std::string 
         env->ExceptionDescribe();
         env->ExceptionClear();
     }
-    return V8LocalValueFromJsValue(promise);
+    //return V8LocalValueFromJsValue(promise);
+    return promise.getHandle();
 }
 std::string OSAndroid::postSyncMessage(const std::string &eventName, const std::string &data)
 {
