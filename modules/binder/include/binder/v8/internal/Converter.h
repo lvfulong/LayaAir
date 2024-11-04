@@ -255,26 +255,26 @@ template <> class Converter<uint64_t>
     {
         return p_vl->IsUint32();
     }
-};
+};*/
 template <> class Converter<uint8_t>
 {
   public:
-    static uint8_t ToCpp(v8::Local<v8::Value> p_vl)
+    static uint8_t ToCpp(jsvm::Value value)
     {
-        return p_vl.As<v8::Uint32>()->Value();
+        return static_cast<uint8_t>(internal::getUint32(value));
     }
-    static v8::Local<v8::Value> ToJs(uint8_t p_vl, bool callDestructor = true)
+    static jsvm::Value  ToJs(uint8_t value, bool callDestructor = true)
     {
-        return v8::Uint32::NewFromUnsigned(v8::Isolate::GetCurrent(), p_vl);
+        return internal::makeUint32(static_cast<uint8_t>(value));
     }
-    static bool is(v8::Local<v8::Value> p_vl)
-    {
-        return p_vl->IsUint32();
-    }
+    //static bool is(v8::Local<v8::Value> p_vl)
+    //{
+    //    return p_vl->IsUint32();
+    //}
 };
 template <> class Converter<const uint8_t &> : public Converter<uint8_t>
 {
-};*/
+};
 
 template <> class Converter<bool>
 {
