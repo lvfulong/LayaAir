@@ -41,7 +41,7 @@ namespace jsvm
 /*JSVM_EXTERN*/ Status CreateArrayWithLength(Env env, size_t length, Value *result);
 /*JSVM_EXTERN*/ Status CreateDouble(Env env, double value, Value *result);
 /*JSVM_EXTERN*/ Status CreateInt32(Env env, int32_t value, Value *result);
-/*JSVM_EXTERN*/ Status CreateUint32(Env env, int32_t value, Value *result);
+/*JSVM_EXTERN*/ Status CreateUint32(Env env, uint32_t value, Value *result);
 /*JSVM_EXTERN*/ Status CreateInt64(Env env, int64_t value, Value *result);
 /*JSVM_EXTERN*/ Status CreateDate(Env env, double time, Value *result);
 /*JSVM_EXTERN*/ Status CreateObject( Env env,  Value* result);
