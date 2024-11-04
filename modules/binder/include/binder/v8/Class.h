@@ -8,7 +8,6 @@
 #include <map>
 #include <string>
 #include <utils/Log.h>
-#include <v8.h>
 
 namespace jsbind
 {

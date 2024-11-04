@@ -20,7 +20,7 @@
 #include <binder/v8/String.h>
 #include <binder/v8/Array.h>
 #include <binder/v8/Value.h>
-#include <v8.h>
+#include <binder/v8/Enum.h>
 #ifdef JS_V8_DEBUGGER
 #include <binder/v8/v8debug/debug-agent.h>
 #endif
@@ -33,7 +33,7 @@ namespace laya
 typedef jsvm::Value JsValue;
 // typedef v8::Local<v8::String> JsString;
 // typedef v8::FunctionCallbackInfo<v8::Value> JsFuncArgs;
-typedef v8::Local<v8::Function> JsFunction;
+//typedef v8::Local<v8::Function> JsFunction;
 typedef jsvm::Value JSValueAsParam;
 // typedef v8::Local<v8::Object> JsObject;
 // #define JSP_THROW(str) __JsThrow::Throw(str);

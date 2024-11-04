@@ -172,8 +172,8 @@ template <> class Converter<uint32_t>
         return p_vl->IsUint32();
     }*/
 };
-
-#ifdef OS_IOS
+#if 0
+//#ifdef OS_IOS
 template <> class Converter<long>
 {
   public:

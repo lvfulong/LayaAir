@@ -2,7 +2,6 @@
 #define __JSBIND_OBJECT_H__
 
 #include <cstring>
-#include "Enum.h"
 #include "internal/Converter.h"
 #include <binder/JSVM_Types.h>
 #include "Utility.h"
@@ -143,7 +142,8 @@ template <typename T> T convert_value_object_from_js(jsvm::Value value)
     T ret{};
     for (auto &field : value_object<T>::fields)
     {
-
+        GET_ENV
+        jsvm::Status status;
         jsvm::Value prop;
         status = jsvm::GetNamedProperty(env, value, field.field_name.c_str(), &prop);
         DEBUG_CHECK(status == jsvm::Status::OK);
@@ -151,7 +151,7 @@ template <typename T> T convert_value_object_from_js(jsvm::Value value)
 
         //v8::MaybeLocal<v8::Value> prop =
         //    obj->Get(v8::Isolate::GetCurrent()->GetCurrentContext(), field.toLocalFieldName());
-        if (val != nullptr)
+        if (value != nullptr)
         {
             field.from_v8(prop, (void *)&ret, field.pfield);
         }
@@ -183,7 +183,7 @@ template <typename T> jsvm::Value convert_value_object_to_js(const T &value)
         //auto name = *reinterpret_cast<v8::Local<v8::String> *>(&field.field_name);
         //ret->Set(v8::Isolate::GetCurrent()->GetCurrentContext(), name, field.to_v8(&value, field.pfield));
     }
-    return ret;
+    return result;
 }
 template <typename T> jsvm::Value convert_value_object_to_js(T *value)
 {
@@ -291,7 +291,7 @@ class Object
         return function(name, func);
     }
     template <typename ReturnType, typename... Args>
-    Object &function_optional_override(std::string_view name, ReturnType (*func)(Args...))
+    Object &function_optional_override(const char* name, ReturnType (*func)(Args...))
     {
         /*v8::HandleScope scope(isolate());
 
@@ -315,7 +315,7 @@ class Object
         jsvm::PropertyDescriptor descriptor;
         descriptor.utf8name = name;
         descriptor.name = NULL;
-        descriptor.method = internal::InvokeGlobalMethodOptionalOverride<ReturnType, Args...>;
+        descriptor.method = internal::InvokeClassMethodOptionalOverride<ReturnType, Args...>;
         descriptor.getter = NULL;
         descriptor.setter = NULL;
         descriptor.value = NULL;
