@@ -70,17 +70,6 @@ if(OS_WINDOWS)
         v8_libbase
         v8_libplatform
     )
-
-    list(APPEND HEADERS
-        ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM.h
-        ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM_Types.h
-    )
-
-    list(APPEND SOURCES
-        src/JSVM_NAPI.cpp
-        src/napi/js_native_api_v8.cc
-        #src/napi/util.cc
-    )
 elseif(OS_ANDROID)
     list(APPEND DEPS_V8
         v8_monolith
@@ -98,6 +87,10 @@ elseif(OS_OHOS)
     list(APPEND DEPS_V8
         v8_monolith
     )
+endif()
+
+
+if(OS_OHOS)
     list(APPEND HEADERS
         ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM.h
         ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM_Types.h
@@ -106,8 +99,22 @@ elseif(OS_OHOS)
     list(APPEND SOURCES
         src/JSVM_OHOS.cpp
     )
-endif()
+else()
+    list(APPEND HEADERS
+        ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM.h
+        ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM_Types.h
+        ${PUBLIC_HEADER_DIR}/${TARGET}/napi/js_native_api_types.h
+        ${PUBLIC_HEADER_DIR}/${TARGET}/napi/js_native_api_v8_internals.h
+        ${PUBLIC_HEADER_DIR}/${TARGET}/napi/js_native_api_v8.h
+        ${PUBLIC_HEADER_DIR}/${TARGET}/napi/js_native_api.h
+    )
 
+    list(APPEND SOURCES
+        src/JSVM_NAPI.cpp
+        src/napi/js_native_api_v8.cc
+        #src/napi/util.cc
+    )
+endif()
 add_library(${TARGET} STATIC ${HEADERS} ${SOURCES})
 target_include_directories(${TARGET} PUBLIC ${PUBLIC_HEADER_DIR})
 set_target_properties(${TARGET} PROPERTIES FOLDER conch/${TARGET})

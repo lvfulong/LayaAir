@@ -5,6 +5,9 @@
 #include "ark_runtime/jsvm.h"
 #else
 #include "napi/js_native_api.h"
+#include "binder/napi/js_native_api_v8.h"
+#include <libplatform/libplatform.h>
+#include <v8.h>
 #endif
 
 namespace jsvm

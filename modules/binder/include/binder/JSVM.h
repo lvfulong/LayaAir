@@ -1,12 +1,12 @@
 #ifndef __JSVM_H__
 #define __JSVM_H__
-
+#include "JSVM_Types.h"
 #include <cstdint>
 #if defined(OS_OHOS)
 #include "ark_runtime/jsvm.h"
-#endif
-#include "JSVM_Types.h"
+#else
 
+#endif
 namespace jsvm
 {
 
@@ -105,5 +105,5 @@ namespace jsvm
 /*JSVM_EXTERN*/ Status GetProperty(Env env, Value object, Value key, Value *result);
 /*JSVM_EXTERN*/ Status GetNamedProperty(Env env, Value object, const char *utf8name, Value *result);
 } // namespace jsvm
-
+//#include "JSVM_inline.h"
 #endif

@@ -20,6 +20,8 @@
 // #include "node_errors.h"
 // #include "node_internals.h"
 // #include "util.h"
+#include <v8.h>
+#include <unordered_set>
 #define NODE_API_DEFAULT_MODULE_API_VERSION 8
 namespace node
 {
