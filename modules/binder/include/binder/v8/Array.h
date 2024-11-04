@@ -95,18 +95,20 @@ namespace jsbind
         {
             GET_ENV
                 bool isArray;
-            jsvm::IsArray(env, array, &isArray);
+            jsvm::Status status;
+            status = jsvm::IsArray(env, array, &isArray);
             DEBUG_CHECK(status == jsvm::Status::OK);
             if (isArray)
             {
                 result.clear();
                 uint32_t length;
-                jsvm::GetArrayLength(env, array, &length) DEBUG_CHECK(status == jsvm::Status::OK);
+                status = jsvm::GetArrayLength(env, array, &length);
+                DEBUG_CHECK(status == jsvm::Status::OK);
                 result.reserve(length);
                 for (int i = 0; i < length; i++)
                 {
                     jsvm::Value element;
-                    jsvm::GetElement(env, array, i, &element);
+                    status = jsvm::GetElement(env, array, i, &element);
                     DEBUG_CHECK(status == jsvm::Status::OK);
                     result.push_back(Converter<T>::ToCpp(element));
                 }

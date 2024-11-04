@@ -94,7 +94,7 @@ template <typename ReturnType, typename... Args>
 jsvm::Value InvokeGlobalMethodOptionalOverride(jsvm::Env env, jsvm::CallbackInfo info)
 {
     size_t argc = sizeof...(Args);
-    jsvm::Value argv[sizeof...(Args)];
+    jsvm::Value argv[sizeof...(Args) + 1];
     jsvm::Value _this;
     void *data;
     jsvm::GetCbInfo(env, info, &argc, argv, &_this, &data);
