@@ -61,7 +61,7 @@ namespace jsbind
             memcpy(mat.elements, ab.getData(), sizeof(float) * 9);
             return mat;
         }
-        static jsvm::Value ToJs(const laya::Matrix3x3& p_vl)
+        static jsvm::Value ToJs(const laya::Matrix3x3& p_vl, bool callDestructor)
         {
             DEBUG_CHECK(false && "not implemented");
             return jsbind::MakeUndefined();
@@ -80,7 +80,7 @@ namespace jsbind
             memcpy(mat.elements, ab.getData(), sizeof(float) * 16);
             return mat;
         }
-        static jsvm::Value ToJs(const laya::Matrix4x4& p_vl)
+        static jsvm::Value ToJs(const laya::Matrix4x4& p_vl,bool callDestructor)
         {
             DEBUG_CHECK(false && "not implemented");
             return jsbind::MakeUndefined();

@@ -111,7 +111,7 @@ void InvokeGlobalMethodOptionalOverride(jsvm::Env env, jsvm::CallbackInfo info)
         return;
     }*/
 
-    tuple_call<std::tuple<Args...>>(funcInfo->func, args, std::make_index_sequence<sizeof...(Args)>());
+    tuple_call<std::tuple<Args...>>(funcInfo->func, argv, std::make_index_sequence<sizeof...(Args)>());
 }
 
 template <typename ClassType, typename ReturnType, typename... Args>
