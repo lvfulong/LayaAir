@@ -58,7 +58,7 @@ namespace laya
             break;
         }
     #endif
-    #ifdef JS_V8
+    #ifdef JS_V8_DEBUGGER
 	    if (gLayaLogNoParam) 
         {
             auto isolate = v8::Isolate::GetCurrent();

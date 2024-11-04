@@ -89,7 +89,7 @@ template <typename ReturnType, typename... Args> jsvm::Value InvokeMethodStatic(
 */
     return tuple_call<std::tuple<Args...>>(funcInfo->func, argv, std::make_index_sequence<sizeof...(Args)>());
 }
-#if 0
+
 template <typename ReturnType, typename... Args>
 void InvokeGlobalMethodOptionalOverride(jsvm::Env env, jsvm::CallbackInfo info)
 {
@@ -113,7 +113,7 @@ void InvokeGlobalMethodOptionalOverride(jsvm::Env env, jsvm::CallbackInfo info)
 
     tuple_call<std::tuple<Args...>>(funcInfo->func, args, std::make_index_sequence<sizeof...(Args)>());
 }
-#endif
+
 template <typename ClassType, typename ReturnType, typename... Args>
 jsvm::Value InvokeClassMethod(jsvm::Env env, jsvm::CallbackInfo info)
 {

@@ -315,7 +315,7 @@ class Object
         jsvm::PropertyDescriptor descriptor;
         descriptor.utf8name = name;
         descriptor.name = NULL;
-        descriptor.method = internal::InvokeClassMethodOptionalOverride<ReturnType, Args...>;
+        descriptor.method = internal::InvokeGlobalMethodOptionalOverride<ReturnType, Args...>;
         descriptor.getter = NULL;
         descriptor.setter = NULL;
         descriptor.value = NULL;

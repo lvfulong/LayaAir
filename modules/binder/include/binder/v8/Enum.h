@@ -2,7 +2,7 @@
 #define __JSBIND_ENUM_H__
 
 #include <string>
-#include <vector>
+#include <memory>
 #include "Object.h"
 namespace jsbind
 {

@@ -131,7 +131,7 @@ namespace laya
     void JSInput::onCaptureScreenCallJSFunction(char *p_pBuffer, int p_nlen, int p_nW, int p_nH)
     {
 #ifdef JS_V8
-        v8::HandleScope scope(v8::Isolate::GetCurrent());
+        //v8::HandleScope scope(v8::Isolate::GetCurrent());
 #endif
         auto ab = jsbind::ArrayBuffer::MakeArrayBuffer((uint8_t*)p_pBuffer, p_nlen).getHandle();
 		delete[] p_pBuffer;

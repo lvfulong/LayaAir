@@ -451,8 +451,8 @@ namespace laya
 	void JSGlobalExportC()	
     {
 
-        v8::Isolate* isolate = v8::Isolate::GetCurrent();
-	    v8::HandleScope scope(isolate);
+        //v8::Isolate* isolate = v8::Isolate::GetCurrent();
+	    //v8::HandleScope scope(isolate);
         jsbind::Object context(nullptr);//TODO
         ///Module global(context.isolate());
         JSCanvasRenderingContext2D::exportJS(context);

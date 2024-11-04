@@ -176,7 +176,7 @@ namespace laya
             if (p_bBin) 
             {
 #ifdef JS_V8
-                v8::HandleScope scope(v8::Isolate::GetCurrent());
+                //v8::HandleScope scope(v8::Isolate::GetCurrent());
 #endif
                 JsValue ab = jsbind::ArrayBuffer::MakeArrayBuffer((uint8_t*)p_Buff, p_nLen).getHandle();
                 pxhr->m_jsfunPostComplete.call<XMLHttpRequest,void>(pxhr, ab, (const char*)p_Buff);
