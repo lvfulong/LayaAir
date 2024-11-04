@@ -172,29 +172,30 @@ template <> class Converter<uint32_t>
         return p_vl->IsUint32();
     }*/
 };
-#if 0
-//#ifdef OS_IOS
+
+#ifdef OS_IOS
+
 template <> class Converter<long>
 {
   public:
-    static v8::Local<v8::Value> ToJs(long p_vl, bool callDestructor = true)
+    static jsvm::Value ToJs(long value, bool callDestructor = true)
     {
-        return v8::Number::New(v8::Isolate::GetCurrent(), *reinterpret_cast<double *>(&p_vl));
+        static_assert(sizeof(long) == 8);
+        return internal::makeInt64Noloss(value);
     }
-    static long ToCpp(v8::Local<v8::Value> value)
+    static long ToCpp(jsvm::Value value)
     {
-        if (!value->IsNumber() || value->IsNullOrUndefined())
+        /*if (!value->IsNumber() || value->IsNullOrUndefined())
         {
             return 0;
-        }
-        double v = value->NumberValue(v8::Isolate::GetCurrent()->GetCurrentContext()).ToChecked();
-        return *reinterpret_cast<long *>(&v);
+        }*/
+        return internal::getInt64Noloss(value);
     }
 
-    static bool is(v8::Local<v8::Value> p_vl)
+    /*static bool is(v8::Local<v8::Value> p_vl)
     {
         return p_vl->IsNumber();
-    }
+    }*/
 };
 #endif
 // 用bigint 保证精度不丢失,可以用于bullet对象指针
