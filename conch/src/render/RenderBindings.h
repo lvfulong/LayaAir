@@ -174,7 +174,7 @@ class RenderBindings
         {
             jsbind::class_<JSBounds> class_binding;
             class_binding.constructor<>();
-            class_binding.constructor<JSValueAsParam>();
+            class_binding.constructor<jsbind::ArrayBuffer>();
             class_binding.function("setMin", &JSBounds::setMin);
             class_binding.function("getMin", &JSBounds::getMinJS);
             class_binding.function("setMax", &JSBounds::setMax);
@@ -191,7 +191,7 @@ class RenderBindings
         {
             jsbind::class_<JSRTTransform> class_binding;
               class_binding.constructor<>();
-              class_binding.constructor <JSValueAsParam>();
+              class_binding.constructor <jsbind::ArrayBuffer>();
               class_binding.function("setParent", &JSRTTransform::rt_setParent);
               class_binding.function("getWorldLossyScale", &JSRTTransform::rt_getWorldLossyScale);
               class_binding.function("setWorldLossyScale", &JSRTTransform::rt_setWorldLossyScale);

@@ -11,16 +11,16 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
-
+//#include "binder/v8/ArrayBuffer.h"
 namespace jsbind
 {
 
 namespace internal
 {
-//template <typename T> T convert_value_object_from_v8(jsvm::Env env, jsvm::Value value);
+//template <typename T> T convert_value_object_from_js(jsvm::Env env, jsvm::Value value);
 
-//template <typename T> jsvm::Value convert_value_object_to_v8(jsvm::Env env, const T &t);
-//template <typename T> jsvm::Value convert_value_object_to_v8(jsvm::Env env, T *t);
+//template <typename T> jsvm::Value convert_value_object_to_js(jsvm::Env env, const T &t);
+//template <typename T> jsvm::Value convert_value_object_to_js(jsvm::Env env, T *t);
 template <class T> struct is_value_object;
 
 template <typename T>
@@ -33,6 +33,13 @@ struct is_wrapped_class : std::conjunction<std::is_class<T>, std::negation<inter
 // std::negation<detail::is_shared_ptr<T>>>
 {
 };
+
+/*template <> struct is_value_object<ArrayBuffer> : std::false_type
+{
+};
+template <> struct is_wrapped_class<ArrayBuffer> : std::false_type
+{
+};*/
 } // namespace internal
 
 template <typename ClassType> bool isWrappedClassOf();
@@ -42,6 +49,7 @@ template <typename ClassType> jsvm::Value wrapCppObject(ClassType *objectPointer
 template <typename T, typename Enable = void> class Converter;
 
 template <typename T> class value_object;
+
 
 
 
@@ -116,7 +124,28 @@ template <typename T> struct Converter<T &> : Converter<T>
 template <typename T> struct Converter<const T &> : Converter<T>
 {
 };
-
+/*template <> class Converter<ArrayBuffer>
+{
+public:
+    static ArrayBuffer ToCpp(jsvm::Value value)
+    {
+        return ArrayBuffer::Make(value);
+    }
+    static jsvm::Value ToJs(ArrayBuffer value, bool callDestructor = true)
+    {
+        return value.getHandle();
+    }
+    static bool is(jsvm::Value value)
+    {
+        return internal::isArrayBuffer(value) || internal::isArrayBufferView(value);
+    }
+};
+template <> class Converter<const ArrayBuffer&> : public Converter<ArrayBuffer>
+{
+};
+template <> class Converter<ArrayBuffer&> : public Converter<ArrayBuffer>
+{
+};*/
 template <> class Converter<int32_t>
 {
   public:
@@ -620,6 +649,7 @@ template <typename T, typename R> class Converter<const std::unordered_map<T, R>
     }
 };
 #endif
+
 namespace internal
 {
     template <class T> jsvm::Value ToJSValue(T t, bool callDestructor = true)

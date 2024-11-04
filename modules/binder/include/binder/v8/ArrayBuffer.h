@@ -27,7 +27,7 @@ class ArrayBuffer
         ARRAY_BUFFER,
         DATA_VIEW,
     };
-    ArrayBuffer() = delete;
+    ArrayBuffer() = default;
     ~ArrayBuffer() = default;
     // if failed ArrayBuffer returned isValid return false
     static ArrayBuffer Make(jsvm::Value arrayBuffer);
@@ -105,6 +105,7 @@ class ArrayBuffer
     Type type_ = ARRAY_BUFFER;
     jsvm::Value handle_ = nullptr;
 };
+//template <typename T, typename Enable = void> class Converter;
 template <> class Converter<ArrayBuffer>
 {
 public:
@@ -120,6 +121,12 @@ public:
     {
         return internal::isArrayBuffer(value) || internal::isArrayBufferView(value);
     }
+};
+template <> class Converter<const ArrayBuffer&> : public Converter<ArrayBuffer>
+{
+};
+template <> class Converter<ArrayBuffer&> : public Converter<ArrayBuffer>
+{
 };
 
 } // namespace jsbind

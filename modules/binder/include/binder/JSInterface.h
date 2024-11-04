@@ -56,10 +56,6 @@ typedef jsvm::Value JSValueAsParam;
         __JSRun::ReportException(isolate, &try_catch);                                                                 \
     }*/
 #endif
-void AdjustAmountOfExternalAllocatedMemory(int p_nMemorySize)
-{
-    // todo
-}
-
+extern void AdjustAmountOfExternalAllocatedMemory(int p_nMemorySize);
 } // namespace laya
 #endif
