@@ -91,13 +91,13 @@ template <typename ReturnType, typename... Args> jsvm::Value InvokeMethodStatic(
 }
 
 template <typename ReturnType, typename... Args>
-void InvokeGlobalMethodOptionalOverride(jsvm::Env env, jsvm::CallbackInfo info)
+jsvm::Value InvokeGlobalMethodOptionalOverride(jsvm::Env env, jsvm::CallbackInfo info)
 {
     size_t argc = sizeof...(Args);
     jsvm::Value argv[sizeof...(Args)];
     jsvm::Value _this;
     void *data;
-    GetCbInfo(env, info, &argc, argv, &_this, &data);
+    jsvm::GetCbInfo(env, info, &argc, argv, &_this, &data);
     // NODE_API_ASSERT(env, argc >= 1, "Not enough arguments, expected 1.");
 
     typedef ReturnType (*FunctorType)(Args...);
@@ -111,7 +111,7 @@ void InvokeGlobalMethodOptionalOverride(jsvm::Env env, jsvm::CallbackInfo info)
         return;
     }*/
 
-    tuple_call<std::tuple<Args...>>(funcInfo->func, argv, std::make_index_sequence<sizeof...(Args)>());
+    return tuple_call<std::tuple<Args...>>(funcInfo->func, argv, std::make_index_sequence<sizeof...(Args)>());
 }
 
 template <typename ClassType, typename ReturnType, typename... Args>
