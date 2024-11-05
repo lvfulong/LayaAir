@@ -1,7 +1,7 @@
 #ifndef __JSBIND_CLASS_H__
 #define __JSBIND_CLASS_H__
 
-#include "Invocation.h"
+#include "Invoke.h"
 #include "Utility.h"
 #include <assert.h>
 #include <functional>

@@ -1,5 +1,5 @@
-#ifndef __V8_INVOCATION_H__
-#define __V8_INVOCATION_H__
+#ifndef __V8_INVOKE_H__
+#define __V8_INVOKE_H__
 
 #include "internal/Converter.h"
 #include <binder/JSVM_Types.h>
