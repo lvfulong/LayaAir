@@ -465,41 +465,21 @@ namespace laya
         return false;
     }
 #if defined(USE_DCC)
-    void onProgJS(unsigned int now, unsigned int total, float speed, std::shared_ptr<v8::Persistent<v8::Value>>& jsOnProg) {
-        auto isolate = v8::Isolate::GetCurrent();
-        v8::HandleScope handleScope(isolate); // 创建 HandleScope
-        v8::Local<v8::Context> context = isolate->GetCurrentContext();
-        // 将下载的数据传递给 JS 回调
-        //把持久句柄转成本地句柄            
-        v8::Local func(jsOnProg->Get(isolate));
-        // 确认value是函数
-        if ( !func.IsEmpty() && func->IsFunction()) {
-            auto v8function = v8::Local<v8::Function>::Cast(func);
-            const unsigned argc = 3;
-            v8::Local<v8::Value> argv[argc] = {
-                v8::Number::New(isolate, now),
-                v8::Number::New(isolate, total),
-                v8::Number::New(isolate, speed),
-            };
-
-            // 调用函数
-            v8::Local<v8::Value> result;
-            if (v8function->Call(context, context->Global(), argc, argv).ToLocal(&result)) {
-                // 函数调用成功，result 包含返回值
-                // 在此处理 result （如果需要）
-            }
-            else {
-                // 处理错误
-            }
-
+    void onProgJS(unsigned int now, unsigned int total, float speed, std::shared_ptr<jsbind::Persistent>& jsOnProg)
+    {
+        auto onProgressLocal = jsOnProg->getLocal();
+        if (onProgressLocal.isValid() && onProgressLocal.isFunction())
+        {
+            onProgressLocal.call<void>(jsbind::global(), now, total, speed);
             //释放持久句柄
-            jsOnProg->Reset();
+            jsOnProg->reset();
         }
-        else {
+        else 
+        {
             // 抛出错误或处理非函数情况
         }
     }
-    int onprog(unsigned int now, unsigned int total, float speed, std::shared_ptr<v8::Persistent<v8::Value>>& jsOnProg) {
+    int onprog(unsigned int now, unsigned int total, float speed, std::shared_ptr<jsbind::Persistent>& jsOnProg) {
         postToJS(std::bind(onProgJS, now, total, speed, jsOnProg));
         return 0;
     }
@@ -507,44 +487,23 @@ namespace laya
     void onDownloaded_JS(JCBuffer & p_Buff,
             int pnCurlRet,
             int pnHttpRet,
-            std::shared_ptr<v8::Persistent<v8::Value>>& jsOnComp,
-            std::shared_ptr<v8::Persistent<v8::Value>>& jsOnProg
+            std::shared_ptr<jsbind::Persistent>& jsOnComp,
+            std::shared_ptr<jsbind::Persistent>& jsOnProg
     ) {
-        //pLocalAddr 等都不要了，因为转v8字符串会导致概率崩溃，可能是临时变量导致
-        auto isolate = v8::Isolate::GetCurrent();
-        v8::HandleScope handleScope(isolate); // 创建 HandleScope
-        v8::Local<v8::Context> context = isolate->GetCurrentContext();
-        // 将下载的数据传递给 JS 回调
-        //把持久句柄转成本地句柄            
-        v8::Local func(jsOnComp->Get(isolate));
-        // 确认value是函数
-        if (func->IsFunction()) {
-            auto v8function = v8::Local<v8::Function>::Cast(func);
-            const unsigned argc = 3;
-            v8::Local<v8::Value> argv[argc] = {
-                createJSAB(p_Buff.m_pPtr, p_Buff.m_nLen),
-                v8::String::NewFromUtf8(isolate, "", v8::NewStringType::kNormal).ToLocalChecked(),
-                v8::String::NewFromUtf8(isolate,  "", v8::NewStringType::kNormal).ToLocalChecked()
-            };
-
-            // 调用函数
-            v8::Local<v8::Value> result;
-            if (v8function->Call(context, context->Global(), argc, argv).ToLocal(&result)) {
-                // 函数调用成功，result 包含返回值
-                // 在此处理 result （如果需要）
-            }
-            else {
-                // 处理错误
-            }
-
+        auto onCompleteLocal = jsOnComp->getLocal();
+        if (onCompleteLocal.isValid() && onCompleteLocal.isFunction())
+        {
+            auto ab = jsbind::ArrayBuffer::MakeArrayBuffer((uint8_t*)p_Buff.m_pPtr, p_Buff.m_nLen);
+            onCompleteLocal.call<void>(jsbind::global(), ab, "","");
             //释放持久句柄
-            jsOnComp->Reset();
-            jsOnProg->Reset();
+            jsOnComp->reset();
+            jsOnProg->reset();
             //释放buffer
             p_Buff.m_bNeedDel = true;
             p_Buff.free();
         }
-        else {
+        else 
+        {
             // 抛出错误或处理非函数情况
         }
     }
@@ -556,8 +515,8 @@ namespace laya
         int pnCurlRet,
         int pnHttpRet,
         const std::string& pstrHeader,
-        std::shared_ptr<v8::Persistent<v8::Value>>& jsOnComp,
-        std::shared_ptr<v8::Persistent<v8::Value>>& jsOnProg) {
+        std::shared_ptr<jsbind::Persistent>& jsOnComp,
+        std::shared_ptr<jsbind::Persistent>& jsOnProg) {
 
         //checkIsEncrypted(p_Buff.m_pPtr, p_Buff.m_nLen);
         //if (gHandleDataFunc) {
@@ -580,11 +539,8 @@ namespace laya
         if (url.empty()) 
             return;
 
-        auto isolate = v8::Isolate::GetCurrent();
-        //v8::Persistent<v8::Value> onCompleteP(isolate, onComplete);  
-        //转成持久句柄。由于lambda不允许拷贝，所以用shareptr
-        auto onCompleteP = std::make_shared<v8::Persistent<v8::Value>>(isolate, onComplete);
-        auto onProgP = std::make_shared<v8::Persistent<v8::Value>>(isolate, onProgress);
+        auto onCompleteP = std::make_shared<jsbind::Persistent>(onComplete);
+        auto onProgP = std::make_shared<jsbind::Persistent>(onProgress);
 
         JCDownloadMgr* pNetLoader = JCDownloadMgr::getInstance();
         auto onComp = std::bind(onDownloaded,
