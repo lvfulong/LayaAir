@@ -1,7 +1,7 @@
 #ifndef __JsVideo_h__
 #define __JsVideo_h__
 
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 
 #include <Image/JCVideo.h>
 #include <map>
@@ -42,7 +42,7 @@ class JSVideo
 
     void AddEvent(const char *evtName);
     void RemoveEvent(const char *evtName);
-    void _setDispatchEventFunc(JSValueAsParam emitFunc);
+    void _setDispatchEventFunc(jsvm::Value emitFunc);
 
     void Load(const char *url);
     void Play();

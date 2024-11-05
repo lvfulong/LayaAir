@@ -1,5 +1,5 @@
 #include "JSCanvasRenderingContext2D.h"
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 #include "2D/CanvasRenderingContext2D.h"
 #include <utils/JCMemorySurvey.h>
 #include <utils/Log.h>
@@ -13,12 +13,12 @@ namespace laya
 JSCanvasRenderingContext2D::JSCanvasRenderingContext2D(int width, int height)
 {
     m_context = CanvasRenderingContext2D::create(width, height);
-    AdjustAmountOfExternalAllocatedMemory(4);
+    jsbind::AdjustAmountOfExternalAllocatedMemory(4);
     JCMemorySurvey::GetInstance()->newClass("conchCanvasRenderingContext2D", 4, this);
 }
 JSCanvasRenderingContext2D::JSCanvasRenderingContext2D()
 {
-    AdjustAmountOfExternalAllocatedMemory(4);
+    jsbind::AdjustAmountOfExternalAllocatedMemory(4);
     JCMemorySurvey::GetInstance()->newClass("conchCanvasRenderingContext2D", 4, this);
 }
 JSCanvasRenderingContext2D::~JSCanvasRenderingContext2D()
@@ -35,7 +35,7 @@ void JSCanvasRenderingContext2D::strokeText(const char *text, double x, double y
 {
     m_context->strokeText(text, x, y, maxWidth);
 }
-JsValue JSCanvasRenderingContext2D::measureText(const std::string &text)
+jsvm::Value JSCanvasRenderingContext2D::measureText(const std::string &text)
 {
     TextMetrics metrics = m_context->measureText(text);
     TextMetrics *copy = new TextMetrics(metrics);
@@ -57,7 +57,7 @@ void JSCanvasRenderingContext2D::restore()
 {
     m_context->restore();
 }
-JsValue JSCanvasRenderingContext2D::getImageData(double x, double y, double width, double height)
+jsvm::Value JSCanvasRenderingContext2D::getImageData(double x, double y, double width, double height)
 {
     ImageData data = m_context->getImageData(x, y, width, height);
     ImageData *copy = new ImageData(std::move(data));

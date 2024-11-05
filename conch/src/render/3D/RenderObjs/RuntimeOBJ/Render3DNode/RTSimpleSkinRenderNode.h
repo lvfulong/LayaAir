@@ -2,7 +2,7 @@
 #define __RTSimpleSkinRenderNode_H_
 
 #include "RTBaseRenderNode.h"
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 namespace laya
 {
     class RTSimpleSkinRenderNode :public RTBaseRenderNode {
@@ -20,7 +20,7 @@ namespace laya
         void setShareBuffer(jsbind::ArrayBuffer arrayBuffer) {
             DEBUG_CHECK(arrayBuffer.isValid());
             m_float32Array = reinterpret_cast<float*>(arrayBuffer.getData());
-            //AdjustAmountOfExternalAllocatedMemory(nArrayBufferSize);
+            //jsbind::AdjustAmountOfExternalAllocatedMemory(nArrayBufferSize);
             //JCMemorySurvey::GetInstance()->newClass("RTSimpleSkinRenderNode", nArrayBufferSize, this);
         }
     public:

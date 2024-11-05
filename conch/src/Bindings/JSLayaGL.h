@@ -1,7 +1,7 @@
 #ifndef __JSLayaGL_H__
 #define __JSLayaGL_H__
 
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 #include <WebGL/JCGpuProgram.h>
 #include <manager/JCArrayBufferManager.h>
 
@@ -35,9 +35,9 @@ class JSLayaGL
   public:
     int getAttribLocationEx(const char *vs, const char *ps, const char *define, const char *sName);
 
-    JsValue getShaderPrecisionFormat(int shaderType, int precisionType);
+    jsvm::Value getShaderPrecisionFormat(int shaderType, int precisionType);
 
-    JsValue getUniform(const char *locationName);
+    jsvm::Value getUniform(const char *locationName);
 
     int getParameter(int pname);
 
@@ -45,22 +45,22 @@ class JSLayaGL
 
     int getIntegerv(int pname);
 
-    JsValue getIntegerArrayv(int pname);
+    jsvm::Value getIntegerArrayv(int pname);
 
     float getFloatv(int pname);
 
-    JsValue getFloatArrayv(int pname);
+    jsvm::Value getFloatArrayv(int pname);
 
-    JsValue readPixels(int x, int y, int width, int height, int format, int type);
+    jsvm::Value readPixels(int x, int y, int width, int height, int format, int type);
 
     void setCurrentContext(int nContextID);
 
   public:
     int getProgramParameter(const char *vs, const char *ps, const char *define, int type);
 
-    JsValue getActiveAttribEx(const char *vs, const char *ps, const char *define, int nIndex);
+    jsvm::Value getActiveAttribEx(const char *vs, const char *ps, const char *define, int nIndex);
 
-    JsValue getActiveUniformEx(const char *vs, const char *ps, const char *define, int nIndex);
+    jsvm::Value getActiveUniformEx(const char *vs, const char *ps, const char *define, int nIndex);
 
     const char *getString(unsigned int name);
 
@@ -76,7 +76,7 @@ class JSLayaGL
 
     int getVertexAttribEx(int index, int target);
 
-    JsValue getVertexAttribExfv(int index, int target);
+    jsvm::Value getVertexAttribExfv(int index, int target);
 
     int getVertexAttribOffset(int index, int target);
 

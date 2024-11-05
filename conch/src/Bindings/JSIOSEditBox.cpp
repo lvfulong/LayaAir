@@ -1,5 +1,5 @@
 #include "JSIOSEditBox.h"
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 #include <utils/Log.h>
 #include <utils/JCColor.h>
 #include "CToObjectC.h"
@@ -12,7 +12,7 @@ namespace laya
 JSIOSEditBox::JSIOSEditBox()
 {
     //大概估算内部变量 11个int  4个字符串
-    AdjustAmountOfExternalAllocatedMemory( 208 );
+    jsbind::AdjustAmountOfExternalAllocatedMemory( 208 );
 	JCMemorySurvey::GetInstance()->newClass( "iOSEditBox",208,this );
 	m_nLeft = 0;
 	m_nTop = 0;
@@ -271,7 +271,7 @@ void JSIOSEditBox::setNumberOnly( bool p_bNumberOnly )
 {
 	CToObjectCSetEditBoxNumberOnly( p_bNumberOnly );
 }
-void JSIOSEditBox::addEventListener(const char* p_sName, JSValueAsParam p_pFunction)
+void JSIOSEditBox::addEventListener(const char* p_sName, jsvm::Value p_pFunction)
 {
     if(strcmp(p_sName,"input")==0)
     {

@@ -2,7 +2,7 @@
 #define __JSSubmitScene3D_H__
 
 #include <stdio.h>
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 #include "../../LayaAir/ISubmit.h"
 
 namespace laya
@@ -12,7 +12,7 @@ namespace laya
 	public:
 		static void exportJS(jsbind::Object& context);
 		JSSubmitScene3D();
-		JSSubmitScene3D(JSValueAsParam pCallback);
+		JSSubmitScene3D(jsvm::Value pCallback);
 		~JSSubmitScene3D();
 		int renderSubmit() override;
 		void recycle() override;

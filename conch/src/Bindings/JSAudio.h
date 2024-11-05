@@ -3,7 +3,7 @@
 
 
 #include <stdio.h>
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 #include "resource/Audio/JCAudioInterface.h"
 #include <utils/JCBuffer.h>
 
@@ -71,7 +71,7 @@ namespace laya
 
     public:
 
-	    void addEventListener( const char* p_sName, JSValueAsParam p_pFunction );
+	    void addEventListener( const char* p_sName, jsvm::Value p_pFunction );
 
 	    void play();
 

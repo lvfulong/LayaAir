@@ -7,7 +7,7 @@ namespace laya
     JSXmlNode::JSXmlNode()
     {
         m_parentNode = NULL;
-        AdjustAmountOfExternalAllocatedMemory(64000);
+        jsbind::AdjustAmountOfExternalAllocatedMemory(64000);
         m_bCreateChilds = false;
         m_bCreateAttribs = false;
         JCMemorySurvey::GetInstance()->newClass("XmlNode", 64000, this);
@@ -39,23 +39,23 @@ namespace laya
     {
         return this;
     }
-    JsValue  JSXmlNode::getParentNode()
+    jsvm::Value  JSXmlNode::getParentNode()
     {
          return jsbind::Make<JSXmlNode*>(m_parentNode);
     }
-    JsValue  JSXmlNode::getFirstChild()
+    jsvm::Value  JSXmlNode::getFirstChild()
     {
         return jsbind::MakeNull();
     }
-    JsValue JSXmlNode::getLastChild()
+    jsvm::Value JSXmlNode::getLastChild()
     {
         return jsbind::MakeNull();
     }
-    JsValue  JSXmlNode::getPreviousSibling()
+    jsvm::Value  JSXmlNode::getPreviousSibling()
     {
         return jsbind::MakeNull();
     }
-    JsValue  JSXmlNode::getNextSibling()
+    jsvm::Value  JSXmlNode::getNextSibling()
     {
         return jsbind::MakeNull();
     }
@@ -75,22 +75,22 @@ namespace laya
     {
         return m_nodeValue.c_str();
     }
-    JsValue JSXmlNode::getChildNodes()
+    jsvm::Value JSXmlNode::getChildNodes()
     {
         if (!m_bCreateChilds)
         {
-            JsValue pJSValue = jsbind::Make<std::vector<JSXmlNode*>>(m_childNodes);
+            jsvm::Value pJSValue = jsbind::Make<std::vector<JSXmlNode*>>(m_childNodes);
             m_jsChildNodes = jsbind::Persistent(pJSValue);
             m_bCreateChilds = true;
         }
         return m_jsChildNodes.getHandle();
     }
-    JsValue JSXmlNode::getAttributes()
+    jsvm::Value JSXmlNode::getAttributes()
     {
         if (!m_bCreateAttribs)
         {
             m_bCreateAttribs = true;
-            JsValue pJSValue = jsbind::Make<std::vector<JSXmlAttr*>>(m_attributes);
+            jsvm::Value pJSValue = jsbind::Make<std::vector<JSXmlAttr*>>(m_attributes);
             m_jsAttribs = jsbind::Persistent(pJSValue);
         }
         return m_jsAttribs.getHandle();
@@ -157,7 +157,7 @@ namespace laya
         initXmlNode(m_document,true);
         if(fdoc!=NULL)delete fdoc;
     }
-    JsValue  JSXmlDocument::getChildNodes()
+    jsvm::Value  JSXmlDocument::getChildNodes()
     {
         return JSXmlNode::getChildNodes();
     }

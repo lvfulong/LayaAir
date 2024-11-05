@@ -2,7 +2,7 @@
 #include <JCConch.h>
 #include <utils/ColorParser.h>
 #include "JSAndroidEditBox.h"
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 #include "../../JCScriptRuntime.h"
 #include <utils/Log.h>
 
@@ -27,7 +27,7 @@ JSAndroidEditBox::JSAndroidEditBox()
 	m_nScaleY = 1;
 	m_bForbidEdit = false;
     m_CallbackRef.reset(new int(1));
-	AdjustAmountOfExternalAllocatedMemory( 256 );
+	jsbind::AdjustAmountOfExternalAllocatedMemory( 256 );
 	JCMemorySurvey::GetInstance()->newClass( "AndroidEditBox",256,this );
 }
 //------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ JSAndroidEditBox::~JSAndroidEditBox()
     JCMemorySurvey::GetInstance()->releaseClass( "AndroidEditBox",this );
 }
 //------------------------------------------------------------------------------
-void JSAndroidEditBox::addEventListener(const char* p_sName, JSValueAsParam p_pFunction )
+void JSAndroidEditBox::addEventListener(const char* p_sName, jsvm::Value p_pFunction )
 {
     if(strcmp( p_sName,"input" ) == 0)
     {

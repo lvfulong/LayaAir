@@ -27,7 +27,7 @@ void GLESShaderData::destroy()
     return _defineDatas;
 }
 
-JsValue GLESShaderData::getOwnerDefineDataJS()
+jsvm::Value GLESShaderData::getOwnerDefineDataJS()
 {
     if (!m_pJSDefineDatas.isValid())
     {

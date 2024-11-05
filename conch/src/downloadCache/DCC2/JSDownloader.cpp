@@ -75,7 +75,7 @@ namespace laya{
         return null;
     }
 
-    void JSDownloader::setJSDownloader(JSValueAsParam obj){
+    void JSDownloader::setJSDownloader(jsvm::Value obj){
         //转成持久句柄。
         m_jsDownloader = jsbind::Persistent(obj);
     }

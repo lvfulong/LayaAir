@@ -2,7 +2,7 @@
 #define __JSDOMParser_H__
 
 #include <stdio.h>
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 #include "resource/JCFileResManager.h"
 #include "JSXmlNode.h"
 
@@ -14,14 +14,14 @@ namespace laya
 		static void exportJS(jsbind::Object& context);
 		JSDOMParser();
 		~JSDOMParser();
-		JsValue parseFromString(const char * str,const char *type);
+		jsvm::Value parseFromString(const char * str,const char *type);
 		const char* getSrc();
 		void setSrc( const char* p_sSrc );
-		void SetOnload( JSValueAsParam p_pFunction );
-		JsValue GetOnload();
-		void SetOnError( JSValueAsParam p_pFunction );
-		JsValue GetOnError();
-		JsValue getXml();
+		void SetOnload( jsvm::Value p_pFunction );
+		jsvm::Value GetOnload();
+		void SetOnError( jsvm::Value p_pFunction );
+		jsvm::Value GetOnError();
+		jsvm::Value getXml();
 	public:
 		void onLoadedCallJSFunction(std::string& str,std::weak_ptr<int>& callbackref);
 		void onErrorCallJSFunction( int e , std::weak_ptr<int>& callbackref);

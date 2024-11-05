@@ -1,7 +1,7 @@
 #ifndef _JSXmlAttr_H  
 #define _JSXmlAttr_H  
 
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 #include <rapidxml/rapidxml.hpp>
 
 namespace laya

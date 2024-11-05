@@ -28,7 +28,7 @@ namespace laya
         m_tag = curIndex;
         curIndex++;
         s_allVideoPlayers[m_tag] = this;
-        AdjustAmountOfExternalAllocatedMemory(sizeof(JSVideo));
+        jsbind::AdjustAmountOfExternalAllocatedMemor(sizeof(JSVideo));
         JCMemorySurvey::GetInstance()->newClass("JSVideo",sizeof(JSVideo),this);
         NapiHelper::GetInstance()->createVideoPlayer(m_tag);
     }

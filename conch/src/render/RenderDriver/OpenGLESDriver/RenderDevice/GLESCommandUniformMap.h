@@ -1,7 +1,7 @@
 #ifndef __GLESCommandUniformMap_H__
 #define __GLESCommandUniformMap_H__
 
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 #include <stdio.h>
 #include <string>
@@ -31,7 +31,7 @@ class GLESCommandUniformMap
 
     static GLESCommandUniformMap *createGlobalUniformMap(const char *blockName);
 
-    static JsValue createGlobalUniformMapJS(const char *blockName);
+    static jsvm::Value createGlobalUniformMapJS(const char *blockName);
 
     GLESCommandUniformMap(const char *stateName)
     {

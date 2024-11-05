@@ -1,5 +1,5 @@
 ﻿#include "JSAudio.h"
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 #include <utils/Log.h>
 #include <utils/JCCommonMethod.h>
 #include <downloadMgr/JCDownloadMgr.h>
@@ -33,7 +33,7 @@ namespace laya
 	    m_bDownloaded = false;
         m_audioRenderInfo = NULL;
 		m_fDuration = std::numeric_limits<double>::quiet_NaN();
-	    AdjustAmountOfExternalAllocatedMemory( 534 );
+	    jsbind::AdjustAmountOfExternalAllocatedMemory( 534 );
 	    JCMemorySurvey::GetInstance()->newClass( "audio",534,this );
 	    m_CallbackRef.reset(new int(1));
     }
@@ -45,7 +45,7 @@ namespace laya
 	    JCAudioManager::GetInstance()->delMp3Obj(this);
     }
     //------------------------------------------------------------------------------
-    void JSAudio::addEventListener( const char* p_sName, JSValueAsParam p_pFunction )
+    void JSAudio::addEventListener( const char* p_sName, jsvm::Value p_pFunction )
     {
 	    if( strcmp( p_sName,"ended" ) == 0 )
 	    {

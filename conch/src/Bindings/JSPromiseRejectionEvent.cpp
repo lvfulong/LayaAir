@@ -1,5 +1,5 @@
 ﻿#include "JSPromiseRejectionEvent.h"
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 #include <utils/Log.h>
 #include <utils/JCMemorySurvey.h>
 #include "../../JCScriptRuntime.h"
@@ -8,7 +8,7 @@ namespace laya
 {
     JSPromiseRejectionEvent::JSPromiseRejectionEvent()
     {
-	    AdjustAmountOfExternalAllocatedMemory(128);
+	    jsbind::AdjustAmountOfExternalAllocatedMemory(128);
 	    JCMemorySurvey::GetInstance()->newClass( "JSPromiseRejectionEvent",10240,this );
     }
     JSPromiseRejectionEvent::~JSPromiseRejectionEvent()
@@ -17,19 +17,19 @@ namespace laya
 		m_pPromise.reset();
 	    JCMemorySurvey::GetInstance()->releaseClass( "JSPromiseRejectionEvent",this );
     }
-    JsValue JSPromiseRejectionEvent::getReason()
+    jsvm::Value JSPromiseRejectionEvent::getReason()
     {
 	    return m_pReason.getHandle();
     }
-    JsValue JSPromiseRejectionEvent::getPromise()
+    jsvm::Value JSPromiseRejectionEvent::getPromise()
     {
         return m_pPromise.getHandle();
     }
-	void JSPromiseRejectionEvent::setReason(JSValueAsParam pObj)
+	void JSPromiseRejectionEvent::setReason(jsvm::Value pObj)
 	{
 		m_pReason = jsbind::Persistent(pObj);
 	}
-	void JSPromiseRejectionEvent::setPromise(JSValueAsParam pObj)
+	void JSPromiseRejectionEvent::setPromise(jsvm::Value pObj)
 	{
 		m_pPromise = jsbind::Persistent(pObj);
 	}

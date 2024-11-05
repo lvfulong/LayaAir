@@ -75,7 +75,7 @@ int OSiOS::getSafeInsetRight()
     CToObjectCGetSafeAreaInsets(&safeInsetTop, &safeInsetLeft, &safeInsetBottom, &safeInsetRight);
     return safeInsetRight;
 }
-JsValue OSiOS::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
+jsvm::Value OSiOS::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
     auto isolate = v8::Isolate::GetCurrent();
     auto context = isolate->GetCurrentContext();
@@ -91,13 +91,13 @@ JsValue OSiOS::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eve
                 return;
             //auto isolate = v8::Isolate::GetCurrent();
             //auto context = isolate->GetCurrentContext();
-            //napi_value v = JsValueFromV8LocalValue(MakeJSValue<const char *>(message));
+            //napi_value v = jsvm::ValueFromV8LocalValue(MakeJSValue<const char *>(message));
             //napi_resolve_deferred(context, deferred, v);
             promise.resolve(message);
         });
     };
     CToObjectCPostAsyncMessage(eventName, data, cb);
-    //return V8LocalValueFromJsValue(promise);
+    //return V8LocalValueFromjsvm::Value(promise);
     return promise.getHandle();
 }
 std::string OSiOS::postSyncMessage(const std::string &eventName, const std::string &data)

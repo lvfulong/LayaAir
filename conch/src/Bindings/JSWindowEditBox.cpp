@@ -1,5 +1,5 @@
 ﻿#include "JSWindowEditBox.h"
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 #include <utils/Log.h>
 #include <utils/JCColor.h>
 #include <utils/JCMemorySurvey.h>
@@ -56,7 +56,7 @@ namespace laya
         m_nCaretStart = 0;
         m_nCaretEnd = 0;
         m_bForbidEdit = false;
-        //AdjustAmountOfExternalAllocatedMemory( 540 + 65536 );
+        //jsbind::AdjustAmountOfExternalAllocatedMemory( 540 + 65536 );
         JCMemorySurvey::GetInstance()->newClass("WindowEditBox", 540 + 65536, this);
 
         m_CallbackRef.reset(new int(1));
@@ -82,7 +82,7 @@ namespace laya
 
 		JCMemorySurvey::GetInstance()->releaseClass("WindowEditBox", this);
     }
-    void JSWindowEditBox::addEventListener(const char* p_sName, JSValueAsParam p_pFunction)
+    void JSWindowEditBox::addEventListener(const char* p_sName, jsvm::Value p_pFunction)
     {
 
     }

@@ -1,5 +1,5 @@
 ﻿#include "JSLaunchOptions.h"
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 #include <utils/Log.h>
 #include <utils/JCMemorySurvey.h>
 #include "../../JCScriptRuntime.h"
@@ -8,7 +8,7 @@ namespace laya
 {
 	JSLaunchOptions::JSLaunchOptions()
     {
-	    AdjustAmountOfExternalAllocatedMemory(10240);
+	    jsbind::AdjustAmountOfExternalAllocatedMemory(10240);
 	    JCMemorySurvey::GetInstance()->newClass( "JSLaunchOptions",10240,this );
     }
 	JSLaunchOptions::~JSLaunchOptions()
@@ -19,7 +19,7 @@ namespace laya
 	{
 		return -1;
 	}
-	JsValue JSLaunchOptions::getQuery()
+	jsvm::Value JSLaunchOptions::getQuery()
 	{
 		return jsbind::MakeUndefined();
 	}
@@ -27,7 +27,7 @@ namespace laya
 	{
 		return "";
 	}
-	JsValue JSLaunchOptions::getReferrerInfo()
+	jsvm::Value JSLaunchOptions::getReferrerInfo()
 	{
 		return jsbind::MakeUndefined();
 	}

@@ -112,7 +112,7 @@ int OSAndroid::getSafeInsetRight()
     CToJavaBridge::GetInstance()->getSafeInsetRect(safeInsetLeft, safeInsetTop, safeInsetRight, safeInsetBottom);
     return safeInsetRight;
 }
-JsValue OSAndroid::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
+jsvm::Value OSAndroid::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
     std::string result;
     static const char *s_methodSign = "(Ljava/lang/String;Ljava/lang/String;J)V";
@@ -137,7 +137,7 @@ JsValue OSAndroid::postAsyncMessage(std::weak_ptr<int> cbref, const std::string 
                 return;
             //auto isolate = v8::Isolate::GetCurrent();
             //auto context = isolate->GetCurrentContext();
-            //napi_value v = JsValueFromV8LocalValue(MakeJSValue<const char *>(message));
+            //napi_value v = jsvm::ValueFromV8LocalValue(MakeJSValue<const char *>(message));
             //napi_resolve_deferred(context, deferred, v);
             promise.resolve(message);
             delete pHandleAsyncMessageMethodRecord;
@@ -159,7 +159,7 @@ JsValue OSAndroid::postAsyncMessage(std::weak_ptr<int> cbref, const std::string 
         env->ExceptionDescribe();
         env->ExceptionClear();
     }
-    //return V8LocalValueFromJsValue(promise);
+    //return V8LocalValueFromjsvm::Value(promise);
     return promise.getHandle();
 }
 std::string OSAndroid::postSyncMessage(const std::string &eventName, const std::string &data)

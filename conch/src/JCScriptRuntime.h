@@ -9,7 +9,7 @@
 #ifndef __JCScriptRuntime_H__
 #define __JCScriptRuntime_H__
 
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 #include <utils/JCLayaUrl.h>
 #include <manager/JCArrayBufferManager.h>
 #include <mutex>

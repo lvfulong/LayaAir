@@ -1,6 +1,6 @@
 #include "JSOHOSEditBox.h"
 #include <aki/jsbind.h>
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 #include "utils/Log.h"
 #include "utils/JCColor.h"
 #include <JCConch.h>
@@ -24,7 +24,7 @@ namespace laya{
         m_nScaleY = 1;
         m_bForbidEdit = false;
         m_CallbackRef.reset(new int(1));
-        //AdjustAmountOfExternalAllocatedMemory(256);
+        //jsbind::AdjustAmountOfExternalAllocatedMemory(256);
         //JCMemorySurvey::GetInstance()->newClass("OHOSEditBox",256,this);
         aki::JSBind::GetJSFunction("EditBox.create")->Invoke<void>(m_tag);
     }
@@ -32,7 +32,7 @@ namespace laya{
         //JCMemorySurvey::GetInstance()->releaseClass("OHOSEditBox",this);
         aki::JSBind::GetJSFunction("EditBox.remove")->Invoke<void>(m_tag);
     }
-    void JSOHOSEditBox::addEventListener(const char* p_sName, JSValueAsParam p_pFunction){
+    void JSOHOSEditBox::addEventListener(const char* p_sName, jsvm::Value p_pFunction){
         if(strcmp(p_sName,"input") == 0)
         {
             m_pJSFunctionOnInput = jsbind::Persistent(p_pFunction);

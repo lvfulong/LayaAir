@@ -3,7 +3,7 @@
 
 //包含头文件
 #include <stdio.h>
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 #include <Image/JCImage.h>
 #include <resource/JCResource.h>
 
@@ -33,17 +33,17 @@ namespace laya
 
 		void onErrorCallJSFunction( int p_nError,std::weak_ptr<int> callbackref);
         
-        void setObj(JSValueAsParam p_pFunction);
+        void setObj(jsvm::Value p_pFunction);
         
-        JsValue getObj();
+        jsvm::Value getObj();
 
-		void SetOnload(JSValueAsParam p_pFunction );
+		void SetOnload(jsvm::Value p_pFunction );
 
-		JsValue GetOnload();
+		jsvm::Value GetOnload();
 
-		void SetOnError(JSValueAsParam p_pFunction );
+		void SetOnError(jsvm::Value p_pFunction );
 
-		JsValue GetOnError();
+		jsvm::Value GetOnError();
 
 		int GetWidth();
 
@@ -55,7 +55,7 @@ namespace laya
 
         bool getComplete();
 
-		JsValue getImageData( int p_nX,int p_nY,int p_nW,int p_nH );
+		jsvm::Value getImageData( int p_nX,int p_nY,int p_nW,int p_nH );
 
         bool syncRestoreResource();
 

@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <string>
 #include <map>
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 
 namespace laya
 {
@@ -18,13 +18,13 @@ namespace laya
 
 	    ~JSPromiseRejectionEvent();
 
-		void setReason(JSValueAsParam pObj);
+		void setReason(jsvm::Value pObj);
 		
-		JsValue getReason();
+		jsvm::Value getReason();
 		
-		void setPromise(JSValueAsParam pObj);
+		void setPromise(jsvm::Value pObj);
 		
-		JsValue getPromise();
+		jsvm::Value getPromise();
 		
 		const char* getType();
 		

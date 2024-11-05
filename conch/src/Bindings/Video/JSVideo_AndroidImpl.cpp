@@ -63,7 +63,7 @@ namespace laya
 
 //		LOGI("[Debug][Video] call JSVideo");
 
-		AdjustAmountOfExternalAllocatedMemory(sizeof(JSVideo));
+		jsbind::AdjustAmountOfExternalAllocatedMemor(sizeof(JSVideo));
 		JCMemorySurvey::GetInstance()->newClass("JSVideo", sizeof(JSVideo), this);
 
 		m_pVideoHandler = new AndroidVideoHandler();

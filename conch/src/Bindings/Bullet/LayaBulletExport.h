@@ -3,7 +3,7 @@
 
 #include <JCConch.h>
 #include "../../JCScriptRuntime.h"
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 #include "btBulletDynamicsCommon.h"
 #include "BulletCollision/Gimpact/btGImpactCollisionAlgorithm.h"
 #include "BulletCollision/Gimpact/btGImpactShape.h"
@@ -348,8 +348,8 @@ namespace laya
 		static pointer_t _malloc(int size);
 		static void copyJSArray(pointer_t ptr, jsbind::ArrayBuffer jsarray);
 		static void _free(pointer_t ptr);
-		static void setDrawlineFunction(JSValueAsParam pFunction);
-		static void setClearlineFunction(JSValueAsParam pFunction);
+		static void setDrawlineFunction(jsvm::Value pFunction);
+		static void setClearlineFunction(jsvm::Value pFunction);
 		static void btConcaveShape_setMargin(pointer_t ptr, btScalar collisionMargin);
 		static btScalar btConcaveShape_getMargin(pointer_t ptr);
 		static void btRigidBody_setCenterOfMassOrientation(pointer_t ptr, btScalar x, btScalar y, btScalar z, btScalar w);

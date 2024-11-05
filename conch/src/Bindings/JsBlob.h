@@ -1,7 +1,7 @@
 ﻿#ifndef __JsBlob_H__
 #define __JsBlob_H__
 
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -77,7 +77,7 @@ namespace laya
                 m_i64Size = p_iLen;
             }
         }
-        JsValue slice(uint64_t p_iBegin = 0, uint64_t p_iEnd = -1)
+        jsvm::Value slice(uint64_t p_iBegin = 0, uint64_t p_iEnd = -1)
         {
             return jsbind::MakeNull();
         }

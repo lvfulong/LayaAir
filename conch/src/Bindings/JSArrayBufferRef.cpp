@@ -2,7 +2,7 @@
 #include <utils/JCCommonMethod.h>
 #include <utils/JCMemorySurvey.h>
 #include <JCConch.h>
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 #include "JCScriptRuntime.h"
 
 namespace laya
@@ -11,7 +11,7 @@ namespace laya
     {
         m_nID = 0;
         m_bSyncToRender = false;
-		AdjustAmountOfExternalAllocatedMemory(128);
+		jsbind::AdjustAmountOfExternalAllocatedMemory(128);
     }
     JSArrayBufferRef::~JSArrayBufferRef()
     {

@@ -5,7 +5,7 @@ namespace laya
     JSShaderActiveInfo::JSShaderActiveInfo()
     {
         m_nType = m_nSize = 0;
-	    AdjustAmountOfExternalAllocatedMemory( 64 );
+	    jsbind::AdjustAmountOfExternalAllocatedMemory( 64 );
 	    JCMemorySurvey::GetInstance()->newClass( "JSShaderActiveInfo",64,this );
     }
     //------------------------------------------------------------------------------

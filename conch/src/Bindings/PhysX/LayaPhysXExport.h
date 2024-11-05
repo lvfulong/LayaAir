@@ -3,7 +3,7 @@
 
 #include <JCConch.h>
 #include "../../JCScriptRuntime.h"
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 #include "PxPhysicsAPI.h"
 #include <Bindings/JSRuntime.h>
 typedef intptr_t pointer_t;

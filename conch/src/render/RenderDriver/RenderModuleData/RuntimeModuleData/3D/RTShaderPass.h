@@ -2,7 +2,7 @@
 #define __RTShaderPass_H__
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderInstance.h"
 #include "render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h"
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 #include <string>
 #include <unordered_map>
 
@@ -21,9 +21,9 @@ class RTShaderPass
     RTShaderPass();
     ~RTShaderPass();
     void setCacheShader(RTDefineDatas *compileDefine, GLESShaderInstance *shader, jsbind::Persistent jsShaderInstance);
-    void setCacheShaderJS(RTDefineDatas* compileDefine, GLESShaderInstance* shader, JSValueAsParam jsShaderInstanceWrapper);
+    void setCacheShaderJS(RTDefineDatas* compileDefine, GLESShaderInstance* shader, jsvm::Value jsShaderInstanceWrapper);
     RTShaderPass::CacheShaderItem *getCacheShader(RTDefineDatas *compileDefine);
-    JsValue getCacheShaderJS(RTDefineDatas *compileDefine);
+    jsvm::Value getCacheShaderJS(RTDefineDatas *compileDefine);
     GLESShaderInstance *callCreateShaderInstanceFunction();
     void setRenderState(RenderState *value)
     {
@@ -41,7 +41,7 @@ class RTShaderPass
 
   public:
     // binds
-    void setCreateShaderInstanceFunction(JSValueAsParam value);
+    void setCreateShaderInstanceFunction(jsvm::Value value);
     // void createShaderInstance(RTDefineDatas *compileDefine);
 
   private:

@@ -1,5 +1,5 @@
 #include "JSBounds.h"
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 #include <utils/Log.h>
 #include <utils/JCMemorySurvey.h>
 
@@ -7,7 +7,7 @@ namespace laya
 {
 	JSBounds::JSBounds()
 	{
-		AdjustAmountOfExternalAllocatedMemory(128);
+		jsbind::AdjustAmountOfExternalAllocatedMemory(128);
 		JCMemorySurvey::GetInstance()->newClass("conchBounds", 128, this);
 	}
 	//------------------------------------------------------------------------------
@@ -21,7 +21,7 @@ namespace laya
 		m_float64Array = (double*)pArrayBuffer;
 		m_float32Array = (float*)pArrayBuffer;
 		m_int32Array = (uint32_t*)pArrayBuffer;
-		AdjustAmountOfExternalAllocatedMemory(128);
+		jsbind::AdjustAmountOfExternalAllocatedMemory(128);
 		JCMemorySurvey::GetInstance()->newClass("conchBounds", 128, this);
 	}
 	//------------------------------------------------------------------------------
@@ -105,7 +105,7 @@ namespace laya
 	{
 		return m_bounds._getBoundBox();
 	}
-	void JSBounds::_tranformJS(JSValueAsParam out)
+	void JSBounds::_tranformJS(jsvm::Value out)
 	{
 		Matrix4x4 matrix;
 		memcpy(matrix.elements, m_float32Array, sizeof(float) * 16);
@@ -116,7 +116,7 @@ namespace laya
 	{
 		m_bounds._tranform(matrix, out.m_bounds);
 	}
-	void JSBounds::cloneTo(JSValueAsParam destBounds)
+	void JSBounds::cloneTo(jsvm::Value destBounds)
 	{
 		JSBounds* pBounds = jsbind::Converter<JSBounds*>::ToCpp(destBounds);
 		m_bounds.cloneTo(pBounds->m_bounds);

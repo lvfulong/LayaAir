@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <string>
 #include <map>
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 
 namespace laya
 {
@@ -20,11 +20,11 @@ namespace laya
 
 		int getScene();
 
-		JsValue getQuery();
+		jsvm::Value getQuery();
 
 		const char* getShareTicket();
 
-		JsValue getReferrerInfo();
+		jsvm::Value getReferrerInfo();
     };
 }
 #endif

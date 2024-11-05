@@ -8,7 +8,7 @@
 #include <unordered_map>
 #include <utils/Preprocessor.h>
 #include <vector>
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 namespace laya
 {
 class GLESInternalTex;
@@ -34,8 +34,8 @@ class GLESInternalRT : public GLObject
     {
         return -m_isCube;
     }
-    //JsValue getDepthTexture();
-   // JsValue getTextures();
+    //jsvm::Value getDepthTexture();
+   // jsvm::Value getTextures();
 private:
     void _changeTexMemory(int byteLength);
   public:

@@ -1,5 +1,5 @@
 #include "JSRTTransform.h"
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 namespace laya
 {
 	
@@ -66,13 +66,13 @@ namespace laya
 		m_int32Array = reinterpret_cast<uint32_t*>(pSharedData.getData());
 		m_pTransform3D = this;
 		uint32_t bytelength = JSRTTransform::TRANSFORM_SHARE_MEMORY_SIZE * sizeof(float);
-		AdjustAmountOfExternalAllocatedMemory(bytelength * sizeof(float));
+		jsbind::AdjustAmountOfExternalAllocatedMemory(bytelength * sizeof(float));
 		JCMemorySurvey::GetInstance()->newClass("conchRTTransform", bytelength, this);
 	};
 
 
 
-	void JSRTTransform::rt_setParent(JSValueAsParam pParent) {
+	void JSRTTransform::rt_setParent(jsvm::Value pParent) {
 		m_parent = jsbind::Converter<JSRTTransform*>::ToCpp(pParent);
 		m_pTransform3D->_setParent(m_parent ? m_parent->m_pTransform3D : nullptr);
 	};

@@ -3,7 +3,7 @@ namespace laya
 {
     JSXmlAttr::JSXmlAttr()
     {
-        AdjustAmountOfExternalAllocatedMemory(64000);
+        jsbind::AdjustAmountOfExternalAllocatedMemory(64000);
         JCMemorySurvey::GetInstance()->newClass("XmlAttr", 64000, this);
     }
     JSXmlAttr::~JSXmlAttr()

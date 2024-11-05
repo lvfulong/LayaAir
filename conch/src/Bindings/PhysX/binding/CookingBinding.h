@@ -21,7 +21,7 @@ extern char* PHYSX_HEAP_BASE_ADDRESS;
 using namespace emscripten;
 #endif
 #ifdef CONCH
-PxConvexMesh *createConvexMeshFromBuffer(JsValue verticesObj, PxPhysics &physics, PxU32 VetexLimit, PxTolerancesScale &scale, int ConvexFlags)
+PxConvexMesh *createConvexMeshFromBuffer(jsvm::Value verticesObj, PxPhysics &physics, PxU32 VetexLimit, PxTolerancesScale &scale, int ConvexFlags)
 {
     VectorWrapper<PxVec3>* pVertices = (VectorWrapper<PxVec3>* )Converter<VectorWrapper<PxVec3>*>::ToCpp(verticesObj);
     std::vector<PxVec3>& vertices = pVertices->data_;
@@ -48,7 +48,7 @@ PxConvexMesh *createConvexMeshFromBuffer(std::vector<PxVec3> vertices, PxPhysics
     return convexMesh;
 }
 #ifdef CONCH
-PxTriangleMesh *createTriMesh(JsValue verticesObj,
+PxTriangleMesh *createTriMesh(jsvm::Value verticesObj,
                               int indice_sptr,
                               int indiceCount,
                               bool isU16,

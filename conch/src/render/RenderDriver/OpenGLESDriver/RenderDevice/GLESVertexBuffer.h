@@ -4,7 +4,7 @@
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLBuffer.h>
 #include <stdio.h>
 #include <utils/Preprocessor.h>
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 
 namespace laya
 {

@@ -6,11 +6,11 @@
 #include "LayaBulletExport.h"
 namespace laya
 {
-	void WASM_EXP setDrawlineFunction(JSValueAsParam pFunction)
+	void WASM_EXP setDrawlineFunction(jsvm::Value pFunction)
 	{
 		JSRuntime::setBulletDrawLineFunction(pFunction);
 	}
-	void WASM_EXP setClearlineFunction(JSValueAsParam pFunction)
+	void WASM_EXP setClearlineFunction(jsvm::Value pFunction)
 	{
 		JSRuntime::setBulletClearLineFunction(pFunction);
 	}

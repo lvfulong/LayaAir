@@ -41,7 +41,7 @@ JSVideo::JSVideo()
 {
     Init();
     m_CallbackRef.reset(new int(1));
-    AdjustAmountOfExternalAllocatedMemory(sizeof(JSVideo));
+    jsbind::AdjustAmountOfExternalAllocatedMemory(sizeof(JSVideo));
     JCMemorySurvey::GetInstance()->newClass("JSVideo", sizeof(JSVideo), this);
 
     m_pVideoHandler = new Win32VideoHandler;

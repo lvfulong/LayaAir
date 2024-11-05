@@ -2,7 +2,7 @@
 #define __LayaConchPhysXAdapter_H__
 
 #include "../../JCScriptRuntime.h"
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 #include <Bindings/JSRuntime.h>
 #include "PxPhysicsAPI.h"
 #include <JCConch.h>
@@ -22,7 +22,7 @@ template <typename BaseClass> struct base
 
 namespace internal
 {
-template <typename WrapperType, typename ClassType /*, typename... */> WrapperType wrapped_new(JsValue args)
+template <typename WrapperType, typename ClassType /*, typename... */> WrapperType wrapped_new(jsvm::Value args)
 {
     return WrapperType(new ClassType(args));
 }
@@ -256,7 +256,7 @@ template <typename T> class wrapper : public T, public internal::WrapperBase
   public:
     typedef T class_type;
 
-    template <typename... Args> explicit wrapper(JsValue wrapped, Args &&...args) : T(std::forward<Args>(args)...)
+    template <typename... Args> explicit wrapper(jsvm::Value wrapped, Args &&...args) : T(std::forward<Args>(args)...)
     {
         wrapped_.reset(wrapped);
     }
@@ -274,7 +274,7 @@ template <typename T> class wrapper : public T, public internal::WrapperBase
     jsbind::Persistent wrapped_;
 };
 #define EMSCRIPTEN_WRAPPER(T)                                                                                          \
-    template <typename... Args> T(JsValue v, Args &&...args) : wrapper(v, std::forward<Args>(args)...)                 \
+    template <typename... Args> T(jsvm::Value v, Args &&...args) : wrapper(v, std::forward<Args>(args)...)                 \
     {                                                                                                                  \
     }
 

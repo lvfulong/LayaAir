@@ -8,7 +8,7 @@ namespace laya
         m_iPos = __IsLocal;
         m_bEnableCache = true;
         UpdateTime();
-        AdjustAmountOfExternalAllocatedMemory(301);
+        jsbind::AdjustAmountOfExternalAllocatedMemory(301);
         JCMemorySurvey::GetInstance()->newClass("JsFile", 301, this);
     }
     JsFile::JsFile(const char *p_pszName)
@@ -18,7 +18,7 @@ namespace laya
         m_bEnableCache = true;
         UpdateTime();
         SetName(p_pszName);
-        AdjustAmountOfExternalAllocatedMemory(301);
+        jsbind::AdjustAmountOfExternalAllocatedMemory(301);
         JCMemorySurvey::GetInstance()->newClass("JsFile", 301, this);
     }
     JsFile::JsFile(const char *p_pszName, const char *p_pszType)
@@ -29,7 +29,7 @@ namespace laya
         UpdateTime();
         SetName(p_pszName);
         SetType(p_pszType);
-        AdjustAmountOfExternalAllocatedMemory(301);
+        jsbind::AdjustAmountOfExternalAllocatedMemory(301);
         JCMemorySurvey::GetInstance()->newClass("JsFile", 301, this);
     }
     JsFile::~JsFile()
@@ -50,7 +50,7 @@ namespace laya
         lastModifiedDate = p_tm;
         lastModifiedDate *= 1000;
     }
-    JsValue JsFile::GetlastModifiedDate()
+    jsvm::Value JsFile::GetlastModifiedDate()
     {
         return jsbind::Date::Make(lastModifiedDate).getHandle();
     }

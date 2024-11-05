@@ -21,11 +21,11 @@ namespace laya
 		m_zip.close();
 		return openZip(p_pSrc);
 	}
-	JsValue JSZip::readFileExp(int idx)
+	jsvm::Value JSZip::readFileExp(int idx)
     {
 		return readFile(idx);
 	}
-	JsValue JSZip::readFile(int idx) 
+	jsvm::Value JSZip::readFile(int idx) 
     {
 		if (!m_zip.m_pZip)
 			return jsbind::MakeNull();
@@ -48,7 +48,7 @@ namespace laya
 				char* pBuff = new char[(unsigned int)sb.size];
 				zip_fread(pzf, pBuff, sb.size);
 				zip_fclose(pzf);
-				JsValue ab = jsbind::ArrayBuffer::MakeArrayBuffer((uint8_t*)pBuff,(int)sb.size).getHandle();
+				jsvm::Value ab = jsbind::ArrayBuffer::MakeArrayBuffer((uint8_t*)pBuff,(int)sb.size).getHandle();
 				delete [] pBuff;
 				//return pAB;
 				return ab;
@@ -56,7 +56,7 @@ namespace laya
 		}
 		return jsbind::MakeNull();
 	}
-    JsValue JSZip::readFileByName(const char* pName)
+    jsvm::Value JSZip::readFileByName(const char* pName)
     {
         if (!pName)
             return jsbind::MakeNull();
@@ -72,7 +72,7 @@ namespace laya
 
         return readFile(idx);
     }
-    JsValue JSZip::readFileAsText(int idx)
+    jsvm::Value JSZip::readFileAsText(int idx)
     {
         if (!m_zip.m_pZip)
             return jsbind::MakeNull();
@@ -107,7 +107,7 @@ namespace laya
         }
         return jsbind::MakeNull();
     }
-    JsValue JSZip::readFileAsTextByName(const char* pName)
+    jsvm::Value JSZip::readFileAsTextByName(const char* pName)
     {
         if (!pName)
             return jsbind::MakeNull();

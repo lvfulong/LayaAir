@@ -1,12 +1,12 @@
 #include "JSFileSystem.h"
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 #include <utils/Log.h>
 #include <utils/JCFileSystem.h>
 #include <ctime>
 
 namespace laya
 {
-	bool JSFileSystem::rmDir(const char* p_pszPath, JSValueAsParam onprogress, JSValueAsParam oncomplete, JSValueAsParam onerror) 
+	bool JSFileSystem::rmDir(const char* p_pszPath, jsvm::Value onprogress, jsvm::Value oncomplete, jsvm::Value onerror) 
     {
 		return true;
 	}
@@ -14,14 +14,14 @@ namespace laya
     {
 		return true;
 	}
-	JsValue JSFileSystem::readdirSync(const std::string &path) 
+	jsvm::Value JSFileSystem::readdirSync(const std::string &path) 
     {
 		if (!FileSystem::exists(path))
 			return jsbind::MakeNull();
 		std::vector<std::string> paths = FileSystem::readdirSync(path);
 		return jsbind::Make<std::vector<std::string> >(paths);
 	}
-	JsValue JSFileSystem::lstatSync(const std::string &path) 
+	jsvm::Value JSFileSystem::lstatSync(const std::string &path) 
     {
 		std::vector<std::string> paths;
 		if (!FileSystem::exists(path))
@@ -97,7 +97,7 @@ namespace laya
         }
         return bret;
     }
-	JsValue JSFileSystem::readBinFileSync(const char* p_pszFile) 
+	jsvm::Value JSFileSystem::readBinFileSync(const char* p_pszFile) 
     {
         JCBuffer buf;
 		if (readFileSync(p_pszFile, buf, JCBuffer::raw))

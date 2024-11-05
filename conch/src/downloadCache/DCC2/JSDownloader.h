@@ -2,7 +2,7 @@
 #ifndef __JSDOWNLOADER_H__
 #define __JSDOWNLOADER_H__
 #include "IDownloader.h"
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 namespace laya{
     class JSDownloader :public IDownloader{
     private:
@@ -20,7 +20,7 @@ namespace laya{
         JSDownloader();
         virtual ~JSDownloader();
 
-        void setJSDownloader(JSValueAsParam obj);
+        void setJSDownloader(jsvm::Value obj);
 
         void download(const char* pszUrl, onDownloadedFunc onok);
     };

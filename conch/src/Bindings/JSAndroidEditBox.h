@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <string>
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 
 
 namespace laya 
@@ -106,7 +106,7 @@ public:
 	
 	void setNumberOnly( bool p_bNumberOnly );
 
-    void addEventListener(const char* p_sName, JSValueAsParam p_pFunction );
+    void addEventListener(const char* p_sName, jsvm::Value p_pFunction );
 
     void setMultiAble(bool p_bMultiAble);
 

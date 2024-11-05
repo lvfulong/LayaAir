@@ -18,16 +18,16 @@ namespace laya
         JSXmlNode* replaceChild(JSXmlNode* newChild, JSXmlNode* oldChild);
         JSXmlNode* removeChild(JSXmlNode* oldChild);
         JSXmlNode* appendChild(JSXmlNode* newChild);
-        JsValue  getParentNode();
-        JsValue  getFirstChild();
-        JsValue  getLastChild();
-        JsValue  getPreviousSibling();
-        JsValue  getNextSibling();
+        jsvm::Value  getParentNode();
+        jsvm::Value  getFirstChild();
+        jsvm::Value  getLastChild();
+        jsvm::Value  getPreviousSibling();
+        jsvm::Value  getNextSibling();
         const char *getNodeName();
         const char *getNodeValue();
         const char *getTextContent();
-        virtual JsValue  getChildNodes();
-        virtual JsValue  getAttributes();
+        virtual jsvm::Value  getChildNodes();
+        virtual jsvm::Value  getAttributes();
         void initXmlNode(rapidxml::xml_node<>* node,bool isRoot);
     public:
         std::vector<JSXmlNode*> m_childNodes;
@@ -46,7 +46,7 @@ namespace laya
         JSXmlDocument();
         ~JSXmlDocument();
         void parse(const char* str);
-        JsValue  getChildNodes();
+        jsvm::Value  getChildNodes();
     public:
         class rapidxml::xml_document<>*m_document;
     };

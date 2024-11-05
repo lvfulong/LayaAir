@@ -5,16 +5,16 @@
 //------------------------------------------------------------------------------
 
 
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 #include "JSFile.h"
 #include <utils/JCMemorySurvey.h>
 
 namespace laya 
 {
     #define __Js_FileReader_Property_Func(pfn,n)  \
-            JsValue Get_##pfn() \
+            jsvm::Value Get_##pfn() \
             {return (pfn.getHandle());} \
-            void Set_##pfn( JSValueAsParam p_pfn)  \
+            void Set_##pfn( jsvm::Value p_pfn)  \
             {   \
                 pfn = jsbind::Persistent(p_pfn);    \
             }
@@ -28,13 +28,13 @@ namespace laya
         ~JsFileReader();
 
         //以二进制格式读取文件内容
-        void readAsArrayBuffer(JSValueAsParam p_pFile);
+        void readAsArrayBuffer(jsvm::Value p_pFile);
 
         //以文本(及字符串)格式读取文件内容，并且可以强制选择文件编码
-        void readAsText(JSValueAsParam p_pFile);
+        void readAsText(jsvm::Value p_pFile);
 
         // 以DataURL格式读取文件内容，主要为了直接嵌入网页
-        void readAsDataURL(JSValueAsParam p_pFile);
+        void readAsDataURL(jsvm::Value p_pFile);
 
         void __LoadLocalFile(JsFile *p_pFile);
 
@@ -46,7 +46,7 @@ namespace laya
 
         void OnFinished(bool p_bSuccess, const char *p_pszError = 0);
 
-        JsValue GetResult();
+        jsvm::Value GetResult();
 
         static void exportJS(jsbind::Object& context);
 

@@ -2,7 +2,7 @@
 #define __JSArrayBufferRef_H__
 
 #include <stdio.h>
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 
 
 namespace laya 

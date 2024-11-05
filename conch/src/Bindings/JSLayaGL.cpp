@@ -33,20 +33,20 @@ class JSLayaGLWrapper
     {
         return JSLayaGL::getInstance()->getProgramParameter(vs, ps, define, type);
     }
-    static JsValue getActiveAttribEx(const char *vs, const char *ps, const char *define, int nIndex)
+    static jsvm::Value getActiveAttribEx(const char *vs, const char *ps, const char *define, int nIndex)
     {
         return JSLayaGL::getInstance()->getActiveAttribEx(vs, ps, define, nIndex);
     }
-    static JsValue getActiveUniformEx(const char *vs, const char *ps, const char *define, int nIndex)
+    static jsvm::Value getActiveUniformEx(const char *vs, const char *ps, const char *define, int nIndex)
     {
         return JSLayaGL::getInstance()->getActiveUniformEx(vs, ps, define, nIndex);
     }
-    static JsValue getShaderPrecisionFormat(int shaderType, int precisionType)
+    static jsvm::Value getShaderPrecisionFormat(int shaderType, int precisionType)
     {
         return JSLayaGL::getInstance()->getShaderPrecisionFormat(shaderType, precisionType);
     }
 
-    static JsValue getUniform(const char *locationName)
+    static jsvm::Value getUniform(const char *locationName)
     {
         return JSLayaGL::getInstance()->getUniform(locationName);
     }
@@ -66,7 +66,7 @@ class JSLayaGLWrapper
         return JSLayaGL::getInstance()->getIntegerv(name);
     }
 
-    static JsValue getIntegerArrayv(int name)
+    static jsvm::Value getIntegerArrayv(int name)
     {
         return JSLayaGL::getInstance()->getIntegerArrayv(name);
     }
@@ -76,12 +76,12 @@ class JSLayaGLWrapper
         return JSLayaGL::getInstance()->getFloatv(name);
     }
 
-    static JsValue getFloatArrayv(int name)
+    static jsvm::Value getFloatArrayv(int name)
     {
         return JSLayaGL::getInstance()->getFloatArrayv(name);
     }
 
-    static JsValue readPixels(int x, int y, int width, int height, int format, int type)
+    static jsvm::Value readPixels(int x, int y, int width, int height, int format, int type)
     {
         return JSLayaGL::getInstance()->readPixels(x, y, width, height, format, type);
     }
@@ -135,7 +135,7 @@ class JSLayaGLWrapper
         return JSLayaGL::getInstance()->getVertexAttribEx(index, target);
     }
 
-    static JsValue getVertexAttribExfv(int index, int target)
+    static jsvm::Value getVertexAttribExfv(int index, int target)
     {
         return JSLayaGL::getInstance()->getVertexAttribExfv(index, target);
     }
@@ -175,7 +175,7 @@ class JSLayaGLWrapper
 JSLayaGL *JSLayaGL::s_pLayaGL = NULL;
 JSLayaGL::JSLayaGL()
 {
-    AdjustAmountOfExternalAllocatedMemory(8192);
+    jsbind::AdjustAmountOfExternalAllocatedMemory(8192);
     JCMemorySurvey::GetInstance()->newClass("layagl", 8192, this);
     m_nSyncToRenderABListID = -1;
     m_nFrameAndSyncCountABListID = -1;
@@ -238,7 +238,7 @@ int JSLayaGL::getProgramParameter(const char *vs, const char *ps, const char *de
 {
     return JCConch::s_pConchRender->m_pLayaGL->getProgramParameter(vs, ps, define, type);
 }
-JsValue JSLayaGL::getActiveAttribEx(const char *vs, const char *ps, const char *define, int nIndex)
+jsvm::Value JSLayaGL::getActiveAttribEx(const char *vs, const char *ps, const char *define, int nIndex)
 {
     JCConch::s_pConchRender->m_pLayaGL->getActiveAttrib(m_pShaderActiveInfo, vs, ps, define, nIndex);
     JSShaderActiveInfo *pActiveInfo = new JSShaderActiveInfo();
@@ -247,7 +247,7 @@ JsValue JSLayaGL::getActiveAttribEx(const char *vs, const char *ps, const char *
     pActiveInfo->m_nSize = m_pShaderActiveInfo->size;
     return jsbind::Make<JSShaderActiveInfo*>(pActiveInfo);
 }
-JsValue JSLayaGL::getActiveUniformEx(const char *vs, const char *ps, const char *define, int nIndex)
+jsvm::Value JSLayaGL::getActiveUniformEx(const char *vs, const char *ps, const char *define, int nIndex)
 {
     JCConch::s_pConchRender->m_pLayaGL->getActiveUniform(m_pShaderActiveInfo, vs, ps, define, nIndex);
     JSShaderActiveInfo *pActiveInfo = new JSShaderActiveInfo();
@@ -256,7 +256,7 @@ JsValue JSLayaGL::getActiveUniformEx(const char *vs, const char *ps, const char 
     pActiveInfo->m_nSize = m_pShaderActiveInfo->size;
     return jsbind::Make<JSShaderActiveInfo*>(pActiveInfo);
 }
-JsValue JSLayaGL::getShaderPrecisionFormat(int shaderType, int precisionType)
+jsvm::Value JSLayaGL::getShaderPrecisionFormat(int shaderType, int precisionType)
 {
     JCConch::s_pConchRender->m_pLayaGL->getShaderPrecisionFormat(
         shaderType, precisionType, m_pShaderPrecisionFormat->precision, m_pShaderPrecisionFormat->range);
@@ -267,7 +267,7 @@ JsValue JSLayaGL::getShaderPrecisionFormat(int shaderType, int precisionType)
     return jsbind::Make<JSShaderPrecisionFormat*>(pShaderPrecision);
 }
 
-JsValue JSLayaGL::getUniform(const char *locationName)
+jsvm::Value JSLayaGL::getUniform(const char *locationName)
 {
     std::string strLocName = locationName;
     JCConch::s_pConchRender->m_pLayaGL->getUniform(m_nParameterResultArray, strLocName);
@@ -290,7 +290,7 @@ int JSLayaGL::getIntegerv(int name)
     return JCConch::s_pConchRender->m_pLayaGL->getIntegerv(name);
 }
 
-JsValue JSLayaGL::getIntegerArrayv(int name)
+jsvm::Value JSLayaGL::getIntegerArrayv(int name)
 {
     JCConch::s_pConchRender->m_pLayaGL->getIntegerArrayv(m_nParameterResultArrayInt, name);
     return jsbind::Array<int32_t>::ToJs(m_nParameterResultArrayInt);
@@ -302,13 +302,13 @@ float JSLayaGL::getFloatv(int name)
     return m_nParameterResultFloat;
 }
 
-JsValue JSLayaGL::getFloatArrayv(int name)
+jsvm::Value JSLayaGL::getFloatArrayv(int name)
 {
     JCConch::s_pConchRender->m_pLayaGL->getFloatArrayv(m_nParameterResultArray, name);
     return jsbind::Array<float>::ToJs(m_nParameterResultArray);
 }
 
-JsValue JSLayaGL::readPixels(int x, int y, int width, int height, int format, int type)
+jsvm::Value JSLayaGL::readPixels(int x, int y, int width, int height, int format, int type)
 {
     JCConch::s_pConchRender->m_pLayaGL->readPixels(m_nParameterResultByteArray, x, y, width, height, format, type);
     return jsbind::ArrayBuffer::MakeArrayBuffer((uint8_t*)m_nParameterResultByteArray.data(), m_nParameterResultByteArray.size()).getHandle();
@@ -373,7 +373,7 @@ int JSLayaGL::getVertexAttribEx(int index, int target)
     return JCConch::s_pConchRender->m_pLayaGL->getVertexAttrib(index, target);
 }
 
-JsValue JSLayaGL::getVertexAttribExfv(int index, int target)
+jsvm::Value JSLayaGL::getVertexAttribExfv(int index, int target)
 {
     static float ret[4] = {0.0};
     JCConch::s_pConchRender->m_pLayaGL->getVertexAttribfv(m_nParameterResultArray, index, target);

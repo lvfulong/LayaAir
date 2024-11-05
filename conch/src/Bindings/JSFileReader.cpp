@@ -78,7 +78,7 @@ namespace laya
         readyState = EMPTY;
         m_pszError = 0;
         m_iContentType = content_type_string;
-        AdjustAmountOfExternalAllocatedMemory(86);
+        jsbind::AdjustAmountOfExternalAllocatedMemory(86);
         JCMemorySurvey::GetInstance()->newClass("JsFileReader", 86, this);
         m_CallbackRef.reset(new int(1));
         m_bIgnoreError = false;
@@ -88,7 +88,7 @@ namespace laya
     {
         JCMemorySurvey::GetInstance()->releaseClass("JsFileReader", this);
     }
-    void JsFileReader::readAsArrayBuffer(JSValueAsParam p_pFile)
+    void JsFileReader::readAsArrayBuffer(jsvm::Value p_pFile)
     {
         m_iContentType = content_type_buffer;
         m_pFile = jsbind::Converter<JsFile*>::ToCpp(p_pFile);
@@ -99,7 +99,7 @@ namespace laya
         m_hFileObject = jsbind::Persistent(p_pFile);
         __LoadRemoteFile(m_pFile);
     }
-    void JsFileReader::readAsText(JSValueAsParam p_pFile)
+    void JsFileReader::readAsText(jsvm::Value p_pFile)
     {
         m_iContentType = content_type_string;
         m_pFile = jsbind::Converter<JsFile*>::ToCpp(p_pFile);
@@ -110,7 +110,7 @@ namespace laya
         m_hFileObject = jsbind::Persistent(p_pFile);
         __LoadRemoteFile(m_pFile);
     }
-    void JsFileReader::readAsDataURL(JSValueAsParam p_pFile)
+    void JsFileReader::readAsDataURL(jsvm::Value p_pFile)
     {
         m_hFileObject = jsbind::Persistent(p_pFile);
         return;
@@ -347,7 +347,7 @@ namespace laya
         m_pFile = 0;
         jsbind::makeWeak(this);
     }
-    JsValue JsFileReader::GetResult()
+    jsvm::Value JsFileReader::GetResult()
     {
         if (DONE != readyState) {
             return jsbind::MakeUndefined();

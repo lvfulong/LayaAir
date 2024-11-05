@@ -417,7 +417,7 @@ const std::string &GLESEngine::propertyIDToName(int id)
     static std::string empty("");
     return empty;
 }
-void GLESEngine::getNamesByDefineDataJS(RTDefineDatas* defineData, JSValueAsParam out)
+void GLESEngine::getNamesByDefineDataJS(RTDefineDatas* defineData, jsvm::Value out)
 {
     std::vector<std::string> outVec;
     getNamesByDefineData(defineData, outVec);
@@ -588,7 +588,7 @@ void GLESEngine::unbindVertexState()
         ((OESVertexArrayObjectExt *)getExtension(WebGLExtension::OES_vertex_array_object))->bindVertexArrayOES(0);
     m_GLBindVertexArray = nullptr;
 }
-JsValue GLESEngine::getTextureContextJS()
+jsvm::Value GLESEngine::getTextureContextJS()
 {
     if (!m_pJSTextureContext.isValid())
     {

@@ -10,11 +10,11 @@ RTShaderPass::~RTShaderPass()
 {
     // TODO
 }
-void RTShaderPass::setCacheShaderJS(RTDefineDatas *compileDefine, GLESShaderInstance* shader, JSValueAsParam jsShaderInstanceWrapper)
+void RTShaderPass::setCacheShaderJS(RTDefineDatas *compileDefine, GLESShaderInstance* shader, jsvm::Value jsShaderInstanceWrapper)
 {
     setCacheShader(compileDefine, shader, jsbind::Persistent(jsShaderInstanceWrapper));
 }
-JsValue RTShaderPass::getCacheShaderJS(RTDefineDatas *compileDefine)
+jsvm::Value RTShaderPass::getCacheShaderJS(RTDefineDatas *compileDefine)
 {
     RTShaderPass::CacheShaderItem *item = getCacheShader(compileDefine);
     if (item != nullptr)
@@ -139,7 +139,7 @@ void RTShaderPass::_resizeCacheShaderMap(void *cacheMap, uint32_t hierarchy, uin
 // void RTShaderPass::createShaderInstance(RTDefineDatas*compileDefine)
 //{
 // }
-void RTShaderPass::setCreateShaderInstanceFunction(JSValueAsParam value)
+void RTShaderPass::setCreateShaderInstanceFunction(jsvm::Value value)
 {
     m_createShaderInstanceFunctionJS = jsbind::Persistent(value);
 }

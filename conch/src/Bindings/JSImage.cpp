@@ -1,7 +1,7 @@
 #include "JSImage.h"
 #include <utils/Log.h>
 #include <utils/JCMemorySurvey.h>
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 #include "../../JCScriptRuntime.h"
 #include <resource/JCFileResManager.h> 
 #include "JSRuntime.h"
@@ -67,7 +67,7 @@ namespace laya
         }
         else {
             int nMemSize = GetWidth() * GetHeight() * 4 + 272;
-            AdjustAmountOfExternalAllocatedMemory(nMemSize);
+            jsbind::AdjustAmountOfExternalAllocatedMemory(nMemSize);
             JCMemorySurvey::GetInstance()->newClass("image", 1024, this);
             m_pImage->m_sUrl = m_sUrl;
             //通知渲染线程
@@ -90,27 +90,27 @@ namespace laya
     {
         return m_bComplete;
     }
-    void JSImage::SetOnload(JSValueAsParam p_pFunction )
+    void JSImage::SetOnload(jsvm::Value p_pFunction )
     {
 	    m_pOnLoad = jsbind::Persistent(p_pFunction);
     }
-    JsValue JSImage::GetOnload()
+    jsvm::Value JSImage::GetOnload()
     {
 	    return m_pOnLoad.getHandle();
     }
-    void JSImage::SetOnError(JSValueAsParam p_pFunction )
+    void JSImage::SetOnError(jsvm::Value p_pFunction )
     {
 	    m_pOnError = jsbind::Persistent(p_pFunction);
     }
-    JsValue JSImage::GetOnError()
+    jsvm::Value JSImage::GetOnError()
     {
         return m_pOnError.getHandle();
     }
-    JsValue JSImage::getObj()
+    jsvm::Value JSImage::getObj()
     {
         return m_pObj.getHandle();
     }
-    void JSImage::setObj(JSValueAsParam obj)
+    void JSImage::setObj(jsvm::Value obj)
     {
         m_pObj = jsbind::Persistent(obj);
     }
@@ -280,7 +280,7 @@ namespace laya
         m_pImage->m_bPushBitmapData = true;
         onLoaded(m_CallbackRef);
     }
-    JsValue JSImage::getImageData( int p_nX,int p_nY,int p_nW,int p_nH )
+    jsvm::Value JSImage::getImageData( int p_nX,int p_nY,int p_nW,int p_nH )
     {
 	    if( m_bComplete == false ) return jsbind::MakeNull();
 	    if( m_pImage == NULL ) return jsbind::MakeNull();

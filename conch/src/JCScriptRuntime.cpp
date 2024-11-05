@@ -9,7 +9,7 @@
 #include "JCScriptRuntime.h"
 #include <algorithm>
 #include <utils/Log.h>
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 #include <Bindings/JSFileReader.h>
 #include <Bindings/JSGlobalExportCFun.h>
 #include <Bindings/JSInput.h>
@@ -145,7 +145,7 @@ namespace laya
         ffplay::VideoPlayer::init();
 #endif
     }
-    static void onUnhandledRejection(JSValueAsParam pPromise, JSValueAsParam pReason, const char* type)
+    static void onUnhandledRejection(jsvm::Value pPromise, jsvm::Value pReason, const char* type)
     {
 #ifdef JS_V8
         JSPromiseRejectionEvent* event = new JSPromiseRejectionEvent;

@@ -1,5 +1,5 @@
 #include "JSWebSocket.h"
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 #include <utils/Log.h>
 #include <utils/JCCommonMethod.h>
 #include <utils/JCMemorySurvey.h>
@@ -54,7 +54,7 @@ namespace laya
         m_pWebSocketDelegate = NULL;
         m_nBinaryType = Type_String;
         m_nWebSocketState = WSS_INIT;
-        AdjustAmountOfExternalAllocatedMemory(1024);
+        jsbind::AdjustAmountOfExternalAllocatedMemory(1024);
         JCMemorySurvey::GetInstance()->newClass("webSocket", 1024, this);
     }
     //------------------------------------------------------------------------------
@@ -75,7 +75,7 @@ namespace laya
         {
             m_nWebSocketState = WSS_CLOSE;
         }
-        AdjustAmountOfExternalAllocatedMemory(1024);
+        jsbind::AdjustAmountOfExternalAllocatedMemory(1024);
         JCMemorySurvey::GetInstance()->newClass("webSocket", 1024, this);
     }
     //------------------------------------------------------------------------------
@@ -161,42 +161,42 @@ namespace laya
         return false;
     }
     //------------------------------------------------------------------------------
-    void JSWebSocket::SetOnOpen(JSValueAsParam p_pFunction)
+    void JSWebSocket::SetOnOpen(jsvm::Value p_pFunction)
     {
         m_pJSFunctionOnOpen = jsbind::Persistent(p_pFunction);
     }
     //------------------------------------------------------------------------------
-    JsValue JSWebSocket::GetOnOpen()
+    jsvm::Value JSWebSocket::GetOnOpen()
     {
         return m_pJSFunctionOnOpen.getHandle();
     }
     //------------------------------------------------------------------------------
-    void JSWebSocket::SetOnMessage(JSValueAsParam p_pFunction)
+    void JSWebSocket::SetOnMessage(jsvm::Value p_pFunction)
     {
         m_pJSFunctionOnMessage = jsbind::Persistent(p_pFunction);
     }
     //------------------------------------------------------------------------------
-    JsValue JSWebSocket::GetOnMessage()
+    jsvm::Value JSWebSocket::GetOnMessage()
     {
         return m_pJSFunctionOnMessage.getHandle();
     }
     //------------------------------------------------------------------------------
-    void JSWebSocket::SetOnClose(JSValueAsParam function)
+    void JSWebSocket::SetOnClose(jsvm::Value function)
     {
         m_pJSFunctionOnClose = jsbind::Persistent(function);
     }
     //------------------------------------------------------------------------------
-    JsValue JSWebSocket::GetOnClose()
+    jsvm::Value JSWebSocket::GetOnClose()
     {
         return m_pJSFunctionOnClose.getHandle();
     }
     //------------------------------------------------------------------------------
-    void JSWebSocket::SetOnError(JSValueAsParam function)
+    void JSWebSocket::SetOnError(jsvm::Value function)
     {
         m_pJSFunctionOnError = jsbind::Persistent(function);
     }
     //------------------------------------------------------------------------------
-    JsValue JSWebSocket::GetOnError()
+    jsvm::Value JSWebSocket::GetOnError()
     {
         return m_pJSFunctionOnError.getHandle();
     }

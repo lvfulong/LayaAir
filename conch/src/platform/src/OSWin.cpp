@@ -79,7 +79,7 @@ int OSWin::getSafeInsetRight()
 {
     return 0;
 }
-JsValue OSWin::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
+jsvm::Value OSWin::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
     //auto isolate = v8::Isolate::GetCurrent();
     //auto context = isolate->GetCurrentContext();
@@ -96,7 +96,7 @@ JsValue OSWin::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eve
                 return;
             //auto isolate = v8::Isolate::GetCurrent();
             //auto context = isolate->GetCurrentContext();
-            //napi_value v = JsValueFromV8LocalValue(jsbind::Local::Make<std::string>(message));
+            //napi_value v = jsvm::ValueFromV8LocalValue(jsbind::Local::Make<std::string>(message));
             //napi_resolve_deferred(context, deferred, v);
             promise.resolve(message);
         });

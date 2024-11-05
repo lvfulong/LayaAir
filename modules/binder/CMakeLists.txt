@@ -6,7 +6,6 @@ project(${TARGET})
 set(PUBLIC_HEADER_DIR include)
 
 set(HEADERS
-    ${PUBLIC_HEADER_DIR}/${TARGET}/JSInterface.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/ArrayBuffer.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/JSEnv.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/JSCProxyTLS.h

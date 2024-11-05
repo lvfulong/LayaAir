@@ -97,7 +97,7 @@ int OSOHOS::getSafeInsetRight()
 {
     return 0;
 }
-JsValue OSOHOS::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
+jsvm::Value OSOHOS::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
     //auto isolate = v8::Isolate::GetCurrent();
     //auto context = isolate->GetCurrentContext();
@@ -113,7 +113,7 @@ JsValue OSOHOS::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &ev
                 return;
             //auto isolate = v8::Isolate::GetCurrent();
             //auto context = isolate->GetCurrentContext();
-            //napi_value v = JsValueFromV8LocalValue(MakeJSValue<const char *>(message));
+            //napi_value v = jsvm::ValueFromV8LocalValue(MakeJSValue<const char *>(message));
             //napi_resolve_deferred(context, deferred, v);
              promise.resolve(message);
         });
@@ -122,7 +122,7 @@ JsValue OSOHOS::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &ev
     {
         post->Invoke<void>(eventName, data, cb);
     }
-    //return V8LocalValueFromJsValue(promise);
+    //return V8LocalValueFromjsvm::Value(promise);
     return promise.getHandle();
 }
 std::string OSOHOS::postSyncMessage(const std::string &eventName, const std::string &data)

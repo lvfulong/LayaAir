@@ -5,7 +5,7 @@
 //#include <map>
 //#include <functional>
 //#include <utils/JCBuffer.h>
-//#include <binder/JSInterface.h>
+//#include <binder/JSBind.h>
 //
 //namespace laya
 //{
@@ -46,7 +46,7 @@
 //        Fetch();
 //        ~Fetch();
 //
-//        void fetch(const char* p_sUrl, const JSValueAsParam& p_jsInit, const JSValueAsParam& p_jsOnResolve, const JSValueAsParam& p_jsOnReject);
+//        void fetch(const char* p_sUrl, const jsvm::Value& p_jsInit, const jsvm::Value& p_jsOnResolve, const jsvm::Value& p_jsOnReject);
 //        
 //        void abort();
 //        

@@ -2,7 +2,7 @@
 #define __JSWebSocket_H__
 
 #include <stdio.h>
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 #include "../../WebSocket/WebSocket.h"
 
 
@@ -53,21 +53,21 @@ namespace laya
 	public:
 		int getTimeGap();//获取时间戳 距离上次断开的时间
 
-		void SetOnOpen( JSValueAsParam p_pFunction );
+		void SetOnOpen( jsvm::Value p_pFunction );
 
-		JsValue GetOnOpen();
+		jsvm::Value GetOnOpen();
 
-		void SetOnMessage( JSValueAsParam p_pFunction );
+		void SetOnMessage( jsvm::Value p_pFunction );
 
-		JsValue GetOnMessage();
+		jsvm::Value GetOnMessage();
 
-		void SetOnClose( JSValueAsParam p_pFunction );
+		void SetOnClose( jsvm::Value p_pFunction );
 
-		JsValue GetOnClose();
+		jsvm::Value GetOnClose();
 
-		void SetOnError( JSValueAsParam p_pFunction );
+		void SetOnError( jsvm::Value p_pFunction );
 
-		JsValue GetOnError();
+		jsvm::Value GetOnError();
 
 		const char* getBinaryType();
 

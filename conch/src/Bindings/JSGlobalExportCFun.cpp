@@ -7,7 +7,7 @@
 */
 
 #include "JSGlobalExportCFun.h"
-#include <binder/JSInterface.h>
+#include <binder/JSBind.h>
 #include <utils/Log.h>
 #include <utils/JCCommonMethod.h>
 #include <utils/JCFileSystem.h>
@@ -124,7 +124,7 @@ namespace laya
         jsbind::Persistent funcOnProg;
         jsbind::Persistent funcOnComp;
         bool stop;
-        JSFuncWrapper(JSValueAsParam onprog, JSValueAsParam onComp)
+        JSFuncWrapper(jsvm::Value onprog, jsvm::Value onComp)
         {
 
             funcOnProg = jsbind::Persistent(onprog);
@@ -167,7 +167,7 @@ namespace laya
     {
         postToJS(std::bind(downloadBig_onComp_js, curlret,httpret, pWrapper));
     }
-	void _downloadBigFile(const char* p_pszUrl, const char* p_pszLocal, JSValueAsParam p_ProgCb,JSValueAsParam p_CompleteCb, int p_nTryNum, int p_nOptTimeout)
+	void _downloadBigFile(const char* p_pszUrl, const char* p_pszLocal, jsvm::Value p_ProgCb,jsvm::Value p_CompleteCb, int p_nTryNum, int p_nOptTimeout)
     {
         /*
         if (!canWrite(pCurProcess->getFSPermission(p_pszLocal))) {
@@ -218,7 +218,7 @@ namespace laya
         }
         postToJS(std::bind(downloadHeader_onComp_js, pBuff, curlret, httpret, pWrapper));
     }
-	void _downloadGetHeader(const char* p_pszUrl, JSValueAsParam p_CompleteCb, int p_nTryNum, int p_nOptTimeout)
+	void _downloadGetHeader(const char* p_pszUrl, jsvm::Value p_CompleteCb, int p_nTryNum, int p_nOptTimeout)
     {
         JCDownloadMgr* dmgr = JCDownloadMgr::getInstance();
         JSFuncWrapper* pJSObj = new JSFuncWrapper(p_CompleteCb, p_CompleteCb);//第一个没有用
@@ -226,13 +226,13 @@ namespace laya
             std::bind(downloadHeader_onComp, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6, pJSObj),
             p_nTryNum, p_nOptTimeout);
     }
-    void setTouchEvtFunc(JSValueAsParam pObj) 
+    void setTouchEvtFunc(jsvm::Value pObj) 
     {
     }
-    void setKeyEvtFunc(JSValueAsParam pObj) 
+    void setKeyEvtFunc(jsvm::Value pObj) 
     {
     }
-    void setJoystickEvtFunc(JSValueAsParam pObj) 
+    void setJoystickEvtFunc(jsvm::Value pObj) 
     {
     }
 	void copy(const char* data)
@@ -421,7 +421,7 @@ namespace laya
             return std::string();
         return base64Encode(val.getValue().data(), val.getValue().length());
     }
-    JsValue atob(const char* encodedString)
+    jsvm::Value atob(const char* encodedString)
     {
         std::vector<char> out;
         if (!base64Decode(std::string(encodedString), out, isHTMLSpace<uint16_t>, Base64ValidatePadding)) 
@@ -434,7 +434,7 @@ namespace laya
     {
         return g_bEnableTouch;
     }
-    JsValue createImageBitmap(jsbind::Local image, jsbind::Local options)
+    jsvm::Value createImageBitmap(jsbind::Local image, jsbind::Local options)
     {
         if (image.is<JSImage>())
         {
