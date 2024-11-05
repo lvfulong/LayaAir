@@ -104,6 +104,8 @@ namespace jsvm
 /*JSVM_EXTERN*/ Status PerformMicrotaskCheckpoint(VM vm);
 /*JSVM_EXTERN*/ Status GetProperty(Env env, Value object, Value key, Value *result);
 /*JSVM_EXTERN*/ Status GetNamedProperty(Env env, Value object, const char *utf8name, Value *result);
+/*JSVM_EXTERN*/ Status CreateExternal(Env env, void *data, Finalize finalizeCb, void *finalizeHint, Value *result);
+/*JSVM_EXTERN*/ Status GetValueExternal(Env env, Value value, void **result);
 } // namespace jsvm
 //#include "JSVM_inline.h"
 #endif

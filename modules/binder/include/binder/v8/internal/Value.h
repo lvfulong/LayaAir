@@ -1,14 +1,23 @@
 #ifndef __JSBIND_INTERNAL_VALUE_H__
 #define __JSBIND_INTERNAL_VALUE_H__
 
-#include <binder/v8/JSEnv.h>
 #include <binder/JSVM.h>
 #include <binder/JSVM_Types.h>
+#include <binder/v8/JSEnv.h>
 
 namespace jsbind
 {
 namespace internal
 {
+static inline jsvm::Value makeObject()
+{
+    GET_ENV
+    jsvm::Value result;
+    jsvm::Status status;
+    status = jsvm::CreateObject(env, &result);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+    return result;
+}
 static inline bool getBool(jsvm::Value value)
 {
     GET_ENV

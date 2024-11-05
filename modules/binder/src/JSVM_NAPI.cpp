@@ -626,4 +626,12 @@ Status RejectDeferred(Env env, Deferred deferred, Value resolution)
 {
     return static_cast<Status>(napi_reject_deferred(env, deferred, resolution));
 }
+Status CreateExternal(Env env, void *data, Finalize finalizeCb, void *finalizeHint, Value *result)
+{
+    return static_cast<Status>(napi_create_external(env, data, finalizeCb, finalizeHint, result));
+}
+Status GetValueExternal(Env env, Value value, void **result)
+{
+    return static_cast<Status>(napi_get_value_external(env, value, result));
+}
 } // namespace jsvm

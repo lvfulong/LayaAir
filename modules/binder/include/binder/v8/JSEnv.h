@@ -21,9 +21,9 @@ class JSEnv
 };
 
 #define GET_ENV                                                                                                        \
-    auto JSEnv = JSEnv::getCurrent();                                                                                  \
-    DEBUG_CHECK(nullptr != JSEnv);                                                                                     \
-    jsvm::Env env = JSEnv->getEnv();                                                                                   \
+    auto jsenv = jsbind::JSEnv::getCurrent();                                                                                  \
+    DEBUG_CHECK(nullptr != jsenv);                                                                                     \
+    jsvm::Env env = jsenv->getEnv();                                                                                   \
     DEBUG_CHECK(nullptr != env);
 
 inline jsvm::Value global()

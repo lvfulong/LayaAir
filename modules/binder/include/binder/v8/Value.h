@@ -19,7 +19,10 @@ namespace jsbind
     {
         return internal::makeUndefined();
     }
-
+     inline jsvm::Value MakeObject()
+    {
+        return internal::makeObject();
+    }
 
       /*template <typename T> T as(Local value) 
      {
