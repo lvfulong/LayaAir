@@ -57,7 +57,7 @@ if(CONCH_USE_DCC)
 	src/downloadCache/DCC1/JCFileResDCC.cpp
 	src/downloadCache/DCC2/JCFileResDCC2.cpp
 	src/downloadCache/DCC2/JSDownloader.cpp
-	src/downloadCache/DCC2/DirectDownloader.cpp)
+	)
 endif()
 
 list(APPEND CONCH_SRC

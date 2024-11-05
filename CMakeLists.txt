@@ -11,7 +11,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CONCH_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
 include(${CONCH_ROOT_DIR}/cmake/preprocessor.cmake)
 
-option(CONCH_USE_DCC "Use NEW DCC" OFF)
+option(CONCH_USE_DCC "Use NEW DCC" ON)
 option(CONCH_TRACE_ENABLED "Trace enabled" ON)
 if(OS_ANDROID)
 	add_definitions(-DJS_V8)
