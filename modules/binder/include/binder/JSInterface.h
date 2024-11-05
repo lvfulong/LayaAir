@@ -2,39 +2,31 @@
 #define __JSInterface_H__
 
 #include <utils/JCMemorySurvey.h>
-#ifdef JS_JSC
-#include "jsc/JSCArrayBuffer.h"
-#include "jsc/JSCBinder.h"
-#include "jsc/JSCEnv.h"
-#elif JS_V8
 
-#include <binder/v8/ArrayBuffer.h>
-#include <binder/v8/Class.h>
-#include <binder/v8/Date.h>
-#include <binder/v8/JSEnv.h>
-#include <binder/v8/Local.h>
-#include <binder/v8/Object.h>
-#include <binder/v8/Persistent.h>
-#include <binder/v8/Promise.h>
-#include <binder/v8/Script.h>
-#include <binder/v8/String.h>
-#include <binder/v8/Array.h>
-#include <binder/v8/Value.h>
-#include <binder/v8/Enum.h>
+#include <binder/Array.h>
+#include <binder/ArrayBuffer.h>
+#include <binder/Date.h>
+#include <binder/Enum.h>
 #include <binder/JSBind.h>
+#include <binder/JSEnv.h>
+#include <binder/Local.h>
+#include <binder/Object.h>
+#include <binder/Persistent.h>
+#include <binder/Promise.h>
+#include <binder/Script.h>
+#include <binder/String.h>
+#include <binder/Value.h>
+#include <binder/Class.h>
 #ifdef JS_V8_DEBUGGER
-#include <binder/v8/v8debug/debug-agent.h>
-#endif
+#include <binder/v8debug/debug-agent.h>
 #endif
 
 namespace laya
 {
-#ifdef JS_JSC
-#elif JS_V8
 typedef jsvm::Value JsValue;
 // typedef v8::Local<v8::String> JsString;
 // typedef v8::FunctionCallbackInfo<v8::Value> JsFuncArgs;
-//typedef v8::Local<v8::Function> JsFunction;
+// typedef v8::Local<v8::Function> JsFunction;
 typedef jsvm::Value JSValueAsParam;
 // typedef v8::Local<v8::Object> JsObject;
 // #define JSP_THROW(str) __JsThrow::Throw(str);
@@ -56,7 +48,6 @@ typedef jsvm::Value JSValueAsParam;
         LOGE("JS onFrame error\n");                                                                                    \
         __JSRun::ReportException(isolate, &try_catch);                                                                 \
     }*/
-#endif
 extern void AdjustAmountOfExternalAllocatedMemory(int p_nMemorySize);
 } // namespace laya
 #endif

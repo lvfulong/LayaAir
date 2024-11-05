@@ -1,6 +1,6 @@
 
-#include "binder/v8/internal/Value.h"
-#include <binder/v8/Script.h>
+#include "binder/internal/Value.h"
+#include <binder/Script.h>
 namespace jsbind
 {
 jsvm::Value runScript(const char *code)

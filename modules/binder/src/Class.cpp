@@ -1,4 +1,4 @@
-#include <binder/v8/Class.h>
+#include <binder/Class.h>
 
 namespace
 {

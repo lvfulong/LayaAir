@@ -5,6 +5,8 @@
 #include "internal/Converter.h"
 #include <binder/JSVM_Types.h>
 #include "Utility.h"
+#include "Class.h"
+
 namespace jsbind
 {
 

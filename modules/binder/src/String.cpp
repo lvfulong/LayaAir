@@ -1,5 +1,5 @@
-#include "binder/v8/internal/Value.h"
-#include <binder/v8/String.h>
+#include "binder/internal/Value.h"
+#include <binder/String.h>
 
 namespace jsbind
 {

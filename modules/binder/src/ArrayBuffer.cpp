@@ -1,8 +1,8 @@
 #include <binder/JSInterface.h>
-#include <binder/v8/ArrayBuffer.h>
-#include <binder/v8/JSEnv.h>
-#include <binder/v8/Local.h>
-#include <binder/v8/internal/Converter.h>
+#include <binder/ArrayBuffer.h>
+#include <binder/JSEnv.h>
+#include <binder/Local.h>
+#include <binder/internal/Converter.h>
 #include <utils/JCMemorySurvey.h>
 #include <utils/Log.h>
 

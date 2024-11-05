@@ -7,56 +7,56 @@ set(PUBLIC_HEADER_DIR include)
 
 set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/JSInterface.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/ArrayBuffer.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/JSEnv.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/JSCProxyTLS.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/internal/Converter.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/internal/Value.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Local.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Persistent.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Class.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Utility.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Date.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/String.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Script.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Promise.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Object.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Enum.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Array.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Invoke.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/v8/Value.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/ArrayBuffer.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/JSEnv.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/JSCProxyTLS.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/internal/Converter.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/internal/Value.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/Local.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/Persistent.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/Class.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/Utility.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/Date.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/String.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/Script.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/Promise.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/Object.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/Enum.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/Array.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/Invoke.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/Value.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/JSBind.h
 )
 
 set(SOURCES
-    src/v8/ArrayBuffer.cpp
-    src/v8/Class.cpp
-    src/v8/Persistent.cpp
-    src/v8/Local.cpp
-    src/v8/Date.cpp
-    src/v8/String.cpp
-    src/v8/Script.cpp
-    src/v8/Promise.cpp
-    src/v8/JSEnv.cpp
-    src/v8/JSBind.cpp
-    src/v8/Enum.cpp
+    src/ArrayBuffer.cpp
+    src/Class.cpp
+    src/Persistent.cpp
+    src/Local.cpp
+    src/Date.cpp
+    src/String.cpp
+    src/Script.cpp
+    src/Promise.cpp
+    src/JSEnv.cpp
+    src/JSBind.cpp
+    src/Enum.cpp
 )
 
 if(OS_WINDOWS AND USE_JS_V8_DEBUGGER)
     list(APPEND SOURCES
-        src/v8/v8debug/V8Win32Socket.cpp
+        src/v8debug/V8Win32Socket.cpp
     )
 endif()
 
 if(USE_JS_V8_DEBUGGER)
     list(APPEND HEADERS
-        ${PUBLIC_HEADER_DIR}/${TARGET}/v8/v8debug/debug-agent.h
-        ${PUBLIC_HEADER_DIR}/${TARGET}/v8/v8debug/V8Socket.h
-        ${PUBLIC_HEADER_DIR}/${TARGET}/v8/v8debug/V8WSSv.h
+        ${PUBLIC_HEADER_DIR}/${TARGET}/v8debug/debug-agent.h
+        ${PUBLIC_HEADER_DIR}/${TARGET}/v8debug/V8Socket.h
+        ${PUBLIC_HEADER_DIR}/${TARGET}/v8debug/V8WSSv.h
     )
     list(APPEND SOURCES
-        src/v8/v8debug/debug-agent.cpp
-        src/v8/v8debug/V8WSSv.cpp
+        src/v8debug/debug-agent.cpp
+        src/v8debug/V8WSSv.cpp
     )
 endif()
 

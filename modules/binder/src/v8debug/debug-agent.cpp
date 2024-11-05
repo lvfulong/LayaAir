@@ -1,13 +1,13 @@
-#include <binder/v8/v8debug/debug-agent.h>
+#include <binder/v8debug/debug-agent.h>
 #include <utils/Log.h>
-#include <binder/v8/v8debug/V8Socket.h>
+#include <binder/v8debug/V8Socket.h>
 #include <utils/JCFileSystem.h>
 #include <utils/JCJson.h>
 #include <utils/JCCommonMethod.h>
 #include <string>
 #include <chrono>
 #include <thread>
-#include <binder/v8/v8debug/V8WSSv.h>
+#include <binder/v8debug/V8WSSv.h>
 #include <binder/JSInterface.h>
 namespace laya {
 

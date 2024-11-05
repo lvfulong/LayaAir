@@ -3,9 +3,9 @@
 
 #include <assert.h>
 #include <binder/JSVM_Types.h>
-#include <binder/v8/Class.h>
-#include <binder/v8/internal/Value.h>
-#include <binder/v8/internal/Converter.h>
+#include <binder/Class.h>
+#include <binder/internal/Value.h>
+#include <binder/internal/Converter.h>
 
 namespace jsbind
 {

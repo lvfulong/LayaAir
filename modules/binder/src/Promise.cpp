@@ -1,6 +1,6 @@
 
-#include "binder/v8/internal/Value.h"
-#include <binder/v8/Promise.h>
+#include "binder/internal/Value.h"
+#include <binder/Promise.h>
 namespace jsbind
 {
     Promise Promise::Make()

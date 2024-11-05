@@ -4,14 +4,15 @@
 #include "binder/JSVM.h"
 #include "binder/JSVM_Types.h"
 #include "binder/napi/js_native_api.h"
-#include "binder/v8/internal/Value.h"
+#include "binder/internal/Value.h"
 #include <assert.h>
-#include <binder/v8/Utility.h>
+#include <binder/Utility.h>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
-//#include "binder/v8/ArrayBuffer.h"
+//#include "binder/ArrayBuffer.h"
+
 namespace jsbind
 {
 

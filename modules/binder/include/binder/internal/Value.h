@@ -3,7 +3,7 @@
 
 #include <binder/JSVM.h>
 #include <binder/JSVM_Types.h>
-#include <binder/v8/JSEnv.h>
+#include <binder/JSEnv.h>
 #include <functional>
 
 namespace jsbind

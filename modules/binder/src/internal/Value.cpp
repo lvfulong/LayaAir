@@ -1,4 +1,4 @@
-#include "binder/v8/interanl/Value.h"
+#include "binder/internal/Value.h"
 
 namespace jsbind
 {
