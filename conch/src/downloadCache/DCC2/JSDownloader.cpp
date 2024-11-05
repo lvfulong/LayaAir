@@ -26,7 +26,7 @@ namespace laya{
 #endif
 
     //js下载完成之后调回这里，这里保存着对应的c++的回调，再继续调回c++，使自己看起来像是一个普通的c++接口
-    void onDownloadEndJs(jsvm::Env env, jsvm::CallbackInfo info)
+    jsvm::Value onDownloadEndJs(jsvm::Env env, jsvm::CallbackInfo info)
     {
         jsvm::Status status;
         size_t argc = 2;
@@ -71,6 +71,8 @@ namespace laya{
         DEBUG_CHECK(status == jsvm::Status::OK);
         status = jsvm::SetNamedProperty(env, _this, "external_onok", null);
         DEBUG_CHECK(status == jsvm::Status::OK);
+
+        return null;
     }
 
     void JSDownloader::setJSDownloader(JSValueAsParam obj){
@@ -82,39 +84,20 @@ namespace laya{
 
         GET_ENV
         jsvm::Status status;
-        // 创建用于回调的 JS 函数
-        auto tpl = v8::FunctionTemplate::New(isolate, onDownloadEndJs);
-        auto func = tpl->GetFunction(ctx).ToLocalChecked();
+        auto func = jsbind::MakeFunctionRaw(onDownloadEndJs);
 
         jsCallbackData* data = new jsCallbackData();
         data->pThis = this;
         data->cFunc = onok;
         data->jsFunc = jsbind::Persistent(func);
-        //auto onok_shared = std::make_shared<onDownloadedFunc>(data);
 
-        // 创建 External 对象封装 onok。 注意这里是new的，要正确删除
-        //auto external_onok = v8::External::New(isolate, data);
         jsvm::Value external_onok;
         status = jsvm::CreateExternal(env, data, nullptr, nullptr, &external_onok);
 
-        // 创建持久引用并调用 JS
-        //v8::Persistent<v8::Function> pcb(isolate, func);
-        // 创建一个新的 JavaScript 对象
-        //auto obj = v8::Object::New(isolate);
         auto obj = jsbind::MakeObject();
-        jsbind::set_option(obj, "onDownloadEnd", );
-        // 将 onDownloadEndJs 函数设置为对象的成员
-        v8::Local<v8::String> onDownloadEndJs_key = v8::String::NewFromUtf8(isolate, "onDownloadEnd").ToLocalChecked();
-        obj->Set(ctx, onDownloadEndJs_key, func).FromJust();
-
-
-       
+        jsbind::set_option(obj, "onDownloadEnd", func);
         jsbind::set_option(obj, "external_onok", external_onok);
-        // 将 external_onok 设置为对象的成员
-        //v8::Local<v8::String> external_onok_key = v8::String::NewFromUtf8(isolate, "external_onok").ToLocalChecked();
-        //obj->Set(ctx, external_onok_key, external_onok).FromJust();
 
-        //m_jsDownloader.call<void>(ctx->Global(), pszUrl, func.As<v8::Object>(), external_onok.As<v8::Value>());
         m_jsDownloader.call<void>(jsbind::global(), pszUrl, obj);
     }
 }

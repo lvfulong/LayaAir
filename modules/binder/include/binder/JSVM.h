@@ -78,7 +78,7 @@ namespace jsvm
 /*JSVM_EXTERN*/ Status DefineClass(Env env, const char *utf8name, size_t length, Callback constructor,
                                    size_t propertyCount, const PropertyDescriptor *properties, Value *result);
 /*JSVM_EXTERN*/ Status CallFunction(Env env, Value recv, Value func, size_t argc, const Value *argv, Value *result);
-/*JSVM_EXTERN*/ Status CreateFunction(Env env, const char *utf8name, size_t length, Callback cb, Value *result);
+/*JSVM_EXTERN*/ Status CreateFunction(Env env, const char *utf8name, size_t length, Callback cb, void* data, Value *result);
 /*JSVM_EXTERN*/ Status Typeof(Env env, Value value, ValueType *result);
 /*JSVM_EXTERN*/ Status CreateArraybuffer(Env env, size_t byteLength, void **data, Value *result);
 /*JSVM_EXTERN*/ Status IsArraybuffer(Env env, Value value, bool *result);
@@ -106,6 +106,7 @@ namespace jsvm
 /*JSVM_EXTERN*/ Status GetNamedProperty(Env env, Value object, const char *utf8name, Value *result);
 /*JSVM_EXTERN*/ Status CreateExternal(Env env, void *data, Finalize finalizeCb, void *finalizeHint, Value *result);
 /*JSVM_EXTERN*/ Status GetValueExternal(Env env, Value value, void **result);
+/*JSVM_EXTERN*/ Status AddFinalizer(Env env, Value jsObject, void* finalizeData, Finalize finalizeCb, void* finalizeHint, Ref* result);
 } // namespace jsvm
 //#include "JSVM_inline.h"
 #endif

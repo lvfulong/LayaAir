@@ -469,9 +469,9 @@ Status CallFunction(Env env, Value recv, Value func, size_t argc, const Value *a
 {
     return static_cast<Status>(napi_call_function(env, recv, func, argc, argv, result));
 }
- Status CreateFunction(Env env, const char *utf8name, size_t length, Callback cb, Value *result)
+ Status CreateFunction(Env env, const char *utf8name, size_t length, Callback cb, void* data, Value *result)
 {
-    return static_cast<Status>(napi_create_function(env, utf8name, length, cb, result, nullptr));
+    return static_cast<Status>(napi_create_function(env, utf8name, length, cb, data, result));
 }
 Status Typeof(Env env, Value value, ValueType *result)
 {
@@ -633,5 +633,9 @@ Status CreateExternal(Env env, void *data, Finalize finalizeCb, void *finalizeHi
 Status GetValueExternal(Env env, Value value, void **result)
 {
     return static_cast<Status>(napi_get_value_external(env, value, result));
+}
+Status AddFinalizer(Env env, Value jsObject, void* finalizeData, Finalize finalizeCb, void* finalizeHint, Ref* result)
+{
+    return static_cast<Status>(napi_add_finalizer(env, jsObject, finalizeData, finalizeCb,finalizeHint, result));
 }
 } // namespace jsvm

@@ -4,12 +4,13 @@
 #include <binder/JSVM.h>
 #include <binder/JSVM_Types.h>
 #include <binder/v8/JSEnv.h>
+#include <functional>
 
 namespace jsbind
 {
 namespace internal
 {
-static inline jsvm::Value makeObject()
+ inline jsvm::Value makeObject()
 {
     GET_ENV
     jsvm::Value result;
@@ -18,7 +19,7 @@ static inline jsvm::Value makeObject()
     DEBUG_CHECK(status == jsvm::Status::OK);
     return result;
 }
-static inline bool getBool(jsvm::Value value)
+ inline bool getBool(jsvm::Value value)
 {
     GET_ENV
     bool result;
@@ -27,7 +28,7 @@ static inline bool getBool(jsvm::Value value)
     DEBUG_CHECK(status == jsvm::Status::OK);
     return result;
 }
-static inline jsvm::Value makeBool(bool value)
+ inline jsvm::Value makeBool(bool value)
 {
     GET_ENV
     jsvm::Value result;
@@ -36,7 +37,7 @@ static inline jsvm::Value makeBool(bool value)
     DEBUG_CHECK(status == jsvm::Status::OK);
     return result;
 }
-static inline double getDouble(jsvm::Value value)
+ inline double getDouble(jsvm::Value value)
 {
     GET_ENV
     double result;
@@ -45,7 +46,7 @@ static inline double getDouble(jsvm::Value value)
     DEBUG_CHECK(status == jsvm::Status::OK);
     return result;
 }
-static inline jsvm::Value makeDouble(double value)
+ inline jsvm::Value makeDouble(double value)
 {
     GET_ENV
     jsvm::Value result;
@@ -54,7 +55,7 @@ static inline jsvm::Value makeDouble(double value)
     DEBUG_CHECK(status == jsvm::Status::OK);
     return result;
 }
-static inline int32_t getInt32(jsvm::Value value)
+ inline int32_t getInt32(jsvm::Value value)
 {
     GET_ENV
     int32_t result;
@@ -63,7 +64,7 @@ static inline int32_t getInt32(jsvm::Value value)
     DEBUG_CHECK(status == jsvm::Status::OK);
     return result;
 }
-static inline jsvm::Value makeInt32(int32_t value)
+ inline jsvm::Value makeInt32(int32_t value)
 {
     GET_ENV
     jsvm::Value result;
@@ -71,7 +72,7 @@ static inline jsvm::Value makeInt32(int32_t value)
     status = jsvm::CreateInt32(env, value, &result);
     return result;
 }
-static uint32_t getUint32(jsvm::Value value)
+ uint32_t getUint32(jsvm::Value value)
 {
     GET_ENV
     uint32_t result;
@@ -80,7 +81,7 @@ static uint32_t getUint32(jsvm::Value value)
     DEBUG_CHECK(status == jsvm::Status::OK);
     return result;
 }
-static jsvm::Value makeUint32(uint32_t value)
+ jsvm::Value makeUint32(uint32_t value)
 {
     GET_ENV
     jsvm::Value result;
@@ -89,7 +90,7 @@ static jsvm::Value makeUint32(uint32_t value)
     DEBUG_CHECK(status == jsvm::Status::OK);
     return result;
 }
-static inline int64_t getInt64Noloss(jsvm::Value value)
+ inline int64_t getInt64Noloss(jsvm::Value value)
 {
     GET_ENV
     int64_t result;
@@ -100,7 +101,7 @@ static inline int64_t getInt64Noloss(jsvm::Value value)
     DEBUG_CHECK(status == jsvm::Status::OK);
     return result;
 }
-static inline jsvm::Value makeInt64Noloss(int64_t value)
+ inline jsvm::Value makeInt64Noloss(int64_t value)
 {
     GET_ENV
     jsvm::Value result;
@@ -108,7 +109,7 @@ static inline jsvm::Value makeInt64Noloss(int64_t value)
     status = jsvm::CreateBigintInt64(env, value, &result);
     return result;
 }
-static inline uint64_t getUint64Noloss(jsvm::Value value)
+ inline uint64_t getUint64Noloss(jsvm::Value value)
 {
     GET_ENV
     uint64_t result;
@@ -119,7 +120,7 @@ static inline uint64_t getUint64Noloss(jsvm::Value value)
     DEBUG_CHECK(status == jsvm::Status::OK);
     return result;
 }
-static inline jsvm::Value makeUint64Noloss(uint64_t value)
+ inline jsvm::Value makeUint64Noloss(uint64_t value)
 {
     GET_ENV
     jsvm::Value result;
@@ -127,7 +128,7 @@ static inline jsvm::Value makeUint64Noloss(uint64_t value)
     status = jsvm::CreateBigintUint64(env, value, &result);
     return result;
 }
-static std::string getStringLatin1(jsvm::Value value)
+ std::string getStringLatin1(jsvm::Value value)
 {
     GET_ENV
     size_t length = 0;
@@ -139,7 +140,7 @@ static std::string getStringLatin1(jsvm::Value value)
     DEBUG_CHECK(status == jsvm::Status::OK);
     return latin1Str;
 }
-static jsvm::Value makeStringLatin1(const std::string &value)
+ jsvm::Value makeStringLatin1(const std::string &value)
 {
     GET_ENV
     jsvm::Value result;
@@ -148,7 +149,7 @@ static jsvm::Value makeStringLatin1(const std::string &value)
     DEBUG_CHECK(status == jsvm::Status::OK);
     return result;
 }
-static std::string getStringUtf8(jsvm::Value value)
+ std::string getStringUtf8(jsvm::Value value)
 {
     GET_ENV
     size_t length = 0;
@@ -160,7 +161,7 @@ static std::string getStringUtf8(jsvm::Value value)
     DEBUG_CHECK(status == jsvm::Status::OK);
     return utf8str;
 }
-static jsvm::Value makeStringUtf8(const std::string &value)
+ jsvm::Value makeStringUtf8(const std::string &value)
 {
     GET_ENV
     jsvm::Value result;
@@ -169,7 +170,7 @@ static jsvm::Value makeStringUtf8(const std::string &value)
     DEBUG_CHECK(status == jsvm::Status::OK);
     return result;
 }
-static std::u16string getStringUtf16(jsvm::Value value)
+ std::u16string getStringUtf16(jsvm::Value value)
 {
     GET_ENV
     size_t length = 0;
@@ -181,7 +182,7 @@ static std::u16string getStringUtf16(jsvm::Value value)
     DEBUG_CHECK(status == jsvm::Status::OK);
     return utf16str;
 }
-static jsvm::Value makeStringUtf16(const std::u16string &value)
+ jsvm::Value makeStringUtf16(const std::u16string &value)
 {
     GET_ENV
     jsvm::Value result;
@@ -191,7 +192,7 @@ static jsvm::Value makeStringUtf16(const std::u16string &value)
     return result;
 }
 
-static inline double getDate(jsvm::Value value)
+ inline double getDate(jsvm::Value value)
 {
     GET_ENV
     double result;
@@ -200,7 +201,7 @@ static inline double getDate(jsvm::Value value)
     DEBUG_CHECK(status == jsvm::Status::OK);
     return result;
 }
-static inline jsvm::Value makeDate(double value)
+ inline jsvm::Value makeDate(double value)
 {
     GET_ENV
     jsvm::Value result;
@@ -209,7 +210,7 @@ static inline jsvm::Value makeDate(double value)
     DEBUG_CHECK(status == jsvm::Status::OK);
     return result;
 }
-static inline bool isDate(jsvm::Value value)
+ inline bool isDate(jsvm::Value value)
 {
     GET_ENV
     bool result;
@@ -218,7 +219,7 @@ static inline bool isDate(jsvm::Value value)
     DEBUG_CHECK(status == jsvm::Status::OK);
     return result;
 }
-static inline jsvm::Value makeNull()
+ inline jsvm::Value makeNull()
 {
     GET_ENV
     jsvm::Value result;
@@ -228,7 +229,7 @@ static inline jsvm::Value makeNull()
     return result;
 }
 
-static inline jsvm::Value makeUndefined()
+ inline jsvm::Value makeUndefined()
 {
     GET_ENV
     jsvm::Value result;
@@ -237,7 +238,7 @@ static inline jsvm::Value makeUndefined()
     DEBUG_CHECK(status == jsvm::Status::OK);
     return result;
 }
-static inline bool isUndefined(jsvm::Value value)
+ inline bool isUndefined(jsvm::Value value)
 {
     GET_ENV
     jsvm::ValueType valueType;
@@ -245,7 +246,7 @@ static inline bool isUndefined(jsvm::Value value)
     DEBUG_CHECK(status == jsvm::Status::OK);
     return valueType == jsvm::ValueType::UNDEFINED;
 }
-static inline bool isNull(jsvm::Value value)
+ inline bool isNull(jsvm::Value value)
 {
     GET_ENV
     jsvm::ValueType valueType;
@@ -253,7 +254,7 @@ static inline bool isNull(jsvm::Value value)
     DEBUG_CHECK(status == jsvm::Status::OK);
     return valueType == jsvm::ValueType::Null;
 }
-static inline bool isBool(jsvm::Value value)
+ inline bool isBool(jsvm::Value value)
 {
     GET_ENV
     DEBUG_CHECK(nullptr != value);
@@ -263,7 +264,7 @@ static inline bool isBool(jsvm::Value value)
     DEBUG_CHECK(status == jsvm::Status::OK);
     return valueType == jsvm::ValueType::BOOLEAN;
 }
-static inline bool isNumber(jsvm::Value value)
+ inline bool isNumber(jsvm::Value value)
 {
     GET_ENV
     jsvm::ValueType valueType;
@@ -272,7 +273,7 @@ static inline bool isNumber(jsvm::Value value)
     return valueType == jsvm::ValueType::NUMBER;
 }
 
-static inline bool isString(jsvm::Value value)
+ inline bool isString(jsvm::Value value)
 {
     GET_ENV
     jsvm::ValueType valueType;
@@ -281,7 +282,7 @@ static inline bool isString(jsvm::Value value)
     return valueType == jsvm::ValueType::STRING;
 }
 
-static inline bool isObject(jsvm::Value value)
+ inline bool isObject(jsvm::Value value)
 {
     GET_ENV
     jsvm::ValueType valueType;
@@ -290,7 +291,7 @@ static inline bool isObject(jsvm::Value value)
     return valueType == jsvm::ValueType::OBJECT;
 }
 
-static inline bool isArray(jsvm::Value value)
+ inline bool isArray(jsvm::Value value)
 {
     GET_ENV
     bool result;
@@ -299,7 +300,7 @@ static inline bool isArray(jsvm::Value value)
     return result;
 }
 
-static inline bool isFunction(jsvm::Value value)
+ inline bool isFunction(jsvm::Value value)
 {
     GET_ENV
     jsvm::ValueType valueType;
@@ -308,7 +309,7 @@ static inline bool isFunction(jsvm::Value value)
     return valueType == jsvm::ValueType::FUNCTION;
 }
 
-static inline bool isError(jsvm::Value value)
+ inline bool isError(jsvm::Value value)
 {
     GET_ENV
     bool result;
@@ -317,7 +318,7 @@ static inline bool isError(jsvm::Value value)
     return result;
 }
 
-static inline bool isArrayBuffer(jsvm::Value value)
+ inline bool isArrayBuffer(jsvm::Value value)
 {
     GET_ENV
     bool isArraybuffer;
@@ -325,7 +326,7 @@ static inline bool isArrayBuffer(jsvm::Value value)
     return isArraybuffer;
 }
 
-static inline bool isArrayBufferView(jsvm::Value value)
+ inline bool isArrayBufferView(jsvm::Value value)
 {
     GET_ENV
     bool isTypedarray;
@@ -335,7 +336,7 @@ static inline bool isArrayBufferView(jsvm::Value value)
     return isTypedarray && isDataview;
 }
 
-static inline bool isTypedArray(jsvm::Value value)
+ inline bool isTypedArray(jsvm::Value value)
 {
     GET_ENV
     bool isTypedarray;
@@ -343,12 +344,57 @@ static inline bool isTypedArray(jsvm::Value value)
     return isTypedarray;
 }
 
-static inline bool isDataView(jsvm::Value value)
+ inline bool isDataView(jsvm::Value value)
 {
     GET_ENV
     bool isDataview;
     jsvm::IsDataview(env, value, &isDataview);
     return isDataview;
+}
+template<typename R, typename... P>
+void finalizer(jsvm::Env env, void* finalize_data, void* finalize_hint)
+{
+    std::function<R(P...)>* data = reinterpret_cast<std::function<R(P...)> *> (finalize_data);
+    delete data;
+    data = nullptr;
+}
+template<typename R, typename... Args>
+jsvm::Value makeFunction(std::function<R(Args...)> value)
+{
+    GET_ENV
+        FuncInfo<decltype(func)>* data = new FuncInfo<decltype(func)>(func);
+    internal::addDeinitializer([data]() { delete data; });//TODO ?????
+
+
+    jsvm::Status status;
+    jsvm::Value result = nullptr;
+    auto invoke = std::make_unique<std::function<R(P...)>>(std::move(value));
+    std::function <R(P...)>* func = invoke.release();
+    status = jsvm::CreateFunction(env, "", NAPI_AUTO_LENGTH, internal::InvokeGlobalMethodOptionalOverride<ReturnType, Args...> , func, data, &result);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+    status = jsvm::AddFinalizer(env, result, func, finalizer, nullptr, nullptr);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+    return result;
+}
+jsvm::Value cnm(jsvm::Env env, jsvm::CallbackInfo info)
+{
+    //todo
+    return makeNull();
+}
+jsvm::Value makeFunctionRaw(std::function<jsvm::Value (jsvm::Env env, jsvm::CallbackInfo info)> value)
+{
+    GET_ENV
+     
+
+    jsvm::Status status;
+    jsvm::Value result = nullptr;
+    auto invoke = std::make_unique<std::function<jsvm::Value(jsvm::Env env, jsvm::CallbackInfo info)>>(std::move(value));
+    std::function <jsvm::Value(jsvm::Env env, jsvm::CallbackInfo info)>* func = invoke.release();
+    status = jsvm::CreateFunction(env, "", NAPI_AUTO_LENGTH, cnm, func, &result);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+    ///status = jsvm::AddFinalizer(env, result, func, finalizer, nullptr, nullptr);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+    return result;
 }
 } // namespace internal
 } // namespace jsbind
