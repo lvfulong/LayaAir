@@ -70,7 +70,7 @@ class PersistentToLocal
 
 #define NAPI_FIXED_ONE_BYTE_STRING(isolate, string) node::FIXED_ONE_BYTE_STRING((isolate), (string))
 
-#define NAPI_PRIVATE_KEY(context, suffix) (node::Environment::GetCurrent((context))->napi_##suffix())
+#define NAPI_PRIVATE_KEY(context, suffix) (jsbind::JSEnv::getCurrent()->napi_##suffix())
 
 namespace v8impl
 {

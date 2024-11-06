@@ -1,5 +1,5 @@
-#ifndef __SCRIPT_THREAD_H__
-#define __SCRIPT_THREAD_H__
+#ifndef __JSBIND_SCRIPT_THREAD_H__
+#define __JSBIND_SCRIPT_THREAD_H__
 
 #include <binder/JSVM.h>
 #include <mutex>
@@ -8,9 +8,9 @@
 #include <utils/Log.h>
 #include <utils/thread/JCWorkerThread.h>
 
-namespace laya
+namespace jsbind
 {
-class ScriptThread : public JCWorkerThread
+class ScriptThread : public laya::JCWorkerThread
 {
   public:
     virtual ~ScriptThread()
@@ -19,12 +19,12 @@ class ScriptThread : public JCWorkerThread
     ScriptThread()
     {
     }
-    virtual void _defRunLoop();
+    void _defRunLoop() override;
 
-    virtual void _runLoop();
+    void _runLoop() override;
 
   private:
     jsvm::VM m_vm;
 };
-} // namespace laya
+} // namespace jsbind
 #endif

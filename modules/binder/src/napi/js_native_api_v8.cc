@@ -342,7 +342,7 @@ inline napi_status ConcludeDeferred(napi_env env,
 }
 
 enum UnwrapAction { KeepWrap, RemoveWrap };
-#if 0
+
 inline napi_status Unwrap(napi_env env,
                           napi_value js_object,
                           void** result,
@@ -382,7 +382,7 @@ inline napi_status Unwrap(napi_env env,
 
   return GET_RETURN_STATUS(env);
 }
-#endif
+
 //=== Function napi_callback wrapper =================================
 
 // Use this data structure to associate callback data with each N-API function
@@ -527,7 +527,7 @@ class FunctionCallbackWrapper {
   const v8::FunctionCallbackInfo<v8::Value>& cbinfo_;
   CallbackBundle* bundle_;
 };
-#if 0
+
 inline napi_status Wrap(napi_env env,
                         napi_value js_object,
                         void* native_object,
@@ -588,7 +588,7 @@ inline napi_status Wrap(napi_env env,
 
   return GET_RETURN_STATUS(env);
 }
-#endif
+
 // In JavaScript, weak references can be created for object types (Object,
 // Function, and external Object) and for local symbols that are created with
 // the `Symbol` function call. Global symbols created with the `Symbol.for`
@@ -2587,7 +2587,7 @@ GEN_COERCE_FUNCTION(OBJECT, Object, object)
 GEN_COERCE_FUNCTION(STRING, String, string)
 
 #undef GEN_COERCE_FUNCTION
-#if 0
+
 napi_status NAPI_CDECL napi_wrap(napi_env env,
                                  napi_value js_object,
                                  void* native_object,
@@ -2611,7 +2611,7 @@ napi_status NAPI_CDECL napi_remove_wrap(napi_env env,
                                         void** result) {
   return v8impl::Unwrap(env, obj, result, v8impl::RemoveWrap);
 }
-#endif
+
 napi_status NAPI_CDECL
 napi_create_external(napi_env env,
                      void* data,

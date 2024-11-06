@@ -1,6 +1,6 @@
-#include "ScriptThread.h"
+#include "binder/internal/ScriptThread.h"
 
-namespace laya
+namespace jsbind
 {
 
 void ScriptThread::_defRunLoop()
@@ -17,7 +17,7 @@ void ScriptThread::_defRunLoop()
     }
 #endif
     // 开始事件
-    JCEventEmitter::evtPtr startEvt(new JCEventBase);
+    JCEventEmitter::evtPtr startEvt(new laya::JCEventBase);
     startEvt->m_nID = JCWorkerThread::Event_threadStart;
     emit(startEvt);
     JCWorkerThread::runObj task;
@@ -64,7 +64,7 @@ void ScriptThread::_defRunLoop()
         }*/
     }
     // 退出事件
-    JCEventEmitter::evtPtr stopEvt(new JCEventBase);
+    JCEventEmitter::evtPtr stopEvt(new laya::JCEventBase);
     stopEvt->m_nID = JCWorkerThread::Event_threadStop;
     emit(stopEvt);
 }

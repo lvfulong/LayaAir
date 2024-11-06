@@ -94,7 +94,7 @@ namespace laya
 #endif
     JCScriptRuntime::JCScriptRuntime()
     {
-        m_pScriptThread = std::make_unique<ScriptThread>();
+        m_pScriptThread = std::make_unique<jsbind::ScriptThread>();
         m_bHasJSThread = false;
         m_pFileResMgr = NULL;
         m_pAssetsRes = NULL;

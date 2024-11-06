@@ -9,6 +9,7 @@ set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/ArrayBuffer.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/JSEnv.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/JSCProxyTLS.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/internal/ScriptThread.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/internal/Converter.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/internal/Value.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Local.h
@@ -39,6 +40,7 @@ set(SOURCES
     src/JSEnv.cpp
     src/JSBind.cpp
     src/Enum.cpp
+    src/internal/ScriptThread.cpp
 )
 
 if(OS_WINDOWS AND USE_JS_V8_DEBUGGER)
