@@ -78,9 +78,7 @@ struct VMScope__
 struct EnvScope__
 {
 };
-struct HandleScope__
-{
-};
+
  Status Init(const InitOptions *options)
 {
     // m_pIsolate = NULL;
@@ -286,10 +284,12 @@ Status OpenVMScope(VM vm, VMScope *result)
 }
 Status OpenEnvScope(Env env, EnvScope *result)
 {
+    env->context()->Enter();
     return Status::OK; // todo
 }
 Status CloseEnvScope(Env env, EnvScope scope)
 {
+    env->context()->Exit();
     return Status::OK; // todo
 }
 Status CreateEnv(VM vm, size_t propertyCount, const PropertyDescriptor *properties, Env *result)
@@ -315,13 +315,11 @@ Status DestroyEnv(Env env)
 
 Status OpenHandleScope(Env env, HandleScope *result)
 {
-    env->context()->Enter();
-    return Status::OK; // todo
+    return static_cast<Status>(napi_open_handle_scope(env, result));
 }
  Status CloseHandleScope(Env env, HandleScope scope)
 {
-    env->context()->Exit();
-    return Status::OK; // todo
+     return static_cast<Status>(napi_close_handle_scope(env, scope));
 }
  Status GetArrayLength(Env env, Value value, uint32_t *result)
 {

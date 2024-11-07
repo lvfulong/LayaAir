@@ -105,7 +105,7 @@ using Script = napi_value;
 typedef struct VM__ *VM;
 typedef struct VMScope__ *VMScope;
 typedef struct EnvScope__ *EnvScope;
-typedef struct HandleScope__ *HandleScope;
+using HandleScope = napi_handle_scope;
 struct InitOptions
 {
     const intptr_t *externalReferences;

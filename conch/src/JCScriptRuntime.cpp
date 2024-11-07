@@ -404,7 +404,7 @@ namespace laya
 			
         }
         JSInput* pInput = JSInput::getInstance();
-        if ( pInput->m_bTouchMode )
+        if ( pInput->m_bTouchMode && m_pJSTouchEvtFunction.isValid() )
         {
             pInput->swapCurrentTouchEvent();
             if( pInput->m_vInputEventsJS.size() > 0 )
@@ -422,7 +422,7 @@ namespace laya
             }
         }
 
-        if (g_bGLCanvasSizeChanged)
+        if (g_bGLCanvasSizeChanged && m_pJSOnResizeFunction.isValid())
         {
             m_pJSOnResizeFunction.call<void>(jsbind::global(), g_nInnerWidth, g_nInnerHeight);
             //m_pRootCanvas->size( g_nInnerWidth,g_nInnerHeight );
