@@ -14,6 +14,7 @@
 #include <binder/Script.h>
 #include <binder/String.h>
 #include <binder/Value.h>
+#include <binder/Function.h>
 #include <binder/Class.h>
 #include <binder/JSVM.h>
 #include <binder/JSVM_Types.h>

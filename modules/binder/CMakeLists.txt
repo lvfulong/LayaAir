@@ -25,6 +25,7 @@ set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/Array.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Invoke.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Value.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/Function.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/JSBind.h
 )
 

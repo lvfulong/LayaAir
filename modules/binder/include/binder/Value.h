@@ -23,15 +23,6 @@ namespace jsbind
     {
         return internal::makeObject();
     }
-     template<typename R, typename... Args>
-     inline jsvm::Value MakeFunction(std::function<R(Args...)> value)
-     {
-         return internal::makeFunction(value);
-     }
-     inline jsvm::Value MakeFunctionRaw(std::function<jsvm::Value(jsvm::Env env, jsvm::CallbackInfo info)> value)
-     {
-         return internal::makeFunctionRaw(value);
-     }
 
       /*template <typename T> T as(Local value) 
      {
