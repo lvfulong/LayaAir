@@ -3,8 +3,10 @@
 namespace jsbind
 {
 
-void ScriptThread::_defRunLoop()
-{
+    void ScriptThread::_defRunLoop()
+    {}
+    void ScriptThread::runLoop(jsvm::Env env)
+    {
 #ifdef OS_WINDOWS
     {
         DWORD thid = GetCurrentThreadId();
@@ -21,11 +23,15 @@ void ScriptThread::_defRunLoop()
     startEvt->m_nID = JCWorkerThread::Event_threadStart;
     emit(startEvt);
     JCWorkerThread::runObj task;
-    // auto isolate = v8::Isolate::GetCurrent();
+    jsvm::Status status;
     while (!m_bStop)
     {
         // v8::HandleScope handle_scope(isolate);
         // v8::TryCatch trycatch(isolate);
+
+        jsvm::HandleScope scope;
+        status = jsvm::OpenHandleScope(env, &scope);
+        DEBUG_CHECK(status == jsvm::Status::OK);
         if (!m_funcLoop)
         {
             // 现在的waitdata返回false不再表示要退出。事件唤醒流程
@@ -43,12 +49,12 @@ void ScriptThread::_defRunLoop()
             bool result = false;
             do
             {
-                jsvm::Status flag1 = jsvm::PumpMessageLoop(m_vm, &result);
-
+                status = jsvm::PumpMessageLoop(m_vm, &result);
+                DEBUG_CHECK(status == jsvm::Status::OK);
             } while (result);
 
-            jsvm::Status flag2 = jsvm::PerformMicrotaskCheckpoint(m_vm);
-
+            status = jsvm::PerformMicrotaskCheckpoint(m_vm);
+            DEBUG_CHECK(status == jsvm::Status::OK);
             // 固定循环流程
             runQueue();
             if (!m_funcLoop())
@@ -56,6 +62,8 @@ void ScriptThread::_defRunLoop()
                 break;
             }
         }
+        status = jsvm::CloseHandleScope(env, scope);
+        DEBUG_CHECK(status == jsvm::Status::OK);
         /*if (trycatch.HasCaught())
         {
             v8::Isolate *piso = v8::Isolate::GetCurrent();
@@ -116,7 +124,7 @@ void ScriptThread::_runLoop()
 
 
     // v8::TryCatch try_catch(m_pIsolate);
-    _defRunLoop();
+    runLoop(env);
     // if (try_catch.HasCaught())
     {
         // v8::String::Utf8Value exceptioninfo(m_pIsolate, try_catch.Exception());

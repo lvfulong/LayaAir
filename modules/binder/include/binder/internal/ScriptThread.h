@@ -20,6 +20,7 @@ class ScriptThread : public laya::JCWorkerThread
     {
     }
     void _defRunLoop() override;
+    void runLoop(jsvm::Env env);
 
     void _runLoop() override;
 
