@@ -288,7 +288,7 @@ void JSIOSEditBox::onInputCallJSFunction(std::weak_ptr<int> callbackref)
 {
     if(!callbackref.lock())
         return;
-    m_pJSFunctionOnInput.call<void, JSIOSEditBox>(this);
+    m_pJSFunctionOnInput.call<void>(jsbind::toLocal(this));
 }
 void JSIOSEditBox::setMultiAble(bool p_bMultiAble)
 {

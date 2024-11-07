@@ -609,6 +609,7 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
 //-------------------------------------------------------------------------------
 -(void) runJsLoop
 {
+#if 0
     laya::JSThreadInterface* pJSThread = laya::JCConch::s_pScriptRuntime->m_pScriptThread;
     pJSThread->run(NULL,NULL);
     if(m_bStopEngine)
@@ -619,6 +620,7 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
         [m_pNSTimer invalidate];
         CFRunLoopStop( [[NSRunLoop currentRunLoop] getCFRunLoop] );
     }
+#endif
 }
 -(void)runFunc:(NSTimer*)timer;
 {
