@@ -41,7 +41,7 @@ class JSEnv
             return isolate_data_->napi_wrapper();                                    \
     }
 #endif
-    JSEnv(IsolateData* isolate_data, v8::Isolate* isolate);
+    JSEnv(IsolateData* isolate_data, v8::Isolate* isolate, jsvm::Env env);
   private:
     jsvm::Env env_;
     IsolateData* isolate_data_;

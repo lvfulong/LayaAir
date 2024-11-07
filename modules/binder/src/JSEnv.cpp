@@ -33,7 +33,7 @@ void JSEnv::setCurrent(JSEnv *env)
 {
     s_threadLocalEnv = env;
 }
-JSEnv::JSEnv(IsolateData* isolate_data, v8::Isolate* isolate):isolate_data_(isolate_data), isolate_(isolate)
+JSEnv::JSEnv(IsolateData* isolate_data, v8::Isolate* isolate, jsvm::Env env):isolate_data_(isolate_data), isolate_(isolate), env_(env)
 {
 
 }

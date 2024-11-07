@@ -283,14 +283,22 @@ class Object
             ->Set(isolate()->GetCurrentContext(), name_string,
                 t->GetFunction(isolate()->GetCurrentContext()).ToLocalChecked())
             .FromJust();*/
-        /*FuncInfo<decltype(func)> *data = new FuncInfo<decltype(func)>(func);
+        FuncInfo<decltype(func)> *data = new FuncInfo<decltype(func)>(func);
         internal::addDeinitializer([data]() { delete data; });
         data->name = name;
-        propertyDescriptorVector_.emplace_back(PropertyDescriptor{
-            (name), NULL, (internal::InvokeFunction<ReturnType, Args...>), NULL, NULL, NULL, napi_default, data});
-        return *this;*/
 
-        return function(name, func);
+        jsvm::PropertyDescriptor descriptor;
+        descriptor.utf8name = name;
+        descriptor.name = NULL;
+        descriptor.method = internal::InvokeFunction<ReturnType, Args...>;
+        descriptor.getter = NULL;
+        descriptor.setter = NULL;
+        descriptor.value = NULL;
+        descriptor.attributes = jsvm::PropertyAttributes::DEFAULT;
+        descriptor.data = data;
+        propertyDescriptorVector_.push_back(descriptor);
+        return *this;
+
     }
     template <typename ReturnType, typename... Args>
     Object &function_optional_override(const char* name, ReturnType (*func)(Args...))

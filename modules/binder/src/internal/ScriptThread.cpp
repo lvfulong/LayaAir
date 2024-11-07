@@ -79,7 +79,7 @@ void ScriptThread::_runLoop()
     // m_pJS->initJSEngine();
     // m_pJS->run(call_JSThread__defRunLoop, this);
     // m_pJS->uninitJSEngine();
-
+   
     jsvm::InitOptions initOptions;
     memset(&initOptions, 0, sizeof(initOptions));
     // InitOptions外部引用赋值
@@ -110,6 +110,10 @@ void ScriptThread::_runLoop()
     jsvm::HandleScope handleScope;
     // 打开一个Handle scope
     jsvm::OpenHandleScope(env, &handleScope);
+
+
+  
+
 
     // v8::TryCatch try_catch(m_pIsolate);
     _defRunLoop();

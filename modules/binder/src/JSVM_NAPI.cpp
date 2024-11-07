@@ -3,6 +3,7 @@
 #include "binder/napi/js_native_api_v8.h"
 #include <libplatform/libplatform.h>
 #include <v8.h>
+#include "binder/JSEnv.h"
 
 namespace jsvm
 {
@@ -243,6 +244,7 @@ Status CreateVM(const CreateVMOptions *options, VM *result)
 {
     v8::Isolate::CreateParams create_params;
     create_params.array_buffer_allocator = v8::ArrayBuffer::Allocator::NewDefaultAllocator();
+    *result = new VM__;
     (*result)->isolate_ = v8::Isolate::New(create_params);
     // m_pIsolate->Enter();
     // v8::HandleScope handle_scope(m_pIsolate);
@@ -271,6 +273,7 @@ Status DestroyVM(VM vm)
 }
 Status OpenVMScope(VM vm, VMScope *result)
 {
+    *result = new VMScope__;
     (*result)->isolate_ = vm->isolate_;
     (*result)->isolate_->Enter();
     return Status::OK; // todo
@@ -292,9 +295,16 @@ Status CloseEnvScope(Env env, EnvScope scope)
 Status CreateEnv(VM vm, size_t propertyCount, const PropertyDescriptor *properties, Env *result)
 {
     // todo properties
+    v8::HandleScope handle_scope(vm->isolate_);
     v8::Local<v8::Context> context = v8::Context::New(vm->isolate_);
     *result = new LayaNapiEnv(context, NAPI_VERSION);
-    return Status::OK; // todo
+
+    jsbind::IsolateData* isolateData = new jsbind::IsolateData(vm->isolate_);//delete ?
+    jsbind::JSEnv* jsEnv = new jsbind::JSEnv(isolateData, vm->isolate_, *result);//delete ?
+    jsbind::JSEnv::setCurrent(jsEnv);
+
+
+    return Status::OK;
 }
 Status DestroyEnv(Env env)
 {

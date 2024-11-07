@@ -2,14 +2,16 @@
 
 namespace jsbind
 {
-Local::Local()
+Local::Local():handle_(nullptr)
 {
+#if 0
     GET_ENV
     jsvm::Status status;
     jsvm::Value undefined;
     status = jsvm::GetUndefined(env, &undefined);
     DEBUG_CHECK(status == jsvm::Status::OK);
     handle_ = undefined;
+#endif
 }
 
 Local::Local(jsvm::Value handle) : handle_(handle)
