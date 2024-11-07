@@ -5,6 +5,7 @@
 #include <binder/JSVM.h>
 #include <binder/JSVM_Types.h>
 #include <functional>
+#include <binder/Invoke.h>
 
 namespace jsbind
 {
@@ -357,16 +358,16 @@ template <typename R, typename... P> inline void finalizer(jsvm::Env env, void *
     delete data;
     data = nullptr;
 }
-template <typename R, typename... Args> inline jsvm::Value makeFunction(std::function<R(Args...)> value)
+template <typename ReturnType, typename... Args> inline jsvm::Value makeFunction(std::function<ReturnType(Args...)> value)
 {
     GET_ENV
-    FuncInfo<decltype(func)> *data = new FuncInfo<decltype(func)>(func);
-    internal::addDeinitializer([data]() { delete data; }); // TODO ?????
+    //FuncInfo<decltype(func)> *data = new FuncInfo<decltype(func)>(func);
+    //internal::addDeinitializer([data]() { delete data; }); // TODO ?????
 
     jsvm::Status status;
     jsvm::Value result = nullptr;
-    auto invoke = std::make_unique<std::function<R(P...)>>(std::move(value));
-    std::function<R(P...)> *func = invoke.release();
+    auto invoke = std::make_unique<std::function<ReturnType(Args...)>>(std::move(value));
+    std::function<ReturnType(Args...)> *func = invoke.release();
     status =
         jsvm::CreateFunction(env, "", NAPI_AUTO_LENGTH,
                              internal::InvokeGlobalMethodOptionalOverride<ReturnType, Args...>, func, data, &result);
