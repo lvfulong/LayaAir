@@ -20,8 +20,8 @@ template <typename ReturnType, typename... Args>
 inline jsvm::Value makeFunction(std::function<ReturnType(Args...)> value)
 {
     GET_ENV
-    // FuncInfo<decltype(func)> *data = new FuncInfo<decltype(func)>(func);
-    // internal::addDeinitializer([data]() { delete data; }); // TODO ?????
+    FuncInfo<decltype(value)> *data = new FuncInfo<decltype(value)>(value);
+    internal::addDeinitializer([data]() { delete data; }); // TODO ?????
 
     jsvm::Status status;
     jsvm::Value result = nullptr;

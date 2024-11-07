@@ -6,7 +6,7 @@
 #include <binder/JSVM_Types.h>
 #include "Utility.h"
 #include "Class.h"
-
+#include "Invoke.h"
 namespace jsbind
 {
 
@@ -264,7 +264,7 @@ class Object
     }
 
     template <typename ReturnType, typename... Args>
-    Object &function(std::string_view name, ReturnType (*func)(Args...))
+    Object &function(const char*  name, ReturnType (*func)(Args...))
     {
 
         /*v8::HandleScope scope(isolate());
@@ -275,7 +275,7 @@ class Object
         v8::Local<v8::Value> data = v8::External::New(isolate(), info);
 
         v8::Local<v8::FunctionTemplate> t =
-            v8::FunctionTemplate::New(isolate(), internal::InvokeFunction<ReturnType, Args...>, data);
+            v8::FunctionTemplate::New(isolate(), internal::<ReturnType, Args...>, data);
         v8::Local<v8::String> name_string =
             v8::String::NewFromUtf8(isolate(), name.data(), v8::NewStringType::kInternalized).ToLocalChecked();
 
@@ -290,7 +290,7 @@ class Object
         jsvm::PropertyDescriptor descriptor;
         descriptor.utf8name = name;
         descriptor.name = NULL;
-        descriptor.method = internal::InvokeFunction<ReturnType, Args...>;
+        descriptor.method = internal::InvokeClassMethod<ReturnType, Args...>;
         descriptor.getter = NULL;
         descriptor.setter = NULL;
         descriptor.value = NULL;
