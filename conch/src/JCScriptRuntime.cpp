@@ -291,13 +291,13 @@ namespace laya
             //v8::Isolate* isolate = v8::Isolate::GetCurrent();
             //v8::HandleScope handle_scope(isolate);
             //v8::TryCatch try_catch(isolate);
-            jsbind::runScript(kBuf.c_str());
+            jsbind::runScript(kBuf);
             //if (try_catch.HasCaught())
             //{
             //    __JSRun::ReportException(isolate, &try_catch);
             //}
 #else
-            jsbind::runScript(kBuf.c_str());
+            jsbind::runScript(kBuf);
 #endif
             delete[] sJCBuffer;
             sJCBuffer = NULL;
@@ -444,7 +444,10 @@ namespace laya
         }
 		
         //JS_TRY;
+        if (m_pJSOnFrameFunction.isValid())
+        {
             m_pJSOnFrameFunction.call<void>(jsbind::global());
+        }
         //JS_CATCH;
 		
         //float dt = tmGetCurms() - nBenginTime;
@@ -520,7 +523,7 @@ namespace laya
     }
     void JCScriptRuntime::callJSStringFunction( std::string sBuffer )
     {
-        jsbind::runScript(sBuffer.c_str());
+        jsbind::runScript(sBuffer);
     }
     void JCScriptRuntime::callJSFuncton(std::string sFunctionName, std::string sJsonParam, std::string sCallbackFunction)
     {
@@ -531,7 +534,7 @@ namespace laya
         sBuffer += sCallbackFunction;
         sBuffer += "\");";
         LOGI("JCScriptRuntime::callJSFuncton buffer=%s",sBuffer.c_str() );
-        jsbind::runScript( sBuffer.c_str() );
+        jsbind::runScript( sBuffer);
     }
     void JCScriptRuntime::restoreAudio()
     {

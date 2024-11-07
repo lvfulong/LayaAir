@@ -290,7 +290,7 @@ class Object
         jsvm::PropertyDescriptor descriptor;
         descriptor.utf8name = name;
         descriptor.name = NULL;
-        descriptor.method = internal::InvokeClassMethod<ReturnType, Args...>;
+        descriptor.method = internal::InvokeMethodStatic<ReturnType, Args...>;
         descriptor.getter = NULL;
         descriptor.setter = NULL;
         descriptor.value = NULL;
