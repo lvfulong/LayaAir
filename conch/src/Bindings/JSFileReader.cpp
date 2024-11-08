@@ -340,7 +340,10 @@ namespace laya
             readyState = DONE;
             onerror.call<void>(jsbind::toLocal(this), p_pszError);
         }
-        onloadend.call<void>(jsbind::toLocal(this));
+        if (onloadend.isValid())
+        {
+            onloadend.call<void>(jsbind::toLocal(this));
+        }
         m_pszError = 0;
         readyState = EMPTY;
         m_hFileObject.reset();	//完成后，要把对File的引用去掉

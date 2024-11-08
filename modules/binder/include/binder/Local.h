@@ -2,10 +2,10 @@
 #define __JSBIND_LOCAL_H__
 
 #include <assert.h>
-#include <binder/JSVM_Types.h>
 #include <binder/Class.h>
-#include <binder/internal/Value.h>
+#include <binder/JSVM_Types.h>
 #include <binder/internal/Converter.h>
+#include <binder/internal/Value.h>
 
 namespace jsbind
 {
@@ -23,97 +23,18 @@ class Local
     {
         GET_ENV
         DEBUG_CHECK(isValid());
-        jsvm::ValueType valueType;
-        jsvm::Status status = jsvm::Typeof(env, handle_, &valueType);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        if (valueType == jsvm::ValueType::FUNCTION)
-        {
-            auto result = internal::v8_call(env, recv, handle_, args...);
-            return Converter<ReturnType>::ToCpp(result);
-        }
-        else
-        {
-            return ReturnType();
-        }
+        DEBUG_CHECK(isFunction());
+        auto result = internal::v8_call(env, recv, handle_, args...);
+        return Converter<ReturnType>::ToCpp(result);
     }
     template <typename ReturnType, typename... Args> ReturnType call(jsvm::Value recv, const Args &...args) const
     {
         GET_ENV
-            DEBUG_CHECK(isValid());
-        jsvm::ValueType valueType;
-        jsvm::Status status = jsvm::Typeof(env, handle_, &valueType);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        if (valueType == jsvm::ValueType::FUNCTION)
-        {
-            auto result = internal::v8_call(env, recv, handle_, args...);
-            return Converter<ReturnType>::ToCpp(result);
-        }
-        else
-        {
-            return ReturnType();
-        }
-    }
-    /*template <typename ClassType, typename ReturnType, typename... Args>
-    ReturnType call(ClassType *recv, const Args &...args)
-    {
-        GET_ENV
-
-        ClassRegistry<ClassType> &classRegistry =
-            ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
-        auto objectRegistry = classRegistry.getObjectRegistry(recv);
-        DEBUG_CHECK(objectRegistry != nullptr);
-        jsvm::Value resultRecv;
-        jsvm::Status status;
-        status = jsvm::GetReferenceValue(env, objectRegistry->objectRef_, &resultRecv);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-
-        //return call<ClassType, ReturnType>(env, result, args...);
         DEBUG_CHECK(isValid());
-        jsvm::ValueType valueType;
-        status = jsvm::Typeof(env, handle_, &valueType);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        if (valueType == jsvm::ValueType::FUNCTION)
-        {
-            auto result = internal::v8_call(env, resultRecv, handle_, args...);
-            return Converter<ReturnType>::ToCpp(result);
-        }
-        else
-        {
-            return ReturnType();
-        }
+        DEBUG_CHECK(isFunction());
+        auto result = internal::v8_call(env, recv, handle_, args...);
+        return Converter<ReturnType>::ToCpp(result);
     }
-    template <typename ClassType, typename ReturnType, typename... Args>
-    ReturnType call(ClassType* recv, const Args &...args) const
-    {
-        GET_ENV
-
-            ClassRegistry<ClassType>& classRegistry =
-            ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
-        auto objectRegistry = classRegistry.getObjectRegistry(recv);
-        DEBUG_CHECK(objectRegistry != nullptr);
-        jsvm::Value resultRecv;
-        jsvm::Status status;
-        status = jsvm::GetReferenceValue(env, objectRegistry->objectRef_, &resultRecv);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-
-        //return call<ClassType, ReturnType>(env, result, args...);
-
-        DEBUG_CHECK(isValid());
-        jsvm::ValueType valueType;
-        status = jsvm::Typeof(env, handle_, &valueType);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        if (valueType == jsvm::ValueType::FUNCTION)
-        {
-            auto result = internal::v8_call(env, resultRecv, handle_, args...);
-            return Converter<ReturnType>::ToCpp(result);
-        }
-        else
-        {
-            return ReturnType();
-        }
-
-
-    }*/
     Local operator[](const std::string &key) const;
 
     jsvm::Value getHandle() const
@@ -126,167 +47,139 @@ class Local
     }
     inline bool isUndefined() const
     {
-        DEBUG_CHECK(isValid());
-        return internal::isUndefined(this->handle_);
+        return isValid() && internal::isUndefined(this->handle_);
     }
 
     inline bool isNull() const
     {
-        DEBUG_CHECK(isValid());
-        return internal::isNull(this->handle_);
+        return isValid() && internal::isNull(this->handle_);
     }
 
     inline bool isBool() const
     {
-        DEBUG_CHECK(isValid());
-        return internal::isBool(this->handle_);
+        return isValid() && internal::isBool(this->handle_);
     }
 
     inline bool isNumber() const
     {
-        DEBUG_CHECK(isValid());
-        return internal::isNumber(this->handle_);
+        return isValid() && internal::isNumber(this->handle_);
     }
 
     inline bool isString() const
     {
-        DEBUG_CHECK(isValid());
-        return internal::isString(this->handle_);
+        return isValid() && internal::isString(this->handle_);
     }
 
     inline bool isObject() const
     {
-        DEBUG_CHECK(isValid());
-        return internal::isObject(this->handle_);
+        return isValid() && internal::isObject(this->handle_);
     }
 
     inline bool isArray() const
     {
-        DEBUG_CHECK(isValid());
-        return internal::isArray(this->handle_);
+        return isValid() && internal::isArray(this->handle_);
     }
 
     inline bool isFunction() const
     {
-        DEBUG_CHECK(isValid());
-        return internal::isFunction(this->handle_);
+        return isValid() && internal::isFunction(this->handle_);
     }
 
     inline bool isError() const
     {
-        DEBUG_CHECK(isValid());
-        return internal::isError(this->handle_);
+        return isValid() && internal::isError(this->handle_);
     }
 
     inline bool isArrayBuffer() const
     {
-        DEBUG_CHECK(isValid());
-        return internal::isArrayBuffer(this->handle_);
+        return isValid() && internal::isArrayBuffer(this->handle_);
     }
 
     inline bool isArrayBufferView() const
     {
-        DEBUG_CHECK(isValid());
-        return internal::isArrayBufferView(this->handle_);
+        return isValid() && internal::isArrayBufferView(this->handle_);
     }
 
     inline bool isTypedArray() const
     {
-        DEBUG_CHECK(isValid());
-        return internal::isTypedArray(this->handle_);
+        return isValid() && internal::isTypedArray(this->handle_);
     }
 
     inline bool isDataView() const
     {
-        DEBUG_CHECK(isValid());
-        return internal::isDataView(this->handle_);
+        return isValid() && internal::isDataView(this->handle_);
     }
     inline bool isDate() const
     {
-        DEBUG_CHECK(isValid());
-        return internal::isDate(this->handle_);
+        return isValid() && internal::isDate(this->handle_);
     }
 
     static inline bool isUndefined(jsvm::Value value)
     {
-        DEBUG_CHECK(value != nullptr);
-        return internal::isUndefined(value);
+        return value != nullptr && internal::isUndefined(value);
     }
     static inline bool isNull(jsvm::Value value)
     {
-        DEBUG_CHECK(value != nullptr);
-        return internal::isNull(value);
+        return value != nullptr && internal::isNull(value);
     }
 
     static inline bool isBool(jsvm::Value value)
     {
-        DEBUG_CHECK(value != nullptr);
-        return internal::isBool(value);
+        return value != nullptr && internal::isBool(value);
     }
 
     static inline bool isNumber(jsvm::Value value)
     {
-        DEBUG_CHECK(value != nullptr);
-        return internal::isNumber(value);
+        return value != nullptr && internal::isNumber(value);
     }
 
     static inline bool isString(jsvm::Value value)
     {
-        DEBUG_CHECK(value != nullptr);
-        return internal::isString(value);
+        return value != nullptr && internal::isString(value);
     }
 
     static inline bool isObject(jsvm::Value value)
     {
-        DEBUG_CHECK(value != nullptr);
-        return internal::isObject(value);
+        return value != nullptr && internal::isObject(value);
     }
 
     static inline bool isArray(jsvm::Value value)
     {
-        DEBUG_CHECK(value != nullptr);
-        return internal::isArray(value);
+        return value != nullptr && internal::isArray(value);
     }
 
     static inline bool isFunction(jsvm::Value value)
     {
-        DEBUG_CHECK(value != nullptr);
-        return internal::isFunction(value);
+        return value != nullptr && internal::isFunction(value);
     }
 
     static inline bool isError(jsvm::Value value)
     {
-        DEBUG_CHECK(value != nullptr);
-        return internal::isError(value);
+        return value != nullptr && internal::isError(value);
     }
 
     static inline bool isArrayBuffer(jsvm::Value value)
     {
-        DEBUG_CHECK(value != nullptr);
-        return internal::isArrayBuffer(value);
+        return value != nullptr && internal::isArrayBuffer(value);
     }
 
     static inline bool isArrayBufferView(jsvm::Value value)
     {
-        DEBUG_CHECK(value != nullptr);
-        return internal::isArrayBufferView(value);
+        return value != nullptr && internal::isArrayBufferView(value);
     }
 
     static inline bool isTypedArray(jsvm::Value value)
     {
-        DEBUG_CHECK(value != nullptr);
-        return internal::isTypedArray(value);
+        return value != nullptr && internal::isTypedArray(value);
     }
 
     static inline bool isDataView(jsvm::Value value)
     {
-        DEBUG_CHECK(value != nullptr);
-        return internal::isDataView(value);
+        return value != nullptr && internal::isDataView(value);
     }
     static inline bool isDate(jsvm::Value value)
     {
-        DEBUG_CHECK(value != nullptr);
-        return internal::isDate(value);
+        return value != nullptr && internal::isDate(value);
     }
 
     template <typename T> T as() const
@@ -297,37 +190,16 @@ class Local
     }
     template <typename T> bool is()
     {
-        DEBUG_CHECK(isValid());
         GET_ENV
-        return Converter<T>::is(handle_);
+        return isValid() && Converter<T>::is(handle_);
     }
-
-
-  private:
-    /*template <typename ClassType, typename ReturnType, typename... Args>
-    ReturnType call(jsvm::Env env, jsvm::Value recv, const Args &...args) const
-    {
-        DEBUG_CHECK(isValid());
-        jsvm::ValueType valueType;
-        jsvm::Status status = jsvm::Typeof(env, handle_, &valueType);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        if (valueType == jsvm::ValueType::FUNCTION)
-        {
-            auto result = internal::v8_call(env, recv, handle_, args...);
-            return Converter<ReturnType>::ToCpp(result);
-        }
-        else
-        {
-            return ReturnType();
-        }
-    }*/
 
   private:
     jsvm::Value handle_ = nullptr;
 };
 template <> class Converter<Local>
 {
-public:
+  public:
     static Local ToCpp(jsvm::Value value)
     {
         return Local(value);

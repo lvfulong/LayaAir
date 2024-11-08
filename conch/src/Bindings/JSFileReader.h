@@ -16,7 +16,14 @@ namespace laya
             {return (pfn.getHandle());} \
             void Set_##pfn( jsvm::Value p_pfn)  \
             {   \
-                pfn = jsbind::Persistent(p_pfn);    \
+                if (jsbind::Local::isNull(p_pfn)) \
+                { \
+                    pfn.reset(); \
+                } \
+                else \
+                { \
+                    pfn = jsbind::Persistent(p_pfn);    \
+                } \
             }
 
     class JsFileReader
@@ -91,7 +98,10 @@ namespace laya
         void OnStart()
         {
             readyState = LOADING;
-            onloadstart.call<void>(jsbind::toLocal(this));
+            if (onloadstart.isValid())
+            {
+                onloadstart.call<void>(jsbind::toLocal(this));
+            }
         }
         void OnProgress(size_t p_iSaved, size_t p_iTotal)
         {
