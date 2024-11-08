@@ -453,7 +453,8 @@ namespace laya
 
         //v8::Isolate* isolate = v8::Isolate::GetCurrent();
 	    //v8::HandleScope scope(isolate);
-        jsbind::Object context(nullptr);//TODO
+        GET_ENV
+        jsbind::Object context(jsbind::global());
         ///Module global(context.isolate());
         JSCanvasRenderingContext2D::exportJS(context);
         JsFile::exportJS(context);
@@ -558,6 +559,7 @@ namespace laya
  #if defined(PHYSX)
         JSLayaConchPhysX::exportJS(context);
 #endif
+        context.Register(env, nullptr, nullptr);
 	}
     void JSGlobalDisExportC() {
         //FontManager::deleteInstance();

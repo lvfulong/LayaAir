@@ -107,6 +107,7 @@ namespace jsvm
 /*JSVM_EXTERN*/ Status CreateExternal(Env env, void *data, Finalize finalizeCb, void *finalizeHint, Value *result);
 /*JSVM_EXTERN*/ Status GetValueExternal(Env env, Value value, void **result);
 /*JSVM_EXTERN*/ Status AddFinalizer(Env env, Value jsObject, void* finalizeData, Finalize finalizeCb, void* finalizeHint, Ref* result);
+Status ReportException(Env env);
 } // namespace jsvm
 //#include "JSVM_inline.h"
 #endif

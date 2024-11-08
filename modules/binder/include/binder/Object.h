@@ -248,7 +248,7 @@ class Object
         //     v8::PropertyAttribute(v8::ReadOnly | v8::DontDelete));
         return *this;
     }
-    template <typename T> Object &class_(std::string_view name, jsbind::class_<T> &cl)
+    template <typename T> Object &class_(const char* name, jsbind::class_<T> &cl)
     {
         /*v8::HandleScope scope(isolate());
         v8::Local<v8::String> name_string =
@@ -259,7 +259,9 @@ class Object
                 cl.js_function_template()->GetFunction(isolate()->GetCurrentContext()).ToLocalChecked())
             .FromJust();*/
         GET_ENV
-        jsvm::SetNamedProperty(env, object_, name.data(), cl.ctor_);
+        cl.Register(env, object_, name);
+        //GET_ENV
+        //jsvm::SetNamedProperty(env, object_, name.data(), cl.ctor_);
         return *this;
     }
 
@@ -334,10 +336,16 @@ class Object
         propertyDescriptorVector_.push_back(descriptor);
         return *this;
     }
-    /*void export()
+    jsvm::Value Register(jsvm::Env env, jsvm::Value exports, const char* className)
     {
-        //todos
-    }*/
+        jsvm::DefineProperties(env, object_, propertyDescriptorVector_.size(), propertyDescriptorVector_.data());
+
+        if (exports != nullptr && className != nullptr)
+        {
+            jsvm::SetNamedProperty(env, exports, className, object_);
+        }
+        return exports;
+    }
   private:
     std::vector<jsvm::PropertyDescriptor> propertyDescriptorVector_;
     jsvm::Value object_ = nullptr;

@@ -460,18 +460,45 @@ Status NewInstance(Env env, Value constructor, size_t argc, const Value *argv, V
  Status DefineClass(Env env, const char *utf8name, size_t length, Callback constructor,
                                           size_t propertyCount, const PropertyDescriptor *properties, Value *result)
 {
-    napi_property_descriptor napi_properties;
-    napi_properties.utf8name = properties->utf8name;
-    napi_properties.name = properties->name;
-    napi_properties.method = properties->method;
-    napi_properties.getter = properties->getter;
-    napi_properties.setter = properties->setter;
-    napi_properties.value = properties->value;
-    napi_properties.attributes = static_cast<napi_property_attributes>(properties->attributes);
-    napi_properties.data = properties->data;
+     std::vector<napi_property_descriptor> napi_properties;
+     napi_properties.reserve(propertyCount);
+     for (int i = 0; i < propertyCount; i++)
+     {
+        napi_property_descriptor  property;
+        property.utf8name = properties[i].utf8name;
+        property.name = properties[i].name;
+        property.method = properties[i].method;
+        property.getter = properties[i].getter;
+        property.setter = properties[i].setter;
+        property.value = properties[i].value;
+        property.attributes = static_cast<napi_property_attributes>(properties[i].attributes);
+        property.data = properties[i].data;
+        napi_properties.push_back(property);
+     }
+   
     return static_cast<Status>(
-        napi_define_class(env, utf8name, length, constructor, nullptr, propertyCount, &napi_properties, result));
+        napi_define_class(env, utf8name, length, constructor, nullptr, propertyCount, napi_properties.data(), result));
 }
+Status DefineProperties(Env env, Value object, size_t propertyCount, const PropertyDescriptor* properties)
+ {
+    std::vector<napi_property_descriptor> napi_properties;
+    napi_properties.reserve(propertyCount);
+    for (int i = 0; i < propertyCount; i++)
+    {
+        napi_property_descriptor  property;
+        property.utf8name = properties[i].utf8name;
+        property.name = properties[i].name;
+        property.method = properties[i].method;
+        property.getter = properties[i].getter;
+        property.setter = properties[i].setter;
+        property.value = properties[i].value;
+        property.attributes = static_cast<napi_property_attributes>(properties[i].attributes);
+        property.data = properties[i].data;
+        napi_properties.push_back(property);
+    }
+    return static_cast<Status>(
+        napi_define_properties(env, object, propertyCount, napi_properties.data()));
+ }
 Status CallFunction(Env env, Value recv, Value func, size_t argc, const Value *argv,
                                            Value *result)
 {
@@ -483,6 +510,7 @@ Status CallFunction(Env env, Value recv, Value func, size_t argc, const Value *a
 }
 Status Typeof(Env env, Value value, ValueType *result)
 {
+
     napi_valuetype napi_result;
     auto status = napi_typeof(env, value, &napi_result);
     *result = static_cast<ValueType>(napi_result);
@@ -646,4 +674,146 @@ Status AddFinalizer(Env env, Value jsObject, void* finalizeData, Finalize finali
 {
     return static_cast<Status>(napi_add_finalizer(env, jsObject, finalizeData, finalizeCb,finalizeHint, result));
 }
+const char* ToCString(const v8::String::Utf8Value& value)
+{
+    return *value ? *value : "<string conversion failed>";
+}
+void ReportException(v8::Isolate* isolate, v8::Local<v8::Value> e)
+{
+    v8::HandleScope handle_scope(isolate);
+    //v8::String::Utf8Value exception(isolate, try_catch->Exception());
+    v8::String::Utf8Value exception(isolate, e);
+    const char* exception_string = ToCString(exception);
+    v8::Local<v8::Message> message;// = try_catch->Message();
+    static char errInfo[2048];
+    int curpos = 0;
+    //if (message.IsEmpty())
+    if (true)
+    {
+        // V8 didn't provide any extra information about this error; just
+        // print the exception.
+        int off = snprintf(errInfo, sizeof(errInfo), "%s\n", exception_string);
+#if 0
+        // 通知全局错误处理脚本
+        std::string kBuf = "if(conch.onerror){conch.onerror('";
+        kBuf += UrlEncode(exception_string);
+        kBuf += "','undefined','undefined','undefined','";
+        kBuf += UrlEncode(exception_string);
+        kBuf += "');};";
+        __JSRun::Run(kBuf.c_str());
+#endif
+    }
+#if 0
+    else
+    {
+        auto ctx = isolate->GetCurrentContext();
+        v8::String::Utf8Value fnstr(isolate, message->GetScriptResourceName());
+        const char* filename_string = ToCString(fnstr);
+        v8::MaybeLocal<v8::String> source_line_maybe = message->GetSourceLine(ctx);
+        v8::String::Utf8Value srclinestr(isolate, source_line_maybe.ToLocalChecked());
+        const char* sourceline_string = ToCString(srclinestr);
+        int linenum = message->GetLineNumber(ctx).FromJust();
+        int start = message->GetStartColumn(ctx).FromMaybe(0);
+        int end = message->GetEndColumn(ctx).FromMaybe(0);
+        v8::ScriptOrigin origin = message->GetScriptOrigin();
+        int lineoff = origin.LineOffset();
+        int startcol = origin.ColumnOffset();
+        if (start > startcol)
+        {
+            start -= startcol;
+            end -= startcol;
+        }
+
+        // 错误行可能非常长，只取一部分
+        char errLineSrc[128 + 1];
+        if (strlen(sourceline_string) > 128)
+        {
+            int startoff = start > 50 ? (start - 50) : 0;
+            start -= startoff;
+            end -= startoff;
+            if (end >= 128)
+                end = 127;
+
+            memcpy(errLineSrc, sourceline_string + startoff, 128);
+            errLineSrc[128] = '\0';
+            sourceline_string = errLineSrc;
+        }
+        curpos += snprintf(errInfo, sizeof(errInfo), "%s:%i:\n%s\n%s\n", filename_string, linenum, exception_string,
+            sourceline_string);
+        // 打印具体哪一行，哪一列
+        if (curpos < sizeof(errInfo))
+        {
+            int st = curpos;
+            int srclen = snprintf(errInfo + curpos, sizeof(errInfo) - curpos, "%s\n", sourceline_string);
+            curpos += srclen;
+            if (curpos < sizeof(errInfo))
+            {
+                for (int si = 0; si < srclen; si++)
+                {
+                    char& c = errInfo[st + si];
+                    if (c != ' ' && c != '\t' && c != '\r')
+                        c = ' ';
+                    if (si >= start && si <= end)
+                        c = '^';
+                }
+            }
+        }
+        curpos += snprintf(errInfo + curpos, sizeof(errInfo) - curpos, "\n");
+        v8::Local<v8::Value> stack_trace_string;
+        if (try_catch->StackTrace(ctx).ToLocal(&stack_trace_string) && stack_trace_string->IsString() &&
+            v8::Local<v8::String>::Cast(stack_trace_string)->Length() > 0)
+        {
+            v8::String::Utf8Value stack_trace(isolate, stack_trace_string);
+            const char* stack_trace_string = ToCString(stack_trace);
+            if (curpos < sizeof(errInfo))
+            {
+                curpos += snprintf(errInfo + curpos, sizeof(errInfo) - curpos, "%s", stack_trace_string);
+            }
+        }
+#endif
+        // 通知全局错误处理脚本
+#if 0
+        std::string kBuf = "if(conch.onerror){conch.onerror('";
+        kBuf += UrlEncode(exception_string);
+        kBuf += "','";
+        kBuf += UrlEncode(filename_string);
+        kBuf += "','";
+        // kBuf += std::to_string(linenum);
+        std::ostringstream os;
+        os << linenum;
+        kBuf += os.str();
+        kBuf += "','";
+        kBuf += "undefined";
+        kBuf += "','";
+        kBuf += UrlEncode(errInfo);
+        kBuf += "');};";
+        __JSRun::Run(kBuf.c_str());
+ }
+#endif 
+   
+
+    //if (gbAlertException)
+    {
+        //JSAlert(errInfo);
+    }
+    LOGE("==JSERROR:\n%s", errInfo);
+}
+Status ReportException(Env env)
+{
+    bool isExceptionPending;
+    auto status = napi_is_exception_pending(env, &isExceptionPending);
+    DEBUG_CHECK(status == napi_ok);
+
+    if (isExceptionPending)
+    {
+        napi_value result = nullptr;
+        status = napi_get_and_clear_last_exception(env, &result);
+        DEBUG_CHECK(status == napi_ok);
+        v8::Local<v8::Value> val = v8impl::V8LocalValueFromJsValue(result);
+        ReportException(env->isolate,val);
+    }
+
+    return Status::OK; // todo
+}
+
 } // namespace jsvm

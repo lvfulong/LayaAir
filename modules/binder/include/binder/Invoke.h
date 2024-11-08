@@ -16,8 +16,8 @@ template <typename T, typename Tuple, size_t... Seq>
 T *tuple_call_class_constructor(jsvm::Env env, jsvm::CallbackInfo info, std::index_sequence<Seq...>)
 {
 
-    size_t argc = 0;
-    jsvm::Value argv[128];
+    size_t argc = sizeof...(Seq);
+    jsvm::Value argv[sizeof...(Seq) + 1];
     jsvm::Value _this;
     void *data;
     jsvm::GetCbInfo(env, info, &argc, argv, &_this, &data);
@@ -71,7 +71,7 @@ typename std::enable_if<internal::is_void_return<Func>::value, jsvm::Value>::typ
 template <typename ReturnType, typename... Args> jsvm::Value InvokeMethodStatic(jsvm::Env env, jsvm::CallbackInfo info)
 {
 
-    size_t argc;
+    size_t argc = sizeof...(Args);
     jsvm::Value argv[sizeof...(Args) + 1];
     jsvm::Value _this;
     void *data;
@@ -117,7 +117,7 @@ jsvm::Value InvokeGlobalMethodOptionalOverride(jsvm::Env env, jsvm::CallbackInfo
 template <typename ClassType, typename ReturnType, typename... Args>
 jsvm::Value InvokeClassMethod(jsvm::Env env, jsvm::CallbackInfo info)
 {
-    size_t argc;
+    size_t argc = sizeof...(Args);
     jsvm::Value argv[sizeof...(Args) + 1];
     jsvm::Value _this;
     void *data;
@@ -144,7 +144,7 @@ jsvm::Value InvokeClassMethod(jsvm::Env env, jsvm::CallbackInfo info)
 template <typename ClassType, typename ReturnType, typename... Args>
 jsvm::Value InvokeClassMethodOptionalOverride(jsvm::Env env, jsvm::CallbackInfo info)
 {
-    size_t argc;
+    size_t argc = sizeof...(Args);
     jsvm::Value argv[sizeof...(Args) + 1];
     jsvm::Value _this;
     void *data;
@@ -220,7 +220,7 @@ template <typename ClassType, typename PropertyType>
 jsvm::Value InvokeClassSetter(jsvm::Env env, jsvm::CallbackInfo info)
 {
 
-    size_t argc;
+    size_t argc = 1;
     jsvm::Value args[1];
     jsvm::Value js_this;
     void *data;
@@ -238,7 +238,7 @@ jsvm::Value InvokeClassSetter(jsvm::Env env, jsvm::CallbackInfo info)
 template <typename ClassType, typename PropertyType>
 jsvm::Value InvokeClassSetterOptionalOverride(jsvm::Env env, jsvm::CallbackInfo info)
 {
-    size_t argc;
+    size_t argc = 1;
     jsvm::Value args[1];
     jsvm::Value js_this;
     void *data;
@@ -269,7 +269,7 @@ template <typename PropertyType> jsvm::Value InvokeClassGetterStatic(jsvm::Env e
 
 template <typename PropertyType> jsvm::Value InvokeClassSetterStatic(jsvm::Env env, jsvm::CallbackInfo info)
 {
-    size_t argc;
+    size_t argc = 1;
     jsvm::Value args[1];
     jsvm::Value js_this;
     void *data;
@@ -299,7 +299,7 @@ jsvm::Value InvokeClassGetterField(jsvm::Env env, jsvm::CallbackInfo info)
 template <typename ClassType, typename PropertyType>
 jsvm::Value InvokeClassSetterField(jsvm::Env env, jsvm::CallbackInfo info)
 {
-    size_t argc;
+    size_t argc = 1;
     jsvm::Value args[1];
     jsvm::Value js_this;
     void *data;

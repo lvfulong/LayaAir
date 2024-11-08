@@ -72,7 +72,7 @@ struct ObjectRegistry
 };
 class ClassRegistryBase
 {
-  protected:
+public:
     std::unordered_map<void *, ObjectRegistry> objects_;
     // std::vector<ClassRegistryBase *> bases_;
     // std::vector<ClassRegistryBase *> derivatives_;
@@ -132,13 +132,13 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
         assert(constructorFunctionMap_.find(numPara) == constructorFunctionMap_.end());
         constructorFunctionMap_.insert(std::make_pair(numPara, func));
     }
-    ClassType *ConstructObject(uint32_t numPara, jsvm::Value *info)
+    ClassType *ConstructObject( uint32_t numPara, jsvm::Env env, jsvm::CallbackInfo info)
     {
         auto it = constructorFunctionMap_.find(numPara);
         if (it != constructorFunctionMap_.end())
         {
             // info.GetIsolate()->AdjustAmountOfExternalAllocatedMemory(static_cast<int64_t>(sizeof(ClassType)));
-            return (it->second)(info);
+            return (it->second)(env, info);
         }
         /*else
         {
@@ -271,7 +271,56 @@ class ClassRegistryManager
     }
     static std::unordered_map<std::string, ClassRegistryBase *> classRegistryMap_;
 };
+template <typename ClassType> static jsvm::Value New(jsvm::Env env, jsvm::CallbackInfo info)
+{
 
+    jsvm::Value newTarget;
+    jsvm::GetNewTarget(env, info, &newTarget);
+    // if (newTarget != nullptr)
+    {
+        // new MyObject(...)
+        size_t argc = 16;
+        jsvm::Value args[16];
+        jsvm::Value jsThis;
+        jsvm::GetCbInfo(env, info, &argc, args, &jsThis, nullptr);
+        DEBUG_CHECK(argc <= 16);
+        /*double value = 0.0;
+        napi_valuetype valuetype;
+        napi_typeof(env, args[0], &valuetype);
+        if (valuetype != napi_undefined) {
+            napi_get_value_double(env, args[0], &value);
+        }*/
+        ClassRegistry<ClassType>& classRegistry = ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
+        //ClassType* object = classRegistry.ConstructObject(env, argc, args);
+        ClassType* object = classRegistry.ConstructObject(argc, env , info);
+        // v8::Global<v8::Object> pobj(isolate, obj);
+        // pobj.SetWeak(this_, WeakCallback<ClassType>, v8::WeakCallbackType::kInternalFields);
+
+        // MyObject *obj = new MyObject(value);
+
+        jsvm::Ref objectRef_;
+        jsvm::Wrap(env, jsThis, reinterpret_cast<void*>(object), internal::destructor<ClassType>, nullptr, &objectRef_);
+        classRegistry.objects_.emplace(object, ObjectRegistry{ objectRef_, true });
+        return jsThis;
+    }
+#if 0
+    else
+    {
+        // ʹ��`MyObject(...)`���÷�ʽ
+        size_t argc = 1;
+        napi_value args[1];
+        napi_get_cb_info(env, info, &argc, args, nullptr, nullptr);
+
+        napi_value cons;
+        napi_get_reference_value(env, g_ref, &cons);
+        napi_value instance;
+        napi_new_instance(env, cons, argc, args, &instance);
+
+        return instance;
+
+        }
+#endif
+}
 template <typename ClassType> class class_
 {
   public:
@@ -367,7 +416,7 @@ template <typename ClassType> class class_
         descriptor.getter = NULL;
         descriptor.setter = NULL;
         descriptor.value = NULL;
-        descriptor.attributes = jsvm::PropertyAttributes::DEFAULT;
+        descriptor.attributes = jsvm::PropertyAttributes::STATIC;
         descriptor.data = data;
         propertyDescriptorVector_.push_back(descriptor);
         return *this;
@@ -460,62 +509,19 @@ template <typename ClassType> class class_
         classRegistry_.js_function_template()->Inherit(baseClassRegistry.class_function_template());*/
         return *this;
     }
-    void exports()
+    //template <typename ClassType>
+    jsvm::Value Register(jsvm::Env env, jsvm::Value exports, const char* className)
     {
-        // todo
+        jsvm::Value cons;
+        jsvm::DefineClass(env, className, NAPI_AUTO_LENGTH, New<ClassType>, propertyDescriptorVector_.size(), propertyDescriptorVector_.data(), &cons);
+
+        //jsvm::CreateReference(env, cons, 1, &g_ref);
+        jsvm::SetNamedProperty(env, exports, className, cons);
+        return exports;
     }
 };
 
-template <typename ClassType> static jsvm::Value New(jsvm::Env env, jsvm::CallbackInfo info)
-{
 
-    jsvm::Value newTarget;
-    jsvm::GetNewTarget(env, info, &newTarget);
-    // if (newTarget != nullptr)
-    {
-        // new MyObject(...)
-        size_t argc = 1;
-        jsvm::Value args[1];
-        jsvm::Value jsThis;
-        jsvm::GetCbInfo(env, info, &argc, args, &jsThis, nullptr);
-
-        /*double value = 0.0;
-        napi_valuetype valuetype;
-        napi_typeof(env, args[0], &valuetype);
-        if (valuetype != napi_undefined) {
-            napi_get_value_double(env, args[0], &value);
-        }*/
-        ClassRegistry<ClassType>& classRegistry = ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
-        ClassType *object = classRegistry.ConstructObject(argc, args);
-
-        // v8::Global<v8::Object> pobj(isolate, obj);
-        // pobj.SetWeak(this_, WeakCallback<ClassType>, v8::WeakCallbackType::kInternalFields);
-
-        // MyObject *obj = new MyObject(value);
-
-        jsvm::Ref objectRef_;
-        jsvm::Wrap(env, jsThis, reinterpret_cast<void *>(object), internal::destructor<ClassType>, nullptr, &objectRef_);
-        classRegistry.objects_.emplace(object, ObjectRegistry{objectRef_, true});
-        return jsThis;
-    }
-#if 0
-    else 
-    {
-        // ʹ��`MyObject(...)`���÷�ʽ
-        size_t argc = 1;
-        napi_value args[1];
-        napi_get_cb_info(env, info, &argc, args, nullptr, nullptr);
-
-        napi_value cons;
-        napi_get_reference_value(env, g_ref, &cons);
-        napi_value instance;
-        napi_new_instance(env, cons, argc, args, &instance);
-
-        return instance;
-
-    }
-#endif
-}
 
 /*   v8::HandleScope scope(isolate_);
 
