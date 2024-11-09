@@ -2,6 +2,7 @@
 #define __JSBIND_UTILITY_H__
 
 #include <assert.h>
+#include <functional>
 #include <map>
 #include <string>
 #include <utils/Log.h>
@@ -241,6 +242,58 @@ template <typename T> constexpr type_info type_id()
     }
 
     return type_info(name);
+}
+
+namespace internal
+{
+extern void addDeinitializer(std::function<void()> func);
+template <typename ClassType> static void destructor(jsvm::Env env, void *nativeObject, void * /*finalize_hint*/);
+template <typename ClassType> void raw_destructor(ClassType *pointer)
+{
+    delete pointer;
+}
+
+template <typename T> struct remove_class;
+template <typename C, typename R, typename... A> struct remove_class<R (C::*)(A...)>
+{
+    using type = R(A...);
+};
+template <typename C, typename R, typename... A> struct remove_class<R (C::*)(A...) const>
+{
+    using type = R(A...);
+};
+template <typename C, typename R, typename... A> struct remove_class<R (C::*)(A...) volatile>
+{
+    using type = R(A...);
+};
+template <typename C, typename R, typename... A> struct remove_class<R (C::*)(A...) const volatile>
+{
+    using type = R(A...);
+};
+
+template <typename LambdaType> using LambdaSignature = typename remove_class<decltype(&LambdaType::operator())>::type;
+} // end namespace internal
+
+// requires captureless lambda because implicitly coerces to function pointer
+template <typename LambdaType> internal::LambdaSignature<LambdaType> *optional_override(const LambdaType &fp)
+{
+    return fp;
+}
+
+template <typename Signature> Signature *select_overload(Signature *fn)
+{
+    return fn;
+}
+
+template <typename Signature, typename ClassType> auto select_overload(Signature(ClassType::*fn)) -> decltype(fn)
+{
+    return fn;
+}
+
+template <typename ClassType, typename ReturnType, typename... Args>
+auto select_const(ReturnType (ClassType::*method)(Args...) const) -> decltype(method)
+{
+    return method;
 }
 } // namespace jsbind
 
