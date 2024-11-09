@@ -227,7 +227,7 @@ template <> class Converter<int64_t>
         jsvm::ValueType valueType;
         jsvm::Status status = jsvm::Typeof(env, value, &valueType);
         DEBUG_CHECK(status == jsvm::Status::OK);
-        if (valueType != jsvm::ValueType::BIGINT)
+        if (valueType == jsvm::ValueType::Null || valueType == jsvm::ValueType::UNDEFINED)
         {
             return 0;
         }
@@ -439,6 +439,14 @@ template <> class Converter<std::string>
   public:
     static std::string ToCpp(jsvm::Value value)
     {
+        GET_ENV
+        jsvm::ValueType valueType;
+        jsvm::Status status = jsvm::Typeof(env, value, &valueType);
+        DEBUG_CHECK(status == jsvm::Status::OK);
+        if (valueType == jsvm::ValueType::Null || valueType == jsvm::ValueType::UNDEFINED || valueType != jsvm::ValueType::STRING)
+        {
+            return "";
+        }
         return internal::getStringUtf8(value);
     }
     static jsvm::Value ToJs(const std::string &value, bool callDestructor = true)
@@ -475,6 +483,14 @@ template <> class Converter<const char *>
     using from_type = convertible_string;
     static from_type ToCpp(jsvm::Value value)
     {
+        GET_ENV
+        jsvm::ValueType valueType;
+        jsvm::Status status = jsvm::Typeof(env, value, &valueType);
+        DEBUG_CHECK(status == jsvm::Status::OK);
+        if (valueType == jsvm::ValueType::Null || valueType == jsvm::ValueType::UNDEFINED || valueType != jsvm::ValueType::STRING)
+        {
+            return "";
+        }
         return from_type(internal::getStringUtf8(value));
     }
     static jsvm::Value ToJs(std::string_view value, bool callDestructor = true)
