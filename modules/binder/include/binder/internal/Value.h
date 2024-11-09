@@ -98,7 +98,7 @@ inline int64_t getInt64Noloss(jsvm::Value value)
     jsvm::Status status;
     bool lossless;
     status = jsvm::GetValueBigintInt64(env, value, &result, &lossless);
-    DEBUG_CHECK(lossless == false);
+    DEBUG_CHECK(lossless == true);
     DEBUG_CHECK(status == jsvm::Status::OK);
     return result;
 }
@@ -117,7 +117,7 @@ inline uint64_t getUint64Noloss(jsvm::Value value)
     jsvm::Status status;
     bool lossless;
     status = jsvm::GetValueBigintUint64(env, value, &result, &lossless);
-    DEBUG_CHECK(lossless == false);
+    DEBUG_CHECK(lossless == true);
     DEBUG_CHECK(status == jsvm::Status::OK);
     return result;
 }
