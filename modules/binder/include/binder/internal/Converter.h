@@ -3,25 +3,24 @@
 
 #include "binder/JSVM.h"
 #include "binder/JSVM_Types.h"
-#include "binder/napi/js_native_api.h"
 #include "binder/internal/Value.h"
+#include "binder/napi/js_native_api.h"
 #include <assert.h>
 #include <binder/Utility.h>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
-//#include "binder/ArrayBuffer.h"
 
 namespace jsbind
 {
 
 namespace internal
 {
-//template <typename T> T convert_value_object_from_js(jsvm::Env env, jsvm::Value value);
+// template <typename T> T convert_value_object_from_js(jsvm::Env env, jsvm::Value value);
 
-//template <typename T> jsvm::Value convert_value_object_to_js(jsvm::Env env, const T &t);
-//template <typename T> jsvm::Value convert_value_object_to_js(jsvm::Env env, T *t);
+// template <typename T> jsvm::Value convert_value_object_to_js(jsvm::Env env, const T &t);
+// template <typename T> jsvm::Value convert_value_object_to_js(jsvm::Env env, T *t);
 template <class T> struct is_value_object;
 
 template <typename T>
@@ -34,13 +33,6 @@ struct is_wrapped_class : std::conjunction<std::is_class<T>, std::negation<inter
 // std::negation<detail::is_shared_ptr<T>>>
 {
 };
-
-/*template <> struct is_value_object<ArrayBuffer> : std::false_type
-{
-};
-template <> struct is_wrapped_class<ArrayBuffer> : std::false_type
-{
-};*/
 } // namespace internal
 
 template <typename ClassType> bool isWrappedClassOf();
@@ -50,9 +42,6 @@ template <typename ClassType> jsvm::Value wrapCppObject(ClassType *objectPointer
 template <typename T, typename Enable = void> class Converter;
 
 template <typename T> class value_object;
-
-
-
 
 template <typename T> class Converter<T, std::enable_if_t<std::is_enum<T>::value>>
 {
@@ -234,10 +223,14 @@ template <> class Converter<int64_t>
   public:
     static int64_t ToCpp(jsvm::Value value)
     {
-        // if (!value->IsNumber() || value->IsNullOrUndefined())
-        //{
-        // return 0;
-        //}
+        GET_ENV
+        jsvm::ValueType valueType;
+        jsvm::Status status = jsvm::Typeof(env, value, &valueType);
+        DEBUG_CHECK(status == jsvm::Status::OK);
+        if (valueType != jsvm::ValueType::BIGINT)
+        {
+            return 0;
+        }
         return internal::getInt64Noloss(value);
     }
     static jsvm::Value ToJs(int64_t value, bool callDestructor = true)
@@ -293,14 +286,14 @@ template <> class Converter<uint8_t>
     {
         return static_cast<uint8_t>(internal::getUint32(value));
     }
-    static jsvm::Value  ToJs(uint8_t value, bool callDestructor = true)
+    static jsvm::Value ToJs(uint8_t value, bool callDestructor = true)
     {
         return internal::makeUint32(static_cast<uint8_t>(value));
     }
-    //static bool is(v8::Local<v8::Value> p_vl)
+    // static bool is(v8::Local<v8::Value> p_vl)
     //{
-    //    return p_vl->IsUint32();
-    //}
+    //     return p_vl->IsUint32();
+    // }
 };
 template <> class Converter<const uint8_t &> : public Converter<uint8_t>
 {
@@ -385,7 +378,7 @@ template <> class Converter<float *>
 
 template <> class Converter<double>
 {
-public:
+  public:
     static double ToCpp(jsvm::Value value)
     {
         return internal::getDouble(value);
@@ -512,7 +505,7 @@ template <> class Converter<jsvm::Value>
 };
 template <> class Converter<void>
 {
-public:
+  public:
     static void ToCpp(jsvm::Value value)
     {
         return;
@@ -604,9 +597,6 @@ template <typename T, typename R> class __JsMap
     }
 };*/
 
-
-
-
 #if 0
 template <typename T> class Converter<std::unordered_set<T>>
 {
@@ -653,11 +643,11 @@ template <typename T, typename R> class Converter<const std::unordered_map<T, R>
 
 namespace internal
 {
-    template <class T> jsvm::Value ToJSValue(T t, bool callDestructor = true)
-    {
-        return Converter<T>::ToJs(t, callDestructor);
-    }
+template <class T> jsvm::Value ToJSValue(T t, bool callDestructor = true)
+{
+    return Converter<T>::ToJs(t, callDestructor);
 }
+} // namespace internal
 } // namespace jsbind
 
 #endif
