@@ -1,5 +1,5 @@
-#include <binder/JSBind.h>
 #include <binder/ArrayBuffer.h>
+#include <binder/JSBind.h>
 #include <binder/JSEnv.h>
 #include <binder/Local.h>
 #include <binder/internal/Converter.h>
@@ -37,6 +37,11 @@ ArrayBuffer::ArrayBuffer(uint8_t *inputBuffer, size_t length, size_t byteOffset,
     if (this->getType() == ArrayBuffer::DATA_VIEW)
     {
         // todo
+        DEBUG_CHECK(false);
+    }
+    else if (this->getType() == ArrayBuffer::ARRAY_BUFFER)
+    {
+        // do nothing
     }
     else
     {

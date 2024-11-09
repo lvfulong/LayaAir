@@ -2,8 +2,8 @@
 #define __JSBIND_ARRAYBUFFER_H_
 
 #include <binder/JSVM_Types.h>
-#include <binder/internal/Value.h>
 #include <binder/internal/Converter.h>
+#include <binder/internal/Value.h>
 
 namespace jsbind
 {
@@ -105,10 +105,10 @@ class ArrayBuffer
     Type type_ = ARRAY_BUFFER;
     jsvm::Value handle_ = nullptr;
 };
-//template <typename T, typename Enable = void> class Converter;
+// template <typename T, typename Enable = void> class Converter;
 template <> class Converter<ArrayBuffer>
 {
-public:
+  public:
     static ArrayBuffer ToCpp(jsvm::Value value)
     {
         return ArrayBuffer::Make(value);
@@ -122,10 +122,10 @@ public:
         return internal::isArrayBuffer(value) || internal::isArrayBufferView(value);
     }
 };
-template <> class Converter<const ArrayBuffer&> : public Converter<ArrayBuffer>
+template <> class Converter<const ArrayBuffer &> : public Converter<ArrayBuffer>
 {
 };
-template <> class Converter<ArrayBuffer&> : public Converter<ArrayBuffer>
+template <> class Converter<ArrayBuffer &> : public Converter<ArrayBuffer>
 {
 };
 
