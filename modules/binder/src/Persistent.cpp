@@ -6,8 +6,11 @@ Persistent::Persistent(jsvm::Value value)
 {
     GET_ENV
     jsvm::Status status;
-    status = jsvm::CreateReference(env, value, 1, &ref_);
-    DEBUG_CHECK(status == jsvm::Status::OK);
+    if (!internal::isNull(value) && !internal::isUndefined(value))
+    {
+        status = jsvm::CreateReference(env, value, 1, &ref_);
+        DEBUG_CHECK(status == jsvm::Status::OK);
+    }
 }
 
 Persistent::Persistent(const Persistent &that)
