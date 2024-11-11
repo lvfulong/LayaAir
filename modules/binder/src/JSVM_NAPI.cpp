@@ -674,6 +674,10 @@ Status AddFinalizer(Env env, Value jsObject, void* finalizeData, Finalize finali
 {
     return static_cast<Status>(napi_add_finalizer(env, jsObject, finalizeData, finalizeCb,finalizeHint, result));
 }
+Status CoerceToBool(Env env, Value value, Value* result)
+{
+    return static_cast<Status>(napi_coerce_to_bool(env, value, result));
+}
 const char* ToCString(const v8::String::Utf8Value& value)
 {
     return *value ? *value : "<string conversion failed>";

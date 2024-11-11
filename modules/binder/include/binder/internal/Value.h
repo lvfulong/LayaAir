@@ -23,20 +23,26 @@ inline jsvm::Value makeObject()
 inline bool getBool(jsvm::Value value)
 {
     GET_ENV
-    bool result;
     jsvm::Status status;
-    status = jsvm::GetValueBool(env, value, &result);
+    bool result;
+    jsvm::Value resultCoerce;
+    status = jsvm::CoerceToBool(env, value, &resultCoerce);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+    status = jsvm::GetValueBool(env, resultCoerce, &result);
     DEBUG_CHECK(status == jsvm::Status::OK);
     return result;
 }
 inline jsvm::Value makeBool(bool value)
 {
     GET_ENV
-    jsvm::Value result;
+    jsvm::Value resultUint32;
+    jsvm::Value resultBoolean;
     jsvm::Status status;
-    status = jsvm::CreateUint32(env, static_cast<uint32_t>(value), &result); // why not create bool ?????
+    status = jsvm::CreateUint32(env, static_cast<uint32_t>(value), &resultUint32); //  no create bool function
     DEBUG_CHECK(status == jsvm::Status::OK);
-    return result;
+    status = jsvm::CoerceToBool(env, resultUint32, &resultBoolean);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+    return resultBoolean;
 }
 inline double getDouble(jsvm::Value value)
 {
