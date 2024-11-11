@@ -73,8 +73,10 @@ template <typename T> class Converter<T, std::enable_if_t<internal::is_wrapped_c
     {
         // assert(!value.IsEmpty() && value->IsObject());
         GET_ENV
+        jsvm::Status status;
         T *obj;
-        jsvm::Unwrap(env, value, reinterpret_cast<void **>(&obj));
+        status = jsvm::Unwrap(env, value, reinterpret_cast<void **>(&obj));
+        DEBUG_CHECK(status == jsvm::Status::OK);
         return *obj;
     }
     static bool is(jsvm::Value value)
@@ -97,8 +99,10 @@ template <typename T> class Converter<T *, std::enable_if_t<internal::is_wrapped
     static T *ToCpp(jsvm::Value value)
     {
         GET_ENV
+        jsvm::Status status;
         T *obj;
-        jsvm::Unwrap(env, value, reinterpret_cast<void **>(&obj));
+        status = jsvm::Unwrap(env, value, reinterpret_cast<void **>(&obj));
+        DEBUG_CHECK(status == jsvm::Status::OK);
         return obj;
     }
     static bool is(jsvm::Value value)
@@ -443,7 +447,8 @@ template <> class Converter<std::string>
         jsvm::ValueType valueType;
         jsvm::Status status = jsvm::Typeof(env, value, &valueType);
         DEBUG_CHECK(status == jsvm::Status::OK);
-        if (valueType == jsvm::ValueType::Null || valueType == jsvm::ValueType::UNDEFINED || valueType != jsvm::ValueType::STRING)
+        if (valueType == jsvm::ValueType::Null || valueType == jsvm::ValueType::UNDEFINED ||
+            valueType != jsvm::ValueType::STRING)
         {
             return "";
         }
@@ -487,7 +492,8 @@ template <> class Converter<const char *>
         jsvm::ValueType valueType;
         jsvm::Status status = jsvm::Typeof(env, value, &valueType);
         DEBUG_CHECK(status == jsvm::Status::OK);
-        if (valueType == jsvm::ValueType::Null || valueType == jsvm::ValueType::UNDEFINED || valueType != jsvm::ValueType::STRING)
+        if (valueType == jsvm::ValueType::Null || valueType == jsvm::ValueType::UNDEFINED ||
+            valueType != jsvm::ValueType::STRING)
         {
             return "";
         }

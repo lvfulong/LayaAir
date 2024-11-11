@@ -14,7 +14,7 @@ namespace jsbind
 template <typename ClassType> class ClassRegistry;
 struct ObjectRegistry
 {
-    jsvm::Ref objectRef_;
+    jsvm::Ref objectRef_ = nullptr;
     bool callDestructor = true;
 };
 class ClassRegistryBase
@@ -56,22 +56,15 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
     }
     virtual ~ClassRegistry()
     {
+        GET_ENV
         auto it = objects_.begin();
         for (; it != objects_.end(); it++)
         {
-            if (it->second.callDestructor)
-            {
-                internal::raw_destructor((ClassType *)it->first);
-            }
 
-            // it->second.pobj.ClearWeak();
-            // it->second.pobj.Reset();
+            removeObjectRegistry(env, &it->second, (ClassType *)it->first);
         }
         objects_.clear();
 
-        // func_.Reset();
-        // js_func_.Reset();
-        GET_ENV
         jsvm::DeleteReference(env, classRef_);
     }
 
@@ -102,6 +95,17 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
         jsvm::Value instance;
         status = jsvm::NewInstance(env, cons, 0, nullptr, &instance);
         DEBUG_CHECK(status == jsvm::Status::OK);
+
+        ClassType *objectToReplace;
+        status = jsvm::RemoveWrap(env, instance, reinterpret_cast<void **>(&objectToReplace));
+        DEBUG_CHECK(status == jsvm::Status::OK);
+        this->removeObject(env, objectToReplace);
+
+        jsvm::Ref objectRef_;
+        status = jsvm::Wrap(env, instance, reinterpret_cast<void *>(objectPointer), internal::destructor<ClassType>, nullptr,
+                            &objectRef_);
+        DEBUG_CHECK(status == jsvm::Status::OK);
+        this->objects_.emplace(instance, ObjectRegistry{objectRef_, true});
         return instance;
     }
     void addBase(ClassRegistryBase *info)
@@ -116,25 +120,29 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
         info->derivatives_.emplace_back(this);*/
     }
 
-    void removeObject(ClassType *objectPointer)
+    void removeObject(jsvm::Env env, ClassType *objectPointer)
     {
-
+        jsvm::Status status;
         auto it = objects_.find((void *)objectPointer);
         DEBUG_CHECK(it != objects_.end());
         if (it != objects_.end())
         {
-            if (it->second.callDestructor)
-            {
-                internal::raw_destructor(objectPointer);
-            }
-            // isolate_->AdjustAmountOfExternalAllocatedMemory(-static_cast<int64_t>(sizeof(ClassType)));
-            // todo it->second.pobj.ClearWeak();
-            // todo it->second.pobj.Reset();
-            //  if (erase)
-            //{
+            removeObjectRegistry(env, &it->second, objectPointer);
             objects_.erase(it);
-            // }
         }
+    }
+
+  private:
+    void removeObjectRegistry(jsvm::Env env, ObjectRegistry *registry, ClassType *objectPointer)
+    {
+        jsvm::Status status;
+        if (registry->callDestructor)
+        {
+            internal::raw_destructor(objectPointer);
+        }
+        // isolate_->AdjustAmountOfExternalAllocatedMemory(-static_cast<int64_t>(sizeof(ClassType)));
+        status = jsvm::DeleteReference(env, registry->objectRef_);
+        DEBUG_CHECK(status == jsvm::Status::OK);
     }
 
   private:
@@ -213,7 +221,7 @@ template <typename ClassType> static jsvm::Value New(jsvm::Env env, jsvm::Callba
 
     jsvm::Value newTarget;
     jsvm::GetNewTarget(env, info, &newTarget);
-    // if (newTarget != nullptr)
+    DEBUG_CHECK(newTarget != nullptr);
     {
         // new MyObject(...)
         size_t argc = 16;
@@ -223,10 +231,7 @@ template <typename ClassType> static jsvm::Value New(jsvm::Env env, jsvm::Callba
         DEBUG_CHECK(argc <= 16);
         ClassRegistry<ClassType> &classRegistry =
             ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
-        // ClassType* object = classRegistry.ConstructObject(env, argc, args);
         ClassType *object = classRegistry.ConstructObject(argc, env, info);
-        // v8::Global<v8::Object> pobj(isolate, obj);
-        // pobj.SetWeak(this_, WeakCallback<ClassType>, v8::WeakCallbackType::kInternalFields);
         jsvm::Ref objectRef_;
         jsvm::Wrap(env, jsThis, reinterpret_cast<void *>(object), internal::destructor<ClassType>, nullptr,
                    &objectRef_);
@@ -454,7 +459,7 @@ template <typename ClassType> static void destructor(jsvm::Env env, void *native
     ClassRegistry<ClassType> &classRegistry = ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
     ClassType *object = static_cast<ClassType *>(nativeObject);
     DEBUG_CHECK(object != nullptr);
-    classRegistry.removeObject(object);
+    classRegistry.removeObject(env, object);
 }
 } // namespace internal
 } // namespace jsbind

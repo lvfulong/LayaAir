@@ -433,6 +433,10 @@ Status Unwrap(Env env, Value jsObject, void **result)
 {
     return static_cast<Status>(napi_unwrap(env, jsObject, result));
 }
+Status RemoveWrap (Env env,  Value jsObject, void **result)
+{
+    return static_cast<Status>(napi_remove_wrap(env, jsObject, result));
+}
  Status CreateReference(Env env, Value value, uint32_t initialRefcount, Ref *result)
 {
     return static_cast<Status>(napi_create_reference(env, value, initialRefcount, result));

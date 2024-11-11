@@ -44,7 +44,7 @@ namespace jsvm
 /*JSVM_EXTERN*/ Status CreateUint32(Env env, uint32_t value, Value *result);
 /*JSVM_EXTERN*/ Status CreateInt64(Env env, int64_t value, Value *result);
 /*JSVM_EXTERN*/ Status CreateDate(Env env, double time, Value *result);
-/*JSVM_EXTERN*/ Status CreateObject( Env env,  Value* result);
+/*JSVM_EXTERN*/ Status CreateObject(Env env, Value *result);
 /*JSVM_EXTERN*/ Status GetValueDouble(Env env, Value value, double *result);
 /*JSVM_EXTERN*/ Status GetValueInt32(Env env, Value value, int32_t *result);
 /*JSVM_EXTERN*/ Status GetValueUint32(Env env, Value value, uint32_t *result);
@@ -69,6 +69,7 @@ namespace jsvm
 /*JSVM_EXTERN*/ Status Wrap(Env env, Value jsObject, void *nativeObject, Finalize finalizeCb, void *finalizeHint,
                             Ref *result);
 /*JSVM_EXTERN*/ Status Unwrap(Env env, Value jsObject, void **result);
+/*JSVM_EXTERN*/ Status RemoveWrap(Env env, Value jsObject, void **result);
 /*JSVM_EXTERN*/ Status CreateReference(Env env, Value value, uint32_t initialRefcount, Ref *result);
 /*JSVM_EXTERN*/ Status DeleteReference(Env env, Ref ref);
 /*JSVM_EXTERN*/ Status ReferenceRef(Env env, Ref ref, uint32_t *result);
@@ -78,7 +79,8 @@ namespace jsvm
 /*JSVM_EXTERN*/ Status DefineClass(Env env, const char *utf8name, size_t length, Callback constructor,
                                    size_t propertyCount, const PropertyDescriptor *properties, Value *result);
 /*JSVM_EXTERN*/ Status CallFunction(Env env, Value recv, Value func, size_t argc, const Value *argv, Value *result);
-/*JSVM_EXTERN*/ Status CreateFunction(Env env, const char *utf8name, size_t length, Callback cb, void* data, Value *result);
+/*JSVM_EXTERN*/ Status CreateFunction(Env env, const char *utf8name, size_t length, Callback cb, void *data,
+                                      Value *result);
 /*JSVM_EXTERN*/ Status Typeof(Env env, Value value, ValueType *result);
 /*JSVM_EXTERN*/ Status CreateArraybuffer(Env env, size_t byteLength, void **data, Value *result);
 /*JSVM_EXTERN*/ Status IsArraybuffer(Env env, Value value, bool *result);
@@ -106,11 +108,11 @@ namespace jsvm
 /*JSVM_EXTERN*/ Status GetNamedProperty(Env env, Value object, const char *utf8name, Value *result);
 /*JSVM_EXTERN*/ Status CreateExternal(Env env, void *data, Finalize finalizeCb, void *finalizeHint, Value *result);
 /*JSVM_EXTERN*/ Status GetValueExternal(Env env, Value value, void **result);
-/*JSVM_EXTERN*/ Status AddFinalizer(Env env, Value jsObject, void* finalizeData, Finalize finalizeCb, void* finalizeHint, Ref* result);
-/*JSVM_EXTERN*/ Status CoerceToBool(Env env, Value value, Value* result);
-
+/*JSVM_EXTERN*/ Status AddFinalizer(Env env, Value jsObject, void *finalizeData, Finalize finalizeCb,
+                                    void *finalizeHint, Ref *result);
+/*JSVM_EXTERN*/ Status CoerceToBool(Env env, Value value, Value *result);
 
 Status ReportException(Env env);
 } // namespace jsvm
-//#include "JSVM_inline.h"
+// #include "JSVM_inline.h"
 #endif

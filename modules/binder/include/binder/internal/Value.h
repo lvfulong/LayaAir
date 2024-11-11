@@ -77,6 +77,7 @@ inline jsvm::Value makeInt32(int32_t value)
     jsvm::Value result;
     jsvm::Status status;
     status = jsvm::CreateInt32(env, value, &result);
+    DEBUG_CHECK(status == jsvm::Status::OK);
     return result;
 }
 inline uint32_t getUint32(jsvm::Value value)
