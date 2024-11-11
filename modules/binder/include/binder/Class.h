@@ -90,6 +90,7 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
         GET_ENV
         jsvm::Status status;
         jsvm::Value cons;
+        DEBUG_CHECK(classRef_ != nullptr);
         status = jsvm::GetReferenceValue(env, classRef_, &cons);
         DEBUG_CHECK(status == jsvm::Status::OK);
         jsvm::Value instance;

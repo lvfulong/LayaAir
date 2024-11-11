@@ -16,6 +16,7 @@ class GLESEngine;
 class GLESInternalRT : public GLObject
 {
   public:
+    GLESInternalRT();
     GLESInternalRT(RenderTargetFormat colorFormat, RenderTargetFormat depthStencilFormat, bool isCube,
                    bool generateMipmap, int samples);
     ~GLESInternalRT();

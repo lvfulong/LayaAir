@@ -53,7 +53,8 @@ template <typename T> class Array
             DEBUG_CHECK(status == jsvm::Status::OK);
             for (int i = 0; i < size; i++)
             {
-                jsvm::SetElement(env, result, i, Converter<T>::ToJs(value.at(i), callDestructor));
+                status = jsvm::SetElement(env, result, i, Converter<T>::ToJs(value.at(i), callDestructor));
+                DEBUG_CHECK(status == jsvm::Status::OK);
             }
             return result;
         }
@@ -66,7 +67,8 @@ template <typename T> class Array
         int size = value.size();
         for (int i = 0; i < size; i++)
         {
-            jsvm::SetElement(env, result, i, Converter<T>::ToJs(value.at(i), callDestructor));
+            status = jsvm::SetElement(env, array, i, Converter<T>::ToJs(value.at(i), callDestructor));
+            DEBUG_CHECK(status == jsvm::Status::OK);
         }
     }
     static void getData(jsvm::Value array, std::vector<T *> &result)
@@ -80,13 +82,14 @@ template <typename T> class Array
         {
             result.clear();
             uint32_t length;
-            jsvm::GetArrayLength(env, array, &length);
+            status = jsvm::GetArrayLength(env, array, &length);
             DEBUG_CHECK(status == jsvm::Status::OK);
             result.reserve(length);
             for (int i = 0; i < length; i++)
             {
                 jsvm::Value element;
-                jsvm::GetElement(env, array, i, &element);
+                status = jsvm::GetElement(env, array, i, &element);
+                DEBUG_CHECK(status == jsvm::Status::OK);
                 result.push_back(Converter<T *>::ToCpp(element));
             }
         }

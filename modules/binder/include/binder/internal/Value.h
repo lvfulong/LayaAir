@@ -344,7 +344,7 @@ inline bool isArrayBufferView(jsvm::Value value)
     jsvm::IsTypedarray(env, value, &isTypedarray);
     bool isDataview;
     jsvm::IsDataview(env, value, &isDataview);
-    return isTypedarray && isDataview;
+    return isTypedarray || isDataview;
 }
 
 inline bool isTypedArray(jsvm::Value value)

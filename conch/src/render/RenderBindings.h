@@ -387,6 +387,7 @@ class RenderBindings
         }
         {
             jsbind::class_<GLESInternalRT> class_binding;
+            class_binding.constructor<>();
             class_binding.constructor<RenderTargetFormat, RenderTargetFormat, bool, bool, int>();
             class_binding.property_field("_isCube", &GLESInternalRT::m_isCube);
             class_binding.property_field("_samples", &GLESInternalRT::m_samples);
@@ -400,6 +401,7 @@ class RenderBindings
                 "getTextures", jsbind::optional_override([](GLESInternalRT &ctx) { return ctx.m_textures; }));
             class_binding.function_optional_override(
                 "getDepthTexture", jsbind::optional_override([](GLESInternalRT &ctx) { return ctx.m_depthTexture; }));
+            context.class_("conchGLESInternalRT", class_binding);
         }
         {
             jsbind::class_<GLESInternalTex> class_binding;

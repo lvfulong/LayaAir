@@ -4,6 +4,8 @@
 
 namespace laya
 {
+    GLESInternalRT::GLESInternalRT(): GLObject(LayaGL::m_pWebglEngine)
+    {}
 GLESInternalRT::GLESInternalRT(RenderTargetFormat colorFormat, RenderTargetFormat depthStencilFormat, bool isCube,
                                bool generateMipmap, int samples)
     : GLObject(LayaGL::m_pWebglEngine)
