@@ -23,6 +23,7 @@ set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/Object.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Enum.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Array.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/Map.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Invoke.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Value.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Function.h

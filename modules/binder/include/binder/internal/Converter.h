@@ -131,28 +131,7 @@ template <typename T> struct Converter<T &> : Converter<T>
 template <typename T> struct Converter<const T &> : Converter<T>
 {
 };
-/*template <> class Converter<ArrayBuffer>
-{
-public:
-    static ArrayBuffer ToCpp(jsvm::Value value)
-    {
-        return ArrayBuffer::Make(value);
-    }
-    static jsvm::Value ToJs(ArrayBuffer value, bool callDestructor = true)
-    {
-        return value.getHandle();
-    }
-    static bool is(jsvm::Value value)
-    {
-        return internal::isArrayBuffer(value) || internal::isArrayBufferView(value);
-    }
-};
-template <> class Converter<const ArrayBuffer&> : public Converter<ArrayBuffer>
-{
-};
-template <> class Converter<ArrayBuffer&> : public Converter<ArrayBuffer>
-{
-};*/
+
 template <> class Converter<int32_t>
 {
   public:
@@ -410,29 +389,7 @@ template <> class Converter<double>
         return internal::isNumber(value);
     }
 };
-/*template <> class Converter<void>
-{
-  public:
-    static void ToCpp(jsvm::Value value)
-    {
-        return;
-    }
-    static jsvm::Value ToJs(int value, bool callDestructor = true)
-    {
-        if (0 == value)
-        {
-            return MakeUndefined();
-        }
-        else
-        {
-            return MakeNull();
-        }
-    }
-    static bool is(jsvm::Value value)
-    {
-        return p_vl->IsNullOrUndefined();
-    }
-};*/
+
 // utf16 u16string
 template <> class Converter<std::u16string>
 {
@@ -561,120 +518,6 @@ template <> class Converter<void>
         return internal::isNull(value) || internal::isUndefined(value);
     }
 };
-#if 0
-template <typename T> class __JsSet
-{
-  public:
-    static void FromJsSet(v8::Local<v8::Value> value, std::unordered_set<T> &p_v1)
-    {
-        if (value->IsSet())
-        {
-
-            v8::Isolate *isolate = v8::Isolate::GetCurrent();
-            v8::Local<v8::Context> context = isolate->GetCurrentContext();
-            p_v1.clear();
-            v8::Local<v8::Set> __set = value.As<v8::Set>();
-            unsigned long size = __set->Size();
-            p_v1.reserve(size);
-            v8::Local<v8::Array> __array = __set->AsArray();
-            for (unsigned long i = 0; i < size; i++)
-            {
-                T pValue = Converter<T>::ToCpp(__array->Get(context, i).ToLocalChecked());
-                p_v1.insert(pValue);
-            }
-        }
-    }
-};
-template <typename T, typename R> class __JsMap
-{
-  public:
-    static void FromJsMap(v8::Local<v8::Value> value, std::unordered_map<T, R> &p_v1)
-    {
-        if (value->IsMap())
-        {
-
-            v8::Isolate *isolate = v8::Isolate::GetCurrent();
-            v8::Local<v8::Context> context = isolate->GetCurrentContext();
-            p_v1.clear();
-            v8::Local<v8::Map> __map = value.As<v8::Map>();
-            unsigned long size = __map->Size();
-            p_v1.reserve(size);
-            v8::Local<v8::Array> __array = __map->AsArray();
-            for (unsigned long i = 0; i < size; i++)
-            {
-                T pKey = Converter<T>::ToCpp(__array->Get(context, i * 2).ToLocalChecked());
-                R pValue = Converter<R>::ToCpp(__array->Get(context, i * 2 + 1).ToLocalChecked());
-                p_v1[pKey] = pValue;
-            }
-        }
-    }
-};
-#endif
-/*class __JsByteArray
-{
-  public:
-    static v8::Local<v8::Value> ToJsByteArray(const unsigned char *p_vl, int p_iSize)
-    {
-        if (0 == p_vl || p_iSize <= 0)
-        {
-            return Null(v8::Isolate::GetCurrent());
-        }
-        else
-        {
-            v8::Local<v8::Array> __array = v8::Array::New(v8::Isolate::GetCurrent(), p_iSize);
-            for (int i = 0; i < p_iSize; ++i)
-            {
-                UNUSED(__array->Set(v8::Isolate::GetCurrent()->GetCurrentContext(), i,
-                                    v8::Int32::New(v8::Isolate::GetCurrent(), p_vl[i])));
-            }
-            return __array;
-        }
-    }
-};*/
-
-#if 0
-template <typename T> class Converter<std::unordered_set<T>>
-{
-  public:
-    static std::unordered_set<T> ToCpp(v8::Local<v8::Value> p_vl)
-    {
-        std::unordered_set<T> vec;
-        __JsSet<T>::FromJsSet(p_vl, vec);
-        return vec;
-    }
-};
-template <typename T, typename R> class Converter<std::unordered_map<T, R>>
-{
-  public:
-    static std::unordered_map<T, R> ToCpp(v8::Local<v8::Value> p_vl)
-    {
-        std::unordered_map<T, R> map;
-        __JsMap<T, R>::FromJsMap(p_vl, map);
-        return map;
-    }
-    static v8::Local<v8::Value> ToJs(const std::vector<T> &p_vl, bool callDestructor = true)
-    {
-        assert("to do");
-        return Undefined(v8::Isolate::GetCurrent());
-    }
-};
-
-template <typename T, typename R> class Converter<const std::unordered_map<T, R> &>
-{
-  public:
-    static std::unordered_map<T, R> ToCpp(v8::Local<v8::Value> p_vl)
-    {
-        std::unordered_map<T, R> map;
-        __JsMap<T, R>::FromJsMap(p_vl, map);
-        return map;
-    }
-    static v8::Local<v8::Value> ToJs(const std::vector<T> &p_vl, bool callDestructor = true)
-    {
-        assert("to do");
-        return Undefined(v8::Isolate::GetCurrent());
-    }
-};
-#endif
 
 namespace internal
 {

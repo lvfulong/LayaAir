@@ -2,6 +2,7 @@
 #define __JSBIND_H__
 
 #include <utils/JCMemorySurvey.h>
+#include <binder/Map.h>
 #include <binder/Array.h>
 #include <binder/ArrayBuffer.h>
 #include <binder/Date.h>

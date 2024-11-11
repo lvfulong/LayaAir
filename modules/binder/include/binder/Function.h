@@ -1,10 +1,11 @@
 #ifndef __JSBIND_FUNCTION_H__
 #define __JSBIND_FUNCTION_H__
 
+#include "binder/internal/Value.h"
+#include <binder/Invoke.h>
 #include <binder/JSEnv.h>
 #include <binder/JSVM.h>
 #include <binder/JSVM_Types.h>
-#include <binder/Invoke.h>
 
 namespace jsbind
 {
@@ -64,7 +65,6 @@ inline jsvm::Value MakeFunctionRaw(std::function<jsvm::Value(jsvm::Env env, jsvm
 {
     return internal::makeFunctionRaw(value);
 }
-
 
 } // namespace jsbind
 #endif

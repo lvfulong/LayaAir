@@ -687,6 +687,10 @@ Status CoerceToString(Env env, Value value, Value* result)
 {
     return static_cast<Status>(napi_coerce_to_string(env, value, result));
 }
+Status GetPropertyNames(Env env, Value object, Value* result)
+{
+    return static_cast<Status>(napi_get_property_names(env, object, result));
+}
 const char *ToCString(const v8::String::Utf8Value &value)
 {
     return *value ? *value : "<string conversion failed>";

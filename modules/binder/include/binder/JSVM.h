@@ -112,10 +112,9 @@ namespace jsvm
                                     void *finalizeHint, Ref *result);
 /*JSVM_EXTERN*/ Status CoerceToBool(Env env, Value value, Value *result);
 /*JSVM_EXTERN*/ Status CoerceToNumber(Env env, Value value, Value *result);
-/*JSVM_EXTERN*/ Status CoerceToObject(Env env, Value value, Value* result);
-/*JSVM_EXTERN*/ Status CoerceToString(Env env, Value value, Value* result);
-
-
+/*JSVM_EXTERN*/ Status CoerceToObject(Env env, Value value, Value *result);
+/*JSVM_EXTERN*/ Status CoerceToString(Env env, Value value, Value *result);
+/*JSVM_EXTERN*/ Status GetPropertyNames(Env env, Value object, Value *result);
 Status ReportException(Env env);
 } // namespace jsvm
 // #include "JSVM_inline.h"

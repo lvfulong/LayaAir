@@ -105,7 +105,7 @@ class ArrayBuffer
     Type type_ = ARRAY_BUFFER;
     jsvm::Value handle_ = nullptr;
 };
-// template <typename T, typename Enable = void> class Converter;
+
 template <> class Converter<ArrayBuffer>
 {
   public:
