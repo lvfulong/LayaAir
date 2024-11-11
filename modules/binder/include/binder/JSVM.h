@@ -111,6 +111,10 @@ namespace jsvm
 /*JSVM_EXTERN*/ Status AddFinalizer(Env env, Value jsObject, void *finalizeData, Finalize finalizeCb,
                                     void *finalizeHint, Ref *result);
 /*JSVM_EXTERN*/ Status CoerceToBool(Env env, Value value, Value *result);
+/*JSVM_EXTERN*/ Status CoerceToNumber(Env env, Value value, Value *result);
+/*JSVM_EXTERN*/ Status CoerceToObject(Env env, Value value, Value* result);
+/*JSVM_EXTERN*/ Status CoerceToString(Env env, Value value, Value* result);
+
 
 Status ReportException(Env env);
 } // namespace jsvm

@@ -403,6 +403,7 @@ class RenderBindings
         }
         {
             jsbind::class_<GLESInternalTex> class_binding;
+            class_binding.constructor<>();
             class_binding.constructor<int, int, int, int, TextureDimension, bool, bool, int>();
             class_binding.function("dispose", &GLESInternalTex::dispose);
             class_binding.function("getWidth", &GLESInternalTex::getWidth);

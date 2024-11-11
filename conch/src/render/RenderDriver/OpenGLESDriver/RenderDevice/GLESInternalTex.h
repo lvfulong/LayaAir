@@ -24,6 +24,7 @@ namespace laya
 class GLESInternalTex : public GLObject, public ObjectBase<GLESInternalTex>
 {
   public:
+      GLESInternalTex();
     GLESInternalTex(int target, int width, int height, int depth, TextureDimension dimension, bool mipmap,
                     bool useSRGBLoader, int gammaCorrection);
     ~GLESInternalTex();

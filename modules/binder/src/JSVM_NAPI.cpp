@@ -1,9 +1,9 @@
+#include "binder/JSEnv.h"
 #include "binder/JSVM.h"
 #include "binder/napi/js_native_api.h"
 #include "binder/napi/js_native_api_v8.h"
 #include <libplatform/libplatform.h>
 #include <v8.h>
-#include "binder/JSEnv.h"
 
 namespace jsvm
 {
@@ -79,7 +79,7 @@ struct EnvScope__
 {
 };
 
- Status Init(const InitOptions *options)
+Status Init(const InitOptions *options)
 {
     // m_pIsolate = NULL;
     // m_nListenPort = 0;
@@ -276,7 +276,7 @@ Status OpenVMScope(VM vm, VMScope *result)
     (*result)->isolate_->Enter();
     return Status::OK; // todo
 }
- Status CloseVMScope(VM vm, VMScope scope)
+Status CloseVMScope(VM vm, VMScope scope)
 {
     scope->isolate_ = vm->isolate_;
     scope->isolate_->Exit();
@@ -299,10 +299,9 @@ Status CreateEnv(VM vm, size_t propertyCount, const PropertyDescriptor *properti
     v8::Local<v8::Context> context = v8::Context::New(vm->isolate_);
     *result = new LayaNapiEnv(context, NAPI_VERSION);
 
-    jsbind::IsolateData* isolateData = new jsbind::IsolateData(vm->isolate_);//delete ?
-    jsbind::JSEnv* jsEnv = new jsbind::JSEnv(isolateData, vm->isolate_, *result);//delete ?
+    jsbind::IsolateData *isolateData = new jsbind::IsolateData(vm->isolate_);     // delete ?
+    jsbind::JSEnv *jsEnv = new jsbind::JSEnv(isolateData, vm->isolate_, *result); // delete ?
     jsbind::JSEnv::setCurrent(jsEnv);
-
 
     return Status::OK;
 }
@@ -317,11 +316,11 @@ Status OpenHandleScope(Env env, HandleScope *result)
 {
     return static_cast<Status>(napi_open_handle_scope(env, result));
 }
- Status CloseHandleScope(Env env, HandleScope scope)
+Status CloseHandleScope(Env env, HandleScope scope)
 {
-     return static_cast<Status>(napi_close_handle_scope(env, scope));
+    return static_cast<Status>(napi_close_handle_scope(env, scope));
 }
- Status GetArrayLength(Env env, Value value, uint32_t *result)
+Status GetArrayLength(Env env, Value value, uint32_t *result)
 {
     return static_cast<Status>(napi_get_array_length(env, value, result));
 }
@@ -358,7 +357,7 @@ Status CreateInt64(Env env, int64_t value, Value *result)
     return static_cast<Status>(napi_create_int64(env, value, result));
 }
 
- Status GetValueDouble(Env env, Value value, double *result)
+Status GetValueDouble(Env env, Value value, double *result)
 {
     return static_cast<Status>(napi_get_value_double(env, value, result));
 }
@@ -383,7 +382,7 @@ Status GetNull(Env env, Value *result)
 {
     return static_cast<Status>(napi_get_null(env, result));
 }
- Status GetUndefined(Env env, Value *result)
+Status GetUndefined(Env env, Value *result)
 {
     return static_cast<Status>(napi_get_undefined(env, result));
 }
@@ -391,7 +390,7 @@ Status GetElement(Env env, Value object, uint32_t index, Value *result)
 {
     return static_cast<Status>(napi_get_element(env, object, index, result));
 }
- Status SetElement(Env env, Value object, uint32_t index, Value value)
+Status SetElement(Env env, Value object, uint32_t index, Value value)
 {
     return static_cast<Status>(napi_set_element(env, object, index, value));
 }
@@ -399,33 +398,31 @@ Status CreateStringUtf8(Env env, const char *value, size_t length, Value *result
 {
     return static_cast<Status>(napi_create_string_utf8(env, value, length, result));
 }
- Status GetValueStringUtf8(Env env, Value value, char *buf, size_t bufsize, size_t *result)
+Status GetValueStringUtf8(Env env, Value value, char *buf, size_t bufsize, size_t *result)
 {
     return static_cast<Status>(napi_get_value_string_utf8(env, value, buf, bufsize, result));
 }
- Status AdjustExternalMemory(Env env, int64_t changeInBytes, int64_t *adjustedValue)
+Status AdjustExternalMemory(Env env, int64_t changeInBytes, int64_t *adjustedValue)
 {
     return static_cast<Status>(napi_adjust_external_memory(env, changeInBytes, adjustedValue));
 }
- Status IsSet(Env env, Value value, bool *isSet)
+Status IsSet(Env env, Value value, bool *isSet)
 {
     return Status::OK; // todo
 }
- Status CreateSet(Env env, Value *result)
+Status CreateSet(Env env, Value *result)
 {
     return Status::OK; // todo
 }
-Status GetCbInfo(Env env, CallbackInfo cbinfo, size_t *argc, Value *argv, Value *thisArg,
-                                        void **data)
+Status GetCbInfo(Env env, CallbackInfo cbinfo, size_t *argc, Value *argv, Value *thisArg, void **data)
 {
     return static_cast<Status>(napi_get_cb_info(env, cbinfo, argc, argv, thisArg, data));
 }
- Status GetNewTarget(Env env, CallbackInfo cbinfo, Value *result)
+Status GetNewTarget(Env env, CallbackInfo cbinfo, Value *result)
 {
     return static_cast<Status>(napi_get_new_target(env, cbinfo, result));
 }
- Status Wrap(Env env, Value jsObject, void *nativeObject, Finalize finalizeCb, void *finalizeHint,
-                                   Ref *result)
+Status Wrap(Env env, Value jsObject, void *nativeObject, Finalize finalizeCb, void *finalizeHint, Ref *result)
 {
     return static_cast<Status>(napi_wrap(env, jsObject, nativeObject, finalizeCb, finalizeHint, result));
 }
@@ -433,27 +430,27 @@ Status Unwrap(Env env, Value jsObject, void **result)
 {
     return static_cast<Status>(napi_unwrap(env, jsObject, result));
 }
-Status RemoveWrap (Env env,  Value jsObject, void **result)
+Status RemoveWrap(Env env, Value jsObject, void **result)
 {
     return static_cast<Status>(napi_remove_wrap(env, jsObject, result));
 }
- Status CreateReference(Env env, Value value, uint32_t initialRefcount, Ref *result)
+Status CreateReference(Env env, Value value, uint32_t initialRefcount, Ref *result)
 {
     return static_cast<Status>(napi_create_reference(env, value, initialRefcount, result));
 }
- Status DeleteReference(Env env, Ref ref)
+Status DeleteReference(Env env, Ref ref)
 {
     return static_cast<Status>(napi_delete_reference(env, ref));
 }
- Status ReferenceRef(Env env, Ref ref, uint32_t *result)
+Status ReferenceRef(Env env, Ref ref, uint32_t *result)
 {
     return static_cast<Status>(napi_reference_ref(env, ref, result));
 }
- Status ReferenceUnref(Env env, Ref ref, uint32_t *result)
+Status ReferenceUnref(Env env, Ref ref, uint32_t *result)
 {
     return static_cast<Status>(napi_reference_unref(env, ref, result));
 }
- Status GetReferenceValue(Env env, Ref ref, Value *result)
+Status GetReferenceValue(Env env, Ref ref, Value *result)
 {
     return static_cast<Status>(napi_get_reference_value(env, ref, result));
 }
@@ -461,35 +458,14 @@ Status NewInstance(Env env, Value constructor, size_t argc, const Value *argv, V
 {
     return static_cast<Status>(napi_new_instance(env, constructor, argc, argv, result));
 }
- Status DefineClass(Env env, const char *utf8name, size_t length, Callback constructor,
-                                          size_t propertyCount, const PropertyDescriptor *properties, Value *result)
+Status DefineClass(Env env, const char *utf8name, size_t length, Callback constructor, size_t propertyCount,
+                   const PropertyDescriptor *properties, Value *result)
 {
-     std::vector<napi_property_descriptor> napi_properties;
-     napi_properties.reserve(propertyCount);
-     for (int i = 0; i < propertyCount; i++)
-     {
-        napi_property_descriptor  property;
-        property.utf8name = properties[i].utf8name;
-        property.name = properties[i].name;
-        property.method = properties[i].method;
-        property.getter = properties[i].getter;
-        property.setter = properties[i].setter;
-        property.value = properties[i].value;
-        property.attributes = static_cast<napi_property_attributes>(properties[i].attributes);
-        property.data = properties[i].data;
-        napi_properties.push_back(property);
-     }
-   
-    return static_cast<Status>(
-        napi_define_class(env, utf8name, length, constructor, nullptr, propertyCount, napi_properties.data(), result));
-}
-Status DefineProperties(Env env, Value object, size_t propertyCount, const PropertyDescriptor* properties)
- {
     std::vector<napi_property_descriptor> napi_properties;
     napi_properties.reserve(propertyCount);
     for (int i = 0; i < propertyCount; i++)
     {
-        napi_property_descriptor  property;
+        napi_property_descriptor property;
         property.utf8name = properties[i].utf8name;
         property.name = properties[i].name;
         property.method = properties[i].method;
@@ -500,15 +476,34 @@ Status DefineProperties(Env env, Value object, size_t propertyCount, const Prope
         property.data = properties[i].data;
         napi_properties.push_back(property);
     }
+
     return static_cast<Status>(
-        napi_define_properties(env, object, propertyCount, napi_properties.data()));
- }
-Status CallFunction(Env env, Value recv, Value func, size_t argc, const Value *argv,
-                                           Value *result)
+        napi_define_class(env, utf8name, length, constructor, nullptr, propertyCount, napi_properties.data(), result));
+}
+Status DefineProperties(Env env, Value object, size_t propertyCount, const PropertyDescriptor *properties)
+{
+    std::vector<napi_property_descriptor> napi_properties;
+    napi_properties.reserve(propertyCount);
+    for (int i = 0; i < propertyCount; i++)
+    {
+        napi_property_descriptor property;
+        property.utf8name = properties[i].utf8name;
+        property.name = properties[i].name;
+        property.method = properties[i].method;
+        property.getter = properties[i].getter;
+        property.setter = properties[i].setter;
+        property.value = properties[i].value;
+        property.attributes = static_cast<napi_property_attributes>(properties[i].attributes);
+        property.data = properties[i].data;
+        napi_properties.push_back(property);
+    }
+    return static_cast<Status>(napi_define_properties(env, object, propertyCount, napi_properties.data()));
+}
+Status CallFunction(Env env, Value recv, Value func, size_t argc, const Value *argv, Value *result)
 {
     return static_cast<Status>(napi_call_function(env, recv, func, argc, argv, result));
 }
- Status CreateFunction(Env env, const char *utf8name, size_t length, Callback cb, void* data, Value *result)
+Status CreateFunction(Env env, const char *utf8name, size_t length, Callback cb, void *data, Value *result)
 {
     return static_cast<Status>(napi_create_function(env, utf8name, length, cb, data, result));
 }
@@ -520,11 +515,11 @@ Status Typeof(Env env, Value value, ValueType *result)
     *result = static_cast<ValueType>(napi_result);
     return static_cast<Status>(status);
 }
- Status CreateArraybuffer(Env env, size_t byteLength, void **data, Value *result)
+Status CreateArraybuffer(Env env, size_t byteLength, void **data, Value *result)
 {
     return static_cast<Status>(napi_create_arraybuffer(env, byteLength, data, result));
 }
- Status IsArraybuffer(Env env, Value value, bool *result)
+Status IsArraybuffer(Env env, Value value, bool *result)
 {
     return static_cast<Status>(napi_is_arraybuffer(env, value, result));
 }
@@ -536,14 +531,13 @@ Status IsDataview(Env env, Value value, bool *result)
 {
     return static_cast<Status>(napi_is_dataview(env, value, result));
 }
-Status CreateTypedarray(Env env, TypedarrayType type, size_t length, Value arraybuffer,
-                                               size_t byteOffset, Value *result)
+Status CreateTypedarray(Env env, TypedarrayType type, size_t length, Value arraybuffer, size_t byteOffset,
+                        Value *result)
 {
     return static_cast<Status>(
         napi_create_typedarray(env, static_cast<napi_typedarray_type>(type), length, arraybuffer, byteOffset, result));
 }
-Status CreateDataview(Env env, size_t length, Value arraybuffer, size_t byteOffset,
-                                             Value *result)
+Status CreateDataview(Env env, size_t length, Value arraybuffer, size_t byteOffset, Value *result)
 {
     return static_cast<Status>(napi_create_dataview(env, length, arraybuffer, byteOffset, result));
 }
@@ -551,17 +545,16 @@ Status GetArraybufferInfo(Env env, Value arraybuffer, void **data, size_t *byteL
 {
     return static_cast<Status>(napi_get_arraybuffer_info(env, arraybuffer, data, byteLength));
 }
-Status GetTypedarrayInfo(Env env, Value typedarray, TypedarrayType *type, size_t *length,
-                                                void **data, Value *arraybuffer, size_t *byteOffset)
+Status GetTypedarrayInfo(Env env, Value typedarray, TypedarrayType *type, size_t *length, void **data,
+                         Value *arraybuffer, size_t *byteOffset)
 {
     napi_typedarray_type napi_type;
-    auto status =
-        static_cast<Status>(napi_get_typedarray_info(env, typedarray, &napi_type, length, data, arraybuffer, byteOffset));
+    auto status = static_cast<Status>(
+        napi_get_typedarray_info(env, typedarray, &napi_type, length, data, arraybuffer, byteOffset));
     *type = static_cast<TypedarrayType>(napi_type);
     return status;
 }
-Status GetDataviewInfo(Env env, Value dataview, size_t *bytelength, void **data,
-                                              Value *arraybuffer, size_t *byteOffset)
+Status GetDataviewInfo(Env env, Value dataview, size_t *bytelength, void **data, Value *arraybuffer, size_t *byteOffset)
 {
 
     return static_cast<Status>(napi_get_dataview_info(env, dataview, bytelength, data, arraybuffer, byteOffset));
@@ -582,7 +575,7 @@ Status CreateDate(Env env, double time, Value *result)
 {
     return static_cast<Status>(napi_create_date(env, time, result));
 }
- Status IsDate(Env env, Value value, bool *isDate)
+Status IsDate(Env env, Value value, bool *isDate)
 {
     return static_cast<Status>(napi_is_date(env, value, isDate));
 }
@@ -642,7 +635,7 @@ Status GetProperty(Env env, Value object, Value key, Value *result)
 {
     return static_cast<Status>(napi_get_property(env, object, key, result));
 }
-Status SetNamedProperty(Env env, Value object, const char* utf8name, Value value)
+Status SetNamedProperty(Env env, Value object, const char *utf8name, Value value)
 {
     return static_cast<Status>(napi_set_named_property(env, object, utf8name, value));
 }
@@ -652,9 +645,9 @@ Status GetNamedProperty(Env env, Value object, const char *utf8name, Value *resu
 }
 Status HasNamedProperty(Env env, Value object, const char *utf8name, bool *result)
 {
-    return static_cast<Status>(napi_has_named_property(env, object,utf8name, result));
+    return static_cast<Status>(napi_has_named_property(env, object, utf8name, result));
 }
-Status CreateObject( Env env,  Value* result)
+Status CreateObject(Env env, Value *result)
 {
     return static_cast<Status>(napi_create_object(env, result));
 }
@@ -674,28 +667,40 @@ Status GetValueExternal(Env env, Value value, void **result)
 {
     return static_cast<Status>(napi_get_value_external(env, value, result));
 }
-Status AddFinalizer(Env env, Value jsObject, void* finalizeData, Finalize finalizeCb, void* finalizeHint, Ref* result)
+Status AddFinalizer(Env env, Value jsObject, void *finalizeData, Finalize finalizeCb, void *finalizeHint, Ref *result)
 {
-    return static_cast<Status>(napi_add_finalizer(env, jsObject, finalizeData, finalizeCb,finalizeHint, result));
+    return static_cast<Status>(napi_add_finalizer(env, jsObject, finalizeData, finalizeCb, finalizeHint, result));
 }
-Status CoerceToBool(Env env, Value value, Value* result)
+Status CoerceToBool(Env env, Value value, Value *result)
 {
     return static_cast<Status>(napi_coerce_to_bool(env, value, result));
 }
-const char* ToCString(const v8::String::Utf8Value& value)
+Status CoerceToNumber(Env env, Value value, Value *result)
+{
+    return static_cast<Status>(napi_coerce_to_number(env, value, result));
+}
+Status CoerceToObject(Env env, Value value, Value* result)
+{
+    return static_cast<Status>(napi_coerce_to_object(env, value, result));
+}
+Status CoerceToString(Env env, Value value, Value* result)
+{
+    return static_cast<Status>(napi_coerce_to_string(env, value, result));
+}
+const char *ToCString(const v8::String::Utf8Value &value)
 {
     return *value ? *value : "<string conversion failed>";
 }
-void ReportException(v8::Isolate* isolate, v8::Local<v8::Value> e)
+void ReportException(v8::Isolate *isolate, v8::Local<v8::Value> e)
 {
     v8::HandleScope handle_scope(isolate);
-    //v8::String::Utf8Value exception(isolate, try_catch->Exception());
+    // v8::String::Utf8Value exception(isolate, try_catch->Exception());
     v8::String::Utf8Value exception(isolate, e);
-    const char* exception_string = ToCString(exception);
-    v8::Local<v8::Message> message;// = try_catch->Message();
+    const char *exception_string = ToCString(exception);
+    v8::Local<v8::Message> message; // = try_catch->Message();
     static char errInfo[2048];
     int curpos = 0;
-    //if (message.IsEmpty())
+    // if (message.IsEmpty())
     if (true)
     {
         // V8 didn't provide any extra information about this error; just
@@ -779,7 +784,7 @@ void ReportException(v8::Isolate* isolate, v8::Local<v8::Value> e)
             }
         }
 #endif
-        // 通知全局错误处理脚本
+    // 通知全局错误处理脚本
 #if 0
         std::string kBuf = "if(conch.onerror){conch.onerror('";
         kBuf += UrlEncode(exception_string);
@@ -797,12 +802,11 @@ void ReportException(v8::Isolate* isolate, v8::Local<v8::Value> e)
         kBuf += "');};";
         __JSRun::Run(kBuf.c_str());
  }
-#endif 
-   
+#endif
 
-    //if (gbAlertException)
+    // if (gbAlertException)
     {
-        //JSAlert(errInfo);
+        // JSAlert(errInfo);
     }
     LOGE("==JSERROR:\n%s", errInfo);
 }
@@ -818,7 +822,7 @@ Status ReportException(Env env)
         status = napi_get_and_clear_last_exception(env, &result);
         DEBUG_CHECK(status == napi_ok);
         v8::Local<v8::Value> val = v8impl::V8LocalValueFromJsValue(result);
-        ReportException(env->isolate,val);
+        ReportException(env->isolate, val);
     }
 
     return Status::OK; // todo

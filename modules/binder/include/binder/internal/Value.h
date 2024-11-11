@@ -48,8 +48,11 @@ inline double getDouble(jsvm::Value value)
 {
     GET_ENV
     double result;
+    jsvm::Value resultCoerce;
     jsvm::Status status;
-    status = jsvm::GetValueDouble(env, value, &result);
+    status = jsvm::CoerceToNumber(env, value, &resultCoerce);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+    status = jsvm::GetValueDouble(env, resultCoerce, &result);
     DEBUG_CHECK(status == jsvm::Status::OK);
     return result;
 }

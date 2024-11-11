@@ -71,9 +71,14 @@ template <typename T> class Converter<T, std::enable_if_t<internal::is_wrapped_c
 
     static T &ToCpp(jsvm::Value value)
     {
-        // assert(!value.IsEmpty() && value->IsObject());
+        DEBUG_CHECK(value != nullptr);
         GET_ENV
         jsvm::Status status;
+        jsvm::ValueType valueType;
+        status = jsvm::Typeof(env, value, &valueType);
+        DEBUG_CHECK(status == jsvm::Status::OK);
+        DEBUG_CHECK(valueType == jsvm::ValueType::OBJECT)
+
         T *obj;
         status = jsvm::Unwrap(env, value, reinterpret_cast<void **>(&obj));
         DEBUG_CHECK(status == jsvm::Status::OK);
@@ -98,8 +103,16 @@ template <typename T> class Converter<T *, std::enable_if_t<internal::is_wrapped
     }
     static T *ToCpp(jsvm::Value value)
     {
+        DEBUG_CHECK(value != nullptr);
         GET_ENV
         jsvm::Status status;
+        jsvm::ValueType valueType;
+        status = jsvm::Typeof(env, value, &valueType);
+        DEBUG_CHECK(status == jsvm::Status::OK);
+        if (valueType  != jsvm::ValueType::OBJECT)
+        {
+            return nullptr;
+        }
         T *obj;
         status = jsvm::Unwrap(env, value, reinterpret_cast<void **>(&obj));
         DEBUG_CHECK(status == jsvm::Status::OK);
@@ -444,14 +457,14 @@ template <> class Converter<std::string>
     static std::string ToCpp(jsvm::Value value)
     {
         GET_ENV
-        jsvm::ValueType valueType;
+        /*jsvm::ValueType valueType;
         jsvm::Status status = jsvm::Typeof(env, value, &valueType);
         DEBUG_CHECK(status == jsvm::Status::OK);
         if (valueType == jsvm::ValueType::Null || valueType == jsvm::ValueType::UNDEFINED ||
             valueType != jsvm::ValueType::STRING)
         {
             return "";
-        }
+        }*/
         return internal::getStringUtf8(value);
     }
     static jsvm::Value ToJs(const std::string &value, bool callDestructor = true)
@@ -489,14 +502,14 @@ template <> class Converter<const char *>
     static from_type ToCpp(jsvm::Value value)
     {
         GET_ENV
-        jsvm::ValueType valueType;
+            /*jsvm::ValueType valueType;
         jsvm::Status status = jsvm::Typeof(env, value, &valueType);
         DEBUG_CHECK(status == jsvm::Status::OK);
         if (valueType == jsvm::ValueType::Null || valueType == jsvm::ValueType::UNDEFINED ||
             valueType != jsvm::ValueType::STRING)
         {
             return "";
-        }
+        }*/
         return from_type(internal::getStringUtf8(value));
     }
     static jsvm::Value ToJs(std::string_view value, bool callDestructor = true)

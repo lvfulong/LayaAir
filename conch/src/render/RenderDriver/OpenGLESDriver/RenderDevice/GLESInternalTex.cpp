@@ -11,7 +11,10 @@ namespace laya
     {
         dispose();
     }
+    GLESInternalTex::GLESInternalTex() : GLObject(LayaGL::m_pWebglEngine), ObjectBase(JCConch::s_pConchRender->m_pWebGLInternalTexManager)
+    {
 
+    }
 GLESInternalTex::GLESInternalTex(int target, int width, int height, int depth, TextureDimension dimension, bool mipmap,
                                  bool useSRGBLoader, int gammaCorrection)
     : GLObject(LayaGL::m_pWebglEngine), ObjectBase(JCConch::s_pConchRender->m_pWebGLInternalTexManager)
