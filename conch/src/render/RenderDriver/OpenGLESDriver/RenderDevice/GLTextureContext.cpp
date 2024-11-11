@@ -1773,8 +1773,14 @@ void GLTextureContext::setTexturePixelsDataJS(GLESInternalTex *texture, jsbind::
 {
     if (texture)
     {
-        DEBUG_CHECK(arrayBuffer.isValid());
-        this->setTexturePixelsData(texture, reinterpret_cast<char*>(arrayBuffer.getData()), arrayBuffer.getLength(), premultiplyAlpha, invertY);
+        if (arrayBuffer.isValid())
+        {
+            this->setTexturePixelsData(texture, reinterpret_cast<char*>(arrayBuffer.getData()), arrayBuffer.getLength(), premultiplyAlpha, invertY);
+        }
+        else
+        {
+            this->setTexturePixelsData(texture, nullptr, 0, premultiplyAlpha, invertY);
+        }
     }
 }
 void GLTextureContext::setTextureSubPixelsDataJS(GLESInternalTex *texture, jsbind::ArrayBuffer source, int mipmapLevel,
