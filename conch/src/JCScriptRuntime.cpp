@@ -453,6 +453,16 @@ namespace laya
         //float dt = tmGetCurms() - nBenginTime;
         //PERF_UPDATE_DATA(JCPerfHUD::PHUD_JS_DELAY, (float)dt);
 
+		{
+//lvtodo
+        GET_ENV
+            jsvm::Value script;
+        jsvm::Status status;
+
+        status = jsvm::ReportException(env);
+        DEBUG_CHECK(status == jsvm::Status::OK);
+        DEBUG_CHECK(status == jsvm::Status::OK);
+		}
         JCConch::s_pConchRender->postTaskFromJSToRenderSync([this]()->bool {
             JCConch::s_pScriptRuntime->dispatchLayaGLBuffer(false);
             JCConch::s_pConchRender->update();
