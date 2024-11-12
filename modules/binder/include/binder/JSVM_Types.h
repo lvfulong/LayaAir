@@ -1,11 +1,12 @@
 #ifndef __JSVM_TYPES_H__
 #define __JSVM_TYPES_H__
 
-#if defined(OS_OHOS)
+#if defined(JS_OHOS_JSVM)
 #include "ark_runtime/jsvm.h"
-#else
-#include "napi/js_native_api.h"
-#include "binder/napi/js_native_api_v8.h"
+#endif
+#if defined(JS_V8)
+#include <binder/napi/js_native_api.h>
+#include <binder/napi/js_native_api_v8.h>
 #include <libplatform/libplatform.h>
 #include <v8.h>
 #endif
@@ -80,26 +81,33 @@ struct ExtendedErrorInfo
 };
 
 #endif
-#if defined(OS_OHOS)
+#if defined(JS_OHOS_JSVM)
 using Env = JSVM_Env;
 using Deferred = JSVM_Deferred;
 using Value = JSVM_Value;
 using CallbackInfo = JSVM_CallbackInfo;
 using Finalize = JSVM_Finalize;
 using Ref = JSVM_Ref;
-// using Callback = JSVM_Callback;
-// using CDECL = JSVM_CDECL;
 typedef Value(JSVM_CDECL *Callback)(Env env, CallbackInfo info);
-#else
+using Script = JSVM_Script;
+
+
+using VM = JSVM_VM;
+using VMScope = JSVM_VMScope;
+using EnvScope = JSVM_EnvScope;
+using HandleScope = JSVM_HandleScope;
+using InitOptions = JSVM_InitOptions;
+using CreateVMOptions = JSVM_CreateVMOptions;
+#endif
+#if defined(JS_V8)
 using Env = napi_env;
 using Deferred = napi_deferred;
 using Value = napi_value;
 using CallbackInfo = napi_callback_info;
 using Finalize = node_api_basic_finalize;
+//typedef node_api_nogc_finalize Finalize;
 using Ref = napi_ref;
-// using Callback = napi_callback;
-// using CDECL = NAPI_CDECL;
-typedef Value(NAPI_CDECL *Callback)(Env env, CallbackInfo info);
+typedef Value (NAPI_CDECL *Callback)(Env env, CallbackInfo info);
 using Script = napi_value;
 
 typedef struct VM__ *VM;

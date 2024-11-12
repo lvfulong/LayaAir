@@ -272,7 +272,7 @@ void  JSLinuxEditBox::onInputCallJSFunction(std::weak_ptr<int> callbackref)
 {
     if( !callbackref.lock())
         return;
-    m_pJSFunctionOnInput.call<void>(toLocal(this));
+    m_pJSFunctionOnInput.call<void>(jsbind::toLocal(this));
 }
 //------------------------------------------------------------------------------
 void JSLinuxEditBox::onInput()

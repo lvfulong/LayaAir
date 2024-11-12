@@ -3,6 +3,9 @@
 
 #include "Utility.h"
 #include <binder/JSVM.h>
+#if defined(JS_V8)
+#include <v8.h>
+#endif
 
 namespace jsbind
 {
@@ -40,12 +43,17 @@ class JSEnv
     {
             return isolate_data_->napi_wrapper();                                    \
     }
-#endif
     JSEnv(IsolateData* isolate_data, v8::Isolate* isolate, jsvm::Env env);
+#endif
+#if defined(JS_OHOS_JSVM)
+    JSEnv(IsolateData* isolate_data, jsvm::Env env);
+#endif
   private:
     jsvm::Env env_;
     IsolateData* isolate_data_;
+#if defined(JS_V8)
     v8::Isolate* isolate_;
+#endif
 };
 
 #define GET_ENV                                                                                                        \

@@ -1,8 +1,9 @@
 #ifndef __JSVM_H__
 #define __JSVM_H__
+
 #include "JSVM_Types.h"
 #include <cstdint>
-#if defined(OS_OHOS)
+#if defined(JS_OHOS_JSVM)
 #include "ark_runtime/jsvm.h"
 #else
 

@@ -8,7 +8,6 @@ set(PUBLIC_HEADER_DIR include)
 set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/ArrayBuffer.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/JSEnv.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/JSCProxyTLS.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/internal/ScriptThread.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/internal/Converter.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/internal/Value.h
@@ -65,35 +64,35 @@ endif()
 
 include_directories(${PUBLIC_HEADER_DIR})
 
-set(DEPS_V8)
-
-if(OS_WINDOWS)
-    list(APPEND DEPS_V8
-        v8
-        v8_libbase
-        v8_libplatform
-    )
-elseif(OS_ANDROID)
-    list(APPEND DEPS_V8
-        v8_monolith
-        v8inspector
-    )
-elseif(OS_LINUX)
-    list(APPEND DEPS_V8
-        v8_monolith
-    )
-elseif(OS_IOS)
-    list(APPEND DEPS_V8
-        v8_monolith
-    )
-elseif(OS_OHOS)
-    list(APPEND DEPS_V8
-        v8_monolith
-    )
+set(DEPS)
+if(USE_JS_V8)
+    if(OS_WINDOWS)
+        list(APPEND DEPS
+            v8
+            v8_libbase
+            v8_libplatform
+        )
+    elseif(OS_ANDROID)
+        list(APPEND DEPS
+            v8_monolith
+            v8inspector
+        )
+    elseif(OS_LINUX)
+        list(APPEND DEPS
+            v8_monolith
+        )
+    elseif(OS_IOS)
+        ist(APPEND DEPS
+            v8_monolith
+        )
+    elseif(OS_OHOS)
+        list(APPEND DEPS
+            v8_monolith
+        )
+    endif()
 endif()
 
-
-if(OS_OHOS)
+if(USE_JS_OHOS_JSVM)
     list(APPEND HEADERS
         ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM.h
         ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM_Types.h
@@ -102,7 +101,13 @@ if(OS_OHOS)
     list(APPEND SOURCES
         src/JSVM_OHOS.cpp
     )
-else()
+    list(APPEND DEPS
+        libace_napi.z.so 
+        libjsvm.so 
+        libhilog_ndk.z.so
+    )
+endif()
+if(USE_JS_V8)
     list(APPEND HEADERS
         ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM.h
         ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM_Types.h
@@ -125,7 +130,7 @@ target_link_libraries(${TARGET}
     websockets
     ssl
     utils
-    ${DEPS_V8}
+    ${DEPS}
 )
 target_precompile_headers(${TARGET} PRIVATE ${HEADERS})
 # set(INSTALL_TYPE ARCHIVE)

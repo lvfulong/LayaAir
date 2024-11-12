@@ -772,6 +772,12 @@ elseif(OS_WINDOWS)
 		curl
 	)
 elseif(OS_OHOS)
+if(USE_JS_V8)
+	#list(APPEND LINK_LIBS v8_monolith)
+endif()
+if(USE_JS_OHOS_JSVM)
+	#list(APPEND LINK_LIBS)
+endif()
 	target_link_libraries(${PROJECT_NAME} PUBLIC
 	${LINK_LIBS}
 		${EGL-lib}
@@ -784,7 +790,6 @@ elseif(OS_OHOS)
 		${rawfile-lib}
     	libohaudio.so
 		libavplayer.so
-		v8_monolith
 		utils
 		binder
 		curl
