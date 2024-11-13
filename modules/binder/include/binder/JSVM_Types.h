@@ -88,10 +88,8 @@ using Value = JSVM_Value;
 using CallbackInfo = JSVM_CallbackInfo;
 using Finalize = JSVM_Finalize;
 using Ref = JSVM_Ref;
-typedef Value(JSVM_CDECL *Callback)(Env env, CallbackInfo info);
-using Script = JSVM_Script;
-
-
+typedef JSVM_Value(JSVM_CDECL* Callback)(JSVM_Env env, JSVM_CallbackInfo info);//using Callback = JSVM_Callback;
+//using Script = JSVM_Script;
 using VM = JSVM_VM;
 using VMScope = JSVM_VMScope;
 using EnvScope = JSVM_EnvScope;
@@ -104,11 +102,10 @@ using Env = napi_env;
 using Deferred = napi_deferred;
 using Value = napi_value;
 using CallbackInfo = napi_callback_info;
-using Finalize = node_api_basic_finalize;
-//typedef node_api_nogc_finalize Finalize;
+using Finalize = node_api_basic_finalize;//typedef node_api_nogc_finalize Finalize;
 using Ref = napi_ref;
 typedef Value (NAPI_CDECL *Callback)(Env env, CallbackInfo info);
-using Script = napi_value;
+//using Script = napi_value;
 
 typedef struct VM__ *VM;
 typedef struct VMScope__ *VMScope;

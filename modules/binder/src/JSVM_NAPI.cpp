@@ -619,7 +619,7 @@ Status GetValueBigintUint64(Env env, Value value, uint64_t *result, bool *lossle
 {
     return static_cast<Status>(napi_get_value_bigint_uint64(env, value, result, lossless));
 }
-Status RunScript(Env env, Script script, Value *result)
+Status RunScript(Env env, Value script, Value *result)
 {
     return static_cast<Status>(napi_run_script(env, script, result));
 }

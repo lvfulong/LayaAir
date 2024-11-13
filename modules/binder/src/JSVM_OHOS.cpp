@@ -226,24 +226,26 @@ Status NewInstance(Env env, Value constructor, size_t argc, const Value *argv, V
 Status DefineClass(Env env, const char *utf8name, size_t length, Callback constructor, size_t propertyCount,
                    const PropertyDescriptor *properties, Value *result)
 {
-    std::vector<napi_property_descriptor> napi_properties;
-    napi_properties.reserve(propertyCount);
+    std::vector<JSVM_PropertyDescriptor> jsvm_properties;
+    jsvm_properties.reserve(propertyCount);
     for (int i = 0; i < propertyCount; i++)
     {
-        napi_property_descriptor property;
+        JSVM_PropertyDescriptor property;
         property.utf8name = properties[i].utf8name;
         property.name = properties[i].name;
-        property.method = properties[i].method;
-        property.getter = properties[i].getter;
-        property.setter = properties[i].setter;
+        property.method->callback = properties[i].method;
+        property.method->data = properties[i].data;
+        property.getter->callback = properties[i].getter; property.getter->data = properties[i].data;
+        property.setter->callback = properties[i].setter; property.setter->data = properties[i].data;
         property.value = properties[i].value;
-        property.attributes = static_cast<napi_property_attributes>(properties[i].attributes);
-        property.data = properties[i].data;
-        napi_properties.push_back(property);
+        property.attributes = static_cast<JSVM_PropertyAttributes>(properties[i].attributes);
+        jsvm_properties.push_back(property);
     }
-
-    return static_cast<Status>(OH_JSVM_DefineClass(env, utf8name, length, constructor, nullptr, propertyCount,
-                                                   napi_properties.data(), result));
+    JSVM_Callback jsvm_constructor;
+    jsvm_constructor->callback = constructor;
+    jsvm_constructor->data = nullptr;
+    return static_cast<Status>(OH_JSVM_DefineClass(env, utf8name, length, jsvm_constructor, propertyCount,
+                                                   jsvm_properties.data(), result));
 }
 Status DefineProperties(Env env, Value object, size_t propertyCount, const PropertyDescriptor *properties)
 {
@@ -254,12 +256,12 @@ Status DefineProperties(Env env, Value object, size_t propertyCount, const Prope
         JSVM_PropertyDescriptor property;
         property.utf8name = properties[i].utf8name;
         property.name = properties[i].name;
-        property.method = properties[i].method;
-        property.getter = properties[i].getter;
-        property.setter = properties[i].setter;
+        property.method->callback = properties[i].method;
+        property.method->data = properties[i].data;
+        property.getter->callback = properties[i].getter; property.getter->data = properties[i].data;
+        property.setter->callback = properties[i].setter; property.setter->data = properties[i].data;
         property.value = properties[i].value;
         property.attributes = static_cast<JSVM_PropertyAttributes>(properties[i].attributes);
-        property.data = properties[i].data;
         napi_properties.push_back(property);
     }
     return static_cast<Status>(OH_JSVM_DefineProperties(env, object, propertyCount, napi_properties.data()));
@@ -271,7 +273,9 @@ Status CallFunction(Env env, Value recv, Value func, size_t argc, const Value *a
 Status CreateFunction(Env env, const char *utf8name, size_t length, Callback cb, void *data, Value *result)
 {
     JSVM_Callback jsvmCallback;
-    jsvmCallback.return static_cast<Status>(OH_JSVM_CreateFunction(env, utf8name, length, cb, data, result));
+    jsvmCallback->callback = cb;
+    jsvmCallback->data = data;
+    return static_cast<Status>(OH_JSVM_CreateFunction(env, utf8name, length, jsvmCallback, result));
 }
 Status Typeof(Env env, Value value, ValueType *result)
 {
@@ -385,9 +389,16 @@ Status GetValueBigintUint64(Env env, Value value, uint64_t *result, bool *lossle
 {
     return static_cast<Status>(OH_JSVM_GetValueBigintUint64(env, value, result, lossless));
 }
-Status RunScript(Env env, Script script, Value *result)
+Status RunScript(Env env, Value script, Value *result)
 {
-    return static_cast<Status>(OH_JSVM_RunScript(env, script, result));
+    JSVM_Script jsvm_script;
+    JSVM_Status status = OH_JSVM_CompileScript(env, script, nullptr, 0, true, nullptr, &jsvm_script);
+    if (status != JSVM_OK) 
+    {                                                        
+       //return napi_set_last_error((env), JSVM_GENERIC_FAILURE); 
+        return static_cast<Status>(JSVM_GENERIC_FAILURE);    //lvtodo throw ???       
+    }  
+    return static_cast<Status>(OH_JSVM_RunScript(env, jsvm_script, result));
 }
 Status PumpMessageLoop(VM vm, bool *result)
 {
