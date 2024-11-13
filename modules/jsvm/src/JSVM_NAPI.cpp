@@ -679,15 +679,15 @@ Status CoerceToNumber(Env env, Value value, Value *result)
 {
     return static_cast<Status>(napi_coerce_to_number(env, value, result));
 }
-Status CoerceToObject(Env env, Value value, Value* result)
+Status CoerceToObject(Env env, Value value, Value *result)
 {
     return static_cast<Status>(napi_coerce_to_object(env, value, result));
 }
-Status CoerceToString(Env env, Value value, Value* result)
+Status CoerceToString(Env env, Value value, Value *result)
 {
     return static_cast<Status>(napi_coerce_to_string(env, value, result));
 }
-Status GetPropertyNames(Env env, Value object, Value* result)
+Status GetPropertyNames(Env env, Value object, Value *result)
 {
     return static_cast<Status>(napi_get_property_names(env, object, result));
 }

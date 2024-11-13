@@ -67,10 +67,18 @@ Status CloseEnvScope(Env env, EnvScope scope)
 }
 Status CreateEnv(VM vm, size_t propertyCount, const PropertyDescriptor *properties, Env *result)
 {
-    // todo properties
 
-    // JSVM_PropertyDescriptor
-    return static_cast<Status>(OH_JSVM_CreateEnv(vm, 0, nullptr, result));
+    // todo properties
+    auto status = static_cast<Status>(OH_JSVM_CreateEnv(vm, 0, nullptr, result));
+
+    if (status == Status::OK)
+    {
+        jsvm::IsolateData *isolateData = new jsvm::IsolateData();   // delete ?
+        jsvm::JSEnv *jsEnv = new jsvm::JSEnv(isolateData, *result); // delete ?
+        jsvm::JSEnv::setCurrent(jsEnv);
+    }
+
+    return status;
 }
 Status DestroyEnv(Env env)
 {
@@ -227,16 +235,31 @@ Status DefineClass(Env env, const char *utf8name, size_t length, Callback constr
                    const PropertyDescriptor *properties, Value *result)
 {
     std::vector<JSVM_PropertyDescriptor> jsvm_properties;
+    std::vector<JSVM_CallbackStruct> jsvm_callbacks;
     jsvm_properties.reserve(propertyCount);
     for (int i = 0; i < propertyCount; i++)
     {
         JSVM_PropertyDescriptor property;
         property.utf8name = properties[i].utf8name;
         property.name = properties[i].name;
-        property.method->callback = properties[i].method;
-        property.method->data = properties[i].data;
-        property.getter->callback = properties[i].getter; property.getter->data = properties[i].data;
-        property.setter->callback = properties[i].setter; property.setter->data = properties[i].data;
+        if (properties[i].method != nullptr)
+        {
+            jsvm_callbacks.push_back(JSVM_CallbackStruct{.callback = properties[i].method, .data = properties[i].data});
+
+            property.method = &jsvm_callbacks.back();
+        }
+
+        if (properties[i].getter != nullptr)
+        {
+            jsvm_callbacks.push_back(JSVM_CallbackStruct{.callback = properties[i].getter, .data = properties[i].data});
+            property.getter = &jsvm_callbacks.back();
+        }
+
+        if (properties[i].setter != nullptr)
+        {
+            jsvm_callbacks.push_back(JSVM_CallbackStruct{.callback = properties[i].setter, .data = properties[i].data});
+            property.setter = &jsvm_callbacks.back();
+        }
         property.value = properties[i].value;
         property.attributes = static_cast<JSVM_PropertyAttributes>(properties[i].attributes);
         jsvm_properties.push_back(property);
@@ -244,22 +267,37 @@ Status DefineClass(Env env, const char *utf8name, size_t length, Callback constr
     JSVM_Callback jsvm_constructor;
     jsvm_constructor->callback = constructor;
     jsvm_constructor->data = nullptr;
-    return static_cast<Status>(OH_JSVM_DefineClass(env, utf8name, length, jsvm_constructor, propertyCount,
-                                                   jsvm_properties.data(), result));
+    return static_cast<Status>(
+        OH_JSVM_DefineClass(env, utf8name, length, jsvm_constructor, propertyCount, jsvm_properties.data(), result));
 }
 Status DefineProperties(Env env, Value object, size_t propertyCount, const PropertyDescriptor *properties)
 {
     std::vector<JSVM_PropertyDescriptor> napi_properties;
+    std::vector<JSVM_CallbackStruct> jsvm_callbacks;
     napi_properties.reserve(propertyCount);
     for (int i = 0; i < propertyCount; i++)
     {
         JSVM_PropertyDescriptor property;
         property.utf8name = properties[i].utf8name;
         property.name = properties[i].name;
-        property.method->callback = properties[i].method;
-        property.method->data = properties[i].data;
-        property.getter->callback = properties[i].getter; property.getter->data = properties[i].data;
-        property.setter->callback = properties[i].setter; property.setter->data = properties[i].data;
+        if (properties[i].method != nullptr)
+        {
+
+            jsvm_callbacks.push_back(JSVM_CallbackStruct{.data = properties[i].data, .callback = properties[i].method});
+
+            property.method = &jsvm_callbacks.back();
+        }
+        if (properties[i].getter != nullptr)
+        {
+            jsvm_callbacks.push_back(JSVM_CallbackStruct{.data = properties[i].data, .callback = properties[i].getter});
+            property.getter = &jsvm_callbacks.back();
+        }
+
+        if (properties[i].setter != nullptr)
+        {
+            jsvm_callbacks.push_back(JSVM_CallbackStruct{.data = properties[i].data, .callback = properties[i].setter});
+            property.setter = &jsvm_callbacks.back();
+        }
         property.value = properties[i].value;
         property.attributes = static_cast<JSVM_PropertyAttributes>(properties[i].attributes);
         napi_properties.push_back(property);
@@ -331,7 +369,7 @@ Status GetDataviewInfo(Env env, Value dataview, size_t *bytelength, void **data,
 }
 Status GetGlobal(Env env, Value *result)
 {
-    return static_cast<Status>(GetGlobal(env, result));
+    return static_cast<Status>(OH_JSVM_GetGlobal(env, result));
 }
 Status SetInstanceData(Env env, void *data, Finalize finalizeCb, void *finalizeHint)
 {
@@ -393,12 +431,13 @@ Status RunScript(Env env, Value script, Value *result)
 {
     JSVM_Script jsvm_script;
     JSVM_Status status = OH_JSVM_CompileScript(env, script, nullptr, 0, true, nullptr, &jsvm_script);
-    if (status != JSVM_OK) 
-    {                                                        
-       //return napi_set_last_error((env), JSVM_GENERIC_FAILURE); 
-        return static_cast<Status>(JSVM_GENERIC_FAILURE);    //lvtodo throw ???       
-    }  
-    return static_cast<Status>(OH_JSVM_RunScript(env, jsvm_script, result));
+    if (status != JSVM_OK)
+    {
+        // return napi_set_last_error((env), JSVM_GENERIC_FAILURE);
+        return static_cast<Status>(JSVM_GENERIC_FAILURE); // lvtodo throw ???
+    }
+    status = OH_JSVM_RunScript(env, jsvm_script, result);
+    return static_cast<Status>(status);
 }
 Status PumpMessageLoop(VM vm, bool *result)
 {
