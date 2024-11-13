@@ -23,9 +23,9 @@ endif()
 
 if(USE_JS_V8_DEBUGGER)
     list(APPEND HEADERS
-        ${PUBLIC_HEADER_DIR}/${TARGET}/v8debug/debug-agent.h
-        ${PUBLIC_HEADER_DIR}/${TARGET}/v8debug/V8Socket.h
-        ${PUBLIC_HEADER_DIR}/${TARGET}/v8debug/V8WSSv.h
+        src/v8debug/debug-agent.h
+        src/v8debug/V8Socket.h
+        src/v8debug/V8WSSv.h
     )
     list(APPEND SOURCES
         src/v8debug/debug-agent.cpp
