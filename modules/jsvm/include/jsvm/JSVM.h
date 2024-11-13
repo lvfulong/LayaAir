@@ -10,27 +10,6 @@
 #endif
 namespace jsvm
 {
-#define ABORT(msg)                                                                                                     \
-    do                                                                                                                 \
-    {                                                                                                                  \
-        LOGE("%s:%d: fatal error: \"%s\"\n", __FILE__, __LINE__, #msg);                                                \
-        ::abort();                                                                                                     \
-    } while (false)
-
-#define CHECK(assertion)                                                                                               \
-    if (!(assertion))                                                                                                  \
-    {                                                                                                                  \
-        ABORT(#assertion);                                                                                             \
-    }
-#if _DEBUG
-
-#define DEBUG_CHECK(assertion) CHECK(assertion)
-
-#else
-
-#define DEBUG_CHECK(assertion)
-
-#endif
 /*JSVM_EXTERN*/ Status Init(const InitOptions *options);
 /*JSVM_EXTERN*/ Status CreateVM(const CreateVMOptions *options, VM *result);
 /*JSVM_EXTERN*/ Status DestroyVM(VM vm);

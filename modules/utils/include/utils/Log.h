@@ -2,6 +2,7 @@
 #define __Log_H__
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #pragma warning(disable : 4996)
 #ifdef OS_WINDOWS
 #pragma execution_character_set("utf-8")

@@ -4,7 +4,7 @@
 #include <jsvm/JSEnv.h>
 #include <jsvm/JSVM.h>
 #include <jsvm/JSVM_Types.h>
-#include <functional>
+#include <string>
 
 
 namespace jsbind

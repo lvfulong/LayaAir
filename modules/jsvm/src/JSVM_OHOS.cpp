@@ -1,5 +1,5 @@
-#include "binder/JSEnv.h"
-#include "binder/JSVM.h"
+#include <jsvm/JSEnv.h>
+#include <jsvm/JSVM.h>
 
 namespace jsvm
 {
