@@ -2,7 +2,7 @@
 #define __JSBounds_H__
 
 #include <stdio.h>
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include <core/math/BoundBox.h>
 #include <core/math/Bounds.h>
 

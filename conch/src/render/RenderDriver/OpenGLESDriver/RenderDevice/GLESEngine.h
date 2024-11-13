@@ -6,7 +6,7 @@
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLEnum/WebGLMode.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLRenderState.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/WebGLConfig.h"
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include <core/math/Color.h>
 #include <core/math/Vector4.h>
 #include <render/3D/design/renderEnum/BufferTargetType.h>

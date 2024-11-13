@@ -4,7 +4,7 @@
 #include <string>
 #include <map>
 #include <utils/JCBuffer.h>
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 
 namespace laya
 {

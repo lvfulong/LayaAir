@@ -2,7 +2,7 @@
 #define __JSRuntime_H__
 
 #include <stdio.h>
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include "../../JCScriptRuntime.h"
 
 

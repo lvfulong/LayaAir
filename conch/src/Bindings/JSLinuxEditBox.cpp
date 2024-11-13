@@ -1,7 +1,7 @@
 ﻿#include "JSLinuxEditBox.h"
 #include <JCConch.h>
 #include <utils/ColorParser.h>
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include "../../JCScriptRuntime.h"
 #include <utils/Log.h>
 #include <utils/JCColor.h>

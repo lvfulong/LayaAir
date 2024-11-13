@@ -7,7 +7,7 @@
 */
 
 #include "JSGlobalExportCFun.h"
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include <utils/Log.h>
 #include <utils/JCCommonMethod.h>
 #include <utils/JCFileSystem.h>
@@ -142,7 +142,7 @@ namespace laya
     {
         if (pWrapper->funcOnProg.isValid())
         {
-            pWrapper->stop = pWrapper->funcOnProg.call<bool>(jsbind::global(), total, now, speed);
+            pWrapper->stop = pWrapper->funcOnProg.call<bool>(jsvm::global(), total, now, speed);
         }
     }
     int downloadBig_onProg(unsigned int total, unsigned int now, float speed, JSFuncWrapper* pWrapper)
@@ -159,7 +159,7 @@ namespace laya
         }*/
         if (pWrapper->funcOnComp.isValid())
         {
-            pWrapper->funcOnComp.call<void>(jsbind::global(), curlret,httpret);
+            pWrapper->funcOnComp.call<void>(jsvm::global(), curlret,httpret);
         }
         delete pWrapper;
     }
@@ -194,12 +194,12 @@ namespace laya
         {
             if (pBuff) 
             {
-                pWrapper->funcOnComp.call<void>(jsbind::global(), curlret, httpret, (const char*)pBuff);
+                pWrapper->funcOnComp.call<void>(jsvm::global(), curlret, httpret, (const char*)pBuff);
                 delete [] pBuff;
             }
             else 
             {
-                pWrapper->funcOnComp.call<void>(jsbind::global(), curlret, httpret);
+                pWrapper->funcOnComp.call<void>(jsvm::global(), curlret, httpret);
             }
         }
         delete pWrapper;
@@ -454,7 +454,7 @@ namespace laya
         //v8::Isolate* isolate = v8::Isolate::GetCurrent();
 	    //v8::HandleScope scope(isolate);
         GET_ENV
-        jsbind::Object context(jsbind::global());
+        jsbind::Object context(jsvm::global());
         ///Module global(context.isolate());
         JSCanvasRenderingContext2D::exportJS(context);
         JsFile::exportJS(context);

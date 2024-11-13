@@ -1,7 +1,7 @@
 
 #ifndef __JSWX_H__
 #define __JSWX_H__
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include <utils/JCBuffer.h>
 #include <map>
 namespace laya

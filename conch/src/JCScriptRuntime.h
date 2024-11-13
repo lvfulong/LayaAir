@@ -9,13 +9,13 @@
 #ifndef __JCScriptRuntime_H__
 #define __JCScriptRuntime_H__
 
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include <utils/JCLayaUrl.h>
 #include <manager/JCArrayBufferManager.h>
 #include <mutex>
 #include <utils/JCCommonMethod.h>
 #include <vector>
-#include "binder/internal/ScriptThread.h"
+#include "jsvm/ScriptThread.h"
 #if defined(OS_ANDROID)
     #include <Bindings/JSAndroidEditBox.h>
 #elif defined(OS_OHOS)
@@ -120,7 +120,7 @@ namespace laya
         //void postToDecoder(const std::function<void(void)>& func);
     public:
         JCConch*                            m_pConch;
-        std::unique_ptr<jsbind::ScriptThread>       m_pScriptThread;
+        std::unique_ptr<jsvm::ScriptThread>       m_pScriptThread;
         JCCommandEncoderBuffer*				m_pRenderCmd;                   
 		bool                                m_bHasJSThread;	                //js线程是否在工作
         jsbind::Persistent                         m_pJSOnFrameFunction;

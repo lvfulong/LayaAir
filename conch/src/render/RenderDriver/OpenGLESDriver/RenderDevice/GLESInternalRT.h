@@ -8,7 +8,7 @@
 #include <unordered_map>
 #include <utils/Preprocessor.h>
 #include <vector>
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 namespace laya
 {
 class GLESInternalTex;

@@ -3,7 +3,7 @@
 
 
 #include <stdio.h>
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include "resource/Audio/JCAudioInterface.h"
 #include <utils/JCBuffer.h>
 

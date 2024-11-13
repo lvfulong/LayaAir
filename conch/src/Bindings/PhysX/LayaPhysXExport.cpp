@@ -1,5 +1,5 @@
 #include "LayaPhysXExport.h"
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include "emscripten.h"
 
 namespace laya

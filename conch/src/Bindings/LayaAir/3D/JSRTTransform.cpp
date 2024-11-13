@@ -1,5 +1,5 @@
 #include "JSRTTransform.h"
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 namespace laya
 {
 	

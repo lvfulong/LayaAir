@@ -2,7 +2,7 @@
 #define __JSInput_H__
 
 #include <stdio.h>
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include "../../JCScriptRuntime.h"
 #include <mutex>
 #include <utils/InputTypes.h>

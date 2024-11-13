@@ -1,5 +1,5 @@
 #include "JSWebSocket.h"
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include <utils/Log.h>
 #include <utils/JCCommonMethod.h>
 #include <utils/JCMemorySurvey.h>

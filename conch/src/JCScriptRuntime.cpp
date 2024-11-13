@@ -9,7 +9,7 @@
 #include "JCScriptRuntime.h"
 #include <algorithm>
 #include <utils/Log.h>
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include <Bindings/JSFileReader.h>
 #include <Bindings/JSGlobalExportCFun.h>
 #include <Bindings/JSInput.h>
@@ -94,7 +94,7 @@ namespace laya
 #endif
     JCScriptRuntime::JCScriptRuntime()
     {
-        m_pScriptThread = std::make_unique<jsbind::ScriptThread>();
+        m_pScriptThread = std::make_unique<jsvm::ScriptThread>();
         m_bHasJSThread = false;
         m_pFileResMgr = NULL;
         m_pAssetsRes = NULL;
@@ -152,7 +152,7 @@ namespace laya
         event->setPromise(pPromise);
         event->setReason(pReason);
         event->setType(type);
-        JCConch::s_pScriptRuntime->m_pJSOnUnhandledRejectionFunction.call<void>(jsbind::global(), jsbind::Make<JSPromiseRejectionEvent*>(event));
+        JCConch::s_pScriptRuntime->m_pJSOnUnhandledRejectionFunction.call<void>(jsvm::global(), jsbind::Make<JSPromiseRejectionEvent*>(event));
 #endif
     }
     void JCScriptRuntime::start(const char* pStartJS) 
@@ -394,7 +394,7 @@ namespace laya
         {
 			
             //JS_TRY;
-            m_pJSOnDrawFunction.call<void>(jsbind::global(), nTime);
+            m_pJSOnDrawFunction.call<void>(jsvm::global(), nTime);
             //JS_CATCH;
 
             JCConch::s_pConchRender->postTaskFromJSToRenderSync([this]()->bool {
@@ -413,7 +413,7 @@ namespace laya
                 for (int i = 0, nSize = (int)pInput->m_vInputEventsJS.size(); i < nSize; i++ )
                 {
                     TouchEventInfo* touchEvent = &pInput->m_vInputEventsJS[i];
-                    m_pJSTouchEvtFunction.call<void>(jsbind::global(), touchEvent->nType, touchEvent->nID,"type",touchEvent->x, touchEvent->y);
+                    m_pJSTouchEvtFunction.call<void>(jsvm::global(), touchEvent->nType, touchEvent->nID,"type",touchEvent->x, touchEvent->y);
                 }
             }
             if( pInput->m_nTouchFrame > 0 )
@@ -424,7 +424,7 @@ namespace laya
 
         if (g_bGLCanvasSizeChanged && m_pJSOnResizeFunction.isValid())
         {
-            m_pJSOnResizeFunction.call<void>(jsbind::global(), g_nInnerWidth, g_nInnerHeight);
+            m_pJSOnResizeFunction.call<void>(jsvm::global(), g_nInnerWidth, g_nInnerHeight);
             //m_pRootCanvas->size( g_nInnerWidth,g_nInnerHeight );
             g_bGLCanvasSizeChanged = false;
         }
@@ -446,7 +446,7 @@ namespace laya
         //JS_TRY;
         if (m_pJSOnFrameFunction.isValid())
         {
-            m_pJSOnFrameFunction.call<void>(jsbind::global());
+            m_pJSOnFrameFunction.call<void>(jsvm::global());
         }
         //JS_CATCH;
 		
@@ -510,7 +510,7 @@ namespace laya
     }
     void JCScriptRuntime::onNetworkChangedCallJSFunction(int nType)
     {
-        m_pJSNetworkEvtFunction.call<void>(jsbind::global(), nType);
+        m_pJSNetworkEvtFunction.call<void>(jsvm::global(), nType);
     }
     void JCScriptRuntime::jsGC()
     {
@@ -592,7 +592,7 @@ namespace laya
 	{
         if (this->m_pJSOnBlurFunction.isValid())
         {
-            this->m_pJSOnBlurFunction.call<void>(jsbind::global());
+            this->m_pJSOnBlurFunction.call<void>(jsvm::global());
 			
         }
 	}
@@ -600,7 +600,7 @@ namespace laya
 	{
         if (this->m_pJSOnFocusFunction.isValid())
         {
-            this->m_pJSOnFocusFunction.call<void>(jsbind::global(), jsbind::Make<JSLaunchOptions*>(new JSLaunchOptions()));
+            this->m_pJSOnFocusFunction.call<void>(jsvm::global(), jsbind::Make<JSLaunchOptions*>(new JSLaunchOptions()));
         }
 	}
 

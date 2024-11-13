@@ -1,6 +1,6 @@
 #include "JSOHOSEditBox.h"
 #include <aki/jsbind.h>
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include "utils/Log.h"
 #include "utils/JCColor.h"
 #include <JCConch.h>

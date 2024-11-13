@@ -1,7 +1,7 @@
 
 #include "JSDownloader.h"
 #include <utils/JCBuffer.h>
-#include <binder/JSVM.h>
+#include <jsvm/JSVM.h>
 namespace laya{
     struct CallbackData {
         JSDownloader::onDownloadedFunc callback;
@@ -98,6 +98,6 @@ namespace laya{
         jsbind::set_option(obj, "onDownloadEnd", func);
         jsbind::set_option(obj, "external_onok", external_onok);
 
-        m_jsDownloader.call<void>(jsbind::global(), pszUrl, obj);
+        m_jsDownloader.call<void>(jsvm::global(), pszUrl, obj);
     }
 }

@@ -1,7 +1,7 @@
 #include "JSImage.h"
 #include <utils/Log.h>
 #include <utils/JCMemorySurvey.h>
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include "../../JCScriptRuntime.h"
 #include <resource/JCFileResManager.h> 
 #include "JSRuntime.h"

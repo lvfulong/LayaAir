@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <string>
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 
 
 namespace laya 

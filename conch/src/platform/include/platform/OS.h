@@ -1,6 +1,6 @@
 #ifndef __OS_H__
 #define __OS_H__
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include <memory>
 #include <string>
 namespace laya

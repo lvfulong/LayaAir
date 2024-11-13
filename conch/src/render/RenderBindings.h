@@ -13,7 +13,7 @@
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLTextureContext.h"
 #include "render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTSubShader.h"
 #include <Bindings/Video/JSVideo.h>
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include <core/math/Color.h>
 #include <core/math/Matrix3x3.h>
 #include <core/math/Matrix4x4.h>

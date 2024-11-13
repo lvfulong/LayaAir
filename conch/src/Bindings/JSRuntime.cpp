@@ -326,7 +326,7 @@ namespace laya
 			nOrientation = it->second;
 		}
 		JSConchConfig::setScreenOrientation(nOrientation);
-		JCConch::s_pScriptRuntime->m_pJSOnScreenOrientationChanged.call<void>(jsbind::global());
+		JCConch::s_pScriptRuntime->m_pJSOnScreenOrientationChanged.call<void>(jsvm::global());
 	}
 	void JSRuntime::setGlobalRepaint(jsvm::Value p_pFunction)
 	{
@@ -336,7 +336,7 @@ namespace laya
 	{
 		if (JCConch::s_pScriptRuntime->m_pJSSetGlobalRepaintFunction.isValid())
 		{
-			JCConch::s_pScriptRuntime->m_pJSSetGlobalRepaintFunction.call<void>(jsbind::global());
+			JCConch::s_pScriptRuntime->m_pJSSetGlobalRepaintFunction.call<void>(jsvm::global());
 		}
 	}
 	struct SkinnedMatrixCache
@@ -470,7 +470,7 @@ namespace laya
         auto onProgressLocal = jsOnProg->getLocal();
         if (onProgressLocal.isValid() && onProgressLocal.isFunction())
         {
-            onProgressLocal.call<void>(jsbind::global(), now, total, speed);
+            onProgressLocal.call<void>(jsvm::global(), now, total, speed);
             //释放持久句柄
             jsOnProg->reset();
         }
@@ -494,7 +494,7 @@ namespace laya
         if (onCompleteLocal.isValid() && onCompleteLocal.isFunction())
         {
             auto ab = jsbind::ArrayBuffer::MakeArrayBuffer((uint8_t*)p_Buff.m_pPtr, p_Buff.m_nLen);
-            onCompleteLocal.call<void>(jsbind::global(), ab, "","");
+            onCompleteLocal.call<void>(jsvm::global(), ab, "","");
             //释放持久句柄
             jsOnComp->reset();
             jsOnProg->reset();

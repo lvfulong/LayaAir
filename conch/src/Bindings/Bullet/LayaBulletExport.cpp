@@ -20,7 +20,7 @@ namespace laya
 		auto pScriptRuntime = JCConch::s_pScriptRuntime;
 		if (pScriptRuntime && pScriptRuntime->m_bJSBulletDrawLineHandle.isValid())
 		{
-			pScriptRuntime->m_bJSBulletDrawLineHandle.call<void>(jsbind::global(), sx, sy, sz, ex, ey, ez, color);
+			pScriptRuntime->m_bJSBulletDrawLineHandle.call<void>(jsvm::global(), sx, sy, sz, ex, ey, ez, color);
 		}
 	}
 	void layaClearLine()
@@ -28,7 +28,7 @@ namespace laya
         auto pScriptRuntime = JCConch::s_pScriptRuntime;
 		if (pScriptRuntime && pScriptRuntime->m_bJSBulletClearLineHandle.isValid())
 		{
-			pScriptRuntime->m_bJSBulletClearLineHandle.call<void>(jsbind::global());
+			pScriptRuntime->m_bJSBulletClearLineHandle.call<void>(jsvm::global());
 		}
 	}
 #else

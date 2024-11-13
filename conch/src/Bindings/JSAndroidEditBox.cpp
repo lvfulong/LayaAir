@@ -2,7 +2,7 @@
 #include <JCConch.h>
 #include <utils/ColorParser.h>
 #include "JSAndroidEditBox.h"
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include "../../JCScriptRuntime.h"
 #include <utils/Log.h>
 

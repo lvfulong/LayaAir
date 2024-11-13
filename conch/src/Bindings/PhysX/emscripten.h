@@ -2,7 +2,7 @@
 #define __LayaConchPhysXAdapter_H__
 
 #include "../../JCScriptRuntime.h"
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include <Bindings/JSRuntime.h>
 #include "PxPhysicsAPI.h"
 #include <JCConch.h>

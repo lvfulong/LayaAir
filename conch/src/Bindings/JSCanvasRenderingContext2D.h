@@ -2,7 +2,7 @@
 #define __JSCanvasRenderingContext2D_H__
 
 // 包含头文件
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include <resource/JCResource.h>
 #include <stdio.h>
 

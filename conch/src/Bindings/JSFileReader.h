@@ -5,7 +5,7 @@
 //------------------------------------------------------------------------------
 
 
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include "JSFile.h"
 #include <utils/JCMemorySurvey.h>
 

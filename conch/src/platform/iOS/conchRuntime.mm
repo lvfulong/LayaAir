@@ -12,7 +12,7 @@
 #import "LayaEditBoxDelegate.h"
 #import "LayaEditBox.h"
 #import "TouchFilter.h"
-#import <binder/JSBind.h>
+#import <jsbind/JSBind.h>
 //#import <Bindings/JSLayaNative.h>
 #import "LayaAlert.h"
 #import "CToObjectCIOS.h"

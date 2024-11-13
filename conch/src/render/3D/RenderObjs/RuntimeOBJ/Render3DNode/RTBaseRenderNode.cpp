@@ -112,7 +112,7 @@ void RTBaseRenderNode::_renderUpdatePre(GLESRenderContext3D *context3D)
         return;
     if (m_JSFunctionRenderUpdatePre.isValid())
     {
-        m_JSFunctionRenderUpdatePre.call<void>(jsbind::global());
+        m_JSFunctionRenderUpdatePre.call<void>(jsvm::global());
     }
     else
     {

@@ -2,7 +2,7 @@
 #define __JSWebSocket_H__
 
 #include <stdio.h>
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include "../../WebSocket/WebSocket.h"
 
 

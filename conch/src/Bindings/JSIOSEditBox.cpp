@@ -1,5 +1,5 @@
 #include "JSIOSEditBox.h"
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include <utils/Log.h>
 #include <utils/JCColor.h>
 #include "CToObjectC.h"

@@ -1,7 +1,7 @@
 #ifndef __JsVideo_h__
 #define __JsVideo_h__
 
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 
 #include <Image/JCVideo.h>
 #include <map>

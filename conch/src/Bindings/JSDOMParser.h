@@ -2,7 +2,7 @@
 #define __JSDOMParser_H__
 
 #include <stdio.h>
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include "resource/JCFileResManager.h"
 #include "JSXmlNode.h"
 

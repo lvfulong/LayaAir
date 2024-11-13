@@ -1,7 +1,7 @@
 #ifndef __JSLayaGL_H__
 #define __JSLayaGL_H__
 
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include <WebGL/JCGpuProgram.h>
 #include <manager/JCArrayBufferManager.h>
 

@@ -2,7 +2,7 @@
 #define __JSGlobalExportCFun_H__
 
 
-  #include <binder/JSBind.h>
+  #include <jsbind/JSBind.h>
  
 namespace laya 
 {

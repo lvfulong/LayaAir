@@ -3,7 +3,7 @@
 
 
 #include <string>
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include "JCSystemConfig.h"
 
 namespace laya

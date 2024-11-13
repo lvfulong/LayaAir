@@ -2,7 +2,7 @@
 #ifndef __JSDOWNLOADER_H__
 #define __JSDOWNLOADER_H__
 #include "IDownloader.h"
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 namespace laya{
     class JSDownloader :public IDownloader{
     private:

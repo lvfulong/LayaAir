@@ -2,7 +2,7 @@
 #define __RTShaderPass_H__
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderInstance.h"
 #include "render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h"
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include <string>
 #include <unordered_map>
 

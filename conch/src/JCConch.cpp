@@ -14,7 +14,7 @@
 #include <utils/JCFileSource.h>
 #include <resource/JCFileResManager.h>
 #include "JCConch.h"
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include <Bindings/JSFileReader.h>
 #include <Bindings/JSGlobalExportCFun.h>
 #include "JCScriptRuntime.h"

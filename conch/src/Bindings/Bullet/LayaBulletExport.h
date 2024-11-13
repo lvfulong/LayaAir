@@ -3,7 +3,7 @@
 
 #include <JCConch.h>
 #include "../../JCScriptRuntime.h"
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include "btBulletDynamicsCommon.h"
 #include "BulletCollision/Gimpact/btGImpactCollisionAlgorithm.h"
 #include "BulletCollision/Gimpact/btGImpactShape.h"
@@ -20,11 +20,11 @@ namespace laya
 {
     inline void layaMotionStateGetWorldTransform(int32_t rigidBodyID, pointer_t worldTrans)
     {
-		JCConch::s_pScriptRuntime->m_bJSBulletGetWorldTransformHandle.call<void>(jsbind::global(),rigidBodyID, worldTrans);
+		JCConch::s_pScriptRuntime->m_bJSBulletGetWorldTransformHandle.call<void>(jsvm::global(),rigidBodyID, worldTrans);
     }
     inline void layaMotionStateSetWorldTransform(int32_t rigidBodyID, const pointer_t worldTrans)
     {
-		JCConch::s_pScriptRuntime->m_bJSBulletSetWorldTransformHandle.call<void>(jsbind::global(),rigidBodyID, worldTrans);
+		JCConch::s_pScriptRuntime->m_bJSBulletSetWorldTransformHandle.call<void>(jsvm::global(),rigidBodyID, worldTrans);
     }
 
 

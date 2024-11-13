@@ -2,7 +2,7 @@
 #include <utils/JCCommonMethod.h>
 #include <utils/JCMemorySurvey.h>
 #include <JCConch.h>
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include "JCScriptRuntime.h"
 
 namespace laya

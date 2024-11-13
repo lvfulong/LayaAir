@@ -145,7 +145,7 @@ void RTShaderPass::setCreateShaderInstanceFunction(jsvm::Value value)
 }
 GLESShaderInstance *RTShaderPass::callCreateShaderInstanceFunction()
 {
-    return m_createShaderInstanceFunctionJS.call<GLESShaderInstance *>(jsbind::global());
+    return m_createShaderInstanceFunctionJS.call<GLESShaderInstance *>(jsvm::global());
 }
 void RTShaderPass::destroy()
 {

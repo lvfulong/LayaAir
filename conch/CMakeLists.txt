@@ -645,7 +645,8 @@ if(OS_ANDROID)
 		GLESv3
 		OpenSLES
 		utils
-		binder
+		jsbind
+		jsvm
 		zlib
 		mpg123
 		zip
@@ -660,8 +661,8 @@ if(OS_ANDROID)
 		freetype
 
 		# curl
-		v8_monolith
-		v8inspector
+		#v8_monolith
+		#v8inspector
 
 		# BulletSoftBody
 		BulletDynamics
@@ -700,7 +701,8 @@ elseif(OS_IOS)
 		"-framework CoreHaptics"
 		${LINK_LIBS}
 		utils
-		binder
+		jsbind
+		jsvm
 		zlib
 		mpg123
 		zip
@@ -718,7 +720,7 @@ elseif(OS_IOS)
 		freetype
 
 		# curl
-		v8_monolith
+		#v8_monolith
 		BulletDynamics
 		BulletCollision
 		LinearMath
@@ -741,7 +743,8 @@ elseif(OS_WINDOWS)
 		shlwapi.lib
 		Iphlpapi.lib
 		utils
-		binder
+		jsbind
+		jsvm
 		zlib
 		mpg123
 		zip
@@ -756,9 +759,9 @@ elseif(OS_WINDOWS)
 		vorbis
 		ogg
 		freetype
-		v8
-		v8_libbase
-		v8_libplatform
+		#v8
+		#v8_libbase
+		#v8_libplatform
 		egl
 		gles
 		bulletcollision
@@ -791,7 +794,8 @@ endif()
     	libohaudio.so
 		libavplayer.so
 		utils
-		binder
+		jsbind
+		jsvm
 		curl
 		jpeg
 		jpeg-turbo

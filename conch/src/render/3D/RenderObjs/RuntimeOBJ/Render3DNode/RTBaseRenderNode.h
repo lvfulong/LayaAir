@@ -5,7 +5,7 @@
 #include <vector>
 #include "render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderContext3D.h"
 #include <core/math/Types.h>
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include "Bindings/LayaAir/3D/JSBounds.h"
 namespace laya
 {

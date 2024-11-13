@@ -1,7 +1,7 @@
 ﻿#ifndef __JSFileSystem_H__
 #define __JSFileSystem_H__
 
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 
 namespace laya
 {

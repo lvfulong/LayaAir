@@ -1,5 +1,5 @@
 #include "JSSubmitScene3D.h"
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 #include <utils/Log.h>
 #include <utils/JCMemorySurvey.h>
 

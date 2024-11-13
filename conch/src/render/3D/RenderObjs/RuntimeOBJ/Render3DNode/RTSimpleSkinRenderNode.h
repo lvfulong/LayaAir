@@ -2,7 +2,7 @@
 #define __RTSimpleSkinRenderNode_H_
 
 #include "RTBaseRenderNode.h"
-#include <binder/JSBind.h>
+#include <jsbind/JSBind.h>
 namespace laya
 {
     class RTSimpleSkinRenderNode :public RTBaseRenderNode {
