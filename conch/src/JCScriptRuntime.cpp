@@ -40,61 +40,9 @@ extern std::string gRedistPath;
 
 namespace laya 
 {
-#ifdef JS_V8_DEBUGGER
-    bool g_bSendLogToDbg = true;
-
-    void mygLayaLog(int level, const char* file, int line, const char* fmt, ...) {
-        if (!JCConch::s_pScriptRuntime)
-            return;
-        DebuggerAgent* pDbgAgent = JCConch::s_pScriptRuntime->m_pDbgAgent;
-        if (!g_bSendLogToDbg || !pDbgAgent) {
-            va_list args;
-            va_start(args, fmt);
-            vprintf(fmt, args);
-            va_end(args);
-            return;
-        }
-        char buf[1024];
-        char* pBuf = NULL;
-        va_list args;
-        va_start(args, fmt);
-        int len = vsnprintf(buf, 1024, fmt, args);
-        if (len < 0) {
-            printf("log error! \n");
-            return;
-        }
-        if (len > 1024) {
-            pBuf = new char[len + 1];
-            len = vsnprintf(pBuf, len + 1, fmt, args);
-            if (len < 0)
-                return;
-        }
-        va_end(args);
-        const char* pTypes[] = { "warning","error", "debug", "log","runtime" };
-        int sz = sizeof(pTypes) / sizeof(const char*);
-        pDbgAgent->sendToDbgConsole(pBuf ? pBuf : buf, file, line, 0, level < sz ? pTypes[level] : "unknown");
-        if (pBuf) {
-            delete[] pBuf;
-        }
-    }
-
-    void mygLayaLogSimp(int level, const char* file, int line, const char* msg) {
-        if (!JCConch::s_pScriptRuntime)
-            return;
-        DebuggerAgent* pDbgAgent = JCConch::s_pScriptRuntime->m_pDbgAgent;
-        if (!g_bSendLogToDbg || !pDbgAgent) {
-            printf("%s", msg);
-            return;
-        }
-        const char* pTypes[] = { "warning","error", "debug", "log","runtime" };
-        int sz = sizeof(pTypes) / sizeof(const char*);
-        pDbgAgent->sendToDbgConsole((char*)msg, file, line, 0, level < sz ? pTypes[level] : "unknown");
-    }
-
-#endif
     JCScriptRuntime::JCScriptRuntime()
     {
-        m_pScriptThread = std::make_unique<jsvm::ScriptThread>();
+        m_pScriptThread = std::make_shared<jsvm::ScriptThread>();
         m_bHasJSThread = false;
         m_pFileResMgr = NULL;
         m_pAssetsRes = NULL;
@@ -161,18 +109,19 @@ namespace laya
         if (pStartJS)m_strStartJS = pStartJS;
 
 #ifdef JS_V8_DEBUGGER
-        m_pDbgAgent = NULL;
-        if (g_kSystemConfig.m_nJSDebugMode != JS_DEBUG_MODE_OFF)
-        {
-            LOGI("open js debug port at %d", g_kSystemConfig.m_nJSDebugPort);
-            m_pDbgAgent = new DebuggerAgent("layabox", g_kSystemConfig.m_nJSDebugPort);
-            JCConch::s_pScriptRuntime->m_pDbgAgent = m_pDbgAgent;
-        }
-        else
-        {
-            m_pDbgAgent = NULL;
-            JCConch::s_pScriptRuntime->m_pDbgAgent = NULL;
-        }
+        // m_pDbgAgent = NULL;
+        // if (g_kSystemConfig.m_nJSDebugMode != JS_DEBUG_MODE_OFF)
+        // {
+        //     jsvm::OpenInspector(env, g_kSystemConfig.m_nJSDebugPort);
+        //     LOGI("open js debug port at %d", g_kSystemConfig.m_nJSDebugPort);
+        //     m_pDbgAgent = new DebuggerAgent("layabox", g_kSystemConfig.m_nJSDebugPort);
+        //     JCConch::s_pScriptRuntime->m_pDbgAgent = m_pDbgAgent;
+        // }
+        // else
+        // {
+        //     m_pDbgAgent = NULL;
+        //     JCConch::s_pScriptRuntime->m_pDbgAgent = NULL;
+        // }
 #endif
 
         m_debugPort = g_kSystemConfig.m_nJSDebugMode;
@@ -186,12 +135,12 @@ namespace laya
         LOGI("Stop js start...");
 
 #ifdef JS_V8_DEBUGGER
-        if (m_pDbgAgent)
-        {
-            m_pDbgAgent->Shutdown();
-            delete m_pDbgAgent;
-            m_pDbgAgent = NULL;
-        }
+        // if (m_pDbgAgent)
+        // {
+        //     m_pDbgAgent->Shutdown();
+        //     delete m_pDbgAgent;
+        //     m_pDbgAgent = NULL;
+        // }
 #endif
         //while (m_nThreadState==1)
         {
@@ -225,30 +174,25 @@ namespace laya
     void JCScriptRuntime::onThreadInit(JCEventEmitter::evtPtr evt) 
     {
         LOGI("js thread started.");
-
+        GET_ENV;
+        env;
         //m_nThreadState = 2;
-#ifdef JS_V8
         //JSObjNode::s_pListJSObj = new JCSimpList();
 #ifdef JS_V8_DEBUGGER
-        if (m_pDbgAgent) 
+        if (g_kSystemConfig.m_nJSDebugMode != JS_DEBUG_MODE_OFF)
         {
-            m_pDbgAgent->onJSStart(m_pScriptThread,(g_kSystemConfig.m_nJSDebugMode == JS_DEBUG_MODE_WAIT) ? true : false,[]{
-                //gLayaLog = mygLayaLog;
-                //gLayaLogNoParam = mygLayaLogSimp;
-            },[]{
-                //gLayaLog = nullptr;
-                //gLayaLogNoParam = nullptr;
-            });
-            LOGI("js debug open mode: %d port %d", g_kSystemConfig.m_nJSDebugMode, g_kSystemConfig.m_nJSDebugPort);
+            jsvm::OpenInspector(env, g_kSystemConfig.m_nJSDebugPort,m_pScriptThread);
+        }
 
-            gLayaLog = mygLayaLog;
-            gLayaLogNoParam = mygLayaLogSimp;
-        }
-        else
-        {
-            LOGI("js debug closed");
-        }
-#endif
+        // if (m_pDbgAgent) 
+        // {
+        //     m_pDbgAgent->onJSStart(m_pScriptThread,(g_kSystemConfig.m_nJSDebugMode == JS_DEBUG_MODE_WAIT) ? true : false);
+        //     LOGI("js debug open mode: %d port %d", g_kSystemConfig.m_nJSDebugMode, g_kSystemConfig.m_nJSDebugPort);
+        // }
+        // else
+        // {
+        //     LOGI("js debug closed");
+        // }
 #endif
         JCConch::s_pConchRender->m_pImageManager->resetJSThread();
 
@@ -307,6 +251,7 @@ namespace laya
     }
     void JCScriptRuntime::onThreadExit(JCEventEmitter::evtPtr evt)
     {
+        GET_ENV;
         //if (m_nThreadState == 0)
         //{
         //    return;
@@ -341,10 +286,7 @@ namespace laya
         JSGlobalDisExportC();
 #ifdef JS_V8
 #ifdef JS_V8_DEBUGGER
-        if (m_pDbgAgent)
-        {
-            m_pDbgAgent->onJSExit();
-        }
+        jsvm::CloseInspector(env);
 #endif
 #elif JS_JSC
         JSP_RESET_GLOBAL_FUNCTION;
@@ -384,6 +326,7 @@ namespace laya
         
         //PERF_INITVAR(nBenginTime);
 #ifdef JS_V8_DEBUGGER
+        //auto xxx = m_pScriptThread.get();
         m_pScriptThread->runDbgFuncs();
 #endif
         m_nUpdateCount++;

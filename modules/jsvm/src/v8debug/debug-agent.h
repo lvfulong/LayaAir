@@ -80,7 +80,7 @@ namespace laya {
 		* 启动js线程了，创建一个新的jsid，以后js相关的消息，都使用这个jsid。
 		* 提供一个函数，希望js线程在循环中调用他。
 		*/
-		void onJSStart(JSThreadInterface* pJSThread,bool bDebugWait, std::function<void()> onAcceptNewFrontend, std::function<void()> onFrontEndClose);
+		void onJSStart(std::shared_ptr<jsvm::ScriptThread> scriptThread, bool bDebugWait);
 		/**
 		* js线程结束了，当前的jsid就失效了，以后接收到的此id的消息都忽略。
 		*/
@@ -93,6 +93,9 @@ namespace laya {
         void onDbgMsg(char* pMsg, int len);
         void sendMsgToFrontend(char* pMsg, int len);
         void onMsgToV8End(int id);    //js线程执行完毕的回调。是在js线程
+        void WaitForDebugger (bool breakNextLine);
+
+        void _breakJS();
 	private:
 
 		v8::Isolate* isolate_;
@@ -101,7 +104,7 @@ namespace laya {
 		bool terminate_;  
 		std::mutex session_access_;  // Mutex guarging access to session_.
 		//semaphore terminate_now_;  // Semaphore to signal termination.
-		JSThreadInterface*	pJSThread_;
+		std::shared_ptr<jsvm::ScriptThread>	pJSThread_;
         per_session_data__v8dbg*    pWsSessionData=nullptr;
         bool        bHasFrontend = false;//等到有人连进来才跑js
         bool        bFirst = true;
@@ -113,10 +116,6 @@ namespace laya {
         std::unique_ptr<v8_inspector::V8InspectorSession> _dbg_session_; //new debugger
         v8_inspector::V8InspectorClient*    m_pInspectorClient=nullptr;
         InspectorFrontend*                  m_pInspectorChannel = nullptr;
-
-        std::function<void()> onAcceptNewFrontend_;
-        std::function<void()> onFrontEndClose_;
-
 	};
 }
 #endif  // V8_DEBUG_AGENT_H_

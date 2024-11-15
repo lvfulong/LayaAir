@@ -1,13 +1,14 @@
-#include <binder/v8debug/debug-agent.h>
+#include "debug-agent.h"
 #include <utils/Log.h>
-#include <jsvm/v8debug/V8Socket.h>
+#include "V8Socket.h"
 #include <utils/JCFileSystem.h>
 #include <utils/JCJson.h>
 #include <utils/JCCommonMethod.h>
 #include <string>
 #include <chrono>
 #include <thread>
-#include <jsvm/v8debug/V8WSSv.h>
+#include "V8WSSv.h"
+#include "jsvm/ScriptThread.h"
 
 namespace laya {
 
@@ -114,7 +115,6 @@ namespace laya {
 		port_(port),
 		terminate_(false)/*,
 		terminate_now_(0)*/{
-		pJSThread_ = NULL;
 		isolate_ = NULL;
 	}
 
@@ -122,11 +122,10 @@ namespace laya {
 	}
     class MyV8InspectorClient :public v8_inspector::V8InspectorClient {
     public:
-        MyV8InspectorClient(JSThreadInterface* pJS) {
+        MyV8InspectorClient(std::shared_ptr<jsvm::ScriptThread> pJS) {
             pJSThread = pJS;
         }
         virtual ~MyV8InspectorClient() {
-            int a = 10;
         }
         void runMessageLoopOnPause(int context_group_id) override {
             terminated_ = false;
@@ -192,7 +191,7 @@ namespace laya {
 
 
         bool        terminated_ = false;
-        JSThreadInterface*   pJSThread=nullptr;
+        std::shared_ptr<jsvm::ScriptThread>   pJSThread;
     };
 
 
@@ -208,9 +207,6 @@ namespace laya {
 
         //注意 由于线程问题，如果有新的前端连进来（或者前端刷新），而js又在用这个对象，可能会导致非法。不过这种情况很少，加锁的话又不好看，先忽略。
         pWsSessionData = pData;
-        //gLayaLog = mygLayaLog;
-        //gLayaLogNoParam = mygLayaLogSimp;
-        onAcceptNewFrontend_();
         m_pInspectorChannel->pAgent = this;
         /*
         if (bFirst) {
@@ -220,10 +216,7 @@ namespace laya {
         */
     }
 
-    void DebuggerAgent::onFrontEndClose() {//TODO ��û�е���
-        //gLayaLog = nullptr;
-        //gLayaLogNoParam = nullptr;
-        onFrontEndClose_();
+    void DebuggerAgent::onFrontEndClose() {
     }
 
     void dispatchProtocolMsg_inJSThread(DebuggerAgent* pAgent, v8_inspector::StringView msg, int msgid) {
@@ -380,10 +373,8 @@ namespace laya {
         return view;
     }
 
-	void DebuggerAgent::onJSStart(JSThreadInterface* pJSThread,bool bDebugWait, std::function<void()> onAcceptNewFrontend, std::function<void()> onFrontEndClose) {
-        onAcceptNewFrontend_ = onAcceptNewFrontend;
-        onFrontEndClose_ = onFrontEndClose;
-		pJSThread_ = pJSThread;
+	void DebuggerAgent::onJSStart(std::shared_ptr<jsvm::ScriptThread> scriptThread,bool bDebugWait) {
+		pJSThread_ = scriptThread;
         isolate_ = (v8::Isolate::GetCurrent());
 		v8::HandleScope handle_scope(isolate_);
         v8::Local<v8::String> nameStr = v8::String::NewFromUtf8(isolate_, "layabox", v8::NewStringType::kNormal).ToLocalChecked();
@@ -391,7 +382,7 @@ namespace laya {
         std::unique_ptr<uint16_t[]> nameBuffer(new uint16_t[nameLen]);
         nameStr->Write(isolate_, nameBuffer.get(), 0, nameLen);
 
-        m_pInspectorClient = new MyV8InspectorClient(pJSThread);
+        m_pInspectorClient = new MyV8InspectorClient(pJSThread_);
         _new_inspector = v8_inspector::V8Inspector::create(isolate_, m_pInspectorClient);
         v8::Local<v8::Context> context = isolate_->GetCurrentContext();
         m_pInspectorChannel = new InspectorFrontend(context);
@@ -412,7 +403,7 @@ namespace laya {
         //如果要一上来就暂停，就要特殊处理
         if (bDebugWait) {
             while (!bHasFrontend) {
-                pJSThread->runDbgFuncs();
+                pJSThread_->runDbgFuncs();
                 std::this_thread::sleep_for(std::chrono::microseconds(100));
             }
             /*
@@ -438,6 +429,34 @@ namespace laya {
             */
         }
 	}
+
+    void DebuggerAgent::WaitForDebugger (bool breakNextLine){
+        if(breakNextLine){
+            if(pJSThread_){
+                //TODO
+                //pJSThread_->pushDbgFunc(std::bind(DebuggerAgent::_breakJS, this));
+            }
+        }
+    }
+
+    void DebuggerAgent::_breakJS (){
+        auto isolate = v8::Isolate::GetCurrent();
+        // 获取当前位置的源代码位置信息
+        v8::Local<v8::StackTrace> stack_trace = v8::StackTrace::CurrentStackTrace(isolate, 1);
+        v8::Local<v8::StackFrame> frame = stack_trace->GetFrame(isolate, 0);
+        int line = frame->GetLineNumber();
+        int column = frame->GetColumn();
+        v8::Local<v8::String> script_name = frame->GetScriptName();
+
+        // 在当前位置设置断点
+        v8_inspector::StringView script_name_view(
+            reinterpret_cast<const uint8_t *>(*v8::String::Utf8Value(isolate, script_name)),
+            script_name->Utf8Length(isolate));
+
+        _dbg_session_->schedulePauseOnNextStatement(
+            v8_inspector::StringView(),
+            script_name_view);
+    }
 
 	void DebuggerAgent::onJSExit() { 
 		pJSThread_ = NULL;

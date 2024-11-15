@@ -2,6 +2,7 @@
 #define __JSVM_H__
 
 #include "JSVM_Types.h"
+#include "ScriptThread.h"
 #include <cstdint>
 #if defined(JS_OHOS_JSVM)
 #include "ark_runtime/jsvm.h"
@@ -135,6 +136,12 @@ namespace jsvm
 /*JSVM_EXTERN*/ Status CoerceToObject(Env env, Value value, Value *result);
 /*JSVM_EXTERN*/ Status CoerceToString(Env env, Value value, Value *result);
 /*JSVM_EXTERN*/ Status GetPropertyNames(Env env, Value object, Value *result);
+//打开调试
+void OpenInspector(Env env, int port, std::shared_ptr<ScriptThread> scriptThread);
+void WaitForDebugger(Env env,bool breakNextLine);
+//关闭调试
+void CloseInspector(Env env);
+
 Status ReportException(Env env);
 } // namespace jsvm
 // #include "JSVM_inline.h"

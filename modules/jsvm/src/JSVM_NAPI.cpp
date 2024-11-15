@@ -4,6 +4,8 @@
 #include "jsvm/napi/js_native_api_v8.h"
 #include <libplatform/libplatform.h>
 #include <v8.h>
+#include "v8debug/debug-agent.h"
+#include "jsvm/ScriptThread.h"
 
 namespace jsvm
 {
@@ -831,5 +833,22 @@ Status ReportException(Env env)
 
     return Status::OK; // todo
 }
+
+laya::DebuggerAgent* pDbgAgent;
+void OpenInspector(Env env, int port, std::shared_ptr<jsvm::ScriptThread> scriptThread){
+    pDbgAgent = new laya::DebuggerAgent("layabox",port);
+    pDbgAgent->onJSStart(scriptThread,false);
+}
+void WaitForDebugger(Env env, bool breakNextLine){
+    pDbgAgent->WaitForDebugger(breakNextLine);
+}
+//关闭调试
+void CloseInspector(Env env){
+    pDbgAgent->Shutdown();
+    delete pDbgAgent;
+    pDbgAgent = nullptr;
+}
+
+
 
 } // namespace jsvm
