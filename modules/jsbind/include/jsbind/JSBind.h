@@ -17,6 +17,7 @@
 #include <jsbind/Value.h>
 #include <jsbind/Function.h>
 #include <jsbind/Class.h>
+#include <jsbind/Error.h>
 #include <jsvm/JSVM.h>
 #include <jsvm/JSVM_Types.h>
 //#ifdef JS_V8_DEBUGGER

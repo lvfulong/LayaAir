@@ -11,27 +11,6 @@
 #endif
 namespace jsvm
 {
-#define ABORT(msg)                                                                                                     \
-    do                                                                                                                 \
-    {                                                                                                                  \
-        LOGE("%s:%d: fatal error: \"%s\"\n", __FILE__, __LINE__, #msg);                                                \
-        ::abort();                                                                                                     \
-    } while (false)
-
-#define CHECK(assertion)                                                                                               \
-    if (!(assertion))                                                                                                  \
-    {                                                                                                                  \
-        ABORT(#assertion);                                                                                             \
-    }
-#if _DEBUG
-
-#define DEBUG_CHECK(assertion) CHECK(assertion)
-
-#else
-
-#define DEBUG_CHECK(assertion)
-
-#endif
 /*JSVM_EXTERN*/ Status Init(const InitOptions *options);
 /*JSVM_EXTERN*/ Status CreateVM(const CreateVMOptions *options, VM *result);
 /*JSVM_EXTERN*/ Status DestroyVM(VM vm);
@@ -43,6 +22,8 @@ namespace jsvm
 /*JSVM_EXTERN*/ Status DestroyEnv(Env env);
 /*JSVM_EXTERN*/ Status OpenHandleScope(Env env, HandleScope *result);
 /*JSVM_EXTERN*/ Status CloseHandleScope(Env env, HandleScope scope);
+/*JSVM_EXTERN*/ Status GetAndClearLastException(Env env, Value *result);
+/*JSVM_EXTERN*/ Status ThrowError(Env env, const char *code, const char *msg);
 /*JSVM_EXTERN*/ Status CreatePromise(Env env, Deferred *deferred, Value *promise);
 /*JSVM_EXTERN*/ Status ResolveDeferred(Env env, Deferred deferred, Value resolution);
 /*JSVM_EXTERN*/ Status RejectDeferred(Env env, Deferred deferred, Value resolution);

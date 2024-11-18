@@ -322,6 +322,14 @@ Status CloseHandleScope(Env env, HandleScope scope)
 {
     return static_cast<Status>(napi_close_handle_scope(env, scope));
 }
+Status GetAndClearLastException(Env env, Value *result)
+{
+    return static_cast<Status>(napi_get_and_clear_last_exception(env, result));
+}
+Status ThrowError(Env env, const char *code, const char *msg)
+{
+    return static_cast<Status>(napi_throw_error(env, code, msg));
+}
 Status GetArrayLength(Env env, Value value, uint32_t *result)
 {
     return static_cast<Status>(napi_get_array_length(env, value, result));
@@ -681,15 +689,15 @@ Status CoerceToNumber(Env env, Value value, Value *result)
 {
     return static_cast<Status>(napi_coerce_to_number(env, value, result));
 }
-Status CoerceToObject(Env env, Value value, Value* result)
+Status CoerceToObject(Env env, Value value, Value *result)
 {
     return static_cast<Status>(napi_coerce_to_object(env, value, result));
 }
-Status CoerceToString(Env env, Value value, Value* result)
+Status CoerceToString(Env env, Value value, Value *result)
 {
     return static_cast<Status>(napi_coerce_to_string(env, value, result));
 }
-Status GetPropertyNames(Env env, Value object, Value* result)
+Status GetPropertyNames(Env env, Value object, Value *result)
 {
     return static_cast<Status>(napi_get_property_names(env, object, result));
 }

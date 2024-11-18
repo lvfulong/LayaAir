@@ -586,7 +586,7 @@ namespace laya
     }
     void JSRuntime::exportJS(jsbind::Object& context)
     {
-        jsbind::class_<JSRuntime> class_binding;
+        jsbind::global_class_<JSRuntime> class_binding;
 		class_binding.class_function("postAsyncMessage", &JSRuntime::postAsyncMessage);
         class_binding.class_function("postSyncMessage", &JSRuntime::postSyncMessage);
 		class_binding.class_function("setGlobalRepaint", &JSRuntime::setGlobalRepaint);
@@ -635,6 +635,6 @@ namespace laya
 		class_binding.class_property("safeInsetBottom", &JSRuntime::GetSafeInsetBottom);
 		class_binding.class_property("safeInsetRight", &JSRuntime::GetSafeInsetRight);
         class_binding.class_property("presetUrl", &JSRuntime::getPresetUrl);
-        context.class_("conch", class_binding);
+        context.global_class_("conch", class_binding);
     }
 }

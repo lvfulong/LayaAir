@@ -414,7 +414,7 @@ void JSLayaGL::setMainContextSize(int width, int height)
 
 void JSLayaGL::exportJS(jsbind::Object &context)
 {
-    jsbind::class_<JSLayaGLWrapper> class_binding;
+    jsbind::global_class_<JSLayaGLWrapper> class_binding;
     class_binding.class_function("setFrameAndSyncCountArrayBufferID",
                                  &JSLayaGLWrapper::setFrameAndSyncCountArrayBufferID);
     class_binding.class_function("setSyncArrayBufferID", &JSLayaGLWrapper::setSyncArrayBufferID);
@@ -455,6 +455,6 @@ void JSLayaGL::exportJS(jsbind::Object &context)
     class_binding.class_function("getActiveUniformBlockName", &JSLayaGLWrapper::getActiveUniformBlockName);
     class_binding.class_function("getUniformBlockIndex", &JSLayaGLWrapper::getUniformBlockIndex);
     class_binding.class_function("uniformBlockBinding", &JSLayaGLWrapper::uniformBlockBinding);
-    context.class_("layagl", class_binding);
+    context.global_class_("layagl", class_binding);
 }
 } // namespace laya

@@ -31,9 +31,9 @@ void JSWX::revokeBufferURL(const char *url)
 
 void JSWX::exportJS(jsbind::Object &context)
 {
-    jsbind::class_<JSWX> class_binding;
+    jsbind::global_class_<JSWX> class_binding;
     class_binding.class_function("createBufferURL", &JSWX::createBufferURL);
     class_binding.class_function("revokeBufferURL", &JSWX::revokeBufferURL);
-    context.class_("wx", class_binding);
+    context.global_class_("wx", class_binding);
 }
 } // namespace laya

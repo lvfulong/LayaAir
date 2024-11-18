@@ -250,18 +250,14 @@ class Object
     }
     template <typename T> Object &class_(const char* name, jsbind::class_<T> &cl)
     {
-        /*v8::HandleScope scope(isolate());
-        v8::Local<v8::String> name_string =
-            v8::String::NewFromUtf8(isolate(), name.data(), v8::NewStringType::kInternalized).ToLocalChecked();
-        cl.class_function_template()->SetClassName(name_string);
-        global()
-            ->Set(isolate()->GetCurrentContext(), name_string,
-                cl.js_function_template()->GetFunction(isolate()->GetCurrentContext()).ToLocalChecked())
-            .FromJust();*/
         GET_ENV
-        cl.Register(env, object_, name);
-        //GET_ENV
-        //jsvm::SetNamedProperty(env, object_, name.data(), cl.ctor_);
+        cl.registerClass(env, object_, name);
+        return *this;
+    }
+    template <typename T> Object &global_class_(const char* name, jsbind::global_class_<T> &cl, T* instance = nullptr)
+    {
+        GET_ENV
+        cl.registerClass(env, object_, name);
         return *this;
     }
 

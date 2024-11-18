@@ -103,8 +103,8 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
         this->removeObject(env, objectToReplace);
 
         jsvm::Ref objectRef_;
-        status = jsvm::Wrap(env, instance, reinterpret_cast<void *>(objectPointer), internal::destructor<ClassType>, nullptr,
-                            &objectRef_);
+        status = jsvm::Wrap(env, instance, reinterpret_cast<void *>(objectPointer), internal::destructor<ClassType>,
+                            nullptr, &objectRef_);
         DEBUG_CHECK(status == jsvm::Status::OK);
         this->objects_.emplace(instance, ObjectRegistry{objectRef_, true});
         return instance;
@@ -256,6 +256,14 @@ template <typename ClassType> static jsvm::Value New(jsvm::Env env, jsvm::Callba
 
         }
 #endif
+}
+template <typename ClassType> static jsvm::Value NewGlobalClass(jsvm::Env env, jsvm::CallbackInfo info)
+{
+    //LOGI("jsvm NewGlobalClass %s", type_id<ClassType>().name().data());
+    jsvm::Value thisVar = nullptr;
+    jsvm::GetCbInfo(env, info, nullptr, nullptr, &thisVar, nullptr);
+
+    return thisVar;
 }
 template <typename ClassType> class class_
 {
@@ -431,17 +439,95 @@ template <typename ClassType> class class_
         classRegistry_.js_function_template()->Inherit(baseClassRegistry.class_function_template());*/
         return *this;
     }
-    jsvm::Value Register(jsvm::Env env, jsvm::Value exports, const char *className)
+    jsvm::Value registerClass(jsvm::Env env, jsvm::Value exports, const char *className)
     {
+        jsvm::Status status;
         jsvm::Value cons;
-        jsvm::DefineClass(env, className, NAPI_AUTO_LENGTH, New<ClassType>, propertyDescriptorVector_.size(),
-                          propertyDescriptorVector_.data(), &cons);
 
+        status = jsvm::DefineClass(env, className, NAPI_AUTO_LENGTH, New<ClassType>, propertyDescriptorVector_.size(),
+                                   propertyDescriptorVector_.data(), &cons);
+        DEBUG_CHECK(status == jsvm::Status::OK);
         ClassRegistry<ClassType> &baseClassRegistry =
             ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
 
-        jsvm::CreateReference(env, cons, 1, &classRegistry_.classRef_);
-        jsvm::SetNamedProperty(env, exports, className, cons);
+        status = jsvm::CreateReference(env, cons, 1, &classRegistry_.classRef_);
+        DEBUG_CHECK(status == jsvm::Status::OK);
+        status = jsvm::SetNamedProperty(env, exports, className, cons);
+        DEBUG_CHECK(status == jsvm::Status::OK);
+
+        return exports;
+    }
+};
+
+template <typename ClassType> class global_class_
+{
+  public:
+    global_class_() : classRegistry_(ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>())) {};
+    global_class_(global_class_ const &) = delete;
+    global_class_ &operator=(global_class_ const &) = delete;
+
+    global_class_(global_class_ &&) = default;
+    global_class_ &operator=(global_class_ &&) = delete;
+    ClassRegistry<ClassType> &classRegistry_;
+
+    jsvm::Value ctor_;
+    mutable std::vector<jsvm::PropertyDescriptor> propertyDescriptorVector_;
+
+  public:
+    template <typename ReturnType, typename... Args>
+    const global_class_&class_function(const char *name, ReturnType (*func)(Args...)) const
+    {
+        FuncInfo<decltype(func)> *data = new FuncInfo<decltype(func)>(func);
+        internal::addDeinitializer([data]() { delete data; });
+        data->name = name;
+        jsvm::PropertyDescriptor descriptor;
+        descriptor.utf8name = name;
+        descriptor.name = NULL;
+        descriptor.method = internal::InvokeMethodStatic<ReturnType, Args...>;
+        descriptor.getter = NULL;
+        descriptor.setter = NULL;
+        descriptor.value = NULL;
+        descriptor.attributes = jsvm::PropertyAttributes::DEFAULT;
+        descriptor.data = data;
+        propertyDescriptorVector_.push_back(descriptor);
+        return *this;
+    }
+    template <typename PropertyType>
+    global_class_&class_property(const char *name, PropertyType (*get)(void), void (*set)(PropertyType value) = nullptr)
+    {
+        auto data = new PropFuncInfo<decltype(get), decltype(set)>(get, set);
+        internal::addDeinitializer([data]() { delete data; });
+        jsvm::PropertyDescriptor descriptor;
+        descriptor.utf8name = name;
+        descriptor.name = NULL;
+        descriptor.method = NULL;
+        descriptor.getter = internal::InvokeClassGetterStatic<PropertyType>;
+        descriptor.setter = internal::InvokeClassSetterStatic<PropertyType>;
+        descriptor.value = NULL;
+        descriptor.attributes = jsvm::PropertyAttributes::DEFAULT;
+        descriptor.data = data;
+        propertyDescriptorVector_.push_back(descriptor);
+        return *this;
+    }
+
+    jsvm::Value registerClass(jsvm::Env env, jsvm::Value exports, const char *className)
+    {
+        jsvm::Status status;
+        jsvm::Value cons;
+
+        status = jsvm::DefineClass(env, className, NAPI_AUTO_LENGTH, NewGlobalClass<ClassType>,
+                                   propertyDescriptorVector_.size(), propertyDescriptorVector_.data(), &cons);
+        DEBUG_CHECK(status == jsvm::Status::OK);
+        ClassRegistry<ClassType> &baseClassRegistry =
+            ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
+
+        jsvm::Value instanceValue = nullptr;
+        status = jsvm::NewInstance(env, cons, 0, nullptr, &instanceValue);
+        DEBUG_CHECK(status == jsvm::Status::OK);
+        status = jsvm::SetNamedProperty(env, exports, className, instanceValue);
+        //status = jsvm::SetNamedProperty(env, exports, className, cons);
+        DEBUG_CHECK(status == jsvm::Status::OK);
+
         return exports;
     }
 };
