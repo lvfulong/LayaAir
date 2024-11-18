@@ -270,8 +270,7 @@ namespace laya
         auto pScriptRuntime = JCConch::s_pScriptRuntime;
         if (!pScriptRuntime)
             return false;
-        auto jsThreadID = pScriptRuntime->m_pScriptThread->getTheadID();
-        return (std::this_thread::get_id() == jsThreadID);
+        return pScriptRuntime->isInJSThread();
     }
 
 	void postToJS(std::function<void(void)> task) {

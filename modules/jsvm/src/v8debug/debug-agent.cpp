@@ -217,6 +217,8 @@ namespace laya {
     }
 
     void DebuggerAgent::onFrontEndClose() {
+        bIsWaitingForDebugger = false;
+        bHasFrontend = false;
     }
 
     void dispatchProtocolMsg_inJSThread(DebuggerAgent* pAgent, v8_inspector::StringView msg, int msgid) {
@@ -373,7 +375,21 @@ namespace laya {
         return view;
     }
 
-	void DebuggerAgent::onJSStart(std::shared_ptr<jsvm::ScriptThread> scriptThread,bool bDebugWait) {
+    bool DebuggerAgent::_isInJSThread(){
+        auto jsThreadID = pJSThread_->getTheadID();
+        return (std::this_thread::get_id() == jsThreadID);
+    }
+
+    void DebuggerAgent::_waitDebugger()
+    {
+        while (!bHasFrontend)
+        {
+            pJSThread_->runDbgFuncs();
+            std::this_thread::sleep_for(std::chrono::microseconds(100));
+        }
+    }
+
+    void DebuggerAgent::onJSStart(std::shared_ptr<jsvm::ScriptThread> scriptThread) {
 		pJSThread_ = scriptThread;
         isolate_ = (v8::Isolate::GetCurrent());
 		v8::HandleScope handle_scope(isolate_);
@@ -399,66 +415,90 @@ namespace laya {
 
         //启动websocket server用来监听调试信息
         startWSSV(port_,this);
-        
-        //如果要一上来就暂停，就要特殊处理
-        if (bDebugWait) {
-            while (!bHasFrontend) {
-                pJSThread_->runDbgFuncs();
-                std::this_thread::sleep_for(std::chrono::microseconds(100));
-            }
-            /*
-            如果用wait的话，只能自己发送消息打开debugger，但是这样并不标准，所以改成循环，一旦前端发来Debugger.enable就可以继续了
-            semWaitDebugger.wait(); //先等待调试器连接上，这样就可以避免保存调试信息，堆栈之类的可以直接发给调试器。
-            //直接设置一些必须的调试信息。schedulePauseOnNextStatement 需要这些设置，而前端发来的设置又太晚了
-            static char* pMsg1 = R"({"id":5,"method":"Runtime.enable"})";
-            static char* pMsg2 = R"({"id":6,"method":"Debugger.enable"})";
-            uint16_t UTF16[1024];
-
-            int uniLen = UTF8StrToUnicodeStr((unsigned char*)pMsg1, UTF16, strlen(pMsg1));
-            v8_inspector::StringView message_view1(UTF16, uniLen);
-            //_dbg_session_->dispatchProtocolMessage(message_view1);
-
-            uniLen = UTF8StrToUnicodeStr((unsigned char*)pMsg2, UTF16, strlen(pMsg2));
-            v8_inspector::StringView message_view2(UTF16, uniLen);
-            //_dbg_session_->dispatchProtocolMessage(message_view2);
-
-            //现在可以设置停在第一句了。
-            uniLen = UTF8StrToUnicodeStr((unsigned char*)"{}", UTF16, strlen(pMsg2));
-            v8_inspector::StringView xx(UTF16, uniLen);
-            //_dbg_session_->schedulePauseOnNextStatement(xx, xx);
-            */
-        }
+              
 	}
 
     void DebuggerAgent::WaitForDebugger (bool breakNextLine){
+        bool inJSThread = _isInJSThread();
+        //等待
+        if(!bHasFrontend && !bIsWaitingForDebugger){
+            if(inJSThread){
+                this->_waitDebugger();
+            }else{
+                if(pJSThread_){
+                    pJSThread_->pushDbgFunc(std::bind(&DebuggerAgent::_waitDebugger, this));
+                }
+            }
+            bIsWaitingForDebugger = true;
+        }
+        //中断
         if(breakNextLine){
             if(pJSThread_){
-                //TODO
-                //pJSThread_->pushDbgFunc(std::bind(DebuggerAgent::_breakJS, this));
+                if(inJSThread){
+                    //如果在js线程，则直接执行
+                    _breakJS();
+                }else{
+                    pJSThread_->pushDbgFunc(std::bind(&DebuggerAgent::_breakJS, this));
+                }
             }
         }
     }
 
-    void DebuggerAgent::_breakJS (){
+    void DebuggerAgent::_breakJS()
+    {
         auto isolate = v8::Isolate::GetCurrent();
+        if (!isolate)
+        {
+            // 如果无法获取 isolate，则直接返回
+            return;
+        }
+
         // 获取当前位置的源代码位置信息
         v8::Local<v8::StackTrace> stack_trace = v8::StackTrace::CurrentStackTrace(isolate, 1);
+        if (stack_trace.IsEmpty() || stack_trace->GetFrameCount() == 0)
+        {
+            // 如果无法获取堆栈信息或堆栈为空，则直接返回
+            return;
+        }
+
         v8::Local<v8::StackFrame> frame = stack_trace->GetFrame(isolate, 0);
+        if (frame.IsEmpty())
+        {
+            // 如果无法获取帧信息，则直接返回
+            return;
+        }
+
         int line = frame->GetLineNumber();
         int column = frame->GetColumn();
         v8::Local<v8::String> script_name = frame->GetScriptName();
 
+        if (script_name.IsEmpty())
+        {
+            // 如果无法获取脚本名称，则使用一个默认值或直接返回
+            // 这里我们选择使用一个默认值
+            script_name = v8::String::NewFromUtf8(isolate, "<unknown>").ToLocalChecked();
+        }
+
         // 在当前位置设置断点
+        v8::String::Utf8Value utf8_script_name(isolate, script_name);
+        if (*utf8_script_name == nullptr)
+        {
+            // 如果无法转换脚本名称为 UTF-8，则直接返回
+            return;
+        }
+
         v8_inspector::StringView script_name_view(
-            reinterpret_cast<const uint8_t *>(*v8::String::Utf8Value(isolate, script_name)),
+            reinterpret_cast<const uint8_t *>(*utf8_script_name),
             script_name->Utf8Length(isolate));
 
-        _dbg_session_->schedulePauseOnNextStatement(
-            v8_inspector::StringView(),
-            script_name_view);
+        if (_dbg_session_)
+        {
+            _dbg_session_->schedulePauseOnNextStatement(
+                v8_inspector::StringView(),
+                script_name_view);
+        }
     }
-
-	void DebuggerAgent::onJSExit() { 
+    void DebuggerAgent::onJSExit() { 
 		pJSThread_ = NULL;
 		isolate_ = NULL;
         gLayaLog = nullptr;

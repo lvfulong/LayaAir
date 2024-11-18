@@ -40,7 +40,6 @@ namespace laya
     class DebuggerAgent;
 #endif
     class JCConch;
-	class JSThreadInterface;
     class JSLayaGL;
     class JCFileResManager;
     class JCFileSource;
@@ -111,13 +110,14 @@ namespace laya
 
 		void onFocus();
 
-    public:
-
         void postToJS(const std::function<void(void)>& func);
 
         //void postToDownload(const std::function<void(void)>& funcf);
 
         //void postToDecoder(const std::function<void(void)>& func);
+
+        bool isInJSThread();
+
     public:
         JCConch*                            m_pConch;
         std::shared_ptr<jsvm::ScriptThread>       m_pScriptThread;
@@ -163,9 +163,6 @@ namespace laya
         JSOHOSEditBox*                      m_pCurEditBox;
 #elif defined(OS_IOS)
         JSIOSEditBox *                      m_pCurEditBox;
-#endif
-#ifdef JS_V8
-        DebuggerAgent*				        m_pDbgAgent;
 #endif
     };
 }

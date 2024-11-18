@@ -835,18 +835,25 @@ Status ReportException(Env env)
 }
 
 laya::DebuggerAgent* pDbgAgent;
-void OpenInspector(Env env, int port, std::shared_ptr<jsvm::ScriptThread> scriptThread){
+void OpenInspector(Env env, int port){
+#ifdef JS_V8_DEBUGGER    
+    //std::shared_ptr<jsvm::ScriptThread> scriptThread
     pDbgAgent = new laya::DebuggerAgent("layabox",port);
-    pDbgAgent->onJSStart(scriptThread,false);
+    pDbgAgent->onJSStart(env->scriptThread);
+#endif
 }
 void WaitForDebugger(Env env, bool breakNextLine){
+#ifdef JS_V8_DEBUGGER    
     pDbgAgent->WaitForDebugger(breakNextLine);
+#endif
 }
 //关闭调试
 void CloseInspector(Env env){
+#ifdef JS_V8_DEBUGGER    
     pDbgAgent->Shutdown();
     delete pDbgAgent;
     pDbgAgent = nullptr;
+#endif
 }
 
 

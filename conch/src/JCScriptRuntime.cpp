@@ -55,9 +55,6 @@ namespace laya
         m_pScriptThread->on(JCWorkerThread::Event_threadStart, std::bind(&JCScriptRuntime::onThreadInit, this, std::placeholders::_1));
         m_pScriptThread->on(JCWorkerThread::Event_threadStop, std::bind(&JCScriptRuntime::onThreadExit, this, std::placeholders::_1));
         m_nUpdateCount = 0;
-#ifdef JS_V8
-        m_pDbgAgent = nullptr;  
-#endif
 #if !defined(OS_LINUX) && !defined(OS_WINDOWS)
 		m_pCurEditBox = NULL;
 #endif
@@ -108,21 +105,7 @@ namespace laya
         LOGI("Start js %s", pStartJS);
         if (pStartJS)m_strStartJS = pStartJS;
 
-#ifdef JS_V8_DEBUGGER
-        // m_pDbgAgent = NULL;
-        // if (g_kSystemConfig.m_nJSDebugMode != JS_DEBUG_MODE_OFF)
-        // {
-        //     jsvm::OpenInspector(env, g_kSystemConfig.m_nJSDebugPort);
-        //     LOGI("open js debug port at %d", g_kSystemConfig.m_nJSDebugPort);
-        //     m_pDbgAgent = new DebuggerAgent("layabox", g_kSystemConfig.m_nJSDebugPort);
-        //     JCConch::s_pScriptRuntime->m_pDbgAgent = m_pDbgAgent;
-        // }
-        // else
-        // {
-        //     m_pDbgAgent = NULL;
-        //     JCConch::s_pScriptRuntime->m_pDbgAgent = NULL;
-        // }
-#endif
+
 
         m_debugPort = g_kSystemConfig.m_nJSDebugMode;
         //m_pScriptThread->initialize(m_debugPort, std::bind(&onUnhandledRejection, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
@@ -134,14 +117,6 @@ namespace laya
     {
         LOGI("Stop js start...");
 
-#ifdef JS_V8_DEBUGGER
-        // if (m_pDbgAgent)
-        // {
-        //     m_pDbgAgent->Shutdown();
-        //     delete m_pDbgAgent;
-        //     m_pDbgAgent = NULL;
-        // }
-#endif
         //while (m_nThreadState==1)
         {
             //LOGI("stop: wait for thread to start...");
@@ -176,23 +151,21 @@ namespace laya
         LOGI("js thread started.");
         GET_ENV;
         env;
+#ifdef JS_V8_DEBUGGER
+        env->scriptThread = m_pScriptThread;
+#endif        
         //m_nThreadState = 2;
         //JSObjNode::s_pListJSObj = new JCSimpList();
 #ifdef JS_V8_DEBUGGER
         if (g_kSystemConfig.m_nJSDebugMode != JS_DEBUG_MODE_OFF)
         {
-            jsvm::OpenInspector(env, g_kSystemConfig.m_nJSDebugPort,m_pScriptThread);
+            jsvm::OpenInspector(env, g_kSystemConfig.m_nJSDebugPort);
+            if (g_kSystemConfig.m_nJSDebugMode == JS_DEBUG_MODE_WAIT) {
+                jsvm::WaitForDebugger(env, true);
+            }
         }
 
-        // if (m_pDbgAgent) 
-        // {
-        //     m_pDbgAgent->onJSStart(m_pScriptThread,(g_kSystemConfig.m_nJSDebugMode == JS_DEBUG_MODE_WAIT) ? true : false);
-        //     LOGI("js debug open mode: %d port %d", g_kSystemConfig.m_nJSDebugMode, g_kSystemConfig.m_nJSDebugPort);
-        // }
-        // else
-        // {
-        //     LOGI("js debug closed");
-        // }
+
 #endif
         JCConch::s_pConchRender->m_pImageManager->resetJSThread();
 
@@ -326,7 +299,6 @@ namespace laya
         
         //PERF_INITVAR(nBenginTime);
 #ifdef JS_V8_DEBUGGER
-        //auto xxx = m_pScriptThread.get();
         m_pScriptThread->runDbgFuncs();
 #endif
         m_nUpdateCount++;
@@ -519,6 +491,12 @@ namespace laya
     {
         jsbind::runScript("history.back()");
     }
+
+    bool JCScriptRuntime::isInJSThread(){
+        auto jsThreadID = m_pScriptThread->getTheadID();
+        return (std::this_thread::get_id() == jsThreadID);
+    }
+
     void JCScriptRuntime::postToJS(const std::function<void(void)>& func)
     {
         m_pScriptThread->post(func);

@@ -11,8 +11,6 @@
 #define ASSERT(condition)      ((void) 0)
 
 namespace laya {
-	class JSMThread;
-    class JSThreadInterface;
     class strIter {
     public:
         //返回空就表示没有了。
@@ -80,7 +78,7 @@ namespace laya {
 		* 启动js线程了，创建一个新的jsid，以后js相关的消息，都使用这个jsid。
 		* 提供一个函数，希望js线程在循环中调用他。
 		*/
-		void onJSStart(std::shared_ptr<jsvm::ScriptThread> scriptThread, bool bDebugWait);
+		void onJSStart(std::shared_ptr<jsvm::ScriptThread> scriptThread);
 		/**
 		* js线程结束了，当前的jsid就失效了，以后接收到的此id的消息都忽略。
 		*/
@@ -111,6 +109,9 @@ namespace laya {
         int         nFrontEndMsgID = 0; //自己规定的消息id，并不是解析的消息的json，这样容易一些。现在主要是判断是否处理的Debugger.enable
         int         nEnableDebuggerMsgID = -1;  //等待这个消息被处理，所以需要记录是哪个
         static int  sMsgID;
+        bool        bIsWaitingForDebugger=false;
+        bool        _isInJSThread();
+        void        _waitDebugger();
 	public:
         std::unique_ptr<v8_inspector::V8Inspector> _new_inspector;
         std::unique_ptr<v8_inspector::V8InspectorSession> _dbg_session_; //new debugger

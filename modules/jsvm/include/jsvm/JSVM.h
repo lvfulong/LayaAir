@@ -137,7 +137,7 @@ namespace jsvm
 /*JSVM_EXTERN*/ Status CoerceToString(Env env, Value value, Value *result);
 /*JSVM_EXTERN*/ Status GetPropertyNames(Env env, Value object, Value *result);
 //打开调试
-void OpenInspector(Env env, int port, std::shared_ptr<ScriptThread> scriptThread);
+void OpenInspector(Env env, int port);
 void WaitForDebugger(Env env,bool breakNextLine);
 //关闭调试
 void CloseInspector(Env env);
