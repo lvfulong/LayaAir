@@ -25,8 +25,8 @@ std::string vformat(const char *fmt, va_list args)
         buf.resize(needed + 1);
         vsnprintf(buf.data(), buf.size(), fmt, args);
     }
-
-    return std::string(buf.data());
+	
+    return std::string(buf.data(), buf.size());
 }
 #if defined(OS_OHOS)
 void logMessage(laya::LogType logType, const char *file, int line, const char *fmt, ...)

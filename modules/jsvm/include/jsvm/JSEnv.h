@@ -1,6 +1,8 @@
 ﻿#ifndef __JSVM_JSENV_H__
 #define __JSVM_JSENV_H__
 
+#include <vector>
+#include <map>
 #include <jsvm/JSVM.h>
 #if defined(JS_V8)
 #include <v8.h>
@@ -53,6 +55,19 @@ class JSEnv
     IsolateData *isolate_data_;
 #if defined(JS_V8)
     v8::Isolate *isolate_;
+#endif
+#if defined(JS_OHOS_JSVM)
+public:
+    //void isProperty(const std::string& className, JSVM_PropertyDescriptor p);
+    //void addProperty(const std::string& className, JSVM_CallbackStruct p);
+    //void addConstructor(const std::string& className, JSVM_CallbackStruct p);
+    std::map<std::string, std::vector<JSVM_PropertyDescriptor>> jsvm_properties_map_;
+    std::map<std::string, std::vector<JSVM_CallbackStruct>> jsvm_callbacks_map_;
+    std::map<std::string, JSVM_CallbackStruct> jsvm_constructor_map_;
+    
+    
+    std::map<jsvm::Value, std::vector<JSVM_PropertyDescriptor>> jsvm_object_properties_map_;
+    std::map<jsvm::Value, std::vector<JSVM_CallbackStruct>> jsvm_object_callbacks_map_;
 #endif
 };
 

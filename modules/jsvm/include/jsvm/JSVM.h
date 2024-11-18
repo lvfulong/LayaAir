@@ -21,6 +21,8 @@ namespace jsvm
 /*JSVM_EXTERN*/ Status DestroyEnv(Env env);
 /*JSVM_EXTERN*/ Status OpenHandleScope(Env env, HandleScope *result);
 /*JSVM_EXTERN*/ Status CloseHandleScope(Env env, HandleScope scope);
+/*JSVM_EXTERN*/ Status GetAndClearLastException(Env env, Value *result);
+/*JSVM_EXTERN*/ Status ThrowError(Env env, const char *code, const char *msg);
 /*JSVM_EXTERN*/ Status CreatePromise(Env env, Deferred *deferred, Value *promise);
 /*JSVM_EXTERN*/ Status ResolveDeferred(Env env, Deferred deferred, Value resolution);
 /*JSVM_EXTERN*/ Status RejectDeferred(Env env, Deferred deferred, Value resolution);
