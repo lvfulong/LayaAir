@@ -53,7 +53,7 @@ if(USE_JS_V8)
             v8_monolith
         )
     elseif(OS_IOS)
-        ist(APPEND DEPS
+        list(APPEND DEPS
             v8_monolith
         )
     elseif(OS_OHOS)
