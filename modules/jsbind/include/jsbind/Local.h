@@ -3,9 +3,9 @@
 
 #include <assert.h>
 #include <jsbind/Class.h>
-#include <jsvm/JSVM_Types.h>
 #include <jsbind/internal/Converter.h>
 #include <jsbind/internal/Value.h>
+#include <jsvm/JSVM_Types.h>
 
 namespace jsbind
 {
@@ -21,19 +21,30 @@ class Local
     Local &operator=(Local &&) = default;
     template <typename ReturnType, typename... Args> ReturnType call(jsvm::Value recv, const Args &...args)
     {
-        GET_ENV
-        DEBUG_CHECK(isValid());
-        DEBUG_CHECK(isFunction());
-        auto result = internal::v8_call(env, recv, handle_, args...);
-        return Converter<ReturnType>::ToCpp(result);
+
+        if (isValid() && isFunction())
+        {
+            GET_ENV
+            auto result = internal::v8_call(env, recv, handle_, args...);
+            return Converter<ReturnType>::ToCpp(result);
+        }
+        else
+        {
+            return ReturnType();
+        }
     }
     template <typename ReturnType, typename... Args> ReturnType call(jsvm::Value recv, const Args &...args) const
     {
-        GET_ENV
-        DEBUG_CHECK(isValid());
-        DEBUG_CHECK(isFunction());
-        auto result = internal::v8_call(env, recv, handle_, args...);
-        return Converter<ReturnType>::ToCpp(result);
+        if (isValid() && isFunction())
+        {
+            GET_ENV
+            auto result = internal::v8_call(env, recv, handle_, args...);
+            return Converter<ReturnType>::ToCpp(result);
+        }
+        else
+        {
+            return ReturnType();
+        }
     }
     Local operator[](const std::string &key) const;
 

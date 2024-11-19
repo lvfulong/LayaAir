@@ -108,24 +108,3 @@ target_precompile_headers(${TARGET} PRIVATE ${HEADERS})
 # install(FILES ${HEADERS} DESTINATION include/${TARGET})
 
 
-message("benchmark :${CMAKE_GENERATOR}")
-####  benchmark
-if(OS_WINDOWS OR (OS_ANDROID AND ANDROID_ABI STREQUAL "arm64-v8a" OR ANDROID_ABI STREQUAL "armeabi-v7a") OR (CMAKE_GENERATOR MATCHES "Xcode"))
-    set(BENCHMARK_SOURCES benchmark/benchmark.cpp)
-    add_executable(benchmark_${TARGET} ${BENCHMARK_SOURCES})
-    #target_compile_options(benchmark_${TARGET} PRIVATE ${OPTIMIZATION_FLAGS})
-    target_link_libraries(benchmark_${TARGET} PRIVATE binder benchmark benchmark_main)
-    set_target_properties(benchmark_${TARGET} PROPERTIES FOLDER benchmark)
-    target_compile_definitions(benchmark_${TARGET}  PRIVATE BENCHMARK_STATIC_DEFINE)
-
-    if(CMAKE_GENERATOR MATCHES "Xcode")
-        function(set_xcode_property TARGET XCODE_PROPERTY XCODE_VALUE)
-	        set_property(TARGET ${TARGET} PROPERTY XCODE_ATTRIBUTE_${XCODE_PROPERTY} ${XCODE_VALUE})
-        endfunction(set_xcode_property)
-        set_xcode_property(benchmark_${TARGET} DEVELOPMENT_TEAM "MH4ZKZTS68")
-	    set_xcode_property(benchmark_${TARGET} VALID_ARCHS "arm64")
-	    set_xcode_property(benchmark_${TARGET} PRODUCT_BUNDLE_IDENTIFIER "com.layabox.conch6")
-    endif()
-endif()
-
-message("binder: ${LINUX}")

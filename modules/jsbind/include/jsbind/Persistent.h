@@ -3,8 +3,8 @@
 
 #include <assert.h>
 #include <jsbind/Class.h>
-#include <jsvm/JSVM_Types.h>
 #include <jsbind/Local.h>
+#include <jsvm/JSVM_Types.h>
 
 namespace jsbind
 {
@@ -22,12 +22,10 @@ class Persistent
     ~Persistent();
     template <typename ReturnType, typename... Args> ReturnType call(jsvm::Value recv, const Args &...args)
     {
-        DEBUG_CHECK(isValid());
         return getLocal().call<ReturnType>(recv, args...);
     }
     template <typename ReturnType, typename... Args> ReturnType call(jsvm::Value recv, const Args &...args) const
     {
-        DEBUG_CHECK(isValid());
         return getLocal().call<ReturnType>(recv, args...);
     }
     inline bool isValid() const
