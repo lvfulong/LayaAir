@@ -167,7 +167,7 @@ namespace laya{
 	void GLESSetRenderData::setBufferValueJS(jsbind::ArrayBuffer arrayBuffer)
 	{
 		DEBUG_CHECK(arrayBuffer.isValid());
-		setBufferValue(arrayBuffer.getData(), arrayBuffer.getLength());
+		setBufferValue(arrayBuffer.getData(), arrayBuffer.getByteLength());
 	}
 	void GLESSetRenderData::setBufferValue(uint8_t* data, uint32_t lengthInBytes) {
 		BufferDataInfo info;

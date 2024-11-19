@@ -152,7 +152,7 @@ namespace laya
     {
         DEBUG_CHECK(arrayBuffer.isValid());
         char* pArrayBufferPtr = reinterpret_cast<char*>(arrayBuffer.getData());
-        int nABLen = arrayBuffer.getLength();
+        int nABLen = arrayBuffer.getByteLength();
 
         if (nABLen <= 0)
         {

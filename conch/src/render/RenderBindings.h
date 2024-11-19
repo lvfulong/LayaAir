@@ -353,7 +353,7 @@ class RenderBindings
                     if (isArrayBuffer)
                     {
                         char *arrayBuffer = reinterpret_cast<char*>(pixels.getData());
-                        int abLength = pixels.getLength();
+                        int abLength = pixels.getByteLength();
                         ctx.setTexture3DPixelsData(texture, arrayBuffer, abLength, depth, premultiplyAlpha, invertY);
                     }
                 }));
@@ -900,7 +900,7 @@ class RenderBindings
                     if (bIsArrayBuffer)
                     {
                         ctx.setAmbientSH(reinterpret_cast<float*>(arrayBuffer.getData()));
-                        ctx.ambientSHByteLength = arrayBuffer.getLength();
+                        ctx.ambientSHByteLength = arrayBuffer.getByteLength();
                     }
                 }));
             class_binding.function("setReflectionTexture", &RTReflectionProb::setReflectionTexture);
@@ -997,7 +997,7 @@ class RenderBindings
 
                 "setBuffer", jsbind::optional_override([](GLESShaderData &data, int32_t propertyIndex, jsbind::ArrayBuffer arrayBuffer) {
                     DEBUG_CHECK(arrayBuffer.isValid());
-                    data.setBuffer(propertyIndex, arrayBuffer.getData(), arrayBuffer.getLength());
+                    data.setBuffer(propertyIndex, arrayBuffer.getData(), arrayBuffer.getByteLength());
                 }));
             context.class_("conchGLESShaderData", class_binding);
         }

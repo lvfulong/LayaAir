@@ -76,7 +76,7 @@ namespace laya
 		{
 			auto arrayBuffer = args.as<jsbind::ArrayBuffer>();
 			char* pABPtr = reinterpret_cast<char*>(arrayBuffer.getData());
-			int nABLen = arrayBuffer.getLength();
+			int nABLen = arrayBuffer.getByteLength();
             if (pABPtr && nABLen > 0)
             {
                 bret = writeFileSync1(p_sUrl, pABPtr, nABLen, 0);

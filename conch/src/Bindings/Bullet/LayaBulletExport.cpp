@@ -2103,7 +2103,7 @@ pointer_t WASM_EXP _malloc(int size)
 void WASM_EXP copyJSArray(pointer_t ptr, jsbind::ArrayBuffer arrayBuffer)
 {
     char* data = reinterpret_cast<char*>(arrayBuffer.getData());
-    int dataLength = arrayBuffer.getLength();
+    int dataLength = arrayBuffer.getByteLength();
     bool bIsArrayBuffer = arrayBuffer.isValid();
     if (bIsArrayBuffer && dataLength > 0)
     {

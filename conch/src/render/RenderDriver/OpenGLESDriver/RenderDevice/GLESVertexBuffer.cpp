@@ -74,6 +74,6 @@ void GLESVertexBuffer::setDataJS(jsbind::ArrayBuffer arrayBuffer, int bufferOffs
                                  double dataCount /*= Number.MAX_SAFE_INTEGER*/)
 {
     DEBUG_CHECK(arrayBuffer.isValid());
-    setData(reinterpret_cast<const char*>(arrayBuffer.getData()), arrayBuffer.getLength(), bufferOffset, dataStartIndex, dataCount);
+    setData(reinterpret_cast<const char*>(arrayBuffer.getData()), arrayBuffer.getByteLength(), bufferOffset, dataStartIndex, dataCount);
 }
 } // namespace laya

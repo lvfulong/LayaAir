@@ -58,7 +58,7 @@ namespace laya{
         DEBUG_CHECK(extdata != nullptr);
 
         //这个buffer不要删除，是js的问题
-        JCBuffer buff(ab.getData(), ab.getLength(), false, false);
+        JCBuffer buff(ab.getData(), ab.getByteLength(), false, false);
         //执行
         extdata->cFunc(buff, localPath.c_str());
         //清理

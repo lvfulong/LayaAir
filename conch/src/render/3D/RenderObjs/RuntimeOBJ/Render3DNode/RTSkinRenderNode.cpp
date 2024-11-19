@@ -73,7 +73,7 @@ namespace laya
 		std::vector<std::pair<float*, int>> skinData ;
 		for (int i = 0, size = pData.size(); i < size; i++)
 		{
-			int nABLen = pData[i].getLength();
+			int nABLen = pData[i].getByteLength();
 			float* data = reinterpret_cast<float*>(pData[i].getData());
 			
 			skinData.push_back(std::make_pair(data, nABLen / 4));
@@ -126,7 +126,7 @@ namespace laya
 		std::vector<std::pair<uint16_t*, int>> boneIndexData;
 		for (int i = 0, size = pData.size(); i < size; i++)
 		{
-			int nABLen = pData[i].getLength();
+			int nABLen = pData[i].getByteLength();
 			uint16_t* data = reinterpret_cast<uint16_t*>(pData[i].getData());
 			boneIndexData.push_back(std::make_pair(data, nABLen / 2));
 		}

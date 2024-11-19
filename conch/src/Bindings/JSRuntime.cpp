@@ -438,7 +438,7 @@ namespace laya
         if (bIsArrayBuffer)
         { 
             char* pBuffer = reinterpret_cast<char*>(arrayBuffer.getData());
-            int nABLen = arrayBuffer.getLength();
+            int nABLen = arrayBuffer.getByteLength();
             JSArrayBufferRef* pArrayBufferRef = new JSArrayBufferRef();
             pArrayBufferRef->m_bSyncToRender = bSyncToRender;
             {
@@ -459,7 +459,7 @@ namespace laya
         else if (pathOrArrayBuffer.isArrayBuffer() || pathOrArrayBuffer.isArrayBufferView())
         {
             auto arrayBuffer = pathOrArrayBuffer.as<jsbind::ArrayBuffer>();
-            return FontManager::registerFont(family, arrayBuffer.getData(), arrayBuffer.getLength());
+            return FontManager::registerFont(family, arrayBuffer.getData(), arrayBuffer.getByteLength());
         }
         LOGI("registerFont failed");
         return false;

@@ -43,9 +43,9 @@ class ArrayBuffer
     {
         return data_;
     }
-    inline size_t getLength() const
+    inline size_t getByteLength() const
     {
-        return length_;
+        return byteLength_;
     }
     inline Type getType() const
     {
@@ -53,37 +53,42 @@ class ArrayBuffer
     }
     inline size_t getCount() const
     {
-        size_t count = 0;
-        switch (type_)
+        return byteLength_ / getBytePerElement(type_);
+  
+    }
+    static size_t getBytePerElement(Type type)
+    {
+        size_t byte = 1;
+        switch (type)
         {
         case INT8_ARRAY:
         case UINT8_ARRAY:
         case UINT8_CLAMPED_ARRAY:
-            count = length_;
+            byte = 1;
             break;
         case INT16_ARRAY:
         case UINT16_ARRAY:
-            count = length_ / sizeof(uint16_t);
+            byte = sizeof(uint16_t);
             break;
         case INT32_ARRAY:
         case UINT32_ARRAY:
-            count = length_ / sizeof(uint32_t);
+            byte = sizeof(uint32_t);
             break;
         case FLOAT32_ARRAY:
-            count = length_ / sizeof(float);
+            byte =  sizeof(float);
             break;
         case FLOAT64_ARRAY:
-            count = length_ / sizeof(double);
+            byte =  sizeof(double);
             break;
         case BIGINT64_ARRAY:
         case BIGUINT64_ARRAY:
-            count = length_ / sizeof(uint64_t);
+            byte = sizeof(uint64_t);
             break;
         default:
-            count = length_;
+            byte = 1;
             break;
         }
-        return count;
+        return byte;
     }
     inline jsvm::Value getHandle() const
     {
@@ -101,7 +106,7 @@ class ArrayBuffer
 
   private:
     uint8_t *data_ = nullptr;
-    size_t length_ = 0;
+    size_t byteLength_ = 0;
     Type type_ = ARRAY_BUFFER;
     jsvm::Value handle_ = nullptr;
 };

@@ -37,7 +37,7 @@ void GLESSkinRenderElement::setSkinnedData(std::vector<jsbind::ArrayBuffer> pDat
     m_vSkinData.clear();
     for (int i = 0, size = pData.size(); i < size; i++)
     {
-        m_vSkinData.push_back(std::make_pair(reinterpret_cast<char*>(pData[i].getData()), pData[i].getLength()));
+        m_vSkinData.push_back(std::make_pair(reinterpret_cast<char*>(pData[i].getData()), pData[i].getByteLength()));
     }
 }
 } // namespace laya

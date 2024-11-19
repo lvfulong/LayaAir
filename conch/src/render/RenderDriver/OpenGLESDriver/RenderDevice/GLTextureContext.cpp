@@ -1775,7 +1775,7 @@ void GLTextureContext::setTexturePixelsDataJS(GLESInternalTex *texture, jsbind::
     {
         if (arrayBuffer.isValid())
         {
-            this->setTexturePixelsData(texture, reinterpret_cast<char*>(arrayBuffer.getData()), arrayBuffer.getLength(), premultiplyAlpha, invertY);
+            this->setTexturePixelsData(texture, reinterpret_cast<char*>(arrayBuffer.getData()), arrayBuffer.getByteLength(), premultiplyAlpha, invertY);
         }
         else
         {

@@ -264,7 +264,7 @@ namespace laya
             if (m_nWebSocketState == WSS_OPEN && m_pWebSocket)
             {
                 jsbind::ArrayBuffer ab = args.as<jsbind::ArrayBuffer>();
-                m_pWebSocket->send((const unsigned char*)ab.getData(), (unsigned int)ab.getLength());
+                m_pWebSocket->send((const unsigned char*)ab.getData(), (unsigned int)ab.getByteLength());
             }
             break;
         case Type_String:

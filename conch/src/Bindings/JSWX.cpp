@@ -13,7 +13,7 @@ std::string JSWX::createBufferURL(jsbind::ArrayBuffer arrayBuffer)
     if (bIsArrayBuffer)
     { 
         char *pArrayBuffer = reinterpret_cast<char*>(arrayBuffer.getData());
-        int nArrayBufferSize = arrayBuffer.getLength();
+        int nArrayBufferSize = arrayBuffer.getByteLength();
         JCMD5 md5;
         md5.GenerateMD5((unsigned char *)pArrayBuffer, nArrayBufferSize);
         std::string url = "wxblob://" + md5.ToString();

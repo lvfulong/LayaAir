@@ -12,7 +12,7 @@ bool ArrayBuffer::upload(uint8_t *inputBuffer, size_t length)
 {
     if (isValid())
     {
-        if (length <= length_)
+        if (length <= byteLength_)
         {
             memcpy(data_, inputBuffer, length);
             return true;
@@ -21,7 +21,7 @@ bool ArrayBuffer::upload(uint8_t *inputBuffer, size_t length)
     return false;
 }
 ArrayBuffer::ArrayBuffer(uint8_t *inputBuffer, size_t length, size_t byteOffset, Type type)
-    : data_(nullptr), length_(length), type_(type)
+    : data_(nullptr), byteLength_(length), type_(type)
 {
     GET_ENV
 
@@ -29,10 +29,10 @@ ArrayBuffer::ArrayBuffer(uint8_t *inputBuffer, size_t length, size_t byteOffset,
     jsvm::Value arrayBuffer;
     uint8_t *outputBuffer = nullptr;
 
-    status = jsvm::CreateArraybuffer(env, this->getLength(), reinterpret_cast<void **>(&outputBuffer), &arrayBuffer);
+    status = jsvm::CreateArraybuffer(env, this->getByteLength(), reinterpret_cast<void **>(&outputBuffer), &arrayBuffer);
     DEBUG_CHECK(status == jsvm::Status::OK);
 
-    std::memcpy(outputBuffer, inputBuffer, this->getLength());
+    std::memcpy(outputBuffer, inputBuffer, this->getByteLength());
 
     if (this->getType() == ArrayBuffer::DATA_VIEW)
     {
@@ -57,7 +57,7 @@ ArrayBuffer::ArrayBuffer(uint8_t *inputBuffer, size_t length, size_t byteOffset,
     handle_ = arrayBuffer;
 }
 ArrayBuffer::ArrayBuffer(jsvm::Value arrayBuffer, uint8_t *inputBuffer, size_t length, Type type)
-    : data_(inputBuffer), length_(length), type_(type), handle_(arrayBuffer)
+    : data_(inputBuffer), byteLength_(length), type_(type), handle_(arrayBuffer)
 {
 }
 
@@ -72,7 +72,7 @@ ArrayBuffer ArrayBuffer::Make(jsvm::Value arrayBuffer)
     if (Local::isTypedArray(arrayBuffer))
     {
         jsvm::GetTypedarrayInfo(env, arrayBuffer, &type, &length, &data, &buffer, &byteOffset);
-        return ArrayBuffer(arrayBuffer, static_cast<uint8_t *>(data), length, static_cast<ArrayBuffer::Type>(type));
+        return ArrayBuffer(arrayBuffer, static_cast<uint8_t *>(data), getBytePerElement(static_cast<ArrayBuffer::Type>(type)) * length, static_cast<ArrayBuffer::Type>(type));
     }
     else if (Local::isDataView(arrayBuffer))
     {
@@ -86,7 +86,7 @@ ArrayBuffer ArrayBuffer::Make(jsvm::Value arrayBuffer)
     }
     else
     {
-        // todo js exception
+        // make a invalid ArrayBuffer
         return ArrayBuffer(nullptr, nullptr, 0, ArrayBuffer::ARRAY_BUFFER);
     }
 }

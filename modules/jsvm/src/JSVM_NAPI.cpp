@@ -240,6 +240,94 @@ template <bool enforceUncaughtExceptionPolicy, typename T> void LayaNapiEnv::Cal
         env->trigger_fatal_exception(local_err);
         });*/
 }
+std::string stackTraceToString(v8::Local<v8::StackTrace> stack)
+{
+    std::string stackStr;
+    if (stack.IsEmpty())
+    {
+        return stackStr;
+    }
+
+    char tmp[100] = {0};
+    for (int i = 0, e = stack->GetFrameCount(); i < e; ++i)
+    {
+        v8::Local<v8::StackFrame> frame = stack->GetFrame(v8::Isolate::GetCurrent(), i);
+        v8::Local<v8::String> script = frame->GetScriptName();
+        std::string scriptName;
+        if (!script.IsEmpty())
+        {
+            scriptName = *v8::String::Utf8Value(v8::Isolate::GetCurrent(), script);
+        }
+
+        v8::Local<v8::String> func = frame->GetFunctionName();
+        std::string funcName;
+        if (!func.IsEmpty())
+        {
+            funcName = *v8::String::Utf8Value(v8::Isolate::GetCurrent(), func);
+        }
+
+        stackStr += " - [";
+        snprintf(tmp, sizeof(tmp), "%d", i);
+        stackStr += tmp;
+        stackStr += "]";
+        stackStr += (funcName.empty() ? "anonymous" : funcName.c_str());
+        stackStr += "@";
+        stackStr += (scriptName.empty() ? "[no filename]" : scriptName.c_str());
+        stackStr += ":";
+        snprintf(tmp, sizeof(tmp), "%d", frame->GetLineNumber());
+        stackStr += tmp;
+
+        if (i < (e - 1))
+        {
+            stackStr += "\n";
+        }
+    }
+
+    return stackStr;
+}
+static void PromiseRejectHandlerInMainThread(v8::PromiseRejectMessage data)
+{
+    v8::Local<v8::Promise> promise = data.GetPromise();
+    v8::Isolate *isolate = promise->GetIsolate();
+    if (data.GetEvent() == v8::kPromiseHandlerAddedAfterReject)
+    {
+        return;
+    }
+    else if (data.GetEvent() == v8::kPromiseRejectAfterResolved || data.GetEvent() == v8::kPromiseResolveAfterResolved)
+    {
+        // Ignore reject/resolve after resolved.
+        return;
+    }
+    v8::Local<v8::Value> exception = data.GetValue();
+    //const char *error_message = nullptr;
+    std::string error_message;
+    v8::Local<v8::Message> message = v8::Exception::CreateMessage(isolate, exception);
+
+    if (!message.IsEmpty())
+    {
+        if (message->Get().IsEmpty() || message->Get()->IsNull()){
+        }else{
+            v8::String::Utf8Value utf8(isolate, message->Get().As<v8::String>());
+            error_message.assign(*utf8);
+            //error_message = Converter<const char*>::ToCpp(message->Get().As<v8::String>());
+        }
+    }
+    // std::string kBuf = "if(conch.onunhandledrejection){conch.onunhandledrejection('";
+    // kBuf += UrlEncode(error_message != nullptr ? error_message : "");
+    // kBuf += "');};";
+    //__JSRun::Run(kBuf.c_str());
+    v8::HandleScope hs(v8::Isolate::GetCurrent());
+    v8::Local<v8::StackTrace> stack =
+        v8::StackTrace::CurrentStackTrace(v8::Isolate::GetCurrent(), 20, v8::StackTrace::kOverview);
+    std::string str = stackTraceToString(stack);
+    const char *s = str.c_str();
+
+    LOGI("unhandledrejection stack %s", s);
+    LOGE("unhandledrejection %s", error_message.c_str());// != nullptr ? error_message : "no message");
+    //IsolateData *pIsolateData = IsolateData::From(isolate);
+    //Javascript *pJavascript = (Javascript *)pIsolateData->m_data;
+    //pJavascript->m_promiseRejectHandler(data.GetPromise(), data.GetValue(), "unhandledrejection");
+}
 Status CreateVM(const CreateVMOptions *options, VM *result)
 {
     v8::Isolate::CreateParams create_params;
@@ -252,7 +340,7 @@ Status CreateVM(const CreateVMOptions *options, VM *result)
     // m_context.Reset(m_pIsolate, context);
     // m_IsolateData = new IsolateData(m_pIsolate, NULL);
     // m_IsolateData->m_data = (void *)this;
-    // m_pIsolate->SetPromiseRejectCallback(PromiseRejectHandlerInMainThread);
+    (*result)->isolate_ ->SetPromiseRejectCallback(PromiseRejectHandlerInMainThread);
     // context->Enter();
     return Status::OK; // todo
 }

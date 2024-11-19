@@ -209,7 +209,7 @@ namespace laya
     {
         DEBUG_CHECK(arrayBuffer.isValid());
         char* pArrayBufferPtr = reinterpret_cast<char*>(arrayBuffer.getData());
-        int nABLen = arrayBuffer.getLength();
+        int nABLen = arrayBuffer.getByteLength();
         if (nABLen >= width * height * 4)
         {
             putBitmapData(pArrayBufferPtr,width, height);
@@ -229,7 +229,7 @@ namespace laya
     {
         DEBUG_CHECK(arrayBuffer.isValid());
         char* pArrayBufferPtr = reinterpret_cast<char*>(arrayBuffer.getData());
-        int nABLen = arrayBuffer.getLength();
+        int nABLen = arrayBuffer.getByteLength();
 
         if (nABLen <= 0)
             return;

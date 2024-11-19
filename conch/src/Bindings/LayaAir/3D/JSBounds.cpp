@@ -15,7 +15,7 @@ namespace laya
 	{
 		DEBUG_CHECK(pSharedData.isValid());
 		char* pArrayBuffer = reinterpret_cast<char*>(pSharedData.getData());
-		int nArrayBufferSize = pSharedData.getLength();
+		int nArrayBufferSize = pSharedData.getByteLength();
 
 		//assert(bIsArrayBuffer && nArrayBufferSize >= sizeof(float) * 4);
 		m_float64Array = (double*)pArrayBuffer;
