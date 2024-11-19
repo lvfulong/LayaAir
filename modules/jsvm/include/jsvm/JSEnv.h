@@ -61,13 +61,13 @@ public:
     //void isProperty(const std::string& className, JSVM_PropertyDescriptor p);
     //void addProperty(const std::string& className, JSVM_CallbackStruct p);
     //void addConstructor(const std::string& className, JSVM_CallbackStruct p);
-    std::map<std::string, std::vector<JSVM_PropertyDescriptor>> jsvm_properties_map_;
-    std::map<std::string, std::vector<JSVM_CallbackStruct>> jsvm_callbacks_map_;
-    std::map<std::string, JSVM_CallbackStruct> jsvm_constructor_map_;
+    std::unordered_map<const char*, std::unique_ptr<std::vector<JSVM_PropertyDescriptor>>> jsvm_properties_map_;
+    std::unordered_map<const char*, std::unique_ptr<std::vector<JSVM_CallbackStruct>>> jsvm_callbacks_map_;
+    std::unordered_map<const char*, std::unique_ptr<JSVM_CallbackStruct>> jsvm_constructor_map_;
     
     
-    std::map<jsvm::Value, std::vector<JSVM_PropertyDescriptor>> jsvm_object_properties_map_;
-    std::map<jsvm::Value, std::vector<JSVM_CallbackStruct>> jsvm_object_callbacks_map_;
+    std::map<jsvm::Value, std::unique_ptr<std::vector<JSVM_PropertyDescriptor>>> jsvm_object_properties_map_;
+    std::map<jsvm::Value, std::unique_ptr<std::vector<JSVM_CallbackStruct>>> jsvm_object_callbacks_map_;
 #endif
 };
 

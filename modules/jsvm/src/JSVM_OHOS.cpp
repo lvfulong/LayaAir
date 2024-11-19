@@ -242,110 +242,149 @@ Status NewInstance(Env env, Value constructor, size_t argc, const Value *argv, V
 Status DefineClass(Env env, const char *utf8name, size_t length, Callback constructor, size_t propertyCount,
                    const PropertyDescriptor *properties, Value *result)
 {
-    auto jsenv = jsvm::JSEnv::getCurrent();                                                                            \
-    DEBUG_CHECK(nullptr != jsenv);   
+    auto jsenv = jsvm::JSEnv::getCurrent();
+    DEBUG_CHECK(nullptr != jsenv);
 
-{
-     auto it = jsenv->jsvm_properties_map_.find(std::string(utf8name));
-     if (it != jsenv->jsvm_properties_map_.end())
-     {
+    auto it = jsenv->jsvm_properties_map_.find(utf8name);
+    if (it != jsenv->jsvm_properties_map_.end())
+    {
         LOGW("warning: jsvm DefineClass % more than once", utf8name);
-     }
-    std::vector<JSVM_PropertyDescriptor> jsvm_properties;
-    jsvm_properties.reserve(propertyCount);
-    jsenv->jsvm_properties_map_[std::string(utf8name)] = jsvm_properties;
-}
+    }
+    auto jsvm_properties = std::make_unique<std::vector<JSVM_PropertyDescriptor>>();
+    jsvm_properties->reserve(propertyCount);
 
-{
-    std::vector<JSVM_CallbackStruct> jsvm_callbacks;
-    jsvm_callbacks.reserve(3 * propertyCount);
-    jsenv->jsvm_callbacks_map_[std::string(utf8name)] = jsvm_callbacks;
-}   
+    auto jsvm_callbacks = std::make_unique<std::vector<JSVM_CallbackStruct>>();
+    jsvm_callbacks->reserve(3 * propertyCount);
+
     for (int i = 0; i < propertyCount; i++)
     {
         JSVM_PropertyDescriptor property;
+        memset(&property, 0, sizeof(property));
         property.utf8name = properties[i].utf8name;
         property.name = properties[i].name;
         if (properties[i].method != nullptr)
         {
-            jsenv->jsvm_callbacks_map_[std::string(utf8name)].push_back(JSVM_CallbackStruct{.callback = properties[i].method, .data = properties[i].data});
-
-            property.method = &jsenv->jsvm_callbacks_map_[std::string(utf8name)].back();
+            JSVM_CallbackStruct s;
+            s.callback = properties[i].method;
+            s.data = properties[i].data;
+            jsvm_callbacks->push_back(s);
+            property.method = &jsvm_callbacks->back();
+        }
+        else
+        {
+            property.method = nullptr;
         }
 
         if (properties[i].getter != nullptr)
         {
-            jsenv->jsvm_callbacks_map_[std::string(utf8name)].push_back(JSVM_CallbackStruct{.callback = properties[i].getter, .data = properties[i].data});
-            property.getter = &jsenv->jsvm_callbacks_map_[std::string(utf8name)].back();
+            JSVM_CallbackStruct s;
+            s.callback = properties[i].getter;
+            s.data = properties[i].data;
+            jsvm_callbacks->push_back(s);
+            property.getter = &jsvm_callbacks->back();
         }
-
+        else
+        {
+            property.getter = nullptr;
+        }
         if (properties[i].setter != nullptr)
         {
-            jsenv->jsvm_callbacks_map_[std::string(utf8name)].push_back(JSVM_CallbackStruct{.callback = properties[i].setter, .data = properties[i].data});
-            property.setter = &jsenv->jsvm_callbacks_map_[std::string(utf8name)].back();
+            JSVM_CallbackStruct s;
+            s.callback = properties[i].setter;
+            s.data = properties[i].data;
+            jsvm_callbacks->push_back(s);
+            property.setter = &jsvm_callbacks->back();
+        }
+        else
+        {
+            property.setter = nullptr;
         }
         property.value = properties[i].value;
         property.attributes = static_cast<JSVM_PropertyAttributes>(properties[i].attributes);
-        jsenv->jsvm_properties_map_[utf8name].push_back(property);
+        jsvm_properties->push_back(property);
     }
-    jsenv->jsvm_constructor_map_[std::string(utf8name)] = JSVM_CallbackStruct();
-    jsenv->jsvm_constructor_map_[std::string(utf8name)].callback= constructor;
-    jsenv->jsvm_constructor_map_[std::string(utf8name)].data = nullptr;
-    return static_cast<Status>(
-        OH_JSVM_DefineClass(env, utf8name, length, &jsenv->jsvm_constructor_map_[utf8name], propertyCount, jsenv->jsvm_properties_map_[utf8name].data(), result));
+    auto jsvm_constructor = std::make_unique<JSVM_CallbackStruct>();
+
+    jsvm_constructor->callback = constructor;
+    jsvm_constructor->data = nullptr;
+
+    auto s = static_cast<Status>(OH_JSVM_DefineClass(env, utf8name, length, jsvm_constructor.get(), propertyCount,
+                                                     jsvm_properties->data(), result));
+    jsenv->jsvm_properties_map_[utf8name] = std::move(jsvm_properties);
+    jsenv->jsvm_callbacks_map_[utf8name] = std::move(jsvm_callbacks);
+    jsenv->jsvm_constructor_map_[utf8name] = std::move(jsvm_constructor);
+    return s;
 }
 Status DefineProperties(Env env, Value object, size_t propertyCount, const PropertyDescriptor *properties)
 {
-    auto jsenv = jsvm::JSEnv::getCurrent();                                                                            \
-    DEBUG_CHECK(nullptr != jsenv);   
-    
+    auto jsenv = jsvm::JSEnv::getCurrent();
+    DEBUG_CHECK(nullptr != jsenv);
+
+    auto it = jsenv->jsvm_object_properties_map_.find(object);
+    if (it != jsenv->jsvm_object_properties_map_.end())
     {
-     auto it = jsenv->jsvm_object_properties_map_.find(object);
-     if (it != jsenv->jsvm_object_properties_map_.end())
-     {
         LOGW("warning: jsvm DefineProperties %p more than once", object);
-     }
-    std::vector<JSVM_PropertyDescriptor> jsvm_properties;
-    jsvm_properties.reserve(propertyCount);
-    jsenv->jsvm_object_properties_map_[object] = jsvm_properties;
-}
-    {
-         std::vector<JSVM_CallbackStruct> jsvm_callbacks;
-        jsvm_callbacks.reserve(3 * propertyCount);
-        jsenv->jsvm_object_callbacks_map_[object] = jsvm_callbacks;
     }
+    auto jsvm_properties = std::make_unique<std::vector<JSVM_PropertyDescriptor>>();
+    jsvm_properties->reserve(propertyCount);
+
+    auto jsvm_callbacks = std::make_unique<std::vector<JSVM_CallbackStruct>>();
+    jsvm_callbacks->reserve(3 * propertyCount);
+
     for (int i = 0; i < propertyCount; i++)
     {
         JSVM_PropertyDescriptor property;
+        memset(&property, 0, sizeof(property));
         property.utf8name = properties[i].utf8name;
         property.name = properties[i].name;
         if (properties[i].method != nullptr)
         {
-
-           jsenv->jsvm_object_callbacks_map_[object].push_back(JSVM_CallbackStruct{.data = properties[i].data, .callback = properties[i].method});
-
-            property.method = &jsenv->jsvm_object_callbacks_map_[object].back();
+            JSVM_CallbackStruct s;
+            s.data = properties[i].data;
+            s.callback = properties[i].method;
+            jsvm_callbacks->push_back(s);
+            property.method = &jsvm_callbacks->back();
+        }
+        else
+        {
+            property.method = nullptr;
         }
         if (properties[i].getter != nullptr)
         {
-            jsenv->jsvm_object_callbacks_map_[object].push_back(JSVM_CallbackStruct{.data = properties[i].data, .callback = properties[i].getter});
-            property.getter = &jsenv->jsvm_object_callbacks_map_[object].back();
+            JSVM_CallbackStruct s;
+            s.data = properties[i].data;
+            s.callback = properties[i].getter;
+            jsvm_callbacks->push_back(s);
+            property.getter = &jsvm_callbacks->back();
+        }
+        else
+        {
+            property.getter = nullptr;
         }
 
         if (properties[i].setter != nullptr)
         {
-            jsenv->jsvm_object_callbacks_map_[object].push_back(JSVM_CallbackStruct{.data = properties[i].data, .callback = properties[i].setter});
-            property.setter = &jsenv->jsvm_object_callbacks_map_[object].back();
+            JSVM_CallbackStruct s;
+            s.data = properties[i].data;
+            s.callback = properties[i].setter;
+            jsvm_callbacks->push_back(s);
+            property.setter = &jsvm_callbacks->back();
+        }
+        else
+        {
+            property.setter = nullptr;
         }
         property.value = properties[i].value;
         property.attributes = static_cast<JSVM_PropertyAttributes>(properties[i].attributes);
-        jsenv->jsvm_object_properties_map_[object].push_back(property);
+        jsvm_properties->push_back(property);
     }
-    return static_cast<Status>(OH_JSVM_DefineProperties(env, object, propertyCount, jsenv->jsvm_object_properties_map_[object].data()));
+    auto s = static_cast<Status>(OH_JSVM_DefineProperties(env, object, propertyCount, jsvm_properties->data()));
+    jsenv->jsvm_object_callbacks_map_[object] = std::move(jsvm_callbacks);
+    jsenv->jsvm_object_properties_map_[object] = std::move(jsvm_properties);
+    return s;
 }
 Status CallFunction(Env env, Value recv, Value func, size_t argc, const Value *argv, Value *result)
 {
-    //LOGI("------------  CallFunction");
     return static_cast<Status>(OH_JSVM_CallFunction(env, recv, func, argc, argv, result));
 }
 Status CreateFunction(Env env, const char *utf8name, size_t length, Callback cb, void *data, Value *result)
@@ -353,7 +392,7 @@ Status CreateFunction(Env env, const char *utf8name, size_t length, Callback cb,
     JSVM_Callback jsvmCallback;
     jsvmCallback->callback = cb;
     jsvmCallback->data = data;
-    //LOGI("------------  %s", utf8name);
+    // todo
     return static_cast<Status>(OH_JSVM_CreateFunction(env, utf8name, length, jsvmCallback, result));
 }
 Status Typeof(Env env, Value value, ValueType *result)
@@ -470,7 +509,6 @@ Status GetValueBigintUint64(Env env, Value value, uint64_t *result, bool *lossle
 }
 Status RunScript(Env env, Value script, Value *result)
 {
-    //LOGI("------------  RunScript1");
     JSVM_Script jsvm_script;
     JSVM_Status status = OH_JSVM_CompileScript(env, script, nullptr, 0, true, nullptr, &jsvm_script);
     if (status != JSVM_OK)
@@ -478,18 +516,16 @@ Status RunScript(Env env, Value script, Value *result)
         // return napi_set_last_error((env), JSVM_GENERIC_FAILURE);
         return static_cast<Status>(JSVM_GENERIC_FAILURE); // lvtodo throw ???
     }
-    //LOGI("------------  RunScript2");
     status = OH_JSVM_RunScript(env, jsvm_script, result);
-    //LOGI("------------  RunScript3");
     return static_cast<Status>(status);
 }
 Status PumpMessageLoop(VM vm, bool *result)
 {
-     return static_cast<Status>(OH_JSVM_PumpMessageLoop(vm, result));
+    return static_cast<Status>(OH_JSVM_PumpMessageLoop(vm, result));
 }
 Status PerformMicrotaskCheckpoint(VM vm)
 {
-     return static_cast<Status>(OH_JSVM_PerformMicrotaskCheckpoint(vm));
+    return static_cast<Status>(OH_JSVM_PerformMicrotaskCheckpoint(vm));
 }
 Status GetProperty(Env env, Value object, Value key, Value *result)
 {

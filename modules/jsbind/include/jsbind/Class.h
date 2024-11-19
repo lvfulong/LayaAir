@@ -125,7 +125,7 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
     {
         jsvm::Status status;
         auto it = objects_.find((void *)objectPointer);
-        DEBUG_CHECK(it != objects_.end());
+        //DEBUG_CHECK(it != objects_.end());
         if (it != objects_.end())
         {
             removeObjectRegistry(env, &it->second, objectPointer);

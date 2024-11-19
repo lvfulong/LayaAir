@@ -90,6 +90,14 @@ void ScriptThread::_runLoop()
    
     jsvm::InitOptions initOptions;
     memset(&initOptions, 0, sizeof(initOptions));
+    static int argc = 2;
+    initOptions.argc = &argc;
+    //initOptions.argc = (int*)malloc(sizeof(int));
+    //*initOptions.argc = 3;
+    initOptions.argv = (char**)malloc(2 * sizeof(char*));
+    initOptions.argv[0] = "";//--expose-gc-as=gc";
+    initOptions.argv[1] = "--expose-gc";
+    initOptions.removeFlags = true;
     // InitOptions外部引用赋值
     initOptions.externalReferences = nullptr;
     if (!s_bSVMInit)
