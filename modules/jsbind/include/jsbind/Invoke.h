@@ -6,6 +6,7 @@
 #include <map>
 #include <string>
 #include <type_traits>
+#include "Error.h"
 
 namespace jsbind
 {
@@ -336,11 +337,16 @@ template <typename... Args> jsvm::Value v8_call(jsvm::Env env, jsvm::Value self,
         return v8::Undefined(v8::Isolate::GetCurrent());
 
     return scope.Escape(result.ToLocalChecked());*/
+    jsvm::Status status;
     const size_t argc = sizeof...(Args);
     jsvm::Value argv[argc + 1] = {internal::ToJSValue(args)...};
 
     jsvm::Value result = nullptr;
-    jsvm::CallFunction(env, self, func, argc, argv, &result);
+    status = jsvm::CallFunction(env, self, func, argc, argv, &result);
+    if (status != jsvm::Status::OK)
+    {
+        reportError(env, status);
+    }
     return result;
 }
 } // namespace internal

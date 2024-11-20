@@ -125,6 +125,7 @@ namespace laya
         class_binding_blob.function("close", &JsBlob::close);
         class_binding_blob.function("slice", &JsBlob::slice);
         class_binding_blob.constructor<>();
+        context.class_("conchBlob", class_binding_blob);
 
         jsbind::class_<JsFile> class_binding_file;
         class_binding_file.inherit<JsBlob>();

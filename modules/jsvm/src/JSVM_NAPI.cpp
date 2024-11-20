@@ -1,11 +1,11 @@
 #include "jsvm/JSEnv.h"
 #include "jsvm/JSVM.h"
+#include "jsvm/ScriptThread.h"
 #include "jsvm/napi/js_native_api.h"
 #include "jsvm/napi/js_native_api_v8.h"
+#include "v8debug/debug-agent.h"
 #include <libplatform/libplatform.h>
 #include <v8.h>
-#include "v8debug/debug-agent.h"
-#include "jsvm/ScriptThread.h"
 
 namespace jsvm
 {
@@ -299,17 +299,20 @@ static void PromiseRejectHandlerInMainThread(v8::PromiseRejectMessage data)
         return;
     }
     v8::Local<v8::Value> exception = data.GetValue();
-    //const char *error_message = nullptr;
+    // const char *error_message = nullptr;
     std::string error_message;
     v8::Local<v8::Message> message = v8::Exception::CreateMessage(isolate, exception);
 
     if (!message.IsEmpty())
     {
-        if (message->Get().IsEmpty() || message->Get()->IsNull()){
-        }else{
+        if (message->Get().IsEmpty() || message->Get()->IsNull())
+        {
+        }
+        else
+        {
             v8::String::Utf8Value utf8(isolate, message->Get().As<v8::String>());
             error_message.assign(*utf8);
-            //error_message = Converter<const char*>::ToCpp(message->Get().As<v8::String>());
+            // error_message = Converter<const char*>::ToCpp(message->Get().As<v8::String>());
         }
     }
     // std::string kBuf = "if(conch.onunhandledrejection){conch.onunhandledrejection('";
@@ -323,10 +326,10 @@ static void PromiseRejectHandlerInMainThread(v8::PromiseRejectMessage data)
     const char *s = str.c_str();
 
     LOGI("unhandledrejection stack %s", s);
-    LOGE("unhandledrejection %s", error_message.c_str());// != nullptr ? error_message : "no message");
-    //IsolateData *pIsolateData = IsolateData::From(isolate);
-    //Javascript *pJavascript = (Javascript *)pIsolateData->m_data;
-    //pJavascript->m_promiseRejectHandler(data.GetPromise(), data.GetValue(), "unhandledrejection");
+    LOGE("unhandledrejection %s", error_message.c_str()); // != nullptr ? error_message : "no message");
+    // IsolateData *pIsolateData = IsolateData::From(isolate);
+    // Javascript *pJavascript = (Javascript *)pIsolateData->m_data;
+    // pJavascript->m_promiseRejectHandler(data.GetPromise(), data.GetValue(), "unhandledrejection");
 }
 Status CreateVM(const CreateVMOptions *options, VM *result)
 {
@@ -340,7 +343,7 @@ Status CreateVM(const CreateVMOptions *options, VM *result)
     // m_context.Reset(m_pIsolate, context);
     // m_IsolateData = new IsolateData(m_pIsolate, NULL);
     // m_IsolateData->m_data = (void *)this;
-    (*result)->isolate_ ->SetPromiseRejectCallback(PromiseRejectHandlerInMainThread);
+    (*result)->isolate_->SetPromiseRejectCallback(PromiseRejectHandlerInMainThread);
     // context->Enter();
     return Status::OK; // todo
 }
@@ -789,6 +792,46 @@ Status GetPropertyNames(Env env, Value object, Value *result)
 {
     return static_cast<Status>(napi_get_property_names(env, object, result));
 }
+static napi_status NAPI_CDECL napi_set_prototype(napi_env env, napi_value object, napi_value prototype)
+{
+    NAPI_PREAMBLE(env);
+
+    v8::Local<v8::Context> context = env->context();
+
+    v8::Local<v8::Object> obj;
+    CHECK_TO_OBJECT(env, context, obj, object);
+
+    v8::Local<v8::Value> a = v8impl::V8LocalValueFromJsValue(prototype);
+    v8::Maybe<bool> set_maybe = obj->SetPrototype(context, a);
+    RETURN_STATUS_IF_FALSE(env, set_maybe.FromMaybe(false), napi_generic_failure);
+    return GET_RETURN_STATUS(env);
+}
+static napi_status NAPI_CDECL napi_object_set_prototype_of(napi_env env, napi_value object, napi_value prototype)
+{
+    NAPI_PREAMBLE(env);
+
+    v8::Local<v8::Context> context = env->context();
+
+    v8::Local<v8::Object> obj;
+    CHECK_TO_OBJECT(env, context, obj, object);
+
+    v8::Local<v8::Value> a = v8impl::V8LocalValueFromJsValue(prototype);
+    v8::Maybe<bool> set_maybe = obj->SetPrototype(context, a);
+    RETURN_STATUS_IF_FALSE(env, set_maybe.FromMaybe(false), napi_generic_failure);
+    return GET_RETURN_STATUS(env);
+}
+Status ObjectSetPrototypeOf(Env env, Value object, Value prototype)
+{
+    return static_cast<Status>(napi_object_set_prototype_of(env, object, prototype));
+}
+Status ObjectGetPrototypeOf(Env env, Value object,  Value *result)
+{
+    return static_cast<Status>(napi_get_prototype(env, object, result));
+}
+Status GetPrototype(Env env, Value object, Value *result)
+{
+    return static_cast<Status>(napi_get_prototype(env, object, result));
+}
 const char *ToCString(const v8::String::Utf8Value &value)
 {
     return *value ? *value : "<string conversion failed>";
@@ -930,28 +973,29 @@ Status ReportException(Env env)
     return Status::OK; // todo
 }
 
-laya::DebuggerAgent* pDbgAgent;
-void OpenInspector(Env env, int port){
-#ifdef JS_V8_DEBUGGER    
-    //std::shared_ptr<jsvm::ScriptThread> scriptThread
-    pDbgAgent = new laya::DebuggerAgent("layabox",port);
+laya::DebuggerAgent *pDbgAgent;
+void OpenInspector(Env env, int port)
+{
+#ifdef JS_V8_DEBUGGER
+    // std::shared_ptr<jsvm::ScriptThread> scriptThread
+    pDbgAgent = new laya::DebuggerAgent("layabox", port);
     pDbgAgent->onJSStart(env->scriptThread);
 #endif
 }
-void WaitForDebugger(Env env, bool breakNextLine){
-#ifdef JS_V8_DEBUGGER    
+void WaitForDebugger(Env env, bool breakNextLine)
+{
+#ifdef JS_V8_DEBUGGER
     pDbgAgent->WaitForDebugger(breakNextLine);
 #endif
 }
-//关闭调试
-void CloseInspector(Env env){
-#ifdef JS_V8_DEBUGGER    
+// 关闭调试
+void CloseInspector(Env env)
+{
+#ifdef JS_V8_DEBUGGER
     pDbgAgent->Shutdown();
     delete pDbgAgent;
     pDbgAgent = nullptr;
 #endif
 }
-
-
 
 } // namespace jsvm

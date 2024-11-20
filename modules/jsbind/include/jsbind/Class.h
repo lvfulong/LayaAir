@@ -8,6 +8,8 @@
 #include <map>
 #include <string>
 #include <utils/Log.h>
+#include "Error.h"
+#include <jsvm/JSEnv.h>
 
 namespace jsbind
 {
@@ -125,7 +127,7 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
     {
         jsvm::Status status;
         auto it = objects_.find((void *)objectPointer);
-        //DEBUG_CHECK(it != objects_.end());
+        // DEBUG_CHECK(it != objects_.end());
         if (it != objects_.end())
         {
             removeObjectRegistry(env, &it->second, objectPointer);
@@ -259,7 +261,7 @@ template <typename ClassType> static jsvm::Value New(jsvm::Env env, jsvm::Callba
 }
 template <typename ClassType> static jsvm::Value NewGlobalClass(jsvm::Env env, jsvm::CallbackInfo info)
 {
-    //LOGI("jsvm NewGlobalClass %s", type_id<ClassType>().name().data());
+    // LOGI("jsvm NewGlobalClass %s", type_id<ClassType>().name().data());
     jsvm::Value thisVar = nullptr;
     jsvm::GetCbInfo(env, info, nullptr, nullptr, &thisVar, nullptr);
 
@@ -276,8 +278,8 @@ template <typename ClassType> class class_
     class_ &operator=(class_ &&) = delete;
     ClassRegistry<ClassType> &classRegistry_;
 
-    jsvm::Value ctor_;
     mutable std::vector<jsvm::PropertyDescriptor> propertyDescriptorVector_;
+    mutable std::vector<jsvm::Ref> inheritConsVector_;
 
   public:
     template <typename... Args> class_ &constructor()
@@ -433,10 +435,11 @@ template <typename ClassType> class class_
     {
         static_assert(std::is_base_of<BaseType, ClassType>::value, "Class BaseType should be base for class ClassType");
 
-        /*ClassRegistry<BaseType>& baseClassRegistry =
+        ClassRegistry<BaseType> &baseClassRegistry =
             ClassRegistryManager::getClassRegistry<BaseType>(type_id<BaseType>());
-        classRegistry_.addBase(&baseClassRegistry);
-        classRegistry_.js_function_template()->Inherit(baseClassRegistry.class_function_template());*/
+
+        inheritConsVector_.push_back(baseClassRegistry.classRef_);
+
         return *this;
     }
     jsvm::Value registerClass(jsvm::Env env, jsvm::Value exports, const char *className)
@@ -447,14 +450,41 @@ template <typename ClassType> class class_
         status = jsvm::DefineClass(env, className, NAPI_AUTO_LENGTH, New<ClassType>, propertyDescriptorVector_.size(),
                                    propertyDescriptorVector_.data(), &cons);
         DEBUG_CHECK(status == jsvm::Status::OK);
-        ClassRegistry<ClassType> &baseClassRegistry =
-            ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
-
         status = jsvm::CreateReference(env, cons, 1, &classRegistry_.classRef_);
         DEBUG_CHECK(status == jsvm::Status::OK);
         status = jsvm::SetNamedProperty(env, exports, className, cons);
         DEBUG_CHECK(status == jsvm::Status::OK);
 
+        for (int i = 0, s = inheritConsVector_.size(); i < s; i++)
+        {
+            jsvm::Value consBase; 
+            status = jsvm::GetReferenceValue(env, inheritConsVector_[i], &consBase);
+            DEBUG_CHECK(status == jsvm::Status::OK);
+            jsvm::Value consBasePrototype = Local(consBase)["prototype"].getHandle();
+
+            jsvm::Value consDerived = cons;
+            jsvm::Value consDerivedPrototype = Local(consDerived)["prototype"].getHandle();
+
+            Local global(jsvm::global());
+            Local setPrototypeOf = global["Object"]["setPrototypeOf"];
+
+            setPrototypeOf.call<void>(jsvm::global(), consDerived, consBase);
+            setPrototypeOf.call<void>(jsvm::global(), consDerivedPrototype, consBasePrototype);
+#if 0 
+            
+            status = jsvm::ObjectGetPrototypeOf(env, consBase, &consBasePrototype);
+            DEBUG_CHECK(status == jsvm::Status::OK);
+
+            status = jsvm::ObjectGetPrototypeOf(env, consDerived, &consDerivedPrototype);
+            DEBUG_CHECK(status == jsvm::Status::OK); 
+            status = jsvm::ObjectSetPrototypeOf(env, consDerived, consBase);
+            DEBUG_CHECK(status == jsvm::Status::OK);
+
+            status = jsvm::ObjectSetPrototypeOf(env, consDerivedPrototype, conBasePrototype);
+            DEBUG_CHECK(status == jsvm::Status::OK);
+#endif
+            // classRegistry_.addBase(&baseClassRegistry);//todo
+        }
         return exports;
     }
 };
@@ -469,13 +499,11 @@ template <typename ClassType> class global_class_
     global_class_(global_class_ &&) = default;
     global_class_ &operator=(global_class_ &&) = delete;
     ClassRegistry<ClassType> &classRegistry_;
-
-    jsvm::Value ctor_;
     mutable std::vector<jsvm::PropertyDescriptor> propertyDescriptorVector_;
 
   public:
     template <typename ReturnType, typename... Args>
-    const global_class_&class_function(const char *name, ReturnType (*func)(Args...)) const
+    const global_class_ &class_function(const char *name, ReturnType (*func)(Args...)) const
     {
         FuncInfo<decltype(func)> *data = new FuncInfo<decltype(func)>(func);
         internal::addDeinitializer([data]() { delete data; });
@@ -493,7 +521,8 @@ template <typename ClassType> class global_class_
         return *this;
     }
     template <typename PropertyType>
-    global_class_&class_property(const char *name, PropertyType (*get)(void), void (*set)(PropertyType value) = nullptr)
+    global_class_ &class_property(const char *name, PropertyType (*get)(void),
+                                  void (*set)(PropertyType value) = nullptr)
     {
         auto data = new PropFuncInfo<decltype(get), decltype(set)>(get, set);
         internal::addDeinitializer([data]() { delete data; });
@@ -525,7 +554,7 @@ template <typename ClassType> class global_class_
         status = jsvm::NewInstance(env, cons, 0, nullptr, &instanceValue);
         DEBUG_CHECK(status == jsvm::Status::OK);
         status = jsvm::SetNamedProperty(env, exports, className, instanceValue);
-        //status = jsvm::SetNamedProperty(env, exports, className, cons);
+        // status = jsvm::SetNamedProperty(env, exports, className, cons);
         DEBUG_CHECK(status == jsvm::Status::OK);
 
         return exports;

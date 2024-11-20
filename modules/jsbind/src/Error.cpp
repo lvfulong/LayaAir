@@ -7,15 +7,20 @@ void reportError(jsvm::Env env, jsvm::Status res)
 {
     jsvm::Value exceptionValue;
     jsvm::Status status = jsvm::GetAndClearLastException(env, &exceptionValue);
+    DEBUG_CHECK(status == jsvm::Status::OK);
     if (status == jsvm::Status::OK)
     {
         jsvm::Value message;
-        jsvm::GetNamedProperty(env, exceptionValue, "message", &message);
+        status = jsvm::GetNamedProperty(env, exceptionValue, "message", &message);
+        DEBUG_CHECK(status == jsvm::Status::OK);
         size_t length;
-        jsvm::GetValueStringUtf8(env, message, nullptr, 0, &length);
+        status = jsvm::GetValueStringUtf8(env, message, nullptr, 0, &length);
+        DEBUG_CHECK(status == jsvm::Status::OK);
         char *buffer = new char[length + 1];
-        jsvm::GetValueStringUtf8(env, message, buffer, length + 1, nullptr);
-        jsvm::ThrowError(env, std::to_string(static_cast<int>(status)).c_str(), buffer);
+        status = jsvm::GetValueStringUtf8(env, message, buffer, length + 1, nullptr);
+        DEBUG_CHECK(status == jsvm::Status::OK);
+        status = jsvm::ThrowError(env, std::to_string(static_cast<int>(status)).c_str(), buffer);
+        DEBUG_CHECK(status == jsvm::Status::OK);
         LOGE("jsvm failed Error code:  %s", buffer);
         delete[] buffer;
     }

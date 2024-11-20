@@ -587,7 +587,18 @@ Status GetPropertyNames(Env env, Value object, Value *result)
 {
     return static_cast<Status>(OH_JSVM_GetPropertyNames(env, object, result));
 }
-
+Status ObjectSetPrototypeOf(Env env, Value object, Value prototype)
+{
+    return static_cast<Status>(OH_JSVM_ObjectSetPrototypeOf(env, object, prototype));
+}
+Status ObjectGetPrototypeOf(Env env, Value object,  Value *result)
+{
+    return static_cast<Status>(OH_JSVM_GetPrototype(env, object, result));
+}
+Status GetPrototype(Env env, Value object, Value *result)
+{
+    return static_cast<Status>(OH_JSVM_ObjectGetPrototypeOf(env, object, result));
+}
 Status ReportException(Env env)
 {
 #if 0

@@ -165,10 +165,13 @@ inline std::string getStringUtf8(jsvm::Value value)
     GET_ENV
     size_t length = 0;
     jsvm::Status status;
-    status = jsvm::GetValueStringUtf8(env, value, NULL, 0, &length);
+    jsvm::Value result;
+    status = jsvm::CoerceToString(env, value, &result);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+    status = jsvm::GetValueStringUtf8(env, result, NULL, 0, &length);
     DEBUG_CHECK(status == jsvm::Status::OK);
     std::string utf8str(length, '\0');
-    status = jsvm::GetValueStringUtf8(env, value, utf8str.data(), length + 1, &length);
+    status = jsvm::GetValueStringUtf8(env, result, utf8str.data(), length + 1, &length);
     DEBUG_CHECK(status == jsvm::Status::OK);
     return utf8str;
 }

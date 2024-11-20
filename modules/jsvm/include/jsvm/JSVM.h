@@ -117,6 +117,9 @@ namespace jsvm
 /*JSVM_EXTERN*/ Status CoerceToObject(Env env, Value value, Value *result);
 /*JSVM_EXTERN*/ Status CoerceToString(Env env, Value value, Value *result);
 /*JSVM_EXTERN*/ Status GetPropertyNames(Env env, Value object, Value *result);
+/*JSVM_EXTERN*/ Status GetPrototype (Env env, Value object, Value *result);
+/*JSVM_EXTERN*/ Status ObjectSetPrototypeOf(Env env, Value object, Value prototype);
+/*JSVM_EXTERN*/ Status ObjectGetPrototypeOf(Env env, Value object,  Value *result);
 //打开调试
 void OpenInspector(Env env, int port);
 void WaitForDebugger(Env env,bool breakNextLine);
