@@ -1,15 +1,15 @@
 #ifndef __JSBIND_CLASS_H__
 #define __JSBIND_CLASS_H__
 
+#include "Error.h"
 #include "Invoke.h"
 #include "Utility.h"
 #include <assert.h>
 #include <functional>
+#include <jsvm/JSEnv.h>
 #include <map>
 #include <string>
 #include <utils/Log.h>
-#include "Error.h"
-#include <jsvm/JSEnv.h>
 
 namespace jsbind
 {
@@ -270,7 +270,13 @@ template <typename ClassType> static jsvm::Value NewGlobalClass(jsvm::Env env, j
 template <typename ClassType> class class_
 {
   public:
-    class_() : classRegistry_(ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>())) {};
+    class_() : classRegistry_(ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>()))
+    {
+        mergedPropertyDescriptorMap_.clear();
+    }
+    ~class_()
+    {
+    }
     class_(class_ const &) = delete;
     class_ &operator=(class_ const &) = delete;
 
@@ -278,8 +284,10 @@ template <typename ClassType> class class_
     class_ &operator=(class_ &&) = delete;
     ClassRegistry<ClassType> &classRegistry_;
 
-    mutable std::vector<jsvm::PropertyDescriptor> propertyDescriptorVector_;
-    mutable std::vector<jsvm::Ref> inheritConsVector_;
+    static std::unordered_map<const char *, jsvm::PropertyDescriptor> mergedPropertyDescriptorMap_;
+    mutable std::unordered_map<const char*, jsvm::PropertyDescriptor> propertyDescriptorMap_;
+    mutable jsvm::Ref inheritBaseCons_ = nullptr;
+    mutable std::unordered_map<const char *, jsvm::PropertyDescriptor> propertyInheritBaseDescriptorMap_;
 
   public:
     template <typename... Args> class_ &constructor()
@@ -302,7 +310,7 @@ template <typename ClassType> class class_
         descriptor.value = NULL;
         descriptor.attributes = jsvm::PropertyAttributes::DEFAULT;
         descriptor.data = data;
-        propertyDescriptorVector_.push_back(descriptor);
+        propertyDescriptorMap_.insert(std::make_pair(name, descriptor));
         return *this;
     }
     template <typename ReturnType, typename... Args>
@@ -320,7 +328,7 @@ template <typename ClassType> class class_
         descriptor.value = NULL;
         descriptor.attributes = jsvm::PropertyAttributes::DEFAULT;
         descriptor.data = data;
-        propertyDescriptorVector_.push_back(descriptor);
+        propertyDescriptorMap_.insert(std::make_pair(name, descriptor));
         return *this;
     }
     template <typename ReturnType, typename... Args>
@@ -338,7 +346,7 @@ template <typename ClassType> class class_
         descriptor.value = NULL;
         descriptor.attributes = jsvm::PropertyAttributes::DEFAULT;
         descriptor.data = data;
-        propertyDescriptorVector_.push_back(descriptor);
+        propertyDescriptorMap_.insert(std::make_pair(name, descriptor));
         return *this;
     }
     template <typename ReturnType, typename... Args>
@@ -356,7 +364,7 @@ template <typename ClassType> class class_
         descriptor.value = NULL;
         descriptor.attributes = jsvm::PropertyAttributes::STATIC;
         descriptor.data = data;
-        propertyDescriptorVector_.push_back(descriptor);
+        propertyDescriptorMap_.insert(std::make_pair(name, descriptor));
         return *this;
     }
     template <typename PropertyType>
@@ -374,7 +382,7 @@ template <typename ClassType> class class_
         descriptor.value = NULL;
         descriptor.attributes = jsvm::PropertyAttributes::DEFAULT;
         descriptor.data = data;
-        propertyDescriptorVector_.push_back(descriptor);
+        propertyDescriptorMap_.insert(std::make_pair(name, descriptor));
         return *this;
     }
     template <typename PropertyType>
@@ -392,7 +400,7 @@ template <typename ClassType> class class_
         descriptor.value = NULL;
         descriptor.attributes = jsvm::PropertyAttributes::DEFAULT;
         descriptor.data = data;
-        propertyDescriptorVector_.push_back(descriptor);
+        propertyDescriptorMap_.insert(std::make_pair(name, descriptor));
         return *this;
     }
     template <
@@ -410,7 +418,7 @@ template <typename ClassType> class class_
         descriptor.value = NULL;
         descriptor.attributes = jsvm::PropertyAttributes::DEFAULT;
         descriptor.data = data;
-        propertyDescriptorVector_.push_back(descriptor);
+        propertyDescriptorMap_.insert(std::make_pair(name, descriptor));
         return *this;
     }
     template <typename PropertyType>
@@ -427,7 +435,7 @@ template <typename ClassType> class class_
         descriptor.value = NULL;
         descriptor.attributes = jsvm::PropertyAttributes::STATIC;
         descriptor.data = data;
-        propertyDescriptorVector_.push_back(descriptor);
+        propertyDescriptorMap_.insert(std::make_pair(name, descriptor));
         return *this;
     }
 
@@ -437,9 +445,10 @@ template <typename ClassType> class class_
 
         ClassRegistry<BaseType> &baseClassRegistry =
             ClassRegistryManager::getClassRegistry<BaseType>(type_id<BaseType>());
-
-        inheritConsVector_.push_back(baseClassRegistry.classRef_);
-
+        DEBUG_CHECK(inheritBaseCons_ == nullptr); // only inherit single base
+        inheritBaseCons_ = baseClassRegistry.classRef_;
+        DEBUG_CHECK(!class_<BaseType>::mergedPropertyDescriptorMap_.empty());
+        propertyInheritBaseDescriptorMap_ = class_<BaseType>::mergedPropertyDescriptorMap_;
         return *this;
     }
     jsvm::Value registerClass(jsvm::Env env, jsvm::Value exports, const char *className)
@@ -447,18 +456,36 @@ template <typename ClassType> class class_
         jsvm::Status status;
         jsvm::Value cons;
 
-        status = jsvm::DefineClass(env, className, NAPI_AUTO_LENGTH, New<ClassType>, propertyDescriptorVector_.size(),
-                                   propertyDescriptorVector_.data(), &cons);
+        // merge start
+        for (const auto &pair : propertyInheritBaseDescriptorMap_)
+        {
+            mergedPropertyDescriptorMap_.insert(pair);
+        }
+        for (const auto &pair : propertyDescriptorMap_)
+        {
+            mergedPropertyDescriptorMap_.insert(pair);
+        }
+
+        std::vector<jsvm::PropertyDescriptor> propertyDescriptorVector;
+        propertyDescriptorVector.reserve(mergedPropertyDescriptorMap_.size());
+        for (const auto &pair : mergedPropertyDescriptorMap_)
+        {
+            propertyDescriptorVector.push_back(pair.second);
+        }
+        // merge end
+
+        status = jsvm::DefineClass(env, className, NAPI_AUTO_LENGTH, New<ClassType>, propertyDescriptorVector.size(),
+                                   propertyDescriptorVector.data(), &cons);
         DEBUG_CHECK(status == jsvm::Status::OK);
         status = jsvm::CreateReference(env, cons, 1, &classRegistry_.classRef_);
         DEBUG_CHECK(status == jsvm::Status::OK);
         status = jsvm::SetNamedProperty(env, exports, className, cons);
         DEBUG_CHECK(status == jsvm::Status::OK);
 
-        for (int i = 0, s = inheritConsVector_.size(); i < s; i++)
+        if (inheritBaseCons_ != nullptr)
         {
-            jsvm::Value consBase; 
-            status = jsvm::GetReferenceValue(env, inheritConsVector_[i], &consBase);
+            jsvm::Value consBase;
+            status = jsvm::GetReferenceValue(env, inheritBaseCons_, &consBase);
             DEBUG_CHECK(status == jsvm::Status::OK);
             jsvm::Value consBasePrototype = Local(consBase)["prototype"].getHandle();
 
@@ -568,6 +595,8 @@ template <typename ClassType> bool isWrappedClassOf()
 {
     return ClassRegistryManager::isWrappedClassOf<ClassType>();
 }
+template <typename ClassType>
+std::unordered_map<const char *, jsvm::PropertyDescriptor> class_<ClassType>::mergedPropertyDescriptorMap_;
 namespace internal
 {
 template <typename ClassType> static void destructor(jsvm::Env env, void *nativeObject, void * /*finalize_hint*/)
