@@ -1,38 +1,35 @@
 #ifndef __JSBIND_H__
 #define __JSBIND_H__
 
-#include <utils/JCMemorySurvey.h>
-#include <jsbind/Map.h>
 #include <jsbind/Array.h>
 #include <jsbind/ArrayBuffer.h>
+#include <jsbind/Class.h>
 #include <jsbind/Date.h>
 #include <jsbind/Enum.h>
-#include <jsvm/JSEnv.h>
+#include <jsbind/Error.h>
+#include <jsbind/Function.h>
 #include <jsbind/Local.h>
+#include <jsbind/Map.h>
 #include <jsbind/Object.h>
 #include <jsbind/Persistent.h>
 #include <jsbind/Promise.h>
 #include <jsbind/Script.h>
 #include <jsbind/String.h>
 #include <jsbind/Value.h>
-#include <jsbind/Function.h>
-#include <jsbind/Class.h>
-#include <jsbind/Error.h>
+#include <jsvm/JSEnv.h>
 #include <jsvm/JSVM.h>
 #include <jsvm/JSVM_Types.h>
-//#ifdef JS_V8_DEBUGGER
-//#include <jsvm/v8debug/debug-agent.h>
-//#endif
+#include <utils/JCMemorySurvey.h>
 
 namespace jsbind
 {
 
 extern void runDeinitializers();
-template <typename ClassType> void makeWeak(ClassType* objectPointer)
+template <typename ClassType> void makeWeak(ClassType *objectPointer)
 {
     ClassRegistryManager::makeWeak<ClassType>(objectPointer);
 }
-template <typename ClassType> void makeStrong(ClassType* objectPointer)
+template <typename ClassType> void makeStrong(ClassType *objectPointer)
 {
     ClassRegistryManager::makeStrong<ClassType>(objectPointer);
 }

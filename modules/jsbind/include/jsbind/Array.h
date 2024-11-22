@@ -2,7 +2,7 @@
 #define __JSBIND_ARRAY_H_
 
 #include <jsvm/JSVM_Types.h>
-#include <jsbind/internal/Converter.h>
+#include <jsbind/internal/ValueTraits.h>
 #include <vector>
 
 namespace jsbind
@@ -30,7 +30,7 @@ template <typename T> class Array
             DEBUG_CHECK(status == jsvm::Status::OK);
             for (int i = 0; i < size; i++)
             {
-                jsvm::SetElement(env, result, i, Converter<T *>::ToJs(value.at(i), callDestructor));
+                jsvm::SetElement(env, result, i, ValueTraits<T *>::ToJs(value.at(i), callDestructor));
             }
             return result;
         }
@@ -53,7 +53,7 @@ template <typename T> class Array
             DEBUG_CHECK(status == jsvm::Status::OK);
             for (int i = 0; i < size; i++)
             {
-                status = jsvm::SetElement(env, result, i, Converter<T>::ToJs(value.at(i), callDestructor));
+                status = jsvm::SetElement(env, result, i, ValueTraits<T>::ToJs(value.at(i), callDestructor));
                 DEBUG_CHECK(status == jsvm::Status::OK);
             }
             return result;
@@ -67,7 +67,7 @@ template <typename T> class Array
         int size = value.size();
         for (int i = 0; i < size; i++)
         {
-            status = jsvm::SetElement(env, array, i, Converter<T>::ToJs(value.at(i), callDestructor));
+            status = jsvm::SetElement(env, array, i, ValueTraits<T>::ToJs(value.at(i), callDestructor));
             DEBUG_CHECK(status == jsvm::Status::OK);
         }
     }
@@ -90,7 +90,7 @@ template <typename T> class Array
                 jsvm::Value element;
                 status = jsvm::GetElement(env, array, i, &element);
                 DEBUG_CHECK(status == jsvm::Status::OK);
-                result.push_back(Converter<T *>::ToCpp(element));
+                result.push_back(ValueTraits<T *>::ToCpp(element));
             }
         }
     }
@@ -113,13 +113,13 @@ template <typename T> class Array
                 jsvm::Value element;
                 status = jsvm::GetElement(env, array, i, &element);
                 DEBUG_CHECK(status == jsvm::Status::OK);
-                result.push_back(Converter<T>::ToCpp(element));
+                result.push_back(ValueTraits<T>::ToCpp(element));
             }
         }
     }
 };
 
-template <typename T> class Converter<std::vector<T>>
+template <typename T> class ValueTraits<std::vector<T>>
 {
   public:
     static std::vector<T> ToCpp(jsvm::Value value)
@@ -133,13 +133,13 @@ template <typename T> class Converter<std::vector<T>>
         return Array<T>::ToJs(value);
     }
 };
-template <typename T> class Converter<const std::vector<T> &> : public Converter<std::vector<T>>
+template <typename T> class ValueTraits<const std::vector<T> &> : public ValueTraits<std::vector<T>>
 {
 };
-template <typename T> class Converter<std::vector<T> &> : public Converter<std::vector<T>>
+template <typename T> class ValueTraits<std::vector<T> &> : public ValueTraits<std::vector<T>>
 {
 };
-template <typename T> class Converter<std::vector<T *>>
+template <typename T> class ValueTraits<std::vector<T *>>
 {
   public:
     static std::vector<T *> ToCpp(jsvm::Value value)
@@ -157,10 +157,10 @@ template <typename T> class Converter<std::vector<T *>>
         return p_vl->IsArray();
     }*/
 };
-template <typename T> class Converter<const std::vector<T *> &> : public Converter<std::vector<T *>>
+template <typename T> class ValueTraits<const std::vector<T *> &> : public ValueTraits<std::vector<T *>>
 {
 };
-template <typename T> class Converter<std::vector<T *> &> : public Converter<std::vector<T *>>
+template <typename T> class ValueTraits<std::vector<T *> &> : public ValueTraits<std::vector<T *>>
 {
 };
 } // namespace jsbind

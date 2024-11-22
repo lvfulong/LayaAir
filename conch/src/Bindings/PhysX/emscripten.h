@@ -309,7 +309,7 @@ class PhysxAdapter_ : public PhysxAdapter
 /*namespace laya
 {
 
-template <> class Converter<physx::PxRigidBodyFlag::Enum>
+template <> class ValueTraits<physx::PxRigidBodyFlag::Enum>
 {
   public:
     static physx::PxRigidBodyFlag::Enum ToCpp(v8::Local<v8::Value> p_vl)
@@ -327,7 +327,7 @@ template <> class Converter<physx::PxRigidBodyFlag::Enum>
     }
 };
 
-template <> class Converter<physx::PxActorFlag::Enum>
+template <> class ValueTraits<physx::PxActorFlag::Enum>
 {
   public:
     static physx::PxActorFlag::Enum ToCpp(v8::Local<v8::Value> p_vl)
@@ -345,7 +345,7 @@ template <> class Converter<physx::PxActorFlag::Enum>
     }
 };
 
-template <> class Converter<physx::PxRigidDynamicLockFlag::Enum>
+template <> class ValueTraits<physx::PxRigidDynamicLockFlag::Enum>
 {
   public:
     static physx::PxRigidDynamicLockFlag::Enum ToCpp(v8::Local<v8::Value> p_vl)
@@ -363,7 +363,7 @@ template <> class Converter<physx::PxRigidDynamicLockFlag::Enum>
     }
 };
 
-template <> class Converter<physx::PxCapsuleClimbingMode::Enum>
+template <> class ValueTraits<physx::PxCapsuleClimbingMode::Enum>
 {
   public:
     static physx::PxCapsuleClimbingMode::Enum ToCpp(v8::Local<v8::Value> p_vl)
@@ -381,7 +381,7 @@ template <> class Converter<physx::PxCapsuleClimbingMode::Enum>
     }
 };
 
-template <> class Converter<physx::PxControllerCollisionFlag::Enum>
+template <> class ValueTraits<physx::PxControllerCollisionFlag::Enum>
 {
   public:
     static physx::PxControllerCollisionFlag::Enum ToCpp(v8::Local<v8::Value> p_vl)
@@ -399,7 +399,7 @@ template <> class Converter<physx::PxControllerCollisionFlag::Enum>
     }
 };
 
-template <> class Converter<physx::PxControllerShapeType::Enum>
+template <> class ValueTraits<physx::PxControllerShapeType::Enum>
 {
   public:
     static physx::PxControllerShapeType::Enum ToCpp(v8::Local<v8::Value> p_vl)
@@ -416,7 +416,7 @@ template <> class Converter<physx::PxControllerShapeType::Enum>
         return p_vl->IsInt32();
     }
 };
-template <> class Converter<physx::PxHeightFieldFormat::Enum>
+template <> class ValueTraits<physx::PxHeightFieldFormat::Enum>
 {
   public:
     static physx::PxHeightFieldFormat::Enum ToCpp(v8::Local<v8::Value> p_vl)
@@ -434,7 +434,7 @@ template <> class Converter<physx::PxHeightFieldFormat::Enum>
     }
 };
 
-template <> class Converter<physx::PxDefaultCpuDispatcherWaitForWorkMode::Enum>
+template <> class ValueTraits<physx::PxDefaultCpuDispatcherWaitForWorkMode::Enum>
 {
   public:
     static physx::PxDefaultCpuDispatcherWaitForWorkMode::Enum ToCpp(v8::Local<v8::Value> p_vl)
@@ -452,7 +452,7 @@ template <> class Converter<physx::PxDefaultCpuDispatcherWaitForWorkMode::Enum>
     }
 };
 
-template <> class Converter<physx::PxShapeFlag::Enum>
+template <> class ValueTraits<physx::PxShapeFlag::Enum>
 {
   public:
     static physx::PxShapeFlag::Enum ToCpp(v8::Local<v8::Value> p_vl)
@@ -469,7 +469,7 @@ template <> class Converter<physx::PxShapeFlag::Enum>
         return p_vl->IsInt32();
     }
 };
-template <> class Converter<physx::PxCombineMode::Enum>
+template <> class ValueTraits<physx::PxCombineMode::Enum>
 {
   public:
     static physx::PxCombineMode::Enum ToCpp(v8::Local<v8::Value> p_vl)

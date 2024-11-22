@@ -1,12 +1,12 @@
 #ifndef __V8_INVOKE_H__
 #define __V8_INVOKE_H__
 
-#include "internal/Converter.h"
+#include <jsbind/internal/ValueTraits.h>
 #include <jsvm/JSVM_Types.h>
 #include <map>
 #include <string>
 #include <type_traits>
-#include "Error.h"
+#include <jsbind/Error.h>
 
 namespace jsbind
 {
@@ -23,49 +23,49 @@ T *tuple_call_class_constructor(jsvm::Env env, jsvm::CallbackInfo info, std::ind
     void *data;
     jsvm::GetCbInfo(env, info, &argc, argv, &_this, &data);
 
-    return new T(Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(argv[Seq])...);
+    return new T(ValueTraits<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(argv[Seq])...);
 }
 
 template <typename Tuple, typename Func, size_t... Seq>
 typename std::enable_if<!internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call(
     Func func, jsvm::Value *args, std::index_sequence<Seq...>)
 {
-    return Converter<typename function_traits<Func>::return_type>::ToJs(
-        func(Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...));
+    return ValueTraits<typename function_traits<Func>::return_type>::ToJs(
+        func(ValueTraits<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...));
 }
 template <typename Tuple, typename Func, size_t... Seq>
 typename std::enable_if<internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call(
     Func func, jsvm::Value *args, std::index_sequence<Seq...>)
 {
-    func(Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...);
+    func(ValueTraits<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...);
     return nullptr;
 }
 template <typename ClassType, typename Tuple, typename Func, size_t... Seq>
 typename std::enable_if<!internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call_with_this(
     ClassType *thisObject, Func func, jsvm::Value *args, std::index_sequence<Seq...>)
 {
-    return Converter<typename function_traits<Func>::return_type>::ToJs(
-        (thisObject->*func)(Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...));
+    return ValueTraits<typename function_traits<Func>::return_type>::ToJs(
+        (thisObject->*func)(ValueTraits<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...));
 }
 template <typename ClassType, typename Tuple, typename Func, size_t... Seq>
 typename std::enable_if<internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call_with_this(
     ClassType *thisObject, Func func, jsvm::Value *args, std::index_sequence<Seq...>)
 {
-    (thisObject->*func)(Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...);
+    (thisObject->*func)(ValueTraits<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...);
     return nullptr;
 }
 template <typename ClassType, typename Tuple, typename Func, size_t... Seq>
 typename std::enable_if<!internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call_optional_override(
     ClassType *thisObject, Func func, jsvm::Value *args, std::index_sequence<Seq...>)
 {
-    return Converter<typename function_traits<Func>::return_type>::ToJs(
-        func(*thisObject, Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...));
+    return ValueTraits<typename function_traits<Func>::return_type>::ToJs(
+        func(*thisObject, ValueTraits<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...));
 }
 template <typename ClassType, typename Tuple, typename Func, size_t... Seq>
 typename std::enable_if<internal::is_void_return<Func>::value, jsvm::Value>::type tuple_call_optional_override(
     ClassType *thisObject, Func func, jsvm::Value *args, std::index_sequence<Seq...>)
 {
-    func(*thisObject, Converter<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...);
+    func(*thisObject, ValueTraits<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...);
     return nullptr;
 }
 
@@ -195,7 +195,7 @@ jsvm::Value InvokeClassGetter(jsvm::Env env, jsvm::CallbackInfo info)
 
     // v8::Local<v8::Object> pthis = info.This();
     // ClassType *pObj = (ClassType *)pthis->GetAlignedPointerFromInternalField(0);
-    return Converter<PropertyType>::ToJs((pObj->*funcInfo->fGet)());
+    return ValueTraits<PropertyType>::ToJs((pObj->*funcInfo->fGet)());
 }
 
 template <typename ClassType, typename PropertyType>
@@ -214,7 +214,7 @@ jsvm::Value InvokeClassGetterOptionalOverride(jsvm::Env env, jsvm::CallbackInfo 
     auto funcInfo = (PropFuncInfo<PropertyType (*)(ClassType &), void (*)(ClassType &, PropertyType data)> *)data;
     // v8::Local<v8::Object> pthis = info.This();
     // ClassType *pObj = (ClassType *)pthis->GetAlignedPointerFromInternalField(0);
-    return Converter<PropertyType>::ToJs((*funcInfo->fGet)(*pObj));
+    return ValueTraits<PropertyType>::ToJs((*funcInfo->fGet)(*pObj));
 }
 
 template <typename ClassType, typename PropertyType>
@@ -232,7 +232,7 @@ jsvm::Value InvokeClassSetter(jsvm::Env env, jsvm::CallbackInfo info)
 
     auto funcInfo = (PropFuncInfo<PropertyType (ClassType::*)(), void (ClassType::*)(PropertyType data)> *)data;
 
-    (pObj->*funcInfo->fSet)(Converter<PropertyType>::ToCpp(args[0]));
+    (pObj->*funcInfo->fSet)(ValueTraits<PropertyType>::ToCpp(args[0]));
     return nullptr;
 }
 
@@ -250,7 +250,7 @@ jsvm::Value InvokeClassSetterOptionalOverride(jsvm::Env env, jsvm::CallbackInfo 
 
     auto funcInfo = (PropFuncInfo<PropertyType (*)(ClassType &), void (*)(ClassType &, PropertyType data)> *)data;
 
-    (*funcInfo->fSet)(*pObj, Converter<PropertyType>::ToCpp(args[0]));
+    (*funcInfo->fSet)(*pObj, ValueTraits<PropertyType>::ToCpp(args[0]));
     return nullptr;
 }
 
@@ -265,7 +265,7 @@ template <typename PropertyType> jsvm::Value InvokeClassGetterStatic(jsvm::Env e
     // NODE_API_ASSERT(env, argc >= 1, "Wrong number of arguments");
 
     auto funcInfo = (PropFuncInfo<PropertyType (*)(), void (*)(PropertyType data)> *)data;
-    return Converter<PropertyType>::ToJs((funcInfo->fGet)());
+    return ValueTraits<PropertyType>::ToJs((funcInfo->fGet)());
 }
 
 template <typename PropertyType> jsvm::Value InvokeClassSetterStatic(jsvm::Env env, jsvm::CallbackInfo info)
@@ -279,7 +279,7 @@ template <typename PropertyType> jsvm::Value InvokeClassSetterStatic(jsvm::Env e
 
     auto funcInfo = (PropFuncInfo<PropertyType (*)(), void (*)(PropertyType data)> *)data;
 
-    (funcInfo->fSet)(Converter<PropertyType>::ToCpp(args[0]));
+    (funcInfo->fSet)(ValueTraits<PropertyType>::ToCpp(args[0]));
     return nullptr;
 }
 
@@ -294,7 +294,7 @@ jsvm::Value InvokeClassGetterField(jsvm::Env env, jsvm::CallbackInfo info)
     jsvm::Unwrap(env, js_this, reinterpret_cast<void **>(&pObj));
     auto funcInfo = (FuncInfo<PropertyType ClassType::*> *)data;
 
-    return Converter<PropertyType>::ToJs(pObj->*(funcInfo->func));
+    return ValueTraits<PropertyType>::ToJs(pObj->*(funcInfo->func));
 }
 
 template <typename ClassType, typename PropertyType>
@@ -309,7 +309,7 @@ jsvm::Value InvokeClassSetterField(jsvm::Env env, jsvm::CallbackInfo info)
     ClassType *pObj;
     jsvm::Unwrap(env, js_this, reinterpret_cast<void **>(&pObj));
     auto funcInfo = (FuncInfo<PropertyType ClassType::*> *)data;
-    (pObj->*(funcInfo->func)) = (Converter<PropertyType>::ToCpp(args[0]));
+    (pObj->*(funcInfo->func)) = (ValueTraits<PropertyType>::ToCpp(args[0]));
     return NULL;
 }
 

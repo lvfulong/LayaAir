@@ -312,7 +312,7 @@ static void PromiseRejectHandlerInMainThread(v8::PromiseRejectMessage data)
         {
             v8::String::Utf8Value utf8(isolate, message->Get().As<v8::String>());
             error_message.assign(*utf8);
-            // error_message = Converter<const char*>::ToCpp(message->Get().As<v8::String>());
+            // error_message = ValueTraits<const char*>::ToCpp(message->Get().As<v8::String>());
         }
     }
     // std::string kBuf = "if(conch.onunhandledrejection){conch.onunhandledrejection('";

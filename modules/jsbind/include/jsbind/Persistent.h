@@ -1,7 +1,6 @@
 #ifndef __JSBIND_PERSISTENT_H__
 #define __JSBIND_PERSISTENT_H__
 
-#include <assert.h>
 #include <jsbind/Class.h>
 #include <jsbind/Local.h>
 #include <jsvm/JSVM_Types.h>

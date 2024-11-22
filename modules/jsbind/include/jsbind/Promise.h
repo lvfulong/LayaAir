@@ -33,13 +33,13 @@ class Promise
 template <typename T> void Promise::resolve(T&& t) const
 {
     GET_ENV
-        jsvm::ResolveDeferred(env, deferred_, Converter<T>::ToJs(std::forward<T>(t), true));
+        jsvm::ResolveDeferred(env, deferred_, ValueTraits<T>::ToJs(std::forward<T>(t), true));
 }
 
 template <typename T> void Promise::reject(T&& t) const
 {
     GET_ENV
-        jsvm::RejectDeferred(env, deferred_, Converter<T>::ToJs(std::forward<T>(t), true));
+        jsvm::RejectDeferred(env, deferred_, ValueTraits<T>::ToJs(std::forward<T>(t), true));
 }
 } // namespace jsbind
 #endif

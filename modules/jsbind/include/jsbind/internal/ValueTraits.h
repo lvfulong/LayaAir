@@ -1,5 +1,5 @@
-#ifndef __JSBIND_CONVERTER__H__
-#define __JSBIND_CONVERTER__H__
+#ifndef __JSBIND_VALUE_TRAITS__H__
+#define __JSBIND_VALUE_TRAITS__H__
 
 #include "jsvm/JSVM.h"
 #include "jsvm/JSVM_Types.h"
@@ -39,11 +39,11 @@ template <typename ClassType> bool isWrappedClassOf();
 
 template <typename ClassType> jsvm::Value wrapCppObject(ClassType *objectPointer, bool callDestructor);
 
-template <typename T, typename Enable = void> class Converter;
+template <typename T, typename Enable = void> class ValueTraits;
 
 template <typename T> class value_object;
 
-template <typename T> class Converter<T, std::enable_if_t<std::is_enum<T>::value>>
+template <typename T> class ValueTraits<T, std::enable_if_t<std::is_enum<T>::value>>
 {
   public:
     static T ToCpp(jsvm::Value value)
@@ -60,7 +60,7 @@ template <typename T> class Converter<T, std::enable_if_t<std::is_enum<T>::value
     }*/
 };
 
-template <typename T> class Converter<T, std::enable_if_t<internal::is_wrapped_class<T>::value>>
+template <typename T> class ValueTraits<T, std::enable_if_t<internal::is_wrapped_class<T>::value>>
 {
   public:
     static jsvm::Value ToJs(T value, bool callDestructor = true)
@@ -90,7 +90,7 @@ template <typename T> class Converter<T, std::enable_if_t<internal::is_wrapped_c
     }
 };
 
-template <typename T> class Converter<T *, std::enable_if_t<internal::is_wrapped_class<T>::value>>
+template <typename T> class ValueTraits<T *, std::enable_if_t<internal::is_wrapped_class<T>::value>>
 {
   public:
     static jsvm::Value ToJs(T *value, bool callDestructor = true)
@@ -124,15 +124,15 @@ template <typename T> class Converter<T *, std::enable_if_t<internal::is_wrapped
     }
 };
 
-template <typename T> struct Converter<T &> : Converter<T>
+template <typename T> struct ValueTraits<T &> : ValueTraits<T>
 {
 };
 
-template <typename T> struct Converter<const T &> : Converter<T>
+template <typename T> struct ValueTraits<const T &> : ValueTraits<T>
 {
 };
 
-template <> class Converter<int32_t>
+template <> class ValueTraits<int32_t>
 {
   public:
     static int32_t ToCpp(jsvm::Value value)
@@ -150,7 +150,7 @@ template <> class Converter<int32_t>
     }*/
 };
 #if 0
-template <> class Converter<int32_t *>
+template <> class ValueTraits<int32_t *>
 {
   public:
     static int32_t ToCpp(jsvm::Value value)
@@ -168,10 +168,10 @@ template <> class Converter<int32_t *>
     }*/
 };
 #endif
-template <> class Converter<const int32_t &> : public Converter<int32_t>
+template <> class ValueTraits<const int32_t &> : public ValueTraits<int32_t>
 {
 };
-template <> class Converter<uint32_t>
+template <> class ValueTraits<uint32_t>
 {
   public:
     static uint32_t ToCpp(jsvm::Value value)
@@ -190,7 +190,7 @@ template <> class Converter<uint32_t>
 
 #ifdef OS_IOS
 
-template <> class Converter<long>
+template <> class ValueTraits<long>
 {
   public:
     static jsvm::Value ToJs(long value, bool callDestructor = true)
@@ -214,7 +214,7 @@ template <> class Converter<long>
 };
 #endif
 // 用bigint 保证精度不丢失,可以用于bullet对象指针
-template <> class Converter<int64_t>
+template <> class ValueTraits<int64_t>
 {
   public:
     static int64_t ToCpp(jsvm::Value value)
@@ -238,7 +238,7 @@ template <> class Converter<int64_t>
        return p_vl->IsNumber();
    }*/
 };
-template <> class Converter<uint64_t>
+template <> class ValueTraits<uint64_t>
 {
   public:
     static uint64_t ToCpp(jsvm::Value value)
@@ -259,7 +259,7 @@ template <> class Converter<uint64_t>
     }*/
 };
 
-/*template <> class Converter<uint16_t>
+/*template <> class ValueTraits<uint16_t>
 {
   public:
     static uint16_t ToCpp(v8::Local<v8::Value> p_vl)
@@ -275,7 +275,7 @@ template <> class Converter<uint64_t>
         return p_vl->IsUint32();
     }
 };*/
-template <> class Converter<uint8_t>
+template <> class ValueTraits<uint8_t>
 {
   public:
     static uint8_t ToCpp(jsvm::Value value)
@@ -291,11 +291,11 @@ template <> class Converter<uint8_t>
     //     return p_vl->IsUint32();
     // }
 };
-template <> class Converter<const uint8_t &> : public Converter<uint8_t>
+template <> class ValueTraits<const uint8_t &> : public ValueTraits<uint8_t>
 {
 };
 
-template <> class Converter<bool>
+template <> class ValueTraits<bool>
 {
   public:
     static bool ToCpp(jsvm::Value value)
@@ -312,7 +312,7 @@ template <> class Converter<bool>
     }
 };
 #if 0
-template <> class Converter<bool *>
+template <> class ValueTraits<bool *>
 {
   public:
     static bool ToCpp(jsvm::Value value)
@@ -333,7 +333,7 @@ template <> class Converter<bool *>
     }
 };
 #endif
-template <> class Converter<float>
+template <> class ValueTraits<float>
 {
   public:
     static float ToCpp(jsvm::Value value)
@@ -350,7 +350,7 @@ template <> class Converter<float>
     }*/
 };
 /*
-template <> class Converter<float *>
+template <> class ValueTraits<float *>
 {
   public:
     static float ToCpp(v8::Local<v8::Value> p_vl)
@@ -372,7 +372,7 @@ template <> class Converter<float *>
     }
 };*/
 
-template <> class Converter<double>
+template <> class ValueTraits<double>
 {
   public:
     static double ToCpp(jsvm::Value value)
@@ -391,7 +391,7 @@ template <> class Converter<double>
 };
 
 // utf16 u16string
-template <> class Converter<std::u16string>
+template <> class ValueTraits<std::u16string>
 {
   public:
     static std::u16string ToCpp(jsvm::Value value)
@@ -408,7 +408,7 @@ template <> class Converter<std::u16string>
     }*/
 };
 // utf8 string
-template <> class Converter<std::string>
+template <> class ValueTraits<std::string>
 {
   public:
     static std::string ToCpp(jsvm::Value value)
@@ -434,10 +434,10 @@ template <> class Converter<std::string>
     }*/
 };
 
-// const char* sColor = Converter<const char*>::ToCpp(args);          so not save sColor for latter use   get right
-// value address const std::string sColor = Converter<std::string>::ToCpp(args);  better const std::string sColor =
-// Converter<const char*>::ToCpp(args);  better
-template <> class Converter<const char *>
+// const char* sColor = ValueTraits<const char*>::ToCpp(args);          so not save sColor for latter use   get right
+// value address const std::string sColor = ValueTraits<std::string>::ToCpp(args);  better const std::string sColor =
+// ValueTraits<const char*>::ToCpp(args);  better
+template <> class ValueTraits<const char *>
 {
   public:
     class convertible_string
@@ -479,7 +479,7 @@ template <> class Converter<const char *>
     }*/
 };
 
-template <> class Converter<jsvm::Value>
+template <> class ValueTraits<jsvm::Value>
 {
   public:
     static jsvm::Value ToCpp(jsvm::Value value)
@@ -495,7 +495,7 @@ template <> class Converter<jsvm::Value>
      return true;
  }*/
 };
-template <> class Converter<void>
+template <> class ValueTraits<void>
 {
   public:
     static void ToCpp(jsvm::Value value)
@@ -523,7 +523,7 @@ namespace internal
 {
 template <class T> jsvm::Value ToJSValue(T t, bool callDestructor = true)
 {
-    return Converter<T>::ToJs(t, callDestructor);
+    return ValueTraits<T>::ToJs(t, callDestructor);
 }
 } // namespace internal
 } // namespace jsbind

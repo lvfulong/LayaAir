@@ -2,7 +2,7 @@
 #include <jsbind/JSBind.h>
 #include <jsvm/JSEnv.h>
 #include <jsbind/Local.h>
-#include <jsbind/internal/Converter.h>
+#include <jsbind/internal/ValueTraits.h>
 #include <utils/JCMemorySurvey.h>
 #include <utils/Log.h>
 

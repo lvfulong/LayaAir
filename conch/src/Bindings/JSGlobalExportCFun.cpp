@@ -442,7 +442,7 @@ namespace laya
             assert(jsImage != nullptr);
             JSImageBitmap* jsImageBitmap = new JSImageBitmap();
             jsImageBitmap->m_ImageBitmap.m_image = jsImage->m_pImage;
-            //return laya::Promise::resolve(Converter<JSImageBitmap*>::ToJs(jsImageBitmap)).getV8Promise();
+            //return laya::Promise::resolve(ValueTraits<JSImageBitmap*>::ToJs(jsImageBitmap)).getV8Promise();
             return jsbind::Make<JSImageBitmap*>(jsImageBitmap);
         }
         //return JSP_TO_JS_PROMISE;

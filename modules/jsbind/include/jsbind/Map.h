@@ -2,7 +2,7 @@
 #define __JSBIND_MAP_H_
 
 #include <jsbind/Local.h>
-#include <jsbind/internal/Converter.h>
+#include <jsbind/internal/ValueTraits.h>
 #include <jsvm/JSVM_Types.h>
 #include <unordered_map>
 
@@ -42,12 +42,12 @@ template <typename K, typename T> class Map
             status = jsvm::GetElement(env, names, index, &keyNapi);
             DEBUG_CHECK(status == jsvm::Status::OK);
 
-            K k = Converter<K>::ToCpp(keyNapi);
+            K k = ValueTraits<K>::ToCpp(keyNapi);
 
             jsvm::Value valueNapi;
             status = jsvm::GetProperty(env, value, keyNapi, &valueNapi);
             DEBUG_CHECK(status == jsvm::Status::OK);
-            map[k] = Converter<T>::ToCpp(valueNapi);
+            map[k] = ValueTraits<T>::ToCpp(valueNapi);
         }
     }
 #endif
@@ -70,8 +70,8 @@ template <typename K, typename T> class Map
                 std::unordered_map<K, T> *ptrMap;
                 jsvm::Status status = jsvm::GetCbInfo(env, info, &argc, argv, nullptr, (void **)&ptrMap);
                 DEBUG_CHECK(status == jsvm::Status::OK);
-                K k = Converter<K>::ToCpp(argv[1]);
-                (*ptrMap)[k] = Converter<T>::ToCpp(argv[0]);
+                K k = ValueTraits<K>::ToCpp(argv[1]);
+                (*ptrMap)[k] = ValueTraits<T>::ToCpp(argv[0]);
                 return nullptr;
             };
 
@@ -86,7 +86,7 @@ template <typename K, typename T> class Map
     }
 };
 
-template <typename K, typename T> class Converter<std::unordered_map<K, T>>
+template <typename K, typename T> class ValueTraits<std::unordered_map<K, T>>
 {
   public:
     static std::unordered_map<K, T> ToCpp(jsvm::Value value)
@@ -102,7 +102,7 @@ template <typename K, typename T> class Converter<std::unordered_map<K, T>>
     }
 };
 
-template <typename T, typename R> class Converter<const std::unordered_map<T, R> &>
+template <typename T, typename R> class ValueTraits<const std::unordered_map<T, R> &>
 {
   public:
     static std::unordered_map<T, R> ToCpp(jsvm::Value value)

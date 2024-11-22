@@ -3,7 +3,8 @@
 
 #include <string>
 #include <memory>
-#include "Object.h"
+#include <jsbind/Object.h>
+
 namespace jsbind
 {
 class Enum_

@@ -1,9 +1,9 @@
 #ifndef __JSBIND_LOCAL_H__
 #define __JSBIND_LOCAL_H__
 
-#include <jsbind/internal/Converter.h>
+#include <jsbind/internal/ValueTraits.h>
 #include <jsbind/internal/Value.h>
-#include <jsbind/Invoke.h>
+#include <jsbind/internal/Invoke.h>
 #include <jsvm/JSVM_Types.h>
 
 namespace jsbind
@@ -25,7 +25,7 @@ class Local
         {
             GET_ENV
             auto result = internal::v8_call(env, recv, handle_, args...);
-            return Converter<ReturnType>::ToCpp(result);
+            return ValueTraits<ReturnType>::ToCpp(result);
         }
         else
         {
@@ -38,7 +38,7 @@ class Local
         {
             GET_ENV
             auto result = internal::v8_call(env, recv, handle_, args...);
-            return Converter<ReturnType>::ToCpp(result);
+            return ValueTraits<ReturnType>::ToCpp(result);
         }
         else
         {
@@ -196,18 +196,18 @@ class Local
     {
         DEBUG_CHECK(isValid());
         GET_ENV
-        return Converter<T>::ToCpp(this->handle_);
+        return ValueTraits<T>::ToCpp(this->handle_);
     }
     template <typename T> bool is()
     {
         GET_ENV
-        return isValid() && Converter<T>::is(handle_);
+        return isValid() && ValueTraits<T>::is(handle_);
     }
 
   private:
     jsvm::Value handle_ = nullptr;
 };
-template <> class Converter<Local>
+template <> class ValueTraits<Local>
 {
   public:
     static Local ToCpp(jsvm::Value value)

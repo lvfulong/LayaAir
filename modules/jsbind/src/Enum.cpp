@@ -1,8 +1,7 @@
 #include <jsbind/Enum.h>
 namespace jsbind
 {
-Enum_::Enum_(Object*owner, std::string_view name)
-    : owner_(owner), name_(name)
+Enum_::Enum_(Object *owner, std::string_view name) : owner_(owner), name_(name)
 {
 
     GET_ENV
@@ -12,7 +11,7 @@ Enum_::Enum_(Object*owner, std::string_view name)
     DEBUG_CHECK(status == jsvm::Status::OK);
     object_ = std::make_unique<Object>(result);
 
-    //lvtodo owner_->submodule(name_, *module_);
+    // lvtodo owner_->submodule(name_, *module_);
 }
 Enum_::~Enum_()
 {
@@ -22,4 +21,4 @@ Enum_::~Enum_()
     }*/
 }
 
-} // namespace laya
+} // namespace jsbind

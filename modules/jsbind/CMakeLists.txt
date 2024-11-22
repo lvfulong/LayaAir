@@ -7,8 +7,9 @@ set(PUBLIC_HEADER_DIR include)
 
 set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/ArrayBuffer.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/internal/Converter.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/internal/ValueTraits.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/internal/Value.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/internal/Invoke.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Local.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Persistent.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Class.h
@@ -21,7 +22,6 @@ set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/Enum.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Array.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Map.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/Invoke.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Value.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Function.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/JSBind.h

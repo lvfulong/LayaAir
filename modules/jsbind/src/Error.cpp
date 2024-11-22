@@ -43,6 +43,6 @@ void reportError(jsvm::Env env, jsvm::Status res)
         //v8::Local<v8::Value> val = v8impl::V8LocalValueFromJsValue(result);
         //ReportException(env->isolate, val);
     }
-    #endif
+#endif
 }
 } // namespace jsbind

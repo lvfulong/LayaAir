@@ -1,16 +1,17 @@
 #ifndef __JSBIND_CLASS_H__
 #define __JSBIND_CLASS_H__
 
-#include "Error.h"
-#include "Invoke.h"
-#include "Utility.h"
+#include <jsbind/Error.h>
+#include <jsbind/internal/Invoke.h>
+#include <jsbind/Utility.h>
+#include <jsbind/Local.h>
 #include <assert.h>
 #include <functional>
 #include <jsvm/JSEnv.h>
 #include <map>
 #include <string>
 #include <utils/Log.h>
-#include <jsbind/Local.h>
+
 
 namespace jsbind
 {

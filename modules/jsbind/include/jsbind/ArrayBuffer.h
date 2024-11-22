@@ -2,7 +2,7 @@
 #define __JSBIND_ARRAYBUFFER_H_
 
 #include <jsvm/JSVM_Types.h>
-#include <jsbind/internal/Converter.h>
+#include <jsbind/internal/ValueTraits.h>
 #include <jsbind/internal/Value.h>
 
 namespace jsbind
@@ -111,7 +111,7 @@ class ArrayBuffer
     jsvm::Value handle_ = nullptr;
 };
 
-template <> class Converter<ArrayBuffer>
+template <> class ValueTraits<ArrayBuffer>
 {
   public:
     static ArrayBuffer ToCpp(jsvm::Value value)
@@ -127,10 +127,10 @@ template <> class Converter<ArrayBuffer>
         return internal::isArrayBuffer(value) || internal::isArrayBufferView(value);
     }
 };
-template <> class Converter<const ArrayBuffer &> : public Converter<ArrayBuffer>
+template <> class ValueTraits<const ArrayBuffer &> : public ValueTraits<ArrayBuffer>
 {
 };
-template <> class Converter<ArrayBuffer &> : public Converter<ArrayBuffer>
+template <> class ValueTraits<ArrayBuffer &> : public ValueTraits<ArrayBuffer>
 {
 };
 

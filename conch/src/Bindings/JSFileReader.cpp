@@ -91,7 +91,7 @@ namespace laya
     void JsFileReader::readAsArrayBuffer(jsvm::Value p_pFile)
     {
         m_iContentType = content_type_buffer;
-        m_pFile = jsbind::Converter<JsFile*>::ToCpp(p_pFile);
+        m_pFile = jsbind::ValueTraits<JsFile*>::ToCpp(p_pFile);
         if (m_pFile == nullptr)
         {
             return;
@@ -102,7 +102,7 @@ namespace laya
     void JsFileReader::readAsText(jsvm::Value p_pFile)
     {
         m_iContentType = content_type_string;
-        m_pFile = jsbind::Converter<JsFile*>::ToCpp(p_pFile);
+        m_pFile = jsbind::ValueTraits<JsFile*>::ToCpp(p_pFile);
         if (m_pFile == nullptr)
         {
             return;

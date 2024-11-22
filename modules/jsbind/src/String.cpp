@@ -1,5 +1,5 @@
-#include <jsbind/internal/Value.h>
 #include <jsbind/String.h>
+#include <jsbind/internal/Value.h>
 
 namespace jsbind
 {

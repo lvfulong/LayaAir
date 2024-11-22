@@ -1,12 +1,12 @@
 
-#include <jsbind/internal/Value.h>
 #include <jsbind/Promise.h>
+#include <jsbind/internal/Value.h>
 namespace jsbind
 {
-    Promise Promise::Make()
-    {
-        return Promise();
-    }
+Promise Promise::Make()
+{
+    return Promise();
+}
 Promise::Promise()
 {
     GET_ENV
