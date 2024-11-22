@@ -1,10 +1,9 @@
 #ifndef __JSBIND_LOCAL_H__
 #define __JSBIND_LOCAL_H__
 
-#include <assert.h>
-#include <jsbind/Class.h>
 #include <jsbind/internal/Converter.h>
 #include <jsbind/internal/Value.h>
+#include <jsbind/Invoke.h>
 #include <jsvm/JSVM_Types.h>
 
 namespace jsbind

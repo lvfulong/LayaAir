@@ -10,6 +10,7 @@
 #include <map>
 #include <string>
 #include <utils/Log.h>
+#include <jsbind/Local.h>
 
 namespace jsbind
 {
