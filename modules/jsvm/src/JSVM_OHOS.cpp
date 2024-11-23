@@ -389,11 +389,20 @@ Status CallFunction(Env env, Value recv, Value func, size_t argc, const Value *a
 }
 Status CreateFunction(Env env, const char *utf8name, size_t length, Callback cb, void *data, Value *result)
 {
-    JSVM_Callback jsvmCallback;
+    JSVM_Callback jsvmCallback = new JSVM_CallbackStruct;
     jsvmCallback->callback = cb;
     jsvmCallback->data = data;
-    // todo
-    return static_cast<Status>(OH_JSVM_CreateFunction(env, utf8name, length, jsvmCallback, result));
+
+    auto status = static_cast<Status>(OH_JSVM_CreateFunction(env, utf8name, length, jsvmCallback, result));
+    if (status != jsvm::Status::OK)
+    {
+        return status;
+    }
+    OH_JSVM_AddFinalizer(
+        env, *result, reinterpret_cast<void *>(jsvmCallback),
+        [](JSVM_Env env, void *data, void *hint) -> void { delete static_cast<JSVM_Callback>(data); }, nullptr,
+        nullptr);
+    return status;
 }
 Status Typeof(Env env, Value value, ValueType *result)
 {
@@ -591,7 +600,7 @@ Status ObjectSetPrototypeOf(Env env, Value object, Value prototype)
 {
     return static_cast<Status>(OH_JSVM_ObjectSetPrototypeOf(env, object, prototype));
 }
-Status ObjectGetPrototypeOf(Env env, Value object,  Value *result)
+Status ObjectGetPrototypeOf(Env env, Value object, Value *result)
 {
     return static_cast<Status>(OH_JSVM_GetPrototype(env, object, result));
 }
