@@ -87,7 +87,6 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
         DEBUG_CHECK(false);
         return nullptr;
     }
-
     jsvm::Value wrapCppObject(ClassType *objectPointer, bool callDestructor)
     {
         GET_ENV
@@ -96,20 +95,20 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
         DEBUG_CHECK(classRef_ != nullptr);
         status = jsvm::GetReferenceValue(env, classRef_, &cons);
         DEBUG_CHECK(status == jsvm::Status::OK);
+
+        this->isWrap_ = true;
         jsvm::Value instance;
         status = jsvm::NewInstance(env, cons, 0, nullptr, &instance);
         DEBUG_CHECK(status == jsvm::Status::OK);
+        this->isWrap_ = false;
 
-        ClassType *objectToReplace;
-        status = jsvm::RemoveWrap(env, instance, reinterpret_cast<void **>(&objectToReplace));
+        jsvm::Ref objectRef;
         DEBUG_CHECK(status == jsvm::Status::OK);
-        this->removeObject(env, objectToReplace);
-
-        jsvm::Ref objectRef_;
         status = jsvm::Wrap(env, instance, reinterpret_cast<void *>(objectPointer), internal::destructor<ClassType>,
-                            nullptr, &objectRef_);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        this->objects_.emplace(instance, ObjectRegistry{objectRef_, callDestructor});
+                            nullptr, &objectRef);
+
+        this->objects_.emplace(objectPointer, ObjectRegistry{objectRef, callDestructor});
+
         return instance;
     }
     void addBase(ClassRegistryBase *info)
@@ -136,7 +135,10 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
         }
     }
 
+
+    bool isWrap_ = false;
   private:
+  
     void removeObjectRegistry(jsvm::Env env, ObjectRegistry *registry, ClassType *objectPointer)
     {
         jsvm::Status status;
@@ -222,25 +224,41 @@ class ClassRegistryManager
 };
 template <typename ClassType> static jsvm::Value New(jsvm::Env env, jsvm::CallbackInfo info)
 {
-
+    jsvm::Status status;
     jsvm::Value newTarget;
-    jsvm::GetNewTarget(env, info, &newTarget);
+    status = jsvm::GetNewTarget(env, info, &newTarget);
+    DEBUG_CHECK(status == jsvm::Status::OK);
     DEBUG_CHECK(newTarget != nullptr);
     {
-        // new MyObject(...)
-        size_t argc = 16;
-        jsvm::Value args[16];
-        jsvm::Value jsThis;
-        jsvm::GetCbInfo(env, info, &argc, args, &jsThis, nullptr);
-        DEBUG_CHECK(argc <= 16);
+
         ClassRegistry<ClassType> &classRegistry =
             ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
-        ClassType *object = classRegistry.ConstructObject(argc, env, info);
-        jsvm::Ref objectRef_;
-        jsvm::Wrap(env, jsThis, reinterpret_cast<void *>(object), internal::destructor<ClassType>, nullptr,
-                   &objectRef_);
-        classRegistry.objects_.emplace(object, ObjectRegistry{objectRef_, true});
-        return jsThis;
+        bool callDestructor = true;
+        if (classRegistry.isWrap_)
+        {
+            jsvm::Value jsThis;
+            status = jsvm::GetCbInfo(env, info, 0, nullptr, &jsThis, nullptr);
+            DEBUG_CHECK(status == jsvm::Status::OK);
+            return jsThis;
+        }
+        else
+        {
+            // new MyObject(...)
+            size_t argc = 8;
+            jsvm::Value args[8];
+            jsvm::Value jsThis;
+            status = jsvm::GetCbInfo(env, info, &argc, args, &jsThis, nullptr);
+            DEBUG_CHECK(status == jsvm::Status::OK);
+            DEBUG_CHECK(argc <= 8);
+            ClassType *object = classRegistry.ConstructObject(argc, env, info);
+            jsvm::Ref objectRef;
+
+            status = jsvm::Wrap(env, jsThis, reinterpret_cast<void *>(object), internal::destructor<ClassType>, nullptr,
+                                &objectRef);
+            DEBUG_CHECK(status == jsvm::Status::OK);
+            classRegistry.objects_.emplace(object, ObjectRegistry{objectRef, callDestructor});
+            return jsThis;
+        }
     }
 #if 0
     else
@@ -596,6 +614,7 @@ template <typename ClassType> bool isWrappedClassOf()
 {
     return ClassRegistryManager::isWrappedClassOf<ClassType>();
 }
+
 template <typename ClassType>
 std::unordered_map<const char *, jsvm::PropertyDescriptor> class_<ClassType>::mergedPropertyDescriptorMap_;
 namespace internal
