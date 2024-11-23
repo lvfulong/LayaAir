@@ -59,30 +59,7 @@ template <typename C, typename R> struct function_traits<R(C::*)> : function_tra
 
 template <typename F> using is_void_return = std::is_same<void, typename function_traits<F>::return_type>;
 } // namespace internal
-/*#define ABORT(msg)                                                                                                     \
-    do                                                                                                                 \
-    {                                                                                                                  \
-        LOGE("%s:%d: fatal error: \"%s\"\n", __FILE__, __LINE__, #msg);                                                \
-        ::abort();                                                                                                     \
-    } while (false)
 
-#define CHECK(assertion)                                                                                               \
-    if (!(assertion))                                                                                                  \
-    {                                                                                                                  \
-        ABORT(#assertion);                                                                                             \
-    }
-#if _DEBUG
-
-#define DEBUG_CHECK(assertion) CHECK(assertion)
-
-#else
-
-#define DEBUG_CHECK(assertion)
-
-#endif
-template <class T> inline void UNUSED(T const &)
-{
-}*/
 template <class G, class S> struct PropFuncInfo
 {
     G fGet;
@@ -108,12 +85,12 @@ template <typename T> struct FuncInfo
         func = f;
     }
 };
+
+namespace internal
+{
 template <typename T> class value_object_base
 {
 };
-namespace internal
-{
-
 template <typename T> union ptr_cast {
     static_assert(sizeof(T) <= sizeof(void *), "size of object in ptr_cast must not be greater than ptr size");
     T value;

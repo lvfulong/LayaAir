@@ -1,9 +1,9 @@
 #ifndef __JSBIND_VALUE_TRAITS__H__
 #define __JSBIND_VALUE_TRAITS__H__
 
+#include "jsbind/internal/Value.h"
 #include "jsvm/JSVM.h"
 #include "jsvm/JSVM_Types.h"
-#include "jsbind/internal/Value.h"
 #include "jsvm/napi/js_native_api.h"
 #include <assert.h>
 #include <jsbind/Utility.h>
@@ -14,13 +14,10 @@
 
 namespace jsbind
 {
-
+template <typename ClassType> bool isWrappedClassOf();
+template <typename ClassType> jsvm::Value wrapCppObject(ClassType *objectPointer, bool callDestructor);
 namespace internal
 {
-// template <typename T> T convert_value_object_from_js(jsvm::Env env, jsvm::Value value);
-
-// template <typename T> jsvm::Value convert_value_object_to_js(jsvm::Env env, const T &t);
-// template <typename T> jsvm::Value convert_value_object_to_js(jsvm::Env env, T *t);
 template <class T> struct is_value_object;
 
 template <typename T>
@@ -33,15 +30,10 @@ struct is_wrapped_class : std::conjunction<std::is_class<T>, std::negation<inter
 // std::negation<detail::is_shared_ptr<T>>>
 {
 };
-} // namespace internal
-
-template <typename ClassType> bool isWrappedClassOf();
-
-template <typename ClassType> jsvm::Value wrapCppObject(ClassType *objectPointer, bool callDestructor);
 
 template <typename T, typename Enable = void> class ValueTraits;
 
-template <typename T> class value_object;
+//template <typename T> class value_object;
 
 template <typename T> class ValueTraits<T, std::enable_if_t<std::is_enum<T>::value>>
 {
@@ -109,7 +101,7 @@ template <typename T> class ValueTraits<T *, std::enable_if_t<internal::is_wrapp
         jsvm::ValueType valueType;
         status = jsvm::Typeof(env, value, &valueType);
         DEBUG_CHECK(status == jsvm::Status::OK);
-        if (valueType  != jsvm::ValueType::OBJECT)
+        if (valueType != jsvm::ValueType::OBJECT)
         {
             return nullptr;
         }
@@ -459,14 +451,14 @@ template <> class ValueTraits<const char *>
     static from_type ToCpp(jsvm::Value value)
     {
         GET_ENV
-            /*jsvm::ValueType valueType;
-        jsvm::Status status = jsvm::Typeof(env, value, &valueType);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        if (valueType == jsvm::ValueType::Null || valueType == jsvm::ValueType::UNDEFINED ||
-            valueType != jsvm::ValueType::STRING)
-        {
-            return "";
-        }*/
+        /*jsvm::ValueType valueType;
+    jsvm::Status status = jsvm::Typeof(env, value, &valueType);
+    DEBUG_CHECK(status == jsvm::Status::OK);
+    if (valueType == jsvm::ValueType::Null || valueType == jsvm::ValueType::UNDEFINED ||
+        valueType != jsvm::ValueType::STRING)
+    {
+        return "";
+    }*/
         return from_type(internal::getStringUtf8(value));
     }
     static jsvm::Value ToJs(std::string_view value, bool callDestructor = true)
@@ -519,8 +511,6 @@ template <> class ValueTraits<void>
     }
 };
 
-namespace internal
-{
 template <class T> jsvm::Value ToJSValue(T t, bool callDestructor = true)
 {
     return ValueTraits<T>::ToJs(t, callDestructor);

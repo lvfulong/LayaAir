@@ -1,8 +1,8 @@
 #ifndef __JSBIND_ARRAY_H_
 #define __JSBIND_ARRAY_H_
 
-#include <jsvm/JSVM_Types.h>
 #include <jsbind/internal/ValueTraits.h>
+#include <jsvm/JSVM_Types.h>
 #include <vector>
 
 namespace jsbind
@@ -30,7 +30,7 @@ template <typename T> class Array
             DEBUG_CHECK(status == jsvm::Status::OK);
             for (int i = 0; i < size; i++)
             {
-                jsvm::SetElement(env, result, i, ValueTraits<T *>::ToJs(value.at(i), callDestructor));
+                jsvm::SetElement(env, result, i, internal::ValueTraits<T *>::ToJs(value.at(i), callDestructor));
             }
             return result;
         }
@@ -53,7 +53,7 @@ template <typename T> class Array
             DEBUG_CHECK(status == jsvm::Status::OK);
             for (int i = 0; i < size; i++)
             {
-                status = jsvm::SetElement(env, result, i, ValueTraits<T>::ToJs(value.at(i), callDestructor));
+                status = jsvm::SetElement(env, result, i, internal::ValueTraits<T>::ToJs(value.at(i), callDestructor));
                 DEBUG_CHECK(status == jsvm::Status::OK);
             }
             return result;
@@ -67,7 +67,7 @@ template <typename T> class Array
         int size = value.size();
         for (int i = 0; i < size; i++)
         {
-            status = jsvm::SetElement(env, array, i, ValueTraits<T>::ToJs(value.at(i), callDestructor));
+            status = jsvm::SetElement(env, array, i, internal::ValueTraits<T>::ToJs(value.at(i), callDestructor));
             DEBUG_CHECK(status == jsvm::Status::OK);
         }
     }
@@ -90,7 +90,7 @@ template <typename T> class Array
                 jsvm::Value element;
                 status = jsvm::GetElement(env, array, i, &element);
                 DEBUG_CHECK(status == jsvm::Status::OK);
-                result.push_back(ValueTraits<T *>::ToCpp(element));
+                result.push_back(internal::ValueTraits<T *>::ToCpp(element));
             }
         }
     }
@@ -113,12 +113,13 @@ template <typename T> class Array
                 jsvm::Value element;
                 status = jsvm::GetElement(env, array, i, &element);
                 DEBUG_CHECK(status == jsvm::Status::OK);
-                result.push_back(ValueTraits<T>::ToCpp(element));
+                result.push_back(internal::ValueTraits<T>::ToCpp(element));
             }
         }
     }
 };
-
+namespace internal
+{
 template <typename T> class ValueTraits<std::vector<T>>
 {
   public:
@@ -130,7 +131,7 @@ template <typename T> class ValueTraits<std::vector<T>>
     }
     static jsvm::Value ToJs(const std::vector<T> &value, bool callDestructor = true)
     {
-        return Array<T>::ToJs(value);
+        return Array<T>::ToJs(value, callDestructor);
     }
 };
 template <typename T> class ValueTraits<const std::vector<T> &> : public ValueTraits<std::vector<T>>
@@ -163,6 +164,7 @@ template <typename T> class ValueTraits<const std::vector<T *> &> : public Value
 template <typename T> class ValueTraits<std::vector<T *> &> : public ValueTraits<std::vector<T *>>
 {
 };
+} // namespace internal
 } // namespace jsbind
 
 #endif

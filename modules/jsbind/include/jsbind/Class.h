@@ -1,17 +1,16 @@
 #ifndef __JSBIND_CLASS_H__
 #define __JSBIND_CLASS_H__
 
-#include <jsbind/Error.h>
-#include <jsbind/internal/Invoke.h>
-#include <jsbind/Utility.h>
-#include <jsbind/Local.h>
 #include <assert.h>
 #include <functional>
+#include <jsbind/Error.h>
+#include <jsbind/Local.h>
+#include <jsbind/Utility.h>
+#include <jsbind/internal/Invoke.h>
 #include <jsvm/JSEnv.h>
 #include <map>
 #include <string>
 #include <utils/Log.h>
-
 
 namespace jsbind
 {
@@ -89,7 +88,7 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
         return nullptr;
     }
 
-    jsvm::Value wrapCppObject(ClassType *objectPointer, bool callDestructor = true)
+    jsvm::Value wrapCppObject(ClassType *objectPointer, bool callDestructor)
     {
         GET_ENV
         jsvm::Status status;
@@ -110,7 +109,7 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
         status = jsvm::Wrap(env, instance, reinterpret_cast<void *>(objectPointer), internal::destructor<ClassType>,
                             nullptr, &objectRef_);
         DEBUG_CHECK(status == jsvm::Status::OK);
-        this->objects_.emplace(instance, ObjectRegistry{objectRef_, true});
+        this->objects_.emplace(instance, ObjectRegistry{objectRef_, callDestructor});
         return instance;
     }
     void addBase(ClassRegistryBase *info)
@@ -191,7 +190,7 @@ class ClassRegistryManager
         status = jsvm::ReferenceUnref(env, objectRegistry->objectRef_, &result);
         DEBUG_CHECK(status == jsvm::Status::OK);
     }
-    template <typename ClassType> static jsvm::Value wrapCppObject(ClassType *objectPointer, bool callDestructor = true)
+    template <typename ClassType> static jsvm::Value wrapCppObject(ClassType *objectPointer, bool callDestructor)
     {
         ClassRegistry<ClassType> &classRegistry = getClassRegistry<ClassType>(type_id<ClassType>());
         return classRegistry.wrapCppObject(objectPointer, callDestructor);
@@ -287,7 +286,7 @@ template <typename ClassType> class class_
     ClassRegistry<ClassType> &classRegistry_;
 
     static std::unordered_map<const char *, jsvm::PropertyDescriptor> mergedPropertyDescriptorMap_;
-    mutable std::unordered_map<const char*, jsvm::PropertyDescriptor> propertyDescriptorMap_;
+    mutable std::unordered_map<const char *, jsvm::PropertyDescriptor> propertyDescriptorMap_;
     mutable jsvm::Ref inheritBaseCons_ = nullptr;
     mutable std::unordered_map<const char *, jsvm::PropertyDescriptor> propertyInheritBaseDescriptorMap_;
 

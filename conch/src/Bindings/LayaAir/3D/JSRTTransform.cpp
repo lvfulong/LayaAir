@@ -73,7 +73,7 @@ namespace laya
 
 
 	void JSRTTransform::rt_setParent(jsvm::Value pParent) {
-		m_parent = jsbind::ValueTraits<JSRTTransform*>::ToCpp(pParent);
+		m_parent = jsbind::as<JSRTTransform*>(pParent);
 		m_pTransform3D->_setParent(m_parent ? m_parent->m_pTransform3D : nullptr);
 	};
 

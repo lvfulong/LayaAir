@@ -30,16 +30,16 @@ class Promise
     jsvm::Value promise_;
     jsvm::Deferred deferred_;
 };
-template <typename T> void Promise::resolve(T&& t) const
+template <typename T> void Promise::resolve(T &&t) const
 {
     GET_ENV
-        jsvm::ResolveDeferred(env, deferred_, ValueTraits<T>::ToJs(std::forward<T>(t), true));
+    jsvm::ResolveDeferred(env, deferred_, internal::ValueTraits<T>::ToJs(std::forward<T>(t), true));
 }
 
-template <typename T> void Promise::reject(T&& t) const
+template <typename T> void Promise::reject(T &&t) const
 {
     GET_ENV
-        jsvm::RejectDeferred(env, deferred_, ValueTraits<T>::ToJs(std::forward<T>(t), true));
+    jsvm::RejectDeferred(env, deferred_, internal::ValueTraits<T>::ToJs(std::forward<T>(t), true));
 }
 } // namespace jsbind
 #endif

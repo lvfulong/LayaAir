@@ -1,12 +1,12 @@
 #ifndef __V8_INVOKE_H__
 #define __V8_INVOKE_H__
 
+#include <jsbind/Error.h>
 #include <jsbind/internal/ValueTraits.h>
 #include <jsvm/JSVM_Types.h>
 #include <map>
 #include <string>
 #include <type_traits>
-#include <jsbind/Error.h>
 
 namespace jsbind
 {
@@ -314,7 +314,6 @@ jsvm::Value InvokeClassSetterField(jsvm::Env env, jsvm::CallbackInfo info)
 }
 
 // template <typename ReturnType, typename... Args> struct V8Call;
-
 
 template <typename... Args> jsvm::Value v8_call(jsvm::Env env, jsvm::Value self, jsvm::Value func, const Args &...args)
 {

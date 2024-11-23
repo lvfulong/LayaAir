@@ -2,9 +2,9 @@
 #define __JSBIND_OBJECT_H__
 
 #include <cstring>
-#include <jsbind/internal/ValueTraits.h>
-#include <jsbind/internal/Invoke.h>
 #include <jsbind/Utility.h>
+#include <jsbind/internal/Invoke.h>
+#include <jsbind/internal/ValueTraits.h>
 #include <jsvm/JSVM_Types.h>
 
 namespace jsbind
@@ -32,7 +32,7 @@ template <typename T> bool get_option(jsvm::Value options, std::string_view name
     jsvm::Value val;
     status = jsvm::GetNamedProperty(env, options, name.data(), &val);
     DEBUG_CHECK(status == jsvm::Status::OK);
-    value = ValueTraits<T>::ToCpp(val);
+    value = internal::ValueTraits<T>::ToCpp(val);
     return true;
 }
 
@@ -47,7 +47,7 @@ template <typename T> bool set_option(jsvm::Value options, std::string_view name
     }
     GET_ENV
     jsvm::Status status;
-    status = jsvm::SetNamedProperty(env, options, name.data(), ValueTraits<T>::ToJs(value));
+    status = jsvm::SetNamedProperty(env, options, name.data(), internal::ValueTraits<T>::ToJs(value));
     DEBUG_CHECK(status == jsvm::Status::OK);
     return true;
 }
@@ -66,24 +66,16 @@ namespace internal
 struct value_object_field
 {
     std::string field_name;
-    // v8::Global<v8::Value> field_name;
     void *pfield;
     void (*from_v8)(jsvm::Value value, void *obj, void *pfield);
     jsvm::Value (*to_v8)(const void *obj, void *pfield);
-
-    /*v8::Local<v8::Value> toLocalFieldName()
-    {
-
-        return v8::Local<v8::Value>::New(v8::Isolate::GetCurrent(), field_name);
-    }*/
 };
-
 template <class T> struct is_value_object : std::false_type
 {
 };
-} // namespace internal
 
-template <typename T> class value_object : public value_object_base<T>
+} // namespace internal
+template <typename T> class value_object : public internal::value_object_base<T>
 {
   public:
     value_object(const char *)
@@ -97,19 +89,15 @@ template <typename T> class value_object : public value_object_base<T>
     {
         auto t = reinterpret_cast<T *>(obj);
         Field field = internal::ptr_cast<Field>(pfield);
-        // Field field = reinterpret_cast<Field>(pfield);
         using FieldType = typename internal::function_traits<Field>::return_type;
-        // obj->*field = internal::from_v8<FieldType>(value);
-        t->*field = ValueTraits<FieldType>::ToCpp(value);
+        t->*field = internal::ValueTraits<FieldType>::ToCpp(value);
     }
 
     template <typename Field> static jsvm::Value field_to_v8(const void *obj, void *pfield)
     {
         auto t = reinterpret_cast<const T *>(obj);
         Field field = internal::ptr_cast<Field>(pfield);
-        // Field field = reinterpret_cast<Field>(pfield);
         using FieldType = typename internal::function_traits<Field>::return_type;
-        // return internal::to_v8(obj->*field);
         return internal::ToJSValue<FieldType>(t->*field);
     }
     template <typename Field> value_object &field(const char *js_name, Field field)
@@ -133,15 +121,14 @@ template <typename T> class value_object : public value_object_base<T>
 
 template <typename T> std::vector<internal::value_object_field> value_object<T>::fields;
 template <typename T> bool value_object<T>::is_bound = false;
-
 namespace internal
 {
 
 template <typename T> T convert_value_object_from_js(jsvm::Value value)
 {
-    DEBUG_CHECK(value_object<T>::is_bound && "casting to an unbound value_type");
+    DEBUG_CHECK(jsbind::value_object<T>::is_bound && "casting to an unbound value_type");
     T ret{};
-    for (auto &field : value_object<T>::fields)
+    for (auto &field : jsbind::value_object<T>::fields)
     {
         GET_ENV
         jsvm::Status status;
@@ -168,26 +155,22 @@ template <typename T> T convert_value_object_from_js(jsvm::Value value)
 
 template <typename T> jsvm::Value convert_value_object_to_js(const T &value)
 {
-    DEBUG_CHECK(value_object<T>::is_bound && "casting from an unbound value_type");
+    DEBUG_CHECK(jsbind::value_object<T>::is_bound && "casting from an unbound value_type");
     GET_ENV
     jsvm::Status status;
     jsvm::Value result;
     status = jsvm::CreateObject(env, &result);
     DEBUG_CHECK(status == jsvm::Status::OK);
-    // auto ret = v8::Object::New(v8::Isolate::GetCurrent());
-    for (auto &field : value_object<T>::fields)
+    for (auto &field : jsbind::value_object<T>::fields)
     {
-
         status = jsvm::SetNamedProperty(env, result, field.field_name.c_str(), field.to_v8(&value, field.pfield));
         DEBUG_CHECK(status == jsvm::Status::OK);
-        // auto name = *reinterpret_cast<v8::Local<v8::String> *>(&field.field_name);
-        // ret->Set(v8::Isolate::GetCurrent()->GetCurrentContext(), name, field.to_v8(&value, field.pfield));
     }
     return result;
 }
 template <typename T> jsvm::Value convert_value_object_to_js(T *value)
 {
-    DEBUG_CHECK(value_object<T>::is_bound && "casting from an unbound value_type");
+    DEBUG_CHECK(jsbind::value_object<T>::is_bound && "casting from an unbound value_type");
     if (value == nullptr)
     {
         return internal::makeNull();
@@ -195,7 +178,6 @@ template <typename T> jsvm::Value convert_value_object_to_js(T *value)
     return convert_value_object_to_js(*value);
 }
 
-} // namespace internal
 template <typename T> class ValueTraits<T, std::enable_if_t<internal::is_value_object<T>::value>>
 {
   public:
@@ -221,6 +203,7 @@ template <typename T> class ValueTraits<T *, std::enable_if_t<internal::is_value
         return internal::convert_value_object_from_js<T>(value);
     }
 };
+} // namespace internal
 class Object
 {
   public:
@@ -261,23 +244,6 @@ class Object
 
     template <typename ReturnType, typename... Args> Object &function(const char *name, ReturnType (*func)(Args...))
     {
-
-        /*v8::HandleScope scope(isolate());
-
-        FuncInfo<decltype(func)>* info = new FuncInfo<decltype(func)>(func);
-        internal::addDeinitializer([info]() { delete info; });
-        info->name = name;
-        v8::Local<v8::Value> data = v8::External::New(isolate(), info);
-
-        v8::Local<v8::FunctionTemplate> t =
-            v8::FunctionTemplate::New(isolate(), internal::<ReturnType, Args...>, data);
-        v8::Local<v8::String> name_string =
-            v8::String::NewFromUtf8(isolate(), name.data(), v8::NewStringType::kInternalized).ToLocalChecked();
-
-        global()
-            ->Set(isolate()->GetCurrentContext(), name_string,
-                t->GetFunction(isolate()->GetCurrentContext()).ToLocalChecked())
-            .FromJust();*/
         FuncInfo<decltype(func)> *data = new FuncInfo<decltype(func)>(func);
         internal::addDeinitializer([data]() { delete data; });
         data->name = name;
@@ -297,22 +263,6 @@ class Object
     template <typename ReturnType, typename... Args>
     Object &function_optional_override(const char *name, ReturnType (*func)(Args...))
     {
-        /*v8::HandleScope scope(isolate());
-
-        FuncInfo<decltype(func)>* info = new FuncInfo<decltype(func)>(func);
-        internal::addDeinitializer([info]() { delete info; });
-        info->name = name;
-        v8::Local<v8::Value> data = v8::External::New(isolate(), info);
-
-        v8::Local<v8::FunctionTemplate> t = v8::FunctionTemplate::New(
-            isolate(), internal::InvokeGlobalMethodOptionalOverride<ReturnType, Args...>, data);
-        v8::Local<v8::String> name_string =
-            v8::String::NewFromUtf8(isolate(), name.data(), v8::NewStringType::kInternalized).ToLocalChecked();
-
-        global()
-            ->Set(isolate()->GetCurrentContext(), name_string,
-                t->GetFunction(isolate()->GetCurrentContext()).ToLocalChecked())
-            .FromJust();*/
         FuncInfo<decltype(func)> *data = new FuncInfo<decltype(func)>(func);
         internal::addDeinitializer([data]() { delete data; });
         data->name = name;

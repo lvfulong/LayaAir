@@ -38,7 +38,7 @@ namespace laya
     void JSRuntime::setZipPackage(jsvm::Value p_pFunction)
     {
         JCConch::s_pScriptRuntime->m_pJSZipPackage = jsbind::Persistent(p_pFunction);
-        JSZip* zip = jsbind::ValueTraits<JSZip*>::ToCpp(JCConch::s_pScriptRuntime->m_pJSZipPackage.getHandle());
+        JSZip* zip = jsbind::as<JSZip*>(JCConch::s_pScriptRuntime->m_pJSZipPackage.getHandle());
 		if (zip)
 		{
 			g_ZipPackage = &zip->m_zip;

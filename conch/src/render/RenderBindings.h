@@ -48,6 +48,8 @@
 
 namespace jsbind
 {
+    namespace internal
+    {
     template <> class ValueTraits<laya::Matrix3x3>
     {
     public:
@@ -86,6 +88,7 @@ namespace jsbind
             return jsbind::MakeUndefined();
         }
     };
+    }
 }
 namespace laya
 {
@@ -336,7 +339,7 @@ class RenderBindings
                 "setTexture3DImageData",
                 jsbind::optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, jsvm::Value jsSources,
                                      int depth, bool premultiplyAlpha, bool invertY) {
-                    std::vector<JSImage *> sources = jsbind::ValueTraits<std::vector<JSImage *>>::ToCpp(jsSources);
+                    std::vector<JSImage *> sources = jsbind::as<std::vector<JSImage *>>(jsSources);
                     ctx.setTexture3DImageData(texture, sources, depth, premultiplyAlpha, invertY);
                 }));
 

@@ -1,9 +1,9 @@
 #ifndef __JSBIND_LOCAL_H__
 #define __JSBIND_LOCAL_H__
 
-#include <jsbind/internal/ValueTraits.h>
-#include <jsbind/internal/Value.h>
 #include <jsbind/internal/Invoke.h>
+#include <jsbind/internal/Value.h>
+#include <jsbind/internal/ValueTraits.h>
 #include <jsvm/JSVM_Types.h>
 
 namespace jsbind
@@ -25,7 +25,7 @@ class Local
         {
             GET_ENV
             auto result = internal::v8_call(env, recv, handle_, args...);
-            return ValueTraits<ReturnType>::ToCpp(result);
+            return internal::ValueTraits<ReturnType>::ToCpp(result);
         }
         else
         {
@@ -38,7 +38,7 @@ class Local
         {
             GET_ENV
             auto result = internal::v8_call(env, recv, handle_, args...);
-            return ValueTraits<ReturnType>::ToCpp(result);
+            return internal::ValueTraits<ReturnType>::ToCpp(result);
         }
         else
         {
@@ -196,17 +196,19 @@ class Local
     {
         DEBUG_CHECK(isValid());
         GET_ENV
-        return ValueTraits<T>::ToCpp(this->handle_);
+        return internal::ValueTraits<T>::ToCpp(this->handle_);
     }
     template <typename T> bool is()
     {
         GET_ENV
-        return isValid() && ValueTraits<T>::is(handle_);
+        return isValid() && internal::ValueTraits<T>::is(handle_);
     }
 
   private:
     jsvm::Value handle_ = nullptr;
 };
+namespace internal
+{
 template <> class ValueTraits<Local>
 {
   public:
@@ -223,5 +225,6 @@ template <> class ValueTraits<Local>
         return true;
     }*/
 };
+} // namespace internal
 } // namespace jsbind
 #endif

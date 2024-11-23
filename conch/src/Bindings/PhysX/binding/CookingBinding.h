@@ -23,7 +23,7 @@ using namespace emscripten;
 #ifdef CONCH
 PxConvexMesh *createConvexMeshFromBuffer(jsvm::Value verticesObj, PxPhysics &physics, PxU32 VetexLimit, PxTolerancesScale &scale, int ConvexFlags)
 {
-    VectorWrapper<PxVec3>* pVertices = (VectorWrapper<PxVec3>* )ValueTraits<VectorWrapper<PxVec3>*>::ToCpp(verticesObj);
+    VectorWrapper<PxVec3>* pVertices = (VectorWrapper<PxVec3>* )jsbind::as<VectorWrapper<PxVec3>*>(verticesObj);
     std::vector<PxVec3>& vertices = pVertices->data_;
 #else
 // eCOMPUTE_CONVEX;
@@ -55,7 +55,7 @@ PxTriangleMesh *createTriMesh(jsvm::Value verticesObj,
                               PxTolerancesScale &scale,
                               PxPhysics &physics)
 {
-	VectorWrapper<PxVec3>* pVertices = (VectorWrapper<PxVec3>* )ValueTraits<VectorWrapper<PxVec3>*>::ToCpp(verticesObj);
+	VectorWrapper<PxVec3>* pVertices = (VectorWrapper<PxVec3>* )jsbind::as<VectorWrapper<PxVec3>*>(verticesObj);
     std::vector<PxVec3>& vertices = pVertices->data_;
 #else
 PxTriangleMesh *createTriMesh(std::vector<PxVec3> vertices,

@@ -1,9 +1,9 @@
 #ifndef __JSBIND_ARRAYBUFFER_H_
 #define __JSBIND_ARRAYBUFFER_H_
 
-#include <jsvm/JSVM_Types.h>
-#include <jsbind/internal/ValueTraits.h>
 #include <jsbind/internal/Value.h>
+#include <jsbind/internal/ValueTraits.h>
+#include <jsvm/JSVM_Types.h>
 
 namespace jsbind
 {
@@ -54,7 +54,6 @@ class ArrayBuffer
     inline size_t getCount() const
     {
         return byteLength_ / getBytePerElement(type_);
-  
     }
     static size_t getBytePerElement(Type type)
     {
@@ -75,10 +74,10 @@ class ArrayBuffer
             byte = sizeof(uint32_t);
             break;
         case FLOAT32_ARRAY:
-            byte =  sizeof(float);
+            byte = sizeof(float);
             break;
         case FLOAT64_ARRAY:
-            byte =  sizeof(double);
+            byte = sizeof(double);
             break;
         case BIGINT64_ARRAY:
         case BIGUINT64_ARRAY:
@@ -110,7 +109,8 @@ class ArrayBuffer
     Type type_ = ARRAY_BUFFER;
     jsvm::Value handle_ = nullptr;
 };
-
+namespace internal
+{
 template <> class ValueTraits<ArrayBuffer>
 {
   public:
@@ -133,7 +133,7 @@ template <> class ValueTraits<const ArrayBuffer &> : public ValueTraits<ArrayBuf
 template <> class ValueTraits<ArrayBuffer &> : public ValueTraits<ArrayBuffer>
 {
 };
-
+} // namespace internal
 } // namespace jsbind
 
 #endif
