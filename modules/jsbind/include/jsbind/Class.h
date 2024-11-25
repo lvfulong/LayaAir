@@ -91,6 +91,18 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
     {
         GET_ENV
         jsvm_status status;
+        //这个会重复，直接返回
+        auto it = objects_.find((void *)objectPointer);
+        if (it != objects_.end())
+        {
+            jsvm_value obj;
+            status = jsvm_get_reference_value( env, it->second.objectRef_, &obj);
+            DEBUG_CHECK(status == jsvm_status::ok);
+            return obj;
+        }
+
+
+  
         jsvm_value cons;
         DEBUG_CHECK(classRef_ != nullptr);
         status = jsvm_get_reference_value(env, classRef_, &cons);
