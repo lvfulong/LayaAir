@@ -181,13 +181,14 @@ void LayaNapiEnv::EnqueueFinalizer(v8impl::RefTracker *finalizer)
     if (!finalization_scheduled && !destructing)
     {
         finalization_scheduled = true;
-        Ref();
+        //Ref();
         /////node_env()->SetImmediate([this](node::Environment* node_env) {
         ////    finalization_scheduled = false;
         ////    Unref();
         //////    DrainFinalizerQueue();
         ///////    });
     }
+    DrainFinalizerQueue();
 }
 
 void LayaNapiEnv::DrainFinalizerQueue()
@@ -213,7 +214,8 @@ void LayaNapiEnv::trigger_fatal_exception(v8::Local<v8::Value> local_err)
 // running Node-API add-ons.
 template <bool enforceUncaughtExceptionPolicy, typename T> void LayaNapiEnv::CallbackIntoModule(T &&call)
 {
-    /*CallIntoModule(call, [](napi_env env_, v8::Local<v8::Value> local_err) {
+    CallIntoModule(call, [](napi_env env_, v8::Local<v8::Value> local_err) {
+#if 0
         node_napi_env__* env = static_cast<node_napi_env__*>(env_);
         if (env->terminatedOrTerminating()) {
             return;
@@ -238,7 +240,8 @@ template <bool enforceUncaughtExceptionPolicy, typename T> void LayaNapiEnv::Cal
         // report it as a fatal exception. (There is no JavaScript on the
         // call stack that can possibly handle it.)
         env->trigger_fatal_exception(local_err);
-        });*/
+#endif
+        });
 }
 std::string stackTraceToString(v8::Local<v8::StackTrace> stack)
 {
@@ -726,10 +729,16 @@ Status RunScript(Env env, Value script, Value *result)
 }
 Status PumpMessageLoop(VM vm, bool *result)
 {
+    DEBUG_CHECK(vm->isolate_ != nullptr);
+    *result = v8::platform::PumpMessageLoop(s_pPlatform, vm->isolate_, v8::platform::MessageLoopBehavior::kDoNotWait);
+            
     return Status::OK; // todo
 }
 Status PerformMicrotaskCheckpoint(VM vm)
 {
+
+    DEBUG_CHECK(vm->isolate_ != nullptr);
+    vm->isolate_->PerformMicrotaskCheckpoint();
     return Status::OK; // todo
 }
 Status GetProperty(Env env, Value object, Value key, Value *result)
@@ -973,7 +982,7 @@ Status ReportException(Env env)
     return Status::OK; // todo
 }
 
-laya::DebuggerAgent *pDbgAgent;
+laya::DebuggerAgent *pDbgAgent = nullptr;
 void OpenInspector(Env env, int port)
 {
 #ifdef JS_V8_DEBUGGER
@@ -992,9 +1001,12 @@ void WaitForDebugger(Env env, bool breakNextLine)
 void CloseInspector(Env env)
 {
 #ifdef JS_V8_DEBUGGER
-    pDbgAgent->Shutdown();
-    delete pDbgAgent;
-    pDbgAgent = nullptr;
+    if (pDbgAgent != nullptr)
+    {
+        pDbgAgent->Shutdown();
+        delete pDbgAgent;
+        pDbgAgent = nullptr;
+    }
 #endif
 }
 

@@ -76,9 +76,9 @@
   } while (0)
 
 void napi_env__::InvokeFinalizerFromGC(v8impl::RefTracker* finalizer) {
-#if 0
-  if (module_api_version != NAPI_VERSION_EXPERIMENTAL) {
+  //if (module_api_version != NAPI_VERSION_EXPERIMENTAL) {
     EnqueueFinalizer(finalizer);
+    #if 0
   } else {
     // The experimental code calls finalizers immediately to release native
     // objects as soon as possible. In that state any code that may affect GC
@@ -89,7 +89,7 @@ void napi_env__::InvokeFinalizerFromGC(v8impl::RefTracker* finalizer) {
     in_gc_finalizer = true;
     finalizer->Finalize();
   }
-#endif
+  #endif
 }
 
 namespace v8impl {
