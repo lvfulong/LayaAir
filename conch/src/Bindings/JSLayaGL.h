@@ -35,9 +35,9 @@ class JSLayaGL
   public:
     int getAttribLocationEx(const char *vs, const char *ps, const char *define, const char *sName);
 
-    jsvm::Value getShaderPrecisionFormat(int shaderType, int precisionType);
+    jsvm_value getShaderPrecisionFormat(int shaderType, int precisionType);
 
-    jsvm::Value getUniform(const char *locationName);
+    jsvm_value getUniform(const char *locationName);
 
     int getParameter(int pname);
 
@@ -45,22 +45,22 @@ class JSLayaGL
 
     int getIntegerv(int pname);
 
-    jsvm::Value getIntegerArrayv(int pname);
+    jsvm_value getIntegerArrayv(int pname);
 
     float getFloatv(int pname);
 
-    jsvm::Value getFloatArrayv(int pname);
+    jsvm_value getFloatArrayv(int pname);
 
-    jsvm::Value readPixels(int x, int y, int width, int height, int format, int type);
+    jsvm_value readPixels(int x, int y, int width, int height, int format, int type);
 
     void setCurrentContext(int nContextID);
 
   public:
     int getProgramParameter(const char *vs, const char *ps, const char *define, int type);
 
-    jsvm::Value getActiveAttribEx(const char *vs, const char *ps, const char *define, int nIndex);
+    jsvm_value getActiveAttribEx(const char *vs, const char *ps, const char *define, int nIndex);
 
-    jsvm::Value getActiveUniformEx(const char *vs, const char *ps, const char *define, int nIndex);
+    jsvm_value getActiveUniformEx(const char *vs, const char *ps, const char *define, int nIndex);
 
     const char *getString(unsigned int name);
 
@@ -76,7 +76,7 @@ class JSLayaGL
 
     int getVertexAttribEx(int index, int target);
 
-    jsvm::Value getVertexAttribExfv(int index, int target);
+    jsvm_value getVertexAttribExfv(int index, int target);
 
     int getVertexAttribOffset(int index, int target);
 

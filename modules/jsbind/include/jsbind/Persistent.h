@@ -12,18 +12,18 @@ class Persistent
   public:
     Persistent() = default;
 
-    explicit Persistent(jsvm::Value);
+    explicit Persistent(jsvm_value);
 
     Persistent(const Persistent &);
 
     Persistent &operator=(const Persistent &);
 
     ~Persistent();
-    template <typename ReturnType, typename... Args> ReturnType call(jsvm::Value recv, const Args &...args)
+    template <typename ReturnType, typename... Args> ReturnType call(jsvm_value recv, const Args &...args)
     {
         return getLocal().call<ReturnType>(recv, args...);
     }
-    template <typename ReturnType, typename... Args> ReturnType call(jsvm::Value recv, const Args &...args) const
+    template <typename ReturnType, typename... Args> ReturnType call(jsvm_value recv, const Args &...args) const
     {
         return getLocal().call<ReturnType>(recv, args...);
     }
@@ -32,14 +32,14 @@ class Persistent
         return ref_ != nullptr;
     }
 
-    inline jsvm::Value getHandle() const
+    inline jsvm_value getHandle() const
     {
         GET_ENV
-        jsvm::Status status;
-        jsvm::Value value;
+        jsvm_status status;
+        jsvm_value value;
 
-        status = jsvm::GetReferenceValue(env, ref_, &value);
-        DEBUG_CHECK(status == jsvm::Status::OK);
+        status = jsvm_get_reference_value(env, ref_, &value);
+        DEBUG_CHECK(status == jsvm_status::ok);
         return value;
     }
 
@@ -50,7 +50,7 @@ class Persistent
     }
 
   private:
-    jsvm::Ref ref_ = nullptr;
+    jsvm_ref ref_ = nullptr;
 };
 
 } // namespace jsbind

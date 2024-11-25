@@ -30,7 +30,7 @@ class ArrayBuffer
     ArrayBuffer() = default;
     ~ArrayBuffer() = default;
     // if failed ArrayBuffer returned isValid return false
-    static ArrayBuffer Make(jsvm::Value arrayBuffer);
+    static ArrayBuffer Make(jsvm_value arrayBuffer);
     static ArrayBuffer MakeArrayBuffer(uint8_t *inputBuffer, size_t length);
     static ArrayBuffer MakeDataView(uint8_t *inputBuffer, size_t length, size_t byteOffset);
     static ArrayBuffer MakeTypedArray(uint8_t *inputBuffer, size_t length, size_t byteOffset, Type type);
@@ -89,7 +89,7 @@ class ArrayBuffer
         }
         return byte;
     }
-    inline jsvm::Value getHandle() const
+    inline jsvm_value getHandle() const
     {
         return handle_;
     }
@@ -101,28 +101,28 @@ class ArrayBuffer
 
   private:
     ArrayBuffer(uint8_t *inputBuffer, size_t length, size_t byteOffset, Type type);
-    ArrayBuffer(jsvm::Value arrayBuffer, uint8_t *inputBuffer, size_t length, Type type = ARRAY_BUFFER);
+    ArrayBuffer(jsvm_value arrayBuffer, uint8_t *inputBuffer, size_t length, Type type = ARRAY_BUFFER);
 
   private:
     uint8_t *data_ = nullptr;
     size_t byteLength_ = 0;
     Type type_ = ARRAY_BUFFER;
-    jsvm::Value handle_ = nullptr;
+    jsvm_value handle_ = nullptr;
 };
 namespace internal
 {
 template <> class ValueTraits<ArrayBuffer>
 {
   public:
-    static ArrayBuffer ToCpp(jsvm::Value value)
+    static ArrayBuffer ToCpp(jsvm_value value)
     {
         return ArrayBuffer::Make(value);
     }
-    static jsvm::Value ToJs(ArrayBuffer value, bool callDestructor = true)
+    static jsvm_value ToJs(ArrayBuffer value, bool callDestructor = true)
     {
         return value.getHandle();
     }
-    static bool is(jsvm::Value value)
+    static bool is(jsvm_value value)
     {
         return internal::isArrayBuffer(value) || internal::isArrayBufferView(value);
     }

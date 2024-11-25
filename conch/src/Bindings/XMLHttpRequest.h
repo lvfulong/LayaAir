@@ -53,7 +53,7 @@ namespace laya
 
 		void changeState(State newState);
 
-		void postString(const char* p_pszUrl, const char* p_pszString, jsvm::Value p_funOnOK, jsvm::Value p_funOnErr);
+		void postString(const char* p_pszUrl, const char* p_pszString, jsvm_value p_funOnOK, jsvm_value p_funOnErr);
 
 		void abort();
 
@@ -104,14 +104,14 @@ namespace laya
 			return (m_responseTypeCode==ResponseTypeArrayBuffer || m_responseTypeCode==ResponseTypeBlob);
 		}
 
-		void set_onreadystatechange(jsvm::Value pObj);
+		void set_onreadystatechange(jsvm_value pObj);
 
 		void _changeState(int p_nState);
 
 		inline void postData(JCDownloadMgr* p_pDownloadMgr, const char* p_pszURL, char* p_pData, int p_nLen );
 
 		//因为不是用v8原生的方法把js函数转换JsObjHandle2所以分成两个函数
-        void setPostCB(jsvm::Value p_onOK, jsvm::Value p_onError);
+        void setPostCB(jsvm_value p_onOK, jsvm_value p_onError);
 
 		void JsPostData( const char* p_sUrl, jsbind::Local arg1 );
 

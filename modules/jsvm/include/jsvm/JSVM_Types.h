@@ -11,12 +11,10 @@
 #include <v8.h>
 #endif
 
-namespace jsvm
-{
 
-enum class Status
+enum jsvm_status
 {
-    OK,                              // 成功状态。
+    ok,                              // 成功状态。
     INVALID_ARG,                     //	无效的状态。
     OBJECT_EXPECTED,                 //	期待传入对象类型。
     STRING_EXPECTED,                 //	期望传入字符串类型。
@@ -41,84 +39,72 @@ enum class Status
     NO_EXTERNAL_BUFFERS_ALLOWED,     //	不允许外部缓冲区。
     CANNOT_RUN_JS,                   //	不能执行JS。
 };
-enum class ValueType
+enum jsvm_valuetype
 {
-    UNDEFINED, // 未定义类型。
-    Null,      // Null类型。
-    BOOLEAN,   //	布尔类型。
-    NUMBER,    //	数字类型。
-    STRING,    //	字符串类型。
-    SYMBOL,    //	符号类型。
-    OBJECT,    //	对象类型。
-    FUNCTION,  //	函数类型。
-    EXTERNAL,  //	外部类型。
-    BIGINT,    //	bigint类型。
+    jsvm_undefined, // 未定义类型。
+    jsvm_null,      // Null类型。
+    jsvm_boolean,   //	布尔类型。
+    jsvm_number,    //	数字类型。
+    jsvm_string,    //	字符串类型。
+    jsvm_symbol,    //	符号类型。
+    jsvm_object,    //	对象类型。
+    jsvm_function,  //	函数类型。
+    jsvm_external,  //	外部类型。
+    jsvm_bigint,    //	bigint类型。
 };
 
-enum class TypedarrayType
+enum jsvm_typedarray_type
 {
-    INT8_ARRAY,
-    UINT8_ARRAY,
-    UINT8_CLAMPED_ARRAY,
-    INT16_ARRAY,
-    UINT16_ARRAY,
-    INT32_ARRAY,
-    UINT32_ARRAY,
-    FLOAT32_ARRAY,
-    FLOAT64_ARRAY,
-    BIGINT64_ARRAY,
-    BIGUINT64_ARRAY,
+    jsvm_int8_array,
+    jsvm_uint8_array,
+    jsvm_uint8_clamped_array,
+    jsvm_int16_array,
+    jsvm_uint16_array,
+    jsvm_int32_array,
+    jsvm_uint32_array,
+    jsvm_float32_array,
+    jsvm_float64_array,
+    jsvm_bigint64_array,
+    jsvm_biguint64_array,
 };
 
-#if 0
-
-struct ExtendedErrorInfo
-{
-    const char *error_message;
-    void *engine_reserved;
-    uint32_t engine_error_code;
-    Status error_code;
-};
-
-#endif
 #if defined(JS_OHOS_JSVM)
-using Env = JSVM_Env;
-using Deferred = JSVM_Deferred;
-using Value = JSVM_Value;
-using CallbackInfo = JSVM_CallbackInfo;
-using Finalize = JSVM_Finalize;
-using Ref = JSVM_Ref;
-typedef JSVM_Value(JSVM_CDECL *Callback)(JSVM_Env env, JSVM_CallbackInfo info); // using Callback = JSVM_Callback;
+using jsvm_env = JSVM_Env;
+using jsvm_deferred = JSVM_Deferred;
+using jsvm_value = JSVM_Value;
+using jsvm_callback_info = JSVM_CallbackInfo;
+using jsvm_finalize = JSVM_Finalize;
+using jsvm_ref = JSVM_Ref;
+typedef JSVM_Value(JSVM_CDECL * jsvm_callback)(JSVM_Env env, JSVM_CallbackInfo info);
 // using Script = JSVM_Script;
-using VM = JSVM_VM;
-using VMScope = JSVM_VMScope;
-using EnvScope = JSVM_EnvScope;
-using HandleScope = JSVM_HandleScope;
-using InitOptions = JSVM_InitOptions;
-using CreateVMOptions = JSVM_CreateVMOptions;
+using jsvm_vm = JSVM_VM;
+using jsvm_vm_scope = JSVM_VMScope;
+using jsvm_env_scope = JSVM_EnvScope;
+using jsvm_handle_scope = JSVM_HandleScope;
+using jsvm_init_options = JSVM_InitOptions;
+using jsvm_create_vm_options = JSVM_CreateVMOptions;
 #endif
 #if defined(JS_V8)
-using Env = napi_env;
-using Deferred = napi_deferred;
-using Value = napi_value;
-using CallbackInfo = napi_callback_info;
-using Finalize = node_api_basic_finalize; // typedef node_api_nogc_finalize Finalize;
-using Ref = napi_ref;
-typedef Value(NAPI_CDECL *Callback)(Env env, CallbackInfo info);
-// using Script = napi_value;
+typedef napi_env jsvm_env;
+typedef napi_deferred jsvm_deferred;
+typedef napi_value jsvm_value;
+typedef napi_callback_info jsvm_callback_info;
+typedef node_api_basic_finalize jsvm_finalize;
+typedef napi_ref jsvm_ref;
+typedef napi_value(NAPI_CDECL * jsvm_callback)(napi_env env, napi_callback_info info);
 
-typedef struct VM__ *VM;
-typedef struct VMScope__ *VMScope;
-typedef struct EnvScope__ *EnvScope;
-using HandleScope = napi_handle_scope;
-struct InitOptions
+typedef struct VM__ * jsvm_vm;
+typedef struct VMScope__ * jsvm_vm_scope;
+typedef struct EnvScope__ * jsvm_env_scope;
+using jsvm_handle_scope = napi_handle_scope;
+struct jsvm_init_options
 {
     const intptr_t *externalReferences;
     int *argc;
     char **argv;
     bool removeFlags;
 };
-struct CreateVMOptions
+struct jsvm_create_vm_options
 {
     size_t maxOldGenerationSize;
     size_t maxYoungGenerationSize;
@@ -129,31 +115,29 @@ struct CreateVMOptions
     bool isForSnapshotting;
 };
 #endif
-enum class PropertyAttributes
+enum jsvm_property_attributes
 {
-    DEFAULT = 0,
-    WRITABLE = 1 << 0,
-    ENUMERABLE = 1 << 1,
-    CONFIGURABLE = 1 << 2,
-    STATIC = 1 << 10,
-    DEFAULT_METHOD = WRITABLE | CONFIGURABLE,
-    DEFAULT_JSPROPERTY = WRITABLE | ENUMERABLE | CONFIGURABLE,
+    jsvm_default = 0,
+    jsvm_writable = 1 << 0,
+    jsvm_enumerable = 1 << 1,
+    jsvm_configurable = 1 << 2,
+    jsvm_static = 1 << 10,
+    jsvm_default_method = napi_writable | napi_configurable,
+    jsvm_default_jsproperty = napi_writable | napi_enumerable | napi_configurable,
 };
 
-struct PropertyDescriptor
+struct jsvm_property_descriptor
 {
     const char *utf8name;
-    Value name;
+    jsvm_value name;
 
-    Callback method;
-    Callback getter;
-    Callback setter;
-    Value value;
+    jsvm_callback method;
+    jsvm_callback getter;
+    jsvm_callback setter;
+    jsvm_value value;
 
-    PropertyAttributes attributes;
+    jsvm_property_attributes attributes;
     void *data;
 };
-
-} // namespace jsvm
 
 #endif

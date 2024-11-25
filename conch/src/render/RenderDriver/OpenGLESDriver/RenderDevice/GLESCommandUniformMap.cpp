@@ -23,7 +23,7 @@ GLESCommandUniformMap *GLESCommandUniformMap::createGlobalUniformMap(const char 
     m_globalBlockMap[blockName] = comMap;
     return comMap;
 }
-jsvm::Value GLESCommandUniformMap::createGlobalUniformMapJS(const char* blockName)
+jsvm_value GLESCommandUniformMap::createGlobalUniformMapJS(const char* blockName)
 {
     GLESCommandUniformMap* data = GLESCommandUniformMap::createGlobalUniformMap(blockName);
     auto it = m_globalBlockMapJS.find(blockName);

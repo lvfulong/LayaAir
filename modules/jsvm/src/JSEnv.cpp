@@ -32,13 +32,13 @@ void JSEnv::setCurrent(JSEnv *env)
     s_threadLocalEnv = env;
 }
 #if defined(JS_V8)
-JSEnv::JSEnv(IsolateData *isolate_data, v8::Isolate *isolate, jsvm::Env env)
+JSEnv::JSEnv(IsolateData *isolate_data, v8::Isolate *isolate, jsvm_env env)
     : isolate_data_(isolate_data), isolate_(isolate), env_(env)
 {
 }
 #endif
 #if defined(JS_OHOS_JSVM)
-JSEnv::JSEnv(IsolateData *isolate_data, jsvm::Env env) : env_(env)
+JSEnv::JSEnv(IsolateData *isolate_data, jsvm_env env) : env_(env)
 {
 }
 #endif

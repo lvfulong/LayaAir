@@ -12,13 +12,13 @@ class Local
 {
   public:
     Local();
-    Local(jsvm::Value);
+    Local(jsvm_value);
     Local(Local const &) = default;
     Local &operator=(Local const &) = default;
 
     Local(Local &&) = default;
     Local &operator=(Local &&) = default;
-    template <typename ReturnType, typename... Args> ReturnType call(jsvm::Value recv, const Args &...args)
+    template <typename ReturnType, typename... Args> ReturnType call(jsvm_value recv, const Args &...args)
     {
 
         if (isValid() && isFunction())
@@ -32,7 +32,7 @@ class Local
             return ReturnType();
         }
     }
-    template <typename ReturnType, typename... Args> ReturnType call(jsvm::Value recv, const Args &...args) const
+    template <typename ReturnType, typename... Args> ReturnType call(jsvm_value recv, const Args &...args) const
     {
         if (isValid() && isFunction())
         {
@@ -47,7 +47,7 @@ class Local
     }
     Local operator[](const std::string &key) const;
 
-    jsvm::Value getHandle() const
+    jsvm_value getHandle() const
     {
         return handle_;
     }
@@ -124,70 +124,70 @@ class Local
         return isValid() && internal::isDate(this->handle_);
     }
 
-    static inline bool isUndefined(jsvm::Value value)
+    static inline bool isUndefined(jsvm_value value)
     {
         return value != nullptr && internal::isUndefined(value);
     }
-    static inline bool isNull(jsvm::Value value)
+    static inline bool isNull(jsvm_value value)
     {
         return value != nullptr && internal::isNull(value);
     }
 
-    static inline bool isBool(jsvm::Value value)
+    static inline bool isBool(jsvm_value value)
     {
         return value != nullptr && internal::isBool(value);
     }
 
-    static inline bool isNumber(jsvm::Value value)
+    static inline bool isNumber(jsvm_value value)
     {
         return value != nullptr && internal::isNumber(value);
     }
 
-    static inline bool isString(jsvm::Value value)
+    static inline bool isString(jsvm_value value)
     {
         return value != nullptr && internal::isString(value);
     }
 
-    static inline bool isObject(jsvm::Value value)
+    static inline bool isObject(jsvm_value value)
     {
         return value != nullptr && internal::isObject(value);
     }
 
-    static inline bool isArray(jsvm::Value value)
+    static inline bool isArray(jsvm_value value)
     {
         return value != nullptr && internal::isArray(value);
     }
 
-    static inline bool isFunction(jsvm::Value value)
+    static inline bool isFunction(jsvm_value value)
     {
         return value != nullptr && internal::isFunction(value);
     }
 
-    static inline bool isError(jsvm::Value value)
+    static inline bool isError(jsvm_value value)
     {
         return value != nullptr && internal::isError(value);
     }
 
-    static inline bool isArrayBuffer(jsvm::Value value)
+    static inline bool isArrayBuffer(jsvm_value value)
     {
         return value != nullptr && internal::isArrayBuffer(value);
     }
 
-    static inline bool isArrayBufferView(jsvm::Value value)
+    static inline bool isArrayBufferView(jsvm_value value)
     {
         return value != nullptr && internal::isArrayBufferView(value);
     }
 
-    static inline bool isTypedArray(jsvm::Value value)
+    static inline bool isTypedArray(jsvm_value value)
     {
         return value != nullptr && internal::isTypedArray(value);
     }
 
-    static inline bool isDataView(jsvm::Value value)
+    static inline bool isDataView(jsvm_value value)
     {
         return value != nullptr && internal::isDataView(value);
     }
-    static inline bool isDate(jsvm::Value value)
+    static inline bool isDate(jsvm_value value)
     {
         return value != nullptr && internal::isDate(value);
     }
@@ -205,22 +205,22 @@ class Local
     }
 
   private:
-    jsvm::Value handle_ = nullptr;
+    jsvm_value handle_ = nullptr;
 };
 namespace internal
 {
 template <> class ValueTraits<Local>
 {
   public:
-    static Local ToCpp(jsvm::Value value)
+    static Local ToCpp(jsvm_value value)
     {
         return Local(value);
     }
-    static jsvm::Value ToJs(Local value, bool callDestructor = true)
+    static jsvm_value ToJs(Local value, bool callDestructor = true)
     {
         return value.getHandle();
     }
-    /*static bool is(jsvm::Value value)
+    /*static bool is(jsvm_value value)
     {
         return true;
     }*/

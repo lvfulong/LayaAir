@@ -39,23 +39,23 @@ namespace laya
     {
         return this;
     }
-    jsvm::Value  JSXmlNode::getParentNode()
+    jsvm_value  JSXmlNode::getParentNode()
     {
          return jsbind::Make<JSXmlNode*>(m_parentNode);
     }
-    jsvm::Value  JSXmlNode::getFirstChild()
+    jsvm_value  JSXmlNode::getFirstChild()
     {
         return jsbind::MakeNull();
     }
-    jsvm::Value JSXmlNode::getLastChild()
+    jsvm_value JSXmlNode::getLastChild()
     {
         return jsbind::MakeNull();
     }
-    jsvm::Value  JSXmlNode::getPreviousSibling()
+    jsvm_value  JSXmlNode::getPreviousSibling()
     {
         return jsbind::MakeNull();
     }
-    jsvm::Value  JSXmlNode::getNextSibling()
+    jsvm_value  JSXmlNode::getNextSibling()
     {
         return jsbind::MakeNull();
     }
@@ -75,22 +75,22 @@ namespace laya
     {
         return m_nodeValue.c_str();
     }
-    jsvm::Value JSXmlNode::getChildNodes()
+    jsvm_value JSXmlNode::getChildNodes()
     {
         if (!m_bCreateChilds)
         {
-            jsvm::Value pJSValue = jsbind::Make<std::vector<JSXmlNode*>>(m_childNodes);
+            jsvm_value pJSValue = jsbind::Make<std::vector<JSXmlNode*>>(m_childNodes);
             m_jsChildNodes = jsbind::Persistent(pJSValue);
             m_bCreateChilds = true;
         }
         return m_jsChildNodes.getHandle();
     }
-    jsvm::Value JSXmlNode::getAttributes()
+    jsvm_value JSXmlNode::getAttributes()
     {
         if (!m_bCreateAttribs)
         {
             m_bCreateAttribs = true;
-            jsvm::Value pJSValue = jsbind::Make<std::vector<JSXmlAttr*>>(m_attributes);
+            jsvm_value pJSValue = jsbind::Make<std::vector<JSXmlAttr*>>(m_attributes);
             m_jsAttribs = jsbind::Persistent(pJSValue);
         }
         return m_jsAttribs.getHandle();
@@ -157,7 +157,7 @@ namespace laya
         initXmlNode(m_document,true);
         if(fdoc!=NULL)delete fdoc;
     }
-    jsvm::Value  JSXmlDocument::getChildNodes()
+    jsvm_value  JSXmlDocument::getChildNodes()
     {
         return JSXmlNode::getChildNodes();
     }

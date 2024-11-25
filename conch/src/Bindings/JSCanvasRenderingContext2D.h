@@ -19,11 +19,11 @@ class JSCanvasRenderingContext2D
     void fillText(const char *text, double x, double y, double maxWidth);
 
     void strokeText(const char *text, double x, double y, double maxWidth);
-    jsvm::Value measureText(const std::string &text);
+    jsvm_value measureText(const std::string &text);
     void clearRect(double x, double y, double width, double height);
     void save();
     void restore();
-    jsvm::Value getImageData(double x, double y, double width, double height);
+    jsvm_value getImageData(double x, double y, double width, double height);
     void scale(double x, double y);
     void setTransform(double a, double b, double c, double d, double e, double f);
     const char *getFont();

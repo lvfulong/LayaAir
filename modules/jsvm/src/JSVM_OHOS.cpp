@@ -394,7 +394,7 @@ Status CreateFunction(Env env, const char *utf8name, size_t length, Callback cb,
     jsvmCallback->data = data;
 
     auto status = static_cast<Status>(OH_JSVM_CreateFunction(env, utf8name, length, jsvmCallback, result));
-    if (status != jsvm::Status::OK)
+    if (status != jsvm_status::ok)
     {
         return status;
     }

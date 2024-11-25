@@ -7,19 +7,19 @@
 
 namespace jsbind
 {
-template <class T> jsvm::Value Make(T t, bool callDestructor = true)
+template <class T> jsvm_value Make(T t, bool callDestructor = true)
 {
     return internal::ValueTraits<T>::ToJs(t, callDestructor);
 }
-inline jsvm::Value MakeNull()
+inline jsvm_value MakeNull()
 {
     return internal::makeNull();
 }
-inline jsvm::Value MakeUndefined()
+inline jsvm_value MakeUndefined()
 {
     return internal::makeUndefined();
 }
-inline jsvm::Value MakeObject()
+inline jsvm_value MakeObject()
 {
     return internal::makeObject();
 }
@@ -30,13 +30,13 @@ inline jsvm::Value MakeObject()
    GET_ENV
        return ValueTraits<T>::ToCpp(value.getHandle());
 }*/
-template <typename T> T as(jsvm::Value value)
+template <typename T> T as(jsvm_value value)
 {
     DEBUG_CHECK(value != nullptr);
     GET_ENV
     return internal::ValueTraits<T>::ToCpp(value);
 }
-/*template <typename T> bool is(jsvm::Value value)
+/*template <typename T> bool is(jsvm_value value)
 {
   DEBUG_CHECK(value != nullptr);
    GET_ENV

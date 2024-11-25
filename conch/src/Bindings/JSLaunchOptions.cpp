@@ -19,7 +19,7 @@ namespace laya
 	{
 		return -1;
 	}
-	jsvm::Value JSLaunchOptions::getQuery()
+	jsvm_value JSLaunchOptions::getQuery()
 	{
 		return jsbind::MakeUndefined();
 	}
@@ -27,7 +27,7 @@ namespace laya
 	{
 		return "";
 	}
-	jsvm::Value JSLaunchOptions::getReferrerInfo()
+	jsvm_value JSLaunchOptions::getReferrerInfo()
 	{
 		return jsbind::MakeUndefined();
 	}

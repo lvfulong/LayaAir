@@ -53,21 +53,21 @@ namespace laya
 	public:
 		int getTimeGap();//获取时间戳 距离上次断开的时间
 
-		void SetOnOpen( jsvm::Value p_pFunction );
+		void SetOnOpen( jsvm_value p_pFunction );
 
-		jsvm::Value GetOnOpen();
+		jsvm_value GetOnOpen();
 
-		void SetOnMessage( jsvm::Value p_pFunction );
+		void SetOnMessage( jsvm_value p_pFunction );
 
-		jsvm::Value GetOnMessage();
+		jsvm_value GetOnMessage();
 
-		void SetOnClose( jsvm::Value p_pFunction );
+		void SetOnClose( jsvm_value p_pFunction );
 
-		jsvm::Value GetOnClose();
+		jsvm_value GetOnClose();
 
-		void SetOnError( jsvm::Value p_pFunction );
+		void SetOnError( jsvm_value p_pFunction );
 
-		jsvm::Value GetOnError();
+		jsvm_value GetOnError();
 
 		const char* getBinaryType();
 

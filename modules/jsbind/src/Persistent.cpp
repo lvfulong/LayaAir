@@ -2,14 +2,14 @@
 
 namespace jsbind
 {
-Persistent::Persistent(jsvm::Value value)
+Persistent::Persistent(jsvm_value value)
 {
     GET_ENV
-    jsvm::Status status;
+    jsvm_status status;
     if (!internal::isNull(value) && !internal::isUndefined(value))
     {
-        status = jsvm::CreateReference(env, value, 1, &ref_);
-        DEBUG_CHECK(status == jsvm::Status::OK);
+        status = jsvm_create_reference(env, value, 1, &ref_);
+        DEBUG_CHECK(status == jsvm_status::ok);
     }
 }
 
@@ -19,10 +19,10 @@ Persistent::Persistent(const Persistent &that)
     if (that.ref_ != nullptr)
     {
         ref_ = that.ref_;
-        jsvm::Status status;
+        jsvm_status status;
         uint32_t count;
-        status = jsvm::ReferenceRef(env, ref_, &count);
-        DEBUG_CHECK(status == jsvm::Status::OK);
+        status = jsvm_reference_ref(env, ref_, &count);
+        DEBUG_CHECK(status == jsvm_status::ok);
     }
 }
 
@@ -33,10 +33,10 @@ Persistent &Persistent::operator=(const Persistent &that)
     {
         reset();
         ref_ = that.ref_;
-        jsvm::Status status;
+        jsvm_status status;
         uint32_t count;
-        status = jsvm::ReferenceRef(env, ref_, &count);
-        DEBUG_CHECK(status == jsvm::Status::OK);
+        status = jsvm_reference_ref(env, ref_, &count);
+        DEBUG_CHECK(status == jsvm_status::ok);
     }
     return *this;
 }
@@ -51,14 +51,14 @@ void Persistent::reset()
     if (ref_ != nullptr)
     {
         GET_ENV
-        jsvm::Status status;
+        jsvm_status status;
         uint32_t count;
-        status = jsvm::ReferenceUnref(env, ref_, &count);
-        DEBUG_CHECK(status == jsvm::Status::OK);
+        status = jsvm_reference_unref(env, ref_, &count);
+        DEBUG_CHECK(status == jsvm_status::ok);
         if (count == 0)
         {
-            status = jsvm::DeleteReference(env, ref_);
-            DEBUG_CHECK(status == jsvm::Status::OK);
+            status = jsvm_delete_reference(env, ref_);
+            DEBUG_CHECK(status == jsvm_status::ok);
         }
         ref_ = nullptr;
     }

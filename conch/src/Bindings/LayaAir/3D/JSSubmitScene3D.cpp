@@ -13,7 +13,7 @@ namespace laya
 		JCMemorySurvey::GetInstance()->newClass("conchSubmitScene3D", 128, this);
 	}
 	//------------------------------------------------------------------------------
-	JSSubmitScene3D::JSSubmitScene3D(jsvm::Value pCallback) : ISubmit(SubmitType::ThreeDimension)
+	JSSubmitScene3D::JSSubmitScene3D(jsvm_value pCallback) : ISubmit(SubmitType::ThreeDimension)
 	{
 		m_pJSFunctionRenderSubmit = jsbind::Persistent(pCallback);
 		jsbind::AdjustAmountOfExternalAllocatedMemory(128);
@@ -42,7 +42,7 @@ namespace laya
 	{
 		jsbind::class_<JSSubmitScene3D> class_binding;
 		class_binding.constructor<>();
-		class_binding.constructor<jsvm::Value>();
+		class_binding.constructor<jsvm_value>();
 		context.class_("conchSubmitScene3D", class_binding);
 	}
 }

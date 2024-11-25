@@ -19,7 +19,7 @@ class OSOHOS : public OS
     int getSafeInsetLeft() override;
     int getSafeInsetBottom() override;
     int getSafeInsetRight() override;
-    jsvm::Value postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data) override;
+    jsvm_value postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data) override;
     std::string postSyncMessage(const std::string &eventName, const std::string &data) override;
 };
 } // namespace laya

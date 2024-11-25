@@ -20,7 +20,7 @@ namespace laya{
         JSDownloader();
         virtual ~JSDownloader();
 
-        void setJSDownloader(jsvm::Value obj);
+        void setJSDownloader(jsvm_value obj);
 
         void download(const char* pszUrl, onDownloadedFunc onok);
     };

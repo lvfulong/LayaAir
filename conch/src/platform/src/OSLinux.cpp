@@ -60,7 +60,7 @@ int OSLinux::getSafeInsetRight()
 {
     return 0;
 }
-jsvm::Value OSLinux::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
+jsvm_value OSLinux::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
     //auto isolate = v8::Isolate::GetCurrent();
     //auto context = isolate->GetCurrentContext();
@@ -76,7 +76,7 @@ jsvm::Value OSLinux::postAsyncMessage(std::weak_ptr<int> cbref, const std::strin
                 return;
             //auto isolate = v8::Isolate::GetCurrent();
             //auto context = isolate->GetCurrentContext();
-            //napi_value v = jsvm::ValueFromV8LocalValue(MakeJSValue<const char *>(message));
+            //napi_value v = jsvm_valueFromV8LocalValue(MakeJSValue<const char *>(message));
             //napi_resolve_deferred(context, deferred, v);
             promise.resolve(message);
         });
@@ -86,7 +86,7 @@ jsvm::Value OSLinux::postAsyncMessage(std::weak_ptr<int> cbref, const std::strin
         // handleAsyncMessage is called in platform os ui thread
         postToPlatform([eventName, data, cb]() { g_handleAsyncMessageCb(eventName, data, cb); });
     }
-    //return V8LocalValueFromjsvm::Value(promise);
+    //return V8LocalValueFromjsvm_value(promise);
     return promise.getHandle();
 }
 std::string OSLinux::postSyncMessage(const std::string &eventName, const std::string &data)

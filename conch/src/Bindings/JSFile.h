@@ -26,7 +26,7 @@ namespace laya
 
         void UpdateTime(time_t p_tm = 0);
 
-        jsvm::Value GetlastModifiedDate();
+        jsvm_value GetlastModifiedDate();
 
         const char *GetName();
 

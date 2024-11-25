@@ -45,7 +45,7 @@ namespace laya
 	    JCAudioManager::GetInstance()->delMp3Obj(this);
     }
     //------------------------------------------------------------------------------
-    void JSAudio::addEventListener( const char* p_sName, jsvm::Value p_pFunction )
+    void JSAudio::addEventListener( const char* p_sName, jsvm_value p_pFunction )
     {
 	    if( strcmp( p_sName,"ended" ) == 0 )
 	    {

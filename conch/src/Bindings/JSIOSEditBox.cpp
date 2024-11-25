@@ -271,7 +271,7 @@ void JSIOSEditBox::setNumberOnly( bool p_bNumberOnly )
 {
 	CToObjectCSetEditBoxNumberOnly( p_bNumberOnly );
 }
-void JSIOSEditBox::addEventListener(const char* p_sName, jsvm::Value p_pFunction)
+void JSIOSEditBox::addEventListener(const char* p_sName, jsvm_value p_pFunction)
 {
     if(strcmp(p_sName,"input")==0)
     {

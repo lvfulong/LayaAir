@@ -20,7 +20,7 @@ class ScriptThread : public laya::JCWorkerThread
     {
     }
     void _defRunLoop() override;
-    void runLoop(jsvm::Env env);
+    void runLoop(jsvm_env env);
 
     void _runLoop() override;
 
@@ -55,7 +55,7 @@ class ScriptThread : public laya::JCWorkerThread
     }
 
   private:
-    jsvm::VM m_vm;
+    jsvm_vm m_vm;
     std::vector<std::function<void(void)>> m_DbgFunction; // 调试函数
     std::mutex m_DbgFuncLock;
 

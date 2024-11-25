@@ -18,13 +18,13 @@ namespace laya
 
 	    ~JSPromiseRejectionEvent();
 
-		void setReason(jsvm::Value pObj);
+		void setReason(jsvm_value pObj);
 		
-		jsvm::Value getReason();
+		jsvm_value getReason();
 		
-		void setPromise(jsvm::Value pObj);
+		void setPromise(jsvm_value pObj);
 		
-		jsvm::Value getPromise();
+		jsvm_value getPromise();
 		
 		const char* getType();
 		

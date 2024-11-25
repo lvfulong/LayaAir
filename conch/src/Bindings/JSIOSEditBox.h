@@ -104,7 +104,7 @@ public:
 	
 	void setNumberOnly( bool p_bNumberOnly );
 	
-	void addEventListener(const char* p_sName, jsvm::Value p_pFunction );
+	void addEventListener(const char* p_sName, jsvm_value p_pFunction );
 
     void setMultiAble(bool p_bMultiAble);
     

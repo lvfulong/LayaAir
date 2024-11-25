@@ -21,9 +21,9 @@ class RTShaderPass
     RTShaderPass();
     ~RTShaderPass();
     void setCacheShader(RTDefineDatas *compileDefine, GLESShaderInstance *shader, jsbind::Persistent jsShaderInstance);
-    void setCacheShaderJS(RTDefineDatas* compileDefine, GLESShaderInstance* shader, jsvm::Value jsShaderInstanceWrapper);
+    void setCacheShaderJS(RTDefineDatas* compileDefine, GLESShaderInstance* shader, jsvm_value jsShaderInstanceWrapper);
     RTShaderPass::CacheShaderItem *getCacheShader(RTDefineDatas *compileDefine);
-    jsvm::Value getCacheShaderJS(RTDefineDatas *compileDefine);
+    jsvm_value getCacheShaderJS(RTDefineDatas *compileDefine);
     GLESShaderInstance *callCreateShaderInstanceFunction();
     void setRenderState(RenderState *value)
     {
@@ -41,7 +41,7 @@ class RTShaderPass
 
   public:
     // binds
-    void setCreateShaderInstanceFunction(jsvm::Value value);
+    void setCreateShaderInstanceFunction(jsvm_value value);
     // void createShaderInstance(RTDefineDatas *compileDefine);
 
   private:

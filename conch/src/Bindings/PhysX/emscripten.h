@@ -22,7 +22,7 @@ template <typename BaseClass> struct base
 
 namespace internal
 {
-template <typename WrapperType, typename ClassType /*, typename... */> WrapperType wrapped_new(jsvm::Value args)
+template <typename WrapperType, typename ClassType /*, typename... */> WrapperType wrapped_new(jsvm_value args)
 {
     return WrapperType(new ClassType(args));
 }
@@ -256,7 +256,7 @@ template <typename T> class wrapper : public T, public internal::WrapperBase
   public:
     typedef T class_type;
 
-    template <typename... Args> explicit wrapper(jsvm::Value wrapped, Args &&...args) : T(std::forward<Args>(args)...)
+    template <typename... Args> explicit wrapper(jsvm_value wrapped, Args &&...args) : T(std::forward<Args>(args)...)
     {
         wrapped_.reset(wrapped);
     }
@@ -274,7 +274,7 @@ template <typename T> class wrapper : public T, public internal::WrapperBase
     jsbind::Persistent wrapped_;
 };
 #define EMSCRIPTEN_WRAPPER(T)                                                                                          \
-    template <typename... Args> T(jsvm::Value v, Args &&...args) : wrapper(v, std::forward<Args>(args)...)                 \
+    template <typename... Args> T(jsvm_value v, Args &&...args) : wrapper(v, std::forward<Args>(args)...)                 \
     {                                                                                                                  \
     }
 

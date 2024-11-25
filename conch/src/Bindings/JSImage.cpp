@@ -90,27 +90,27 @@ namespace laya
     {
         return m_bComplete;
     }
-    void JSImage::SetOnload(jsvm::Value p_pFunction )
+    void JSImage::SetOnload(jsvm_value p_pFunction )
     {
 	    m_pOnLoad = jsbind::Persistent(p_pFunction);
     }
-    jsvm::Value JSImage::GetOnload()
+    jsvm_value JSImage::GetOnload()
     {
 	    return m_pOnLoad.getHandle();
     }
-    void JSImage::SetOnError(jsvm::Value p_pFunction )
+    void JSImage::SetOnError(jsvm_value p_pFunction )
     {
 	    m_pOnError = jsbind::Persistent(p_pFunction);
     }
-    jsvm::Value JSImage::GetOnError()
+    jsvm_value JSImage::GetOnError()
     {
         return m_pOnError.getHandle();
     }
-    jsvm::Value JSImage::getObj()
+    jsvm_value JSImage::getObj()
     {
         return m_pObj.getHandle();
     }
-    void JSImage::setObj(jsvm::Value obj)
+    void JSImage::setObj(jsvm_value obj)
     {
         m_pObj = jsbind::Persistent(obj);
     }
@@ -280,7 +280,7 @@ namespace laya
         m_pImage->m_bPushBitmapData = true;
         onLoaded(m_CallbackRef);
     }
-    jsvm::Value JSImage::getImageData( int p_nX,int p_nY,int p_nW,int p_nH )
+    jsvm_value JSImage::getImageData( int p_nX,int p_nY,int p_nW,int p_nH )
     {
 	    if( m_bComplete == false ) return jsbind::MakeNull();
 	    if( m_pImage == NULL ) return jsbind::MakeNull();

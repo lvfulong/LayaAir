@@ -16,7 +16,7 @@ class Promise
 
     template <typename T> void reject(T &&t) const;
 
-    jsvm::Value getHandle() const
+    jsvm_value getHandle() const
     {
         return promise_;
     }
@@ -27,19 +27,19 @@ class Promise
 
   private:
     Promise();
-    jsvm::Value promise_;
-    jsvm::Deferred deferred_;
+    jsvm_value promise_;
+    jsvm_deferred deferred_;
 };
 template <typename T> void Promise::resolve(T &&t) const
 {
     GET_ENV
-    jsvm::ResolveDeferred(env, deferred_, internal::ValueTraits<T>::ToJs(std::forward<T>(t), true));
+    jsvm_resolve_deferred(env, deferred_, internal::ValueTraits<T>::ToJs(std::forward<T>(t), true));
 }
 
 template <typename T> void Promise::reject(T &&t) const
 {
     GET_ENV
-    jsvm::RejectDeferred(env, deferred_, internal::ValueTraits<T>::ToJs(std::forward<T>(t), true));
+    jsvm_reject_deferred(env, deferred_, internal::ValueTraits<T>::ToJs(std::forward<T>(t), true));
 }
 } // namespace jsbind
 #endif

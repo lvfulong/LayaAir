@@ -12,7 +12,7 @@ namespace laya
 	public:
 		static void exportJS(jsbind::Object& context);
 		JSSubmitScene3D();
-		JSSubmitScene3D(jsvm::Value pCallback);
+		JSSubmitScene3D(jsvm_value pCallback);
 		~JSSubmitScene3D();
 		int renderSubmit() override;
 		void recycle() override;

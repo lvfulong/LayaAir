@@ -42,7 +42,7 @@ class JSVideo
 
     void AddEvent(const char *evtName);
     void RemoveEvent(const char *evtName);
-    void _setDispatchEventFunc(jsvm::Value emitFunc);
+    void _setDispatchEventFunc(jsvm_value emitFunc);
 
     void Load(const char *url);
     void Play();

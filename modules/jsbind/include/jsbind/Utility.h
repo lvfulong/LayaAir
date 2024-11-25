@@ -224,7 +224,7 @@ template <typename T> constexpr type_info type_id()
 namespace internal
 {
 extern void addDeinitializer(std::function<void()> func);
-template <typename ClassType> static void destructor(jsvm::Env env, void *nativeObject, void * /*finalize_hint*/);
+template <typename ClassType> static void destructor(jsvm_env env, void *nativeObject, void * /*finalize_hint*/);
 template <typename ClassType> void raw_destructor(ClassType *pointer)
 {
     delete pointer;

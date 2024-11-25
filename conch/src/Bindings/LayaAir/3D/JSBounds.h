@@ -25,9 +25,9 @@ namespace laya
 		const Vector3& getCenter();
 		void setExtent();
 		void getExtent();
-		void _tranformJS(jsvm::Value out);
+		void _tranformJS(jsvm_value out);
 		void _tranform(const Matrix4x4& matrix, JSBounds& out);
-		void cloneTo(jsvm::Value destBounds);
+		void cloneTo(jsvm_value destBounds);
 		void getBoundBox();
 	public:
 		const BoundBox& _getBoundBox();

@@ -8,9 +8,9 @@ namespace jsbind
 class StringLatin1
 {
   public:
-    static StringLatin1 Make(jsvm::Value value);
+    static StringLatin1 Make(jsvm_value value);
     static StringLatin1 Make(const std::string &value);
-    jsvm::Value getHandle() const
+    jsvm_value getHandle() const
     {
         return handle_;
     }
@@ -29,10 +29,10 @@ class StringLatin1
 
   private:
     StringLatin1() = default;
-    StringLatin1(jsvm::Value date, const std::string &value) : handle_(date), value_(value)
+    StringLatin1(jsvm_value date, const std::string &value) : handle_(date), value_(value)
     {
     }
-    jsvm::Value handle_ = nullptr;
+    jsvm_value handle_ = nullptr;
     std::string value_;
 };
 

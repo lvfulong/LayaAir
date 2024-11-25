@@ -5,7 +5,7 @@ namespace jsvm
 
     void ScriptThread::_defRunLoop()
     {}
-    void ScriptThread::runLoop(jsvm::Env env)
+    void ScriptThread::runLoop(jsvm_env env)
     {
 #ifdef OS_WINDOWS
     {
@@ -23,15 +23,15 @@ namespace jsvm
     startEvt->m_nID = JCWorkerThread::Event_threadStart;
     emit(startEvt);
     JCWorkerThread::runObj task;
-    jsvm::Status status;
+    jsvm_status status;
     while (!m_bStop)
     {
         // v8::HandleScope handle_scope(isolate);
         // v8::TryCatch trycatch(isolate);
 
-        jsvm::HandleScope scope;
-        status = jsvm::OpenHandleScope(env, &scope);
-        DEBUG_CHECK(status == jsvm::Status::OK);
+        jsvm_handle_scope scope;
+        status = jsvm_open_handle_scope(env, &scope);
+        DEBUG_CHECK(status == jsvm_status::ok);
         if (!m_funcLoop)
         {
             // 现在的waitdata返回false不再表示要退出。事件唤醒流程
@@ -49,12 +49,12 @@ namespace jsvm
             bool result = false;
             do
             {
-                status = jsvm::PumpMessageLoop(m_vm, &result);
-                DEBUG_CHECK(status == jsvm::Status::OK);
+                status = jsvm_pump_messageloop(m_vm, &result);
+                DEBUG_CHECK(status == jsvm_status::ok);
             } while (result);
 
-            status = jsvm::PerformMicrotaskCheckpoint(m_vm);
-            DEBUG_CHECK(status == jsvm::Status::OK);
+            status = jsvm_perform_microtask_checkpoint(m_vm);
+            DEBUG_CHECK(status == jsvm_status::ok);
             // 固定循环流程
             runQueue();
             if (!m_funcLoop())
@@ -62,8 +62,8 @@ namespace jsvm
                 break;
             }
         }
-        status = jsvm::CloseHandleScope(env, scope);
-        DEBUG_CHECK(status == jsvm::Status::OK);
+        status = jsvm_close_handle_scope(env, scope);
+        DEBUG_CHECK(status == jsvm_status::ok);
         /*if (trycatch.HasCaught())
         {
             v8::Isolate *piso = v8::Isolate::GetCurrent();
@@ -88,7 +88,7 @@ void ScriptThread::_runLoop()
     // m_pJS->run(call_JSThread__defRunLoop, this);
     // m_pJS->uninitJSEngine();
    
-    jsvm::InitOptions initOptions;
+    jsvm_init_options initOptions;
     memset(&initOptions, 0, sizeof(initOptions));
     static int argc = 2;
     initOptions.argc = &argc;
@@ -104,28 +104,28 @@ void ScriptThread::_runLoop()
     {
         s_bSVMInit = true;
         // 初始化JavaScript引擎实例
-        jsvm::Init(&initOptions);
+        jsvm_init(&initOptions);
     }
-    jsvm::CreateVMOptions options;
+    jsvm_create_vm_options options;
     memset(&options, 0, sizeof(options));
     // 创建JavaScript引擎实例
-    jsvm::CreateVM(&options, &m_vm);
-    jsvm::VMScope vmScope;
+    jsvm_create_vm(&options, &m_vm);
+    jsvm_vm_scope vmScope;
     // 打开一个新的VM scope，引擎实例只能在scope范围内使用，可以保证引擎实例不被销毁
-    jsvm::OpenVMScope(m_vm, &vmScope);
-    jsvm::Env env;
+    jsvm_open_vm_scope(m_vm, &vmScope);
+    jsvm_env env;
     // 创建一个新的JS执行上下文环境，并注册指定的Native函数
-    // jsvm::Status res = jsvm::CreateEnv(vm, sizeof(descriptor) / sizeof(descriptor[0]), descriptor, &env);
-    jsvm::Status res = jsvm::CreateEnv(m_vm, 0, nullptr, &env);
+    // jsvm_status res = jsvm::CreateEnv(vm, sizeof(descriptor) / sizeof(descriptor[0]), descriptor, &env);
+    jsvm_status res = jsvm_create_env(m_vm, 0, nullptr, &env);
     // if (res != JSVM_OK) {
     //     OH_LOG_INFO(LOG_APP, "JSVM API OH_JSVM_CreateEnv failed res is %{public}d", static_cast<int>(res));
     // }
-    jsvm::EnvScope envScope;
+    jsvm_env_scope envScope;
     // 打开一个新的Env scope，Env只能在scope范围内使用
-    jsvm::OpenEnvScope(env, &envScope);
-    jsvm::HandleScope handleScope;
+    jsvm_open_env_scope(env, &envScope);
+    jsvm_handle_scope handleScope;
     // 打开一个Handle scope
-    jsvm::OpenHandleScope(env, &handleScope);
+    jsvm_open_handle_scope(env, &handleScope);
 
 
   
@@ -139,10 +139,10 @@ void ScriptThread::_runLoop()
         // printf("Exception info [%s]\n", *exceptioninfo);
     }
 
-    jsvm::CloseHandleScope(env, handleScope); // 关闭Handle scope
-    jsvm::CloseEnvScope(env, envScope);       // 关闭Env scope
-    jsvm::CloseVMScope(m_vm, vmScope);        // 关闭VM scope
-    jsvm::DestroyEnv(env);                    // 销毁一个JS执行上下文环境
-    jsvm::DestroyVM(m_vm);                    // 销毁JavaScript引擎实例
+    jsvm_close_handle_scope(env, handleScope); // 关闭Handle scope
+    jsvm_close_env_scope(env, envScope);       // 关闭Env scope
+    jsvm_close_vm_scope(m_vm, vmScope);        // 关闭VM scope
+    jsvm_destroy_env(env);                    // 销毁一个JS执行上下文环境
+    jsvm_destroy_vm(m_vm);                    // 销毁JavaScript引擎实例
 }
 } // namespace laya

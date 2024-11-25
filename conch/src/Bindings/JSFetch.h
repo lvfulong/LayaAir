@@ -46,7 +46,7 @@
 //        Fetch();
 //        ~Fetch();
 //
-//        void fetch(const char* p_sUrl, const jsvm::Value& p_jsInit, const jsvm::Value& p_jsOnResolve, const jsvm::Value& p_jsOnReject);
+//        void fetch(const char* p_sUrl, const jsvm_value& p_jsInit, const jsvm_value& p_jsOnResolve, const jsvm_value& p_jsOnReject);
 //        
 //        void abort();
 //        

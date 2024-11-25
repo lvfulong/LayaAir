@@ -8,9 +8,9 @@ namespace jsbind
 class Date
 {
   public:
-    static Date Make(jsvm::Value value);
+    static Date Make(jsvm_value value);
     static Date Make(double value);
-    jsvm::Value getHandle() const
+    jsvm_value getHandle() const
     {
         return handle_;
     }
@@ -21,10 +21,10 @@ class Date
 
   private:
     Date() = default;
-    Date(jsvm::Value date, double value) : handle_(date), value_(value)
+    Date(jsvm_value date, double value) : handle_(date), value_(value)
     {
     }
-    jsvm::Value handle_ = nullptr;
+    jsvm_value handle_ = nullptr;
     double value_;
 };
 

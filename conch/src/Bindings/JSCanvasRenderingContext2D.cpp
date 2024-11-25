@@ -35,7 +35,7 @@ void JSCanvasRenderingContext2D::strokeText(const char *text, double x, double y
 {
     m_context->strokeText(text, x, y, maxWidth);
 }
-jsvm::Value JSCanvasRenderingContext2D::measureText(const std::string &text)
+jsvm_value JSCanvasRenderingContext2D::measureText(const std::string &text)
 {
     TextMetrics metrics = m_context->measureText(text);
     TextMetrics *copy = new TextMetrics(metrics);
@@ -57,7 +57,7 @@ void JSCanvasRenderingContext2D::restore()
 {
     m_context->restore();
 }
-jsvm::Value JSCanvasRenderingContext2D::getImageData(double x, double y, double width, double height)
+jsvm_value JSCanvasRenderingContext2D::getImageData(double x, double y, double width, double height)
 {
     ImageData data = m_context->getImageData(x, y, width, height);
     ImageData *copy = new ImageData(std::move(data));

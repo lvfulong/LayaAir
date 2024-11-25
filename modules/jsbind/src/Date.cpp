@@ -3,7 +3,7 @@
 
 namespace jsbind
 {
-Date Date::Make(jsvm::Value value)
+Date Date::Make(jsvm_value value)
 {
     return Date(value, internal::getDate(value));
 }

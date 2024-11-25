@@ -3,7 +3,7 @@
 
 namespace jsbind
 {
-StringLatin1 StringLatin1::Make(jsvm::Value value)
+StringLatin1 StringLatin1::Make(jsvm_value value)
 {
     return StringLatin1(value, internal::getStringLatin1(value));
 }

@@ -161,42 +161,42 @@ namespace laya
         return false;
     }
     //------------------------------------------------------------------------------
-    void JSWebSocket::SetOnOpen(jsvm::Value p_pFunction)
+    void JSWebSocket::SetOnOpen(jsvm_value p_pFunction)
     {
         m_pJSFunctionOnOpen = jsbind::Persistent(p_pFunction);
     }
     //------------------------------------------------------------------------------
-    jsvm::Value JSWebSocket::GetOnOpen()
+    jsvm_value JSWebSocket::GetOnOpen()
     {
         return m_pJSFunctionOnOpen.getHandle();
     }
     //------------------------------------------------------------------------------
-    void JSWebSocket::SetOnMessage(jsvm::Value p_pFunction)
+    void JSWebSocket::SetOnMessage(jsvm_value p_pFunction)
     {
         m_pJSFunctionOnMessage = jsbind::Persistent(p_pFunction);
     }
     //------------------------------------------------------------------------------
-    jsvm::Value JSWebSocket::GetOnMessage()
+    jsvm_value JSWebSocket::GetOnMessage()
     {
         return m_pJSFunctionOnMessage.getHandle();
     }
     //------------------------------------------------------------------------------
-    void JSWebSocket::SetOnClose(jsvm::Value function)
+    void JSWebSocket::SetOnClose(jsvm_value function)
     {
         m_pJSFunctionOnClose = jsbind::Persistent(function);
     }
     //------------------------------------------------------------------------------
-    jsvm::Value JSWebSocket::GetOnClose()
+    jsvm_value JSWebSocket::GetOnClose()
     {
         return m_pJSFunctionOnClose.getHandle();
     }
     //------------------------------------------------------------------------------
-    void JSWebSocket::SetOnError(jsvm::Value function)
+    void JSWebSocket::SetOnError(jsvm_value function)
     {
         m_pJSFunctionOnError = jsbind::Persistent(function);
     }
     //------------------------------------------------------------------------------
-    jsvm::Value JSWebSocket::GetOnError()
+    jsvm_value JSWebSocket::GetOnError()
     {
         return m_pJSFunctionOnError.getHandle();
     }

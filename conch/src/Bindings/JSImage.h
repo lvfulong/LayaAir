@@ -33,17 +33,17 @@ namespace laya
 
 		void onErrorCallJSFunction( int p_nError,std::weak_ptr<int> callbackref);
         
-        void setObj(jsvm::Value p_pFunction);
+        void setObj(jsvm_value p_pFunction);
         
-        jsvm::Value getObj();
+        jsvm_value getObj();
 
-		void SetOnload(jsvm::Value p_pFunction );
+		void SetOnload(jsvm_value p_pFunction );
 
-		jsvm::Value GetOnload();
+		jsvm_value GetOnload();
 
-		void SetOnError(jsvm::Value p_pFunction );
+		void SetOnError(jsvm_value p_pFunction );
 
-		jsvm::Value GetOnError();
+		jsvm_value GetOnError();
 
 		int GetWidth();
 
@@ -55,7 +55,7 @@ namespace laya
 
         bool getComplete();
 
-		jsvm::Value getImageData( int p_nX,int p_nY,int p_nW,int p_nH );
+		jsvm_value getImageData( int p_nX,int p_nY,int p_nW,int p_nH );
 
         bool syncRestoreResource();
 

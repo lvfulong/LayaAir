@@ -3,30 +3,30 @@
 #include <utils/Log.h>
 namespace jsbind
 {
-void reportError(jsvm::Env env, jsvm::Status res)
+void reportError(jsvm_env env, jsvm_status res)
 {
-    jsvm::Value exceptionValue;
-    jsvm::Status status = jsvm::GetAndClearLastException(env, &exceptionValue);
-    DEBUG_CHECK(status == jsvm::Status::OK);
-    if (status == jsvm::Status::OK)
+    jsvm_value exceptionValue;
+    jsvm_status status = jsvm_get_and_clear_last_exception(env, &exceptionValue);
+    DEBUG_CHECK(status == jsvm_status::ok);
+    if (status == jsvm_status::ok)
     {
-        jsvm::Value message;
-        status = jsvm::GetNamedProperty(env, exceptionValue, "message", &message);
-        DEBUG_CHECK(status == jsvm::Status::OK);
+        jsvm_value message;
+        status = jsvm_get_named_property(env, exceptionValue, "message", &message);
+        DEBUG_CHECK(status == jsvm_status::ok);
         size_t length;
-        status = jsvm::GetValueStringUtf8(env, message, nullptr, 0, &length);
-        DEBUG_CHECK(status == jsvm::Status::OK);
+        status = jsvm_get_value_string_utf8(env, message, nullptr, 0, &length);
+        DEBUG_CHECK(status == jsvm_status::ok);
         char *buffer = new char[length + 1];
-        status = jsvm::GetValueStringUtf8(env, message, buffer, length + 1, nullptr);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        status = jsvm::ThrowError(env, std::to_string(static_cast<int>(status)).c_str(), buffer);
-        DEBUG_CHECK(status == jsvm::Status::OK);
+        status = jsvm_get_value_string_utf8(env, message, buffer, length + 1, nullptr);
+        DEBUG_CHECK(status == jsvm_status::ok);
+        status = jsvm_throw_error(env, std::to_string(static_cast<int>(status)).c_str(), buffer);
+        DEBUG_CHECK(status == jsvm_status::ok);
         LOGE("jsvm failed Error code:  %s", buffer);
         delete[] buffer;
     }
     else
     {
-        jsvm::ThrowError(env, std::to_string(static_cast<int>(status)).c_str(), nullptr);
+        jsvm_throw_error(env, std::to_string(static_cast<int>(status)).c_str(), nullptr);
         LOGE("jsvm failed Error code:  %d", static_cast<int>(res));
     }
 

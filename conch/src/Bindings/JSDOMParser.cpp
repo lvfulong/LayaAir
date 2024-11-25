@@ -24,7 +24,7 @@ namespace laya
             jsDOC = NULL;
         }
     }
-    jsvm::Value JSDOMParser::parseFromString(const char *str, const char *type)
+    jsvm_value JSDOMParser::parseFromString(const char *str, const char *type)
     {
         jsDOC = new JSXmlDocument();
         jsDOC->parse(str);
@@ -65,19 +65,19 @@ namespace laya
         pRes->setOnReadyCB(std::bind(JSDOM_onDownloadOK, this, std::placeholders::_1, cbref));
         pRes->setOnErrorCB(std::bind(JSDOM_onDownloadError, this, std::placeholders::_1, std::placeholders::_2, cbref));
     }
-    void JSDOMParser::SetOnload(jsvm::Value p_pFunction)
+    void JSDOMParser::SetOnload(jsvm_value p_pFunction)
     {
         m_pOnLoadJSFunction = jsbind::Persistent(p_pFunction);
     }
-    jsvm::Value JSDOMParser::GetOnload()
+    jsvm_value JSDOMParser::GetOnload()
     {
         return m_pOnLoadJSFunction.getHandle();
     }
-    void JSDOMParser::SetOnError(jsvm::Value p_pFunction)
+    void JSDOMParser::SetOnError(jsvm_value p_pFunction)
     {
         m_pOnErrorJSFunction = jsbind::Persistent(p_pFunction);
     }
-    jsvm::Value JSDOMParser::GetOnError()
+    jsvm_value JSDOMParser::GetOnError()
     {
         return m_pOnErrorJSFunction.getHandle();
     }
@@ -94,7 +94,7 @@ namespace laya
         if (!callbackref.lock()) return;
         m_pOnErrorJSFunction.call<void>(jsbind::toLocal(this), e);
     }
-    jsvm::Value JSDOMParser::getXml()
+    jsvm_value JSDOMParser::getXml()
     {
         return jsbind::Make<JSXmlDocument*>(jsDOC);
     }

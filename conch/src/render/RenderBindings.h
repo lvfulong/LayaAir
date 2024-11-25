@@ -63,7 +63,7 @@ namespace jsbind
             memcpy(mat.elements, ab.getData(), sizeof(float) * 9);
             return mat;
         }
-        static jsvm::Value ToJs(const laya::Matrix3x3& p_vl, bool callDestructor)
+        static jsvm_value ToJs(const laya::Matrix3x3& p_vl, bool callDestructor)
         {
             DEBUG_CHECK(false && "not implemented");
             return jsbind::MakeUndefined();
@@ -82,7 +82,7 @@ namespace jsbind
             memcpy(mat.elements, ab.getData(), sizeof(float) * 16);
             return mat;
         }
-        static jsvm::Value ToJs(const laya::Matrix4x4& p_vl,bool callDestructor)
+        static jsvm_value ToJs(const laya::Matrix4x4& p_vl,bool callDestructor)
         {
             DEBUG_CHECK(false && "not implemented");
             return jsbind::MakeUndefined();
@@ -337,7 +337,7 @@ class RenderBindings
             class_binding.function("createTexture3DInternal", &GLTextureContext::createTexture3DInternal);
             class_binding.function_optional_override(
                 "setTexture3DImageData",
-                jsbind::optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, jsvm::Value jsSources,
+                jsbind::optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, jsvm_value jsSources,
                                      int depth, bool premultiplyAlpha, bool invertY) {
                     std::vector<JSImage *> sources = jsbind::as<std::vector<JSImage *>>(jsSources);
                     ctx.setTexture3DImageData(texture, sources, depth, premultiplyAlpha, invertY);
@@ -943,7 +943,7 @@ class RenderBindings
             // class_binding.function("getOwnerDefineData", &GLESShaderData::getOwnerDefineDataJS);
             class_binding.function("setBool", &GLESShaderData::setBool);
             class_binding.function_optional_override(
-                "getBool", jsbind::optional_override([](GLESShaderData &ctx, int32_t index) -> jsvm::Value {
+                "getBool", jsbind::optional_override([](GLESShaderData &ctx, int32_t index) -> jsvm_value {
                     bool *ret = ctx.getBool(index);
                     if (ret != nullptr)
                     {
@@ -956,7 +956,7 @@ class RenderBindings
                 }));
             class_binding.function("setInt", &GLESShaderData::setInt);
             class_binding.function_optional_override(
-                "getInt", jsbind::optional_override([](GLESShaderData &ctx, int32_t index) -> jsvm::Value {
+                "getInt", jsbind::optional_override([](GLESShaderData &ctx, int32_t index) -> jsvm_value {
                     int *ret = ctx.getInt(index);
                     if (ret != nullptr)
                     {
@@ -969,7 +969,7 @@ class RenderBindings
                 }));
             class_binding.function("setNumber", &GLESShaderData::setNumber);
             class_binding.function_optional_override(
-                "getNumber", jsbind::optional_override([](GLESShaderData &ctx, int32_t index) -> jsvm::Value {
+                "getNumber", jsbind::optional_override([](GLESShaderData &ctx, int32_t index) -> jsvm_value {
                     float *ret = ctx.getNumber(index);
                     if (ret != nullptr)
                     {

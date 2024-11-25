@@ -53,7 +53,7 @@ namespace laya
 	
 	    bool get_Visible();
 
-        void addEventListener(const char* p_sName,jsvm::Value p_pFunction );
+        void addEventListener(const char* p_sName,jsvm_value p_pFunction );
         void setSelectionRange(int start,int end);
 
         void onInputCallJSFunction(std::weak_ptr<int> callbackref);

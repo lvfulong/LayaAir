@@ -64,7 +64,7 @@ class GLESShaderData //: public ResourceBase<ShaderData>
     void destroy();
 
     //RTDefineDatas *getOwnerDefineData();
-    //jsvm::Value getOwnerDefineDataJS();
+    //jsvm_value getOwnerDefineDataJS();
     void addDefine(RTShaderDefine define);
     void addDefines(RTDefineDatas *defines);
     void removeDefine(RTShaderDefine define);

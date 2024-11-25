@@ -36,7 +36,7 @@ JSAndroidEditBox::~JSAndroidEditBox()
     JCMemorySurvey::GetInstance()->releaseClass( "AndroidEditBox",this );
 }
 //------------------------------------------------------------------------------
-void JSAndroidEditBox::addEventListener(const char* p_sName, jsvm::Value p_pFunction )
+void JSAndroidEditBox::addEventListener(const char* p_sName, jsvm_value p_pFunction )
 {
     if(strcmp( p_sName,"input" ) == 0)
     {

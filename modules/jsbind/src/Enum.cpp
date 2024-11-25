@@ -5,10 +5,10 @@ Enum_::Enum_(Object *owner, std::string_view name) : owner_(owner), name_(name)
 {
 
     GET_ENV
-    jsvm::Status status;
-    jsvm::Value result;
-    status = jsvm::CreateObject(env, &result);
-    DEBUG_CHECK(status == jsvm::Status::OK);
+    jsvm_status status;
+    jsvm_value result;
+    status = jsvm_create_object(env, &result);
+    DEBUG_CHECK(status == jsvm_status::ok);
     object_ = std::make_unique<Object>(result);
 
     // lvtodo owner_->submodule(name_, *module_);

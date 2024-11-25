@@ -17,19 +17,19 @@ namespace laya
 		m_pPromise.reset();
 	    JCMemorySurvey::GetInstance()->releaseClass( "JSPromiseRejectionEvent",this );
     }
-    jsvm::Value JSPromiseRejectionEvent::getReason()
+    jsvm_value JSPromiseRejectionEvent::getReason()
     {
 	    return m_pReason.getHandle();
     }
-    jsvm::Value JSPromiseRejectionEvent::getPromise()
+    jsvm_value JSPromiseRejectionEvent::getPromise()
     {
         return m_pPromise.getHandle();
     }
-	void JSPromiseRejectionEvent::setReason(jsvm::Value pObj)
+	void JSPromiseRejectionEvent::setReason(jsvm_value pObj)
 	{
 		m_pReason = jsbind::Persistent(pObj);
 	}
-	void JSPromiseRejectionEvent::setPromise(jsvm::Value pObj)
+	void JSPromiseRejectionEvent::setPromise(jsvm_value pObj)
 	{
 		m_pPromise = jsbind::Persistent(pObj);
 	}

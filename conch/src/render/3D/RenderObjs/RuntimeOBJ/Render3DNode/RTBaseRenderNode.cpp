@@ -127,11 +127,11 @@ bool RTBaseRenderNode::_needRender(BoundFrustum *pBoundFrustum)
     else
         return true;
 }
-void RTBaseRenderNode::setRenderUpdatePre(jsvm::Value function)
+void RTBaseRenderNode::setRenderUpdatePre(jsvm_value function)
 {
     m_JSFunctionRenderUpdatePre = jsbind::Persistent(function);
 }
-void RTBaseRenderNode::setCalculateBoundingBox(jsvm::Value function)
+void RTBaseRenderNode::setCalculateBoundingBox(jsvm_value function)
 {
     m_JSFunctionCalculateBoundingBox = jsbind::Persistent(function);
 }

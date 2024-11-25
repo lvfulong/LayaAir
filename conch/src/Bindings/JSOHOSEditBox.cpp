@@ -32,7 +32,7 @@ namespace laya{
         //JCMemorySurvey::GetInstance()->releaseClass("OHOSEditBox",this);
         aki::JSBind::GetJSFunction("EditBox.remove")->Invoke<void>(m_tag);
     }
-    void JSOHOSEditBox::addEventListener(const char* p_sName, jsvm::Value p_pFunction){
+    void JSOHOSEditBox::addEventListener(const char* p_sName, jsvm_value p_pFunction){
         if(strcmp(p_sName,"input") == 0)
         {
             m_pJSFunctionOnInput = jsbind::Persistent(p_pFunction);

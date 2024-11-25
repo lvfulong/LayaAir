@@ -20,11 +20,11 @@ namespace laya
 
 		int getScene();
 
-		jsvm::Value getQuery();
+		jsvm_value getQuery();
 
 		const char* getShareTicket();
 
-		jsvm::Value getReferrerInfo();
+		jsvm_value getReferrerInfo();
     };
 }
 #endif

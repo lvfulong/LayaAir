@@ -20,28 +20,28 @@ namespace laya
 	    
     public:
 
-        static void setOnFrameFunction( jsvm::Value p_pFunction );
-        static void setOnDrawFunction(jsvm::Value p_pFunction);
+        static void setOnFrameFunction( jsvm_value p_pFunction );
+        static void setOnDrawFunction(jsvm_value p_pFunction);
 
-        static void setOnResizeFunction(jsvm::Value p_onresize);
+        static void setOnResizeFunction(jsvm_value p_onresize);
 
-        static void setOnBlurFunction(jsvm::Value p_pFunction);
+        static void setOnBlurFunction(jsvm_value p_pFunction);
         
-        static void setOnFocusFunction(jsvm::Value p_pFunction);
+        static void setOnFocusFunction(jsvm_value p_pFunction);
         
-        static void setHref(jsvm::Value p_sHref);
+        static void setHref(jsvm_value p_sHref);
 
-        static void setMouseEvtFunction(jsvm::Value p_pFunction);
+        static void setMouseEvtFunction(jsvm_value p_pFunction);
 
-        static void setTouchEvtFunction(jsvm::Value p_pFunction);
+        static void setTouchEvtFunction(jsvm_value p_pFunction);
 
-        static void setDeviceMotionEvtFunction(jsvm::Value p_pFunction);
+        static void setDeviceMotionEvtFunction(jsvm_value p_pFunction);
 
-        static void captureScreen(jsvm::Value p_pFunction);
+        static void captureScreen(jsvm_value p_pFunction);
 
-        static void setKeyEvtFunction(jsvm::Value p_pFunction);
+        static void setKeyEvtFunction(jsvm_value p_pFunction);
 
-        static void setNetworkEvtFunction(jsvm::Value p_pFunction);
+        static void setNetworkEvtFunction(jsvm_value p_pFunction);
 
         static void setScreenWakeLock(bool bWakeLock);
 
@@ -53,19 +53,19 @@ namespace laya
 
         static bool saveAsJpeg(jsbind::ArrayBuffer arrayBuffer, int w, int h, const char* p_pszFile);
         
-        static jsvm::Value convertBitmapToPng(jsbind::ArrayBuffer arrayBuffer, int w, int h);
+        static jsvm_value convertBitmapToPng(jsbind::ArrayBuffer arrayBuffer, int w, int h);
         
-        static jsvm::Value convertBitmapToJpeg(jsbind::ArrayBuffer arrayBuffer, int w, int h);
+        static jsvm_value convertBitmapToJpeg(jsbind::ArrayBuffer arrayBuffer, int w, int h);
 
-        static void setGetWorldTransformFunction(jsvm::Value p_pFunction);
+        static void setGetWorldTransformFunction(jsvm_value p_pFunction);
 
-        static void setSetWorldTransformFunction(jsvm::Value p_pFunction);
+        static void setSetWorldTransformFunction(jsvm_value p_pFunction);
 
-		static void setBulletDrawLineFunction(jsvm::Value p_pFunction);
+		static void setBulletDrawLineFunction(jsvm_value p_pFunction);
 
-		static void setBulletClearLineFunction(jsvm::Value p_pFunction);
+		static void setBulletClearLineFunction(jsvm_value p_pFunction);
 		
-        static void setZipPackage(jsvm::Value p_pFunction);
+        static void setZipPackage(jsvm_value p_pFunction);
 
 		static int getSafeInsetTop();
 
@@ -75,32 +75,32 @@ namespace laya
 
 		static int GetSafeInsetRight();
 
-		static jsvm::Value getLaunchOptionsSync();
+		static jsvm_value getLaunchOptionsSync();
 
-		static void setOnUnhandledRejection(jsvm::Value p_pFunction);
+		static void setOnUnhandledRejection(jsvm_value p_pFunction);
 
-		static jsvm::Value getOnUnhandledRejection();
+		static jsvm_value getOnUnhandledRejection();
 
-		static void setScreenOrientation(const char* p_strOrientation, jsvm::Value p_pFunction);
+		static void setScreenOrientation(const char* p_strOrientation, jsvm_value p_pFunction);
 
-		static void setGlobalRepaint(jsvm::Value p_pFunction);
+		static void setGlobalRepaint(jsvm_value p_pFunction);
 
 		static void setGlobalRepaintCall();
 
-		static void computeSubSkinnedDataForNative(jsvm::Value inverseBindPosesBuffer, jsvm::Value boneIndices, jsvm::Value subData, jsvm::Value skinnedMatrixCaches, jsvm::Value bonesTransform, jsvm::Value skinnedDataLoopMarks, jsvm::Value skinnedData);
+		static void computeSubSkinnedDataForNative(jsvm_value inverseBindPosesBuffer, jsvm_value boneIndices, jsvm_value subData, jsvm_value skinnedMatrixCaches, jsvm_value bonesTransform, jsvm_value skinnedDataLoopMarks, jsvm_value skinnedData);
 
         static bool registerFont(const std::string& family, jsbind::Local pathOrArrayBuffer);
 
-        static void downloadFile(const std::string& url, jsvm::Value onProgress, jsvm::Value onComplete, jsvm::Value onError);
-        static void setDownloader(jsvm::Value obj);
+        static void downloadFile(const std::string& url, jsvm_value onProgress, jsvm_value onComplete, jsvm_value onError);
+        static void setDownloader(jsvm_value obj);
 
-        static jsvm::Value postAsyncMessage(const std::string &eventName, const std::string &data);
+        static jsvm_value postAsyncMessage(const std::string &eventName, const std::string &data);
         static std::string postSyncMessage(const std::string &eventName, const std::string &data);
     public:
 
-        static jsvm::Value readFileFromAsset(const char* file, const char* encode);
+        static jsvm_value readFileFromAsset(const char* file, const char* encode);
 
-        static jsvm::Value strTobufer(const char* s);
+        static jsvm_value strTobufer(const char* s);
 
         static const char* callMethod(int objid,bool isSyn,const char*clsName, const char* methodName, const char* paramStr);
 
@@ -112,7 +112,7 @@ namespace laya
 
 	    static void exit();
 
-        static jsvm::Value createArrayBufferRef(jsbind::ArrayBuffer arrayBuffer, int nType, bool bSyncToRender, int nRefType);
+        static jsvm_value createArrayBufferRef(jsbind::ArrayBuffer arrayBuffer, int nType, bool bSyncToRender, int nRefType);
         
 
         static std::string m_strReturn;

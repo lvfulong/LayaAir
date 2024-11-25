@@ -14,14 +14,14 @@ namespace laya
 		static void exportJS(jsbind::Object& context);
 		JSDOMParser();
 		~JSDOMParser();
-		jsvm::Value parseFromString(const char * str,const char *type);
+		jsvm_value parseFromString(const char * str,const char *type);
 		const char* getSrc();
 		void setSrc( const char* p_sSrc );
-		void SetOnload( jsvm::Value p_pFunction );
-		jsvm::Value GetOnload();
-		void SetOnError( jsvm::Value p_pFunction );
-		jsvm::Value GetOnError();
-		jsvm::Value getXml();
+		void SetOnload( jsvm_value p_pFunction );
+		jsvm_value GetOnload();
+		void SetOnError( jsvm_value p_pFunction );
+		jsvm_value GetOnError();
+		jsvm_value getXml();
 	public:
 		void onLoadedCallJSFunction(std::string& str,std::weak_ptr<int>& callbackref);
 		void onErrorCallJSFunction( int e , std::weak_ptr<int>& callbackref);

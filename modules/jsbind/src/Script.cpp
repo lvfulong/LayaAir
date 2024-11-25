@@ -4,17 +4,17 @@
 
 namespace jsbind
 {
-jsvm::Value runScript(const std::string &code)
+jsvm_value runScript(const std::string &code)
 {
     GET_ENV
-    jsvm::Value script;
-    jsvm::Status status;
-    status = jsvm::CreateStringUtf8(env, code.c_str(), code.length(), &script);
-    DEBUG_CHECK(status == jsvm::Status::OK);
+    jsvm_value script;
+    jsvm_status status;
+    status = jsvm_create_string_utf8(env, code.c_str(), code.length(), &script);
+    DEBUG_CHECK(status == jsvm_status::ok);
 
-    jsvm::Value result;
-    status = jsvm::RunScript(env, script, &result);
-    if (status != jsvm::Status::OK)
+    jsvm_value result;
+    status = jsvm_run_script(env, script, &result);
+    if (status != jsvm_status::ok)
     {
         reportError(env, status);
     }

@@ -31,7 +31,7 @@ class GLESCommandUniformMap
 
     static GLESCommandUniformMap *createGlobalUniformMap(const char *blockName);
 
-    static jsvm::Value createGlobalUniformMapJS(const char *blockName);
+    static jsvm_value createGlobalUniformMapJS(const char *blockName);
 
     GLESCommandUniformMap(const char *stateName)
     {

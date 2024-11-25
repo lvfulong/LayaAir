@@ -77,7 +77,7 @@ namespace laya
                 m_i64Size = p_iLen;
             }
         }
-        jsvm::Value slice(uint64_t p_iBegin = 0, uint64_t p_iEnd = -1)
+        jsvm_value slice(uint64_t p_iBegin = 0, uint64_t p_iEnd = -1)
         {
             return jsbind::MakeNull();
         }

@@ -63,7 +63,7 @@ class JSOHOSEditBox
         void setType(const char* p_sType);
         void setRegular(const char* p_sRegular);
         void setNumberOnly(bool p_bNumberOnly);
-        void addEventListener(const char* p_sName, jsvm::Value p_pFunction);
+        void addEventListener(const char* p_sName, jsvm_value p_pFunction);
         void setMultiAble(bool p_bMultiAble);
         void onInputCallJSFunction(std::weak_ptr<int> callbackref);
         void onInput();

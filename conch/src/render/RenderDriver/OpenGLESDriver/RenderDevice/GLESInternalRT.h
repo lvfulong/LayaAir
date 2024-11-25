@@ -35,8 +35,8 @@ class GLESInternalRT : public GLObject
     {
         return -m_isCube;
     }
-    //jsvm::Value getDepthTexture();
-   // jsvm::Value getTextures();
+    //jsvm_value getDepthTexture();
+   // jsvm_value getTextures();
 private:
     void _changeTexMemory(int byteLength);
   public:

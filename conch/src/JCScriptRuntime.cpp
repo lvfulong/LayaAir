@@ -90,7 +90,7 @@ namespace laya
         ffplay::VideoPlayer::init();
 #endif
     }
-    static void onUnhandledRejection(jsvm::Value pPromise, jsvm::Value pReason, const char* type)
+    static void onUnhandledRejection(jsvm_value pPromise, jsvm_value pReason, const char* type)
     {
 #ifdef JS_V8
         JSPromiseRejectionEvent* event = new JSPromiseRejectionEvent;
@@ -159,9 +159,9 @@ namespace laya
 #ifdef JS_V8_DEBUGGER
         if (g_kSystemConfig.m_nJSDebugMode != JS_DEBUG_MODE_OFF)
         {
-            jsvm::OpenInspector(env, g_kSystemConfig.m_nJSDebugPort);
+            jsvm_open_inspector(env, g_kSystemConfig.m_nJSDebugPort);
             if (g_kSystemConfig.m_nJSDebugMode == JS_DEBUG_MODE_WAIT) {
-                jsvm::WaitForDebugger(env, true);
+                jsvm_wait_for_debugger(env, true);
             }
         }
 
@@ -259,7 +259,7 @@ namespace laya
         JSGlobalDisExportC();
 #ifdef JS_V8
 #ifdef JS_V8_DEBUGGER
-        jsvm::CloseInspector(env);
+        jsvm_close_inspector(env);
 #endif
 #elif JS_JSC
         JSP_RESET_GLOBAL_FUNCTION;
@@ -371,12 +371,12 @@ namespace laya
 		{
 //lvtodo
         GET_ENV
-            jsvm::Value script;
-        jsvm::Status status;
+            jsvm_value script;
+        jsvm_status status;
 
-        status = jsvm::ReportException(env);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        DEBUG_CHECK(status == jsvm::Status::OK);
+        //////status = jsvm::ReportException(env);
+        //DEBUG_CHECK(status == jsvm_status::ok);
+        ///DEBUG_CHECK(status == jsvm_status::ok);
 		}
         JCConch::s_pConchRender->postTaskFromJSToRenderSync([this]()->bool {
             JCConch::s_pScriptRuntime->dispatchLayaGLBuffer(false);

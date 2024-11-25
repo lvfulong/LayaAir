@@ -36,7 +36,7 @@ class JSEnv
   public:
     static JSEnv *getCurrent();
     static void setCurrent(JSEnv *env);
-    jsvm::Env getEnv()
+    jsvm_env getEnv()
     {
         return env_;
     }
@@ -45,13 +45,13 @@ class JSEnv
     {
         return isolate_data_->napi_wrapper();
     }
-    JSEnv(IsolateData *isolate_data, v8::Isolate *isolate, jsvm::Env env);
+    JSEnv(IsolateData *isolate_data, v8::Isolate *isolate, jsvm_env env);
 #endif
 #if defined(JS_OHOS_JSVM)
-    JSEnv(IsolateData *isolate_data, jsvm::Env env);
+    JSEnv(IsolateData *isolate_data, jsvm_env env);
 #endif
   private:
-    jsvm::Env env_;
+    jsvm_env env_;
     IsolateData *isolate_data_;
 #if defined(JS_V8)
     v8::Isolate *isolate_;
@@ -66,24 +66,24 @@ public:
     std::unordered_map<const char*, std::unique_ptr<JSVM_CallbackStruct>> jsvm_constructor_map_;
     
     
-    std::map<jsvm::Value, std::unique_ptr<std::vector<JSVM_PropertyDescriptor>>> jsvm_object_properties_map_;
-    std::map<jsvm::Value, std::unique_ptr<std::vector<JSVM_CallbackStruct>>> jsvm_object_callbacks_map_;
+    std::map<jsvm_value, std::unique_ptr<std::vector<JSVM_PropertyDescriptor>>> jsvm_object_properties_map_;
+    std::map<jsvm_value, std::unique_ptr<std::vector<JSVM_CallbackStruct>>> jsvm_object_callbacks_map_;
 #endif
 };
 
 #define GET_ENV                                                                                                        \
     auto jsenv = jsvm::JSEnv::getCurrent();                                                                            \
     DEBUG_CHECK(nullptr != jsenv);                                                                                     \
-    jsvm::Env env = jsenv->getEnv();                                                                                   \
+    jsvm_env env = jsenv->getEnv();                                                                                   \
     DEBUG_CHECK(nullptr != env);
 
-inline jsvm::Value global()
+inline jsvm_value global()
 {
 
     GET_ENV
-    jsvm::Value result;
-    jsvm::Status status = jsvm::GetGlobal(env, &result);
-    DEBUG_CHECK(status == jsvm::Status::OK);
+    jsvm_value result;
+    jsvm_status status = jsvm_get_global(env, &result);
+    DEBUG_CHECK(status == jsvm_status::ok);
     return result;
 }
 

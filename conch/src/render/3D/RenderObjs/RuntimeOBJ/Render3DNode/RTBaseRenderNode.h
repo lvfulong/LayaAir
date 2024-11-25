@@ -49,8 +49,8 @@ public: //binding
     void setLightmap(RTLightmapData* value) { lightmap = value; }
     void setProbeReflection(RTReflectionProb* value) { probeReflection = value; }
     void setVolumetricGI(RTVolumetricGI* value) { volumetricGI = value; }
-    void setRenderUpdatePre(jsvm::Value function);
-    void setCalculateBoundingBox(jsvm::Value function);
+    void setRenderUpdatePre(jsvm_value function);
+    void setCalculateBoundingBox(jsvm_value function);
     void setLightmapScaleOffset(const Vector4& value) { lightmapScaleOffset = value; }
     void setCommonUniformMap(const std::vector<std::string>& value);
     void setRenderElements(const std::vector<GLESRenderElement3D*>& value);

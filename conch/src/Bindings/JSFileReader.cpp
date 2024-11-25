@@ -88,7 +88,7 @@ namespace laya
     {
         JCMemorySurvey::GetInstance()->releaseClass("JsFileReader", this);
     }
-    void JsFileReader::readAsArrayBuffer(jsvm::Value p_pFile)
+    void JsFileReader::readAsArrayBuffer(jsvm_value p_pFile)
     {
         m_iContentType = content_type_buffer;
         m_pFile = jsbind::as<JsFile*>(p_pFile);
@@ -99,7 +99,7 @@ namespace laya
         m_hFileObject = jsbind::Persistent(p_pFile);
         __LoadRemoteFile(m_pFile);
     }
-    void JsFileReader::readAsText(jsvm::Value p_pFile)
+    void JsFileReader::readAsText(jsvm_value p_pFile)
     {
         m_iContentType = content_type_string;
         m_pFile = jsbind::as<JsFile*>(p_pFile);
@@ -110,7 +110,7 @@ namespace laya
         m_hFileObject = jsbind::Persistent(p_pFile);
         __LoadRemoteFile(m_pFile);
     }
-    void JsFileReader::readAsDataURL(jsvm::Value p_pFile)
+    void JsFileReader::readAsDataURL(jsvm_value p_pFile)
     {
         m_hFileObject = jsbind::Persistent(p_pFile);
         return;
@@ -350,7 +350,7 @@ namespace laya
         m_pFile = 0;
         jsbind::makeWeak(this);
     }
-    jsvm::Value JsFileReader::GetResult()
+    jsvm_value JsFileReader::GetResult()
     {
         if (DONE != readyState) {
             return jsbind::MakeUndefined();

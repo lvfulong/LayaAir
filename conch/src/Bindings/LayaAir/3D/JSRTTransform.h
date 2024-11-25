@@ -42,11 +42,11 @@ namespace laya
 	
 	public:
 		JSRTTransform();
-		// JSRTTransform(jsvm::Value pSharedData, jsvm::Value pEvent);
+		// JSRTTransform(jsvm_value pSharedData, jsvm_value pEvent);
 		~JSRTTransform();
 
 		JSRTTransform(jsbind::ArrayBuffer pSharedData);
-		void rt_setParent(jsvm::Value pParent);
+		void rt_setParent(jsvm_value pParent);
 		void rt_getWorldLossyScale();
 		void rt_setWorldLossyScale();
 	

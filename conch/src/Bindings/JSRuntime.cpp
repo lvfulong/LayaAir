@@ -31,11 +31,11 @@ laya::JCZip *g_ZipPackage = NULL;
 namespace laya
 {
     std::string JSRuntime::m_strReturn;
-    void JSRuntime::setOnFrameFunction(jsvm::Value p_pFunction)
+    void JSRuntime::setOnFrameFunction(jsvm_value p_pFunction)
     {
         JCConch::s_pScriptRuntime->m_pJSOnFrameFunction = jsbind::Persistent(p_pFunction);
     }
-    void JSRuntime::setZipPackage(jsvm::Value p_pFunction)
+    void JSRuntime::setZipPackage(jsvm_value p_pFunction)
     {
         JCConch::s_pScriptRuntime->m_pJSZipPackage = jsbind::Persistent(p_pFunction);
         JSZip* zip = jsbind::as<JSZip*>(JCConch::s_pScriptRuntime->m_pJSZipPackage.getHandle());
@@ -44,35 +44,35 @@ namespace laya
 			g_ZipPackage = &zip->m_zip;
 		}
     }
-    void JSRuntime::setOnDrawFunction(jsvm::Value p_pFunction) 
+    void JSRuntime::setOnDrawFunction(jsvm_value p_pFunction) 
     {
         JCConch::s_pScriptRuntime->m_pJSOnDrawFunction = jsbind::Persistent(p_pFunction);
     }
-    void JSRuntime::setOnResizeFunction(jsvm::Value p_onresize)
+    void JSRuntime::setOnResizeFunction(jsvm_value p_onresize)
     {
         JCConch::s_pScriptRuntime->m_pJSOnResizeFunction = jsbind::Persistent(p_onresize);
     }
-    void JSRuntime::setOnBlurFunction(jsvm::Value p_pFunction)
+    void JSRuntime::setOnBlurFunction(jsvm_value p_pFunction)
     {
         JCConch::s_pScriptRuntime->m_pJSOnBlurFunction = jsbind::Persistent(p_pFunction);
     }
-    void JSRuntime::setOnFocusFunction(jsvm::Value p_pFunction)
+    void JSRuntime::setOnFocusFunction(jsvm_value p_pFunction)
     {
         JCConch::s_pScriptRuntime->m_pJSOnFocusFunction = jsbind::Persistent(p_pFunction);
     }
-    void  JSRuntime::setGetWorldTransformFunction(jsvm::Value p_pFunction)
+    void  JSRuntime::setGetWorldTransformFunction(jsvm_value p_pFunction)
     {
         JCConch::s_pScriptRuntime->m_bJSBulletGetWorldTransformHandle = jsbind::Persistent(p_pFunction);
     }
-    void  JSRuntime::setSetWorldTransformFunction(jsvm::Value p_pFunction)
+    void  JSRuntime::setSetWorldTransformFunction(jsvm_value p_pFunction)
     {
         JCConch::s_pScriptRuntime->m_bJSBulletSetWorldTransformHandle = jsbind::Persistent(p_pFunction);
     }
-	void  JSRuntime::setBulletDrawLineFunction(jsvm::Value p_pFunction)
+	void  JSRuntime::setBulletDrawLineFunction(jsvm_value p_pFunction)
 	{
 		JCConch::s_pScriptRuntime->m_bJSBulletDrawLineHandle = jsbind::Persistent(p_pFunction);
 	}
-	void  JSRuntime::setBulletClearLineFunction(jsvm::Value p_pFunction)
+	void  JSRuntime::setBulletClearLineFunction(jsvm_value p_pFunction)
 	{
 		JCConch::s_pScriptRuntime->m_bJSBulletClearLineHandle = jsbind::Persistent(p_pFunction);
 	}
@@ -87,7 +87,7 @@ namespace laya
             LOGE("JSRuntime::setCmdBuffer param is not an ArrayBuffer!");
         }
     }
-    void JSRuntime::setHref(jsvm::Value p_sHref)
+    void JSRuntime::setHref(jsvm_value p_sHref)
     {
         jsbind::Local href(p_sHref);
         if (href.isString())
@@ -120,27 +120,27 @@ namespace laya
             }
         }
     }
-    void JSRuntime::setMouseEvtFunction(jsvm::Value p_pFunction)
+    void JSRuntime::setMouseEvtFunction(jsvm_value p_pFunction)
     {
         JCConch::s_pScriptRuntime->m_pJSMouseEvtFunction = jsbind::Persistent(p_pFunction);
     }
-    void JSRuntime::setTouchEvtFunction(jsvm::Value p_pFunction)
+    void JSRuntime::setTouchEvtFunction(jsvm_value p_pFunction)
     {
         JCConch::s_pScriptRuntime->m_pJSTouchEvtFunction = jsbind::Persistent(p_pFunction);
     }
-    void JSRuntime::setDeviceMotionEvtFunction(jsvm::Value p_pFunction)
+    void JSRuntime::setDeviceMotionEvtFunction(jsvm_value p_pFunction)
     {
         JCConch::s_pScriptRuntime->m_pJSDeviceMotionEvtFunction = jsbind::Persistent(p_pFunction);
     }
-    void JSRuntime::setKeyEvtFunction(jsvm::Value p_pFunction)
+    void JSRuntime::setKeyEvtFunction(jsvm_value p_pFunction)
     {
         JCConch::s_pScriptRuntime->m_pJSKeyEvtFunction = jsbind::Persistent(p_pFunction);
     }
-    void JSRuntime::setNetworkEvtFunction(jsvm::Value p_pFunction)
+    void JSRuntime::setNetworkEvtFunction(jsvm_value p_pFunction)
     {
         JCConch::s_pScriptRuntime->m_pJSNetworkEvtFunction = jsbind::Persistent(p_pFunction);
     }
-    void JSRuntime::captureScreen(jsvm::Value p_pFunction)
+    void JSRuntime::captureScreen(jsvm_value p_pFunction)
     {
         JCConch::s_pScriptRuntime->m_pJSOnceOtherEvtFuction = jsbind::Persistent(p_pFunction);
         JCConch::s_pConchRender->requestCaptureScreen();
@@ -155,7 +155,7 @@ namespace laya
         *(unsigned char**)pUserData = ret;
         return ret;
     }
-    jsvm::Value JSRuntime::readFileFromAsset(const char* file, const char* encode) 
+    jsvm_value JSRuntime::readFileFromAsset(const char* file, const char* encode) 
     {
         if (!JCConch::s_pScriptRuntime->m_pAssetsRes)
         {
@@ -193,7 +193,7 @@ namespace laya
     {
         JCConch::s_pConch->getOS()->setSensorAble(bSensorAble);
     }
-    jsvm::Value JSRuntime::strTobufer(const char* s)
+    jsvm_value JSRuntime::strTobufer(const char* s)
     {
         int size = (strlen(s) + 1);
         int alignedSize = (size + 3) & 0xfffffffc;
@@ -253,7 +253,7 @@ namespace laya
         }
         return false;
     }
-    jsvm::Value JSRuntime::convertBitmapToPng(jsbind::ArrayBuffer arrayBuffer, int w, int h)
+    jsvm_value JSRuntime::convertBitmapToPng(jsbind::ArrayBuffer arrayBuffer, int w, int h)
     {
         bool bIsArrayBuffer = arrayBuffer.isValid();
         if (bIsArrayBuffer)
@@ -266,7 +266,7 @@ namespace laya
         }
         return jsbind::MakeNull();
     }
-    jsvm::Value JSRuntime::convertBitmapToJpeg(jsbind::ArrayBuffer arrayBuffer, int w, int h)
+    jsvm_value JSRuntime::convertBitmapToJpeg(jsbind::ArrayBuffer arrayBuffer, int w, int h)
     {
         bool bIsArrayBuffer = arrayBuffer.isValid();
         if (bIsArrayBuffer)
@@ -300,19 +300,19 @@ namespace laya
         return JCConch::s_pConch->getOS()->getSafeInsetRight();
 	}
 
-	jsvm::Value JSRuntime::getLaunchOptionsSync()
+	jsvm_value JSRuntime::getLaunchOptionsSync()
 	{
         return jsbind::Make<JSLaunchOptions*>(new JSLaunchOptions());
 	}
-    void JSRuntime::setOnUnhandledRejection(jsvm::Value p_pFunction)
+    void JSRuntime::setOnUnhandledRejection(jsvm_value p_pFunction)
     {
 	    JCConch::s_pScriptRuntime->m_pJSOnUnhandledRejectionFunction = jsbind::Persistent(p_pFunction);
     }
-    jsvm::Value JSRuntime::getOnUnhandledRejection()
+    jsvm_value JSRuntime::getOnUnhandledRejection()
     {
         return JCConch::s_pScriptRuntime->m_pJSOnUnhandledRejectionFunction.getHandle();
     }
-	void JSRuntime::setScreenOrientation(const char* p_strOrientation, jsvm::Value p_pFunction)
+	void JSRuntime::setScreenOrientation(const char* p_strOrientation, jsvm_value p_pFunction)
 	{
 		JCConch::s_pScriptRuntime->m_pJSOnScreenOrientationChanged = jsbind::Persistent(p_pFunction);
 		static std::unordered_map<std::string, int> nameToVal = {
@@ -328,7 +328,7 @@ namespace laya
 		JSConchConfig::setScreenOrientation(nOrientation);
 		JCConch::s_pScriptRuntime->m_pJSOnScreenOrientationChanged.call<void>(jsvm::global());
 	}
-	void JSRuntime::setGlobalRepaint(jsvm::Value p_pFunction)
+	void JSRuntime::setGlobalRepaint(jsvm_value p_pFunction)
 	{
 		JCConch::s_pScriptRuntime->m_pJSSetGlobalRepaintFunction = jsbind::Persistent(p_pFunction);
 	}
@@ -345,7 +345,7 @@ namespace laya
 		int batchIndex;
 		int batchBoneIndex;
 	};
-	/*void JSRuntime::computeSubSkinnedDataForNative(jsvm::Value inverseBindPosesBuffer, jsvm::Value boneIndices, jsvm::Value subData, jsvm::Value skinnedMatrixCaches, jsvm::Value bonesTransform, jsvm::Value skinnedDataLoopMarks, jsvm::Value skinnedData)
+	/*void JSRuntime::computeSubSkinnedDataForNative(jsvm_value inverseBindPosesBuffer, jsvm_value boneIndices, jsvm_value subData, jsvm_value skinnedMatrixCaches, jsvm_value bonesTransform, jsvm_value skinnedDataLoopMarks, jsvm_value skinnedData)
 	{
 		char* pInverseBindPosesBuffer = NULL;
 		int nInverseBindPosesBufferSize = 0;
@@ -402,7 +402,7 @@ namespace laya
 
 				v8::Local<Array> __array = skinnedData.As<Array>();
 				v8::Local<Array> __subArray = __array->Get(context, c.subMeshIndex).ToLocalChecked().As<Array>();
-				jsvm::Value ab =  __subArray->Get(context, c.batchIndex).ToLocalChecked();
+				jsvm_value ab =  __subArray->Get(context, c.batchIndex).ToLocalChecked();
 				//float* preData = _skinnedData[c.subMeshIndex][c.batchIndex];
 				char* pPreData = NULL;
 				int npPreDataSize = 0;
@@ -420,7 +420,7 @@ namespace laya
 			else
 			{
 				v8::Local<Array> _bones = bonesTransform.As<Array>();
-				jsvm::Value bone = _bones->Get(context, index).ToLocalChecked();
+				jsvm_value bone = _bones->Get(context, index).ToLocalChecked();
 				JSTransform* pBone = __TransferToCpp<JSTransform*> ::ToCpp(bone);
 				if (pBone)
 				{
@@ -431,7 +431,7 @@ namespace laya
 			}
 		}
 	}*/
-    jsvm::Value JSRuntime::createArrayBufferRef(jsbind::ArrayBuffer arrayBuffer, int nType, bool bSyncToRender, int nRefType)
+    jsvm_value JSRuntime::createArrayBufferRef(jsbind::ArrayBuffer arrayBuffer, int nType, bool bSyncToRender, int nRefType)
     {
        
         bool bIsArrayBuffer = arrayBuffer.isValid();
@@ -535,7 +535,7 @@ namespace laya
     /**
     *   不带dcc和缓存的下载
     */
-    void JSRuntime::downloadFile(const std::string& url, jsvm::Value onProgress, jsvm::Value onComplete, jsvm::Value onError) {
+    void JSRuntime::downloadFile(const std::string& url, jsvm_value onProgress, jsvm_value onComplete, jsvm_value onError) {
         if (url.empty()) 
             return;
 
@@ -567,7 +567,7 @@ namespace laya
     }
 
 
-    void JSRuntime::setDownloader(jsvm::Value obj){
+    void JSRuntime::setDownloader(jsvm_value obj){
         std::shared_ptr<JSDownloader> jsdownloader = std::make_shared<JSDownloader>();
         jsdownloader->setJSDownloader(obj);
         JCFileResManager* pfsMgr = JCConch::s_pScriptRuntime->m_pFileResMgr;
@@ -576,7 +576,7 @@ namespace laya
 #endif
     //todo 刷新生命周期
     std::shared_ptr<int> callbackRef(new int(1));
-    jsvm::Value JSRuntime::postAsyncMessage(const std::string &eventName, const std::string &data)
+    jsvm_value JSRuntime::postAsyncMessage(const std::string &eventName, const std::string &data)
     {
         return JCConch::s_pConch->getOS()->postAsyncMessage(callbackRef, eventName, data);
     }

@@ -105,7 +105,7 @@ namespace laya
 	{
 		return m_bounds._getBoundBox();
 	}
-	void JSBounds::_tranformJS(jsvm::Value out)
+	void JSBounds::_tranformJS(jsvm_value out)
 	{
 		Matrix4x4 matrix;
 		memcpy(matrix.elements, m_float32Array, sizeof(float) * 16);
@@ -116,7 +116,7 @@ namespace laya
 	{
 		m_bounds._tranform(matrix, out.m_bounds);
 	}
-	void JSBounds::cloneTo(jsvm::Value destBounds)
+	void JSBounds::cloneTo(jsvm_value destBounds)
 	{
 		JSBounds* pBounds = jsbind::as<JSBounds*>(destBounds);
 		m_bounds.cloneTo(pBounds->m_bounds);

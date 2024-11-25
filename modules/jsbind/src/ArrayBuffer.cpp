@@ -25,12 +25,12 @@ ArrayBuffer::ArrayBuffer(uint8_t *inputBuffer, size_t length, size_t byteOffset,
 {
     GET_ENV
 
-    jsvm::Status status;
-    jsvm::Value arrayBuffer;
+    jsvm_status status;
+    jsvm_value arrayBuffer;
     uint8_t *outputBuffer = nullptr;
 
-    status = jsvm::CreateArraybuffer(env, this->getByteLength(), reinterpret_cast<void **>(&outputBuffer), &arrayBuffer);
-    DEBUG_CHECK(status == jsvm::Status::OK);
+    status = jsvm_create_arraybuffer(env, this->getByteLength(), reinterpret_cast<void **>(&outputBuffer), &arrayBuffer);
+    DEBUG_CHECK(status == jsvm_status::ok);
 
     std::memcpy(outputBuffer, inputBuffer, this->getByteLength());
 
@@ -45,43 +45,43 @@ ArrayBuffer::ArrayBuffer(uint8_t *inputBuffer, size_t length, size_t byteOffset,
     }
     else
     {
-        jsvm::Value typedArray;
-        jsvm::TypedarrayType type = static_cast<jsvm::TypedarrayType>(this->getType());
+        jsvm_value typedArray;
+        jsvm_typedarray_type type = static_cast<jsvm_typedarray_type>(this->getType());
 
-        status = jsvm::CreateTypedarray(env, type, this->getCount(), arrayBuffer, byteOffset, &typedArray);
-        DEBUG_CHECK(status == jsvm::Status::OK);
+        status = jsvm_create_typedarray(env, type, this->getCount(), arrayBuffer, byteOffset, &typedArray);
+        DEBUG_CHECK(status == jsvm_status::ok);
         arrayBuffer = typedArray;
     }
 
     data_ = outputBuffer;
     handle_ = arrayBuffer;
 }
-ArrayBuffer::ArrayBuffer(jsvm::Value arrayBuffer, uint8_t *inputBuffer, size_t length, Type type)
+ArrayBuffer::ArrayBuffer(jsvm_value arrayBuffer, uint8_t *inputBuffer, size_t length, Type type)
     : data_(inputBuffer), byteLength_(length), type_(type), handle_(arrayBuffer)
 {
 }
 
-ArrayBuffer ArrayBuffer::Make(jsvm::Value arrayBuffer)
+ArrayBuffer ArrayBuffer::Make(jsvm_value arrayBuffer)
 {
     GET_ENV
     void *data = nullptr;
     size_t length;
-    jsvm::TypedarrayType type;
-    jsvm::Value buffer;
+    jsvm_typedarray_type type;
+    jsvm_value buffer;
     size_t byteOffset;
     if (Local::isTypedArray(arrayBuffer))
     {
-        jsvm::GetTypedarrayInfo(env, arrayBuffer, &type, &length, &data, &buffer, &byteOffset);
+        jsvm_get_typedarray_info(env, arrayBuffer, &type, &length, &data, &buffer, &byteOffset);
         return ArrayBuffer(arrayBuffer, static_cast<uint8_t *>(data), getBytePerElement(static_cast<ArrayBuffer::Type>(type)) * length, static_cast<ArrayBuffer::Type>(type));
     }
     else if (Local::isDataView(arrayBuffer))
     {
-        jsvm::GetDataviewInfo(env, arrayBuffer, &length, &data, &buffer, &byteOffset);
+        jsvm_get_dataview_info(env, arrayBuffer, &length, &data, &buffer, &byteOffset);
         return ArrayBuffer(arrayBuffer, static_cast<uint8_t *>(data), length, ArrayBuffer::DATA_VIEW);
     }
     else if (Local::isArrayBuffer(arrayBuffer))
     {
-        jsvm::GetArraybufferInfo(env, arrayBuffer, &data, &length);
+        jsvm_get_arraybuffer_info(env, arrayBuffer, &data, &length);
         return ArrayBuffer(arrayBuffer, static_cast<uint8_t *>(data), length, ArrayBuffer::ARRAY_BUFFER);
     }
     else

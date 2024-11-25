@@ -6,7 +6,7 @@
 
 namespace laya
 {
-	bool JSFileSystem::rmDir(const char* p_pszPath, jsvm::Value onprogress, jsvm::Value oncomplete, jsvm::Value onerror) 
+	bool JSFileSystem::rmDir(const char* p_pszPath, jsvm_value onprogress, jsvm_value oncomplete, jsvm_value onerror) 
     {
 		return true;
 	}
@@ -14,14 +14,14 @@ namespace laya
     {
 		return true;
 	}
-	jsvm::Value JSFileSystem::readdirSync(const std::string &path) 
+	jsvm_value JSFileSystem::readdirSync(const std::string &path) 
     {
 		if (!FileSystem::exists(path))
 			return jsbind::MakeNull();
 		std::vector<std::string> paths = FileSystem::readdirSync(path);
 		return jsbind::Make<std::vector<std::string> >(paths);
 	}
-	jsvm::Value JSFileSystem::lstatSync(const std::string &path) 
+	jsvm_value JSFileSystem::lstatSync(const std::string &path) 
     {
 		std::vector<std::string> paths;
 		if (!FileSystem::exists(path))
@@ -97,7 +97,7 @@ namespace laya
         }
         return bret;
     }
-	jsvm::Value JSFileSystem::readBinFileSync(const char* p_pszFile) 
+	jsvm_value JSFileSystem::readBinFileSync(const char* p_pszFile) 
     {
         JCBuffer buf;
 		if (readFileSync(p_pszFile, buf, JCBuffer::raw))

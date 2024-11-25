@@ -10,9 +10,9 @@ Promise Promise::Make()
 Promise::Promise()
 {
     GET_ENV
-    jsvm::Status status;
-    status = jsvm::CreatePromise(env, &deferred_, &promise_);
-    DEBUG_CHECK(status == jsvm::Status::OK);
+    jsvm_status status;
+    status = jsvm_create_promise(env, &deferred_, &promise_);
+    DEBUG_CHECK(status == jsvm_status::ok);
 }
 
 } // namespace jsbind

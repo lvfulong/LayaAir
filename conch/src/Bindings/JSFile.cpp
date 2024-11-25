@@ -50,7 +50,7 @@ namespace laya
         lastModifiedDate = p_tm;
         lastModifiedDate *= 1000;
     }
-    jsvm::Value JsFile::GetlastModifiedDate()
+    jsvm_value JsFile::GetlastModifiedDate()
     {
         return jsbind::Date::Make(lastModifiedDate).getHandle();
     }

@@ -7,8 +7,7 @@
 #include <libplatform/libplatform.h>
 #include <v8.h>
 
-namespace jsvm
-{
+
 #if 0
 // ���Ҫ��v8�߳��������ͷţ���Ϊv8������ʱ��������������ṩ�� Free �ӿ�
 class ArrayBufferAllocator : public v8::ArrayBuffer::Allocator
@@ -81,7 +80,7 @@ struct EnvScope__
 {
 };
 
-Status Init(const InitOptions *options)
+jsvm_status jsvm_init(const jsvm_init_options* options)
 {
     // m_pIsolate = NULL;
     // m_nListenPort = 0;
@@ -103,7 +102,7 @@ Status Init(const InitOptions *options)
         flags.append(" --turbo-fast-api-calls ");
         v8::V8::SetFlagsFromString(flags.c_str(), (size_t)flags.length());
     }
-    return Status::OK; // todo
+    return jsvm_status::ok; // todo
 }
 #if 0
 Status UnInit()
@@ -334,7 +333,7 @@ static void PromiseRejectHandlerInMainThread(v8::PromiseRejectMessage data)
     // Javascript *pJavascript = (Javascript *)pIsolateData->m_data;
     // pJavascript->m_promiseRejectHandler(data.GetPromise(), data.GetValue(), "unhandledrejection");
 }
-Status CreateVM(const CreateVMOptions *options, VM *result)
+jsvm_status jsvm_create_vm(const jsvm_create_vm_options* options, jsvm_vm* result)
 {
     v8::Isolate::CreateParams create_params;
     create_params.array_buffer_allocator = v8::ArrayBuffer::Allocator::NewDefaultAllocator();
@@ -348,9 +347,9 @@ Status CreateVM(const CreateVMOptions *options, VM *result)
     // m_IsolateData->m_data = (void *)this;
     (*result)->isolate_->SetPromiseRejectCallback(PromiseRejectHandlerInMainThread);
     // context->Enter();
-    return Status::OK; // todo
+    return jsvm_status::ok; // todo
 }
-Status DestroyVM(VM vm)
+jsvm_status jsvm_destroy_vm(jsvm_vm vm)
 {
     {
         // v8::HandleScope handle_scope(m_pIsolate);
@@ -363,32 +362,32 @@ Status DestroyVM(VM vm)
     DEBUG_CHECK(vm->isolate_ != nullptr);
     vm->isolate_->Dispose();
     vm->isolate_ = nullptr;
-    return Status::OK; // todo
+    return jsvm_status::ok; // todo
 }
-Status OpenVMScope(VM vm, VMScope *result)
+jsvm_status jsvm_open_vm_scope(jsvm_vm vm, jsvm_vm_scope* result)
 {
     *result = new VMScope__;
     (*result)->isolate_ = vm->isolate_;
     (*result)->isolate_->Enter();
-    return Status::OK; // todo
+    return jsvm_status::ok; // todo
 }
-Status CloseVMScope(VM vm, VMScope scope)
+jsvm_status jsvm_close_vm_scope(jsvm_vm vm, jsvm_vm_scope scope)
 {
     scope->isolate_ = vm->isolate_;
     scope->isolate_->Exit();
-    return Status::OK; // todo
+    return jsvm_status::ok; // todo
 }
-Status OpenEnvScope(Env env, EnvScope *result)
+jsvm_status jsvm_open_env_scope(jsvm_env env, jsvm_env_scope* result)
 {
     env->context()->Enter();
-    return Status::OK; // todo
+    return jsvm_status::ok; // todo
 }
-Status CloseEnvScope(Env env, EnvScope scope)
+jsvm_status jsvm_close_env_scope(jsvm_env env, jsvm_env_scope scope)
 {
     env->context()->Exit();
-    return Status::OK; // todo
+    return jsvm_status::ok; // todo
 }
-Status CreateEnv(VM vm, size_t propertyCount, const PropertyDescriptor *properties, Env *result)
+jsvm_status jsvm_create_env(jsvm_vm vm, size_t propertyCount, const jsvm_property_descriptor* properties, jsvm_env* result)
 {
     // todo properties
     v8::HandleScope handle_scope(vm->isolate_);
@@ -399,171 +398,172 @@ Status CreateEnv(VM vm, size_t propertyCount, const PropertyDescriptor *properti
     jsvm::JSEnv *jsEnv = new jsvm::JSEnv(isolateData, vm->isolate_, *result); // delete ?
     jsvm::JSEnv::setCurrent(jsEnv);
 
-    return Status::OK;
+    return jsvm_status::ok;
 }
-Status DestroyEnv(Env env)
+jsvm_status jsvm_destroy_env(jsvm_env env)
 {
     DEBUG_CHECK(env != nullptr);
     env->DeleteMe();
-    return Status::OK; // todo
+    return jsvm_status::ok; // todo
 }
 
-Status OpenHandleScope(Env env, HandleScope *result)
+jsvm_status jsvm_open_handle_scope(jsvm_env env, jsvm_handle_scope* result)
 {
-    return static_cast<Status>(napi_open_handle_scope(env, result));
+    return static_cast<jsvm_status>(napi_open_handle_scope(env, result));
 }
-Status CloseHandleScope(Env env, HandleScope scope)
+jsvm_status jsvm_close_handle_scope(jsvm_env env, jsvm_handle_scope scope)
 {
-    return static_cast<Status>(napi_close_handle_scope(env, scope));
+    return static_cast<jsvm_status>(napi_close_handle_scope(env, scope));
 }
-Status GetAndClearLastException(Env env, Value *result)
+jsvm_status  jsvm_get_and_clear_last_exception(jsvm_env env, jsvm_value*result)
 {
-    return static_cast<Status>(napi_get_and_clear_last_exception(env, result));
+    return static_cast<jsvm_status>(napi_get_and_clear_last_exception(env, result));
 }
-Status ThrowError(Env env, const char *code, const char *msg)
+jsvm_status jsvm_throw_error(jsvm_env env, const char* code, const char* msg)
 {
-    return static_cast<Status>(napi_throw_error(env, code, msg));
+    return static_cast<jsvm_status>(napi_throw_error(env, code, msg));
 }
-Status GetArrayLength(Env env, Value value, uint32_t *result)
+jsvm_status jsvm_get_array_length(jsvm_env env, jsvm_value value, uint32_t* result)
 {
-    return static_cast<Status>(napi_get_array_length(env, value, result));
+    return static_cast<jsvm_status>(napi_get_array_length(env, value, result));
 }
-Status IsArray(Env env, Value value, bool *result)
+jsvm_status jsvm_is_array(jsvm_env env, jsvm_value value, bool* result)
 {
-    return static_cast<Status>(napi_is_array(env, value, result));
+    return static_cast<jsvm_status>(napi_is_array(env, value, result));
 }
-Status CreatePromise(Env env, Deferred *deferred, Value *promise)
+jsvm_status jsvm_create_promise(jsvm_env env, jsvm_deferred* deferred, jsvm_value* promise)
 {
-    return static_cast<Status>(napi_create_promise(env, deferred, promise));
+    return static_cast<jsvm_status>(napi_create_promise(env, deferred, promise));
 }
-Status CreateArray(Env env, Value *result)
+jsvm_status jsvm_create_array(jsvm_env env, jsvm_value* result)
 {
-    return static_cast<Status>(napi_create_array(env, result));
+    return static_cast<jsvm_status>(napi_create_array(env, result));
 }
-Status CreateArrayWithLength(Env env, size_t length, Value *result)
+jsvm_status jsvm_create_array_with_length(jsvm_env env, size_t length, jsvm_value* result)
 {
-    return static_cast<Status>(napi_create_array_with_length(env, length, result));
+    return static_cast<jsvm_status>(napi_create_array_with_length(env, length, result));
 }
-Status CreateDouble(Env env, double value, Value *result)
+jsvm_status jsvm_create_double(jsvm_env env, double value, jsvm_value* result)
 {
-    return static_cast<Status>(napi_create_double(env, value, result));
+    return static_cast<jsvm_status>(napi_create_double(env, value, result));
 }
-Status CreateInt32(Env env, int32_t value, Value *result)
+jsvm_status jsvm_create_int32(jsvm_env env, int32_t value, jsvm_value* result)
 {
-    return static_cast<Status>(napi_create_int32(env, value, result));
+    return static_cast<jsvm_status>(napi_create_int32(env, value, result));
 }
-Status CreateUint32(Env env, uint32_t value, Value *result)
+jsvm_status jsvm_create_uint32(jsvm_env env, uint32_t value, jsvm_value* result)
 {
-    return static_cast<Status>(napi_create_uint32(env, value, result));
+    return static_cast<jsvm_status>(napi_create_uint32(env, value, result));
 }
-Status CreateInt64(Env env, int64_t value, Value *result)
+jsvm_status jsvm_create_int64(jsvm_env env, int64_t value, jsvm_value* result)
 {
-    return static_cast<Status>(napi_create_int64(env, value, result));
-}
-
-Status GetValueDouble(Env env, Value value, double *result)
-{
-    return static_cast<Status>(napi_get_value_double(env, value, result));
+    return static_cast<jsvm_status>(napi_create_int64(env, value, result));
 }
 
-Status GetValueInt32(Env env, Value value, int32_t *result)
+jsvm_status jsvm_get_value_double(jsvm_env env, jsvm_value value, double* result)
 {
-    return static_cast<Status>(napi_get_value_int32(env, value, result));
+    return static_cast<jsvm_status>(napi_get_value_double(env, value, result));
 }
-Status GetValueUint32(Env env, Value value, uint32_t *result)
+
+jsvm_status jsvm_get_value_int32(jsvm_env env, jsvm_value value, int32_t* result)
 {
-    return static_cast<Status>(napi_get_value_uint32(env, value, result));
+    return static_cast<jsvm_status>(napi_get_value_int32(env, value, result));
 }
-Status GetValueInt64(Env env, Value value, int64_t *result)
+jsvm_status jsvm_get_value_uint32(jsvm_env env, jsvm_value value, uint32_t* result)
 {
-    return static_cast<Status>(napi_get_value_int64(env, value, result));
+    return static_cast<jsvm_status>(napi_get_value_uint32(env, value, result));
 }
-Status GetValueBool(Env env, Value value, bool *result)
+jsvm_status jsvm_get_value_int64(jsvm_env env, jsvm_value value, int64_t* result)
 {
-    return static_cast<Status>(napi_get_value_bool(env, value, result));
+    return static_cast<jsvm_status>(napi_get_value_int64(env, value, result));
 }
-Status GetNull(Env env, Value *result)
+jsvm_status jsvm_get_value_bool(jsvm_env env, jsvm_value value, bool* result)
 {
-    return static_cast<Status>(napi_get_null(env, result));
+    return static_cast<jsvm_status>(napi_get_value_bool(env, value, result));
 }
-Status GetUndefined(Env env, Value *result)
+jsvm_status jsvm_get_null(jsvm_env env, jsvm_value* result)
 {
-    return static_cast<Status>(napi_get_undefined(env, result));
+    return static_cast<jsvm_status>(napi_get_null(env, result));
 }
-Status GetElement(Env env, Value object, uint32_t index, Value *result)
+jsvm_status jsvm_get_undefined(jsvm_env env, jsvm_value* result)
 {
-    return static_cast<Status>(napi_get_element(env, object, index, result));
+    return static_cast<jsvm_status>(napi_get_undefined(env, result));
 }
-Status SetElement(Env env, Value object, uint32_t index, Value value)
+jsvm_status jsvm_get_element(jsvm_env env, jsvm_value object, uint32_t index, jsvm_value* result)
 {
-    return static_cast<Status>(napi_set_element(env, object, index, value));
+    return static_cast<jsvm_status>(napi_get_element(env, object, index, result));
 }
-Status CreateStringUtf8(Env env, const char *value, size_t length, Value *result)
+jsvm_status jsvm_set_element(jsvm_env env, jsvm_value object, uint32_t index, jsvm_value value)
 {
-    return static_cast<Status>(napi_create_string_utf8(env, value, length, result));
+    return static_cast<jsvm_status>(napi_set_element(env, object, index, value));
 }
-Status GetValueStringUtf8(Env env, Value value, char *buf, size_t bufsize, size_t *result)
+jsvm_status jsvm_create_string_utf8(jsvm_env env, const char* value, size_t length, jsvm_value* result)
 {
-    return static_cast<Status>(napi_get_value_string_utf8(env, value, buf, bufsize, result));
+    return static_cast<jsvm_status>(napi_create_string_utf8(env, value, length, result));
 }
-Status AdjustExternalMemory(Env env, int64_t changeInBytes, int64_t *adjustedValue)
+jsvm_status jsvm_get_value_string_utf8(jsvm_env env, jsvm_value value, char* buf, size_t bufsize, size_t* result)
 {
-    return static_cast<Status>(napi_adjust_external_memory(env, changeInBytes, adjustedValue));
+    return static_cast<jsvm_status>(napi_get_value_string_utf8(env, value, buf, bufsize, result));
 }
-Status IsSet(Env env, Value value, bool *isSet)
+jsvm_status jsvm_adjust_external_memory(jsvm_env env, int64_t changeInBytes, int64_t* result)
 {
-    return Status::OK; // todo
+    return static_cast<jsvm_status>(napi_adjust_external_memory(env, changeInBytes, result));
 }
-Status CreateSet(Env env, Value *result)
+jsvm_status jsvm_is_set(jsvm_env env, jsvm_value value, bool* isSet)
 {
-    return Status::OK; // todo
+    return jsvm_status::ok; // todo
 }
-Status GetCbInfo(Env env, CallbackInfo cbinfo, size_t *argc, Value *argv, Value *thisArg, void **data)
+jsvm_status jsvm_create_set(jsvm_env env, jsvm_value* result)
 {
-    return static_cast<Status>(napi_get_cb_info(env, cbinfo, argc, argv, thisArg, data));
+    return jsvm_status::ok; // todo
 }
-Status GetNewTarget(Env env, CallbackInfo cbinfo, Value *result)
+jsvm_status jsvm_get_cb_info(jsvm_env env, jsvm_callback_info cbinfo, size_t* argc, jsvm_value* argv, jsvm_value* thisArg, void** data)
 {
-    return static_cast<Status>(napi_get_new_target(env, cbinfo, result));
+    return static_cast<jsvm_status>(napi_get_cb_info(env, cbinfo, argc, argv, thisArg, data));
 }
-Status Wrap(Env env, Value jsObject, void *nativeObject, Finalize finalizeCb, void *finalizeHint, Ref *result)
+jsvm_status jsvm_get_new_target(jsvm_env env, jsvm_callback_info cbinfo, jsvm_value* result)
 {
-    return static_cast<Status>(napi_wrap(env, jsObject, nativeObject, finalizeCb, finalizeHint, result));
+    return static_cast<jsvm_status>(napi_get_new_target(env, cbinfo, result));
 }
-Status Unwrap(Env env, Value jsObject, void **result)
+jsvm_status jsvm_wrap(jsvm_env env, jsvm_value jsObject, void* nativeObject, jsvm_finalize finalizeCb, void* finalizeHint,
+    jsvm_ref* result)
 {
-    return static_cast<Status>(napi_unwrap(env, jsObject, result));
+    return static_cast<jsvm_status>(napi_wrap(env, jsObject, nativeObject, finalizeCb, finalizeHint, result));
 }
-Status RemoveWrap(Env env, Value jsObject, void **result)
+jsvm_status jsvm_unwrap(jsvm_env env, jsvm_value jsObject, void** result)
 {
-    return static_cast<Status>(napi_remove_wrap(env, jsObject, result));
+    return static_cast<jsvm_status>(napi_unwrap(env, jsObject, result));
 }
-Status CreateReference(Env env, Value value, uint32_t initialRefcount, Ref *result)
+jsvm_status jsvm_remove_wrap(jsvm_env env, jsvm_value jsObject, void** result)
 {
-    return static_cast<Status>(napi_create_reference(env, value, initialRefcount, result));
+    return static_cast<jsvm_status>(napi_remove_wrap(env, jsObject, result));
 }
-Status DeleteReference(Env env, Ref ref)
+jsvm_status jsvm_create_reference(jsvm_env env, jsvm_value value, uint32_t initialRefcount, jsvm_ref* result)
 {
-    return static_cast<Status>(napi_delete_reference(env, ref));
+    return static_cast<jsvm_status>(napi_create_reference(env, value, initialRefcount, result));
 }
-Status ReferenceRef(Env env, Ref ref, uint32_t *result)
+jsvm_status jsvm_delete_reference(jsvm_env env, jsvm_ref ref)
 {
-    return static_cast<Status>(napi_reference_ref(env, ref, result));
+    return static_cast<jsvm_status>(napi_delete_reference(env, ref));
 }
-Status ReferenceUnref(Env env, Ref ref, uint32_t *result)
+jsvm_status jsvm_reference_ref(jsvm_env env, jsvm_ref ref, uint32_t* result)
 {
-    return static_cast<Status>(napi_reference_unref(env, ref, result));
+    return static_cast<jsvm_status>(napi_reference_ref(env, ref, result));
 }
-Status GetReferenceValue(Env env, Ref ref, Value *result)
+jsvm_status jsvm_reference_unref(jsvm_env env, jsvm_ref ref, uint32_t* result)
 {
-    return static_cast<Status>(napi_get_reference_value(env, ref, result));
+    return static_cast<jsvm_status>(napi_reference_unref(env, ref, result));
 }
-Status NewInstance(Env env, Value constructor, size_t argc, const Value *argv, Value *result)
+jsvm_status jsvm_get_reference_value(jsvm_env env, jsvm_ref ref, jsvm_value* result)
 {
-    return static_cast<Status>(napi_new_instance(env, constructor, argc, argv, result));
+    return static_cast<jsvm_status>(napi_get_reference_value(env, ref, result));
 }
-Status DefineClass(Env env, const char *utf8name, size_t length, Callback constructor, size_t propertyCount,
-                   const PropertyDescriptor *properties, Value *result)
+jsvm_status jsvm_new_instance(jsvm_env env, jsvm_value constructor, size_t argc, const jsvm_value* argv, jsvm_value* result)
+{
+    return static_cast<jsvm_status>(napi_new_instance(env, constructor, argc, argv, result));
+}
+jsvm_status jsvm_define_class(jsvm_env env, const char* utf8name, size_t length, jsvm_callback constructor,
+    size_t propertyCount, const jsvm_property_descriptor* properties, jsvm_value* result)
 {
     std::vector<napi_property_descriptor> napi_properties;
     napi_properties.reserve(propertyCount);
@@ -581,10 +581,11 @@ Status DefineClass(Env env, const char *utf8name, size_t length, Callback constr
         napi_properties.push_back(property);
     }
 
-    return static_cast<Status>(
+    return static_cast<jsvm_status>(
         napi_define_class(env, utf8name, length, constructor, nullptr, propertyCount, napi_properties.data(), result));
 }
-Status DefineProperties(Env env, Value object, size_t propertyCount, const PropertyDescriptor *properties)
+jsvm_status jsvm_define_properties(jsvm_env env, jsvm_value object, size_t propertyCount,
+    const jsvm_property_descriptor* properties)
 {
     std::vector<napi_property_descriptor> napi_properties;
     napi_properties.reserve(propertyCount);
@@ -601,205 +602,208 @@ Status DefineProperties(Env env, Value object, size_t propertyCount, const Prope
         property.data = properties[i].data;
         napi_properties.push_back(property);
     }
-    return static_cast<Status>(napi_define_properties(env, object, propertyCount, napi_properties.data()));
+    return static_cast<jsvm_status>(napi_define_properties(env, object, propertyCount, napi_properties.data()));
 }
-Status CallFunction(Env env, Value recv, Value func, size_t argc, const Value *argv, Value *result)
+jsvm_status jsvm_call_function(jsvm_env env, jsvm_value recv, jsvm_value func, size_t argc, const jsvm_value* argv, jsvm_value* result)
 {
-    return static_cast<Status>(napi_call_function(env, recv, func, argc, argv, result));
+    return static_cast<jsvm_status>(napi_call_function(env, recv, func, argc, argv, result));
 }
-Status CreateFunction(Env env, const char *utf8name, size_t length, Callback cb, void *data, Value *result)
+jsvm_status jsvm_create_function(jsvm_env env, const char* utf8name, size_t length, jsvm_callback cb, void* data,
+    jsvm_value* result)
 {
-    return static_cast<Status>(napi_create_function(env, utf8name, length, cb, data, result));
+    return static_cast<jsvm_status>(napi_create_function(env, utf8name, length, cb, data, result));
 }
-Status Typeof(Env env, Value value, ValueType *result)
+jsvm_status jsvm_typeof(jsvm_env env, jsvm_value value, jsvm_valuetype* result)
 {
 
     napi_valuetype napi_result;
     auto status = napi_typeof(env, value, &napi_result);
-    *result = static_cast<ValueType>(napi_result);
-    return static_cast<Status>(status);
+    *result = static_cast<jsvm_valuetype>(napi_result);
+    return static_cast<jsvm_status>(status);
 }
-Status CreateArraybuffer(Env env, size_t byteLength, void **data, Value *result)
+jsvm_status jsvm_create_arraybuffer(jsvm_env env, size_t byteLength, void** data, jsvm_value* result)
 {
-    return static_cast<Status>(napi_create_arraybuffer(env, byteLength, data, result));
+    return static_cast<jsvm_status>(napi_create_arraybuffer(env, byteLength, data, result));
 }
-Status IsArraybuffer(Env env, Value value, bool *result)
+jsvm_status jsvm_is_arraybuffer(jsvm_env env, jsvm_value value, bool* result)
 {
-    return static_cast<Status>(napi_is_arraybuffer(env, value, result));
+    return static_cast<jsvm_status>(napi_is_arraybuffer(env, value, result));
 }
-Status IsTypedarray(Env env, Value value, bool *result)
+jsvm_status jsvm_is_typedarray(jsvm_env env, jsvm_value value, bool* result)
 {
-    return static_cast<Status>(napi_is_typedarray(env, value, result));
+    return static_cast<jsvm_status>(napi_is_typedarray(env, value, result));
 }
-Status IsDataview(Env env, Value value, bool *result)
+jsvm_status jsvm_is_dataview(jsvm_env env, jsvm_value value, bool* result)
 {
-    return static_cast<Status>(napi_is_dataview(env, value, result));
+    return static_cast<jsvm_status>(napi_is_dataview(env, value, result));
 }
-Status CreateTypedarray(Env env, TypedarrayType type, size_t length, Value arraybuffer, size_t byteOffset,
-                        Value *result)
+jsvm_status jsvm_create_typedarray(jsvm_env env, jsvm_typedarray_type type, size_t length, jsvm_value arraybuffer,
+    size_t byteOffset, jsvm_value* result)
 {
-    return static_cast<Status>(
+    return static_cast<jsvm_status>(
         napi_create_typedarray(env, static_cast<napi_typedarray_type>(type), length, arraybuffer, byteOffset, result));
 }
-Status CreateDataview(Env env, size_t length, Value arraybuffer, size_t byteOffset, Value *result)
+jsvm_status jsvm_create_dataview(jsvm_env env, size_t length, jsvm_value arraybuffer, size_t byteOffset, jsvm_value* result)
 {
-    return static_cast<Status>(napi_create_dataview(env, length, arraybuffer, byteOffset, result));
+    return static_cast<jsvm_status>(napi_create_dataview(env, length, arraybuffer, byteOffset, result));
 }
-Status GetArraybufferInfo(Env env, Value arraybuffer, void **data, size_t *byteLength)
+jsvm_status jsvm_get_arraybuffer_info(jsvm_env env, jsvm_value arraybuffer, void** data, size_t* byteLength)
 {
-    return static_cast<Status>(napi_get_arraybuffer_info(env, arraybuffer, data, byteLength));
+    return static_cast<jsvm_status>(napi_get_arraybuffer_info(env, arraybuffer, data, byteLength));
 }
-Status GetTypedarrayInfo(Env env, Value typedarray, TypedarrayType *type, size_t *length, void **data,
-                         Value *arraybuffer, size_t *byteOffset)
+jsvm_status jsvm_get_typedarray_info(jsvm_env env, jsvm_value typedarray, jsvm_typedarray_type* type, size_t* length, void** data,
+    jsvm_value* arraybuffer, size_t* byteOffset)
 {
     napi_typedarray_type napi_type;
-    auto status = static_cast<Status>(
+    auto status = static_cast<jsvm_status>(
         napi_get_typedarray_info(env, typedarray, &napi_type, length, data, arraybuffer, byteOffset));
-    *type = static_cast<TypedarrayType>(napi_type);
+    *type = static_cast<jsvm_typedarray_type>(napi_type);
     return status;
 }
-Status GetDataviewInfo(Env env, Value dataview, size_t *bytelength, void **data, Value *arraybuffer, size_t *byteOffset)
+jsvm_status jsvm_get_dataview_info(jsvm_env env, jsvm_value dataview, size_t* bytelength, void** data, jsvm_value* arraybuffer,
+    size_t* byteOffset)
 {
 
-    return static_cast<Status>(napi_get_dataview_info(env, dataview, bytelength, data, arraybuffer, byteOffset));
+    return static_cast<jsvm_status>(napi_get_dataview_info(env, dataview, bytelength, data, arraybuffer, byteOffset));
 }
-Status GetGlobal(Env env, Value *result)
+jsvm_status jsvm_get_global(jsvm_env env, jsvm_value* result)
 {
-    return static_cast<Status>(napi_get_global(env, result));
+    return static_cast<jsvm_status>(napi_get_global(env, result));
 }
-Status SetInstanceData(Env env, void *data, Finalize finalizeCb, void *finalizeHint)
+jsvm_status jsvm_set_instance_data(jsvm_env env, void* data, jsvm_finalize finalizeCb, void* finalizeHint)
 {
-    return static_cast<Status>(napi_set_instance_data(env, data, finalizeCb, finalizeHint));
+    return static_cast<jsvm_status>(napi_set_instance_data(env, data, finalizeCb, finalizeHint));
 }
-Status GetInstanceData(Env env, void **data)
+jsvm_status jsvm_get_instance_data(jsvm_env env, void** data)
 {
-    return static_cast<Status>(napi_get_instance_data(env, data));
+    return static_cast<jsvm_status>(napi_get_instance_data(env, data));
 }
-Status CreateDate(Env env, double time, Value *result)
+jsvm_status jsvm_create_date(jsvm_env env, double time, jsvm_value* result)
 {
-    return static_cast<Status>(napi_create_date(env, time, result));
+    return static_cast<jsvm_status>(napi_create_date(env, time, result));
 }
-Status IsDate(Env env, Value value, bool *isDate)
+jsvm_status jsvm_is_date(jsvm_env env, jsvm_value value, bool* isDate)
 {
-    return static_cast<Status>(napi_is_date(env, value, isDate));
+    return static_cast<jsvm_status>(napi_is_date(env, value, isDate));
 }
-Status GetDateValue(Env env, Value value, double *result)
+jsvm_status jsvm_get_date_value(jsvm_env env, jsvm_value value, double* result)
 {
-    return static_cast<Status>(napi_get_date_value(env, value, result));
+    return static_cast<jsvm_status>(napi_get_date_value(env, value, result));
 }
-Status IsError(Env env, Value value, bool *result)
+jsvm_status jsvm_is_error(jsvm_env env, jsvm_value value, bool* result)
 {
-    return static_cast<Status>(napi_is_error(env, value, result));
+    return static_cast<jsvm_status>(napi_is_error(env, value, result));
 }
-Status CreateStringUtf16(Env env, const char16_t *str, size_t length, Value *result)
+jsvm_status jsvm_create_string_utf16(jsvm_env env, const char16_t* str, size_t length, jsvm_value* result)
 {
-    return static_cast<Status>(napi_create_string_utf16(env, str, length, result));
+    return static_cast<jsvm_status>(napi_create_string_utf16(env, str, length, result));
 }
-Status GetValueStringUtf16(Env env, Value value, char16_t *buf, size_t bufsize, size_t *result)
+jsvm_status jsvm_get_value_string_utf16(jsvm_env env, jsvm_value value, char16_t* buf, size_t bufsize, size_t* result)
 {
-    return static_cast<Status>(napi_get_value_string_utf16(env, value, buf, bufsize, result));
+    return static_cast<jsvm_status>(napi_get_value_string_utf16(env, value, buf, bufsize, result));
 }
-Status CreateStringLatin1(Env env, const char *str, size_t length, Value *result)
+jsvm_status jsvm_create_string_latin1(jsvm_env env, const char* str, size_t length, jsvm_value* result)
 {
-    return static_cast<Status>(napi_create_string_latin1(env, str, length, result));
+    return static_cast<jsvm_status>(napi_create_string_latin1(env, str, length, result));
 }
-Status GetValueStringLatin1(Env env, Value value, char *buf, size_t bufsize, size_t *result)
+jsvm_status jsvm_get_value_string_latin1(jsvm_env env, jsvm_value value, char* buf, size_t bufsize, size_t* result)
 {
-    return static_cast<Status>(napi_get_value_string_latin1(env, value, buf, bufsize, result));
+    return static_cast<jsvm_status>(napi_get_value_string_latin1(env, value, buf, bufsize, result));
 }
-Status CreateBigintInt64(Env env, int64_t value, Value *result)
+jsvm_status jsvm_create_bigint_int64(jsvm_env env, int64_t value, jsvm_value* result)
 {
-    return static_cast<Status>(napi_create_bigint_int64(env, value, result));
+    return static_cast<jsvm_status>(napi_create_bigint_int64(env, value, result));
 }
-Status GetValueBigintInt64(Env env, Value value, int64_t *result, bool *lossless)
+jsvm_status jsvm_get_value_bigint_int64(jsvm_env env, jsvm_value value, int64_t* result, bool* lossless)
 {
-    return static_cast<Status>(napi_get_value_bigint_int64(env, value, result, lossless));
+    return static_cast<jsvm_status>(napi_get_value_bigint_int64(env, value, result, lossless));
 }
-Status CreateBigintUint64(Env env, uint64_t value, Value *result)
+jsvm_status jsvm_create_bigint_uint64(jsvm_env env, uint64_t value, jsvm_value* result)
 {
-    return static_cast<Status>(napi_create_bigint_uint64(env, value, result));
+    return static_cast<jsvm_status>(napi_create_bigint_uint64(env, value, result));
 }
-Status GetValueBigintUint64(Env env, Value value, uint64_t *result, bool *lossless)
+jsvm_status jsvm_get_value_bigint_uint64(jsvm_env env, jsvm_value value, uint64_t* result, bool* lossless)
 {
-    return static_cast<Status>(napi_get_value_bigint_uint64(env, value, result, lossless));
+    return static_cast<jsvm_status>(napi_get_value_bigint_uint64(env, value, result, lossless));
 }
-Status RunScript(Env env, Value script, Value *result)
+jsvm_status jsvm_run_script(jsvm_env env, jsvm_value script, jsvm_value* result)
 {
-    return static_cast<Status>(napi_run_script(env, script, result));
+    return static_cast<jsvm_status>(napi_run_script(env, script, result));
 }
-Status PumpMessageLoop(VM vm, bool *result)
+jsvm_status jsvm_pump_messageloop(jsvm_vm vm, bool* result)
 {
     DEBUG_CHECK(vm->isolate_ != nullptr);
     *result = v8::platform::PumpMessageLoop(s_pPlatform, vm->isolate_, v8::platform::MessageLoopBehavior::kDoNotWait);
             
-    return Status::OK; // todo
+    return jsvm_status::ok; // todo
 }
-Status PerformMicrotaskCheckpoint(VM vm)
+jsvm_status jsvm_perform_microtask_checkpoint(jsvm_vm vm)
 {
 
     DEBUG_CHECK(vm->isolate_ != nullptr);
     vm->isolate_->PerformMicrotaskCheckpoint();
-    return Status::OK; // todo
+    return jsvm_status::ok; // todo
 }
-Status GetProperty(Env env, Value object, Value key, Value *result)
+jsvm_status jsvm_get_property(jsvm_env env, jsvm_value object, jsvm_value key, jsvm_value* result)
 {
-    return static_cast<Status>(napi_get_property(env, object, key, result));
+    return static_cast<jsvm_status>(napi_get_property(env, object, key, result));
 }
-Status SetNamedProperty(Env env, Value object, const char *utf8name, Value value)
+jsvm_status jsvm_set_named_property(jsvm_env env, jsvm_value object, const char* utf8name, jsvm_value value)
 {
-    return static_cast<Status>(napi_set_named_property(env, object, utf8name, value));
+    return static_cast<jsvm_status>(napi_set_named_property(env, object, utf8name, value));
 }
-Status GetNamedProperty(Env env, Value object, const char *utf8name, Value *result)
+jsvm_status jsvm_get_named_property(jsvm_env env, jsvm_value object, const char* utf8name, jsvm_value* result)
 {
-    return static_cast<Status>(napi_get_named_property(env, object, utf8name, result));
+    return static_cast<jsvm_status>(napi_get_named_property(env, object, utf8name, result));
 }
-Status HasNamedProperty(Env env, Value object, const char *utf8name, bool *result)
+jsvm_status jsvm_has_named_property(jsvm_env env, jsvm_value object, const char* utf8name, bool* result)
 {
-    return static_cast<Status>(napi_has_named_property(env, object, utf8name, result));
+    return static_cast<jsvm_status>(napi_has_named_property(env, object, utf8name, result));
 }
-Status CreateObject(Env env, Value *result)
+jsvm_status jsvm_create_object(jsvm_env env, jsvm_value* result)
 {
-    return static_cast<Status>(napi_create_object(env, result));
+    return static_cast<jsvm_status>(napi_create_object(env, result));
 }
-Status ResolveDeferred(Env env, Deferred deferred, Value resolution)
+jsvm_status jsvm_resolve_deferred(jsvm_env env, jsvm_deferred deferred, jsvm_value resolution)
 {
-    return static_cast<Status>(napi_resolve_deferred(env, deferred, resolution));
+    return static_cast<jsvm_status>(napi_resolve_deferred(env, deferred, resolution));
 }
-Status RejectDeferred(Env env, Deferred deferred, Value resolution)
+jsvm_status jsvm_reject_deferred(jsvm_env env, jsvm_deferred deferred, jsvm_value resolution)
 {
-    return static_cast<Status>(napi_reject_deferred(env, deferred, resolution));
+    return static_cast<jsvm_status>(napi_reject_deferred(env, deferred, resolution));
 }
-Status CreateExternal(Env env, void *data, Finalize finalizeCb, void *finalizeHint, Value *result)
+jsvm_status jsvm_create_external(jsvm_env env, void* data, jsvm_finalize finalizeCb, void* finalizeHint, jsvm_value* result)
 {
-    return static_cast<Status>(napi_create_external(env, data, finalizeCb, finalizeHint, result));
+    return static_cast<jsvm_status>(napi_create_external(env, data, finalizeCb, finalizeHint, result));
 }
-Status GetValueExternal(Env env, Value value, void **result)
+jsvm_status jsvm_get_value_external(jsvm_env env, jsvm_value value, void** result)
 {
-    return static_cast<Status>(napi_get_value_external(env, value, result));
+    return static_cast<jsvm_status>(napi_get_value_external(env, value, result));
 }
-Status AddFinalizer(Env env, Value jsObject, void *finalizeData, Finalize finalizeCb, void *finalizeHint, Ref *result)
+jsvm_status jsvm_add_finalizer(jsvm_env env, jsvm_value jsObject, void* finalizeData, jsvm_finalize finalizeCb,
+    void* finalizeHint, jsvm_ref* result)
 {
-    return static_cast<Status>(napi_add_finalizer(env, jsObject, finalizeData, finalizeCb, finalizeHint, result));
+    return static_cast<jsvm_status>(napi_add_finalizer(env, jsObject, finalizeData, finalizeCb, finalizeHint, result));
 }
-Status CoerceToBool(Env env, Value value, Value *result)
+jsvm_status jsvm_coerce_to_bool(jsvm_env env, jsvm_value value, jsvm_value* result)
 {
-    return static_cast<Status>(napi_coerce_to_bool(env, value, result));
+    return static_cast<jsvm_status>(napi_coerce_to_bool(env, value, result));
 }
-Status CoerceToNumber(Env env, Value value, Value *result)
+jsvm_status jsvm_coerce_to_number(jsvm_env env, jsvm_value value, jsvm_value* result)
 {
-    return static_cast<Status>(napi_coerce_to_number(env, value, result));
+    return static_cast<jsvm_status>(napi_coerce_to_number(env, value, result));
 }
-Status CoerceToObject(Env env, Value value, Value *result)
+jsvm_status jsvm_coerce_to_object(jsvm_env env, jsvm_value value, jsvm_value* result)
 {
-    return static_cast<Status>(napi_coerce_to_object(env, value, result));
+    return static_cast<jsvm_status>(napi_coerce_to_object(env, value, result));
 }
-Status CoerceToString(Env env, Value value, Value *result)
+jsvm_status jsvm_coerce_to_string(jsvm_env env, jsvm_value value, jsvm_value* result)
 {
-    return static_cast<Status>(napi_coerce_to_string(env, value, result));
+    return static_cast<jsvm_status>(napi_coerce_to_string(env, value, result));
 }
-Status GetPropertyNames(Env env, Value object, Value *result)
+jsvm_status jsvm_get_property_names(jsvm_env env, jsvm_value object, jsvm_value* result)
 {
-    return static_cast<Status>(napi_get_property_names(env, object, result));
+    return static_cast<jsvm_status>(napi_get_property_names(env, object, result));
 }
 static napi_status NAPI_CDECL napi_set_prototype(napi_env env, napi_value object, napi_value prototype)
 {
@@ -829,17 +833,17 @@ static napi_status NAPI_CDECL napi_object_set_prototype_of(napi_env env, napi_va
     RETURN_STATUS_IF_FALSE(env, set_maybe.FromMaybe(false), napi_generic_failure);
     return GET_RETURN_STATUS(env);
 }
-Status ObjectSetPrototypeOf(Env env, Value object, Value prototype)
+jsvm_status jsvm_object_set_prototype_of(jsvm_env env, jsvm_value object, jsvm_value prototype)
 {
-    return static_cast<Status>(napi_object_set_prototype_of(env, object, prototype));
+    return static_cast<jsvm_status>(napi_object_set_prototype_of(env, object, prototype));
 }
-Status ObjectGetPrototypeOf(Env env, Value object,  Value *result)
+jsvm_status jsvm_object_get_prototype_of(jsvm_env env, jsvm_value object, jsvm_value* result)
 {
-    return static_cast<Status>(napi_get_prototype(env, object, result));
+    return static_cast<jsvm_status>(napi_get_prototype(env, object, result));
 }
-Status GetPrototype(Env env, Value object, Value *result)
+jsvm_status jsvm_get_prototype(jsvm_env env, jsvm_value object, jsvm_value* result)
 {
-    return static_cast<Status>(napi_get_prototype(env, object, result));
+    return static_cast<jsvm_status>(napi_get_prototype(env, object, result));
 }
 const char *ToCString(const v8::String::Utf8Value &value)
 {
@@ -964,7 +968,7 @@ void ReportException(v8::Isolate *isolate, v8::Local<v8::Value> e)
     }
     LOGE("==JSERROR:\n%s", errInfo);
 }
-Status ReportException(Env env)
+jsvm_status ReportException(jsvm_env env)
 {
     bool isExceptionPending;
     auto status = napi_is_exception_pending(env, &isExceptionPending);
@@ -979,26 +983,28 @@ Status ReportException(Env env)
         ReportException(env->isolate, val);
     }
 
-    return Status::OK; // todo
+    return jsvm_status::ok; // todo
 }
 
 laya::DebuggerAgent *pDbgAgent = nullptr;
-void OpenInspector(Env env, int port)
+jsvm_status jsvm_open_inspector(jsvm_env env, int port)
 {
 #ifdef JS_V8_DEBUGGER
     // std::shared_ptr<jsvm::ScriptThread> scriptThread
     pDbgAgent = new laya::DebuggerAgent("layabox", port);
     pDbgAgent->onJSStart(env->scriptThread);
 #endif
+    return jsvm_status::ok;
 }
-void WaitForDebugger(Env env, bool breakNextLine)
+jsvm_status jsvm_wait_for_debugger(jsvm_env env, bool breakNextLine)
 {
 #ifdef JS_V8_DEBUGGER
     pDbgAgent->WaitForDebugger(breakNextLine);
 #endif
+    return jsvm_status::ok;
 }
 // 关闭调试
-void CloseInspector(Env env)
+jsvm_status jsvm_close_inspector(jsvm_env env)
 {
 #ifdef JS_V8_DEBUGGER
     if (pDbgAgent != nullptr)
@@ -1008,6 +1014,5 @@ void CloseInspector(Env env)
         pDbgAgent = nullptr;
     }
 #endif
+    return jsvm_status::ok;
 }
-
-} // namespace jsvm

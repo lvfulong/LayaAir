@@ -26,18 +26,18 @@ namespace laya{
 #endif
 
     //js下载完成之后调回这里，这里保存着对应的c++的回调，再继续调回c++，使自己看起来像是一个普通的c++接口
-    jsvm::Value onDownloadEndJs(jsvm::Env env, jsvm::CallbackInfo info)
+    jsvm_value onDownloadEndJs(jsvm_env env, jsvm_callback_info info)
     {
-        jsvm::Status status;
+        jsvm_status status;
         size_t argc = 2;
-        jsvm::Value args[2];
-        jsvm::Value _this;
-        jsvm::GetCbInfo(env, info, &argc, args, &_this, nullptr);
+        jsvm_value args[2];
+        jsvm_value _this;
+        jsvm_get_cb_info(env, info, &argc, args, &_this, nullptr);
         DEBUG_CHECK(argc >= 2);
 
-        jsvm::Value external_onok_value;
-        status = jsvm::GetNamedProperty(env, _this, "external_onok", &external_onok_value);
-        DEBUG_CHECK(status == jsvm::Status::OK);
+        jsvm_value external_onok_value;
+        status = jsvm_get_named_property(env, _this, "external_onok", &external_onok_value);
+        DEBUG_CHECK(status == jsvm_status::ok);
 
 
         jsbind::Local args0(args[0]);
@@ -52,8 +52,8 @@ namespace laya{
 
 
         void* external_onok;
-        status = jsvm::GetValueExternal(env, external_onok_value, &external_onok);
-        DEBUG_CHECK(status == jsvm::Status::OK);
+        status = jsvm_get_value_external(env, external_onok_value, &external_onok);
+        DEBUG_CHECK(status == jsvm_status::ok);
         auto extdata = reinterpret_cast<JSDownloader::jsCallbackData*>(external_onok);
         DEBUG_CHECK(extdata != nullptr);
 
@@ -66,16 +66,16 @@ namespace laya{
         delete extdata;
 
         // 将 external_onok 成员设置为 null，避免多次调用使用上面已经删除的指针
-        jsvm::Value null;
-        status = jsvm::GetNull(env, &null);
-        DEBUG_CHECK(status == jsvm::Status::OK);
-        status = jsvm::SetNamedProperty(env, _this, "external_onok", null);
-        DEBUG_CHECK(status == jsvm::Status::OK);
+        jsvm_value null;
+        status = jsvm_get_null(env, &null);
+        DEBUG_CHECK(status == jsvm_status::ok);
+        status = jsvm_set_named_property(env, _this, "external_onok", null);
+        DEBUG_CHECK(status == jsvm_status::ok);
 
         return null;
     }
 
-    void JSDownloader::setJSDownloader(jsvm::Value obj){
+    void JSDownloader::setJSDownloader(jsvm_value obj){
         //转成持久句柄。
         m_jsDownloader = jsbind::Persistent(obj);
     }
@@ -83,7 +83,7 @@ namespace laya{
     void JSDownloader::download(const char* pszUrl, onDownloadedFunc onok){
 
         GET_ENV
-        jsvm::Status status;
+        jsvm_status status;
         auto func = jsbind::MakeFunctionRaw(onDownloadEndJs);
 
         jsCallbackData* data = new jsCallbackData();
@@ -91,8 +91,8 @@ namespace laya{
         data->cFunc = onok;
         data->jsFunc = jsbind::Persistent(func);
 
-        jsvm::Value external_onok;
-        status = jsvm::CreateExternal(env, data, nullptr, nullptr, &external_onok);
+        jsvm_value external_onok;
+        status = jsvm_create_external(env, data, nullptr, nullptr, &external_onok);
 
         auto obj = jsbind::MakeObject();
         jsbind::set_option(obj, "onDownloadEnd", func);

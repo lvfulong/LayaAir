@@ -10,50 +10,50 @@
 namespace jsbind
 {
 
-template <typename T> bool get_option(jsvm::Value options, std::string_view name, T &value)
+template <typename T> bool get_option(jsvm_value options, std::string_view name, T &value)
 {
     std::string_view::size_type const dot_pos = name.find('.');
     if (dot_pos != name.npos)
     {
-        jsvm::Value suboptions;
+        jsvm_value suboptions;
         return get_option(options, name.substr(0, dot_pos), suboptions) &&
                get_option(suboptions, name.substr(dot_pos + 1), value);
     }
 
     GET_ENV
-    jsvm::Status status;
+    jsvm_status status;
     bool hasProperty;
-    status = jsvm::HasNamedProperty(env, options, name.data(), &hasProperty);
-    DEBUG_CHECK(status == jsvm::Status::OK);
+    status = jsvm_has_named_property(env, options, name.data(), &hasProperty);
+    DEBUG_CHECK(status == jsvm_status::ok);
     if (!hasProperty)
     {
         return false;
     }
-    jsvm::Value val;
-    status = jsvm::GetNamedProperty(env, options, name.data(), &val);
-    DEBUG_CHECK(status == jsvm::Status::OK);
+    jsvm_value val;
+    status = jsvm_get_named_property(env, options, name.data(), &val);
+    DEBUG_CHECK(status == jsvm_status::ok);
     value = internal::ValueTraits<T>::ToCpp(val);
     return true;
 }
 
-template <typename T> bool set_option(jsvm::Value options, std::string_view name, T const &value)
+template <typename T> bool set_option(jsvm_value options, std::string_view name, T const &value)
 {
     std::string_view::size_type const dot_pos = name.find('.');
     if (dot_pos != name.npos)
     {
-        jsvm::Value suboptions;
+        jsvm_value suboptions;
         return get_option(options, name.substr(0, dot_pos), suboptions) &&
                set_option(suboptions, name.substr(dot_pos + 1), value);
     }
     GET_ENV
-    jsvm::Status status;
-    status = jsvm::SetNamedProperty(env, options, name.data(), internal::ValueTraits<T>::ToJs(value));
-    DEBUG_CHECK(status == jsvm::Status::OK);
+    jsvm_status status;
+    status = jsvm_set_named_property(env, options, name.data(), internal::ValueTraits<T>::ToJs(value));
+    DEBUG_CHECK(status == jsvm_status::ok);
     return true;
 }
 
 /*template <typename T>
-void set_const(jsvm::Value options, std::string_view name, T const &value)
+void set_const(jsvm_value options, std::string_view name, T const &value)
 {
     options
         ->DefineOwnProperty(isolate->GetCurrentContext(), ValueTraits<const char *>::ToJs(name.data()),
@@ -67,8 +67,8 @@ struct value_object_field
 {
     std::string field_name;
     void *pfield;
-    void (*from_v8)(jsvm::Value value, void *obj, void *pfield);
-    jsvm::Value (*to_v8)(const void *obj, void *pfield);
+    void (*from_v8)(jsvm_value value, void *obj, void *pfield);
+    jsvm_value (*to_v8)(const void *obj, void *pfield);
 };
 template <class T> struct is_value_object : std::false_type
 {
@@ -85,7 +85,7 @@ template <typename T> class value_object : public internal::value_object_base<T>
         is_bound = true;
     }
 
-    template <typename Field> static void field_from_v8(jsvm::Value value, void *obj, void *pfield)
+    template <typename Field> static void field_from_v8(jsvm_value value, void *obj, void *pfield)
     {
         auto t = reinterpret_cast<T *>(obj);
         Field field = internal::ptr_cast<Field>(pfield);
@@ -93,7 +93,7 @@ template <typename T> class value_object : public internal::value_object_base<T>
         t->*field = internal::ValueTraits<FieldType>::ToCpp(value);
     }
 
-    template <typename Field> static jsvm::Value field_to_v8(const void *obj, void *pfield)
+    template <typename Field> static jsvm_value field_to_v8(const void *obj, void *pfield)
     {
         auto t = reinterpret_cast<const T *>(obj);
         Field field = internal::ptr_cast<Field>(pfield);
@@ -124,17 +124,17 @@ template <typename T> bool value_object<T>::is_bound = false;
 namespace internal
 {
 
-template <typename T> T convert_value_object_from_js(jsvm::Value value)
+template <typename T> T convert_value_object_from_js(jsvm_value value)
 {
     DEBUG_CHECK(jsbind::value_object<T>::is_bound && "casting to an unbound value_type");
     T ret{};
     for (auto &field : jsbind::value_object<T>::fields)
     {
         GET_ENV
-        jsvm::Status status;
-        jsvm::Value prop;
-        status = jsvm::GetNamedProperty(env, value, field.field_name.c_str(), &prop);
-        DEBUG_CHECK(status == jsvm::Status::OK);
+        jsvm_status status;
+        jsvm_value prop;
+        status = jsvm_get_named_property(env, value, field.field_name.c_str(), &prop);
+        DEBUG_CHECK(status == jsvm_status::ok);
 
         // v8::MaybeLocal<v8::Value> prop =
         //     obj->Get(v8::Isolate::GetCurrent()->GetCurrentContext(), field.toLocalFieldName());
@@ -153,22 +153,22 @@ template <typename T> T convert_value_object_from_js(jsvm::Value value)
     return ret;
 }
 
-template <typename T> jsvm::Value convert_value_object_to_js(const T &value)
+template <typename T> jsvm_value convert_value_object_to_js(const T &value)
 {
     DEBUG_CHECK(jsbind::value_object<T>::is_bound && "casting from an unbound value_type");
     GET_ENV
-    jsvm::Status status;
-    jsvm::Value result;
-    status = jsvm::CreateObject(env, &result);
-    DEBUG_CHECK(status == jsvm::Status::OK);
+    jsvm_status status;
+    jsvm_value result;
+    status = jsvm_create_object(env, &result);
+    DEBUG_CHECK(status == jsvm_status::ok);
     for (auto &field : jsbind::value_object<T>::fields)
     {
-        status = jsvm::SetNamedProperty(env, result, field.field_name.c_str(), field.to_v8(&value, field.pfield));
-        DEBUG_CHECK(status == jsvm::Status::OK);
+        status = jsvm_set_named_property(env, result, field.field_name.c_str(), field.to_v8(&value, field.pfield));
+        DEBUG_CHECK(status == jsvm_status::ok);
     }
     return result;
 }
-template <typename T> jsvm::Value convert_value_object_to_js(T *value)
+template <typename T> jsvm_value convert_value_object_to_js(T *value)
 {
     DEBUG_CHECK(jsbind::value_object<T>::is_bound && "casting from an unbound value_type");
     if (value == nullptr)
@@ -181,11 +181,11 @@ template <typename T> jsvm::Value convert_value_object_to_js(T *value)
 template <typename T> class ValueTraits<T, std::enable_if_t<internal::is_value_object<T>::value>>
 {
   public:
-    static jsvm::Value ToJs(T value, bool callDestructor = true)
+    static jsvm_value ToJs(T value, bool callDestructor = true)
     {
         return internal::convert_value_object_to_js(value);
     }
-    static T ToCpp(jsvm::Value value)
+    static T ToCpp(jsvm_value value)
     {
         return internal::convert_value_object_from_js<T>(value);
     }
@@ -194,11 +194,11 @@ template <typename T> class ValueTraits<T, std::enable_if_t<internal::is_value_o
 template <typename T> class ValueTraits<T *, std::enable_if_t<internal::is_value_object<T>::value>>
 {
   public:
-    static jsvm::Value ToJs(T *value, bool callDestructor = true)
+    static jsvm_value ToJs(T *value, bool callDestructor = true)
     {
         return internal::convert_value_object_to_js(value);
     }
-    static T ToCpp(jsvm::Value value)
+    static T ToCpp(jsvm_value value)
     {
         return internal::convert_value_object_from_js<T>(value);
     }
@@ -207,7 +207,7 @@ template <typename T> class ValueTraits<T *, std::enable_if_t<internal::is_value
 class Object
 {
   public:
-    explicit Object(jsvm::Value object) : object_(object)
+    explicit Object(jsvm_value object) : object_(object)
     {
     }
 
@@ -248,14 +248,14 @@ class Object
         internal::addDeinitializer([data]() { delete data; });
         data->name = name;
 
-        jsvm::PropertyDescriptor descriptor;
+        jsvm_property_descriptor descriptor;
         descriptor.utf8name = name;
         descriptor.name = NULL;
         descriptor.method = internal::InvokeMethodStatic<ReturnType, Args...>;
         descriptor.getter = NULL;
         descriptor.setter = NULL;
         descriptor.value = NULL;
-        descriptor.attributes = jsvm::PropertyAttributes::DEFAULT;
+        descriptor.attributes = jsvm_property_attributes::jsvm_default;
         descriptor.data = data;
         propertyDescriptorVector_.push_back(descriptor);
         return *this;
@@ -266,32 +266,32 @@ class Object
         FuncInfo<decltype(func)> *data = new FuncInfo<decltype(func)>(func);
         internal::addDeinitializer([data]() { delete data; });
         data->name = name;
-        jsvm::PropertyDescriptor descriptor;
+        jsvm_property_descriptor descriptor;
         descriptor.utf8name = name;
         descriptor.name = NULL;
         descriptor.method = internal::InvokeGlobalMethodOptionalOverride<ReturnType, Args...>;
         descriptor.getter = NULL;
         descriptor.setter = NULL;
         descriptor.value = NULL;
-        descriptor.attributes = jsvm::PropertyAttributes::DEFAULT;
+        descriptor.attributes = jsvm_property_attributes::jsvm_default;
         descriptor.data = data;
         propertyDescriptorVector_.push_back(descriptor);
         return *this;
     }
-    jsvm::Value Register(jsvm::Env env, jsvm::Value exports, const char *className)
+    jsvm_value Register(jsvm_env env, jsvm_value exports, const char *className)
     {
-        jsvm::DefineProperties(env, object_, propertyDescriptorVector_.size(), propertyDescriptorVector_.data());
+        jsvm_define_properties(env, object_, propertyDescriptorVector_.size(), propertyDescriptorVector_.data());
 
         if (exports != nullptr && className != nullptr)
         {
-            jsvm::SetNamedProperty(env, exports, className, object_);
+            jsvm_set_named_property(env, exports, className, object_);
         }
         return exports;
     }
 
   private:
-    std::vector<jsvm::PropertyDescriptor> propertyDescriptorVector_;
-    jsvm::Value object_ = nullptr;
+    std::vector<jsvm_property_descriptor> propertyDescriptorVector_;
+    jsvm_value object_ = nullptr;
 };
 } // namespace jsbind
 

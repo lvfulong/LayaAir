@@ -2,131 +2,124 @@
 #define __JSVM_H__
 
 #include "JSVM_Types.h"
-#include "ScriptThread.h"
+//#include "ScriptThread.h"
 #include <cstdint>
 #if defined(JS_OHOS_JSVM)
 #include "ark_runtime/jsvm.h"
 #else
 
 #endif
-namespace jsvm
-{
-/*JSVM_EXTERN*/ Status Init(const InitOptions *options);
-/*JSVM_EXTERN*/ Status CreateVM(const CreateVMOptions *options, VM *result);
-/*JSVM_EXTERN*/ Status DestroyVM(VM vm);
-/*JSVM_EXTERN*/ Status OpenVMScope(VM vm, VMScope *result);
-/*JSVM_EXTERN*/ Status CloseVMScope(VM vm, VMScope scope);
-/*JSVM_EXTERN*/ Status OpenEnvScope(Env env, EnvScope *result);
-/*JSVM_EXTERN*/ Status CloseEnvScope(Env env, EnvScope scope);
-/*JSVM_EXTERN*/ Status CreateEnv(VM vm, size_t propertyCount, const PropertyDescriptor *properties, Env *result);
-/*JSVM_EXTERN*/ Status DestroyEnv(Env env);
-/*JSVM_EXTERN*/ Status OpenHandleScope(Env env, HandleScope *result);
-/*JSVM_EXTERN*/ Status CloseHandleScope(Env env, HandleScope scope);
-/*JSVM_EXTERN*/ Status GetAndClearLastException(Env env, Value *result);
-/*JSVM_EXTERN*/ Status ThrowError(Env env, const char *code, const char *msg);
-/*JSVM_EXTERN*/ Status CreatePromise(Env env, Deferred *deferred, Value *promise);
-/*JSVM_EXTERN*/ Status ResolveDeferred(Env env, Deferred deferred, Value resolution);
-/*JSVM_EXTERN*/ Status RejectDeferred(Env env, Deferred deferred, Value resolution);
-/*JSVM_EXTERN*/ Status RunScript(Env env, Value script, Value *result);
-/*JSVM_EXTERN*/ Status IsPromise(Env env, Value value, bool *isPromise);
-/*JSVM_EXTERN*/ Status IsArray(Env env, Value value, bool *result);
-/*JSVM_EXTERN*/ Status IsError(Env env, Value value, bool *result);
-/*JSVM_EXTERN*/ Status GetArrayLength(Env env, Value value, uint32_t *result);
-/*JSVM_EXTERN*/ Status CreateObject(Env env, Value *result);
-/*JSVM_EXTERN*/ Status IsSet(Env env, Value value, bool *isSet);
-/*JSVM_EXTERN*/ Status IsDate(Env env, Value value, bool *isDate);
-/*JSVM_EXTERN*/ Status GetDateValue(Env env, Value value, double *result);
-/*JSVM_EXTERN*/ Status CreateSet(Env env, Value *result);
-/*JSVM_EXTERN*/ Status DefineProperties(Env env, Value object, size_t propertyCount,
-                                        const PropertyDescriptor *properties);
-/*JSVM_EXTERN*/ Status SetProperty(Env env, Value object, Value key, Value value);
-/*JSVM_EXTERN*/ Status CreateArray(Env env, Value *result);
-/*JSVM_EXTERN*/ Status CreateArrayWithLength(Env env, size_t length, Value *result);
-/*JSVM_EXTERN*/ Status CreateDouble(Env env, double value, Value *result);
-/*JSVM_EXTERN*/ Status CreateInt32(Env env, int32_t value, Value *result);
-/*JSVM_EXTERN*/ Status CreateUint32(Env env, uint32_t value, Value *result);
-/*JSVM_EXTERN*/ Status CreateInt64(Env env, int64_t value, Value *result);
-/*JSVM_EXTERN*/ Status CreateDate(Env env, double time, Value *result);
-/*JSVM_EXTERN*/ Status CreateObject(Env env, Value *result);
-/*JSVM_EXTERN*/ Status GetValueDouble(Env env, Value value, double *result);
-/*JSVM_EXTERN*/ Status GetValueInt32(Env env, Value value, int32_t *result);
-/*JSVM_EXTERN*/ Status GetValueUint32(Env env, Value value, uint32_t *result);
-/*JSVM_EXTERN*/ Status CreateStringLatin1(Env env, const char *str, size_t length, Value *result);
-/*JSVM_EXTERN*/ Status GetValueStringLatin1(Env env, Value value, char *buf, size_t bufsize, size_t *result);
-/*JSVM_EXTERN*/ Status CreateStringUtf16(Env env, const char16_t *str, size_t length, Value *result);
-/*JSVM_EXTERN*/ Status GetValueStringUtf16(Env env, Value value, char16_t *buf, size_t bufsize, size_t *result);
-/*JSVM_EXTERN*/ Status GetValueInt64(Env env, Value value, int64_t *result);
-/*JSVM_EXTERN*/ Status GetValueBool(Env env, Value value, bool *result);
-/*JSVM_EXTERN*/ Status GetNull(Env env, Value *result);
-/*JSVM_EXTERN*/ Status GetUndefined(Env env, Value *result);
-/*JSVM_EXTERN*/ Status SetElement(Env env, Value object, uint32_t index, Value value);
-/*JSVM_EXTERN*/ Status GetElement(Env env, Value object, uint32_t index, Value *result);
-/*JSVM_EXTERN*/ Status CreateStringUtf8(Env env, const char *value, size_t length, Value *result);
-/*JSVM_EXTERN*/ Status GetValueStringUtf8(Env env, Value value, char *buf, size_t bufsize, size_t *result);
-/*JSVM_EXTERN*/ Status AdjustExternalMemory(Env env, int64_t changeInBytes, int64_t *result);
-/*JSVM_EXTERN*/ Status GetCbInfo(Env env, CallbackInfo cbinfo, size_t *argc, Value *argv, Value *thisArg, void **data);
-/*JSVM_EXTERN*/ Status SetNamedProperty(Env env, Value object, const char *utf8name, Value value);
-/*JSVM_EXTERN*/ Status GetNamedProperty(Env env, Value object, const char *utf8name, Value *result);
-/*JSVM_EXTERN*/ Status HasNamedProperty(Env env, Value object, const char *utf8name, bool *result);
-/*JSVM_EXTERN*/ Status GetNewTarget(Env env, CallbackInfo cbinfo, Value *result);
-/*JSVM_EXTERN*/ Status Wrap(Env env, Value jsObject, void *nativeObject, Finalize finalizeCb, void *finalizeHint,
-                            Ref *result);
-/*JSVM_EXTERN*/ Status Unwrap(Env env, Value jsObject, void **result);
-/*JSVM_EXTERN*/ Status RemoveWrap(Env env, Value jsObject, void **result);
-/*JSVM_EXTERN*/ Status CreateReference(Env env, Value value, uint32_t initialRefcount, Ref *result);
-/*JSVM_EXTERN*/ Status DeleteReference(Env env, Ref ref);
-/*JSVM_EXTERN*/ Status ReferenceRef(Env env, Ref ref, uint32_t *result);
-/*JSVM_EXTERN*/ Status ReferenceUnref(Env env, Ref ref, uint32_t *result);
-/*JSVM_EXTERN*/ Status GetReferenceValue(Env env, Ref ref, Value *result);
-/*JSVM_EXTERN*/ Status NewInstance(Env env, Value constructor, size_t argc, const Value *argv, Value *result);
-/*JSVM_EXTERN*/ Status DefineClass(Env env, const char *utf8name, size_t length, Callback constructor,
-                                   size_t propertyCount, const PropertyDescriptor *properties, Value *result);
-/*JSVM_EXTERN*/ Status CallFunction(Env env, Value recv, Value func, size_t argc, const Value *argv, Value *result);
-/*JSVM_EXTERN*/ Status CreateFunction(Env env, const char *utf8name, size_t length, Callback cb, void *data,
-                                      Value *result);
-/*JSVM_EXTERN*/ Status Typeof(Env env, Value value, ValueType *result);
-/*JSVM_EXTERN*/ Status CreateArraybuffer(Env env, size_t byteLength, void **data, Value *result);
-/*JSVM_EXTERN*/ Status IsArraybuffer(Env env, Value value, bool *result);
-/*JSVM_EXTERN*/ Status IsTypedarray(Env env, Value value, bool *result);
-/*JSVM_EXTERN*/ Status IsDataview(Env env, Value value, bool *result);
-/*JSVM_EXTERN*/ Status CreateTypedarray(Env env, TypedarrayType type, size_t length, Value arraybuffer,
-                                        size_t byteOffset, Value *result);
-/*JSVM_EXTERN*/ Status CreateDataview(Env env, size_t length, Value arraybuffer, size_t byteOffset, Value *result);
-/*JSVM_EXTERN*/ Status GetArraybufferInfo(Env env, Value arraybuffer, void **data, size_t *byteLength);
-/*JSVM_EXTERN*/ Status GetTypedarrayInfo(Env env, Value typedarray, TypedarrayType *type, size_t *length, void **data,
-                                         Value *arraybuffer, size_t *byteOffset);
-/*JSVM_EXTERN*/ Status GetDataviewInfo(Env env, Value dataview, size_t *bytelength, void **data, Value *arraybuffer,
-                                       size_t *byteOffset);
-/*JSVM_EXTERN*/ Status GetGlobal(Env env, Value *result);
-/*JSVM_EXTERN*/ Status SetInstanceData(Env env, void *data, Finalize finalizeCb, void *finalizeHint);
-/*JSVM_EXTERN*/ Status GetInstanceData(Env env, void **data);
-/*JSVM_EXTERN*/ Status CreateBigintInt64(Env env, int64_t value, Value *result);
-/*JSVM_EXTERN*/ Status GetValueBigintInt64(Env env, Value value, int64_t *result, bool *lossless);
-/*JSVM_EXTERN*/ Status CreateBigintUint64(Env env, uint64_t value, Value *result);
-/*JSVM_EXTERN*/ Status GetValueBigintUint64(Env env, Value value, uint64_t *result, bool *lossless);
-/*JSVM_EXTERN*/ Status PumpMessageLoop(VM vm, bool *result);
-/*JSVM_EXTERN*/ Status PerformMicrotaskCheckpoint(VM vm);
-/*JSVM_EXTERN*/ Status GetProperty(Env env, Value object, Value key, Value *result);
-/*JSVM_EXTERN*/ Status GetNamedProperty(Env env, Value object, const char *utf8name, Value *result);
-/*JSVM_EXTERN*/ Status CreateExternal(Env env, void *data, Finalize finalizeCb, void *finalizeHint, Value *result);
-/*JSVM_EXTERN*/ Status GetValueExternal(Env env, Value value, void **result);
-/*JSVM_EXTERN*/ Status AddFinalizer(Env env, Value jsObject, void *finalizeData, Finalize finalizeCb,
-                                    void *finalizeHint, Ref *result);
-/*JSVM_EXTERN*/ Status CoerceToBool(Env env, Value value, Value *result);
-/*JSVM_EXTERN*/ Status CoerceToNumber(Env env, Value value, Value *result);
-/*JSVM_EXTERN*/ Status CoerceToObject(Env env, Value value, Value *result);
-/*JSVM_EXTERN*/ Status CoerceToString(Env env, Value value, Value *result);
-/*JSVM_EXTERN*/ Status GetPropertyNames(Env env, Value object, Value *result);
-/*JSVM_EXTERN*/ Status GetPrototype (Env env, Value object, Value *result);
-/*JSVM_EXTERN*/ Status ObjectSetPrototypeOf(Env env, Value object, Value prototype);
-/*JSVM_EXTERN*/ Status ObjectGetPrototypeOf(Env env, Value object,  Value *result);
-//打开调试
-void OpenInspector(Env env, int port);
-void WaitForDebugger(Env env,bool breakNextLine);
-//关闭调试
-void CloseInspector(Env env);
 
-Status ReportException(Env env);
-} // namespace jsvm
-// #include "JSVM_inline.h"
+/*JSVM_EXTERN*/ jsvm_status jsvm_init(const jsvm_init_options *options);
+/*JSVM_EXTERN*/ jsvm_status jsvm_create_vm(const jsvm_create_vm_options *options, jsvm_vm *result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_destroy_vm(jsvm_vm vm);
+/*JSVM_EXTERN*/ jsvm_status jsvm_open_vm_scope(jsvm_vm vm, jsvm_vm_scope *result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_close_vm_scope(jsvm_vm vm, jsvm_vm_scope scope);
+/*JSVM_EXTERN*/ jsvm_status jsvm_open_env_scope(jsvm_env env, jsvm_env_scope*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_close_env_scope(jsvm_env env, jsvm_env_scope scope);
+/*JSVM_EXTERN*/ jsvm_status jsvm_create_env(jsvm_vm vm, size_t propertyCount, const jsvm_property_descriptor*properties, jsvm_env*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_destroy_env(jsvm_env env);
+/*JSVM_EXTERN*/ jsvm_status jsvm_open_handle_scope(jsvm_env env, jsvm_handle_scope *result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_close_handle_scope(jsvm_env env, jsvm_handle_scope scope);
+/*JSVM_EXTERN*/ jsvm_status jsvm_throw_error(jsvm_env env, const char *code, const char *msg);
+/*JSVM_EXTERN*/ jsvm_status jsvm_get_and_clear_last_exception(jsvm_env env, jsvm_value* result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_create_promise(jsvm_env env, jsvm_deferred*deferred, jsvm_value*promise);
+/*JSVM_EXTERN*/ jsvm_status jsvm_resolve_deferred(jsvm_env env, jsvm_deferred deferred, jsvm_value resolution);
+/*JSVM_EXTERN*/ jsvm_status jsvm_reject_deferred(jsvm_env env, jsvm_deferred deferred, jsvm_value resolution);
+/*JSVM_EXTERN*/ jsvm_status jsvm_run_script(jsvm_env env, jsvm_value script, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_is_promise(jsvm_env env, jsvm_value value, bool *isPromise);
+/*JSVM_EXTERN*/ jsvm_status jsvm_is_array(jsvm_env env, jsvm_value value, bool *result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_is_error(jsvm_env env, jsvm_value value, bool *result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_get_array_length(jsvm_env env, jsvm_value value, uint32_t *result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_create_object(jsvm_env env, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_is_set(jsvm_env env, jsvm_value value, bool *isSet);
+/*JSVM_EXTERN*/ jsvm_status jsvm_is_date(jsvm_env env, jsvm_value value, bool *isDate);
+/*JSVM_EXTERN*/ jsvm_status jsvm_get_date_value(jsvm_env env, jsvm_value value, double *result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_create_set(jsvm_env env, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_define_properties(jsvm_env env, jsvm_value object, size_t propertyCount,
+                                        const jsvm_property_descriptor*properties);
+/*JSVM_EXTERN*/ jsvm_status jsvm_set_property(jsvm_env env, jsvm_value object, jsvm_value key, jsvm_value value);
+/*JSVM_EXTERN*/ jsvm_status jsvm_create_array(jsvm_env env, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_create_array_with_length(jsvm_env env, size_t length, jsvm_value* result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_create_double(jsvm_env env, double value, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_create_int32(jsvm_env env, int32_t value, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_create_uint32(jsvm_env env, uint32_t value, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_create_int64(jsvm_env env, int64_t value, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_create_date(jsvm_env env, double time, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_create_object(jsvm_env env, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_get_value_double(jsvm_env env, jsvm_value value, double *result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_get_value_int32(jsvm_env env, jsvm_value value, int32_t *result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_get_value_uint32(jsvm_env env, jsvm_value value, uint32_t *result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_create_string_latin1(jsvm_env env, const char *str, size_t length, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_get_value_string_latin1(jsvm_env env, jsvm_value value, char *buf, size_t bufsize, size_t *result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_create_string_utf16(jsvm_env env, const char16_t *str, size_t length, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_get_value_string_utf16(jsvm_env env, jsvm_value value, char16_t *buf, size_t bufsize, size_t *result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_get_value_int64(jsvm_env env, jsvm_value value, int64_t *result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_get_value_bool(jsvm_env env, jsvm_value value, bool *result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_get_null(jsvm_env env, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_get_undefined(jsvm_env env, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_set_element(jsvm_env env, jsvm_value object, uint32_t index, jsvm_value value);
+/*JSVM_EXTERN*/ jsvm_status jsvm_get_element(jsvm_env env, jsvm_value object, uint32_t index, jsvm_value* result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_create_string_utf8(jsvm_env env, const char *value, size_t length, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_get_value_string_utf8(jsvm_env env, jsvm_value value, char *buf, size_t bufsize, size_t *result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_adjust_external_memory(jsvm_env env, int64_t changeInBytes, int64_t *result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_get_cb_info(jsvm_env env, jsvm_callback_info cbinfo, size_t *argc, jsvm_value*argv, jsvm_value*thisArg, void **data);
+/*JSVM_EXTERN*/ jsvm_status jsvm_set_named_property(jsvm_env env, jsvm_value object, const char *utf8name, jsvm_value value);
+/*JSVM_EXTERN*/ jsvm_status jsvm_get_named_property(jsvm_env env, jsvm_value object, const char *utf8name, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_has_named_property(jsvm_env env, jsvm_value object, const char *utf8name, bool *result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_get_new_target(jsvm_env env, jsvm_callback_info cbinfo, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_wrap(jsvm_env env, jsvm_value jsObject, void *nativeObject, jsvm_finalize finalizeCb, void *finalizeHint,
+    jsvm_ref*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_unwrap(jsvm_env env, jsvm_value jsObject, void **result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_remove_wrap(jsvm_env env, jsvm_value jsObject, void **result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_create_reference(jsvm_env env, jsvm_value value, uint32_t initialRefcount, jsvm_ref*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_delete_reference(jsvm_env env, jsvm_ref ref);
+/*JSVM_EXTERN*/ jsvm_status jsvm_reference_ref(jsvm_env env, jsvm_ref ref, uint32_t *result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_reference_unref(jsvm_env env, jsvm_ref ref, uint32_t *result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_get_reference_value(jsvm_env env, jsvm_ref ref, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_new_instance(jsvm_env env, jsvm_value constructor, size_t argc, const jsvm_value*argv, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_define_class(jsvm_env env, const char *utf8name, size_t length, jsvm_callback constructor,
+                                   size_t propertyCount, const jsvm_property_descriptor*properties, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_call_function(jsvm_env env, jsvm_value recv, jsvm_value func, size_t argc, const jsvm_value*argv, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_create_function(jsvm_env env, const char *utf8name, size_t length, jsvm_callback cb, void *data,
+    jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_typeof(jsvm_env env, jsvm_value value, jsvm_valuetype*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_create_arraybuffer(jsvm_env env, size_t byteLength, void **data, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_is_arraybuffer(jsvm_env env, jsvm_value value, bool *result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_is_typedarray(jsvm_env env, jsvm_value value, bool *result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_is_dataview(jsvm_env env, jsvm_value value, bool *result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_create_typedarray(jsvm_env env, jsvm_typedarray_type type, size_t length, jsvm_value arraybuffer,
+                                        size_t byteOffset, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_create_dataview(jsvm_env env, size_t length, jsvm_value arraybuffer, size_t byteOffset, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_get_arraybuffer_info(jsvm_env env, jsvm_value arraybuffer, void **data, size_t *byteLength);
+/*JSVM_EXTERN*/ jsvm_status jsvm_get_typedarray_info(jsvm_env env, jsvm_value typedarray, jsvm_typedarray_type*type, size_t *length, void **data,
+    jsvm_value*arraybuffer, size_t *byteOffset);
+/*JSVM_EXTERN*/ jsvm_status jsvm_get_dataview_info(jsvm_env env, jsvm_value dataview, size_t *bytelength, void **data, jsvm_value*arraybuffer,
+                                       size_t *byteOffset);
+/*JSVM_EXTERN*/ jsvm_status jsvm_get_global(jsvm_env env, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_set_instance_data(jsvm_env env, void *data, jsvm_finalize finalizeCb, void *finalizeHint);
+/*JSVM_EXTERN*/ jsvm_status jsvm_get_instance_data(jsvm_env env, void **data);
+/*JSVM_EXTERN*/ jsvm_status jsvm_create_bigint_int64(jsvm_env env, int64_t value, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_get_value_bigint_int64(jsvm_env env, jsvm_value value, int64_t *result, bool *lossless);
+/*JSVM_EXTERN*/ jsvm_status jsvm_create_bigint_uint64(jsvm_env env, uint64_t value, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_get_value_bigint_uint64(jsvm_env env, jsvm_value value, uint64_t *result, bool *lossless);
+/*JSVM_EXTERN*/ jsvm_status jsvm_pump_messageloop(jsvm_vm vm, bool *result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_perform_microtask_checkpoint(jsvm_vm vm);
+/*JSVM_EXTERN*/ jsvm_status jsvm_get_property(jsvm_env env, jsvm_value object, jsvm_value key, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_get_named_property(jsvm_env env, jsvm_value object, const char *utf8name, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_create_external(jsvm_env env, void *data, jsvm_finalize finalizeCb, void *finalizeHint, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_get_value_external(jsvm_env env, jsvm_value value, void **result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_add_finalizer(jsvm_env env, jsvm_value jsObject, void *finalizeData, jsvm_finalize finalizeCb,
+                                    void *finalizeHint, jsvm_ref*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_coerce_to_bool(jsvm_env env, jsvm_value value, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_coerce_to_number(jsvm_env env, jsvm_value value, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_coerce_to_object(jsvm_env env, jsvm_value value, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_coerce_to_string(jsvm_env env, jsvm_value value, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_get_property_names(jsvm_env env, jsvm_value object, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_get_prototype (jsvm_env env, jsvm_value object, jsvm_value*result);
+/*JSVM_EXTERN*/ jsvm_status jsvm_object_set_prototype_of(jsvm_env env, jsvm_value object, jsvm_value prototype);
+/*JSVM_EXTERN*/ jsvm_status jsvm_object_get_prototype_of(jsvm_env env, jsvm_value object, jsvm_value*result);
+jsvm_status jsvm_open_inspector(jsvm_env env, int port);
+jsvm_status jsvm_wait_for_debugger(jsvm_env env, bool breakNextLine);
+jsvm_status jsvm_close_inspector(jsvm_env env);
 #endif

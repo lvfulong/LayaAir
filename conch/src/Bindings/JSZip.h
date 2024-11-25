@@ -17,11 +17,11 @@ namespace laya
 		void enumFiles(jsbind::Local callback);
 		bool setSrc(const char* p_pSrc);
         bool setBuffer(jsbind::ArrayBuffer arrayBuffer);
-		jsvm::Value readFile(int idx);
-        jsvm::Value readFileByName(const char* pName);
-        jsvm::Value readFileAsText(int idx);
-        jsvm::Value readFileAsTextByName(const char* pName);
-		jsvm::Value readFileExp(int idx);
+		jsvm_value readFile(int idx);
+        jsvm_value readFileByName(const char* pName);
+        jsvm_value readFileAsText(int idx);
+        jsvm_value readFileAsTextByName(const char* pName);
+		jsvm_value readFileExp(int idx);
         bool exists(const char* pName);
 		void close();
 	public:

@@ -78,7 +78,7 @@ class GLESEngine
     void clearRenderTexture(uint32_t clearFlag, const Color *clearcolor, float clearDepth);
     int propertyNameToID(const char *name);
     const std::string &propertyIDToName(int id);
-    void getNamesByDefineDataJS(RTDefineDatas* defineData, jsvm::Value out);
+    void getNamesByDefineDataJS(RTDefineDatas* defineData, jsvm_value out);
     void getNamesByDefineData(RTDefineDatas *defineData, std::vector<std::string> &out);
     RTShaderDefine getDefineByName(const char *name);
     GLRenderState *getRenderState();
@@ -100,7 +100,7 @@ class GLESEngine
     void clearStatisticsInfo();
     int getStatisticsInfo(GPUEngineStatisticsInfo info);
     void unbindVertexState();
-    jsvm::Value getTextureContextJS();
+    jsvm_value getTextureContextJS();
     void regGlobalVertexDeclaration(std::string name, int32_t key, const VertexStateContext& declarations);
     std::unordered_map<int32_t, VertexStateContext>* getGlobalVertexDeclaration(std::string name);
   private:

@@ -32,7 +32,7 @@ JSLinuxEditBox::~JSLinuxEditBox()
     JCMemorySurvey::GetInstance()->releaseClass( "JSLinuxEditBox",this );
 }
 //------------------------------------------------------------------------------
-void JSLinuxEditBox::addEventListener(const char* p_sName, jsvm::Value p_pFunction )
+void JSLinuxEditBox::addEventListener(const char* p_sName, jsvm_value p_pFunction )
 {
     if(strcmp( p_sName,"input" ) == 0)
     {
