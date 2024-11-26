@@ -11,46 +11,45 @@
 #include <v8.h>
 #endif
 
-
 enum jsvm_status
 {
-    ok,                              // 成功状态。
-    INVALID_ARG,                     //	无效的状态。
-    OBJECT_EXPECTED,                 //	期待传入对象类型。
-    STRING_EXPECTED,                 //	期望传入字符串类型。
-    NAME_EXPECTED,                   //	期望传入名字类型。
-    FUNCTION_EXPECTED,               //	期待传入函数类型。
-    NUMBER_EXPECTED,                 // 期待传入数字类型。
-    BOOLEAN_EXPECTED,                //	期待传入布尔类型。
-    ARRAY_EXPECTED,                  //	期待传入数组类型。
-    GENERIC_FAILURE,                 //	泛型失败状态。
-    PENDING_EXCEPTION,               //	挂起异常状态。
-    CANCELLED,                       //	取消状态。
-    ESCAPE_CALLED_TWICE,             //	转义调用了两次。
-    HANDLE_SCOPE_MISMATCH,           //	句柄作用域不匹配。
-    CALLBACK_SCOPE_MISMATCH,         //	回调作用域不匹配。
-    QUEUE_FULL,                      //	队列满。
-    CLOSING,                         //	关闭中。
-    BIGINT_EXPECTED,                 //	期望传入Bigint类型。
-    DATE_EXPECTED,                   //	期望传入日期类型。
-    ARRAYBUFFER_EXPECTED,            //	期望传入ArrayBuffer类型。
-    DETACHABLE_ARRAYBUFFER_EXPECTED, //	可分离的数组缓冲区预期状态。
-    WOULD_DEADLOCK,                  //	将死锁状态。
-    NO_EXTERNAL_BUFFERS_ALLOWED,     //	不允许外部缓冲区。
-    CANNOT_RUN_JS,                   //	不能执行JS。
+    jsvm_ok,
+    jsvm_invalid_arg,
+    jsvm_object_expected,
+    jsvm_string_expected,
+    jsvm_name_expected,
+    jsvm_function_expected,
+    jsvm_number_expected,
+    jsvm_boolean_expected,
+    jsvm_array_expected,
+    jsvm_generic_failure,
+    jsvm_pending_exception,
+    jsvm_cancelled,
+    jsvm_escape_called_twice,
+    jsvm_handle_scope_mismatch,
+    jsvm_callback_scope_mismatch,
+    jsvm_queue_full,
+    jsvm_closing,
+    jsvm_bigint_expected,
+    jsvm_date_expected,
+    jsvm_arraybuffer_expected,
+    jsvm_detachable_arraybuffer_expected,
+    jsvm_would_deadlock, // unused
+    jsvm_no_external_buffers_allowed,
+    jsvm_cannot_run_js,
 };
 enum jsvm_valuetype
 {
-    jsvm_undefined, // 未定义类型。
-    jsvm_null,      // Null类型。
-    jsvm_boolean,   //	布尔类型。
-    jsvm_number,    //	数字类型。
-    jsvm_string,    //	字符串类型。
-    jsvm_symbol,    //	符号类型。
-    jsvm_object,    //	对象类型。
-    jsvm_function,  //	函数类型。
-    jsvm_external,  //	外部类型。
-    jsvm_bigint,    //	bigint类型。
+    jsvm_undefined,
+    jsvm_null,
+    jsvm_boolean,
+    jsvm_number,
+    jsvm_string,
+    jsvm_symbol,
+    jsvm_object,
+    jsvm_function,
+    jsvm_external,
+    jsvm_bigint,
 };
 
 enum jsvm_typedarray_type
@@ -75,7 +74,7 @@ using jsvm_value = JSVM_Value;
 using jsvm_callback_info = JSVM_CallbackInfo;
 using jsvm_finalize = JSVM_Finalize;
 using jsvm_ref = JSVM_Ref;
-typedef JSVM_Value(JSVM_CDECL * jsvm_callback)(JSVM_Env env, JSVM_CallbackInfo info);
+typedef JSVM_Value(JSVM_CDECL *jsvm_callback)(JSVM_Env env, JSVM_CallbackInfo info);
 // using Script = JSVM_Script;
 using jsvm_vm = JSVM_VM;
 using jsvm_vm_scope = JSVM_VMScope;
@@ -91,11 +90,11 @@ typedef napi_value jsvm_value;
 typedef napi_callback_info jsvm_callback_info;
 typedef node_api_basic_finalize jsvm_finalize;
 typedef napi_ref jsvm_ref;
-typedef napi_value(NAPI_CDECL * jsvm_callback)(napi_env env, napi_callback_info info);
+typedef napi_value(NAPI_CDECL *jsvm_callback)(napi_env env, napi_callback_info info);
 
-typedef struct VM__ * jsvm_vm;
-typedef struct VMScope__ * jsvm_vm_scope;
-typedef struct EnvScope__ * jsvm_env_scope;
+typedef struct VM__ *jsvm_vm;
+typedef struct VMScope__ *jsvm_vm_scope;
+typedef struct EnvScope__ *jsvm_env_scope;
 using jsvm_handle_scope = napi_handle_scope;
 struct jsvm_init_options
 {
@@ -122,8 +121,8 @@ enum jsvm_property_attributes
     jsvm_enumerable = 1 << 1,
     jsvm_configurable = 1 << 2,
     jsvm_static = 1 << 10,
-    jsvm_default_method = napi_writable | napi_configurable,
-    jsvm_default_jsproperty = napi_writable | napi_enumerable | napi_configurable,
+    jsvm_default_method = jsvm_writable | jsvm_configurable,
+    jsvm_default_jsproperty = jsvm_writable | jsvm_enumerable | jsvm_configurable,
 };
 
 struct jsvm_property_descriptor

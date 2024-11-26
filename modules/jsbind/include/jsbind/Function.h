@@ -1,8 +1,8 @@
 #ifndef __JSBIND_FUNCTION_H__
 #define __JSBIND_FUNCTION_H__
 
-#include <jsbind/internal/Value.h>
 #include <jsbind/internal/Invoke.h>
+#include <jsbind/internal/Value.h>
 #include <jsvm/JSEnv.h>
 #include <jsvm/JSVM.h>
 #include <jsvm/JSVM_Types.h>
@@ -31,9 +31,9 @@ inline jsvm_value makeFunction(std::function<ReturnType(Args...)> value)
     status =
         jsvm::CreateFunction(env, "", NAPI_AUTO_LENGTH,
                              internal::InvokeGlobalMethodOptionalOverride<ReturnType, Args...>, func, data, &result);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     status = jsvm::AddFinalizer(env, result, func, finalizer, nullptr, nullptr);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return result;
 }
 inline jsvm_value cnm(jsvm_env env, jsvm_callback_info info)
@@ -47,13 +47,12 @@ inline jsvm_value makeFunctionRaw(std::function<jsvm_value(jsvm_env env, jsvm_ca
 
     jsvm_status status;
     jsvm_value result = nullptr;
-    auto invoke =
-        std::make_unique<std::function<jsvm_value(jsvm_env env, jsvm_callback_info info)>>(std::move(value));
+    auto invoke = std::make_unique<std::function<jsvm_value(jsvm_env env, jsvm_callback_info info)>>(std::move(value));
     std::function<jsvm_value(jsvm_env env, jsvm_callback_info info)> *func = invoke.release();
     status = jsvm_create_function(env, "", NAPI_AUTO_LENGTH, cnm, func, &result);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     /// status = jsvm::AddFinalizer(env, result, func, finalizer, nullptr, nullptr);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return result;
 }
 } // namespace internal

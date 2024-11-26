@@ -1,8 +1,8 @@
 #include <jsbind/ArrayBuffer.h>
 #include <jsbind/JSBind.h>
-#include <jsvm/JSEnv.h>
 #include <jsbind/Local.h>
 #include <jsbind/internal/ValueTraits.h>
+#include <jsvm/JSEnv.h>
 #include <utils/JCMemorySurvey.h>
 #include <utils/Log.h>
 
@@ -29,8 +29,9 @@ ArrayBuffer::ArrayBuffer(uint8_t *inputBuffer, size_t length, size_t byteOffset,
     jsvm_value arrayBuffer;
     uint8_t *outputBuffer = nullptr;
 
-    status = jsvm_create_arraybuffer(env, this->getByteLength(), reinterpret_cast<void **>(&outputBuffer), &arrayBuffer);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    status =
+        jsvm_create_arraybuffer(env, this->getByteLength(), reinterpret_cast<void **>(&outputBuffer), &arrayBuffer);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
 
     std::memcpy(outputBuffer, inputBuffer, this->getByteLength());
 
@@ -49,7 +50,7 @@ ArrayBuffer::ArrayBuffer(uint8_t *inputBuffer, size_t length, size_t byteOffset,
         jsvm_typedarray_type type = static_cast<jsvm_typedarray_type>(this->getType());
 
         status = jsvm_create_typedarray(env, type, this->getCount(), arrayBuffer, byteOffset, &typedArray);
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         arrayBuffer = typedArray;
     }
 
@@ -72,7 +73,9 @@ ArrayBuffer ArrayBuffer::Make(jsvm_value arrayBuffer)
     if (Local::isTypedArray(arrayBuffer))
     {
         jsvm_get_typedarray_info(env, arrayBuffer, &type, &length, &data, &buffer, &byteOffset);
-        return ArrayBuffer(arrayBuffer, static_cast<uint8_t *>(data), getBytePerElement(static_cast<ArrayBuffer::Type>(type)) * length, static_cast<ArrayBuffer::Type>(type));
+        return ArrayBuffer(arrayBuffer, static_cast<uint8_t *>(data),
+                           getBytePerElement(static_cast<ArrayBuffer::Type>(type)) * length,
+                           static_cast<ArrayBuffer::Type>(type));
     }
     else if (Local::isDataView(arrayBuffer))
     {

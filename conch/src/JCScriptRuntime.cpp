@@ -375,8 +375,8 @@ namespace laya
         jsvm_status status;
 
         //////status = jsvm::ReportException(env);
-        //DEBUG_CHECK(status == jsvm_status::ok);
-        ///DEBUG_CHECK(status == jsvm_status::ok);
+        //DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+        ///DEBUG_CHECK(status == jsvm_status::jsvm_ok);
 		}
         JCConch::s_pConchRender->postTaskFromJSToRenderSync([this]()->bool {
             JCConch::s_pScriptRuntime->dispatchLayaGLBuffer(false);

@@ -24,14 +24,14 @@ template <typename T> bool get_option(jsvm_value options, std::string_view name,
     jsvm_status status;
     bool hasProperty;
     status = jsvm_has_named_property(env, options, name.data(), &hasProperty);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     if (!hasProperty)
     {
         return false;
     }
     jsvm_value val;
     status = jsvm_get_named_property(env, options, name.data(), &val);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     value = internal::ValueTraits<T>::ToCpp(val);
     return true;
 }
@@ -48,7 +48,7 @@ template <typename T> bool set_option(jsvm_value options, std::string_view name,
     GET_ENV
     jsvm_status status;
     status = jsvm_set_named_property(env, options, name.data(), internal::ValueTraits<T>::ToJs(value));
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return true;
 }
 
@@ -134,7 +134,7 @@ template <typename T> T convert_value_object_from_js(jsvm_value value)
         jsvm_status status;
         jsvm_value prop;
         status = jsvm_get_named_property(env, value, field.field_name.c_str(), &prop);
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
 
         // v8::MaybeLocal<v8::Value> prop =
         //     obj->Get(v8::Isolate::GetCurrent()->GetCurrentContext(), field.toLocalFieldName());
@@ -160,11 +160,11 @@ template <typename T> jsvm_value convert_value_object_to_js(const T &value)
     jsvm_status status;
     jsvm_value result;
     status = jsvm_create_object(env, &result);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     for (auto &field : jsbind::value_object<T>::fields)
     {
         status = jsvm_set_named_property(env, result, field.field_name.c_str(), field.to_v8(&value, field.pfield));
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     }
     return result;
 }

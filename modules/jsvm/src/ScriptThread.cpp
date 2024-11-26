@@ -31,7 +31,7 @@ namespace jsvm
 
         jsvm_handle_scope scope;
         status = jsvm_open_handle_scope(env, &scope);
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         if (!m_funcLoop)
         {
             // 现在的waitdata返回false不再表示要退出。事件唤醒流程
@@ -50,11 +50,11 @@ namespace jsvm
             do
             {
                 status = jsvm_pump_messageloop(m_vm, &result);
-                DEBUG_CHECK(status == jsvm_status::ok);
+                DEBUG_CHECK(status == jsvm_status::jsvm_ok);
             } while (result);
 
             status = jsvm_perform_microtask_checkpoint(m_vm);
-            DEBUG_CHECK(status == jsvm_status::ok);
+            DEBUG_CHECK(status == jsvm_status::jsvm_ok);
             // 固定循环流程
             runQueue();
             if (!m_funcLoop())
@@ -63,7 +63,7 @@ namespace jsvm
             }
         }
         status = jsvm_close_handle_scope(env, scope);
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         /*if (trycatch.HasCaught())
         {
             v8::Isolate *piso = v8::Isolate::GetCurrent();

@@ -33,7 +33,7 @@ struct is_wrapped_class : std::conjunction<std::is_class<T>, std::negation<inter
 
 template <typename T, typename Enable = void> class ValueTraits;
 
-//template <typename T> class value_object;
+// template <typename T> class value_object;
 
 template <typename T> class ValueTraits<T, std::enable_if_t<std::is_enum<T>::value>>
 {
@@ -68,12 +68,12 @@ template <typename T> class ValueTraits<T, std::enable_if_t<internal::is_wrapped
         jsvm_status status;
         jsvm_valuetype valueType;
         status = jsvm_typeof(env, value, &valueType);
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         DEBUG_CHECK(valueType == jsvm_valuetype::jsvm_object)
 
         T *obj;
         status = jsvm_unwrap(env, value, reinterpret_cast<void **>(&obj));
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         return *obj;
     }
     static bool is(jsvm_value value)
@@ -100,14 +100,14 @@ template <typename T> class ValueTraits<T *, std::enable_if_t<internal::is_wrapp
         jsvm_status status;
         jsvm_valuetype valueType;
         status = jsvm_typeof(env, value, &valueType);
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         if (valueType != jsvm_valuetype::jsvm_object)
         {
             return nullptr;
         }
         T *obj;
         status = jsvm_unwrap(env, value, reinterpret_cast<void **>(&obj));
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         return obj;
     }
     static bool is(jsvm_value value)
@@ -214,7 +214,7 @@ template <> class ValueTraits<int64_t>
         GET_ENV
         jsvm_valuetype valueType;
         jsvm_status status = jsvm_typeof(env, value, &valueType);
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         if (valueType == jsvm_valuetype::jsvm_null || valueType == jsvm_valuetype::jsvm_undefined)
         {
             return 0;
@@ -408,7 +408,7 @@ template <> class ValueTraits<std::string>
         GET_ENV
         /*jsvm_valuetype valueType;
         jsvm_status status = jsvm::Typeof(env, value, &valueType);
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         if (valueType == jsvm_valuetype::Null || valueType == jsvm_valuetype::UNDEFINED ||
             valueType != jsvm_valuetype::STRING)
         {
@@ -453,7 +453,7 @@ template <> class ValueTraits<const char *>
         GET_ENV
         /*jsvm_valuetype valueType;
     jsvm_status status = jsvm::Typeof(env, value, &valueType);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     if (valueType == jsvm_valuetype::Null || valueType == jsvm_valuetype::UNDEFINED ||
         valueType != jsvm_valuetype::STRING)
     {

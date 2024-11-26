@@ -102,7 +102,7 @@ jsvm_status jsvm_init(const jsvm_init_options* options)
         flags.append(" --turbo-fast-api-calls ");
         v8::V8::SetFlagsFromString(flags.c_str(), (size_t)flags.length());
     }
-    return jsvm_status::ok; // todo
+    return jsvm_status::jsvm_ok; // todo
 }
 #if 0
 Status UnInit()
@@ -347,7 +347,7 @@ jsvm_status jsvm_create_vm(const jsvm_create_vm_options* options, jsvm_vm* resul
     // m_IsolateData->m_data = (void *)this;
     (*result)->isolate_->SetPromiseRejectCallback(PromiseRejectHandlerInMainThread);
     // context->Enter();
-    return jsvm_status::ok; // todo
+    return jsvm_status::jsvm_ok; // todo
 }
 jsvm_status jsvm_destroy_vm(jsvm_vm vm)
 {
@@ -362,30 +362,30 @@ jsvm_status jsvm_destroy_vm(jsvm_vm vm)
     DEBUG_CHECK(vm->isolate_ != nullptr);
     vm->isolate_->Dispose();
     vm->isolate_ = nullptr;
-    return jsvm_status::ok; // todo
+    return jsvm_status::jsvm_ok; // todo
 }
 jsvm_status jsvm_open_vm_scope(jsvm_vm vm, jsvm_vm_scope* result)
 {
     *result = new VMScope__;
     (*result)->isolate_ = vm->isolate_;
     (*result)->isolate_->Enter();
-    return jsvm_status::ok; // todo
+    return jsvm_status::jsvm_ok; // todo
 }
 jsvm_status jsvm_close_vm_scope(jsvm_vm vm, jsvm_vm_scope scope)
 {
     scope->isolate_ = vm->isolate_;
     scope->isolate_->Exit();
-    return jsvm_status::ok; // todo
+    return jsvm_status::jsvm_ok; // todo
 }
 jsvm_status jsvm_open_env_scope(jsvm_env env, jsvm_env_scope* result)
 {
     env->context()->Enter();
-    return jsvm_status::ok; // todo
+    return jsvm_status::jsvm_ok; // todo
 }
 jsvm_status jsvm_close_env_scope(jsvm_env env, jsvm_env_scope scope)
 {
     env->context()->Exit();
-    return jsvm_status::ok; // todo
+    return jsvm_status::jsvm_ok; // todo
 }
 jsvm_status jsvm_create_env(jsvm_vm vm, size_t propertyCount, const jsvm_property_descriptor* properties, jsvm_env* result)
 {
@@ -398,13 +398,13 @@ jsvm_status jsvm_create_env(jsvm_vm vm, size_t propertyCount, const jsvm_propert
     jsvm::JSEnv *jsEnv = new jsvm::JSEnv(isolateData, vm->isolate_, *result); // delete ?
     jsvm::JSEnv::setCurrent(jsEnv);
 
-    return jsvm_status::ok;
+    return jsvm_status::jsvm_ok;
 }
 jsvm_status jsvm_destroy_env(jsvm_env env)
 {
     DEBUG_CHECK(env != nullptr);
     env->DeleteMe();
-    return jsvm_status::ok; // todo
+    return jsvm_status::jsvm_ok; // todo
 }
 
 jsvm_status jsvm_open_handle_scope(jsvm_env env, jsvm_handle_scope* result)
@@ -511,11 +511,11 @@ jsvm_status jsvm_adjust_external_memory(jsvm_env env, int64_t changeInBytes, int
 }
 jsvm_status jsvm_is_set(jsvm_env env, jsvm_value value, bool* isSet)
 {
-    return jsvm_status::ok; // todo
+    return jsvm_status::jsvm_ok; // todo
 }
 jsvm_status jsvm_create_set(jsvm_env env, jsvm_value* result)
 {
-    return jsvm_status::ok; // todo
+    return jsvm_status::jsvm_ok; // todo
 }
 jsvm_status jsvm_get_cb_info(jsvm_env env, jsvm_callback_info cbinfo, size_t* argc, jsvm_value* argv, jsvm_value* thisArg, void** data)
 {
@@ -735,14 +735,14 @@ jsvm_status jsvm_pump_messageloop(jsvm_vm vm, bool* result)
     DEBUG_CHECK(vm->isolate_ != nullptr);
     *result = v8::platform::PumpMessageLoop(s_pPlatform, vm->isolate_, v8::platform::MessageLoopBehavior::kDoNotWait);
             
-    return jsvm_status::ok; // todo
+    return jsvm_status::jsvm_ok; // todo
 }
 jsvm_status jsvm_perform_microtask_checkpoint(jsvm_vm vm)
 {
 
     DEBUG_CHECK(vm->isolate_ != nullptr);
     vm->isolate_->PerformMicrotaskCheckpoint();
-    return jsvm_status::ok; // todo
+    return jsvm_status::jsvm_ok; // todo
 }
 jsvm_status jsvm_get_property(jsvm_env env, jsvm_value object, jsvm_value key, jsvm_value* result)
 {
@@ -983,7 +983,7 @@ jsvm_status ReportException(jsvm_env env)
         ReportException(env->isolate, val);
     }
 
-    return jsvm_status::ok; // todo
+    return jsvm_status::jsvm_ok; // todo
 }
 
 laya::DebuggerAgent *pDbgAgent = nullptr;
@@ -994,14 +994,14 @@ jsvm_status jsvm_open_inspector(jsvm_env env, int port)
     pDbgAgent = new laya::DebuggerAgent("layabox", port);
     pDbgAgent->onJSStart(env->scriptThread);
 #endif
-    return jsvm_status::ok;
+    return jsvm_status::jsvm_ok;
 }
 jsvm_status jsvm_wait_for_debugger(jsvm_env env, bool breakNextLine)
 {
 #ifdef JS_V8_DEBUGGER
     pDbgAgent->WaitForDebugger(breakNextLine);
 #endif
-    return jsvm_status::ok;
+    return jsvm_status::jsvm_ok;
 }
 // 关闭调试
 jsvm_status jsvm_close_inspector(jsvm_env env)
@@ -1014,5 +1014,5 @@ jsvm_status jsvm_close_inspector(jsvm_env env)
         pDbgAgent = nullptr;
     }
 #endif
-    return jsvm_status::ok;
+    return jsvm_status::jsvm_ok;
 }

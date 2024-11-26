@@ -91,33 +91,31 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
     {
         GET_ENV
         jsvm_status status;
-        //这个会重复，直接返回
+        // 这个会重复，直接返回
         auto it = objects_.find((void *)objectPointer);
         if (it != objects_.end())
         {
             jsvm_value obj;
-            status = jsvm_get_reference_value( env, it->second.objectRef_, &obj);
-            DEBUG_CHECK(status == jsvm_status::ok);
+            status = jsvm_get_reference_value(env, it->second.objectRef_, &obj);
+            DEBUG_CHECK(status == jsvm_status::jsvm_ok);
             return obj;
         }
 
-
-  
         jsvm_value cons;
         DEBUG_CHECK(classRef_ != nullptr);
         status = jsvm_get_reference_value(env, classRef_, &cons);
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
 
         this->isWrap_ = true;
         jsvm_value instance;
         status = jsvm_new_instance(env, cons, 0, nullptr, &instance);
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         this->isWrap_ = false;
 
         jsvm_ref objectRef;
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         status = jsvm_wrap(env, instance, reinterpret_cast<void *>(objectPointer), internal::destructor<ClassType>,
-                            nullptr, &objectRef);
+                           nullptr, &objectRef);
 
         this->objects_.emplace(objectPointer, ObjectRegistry{objectRef, callDestructor});
 
@@ -147,19 +145,18 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
         }
     }
 
-
     bool isWrap_ = false;
+
   private:
-  
     void removeObjectRegistry(jsvm_env env, ObjectRegistry *registry, ClassType *objectPointer)
     {
         jsvm_status status;
         if (registry->callDestructor)
         {
-            internal::raw_destructor(objectPointer);      
+            internal::raw_destructor(objectPointer);
             // isolate_->AdjustAmountOfExternalAllocatedMemory(-static_cast<int64_t>(sizeof(ClassType)));
             status = jsvm_delete_reference(env, registry->objectRef_);
-            DEBUG_CHECK(status == jsvm_status::ok);
+            DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         }
     }
 
@@ -191,7 +188,7 @@ class ClassRegistryManager
         uint32_t result;
         status = jsvm_reference_ref(env, objectRegistry->objectRef_, &result);
         DEBUG_CHECK(result > 0);
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     }
     template <typename ClassType> static void makeWeak(ClassType *objectPointer)
     {
@@ -202,7 +199,7 @@ class ClassRegistryManager
         DEBUG_CHECK(objectRegistry != nullptr);
         uint32_t result;
         status = jsvm_reference_unref(env, objectRegistry->objectRef_, &result);
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     }
     template <typename ClassType> static jsvm_value wrapCppObject(ClassType *objectPointer, bool callDestructor)
     {
@@ -239,7 +236,7 @@ template <typename ClassType> static jsvm_value New(jsvm_env env, jsvm_callback_
     jsvm_status status;
     jsvm_value newTarget;
     status = jsvm_get_new_target(env, info, &newTarget);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     DEBUG_CHECK(newTarget != nullptr);
     {
 
@@ -250,7 +247,7 @@ template <typename ClassType> static jsvm_value New(jsvm_env env, jsvm_callback_
         {
             jsvm_value jsThis;
             status = jsvm_get_cb_info(env, info, 0, nullptr, &jsThis, nullptr);
-            DEBUG_CHECK(status == jsvm_status::ok);
+            DEBUG_CHECK(status == jsvm_status::jsvm_ok);
             return jsThis;
         }
         else
@@ -260,14 +257,14 @@ template <typename ClassType> static jsvm_value New(jsvm_env env, jsvm_callback_
             jsvm_value args[8];
             jsvm_value jsThis;
             status = jsvm_get_cb_info(env, info, &argc, args, &jsThis, nullptr);
-            DEBUG_CHECK(status == jsvm_status::ok);
+            DEBUG_CHECK(status == jsvm_status::jsvm_ok);
             DEBUG_CHECK(argc <= 8);
             ClassType *object = classRegistry.ConstructObject(argc, env, info);
             jsvm_ref objectRef;
 
             status = jsvm_wrap(env, jsThis, reinterpret_cast<void *>(object), internal::destructor<ClassType>, nullptr,
-                                &objectRef);
-            DEBUG_CHECK(status == jsvm_status::ok);
+                               &objectRef);
+            DEBUG_CHECK(status == jsvm_status::jsvm_ok);
             classRegistry.objects_.emplace(object, ObjectRegistry{objectRef, callDestructor});
             return jsThis;
         }
@@ -507,17 +504,17 @@ template <typename ClassType> class class_
 
         status = jsvm_define_class(env, className, NAPI_AUTO_LENGTH, New<ClassType>, propertyDescriptorVector.size(),
                                    propertyDescriptorVector.data(), &cons);
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         status = jsvm_create_reference(env, cons, 1, &classRegistry_.classRef_);
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         status = jsvm_set_named_property(env, exports, className, cons);
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
 
         if (inheritBaseCons_ != nullptr)
         {
             jsvm_value consBase;
             status = jsvm_get_reference_value(env, inheritBaseCons_, &consBase);
-            DEBUG_CHECK(status == jsvm_status::ok);
+            DEBUG_CHECK(status == jsvm_status::jsvm_ok);
             jsvm_value consBasePrototype = Local(consBase)["prototype"].getHandle();
 
             jsvm_value consDerived = cons;
@@ -531,15 +528,15 @@ template <typename ClassType> class class_
 #if 0 
             
             status = jsvm::ObjectGetPrototypeOf(env, consBase, &consBasePrototype);
-            DEBUG_CHECK(status == jsvm_status::ok);
+            DEBUG_CHECK(status == jsvm_status::jsvm_ok);
 
             status = jsvm::ObjectGetPrototypeOf(env, consDerived, &consDerivedPrototype);
-            DEBUG_CHECK(status == jsvm_status::ok); 
+            DEBUG_CHECK(status == jsvm_status::jsvm_ok); 
             status = jsvm::ObjectSetPrototypeOf(env, consDerived, consBase);
-            DEBUG_CHECK(status == jsvm_status::ok);
+            DEBUG_CHECK(status == jsvm_status::jsvm_ok);
 
             status = jsvm::ObjectSetPrototypeOf(env, consDerivedPrototype, conBasePrototype);
-            DEBUG_CHECK(status == jsvm_status::ok);
+            DEBUG_CHECK(status == jsvm_status::jsvm_ok);
 #endif
             // classRegistry_.addBase(&baseClassRegistry);//todo
         }
@@ -604,16 +601,16 @@ template <typename ClassType> class global_class_
 
         status = jsvm_define_class(env, className, NAPI_AUTO_LENGTH, NewGlobalClass<ClassType>,
                                    propertyDescriptorVector_.size(), propertyDescriptorVector_.data(), &cons);
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         ClassRegistry<ClassType> &baseClassRegistry =
             ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
 
         jsvm_value instanceValue = nullptr;
         status = jsvm_new_instance(env, cons, 0, nullptr, &instanceValue);
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         status = jsvm_set_named_property(env, exports, className, instanceValue);
         // status = jsvm_set_named_property(env, exports, className, cons);
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
 
         return exports;
     }

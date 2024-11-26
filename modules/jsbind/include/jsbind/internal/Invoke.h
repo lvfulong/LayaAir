@@ -34,8 +34,8 @@ typename std::enable_if<!internal::is_void_return<Func>::value, jsvm_value>::typ
         func(ValueTraits<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...));
 }
 template <typename Tuple, typename Func, size_t... Seq>
-typename std::enable_if<internal::is_void_return<Func>::value, jsvm_value>::type tuple_call(
-    Func func, jsvm_value *args, std::index_sequence<Seq...>)
+typename std::enable_if<internal::is_void_return<Func>::value, jsvm_value>::type tuple_call(Func func, jsvm_value *args,
+                                                                                            std::index_sequence<Seq...>)
 {
     func(ValueTraits<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(args[Seq])...);
     return nullptr;
@@ -172,15 +172,13 @@ jsvm_value InvokeClassMethodOptionalOverride(jsvm_env env, jsvm_callback_info in
                                                                         std::make_index_sequence<sizeof...(Args)>());
 }
 
-template <typename ClassType, typename... Args>
-ClassType *InvokeClassConstructor(jsvm_env env, jsvm_callback_info info)
+template <typename ClassType, typename... Args> ClassType *InvokeClassConstructor(jsvm_env env, jsvm_callback_info info)
 {
     return tuple_call_class_constructor<ClassType, std::tuple<Args...>>(env, info,
                                                                         std::make_index_sequence<sizeof...(Args)>());
 }
 
-template <typename ClassType, typename PropertyType>
-jsvm_value InvokeClassGetter(jsvm_env env, jsvm_callback_info info)
+template <typename ClassType, typename PropertyType> jsvm_value InvokeClassGetter(jsvm_env env, jsvm_callback_info info)
 {
     // size_t argc = 1;
     // napi_value args[1];
@@ -217,8 +215,7 @@ jsvm_value InvokeClassGetterOptionalOverride(jsvm_env env, jsvm_callback_info in
     return ValueTraits<PropertyType>::ToJs((*funcInfo->fGet)(*pObj));
 }
 
-template <typename ClassType, typename PropertyType>
-jsvm_value InvokeClassSetter(jsvm_env env, jsvm_callback_info info)
+template <typename ClassType, typename PropertyType> jsvm_value InvokeClassSetter(jsvm_env env, jsvm_callback_info info)
 {
 
     size_t argc = 1;
@@ -342,7 +339,7 @@ template <typename... Args> jsvm_value v8_call(jsvm_env env, jsvm_value self, js
 
     jsvm_value result = nullptr;
     status = jsvm_call_function(env, self, func, argc, argv, &result);
-    if (status != jsvm_status::ok)
+    if (status != jsvm_status::jsvm_ok)
     {
         reportError(env, status);
     }

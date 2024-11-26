@@ -2,14 +2,14 @@
 
 namespace jsbind
 {
-Local::Local():handle_(nullptr)
+Local::Local() : handle_(nullptr)
 {
 #if 0
     GET_ENV
     jsvm_status status;
     jsvm_value undefined;
     status = jsvm::GetUndefined(env, &undefined);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     handle_ = undefined;
 #endif
 }
@@ -24,7 +24,7 @@ Local Local::operator[](const std::string &key) const
     jsvm_status status;
     jsvm_value result = nullptr;
     status = jsvm_get_named_property(env, handle_, key.c_str(), &result);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return Local(result);
 }
 } // namespace jsbind

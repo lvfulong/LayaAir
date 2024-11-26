@@ -58,7 +58,6 @@ class ScriptThread : public laya::JCWorkerThread
     jsvm_vm m_vm;
     std::vector<std::function<void(void)>> m_DbgFunction; // 调试函数
     std::mutex m_DbgFuncLock;
-
 };
-} // namespace jsbind
+} // namespace jsvm
 #endif

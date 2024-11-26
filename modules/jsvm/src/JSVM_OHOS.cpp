@@ -394,7 +394,7 @@ Status CreateFunction(Env env, const char *utf8name, size_t length, Callback cb,
     jsvmCallback->data = data;
 
     auto status = static_cast<Status>(OH_JSVM_CreateFunction(env, utf8name, length, jsvmCallback, result));
-    if (status != jsvm_status::ok)
+    if (status != jsvm_status::jsvm_ok)
     {
         return status;
     }
@@ -580,31 +580,31 @@ Status CoerceToBool(Env env, Value value, Value *result)
 {
     return static_cast<Status>(OH_JSVM_CoerceToBool(env, value, result));
 }
-Status CoerceToNumber(Env env, Value value, Value *result)
+jsvm_status jsvm_coerce_to_number(jsvm_env env, jsvm_value value, jsvm_value* result)
 {
     return static_cast<Status>(OH_JSVM_CoerceToNumber(env, value, result));
 }
-Status CoerceToObject(Env env, Value value, Value *result)
+jsvm_status jsvm_coerce_to_object(jsvm_env env, jsvm_value value, jsvm_value* result)
 {
     return static_cast<Status>(OH_JSVM_CoerceToObject(env, value, result));
 }
-Status CoerceToString(Env env, Value value, Value *result)
+jsvm_status jsvm_coerce_to_string(jsvm_env env, jsvm_value value, jsvm_value* result)
 {
     return static_cast<Status>(OH_JSVM_CoerceToString(env, value, result));
 }
-Status GetPropertyNames(Env env, Value object, Value *result)
+jsvm_status jsvm_get_property_names(jsvm_env env, jsvm_value object, jsvm_value* result)
 {
     return static_cast<Status>(OH_JSVM_GetPropertyNames(env, object, result));
 }
-Status ObjectSetPrototypeOf(Env env, Value object, Value prototype)
+jsvm_status jsvm_object_set_prototype_of(jsvm_env env, jsvm_value object, jsvm_value prototype)
 {
     return static_cast<Status>(OH_JSVM_ObjectSetPrototypeOf(env, object, prototype));
 }
-Status ObjectGetPrototypeOf(Env env, Value object, Value *result)
+jsvm_status jsvm_object_get_prototype_of(jsvm_env env, jsvm_value object, jsvm_value* result)
 {
     return static_cast<Status>(OH_JSVM_GetPrototype(env, object, result));
 }
-Status GetPrototype(Env env, Value object, Value *result)
+jsvm_status jsvm_get_prototype(jsvm_env env, jsvm_value object, jsvm_value* result)
 {
     return static_cast<Status>(OH_JSVM_ObjectGetPrototypeOf(env, object, result));
 }

@@ -39,7 +39,7 @@ class Persistent
         jsvm_value value;
 
         status = jsvm_get_reference_value(env, ref_, &value);
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         return value;
     }
 

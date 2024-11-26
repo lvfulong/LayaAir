@@ -6,7 +6,6 @@
 #include <jsvm/JSVM_Types.h>
 #include <string>
 
-
 namespace jsbind
 {
 namespace internal
@@ -17,7 +16,7 @@ inline jsvm_value makeObject()
     jsvm_value result;
     jsvm_status status;
     status = jsvm_create_object(env, &result);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return result;
 }
 inline bool getBool(jsvm_value value)
@@ -27,9 +26,9 @@ inline bool getBool(jsvm_value value)
     bool result;
     jsvm_value resultCoerce;
     status = jsvm_coerce_to_bool(env, value, &resultCoerce);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     status = jsvm_get_value_bool(env, resultCoerce, &result);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return result;
 }
 inline jsvm_value makeBool(bool value)
@@ -39,9 +38,9 @@ inline jsvm_value makeBool(bool value)
     jsvm_value resultBoolean;
     jsvm_status status;
     status = jsvm_create_uint32(env, static_cast<uint32_t>(value), &resultUint32); //  no create bool function
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     status = jsvm_coerce_to_bool(env, resultUint32, &resultBoolean);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return resultBoolean;
 }
 inline double getDouble(jsvm_value value)
@@ -51,9 +50,9 @@ inline double getDouble(jsvm_value value)
     jsvm_value resultCoerce;
     jsvm_status status;
     status = jsvm_coerce_to_number(env, value, &resultCoerce);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     status = jsvm_get_value_double(env, resultCoerce, &result);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return result;
 }
 inline jsvm_value makeDouble(double value)
@@ -62,7 +61,7 @@ inline jsvm_value makeDouble(double value)
     jsvm_value result;
     jsvm_status status;
     status = jsvm_create_double(env, value, &result);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return result;
 }
 inline int32_t getInt32(jsvm_value value)
@@ -71,7 +70,7 @@ inline int32_t getInt32(jsvm_value value)
     int32_t result;
     jsvm_status status;
     status = jsvm_get_value_int32(env, value, &result);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return result;
 }
 inline jsvm_value makeInt32(int32_t value)
@@ -80,7 +79,7 @@ inline jsvm_value makeInt32(int32_t value)
     jsvm_value result;
     jsvm_status status;
     status = jsvm_create_int32(env, value, &result);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return result;
 }
 inline uint32_t getUint32(jsvm_value value)
@@ -89,7 +88,7 @@ inline uint32_t getUint32(jsvm_value value)
     uint32_t result;
     jsvm_status status;
     status = jsvm_get_value_uint32(env, value, &result);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return result;
 }
 inline jsvm_value makeUint32(uint32_t value)
@@ -98,7 +97,7 @@ inline jsvm_value makeUint32(uint32_t value)
     jsvm_value result;
     jsvm_status status;
     status = jsvm_create_uint32(env, value, &result);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return result;
 }
 inline int64_t getInt64Noloss(jsvm_value value)
@@ -109,7 +108,7 @@ inline int64_t getInt64Noloss(jsvm_value value)
     bool lossless;
     status = jsvm_get_value_bigint_int64(env, value, &result, &lossless);
     DEBUG_CHECK(lossless == true);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return result;
 }
 inline jsvm_value makeInt64Noloss(int64_t value)
@@ -128,7 +127,7 @@ inline uint64_t getUint64Noloss(jsvm_value value)
     bool lossless;
     status = jsvm_get_value_bigint_uint64(env, value, &result, &lossless);
     DEBUG_CHECK(lossless == true);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return result;
 }
 inline jsvm_value makeUint64Noloss(uint64_t value)
@@ -145,10 +144,10 @@ inline std::string getStringLatin1(jsvm_value value)
     size_t length = 0;
     jsvm_status status;
     status = jsvm_get_value_string_latin1(env, value, NULL, 0, &length);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     std::string latin1Str(length, '\0');
     status = jsvm_get_value_string_latin1(env, value, latin1Str.data(), length + 1, &length);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return latin1Str;
 }
 inline jsvm_value makeStringLatin1(const std::string &value)
@@ -157,7 +156,7 @@ inline jsvm_value makeStringLatin1(const std::string &value)
     jsvm_value result;
     jsvm_status status;
     status = jsvm_create_string_latin1(env, value.c_str(), value.length(), &result);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return result;
 }
 inline std::string getStringUtf8(jsvm_value value)
@@ -167,12 +166,12 @@ inline std::string getStringUtf8(jsvm_value value)
     jsvm_status status;
     jsvm_value result;
     status = jsvm_coerce_to_string(env, value, &result);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     status = jsvm_get_value_string_utf8(env, result, NULL, 0, &length);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     std::string utf8str(length, '\0');
     status = jsvm_get_value_string_utf8(env, result, utf8str.data(), length + 1, &length);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return utf8str;
 }
 inline jsvm_value makeStringUtf8(const std::string &value)
@@ -181,7 +180,7 @@ inline jsvm_value makeStringUtf8(const std::string &value)
     jsvm_value result;
     jsvm_status status;
     status = jsvm_create_string_utf8(env, value.c_str(), value.length(), &result);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return result;
 }
 inline std::u16string getStringUtf16(jsvm_value value)
@@ -190,10 +189,10 @@ inline std::u16string getStringUtf16(jsvm_value value)
     size_t length = 0;
     jsvm_status status;
     status = jsvm_get_value_string_utf16(env, value, NULL, 0, &length);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     std::u16string utf16str(length, '\0');
     status = jsvm_get_value_string_utf16(env, value, utf16str.data(), length + 1, &length);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return utf16str;
 }
 inline jsvm_value makeStringUtf16(const std::u16string &value)
@@ -202,7 +201,7 @@ inline jsvm_value makeStringUtf16(const std::u16string &value)
     jsvm_value result;
     jsvm_status status;
     status = jsvm_create_string_utf16(env, value.c_str(), value.length(), &result);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return result;
 }
 
@@ -212,7 +211,7 @@ inline double getDate(jsvm_value value)
     double result;
     jsvm_status status;
     status = jsvm_get_date_value(env, value, &result);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return result;
 }
 inline jsvm_value makeDate(double value)
@@ -221,7 +220,7 @@ inline jsvm_value makeDate(double value)
     jsvm_value result;
     jsvm_status status;
     status = jsvm_create_date(env, value, &result);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return result;
 }
 inline bool isDate(jsvm_value value)
@@ -230,7 +229,7 @@ inline bool isDate(jsvm_value value)
     bool result;
     jsvm_status status;
     status = jsvm_is_date(env, value, &result);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return result;
 }
 inline jsvm_value makeNull()
@@ -239,7 +238,7 @@ inline jsvm_value makeNull()
     jsvm_value result;
     jsvm_status status;
     status = jsvm_get_null(env, &result);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return result;
 }
 
@@ -249,7 +248,7 @@ inline jsvm_value makeUndefined()
     jsvm_value result;
     jsvm_status status;
     status = jsvm_get_undefined(env, &result);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return result;
 }
 inline bool isUndefined(jsvm_value value)
@@ -257,15 +256,15 @@ inline bool isUndefined(jsvm_value value)
     GET_ENV
     jsvm_valuetype valueType;
     jsvm_status status = jsvm_typeof(env, value, &valueType);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return valueType == jsvm_valuetype::jsvm_undefined;
 }
 inline bool isNull(jsvm_value value)
 {
     GET_ENV
-        jsvm_valuetype valueType;
+    jsvm_valuetype valueType;
     jsvm_status status = jsvm_typeof(env, value, &valueType);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return valueType == jsvm_valuetype::jsvm_null;
 }
 inline bool isBool(jsvm_value value)
@@ -275,33 +274,33 @@ inline bool isBool(jsvm_value value)
     jsvm_valuetype valueType;
     jsvm_status status;
     status = jsvm_typeof(env, value, &valueType);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return valueType == jsvm_valuetype::jsvm_boolean;
 }
 inline bool isNumber(jsvm_value value)
 {
     GET_ENV
-        jsvm_valuetype valueType;
+    jsvm_valuetype valueType;
     jsvm_status status = jsvm_typeof(env, value, &valueType);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return valueType == jsvm_valuetype::jsvm_number;
 }
 
 inline bool isString(jsvm_value value)
 {
     GET_ENV
-        jsvm_valuetype valueType;
+    jsvm_valuetype valueType;
     jsvm_status status = jsvm_typeof(env, value, &valueType);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return valueType == jsvm_valuetype::jsvm_string;
 }
 
 inline bool isObject(jsvm_value value)
 {
     GET_ENV
-        jsvm_valuetype valueType;
+    jsvm_valuetype valueType;
     jsvm_status status = jsvm_typeof(env, value, &valueType);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return valueType == jsvm_valuetype::jsvm_object;
 }
 
@@ -310,16 +309,16 @@ inline bool isArray(jsvm_value value)
     GET_ENV
     bool result;
     jsvm_status status = jsvm_is_array(env, value, &result);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return result;
 }
 
 inline bool isFunction(jsvm_value value)
 {
     GET_ENV
-        jsvm_valuetype valueType;
+    jsvm_valuetype valueType;
     jsvm_status status = jsvm_typeof(env, value, &valueType);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return valueType == jsvm_valuetype::jsvm_function;
 }
 
@@ -328,7 +327,7 @@ inline bool isError(jsvm_value value)
     GET_ENV
     bool result;
     jsvm_status status = jsvm_is_error(env, value, &result);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return result;
 }
 

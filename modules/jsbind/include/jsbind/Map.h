@@ -30,23 +30,23 @@ template <typename K, typename T> class Map
         DEBUG_CHECK(isArray);
 #if 0
         status = jsvm::GetPropertyNames(env, value, &names);
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
 #endif
         uint32_t length;
         status = jsvm::GetArrayLength(env, names, &length);
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
 
         for (auto index = 0; index < length; index++)
         {
             jsvm_value keyNapi;
             status = jsvm::GetElement(env, names, index, &keyNapi);
-            DEBUG_CHECK(status == jsvm_status::ok);
+            DEBUG_CHECK(status == jsvm_status::jsvm_ok);
 
             K k = internal::ValueTraits<K>::ToCpp(keyNapi);
 
             jsvm_value valueNapi;
             status = jsvm::GetProperty(env, value, keyNapi, &valueNapi);
-            DEBUG_CHECK(status == jsvm_status::ok);
+            DEBUG_CHECK(status == jsvm_status::jsvm_ok);
             map[k] = internal::ValueTraits<T>::ToCpp(valueNapi);
         }
     }
@@ -58,9 +58,9 @@ template <typename K, typename T> class Map
         jsvm_valuetype type;
         jsvm_value forEachFunc;
         status = jsvm_get_named_property(env, value, "forEach", &forEachFunc);
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         jsvm_typeof(env, forEachFunc, &type);
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         if (type == jsvm_valuetype::jsvm_function)
         {
             auto forEachCallback = [](jsvm_env env, jsvm_callback_info info) -> jsvm_value {
@@ -69,7 +69,7 @@ template <typename K, typename T> class Map
 
                 std::unordered_map<K, T> *ptrMap;
                 jsvm_status status = jsvm_get_cb_info(env, info, &argc, argv, nullptr, (void **)&ptrMap);
-                DEBUG_CHECK(status == jsvm_status::ok);
+                DEBUG_CHECK(status == jsvm_status::jsvm_ok);
                 K k = internal::ValueTraits<K>::ToCpp(argv[1]);
                 (*ptrMap)[k] = internal::ValueTraits<T>::ToCpp(argv[0]);
                 return nullptr;
@@ -77,11 +77,11 @@ template <typename K, typename T> class Map
 
             jsvm_value fn;
             status = jsvm_create_function(env, "callback", NAPI_AUTO_LENGTH, forEachCallback, &map, &fn);
-            DEBUG_CHECK(status == jsvm_status::ok);
+            DEBUG_CHECK(status == jsvm_status::jsvm_ok);
 
             jsvm_value return_val;
             status = jsvm_call_function(env, value, forEachFunc, 1, &fn, &return_val);
-            DEBUG_CHECK(status == jsvm_status::ok);
+            DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         }
     }
 };

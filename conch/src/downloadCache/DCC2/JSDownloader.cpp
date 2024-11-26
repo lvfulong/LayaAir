@@ -37,7 +37,7 @@ namespace laya{
 
         jsvm_value external_onok_value;
         status = jsvm_get_named_property(env, _this, "external_onok", &external_onok_value);
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
 
 
         jsbind::Local args0(args[0]);
@@ -53,7 +53,7 @@ namespace laya{
 
         void* external_onok;
         status = jsvm_get_value_external(env, external_onok_value, &external_onok);
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         auto extdata = reinterpret_cast<JSDownloader::jsCallbackData*>(external_onok);
         DEBUG_CHECK(extdata != nullptr);
 
@@ -68,9 +68,9 @@ namespace laya{
         // 将 external_onok 成员设置为 null，避免多次调用使用上面已经删除的指针
         jsvm_value null;
         status = jsvm_get_null(env, &null);
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         status = jsvm_set_named_property(env, _this, "external_onok", null);
-        DEBUG_CHECK(status == jsvm_status::ok);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
 
         return null;
     }

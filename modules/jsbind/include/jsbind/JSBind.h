@@ -42,7 +42,7 @@ template <typename ClassType> jsvm_value toLocal(ClassType *objectPointer)
     jsvm_value result;
     jsvm_status status;
     status = jsvm_get_reference_value(env, objectRegistry->objectRef_, &result);
-    DEBUG_CHECK(status == jsvm_status::ok);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return result;
 }
 extern void AdjustAmountOfExternalAllocatedMemory(int p_nMemorySize);
