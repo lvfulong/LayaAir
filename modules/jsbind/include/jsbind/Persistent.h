@@ -21,11 +21,25 @@ class Persistent
     ~Persistent();
     template <typename ReturnType, typename... Args> ReturnType call(jsvm_value recv, const Args &...args)
     {
-        return getLocal().call<ReturnType>(recv, args...);
+        if (isValid() && getLocal().isFunction())
+        {
+            return getLocal().call<ReturnType>(recv, args...);
+        }
+        else
+        {
+            return ReturnType();
+        }
     }
     template <typename ReturnType, typename... Args> ReturnType call(jsvm_value recv, const Args &...args) const
     {
-        return getLocal().call<ReturnType>(recv, args...);
+        if (isValid() && getLocal().isFunction())
+        {
+            return getLocal().call<ReturnType>(recv, args...);
+        }
+        else
+        {
+            return ReturnType();
+        }
     }
     inline bool isValid() const
     {
