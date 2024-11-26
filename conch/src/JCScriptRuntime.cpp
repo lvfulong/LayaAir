@@ -50,6 +50,7 @@ namespace laya
 
         if (isExceptionPending)
         {
+
             jsvm_value result = nullptr;
             status = jsvm_get_and_clear_last_exception(env, &result);
             DEBUG_CHECK(status == jsvm_ok);
@@ -200,7 +201,7 @@ namespace laya
 
         JSGlobalExportC();
     #if defined(OS_WINDOWS)
-        importAllDynaLib(gRedistPath,nullptr);
+        //importAllDynaLib(gRedistPath,nullptr);
     #endif
 
     }

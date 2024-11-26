@@ -105,7 +105,7 @@ jsvm_value OSWin::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &
             //napi_resolve_deferred(context, deferred, v);
             promise.resolve(message);
         });
-    });
+    };
     if (g_handleAsyncMessageCb)
     {
         // handleAsyncMessage is called in platform os ui thread
