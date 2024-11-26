@@ -36,10 +36,18 @@ inline jsvm_value makeFunction(std::function<ReturnType(Args...)> value)
     DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return result;
 }
-inline jsvm_value cnm(jsvm_env env, jsvm_callback_info info)
+inline static jsvm_value callback(jsvm_env env, jsvm_callback_info info)
 {
-    // todo
-    return makeNull();
+    size_t argc = 1;
+    jsvm_value arg;
+    std::function <jsvm_value(jsvm_env env, jsvm_callback_info info)>* func;
+    jsvm_status status = jsvm_get_cb_info(env, info, &argc, &arg, nullptr, (void**)&func);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+
+    jsvm_value ret = (*func)(env, info);
+    delete func;
+    return ret;
+
 }
 inline jsvm_value makeFunctionRaw(std::function<jsvm_value(jsvm_env env, jsvm_callback_info info)> value)
 {
@@ -49,7 +57,7 @@ inline jsvm_value makeFunctionRaw(std::function<jsvm_value(jsvm_env env, jsvm_ca
     jsvm_value result = nullptr;
     auto invoke = std::make_unique<std::function<jsvm_value(jsvm_env env, jsvm_callback_info info)>>(std::move(value));
     std::function<jsvm_value(jsvm_env env, jsvm_callback_info info)> *func = invoke.release();
-    status = jsvm_create_function(env, "", NAPI_AUTO_LENGTH, cnm, func, &result);
+    status = jsvm_create_function(env, "", NAPI_AUTO_LENGTH, callback, func, &result);
     DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     /// status = jsvm::AddFinalizer(env, result, func, finalizer, nullptr, nullptr);
     DEBUG_CHECK(status == jsvm_status::jsvm_ok);
