@@ -40,6 +40,24 @@ extern std::string gRedistPath;
 
 namespace laya 
 {
+
+    void CheckJSException()
+    {
+        GET_ENV
+        bool isExceptionPending;
+        auto status = jsvm_is_exception_pending(env, &isExceptionPending);
+        DEBUG_CHECK(status == napi_ok);
+
+        if (isExceptionPending)
+        {
+            jsvm_value result = nullptr;
+            status = jsvm_get_and_clear_last_exception(env, &result);
+            DEBUG_CHECK(status == jsvm_ok);
+            //v8::Local<v8::Value> val = v8impl::V8LocalValueFromJsValue(result);
+            //ReportException(env->isolate, val);
+            JCConch::s_pScriptRuntime->m_pJSOnErrorFunction.call<void>(jsvm::global(), result);
+        }
+    }
     JCScriptRuntime::JCScriptRuntime()
     {
         m_pScriptThread = std::make_shared<jsvm::ScriptThread>();
@@ -192,7 +210,9 @@ namespace laya
             int nSize = 0;
             if (m_pAssetsRes->loadFileContent("scripts/runtimeInit.js", sJSRuntime, nSize))
             {
-                jsbind::runScript(sJSRuntime);
+                jsvm_value result;
+                jsbind::runScript(sJSRuntime, &result);
+                CheckJSException();
                 delete[] sJSRuntime;
             }
         }
@@ -203,22 +223,15 @@ namespace laya
             std::string kBuf = "(function(window){\n'use strict'\n";
             kBuf += sJCBuffer;
             kBuf += "\n})(window);\n//@ sourceURL=apploader.js";
-#ifdef JS_V8
-            //v8::Isolate* isolate = v8::Isolate::GetCurrent();
-            //v8::HandleScope handle_scope(isolate);
-            //v8::TryCatch try_catch(isolate);
-            jsbind::runScript(kBuf);
-            //if (try_catch.HasCaught())
-            //{
-            //    __JSRun::ReportException(isolate, &try_catch);
-            //}
-#else
-            jsbind::runScript(kBuf);
-#endif
+
+            jsvm_value result;
+            jsbind::runScript(kBuf, &result);
+            CheckJSException();
             delete[] sJCBuffer;
             sJCBuffer = NULL;
         }
-        jsbind::runScript("gc();gc();gc();");
+        jsvm_value result;
+        jsbind::runScript("gc();gc();gc();", &result);
         });
     }
     void JCScriptRuntime::onThreadExit(JCEventEmitter::evtPtr evt)
@@ -249,6 +262,7 @@ namespace laya
         m_pJSOnUnhandledRejectionFunction.reset();
 		m_pJSOnScreenOrientationChanged.reset();
 		m_pJSSetGlobalRepaintFunction.reset();
+        m_pJSOnErrorFunction.reset();
 		g_ZipPackage = NULL;
 #if !defined(OS_LINUX) && !defined(OS_WINDOWS)
         m_pCurEditBox = NULL;
@@ -363,20 +377,9 @@ namespace laya
             m_pJSOnFrameFunction.call<void>(jsvm::global());
         }
         //JS_CATCH;
-		
+        CheckJSException();
         //float dt = tmGetCurms() - nBenginTime;
         //PERF_UPDATE_DATA(JCPerfHUD::PHUD_JS_DELAY, (float)dt);
-
-		{
-//lvtodo
-        GET_ENV
-            jsvm_value script;
-        jsvm_status status;
-
-        //////status = jsvm::ReportException(env);
-        //DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-        ///DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-		}
         JCConch::s_pConchRender->postTaskFromJSToRenderSync([this]()->bool {
             JCConch::s_pScriptRuntime->dispatchLayaGLBuffer(false);
             JCConch::s_pConchRender->update();
@@ -433,7 +436,8 @@ namespace laya
     }
     void JCScriptRuntime::jsGCCallJSFunction()
     {
-        jsbind::runScript("gc()");
+        jsvm_value result;
+        jsbind::runScript("gc()", &result);
     }
     void JCScriptRuntime::callJC(std::string sFunctionName, std::string sJsonParam, std::string sCallbackFunction)
     {
@@ -447,7 +451,8 @@ namespace laya
     }
     void JCScriptRuntime::callJSStringFunction( std::string sBuffer )
     {
-        jsbind::runScript(sBuffer);
+        jsvm_value result;
+        jsbind::runScript(sBuffer, &result);
     }
     void JCScriptRuntime::callJSFuncton(std::string sFunctionName, std::string sJsonParam, std::string sCallbackFunction)
     {
@@ -458,7 +463,8 @@ namespace laya
         sBuffer += sCallbackFunction;
         sBuffer += "\");";
         LOGI("JCScriptRuntime::callJSFuncton buffer=%s",sBuffer.c_str() );
-        jsbind::runScript( sBuffer);
+        jsvm_value result;
+        jsbind::runScript( sBuffer, &result);
     }
     void JCScriptRuntime::restoreAudio()
     {
@@ -479,7 +485,8 @@ namespace laya
     }
     void JCScriptRuntime::jsReloadUrlJSFunction()
     {
-        jsbind::runScript("reloadJS(true)");
+        jsvm_value result;
+        jsbind::runScript("reloadJS(true)", &result);
     }
     void JCScriptRuntime::jsUrlback()
     {
@@ -488,7 +495,8 @@ namespace laya
     }
     void JCScriptRuntime::jsUrlbackJSFunction()
     {
-        jsbind::runScript("history.back()");
+        jsvm_value result;
+        jsbind::runScript("history.back()", &result);
     }
 
     bool JCScriptRuntime::isInJSThread(){

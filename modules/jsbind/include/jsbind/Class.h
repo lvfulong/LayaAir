@@ -476,7 +476,7 @@ template <typename ClassType> class class_
             ClassRegistryManager::getClassRegistry<BaseType>(type_id<BaseType>());
         DEBUG_CHECK(inheritBaseCons_ == nullptr); // only inherit single base
         inheritBaseCons_ = baseClassRegistry.classRef_;
-        DEBUG_CHECK(!class_<BaseType>::mergedPropertyDescriptorMap_.empty());
+        //DEBUG_CHECK(!class_<BaseType>::mergedPropertyDescriptorMap_.empty());
         propertyInheritBaseDescriptorMap_ = class_<BaseType>::mergedPropertyDescriptorMap_;
         return *this;
     }

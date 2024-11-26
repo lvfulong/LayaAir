@@ -106,10 +106,8 @@ template <typename T> class ValueTraits<T *, std::enable_if_t<internal::is_wrapp
             return nullptr;
         }
         T *obj;
-        void *p = (void *)obj;
-        status = jsvm_unwrap(env, value, reinterpret_cast<void **>(&p));
+        status = jsvm_unwrap(env, value, (void **)(&obj));
         DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-        obj = (T *)p;
         return obj;
     }
     static bool is(jsvm_value value)

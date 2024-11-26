@@ -142,6 +142,7 @@ namespace laya
         jsbind::Persistent                         m_pJSZipPackage;
         jsbind::Persistent                         m_pJSOnScreenOrientationChanged;
         jsbind::Persistent                         m_pJSSetGlobalRepaintFunction;
+        jsbind::Persistent                         m_pJSOnErrorFunction;
         std::string                         m_strStartJS;
         JCFileResManager*                   m_pFileResMgr;                  //外部设置的。本地不允许删除
         JCFileSource*                       m_pAssetsRes;	                //外部设置的。本地不允许删除

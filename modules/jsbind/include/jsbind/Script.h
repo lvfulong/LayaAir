@@ -5,6 +5,6 @@
 
 namespace jsbind
 {
-jsvm_value runScript(const std::string &code);
+jsvm_status runScript(const std::string &code, jsvm_value* result);
 } // namespace jsbind
 #endif

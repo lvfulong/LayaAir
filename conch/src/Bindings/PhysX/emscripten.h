@@ -219,7 +219,7 @@ template <typename ClassType, typename BaseSpecifier> Class_<ClassType, BaseSpec
         assert(jsbind::ClassRegistryManager::isWrappedClassOf<typename BaseSpecifier::baseType>());
         mclass_->template inherit<typename BaseSpecifier::baseType>();
         // delete base info , if not will crash, because base don not need bind
-        adapter_->unregisterFunction(jsbind::type_id<typename BaseSpecifier::baseType>());
+        //adapter_->unregisterFunction(jsbind::type_id<typename BaseSpecifier::baseType>());
     }
 
     mclass_->function_optional_override("delete",
@@ -232,7 +232,7 @@ template <typename ClassType, typename BaseSpecifier> Class_<ClassType, BaseSpec
     adapter_->registerFunction(jsbind::type_id<ClassType>(), [mc = mclass_, m, className]() {
         GET_ENV
         mc->Export(env, m->getHandle(), className);
-        delete mc;
+        //delete mc;
     });
 }
 template <typename ClassType, typename BaseSpecifier>

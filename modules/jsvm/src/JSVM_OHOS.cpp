@@ -617,23 +617,7 @@ jsvm_status jsvm_get_prototype(jsvm_env env, jsvm_value object, jsvm_value *resu
 {
     return static_cast<jsvm_status>(OH_JSVM_ObjectGetPrototypeOf(env, object, result));
 }
-#if 0
-Status ReportException(Env env)
+jsvm_status jsvm_is_exception_pending(jsvm_env env, bool* result)
 {
-
-    bool isExceptionPending;
-    auto status = napi_is_exception_pending(env, &isExceptionPending);
-    DEBUG_CHECK(status == napi_ok);
-
-    if (isExceptionPending)
-    {
-        napi_value result = nullptr;
-        status = napi_get_and_clear_last_exception(env, &result);
-        DEBUG_CHECK(status == napi_ok);
-        //v8::Local<v8::Value> val = v8impl::V8LocalValueFromJsValue(result);
-        //ReportException(env->isolate, val);
-    }
-
-    return Status::OK; // todo
+    return static_cast<jsvm_status>(OH_JSVM_IsExceptionPending(env, result));
 }
-#endif

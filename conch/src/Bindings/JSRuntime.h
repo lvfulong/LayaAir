@@ -87,6 +87,8 @@ namespace laya
 
 		static void setGlobalRepaintCall();
 
+        static void setOnError(jsvm_value p_pFunction);
+
 		static void computeSubSkinnedDataForNative(jsvm_value inverseBindPosesBuffer, jsvm_value boneIndices, jsvm_value subData, jsvm_value skinnedMatrixCaches, jsvm_value bonesTransform, jsvm_value skinnedDataLoopMarks, jsvm_value skinnedData);
 
         static bool registerFont(const std::string& family, jsbind::Local pathOrArrayBuffer);

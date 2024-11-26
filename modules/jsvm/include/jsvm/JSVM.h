@@ -152,6 +152,7 @@ JSVM_API jsvm_status jsvm_coerce_to_object(jsvm_env env, jsvm_value value, jsvm_
 JSVM_API jsvm_status jsvm_coerce_to_string(jsvm_env env, jsvm_value value, jsvm_value *result);
 JSVM_API jsvm_status jsvm_get_property_names(jsvm_env env, jsvm_value object, jsvm_value *result);
 JSVM_API jsvm_status jsvm_get_prototype(jsvm_env env, jsvm_value object, jsvm_value *result);
+JSVM_API jsvm_status jsvm_is_exception_pending(jsvm_env env, bool* result);
 JSVM_API jsvm_status jsvm_object_set_prototype_of(jsvm_env env, jsvm_value object, jsvm_value prototype);
 JSVM_API jsvm_status jsvm_object_get_prototype_of(jsvm_env env, jsvm_value object, jsvm_value *result);
 JSVM_API jsvm_status jsvm_open_inspector(jsvm_env env, int port);

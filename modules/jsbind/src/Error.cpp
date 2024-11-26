@@ -29,20 +29,5 @@ void reportError(jsvm_env env, jsvm_status res)
         jsvm_throw_error(env, std::to_string(static_cast<int>(status)).c_str(), nullptr);
         LOGE("jsvm failed Error code:  %d", static_cast<int>(res));
     }
-
-#if 0
-        bool isExceptionPending;
-    auto status = napi_is_exception_pending(env, &isExceptionPending);
-    DEBUG_CHECK(status == napi_ok);
-
-    if (isExceptionPending)
-    {
-        napi_value result = nullptr;
-        status = napi_get_and_clear_last_exception(env, &result);
-        DEBUG_CHECK(status == napi_ok);
-        //v8::Local<v8::Value> val = v8impl::V8LocalValueFromJsValue(result);
-        //ReportException(env->isolate, val);
-    }
-#endif
 }
 } // namespace jsbind

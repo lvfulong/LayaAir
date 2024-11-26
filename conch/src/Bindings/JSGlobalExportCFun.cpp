@@ -250,7 +250,8 @@ namespace laya
 
     void evalJS(const char* p_sSource)
     {
-        jsbind::runScript(p_sSource);
+        jsvm_value result;
+        jsbind::runScript(p_sSource, &result);
     }
     void JSPrint(const char* p_sBuffer)
     {

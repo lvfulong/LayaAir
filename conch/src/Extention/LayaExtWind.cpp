@@ -1,6 +1,8 @@
 
 #include "LayaExtWin.h"
+#if defined(OS_WINDOWS)
 #include <windows.h>
+#endif
 #include <string>
 #include <filesystem>
 #include <vector>
