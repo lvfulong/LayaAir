@@ -95,6 +95,10 @@ namespace laya
 class RenderBindings
 {
   public:
+      static void clean()
+      {
+        GLESCommandUniformMap::clean();
+    }
     static void exportJS(jsbind::Object &context)
     {
         // Math Bindings

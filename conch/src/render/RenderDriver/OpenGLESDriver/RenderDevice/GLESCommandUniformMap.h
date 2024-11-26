@@ -57,7 +57,7 @@ class GLESCommandUniformMap
                              blockName);
         }
     }
-
+    static void clean();
   public:
     static std::unordered_map<std::string, GLESCommandUniformMap *> m_globalBlockMap;
     std::string m_stateName;

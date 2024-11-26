@@ -44,4 +44,14 @@ bool GLESCommandUniformMap::hasPtrID(int propertyID)
     }
     return false;
 }
+    void  GLESCommandUniformMap::clean()
+    {
+        m_globalBlockMapJS.clear();
+        std::unordered_map<std::string, GLESCommandUniformMap *>::iterator it = m_globalBlockMap.begin();
+        for (;it != m_globalBlockMap.end();it++)
+        {
+            delete it->second;
+        }
+        m_globalBlockMap.clear();
+    }
 } // namespace laya

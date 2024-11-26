@@ -25,7 +25,7 @@
 #include <zip/JCZip.h>
 #include <Bindings/JSLaunchOptions.h>
 #include <Bindings/JSPromiseRejectionEvent.h>
-//#include "btBulletDynamicsCommon.h"
+#include <render/RenderBindings.h>
 #include <cstdarg>
 #include "2D/FontManager.h"
 #if defined(OS_WINDOWS)
@@ -268,7 +268,7 @@ namespace laya
         m_pCurEditBox = NULL;
 #endif
         jsbind::runDeinitializers();
-
+        RenderBindings::clean();
         JSGlobalDisExportC();
 #ifdef JS_V8
 #ifdef JS_V8_DEBUGGER
