@@ -29,10 +29,10 @@ inline jsvm_value makeFunction(std::function<ReturnType(Args...)> value)
     auto invoke = std::make_unique<std::function<ReturnType(Args...)>>(std::move(value));
     std::function<ReturnType(Args...)> *func = invoke.release();
     status =
-        jsvm::CreateFunction(env, "", NAPI_AUTO_LENGTH,
+        jsvm_create_function(env, "", NAPI_AUTO_LENGTH,
                              internal::InvokeGlobalMethodOptionalOverride<ReturnType, Args...>, func, data, &result);
     DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-    status = jsvm::AddFinalizer(env, result, func, finalizer, nullptr, nullptr);
+    status = jsvm_add_finalizer(env, result, func, finalizer, nullptr, nullptr);
     DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return result;
 }

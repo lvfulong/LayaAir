@@ -354,7 +354,7 @@ template <typename ClassType> class class_
         descriptor.getter = NULL;
         descriptor.setter = NULL;
         descriptor.value = NULL;
-        descriptor.attributes = jsvm_property_attributes::DEFAULT;
+        descriptor.attributes = jsvm_property_attributes::jsvm_default;
         descriptor.data = data;
         propertyDescriptorMap_.insert(std::make_pair(name, descriptor));
         return *this;
@@ -461,7 +461,7 @@ template <typename ClassType> class class_
         descriptor.getter = internal::InvokeClassGetterStatic<PropertyType>;
         descriptor.setter = internal::InvokeClassSetterStatic<PropertyType>;
         descriptor.value = NULL;
-        descriptor.attributes = jsvm_property_attributes::STATIC;
+        descriptor.attributes = jsvm_property_attributes::jsvm_static;
         descriptor.data = data;
         propertyDescriptorMap_.insert(std::make_pair(name, descriptor));
         return *this;

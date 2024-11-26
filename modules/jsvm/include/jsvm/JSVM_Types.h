@@ -95,7 +95,7 @@ typedef napi_value(NAPI_CDECL *jsvm_callback)(napi_env env, napi_callback_info i
 typedef struct VM__ *jsvm_vm;
 typedef struct VMScope__ *jsvm_vm_scope;
 typedef struct EnvScope__ *jsvm_env_scope;
-using jsvm_handle_scope = napi_handle_scope;
+typedef napi_handle_scope  jsvm_handle_scope;
 struct jsvm_init_options
 {
     const intptr_t *externalReferences;

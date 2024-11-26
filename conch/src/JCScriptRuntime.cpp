@@ -150,7 +150,6 @@ namespace laya
     {
         LOGI("js thread started.");
         GET_ENV;
-        env;
 #ifdef JS_V8_DEBUGGER
         env->scriptThread = m_pScriptThread;
 #endif        
