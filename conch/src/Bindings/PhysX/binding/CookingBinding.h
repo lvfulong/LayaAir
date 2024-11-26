@@ -13,6 +13,7 @@
 using namespace physx;
 #ifdef CONCH
 using namespace laya;
+using namespace jsbind;
 namespace laya
 {
 extern char* PHYSX_HEAP_BASE_ADDRESS;
@@ -231,7 +232,7 @@ EMSCRIPTEN_BINDINGS(physx_cooking)
 }
 
 #ifdef CONCH
-namespace laya {
+namespace jsbind {
 #else
 namespace emscripten {
 #endif

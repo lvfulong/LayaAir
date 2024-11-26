@@ -41,6 +41,28 @@ class Persistent
             return ReturnType();
         }
     }
+        template <typename ReturnType, typename... Args> ReturnType call(const char*  name, const Args &...args)
+    {
+        if (isValid() && getLocal().isFunction())
+        {
+            return getLocal().call<ReturnType>(name, args...);
+        }
+        else
+        {
+            return ReturnType();
+        }
+    }
+    template <typename ReturnType, typename... Args> ReturnType call(const char*  name, const Args &...args) const
+    {
+        if (isValid() && getLocal().isFunction())
+        {
+            return getLocal().call<ReturnType>(name, args...);
+        }
+        else
+        {
+            return ReturnType();
+        }
+    }
     inline bool isValid() const
     {
         return ref_ != nullptr;

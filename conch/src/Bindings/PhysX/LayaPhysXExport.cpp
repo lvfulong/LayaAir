@@ -8,7 +8,7 @@ char* PHYSX_HEAP_BASE_ADDRESS = 0;
 void JSLayaConchPhysX::onMalloc(jsbind::ArrayBuffer arrayBuffer)
 {
     DEBUG_CHECK(arrayBuffer.isValid());
-    PHYSX_HEAP_BASE_ADDRESS = reinterpret_cast<const char*>(arrayBuffer.getData());
+    PHYSX_HEAP_BASE_ADDRESS = reinterpret_cast<char*>(arrayBuffer.getData());
 }
 void JSLayaConchPhysX::exportJS(jsbind::Object &context)
 {

@@ -44,15 +44,15 @@ template <typename T> class VectorWrapper
         return data_.size();
     }
 
-    v8::Local<v8::Value> get(uint32_t index)
+    jsvm_value get(uint32_t index)
     {
         if (index < data_.size())
         {
-            return MakeJSValue<T>(data_[index]);
+            return jsbind::Make<T>(data_[index]);
         }
         else
         {
-            return v8::Undefined(v8::Isolate::GetCurrent());
+            return jsbind::MakeUndefined();
         }
     }
 
@@ -69,7 +69,7 @@ class PhysxAdapter;
 template <typename ClassType, typename BaseSpecifier = NoBaseClass> class Class_
 {
   public:
-    Class_(std::string_view name, PhysxAdapter *adapter);
+    Class_(const char * name, PhysxAdapter *adapter);
     Class_(Class_ const &) = delete;
     Class_ &operator=(Class_ const &) = delete;
 
@@ -83,34 +83,34 @@ template <typename ClassType, typename BaseSpecifier = NoBaseClass> class Class_
         return *this;
     }
     template <typename ReturnType, typename... Args>
-    const Class_ &function(std::string_view name, ReturnType (ClassType::*func)(Args...) const,
+    const Class_ &function(const char * name, ReturnType (ClassType::*func)(Args...) const,
                            int dummy = allow_raw_pointers()) const
     {
         mclass_->template function(name, func);
         return *this;
     }
     template <typename ReturnType, typename... Args>
-    const Class_ &function(std::string_view name, ReturnType (ClassType::*func)(Args...),
+    const Class_ &function(const char * name, ReturnType (ClassType::*func)(Args...),
                            int dummy = allow_raw_pointers()) const
     {
         mclass_->template function(name, func);
         return *this;
     }
     template <typename ReturnType, typename... Args>
-    const Class_ &function_optional_override(std::string_view name, ReturnType (*func)(ClassType &, Args...),
+    const Class_ &function_optional_override(const char * name, ReturnType (*func)(ClassType &, Args...),
                                              int dummy = allow_raw_pointers()) const
     {
         mclass_->template function_optional_override(name, func);
         return *this;
     }
     template <typename ReturnType, typename... Args>
-    Class_ &class_function(std::string_view name, ReturnType (*func)(Args...), int dummy = allow_raw_pointers())
+    Class_ &class_function(const char * name, ReturnType (*func)(Args...), int dummy = allow_raw_pointers())
     {
         mclass_->class_function(name, func);
         return *this;
     }
     template <typename PropertyType>
-    Class_ &property(std::string_view name, PropertyType (ClassType::*get)(void),
+    Class_ &property(const char * name, PropertyType (ClassType::*get)(void),
                      void (ClassType::*set)(PropertyType data) = nullptr)
     {
         mclass_->property(name, get, set);
@@ -118,7 +118,7 @@ template <typename ClassType, typename BaseSpecifier = NoBaseClass> class Class_
     }
     template <
         typename PropertyType /*, typename = typename std::enable_if<!std::is_function<PropertyType>::value>::type>*/>
-    const Class_ &property(std::string_view name, PropertyType ClassType::*field) const
+    const Class_ &property(const char * name, PropertyType ClassType::*field) const
     {
         mclass_->property_field(name, field);
         return *this;
@@ -133,32 +133,32 @@ template <typename ClassType, typename BaseSpecifier = NoBaseClass> class Class_
     }
 
   public:
-    std::unique_ptr<laya::class_<ClassType>> mclass_;
-    std::string name_;
+    jsbind::class_<ClassType>* mclass_;
+    const char* name_;
     PhysxAdapter *adapter_;
 };
 class PhysxAdapter
 {
   public:
-    PhysxAdapter(v8::Isolate *isolate) : isolate_(isolate), module_(isolate)
+    PhysxAdapter() : module_(jsbind::MakeObject())
     {
     }
-    template <typename Value> laya::Module &constant(std::string_view name, Value const &value)
+    template <typename Value> jsbind::Object &constant(const char * name, Value const &value)
     {
         return module_.constant(name, value);
     }
     template <typename ReturnType, typename... Args>
-    void function(std::string_view name, ReturnType (*func)(Args...), int dummy = allow_raw_pointers())
+    void function(const char * name, ReturnType (*func)(Args...), int dummy = allow_raw_pointers())
     {
         module_.function(name, func);
     }
     template <typename ClassType, typename BaseSpecifier = NoBaseClass>
-    Class_<ClassType, BaseSpecifier> class_(std::string_view name)
+    Class_<ClassType, BaseSpecifier> class_(const char * name)
     {
         Class_<ClassType, BaseSpecifier> c(name, this);
         return c;
     }
-    template <typename EnumType> laya::Enum_ enum_(std::string_view name)
+    template <typename EnumType> jsbind::Enum_ enum_(const char * name)
     {
         return module_.enum_<EnumType>(name);
     }
@@ -175,17 +175,17 @@ class PhysxAdapter
 
         return c;
     }
-    void registerFunction(type_info info, std::function<void()> callback)
+    void registerFunction(jsbind::type_info info, std::function<void()> callback)
     {
         auto it = functions_.find(info.name().data());
         if (it != functions_.end())
         {
-            assert(false && "only once");
+            DEBUG_CHECK(false && "only once");
         }
         functions_.insert(std::make_pair(info.name().data(), callback));
     }
 
-    void unregisterFunction(type_info info)
+    void unregisterFunction(jsbind::type_info info)
     {
         auto it = functions_.find(info.name().data());
         if (it != functions_.end())
@@ -205,9 +205,8 @@ class PhysxAdapter
     }
 
   public:
-    std::unordered_map<std::string, std::function<void()>> functions_;
-    v8::Isolate *isolate_;
-    laya::Module module_;
+    std::unordered_map<const char *, std::function<void()>> functions_;
+    jsbind::Object module_;
 };
 
 template <typename ClassType, typename BaseSpecifier> Class_<ClassType, BaseSpecifier>::~Class_()
@@ -217,28 +216,28 @@ template <typename ClassType, typename BaseSpecifier> Class_<ClassType, BaseSpec
     }
     else
     {
-        assert(ClassRegistryManager::isWrappedClassOf<typename BaseSpecifier::baseType>());
+        assert(jsbind::ClassRegistryManager::isWrappedClassOf<typename BaseSpecifier::baseType>());
         mclass_->template inherit<typename BaseSpecifier::baseType>();
         // delete base info , if not will crash, because base don not need bind
-        adapter_->unregisterFunction(type_id<typename BaseSpecifier::baseType>());
+        adapter_->unregisterFunction(jsbind::type_id<typename BaseSpecifier::baseType>());
     }
 
     mclass_->function_optional_override("delete",
-                                        optional_override([](ClassType &THIS) { ClassRegistryManager::removeObject<ClassType>(&THIS, false); }));
+                                        jsbind::optional_override([](ClassType &THIS) { jsbind::ClassRegistryManager::removeObject<ClassType>(&THIS); }));
 
-    ClassRegistry<ClassType> &classRegistry = ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
+    jsbind::ClassRegistry<ClassType> &classRegistry = jsbind::ClassRegistryManager::getClassRegistry<ClassType>(jsbind::type_id<ClassType>());
 
-    auto js_function_template = classRegistry.js_function_template();
-    auto class_function_template = classRegistry.class_function_template();
-    laya::Module *m = &adapter_->module_;
-    auto name = this->name_;
-    adapter_->registerFunction(type_id<ClassType>(), [m, name, js_function_template, class_function_template]() {
-        m->add_class_(name, js_function_template, class_function_template);
+    jsbind::Object *m = &adapter_->module_;
+    auto className = this->name_;
+    adapter_->registerFunction(jsbind::type_id<ClassType>(), [mc = mclass_, m, className]() {
+        GET_ENV
+        mc->Export(env, m->getHandle(), className);
+        delete mc;
     });
 }
 template <typename ClassType, typename BaseSpecifier>
-Class_<ClassType, BaseSpecifier>::Class_(std::string_view name, PhysxAdapter *adapter)
-    : mclass_(new laya::class_<ClassType>()), name_(name), adapter_(adapter){};
+Class_<ClassType, BaseSpecifier>::Class_(const char * name, PhysxAdapter *adapter)
+    : mclass_(new jsbind::class_<ClassType>()), name_(name), adapter_(adapter){};
 
 namespace internal
 {
@@ -258,7 +257,7 @@ template <typename T> class wrapper : public T, public internal::WrapperBase
 
     template <typename... Args> explicit wrapper(jsvm_value wrapped, Args &&...args) : T(std::forward<Args>(args)...)
     {
-        wrapped_.reset(wrapped);
+        wrapped_ = jsbind::Persistent(wrapped);
     }
 
     ~wrapper()
@@ -282,17 +281,19 @@ template <typename T> class wrapper : public T, public internal::WrapperBase
 
 #define EMSCRIPTEN_BINDINGS_DEFINE_EXPORT_FUNCTION(name) void exportJS_##name();
 
-#define EMSCRIPTEN_BINDINGS_EXPORT_JS_START PhysxAdapter_ binding_(v8::Isolate::GetCurrent());
+#define EMSCRIPTEN_BINDINGS_EXPORT_JS_START PhysxAdapter_ binding_;
 
 #define EMSCRIPTEN_BINDINGS_EXPORT_JS(name) binding_.exportJS_##name();
-#define EMSCRIPTEN_BINDINGS_EXPORT_JS_END                                                                              \
-    binding_.exportAll();                                                                                              \
-    context.module("physx", binding_.module_);
+
+#define EMSCRIPTEN_BINDINGS_EXPORT_JS_END  \
+    GET_ENV                                \
+    binding_.exportAll();                  \
+    binding_.module_.Export(env, context.getHandle(), "physx");
 
 class PhysxAdapter_ : public PhysxAdapter
 {
   public:
-    PhysxAdapter_(v8::Isolate *isolate) : PhysxAdapter(isolate)
+    PhysxAdapter_() : PhysxAdapter()
     {
     }
     EMSCRIPTEN_BINDINGS_DEFINE_EXPORT_FUNCTION(physx)

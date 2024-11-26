@@ -206,11 +206,12 @@ class ClassRegistryManager
         ClassRegistry<ClassType> &classRegistry = getClassRegistry<ClassType>(type_id<ClassType>());
         return classRegistry.wrapCppObject(objectPointer, callDestructor);
     }
-    /*template <typename ClassType> static void removeObject(ClassType* objectPointer, bool callDestructor)
+    template <typename ClassType> static void removeObject(ClassType* objectPointer)
     {
+        GET_ENV
         ClassRegistry<ClassType> &classRegistry = getClassRegistry<ClassType>(type_id<ClassType>());
-        classRegistry.removeObject(objectPointer, callDestructor);
-    }*/
+        classRegistry.removeObject(env, objectPointer);
+    }
     template <typename ClassType> static bool isWrappedClassOf()
     {
         auto it = classRegistryMap_.find(type_id<ClassType>().name().data());
@@ -479,7 +480,7 @@ template <typename ClassType> class class_
         propertyInheritBaseDescriptorMap_ = class_<BaseType>::mergedPropertyDescriptorMap_;
         return *this;
     }
-    jsvm_value registerClass(jsvm_env env, jsvm_value exports, const char *className)
+    jsvm_value Export(jsvm_env env, jsvm_value exports, const char *className)
     {
         jsvm_status status;
         jsvm_value cons;
@@ -594,7 +595,7 @@ template <typename ClassType> class global_class_
         return *this;
     }
 
-    jsvm_value registerClass(jsvm_env env, jsvm_value exports, const char *className)
+    jsvm_value Export(jsvm_env env, jsvm_value exports, const char *className)
     {
         jsvm_status status;
         jsvm_value cons;

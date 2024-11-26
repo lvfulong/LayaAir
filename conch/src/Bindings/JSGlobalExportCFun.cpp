@@ -561,7 +561,7 @@ namespace laya
  #if defined(PHYSX)
         JSLayaConchPhysX::exportJS(context);
 #endif
-        context.Register(env, nullptr, nullptr);
+        context.Export(env, nullptr, nullptr);
 	}
     void JSGlobalDisExportC() {
         //FontManager::deleteInstance();

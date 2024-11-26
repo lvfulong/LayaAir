@@ -6,6 +6,7 @@
 #include <jsbind/internal/Invoke.h>
 #include <jsbind/internal/ValueTraits.h>
 #include <jsvm/JSVM_Types.h>
+#include <jsbind/Enum.h>
 
 namespace jsbind
 {
@@ -221,24 +222,50 @@ class Object
     {
     }
     // Object& module(std::string_view name, Module& m);
-    template <typename Value> Object &constant(std::string_view name, Value const &value)
+    template <typename Value> Object &constant(const char * name, const Value& value)
     {
-        // todo
-        // v8::HandleScope scope(isolate_);
-        // getLocal()->Set(ValueTraits<const char*>::ToJs(name).As<v8::Name>(), ValueTraits<Value>::ToJs(value),
-        //     v8::PropertyAttribute(v8::ReadOnly | v8::DontDelete));
+        jsvm_property_descriptor descriptor;
+        descriptor.utf8name = name;
+        descriptor.name = NULL;
+        descriptor.method = NULL;
+        descriptor.getter = NULL;
+        descriptor.setter = NULL;
+        descriptor.value = internal::ValueTraits<Value>::ToJs(value);
+        descriptor.attributes = jsvm_property_attributes::jsvm_default;
+        descriptor.data = NULL;
+        propertyDescriptorVector_.push_back(descriptor);
         return *this;
+
+    }
+    Object &constant(const char * name, jsvm_value value)
+    {
+        jsvm_property_descriptor descriptor;
+        descriptor.utf8name = name;
+        descriptor.name = NULL;
+        descriptor.method = NULL;
+        descriptor.getter = NULL;
+        descriptor.setter = NULL;
+        descriptor.value = value;
+        descriptor.attributes = jsvm_property_attributes::jsvm_default;
+        descriptor.data = NULL;
+        propertyDescriptorVector_.push_back(descriptor);
+        return *this;
+
+    }
+    template <typename EnumType> Enum_ enum_(const char * name)
+    {
+        return Enum_(this, name);
     }
     template <typename T> Object &class_(const char *name, jsbind::class_<T> &cl)
     {
         GET_ENV
-        cl.registerClass(env, object_, name);
+        cl.Export(env, object_, name);
         return *this;
     }
     template <typename T> Object &global_class_(const char *name, jsbind::global_class_<T> &cl, T *instance = nullptr)
     {
         GET_ENV
-        cl.registerClass(env, object_, name);
+        cl.Export(env, object_, name);
         return *this;
     }
 
@@ -278,7 +305,7 @@ class Object
         propertyDescriptorVector_.push_back(descriptor);
         return *this;
     }
-    jsvm_value Register(jsvm_env env, jsvm_value exports, const char *className)
+    jsvm_value Export(jsvm_env env, jsvm_value exports, const char *className)
     {
         jsvm_define_properties(env, object_, propertyDescriptorVector_.size(), propertyDescriptorVector_.data());
 
@@ -288,11 +315,19 @@ class Object
         }
         return exports;
     }
-
+    jsvm_value getHandle()
+    {
+        return object_;
+    }
   private:
     std::vector<jsvm_property_descriptor> propertyDescriptorVector_;
     jsvm_value object_ = nullptr;
 };
+    template <typename EnumType> Enum_ &Enum_::value(const char *name, EnumType value)
+    {
+        object_->constant(name, (int32_t)value);
+        return *this;
+    }
 } // namespace jsbind
 
 #endif

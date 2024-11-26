@@ -1,16 +1,16 @@
 #ifndef __JSBIND_ENUM_H__
 #define __JSBIND_ENUM_H__
 
-#include <jsbind/Object.h>
 #include <memory>
 #include <string>
 
 namespace jsbind
 {
+    class Object;
 class Enum_
 {
   public:
-    Enum_(Object *owner, std::string_view name);
+    Enum_(Object *owner, const char * name);
     ~Enum_();
     template <typename EnumType> Enum_ &value(const char *name, EnumType value);
 
@@ -21,15 +21,10 @@ class Enum_
     Enum_ &operator=(Enum_ &&) = default;
 
   private:
-    // friend class Module;
-    std::string name_;
+    const char * name_;
     Object *owner_;
     std::unique_ptr<Object> object_;
 };
-template <typename EnumType> Enum_ &Enum_::value(const char *name, EnumType value)
-{
-    object_->constant(name, (int32_t)value);
-    return *this;
-}
+
 } // namespace jsbind
 #endif

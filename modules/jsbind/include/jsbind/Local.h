@@ -45,6 +45,34 @@ class Local
             return ReturnType();
         }
     }
+    template <typename ReturnType, typename... Args> ReturnType call(const char* name, const Args &...args)
+    {
+
+        if (isValid() && isFunction())
+        {
+            GET_ENV
+            auto result = internal::v8_call(env, handle_, this->operator[](name).getHandle(),  args...);
+            return internal::ValueTraits<ReturnType>::ToCpp(result);
+        }
+        else
+        {
+            return ReturnType();
+        }
+    }
+    template <typename ReturnType, typename... Args> ReturnType call(const char* name, const Args &...args) const
+    {
+
+        if (isValid() && isFunction())
+        {
+            GET_ENV
+            auto result = internal::v8_call(env, handle_, this->operator[](name).getHandle(), args...);
+            return internal::ValueTraits<ReturnType>::ToCpp(result);
+        }
+        else
+        {
+            return ReturnType();
+        }
+    }
     Local operator[](const std::string &key) const;
 
     jsvm_value getHandle() const

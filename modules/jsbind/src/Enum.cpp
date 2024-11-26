@@ -1,7 +1,7 @@
 #include <jsbind/Enum.h>
 namespace jsbind
 {
-Enum_::Enum_(Object *owner, std::string_view name) : owner_(owner), name_(name)
+Enum_::Enum_(Object *owner, const char * name) : owner_(owner), name_(name)
 {
 
     GET_ENV
@@ -11,7 +11,7 @@ Enum_::Enum_(Object *owner, std::string_view name) : owner_(owner), name_(name)
     DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     object_ = std::make_unique<Object>(result);
 
-    // lvtodo owner_->submodule(name_, *module_);
+    owner_->constant(name_, object_->getHandle());
 }
 Enum_::~Enum_()
 {

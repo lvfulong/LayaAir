@@ -106,8 +106,10 @@ template <typename T> class ValueTraits<T *, std::enable_if_t<internal::is_wrapp
             return nullptr;
         }
         T *obj;
-        status = jsvm_unwrap(env, value, reinterpret_cast<void **>(&obj));
+        void *p = (void *)obj;
+        status = jsvm_unwrap(env, value, reinterpret_cast<void **>(&p));
         DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+        obj = (T *)p;
         return obj;
     }
     static bool is(jsvm_value value)
@@ -116,6 +118,7 @@ template <typename T> class ValueTraits<T *, std::enable_if_t<internal::is_wrapp
     }
 };
 
+
 template <typename T> struct ValueTraits<T &> : ValueTraits<T>
 {
 };
@@ -123,7 +126,6 @@ template <typename T> struct ValueTraits<T &> : ValueTraits<T>
 template <typename T> struct ValueTraits<const T &> : ValueTraits<T>
 {
 };
-
 template <> class ValueTraits<int32_t>
 {
   public:
@@ -251,22 +253,22 @@ template <> class ValueTraits<uint64_t>
     }*/
 };
 
-/*template <> class ValueTraits<uint16_t>
+template <> class ValueTraits<uint16_t>
 {
   public:
-    static uint16_t ToCpp(v8::Local<v8::Value> p_vl)
+    static uint16_t ToCpp(jsvm_value value)
     {
-        return p_vl.As<v8::Uint32>()->Value();
+        return static_cast<uint8_t>(internal::getUint32(value));
     }
-    static v8::Local<v8::Value> ToJs(uint16_t p_vl)
+    static jsvm_value ToJs(uint16_t value, bool callDestructor = true)
     {
-        return v8::Uint32::NewFromUnsigned(v8::Isolate::GetCurrent(), p_vl);
+        return internal::makeUint32(static_cast<uint8_t>(value));
     }
-    static bool is(v8::Local<v8::Value> p_vl)
-    {
-        return p_vl->IsUint32();
-    }
-};*/
+    //static bool is(v8::Local<v8::Value> p_vl)
+    //{
+    //    return p_vl->IsUint32();
+    //}
+};
 template <> class ValueTraits<uint8_t>
 {
   public:
