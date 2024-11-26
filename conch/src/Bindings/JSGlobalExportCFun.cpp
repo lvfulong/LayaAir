@@ -29,6 +29,7 @@
 #include "JSFileSystem.h"
 #include "JSZip.h"
 #include "JSNotify.h"
+#include "Extention/LayaExtWin.h"
 
 #include "JSCanvasRenderingContext2D.h"
 #if defined(OS_ANDROID)
@@ -545,6 +546,7 @@ namespace laya
         context.function("open", &open);
         context.function("btoa", &btoa);
         context.function("atob", &atob);
+        context.function("importNative",&importNative);
         context.function("_createImageBitmap", &createImageBitmap);
         context.function_optional_override("TRACE_BEGIN", jsbind::optional_override([](const std::string& name) {
             TRACE_NAME_BEGIN(name.c_str());

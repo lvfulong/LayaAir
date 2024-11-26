@@ -181,7 +181,7 @@ namespace laya
         
 
         JSGlobalExportC();
-        importAllDynaLib(gRedistPath,nullptr);
+        //importAllDynaLib(gRedistPath,nullptr);
 
     }
     void JCScriptRuntime::loadJSScript() {

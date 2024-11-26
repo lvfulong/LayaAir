@@ -1,9 +1,9 @@
 #ifndef _LAYA_EXTENTION_MANAGER_H_2024_0920__
 #define _LAYA_EXTENTION_MANAGER_H_2024_0920__
 #include <string>
-
+#include "jsvm/JSVM.h"
 namespace laya{
-    void importAllDynaLib(std::string exePath, void *ctx);
+    jsvm_value importNative(std::string dll);
 }
 
 #endif
