@@ -4,7 +4,7 @@
 #include <string>
 #include <map>
 #include <utils/JCBuffer.h>
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 
 namespace laya
 {
@@ -53,7 +53,7 @@ namespace laya
 
 		void changeState(State newState);
 
-		void postString(const char* p_pszUrl, const char* p_pszString, JSValueAsParam p_funOnOK, JSValueAsParam p_funOnErr);
+		void postString(const char* p_pszUrl, const char* p_pszString, jsvm_value p_funOnOK, jsvm_value p_funOnErr);
 
 		void abort();
 
@@ -104,21 +104,21 @@ namespace laya
 			return (m_responseTypeCode==ResponseTypeArrayBuffer || m_responseTypeCode==ResponseTypeBlob);
 		}
 
-		void set_onreadystatechange(JSValueAsParam pObj);
+		void set_onreadystatechange(jsvm_value pObj);
 
 		void _changeState(int p_nState);
 
 		inline void postData(JCDownloadMgr* p_pDownloadMgr, const char* p_pszURL, char* p_pData, int p_nLen );
 
 		//因为不是用v8原生的方法把js函数转换JsObjHandle2所以分成两个函数
-        void setPostCB(JSValueAsParam p_onOK, JSValueAsParam p_onError);
+        void setPostCB(jsvm_value p_onOK, jsvm_value p_onError);
 
-		void JsPostData( const char* p_sUrl, JSValueAsParam arg1 );
+		void JsPostData( const char* p_sUrl, jsbind::Local arg1 );
 
         //回调也是走 setPostCB设置的函数
         void getData(const char* p_sUrl);
 		
-        static void exportJS(Context& context);
+        static void exportJS(jsbind::Object& context);
 
 	private:
         typedef std::map<std::string, std::string> HTTPHeaderMap;
@@ -135,10 +135,10 @@ namespace laya
 		
 	public:
 		
-		Persistent		        m_funcOnStateChg;
-		Persistent		        m_This;// this 的 JS 对象
-		Persistent		        m_jsfunPostComplete;
-		Persistent		        m_jsfunPostError;
+		jsbind::Persistent		        m_funcOnStateChg;
+		//jsbind::Persistent		        m_This;// this 的 JS 对象
+		jsbind::Persistent		        m_jsfunPostComplete;
+		jsbind::Persistent		        m_jsfunPostError;
 		std::shared_ptr<int>	m_CallbackRef;
     };
 }

@@ -71,7 +71,7 @@ namespace laya {
     {
         Init();
         
-        AdjustAmountOfExternalAllocatedMemory(sizeof(JSVideo));
+        jsbind::AdjustAmountOfExternalAllocatedMemory(sizeof(JSVideo));
         JCMemorySurvey::GetInstance()->newClass("JSVideo", sizeof(JSVideo), this);
         
         m_pVideoHandler = new IOSVideoHandler(); // released it by JCVideo in render thread

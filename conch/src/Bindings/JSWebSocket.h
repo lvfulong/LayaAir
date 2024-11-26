@@ -2,7 +2,7 @@
 #define __JSWebSocket_H__
 
 #include <stdio.h>
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include "../../WebSocket/WebSocket.h"
 
 
@@ -42,7 +42,7 @@ namespace laya
 		};
 	public:
 
-		static void exportJS(Context& context);
+		static void exportJS(jsbind::Object& context);
 
 		JSWebSocket();
 
@@ -53,27 +53,27 @@ namespace laya
 	public:
 		int getTimeGap();//获取时间戳 距离上次断开的时间
 
-		void SetOnOpen( JSValueAsParam p_pFunction );
+		void SetOnOpen( jsvm_value p_pFunction );
 
-		JsValue GetOnOpen();
+		jsvm_value GetOnOpen();
 
-		void SetOnMessage( JSValueAsParam p_pFunction );
+		void SetOnMessage( jsvm_value p_pFunction );
 
-		JsValue GetOnMessage();
+		jsvm_value GetOnMessage();
 
-		void SetOnClose( JSValueAsParam p_pFunction );
+		void SetOnClose( jsvm_value p_pFunction );
 
-		JsValue GetOnClose();
+		jsvm_value GetOnClose();
 
-		void SetOnError( JSValueAsParam p_pFunction );
+		void SetOnError( jsvm_value p_pFunction );
 
-		JsValue GetOnError();
+		jsvm_value GetOnError();
 
 		const char* getBinaryType();
 
 		void setBinaryType( const char* p_pszBinaryType );
 
-		void JsSend(JSValueAsParam args );
+		void JsSend(jsbind::Local args );
 
 	public:
 
@@ -105,13 +105,13 @@ namespace laya
 	public:
 		int64_t                 closeTime;                      //断开时间
 		
-		Persistent			    m_pJSFunctionOnOpen;			//JS连接上了，回调该JS方法
+		jsbind::Persistent			    m_pJSFunctionOnOpen;			//JS连接上了，回调该JS方法
 
-		Persistent			    m_pJSFunctionOnMessage;			//收到消息了，回调该JS方法
+		jsbind::Persistent			    m_pJSFunctionOnMessage;			//收到消息了，回调该JS方法
 
-		Persistent			    m_pJSFunctionOnClose;			//关闭socket，回调该JS方法
+		jsbind::Persistent			    m_pJSFunctionOnClose;			//关闭socket，回调该JS方法
 
-		Persistent			    m_pJSFunctionOnError;			//出错socket，回调该JS方法
+		jsbind::Persistent			    m_pJSFunctionOnError;			//出错socket，回调该JS方法
 
 	public:
         WEB_SOCKET_STATE	    m_nWebSocketState;				//是否初始化

@@ -3,7 +3,7 @@
 
 
 #include <string>
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include "JCSystemConfig.h"
 
 namespace laya
@@ -11,7 +11,7 @@ namespace laya
     class JSConchConfig
     {
     public:
-	    static void exportJS(Context& context);
+	    static void exportJS(jsbind::Object& context);
 	    static bool getUrlIgnoreCase();
 	    static void setUrlIgnoreCase(bool b);
 	    static int getNetworkType();

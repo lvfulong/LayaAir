@@ -1,7 +1,7 @@
 #ifndef __JsVideo_h__
 #define __JsVideo_h__
 
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 
 #include <Image/JCVideo.h>
 #include <map>
@@ -35,14 +35,14 @@ namespace laya
 class JSVideo
 {
   public:
-    static void exportJS(Context &context);
+    static void exportJS(jsbind::Object &context);
 
     JSVideo();
     ~JSVideo();
 
     void AddEvent(const char *evtName);
     void RemoveEvent(const char *evtName);
-    void _setDispatchEventFunc(JSValueAsParam emitFunc);
+    void _setDispatchEventFunc(jsvm_value emitFunc);
 
     void Load(const char *url);
     void Play();
@@ -113,7 +113,7 @@ class JSVideo
     static std::set<std::string> ms_supportFormat;
 
     std::map<std::string, int> m_evtMap;
-    Persistent m_dispatchHandle;
+    jsbind::Persistent m_dispatchHandle;
     std::string m_src;
 
     bool m_isDownloadWaitLoad;

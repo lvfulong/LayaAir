@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <string>
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 
 
 namespace laya 
@@ -12,7 +12,7 @@ class JSAndroidEditBox
 {
 public:
 
-	static void exportJS(Context& context);
+	static void exportJS(jsbind::Object& context);
 
 	JSAndroidEditBox();
 
@@ -106,7 +106,7 @@ public:
 	
 	void setNumberOnly( bool p_bNumberOnly );
 
-    void addEventListener(const char* p_sName, JSValueAsParam p_pFunction );
+    void addEventListener(const char* p_sName, jsvm_value p_pFunction );
 
     void setMultiAble(bool p_bMultiAble);
 
@@ -133,7 +133,7 @@ public:
 	bool				m_bForbidEdit;
 private:
     std::shared_ptr<int>  m_CallbackRef;
-	Persistent     m_pJSFunctionOnInput;//JS的回调                                //4
+	jsbind::Persistent     m_pJSFunctionOnInput;//JS的回调                                //4
 };
 }
 #endif

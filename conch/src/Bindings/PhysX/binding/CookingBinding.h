@@ -13,6 +13,7 @@
 using namespace physx;
 #ifdef CONCH
 using namespace laya;
+using namespace jsbind;
 namespace laya
 {
 extern char* PHYSX_HEAP_BASE_ADDRESS;
@@ -21,9 +22,9 @@ extern char* PHYSX_HEAP_BASE_ADDRESS;
 using namespace emscripten;
 #endif
 #ifdef CONCH
-PxConvexMesh *createConvexMeshFromBuffer(JsValue verticesObj, PxPhysics &physics, PxU32 VetexLimit, PxTolerancesScale &scale, int ConvexFlags)
+PxConvexMesh *createConvexMeshFromBuffer(jsvm_value verticesObj, PxPhysics &physics, PxU32 VetexLimit, PxTolerancesScale &scale, int ConvexFlags)
 {
-    VectorWrapper<PxVec3>* pVertices = (VectorWrapper<PxVec3>* )Converter<VectorWrapper<PxVec3>*>::ToCpp(verticesObj);
+    VectorWrapper<PxVec3>* pVertices = (VectorWrapper<PxVec3>* )jsbind::as<VectorWrapper<PxVec3>*>(verticesObj);
     std::vector<PxVec3>& vertices = pVertices->data_;
 #else
 // eCOMPUTE_CONVEX;
@@ -48,14 +49,14 @@ PxConvexMesh *createConvexMeshFromBuffer(std::vector<PxVec3> vertices, PxPhysics
     return convexMesh;
 }
 #ifdef CONCH
-PxTriangleMesh *createTriMesh(JsValue verticesObj,
+PxTriangleMesh *createTriMesh(jsvm_value verticesObj,
                               int indice_sptr,
                               int indiceCount,
                               bool isU16,
                               PxTolerancesScale &scale,
                               PxPhysics &physics)
 {
-	VectorWrapper<PxVec3>* pVertices = (VectorWrapper<PxVec3>* )Converter<VectorWrapper<PxVec3>*>::ToCpp(verticesObj);
+	VectorWrapper<PxVec3>* pVertices = (VectorWrapper<PxVec3>* )jsbind::as<VectorWrapper<PxVec3>*>(verticesObj);
     std::vector<PxVec3>& vertices = pVertices->data_;
 #else
 PxTriangleMesh *createTriMesh(std::vector<PxVec3> vertices,
@@ -231,7 +232,7 @@ EMSCRIPTEN_BINDINGS(physx_cooking)
 }
 
 #ifdef CONCH
-namespace laya {
+namespace jsbind {
 #else
 namespace emscripten {
 #endif

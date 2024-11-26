@@ -3,7 +3,7 @@
 
 
 #include <stdio.h>
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include "resource/Audio/JCAudioInterface.h"
 #include <utils/JCBuffer.h>
 
@@ -31,7 +31,7 @@ namespace laya
 			EXT_STATE_PLAY_END,
 		};
 
-	    static void exportJS(Context& context);
+	    static void exportJS(jsbind::Object& context);
 
 	    JSAudio();
 
@@ -71,7 +71,7 @@ namespace laya
 
     public:
 
-	    void addEventListener( const char* p_sName, JSValueAsParam p_pFunction );
+	    void addEventListener( const char* p_sName, jsvm_value p_pFunction );
 
 	    void play();
 
@@ -119,9 +119,9 @@ namespace laya
 
     public:
 
-        Persistent		    m_pJSFunctionAudioEnd;	//JS的回调
-        Persistent         m_pJSFunctionCanPlay;   //JS的回调
-        Persistent         m_pJSFunctionError;     //JS的回调
+		jsbind::Persistent		    m_pJSFunctionAudioEnd;	//JS的回调
+		jsbind::Persistent         m_pJSFunctionCanPlay;   //JS的回调
+		jsbind::Persistent         m_pJSFunctionError;     //JS的回调
         AudioRenderInfo* m_audioRenderInfo;
 
     private:

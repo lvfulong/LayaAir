@@ -66,15 +66,10 @@ void GLESIndexBuffer::_setIndexData(char *data, uint32_t byteLength, uint32_t bu
     }
 }
 
-void GLESIndexBuffer::_setIndexDataJS(JSValueAsParam buffer, uint32_t bufferOffset)
+void GLESIndexBuffer::_setIndexDataJS(jsbind::ArrayBuffer arrayBuffer, uint32_t bufferOffset)
 {
-    char *data = NULL;
-    int dataLength = 0;
-    bool bIsArrayBuffer = extractJSAB(buffer, data, dataLength);
-    if (bIsArrayBuffer)
-    {
-        this->_setIndexData(data, dataLength, bufferOffset);
-    }
+    DEBUG_CHECK(arrayBuffer.isValid());
+    this->_setIndexData(reinterpret_cast<char*>(arrayBuffer.getData()), arrayBuffer.getByteLength(), bufferOffset);
 }
 
 void GLESIndexBuffer::destroy()

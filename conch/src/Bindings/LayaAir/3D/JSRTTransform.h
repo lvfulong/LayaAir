@@ -2,7 +2,7 @@
 #define __JSRTTransform_H__
 
 #include <stdio.h>
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include <core/math/Matrix4x4.h>
 #include <core/math/Vector3.h>
 #include <core/math/Quaternion.h>
@@ -42,11 +42,11 @@ namespace laya
 	
 	public:
 		JSRTTransform();
-		// JSRTTransform(JSValueAsParam pSharedData, JSValueAsParam pEvent);
+		// JSRTTransform(jsvm_value pSharedData, jsvm_value pEvent);
 		~JSRTTransform();
 
-		JSRTTransform(JSValueAsParam pSharedData);
-		void rt_setParent(JSValueAsParam pParent);
+		JSRTTransform(jsbind::ArrayBuffer pSharedData);
+		void rt_setParent(jsvm_value pParent);
 		void rt_getWorldLossyScale();
 		void rt_setWorldLossyScale();
 	

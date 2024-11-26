@@ -78,7 +78,7 @@ GLESEngine::GLESEngine(WebGLConfig config, WebGLMode webglMode)
 GLESEngine::~GLESEngine()
 {
     LayaGL::m_pWebglEngine = nullptr;
-    if (!m_pJSTextureContext.isEmpty())
+    if (m_pJSTextureContext.isValid())
     {
         m_pJSTextureContext.reset();
     }
@@ -417,11 +417,11 @@ const std::string &GLESEngine::propertyIDToName(int id)
     static std::string empty("");
     return empty;
 }
-void GLESEngine::getNamesByDefineDataJS(RTDefineDatas* defineData, JSValueAsParam out)
+void GLESEngine::getNamesByDefineDataJS(RTDefineDatas* defineData, jsvm_value out)
 {
     std::vector<std::string> outVec;
     getNamesByDefineData(defineData, outVec);
-    __JsArray<std::string>::FillJsArray(outVec, out);
+    jsbind::Array<std::string>::setData(outVec, out);
 }
 void GLESEngine::getNamesByDefineData(RTDefineDatas *defineData, std::vector<std::string> &out)
 {
@@ -588,16 +588,16 @@ void GLESEngine::unbindVertexState()
         ((OESVertexArrayObjectExt *)getExtension(WebGLExtension::OES_vertex_array_object))->bindVertexArrayOES(0);
     m_GLBindVertexArray = nullptr;
 }
-JsValue GLESEngine::getTextureContextJS()
+jsvm_value GLESEngine::getTextureContextJS()
 {
-    if (m_pJSTextureContext.isEmpty())
+    if (!m_pJSTextureContext.isValid())
     {
-        m_pJSTextureContext.reset(JSP_TO_JS(GLTextureContext *, m_textureContext));
-        return m_pJSTextureContext.toLocal().handle_;
+        m_pJSTextureContext = jsbind::Persistent(jsbind::Make<GLTextureContext*>(m_textureContext));
+        return m_pJSTextureContext.getHandle();
     }
     else
     {
-        return m_pJSTextureContext.toLocal().handle_;
+        return m_pJSTextureContext.getHandle();
     }
 }
 void GLESEngine::regGlobalVertexDeclaration(std::string name, int32_t key, const VertexStateContext& declarations)

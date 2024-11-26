@@ -14,7 +14,7 @@
 #include <utils/JCFileSource.h>
 #include <resource/JCFileResManager.h>
 #include "JCConch.h"
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include <Bindings/JSFileReader.h>
 #include <Bindings/JSGlobalExportCFun.h>
 #include "JCScriptRuntime.h"
@@ -270,11 +270,7 @@ namespace laya
         auto pScriptRuntime = JCConch::s_pScriptRuntime;
         if (!pScriptRuntime)
             return false;
-        auto worker = pScriptRuntime->m_pScriptThread->getWorker();
-        if(!worker)
-            return false;
-        auto jsThreadID = worker->getTheadID();
-        return (std::this_thread::get_id() == jsThreadID);
+        return pScriptRuntime->isInJSThread();
     }
 
 	void postToJS(std::function<void(void)> task) {

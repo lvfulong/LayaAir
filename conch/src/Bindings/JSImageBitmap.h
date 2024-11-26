@@ -1,7 +1,7 @@
 ﻿#ifndef __JSImageBitmap_H__
 #define __JSImageBitmap_H__
 
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include <Image/ImageBitmap.h>
 #include <map>
 #include <stdio.h>
@@ -12,7 +12,7 @@ namespace laya
 class JSImageBitmap
 {
   public:
-    static void exportJS(Context &context);
+    static void exportJS(jsbind::Object &context);
 
     JSImageBitmap();
 

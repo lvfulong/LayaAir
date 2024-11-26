@@ -5,7 +5,7 @@
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderGeometryElement.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderInstance.h"
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLShaderInstance.h>
 #include <stdio.h>
 #include <utils/JCSingletonList.h>
@@ -21,7 +21,7 @@ class GLESSkinRenderElement : public GLESRenderElement3D
     ~GLESSkinRenderElement();
 
     void drawGeometry(GLESShaderInstance *shaderIns) override;
-    void setSkinnedData(JSValueAsParam pData);
+    void setSkinnedData(std::vector<jsbind::ArrayBuffer> pData);
 
   public:
     std::vector<std::pair<char *, int>> m_vSkinData;

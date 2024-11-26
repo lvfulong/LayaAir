@@ -3,7 +3,7 @@
 
 #include <JCConch.h>
 #include "../../JCScriptRuntime.h"
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include "PxPhysicsAPI.h"
 #include <Bindings/JSRuntime.h>
 typedef intptr_t pointer_t;
@@ -13,9 +13,9 @@ namespace laya
     {
     public:
 
-        static void exportJS(Context& context);
+        static void exportJS(jsbind::Object& context);
 
-        static void onMalloc(JSValueAsParam ab);
+        static void onMalloc(jsbind::ArrayBuffer arrayBuffer);
     };
 }
 #endif

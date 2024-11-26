@@ -1,7 +1,7 @@
 #ifndef _JSXmlAttr_H  
 #define _JSXmlAttr_H  
 
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include <rapidxml/rapidxml.hpp>
 
 namespace laya
@@ -9,7 +9,7 @@ namespace laya
     class  JSXmlAttr
     {
     public:
-        static void exportJS(Context& context);
+        static void exportJS(jsbind::Object& context);
 
         JSXmlAttr();
         ~JSXmlAttr();

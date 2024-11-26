@@ -1,7 +1,7 @@
 ﻿#ifndef __JSFile_H__
 #define __JSFile_H__
 
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include <time.h>
 #include "JsBlob.h"
 #include <utils/JCMemorySurvey.h>
@@ -26,7 +26,7 @@ namespace laya
 
         void UpdateTime(time_t p_tm = 0);
 
-        JsValue GetlastModifiedDate();
+        jsvm_value GetlastModifiedDate();
 
         const char *GetName();
 
@@ -42,7 +42,7 @@ namespace laya
             m_bEnableCache = b;
         }
 
-        static void exportJS(Context& context);
+        static void exportJS(jsbind::Object& context);
 
     public:
         friend class JsFileReader;

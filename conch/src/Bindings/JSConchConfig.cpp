@@ -637,9 +637,9 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
     {
         return JCConch::s_pConch->getOS()->getMemoryUsageInByte();
     }
-    void JSConchConfig::exportJS(Context& context)
+    void JSConchConfig::exportJS(jsbind::Object& context)
     {
-        class_<JSConchConfig> class_binding;
+        jsbind::global_class_<JSConchConfig> class_binding;
 
 		class_binding.class_function("getStoragePath", &JSConchConfig::getLocalStoragePath);
 		class_binding.class_function("getTotalMem", &JSConchConfig::getTotalMem);
@@ -700,6 +700,6 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         class_binding.class_property("JSDebugPort", &JSConchConfig::getJSDebugPort, &JSConchConfig::setJSDebugPort);
         class_binding.class_property("conchWebGL", &JSConchConfig::getConchWebGL);
         class_binding.class_property("urlIgnoreCase", &JSConchConfig::getUrlIgnoreCase, &JSConchConfig::setUrlIgnoreCase);
-        context.class_("conchConfig", class_binding);
+        context.global_class_("conchConfig", class_binding);
     }
 }

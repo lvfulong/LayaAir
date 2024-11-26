@@ -1,6 +1,6 @@
 #ifndef __OS_H__
 #define __OS_H__
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include <memory>
 #include <string>
 namespace laya
@@ -24,7 +24,7 @@ class OS
     virtual int getSafeInsetLeft() = 0;
     virtual int getSafeInsetBottom() = 0;
     virtual int getSafeInsetRight() = 0;
-    virtual JsValue postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName,
+    virtual jsvm_value postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName,
                                      const std::string &data) = 0;
     virtual std::string postSyncMessage(const std::string &eventName, const std::string &data) = 0;
 };

@@ -6,11 +6,11 @@
 #include "LayaBulletExport.h"
 namespace laya
 {
-	void WASM_EXP setDrawlineFunction(JSValueAsParam pFunction)
+	void WASM_EXP setDrawlineFunction(jsvm_value pFunction)
 	{
 		JSRuntime::setBulletDrawLineFunction(pFunction);
 	}
-	void WASM_EXP setClearlineFunction(JSValueAsParam pFunction)
+	void WASM_EXP setClearlineFunction(jsvm_value pFunction)
 	{
 		JSRuntime::setBulletClearLineFunction(pFunction);
 	}
@@ -18,17 +18,17 @@ namespace laya
 	void layaDrawline(float sx, float sy, float sz, float ex, float ey, float ez, int color)
 	{
 		auto pScriptRuntime = JCConch::s_pScriptRuntime;
-		if (pScriptRuntime && !pScriptRuntime->m_bJSBulletDrawLineHandle.isEmpty())
+		if (pScriptRuntime && pScriptRuntime->m_bJSBulletDrawLineHandle.isValid())
 		{
-			pScriptRuntime->m_bJSBulletDrawLineHandle.call<void>(getCurrentContext().global(), sx, sy, sz, ex, ey, ez, color);
+			pScriptRuntime->m_bJSBulletDrawLineHandle.call<void>(jsvm::global(), sx, sy, sz, ex, ey, ez, color);
 		}
 	}
 	void layaClearLine()
 	{
         auto pScriptRuntime = JCConch::s_pScriptRuntime;
-		if (pScriptRuntime && !pScriptRuntime->m_bJSBulletClearLineHandle.isEmpty())
+		if (pScriptRuntime && pScriptRuntime->m_bJSBulletClearLineHandle.isValid())
 		{
-			pScriptRuntime->m_bJSBulletClearLineHandle.call<void>(getCurrentContext().global());
+			pScriptRuntime->m_bJSBulletClearLineHandle.call<void>(jsvm::global());
 		}
 	}
 #else
@@ -2100,11 +2100,11 @@ pointer_t WASM_EXP _malloc(int size)
 
 
 // runtime要实现这个接口
-void WASM_EXP copyJSArray(pointer_t ptr, JSValueAsParam jsarray)
+void WASM_EXP copyJSArray(pointer_t ptr, jsbind::ArrayBuffer arrayBuffer)
 {
-    char* data = NULL;
-    int dataLength = 0;
-    bool bIsArrayBuffer = extractJSAB(jsarray, data, dataLength);
+    char* data = reinterpret_cast<char*>(arrayBuffer.getData());
+    int dataLength = arrayBuffer.getByteLength();
+    bool bIsArrayBuffer = arrayBuffer.isValid();
     if (bIsArrayBuffer && dataLength > 0)
     {
         memcpy((void*)ptr, data, dataLength);

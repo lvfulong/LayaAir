@@ -2,7 +2,7 @@
 #define __JSRuntime_H__
 
 #include <stdio.h>
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include "../../JCScriptRuntime.h"
 
 
@@ -16,56 +16,56 @@ namespace laya
             onframeid, ondrawid, onresizeid, ontouchevtid,ondevicemotionevtid, onkeyevtid, onmouseevtid, oninvalidglid,onotherevtid,onnetworkevt,onblurid,onfocusid, bulletsetid, bulletgetid, zippackageid,onunhandledrejection, screenorientationchangeid, setglobalrepaintid, bulletdrawlineid, bulletclearlineid
         };
     
-	    static void exportJS(Context& context);
+	    static void exportJS(jsbind::Object& context);
 	    
     public:
 
-        static void setOnFrameFunction( JSValueAsParam p_pFunction );
-        static void setOnDrawFunction(JSValueAsParam p_pFunction);
+        static void setOnFrameFunction( jsvm_value p_pFunction );
+        static void setOnDrawFunction(jsvm_value p_pFunction);
 
-        static void setOnResizeFunction(JSValueAsParam p_onresize);
+        static void setOnResizeFunction(jsvm_value p_onresize);
 
-        static void setOnBlurFunction(JSValueAsParam p_pFunction);
+        static void setOnBlurFunction(jsvm_value p_pFunction);
         
-        static void setOnFocusFunction(JSValueAsParam p_pFunction);
+        static void setOnFocusFunction(jsvm_value p_pFunction);
         
-        static void setHref(JSValueAsParam p_sHref);
+        static void setHref(jsvm_value p_sHref);
 
-        static void setMouseEvtFunction(JSValueAsParam p_pFunction);
+        static void setMouseEvtFunction(jsvm_value p_pFunction);
 
-        static void setTouchEvtFunction(JSValueAsParam p_pFunction);
+        static void setTouchEvtFunction(jsvm_value p_pFunction);
 
-        static void setDeviceMotionEvtFunction(JSValueAsParam p_pFunction);
+        static void setDeviceMotionEvtFunction(jsvm_value p_pFunction);
 
-        static void captureScreen(JSValueAsParam p_pFunction);
+        static void captureScreen(jsvm_value p_pFunction);
 
-        static void setKeyEvtFunction(JSValueAsParam p_pFunction);
+        static void setKeyEvtFunction(jsvm_value p_pFunction);
 
-        static void setNetworkEvtFunction(JSValueAsParam p_pFunction);
+        static void setNetworkEvtFunction(jsvm_value p_pFunction);
 
         static void setScreenWakeLock(bool bWakeLock);
 
         static void setSensorAble(bool bSensorAble);
 
-        static void setBuffer(JSValueAsParam pArrayBuffer);
+        static void setBuffer(jsbind::ArrayBuffer arrayBuffer);
 
-        static bool saveAsPng(JSValueAsParam pArrayBufferArgs, int w, int h, const char* p_pszFile);
+        static bool saveAsPng(jsbind::ArrayBuffer arrayBuffer, int w, int h, const char* p_pszFile);
 
-        static bool saveAsJpeg(JSValueAsParam pArrayBufferArgs, int w, int h, const char* p_pszFile);
+        static bool saveAsJpeg(jsbind::ArrayBuffer arrayBuffer, int w, int h, const char* p_pszFile);
         
-        static JsValue convertBitmapToPng(JSValueAsParam pArrayBufferArgs, int w, int h);
+        static jsvm_value convertBitmapToPng(jsbind::ArrayBuffer arrayBuffer, int w, int h);
         
-        static JsValue convertBitmapToJpeg(JSValueAsParam pArrayBufferArgs, int w, int h);
+        static jsvm_value convertBitmapToJpeg(jsbind::ArrayBuffer arrayBuffer, int w, int h);
 
-        static void setGetWorldTransformFunction(JSValueAsParam p_pFunction);
+        static void setGetWorldTransformFunction(jsvm_value p_pFunction);
 
-        static void setSetWorldTransformFunction(JSValueAsParam p_pFunction);
+        static void setSetWorldTransformFunction(jsvm_value p_pFunction);
 
-		static void setBulletDrawLineFunction(JSValueAsParam p_pFunction);
+		static void setBulletDrawLineFunction(jsvm_value p_pFunction);
 
-		static void setBulletClearLineFunction(JSValueAsParam p_pFunction);
+		static void setBulletClearLineFunction(jsvm_value p_pFunction);
 		
-        static void setZipPackage(JSValueAsParam p_pFunction);
+        static void setZipPackage(jsvm_value p_pFunction);
 
 		static int getSafeInsetTop();
 
@@ -75,32 +75,34 @@ namespace laya
 
 		static int GetSafeInsetRight();
 
-		static JsValue getLaunchOptionsSync();
+		static jsvm_value getLaunchOptionsSync();
 
-		static void setOnUnhandledRejection(JSValueAsParam p_pFunction);
+		static void setOnUnhandledRejection(jsvm_value p_pFunction);
 
-		static JsValue getOnUnhandledRejection();
+		static jsvm_value getOnUnhandledRejection();
 
-		static void setScreenOrientation(const char* p_strOrientation, JSValueAsParam p_pFunction);
+		static void setScreenOrientation(const char* p_strOrientation, jsvm_value p_pFunction);
 
-		static void setGlobalRepaint(JSValueAsParam p_pFunction);
+		static void setGlobalRepaint(jsvm_value p_pFunction);
 
 		static void setGlobalRepaintCall();
 
-		static void computeSubSkinnedDataForNative(JSValueAsParam inverseBindPosesBuffer, JSValueAsParam boneIndices, JSValueAsParam subData, JSValueAsParam skinnedMatrixCaches, JSValueAsParam bonesTransform, JSValueAsParam skinnedDataLoopMarks, JSValueAsParam skinnedData);
+        static void setOnError(jsvm_value p_pFunction);
 
-        static bool registerFont(JSValueAsParam jsFamily, JSValueAsParam pathOrArrayBuffer);
+		static void computeSubSkinnedDataForNative(jsvm_value inverseBindPosesBuffer, jsvm_value boneIndices, jsvm_value subData, jsvm_value skinnedMatrixCaches, jsvm_value bonesTransform, jsvm_value skinnedDataLoopMarks, jsvm_value skinnedData);
 
-        static void downloadFile(JSValueAsParam url, JSValueAsParam onProgress, JSValueAsParam onComplete, JSValueAsParam onError);
-        static void setDownloader(JSValueAsParam obj);
+        static bool registerFont(const std::string& family, jsbind::Local pathOrArrayBuffer);
 
-        static JsValue postAsyncMessage(const std::string &eventName, const std::string &data);
+        static void downloadFile(const std::string& url, jsvm_value onProgress, jsvm_value onComplete, jsvm_value onError);
+        static void setDownloader(jsvm_value obj);
+
+        static jsvm_value postAsyncMessage(const std::string &eventName, const std::string &data);
         static std::string postSyncMessage(const std::string &eventName, const std::string &data);
     public:
 
-        static JsValue readFileFromAsset(const char* file, const char* encode);
+        static jsvm_value readFileFromAsset(const char* file, const char* encode);
 
-        static JsValue strTobufer(const char* s);
+        static jsvm_value strTobufer(const char* s);
 
         static const char* callMethod(int objid,bool isSyn,const char*clsName, const char* methodName, const char* paramStr);
 
@@ -112,7 +114,7 @@ namespace laya
 
 	    static void exit();
 
-        static JsValue createArrayBufferRef(JSValueAsParam pArrayBuffer, int nType, bool bSyncToRender, int nRefType);
+        static jsvm_value createArrayBufferRef(jsbind::ArrayBuffer arrayBuffer, int nType, bool bSyncToRender, int nRefType);
         
 
         static std::string m_strReturn;

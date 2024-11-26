@@ -5,7 +5,7 @@
 #include <vector>
 #include "render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderContext3D.h"
 #include <core/math/Types.h>
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include "Bindings/LayaAir/3D/JSBounds.h"
 namespace laya
 {
@@ -49,8 +49,8 @@ public: //binding
     void setLightmap(RTLightmapData* value) { lightmap = value; }
     void setProbeReflection(RTReflectionProb* value) { probeReflection = value; }
     void setVolumetricGI(RTVolumetricGI* value) { volumetricGI = value; }
-    void setRenderUpdatePre(JSValueAsParam function);
-    void setCalculateBoundingBox(JSValueAsParam function);
+    void setRenderUpdatePre(jsvm_value function);
+    void setCalculateBoundingBox(jsvm_value function);
     void setLightmapScaleOffset(const Vector4& value) { lightmapScaleOffset = value; }
     void setCommonUniformMap(const std::vector<std::string>& value);
     void setRenderElements(const std::vector<GLESRenderElement3D*>& value);
@@ -84,8 +84,8 @@ public://bind
     int lightProbUpdateMark = -1;
     IrradianceMode irradianceMode;
     GLESShaderData* shaderData;
-    Persistent	m_JSFunctionRenderUpdatePre;//js call
-    Persistent	m_JSFunctionCalculateBoundingBox;//js call
+    jsbind::Persistent	m_JSFunctionRenderUpdatePre;//js call
+    jsbind::Persistent	m_JSFunctionCalculateBoundingBox;//js call
     std::vector<std::string> commonUniformMap;
     //---------------------
     bool customCull = false;//TODO

@@ -1,12 +1,12 @@
 #include "JSFileSystem.h"
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include <utils/Log.h>
 #include <utils/JCFileSystem.h>
 #include <ctime>
 
 namespace laya
 {
-	bool JSFileSystem::rmDir(const char* p_pszPath, JSValueAsParam onprogress, JSValueAsParam oncomplete, JSValueAsParam onerror) 
+	bool JSFileSystem::rmDir(const char* p_pszPath, jsvm_value onprogress, jsvm_value oncomplete, jsvm_value onerror) 
     {
 		return true;
 	}
@@ -14,18 +14,18 @@ namespace laya
     {
 		return true;
 	}
-	JsValue JSFileSystem::readdirSync(const std::string &path) 
+	jsvm_value JSFileSystem::readdirSync(const std::string &path) 
     {
 		if (!FileSystem::exists(path))
-			return JSP_TO_JS_NULL;
+			return jsbind::MakeNull();
 		std::vector<std::string> paths = FileSystem::readdirSync(path);
-		return Converter<std::vector<std::string> >::ToJs(paths);
+		return jsbind::Make<std::vector<std::string> >(paths);
 	}
-	JsValue JSFileSystem::lstatSync(const std::string &path) 
+	jsvm_value JSFileSystem::lstatSync(const std::string &path) 
     {
 		std::vector<std::string> paths;
 		if (!FileSystem::exists(path))
-			return JSP_TO_JS_NULL;
+			return jsbind::MakeNull();
 		//try {
 			std::time_t wtime;
 //#ifdef OS_WINDOWS
@@ -37,7 +37,8 @@ namespace laya
 			bool isFile = FileSystem::is_regular_file(path);
 			int sz = 0;
 			if (!isDir)sz = (int)FileSystem::file_size(path);
-#ifdef JS_V8
+#if 0
+//#ifdef JS_V8
 			//st.type;
 			v8::Isolate* pIso = v8::Isolate::GetCurrent();
 			v8::Local<v8::Context> context = pIso->GetCurrentContext();
@@ -48,7 +49,8 @@ namespace laya
 			retobj->Set(context, Js_Str(pIso, "size"), v8::Number::New(pIso, sz));
 			retobj->Set(context, Js_Str(pIso, "mtime"), v8::Date::New(context, (double)(wtime*1000)).ToLocalChecked());
 			return retobj;
-#elif defined(JS_JSC)
+#endif
+#if 0
             JSContextRef ctx = laya::__TlsData::GetInstance()->GetCurContext();
 			JSObjectRef retobj = JSObjectMake(ctx, nullptr, nullptr);
 			JSObjectSetProperty(ctx, retobj, JSStringCreateWithUTF8CString("isDirectory"), JSValueMakeBoolean(ctx, isDir), kJSPropertyAttributeNone, nullptr);
@@ -62,17 +64,19 @@ namespace laya
         //{
 		//	JSP_THROW("lstatSync error!");
 		//}
-		return JSP_TO_JS_NULL;
+		return jsbind::MakeNull();
 	}
-    bool JSFileSystem::JSWriteFileSync(const char* p_sUrl, JSValueAsParam args)
+    bool JSFileSystem::JSWriteFileSync(const char* p_sUrl, jsbind::Local args)
     {
         if (!p_sUrl) return false;
-        char* pABPtr = NULL;
-        int nABLen = 0;
-        bool bisab = extractJSAB(args, pABPtr, nABLen);
+      
+        bool bisab = args.isArrayBuffer() || args.isArrayBufferView();
         bool bret = false;
         if (bisab) 
-        {
+		{
+			auto arrayBuffer = args.as<jsbind::ArrayBuffer>();
+			char* pABPtr = reinterpret_cast<char*>(arrayBuffer.getData());
+			int nABLen = arrayBuffer.getByteLength();
             if (pABPtr && nABLen > 0)
             {
                 bret = writeFileSync1(p_sUrl, pABPtr, nABLen, 0);
@@ -80,10 +84,9 @@ namespace laya
         }
         else 
         {
-			Local value(args);
-            if (value.isString())
+            if (args.isString())
             {
-                std::string pData = Converter<std::string>::ToCpp(args);
+                std::string pData = args.as<std::string>();
                 if (!pData.empty())
                 {
                     int len = pData.length();
@@ -94,16 +97,16 @@ namespace laya
         }
         return bret;
     }
-	JsValue JSFileSystem::readBinFileSync(const char* p_pszFile) 
+	jsvm_value JSFileSystem::readBinFileSync(const char* p_pszFile) 
     {
         JCBuffer buf;
 		if (readFileSync(p_pszFile, buf, JCBuffer::raw))
         {
-			return laya::createJSAB(buf.m_pPtr, buf.m_nLen);
+			return jsbind::ArrayBuffer::MakeArrayBuffer((uint8_t*)buf.m_pPtr, buf.m_nLen).getHandle();
 		}
 		else 
         {
-			return JSP_TO_JS_NULL;
+			return jsbind::MakeNull();
 		}
     }
 };

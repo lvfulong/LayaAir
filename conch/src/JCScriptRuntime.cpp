@@ -9,7 +9,7 @@
 #include "JCScriptRuntime.h"
 #include <algorithm>
 #include <utils/Log.h>
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include <Bindings/JSFileReader.h>
 #include <Bindings/JSGlobalExportCFun.h>
 #include <Bindings/JSInput.h>
@@ -25,13 +25,13 @@
 #include <zip/JCZip.h>
 #include <Bindings/JSLaunchOptions.h>
 #include <Bindings/JSPromiseRejectionEvent.h>
-//#include "btBulletDynamicsCommon.h"
+#include <render/RenderBindings.h>
 #include <cstdarg>
 #include "2D/FontManager.h"
 #if defined(OS_WINDOWS)
 #include "video/VideoPlayer.h"
-#include "Extention/LayaExtWin.h"
 #endif
+#include "Extention/LayaExtWin.h"
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
 extern bool g_bGLCanvasSizeChanged;
@@ -40,61 +40,27 @@ extern std::string gRedistPath;
 
 namespace laya 
 {
-#ifdef JS_V8_DEBUGGER
-    bool g_bSendLogToDbg = true;
 
-    void mygLayaLog(int level, const char* file, int line, const char* fmt, ...) {
-        if (!JCConch::s_pScriptRuntime)
-            return;
-        DebuggerAgent* pDbgAgent = JCConch::s_pScriptRuntime->m_pDbgAgent;
-        if (!g_bSendLogToDbg || !pDbgAgent) {
-            va_list args;
-            va_start(args, fmt);
-            vprintf(fmt, args);
-            va_end(args);
-            return;
-        }
-        char buf[1024];
-        char* pBuf = NULL;
-        va_list args;
-        va_start(args, fmt);
-        int len = vsnprintf(buf, 1024, fmt, args);
-        if (len < 0) {
-            printf("log error! \n");
-            return;
-        }
-        if (len > 1024) {
-            pBuf = new char[len + 1];
-            len = vsnprintf(pBuf, len + 1, fmt, args);
-            if (len < 0)
-                return;
-        }
-        va_end(args);
-        const char* pTypes[] = { "warning","error", "debug", "log","runtime" };
-        int sz = sizeof(pTypes) / sizeof(const char*);
-        pDbgAgent->sendToDbgConsole(pBuf ? pBuf : buf, file, line, 0, level < sz ? pTypes[level] : "unknown");
-        if (pBuf) {
-            delete[] pBuf;
+    void CheckJSException()
+    {
+        GET_ENV
+        bool isExceptionPending;
+        auto status = jsvm_is_exception_pending(env, &isExceptionPending);
+        DEBUG_CHECK(status == napi_ok);
+
+        if (isExceptionPending)
+        {
+            jsvm_value result = nullptr;
+            status = jsvm_get_and_clear_last_exception(env, &result);
+            DEBUG_CHECK(status == jsvm_ok);
+            //v8::Local<v8::Value> val = v8impl::V8LocalValueFromJsValue(result);
+            //ReportException(env->isolate, val);
+            JCConch::s_pScriptRuntime->m_pJSOnErrorFunction.call<void>(jsvm::global(), result);
         }
     }
-
-    void mygLayaLogSimp(int level, const char* file, int line, const char* msg) {
-        if (!JCConch::s_pScriptRuntime)
-            return;
-        DebuggerAgent* pDbgAgent = JCConch::s_pScriptRuntime->m_pDbgAgent;
-        if (!g_bSendLogToDbg || !pDbgAgent) {
-            printf("%s", msg);
-            return;
-        }
-        const char* pTypes[] = { "warning","error", "debug", "log","runtime" };
-        int sz = sizeof(pTypes) / sizeof(const char*);
-        pDbgAgent->sendToDbgConsole((char*)msg, file, line, 0, level < sz ? pTypes[level] : "unknown");
-    }
-
-#endif
     JCScriptRuntime::JCScriptRuntime()
     {
-        m_pScriptThread = new JSMulThread();
+        m_pScriptThread = std::make_shared<jsvm::ScriptThread>();
         m_bHasJSThread = false;
         m_pFileResMgr = NULL;
         m_pAssetsRes = NULL;
@@ -107,17 +73,12 @@ namespace laya
         m_pScriptThread->on(JCWorkerThread::Event_threadStart, std::bind(&JCScriptRuntime::onThreadInit, this, std::placeholders::_1));
         m_pScriptThread->on(JCWorkerThread::Event_threadStop, std::bind(&JCScriptRuntime::onThreadExit, this, std::placeholders::_1));
         m_nUpdateCount = 0;
-#ifdef JS_V8
-        m_pDbgAgent = nullptr;  
-#endif
 #if !defined(OS_LINUX) && !defined(OS_WINDOWS)
 		m_pCurEditBox = NULL;
 #endif
     }
     JCScriptRuntime::~JCScriptRuntime() 
     {
-        delete m_pScriptThread;
-        m_pScriptThread = NULL;
 
         m_pFileResMgr = NULL;
         m_pAssetsRes = NULL;
@@ -147,14 +108,14 @@ namespace laya
         ffplay::VideoPlayer::init();
 #endif
     }
-    static void onUnhandledRejection(JSValueAsParam pPromise, JSValueAsParam pReason, const char* type)
+    static void onUnhandledRejection(jsvm_value pPromise, jsvm_value pReason, const char* type)
     {
 #ifdef JS_V8
         JSPromiseRejectionEvent* event = new JSPromiseRejectionEvent;
         event->setPromise(pPromise);
         event->setReason(pReason);
         event->setType(type);
-        JCConch::s_pScriptRuntime->m_pJSOnUnhandledRejectionFunction.call<void>(getCurrentContext().global(), JSP_TO_JS(JSPromiseRejectionEvent*, event));
+        JCConch::s_pScriptRuntime->m_pJSOnUnhandledRejectionFunction.call<void>(jsvm::global(), jsbind::Make<JSPromiseRejectionEvent*>(event));
 #endif
     }
     void JCScriptRuntime::start(const char* pStartJS) 
@@ -162,23 +123,10 @@ namespace laya
         LOGI("Start js %s", pStartJS);
         if (pStartJS)m_strStartJS = pStartJS;
 
-#ifdef JS_V8_DEBUGGER
-        m_pDbgAgent = NULL;
-        if (g_kSystemConfig.m_nJSDebugMode != JS_DEBUG_MODE_OFF)
-        {
-            LOGI("open js debug port at %d", g_kSystemConfig.m_nJSDebugPort);
-            m_pDbgAgent = new DebuggerAgent("layabox", g_kSystemConfig.m_nJSDebugPort);
-            JCConch::s_pScriptRuntime->m_pDbgAgent = m_pDbgAgent;
-        }
-        else
-        {
-            m_pDbgAgent = NULL;
-            JCConch::s_pScriptRuntime->m_pDbgAgent = NULL;
-        }
-#endif
+
 
         m_debugPort = g_kSystemConfig.m_nJSDebugMode;
-        m_pScriptThread->initialize(m_debugPort, std::bind(&onUnhandledRejection, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+        //m_pScriptThread->initialize(m_debugPort, std::bind(&onUnhandledRejection, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
         //m_nThreadState = 1;
         m_pScriptThread->setLoopFunc(std::bind(&JCScriptRuntime::onUpdate, JCConch::s_pScriptRuntime.get()));
         m_pScriptThread->start();
@@ -187,21 +135,13 @@ namespace laya
     {
         LOGI("Stop js start...");
 
-#ifdef JS_V8_DEBUGGER
-        if (m_pDbgAgent)
-        {
-            m_pDbgAgent->Shutdown();
-            delete m_pDbgAgent;
-            m_pDbgAgent = NULL;
-        }
-#endif
         //while (m_nThreadState==1)
         {
             //LOGI("stop: wait for thread to start...");
             //std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
         m_pScriptThread->stop();
-        m_pScriptThread->uninitialize();
+        //m_pScriptThread->uninitialize();
         LOGI("Stop js end.");
     }
     void JCScriptRuntime::reload() 
@@ -227,30 +167,22 @@ namespace laya
     void JCScriptRuntime::onThreadInit(JCEventEmitter::evtPtr evt) 
     {
         LOGI("js thread started.");
-
+        GET_ENV;
+#ifdef JS_V8_DEBUGGER
+        env->scriptThread = m_pScriptThread;
+#endif        
         //m_nThreadState = 2;
-#ifdef JS_V8
         //JSObjNode::s_pListJSObj = new JCSimpList();
 #ifdef JS_V8_DEBUGGER
-        if (m_pDbgAgent) 
+        if (g_kSystemConfig.m_nJSDebugMode != JS_DEBUG_MODE_OFF)
         {
-            m_pDbgAgent->onJSStart(m_pScriptThread,(g_kSystemConfig.m_nJSDebugMode == JS_DEBUG_MODE_WAIT) ? true : false,[]{
-                //gLayaLog = mygLayaLog;
-                //gLayaLogNoParam = mygLayaLogSimp;
-            },[]{
-                //gLayaLog = nullptr;
-                //gLayaLogNoParam = nullptr;
-            });
-            LOGI("js debug open mode: %d port %d", g_kSystemConfig.m_nJSDebugMode, g_kSystemConfig.m_nJSDebugPort);
+            jsvm_open_inspector(env, g_kSystemConfig.m_nJSDebugPort);
+            if (g_kSystemConfig.m_nJSDebugMode == JS_DEBUG_MODE_WAIT) {
+                jsvm_wait_for_debugger(env, true);
+            }
+        }
 
-            gLayaLog = mygLayaLog;
-            gLayaLogNoParam = mygLayaLogSimp;
-        }
-        else
-        {
-            LOGI("js debug closed");
-        }
-#endif
+
 #endif
         JCConch::s_pConchRender->m_pImageManager->resetJSThread();
 
@@ -280,7 +212,9 @@ namespace laya
             int nSize = 0;
             if (m_pAssetsRes->loadFileContent("scripts/runtimeInit.js", sJSRuntime, nSize))
             {
-                JSP_RUN_SCRIPT(sJSRuntime);
+                jsvm_value result;
+                jsbind::runScript(sJSRuntime, &result);
+                CheckJSException();
                 delete[] sJSRuntime;
             }
         }
@@ -291,26 +225,20 @@ namespace laya
             std::string kBuf = "(function(window){\n'use strict'\n";
             kBuf += sJCBuffer;
             kBuf += "\n})(window);\n//@ sourceURL=apploader.js";
-#ifdef JS_V8
-            v8::Isolate* isolate = v8::Isolate::GetCurrent();
-            v8::HandleScope handle_scope(isolate);
-            v8::TryCatch try_catch(isolate);
-            JSP_RUN_SCRIPT(kBuf.c_str());
-            if (try_catch.HasCaught())
-            {
-                __JSRun::ReportException(isolate, &try_catch);
-            }
-#else
-            JSP_RUN_SCRIPT(kBuf.c_str());
-#endif
+
+            jsvm_value result;
+            jsbind::runScript(kBuf, &result);
+            CheckJSException();
             delete[] sJCBuffer;
             sJCBuffer = NULL;
         }
-        JSP_RUN_SCRIPT("gc();gc();gc();");
+        jsvm_value result;
+        jsbind::runScript("gc();gc();gc();", &result);
         });
     }
     void JCScriptRuntime::onThreadExit(JCEventEmitter::evtPtr evt)
     {
+        GET_ENV;
         //if (m_nThreadState == 0)
         //{
         //    return;
@@ -336,19 +264,17 @@ namespace laya
         m_pJSOnUnhandledRejectionFunction.reset();
 		m_pJSOnScreenOrientationChanged.reset();
 		m_pJSSetGlobalRepaintFunction.reset();
+        m_pJSOnErrorFunction.reset();
 		g_ZipPackage = NULL;
 #if !defined(OS_LINUX) && !defined(OS_WINDOWS)
         m_pCurEditBox = NULL;
 #endif
-        internal::runDeinitializers();
-
+        jsbind::runDeinitializers();
+        RenderBindings::clean();
         JSGlobalDisExportC();
 #ifdef JS_V8
 #ifdef JS_V8_DEBUGGER
-        if (m_pDbgAgent)
-        {
-            m_pDbgAgent->onJSExit();
-        }
+        jsvm_close_inspector(env);
 #endif
 #elif JS_JSC
         JSP_RESET_GLOBAL_FUNCTION;
@@ -387,19 +313,19 @@ namespace laya
         }).get();
         
         //PERF_INITVAR(nBenginTime);
-#ifdef JS_V8
+#ifdef JS_V8_DEBUGGER
         m_pScriptThread->runDbgFuncs();
 #endif
         m_nUpdateCount++;
         bool bRunOnDraw = false;
         double nTime = tmGetCurms();
 
-        if (!m_pJSOnDrawFunction.isEmpty())
+        if (m_pJSOnDrawFunction.isValid())
         {
 			
-            JS_TRY;
-            m_pJSOnDrawFunction.call<void>(getCurrentContext().global(), nTime);
-            JS_CATCH;
+            //JS_TRY;
+            m_pJSOnDrawFunction.call<void>(jsvm::global(), nTime);
+            //JS_CATCH;
 
             JCConch::s_pConchRender->postTaskFromJSToRenderSync([this]()->bool {
                 this->dispatchLayaGLBuffer(true);
@@ -408,7 +334,7 @@ namespace laya
 			
         }
         JSInput* pInput = JSInput::getInstance();
-        if ( pInput->m_bTouchMode )
+        if ( pInput->m_bTouchMode && m_pJSTouchEvtFunction.isValid() )
         {
             pInput->swapCurrentTouchEvent();
             if( pInput->m_vInputEventsJS.size() > 0 )
@@ -417,7 +343,7 @@ namespace laya
                 for (int i = 0, nSize = (int)pInput->m_vInputEventsJS.size(); i < nSize; i++ )
                 {
                     TouchEventInfo* touchEvent = &pInput->m_vInputEventsJS[i];
-                    m_pJSTouchEvtFunction.call<void>(getCurrentContext().global(), touchEvent->nType, touchEvent->nID,"type",touchEvent->x, touchEvent->y);
+                    m_pJSTouchEvtFunction.call<void>(jsvm::global(), touchEvent->nType, touchEvent->nID,"type",touchEvent->x, touchEvent->y);
                 }
             }
             if( pInput->m_nTouchFrame > 0 )
@@ -426,9 +352,9 @@ namespace laya
             }
         }
 
-        if (g_bGLCanvasSizeChanged)
+        if (g_bGLCanvasSizeChanged && m_pJSOnResizeFunction.isValid())
         {
-            m_pJSOnResizeFunction.call<void>(getCurrentContext().global(), g_nInnerWidth, g_nInnerHeight);
+            m_pJSOnResizeFunction.call<void>(jsvm::global(), g_nInnerWidth, g_nInnerHeight);
             //m_pRootCanvas->size( g_nInnerWidth,g_nInnerHeight );
             g_bGLCanvasSizeChanged = false;
         }
@@ -447,13 +373,15 @@ namespace laya
             break;
         }
 		
-        JS_TRY;
-            m_pJSOnFrameFunction.call<void>(getCurrentContext().global());
-        JS_CATCH;
-		
+        //JS_TRY;
+        if (m_pJSOnFrameFunction.isValid())
+        {
+            m_pJSOnFrameFunction.call<void>(jsvm::global());
+        }
+        //JS_CATCH;
+        CheckJSException();
         //float dt = tmGetCurms() - nBenginTime;
         //PERF_UPDATE_DATA(JCPerfHUD::PHUD_JS_DELAY, (float)dt);
-
         JCConch::s_pConchRender->postTaskFromJSToRenderSync([this]()->bool {
             JCConch::s_pScriptRuntime->dispatchLayaGLBuffer(false);
             JCConch::s_pConchRender->update();
@@ -501,7 +429,7 @@ namespace laya
     }
     void JCScriptRuntime::onNetworkChangedCallJSFunction(int nType)
     {
-        m_pJSNetworkEvtFunction.call<void>(getCurrentContext().global(), nType);
+        m_pJSNetworkEvtFunction.call<void>(jsvm::global(), nType);
     }
     void JCScriptRuntime::jsGC()
     {
@@ -510,7 +438,8 @@ namespace laya
     }
     void JCScriptRuntime::jsGCCallJSFunction()
     {
-        JSP_RUN_SCRIPT("gc()");
+        jsvm_value result;
+        jsbind::runScript("gc()", &result);
     }
     void JCScriptRuntime::callJC(std::string sFunctionName, std::string sJsonParam, std::string sCallbackFunction)
     {
@@ -524,7 +453,8 @@ namespace laya
     }
     void JCScriptRuntime::callJSStringFunction( std::string sBuffer )
     {
-        JSP_RUN_SCRIPT(sBuffer.c_str());
+        jsvm_value result;
+        jsbind::runScript(sBuffer, &result);
     }
     void JCScriptRuntime::callJSFuncton(std::string sFunctionName, std::string sJsonParam, std::string sCallbackFunction)
     {
@@ -535,7 +465,8 @@ namespace laya
         sBuffer += sCallbackFunction;
         sBuffer += "\");";
         LOGI("JCScriptRuntime::callJSFuncton buffer=%s",sBuffer.c_str() );
-        JSP_RUN_SCRIPT( sBuffer.c_str() );
+        jsvm_value result;
+        jsbind::runScript( sBuffer, &result);
     }
     void JCScriptRuntime::restoreAudio()
     {
@@ -556,7 +487,8 @@ namespace laya
     }
     void JCScriptRuntime::jsReloadUrlJSFunction()
     {
-        JSP_RUN_SCRIPT("reloadJS(true)");
+        jsvm_value result;
+        jsbind::runScript("reloadJS(true)", &result);
     }
     void JCScriptRuntime::jsUrlback()
     {
@@ -565,8 +497,15 @@ namespace laya
     }
     void JCScriptRuntime::jsUrlbackJSFunction()
     {
-        JSP_RUN_SCRIPT("history.back()");
+        jsvm_value result;
+        jsbind::runScript("history.back()", &result);
     }
+
+    bool JCScriptRuntime::isInJSThread(){
+        auto jsThreadID = m_pScriptThread->getTheadID();
+        return (std::this_thread::get_id() == jsThreadID);
+    }
+
     void JCScriptRuntime::postToJS(const std::function<void(void)>& func)
     {
         m_pScriptThread->post(func);
@@ -581,17 +520,17 @@ namespace laya
     }*/
 	void JCScriptRuntime::onBlur()
 	{
-        if (!this->m_pJSOnBlurFunction.isEmpty())
+        if (this->m_pJSOnBlurFunction.isValid())
         {
-            this->m_pJSOnBlurFunction.call<void>(getCurrentContext().global());
+            this->m_pJSOnBlurFunction.call<void>(jsvm::global());
 			
         }
 	}
 	void JCScriptRuntime::onFocus()
 	{
-        if (!this->m_pJSOnFocusFunction.isEmpty())
+        if (this->m_pJSOnFocusFunction.isValid())
         {
-            this->m_pJSOnFocusFunction.call<void>(getCurrentContext().global(), JSP_TO_JS(JSLaunchOptions*, new JSLaunchOptions()));
+            this->m_pJSOnFocusFunction.call<void>(jsvm::global(), jsbind::Make<JSLaunchOptions*>(new JSLaunchOptions()));
         }
 	}
 

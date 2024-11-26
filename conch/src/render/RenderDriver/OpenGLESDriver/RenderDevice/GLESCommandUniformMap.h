@@ -1,7 +1,7 @@
 #ifndef __GLESCommandUniformMap_H__
 #define __GLESCommandUniformMap_H__
 
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 #include <stdio.h>
 #include <string>
@@ -31,7 +31,7 @@ class GLESCommandUniformMap
 
     static GLESCommandUniformMap *createGlobalUniformMap(const char *blockName);
 
-    static JsValue createGlobalUniformMapJS(const char *blockName);
+    static jsvm_value createGlobalUniformMapJS(const char *blockName);
 
     GLESCommandUniformMap(const char *stateName)
     {
@@ -57,12 +57,12 @@ class GLESCommandUniformMap
                              blockName);
         }
     }
-
+    static void clean();
   public:
     static std::unordered_map<std::string, GLESCommandUniformMap *> m_globalBlockMap;
     std::string m_stateName;
     std::unordered_map<int, CommandUniformData> m_vData;
-    static std::unordered_map<std::string, Persistent *> m_globalBlockMapJS;
+    static std::unordered_map<std::string, jsbind::Persistent> m_globalBlockMapJS;
 };
 } // namespace laya
 #endif //__GLESCommandUniformMap_H__

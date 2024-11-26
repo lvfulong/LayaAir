@@ -65,24 +65,25 @@ int OSLinux::getSafeInsetRight()
 {
     return 0;
 }
-JsValue OSLinux::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
+jsvm_value OSLinux::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
-    auto isolate = v8::Isolate::GetCurrent();
-    auto context = isolate->GetCurrentContext();
+    //auto isolate = v8::Isolate::GetCurrent();
+    //auto context = isolate->GetCurrentContext();
 
-    napi_deferred deferred;
-    napi_value promise;
+    //napi_deferred deferred;
+    //napi_value promise;
 
-    napi_create_promise(context, &deferred, &promise);
-
-    conchRegisterHandleMessageHandler(eventName.c_str(), [deferred, cbref](const char *message) {
-        postToJS([deferred, message, cbref]() {
+    //napi_create_promise(context, &deferred, &promise);
+    auto promise = jsbind::Promise::Make();
+    std::function<void(std::string)> cb = [promise, cbref](std::string message) {
+        postToJS([promise, message, cbref]() {
             if (!cbref.lock())
                 return;
-            auto isolate = v8::Isolate::GetCurrent();
-            auto context = isolate->GetCurrentContext();
-            napi_value v = JsValueFromV8LocalValue(Converter<const char *>::ToJs(message));
-            napi_resolve_deferred(context, deferred, v);
+            //auto isolate = v8::Isolate::GetCurrent();
+            //auto context = isolate->GetCurrentContext();
+            //napi_value v = jsvm_valueFromV8LocalValue(MakeJSValue<const char *>(message));
+            //napi_resolve_deferred(context, deferred, v);
+            promise.resolve(message);
         });
     });
     if (g_handleAsyncMessageCb)
@@ -90,7 +91,8 @@ JsValue OSLinux::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &e
         // handleAsyncMessage is called in platform os ui thread
         postToPlatform([eventName, data]() { g_handleAsyncMessageCb(eventName.c_str(), data.c_str()); });
     }
-    return V8LocalValueFromJsValue(promise);
+    //return V8LocalValueFromjsvm_value(promise);
+    return promise.getHandle();
 }
 std::string OSLinux::postSyncMessage(const std::string &eventName, const std::string &data)
 {

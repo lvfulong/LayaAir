@@ -1,5 +1,5 @@
 ﻿#include "JSLaunchOptions.h"
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include <utils/Log.h>
 #include <utils/JCMemorySurvey.h>
 #include "../../JCScriptRuntime.h"
@@ -8,7 +8,7 @@ namespace laya
 {
 	JSLaunchOptions::JSLaunchOptions()
     {
-	    AdjustAmountOfExternalAllocatedMemory(10240);
+	    jsbind::AdjustAmountOfExternalAllocatedMemory(10240);
 	    JCMemorySurvey::GetInstance()->newClass( "JSLaunchOptions",10240,this );
     }
 	JSLaunchOptions::~JSLaunchOptions()
@@ -19,21 +19,21 @@ namespace laya
 	{
 		return -1;
 	}
-	JsValue JSLaunchOptions::getQuery()
+	jsvm_value JSLaunchOptions::getQuery()
 	{
-		return JSP_TO_JS_UNDEFINE;
+		return jsbind::MakeUndefined();
 	}
 	const char* JSLaunchOptions::getShareTicket()
 	{
 		return "";
 	}
-	JsValue JSLaunchOptions::getReferrerInfo()
+	jsvm_value JSLaunchOptions::getReferrerInfo()
 	{
-		return JSP_TO_JS_UNDEFINE;
+		return jsbind::MakeUndefined();
 	}
-    void JSLaunchOptions::exportJS(Context& context)
+    void JSLaunchOptions::exportJS(jsbind::Object& context)
     {
-		class_<JSLaunchOptions> class_binding;
+		jsbind::class_<JSLaunchOptions> class_binding;
 		class_binding.constructor<>();
 		class_binding.property("scene", &JSLaunchOptions::getScene);
 		class_binding.property("query", &JSLaunchOptions::getQuery);

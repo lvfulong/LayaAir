@@ -6,7 +6,7 @@
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLEnum/WebGLMode.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLRenderState.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/WebGLConfig.h"
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include <core/math/Color.h>
 #include <core/math/Vector4.h>
 #include <render/3D/design/renderEnum/BufferTargetType.h>
@@ -78,7 +78,7 @@ class GLESEngine
     void clearRenderTexture(uint32_t clearFlag, const Color *clearcolor, float clearDepth);
     int propertyNameToID(const char *name);
     const std::string &propertyIDToName(int id);
-    void getNamesByDefineDataJS(RTDefineDatas* defineData, JSValueAsParam out);
+    void getNamesByDefineDataJS(RTDefineDatas* defineData, jsvm_value out);
     void getNamesByDefineData(RTDefineDatas *defineData, std::vector<std::string> &out);
     RTShaderDefine getDefineByName(const char *name);
     GLRenderState *getRenderState();
@@ -100,7 +100,7 @@ class GLESEngine
     void clearStatisticsInfo();
     int getStatisticsInfo(GPUEngineStatisticsInfo info);
     void unbindVertexState();
-    JsValue getTextureContextJS();
+    jsvm_value getTextureContextJS();
     void regGlobalVertexDeclaration(std::string name, int32_t key, const VertexStateContext& declarations);
     std::unordered_map<int32_t, VertexStateContext>* getGlobalVertexDeclaration(std::string name);
   private:
@@ -145,7 +145,7 @@ class GLESEngine
     typedef std::unordered_map<GPUEngineStatisticsInfo, int> RenderStatisticsInfoMapType;
     RenderStatisticsInfoMapType m_GLStatisticsInfo;
     std::unordered_map<int, GLBuffer *> _GLBindPointerUBOMap;
-    Persistent m_pJSTextureContext;
+    jsbind::Persistent m_pJSTextureContext;
     static std::unordered_map<std::string, RTShaderDefine> _defineMap;
     static int32_t _defineCounter;
     static std::vector<std::unordered_map<int32_t, std::string>> _maskMap;

@@ -8,7 +8,7 @@ namespace laya
         m_iPos = __IsLocal;
         m_bEnableCache = true;
         UpdateTime();
-        AdjustAmountOfExternalAllocatedMemory(301);
+        jsbind::AdjustAmountOfExternalAllocatedMemory(301);
         JCMemorySurvey::GetInstance()->newClass("JsFile", 301, this);
     }
     JsFile::JsFile(const char *p_pszName)
@@ -18,7 +18,7 @@ namespace laya
         m_bEnableCache = true;
         UpdateTime();
         SetName(p_pszName);
-        AdjustAmountOfExternalAllocatedMemory(301);
+        jsbind::AdjustAmountOfExternalAllocatedMemory(301);
         JCMemorySurvey::GetInstance()->newClass("JsFile", 301, this);
     }
     JsFile::JsFile(const char *p_pszName, const char *p_pszType)
@@ -29,7 +29,7 @@ namespace laya
         UpdateTime();
         SetName(p_pszName);
         SetType(p_pszType);
-        AdjustAmountOfExternalAllocatedMemory(301);
+        jsbind::AdjustAmountOfExternalAllocatedMemory(301);
         JCMemorySurvey::GetInstance()->newClass("JsFile", 301, this);
     }
     JsFile::~JsFile()
@@ -50,9 +50,9 @@ namespace laya
         lastModifiedDate = p_tm;
         lastModifiedDate *= 1000;
     }
-    JsValue JsFile::GetlastModifiedDate()
+    jsvm_value JsFile::GetlastModifiedDate()
     {
-        return (Converter<int64_t>::ToJsDate(lastModifiedDate));
+        return jsbind::Date::Make(lastModifiedDate).getHandle();
     }
     const char *JsFile::GetName()
     {
@@ -117,16 +117,17 @@ namespace laya
             }
         }
     }
-    void JsFile::exportJS(Context& context)
+    void JsFile::exportJS(jsbind::Object& context)
     {
-        class_<JsBlob> class_binding_blob;
+        jsbind::class_<JsBlob> class_binding_blob;
         class_binding_blob.property("size", &JsBlob::GetSize);
         class_binding_blob.property("type", &JsBlob::GetType);
         class_binding_blob.function("close", &JsBlob::close);
         class_binding_blob.function("slice", &JsBlob::slice);
         class_binding_blob.constructor<>();
+        context.class_("conchBlob", class_binding_blob);
 
-        class_<JsFile> class_binding_file;
+        jsbind::class_<JsFile> class_binding_file;
         class_binding_file.inherit<JsBlob>();
         class_binding_file.property("lastModifiedDate", &JsFile::GetlastModifiedDate);
         class_binding_file.property("name", &JsFile::GetName);

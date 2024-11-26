@@ -2,7 +2,7 @@
 #define __JSArrayBufferRef_H__
 
 #include <stdio.h>
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 
 
 namespace laya 
@@ -11,7 +11,7 @@ namespace laya
     {
     public:
 
-	    static void exportJS(Context& context);
+	    static void exportJS(jsbind::Object& context);
 
         JSArrayBufferRef();
 

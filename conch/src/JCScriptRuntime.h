@@ -9,13 +9,13 @@
 #ifndef __JCScriptRuntime_H__
 #define __JCScriptRuntime_H__
 
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include <utils/JCLayaUrl.h>
 #include <manager/JCArrayBufferManager.h>
 #include <mutex>
 #include <utils/JCCommonMethod.h>
 #include <vector>
-
+#include "jsvm/ScriptThread.h"
 #if defined(OS_ANDROID)
     #include <Bindings/JSAndroidEditBox.h>
 #elif defined(OS_OHOS)
@@ -40,7 +40,6 @@ namespace laya
     class DebuggerAgent;
 #endif
     class JCConch;
-	class JSThreadInterface;
     class JSLayaGL;
     class JCFileResManager;
     class JCFileSource;
@@ -111,37 +110,39 @@ namespace laya
 
 		void onFocus();
 
-    public:
-
         void postToJS(const std::function<void(void)>& func);
 
         //void postToDownload(const std::function<void(void)>& funcf);
 
         //void postToDecoder(const std::function<void(void)>& func);
+
+        bool isInJSThread();
+
     public:
         JCConch*                            m_pConch;
-        JSMulThread*                        m_pScriptThread;
+        std::shared_ptr<jsvm::ScriptThread>       m_pScriptThread;
         JCCommandEncoderBuffer*				m_pRenderCmd;                   
 		bool                                m_bHasJSThread;	                //js线程是否在工作
-        Persistent                         m_pJSOnFrameFunction;
-        Persistent                         m_pJSOnDrawFunction;            //垂直回扫同步
-        Persistent                         m_pJSOnResizeFunction;
-        Persistent                         m_pJSOnBlurFunction;
-        Persistent                         m_pJSOnFocusFunction;
-        Persistent                         m_pJSMouseEvtFunction;          //鼠标事件回调
-        Persistent                         m_pJSKeyEvtFunction;
-        Persistent                         m_pJSTouchEvtFunction;
-        Persistent                         m_pJSDeviceMotionEvtFunction;   //重力感应
-        Persistent                         m_pJSOnceOtherEvtFuction;       //注册一次的事件 如截屏
-        Persistent					        m_pJSNetworkEvtFunction;        //网络事件的监听
-        Persistent                         m_pJSOnUnhandledRejectionFunction;
-        Persistent                         m_bJSBulletGetWorldTransformHandle;
-        Persistent                         m_bJSBulletSetWorldTransformHandle;
-		Persistent                         m_bJSBulletDrawLineHandle;
-		Persistent                         m_bJSBulletClearLineHandle;
-        Persistent                         m_pJSZipPackage;
-		Persistent                         m_pJSOnScreenOrientationChanged;
-		Persistent                         m_pJSSetGlobalRepaintFunction;
+        jsbind::Persistent                         m_pJSOnFrameFunction;
+        jsbind::Persistent                         m_pJSOnDrawFunction;            //垂直回扫同步
+        jsbind::Persistent                         m_pJSOnResizeFunction;
+        jsbind::Persistent                         m_pJSOnBlurFunction;
+        jsbind::Persistent                         m_pJSOnFocusFunction;
+        jsbind::Persistent                         m_pJSMouseEvtFunction;          //鼠标事件回调
+        jsbind::Persistent                         m_pJSKeyEvtFunction;
+        jsbind::Persistent                         m_pJSTouchEvtFunction;
+        jsbind::Persistent                         m_pJSDeviceMotionEvtFunction;   //重力感应
+        jsbind::Persistent                         m_pJSOnceOtherEvtFuction;       //注册一次的事件 如截屏
+        jsbind::Persistent					        m_pJSNetworkEvtFunction;        //网络事件的监听
+        jsbind::Persistent                         m_pJSOnUnhandledRejectionFunction;
+        jsbind::Persistent                         m_bJSBulletGetWorldTransformHandle;
+        jsbind::Persistent                         m_bJSBulletSetWorldTransformHandle;
+        jsbind::Persistent                         m_bJSBulletDrawLineHandle;
+        jsbind::Persistent                         m_bJSBulletClearLineHandle;
+        jsbind::Persistent                         m_pJSZipPackage;
+        jsbind::Persistent                         m_pJSOnScreenOrientationChanged;
+        jsbind::Persistent                         m_pJSSetGlobalRepaintFunction;
+        jsbind::Persistent                         m_pJSOnErrorFunction;
         std::string                         m_strStartJS;
         JCFileResManager*                   m_pFileResMgr;                  //外部设置的。本地不允许删除
         JCFileSource*                       m_pAssetsRes;	                //外部设置的。本地不允许删除
@@ -163,9 +164,6 @@ namespace laya
         JSOHOSEditBox*                      m_pCurEditBox;
 #elif defined(OS_IOS)
         JSIOSEditBox *                      m_pCurEditBox;
-#endif
-#ifdef JS_V8
-        DebuggerAgent*				        m_pDbgAgent;
 #endif
     };
 }

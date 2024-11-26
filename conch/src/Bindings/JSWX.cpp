@@ -6,13 +6,14 @@
 #include "JCScriptRuntime.h"
 namespace laya
 {
-std::string JSWX::createBufferURL(JSValueAsParam param)
+std::string JSWX::createBufferURL(jsbind::ArrayBuffer arrayBuffer)
 {
-    char *pArrayBuffer = NULL;
-    int nArrayBufferSize = 0;
-    bool bIsArrayBuffer = extractJSAB(param, pArrayBuffer, nArrayBufferSize);
+   
+    bool bIsArrayBuffer = arrayBuffer.isValid();
     if (bIsArrayBuffer)
-    {
+    { 
+        char *pArrayBuffer = reinterpret_cast<char*>(arrayBuffer.getData());
+        int nArrayBufferSize = arrayBuffer.getByteLength();
         JCMD5 md5;
         md5.GenerateMD5((unsigned char *)pArrayBuffer, nArrayBufferSize);
         std::string url = "wxblob://" + md5.ToString();
@@ -28,11 +29,11 @@ void JSWX::revokeBufferURL(const char *url)
     pfsMgr->revokeBufferURL(url);
 }
 
-void JSWX::exportJS(Context &context)
+void JSWX::exportJS(jsbind::Object &context)
 {
-    class_<JSWX> class_binding;
+    jsbind::global_class_<JSWX> class_binding;
     class_binding.class_function("createBufferURL", &JSWX::createBufferURL);
     class_binding.class_function("revokeBufferURL", &JSWX::revokeBufferURL);
-    context.class_("wx", class_binding);
+    context.global_class_("wx", class_binding);
 }
 } // namespace laya

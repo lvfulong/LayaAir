@@ -5,34 +5,34 @@
 #include <stdio.h>
 #include <string>
 #include <map>
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 
 namespace laya
 {
     class JSPromiseRejectionEvent
     {
     public:
-	    static void exportJS(Context& context);
+	    static void exportJS(jsbind::Object& context);
 
         JSPromiseRejectionEvent();
 
 	    ~JSPromiseRejectionEvent();
 
-		void setReason(JSValueAsParam pObj);
+		void setReason(jsvm_value pObj);
 		
-		JsValue getReason();
+		jsvm_value getReason();
 		
-		void setPromise(JSValueAsParam pObj);
+		void setPromise(jsvm_value pObj);
 		
-		JsValue getPromise();
+		jsvm_value getPromise();
 		
 		const char* getType();
 		
 		void setType(const char* strType);
     public:
 		std::string m_strType;
-		Persistent m_pReason;
-		Persistent m_pPromise;
+		jsbind::Persistent m_pReason;
+		jsbind::Persistent m_pPromise;
     };
 }
 #endif

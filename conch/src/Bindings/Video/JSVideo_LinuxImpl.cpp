@@ -35,7 +35,7 @@ namespace laya
 	{
 		Init();
 
-		AdjustAmountOfExternalAllocatedMemory(sizeof(JSVideo));
+		jsbind::AdjustAmountOfExternalAllocatedMemoryr(sizeof(JSVideo));
 		JCMemorySurvey::GetInstance()->newClass("JSVideo", sizeof(JSVideo), this);
 
 		m_pVideoHandler = new LinuxVideoHandler;

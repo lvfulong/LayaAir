@@ -9,6 +9,7 @@
 #include <Bindings/JSImage.h>
 #include <assert.h>
 #include <utils/Preprocessor.h>
+#include <utils/Log.h>
 
 namespace laya
 {
@@ -844,7 +845,7 @@ void GLTextureContext::setTextureDDSData(GLESInternalTex *texture, const DDSText
     int width = texture->m_width;
     int height = texture->m_height;
 
-    char *source = ddsInfo.source;
+    const char *source = ddsInfo.source;
     int dataOffset = ddsInfo.dataOffset;
     int bpp = ddsInfo.bpp;
     int blocksBytes = ddsInfo.blockBytes;
@@ -912,7 +913,7 @@ void GLTextureContext::setTextureKTXData(GLESInternalTex *texture, const KTXText
     int format = texture->m_format;
     int type = texture->m_type;
 
-    char *source = ktxInfo.source;
+    const char *source = ktxInfo.source;
     bool compressd = ktxInfo.compress;
     bool fourSize = width % 4 == 0 && height % 4 == 0;
 
@@ -1198,7 +1199,7 @@ void GLTextureContext::setCubeDDSData(GLESInternalTex *texture, const DDSTexture
     int width = texture->m_width;
     int height = texture->m_height;
 
-    char *source = ddsInfo.source;
+    const char *source = ddsInfo.source;
     int dataOffset = ddsInfo.dataOffset;
     int bpp = ddsInfo.bpp;
     int blockBytes = ddsInfo.blockBytes;
@@ -1289,7 +1290,7 @@ void GLTextureContext::setCubeKTXData(GLESInternalTex *texture, const KTXTexture
     int mipmapCount = texture->m_mipmapCount;
     int width = texture->m_width;
     int height = texture->m_height;
-    char *source = ktxInfo.source;
+    const char *source = ktxInfo.source;
 
     bool fourSize = width % 4 == 0 && height % 4 == 0;
     if (!fourSize)
@@ -1767,17 +1768,14 @@ void GLTextureContext::getRenderTextureData(GLESInternalRT *internalTex, int x, 
     glBindFramebuffer(GL_FRAMEBUFFER, g_nMainFrameBuffer);
     return;
 }
-void GLTextureContext::setTexturePixelsDataJS(GLESInternalTex *texture, JSValueAsParam pixels, bool premultiplyAlpha,
+void GLTextureContext::setTexturePixelsDataJS(GLESInternalTex *texture, jsbind::ArrayBuffer arrayBuffer, bool premultiplyAlpha,
                                               bool invertY)
 {
     if (texture)
     {
-        char *pArrayBufferPtr = NULL;
-        int nABLen = 0;
-        bool bIsArrayBuffer = extractJSAB(pixels, pArrayBufferPtr, nABLen);
-        if (bIsArrayBuffer)
+        if (arrayBuffer.isValid())
         {
-            this->setTexturePixelsData(texture, pArrayBufferPtr, nABLen, premultiplyAlpha, invertY);
+            this->setTexturePixelsData(texture, reinterpret_cast<char*>(arrayBuffer.getData()), arrayBuffer.getByteLength(), premultiplyAlpha, invertY);
         }
         else
         {
@@ -1785,48 +1783,33 @@ void GLTextureContext::setTexturePixelsDataJS(GLESInternalTex *texture, JSValueA
         }
     }
 }
-void GLTextureContext::setTextureSubPixelsDataJS(GLESInternalTex *texture, JSValueAsParam source, int mipmapLevel,
+void GLTextureContext::setTextureSubPixelsDataJS(GLESInternalTex *texture, jsbind::ArrayBuffer source, int mipmapLevel,
                                                  bool generateMipmap, int xOffset, int yOffset, int width, int height,
                                                  bool premultiplyAlpha, bool invertY)
 {
-    char *pArrayBufferPtr = NULL;
-    int nABLen = 0;
-    bool bIsArrayBuffer = extractJSAB(source, pArrayBufferPtr, nABLen);
-    if (bIsArrayBuffer)
-    {
-        this->setTextureSubPixelsData(texture, pArrayBufferPtr, mipmapLevel, generateMipmap, xOffset, yOffset, width,
+    DEBUG_CHECK(source.isValid());
+    this->setTextureSubPixelsData(texture, reinterpret_cast<char*>(source.getData()), mipmapLevel, generateMipmap, xOffset, yOffset, width,
                                       height, premultiplyAlpha, invertY);
-    }
 }
-void GLTextureContext::setCubePixelsDataJS(GLESInternalTex *texture, JSValueAsParam source, bool premultiplyAlpha,
+void GLTextureContext::setCubePixelsDataJS(GLESInternalTex *texture, std::vector<jsbind::ArrayBuffer> source, bool premultiplyAlpha,
                                            bool invertY)
 {
-    std::vector<JsValue> vecSources;
-    __JsArray<JsValue>::FromJsArray(source, vecSources);
-
     std::vector<char *> vecDatas;
-    for (int i = 0, size = vecSources.size(); i < size; i++)
+    for (int i = 0, size = source.size(); i < size; i++)
     {
-        char *pArrayBufferPtr = NULL;
-        int nABLen = 0;
-        bool bIsArrayBuffer = extractJSAB(vecSources[i], pArrayBufferPtr, nABLen);
+        char *pArrayBufferPtr = reinterpret_cast<char*>(source[i].getData());
         vecDatas.push_back(pArrayBufferPtr);
     }
     this->setCubePixelsData(texture, vecDatas, premultiplyAlpha, invertY);
 }
-void GLTextureContext::setCubeSubPixelDataJS(GLESInternalTex *texture, JSValueAsParam source, int mipmapLevel,
+void GLTextureContext::setCubeSubPixelDataJS(GLESInternalTex *texture, std::vector<jsbind::ArrayBuffer> source, int mipmapLevel,
                                              bool generateMipmap, int xOffset, int yOffset, int width, int height,
                                              bool premultiplyAlpha, bool invertY)
 {
-    std::vector<JsValue> vecSources;
-    __JsArray<JsValue>::FromJsArray(source, vecSources);
-
     std::vector<char *> vecDatas;
-    for (int i = 0, size = vecSources.size(); i < size; i++)
+    for (int i = 0, size = source.size(); i < size; i++)
     {
-        char *pArrayBufferPtr = NULL;
-        int nABLen = 0;
-        bool bIsArrayBuffer = extractJSAB(vecSources[i], pArrayBufferPtr, nABLen);
+        char *pArrayBufferPtr = reinterpret_cast<char*>(source[i].getData());
         vecDatas.push_back(pArrayBufferPtr);
 
     }

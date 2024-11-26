@@ -1,5 +1,5 @@
 #include "JSCanvasRenderingContext2D.h"
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include "2D/CanvasRenderingContext2D.h"
 #include <utils/JCMemorySurvey.h>
 #include <utils/Log.h>
@@ -13,12 +13,12 @@ namespace laya
 JSCanvasRenderingContext2D::JSCanvasRenderingContext2D(int width, int height)
 {
     m_context = CanvasRenderingContext2D::create(width, height);
-    AdjustAmountOfExternalAllocatedMemory(4);
+    jsbind::AdjustAmountOfExternalAllocatedMemory(4);
     JCMemorySurvey::GetInstance()->newClass("conchCanvasRenderingContext2D", 4, this);
 }
 JSCanvasRenderingContext2D::JSCanvasRenderingContext2D()
 {
-    AdjustAmountOfExternalAllocatedMemory(4);
+    jsbind::AdjustAmountOfExternalAllocatedMemory(4);
     JCMemorySurvey::GetInstance()->newClass("conchCanvasRenderingContext2D", 4, this);
 }
 JSCanvasRenderingContext2D::~JSCanvasRenderingContext2D()
@@ -35,11 +35,11 @@ void JSCanvasRenderingContext2D::strokeText(const char *text, double x, double y
 {
     m_context->strokeText(text, x, y, maxWidth);
 }
-JsValue JSCanvasRenderingContext2D::measureText(const std::string &text)
+jsvm_value JSCanvasRenderingContext2D::measureText(const std::string &text)
 {
     TextMetrics metrics = m_context->measureText(text);
     TextMetrics *copy = new TextMetrics(metrics);
-    return Converter<TextMetrics *>::ToJs(copy);
+    return jsbind::Make<TextMetrics *>(copy);
 }
 int JSCanvasRenderingContext2D::getID()
 {
@@ -57,11 +57,11 @@ void JSCanvasRenderingContext2D::restore()
 {
     m_context->restore();
 }
-JsValue JSCanvasRenderingContext2D::getImageData(double x, double y, double width, double height)
+jsvm_value JSCanvasRenderingContext2D::getImageData(double x, double y, double width, double height)
 {
     ImageData data = m_context->getImageData(x, y, width, height);
     ImageData *copy = new ImageData(std::move(data));
-    return Converter<ImageData *>::ToJs(copy);
+    return jsbind::Make<ImageData*>(copy);
 }
 void JSCanvasRenderingContext2D::setTransform(double a, double b, double c, double d, double e, double f)
 {
@@ -128,26 +128,25 @@ const char *JSCanvasRenderingContext2D::getLineJoin()
 {
     return m_context->getLineJoin();
 }
-void JSCanvasRenderingContext2D::exportJS(Context &context)
+void JSCanvasRenderingContext2D::exportJS(jsbind::Object &context)
 {
-    class_<ImageData> class_binding_image_data;
+    jsbind::class_<ImageData> class_binding_image_data;
     class_binding_image_data.constructor<>();
     class_binding_image_data.property_field("width", &ImageData::m_width);
     class_binding_image_data.property_field("height", &ImageData::m_height);
     class_binding_image_data.property_optional_override(
-        "data", optional_override([](ImageData &imageData) {
-            JsValue ab = createJSAB((char *)imageData.m_data.data(), imageData.m_data.size());
-
-            return createUint8ClampedArray(ab, 0, imageData.m_data.size());
+        "data", jsbind::optional_override([](ImageData &imageData) {
+            auto ab = jsbind::ArrayBuffer::MakeTypedArray(imageData.m_data.data(), imageData.m_data.size(), 0, jsbind::ArrayBuffer::UINT8_CLAMPED_ARRAY);
+            return ab.getHandle();
         }));
     context.class_("ImageData", class_binding_image_data);
 
-    class_<TextMetrics> class_binding_text_metrics;
+    jsbind::class_<TextMetrics> class_binding_text_metrics;
     class_binding_text_metrics.constructor<>();
     class_binding_text_metrics.property_field("width", &TextMetrics::m_width);
     context.class_("TextMetrics", class_binding_text_metrics);
 
-    class_<JSCanvasRenderingContext2D> class_binding;
+    jsbind::class_<JSCanvasRenderingContext2D> class_binding;
     class_binding.constructor<>();
     class_binding.constructor<int, int>();
     class_binding.property("fillStyle", &JSCanvasRenderingContext2D::getFillStyle,

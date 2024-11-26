@@ -31,6 +31,15 @@ list(APPEND CONCH_INCLUDE
 	${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
+if(USE_PHYSX)
+list(APPEND CONCH_SRC
+src/Bindings/PhysX/LayaPhysXExport.h
+src/Bindings/PhysX/LayaPhysXExport.cpp
+src/Bindings/PhysX/PxWebBindings.cpp
+src/Bindings/PhysX/emscripten.h
+src/Bindings/PhysX/emscripten.cpp)
+endif()
+
 if(CONCH_USE_OLD_CURL_DOWNLOAD)
 	list(APPEND CONCH_SRC
 
@@ -43,8 +52,19 @@ if(CONCH_USE_JPEG_XL)
 	src/imageLib/JPEGXLImageDecoder.h
 	src/imageLib/JPEGXLImageDecoder.cpp)
 endif()
-list(APPEND CONCH_SRC
+if(CONCH_USE_DCC)
+	list(APPEND CONCH_SRC
 
+	src/downloadCache/DCC1/JCFileTable.cpp
+	src/downloadCache/DCC1/JCServerFileCache.h
+	src/downloadCache/DCC1/JCServerFileCache.cpp
+	src/downloadCache/DCC1/JCFileResDCC.cpp
+	src/downloadCache/DCC2/JCFileResDCC2.cpp
+	src/downloadCache/DCC2/JSDownloader.cpp
+	)
+endif()
+
+list(APPEND CONCH_SRC
 	# 分开数据库类core/Math 和相关方法类core/Util
 	src/core/math/Matrix3x3.h
 	src/core/math/Matrix3x3.cpp
@@ -227,13 +247,6 @@ list(APPEND CONCH_SRC
 
 	src/Audio/JCAudioManager.cpp
 	src/Audio/JCAudioManager.h
-	src/downloadCache/DCC1/JCFileTable.cpp
-	src/downloadCache/DCC1/JCServerFileCache.h
-	src/downloadCache/DCC1/JCServerFileCache.cpp
-	src/downloadCache/DCC1/JCFileResDCC.cpp
-	src/downloadCache/DCC2/JCFileResDCC2.cpp
-	src/downloadCache/DCC2/JSDownloader.cpp
-	src/downloadCache/DCC2/DirectDownloader.cpp
 	src/downloadMgr/JCDownloadMgr.h
 	src/downloadMgr/JCDownloadMgr.cpp
 	src/downloadMgr/JCHttpHeader.h
@@ -344,8 +357,6 @@ list(APPEND CONCH_SRC
 	src/Bindings/JSPromiseRejectionEvent.h
 	src/Bindings/JSPromiseRejectionEvent.cpp
 	src/Bindings/JSCanvasRenderingContext2D.cpp
-	src/Bindings/JSTextDecoder.h
-	src/Bindings/JSTextDecoder.cpp
 	src/Extention/LayaExtWind.cpp
 	
 	src/OpenAL/
@@ -460,11 +471,6 @@ if(OS_IOS)
 		src/backend/src/OpenGLBackendiOS.mm
 		src/network/src/HttpClientiOS.mm
 		src/2D/src/CanvasRenderingContext2DCG.mm
-		src/Bindings/PhysX/LayaPhysXExport.h
-		src/Bindings/PhysX/LayaPhysXExport.cpp
-		src/Bindings/PhysX/PxWebBindings.cpp
-		src/Bindings/PhysX/emscripten.h
-		src/Bindings/PhysX/emscripten.cpp
 		src/resource/Audio/JCMp3Parser.h
 		src/resource/Audio/JCMp3Parser.cpp
 		src/resource/Audio/JCAudioWavPlayer.h
@@ -493,11 +499,6 @@ elseif(OS_ANDROID)
 		src/Bindings/JSAndroidEditBox.cpp
 		src/backend/src/OpenGLBackendAndroidEGL.cpp
 		src/2D/src/CanvasRenderingContext2DAndroid.cpp
-		src/Bindings/PhysX/LayaPhysXExport.h
-		src/Bindings/PhysX/LayaPhysXExport.cpp
-		src/Bindings/PhysX/PxWebBindings.cpp
-		src/Bindings/PhysX/emscripten.h
-		src/Bindings/PhysX/emscripten.cpp
 		src/resource/Audio/JCMp3Parser.h
 		src/resource/Audio/JCMp3Parser.cpp
 		src/resource/Audio/JCAudioWavPlayer.h
@@ -610,7 +611,22 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 set(LINK_LIBS)
+if(USE_PHYSX)
+	set(LINK_LIBS
+	PhysXVehicle
+	PhysXVehicle2
+	PhysXCharacterKinematic
+	PhysXExtensions
+	PhysX
+
+	# PhysXPvdSDK
+	PhysXCooking
+	PhysXCommon
+	PhysXFoundation
+	)
+endif()
 if(CONCH_USE_CURL_DOWNLOAD)
+
 	list(APPEND LINK_LIBS
 		network
 	)
@@ -630,7 +646,7 @@ if(OS_ANDROID)
 	# for openal
 	target_compile_definitions(${PROJECT_NAME} PRIVATE AL_ALEXT_PROTOTYPES)
 	target_link_libraries(${PROJECT_NAME}
-		${LINK_LIBS}
+	${LINK_LIBS}
 		android
 		log
 		m
@@ -642,7 +658,8 @@ if(OS_ANDROID)
 		GLESv3
 		OpenSLES
 		utils
-		binder
+		jsbind
+		jsvm
 		zlib
 		mpg123
 		zip
@@ -657,23 +674,14 @@ if(OS_ANDROID)
 		freetype
 
 		# curl
-		v8_monolith
-		v8inspector
+		#v8_monolith
+		#v8inspector
 
 		# BulletSoftBody
 		BulletDynamics
 		BulletCollision
 		LinearMath
-		PhysXVehicle
-		PhysXVehicle2
-		PhysXCharacterKinematic
-		PhysXExtensions
-		PhysX
 
-		# PhysXPvdSDK
-		PhysXCooking
-		PhysXCommon
-		PhysXFoundation
 		ssl
 		crypto
 	)
@@ -704,8 +712,10 @@ elseif(OS_IOS)
 		"-framework CoreImage"
 		"-framework QuartzCore"
 		"-framework CoreHaptics"
+		${LINK_LIBS}
 		utils
-		binder
+		jsbind
+		jsvm
 		zlib
 		mpg123
 		zip
@@ -723,22 +733,11 @@ elseif(OS_IOS)
 		freetype
 
 		# curl
-		v8_monolith
+		#v8_monolith
 		BulletDynamics
 		BulletCollision
 		LinearMath
 
-		# BulletSoftBody
-		PhysX
-		PhysXCharacterKinematic
-		PhysXCommon
-		PhysXCooking
-		PhysXExtensions
-		PhysXFoundation
-
-		# PhysXPvdSDK
-		PhysXVehicle
-		PhysXVehicle2
 	)
 	set_property(TARGET ${PROJECT_NAME} PROPERTY XCODE_ATTRIBUTE_ENABLE_BITCODE "NO")
 elseif(OS_WINDOWS)
@@ -757,7 +756,8 @@ elseif(OS_WINDOWS)
 		shlwapi.lib
 		Iphlpapi.lib
 		utils
-		binder
+		jsbind
+		jsvm
 		zlib
 		mpg123
 		zip
@@ -772,9 +772,9 @@ elseif(OS_WINDOWS)
 		vorbis
 		ogg
 		freetype
-		v8
-		v8_libbase
-		v8_libplatform
+		#v8
+		#v8_libbase
+		#v8_libplatform
 		egl
 		gles
 		bulletcollision
@@ -788,7 +788,14 @@ elseif(OS_WINDOWS)
 		curl
 	)
 elseif(OS_OHOS)
+if(USE_JS_V8)
+	#list(APPEND LINK_LIBS v8_monolith)
+endif()
+if(USE_JS_OHOS_JSVM)
+	#list(APPEND LINK_LIBS)
+endif()
 	target_link_libraries(${PROJECT_NAME} PUBLIC
+	${LINK_LIBS}
 		${EGL-lib}
 		${GLESv3-lib}
 	  	${hilog-lib} 
@@ -799,9 +806,9 @@ elseif(OS_OHOS)
 		${rawfile-lib}
     	libohaudio.so
 		libavplayer.so
-		v8_monolith
 		utils
-		binder
+		jsbind
+		jsvm
 		curl
 		jpeg
 		jpeg-turbo

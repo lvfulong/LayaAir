@@ -1,5 +1,6 @@
 #include "JSZip.h"
 #include <utils/Log.h>
+#include <utils/JCCommonMethod.h>
 #include <zip.h>
 
 namespace laya 
@@ -20,14 +21,14 @@ namespace laya
 		m_zip.close();
 		return openZip(p_pSrc);
 	}
-	JsValue JSZip::readFileExp(int idx)
+	jsvm_value JSZip::readFileExp(int idx)
     {
 		return readFile(idx);
 	}
-	JsValue JSZip::readFile(int idx) 
+	jsvm_value JSZip::readFile(int idx) 
     {
 		if (!m_zip.m_pZip)
-			return JSP_TO_JS_NULL;
+			return jsbind::MakeNull();
 		zip* pZip = (zip*)m_zip.m_pZip;
 		struct zip_stat sb;
 		zip_stat_init(&sb);
@@ -47,34 +48,34 @@ namespace laya
 				char* pBuff = new char[(unsigned int)sb.size];
 				zip_fread(pzf, pBuff, sb.size);
 				zip_fclose(pzf);
-				JsValue ab = createJSAB(pBuff,(int)sb.size);
+				jsvm_value ab = jsbind::ArrayBuffer::MakeArrayBuffer((uint8_t*)pBuff,(int)sb.size).getHandle();
 				delete [] pBuff;
 				//return pAB;
 				return ab;
 			}
 		}
-		return JSP_TO_JS_NULL;
+		return jsbind::MakeNull();
 	}
-    JsValue JSZip::readFileByName(const char* pName)
+    jsvm_value JSZip::readFileByName(const char* pName)
     {
         if (!pName)
-            return JSP_TO_JS_NULL;
+            return jsbind::MakeNull();
 
         if (!m_zip.m_pZip)
-            return JSP_TO_JS_NULL;
+            return jsbind::MakeNull();
 
         zip* pZip = (zip*)m_zip.m_pZip;
         zip_int64_t idx = zip_name_locate(pZip, pName, 0);
 
         if (idx == -1)
-            return JSP_TO_JS_NULL;
+            return jsbind::MakeNull();
 
         return readFile(idx);
     }
-    JsValue JSZip::readFileAsText(int idx)
+    jsvm_value JSZip::readFileAsText(int idx)
     {
         if (!m_zip.m_pZip)
-            return JSP_TO_JS_NULL;
+            return jsbind::MakeNull();
         zip* pZip = (zip*)m_zip.m_pZip;
         struct zip_stat sb;
         zip_stat_init(&sb);
@@ -101,28 +102,28 @@ namespace laya
                     LOGE("error JSZip readFileAsText %s is not utf8 format", pName);
                 }
 #endif
-                return (JSP_TO_JS_STR(pBuff.get()));
+                jsbind::Make<std::string>(pBuff.get());
             }
         }
-        return JSP_TO_JS_NULL;
+        return jsbind::MakeNull();
     }
-    JsValue JSZip::readFileAsTextByName(const char* pName)
+    jsvm_value JSZip::readFileAsTextByName(const char* pName)
     {
         if (!pName)
-            return JSP_TO_JS_NULL;
+            return jsbind::MakeNull();
 
         if (!m_zip.m_pZip)
-            return JSP_TO_JS_NULL;
+            return jsbind::MakeNull();
 
         zip* pZip = (zip*)m_zip.m_pZip;
         zip_int64_t idx = zip_name_locate(pZip, pName, 0);
 
         if (idx == -1)
-            return JSP_TO_JS_NULL;
+            return jsbind::MakeNull();
 
         return readFileAsText(idx);
     }
-	void JSZip::enumFiles( JSValueAsParam pObj)
+	void JSZip::enumFiles(jsbind::Local callback)
     {
 		if (!m_zip.m_pZip)
 			return;
@@ -138,8 +139,7 @@ namespace laya
 			else 
             {
 				bool bDir = sb.name[strlen(sb.name) - 1] == '/';
-                Local onEnumFiles(pObj);
-                onEnumFiles.call<void>(toLocal(this), i, sb.name, bDir, sb.size);
+                callback.call<void>(jsbind::toLocal(this), i, sb.name, bDir, sb.size);
 			}
 		}
 		//zip_close(pZip);
@@ -148,16 +148,12 @@ namespace laya
     {
 		m_zip.close();
 	}
-    bool JSZip::setBuffer(JSValueAsParam pArrayBuffer)
+    bool JSZip::setBuffer(jsbind::ArrayBuffer arrayBuffer)
     {
-        char* pArrayBufferPtr = NULL;
-        int nABLen = 0;
-        bool bIsArrayBuffer = extractJSAB(pArrayBuffer, pArrayBufferPtr, nABLen);
-        if (!bIsArrayBuffer)
-        {
-            LOGE("JSZip::setBuffer param is not an ArrayBuffer!");
-            return false;
-        }
+        DEBUG_CHECK(arrayBuffer.isValid());
+        char* pArrayBufferPtr = reinterpret_cast<char*>(arrayBuffer.getData());
+        int nABLen = arrayBuffer.getByteLength();
+
         if (nABLen <= 0)
         {
             return false;
@@ -193,9 +189,9 @@ namespace laya
     {
         return m_zip.exists(pName);
     }
-	void JSZip::exportJS(Context& context) 
+	void JSZip::exportJS(jsbind::Object& context) 
     {
-        class_<JSZip> class_binding;
+        jsbind::class_<JSZip> class_binding;
         class_binding.constructor<>();
 		class_binding.function("setSrc", &JSZip::setSrc);
 		class_binding.function("forEach", &JSZip::enumFiles);

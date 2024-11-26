@@ -5,14 +5,14 @@
 #include <stdio.h>
 #include <string>
 #include <map>
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 
 namespace laya
 {
     class JSShaderActiveInfo
     {
     public:
-	    static void exportJS(Context& context);
+	    static void exportJS(jsbind::Object& context);
 
         JSShaderActiveInfo();
 

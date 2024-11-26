@@ -2,7 +2,7 @@
 #include <JCConch.h>
 #include <utils/ColorParser.h>
 #include "JSAndroidEditBox.h"
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include "../../JCScriptRuntime.h"
 #include <utils/Log.h>
 
@@ -27,7 +27,7 @@ JSAndroidEditBox::JSAndroidEditBox()
 	m_nScaleY = 1;
 	m_bForbidEdit = false;
     m_CallbackRef.reset(new int(1));
-	AdjustAmountOfExternalAllocatedMemory( 256 );
+	jsbind::AdjustAmountOfExternalAllocatedMemory( 256 );
 	JCMemorySurvey::GetInstance()->newClass( "AndroidEditBox",256,this );
 }
 //------------------------------------------------------------------------------
@@ -36,11 +36,11 @@ JSAndroidEditBox::~JSAndroidEditBox()
     JCMemorySurvey::GetInstance()->releaseClass( "AndroidEditBox",this );
 }
 //------------------------------------------------------------------------------
-void JSAndroidEditBox::addEventListener(const char* p_sName, JSValueAsParam p_pFunction )
+void JSAndroidEditBox::addEventListener(const char* p_sName, jsvm_value p_pFunction )
 {
     if(strcmp( p_sName,"input" ) == 0)
     {
-        m_pJSFunctionOnInput.reset(p_pFunction);
+        m_pJSFunctionOnInput = jsbind::Persistent(p_pFunction);
     }
     else if(strcmp( p_sName,"keydown" ) == 0)
     {
@@ -312,7 +312,7 @@ void  JSAndroidEditBox::onInputCallJSFunction(std::weak_ptr<int> callbackref)
 {
     if( !callbackref.lock())
         return;
-    m_pJSFunctionOnInput.call<void>(toLocal(this));
+    m_pJSFunctionOnInput.call<void>(jsbind::toLocal(this));
 }
 //------------------------------------------------------------------------------
 void JSAndroidEditBox::onInput()
@@ -346,9 +346,9 @@ void JSAndroidEditBox::setConfirmType(const char* p_sType)
 	CToJavaBridge::JavaRet kRet;
 	CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setConfirmTypeSearch", bSearch, kRet);
 }
-void JSAndroidEditBox::exportJS(Context& context) 
+void JSAndroidEditBox::exportJS(jsbind::Object& context) 
 {
-	class_<JSAndroidEditBox> class_binding;
+	jsbind::class_<JSAndroidEditBox> class_binding;
 	class_binding.constructor<>();
     class_binding.property("left", &JSAndroidEditBox::get_Left, &JSAndroidEditBox::set_Left);
     class_binding.property("top", &JSAndroidEditBox::get_Top, &JSAndroidEditBox::set_Top);

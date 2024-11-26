@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <string>
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 
 namespace laya{
 
@@ -17,7 +17,7 @@ enum EditBoxType{
 class JSOHOSEditBox
 {
     public:
-       static void exportJS(Context& context);
+       static void exportJS(jsbind::Object& context);
         JSOHOSEditBox();
         ~JSOHOSEditBox();
     public:
@@ -63,7 +63,7 @@ class JSOHOSEditBox
         void setType(const char* p_sType);
         void setRegular(const char* p_sRegular);
         void setNumberOnly(bool p_bNumberOnly);
-        void addEventListener(const char* p_sName, JSValueAsParam p_pFunction);
+        void addEventListener(const char* p_sName, jsvm_value p_pFunction);
         void setMultiAble(bool p_bMultiAble);
         void onInputCallJSFunction(std::weak_ptr<int> callbackref);
         void onInput();
@@ -86,7 +86,7 @@ class JSOHOSEditBox
     private:
         int m_tag;
         std::shared_ptr<int> m_CallbackRef;
-        Persistent m_pJSFunctionOnInput;//JS的回调
+        jsbind::Persistent m_pJSFunctionOnInput;//JS的回调
 };
 }
 #endif //__JSOHOSEditBox_H__

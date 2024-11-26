@@ -2,7 +2,7 @@
 #define __RTShaderPass_H__
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderInstance.h"
 #include "render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h"
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include <string>
 #include <unordered_map>
 
@@ -16,14 +16,14 @@ class RTShaderPass
     struct CacheShaderItem
     {
         GLESShaderInstance *_glesShaderInstance;
-        Persistent _jsShaderInstance;
+        jsbind::Persistent _jsShaderInstance;
     };
     RTShaderPass();
     ~RTShaderPass();
-    void setCacheShader(RTDefineDatas *compileDefine, GLESShaderInstance *shader, Persistent jsShaderInstance);
-    void setCacheShaderJS(RTDefineDatas* compileDefine, GLESShaderInstance* shader, JSValueAsParam jsShaderInstanceWrapper);
+    void setCacheShader(RTDefineDatas *compileDefine, GLESShaderInstance *shader, jsbind::Persistent jsShaderInstance);
+    void setCacheShaderJS(RTDefineDatas* compileDefine, GLESShaderInstance* shader, jsvm_value jsShaderInstanceWrapper);
     RTShaderPass::CacheShaderItem *getCacheShader(RTDefineDatas *compileDefine);
-    JsValue getCacheShaderJS(RTDefineDatas *compileDefine);
+    jsvm_value getCacheShaderJS(RTDefineDatas *compileDefine);
     GLESShaderInstance *callCreateShaderInstanceFunction();
     void setRenderState(RenderState *value)
     {
@@ -41,7 +41,7 @@ class RTShaderPass
 
   public:
     // binds
-    void setCreateShaderInstanceFunction(JSValueAsParam value);
+    void setCreateShaderInstanceFunction(jsvm_value value);
     // void createShaderInstance(RTDefineDatas *compileDefine);
 
   private:
@@ -59,7 +59,7 @@ class RTShaderPass
   private:
     std::unordered_map<uint32_t, void *> _cacheSharders{};
     uint32_t _cacheShaderHierarchy = 1;
-    Persistent m_createShaderInstanceFunctionJS;
+    jsbind::Persistent m_createShaderInstanceFunctionJS;
 };
 } // namespace laya
 

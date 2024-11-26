@@ -5,14 +5,14 @@
 #include <stdio.h>
 #include <string>
 #include <map>
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 
 namespace laya
 {
     class JSLaunchOptions
     {
     public:
-	    static void exportJS(Context& context);
+	    static void exportJS(jsbind::Object& context);
 
 		JSLaunchOptions();
 
@@ -20,11 +20,11 @@ namespace laya
 
 		int getScene();
 
-		JsValue getQuery();
+		jsvm_value getQuery();
 
 		const char* getShareTicket();
 
-		JsValue getReferrerInfo();
+		jsvm_value getReferrerInfo();
     };
 }
 #endif

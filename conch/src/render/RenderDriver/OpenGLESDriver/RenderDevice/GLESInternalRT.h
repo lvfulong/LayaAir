@@ -8,7 +8,7 @@
 #include <unordered_map>
 #include <utils/Preprocessor.h>
 #include <vector>
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 namespace laya
 {
 class GLESInternalTex;
@@ -16,6 +16,7 @@ class GLESEngine;
 class GLESInternalRT : public GLObject
 {
   public:
+    GLESInternalRT();
     GLESInternalRT(RenderTargetFormat colorFormat, RenderTargetFormat depthStencilFormat, bool isCube,
                    bool generateMipmap, int samples);
     ~GLESInternalRT();
@@ -34,8 +35,8 @@ class GLESInternalRT : public GLObject
     {
         return -m_isCube;
     }
-    //JsValue getDepthTexture();
-   // JsValue getTextures();
+    //jsvm_value getDepthTexture();
+   // jsvm_value getTextures();
 private:
     void _changeTexMemory(int byteLength);
   public:

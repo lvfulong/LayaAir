@@ -13,7 +13,7 @@
 //    {
 //    }
 //
-//    void Fetch::fetch(const char *p_sUrl, const JSValueAsParam &p_jsInit, const JSValueAsParam &p_jsOnResolve, const JSValueAsParam &p_jsOnReject){
+//    void Fetch::fetch(const char *p_sUrl, const jsvm_value &p_jsInit, const jsvm_value &p_jsOnResolve, const jsvm_value &p_jsOnReject){
 //        // 解析init参数
 //        v8::Local<v8::Value> jsHeaders;
 //        v8::Local<v8::Value> jsBody;

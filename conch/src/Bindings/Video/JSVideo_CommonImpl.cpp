@@ -126,9 +126,9 @@ void JSVideo::RemoveEvent(const char *evtName)
     }
 }
 
-void JSVideo::_setDispatchEventFunc(JSValueAsParam emitFunc)
+void JSVideo::_setDispatchEventFunc(jsvm_value emitFunc)
 {
-    m_dispatchHandle.reset(emitFunc);
+    m_dispatchHandle = jsbind::Persistent(emitFunc);
 }
 
 void JSVideo::CallHandle(const char *evtName)
@@ -147,12 +147,12 @@ void JSVideo::CallHandle(const char *evtName)
 
 void JSVideo::DispatchEvtToJS(const std::string evtName)
 {
-    m_dispatchHandle.call<void>(toLocal(this), evtName.c_str());
+    m_dispatchHandle.call<void>(jsbind::toLocal(this), evtName.c_str());
 }
 
-void JSVideo::exportJS(Context &context)
+void JSVideo::exportJS(jsbind::Object &context)
 {
-    class_<JSVideo> class_binding;
+    jsbind::class_<JSVideo> class_binding;
     class_binding.constructor<>();
     class_binding.function("load", &JSVideo::Load);
     class_binding.function("play", &JSVideo::Play);

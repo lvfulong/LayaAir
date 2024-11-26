@@ -2,7 +2,7 @@
 #define __JSBounds_H__
 
 #include <stdio.h>
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include <core/math/BoundBox.h>
 #include <core/math/Bounds.h>
 
@@ -12,7 +12,7 @@ namespace laya
 	{
 	public:
 		JSBounds();
-		JSBounds(JSValueAsParam pSharedData);
+		JSBounds(jsbind::ArrayBuffer pSharedData);
 		~JSBounds();
 		void setMin();
 		const Vector3& getMin();
@@ -25,9 +25,9 @@ namespace laya
 		const Vector3& getCenter();
 		void setExtent();
 		void getExtent();
-		void _tranformJS(JSValueAsParam out);
+		void _tranformJS(jsvm_value out);
 		void _tranform(const Matrix4x4& matrix, JSBounds& out);
-		void cloneTo(JSValueAsParam destBounds);
+		void cloneTo(jsvm_value destBounds);
 		void getBoundBox();
 	public:
 		const BoundBox& _getBoundBox();

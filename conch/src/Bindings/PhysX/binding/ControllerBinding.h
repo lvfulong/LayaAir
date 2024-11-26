@@ -13,6 +13,7 @@
 using namespace physx;
 #ifdef CONCH
 using namespace laya;
+using namespace jsbind;
 #else
 using namespace emscripten;
 #endif
@@ -251,7 +252,7 @@ EMSCRIPTEN_BINDINGS(physx_controller) {
 }
 
 #ifdef CONCH
-namespace laya {
+namespace jsbind {
 #else
 namespace emscripten {
 #endif

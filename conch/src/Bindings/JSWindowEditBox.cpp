@@ -1,5 +1,5 @@
 ﻿#include "JSWindowEditBox.h"
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include <utils/Log.h>
 #include <utils/JCColor.h>
 #include <utils/JCMemorySurvey.h>
@@ -56,7 +56,7 @@ namespace laya
         m_nCaretStart = 0;
         m_nCaretEnd = 0;
         m_bForbidEdit = false;
-        //AdjustAmountOfExternalAllocatedMemory( 540 + 65536 );
+        //jsbind::AdjustAmountOfExternalAllocatedMemory( 540 + 65536 );
         JCMemorySurvey::GetInstance()->newClass("WindowEditBox", 540 + 65536, this);
 
         m_CallbackRef.reset(new int(1));
@@ -82,7 +82,7 @@ namespace laya
 
 		JCMemorySurvey::GetInstance()->releaseClass("WindowEditBox", this);
     }
-    void JSWindowEditBox::addEventListener(const char* p_sName, JSValueAsParam p_pFunction)
+    void JSWindowEditBox::addEventListener(const char* p_sName, jsvm_value p_pFunction)
     {
 
     }
@@ -340,14 +340,14 @@ namespace laya
     {
         if (!callbackref.lock())
             return;
-        m_pJSFunctionOnInput.call<void>(toLocal(this));
+        m_pJSFunctionOnInput.call<void>(jsbind::toLocal(this));
     }
 
     void JSWindowEditBox::onKeyDownCallJSFunction(int keyCode, std::weak_ptr<int> callbackref)
     {
         if (!callbackref.lock())
             return;
-        m_pJSFunctionOnKeydown.call<void>(toLocal(this), keyCode);
+        m_pJSFunctionOnKeydown.call<void>(jsbind::toLocal(this), keyCode);
     }
 
     void JSWindowEditBox::setSelectionRange(int start, int end)
@@ -515,9 +515,9 @@ namespace laya
     }
 
     //------------------------------------------------------------------------------
-    void JSWindowEditBox::exportJS(Context& context)
+    void JSWindowEditBox::exportJS(jsbind::Object& context)
     {
-        class_<JSWindowEditBox> class_binding;
+        jsbind::class_<JSWindowEditBox> class_binding;
         class_binding.constructor<>();
         class_binding.property("left", &JSWindowEditBox::get_Left, &JSWindowEditBox::set_Left);
         class_binding.property("top", &JSWindowEditBox::get_Top, &JSWindowEditBox::set_Top);

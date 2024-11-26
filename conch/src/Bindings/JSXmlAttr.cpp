@@ -3,7 +3,7 @@ namespace laya
 {
     JSXmlAttr::JSXmlAttr()
     {
-        AdjustAmountOfExternalAllocatedMemory(64000);
+        jsbind::AdjustAmountOfExternalAllocatedMemory(64000);
         JCMemorySurvey::GetInstance()->newClass("XmlAttr", 64000, this);
     }
     JSXmlAttr::~JSXmlAttr()
@@ -22,9 +22,9 @@ namespace laya
     {
         return m_nodeValue.c_str();
     }
-    void JSXmlAttr::exportJS(Context& context)
+    void JSXmlAttr::exportJS(jsbind::Object& context)
     {
-        class_<JSXmlAttr> class_binding;
+        jsbind::class_<JSXmlAttr> class_binding;
         class_binding.constructor<>();
         class_binding.property("nodeValue", &JSXmlAttr::getNodeValue);
         class_binding.property("nodeName", &JSXmlAttr::getNodeName);

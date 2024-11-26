@@ -1,5 +1,5 @@
 ﻿#include "JSAudio.h"
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include <utils/Log.h>
 #include <utils/JCCommonMethod.h>
 #include <downloadMgr/JCDownloadMgr.h>
@@ -33,7 +33,7 @@ namespace laya
 	    m_bDownloaded = false;
         m_audioRenderInfo = NULL;
 		m_fDuration = std::numeric_limits<double>::quiet_NaN();
-	    AdjustAmountOfExternalAllocatedMemory( 534 );
+	    jsbind::AdjustAmountOfExternalAllocatedMemory( 534 );
 	    JCMemorySurvey::GetInstance()->newClass( "audio",534,this );
 	    m_CallbackRef.reset(new int(1));
     }
@@ -45,19 +45,19 @@ namespace laya
 	    JCAudioManager::GetInstance()->delMp3Obj(this);
     }
     //------------------------------------------------------------------------------
-    void JSAudio::addEventListener( const char* p_sName, JSValueAsParam p_pFunction )
+    void JSAudio::addEventListener( const char* p_sName, jsvm_value p_pFunction )
     {
 	    if( strcmp( p_sName,"ended" ) == 0 )
 	    {
-		    m_pJSFunctionAudioEnd.reset(p_pFunction);
+		    m_pJSFunctionAudioEnd = jsbind::Persistent(p_pFunction);
 	    }
 	    else if(strcmp(p_sName,"canplaythrough")==0)
 	    {
-		    m_pJSFunctionCanPlay.reset(p_pFunction);
+		    m_pJSFunctionCanPlay = jsbind::Persistent(p_pFunction);
 	    }
 	    else if (strcmp(p_sName, "error") == 0)
 	    {
-		    m_pJSFunctionError.reset(p_pFunction);
+		    m_pJSFunctionError = jsbind::Persistent(p_pFunction);
 	    }
         else
         {
@@ -516,19 +516,19 @@ namespace laya
     void JSAudio::onPlayEndCallJSFunction( std::weak_ptr<int> callbackref)
     {
 	    if( !callbackref.lock())return;
-	    m_pJSFunctionAudioEnd.call<void>(toLocal(this));
+	    m_pJSFunctionAudioEnd.call<void>(jsbind::toLocal(this));
     }
     //------------------------------------------------------------------------------
     void JSAudio::onCanplayCallJSFunction( std::weak_ptr<int> callbackref)
     {
         if( !callbackref.lock())
             return;
-        m_pJSFunctionCanPlay.call<void>(toLocal(this));
+        m_pJSFunctionCanPlay.call<void>(jsbind::toLocal(this));
     }
     void JSAudio::onErrorCallJSFunction(int p_nErrorCode,std::weak_ptr<int> callbackref)
     {
 	    if (!callbackref.lock())return;
-	    m_pJSFunctionError.call<void>(toLocal(this), p_nErrorCode);
+	    m_pJSFunctionError.call<void>(jsbind::toLocal(this), p_nErrorCode);
     }
 	void JSAudio::setIsBackgroundMusic(bool p_bIsBackgroundMusic)
 	{
@@ -539,9 +539,9 @@ namespace laya
 	{
 		return m_bIsBackgroundMusic;
 	}
-    void JSAudio::exportJS(Context& context) 
+    void JSAudio::exportJS(jsbind::Object& context)
     {
-		class_<JSAudio> class_binding;
+		jsbind::class_<JSAudio> class_binding;
         class_binding.property("autoplay", &JSAudio::getAutoPlay, &JSAudio::setAutoPlay);
         class_binding.property("loop", &JSAudio::getLoop, &JSAudio::setLoop);
         class_binding.property("muted", &JSAudio::getMuted, &JSAudio::setMuted);

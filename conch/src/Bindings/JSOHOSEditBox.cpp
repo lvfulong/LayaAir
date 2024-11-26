@@ -1,6 +1,6 @@
 #include "JSOHOSEditBox.h"
 #include <aki/jsbind.h>
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include "utils/Log.h"
 #include "utils/JCColor.h"
 #include <JCConch.h>
@@ -24,7 +24,7 @@ namespace laya{
         m_nScaleY = 1;
         m_bForbidEdit = false;
         m_CallbackRef.reset(new int(1));
-        //AdjustAmountOfExternalAllocatedMemory(256);
+        //jsbind::AdjustAmountOfExternalAllocatedMemory(256);
         //JCMemorySurvey::GetInstance()->newClass("OHOSEditBox",256,this);
         aki::JSBind::GetJSFunction("EditBox.create")->Invoke<void>(m_tag);
     }
@@ -32,10 +32,10 @@ namespace laya{
         //JCMemorySurvey::GetInstance()->releaseClass("OHOSEditBox",this);
         aki::JSBind::GetJSFunction("EditBox.remove")->Invoke<void>(m_tag);
     }
-    void JSOHOSEditBox::addEventListener(const char* p_sName, JSValueAsParam p_pFunction){
+    void JSOHOSEditBox::addEventListener(const char* p_sName, jsvm_value p_pFunction){
         if(strcmp(p_sName,"input") == 0)
         {
-            m_pJSFunctionOnInput.reset(p_pFunction);
+            m_pJSFunctionOnInput = jsbind::Persistent(p_pFunction);
         } 
         else if (strcmp(p_sName, "keydown") == 0) {
             //m_pJSFunctionOnKeydown = p_pFunction;
@@ -208,7 +208,7 @@ namespace laya{
     void JSOHOSEditBox::onInputCallJSFunction(std::weak_ptr<int> callbackref){
         if(!callbackref.lock())
             return;
-        m_pJSFunctionOnInput.call<void>(toLocal(this));
+        m_pJSFunctionOnInput.call<void>(jsbind::toLocal(this));
     }
     void JSOHOSEditBox::onInput()
     {
@@ -226,9 +226,9 @@ namespace laya{
     bool JSOHOSEditBox::getForbidEdit(){
         return m_bForbidEdit;
     }
-    void JSOHOSEditBox::exportJS(Context& context)
+    void JSOHOSEditBox::exportJS(jsbind::Object& context)
     {
-        class_<JSOHOSEditBox> class_binding;
+        jsbind::class_<JSOHOSEditBox> class_binding;
 	    class_binding.constructor<>();
         class_binding.property("left", &JSOHOSEditBox::get_Left, &JSOHOSEditBox::set_Left);//2
         class_binding.property("top", &JSOHOSEditBox::get_Top, &JSOHOSEditBox::set_Top);//2

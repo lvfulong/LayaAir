@@ -39,15 +39,15 @@ namespace laya
             return JCConch::s_pConch->urlHistoryPush(strUrl);
         }
     }
-    void JSHistory::exportJS(Context& context)
+    void JSHistory::exportJS(jsbind::Object& context)
     {
-        class_<JSHistory> class_binding;
+        jsbind::global_class_<JSHistory> class_binding;
 		class_binding.class_function("back", &JSHistory::back);
 		class_binding.class_function("forward", &JSHistory::forward);
 		class_binding.class_function("go", &JSHistory::go);
 		class_binding.class_function("_push", &JSHistory::push);
          //class_property必须在下面，否则导不出class_function
         class_binding.class_property("length", &JSHistory::getLength);
-        context.class_("history", class_binding);
+        context.global_class_("history", class_binding);
     }
 }

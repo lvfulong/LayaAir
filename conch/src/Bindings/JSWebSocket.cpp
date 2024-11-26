@@ -1,5 +1,5 @@
 #include "JSWebSocket.h"
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include <utils/Log.h>
 #include <utils/JCCommonMethod.h>
 #include <utils/JCMemorySurvey.h>
@@ -54,7 +54,7 @@ namespace laya
         m_pWebSocketDelegate = NULL;
         m_nBinaryType = Type_String;
         m_nWebSocketState = WSS_INIT;
-        AdjustAmountOfExternalAllocatedMemory(1024);
+        jsbind::AdjustAmountOfExternalAllocatedMemory(1024);
         JCMemorySurvey::GetInstance()->newClass("webSocket", 1024, this);
     }
     //------------------------------------------------------------------------------
@@ -75,7 +75,7 @@ namespace laya
         {
             m_nWebSocketState = WSS_CLOSE;
         }
-        AdjustAmountOfExternalAllocatedMemory(1024);
+        jsbind::AdjustAmountOfExternalAllocatedMemory(1024);
         JCMemorySurvey::GetInstance()->newClass("webSocket", 1024, this);
     }
     //------------------------------------------------------------------------------
@@ -96,7 +96,7 @@ namespace laya
     void JSWebSocket::onSocketOpenCallJSFunction(std::string p_sEvent, std::weak_ptr<int> cbref)
     {
         if (!cbref.lock())return;
-        m_pJSFunctionOnOpen.call<void>(toLocal(this), p_sEvent.c_str());
+        m_pJSFunctionOnOpen.call<void>(jsbind::toLocal(this), p_sEvent.c_str());
     }
     //------------------------------------------------------------------------------
     void JSWebSocket::onSocketCloseCallJSFunction(std::string p_sEvent, double closetm, std::weak_ptr<int> cbref)
@@ -107,7 +107,7 @@ namespace laya
         if (m_nWebSocketState == WSS_OPEN || m_nWebSocketState == WSS_CLOSEING)
         {  
             m_nWebSocketState = WSS_CLOSE;
-            m_pJSFunctionOnClose.call<void>(toLocal(this), p_sEvent.c_str());
+            m_pJSFunctionOnClose.call<void>(jsbind::toLocal(this), p_sEvent.c_str());
         }
         else
         {
@@ -123,7 +123,7 @@ namespace laya
         if (m_nWebSocketState == WSS_OPEN) 
         {
             m_nWebSocketState = WSS_CLOSE;
-            m_pJSFunctionOnError.call<void>(toLocal(this), p_sEvent.c_str());
+            m_pJSFunctionOnError.call<void>(jsbind::toLocal(this), p_sEvent.c_str());
         }
         else
         {
@@ -133,20 +133,18 @@ namespace laya
     void JSWebSocket::onSocketMessageCallJSFunctionArrayBuffer(const char* pBuf, int p_nLen, bool isBin, std::weak_ptr<int> cbref)
     {
         if (!cbref.lock()) return;
-#ifdef JS_V8
-        v8::HandleScope scope(v8::Isolate::GetCurrent());
-#endif
+
         if (isBin)
         {
-            JsValue ab = createJSAB((char*)pBuf, p_nLen);
+            auto ab = jsbind::ArrayBuffer::MakeArrayBuffer((uint8_t*)pBuf, p_nLen);
             delete[] pBuf;
-            m_pJSFunctionOnMessage.call<void>(toLocal(this), ab);
+            m_pJSFunctionOnMessage.call<void>(jsbind::toLocal(this), ab);
         }
         else
         {
             std::string strMsg;
             strMsg.append(pBuf, p_nLen);	//怕有0的問題，就新建一個string了
-            m_pJSFunctionOnMessage.call<void>(toLocal(this), strMsg.c_str());
+            m_pJSFunctionOnMessage.call<void>(jsbind::toLocal(this), strMsg.c_str());
             delete[] pBuf;
         }
     }
@@ -163,44 +161,44 @@ namespace laya
         return false;
     }
     //------------------------------------------------------------------------------
-    void JSWebSocket::SetOnOpen(JSValueAsParam p_pFunction)
+    void JSWebSocket::SetOnOpen(jsvm_value p_pFunction)
     {
-        m_pJSFunctionOnOpen.reset(p_pFunction);
+        m_pJSFunctionOnOpen = jsbind::Persistent(p_pFunction);
     }
     //------------------------------------------------------------------------------
-    JsValue JSWebSocket::GetOnOpen()
+    jsvm_value JSWebSocket::GetOnOpen()
     {
-        return m_pJSFunctionOnOpen.toLocal().handle_;
+        return m_pJSFunctionOnOpen.getHandle();
     }
     //------------------------------------------------------------------------------
-    void JSWebSocket::SetOnMessage(JSValueAsParam p_pFunction)
+    void JSWebSocket::SetOnMessage(jsvm_value p_pFunction)
     {
-        m_pJSFunctionOnMessage.reset(p_pFunction);
+        m_pJSFunctionOnMessage = jsbind::Persistent(p_pFunction);
     }
     //------------------------------------------------------------------------------
-    JsValue JSWebSocket::GetOnMessage()
+    jsvm_value JSWebSocket::GetOnMessage()
     {
-        return m_pJSFunctionOnMessage.toLocal().handle_;
+        return m_pJSFunctionOnMessage.getHandle();
     }
     //------------------------------------------------------------------------------
-    void JSWebSocket::SetOnClose(JSValueAsParam p_pFunction)
+    void JSWebSocket::SetOnClose(jsvm_value function)
     {
-        m_pJSFunctionOnClose.reset(p_pFunction);
+        m_pJSFunctionOnClose = jsbind::Persistent(function);
     }
     //------------------------------------------------------------------------------
-    JsValue JSWebSocket::GetOnClose()
+    jsvm_value JSWebSocket::GetOnClose()
     {
-        return m_pJSFunctionOnClose.toLocal().handle_;
+        return m_pJSFunctionOnClose.getHandle();
     }
     //------------------------------------------------------------------------------
-    void JSWebSocket::SetOnError(JSValueAsParam p_pFunction)
+    void JSWebSocket::SetOnError(jsvm_value function)
     {
-        m_pJSFunctionOnError.reset(p_pFunction);
+        m_pJSFunctionOnError = jsbind::Persistent(function);
     }
     //------------------------------------------------------------------------------
-    JsValue JSWebSocket::GetOnError()
+    jsvm_value JSWebSocket::GetOnError()
     {
-        return m_pJSFunctionOnError.toLocal().handle_;
+        return m_pJSFunctionOnError.getHandle();
     }
     //------------------------------------------------------------------------------
     void JSWebSocket::send(const char* p_sMessage)
@@ -248,19 +246,16 @@ namespace laya
             m_nBinaryType = Type_ArrayBuffer;
         }
     }
-    void JSWebSocket::JsSend(JSValueAsParam args)
+    void JSWebSocket::JsSend(jsbind::Local args)
     {
         enBinaryType type = m_nBinaryType;
-        char* pABPtr = NULL;
-        int nABLen = 0;
-        Local value(args);
-        if (value.isString())
+        if (args.isString())
         {
             type = Type_String;
         }
         else
         {
-            bool bisab = extractJSAB(args, pABPtr, nABLen);
+            bool bisab = args.isArrayBuffer() || args.isArrayBufferView();
             type = bisab ? Type_ArrayBuffer : Type_Unknown;
         }
         switch (type)
@@ -268,13 +263,14 @@ namespace laya
         case Type_ArrayBuffer:
             if (m_nWebSocketState == WSS_OPEN && m_pWebSocket)
             {
-                m_pWebSocket->send((const unsigned char*)pABPtr, (unsigned int)nABLen);
+                jsbind::ArrayBuffer ab = args.as<jsbind::ArrayBuffer>();
+                m_pWebSocket->send((const unsigned char*)ab.getData(), (unsigned int)ab.getByteLength());
             }
             break;
         case Type_String:
             if (m_nWebSocketState == WSS_OPEN && m_pWebSocket)
             {
-                std::string sColor = Converter<std::string>::ToCpp(args);
+                std::string sColor = args.as<std::string>();
                 m_pWebSocket->send(sColor);
             }
             break;
@@ -290,9 +286,9 @@ namespace laya
         else
             return int(tmGetCurms() - closeTime);
     }
-    void JSWebSocket::exportJS(Context& context)
+    void JSWebSocket::exportJS(jsbind::Object& context)
     {
-        class_<JSWebSocket> class_binding;
+        jsbind::class_<JSWebSocket> class_binding;
         class_binding.property("onopen", &JSWebSocket::GetOnOpen, &JSWebSocket::SetOnOpen);
         class_binding.property("_onmessage", &JSWebSocket::GetOnMessage, &JSWebSocket::SetOnMessage);
         class_binding.property("onclose", &JSWebSocket::GetOnClose, &JSWebSocket::SetOnClose);

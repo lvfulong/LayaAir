@@ -30,7 +30,7 @@ namespace laya
     }
     void JSInput::onDeviceOrientationCallJSFunction(DeviceOrientationEvent e)
     {
-        JCConch::s_pScriptRuntime->m_pJSDeviceMotionEvtFunction.call<void>(getCurrentContext().global(), e.type,e.ra,e.rb,e.rg);
+        JCConch::s_pScriptRuntime->m_pJSDeviceMotionEvtFunction.call<void>(jsvm::global(), e.type,e.ra,e.rb,e.rg);
     }
     void JSInput::onDeviceMotionCallJSFunction(DeviceMotionEvent e)
     {
@@ -45,7 +45,7 @@ namespace laya
         t[7] = e.rb;
         t[8] = e.rg;
         t[9] = e.interval;
-        JCConch::s_pScriptRuntime->m_pJSDeviceMotionEvtFunction.call<void>(getCurrentContext().global(), e.type);
+        JCConch::s_pScriptRuntime->m_pJSDeviceMotionEvtFunction.call<void>(jsvm::global(), e.type);
     }
     void JSInput::setTouchMode(bool bMode)
     {
@@ -67,12 +67,12 @@ namespace laya
         //touch
         if (e.nType <= E_ONACTION_POINTER_UP)
         {
-            JCConch::s_pScriptRuntime->m_pJSTouchEvtFunction.call<void>(getCurrentContext().global(), e.nTouchType, e.id, e.type, e.posX, e.posY);
+            JCConch::s_pScriptRuntime->m_pJSTouchEvtFunction.call<void>(jsvm::global(), e.nTouchType, e.id, e.type, e.posX, e.posY);
         }
         //mouse
         else if (e.nType >= E_ONMOUSEDOWN && e.nType <= E_ONRIGHTMOUSEUP)
         {
-            JCConch::s_pScriptRuntime->m_pJSMouseEvtFunction.call<void>(getCurrentContext().global(), e.nTouchType, e.type, e.posX, e.posY, e.nWheel, e.deltaMode, e.deltaX, e.deltaY, e.deltaZ);
+            JCConch::s_pScriptRuntime->m_pJSMouseEvtFunction.call<void>(jsvm::global(), e.nTouchType, e.type, e.posX, e.posY, e.nWheel, e.deltaMode, e.deltaX, e.deltaY, e.deltaZ);
         }
         //keyboard
         else if (e.nType >= E_ONKEYDOWN && e.nType <= E_ONKEYUP)
@@ -80,7 +80,7 @@ namespace laya
             int bAlt = e.bAlt ? 4 : 0;
             int bShift = e.bShift ? 2 : 0;
             int bCtrl = e.bCtrl ? 1 : 0;
-            JCConch::s_pScriptRuntime->m_pJSKeyEvtFunction.call<void>(getCurrentContext().global(), e.type, e.keyCode, e.keyChar, bAlt|bShift|bCtrl);
+            JCConch::s_pScriptRuntime->m_pJSKeyEvtFunction.call<void>(jsvm::global(), e.type, e.keyCode, e.keyChar, bAlt|bShift|bCtrl);
         }
         else if (e.nType == E_JOYSTICK) 
         {
@@ -131,10 +131,10 @@ namespace laya
     void JSInput::onCaptureScreenCallJSFunction(char *p_pBuffer, int p_nlen, int p_nW, int p_nH)
     {
 #ifdef JS_V8
-        v8::HandleScope scope(v8::Isolate::GetCurrent());
+        //v8::HandleScope scope(v8::Isolate::GetCurrent());
 #endif
-        JsValue ab = createJSAB(p_pBuffer, p_nlen);
+        auto ab = jsbind::ArrayBuffer::MakeArrayBuffer((uint8_t*)p_pBuffer, p_nlen).getHandle();
 		delete[] p_pBuffer;
-        JCConch::s_pScriptRuntime->m_pJSOnceOtherEvtFuction.call<void>(getCurrentContext().global(), ab, p_nW,p_nH);
+        JCConch::s_pScriptRuntime->m_pJSOnceOtherEvtFuction.call<void>(jsvm::global(), ab, p_nW,p_nH);
     }
 }

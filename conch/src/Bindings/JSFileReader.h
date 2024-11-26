@@ -5,18 +5,18 @@
 //------------------------------------------------------------------------------
 
 
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include "JSFile.h"
 #include <utils/JCMemorySurvey.h>
 
 namespace laya 
 {
     #define __Js_FileReader_Property_Func(pfn,n)  \
-            JsValue Get_##pfn() \
-            {return (pfn.toLocal().handle_);} \
-            void Set_##pfn( JSValueAsParam p_pfn)  \
+            jsvm_value Get_##pfn() \
+            {return (pfn.getHandle());} \
+            void Set_##pfn( jsvm_value p_pfn)  \
             {   \
-                pfn.reset(p_pfn);    \
+                pfn = jsbind::Persistent(p_pfn);    \
             }
 
     class JsFileReader
@@ -28,13 +28,13 @@ namespace laya
         ~JsFileReader();
 
         //以二进制格式读取文件内容
-        void readAsArrayBuffer(JSValueAsParam p_pFile);
+        void readAsArrayBuffer(jsvm_value p_pFile);
 
         //以文本(及字符串)格式读取文件内容，并且可以强制选择文件编码
-        void readAsText(JSValueAsParam p_pFile);
+        void readAsText(jsvm_value p_pFile);
 
         // 以DataURL格式读取文件内容，主要为了直接嵌入网页
-        void readAsDataURL(JSValueAsParam p_pFile);
+        void readAsDataURL(jsvm_value p_pFile);
 
         void __LoadLocalFile(JsFile *p_pFile);
 
@@ -46,9 +46,9 @@ namespace laya
 
         void OnFinished(bool p_bSuccess, const char *p_pszError = 0);
 
-        JsValue GetResult();
+        jsvm_value GetResult();
 
-        static void exportJS(Context& context);
+        static void exportJS(jsbind::Object& context);
 
         //如果需要下载的话，设置超时参数。非标准
         void setConnTimeout(int tm);
@@ -80,7 +80,7 @@ namespace laya
         }
         void abort()
         {
-            JSP_THROW("abort not impl");
+            //JSP_THROW("abort not impl");todo
         }
         void OnFinishedSafe(bool p_bSuccess, const char *p_pszError, std::weak_ptr<int> callbackref)
         {
@@ -91,7 +91,10 @@ namespace laya
         void OnStart()
         {
             readyState = LOADING;
-            onloadstart.call<void>(toLocal(this));
+            if (onloadstart.isValid())
+            {
+                onloadstart.call<void>(jsbind::toLocal(this));
+            }
         }
         void OnProgress(size_t p_iSaved, size_t p_iTotal)
         {
@@ -138,13 +141,13 @@ namespace laya
         #define JsFileReaderErr_SecurityError "SecurityError"
         #define JsFileReaderErr_NotReadableError "NotReadableError"
         JsFile*                 m_pFile;
-        Persistent             m_hFileObject;
-        Persistent             onloadstart;	// 在读取开始时触发
-        Persistent             onprogress;	// 在读取进行中定时触发
-        Persistent             onload;		// 在读取成功结束后触发
-        Persistent             onabort;		// 在读取中断时触发
-        Persistent             onerror;		// 在读取错误时触发
-        Persistent             onloadend;		// 在读取结束后，无论成功或者失败都会触发
+        jsbind::Persistent             m_hFileObject;
+        jsbind::Persistent             onloadstart;	// 在读取开始时触发
+        jsbind::Persistent             onprogress;	// 在读取进行中定时触发
+        jsbind::Persistent             onload;		// 在读取成功结束后触发
+        jsbind::Persistent             onabort;		// 在读取中断时触发
+        jsbind::Persistent             onerror;		// 在读取错误时触发
+        jsbind::Persistent             onloadend;		// 在读取结束后，无论成功或者失败都会触发
         const char*             m_pszError;
         unsigned int            readyState;
         static const char*      s_ErrorStr[];

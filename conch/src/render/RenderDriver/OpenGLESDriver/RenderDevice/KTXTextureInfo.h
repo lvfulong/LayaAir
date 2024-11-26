@@ -1,7 +1,7 @@
 #ifndef KTXTextureInfo_h
 #define KTXTextureInfo_h
 
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include <render/3D/design/renderEnum/TextureDimension.h>
 #include <render/3D/design/renderEnum/TextureFormat.h>
 
@@ -10,7 +10,7 @@ namespace laya
 
 struct KTXTextureInfo
 {
-    char *source;
+    const char *source;
     bool compress;
     bool sRGB;
     TextureDimension dimension;
@@ -23,7 +23,7 @@ struct KTXTextureInfo
 };
 struct KTXTextureInfoJS
 {
-    JsValue sourceAB;
+    jsbind::ArrayBuffer sourceAB;
     bool compress;
     bool sRGB;
     TextureDimension dimension;
@@ -37,7 +37,7 @@ struct KTXTextureInfoJS
 
 struct DDSTextureInfo
 {
-    char *source;
+    const char *source;
     bool compressed;
     int dataOffset;
     int blockBytes;
@@ -50,7 +50,7 @@ struct DDSTextureInfo
 };
 struct DDSTextureInfoJS
 {
-    JsValue sourceAB;
+    jsbind::ArrayBuffer sourceAB;
     bool compressed;
     int dataOffset;
     int blockBytes;

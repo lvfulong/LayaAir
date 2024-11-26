@@ -10,7 +10,7 @@ namespace laya
     class  JSXmlNode
     {
     public:
-        static void exportJS(Context& context);
+        static void exportJS(jsbind::Object& context);
         JSXmlNode();
         virtual ~JSXmlNode();
         bool  hasChildNodes();
@@ -18,23 +18,23 @@ namespace laya
         JSXmlNode* replaceChild(JSXmlNode* newChild, JSXmlNode* oldChild);
         JSXmlNode* removeChild(JSXmlNode* oldChild);
         JSXmlNode* appendChild(JSXmlNode* newChild);
-        JsValue  getParentNode();
-        JsValue  getFirstChild();
-        JsValue  getLastChild();
-        JsValue  getPreviousSibling();
-        JsValue  getNextSibling();
+        jsvm_value  getParentNode();
+        jsvm_value  getFirstChild();
+        jsvm_value  getLastChild();
+        jsvm_value  getPreviousSibling();
+        jsvm_value  getNextSibling();
         const char *getNodeName();
         const char *getNodeValue();
         const char *getTextContent();
-        virtual JsValue  getChildNodes();
-        virtual JsValue  getAttributes();
+        virtual jsvm_value  getChildNodes();
+        virtual jsvm_value  getAttributes();
         void initXmlNode(rapidxml::xml_node<>* node,bool isRoot);
     public:
         std::vector<JSXmlNode*> m_childNodes;
         std::vector<JSXmlAttr*> m_attributes;
         enum { allchildsid, allattribid };
-        Persistent m_jsChildNodes; bool m_bCreateChilds;
-        Persistent m_jsAttribs; bool m_bCreateAttribs;
+        jsbind::Persistent m_jsChildNodes; bool m_bCreateChilds;
+        jsbind::Persistent m_jsAttribs; bool m_bCreateAttribs;
         JSXmlNode* m_parentNode;
         std::string  m_nodeName;
         std::string  m_nodeValue;
@@ -42,11 +42,11 @@ namespace laya
     class JSXmlDocument :public JSXmlNode
     {
     public:
-        static void exportJS(Context& context);
+        static void exportJS(jsbind::Object& context);
         JSXmlDocument();
         ~JSXmlDocument();
         void parse(const char* str);
-        JsValue  getChildNodes();
+        jsvm_value  getChildNodes();
     public:
         class rapidxml::xml_document<>*m_document;
     };

@@ -2,7 +2,7 @@
 #define __JSCanvasRenderingContext2D_H__
 
 // 包含头文件
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include <resource/JCResource.h>
 #include <stdio.h>
 
@@ -19,11 +19,11 @@ class JSCanvasRenderingContext2D
     void fillText(const char *text, double x, double y, double maxWidth);
 
     void strokeText(const char *text, double x, double y, double maxWidth);
-    JsValue measureText(const std::string &text);
+    jsvm_value measureText(const std::string &text);
     void clearRect(double x, double y, double width, double height);
     void save();
     void restore();
-    JsValue getImageData(double x, double y, double width, double height);
+    jsvm_value getImageData(double x, double y, double width, double height);
     void scale(double x, double y);
     void setTransform(double a, double b, double c, double d, double e, double f);
     const char *getFont();
@@ -48,7 +48,7 @@ class JSCanvasRenderingContext2D
     void setLineJoin(const char *lineJoin);
     const char *getLineJoin();
 
-    static void exportJS(Context &context);
+    static void exportJS(jsbind::Object &context);
 
   public:
     CanvasRenderingContext2D *m_context;

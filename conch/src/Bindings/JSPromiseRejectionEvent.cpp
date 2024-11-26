@@ -1,5 +1,5 @@
 ﻿#include "JSPromiseRejectionEvent.h"
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include <utils/Log.h>
 #include <utils/JCMemorySurvey.h>
 #include "../../JCScriptRuntime.h"
@@ -8,7 +8,7 @@ namespace laya
 {
     JSPromiseRejectionEvent::JSPromiseRejectionEvent()
     {
-	    AdjustAmountOfExternalAllocatedMemory(128);
+	    jsbind::AdjustAmountOfExternalAllocatedMemory(128);
 	    JCMemorySurvey::GetInstance()->newClass( "JSPromiseRejectionEvent",10240,this );
     }
     JSPromiseRejectionEvent::~JSPromiseRejectionEvent()
@@ -17,21 +17,21 @@ namespace laya
 		m_pPromise.reset();
 	    JCMemorySurvey::GetInstance()->releaseClass( "JSPromiseRejectionEvent",this );
     }
-    JsValue JSPromiseRejectionEvent::getReason()
+    jsvm_value JSPromiseRejectionEvent::getReason()
     {
-	    return m_pReason.toLocal().handle_;
+	    return m_pReason.getHandle();
     }
-    JsValue JSPromiseRejectionEvent::getPromise()
+    jsvm_value JSPromiseRejectionEvent::getPromise()
     {
-        return m_pPromise.toLocal().handle_;
+        return m_pPromise.getHandle();
     }
-	void JSPromiseRejectionEvent::setReason(JSValueAsParam pObj)
+	void JSPromiseRejectionEvent::setReason(jsvm_value pObj)
 	{
-		m_pReason.reset(pObj);
+		m_pReason = jsbind::Persistent(pObj);
 	}
-	void JSPromiseRejectionEvent::setPromise(JSValueAsParam pObj)
+	void JSPromiseRejectionEvent::setPromise(jsvm_value pObj)
 	{
-		m_pPromise.reset(pObj);
+		m_pPromise = jsbind::Persistent(pObj);
 	}
 	void JSPromiseRejectionEvent::setType(const char* strType)
 	{
@@ -41,9 +41,9 @@ namespace laya
 	{
 		return m_strType.c_str();
 	}
-    void JSPromiseRejectionEvent::exportJS(Context& context)
+    void JSPromiseRejectionEvent::exportJS(jsbind::Object& context)
     {
-		class_<JSPromiseRejectionEvent> class_binding;
+		jsbind::class_<JSPromiseRejectionEvent> class_binding;
 		class_binding.constructor<>();
         class_binding.property("reason", &JSPromiseRejectionEvent::getReason);
         class_binding.property("promise", &JSPromiseRejectionEvent::getPromise);

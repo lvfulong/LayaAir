@@ -5,7 +5,7 @@ namespace laya
     JSShaderPrecisionFormat::JSShaderPrecisionFormat()
     {
         m_nRangeMin = m_nRangeMax = m_nPrecision = 0;
-	    AdjustAmountOfExternalAllocatedMemory( 64 );
+	    jsbind::AdjustAmountOfExternalAllocatedMemory( 64 );
 	    JCMemorySurvey::GetInstance()->newClass( "JSShaderPrecisionFormat",64,this );
     }
     //------------------------------------------------------------------------------
@@ -26,9 +26,9 @@ namespace laya
     {
         return m_nPrecision;
     }
-    void JSShaderPrecisionFormat::exportJS(Context& context)
+    void JSShaderPrecisionFormat::exportJS(jsbind::Object& context)
     {
-        class_<JSShaderPrecisionFormat> class_binding;
+        jsbind::class_<JSShaderPrecisionFormat> class_binding;
         class_binding.constructor<>();
         class_binding.property("rangeMin", &JSShaderPrecisionFormat::getRangeMin);
         class_binding.property("rangeMax", &JSShaderPrecisionFormat::getRangeMax);

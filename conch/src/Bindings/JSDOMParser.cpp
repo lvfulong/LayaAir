@@ -13,7 +13,7 @@ namespace laya
     {
         jsDOC = NULL;
         m_CallbackRef.reset(new int(1));
-        AdjustAmountOfExternalAllocatedMemory(640000);
+        jsbind::AdjustAmountOfExternalAllocatedMemory(640000);
         JCMemorySurvey::GetInstance()->newClass("DOMParser", 640000, this);
     }
     JSDOMParser::~JSDOMParser()
@@ -24,11 +24,11 @@ namespace laya
             jsDOC = NULL;
         }
     }
-    JsValue JSDOMParser::parseFromString(const char *str, const char *type)
+    jsvm_value JSDOMParser::parseFromString(const char *str, const char *type)
     {
         jsDOC = new JSXmlDocument();
         jsDOC->parse(str);
-        return JSP_TO_JS(JSXmlDocument*, jsDOC);
+        return jsbind::Make<JSXmlDocument*>(jsDOC);
     }
     const char* JSDOMParser::getSrc()
     {
@@ -65,21 +65,21 @@ namespace laya
         pRes->setOnReadyCB(std::bind(JSDOM_onDownloadOK, this, std::placeholders::_1, cbref));
         pRes->setOnErrorCB(std::bind(JSDOM_onDownloadError, this, std::placeholders::_1, std::placeholders::_2, cbref));
     }
-    void JSDOMParser::SetOnload(JSValueAsParam p_pFunction)
+    void JSDOMParser::SetOnload(jsvm_value p_pFunction)
     {
-        m_pOnLoadJSFunction.reset(p_pFunction);
+        m_pOnLoadJSFunction = jsbind::Persistent(p_pFunction);
     }
-    JsValue JSDOMParser::GetOnload()
+    jsvm_value JSDOMParser::GetOnload()
     {
-        return m_pOnLoadJSFunction.toLocal().handle_;
+        return m_pOnLoadJSFunction.getHandle();
     }
-    void JSDOMParser::SetOnError(JSValueAsParam p_pFunction)
+    void JSDOMParser::SetOnError(jsvm_value p_pFunction)
     {
-        m_pOnErrorJSFunction.reset(p_pFunction);
+        m_pOnErrorJSFunction = jsbind::Persistent(p_pFunction);
     }
-    JsValue JSDOMParser::GetOnError()
+    jsvm_value JSDOMParser::GetOnError()
     {
-        return m_pOnErrorJSFunction.toLocal().handle_;
+        return m_pOnErrorJSFunction.getHandle();
     }
     void JSDOMParser::onLoadedCallJSFunction(std::string& str, std::weak_ptr<int>& callbackref)
     {
@@ -87,20 +87,20 @@ namespace laya
         LOGI("download xml file seccuss! %s\n", m_sUrl.c_str());
         jsDOC = new JSXmlDocument();
         jsDOC->parse(str.c_str());
-        m_pOnLoadJSFunction.call<void>(toLocal(this));
+        m_pOnLoadJSFunction.call<void>(jsbind::toLocal(this));
     }
     void JSDOMParser::onErrorCallJSFunction(int e, std::weak_ptr<int>& callbackref)
     {
         if (!callbackref.lock()) return;
-        m_pOnErrorJSFunction.call<void>(toLocal(this), e);
+        m_pOnErrorJSFunction.call<void>(jsbind::toLocal(this), e);
     }
-    JsValue JSDOMParser::getXml()
+    jsvm_value JSDOMParser::getXml()
     {
-        return JSP_TO_JS(JSXmlDocument*, jsDOC);
+        return jsbind::Make<JSXmlDocument*>(jsDOC);
     }
-    void JSDOMParser::exportJS(Context& context)
+    void JSDOMParser::exportJS(jsbind::Object& context)
     {
-        class_<JSDOMParser> class_binding;
+        jsbind::class_<JSDOMParser> class_binding;
         class_binding.function("parseFromString", &JSDOMParser::parseFromString);
         class_binding.property("src", &JSDOMParser::getSrc, &JSDOMParser::setSrc);
         class_binding.property("onload", &JSDOMParser::GetOnload, &JSDOMParser::SetOnload);

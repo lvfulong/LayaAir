@@ -1,5 +1,5 @@
 #include "JSSubmitScene3D.h"
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include <utils/Log.h>
 #include <utils/JCMemorySurvey.h>
 
@@ -9,14 +9,14 @@ namespace laya
 	JSSubmitScene3D::JSSubmitScene3D(): ISubmit(SubmitType::ThreeDimension)
 	{
 		assert(true);
-		AdjustAmountOfExternalAllocatedMemory(128);
+		jsbind::AdjustAmountOfExternalAllocatedMemory(128);
 		JCMemorySurvey::GetInstance()->newClass("conchSubmitScene3D", 128, this);
 	}
 	//------------------------------------------------------------------------------
-	JSSubmitScene3D::JSSubmitScene3D(JSValueAsParam pCallback) : ISubmit(SubmitType::ThreeDimension)
+	JSSubmitScene3D::JSSubmitScene3D(jsvm_value pCallback) : ISubmit(SubmitType::ThreeDimension)
 	{
-		m_pJSFunctionRenderSubmit.reset(pCallback);
-		AdjustAmountOfExternalAllocatedMemory(128);
+		m_pJSFunctionRenderSubmit = jsbind::Persistent(pCallback);
+		jsbind::AdjustAmountOfExternalAllocatedMemory(128);
 		JCMemorySurvey::GetInstance()->newClass("conchSubmitScene3D", 128, this);
 	}
 	//------------------------------------------------------------------------------
@@ -27,9 +27,9 @@ namespace laya
 	}
 	int JSSubmitScene3D::renderSubmit()
 	{
-		if (!m_pJSFunctionRenderSubmit.isEmpty())
+		if (!m_pJSFunctionRenderSubmit.isValid())
 		{
-			m_pJSFunctionRenderSubmit.call<void>(toLocal(this));
+			m_pJSFunctionRenderSubmit.call<void>(jsbind::toLocal(this));
 		}
 		return 1;
 	}
@@ -38,11 +38,11 @@ namespace laya
 
 	}
 	//------------------------------------------------------------------------------
-	void JSSubmitScene3D::exportJS(Context& context)
+	void JSSubmitScene3D::exportJS(jsbind::Object& context)
 	{
-		class_<JSSubmitScene3D> class_binding;
+		jsbind::class_<JSSubmitScene3D> class_binding;
 		class_binding.constructor<>();
-		class_binding.constructor<JSValueAsParam>();
+		class_binding.constructor<jsvm_value>();
 		context.class_("conchSubmitScene3D", class_binding);
 	}
 }

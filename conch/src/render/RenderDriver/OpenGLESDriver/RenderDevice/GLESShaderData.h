@@ -1,7 +1,7 @@
 #ifndef __GLESShaderData_H__
 #define __GLESShaderData_H__
 #include <any>
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include <core/math/Color.h>
 #include <core/math/Matrix3x3.h>
 #include <core/math/Matrix4x4.h>
@@ -64,7 +64,7 @@ class GLESShaderData //: public ResourceBase<ShaderData>
     void destroy();
 
     //RTDefineDatas *getOwnerDefineData();
-    //JsValue getOwnerDefineDataJS();
+    //jsvm_value getOwnerDefineDataJS();
     void addDefine(RTShaderDefine define);
     void addDefines(RTDefineDatas *defines);
     void removeDefine(RTShaderDefine define);

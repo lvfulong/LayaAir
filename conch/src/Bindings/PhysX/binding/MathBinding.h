@@ -13,6 +13,7 @@
 using namespace physx;
 #ifdef CONCH
 using namespace laya;
+using namespace jsbind;
 #else
 using namespace emscripten;
 #endif
@@ -105,7 +106,7 @@ EMSCRIPTEN_BINDINGS(physx_math) {
     register_vector<LayaQuaryResult>("Vector_LayaQuaryResult");
 }
 #ifdef CONCH
-namespace laya {
+namespace jsbind {
 namespace internal
 {
 template <> struct is_value_object<physx::PxVec3> : std::true_type

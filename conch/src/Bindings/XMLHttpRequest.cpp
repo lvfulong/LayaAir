@@ -16,7 +16,7 @@ namespace laya
         m_async = false;
         m_responseTypeCode = ResponseTypeDefault;
         m_CallbackRef.reset(new int(1));
-        AdjustAmountOfExternalAllocatedMemory(100000);
+        jsbind::AdjustAmountOfExternalAllocatedMemory(100000);
         JCMemorySurvey::GetInstance()->newClass("XMLHttpRequest", 100000, this);
         //mpJsOnReadyStateChange = mpJsPostComplete = mpJsPostError = NULL;
     }
@@ -148,8 +148,9 @@ namespace laya
     }
     void XMLHttpRequest::callReadyStateChangeListener() 
     {
-        if (!m_funcOnStateChg.isEmpty()) {
-            m_funcOnStateChg.call<void>(toLocal(this), (int)m_state);
+        if (m_funcOnStateChg.isValid()) 
+        {
+            m_funcOnStateChg.call<void>(jsbind::toLocal(this), (int)m_state);
         }
     }
     void XMLHttpRequest::setRequestHeaderInternal(const std::string& name, const std::string& value) 
@@ -159,9 +160,9 @@ namespace laya
     void XMLHttpRequest::abort() 
     {
     }
-    void XMLHttpRequest::set_onreadystatechange(JSValueAsParam pObj)
+    void XMLHttpRequest::set_onreadystatechange(jsvm_value pObj)
     {
-        m_funcOnStateChg.reset(pObj);
+        m_funcOnStateChg = jsbind::Persistent(pObj);
     }
     void _onPostComplete_JSThread(XMLHttpRequest* pxhr, char* p_Buff, int p_nLen, bool p_bBin, std::weak_ptr<int> cbref) 
     {
@@ -175,10 +176,10 @@ namespace laya
             if (p_bBin) 
             {
 #ifdef JS_V8
-                v8::HandleScope scope(v8::Isolate::GetCurrent());
+                //v8::HandleScope scope(v8::Isolate::GetCurrent());
 #endif
-                JsValue ab = createJSAB(p_Buff, p_nLen);
-                pxhr->m_jsfunPostComplete.call<void>(toLocal(pxhr), ab, (const char*)p_Buff);
+                jsvm_value ab = jsbind::ArrayBuffer::MakeArrayBuffer((uint8_t*)p_Buff, p_nLen).getHandle();
+                pxhr->m_jsfunPostComplete.call<void>(jsbind::toLocal(pxhr), ab, (const char*)p_Buff);
             }
             else 
             {
@@ -190,20 +191,20 @@ namespace laya
                         strBuff.append(p_Buff + 3);
                     }
                     else strBuff = p_Buff;
-                    pxhr->m_jsfunPostComplete.call<void>(toLocal(pxhr), strBuff);
+                    pxhr->m_jsfunPostComplete.call<void>(jsbind::toLocal(pxhr), strBuff);
                 }
                 else
                 {
-                    pxhr->m_jsfunPostComplete.call<void>(toLocal(pxhr), "");
+                    pxhr->m_jsfunPostComplete.call<void>(jsbind::toLocal(pxhr), "");
                 }
             }
             delete[] p_Buff;
         }
         else 
         {
-            pxhr->m_jsfunPostError.call<void>(toLocal(pxhr), -1);
+            pxhr->m_jsfunPostError.call<void>(jsbind::toLocal(pxhr), -1);
         }
-        makeWeak(pxhr);
+        jsbind::makeWeak(pxhr);
     }
     void _onPostError_JSThread(XMLHttpRequest* pxhr, int curle, int httpresponse, std::weak_ptr<int> cbref)
     {
@@ -212,8 +213,8 @@ namespace laya
         //if (!pxhr->IsMyJsEnv())
         //    return;
        
-        pxhr->m_jsfunPostError.call<void>(toLocal(pxhr), curle, httpresponse);
-        makeWeak(pxhr);
+        pxhr->m_jsfunPostError.call<void>(jsbind::toLocal(pxhr), curle, httpresponse);
+        jsbind::makeWeak(pxhr);
     }
     void _onPostError(XMLHttpRequest* xhr, int curle, int httpresponse, std::weak_ptr<int> cbref) 
     {
@@ -241,7 +242,7 @@ namespace laya
         }
     }
     /*
-    void XMLHttpRequest::set_onreadystatechange1(JsValue pObj)
+    void XMLHttpRequest::set_onreadystatechange1(jsvm_value pObj)
     {
         v8::HandleScope sc(mpJsIso);
         bool isfunc = pObj->IsFunction();
@@ -251,7 +252,7 @@ namespace laya
     }
     */
     /*
-    void XMLHttpRequest::setPostCB1(JsValue p_onOK, JsValue p_onError) 
+    void XMLHttpRequest::setPostCB1(jsvm_value p_onOK, jsvm_value p_onError) 
     {
         v8::HandleScope sc(mpJsIso);
         mpJsPostComplete = (JsFunction*)weakHoldJsObj(v8::Local<v8::Object>::Cast(p_onOK));
@@ -261,21 +262,21 @@ namespace laya
         m_funcPostError = std::bind(_onPostError, this, std::placeholders::_1, cbref);
     }
     */
-    void XMLHttpRequest::postString(const char* p_pszUrl, const char* p_pszString, JSValueAsParam p_funOnOK, JSValueAsParam p_funOnErr) 
+    void XMLHttpRequest::postString(const char* p_pszUrl, const char* p_pszString, jsvm_value p_funOnOK, jsvm_value p_funOnErr) 
     {
         JCDownloadMgr* pdmgr = JCDownloadMgr::getInstance();
-        m_jsfunPostError.reset(p_funOnErr);
-        m_jsfunPostComplete.reset(p_funOnOK);
+        m_jsfunPostError = jsbind::Persistent(p_funOnErr);
+        m_jsfunPostComplete = jsbind::Persistent(p_funOnOK);
         if (!pdmgr) 
         {
             //error
-            m_jsfunPostError.call<void>(toLocal(this), -1);
+            m_jsfunPostError.call<void>(jsbind::toLocal(this), -1);
             //if(p_funOnErr)p_funOnErr->Call(-1);
             return;
         }
         else 
         {
-			makeStrong(this);
+			jsbind::makeStrong(this);
 
             std::weak_ptr<int> cbref(m_CallbackRef);
             pdmgr->postData(p_pszUrl, p_pszString, strlen(p_pszString), 
@@ -291,7 +292,7 @@ namespace laya
         }
     }
     /*
-    void XMLHttpRequest::postString1(const char* p_pszUrl, const char* p_pszString, JsValue p_funOnOK, JsValue p_funOnErr) {
+    void XMLHttpRequest::postString1(const char* p_pszUrl, const char* p_pszString, jsvm_value p_funOnOK, jsvm_value p_funOnErr) {
     downloadMgr* pdmgr = downloadMgr::getInstance();
     if (!pdmgr) {
     if (mpJsPostError)
@@ -304,10 +305,10 @@ namespace laya
     }
     }
     */
-    void XMLHttpRequest::setPostCB(JSValueAsParam p_onOK, JSValueAsParam p_onError) 
+    void XMLHttpRequest::setPostCB(jsvm_value p_onOK, jsvm_value p_onError) 
     {
-        m_jsfunPostComplete.reset(p_onOK);
-        m_jsfunPostError.reset(p_onError);
+        m_jsfunPostComplete = jsbind::Persistent(p_onOK);
+        m_jsfunPostError = jsbind::Persistent(p_onError);
         std::weak_ptr<int> cbref(m_CallbackRef);
         m_funcPostComplete = std::bind(_onPostComplete, this, isBin(),
             std::placeholders::_1, 
@@ -339,7 +340,7 @@ namespace laya
             else
                 pDMgr->postData(p_pszURL, p_pData, p_nLen, m_funcPostComplete);
 
-			makeStrong(this);
+           jsbind::makeStrong(this);
         }
     }
     void XMLHttpRequest::getData(const char* p_sUrl) 
@@ -365,7 +366,7 @@ namespace laya
             pdmgr->download(p_sUrl, 0, JCDownloadMgr::defProgressFunc, m_funcPostComplete,0, m_requestHeaders);
         }
     }
-    void XMLHttpRequest::JsPostData(const char* p_sUrl, JSValueAsParam arg1)
+    void XMLHttpRequest::JsPostData(const char* p_sUrl, jsbind::Local arg1)
     {
         JCDownloadMgr* pdmgr = JCDownloadMgr::getInstance();
         int nDataLen = 0;
@@ -376,17 +377,16 @@ namespace laya
         }
         else
         {
-            Local value(arg1);
-            if (value.isString())
+            if (arg1.isString())
             {
-                std::string pData = Converter<std::string>::ToCpp(arg1);
+                std::string pData = arg1.as<std::string>();
                 postData(pdmgr, p_sUrl, (char*)pData.c_str(), pData.length());
             }
             else
             {
                 int nABLen = 0;
                 char* pData = NULL;
-                bool bisab = extractJSAB(arg1, pData, nDataLen);
+                bool bisab = arg1.isArrayBuffer() || arg1.isArrayBufferView();// extractJSAB(arg1, pData, nDataLen);
                 if (bisab)
                 {
                     postData(pdmgr, p_sUrl, (char*)pData, nDataLen);
@@ -399,9 +399,9 @@ namespace laya
             }
         }
     }
-    void XMLHttpRequest::exportJS(Context& context)
+    void XMLHttpRequest::exportJS(jsbind::Object& context)
     {
-        class_<XMLHttpRequest> class_binding;
+        jsbind::class_<XMLHttpRequest> class_binding;
         class_binding.constructor<>();
         class_binding.function("get_readyState", &XMLHttpRequest::getReadyState);
         class_binding.function("get_status", &XMLHttpRequest::getStatus);

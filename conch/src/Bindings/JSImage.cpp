@@ -1,7 +1,7 @@
 #include "JSImage.h"
 #include <utils/Log.h>
 #include <utils/JCMemorySurvey.h>
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include "../../JCScriptRuntime.h"
 #include <resource/JCFileResManager.h> 
 #include "JSRuntime.h"
@@ -63,19 +63,19 @@ namespace laya
         //if (!IsMyJsEnv()) return;
 
         if (GetWidth() <= 0 || GetHeight() <= 0|| m_pImage->m_kBitmapData.m_pImageData==NULL) {
-            m_pOnError.call<void>(toLocal(this), 500);
+            m_pOnError.call<void>(jsbind::toLocal(this), 500);
         }
         else {
             int nMemSize = GetWidth() * GetHeight() * 4 + 272;
-            AdjustAmountOfExternalAllocatedMemory(nMemSize);
+            jsbind::AdjustAmountOfExternalAllocatedMemory(nMemSize);
             JCMemorySurvey::GetInstance()->newClass("image", 1024, this);
             m_pImage->m_sUrl = m_sUrl;
             //通知渲染线程
             createImageOnRenderThread(m_nID, m_pImage);
             m_bComplete = true;
-            m_pOnLoad.call<void>(toLocal(this));
+            m_pOnLoad.call<void>(jsbind::toLocal(this));
         }
-		makeWeak(this);
+        jsbind::makeWeak(this);
     }
     void JSImage::onErrorCallJSFunction( int p_nError,std::weak_ptr<int> callbackref )
     {
@@ -83,36 +83,36 @@ namespace laya
         //if (JCScriptRuntime::s_JSRT->m_bIsExit == true)return;
 	    //if (!IsMyJsEnv())return;
         LOGW("download image file error! %s\n", m_sUrl.c_str());
-        m_pOnError.call<void>(toLocal(this), p_nError);
-		makeWeak(this);
+        m_pOnError.call<void>(jsbind::toLocal(this), p_nError);
+        jsbind::makeWeak(this);
     }
     bool JSImage::getComplete()
     {
         return m_bComplete;
     }
-    void JSImage::SetOnload(JSValueAsParam p_pFunction )
+    void JSImage::SetOnload(jsvm_value p_pFunction )
     {
-	    m_pOnLoad.reset(p_pFunction);
+	    m_pOnLoad = jsbind::Persistent(p_pFunction);
     }
-    JsValue JSImage::GetOnload()
+    jsvm_value JSImage::GetOnload()
     {
-	    return m_pOnLoad.toLocal().handle_;
+	    return m_pOnLoad.getHandle();
     }
-    void JSImage::SetOnError(JSValueAsParam p_pFunction )
+    void JSImage::SetOnError(jsvm_value p_pFunction )
     {
-	    m_pOnError.reset(p_pFunction);
+	    m_pOnError = jsbind::Persistent(p_pFunction);
     }
-    JsValue JSImage::GetOnError()
+    jsvm_value JSImage::GetOnError()
     {
-        return m_pOnError.toLocal().handle_;
+        return m_pOnError.getHandle();
     }
-    JsValue JSImage::getObj()
+    jsvm_value JSImage::getObj()
     {
-        return m_pObj.toLocal().handle_;
+        return m_pObj.getHandle();
     }
-    void JSImage::setObj(JSValueAsParam obj)
+    void JSImage::setObj(jsvm_value obj)
     {
-        m_pObj.reset(obj);
+        m_pObj = jsbind::Persistent(obj);
     }
     const char* JSImage::getSrc()
     {
@@ -194,7 +194,7 @@ namespace laya
         JCFileRes* pRes = JCConch::s_pScriptRuntime->m_pFileResMgr->getRes(m_sUrl);
         pRes->setOnReadyCB(std::bind(&JSImage::onDownloadOK, this, std::placeholders::_1, false, cbref));
         pRes->setOnErrorCB(std::bind(&JSImage::onDownloadError, this, std::placeholders::_1, std::placeholders::_2, cbref));
-		makeStrong(this);
+        jsbind::makeStrong(this);
         return true;
     }
     int JSImage::GetWidth()
@@ -205,25 +205,18 @@ namespace laya
     {
 	    return m_pImage->getHeight();
     }
-    void JSImage::putBitmapDataJS(JSValueAsParam pArrayBuffer, int width, int height)
+    void JSImage::putBitmapDataJS(jsbind::ArrayBuffer arrayBuffer, int width, int height)
     {
-        char* pArrayBufferPtr = NULL;
-        int nABLen = 0;
-        bool bIsArrayBuffer = extractJSAB(pArrayBuffer, pArrayBufferPtr, nABLen);
-        if (bIsArrayBuffer)
+        DEBUG_CHECK(arrayBuffer.isValid());
+        char* pArrayBufferPtr = reinterpret_cast<char*>(arrayBuffer.getData());
+        int nABLen = arrayBuffer.getByteLength();
+        if (nABLen >= width * height * 4)
         {
-            if (nABLen >= width * height * 4)
-            {
-                putBitmapData(pArrayBufferPtr,width, height);
-            }
-            else
-            {
-                LOGE("JSImage::pushBitmapData array buffer size < width * height * 4");
-            }
+            putBitmapData(pArrayBufferPtr,width, height);
         }
-        else 
+        else
         {
-            LOGE("JSImage::pushBitmapData param is not an ArrayBuffer!");
+            LOGE("JSImage::pushBitmapData array buffer size < width * height * 4");
         }
     }
 
@@ -232,29 +225,24 @@ namespace laya
         //不删除 JS保证在onDecodeEndDecThread前pArrayBuffer不垃圾回收
     }
 
-    void JSImage::putDataJS(JSValueAsParam pArrayBuffer)
+    void JSImage::putDataJS(jsbind::ArrayBuffer arrayBuffer)
     {
-        char* pArrayBufferPtr = NULL;
-        int nABLen = 0;
-        bool bIsArrayBuffer = extractJSAB(pArrayBuffer, pArrayBufferPtr, nABLen);
-        if (bIsArrayBuffer)
-        {
-            if (nABLen <= 0)
-                return;
-            //设置url的名字
-            char sCachePath[1024];
-            memset(sCachePath, 0, 1024);
-            sprintf(sCachePath, "%s/%d.LayaBoxImg", JCConch::s_pConch->m_sCachePath.c_str(), m_nID);
-            m_sUrl = sCachePath;
-            std::weak_ptr<int> cbref(m_CallbackRef);
-            imgDecodeCB cb = std::bind(&JSImage::onDecodeEndDecThread, this, std::placeholders::_1, cbref);
-            std::shared_ptr<char> pBuffer(pArrayBufferPtr, deleter);
-            loadImageMemASync(pBuffer, nABLen, cb);
-        }
-        else
-        {
-            LOGE("JSImage::putData param is not an ArrayBuffer!");
-        }
+        DEBUG_CHECK(arrayBuffer.isValid());
+        char* pArrayBufferPtr = reinterpret_cast<char*>(arrayBuffer.getData());
+        int nABLen = arrayBuffer.getByteLength();
+
+        if (nABLen <= 0)
+            return;
+        //设置url的名字
+        char sCachePath[1024];
+        memset(sCachePath, 0, 1024);
+        sprintf(sCachePath, "%s/%d.LayaBoxImg", JCConch::s_pConch->m_sCachePath.c_str(), m_nID);
+        m_sUrl = sCachePath;
+        std::weak_ptr<int> cbref(m_CallbackRef);
+        imgDecodeCB cb = std::bind(&JSImage::onDecodeEndDecThread, this, std::placeholders::_1, cbref);
+        std::shared_ptr<char> pBuffer(pArrayBufferPtr, deleter);
+        loadImageMemASync(pBuffer, nABLen, cb);
+
     }
     void JSImage::setBase64(const char* base64)
     {
@@ -292,21 +280,21 @@ namespace laya
         m_pImage->m_bPushBitmapData = true;
         onLoaded(m_CallbackRef);
     }
-    JsValue JSImage::getImageData( int p_nX,int p_nY,int p_nW,int p_nH )
+    jsvm_value JSImage::getImageData( int p_nX,int p_nY,int p_nW,int p_nH )
     {
-	    if( m_bComplete == false ) return JSP_TO_JS_NULL;
-	    if( m_pImage == NULL ) return JSP_TO_JS_NULL;
+	    if( m_bComplete == false ) return jsbind::MakeNull();
+	    if( m_pImage == NULL ) return jsbind::MakeNull();
 	    BitmapData* pImg = &(m_pImage->m_kBitmapData);
 	    if( pImg  )
 	    {
-		    if( p_nX < 0 || p_nY < 0 || p_nX >= pImg->m_nWidth || p_nY >= pImg->m_nHeight )return JSP_TO_JS_NULL;
-		    if( ( p_nX + p_nW ) > pImg->m_nWidth || ( p_nY + p_nH ) > pImg->m_nHeight  )return JSP_TO_JS_NULL;
+		    if( p_nX < 0 || p_nY < 0 || p_nX >= pImg->m_nWidth || p_nY >= pImg->m_nHeight )return jsbind::MakeNull();
+		    if( ( p_nX + p_nW ) > pImg->m_nWidth || ( p_nY + p_nH ) > pImg->m_nHeight  )return jsbind::MakeNull();
 
             if (pImg->m_pImageData != NULL || (pImg->m_pImageData == NULL && m_pImage->enableImage()))
             {
 		        if( p_nX == 0 && p_nY == 0 && p_nW == pImg->m_nWidth && p_nH == pImg->m_nHeight )
 		        {
-			        return createJSAB( (char *)(pImg->m_pImageData),pImg->m_nWidth * pImg->m_nHeight * 4 );
+			        return jsbind::ArrayBuffer::MakeArrayBuffer((uint8_t*)(pImg->m_pImageData),pImg->m_nWidth * pImg->m_nHeight * 4 ).getHandle();
 		        }
 		        else
 		        {
@@ -319,20 +307,20 @@ namespace laya
 			        {
 				        memcpy(&pBuffer[nDstLine*i],&pTemp[nSrcLine*(i+p_nY)+p_nX*4],nDstLine);
 			        }
-			        return createJSAB( (char*)pBuffer,nSize );
+			        return jsbind::ArrayBuffer::MakeArrayBuffer((uint8_t*)pBuffer, nSize).getHandle();
 		        }
             }
 	    }
-	    return JSP_TO_JS_NULL;
+	    return jsbind::MakeNull();
     }
     int JSImage::getImageID()
     {
 	    return m_nID;
     }
 
-    void JSImage::exportJS(Context& context) 
+    void JSImage::exportJS(jsbind::Object& context) 
     {
-        class_<JSImage> class_binding;
+        jsbind::class_<JSImage> class_binding;
         class_binding.constructor<>();
         class_binding.property("conchImgId", &JSImage::getImageID);
         class_binding.property("width", &JSImage::GetWidth);

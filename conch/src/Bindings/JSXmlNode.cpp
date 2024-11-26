@@ -7,7 +7,7 @@ namespace laya
     JSXmlNode::JSXmlNode()
     {
         m_parentNode = NULL;
-        AdjustAmountOfExternalAllocatedMemory(64000);
+        jsbind::AdjustAmountOfExternalAllocatedMemory(64000);
         m_bCreateChilds = false;
         m_bCreateAttribs = false;
         JCMemorySurvey::GetInstance()->newClass("XmlNode", 64000, this);
@@ -39,25 +39,25 @@ namespace laya
     {
         return this;
     }
-    JsValue  JSXmlNode::getParentNode()
+    jsvm_value  JSXmlNode::getParentNode()
     {
-         return JSP_TO_JS(JSXmlNode*, m_parentNode);
+         return jsbind::Make<JSXmlNode*>(m_parentNode);
     }
-    JsValue  JSXmlNode::getFirstChild()
+    jsvm_value  JSXmlNode::getFirstChild()
     {
-        return JSP_TO_JS_NULL;
+        return jsbind::MakeNull();
     }
-    JsValue JSXmlNode::getLastChild()
+    jsvm_value JSXmlNode::getLastChild()
     {
-        return JSP_TO_JS_NULL;
+        return jsbind::MakeNull();
     }
-    JsValue  JSXmlNode::getPreviousSibling()
+    jsvm_value  JSXmlNode::getPreviousSibling()
     {
-        return JSP_TO_JS_NULL;
+        return jsbind::MakeNull();
     }
-    JsValue  JSXmlNode::getNextSibling()
+    jsvm_value  JSXmlNode::getNextSibling()
     {
-        return JSP_TO_JS_NULL;
+        return jsbind::MakeNull();
     }
     const char * JSXmlNode::getNodeName()
     {
@@ -75,25 +75,25 @@ namespace laya
     {
         return m_nodeValue.c_str();
     }
-    JsValue JSXmlNode::getChildNodes()
+    jsvm_value JSXmlNode::getChildNodes()
     {
         if (!m_bCreateChilds)
         {
-            JsValue pJSValue = JSP_TO_JS(std::vector<JSXmlNode*>, m_childNodes);
-            m_jsChildNodes.reset(pJSValue);
+            jsvm_value pJSValue = jsbind::Make<std::vector<JSXmlNode*>>(m_childNodes);
+            m_jsChildNodes = jsbind::Persistent(pJSValue);
             m_bCreateChilds = true;
         }
-        return m_jsChildNodes.toLocal().handle_;
+        return m_jsChildNodes.getHandle();
     }
-    JsValue JSXmlNode::getAttributes()
+    jsvm_value JSXmlNode::getAttributes()
     {
         if (!m_bCreateAttribs)
         {
             m_bCreateAttribs = true;
-            JsValue pJSValue = JSP_TO_JS(std::vector<JSXmlAttr*>, m_attributes);
-            m_jsAttribs.reset(pJSValue);
+            jsvm_value pJSValue = jsbind::Make<std::vector<JSXmlAttr*>>(m_attributes);
+            m_jsAttribs = jsbind::Persistent(pJSValue);
         }
-        return m_jsAttribs.toLocal().handle_;
+        return m_jsAttribs.getHandle();
     }
 	void JSXmlNode::initXmlNode(rapidxml::xml_node<>* node,bool isRoot)
 	{
@@ -157,13 +157,13 @@ namespace laya
         initXmlNode(m_document,true);
         if(fdoc!=NULL)delete fdoc;
     }
-    JsValue  JSXmlDocument::getChildNodes()
+    jsvm_value  JSXmlDocument::getChildNodes()
     {
         return JSXmlNode::getChildNodes();
     }
-    void JSXmlNode::exportJS(Context& context)
+    void JSXmlNode::exportJS(jsbind::Object& context)
     {
-        class_<JSXmlNode> class_binding;
+        jsbind::class_<JSXmlNode> class_binding;
         class_binding.constructor<>();
         class_binding.property("nodeValue", &JSXmlNode::getNodeValue);
         class_binding.property("nodeName", &JSXmlNode::getNodeName);
@@ -172,9 +172,9 @@ namespace laya
         class_binding.property("attributes", &JSXmlNode::getAttributes);
         context.class_("_XmlNode", class_binding);
     }
-    void JSXmlDocument::exportJS(Context& context)
+    void JSXmlDocument::exportJS(jsbind::Object& context)
     {
-        class_<JSXmlDocument> class_binding;
+        jsbind::class_<JSXmlDocument> class_binding;
         class_binding.constructor<>();
         class_binding.property("childNodes", &JSXmlDocument::getChildNodes);
         context.class_("_XmlDocument", class_binding);

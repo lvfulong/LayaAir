@@ -2,9 +2,9 @@
 
 namespace laya
 {
-    void JSLayaConchBullet::exportJS(Context& context)
+    void JSLayaConchBullet::exportJS(jsbind::Object& context)
     {
-		class_<JSLayaConchBullet> class_binding;
+		jsbind::global_class_<JSLayaConchBullet> class_binding;
 		class_binding.class_function("btGImpactCollisionAlgorithm_RegisterAlgorithm", &JSLayaConchBullet::btGImpactCollisionAlgorithm_RegisterAlgorithm);
 		class_binding.class_function("btVector3_create", &JSLayaConchBullet::btVector3_create);
 		class_binding.class_function("btVector3_setValue", &JSLayaConchBullet::btVector3_setValue);
@@ -297,7 +297,7 @@ namespace laya
 		//class_binding.class_function("btRigidBody_setSurfaceVelocity", JSLayaConchBullet::btRigidBody_setSurfaceVelocity);
 		//class_binding.class_function("btRigidBody_setSurfaceVelocityxyz", JSLayaConchBullet::btRigidBody_setSurfaceVelocityxyz);
 		//class_binding.class_function("btCollisionObject_setHasCDCallback", JSLayaConchBullet::btCollisionObject_setHasCDCallback);
-		context.class_("layaConchBullet", class_binding);
+		context.global_class_("layaConchBullet", class_binding);
     }
 }
 

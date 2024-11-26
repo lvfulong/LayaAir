@@ -1,5 +1,5 @@
 #include "JSBounds.h"
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include <utils/Log.h>
 #include <utils/JCMemorySurvey.h>
 
@@ -7,20 +7,21 @@ namespace laya
 {
 	JSBounds::JSBounds()
 	{
-		AdjustAmountOfExternalAllocatedMemory(128);
+		jsbind::AdjustAmountOfExternalAllocatedMemory(128);
 		JCMemorySurvey::GetInstance()->newClass("conchBounds", 128, this);
 	}
 	//------------------------------------------------------------------------------
-	JSBounds::JSBounds(JSValueAsParam pSharedData)
+	JSBounds::JSBounds(jsbind::ArrayBuffer pSharedData)
 	{
-		char* pArrayBuffer = NULL;
-		int nArrayBufferSize = 0;
-		bool bIsArrayBuffer = extractJSAB(pSharedData, pArrayBuffer, nArrayBufferSize);
+		DEBUG_CHECK(pSharedData.isValid());
+		char* pArrayBuffer = reinterpret_cast<char*>(pSharedData.getData());
+		int nArrayBufferSize = pSharedData.getByteLength();
+
 		//assert(bIsArrayBuffer && nArrayBufferSize >= sizeof(float) * 4);
 		m_float64Array = (double*)pArrayBuffer;
 		m_float32Array = (float*)pArrayBuffer;
 		m_int32Array = (uint32_t*)pArrayBuffer;
-		AdjustAmountOfExternalAllocatedMemory(128);
+		jsbind::AdjustAmountOfExternalAllocatedMemory(128);
 		JCMemorySurvey::GetInstance()->newClass("conchBounds", 128, this);
 	}
 	//------------------------------------------------------------------------------
@@ -104,20 +105,20 @@ namespace laya
 	{
 		return m_bounds._getBoundBox();
 	}
-	void JSBounds::_tranformJS(JSValueAsParam out)
+	void JSBounds::_tranformJS(jsvm_value out)
 	{
 		Matrix4x4 matrix;
 		memcpy(matrix.elements, m_float32Array, sizeof(float) * 16);
-		JSBounds* pBounds = Converter<JSBounds*>::ToCpp(out);
+		JSBounds* pBounds = jsbind::as<JSBounds*>(out);
 		m_bounds._tranform(matrix, pBounds->m_bounds);
 	}
 	void JSBounds::_tranform(const Matrix4x4& matrix, JSBounds& out)
 	{
 		m_bounds._tranform(matrix, out.m_bounds);
 	}
-	void JSBounds::cloneTo(JSValueAsParam destBounds)
+	void JSBounds::cloneTo(jsvm_value destBounds)
 	{
-		JSBounds* pBounds = Converter<JSBounds*>::ToCpp(destBounds);
+		JSBounds* pBounds = jsbind::as<JSBounds*>(destBounds);
 		m_bounds.cloneTo(pBounds->m_bounds);
 	}
 	void JSBounds::getBoundBox()

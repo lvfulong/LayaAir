@@ -3,7 +3,7 @@
 
 //包含头文件
 #include <stdio.h>
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include <Image/JCImage.h>
 #include <resource/JCResource.h>
 
@@ -23,7 +23,7 @@ namespace laya
 
 	public:
 		enum { onloadid, onerrorid, thisid, objid };
-        static void exportJS(Context& context);
+        static void exportJS(jsbind::Object& context);
 
         void onLoaded(std::weak_ptr<int> callbackref);
 
@@ -33,17 +33,17 @@ namespace laya
 
 		void onErrorCallJSFunction( int p_nError,std::weak_ptr<int> callbackref);
         
-        void setObj(JSValueAsParam p_pFunction);
+        void setObj(jsvm_value p_pFunction);
         
-        JsValue getObj();
+        jsvm_value getObj();
 
-		void SetOnload(JSValueAsParam p_pFunction );
+		void SetOnload(jsvm_value p_pFunction );
 
-		JsValue GetOnload();
+		jsvm_value GetOnload();
 
-		void SetOnError(JSValueAsParam p_pFunction );
+		void SetOnError(jsvm_value p_pFunction );
 
-		JsValue GetOnError();
+		jsvm_value GetOnError();
 
 		int GetWidth();
 
@@ -55,15 +55,15 @@ namespace laya
 
         bool getComplete();
 
-		JsValue getImageData( int p_nX,int p_nY,int p_nW,int p_nH );
+		jsvm_value getImageData( int p_nX,int p_nY,int p_nW,int p_nH );
 
         bool syncRestoreResource();
 
         void putBitmapData( char* pData,int width, int height);
 
-        void putBitmapDataJS( JSValueAsParam pArrayBuffer, int width, int height );
+        void putBitmapDataJS(jsbind::ArrayBuffer arrayBufferr, int width, int height );
 
-        void putDataJS(JSValueAsParam pArrayBuffer);
+        void putDataJS(jsbind::ArrayBuffer arrayBuffer);
 
         void setBase64(const char* base64);
 
@@ -94,9 +94,9 @@ namespace laya
 
         void releaseImageOnRenderThread(int nID);
 	public:
-		Persistent		                m_pOnLoad;
-		Persistent		                m_pOnError;
-		Persistent                     m_pObj;
+		jsbind::Persistent		                m_pOnLoad;
+		jsbind::Persistent		                m_pOnError;
+		jsbind::Persistent                     m_pObj;
         bool			                m_bComplete;
         std::shared_ptr<int>	        m_CallbackRef;
         std::string                     m_sUrl;

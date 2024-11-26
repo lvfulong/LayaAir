@@ -1,7 +1,8 @@
 #include "JSConsole.h"
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include <utils/Log.h>
 #include <utils/JCMemorySurvey.h>
+#include <utils/JCCommonMethod.h>
 
 namespace laya 
 {
@@ -57,7 +58,7 @@ namespace laya
             break;
         }
     #endif
-    #ifdef JS_V8
+    #ifdef JS_V8_DEBUGGER
 	    if (gLayaLogNoParam) 
         {
             auto isolate = v8::Isolate::GetCurrent();
@@ -87,10 +88,10 @@ namespace laya
 	    }
     #endif
     }
-    void JSConsole::exportJS(Context& context)
+    void JSConsole::exportJS(jsbind::Object& context)
     {
-        class_<JSConsole> class_binding;
+        jsbind::global_class_<JSConsole> class_binding;
         class_binding.class_function("log", &JSConsole::log);
-        context.class_("_console", class_binding);
+        context.global_class_("_console", class_binding);
     }
 }

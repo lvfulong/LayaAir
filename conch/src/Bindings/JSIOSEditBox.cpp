@@ -1,5 +1,5 @@
 #include "JSIOSEditBox.h"
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include <utils/Log.h>
 #include <utils/JCColor.h>
 #include "CToObjectC.h"
@@ -12,7 +12,7 @@ namespace laya
 JSIOSEditBox::JSIOSEditBox()
 {
     //大概估算内部变量 11个int  4个字符串
-    AdjustAmountOfExternalAllocatedMemory( 208 );
+    jsbind::AdjustAmountOfExternalAllocatedMemory( 208 );
 	JCMemorySurvey::GetInstance()->newClass( "iOSEditBox",208,this );
 	m_nLeft = 0;
 	m_nTop = 0;
@@ -271,11 +271,11 @@ void JSIOSEditBox::setNumberOnly( bool p_bNumberOnly )
 {
 	CToObjectCSetEditBoxNumberOnly( p_bNumberOnly );
 }
-void JSIOSEditBox::addEventListener(const char* p_sName, JSValueAsParam p_pFunction)
+void JSIOSEditBox::addEventListener(const char* p_sName, jsvm_value p_pFunction)
 {
     if(strcmp(p_sName,"input")==0)
     {
-        m_pJSFunctionOnInput.reset(p_pFunction);
+        m_pJSFunctionOnInput = jsbind::Persistent(p_pFunction);
     }
 }
 void JSIOSEditBox::onInput()
@@ -288,7 +288,7 @@ void JSIOSEditBox::onInputCallJSFunction(std::weak_ptr<int> callbackref)
 {
     if(!callbackref.lock())
         return;
-    m_pJSFunctionOnInput.call<void>(toLocal(this));
+    m_pJSFunctionOnInput.call<void>(jsbind::toLocal(this));
 }
 void JSIOSEditBox::setMultiAble(bool p_bMultiAble)
 {
@@ -303,9 +303,9 @@ bool JSIOSEditBox::getForbidEdit()
 {
 	return m_bForbidEdit;
 }
-void JSIOSEditBox::exportJS(Context& context)
+void JSIOSEditBox::exportJS(jsbind::Object& context)
 {
-	class_<JSIOSEditBox> class_binding;
+	jsbind::class_<JSIOSEditBox> class_binding;
 	class_binding.constructor<>();
     class_binding.property("left", &JSIOSEditBox::get_Left, &JSIOSEditBox::set_Left);
     class_binding.property("top", &JSIOSEditBox::get_Top, &JSIOSEditBox::set_Top);

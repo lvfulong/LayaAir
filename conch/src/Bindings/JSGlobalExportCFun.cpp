@@ -7,7 +7,7 @@
 */
 
 #include "JSGlobalExportCFun.h"
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include <utils/Log.h>
 #include <utils/JCCommonMethod.h>
 #include <utils/JCFileSystem.h>
@@ -29,7 +29,7 @@
 #include "JSFileSystem.h"
 #include "JSZip.h"
 #include "JSNotify.h"
-#include "JSTextDecoder.h"
+#include "Extention/LayaExtWin.h"
 
 #include "JSCanvasRenderingContext2D.h"
 #if defined(OS_ANDROID)
@@ -63,7 +63,7 @@
 #include "Video/JSVideo.h"
 #include <LayaGL/JCLayaGLDispatch.h>
 #include "Bullet/LayaBulletExport.h"
-#if !defined(OS_LINUX) && !defined(OS_WINDOWS) && !defined(OS_OHOS)//todo
+#if defined(PHYSX)
 #include "PhysX/LayaPhysXExport.h"
 #endif
 #include "JSArrayBufferRef.h"
@@ -122,14 +122,14 @@ namespace laya
     //下载大文件，zip用的
     struct JSFuncWrapper
     {
-        Persistent funcOnProg;
-        Persistent funcOnComp;
+        jsbind::Persistent funcOnProg;
+        jsbind::Persistent funcOnComp;
         bool stop;
-        JSFuncWrapper(JSValueAsParam onprog, JSValueAsParam onComp)
+        JSFuncWrapper(jsvm_value onprog, jsvm_value onComp)
         {
 
-            funcOnProg.reset(onprog);
-            funcOnComp.reset(onComp);
+            funcOnProg = jsbind::Persistent(onprog);
+            funcOnComp = jsbind::Persistent(onComp);
             stop = false;
         }
 		~JSFuncWrapper()
@@ -141,8 +141,10 @@ namespace laya
 
     void downloadBig_onProg_js(JSFuncWrapper* pWrapper, unsigned int total, unsigned int now, float speed)
     {
-        if (pWrapper->funcOnProg.isEmpty())return;
-        pWrapper->stop = pWrapper->funcOnProg.call<bool>(getCurrentContext().global(), total, now, speed);
+        if (pWrapper->funcOnProg.isValid())
+        {
+            pWrapper->stop = pWrapper->funcOnProg.call<bool>(jsvm::global(), total, now, speed);
+        }
     }
     int downloadBig_onProg(unsigned int total, unsigned int now, float speed, JSFuncWrapper* pWrapper)
     {
@@ -156,9 +158,9 @@ namespace laya
             delete pWrapper;
             return;
         }*/
-        if (!pWrapper->funcOnComp.isEmpty())
+        if (pWrapper->funcOnComp.isValid())
         {
-            pWrapper->funcOnComp.call<void>(getCurrentContext().global(), curlret,httpret);
+            pWrapper->funcOnComp.call<void>(jsvm::global(), curlret,httpret);
         }
         delete pWrapper;
     }
@@ -166,7 +168,7 @@ namespace laya
     {
         postToJS(std::bind(downloadBig_onComp_js, curlret,httpret, pWrapper));
     }
-	void _downloadBigFile(const char* p_pszUrl, const char* p_pszLocal, JSValueAsParam p_ProgCb,JSValueAsParam p_CompleteCb, int p_nTryNum, int p_nOptTimeout)
+	void _downloadBigFile(const char* p_pszUrl, const char* p_pszLocal, jsvm_value p_ProgCb,jsvm_value p_CompleteCb, int p_nTryNum, int p_nOptTimeout)
     {
         /*
         if (!canWrite(pCurProcess->getFSPermission(p_pszLocal))) {
@@ -189,16 +191,16 @@ namespace laya
             delete pWrapper;
             return;
         }*/
-        if (!pWrapper->funcOnComp.isEmpty())
+        if (pWrapper->funcOnComp.isValid())
         {
             if (pBuff) 
             {
-                pWrapper->funcOnComp.call<void>(getCurrentContext().global(), curlret, httpret, (const char*)pBuff);
+                pWrapper->funcOnComp.call<void>(jsvm::global(), curlret, httpret, (const char*)pBuff);
                 delete [] pBuff;
             }
             else 
             {
-                pWrapper->funcOnComp.call<void>(getCurrentContext().global(), curlret, httpret);
+                pWrapper->funcOnComp.call<void>(jsvm::global(), curlret, httpret);
             }
         }
         delete pWrapper;
@@ -217,7 +219,7 @@ namespace laya
         }
         postToJS(std::bind(downloadHeader_onComp_js, pBuff, curlret, httpret, pWrapper));
     }
-	void _downloadGetHeader(const char* p_pszUrl, JSValueAsParam p_CompleteCb, int p_nTryNum, int p_nOptTimeout)
+	void _downloadGetHeader(const char* p_pszUrl, jsvm_value p_CompleteCb, int p_nTryNum, int p_nOptTimeout)
     {
         JCDownloadMgr* dmgr = JCDownloadMgr::getInstance();
         JSFuncWrapper* pJSObj = new JSFuncWrapper(p_CompleteCb, p_CompleteCb);//第一个没有用
@@ -225,13 +227,13 @@ namespace laya
             std::bind(downloadHeader_onComp, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6, pJSObj),
             p_nTryNum, p_nOptTimeout);
     }
-    void setTouchEvtFunc(JSValueAsParam pObj) 
+    void setTouchEvtFunc(jsvm_value pObj) 
     {
     }
-    void setKeyEvtFunc(JSValueAsParam pObj) 
+    void setKeyEvtFunc(jsvm_value pObj) 
     {
     }
-    void setJoystickEvtFunc(JSValueAsParam pObj) 
+    void setJoystickEvtFunc(jsvm_value pObj) 
     {
     }
 	void copy(const char* data)
@@ -248,7 +250,8 @@ namespace laya
 
     void evalJS(const char* p_sSource)
     {
-        JSP_RUN_SCRIPT(p_sSource);
+        jsvm_value result;
+        jsbind::runScript(p_sSource, &result);
     }
     void JSPrint(const char* p_sBuffer)
     {
@@ -346,19 +349,17 @@ namespace laya
         imd5.GenerateMD5(buf, len);
         return imd5.ToString();
     }
-    std::string calcMD5_JSAB(JSValueAsParam pjs)
+    std::string calcMD5_JSAB(jsbind::ArrayBuffer arrayBuffer)
     {
-        char* pABPtr = NULL;
-        int nABLen = 0;
-        if (!extractJSAB(pjs, pABPtr, nABLen))return "";
-        std::string ret = calcMD5((unsigned char*)pABPtr, nABLen);
+        DEBUG_CHECK(arrayBuffer.isValid());
+        std::string ret = calcMD5(reinterpret_cast<unsigned char* >(arrayBuffer.getData()), arrayBuffer.getByteLength());
         return ret;
     }
-    static std::string toBase64(const char* type, float encoderOptions, JSValueAsParam ab, int w, int h, bool flipY)
+    static std::string toBase64(const char* type, float encoderOptions, jsbind::ArrayBuffer arrayBuffer, int w, int h, bool flipY)
     {
-        char* pPixels = NULL;
-        int nABLen = 0;
-        bool bIsArrayBuffer = extractJSAB(ab, pPixels, nABLen);
+        char* pPixels = reinterpret_cast<char*>(arrayBuffer.getData());
+        int nABLen = arrayBuffer.getByteLength();
+        bool bIsArrayBuffer = arrayBuffer.isValid();
         int size = sizeof(GLubyte) * w * h * 4;
         if (!bIsArrayBuffer || w == 0 || h == 0 || size != nABLen)
         {
@@ -408,59 +409,54 @@ namespace laya
         delete[] result.first;
         return std::string(pDest.get());
     }
-    std::string conchToBase64FlipY(const char* type, float encoderOptions, JSValueAsParam ab, int w, int h)
+    std::string conchToBase64FlipY(const char* type, float encoderOptions, jsbind::ArrayBuffer ab, int w, int h)
     {
         return toBase64(type, encoderOptions, ab, w, h, true);
     }
-    std::string conchToBase64(const char* type, float encoderOptions, JSValueAsParam ab, int w, int h)
+    std::string conchToBase64(const char* type, float encoderOptions, jsbind::ArrayBuffer ab, int w, int h)
     {
         return toBase64(type, encoderOptions, ab, w, h, false);
     }
-    std::string btoa(JSValueAsParam val)
+    std::string btoa(const jsbind::StringLatin1& val)
     {
-        std::string temp;
-        v8::Local<v8::String> str = v8::Local<v8::String>::Cast(val);
-        int length = str->Length();
-        temp.resize(length);
-        //str->WriteUtf8(Isolate::GetCurrent(), &temp[0], length, NULL, String::NO_NULL_TERMINATION);
-        str->WriteOneByte(v8::Isolate::GetCurrent(), (uint8_t* )&temp[0], 0, length, v8::String::NO_OPTIONS);
-        
-        if (temp.length() == 0)
+        if (val.getValue().empty())
             return std::string();
-        return base64Encode(temp.data(), temp.length());
+        return base64Encode(val.getValue().data(), val.getValue().length());
     }
-    JsValue atob(const char* encodedString)
+    jsvm_value atob(const char* encodedString)
     {
         std::vector<char> out;
-        if (!base64Decode(std::string(encodedString), out, isHTMLSpace<uint16_t>, Base64ValidatePadding)) {
-            return v8::String::NewFromOneByte(v8::Isolate::GetCurrent(), (const uint8_t*)out.data(), v8::NewStringType::kNormal, 0).ToLocalChecked();
+        if (!base64Decode(std::string(encodedString), out, isHTMLSpace<uint16_t>, Base64ValidatePadding)) 
+        {
+            return jsbind::StringLatin1::Make(std::string(out.data())).getHandle();
         }
-        return v8::String::NewFromOneByte(v8::Isolate::GetCurrent(), (const uint8_t*)out.data(), v8::NewStringType::kNormal, out.size()).ToLocalChecked();
+        return jsbind::StringLatin1::Make(std::string(out.data())).getHandle();
     }
     bool getEnableTouch()
     {
         return g_bEnableTouch;
     }
-    JsValue createImageBitmap(JsValue image, JsValue options)
+    jsvm_value createImageBitmap(jsbind::Local image, jsbind::Local options)
     {
-        if (Converter<JSImage>::is(image))
+        if (image.is<JSImage>())
         {
-            JSImage* jsImage = Converter<JSImage*>::ToCpp(image);
+            JSImage* jsImage = image.as<JSImage*>();
             assert(jsImage != nullptr);
             JSImageBitmap* jsImageBitmap = new JSImageBitmap();
             jsImageBitmap->m_ImageBitmap.m_image = jsImage->m_pImage;
-            //return laya::Promise::resolve(Converter<JSImageBitmap*>::ToJs(jsImageBitmap)).getV8Promise();
-            return Converter<JSImageBitmap*>::ToJs(jsImageBitmap);
+            //return laya::Promise::resolve(ValueTraits<JSImageBitmap*>::ToJs(jsImageBitmap)).getV8Promise();
+            return jsbind::Make<JSImageBitmap*>(jsImageBitmap);
         }
         //return JSP_TO_JS_PROMISE;
-        return JSP_TO_JS_NULL;
+        return jsbind::MakeNull();
     }
 	void JSGlobalExportC()	
     {
 
-        v8::Isolate* isolate = v8::Isolate::GetCurrent();
-	    v8::HandleScope scope(isolate);
-        Context context;
+        //v8::Isolate* isolate = v8::Isolate::GetCurrent();
+	    //v8::HandleScope scope(isolate);
+        GET_ENV
+        jsbind::Object context(jsvm::global());
         ///Module global(context.isolate());
         JSCanvasRenderingContext2D::exportJS(context);
         JsFile::exportJS(context);
@@ -471,7 +467,6 @@ namespace laya
         JSImage::exportJS(context);
         XMLHttpRequest::exportJS(context);
         //Fetch::exportJS(context);
-        TextDecoderWrapper::exportJS(context);
         JSConchConfig::exportJS(context);
         JSXmlNode::exportJS(context);
         JSXmlDocument::exportJS(context);
@@ -552,20 +547,22 @@ namespace laya
         context.function("open", &open);
         context.function("btoa", &btoa);
         context.function("atob", &atob);
+        context.function("importNative",&importNative);
         context.function("_createImageBitmap", &createImageBitmap);
-        context.function_optional_override("TRACE_BEGIN", optional_override([](const std::string& name) {
+        context.function_optional_override("TRACE_BEGIN", jsbind::optional_override([](const std::string& name) {
             TRACE_NAME_BEGIN(name.c_str());
         }));
-         context.function_optional_override("TRACE_END", optional_override([](const std::string& name) {
+         context.function_optional_override("TRACE_END", jsbind::optional_override([](const std::string& name) {
             TRACE_NAME_END(name.c_str());
         }));
-         context.function_optional_override("TRACE_DUMP", optional_override([]() {
+         context.function_optional_override("TRACE_DUMP", jsbind::optional_override([]() {
             TRACE_NAME_DUMP();
          }));
         JSLayaConchBullet::exportJS(context);
- #if !defined(OS_LINUX) && !defined(OS_WINDOWS) && !defined(OS_OHOS)//TODO
+ #if defined(PHYSX)
         JSLayaConchPhysX::exportJS(context);
 #endif
+        context.Export(env, nullptr, nullptr);
 	}
     void JSGlobalDisExportC() {
         //FontManager::deleteInstance();

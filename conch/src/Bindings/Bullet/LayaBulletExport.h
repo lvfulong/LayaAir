@@ -3,7 +3,7 @@
 
 #include <JCConch.h>
 #include "../../JCScriptRuntime.h"
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include "btBulletDynamicsCommon.h"
 #include "BulletCollision/Gimpact/btGImpactCollisionAlgorithm.h"
 #include "BulletCollision/Gimpact/btGImpactShape.h"
@@ -20,11 +20,11 @@ namespace laya
 {
     inline void layaMotionStateGetWorldTransform(int32_t rigidBodyID, pointer_t worldTrans)
     {
-		JCConch::s_pScriptRuntime->m_bJSBulletGetWorldTransformHandle.call<void>(getCurrentContext().global(),rigidBodyID, worldTrans);
+		JCConch::s_pScriptRuntime->m_bJSBulletGetWorldTransformHandle.call<void>(jsvm::global(),rigidBodyID, worldTrans);
     }
     inline void layaMotionStateSetWorldTransform(int32_t rigidBodyID, const pointer_t worldTrans)
     {
-		JCConch::s_pScriptRuntime->m_bJSBulletSetWorldTransformHandle.call<void>(getCurrentContext().global(),rigidBodyID, worldTrans);
+		JCConch::s_pScriptRuntime->m_bJSBulletSetWorldTransformHandle.call<void>(jsvm::global(),rigidBodyID, worldTrans);
     }
 
 
@@ -44,7 +44,7 @@ namespace laya
     class JSLayaConchBullet
     {
     public:
-        static void exportJS(Context& context);
+        static void exportJS(jsbind::Object& context);
 
         static void  btGImpactCollisionAlgorithm_RegisterAlgorithm(pointer_t dispatcher);
         static pointer_t  btVector3_create(btScalar x, btScalar y, btScalar z);
@@ -346,10 +346,10 @@ namespace laya
 		static pointer_t btHeightfieldTerrainShape_create(int heightStickWidth, int heightStickLength, const pointer_t heightfieldData, btScalar heightScale,
 			btScalar minHeight, btScalar maxHeight, int datatype);
 		static pointer_t _malloc(int size);
-		static void copyJSArray(pointer_t ptr, JSValueAsParam jsarray);
+		static void copyJSArray(pointer_t ptr, jsbind::ArrayBuffer jsarray);
 		static void _free(pointer_t ptr);
-		static void setDrawlineFunction(JSValueAsParam pFunction);
-		static void setClearlineFunction(JSValueAsParam pFunction);
+		static void setDrawlineFunction(jsvm_value pFunction);
+		static void setClearlineFunction(jsvm_value pFunction);
 		static void btConcaveShape_setMargin(pointer_t ptr, btScalar collisionMargin);
 		static btScalar btConcaveShape_getMargin(pointer_t ptr);
 		static void btRigidBody_setCenterOfMassOrientation(pointer_t ptr, btScalar x, btScalar y, btScalar z, btScalar w);

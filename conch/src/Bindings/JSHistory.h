@@ -1,7 +1,7 @@
 #ifndef __JSHistory_H__
 #define __JSHistory_H__
 
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 
 namespace laya 
 {
@@ -9,7 +9,7 @@ namespace laya
     class JSHistory
     {
     public:
-        static void exportJS(Context& context);
+        static void exportJS(jsbind::Object& context);
     public:
         static int getLength();
         static void back();

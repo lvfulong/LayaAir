@@ -1,6 +1,6 @@
 ﻿#include "JSImageBitmap.h"
 #include "../../JCScriptRuntime.h"
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include <utils/Log.h>
 #include <utils/JCMemorySurvey.h>
 
@@ -8,7 +8,7 @@ namespace laya
 {
 JSImageBitmap::JSImageBitmap()
 {
-    AdjustAmountOfExternalAllocatedMemory(128);
+    jsbind::AdjustAmountOfExternalAllocatedMemory(128);
     JCMemorySurvey::GetInstance()->newClass("JSImageBitmap", 10240, this);
 }
 JSImageBitmap::~JSImageBitmap()
@@ -31,9 +31,9 @@ int JSImageBitmap::getImageID()
 {
     return m_ImageBitmap.getImageID();
 }
-void JSImageBitmap::exportJS(Context &context)
+void JSImageBitmap::exportJS(jsbind::Object &context)
 {
-    class_<JSImageBitmap> class_binding;
+    jsbind::class_<JSImageBitmap> class_binding;
     class_binding.constructor<>();
     class_binding.property("width", &JSImageBitmap::getWidth);
     class_binding.property("height", &JSImageBitmap::getHeight);

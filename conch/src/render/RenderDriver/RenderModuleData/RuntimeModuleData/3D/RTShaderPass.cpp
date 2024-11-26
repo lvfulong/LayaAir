@@ -10,23 +10,23 @@ RTShaderPass::~RTShaderPass()
 {
     // TODO
 }
-void RTShaderPass::setCacheShaderJS(RTDefineDatas *compileDefine, GLESShaderInstance* shader, JSValueAsParam jsShaderInstanceWrapper)
+void RTShaderPass::setCacheShaderJS(RTDefineDatas *compileDefine, GLESShaderInstance* shader, jsvm_value jsShaderInstanceWrapper)
 {
-    setCacheShader(compileDefine, shader, Persistent(jsShaderInstanceWrapper));
+    setCacheShader(compileDefine, shader, jsbind::Persistent(jsShaderInstanceWrapper));
 }
-JsValue RTShaderPass::getCacheShaderJS(RTDefineDatas *compileDefine)
+jsvm_value RTShaderPass::getCacheShaderJS(RTDefineDatas *compileDefine)
 {
     RTShaderPass::CacheShaderItem *item = getCacheShader(compileDefine);
     if (item != nullptr)
     {
-        return item->_jsShaderInstance.toLocal().handle_;
+        return item->_jsShaderInstance.getHandle();
     }
     else
     {
-        return JSP_TO_JS_NULL;
+        return jsbind::MakeNull();
     }
 }
-void RTShaderPass::setCacheShader(RTDefineDatas *compileDefine, GLESShaderInstance *shader, Persistent jsShaderInstance)
+void RTShaderPass::setCacheShader(RTDefineDatas *compileDefine, GLESShaderInstance *shader, jsbind::Persistent jsShaderInstance)
 {
     void *cacheShaders = &_cacheSharders;
     // var mask : Array<number> = compileDefine._mask;
@@ -139,13 +139,13 @@ void RTShaderPass::_resizeCacheShaderMap(void *cacheMap, uint32_t hierarchy, uin
 // void RTShaderPass::createShaderInstance(RTDefineDatas*compileDefine)
 //{
 // }
-void RTShaderPass::setCreateShaderInstanceFunction(JSValueAsParam value)
+void RTShaderPass::setCreateShaderInstanceFunction(jsvm_value value)
 {
-    m_createShaderInstanceFunctionJS.reset(value);
+    m_createShaderInstanceFunctionJS = jsbind::Persistent(value);
 }
 GLESShaderInstance *RTShaderPass::callCreateShaderInstanceFunction()
 {
-    return m_createShaderInstanceFunctionJS.call<GLESShaderInstance *>(getCurrentContext().global());
+    return m_createShaderInstanceFunctionJS.call<GLESShaderInstance *>(jsvm::global());
 }
 void RTShaderPass::destroy()
 {

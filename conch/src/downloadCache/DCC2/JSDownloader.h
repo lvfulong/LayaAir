@@ -2,11 +2,11 @@
 #ifndef __JSDOWNLOADER_H__
 #define __JSDOWNLOADER_H__
 #include "IDownloader.h"
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 namespace laya{
     class JSDownloader :public IDownloader{
     private:
-        Persistent  m_jsDownloader;
+        jsbind::Persistent  m_jsDownloader;
         //std::vector<Persistent>  m_onEndCBs;
         bool m_inited=false;
 
@@ -15,12 +15,12 @@ namespace laya{
         struct jsCallbackData{
             JSDownloader* pThis;
             onDownloadedFunc cFunc;
-            Persistent      jsFunc;
+            jsbind::Persistent      jsFunc;
         };
         JSDownloader();
         virtual ~JSDownloader();
 
-        void setJSDownloader(JSValueAsParam obj);
+        void setJSDownloader(jsvm_value obj);
 
         void download(const char* pszUrl, onDownloadedFunc onok);
     };

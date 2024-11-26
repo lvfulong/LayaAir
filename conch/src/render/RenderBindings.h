@@ -13,7 +13,7 @@
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLTextureContext.h"
 #include "render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTSubShader.h"
 #include <Bindings/Video/JSVideo.h>
-#include <binder/JSInterface.h>
+#include <jsbind/JSBind.h>
 #include <core/math/Color.h>
 #include <core/math/Matrix3x3.h>
 #include <core/math/Matrix4x4.h>
@@ -46,89 +46,83 @@
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTShaderPass.h>
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h>
 
+namespace jsbind
+{
+    namespace internal
+    {
+    template <> class ValueTraits<laya::Matrix3x3>
+    {
+    public:
+        static laya::Matrix3x3 ToCpp(jsbind::Local value)
+        {
+            //Local local = Local(value)["elements"];
+            Local local = value["elements"];
+            DEBUG_CHECK(local.isArrayBuffer() || local.isArrayBufferView());
+            auto ab = local.as<ArrayBuffer>();
+            laya::Matrix3x3 mat;
+            memcpy(mat.elements, ab.getData(), sizeof(float) * 9);
+            return mat;
+        }
+        static jsvm_value ToJs(const laya::Matrix3x3& p_vl, bool callDestructor)
+        {
+            DEBUG_CHECK(false && "not implemented");
+            return jsbind::MakeUndefined();
+        }
+    };
+    template <> class ValueTraits<laya::Matrix4x4>
+    {
+    public:
+        static laya::Matrix4x4 ToCpp(jsbind::Local value)
+        {
+            //Local local = Local(value)["elements"];
+            Local local = value["elements"];
+            DEBUG_CHECK(local.isArrayBuffer() || local.isArrayBufferView());
+            auto ab = local.as<ArrayBuffer>();
+            laya::Matrix4x4 mat;
+            memcpy(mat.elements, ab.getData(), sizeof(float) * 16);
+            return mat;
+        }
+        static jsvm_value ToJs(const laya::Matrix4x4& p_vl,bool callDestructor)
+        {
+            DEBUG_CHECK(false && "not implemented");
+            return jsbind::MakeUndefined();
+        }
+    };
+    }
+}
 namespace laya
 {
-template <> class Converter<Matrix3x3>
-{
-  public:
-    static Matrix3x3 ToCpp(JSValueAsParam obj)
-    {
-        Local value(obj);
-        char *pArrayBufferPtr = NULL;
-        int nABLen = 0;
-        bool bIsArrayBuffer = extractJSAB(value[std::string("elements")].handle_, pArrayBufferPtr, nABLen);
-        if (bIsArrayBuffer)
-        {
-            Matrix3x3 mat;
-            memcpy(mat.elements, pArrayBufferPtr, sizeof(float) * 9);
-            return mat;
-        }
-        else
-        {
-            return Matrix3x3();
-        }
-    }
-    static JsValue ToJs(const Matrix3x3 &p_vl)
-    {
-        assert(true && "not implemented");
-        return JSP_TO_JS_UNDEFINE;
-    }
-};
-template <> class Converter<Matrix4x4>
-{
-  public:
-    static Matrix4x4 ToCpp(JSValueAsParam obj)
-    {
-        Local value(obj);
-
-        char *pArrayBufferPtr = NULL;
-        int nABLen = 0;
-        bool bIsArrayBuffer = extractJSAB(value[std::string("elements")].handle_, pArrayBufferPtr, nABLen);
-        if (bIsArrayBuffer)
-        {
-            Matrix4x4 mat;
-            memcpy(mat.elements, pArrayBufferPtr, sizeof(float) * 16);
-            return mat;
-        }
-        else
-        {
-            return Matrix4x4();
-        }
-    }
-    static JsValue ToJs(const Matrix4x4 &p_vl)
-    {
-        assert(true && "not implemented");
-        return JSP_TO_JS_UNDEFINE;
-    }
-};
-
 class RenderBindings
 {
   public:
-    static void exportJS(Context &context)
+      static void clean()
+      {
+        GLESCommandUniformMap::clean();
+    }
+    static void exportJS(jsbind::Object &context)
     {
         // Math Bindings
-        value_object<Vector2>("conchVector2").field("x", &Vector2::x).field("y", &Vector2::y);
-        value_object<Vector3>("conchVector3").field("x", &Vector3::x).field("y", &Vector3::y).field("z", &Vector3::z);
-        value_object<Vector4>("conchVector4")
+        jsbind::value_object<Vector2>("conchVector2").field("x", &Vector2::x).field("y", &Vector2::y);
+        jsbind::value_object<Vector3>("conchVector3").field("x", &Vector3::x).field("y", &Vector3::y).field("z", &Vector3::z);
+        jsbind::value_object<Vector4>("conchVector4")
             .field("x", &Vector4::x)
             .field("y", &Vector4::y)
             .field("z", &Vector4::z)
             .field("w", &Vector4::w);
-        value_object<Color>("conchColor")
+        jsbind::value_object<Color>("conchColor")
             .field("r", &Color::r)
             .field("g", &Color::g)
             .field("b", &Color::b)
             .field("a", &Color::a);
-        value_object<Viewport>("conchViewport")
+        jsbind::value_object<Viewport>("conchViewport")
             .field("x", &Viewport::x)
             .field("y", &Viewport::y)
             .field("width", &Viewport::width)
             .field("height", &Viewport::height)
             .field("minDepth", &Viewport::minDepth)
             .field("maxDepth", &Viewport::maxDepth);
-        value_object<Plane>("conchPlane").field("normal", &Plane::normal).field("distance", &Plane::distance);
-        value_object<BoundFrustum>("conchBoundFrustum")
+        jsbind::value_object<Plane>("conchPlane").field("normal", &Plane::normal).field("distance", &Plane::distance);
+        jsbind::value_object<BoundFrustum>("conchBoundFrustum")
             .field("_matrix", &BoundFrustum::_matrix)
             .field("_near", &BoundFrustum::_near)
             .field("_far", &BoundFrustum::_far)
@@ -136,13 +130,13 @@ class RenderBindings
             .field("_right", &BoundFrustum::_right)
             .field("_top", &BoundFrustum::_top)
             .field("_bottom", &BoundFrustum::_bottom);
-        value_object<CameraCullInfo>("conchCameraCullInfo")
+        jsbind::value_object<CameraCullInfo>("conchCameraCullInfo")
             .field("position", &CameraCullInfo::_position)
             .field("cullingMask", &CameraCullInfo::_cullingMask)
             .field("staticMask", &CameraCullInfo::_staticMask)
             .field("boundFrustum", &CameraCullInfo::_boundFrustum)
             .field("useOcclusionCulling", &CameraCullInfo::_useOcclusionCulling);
-        value_object<WebGLConfig>("conchWebGLConfig")
+        jsbind::value_object<WebGLConfig>("conchWebGLConfig")
             .field("stencil", &WebGLConfig::stencil)
             .field("alpha", &WebGLConfig::alpha)
             .field("depth", &WebGLConfig::depth)
@@ -150,20 +144,20 @@ class RenderBindings
             .field("failIfMajorPerformanceCaveat", &WebGLConfig::failIfMajorPerformanceCaveat)
             .field("premultipliedAlpha", &WebGLConfig::premultipliedAlpha)
             .field("posipreserveDrawingBuffertion", &WebGLConfig::preserveDrawingBuffer);
-        value_object<VertexStateContext>("conchVertexStateContext")
+        jsbind::value_object<VertexStateContext>("conchVertexStateContext")
             .field("elementCount", &VertexStateContext::elementCount)
             .field("elementType", &VertexStateContext::elementType)
             .field("normalized", &VertexStateContext::normalized)
             .field("vertexStride", &VertexStateContext::vertexStride)
             .field("elementOffset", &VertexStateContext::elementOffset);
-        value_object<UniformProperty>("conchUniformProperty")
+        jsbind::value_object<UniformProperty>("conchUniformProperty")
             .field("id", &UniformProperty::id)
             .field("propertyName", &UniformProperty::propertyName)
             .field("uniformtype", &UniformProperty::uniformtype);
-        value_object<RTShaderDefine>("conchRTShaderDefine")
+        jsbind::value_object<RTShaderDefine>("conchRTShaderDefine")
             .field("_index", &RTShaderDefine::_index)
             .field("_value", &RTShaderDefine::_value);
-        value_object<DDSTextureInfoJS>("conchDDSTextureInfo")
+        jsbind::value_object<DDSTextureInfoJS>("conchDDSTextureInfo")
             .field("source", &DDSTextureInfoJS::sourceAB)
             .field("compressed", &DDSTextureInfoJS::compressed)
             .field("dataOffset", &DDSTextureInfoJS::dataOffset)
@@ -174,7 +168,7 @@ class RenderBindings
             .field("width", &DDSTextureInfoJS::width)
             .field("height", &DDSTextureInfoJS::height)
             .field("format", &DDSTextureInfoJS::format);
-        value_object<KTXTextureInfoJS>("conchKTXTextureInfo")
+        jsbind::value_object<KTXTextureInfoJS>("conchKTXTextureInfo")
             .field("source", &KTXTextureInfoJS::sourceAB)
             .field("compress", &KTXTextureInfoJS::compress)
             .field("sRGB", &KTXTextureInfoJS::sRGB)
@@ -185,9 +179,9 @@ class RenderBindings
             .field("bytesOfKeyValueData", &KTXTextureInfoJS::bytesOfKeyValueData)
             .field("headerOffset", &KTXTextureInfoJS::headerOffset);
         {
-            class_<JSBounds> class_binding;
+            jsbind::class_<JSBounds> class_binding;
             class_binding.constructor<>();
-            class_binding.constructor<JSValueAsParam>();
+            class_binding.constructor<jsbind::ArrayBuffer>();
             class_binding.function("setMin", &JSBounds::setMin);
             class_binding.function("getMin", &JSBounds::getMinJS);
             class_binding.function("setMax", &JSBounds::setMax);
@@ -202,9 +196,9 @@ class RenderBindings
             context.class_("conchBounds", class_binding);
         }
         {
-              class_<JSRTTransform> class_binding;
+            jsbind::class_<JSRTTransform> class_binding;
               class_binding.constructor<>();
-              class_binding.constructor <JSValueAsParam>();
+              class_binding.constructor <jsbind::ArrayBuffer>();
               class_binding.function("setParent", &JSRTTransform::rt_setParent);
               class_binding.function("getWorldLossyScale", &JSRTTransform::rt_getWorldLossyScale);
               class_binding.function("setWorldLossyScale", &JSRTTransform::rt_setWorldLossyScale);
@@ -230,7 +224,7 @@ class RenderBindings
               context.class_("conchRTTransform", class_binding);
         }
         {
-            class_<GLTextureContext> class_binding;
+            jsbind::class_<GLTextureContext> class_binding;
             class_binding.constructor<>();
             class_binding.function("createTextureInternal", &GLTextureContext::createTextureInternal);
             class_binding.function("setTexturePixelsData", &GLTextureContext::setTexturePixelsDataJS);
@@ -252,7 +246,7 @@ class RenderBindings
             class_binding.function("initVideoTextureData", &GLTextureContext::initVideoTextureData);
             class_binding.function("updateVideoTexture", &GLTextureContext::updateVideoTexture);
             class_binding.function_optional_override(
-                "updateVideoTexture", optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, int source,
+                "updateVideoTexture", jsbind::optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, int source,
                                                            bool premultiplyAlpha, bool invertY) {
                     auto pImage = JCConch::s_pConchRender->m_pImageManager->getImage(source);
                     if (pImage && texture)
@@ -261,7 +255,7 @@ class RenderBindings
                     }
                 }));
             class_binding.function_optional_override(
-                "setTextureImageData", optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, int source,
+                "setTextureImageData", jsbind::optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, int source,
                                                             bool premultiplyAlpha, bool invertY) {
                     auto pImage = JCConch::s_pConchRender->m_pImageManager->getImage(source);
                     if (pImage && texture)
@@ -273,14 +267,12 @@ class RenderBindings
 
             class_binding.function_optional_override(
                 "setTextureDDSData",
-                optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, const DDSTextureInfoJS &ddsInfo) {
-                    char *pArrayBufferPtr = NULL;
-                    int nABLen = 0;
-                    bool bIsArrayBuffer = extractJSAB(ddsInfo.sourceAB, pArrayBufferPtr, nABLen);
+                jsbind::optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, const DDSTextureInfoJS &ddsInfo) {
+                    bool bIsArrayBuffer = ddsInfo.sourceAB.isValid();
                     if (bIsArrayBuffer)
                     {
                         DDSTextureInfo info;
-                        info.source = pArrayBufferPtr;
+                        info.source = reinterpret_cast<const char*>(ddsInfo.sourceAB.getData());
                         info.compressed = ddsInfo.compressed;
                         info.dataOffset = ddsInfo.dataOffset;
                         info.blockBytes = ddsInfo.blockBytes;
@@ -296,14 +288,12 @@ class RenderBindings
                 }));
             class_binding.function_optional_override(
                 "setTextureKTXData",
-                optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, const KTXTextureInfoJS &ktxInfo) {
-                    char *pArrayBufferPtr = NULL;
-                    int nABLen = 0;
-                    bool bIsArrayBuffer = extractJSAB(ktxInfo.sourceAB, pArrayBufferPtr, nABLen);
+                jsbind::optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, const KTXTextureInfoJS &ktxInfo) {
+                    bool bIsArrayBuffer = ktxInfo.sourceAB.isValid();
                     if (bIsArrayBuffer)
                     {
                         KTXTextureInfo info;
-                        info.source = pArrayBufferPtr;
+                        info.source = reinterpret_cast<const char*>(ktxInfo.sourceAB.getData());
                         info.compress = ktxInfo.compress;
                         info.sRGB = ktxInfo.sRGB;
                         info.dimension = ktxInfo.dimension;
@@ -320,14 +310,12 @@ class RenderBindings
             // class_binding.function("setCubeDDSData", &GLTextureContext::setCubeDDSData);
             class_binding.function_optional_override(
                 "setCubeKTXData",
-                optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, const KTXTextureInfoJS &ktxInfo) {
-                    char *pArrayBufferPtr = NULL;
-                    int nABLen = 0;
-                    bool bIsArrayBuffer = extractJSAB(ktxInfo.sourceAB, pArrayBufferPtr, nABLen);
+                jsbind::optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, const KTXTextureInfoJS &ktxInfo) {
+                    bool bIsArrayBuffer = ktxInfo.sourceAB.isValid();
                     if (bIsArrayBuffer)
                     {
                         KTXTextureInfo info;
-                        info.source = pArrayBufferPtr;
+                        info.source = reinterpret_cast<const char*>(ktxInfo.sourceAB.getData());
                         info.compress = ktxInfo.compress;
                         info.sRGB = ktxInfo.sRGB;
                         info.dimension = ktxInfo.dimension;
@@ -343,58 +331,53 @@ class RenderBindings
                 }));
             class_binding.function_optional_override(
                 "readRenderTargetPixelData",
-                optional_override([](GLTextureContext &ctx, GLESInternalRT *renderTarget, int xOffset, int yOffset,
-                                     int width, int height, JSValueAsParam out) {
+                jsbind::optional_override([](GLTextureContext &ctx, GLESInternalRT *renderTarget, int xOffset, int yOffset,
+                                     int width, int height, jsbind::ArrayBuffer out) {
                     std::vector<uint8_t> buffer;
                     ctx.readRenderTargetPixelData(renderTarget, xOffset, yOffset, width, height, buffer);
-                    writeToJSAB(out, (const char *)buffer.data(), buffer.size());
+                    out.upload(buffer.data(), buffer.size());
                     return out;
                 }));
             class_binding.function("createTexture3DInternal", &GLTextureContext::createTexture3DInternal);
             class_binding.function_optional_override(
                 "setTexture3DImageData",
-                optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, JSValueAsParam jsSources,
+                jsbind::optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, jsvm_value jsSources,
                                      int depth, bool premultiplyAlpha, bool invertY) {
-                    std::vector<JSImage *> sources = Converter<std::vector<JSImage *>>::ToCpp(jsSources);
+                    std::vector<JSImage *> sources = jsbind::as<std::vector<JSImage *>>(jsSources);
                     ctx.setTexture3DImageData(texture, sources, depth, premultiplyAlpha, invertY);
                 }));
 
             class_binding.function_optional_override(
                 "setTexture3DPixelsData",
-                optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, JSValueAsParam pixels, int depth,
+                jsbind::optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, jsbind::ArrayBuffer pixels, int depth,
                                      bool premultiplyAlpha, bool invertY) {
                     if (texture == nullptr)
                     {
                         return;
                     }
-                    char *arrayBuffer;
-                    int abLength;
-                    bool isArrayBuffer = extractJSAB(pixels, arrayBuffer, abLength);
+                    
+                    bool isArrayBuffer = pixels.isValid();
                     if (isArrayBuffer)
                     {
+                        char *arrayBuffer = reinterpret_cast<char*>(pixels.getData());
+                        int abLength = pixels.getByteLength();
                         ctx.setTexture3DPixelsData(texture, arrayBuffer, abLength, depth, premultiplyAlpha, invertY);
-                    }
-                    else
-                    {
-                        ctx.setTexture3DPixelsData(texture, nullptr, abLength, depth, premultiplyAlpha, invertY);
                     }
                 }));
 
             class_binding.function_optional_override(
                 "setTexture3DSubPixelsData",
-                optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, JSValueAsParam pixels,
+                jsbind::optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, jsbind::ArrayBuffer pixels,
                                      int mipmapLevel, bool generateMipmap, int xOffset, int yOffset, int zOffset,
                                      int width, int height, int depth, bool premultiplyAlpha, bool invertY) {
                     if (texture == nullptr)
                     {
                         return;
                     }
-                    char *arrayBuffer;
-                    int abLength;
-                    bool isArrayBuffer = extractJSAB(pixels, arrayBuffer, abLength);
+                    bool isArrayBuffer = pixels.isValid();
                     if (isArrayBuffer)
                     {
-                        ctx.setTexture3DSubPixelsData(texture, arrayBuffer, mipmapLevel, generateMipmap, xOffset,
+                        ctx.setTexture3DSubPixelsData(texture, reinterpret_cast<char*>(pixels.getData()), mipmapLevel, generateMipmap, xOffset,
                                                       yOffset, zOffset, width, height, depth, premultiplyAlpha,
                                                       invertY);
                     }
@@ -404,13 +387,14 @@ class RenderBindings
         }
         {
 
-            class_<GL2TextureContext> class_binding;
+            jsbind::class_<GL2TextureContext> class_binding;
             class_binding.inherit<GLTextureContext>();
             class_binding.constructor<>();
             context.class_("conchGLES2TextureContext", class_binding);
         }
         {
-            class_<GLESInternalRT> class_binding;
+            jsbind::class_<GLESInternalRT> class_binding;
+            class_binding.constructor<>();
             class_binding.constructor<RenderTargetFormat, RenderTargetFormat, bool, bool, int>();
             class_binding.property_field("_isCube", &GLESInternalRT::m_isCube);
             class_binding.property_field("_samples", &GLESInternalRT::m_samples);
@@ -421,12 +405,14 @@ class RenderBindings
             class_binding.property_field("gpuMemory", &GLESInternalRT::m_gpuMemory);
             class_binding.function("dispose", &GLESInternalRT::dispose);
             class_binding.function_optional_override(
-                "getTextures", optional_override([](GLESInternalRT &ctx) { return ctx.m_textures; }));
+                "getTextures", jsbind::optional_override([](GLESInternalRT &ctx) { return ctx.m_textures; }));
             class_binding.function_optional_override(
-                "getDepthTexture", optional_override([](GLESInternalRT &ctx) { return ctx.m_depthTexture; }));
+                "getDepthTexture", jsbind::optional_override([](GLESInternalRT &ctx) { return ctx.m_depthTexture; }));
+            context.class_("conchGLESInternalRT", class_binding);
         }
         {
-            class_<GLESInternalTex> class_binding;
+            jsbind::class_<GLESInternalTex> class_binding;
+            class_binding.constructor<>();
             class_binding.constructor<int, int, int, int, TextureDimension, bool, bool, int>();
             class_binding.function("dispose", &GLESInternalTex::dispose);
             class_binding.function("getWidth", &GLESInternalTex::getWidth);
@@ -459,7 +445,7 @@ class RenderBindings
             // todo UniformBufferObject
         }
         {
-            class_<GLESIndexBuffer> class_binding;
+            jsbind::class_<GLESIndexBuffer> class_binding;
             class_binding.constructor<BufferTargetType, BufferUsage>();
             class_binding.property_field("_indexCount", &GLESIndexBuffer::_indexCount);
             class_binding.property_field("_indexType", &GLESIndexBuffer::_indexType);
@@ -469,7 +455,7 @@ class RenderBindings
             context.class_("conchGLESIndexBuffer", class_binding);
         }
         {
-            class_<GLESVertexBuffer> class_binding;
+            jsbind::class_<GLESVertexBuffer> class_binding;
             class_binding.constructor<BufferTargetType, BufferUsage>();
             class_binding.property_field("_instanceBuffer", &GLESVertexBuffer::_instanceBuffer);
             class_binding.function("clearVertexDeclaration", &GLESVertexBuffer::clearVertexDeclaration);
@@ -480,7 +466,7 @@ class RenderBindings
             context.class_("conchGLESVertexBuffer", class_binding);
         }
         {
-            class_<GLESEngine> class_binding;
+            jsbind::class_<GLESEngine> class_binding;
             class_binding.constructor<WebGLConfig, WebGLMode>();
             class_binding.function("initRenderEngine", &GLESEngine::initRenderEngine);
             class_binding.function("getTextureContext", &GLESEngine::getTextureContextJS);
@@ -501,14 +487,14 @@ class RenderBindings
             context.class_("conchGLESEngine", class_binding);
         }
         {
-            class_<GLESBufferState> class_binding;
+            jsbind::class_<GLESBufferState> class_binding;
             class_binding.constructor<>();
             class_binding.function("applyState", &GLESBufferState::applyState);
             class_binding.function("destroy", &GLESBufferState::destroy);
             context.class_("conchGLESBufferState", class_binding);
         }
         {
-            class_<GLESCommandUniformMap> class_binding;
+            jsbind::class_<GLESCommandUniformMap> class_binding;
             class_binding.constructor<>();
             // class_binding.function("hasPtrID", &JSCommandUniformMap::hasPtrID);
             class_binding.function("addShaderBlockUniform", &GLESCommandUniformMap::addShaderBlockUniform);
@@ -517,7 +503,7 @@ class RenderBindings
             context.class_("conchGLESCommandUniformMap", class_binding);
         }
         {
-            class_<RenderState> class_binding;
+            jsbind::class_<RenderState> class_binding;
             class_binding.constructor<>();
             class_binding.property("cull", &RenderState::getCull, &RenderState::setCull);
             class_binding.property("blend", &RenderState::getBlend, &RenderState::setBlend);
@@ -544,7 +530,7 @@ class RenderBindings
             context.class_("conchRenderState", class_binding);
         }
         {
-            class_<RTDefineDatas> class_binding;
+            jsbind::class_<RTDefineDatas> class_binding;
             class_binding.constructor<>();
             class_binding.function("cloneTo", &RTDefineDatas::cloneTo);
             class_binding.function("add", &RTDefineDatas::add);
@@ -559,7 +545,7 @@ class RenderBindings
             context.class_("conchRTDefineDatas", class_binding);
         }
         {
-            class_<RTSubShader> class_binding;
+            jsbind::class_<RTSubShader> class_binding;
             class_binding.constructor<>();
             class_binding.function("addShaderPass", &RTSubShader::addShaderPass);
             class_binding.function("destroy", &RTSubShader::destroy);
@@ -567,7 +553,7 @@ class RenderBindings
             context.class_("conchRTSubShader", class_binding);
         }
         {
-            class_<GLESRenderGeometryElement> class_binding;
+            jsbind::class_<GLESRenderGeometryElement> class_binding;
             class_binding.constructor<>();
             class_binding.property("mode", &GLESRenderGeometryElement::getMeshTopology,
                                    &GLESRenderGeometryElement::setMeshTopology);
@@ -585,14 +571,14 @@ class RenderBindings
             context.class_("conchGLESRenderGeometryElement", class_binding);
         }
         {
-            class_<GLESShaderInstance> class_binding;
+            jsbind::class_<GLESShaderInstance> class_binding;
             class_binding.constructor<bool, const char *, const char *,
                                       const std::unordered_map<std::string, int32_t> &, RTShaderPass *>();
             class_binding.function("destroy", &GLESShaderInstance::destroy);
             context.class_("conchGLESShaderInstance", class_binding);
         }
         {
-            class_<RTShaderPass> class_binding;
+            jsbind::class_<RTShaderPass> class_binding;
             class_binding.constructor<>();
             // class_binding.function("setCompileDefine", &RTShaderPass::setCompileDefine);
             class_binding.function("setRenderState", &RTShaderPass::setRenderState);
@@ -607,7 +593,7 @@ class RenderBindings
             context.class_("conchRTShaderPass", class_binding);
         }
         {
-            class_<GLESRenderElement3D> class_binding;
+            jsbind::class_<GLESRenderElement3D> class_binding;
             class_binding.constructor<>();
             class_binding.function("destroy", &GLESRenderElement3D::destroy);
             class_binding.function("_addShaderInstance", &GLESRenderElement3D::_addShaderInstance);
@@ -625,14 +611,14 @@ class RenderBindings
             context.class_("conchGLESRenderElement3D", class_binding);
         }
         {
-            class_<GLESSkinRenderElement> class_binding;
+            jsbind::class_<GLESSkinRenderElement> class_binding;
             class_binding.inherit<GLESRenderElement3D>();
             class_binding.function("setSkinnedData", &GLESSkinRenderElement::setSkinnedData);
             class_binding.constructor<>();
             context.class_("conchGLESSkinRenderElement3D", class_binding);
         }
         {
-            class_<RTBaseRenderNode> class_binding;
+            jsbind::class_<RTBaseRenderNode> class_binding;
             class_binding.constructor<>();
             class_binding.function("_applyLightProb", &RTBaseRenderNode::_applyLightProb);
             class_binding.function("_applyReflection", &RTBaseRenderNode::_applyReflection);
@@ -668,7 +654,7 @@ class RenderBindings
             context.class_("conchRTBaseRenderNode", class_binding);
         }
         {
-            class_<RTSkinRenderNode> class_binding;
+            jsbind::class_<RTSkinRenderNode> class_binding;
             class_binding.constructor<>();
             class_binding.inherit<RTBaseRenderNode>();
             class_binding.function("computeSkinnedData", &RTSkinRenderNode::computeSkinnedData);
@@ -688,7 +674,7 @@ class RenderBindings
             context.class_("conchRTSkinRenderNode", class_binding);
         }
         {
-            class_<RTSimpleSkinRenderNode> class_binding;
+            jsbind::class_<RTSimpleSkinRenderNode> class_binding;
             class_binding.constructor<>();
             class_binding.inherit<RTBaseRenderNode>();
             class_binding.function("setSimpleAnimatorParams", &RTSimpleSkinRenderNode::setSimpleAnimatorParams);
@@ -698,7 +684,7 @@ class RenderBindings
         }
 
         {
-            class_<GLESRenderElement2D> class_binding;
+            jsbind::class_<GLESRenderElement2D> class_binding;
             class_binding.constructor<>();
             class_binding.function("setValue2DShaderData", &GLESRenderElement2D::setValue2DShaderData);
             class_binding.function("setMaterialShaderData", &GLESRenderElement2D::setMaterialShaderData);
@@ -710,7 +696,7 @@ class RenderBindings
             context.class_("conchGLESRenderElement2D", class_binding);
         }
         {
-            class_<GLESRenderContext2D> class_binding;
+            jsbind::class_<GLESRenderContext2D> class_binding;
             class_binding.constructor<>();
             class_binding.function("setGlobalConfigShaderData", &GLESRenderContext2D::setGlobalConfigShaderData);
             class_binding.function("setRenderTarget", &GLESRenderContext2D::setRenderTarget);
@@ -721,7 +707,7 @@ class RenderBindings
             class_binding.property_field("pipelineMode", &GLESRenderContext2D::pipelineMode);
             class_binding.function_optional_override(
                 "drawRenderElementList",
-                optional_override(
+                jsbind::optional_override(
                     [](GLESRenderContext2D &ctx, const std::vector<GLESRenderElement2D *> elements, uint32_t length) {
                         JCSingletonList<GLESRenderElement2D *> list(false);
                         list.m_vElements = elements;
@@ -732,7 +718,7 @@ class RenderBindings
         }
 
         {
-            class_<GLESRenderContext3D> class_binding;
+            jsbind::class_<GLESRenderContext3D> class_binding;
             class_binding.function("setClearData", &GLESRenderContext3D::setClearData);
             class_binding.function("setSceneData", &GLESRenderContext3D::setSceneData);
             class_binding.function("setCameraData", &GLESRenderContext3D::setCameraData);
@@ -755,7 +741,7 @@ class RenderBindings
             class_binding.function("runCMDList", &GLESRenderContext3D::runCMDList);
             class_binding.function_optional_override(
                 "drawRenderElementList",
-                optional_override(
+                jsbind::optional_override(
                     [](GLESRenderContext3D &ctx, const std::vector<GLESRenderElement3D *> elements, uint32_t length) {
                         JCSingletonList<GLESRenderElement3D *> list(false);
                         list.m_vElements = elements;
@@ -766,13 +752,13 @@ class RenderBindings
             context.class_("conchGLESRenderContext3D", class_binding);
         }
         {
-            class_<GLESRender3DProcess> class_binding;
+            jsbind::class_<GLESRender3DProcess> class_binding;
             class_binding.constructor<>();
             class_binding.function("renderFowarAddCameraPass", &GLESRender3DProcess::renderFowarAddCameraPass);
             context.class_("conchGLESRender3DProcess", class_binding);
         }
         {
-            class_<GLESForwardAddRP> class_binding;
+            jsbind::class_<GLESForwardAddRP> class_binding;
             class_binding.constructor<>();
             class_binding.property_field("enableSpotLightShadowPass", &GLESForwardAddRP::enableSpotLightShadowPass);
             class_binding.property_field("enableDirectLightShadow", &GLESForwardAddRP::enableDirectLightShadow);
@@ -790,7 +776,7 @@ class RenderBindings
             context.class_("conchGLESForwardAddRP", class_binding);
         }
         {
-            class_<GLESDirectLightShadowRP> class_binding;
+            jsbind::class_<GLESDirectLightShadowRP> class_binding;
             class_binding.constructor<>();
             class_binding.function("setCameraNodeData", &GLESDirectLightShadowRP::setCameraNodeData);
             class_binding.function("setRenderTarget", &GLESDirectLightShadowRP::setRenderTarget);
@@ -806,14 +792,14 @@ class RenderBindings
             context.class_("conchGLESDirectLightShadowCastRP", class_binding);
         }
         {
-            class_<GLESSpotLightShadowRP> class_binding;
+            jsbind::class_<GLESSpotLightShadowRP> class_binding;
             class_binding.constructor<>();
             class_binding.function("setRenderTarget", &GLESSpotLightShadowRP::setRenderTarget);
             class_binding.function("setLight", &GLESSpotLightShadowRP::setLight);
             context.class_("conchGLESSpotLightShadowRP", class_binding);
         }
         {
-            class_<GLESForwardAddClusterRP> class_binding;
+            jsbind::class_<GLESForwardAddClusterRP> class_binding;
             class_binding.constructor<>();
             class_binding.property_field("_depthNormalPipelineMode", &GLESForwardAddClusterRP::depthNormalPipelineMode);
             class_binding.property_field("_depthPipelineMode", &GLESForwardAddClusterRP::depthPipelineMode);
@@ -845,7 +831,7 @@ class RenderBindings
             context.class_("conchGLESForwardAddClusterRP", class_binding);
         }
         {
-            class_<RTLightmapData> class_binding;
+            jsbind::class_<RTLightmapData> class_binding;
             class_binding.constructor<>();
             class_binding.function("setLightmapColor", &RTLightmapData::setLightmapColor);
             class_binding.function("setLightmapDirection", &RTLightmapData::setLightmapDirection);
@@ -853,7 +839,7 @@ class RenderBindings
             context.class_("conchRTLightmapData", class_binding);
         }
         {
-            class_<RTCameraNodeData> class_binding;
+            jsbind::class_<RTCameraNodeData> class_binding;
             class_binding.constructor<>();
             class_binding.property_field("_aspectRatio", &RTCameraNodeData::aspectRatio);
             class_binding.property_field("_fieldOfView", &RTCameraNodeData::fieldOfView);
@@ -864,7 +850,7 @@ class RenderBindings
             context.class_("conchRTCameraNodeData", class_binding);
         }
         {
-            class_<RTVolumetricGI> class_binding;
+            jsbind::class_<RTVolumetricGI> class_binding;
             class_binding.constructor<>();
             class_binding.function("setParams", &RTVolumetricGI::setParams);
             class_binding.function("setProbeCounts", &RTVolumetricGI::setProbeCounts);
@@ -877,7 +863,7 @@ class RenderBindings
             context.class_("conchRTVolumetricGI", class_binding);
         }
         {
-            class_<RTPointLight> class_binding;
+            jsbind::class_<RTPointLight> class_binding;
             class_binding.constructor<>();
             class_binding.function("setTransform", &RTPointLight::setTransform);
             class_binding.property_field("range", &RTPointLight::range);
@@ -891,7 +877,7 @@ class RenderBindings
             context.class_("conchRTPointLight", class_binding);
         }
         {
-            class_<RTSpotLight> class_binding;
+            jsbind::class_<RTSpotLight> class_binding;
             class_binding.constructor<>();
             class_binding.property_field("_shadowResolution", &RTSpotLight::shadowResolution);
             class_binding.property_field("_shadowDistance", &RTSpotLight::shadowDistance);
@@ -907,7 +893,7 @@ class RenderBindings
             context.class_("conchRTSpotLight", class_binding);
         }
         {
-            class_<RTReflectionProb> class_binding;
+            jsbind::class_<RTReflectionProb> class_binding;
             class_binding.constructor<>();
             class_binding.property_field("_iblTexRGBD", &RTReflectionProb::iblTexRGBD);
             class_binding.property_field("_updateMark", &RTReflectionProb::updateMark);
@@ -916,14 +902,12 @@ class RenderBindings
             class_binding.property_field("_boxProjection", &RTReflectionProb::boxProjection);
             class_binding.property_field("_ambientIntensity", &RTReflectionProb::ambientIntensity);
             class_binding.function_optional_override(
-                "setAmbientSH", optional_override([](RTReflectionProb &ctx, JSValueAsParam value) {
-                    char *pArrayBufferPtr = NULL;
-                    int nABLen = 0;
-                    bool bIsArrayBuffer = extractJSAB(value, pArrayBufferPtr, nABLen);
+                "setAmbientSH", jsbind::optional_override([](RTReflectionProb &ctx, jsbind::ArrayBuffer arrayBuffer) {
+                    bool bIsArrayBuffer = arrayBuffer.isValid();
                     if (bIsArrayBuffer)
                     {
-                        ctx.setAmbientSH((float *)pArrayBufferPtr);
-                        ctx.ambientSHByteLength = nABLen;
+                        ctx.setAmbientSH(reinterpret_cast<float*>(arrayBuffer.getData()));
+                        ctx.ambientSHByteLength = arrayBuffer.getByteLength();
                     }
                 }));
             class_binding.function("setReflectionTexture", &RTReflectionProb::setReflectionTexture);
@@ -935,13 +919,13 @@ class RenderBindings
             context.class_("conchRTReflectionProb", class_binding);
         }
         {
-            class_<RTSceneNodeData> class_binding;
+            jsbind::class_<RTSceneNodeData> class_binding;
             class_binding.constructor<>();
             class_binding.property_field("_lightmapDirtyFlag", &RTSceneNodeData::lightmapDirtyFlag);
             context.class_("conchRTSceneNodeData", class_binding);
         }
         {
-            class_<RTDirectLight> class_binding;
+            jsbind::class_<RTDirectLight> class_binding;
             class_binding.constructor<>();
             class_binding.property_field("_shadowNearPlane", &RTDirectLight::shadowNearPlane);
             class_binding.property_field("_shadowCascadesMode", &RTDirectLight::shadowCascadesMode);
@@ -958,46 +942,46 @@ class RenderBindings
             context.class_("conchRTDirectLight", class_binding);
         }
         {
-            class_<GLESShaderData> class_binding;
+            jsbind::class_<GLESShaderData> class_binding;
             class_binding.constructor<RTDefineDatas *>();
             // class_binding.function("getOwnerDefineData", &GLESShaderData::getOwnerDefineDataJS);
             class_binding.function("setBool", &GLESShaderData::setBool);
             class_binding.function_optional_override(
-                "getBool", optional_override([](GLESShaderData &ctx, int32_t index) -> JsValue {
+                "getBool", jsbind::optional_override([](GLESShaderData &ctx, int32_t index) -> jsvm_value {
                     bool *ret = ctx.getBool(index);
                     if (ret != nullptr)
                     {
-                        return Converter<int>::ToJs(*ret);
+                        return jsbind::Make<int>(*ret);
                     }
                     else
                     {
-                        return JSP_TO_JS_UNDEFINE;
+                        return jsbind::MakeUndefined();
                     }
                 }));
             class_binding.function("setInt", &GLESShaderData::setInt);
             class_binding.function_optional_override(
-                "getInt", optional_override([](GLESShaderData &ctx, int32_t index) -> JsValue {
+                "getInt", jsbind::optional_override([](GLESShaderData &ctx, int32_t index) -> jsvm_value {
                     int *ret = ctx.getInt(index);
                     if (ret != nullptr)
                     {
-                        return Converter<int>::ToJs(*ret);
+                        return jsbind::Make<int>(*ret);
                     }
                     else
                     {
-                        return JSP_TO_JS_UNDEFINE;
+                        return jsbind::MakeUndefined();
                     }
                 }));
             class_binding.function("setNumber", &GLESShaderData::setNumber);
             class_binding.function_optional_override(
-                "getNumber", optional_override([](GLESShaderData &ctx, int32_t index) -> JsValue {
+                "getNumber", jsbind::optional_override([](GLESShaderData &ctx, int32_t index) -> jsvm_value {
                     float *ret = ctx.getNumber(index);
                     if (ret != nullptr)
                     {
-                        return Converter<float>::ToJs(*ret);
+                        return jsbind::Make<float>(*ret);
                     }
                     else
                     {
-                        return JSP_TO_JS_UNDEFINE;
+                        return jsbind::MakeUndefined();
                     }
                 }));
             class_binding.function("setVector2", &GLESShaderData::setVector2);
@@ -1018,20 +1002,15 @@ class RenderBindings
             class_binding.function("destroy", &GLESShaderData::destroy);
             class_binding.function_optional_override(
 
-                "setBuffer", optional_override([](GLESShaderData &data, int32_t propertyIndex, JSValueAsParam value) {
-                    char *pArrayBufferPtr = NULL;
-                    int nABLen = 0;
-                    bool bIsArrayBuffer = extractJSAB(value, pArrayBufferPtr, nABLen);
-                    if (bIsArrayBuffer)
-                    {
-                        data.setBuffer(propertyIndex, (uint8_t *)pArrayBufferPtr, nABLen);
-                    }
+                "setBuffer", jsbind::optional_override([](GLESShaderData &data, int32_t propertyIndex, jsbind::ArrayBuffer arrayBuffer) {
+                    DEBUG_CHECK(arrayBuffer.isValid());
+                    data.setBuffer(propertyIndex, arrayBuffer.getData(), arrayBuffer.getByteLength());
                 }));
             context.class_("conchGLESShaderData", class_binding);
         }
 
         {
-            class_<GLESDrawNodeCMDData> class_binding;
+            jsbind::class_<GLESDrawNodeCMDData> class_binding;
             class_binding.constructor<>();
             class_binding.function("setBaseRenderNode", &GLESDrawNodeCMDData::setBaseRenderNode);
             class_binding.function("setShaderData", &GLESDrawNodeCMDData::setShaderData);
@@ -1041,7 +1020,7 @@ class RenderBindings
         }
 
         {
-            class_<GLESBlitQuadCMDData> class_binding;
+            jsbind::class_<GLESBlitQuadCMDData> class_binding;
             class_binding.constructor<>();
             class_binding.function("setDest", &GLESBlitQuadCMDData::setDest);
             class_binding.function("setViewport", &GLESBlitQuadCMDData::setViewport);
@@ -1053,7 +1032,7 @@ class RenderBindings
         }
 
         {
-            class_<GLESDrawElementCMDData> class_binding;
+            jsbind::class_<GLESDrawElementCMDData> class_binding;
             class_binding.constructor<>();
             class_binding.function("clearElement", &GLESDrawElementCMDData::clearElement);
             class_binding.function("addOneElement", &GLESDrawElementCMDData::addOneElement);
@@ -1061,7 +1040,7 @@ class RenderBindings
         }
 
         {
-            class_<GLESSetViewportCMD> class_binding;
+            jsbind::class_<GLESSetViewportCMD> class_binding;
             class_binding.constructor<>();
             class_binding.function("setViewport", &GLESSetViewportCMD::setViewport);
             class_binding.function("setScissor", &GLESSetViewportCMD::setScissor);
@@ -1069,7 +1048,7 @@ class RenderBindings
         }
 
         {
-            class_<GLESSetRenderTargetCMD> class_binding;
+            jsbind::class_<GLESSetRenderTargetCMD> class_binding;
             class_binding.constructor<>();
             class_binding.function("setRT", &GLESSetRenderTargetCMD::setRT);
             class_binding.function("setClearFlag", &GLESSetRenderTargetCMD::clearFlag);
@@ -1080,7 +1059,7 @@ class RenderBindings
         }
 
         {
-            class_<GLESSetRenderData> class_binding;
+            jsbind::class_<GLESSetRenderData> class_binding;
             class_binding.constructor<>();
             class_binding.function("setDataType", &GLESSetRenderData::setDataType);
             class_binding.function("setPropertyID", &GLESSetRenderData::setPropertyID);
@@ -1099,7 +1078,7 @@ class RenderBindings
         }
 
         {
-            class_<GLESSetShaderDefine> class_binding;
+            jsbind::class_<GLESSetShaderDefine> class_binding;
             class_binding.constructor<>();
             class_binding.function("setAdd", &GLESSetShaderDefine::setAdd);
             class_binding.function("setDest", &GLESSetShaderDefine::setDest);
@@ -1108,92 +1087,96 @@ class RenderBindings
         }
     }
 };
-namespace internal
-{
-template <> struct is_value_object<Vector2> : std::true_type
-{
-};
-template <> struct is_wrapped_class<Vector2> : std::false_type
-{
-};
-template <> struct is_value_object<Vector3> : std::true_type
-{
-};
-template <> struct is_wrapped_class<Vector3> : std::false_type
-{
-};
-template <> struct is_value_object<Vector4> : std::true_type
-{
-};
-template <> struct is_wrapped_class<Vector4> : std::false_type
-{
-};
-template <> struct is_value_object<Color> : std::true_type
-{
-};
-template <> struct is_wrapped_class<Color> : std::false_type
-{
-};
-template <> struct is_value_object<Plane> : std::true_type
-{
-};
-template <> struct is_wrapped_class<Plane> : std::false_type
-{
-};
-template <> struct is_value_object<BoundFrustum> : std::true_type
-{
-};
-template <> struct is_wrapped_class<BoundFrustum> : std::false_type
-{
-};
-template <> struct is_value_object<CameraCullInfo> : std::true_type
-{
-};
-template <> struct is_wrapped_class<CameraCullInfo> : std::false_type
-{
-};
-template <> struct is_value_object<WebGLConfig> : std::true_type
-{
-};
-template <> struct is_wrapped_class<WebGLConfig> : std::false_type
-{
-};
-template <> struct is_value_object<VertexStateContext> : std::true_type
-{
-};
-template <> struct is_wrapped_class<VertexStateContext> : std::false_type
-{
-};
-template <> struct is_value_object<UniformProperty> : std::true_type
-{
-};
-template <> struct is_wrapped_class<UniformProperty> : std::false_type
-{
-};
-template <> struct is_value_object<RTShaderDefine> : std::true_type
-{
-};
-template <> struct is_wrapped_class<RTShaderDefine> : std::false_type
-{
-};
-template <> struct is_value_object<DDSTextureInfoJS> : std::true_type
-{
-};
-template <> struct is_wrapped_class<DDSTextureInfoJS> : std::false_type
-{
-};
-template <> struct is_value_object<KTXTextureInfoJS> : std::true_type
-{
-};
-template <> struct is_wrapped_class<KTXTextureInfoJS> : std::false_type
-{
-};
-template <> struct is_value_object<Viewport> : std::true_type
-{
-};
-template <> struct is_wrapped_class<Viewport> : std::false_type
-{
-};
-} // namespace internal
+
 } // namespace laya
+namespace jsbind
+{ 
+    namespace internal
+    {
+        template <> struct is_value_object<laya::Vector2> : std::true_type
+        {
+        };
+        template <> struct is_wrapped_class<laya::Vector2> : std::false_type
+        {
+        };
+        template <> struct is_value_object<laya::Vector3> : std::true_type
+        {
+        };
+        template <> struct is_wrapped_class<laya::Vector3> : std::false_type
+        {
+        };
+        template <> struct is_value_object<laya::Vector4> : std::true_type
+        {
+        };
+        template <> struct is_wrapped_class<laya::Vector4> : std::false_type
+        {
+        };
+        template <> struct is_value_object<laya::Color> : std::true_type
+        {
+        };
+        template <> struct is_wrapped_class<laya::Color> : std::false_type
+        {
+        };
+        template <> struct is_value_object<laya::Plane> : std::true_type
+        {
+        };
+        template <> struct is_wrapped_class<laya::Plane> : std::false_type
+        {
+        };
+        template <> struct is_value_object<laya::BoundFrustum> : std::true_type
+        {
+        };
+        template <> struct is_wrapped_class<laya::BoundFrustum> : std::false_type
+        {
+        };
+        template <> struct is_value_object<laya::CameraCullInfo> : std::true_type
+        {
+        };
+        template <> struct is_wrapped_class<laya::CameraCullInfo> : std::false_type
+        {
+        };
+        template <> struct is_value_object<laya::WebGLConfig> : std::true_type
+        {
+        };
+        template <> struct is_wrapped_class<laya::WebGLConfig> : std::false_type
+        {
+        };
+        template <> struct is_value_object<laya::VertexStateContext> : std::true_type
+        {
+        };
+        template <> struct is_wrapped_class<laya::VertexStateContext> : std::false_type
+        {
+        };
+        template <> struct is_value_object<laya::UniformProperty> : std::true_type
+        {
+        };
+        template <> struct is_wrapped_class<laya::UniformProperty> : std::false_type
+        {
+        };
+        template <> struct is_value_object<laya::RTShaderDefine> : std::true_type
+        {
+        };
+        template <> struct is_wrapped_class<laya::RTShaderDefine> : std::false_type
+        {
+        };
+        template <> struct is_value_object<laya::DDSTextureInfoJS> : std::true_type
+        {
+        };
+        template <> struct is_wrapped_class<laya::DDSTextureInfoJS> : std::false_type
+        {
+        };
+        template <> struct is_value_object<laya::KTXTextureInfoJS> : std::true_type
+        {
+        };
+        template <> struct is_wrapped_class<laya::KTXTextureInfoJS> : std::false_type
+        {
+        };
+        template <> struct is_value_object<laya::Viewport> : std::true_type
+        {
+        };
+        template <> struct is_wrapped_class<laya::Viewport> : std::false_type
+        {
+        };
+    }
+} // namespace internal
 #endif
