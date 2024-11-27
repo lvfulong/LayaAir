@@ -4,6 +4,7 @@
 #include "jsvm/JSVM.h"
 namespace laya{
     jsvm_value importNative(std::string dll);
+    void importAllDynaLib(std::string extPath);
 }
 
 #endif

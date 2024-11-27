@@ -32,6 +32,7 @@
 #include "video/VideoPlayer.h"
 #endif
 #include "Extention/LayaExtWin.h"
+#include <filesystem>
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
 extern bool g_bGLCanvasSizeChanged;
@@ -201,9 +202,12 @@ namespace laya
 
         JSGlobalExportC();
     #if defined(OS_WINDOWS)
-        //importAllDynaLib(gRedistPath,nullptr);
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+        std::wstring wExePath = converter.from_bytes(gRedistPath);          
+        std::filesystem::path currentPath(std::move(wExePath));
+        std::filesystem::path extensionPath = currentPath / std::filesystem::path( L"extensions");
+        importAllDynaLib(extensionPath.string());
     #endif
-
     }
     void JCScriptRuntime::loadJSScript() {
         postToJS([this](){

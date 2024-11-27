@@ -86,5 +86,58 @@ namespace laya
         return nul;
 #endif
     }
+
+void importAllDynaLib(std::string extPath)
+    {
+#if defined(OS_WINDOWS)
+        GET_ENV
+        // 将 std::string 转换为 std::wstring
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+        std::wstring wExtPath = converter.from_bytes(extPath);        
+
+        //当前目录
+        fs::path currentPath(std::move(wExtPath));
+
+        // 检查扩展目录是否存在
+        if (!fs::exists(currentPath))
+        {
+            return;
+        }
+
+        // 遍历扩展目录中的所有文件
+        for (const auto &entry : fs::directory_iterator(currentPath))
+        {
+            if (entry.path().extension() == std::wstring(L".dll"))
+            {
+                // 加载 DLL
+                HMODULE hModule = LoadLibraryW(entry.path().c_str());
+                if (hModule != NULL){
+                    // 获取 LayaExtInit 函数地址
+                    LayaInitFunc layainit = (LayaInitFunc)GetProcAddress(hModule, "LayaExtInit");
+                    if (layainit == NULL){
+                        //LOGE("LayaExtInit function not found in DLL: %s", dllPath.string().c_str());
+                        FreeLibrary(hModule);
+                        continue;
+                    }
+
+                    // 调用 LayaExtInit 函数
+                    jsvm_value export_obj;
+                    jsvm_create_object(env, &export_obj);
+                    layainit(env, export_obj);
+                    //添加
+                    std::string dllname = entry.path().stem().string();
+                    jsvm_value global;
+                    jsvm_get_global(env, &global);
+                    jsvm_set_named_property(env, global, dllname.c_str(), export_obj);
+                }
+                else
+                {
+                    LOGE("Failed to load DLL: %s", entry.path().string().c_str());
+                }
+            }
+        }
+    #endif    
+    }
 }
+
 #endif

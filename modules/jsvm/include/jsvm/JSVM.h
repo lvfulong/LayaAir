@@ -10,15 +10,17 @@
 
 #endif
 #if defined(OS_WINDOWS)
-#ifdef CONCH
-#define JSVM_API __declspec(dllexport)
+    #ifdef CONCH
+        #define JSVM_API __declspec(dllexport)
+    #else
+        //如果不是dll则不要导入导出
+        #define JSVM_API __declspec(dllimport)    
+    #endif
 #else
-// 如果不是dll则不要导入导出
-#define JSVM_API __declspec(dllimport)
+    #define JSVM_API
 #endif
-#else
-#define JSVM_API
-#endif
+
+
 
 #ifdef __cplusplus
 extern "C" {
