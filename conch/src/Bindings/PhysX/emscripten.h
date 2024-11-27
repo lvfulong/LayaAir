@@ -229,11 +229,10 @@ template <typename ClassType, typename BaseSpecifier> Class_<ClassType, BaseSpec
 
     jsbind::Object *m = &adapter_->module_;
     auto className = this->name_;
-    adapter_->registerFunction(jsbind::type_id<ClassType>(), [mc = mclass_, m, className]() {
-        GET_ENV
-        mc->Export(env, m->getHandle(), className);
-        //delete mc;
-    });
+    
+    GET_ENV
+    mclass_->Export(env, m->getHandle(), className);
+    delete mclass_;
 }
 template <typename ClassType, typename BaseSpecifier>
 Class_<ClassType, BaseSpecifier>::Class_(const char * name, PhysxAdapter *adapter)

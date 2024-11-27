@@ -68,8 +68,11 @@ inline int32_t getInt32(jsvm_value value)
 {
     GET_ENV
     int32_t result;
+    jsvm_value resultCoerce;
     jsvm_status status;
-    status = jsvm_get_value_int32(env, value, &result);
+    status = jsvm_coerce_to_number(env, value, &resultCoerce);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+    status = jsvm_get_value_int32(env, resultCoerce, &result);
     DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return result;
 }
