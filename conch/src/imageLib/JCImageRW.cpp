@@ -5,8 +5,10 @@
 #include <cmath>
 #include <utils/Preprocessor.h>
 
+#if defined(JPEG_XL)
 #include <jxl/decode.h>
 #include <jxl/decode_cxx.h>
+#endif
 //------------------------------------------------------------------------------
 namespace laya
 {
@@ -15,7 +17,7 @@ namespace laya
 	int LoadGif(BitmapData *pBitmapData, unsigned char *memData, int size);
 	bool saveJpeg(int width, int height, int bpp, char *buffer, int quality, const char *filename);
 	std::shared_ptr<JCWorkerThread> g_DecThread = NULL; // 全局的解码线程
-
+#if defined(JPEG_XL)
 	bool LoadJXLFromMem(BitmapData *pBitmapData, unsigned char *memData, int size){
 		printf("Starting to load JXL from memory...\n");
 
@@ -89,7 +91,7 @@ namespace laya
 		printf("JXL loading complete\n");
 		return true;
 	}
-
+#endif
 	bool loadImageMemSync(const char *p_pMem, int p_nLenth, BitmapData &p_bmp)
 	{
 		ImageType imgType = getImgType(p_pMem, p_nLenth);
@@ -107,8 +109,10 @@ namespace laya
 		case ImgType_gif:
 			return LoadGif(&p_bmp, (unsigned char *)p_pMem, p_nLenth) != 0;
 			break;
+#if defined(JPEG_XL)
 		case ImgType_JXL:
 			return LoadJXLFromMem(&p_bmp, (unsigned char *)p_pMem, p_nLenth);
+#endif
 			break;
 		case ImgType_unknow:
 		default:
@@ -153,12 +157,13 @@ namespace laya
 		if( idval == pngID )return ImgType_png;
 		else if( idval==gifID ) return ImgType_gif;
 		else if( (idval &0xffffff) == jpegID ) return ImgType_jpeg;
-
+#if defined(JPEG_XL)
 		 // 使用 libjxl 检查文件格式
     	JxlSignature signature = JxlSignatureCheck(reinterpret_cast<const uint8_t*>(p_pMem), p_nLength);
 		if(signature == JXL_SIG_CODESTREAM || signature == JXL_SIG_CONTAINER){
 			return ImgType_JXL;
 		}
+#endif
 		return ImgType_unknow;
 	}
 	bool getImageBaseInfo( const char* p_pMem, int p_nLength, ImageBaseInfo& p_Info ){
