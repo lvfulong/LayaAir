@@ -596,7 +596,7 @@ elseif(OS_IOS)
 endif()
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${PUBLIC_HDR_DIR})
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src})
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/${PLATFORM_HEADER_DIR})
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/${CONCH_INCLUDE})
 
@@ -848,7 +848,7 @@ elseif(OS_LINUX)
 		cairo
 		fontconfig
 		utils
-		binder
+		jsbind
 		zlib
 		#mpg123
 		zip

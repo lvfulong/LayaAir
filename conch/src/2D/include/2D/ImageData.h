@@ -2,6 +2,7 @@
 #define __ImageData_H__
 #include <string>
 #include <vector>
+#include <cstdint>
 namespace laya
 {
 class ImageData
