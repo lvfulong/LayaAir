@@ -244,9 +244,12 @@ function archive_ios {
     cp ios-${build_type}-arm64/rapidxml/librapidxml.a armv64
     cp ios-${build_type}-x86_64/rapidxml/librapidxml.a x86_64
     
-    cp ios-${build_type}-arm64/modules/binder/libbinder.a armv64
-    cp ios-${build_type}-x86_64/modules/binder/libbinder.a x86_64
+    cp ios-${build_type}-arm64/modules/jsbind/libjsbind.a armv64
+    cp ios-${build_type}-x86_64/modules/jsbind/libjsbind.a x86_64
     
+    cp ios-${build_type}-arm64/modules/jsvm/libjsvm.a armv64
+    cp ios-${build_type}-x86_64/modules/jsvm/libjsvm.a x86_64
+
     cp ios-${build_type}-arm64/modules/utils/libutils.a armv64
     cp ios-${build_type}-x86_64/modules/utils/libutils.a x86_64
     
@@ -328,9 +331,9 @@ if [[ "${ISSUE_CLEAN}" == "true" ]]; then
 fi
     case ${BUILD_LIB_TYPE} in
         ios)
-           	build_ios release arm64 iphoneos
-            build_ios release x86_64 iphonesimulator
-            archive_ios release
+           	build_ios Release arm64 iphoneos
+            build_ios Release x86_64 iphonesimulator
+            archive_ios Release
             exit 1
             ;;
 		android)
