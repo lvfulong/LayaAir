@@ -108,7 +108,7 @@ namespace laya
 	void JCBuffer::free()
     {
 		m_nLen = 0;
-		if(m_bNeedDel)
+		if(m_bNeedDel && m_pPtr)
         {
 			m_bNeedDel=false;
 			delete [] m_pPtr;

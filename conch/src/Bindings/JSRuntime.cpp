@@ -476,7 +476,7 @@ namespace laya
         {
             onProgressLocal.call<void>(jsvm::global(), now, total, speed);
             //释放持久句柄
-            jsOnProg->reset();
+            //jsOnProg->reset();
         }
         else 
         {
@@ -502,14 +502,15 @@ namespace laya
             //释放持久句柄
             jsOnComp->reset();
             jsOnProg->reset();
-            //释放buffer
-            p_Buff.m_bNeedDel = true;
-            p_Buff.free();
         }
         else 
         {
             // 抛出错误或处理非函数情况
         }
+        
+        //释放buffer
+        p_Buff.m_bNeedDel = true;
+        p_Buff.free();
     }
 
     void onDownloaded(
