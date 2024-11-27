@@ -1,8 +1,6 @@
 #if defined(OS_WINDOWS)
 #include "LayaExtWin.h"
-#if defined(OS_WINDOWS)
 #include <windows.h>
-#endif
 #include <string>
 #include <filesystem>
 #include <vector>
@@ -19,7 +17,6 @@ namespace laya
 
     typedef void (*LayaInitFunc)(jsvm_env, jsvm_value);
 
-#if defined(OS_WINDOWS)
     jsvm_value importNative_win(std::string dll){
         std::string exePath = gRedistPath;
         GET_ENV
@@ -73,23 +70,18 @@ namespace laya
 
         return export_obj;
     }
-#endif
 
     jsvm_value importNative(std::string dll){
-#if defined(OS_WINDOWS)
         return importNative_win(dll);
-#else
-        LOGE("只支持windows平台");
-        GET_ENV;
-        jsvm_value nul;
-        jsvm_get_null(env,&nul);
-        return nul;
-#endif
+        // LOGE("只支持windows平台");
+        // GET_ENV;
+        // jsvm_value nul;
+        // jsvm_get_null(env,&nul);
+        // return nul;
     }
 
 void importAllDynaLib(std::string extPath)
     {
-#if defined(OS_WINDOWS)
         GET_ENV
         // 将 std::string 转换为 std::wstring
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
@@ -136,7 +128,6 @@ void importAllDynaLib(std::string extPath)
                 }
             }
         }
-    #endif    
     }
 }
 
