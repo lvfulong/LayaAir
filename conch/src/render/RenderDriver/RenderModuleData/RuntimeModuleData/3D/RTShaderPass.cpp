@@ -147,6 +147,10 @@ GLESShaderInstance *RTShaderPass::callCreateShaderInstanceFunction()
 {
     return m_createShaderInstanceFunctionJS.call<GLESShaderInstance *>(jsvm::global());
 }
+void RTShaderPass::setCommonUniformMap(const std::vector<std::string>& value)
+{
+    this->nodeCommonMap = value;
+}
 void RTShaderPass::destroy()
 {
     // todo

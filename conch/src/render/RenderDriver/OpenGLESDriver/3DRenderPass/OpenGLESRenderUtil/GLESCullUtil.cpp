@@ -24,7 +24,7 @@ void GLESCullUtil::cullByCameraCullInfo(CameraCullInfo &cameraCullInfo, std::vec
             //  needRender 方案有问题 会造成native和js的差异
             if (!cameraCullInfo._useOcclusionCulling || render->_needRender(&boundFrustum)) // NEEDRENDER TS OR NATIVE
             {
-                render->distanceForSort = Vector3::distance(render->getBounds()->getCenter(), cameraCullInfo._position);
+                render->distanceForSort = Vector3::distanceSquared(render->getBounds()->getCenter(), cameraCullInfo._position);
                 render->_renderUpdatePre(context); // TS OR Native
                 std::vector<GLESRenderElement3D *> &elements = render->renderelements;
                 if (elements.size() == 1)

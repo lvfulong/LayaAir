@@ -25,6 +25,7 @@ class RTShaderPass
     RTShaderPass::CacheShaderItem *getCacheShader(RTDefineDatas *compileDefine);
     jsvm_value getCacheShaderJS(RTDefineDatas *compileDefine);
     GLESShaderInstance *callCreateShaderInstanceFunction();
+    void setCommonUniformMap(const std::vector<std::string>& value);
     void setRenderState(RenderState *value)
     {
         renderState = value;

@@ -17,7 +17,7 @@ class QuickSort ///: public ISortPass
 
     int _partitionRenderObject(int left, int right);
 
-    int _compare(GLESRenderElement3D *left, GLESRenderElement3D *right);
+    float _compare(GLESRenderElement3D *left, GLESRenderElement3D *right);
 
   private:
     JCSingletonList<GLESRenderElement3D *> *m_pElementArray = nullptr;

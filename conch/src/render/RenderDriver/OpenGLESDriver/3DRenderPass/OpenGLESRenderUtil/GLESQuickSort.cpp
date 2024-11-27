@@ -57,12 +57,12 @@ int QuickSort::_partitionRenderObject(int left, int right)
     return left;
 }
 
-int QuickSort::_compare(GLESRenderElement3D *left, GLESRenderElement3D *right)
+float QuickSort::_compare(GLESRenderElement3D *left, GLESRenderElement3D *right)
 {
-    int renderQueue = left->materialRenderQueue - right->materialRenderQueue;
+    float renderQueue = left->materialRenderQueue - right->materialRenderQueue;
     if (renderQueue == 0)
     {
-        int sort = m_bIsTransparent ? right->owner->distanceForSort - left->owner->distanceForSort
+        float sort = m_bIsTransparent ? right->owner->distanceForSort - left->owner->distanceForSort
                                     : left->owner->distanceForSort - right->owner->distanceForSort;
         return sort + right->owner->sortingFudge - left->owner->sortingFudge;
     }
