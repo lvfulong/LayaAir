@@ -1176,7 +1176,8 @@ std::string CToObjectCCallMethod(int objid,bool isSync, const char*clsName, cons
 void reflectionCallback(const std::string& jsonret)
 {
     std::string script = "conch.platCallBack(" + jsonret + ")";
-    jsbind::runScript(script);
+    jsvm_value result;
+    jsbind::runScript(script, &result);
     NSLog(@"reflectionCallback %@", [[NSString alloc] initWithUTF8String:jsonret.c_str()]);
 }
 
@@ -1188,7 +1189,8 @@ void CToObjectCSetSensorAble(bool p_bAble)
 
 void CToObjectCRunJS(const std::string& script)
 {
-    jsbind::runScript(script);
+    jsvm_value result;
+    jsbind::runScript(script, &result);
 }
 
 float CToObjectCGetDevicePixelRatio()
