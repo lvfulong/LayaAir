@@ -16,6 +16,10 @@ function log(m) {
 }*/
 
 function loadLib(url:string) {
+    if (url == "")
+    {
+        return;
+    }
     var script = document.createElement("script");
     /*if(url.indexOf("laya.physics3D.js") >= 0 )
     {
