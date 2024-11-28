@@ -15,10 +15,6 @@ Enum_::Enum_(Object *owner, const char * name) : owner_(owner), name_(name)
 }
 Enum_::~Enum_()
 {
-    /*if (module_)
-    {
-    owner_->submodule(name_, *module_);
-    }*/
 }
 
 } // namespace jsbind

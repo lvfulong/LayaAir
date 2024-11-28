@@ -39,7 +39,7 @@ namespace laya
 		};
 
 		//返回false的时候，表示希望退出循环。
-		typedef std::function<bool(void)> loopRun;
+		typedef std::function<bool(void*)> loopRun;
 		typedef std::function<void(void)> runObj;
 
         JCWorkerThread(bool p_bStart=false);

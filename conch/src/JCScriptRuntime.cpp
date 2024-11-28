@@ -42,23 +42,47 @@ extern std::string gRedistPath;
 namespace laya 
 {
 
-    void CheckJSException()
+    extern bool gbAlertException;
+    void CheckJSException(jsvm_env env)
     {
-        GET_ENV
         bool isExceptionPending;
         auto status = jsvm_is_exception_pending(env, &isExceptionPending);
-        DEBUG_CHECK(status == napi_ok);
-
+        //DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         if (isExceptionPending)
         {
-
-            jsvm_value result = nullptr;
-            status = jsvm_get_and_clear_last_exception(env, &result);
-            DEBUG_CHECK(status == jsvm_ok);
-            //v8::Local<v8::Value> val = v8impl::V8LocalValueFromJsValue(result);
-            //ReportException(env->isolate, val);
-            JCConch::s_pScriptRuntime->m_pJSOnErrorFunction.call<void>(jsvm::global(), result);
+            jsbind::reportError(env);
         }
+    }
+    void onError(jsvm_env env, jsvm_value exception)
+    {
+        jsvm_status status;
+        JCConch::s_pScriptRuntime->m_pJSOnErrorFunction.call<void>(jsvm::global(), exception);
+
+        jsbind::Local l(exception);
+        if (!l.isNull() && !l.isUndefined())
+        {
+            jsvm_value message;
+            status = jsvm_get_named_property(env, exception, "message", &message);
+            if (status == jsvm_status::jsvm_ok)
+            {
+                size_t length;
+                status = jsvm_get_value_string_utf8(env, message, nullptr, 0, &length);
+                DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+                char* buffer = new char[length + 1];
+                status = jsvm_get_value_string_utf8(env, message, buffer, length + 1, nullptr);
+                DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+
+                if (gbAlertException)
+                {
+                    JSAlert(buffer);
+                }
+                LOGE("==JSERROR:\n%s", buffer);
+
+
+                delete[] buffer;
+            }
+        }
+
     }
     JCScriptRuntime::JCScriptRuntime()
     {
@@ -125,12 +149,12 @@ namespace laya
         LOGI("Start js %s", pStartJS);
         if (pStartJS)m_strStartJS = pStartJS;
 
-
+        jsbind::setOnError(onError);
 
         m_debugPort = g_kSystemConfig.m_nJSDebugMode;
         //m_pScriptThread->initialize(m_debugPort, std::bind(&onUnhandledRejection, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
         //m_nThreadState = 1;
-        m_pScriptThread->setLoopFunc(std::bind(&JCScriptRuntime::onUpdate, JCConch::s_pScriptRuntime.get()));
+        m_pScriptThread->setLoopFunc(std::bind(&JCScriptRuntime::onUpdate, JCConch::s_pScriptRuntime.get(), std::placeholders::_1));
         m_pScriptThread->start();
     }
     void JCScriptRuntime::stop()
@@ -219,7 +243,6 @@ namespace laya
             {
                 jsvm_value result;
                 jsbind::runScript(sJSRuntime, &result);
-                CheckJSException();
                 delete[] sJSRuntime;
             }
         }
@@ -233,7 +256,6 @@ namespace laya
 
             jsvm_value result;
             jsbind::runScript(kBuf, &result);
-            CheckJSException();
             delete[] sJCBuffer;
             sJCBuffer = NULL;
         }
@@ -296,8 +318,9 @@ namespace laya
             return true;
         }).get();
     }
-    bool JCScriptRuntime::onUpdate() 
+    bool JCScriptRuntime::onUpdate(void* data) 
     {
+        jsvm_env env = (jsvm_env)data;
         if (!JCConch::s_pConch)
         {
             return true;
@@ -384,7 +407,7 @@ namespace laya
             m_pJSOnFrameFunction.call<void>(jsvm::global());
         }
         //JS_CATCH;
-        CheckJSException();
+        CheckJSException(env);
         //float dt = tmGetCurms() - nBenginTime;
         //PERF_UPDATE_DATA(JCPerfHUD::PHUD_JS_DELAY, (float)dt);
         JCConch::s_pConchRender->postTaskFromJSToRenderSync([this]()->bool {

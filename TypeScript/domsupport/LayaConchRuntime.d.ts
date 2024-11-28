@@ -657,7 +657,7 @@ interface conch {
     syncArrayBufferDataToRuntime(nPtrID: number, arg1: any, arrayBuffer: any): unknown;
     createArrayBufferRef(_syncBufferList: Int32Array, ARRAY_BUFFER_TYPE_DATA: number, arg2: boolean, ARRAY_BUFFER_REF_REFERENCE: number): any;
     updateArrayBufferRef(arg0: any, arg1: any, _buffer: ArrayBuffer): unknown;
-    onerror:Function;
+    onError:Function;
     __onerror:Function;
     onunhandledrejection:Function;
     __onunhandledrejection:Function;

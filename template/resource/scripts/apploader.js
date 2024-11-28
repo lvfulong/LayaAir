@@ -6477,7 +6477,7 @@ class WebSocket extends EventTarget {
         this._nativeObj.onopen = function () {
             var e = new Event("open");
             e.target = e.currentTarget = this;
-            f(e);
+            f && f(e);
         };
     }
     set onclose(f) {
@@ -6721,21 +6721,19 @@ class Screen {
 window.screen = new Screen();
 window.onresize = function (e) {
 };
-conch.onerror = function (message, filename, lineno, colno, error) {
-    if (window.onerror) {
-        var ln = decodeTemp(lineno);
-        var cn = decodeTemp(colno);
-        var er = decodeTemp(error);
-        var mg = decodeTemp(message);
-        var fn = decodeTemp(filename);
+conch.onError(function (exception) {
+    if (window.onerror && exception) {
+        var lineno = exception.lineNumber ? exception.lineNumber : -1;
+        var colno = exception.columnNumber ? exception.columnNumber : -1;
+        var source = exception.fileName ? exception.fileName : "";
         var e = {
-            message: decodeTemp(message),
-            stack: er,
-            name: ""
+            message: exception.message,
+            stack: exception.stack,
+            name: exception.name
         };
-        window.onerror(mg == "undefined" ? undefined : mg, fn == "undefined" ? undefined : fn, ln != "undefined" ? parseInt(ln) : undefined, cn != "undefined" ? parseInt(cn) : undefined, e);
+        window.onerror(exception.message, source, lineno, colno, e);
     }
-};
+});
 Object.defineProperty(window, 'onerror', { set: function (fun) {
         conch.__onerror = fun;
     }, get: function () {

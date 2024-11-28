@@ -68,7 +68,7 @@ namespace laya
 
         void onThreadInit(JCEventEmitter::evtPtr evt);
 
-        bool onUpdate();
+        bool onUpdate(void* data);
         
         void onUpdateTimer();
 

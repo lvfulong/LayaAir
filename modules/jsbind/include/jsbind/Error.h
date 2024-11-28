@@ -7,7 +7,7 @@
 
 namespace jsbind
 {
-void reportError(jsvm_env env, jsvm_status res);
-
+void reportError(jsvm_env env);
+void setOnError(std::function<void(jsvm_env, jsvm_value)> callback);
 } // namespace jsbind
 #endif

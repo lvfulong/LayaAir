@@ -204,22 +204,20 @@ window.onresize=function(e:UIEvent){
     //alert('kkkkk')
 }
 
-conch.onerror = function (message, filename, lineno, colno, error) {
-    if (window.onerror)
+conch.onError(function (exception) {
+    if (window.onerror && exception)
     {
-        var ln=decodeTemp(lineno);
-        var cn=decodeTemp(colno);
-        var er=decodeTemp(error);
-        var mg=decodeTemp(message);
-        var fn=decodeTemp(filename);
-        var e={
-            message:decodeTemp(message),
-            stack:er,
-            name:""
+        var lineno = exception.lineNumber ? exception.lineNumber : -1;
+        var colno = exception.columnNumber ? exception.columnNumber : -1;
+        var source = exception.fileName ? exception.fileName : "";
+        var e = {
+            message: exception.message,
+            stack: exception.stack,
+            name: exception.name
         };
-        window.onerror(mg=="undefined"?undefined:mg,fn=="undefined"?undefined:fn,ln!="undefined"?parseInt(ln):undefined,cn!="undefined"?parseInt(cn):undefined,e);
+        window.onerror(exception.message, source, lineno, colno, e);
     }
-};
+})
 
 /**
  * 全局错误处理

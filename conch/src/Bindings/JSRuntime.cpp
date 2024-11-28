@@ -342,6 +342,7 @@ namespace laya
     void JSRuntime::setOnError(jsvm_value p_pFunction)
     {
         JCConch::s_pScriptRuntime->m_pJSOnErrorFunction = jsbind::Persistent(p_pFunction);
+
     }
 	struct SkinnedMatrixCache
 	{
@@ -629,7 +630,7 @@ namespace laya
 		class_binding.class_function("exit", &JSRuntime::exit);
         class_binding.class_function("createArrayBufferRef", &JSRuntime::createArrayBufferRef);
         class_binding.class_function("registerFont", &JSRuntime::registerFont);
-        class_binding.class_function("setOnError", &JSRuntime::setOnError);
+        class_binding.class_function("onError", &JSRuntime::setOnError);
 #if defined(USE_DCC)
         class_binding.class_function("downloadNoCache", &JSRuntime::downloadFile);
         class_binding.class_function("setDownloader", &JSRuntime::setDownloader);

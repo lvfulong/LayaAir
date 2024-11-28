@@ -86,26 +86,18 @@ int OSWin::getSafeInsetRight()
 }
 jsvm_value OSWin::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
-    //auto isolate = v8::Isolate::GetCurrent();
-    //auto context = isolate->GetCurrentContext();
 
-    //napi_deferred deferred;
-    //napi_value promise;
-
-    //napi_create_promise(context, &deferred, &promise);
 
     auto promise = jsbind::Promise::Make();
-    std::function<void(std::string)> cb = [promise, cbref](std::string message) {
+
+    conchRegisterHandleMessageHandler(eventName.c_str(), [promise, cbref](const char *message) {
         postToJS([promise, message, cbref]() {
             if (!cbref.lock())
                 return;
-            //auto isolate = v8::Isolate::GetCurrent();
-            //auto context = isolate->GetCurrentContext();
-            //napi_value v = jsvm_valueFromV8LocalValue(jsbind::Local::Make<std::string>(message));
-            //napi_resolve_deferred(context, deferred, v);
             promise.resolve(message);
         });
-    };
+    });
+
     if (g_handleAsyncMessageCb)
     {
         // handleAsyncMessage is called in platform os ui thread

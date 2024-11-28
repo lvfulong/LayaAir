@@ -12,6 +12,9 @@ function log(m) {
     console.log(m);
 }
 function loadLib(url) {
+    if (url == "") {
+        return;
+    }
     var script = document.createElement("script");
     script.src = url;
     script.onerror = function () {

@@ -57,7 +57,7 @@ namespace jsvm
             DEBUG_CHECK(status == jsvm_status::jsvm_ok);
             // 固定循环流程
             runQueue();
-            if (!m_funcLoop())
+            if (!m_funcLoop(env))
             {
                 break;
             }

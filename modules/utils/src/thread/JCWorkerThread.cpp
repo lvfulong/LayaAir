@@ -173,7 +173,7 @@ namespace laya{
 			}else{
 				//固定循环流程
 				runQueue();
-				if(!m_funcLoop()){
+				if(!m_funcLoop(nullptr)){
 					break;	//
 				}
 			}

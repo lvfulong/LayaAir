@@ -310,29 +310,8 @@ jsvm_value InvokeClassSetterField(jsvm_env env, jsvm_callback_info info)
     return NULL;
 }
 
-// template <typename ReturnType, typename... Args> struct V8Call;
-
 template <typename... Args> jsvm_value v8_call(jsvm_env env, jsvm_value self, jsvm_value func, const Args &...args)
 {
-    /*v8::EscapableHandleScope scope(v8::Isolate::GetCurrent());
-
-    const int num_args = sizeof...(Args);
-
-    v8::Local<v8::Value> v8_args[num_args + 1] = {ToJSValue(args)...};
-
-    v8::TryCatch try_catch(v8::Isolate::GetCurrent());
-
-    auto result = func->Call(v8::Isolate::GetCurrent()->GetCurrentContext(), self, num_args, v8_args);
-
-    if (try_catch.HasCaught())
-    {
-        __JSRun::ReportException(v8::Isolate::GetCurrent(), &try_catch);
-    }
-
-    if (result.IsEmpty())
-        return v8::Undefined(v8::Isolate::GetCurrent());
-
-    return scope.Escape(result.ToLocalChecked());*/
     jsvm_status status;
     const size_t argc = sizeof...(Args);
     jsvm_value argv[argc + 1] = {internal::ToJSValue(args)...};
@@ -341,7 +320,7 @@ template <typename... Args> jsvm_value v8_call(jsvm_env env, jsvm_value self, js
     status = jsvm_call_function(env, self, func, argc, argv, &result);
     if (status != jsvm_status::jsvm_ok)
     {
-        reportError(env, status);
+        reportError(env);
     }
     return result;
 }
