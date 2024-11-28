@@ -382,7 +382,7 @@ class RenderBindings
                                                       invertY);
                     }
                 }));
-            class_binding.function("getRenderTextureData", &GLTextureContext::getRenderTextureData);
+            // class_binding.function("getRenderTextureData", &GLTextureContext::getRenderTextureData);
             context.class_("conchGLESTextureContext", class_binding);
         }
         {
