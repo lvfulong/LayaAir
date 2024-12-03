@@ -501,8 +501,6 @@ namespace laya {
     void DebuggerAgent::onJSExit() { 
 		pJSThread_ = NULL;
 		isolate_ = NULL;
-        gLayaLog = nullptr;
-        gLayaLogNoParam = nullptr;
 
         if (m_pInspectorClient)
             delete m_pInspectorClient;

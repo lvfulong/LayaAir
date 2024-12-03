@@ -5,10 +5,6 @@
 
 int g_nDebugLevel = 3;
 
-void (*gLayaLog)(int level, const char *file, int line, const char *fmt, ...) = 0;
-void (*gLayaLogNoParam)(int level, const char *file, int line, const char *msg) = 0;
-void (*gLayaLogBin)(int level, const char *file, int line, void *pData, int len) = 0;
-
 std::string vformat(const char *fmt, va_list args)
 {
     va_list args_copy;
@@ -25,7 +21,7 @@ std::string vformat(const char *fmt, va_list args)
         buf.resize(needed + 1);
         vsnprintf(buf.data(), buf.size(), fmt, args);
     }
-	
+
     return std::string(buf.data(), buf.size());
 }
 #if defined(OS_OHOS)
@@ -39,14 +35,7 @@ void logMessage(laya::LogType logType, const char *file, int line, const char *f
     case laya::LogType::Warn:
         if (g_nDebugLevel >= 2)
         {
-            if (gLayaLog)
-            {
-                gLayaLog(static_cast<int>(laya::LogLevel::Warn), file, line, message.c_str());
-            }
-            else
-            {
-                OH_LOG_Print(LOG_APP, LOG_WARN, LOG_DOMAIN, LOG_TAG, "%{public}s", message.c_str());
-            }
+            OH_LOG_Print(LOG_APP, LOG_WARN, LOG_DOMAIN, LOG_TAG, "%{public}s", message.c_str());
         }
         if (g_nDebugLevel >= 5)
         {
@@ -56,14 +45,7 @@ void logMessage(laya::LogType logType, const char *file, int line, const char *f
     case laya::LogType::Error:
         if (g_nDebugLevel >= 1)
         {
-            if (gLayaLog)
-            {
-                gLayaLog(static_cast<int>(laya::LogLevel::Error), file, line, message.c_str());
-            }
-            else
-            {
-                OH_LOG_Print(LOG_APP, LOG_ERROR, LOG_DOMAIN, LOG_TAG, "%{public}s", message.c_str());
-            }
+            OH_LOG_Print(LOG_APP, LOG_ERROR, LOG_DOMAIN, LOG_TAG, "%{public}s", message.c_str());
         }
         if (g_nDebugLevel >= 4)
         {
@@ -75,15 +57,7 @@ void logMessage(laya::LogType logType, const char *file, int line, const char *f
     case laya::LogType::Info:
         if (g_nDebugLevel >= 3)
         {
-            if (gLayaLog)
-            {
-                gLayaLog(static_cast<int>(laya::LogLevel::Info), file, line, message.c_str());
-            }
-            else
-            {
-
-                OH_LOG_Print(LOG_APP, LOG_INFO, LOG_DOMAIN, LOG_TAG, "%{public}s", message.c_str());
-            }
+            OH_LOG_Print(LOG_APP, LOG_INFO, LOG_DOMAIN, LOG_TAG, "%{public}s", message.c_str());
         }
         break;
     default:

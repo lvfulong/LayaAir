@@ -58,35 +58,6 @@ namespace laya
             break;
         }
     #endif
-    #ifdef JS_V8_DEBUGGER
-	    if (gLayaLogNoParam) 
-        {
-            auto isolate = v8::Isolate::GetCurrent();
-		    v8::HandleScope hs(isolate);
-		    int flags = v8::StackTrace::kLineNumber | v8::StackTrace::kScriptNameOrSourceURL | v8::StackTrace::kFunctionName;
-		    int wantcount = 1;
-		    v8::Local<v8::StackTrace> curstack = v8::StackTrace::CurrentStackTrace(isolate, wantcount, (v8::StackTrace::StackTraceOptions)flags);
-		    int count = curstack->GetFrameCount();
-		    for (int i = 0; i < count; i++ ){
-			    v8::Local<v8::StackFrame> curfrm = curstack->GetFrame(isolate, i);
-
-			    v8::Local<v8::String> fname = curfrm->GetFunctionName();
-			    //std::string fnamestr = *v8::String::Utf8Value(isolate, fname->ToString(isolate->GetCurrentContext()).ToLocalChecked());
-			    int ln = curfrm->GetLineNumber();
-			    v8::Local<v8::String> scname = curfrm->GetScriptName();
-			    std::string srcfile;
-			    if (!scname.IsEmpty()) {
-				    srcfile = *v8::String::Utf8Value(isolate, scname->ToString(isolate->GetCurrentContext()).ToLocalChecked());
-			    }
-			    v8::Local<v8::String> srcurl = curfrm->GetScriptNameOrSourceURL();
-			    if (!srcurl.IsEmpty()) {
-				    srcfile = *v8::String::Utf8Value(isolate, srcurl->ToString(isolate->GetCurrentContext()).ToLocalChecked());
-			    }
-			    gLayaLogNoParam(static_cast<int>(LogLevel::Info), srcfile.c_str(), ln, p_sBuffer);
-		    }
-		    //gLayaLog(Info,
-	    }
-    #endif
     }
     void JSConsole::exportJS(jsbind::Object& context)
     {

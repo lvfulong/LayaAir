@@ -35,10 +35,6 @@ enum class LogLevel
     Runtime,
 };
 } // namespace laya
-extern void (*gLayaLog)(int level, const char *file, int line, const char *fmt, ...);
-// 如果知道没有参数就不用做%的转换了。
-extern void (*gLayaLogNoParam)(int level, const char *file, int line, const char *msg);
-extern void (*gLayaLogBin)(int level, const char *file, int line, void *pData, int len);
 
 void alert(const char *fmt, ...);
 #if defined(OS_OHOS)
@@ -93,30 +89,16 @@ void CToObjectCLogIExt(const char *str);
     {                                                                                                                  \
         if (g_nDebugLevel >= 3)                                                                                        \
         {                                                                                                              \
-            if (gLayaLog)                                                                                              \
-            {                                                                                                          \
-                gLayaLog(static_cast<int>(laya::LogLevel::Info), __FILE__, __LINE__, __VA_ARGS__);                     \
-            }                                                                                                          \
-            else                                                                                                       \
-            {                                                                                                          \
-                printf(__VA_ARGS__);                                                                                   \
-                printf("\n");                                                                                          \
-            }                                                                                                          \
+            printf(__VA_ARGS__);                                                                                       \
+            printf("\n");                                                                                              \
         }                                                                                                              \
     }
 #define LOGW(...)                                                                                                      \
     {                                                                                                                  \
         if (g_nDebugLevel >= 2)                                                                                        \
         {                                                                                                              \
-            if (gLayaLog)                                                                                              \
-            {                                                                                                          \
-                gLayaLog(static_cast<int>(laya::LogLevel::Warn), __FILE__, __LINE__, __VA_ARGS__);                     \
-            }                                                                                                          \
-            else                                                                                                       \
-            {                                                                                                          \
-                printf(__VA_ARGS__);                                                                                   \
-                printf("\n");                                                                                          \
-            }                                                                                                          \
+            printf(__VA_ARGS__);                                                                                       \
+            printf("\n");                                                                                              \
         }                                                                                                              \
         if (g_nDebugLevel >= 5)                                                                                        \
         {                                                                                                              \
@@ -127,15 +109,8 @@ void CToObjectCLogIExt(const char *str);
     {                                                                                                                  \
         if (g_nDebugLevel >= 1)                                                                                        \
         {                                                                                                              \
-            if (gLayaLog)                                                                                              \
-            {                                                                                                          \
-                gLayaLog(static_cast<int>(laya::LogLevel::Error), __FILE__, __LINE__, __VA_ARGS__);                    \
-            }                                                                                                          \
-            else                                                                                                       \
-            {                                                                                                          \
-                printf(__VA_ARGS__);                                                                                   \
-                printf("\n");                                                                                          \
-            }                                                                                                          \
+            printf(__VA_ARGS__);                                                                                       \
+            printf("\n");                                                                                              \
         }                                                                                                              \
         if (g_nDebugLevel >= 4)                                                                                        \
         {                                                                                                              \
@@ -147,28 +122,14 @@ void CToObjectCLogIExt(const char *str);
     {                                                                                                                  \
         if (g_nDebugLevel >= 3)                                                                                        \
         {                                                                                                              \
-            if (gLayaLog)                                                                                              \
-            {                                                                                                          \
-                gLayaLog(static_cast<int>(laya::LogLevel::Info), __FILE__, __LINE__, __VA_ARGS__);                     \
-            }                                                                                                          \
-            else                                                                                                       \
-            {                                                                                                          \
-                __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__);                                           \
-            }                                                                                                          \
+            __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__);                                               \
         }                                                                                                              \
     }
 #define LOGW(...)                                                                                                      \
     {                                                                                                                  \
         if (g_nDebugLevel >= 2)                                                                                        \
         {                                                                                                              \
-            if (gLayaLog)                                                                                              \
-            {                                                                                                          \
-                gLayaLog(static_cast<int>(laya::LogLevel::Warn), __FILE__, __LINE__, __VA_ARGS__);                     \
-            }                                                                                                          \
-            else                                                                                                       \
-            {                                                                                                          \
-                __android_log_print(ANDROID_LOG_WARN, LOG_TAG, __VA_ARGS__);                                           \
-            }                                                                                                          \
+            __android_log_print(ANDROID_LOG_WARN, LOG_TAG, __VA_ARGS__);                                               \
         }                                                                                                              \
         if (g_nDebugLevel >= 5)                                                                                        \
         {                                                                                                              \
@@ -179,14 +140,7 @@ void CToObjectCLogIExt(const char *str);
     {                                                                                                                  \
         if (g_nDebugLevel >= 1)                                                                                        \
         {                                                                                                              \
-            if (gLayaLog)                                                                                              \
-            {                                                                                                          \
-                gLayaLog(static_cast<int>(laya::LogLevel::Error), __FILE__, __LINE__, __VA_ARGS__);                    \
-            }                                                                                                          \
-            else                                                                                                       \
-            {                                                                                                          \
-                __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__);                                          \
-            }                                                                                                          \
+            __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__);                                              \
         }                                                                                                              \
         if (g_nDebugLevel >= 4)                                                                                        \
         {                                                                                                              \
@@ -202,30 +156,16 @@ void CToObjectCLogIExt(const char *str);
     {                                                                                                                  \
         if (g_nDebugLevel >= 3)                                                                                        \
         {                                                                                                              \
-            if (gLayaLog)                                                                                              \
-            {                                                                                                          \
-                gLayaLog(static_cast<int>(laya::LogLevel::Info), __FILE__, __LINE__, __VA_ARGS__);                     \
-            }                                                                                                          \
-            else                                                                                                       \
-            {                                                                                                          \
-                printf(__VA_ARGS__);                                                                                   \
-                printf("\n");                                                                                          \
-            }                                                                                                          \
+            printf(__VA_ARGS__);                                                                                       \
+            printf("\n");                                                                                              \
         }                                                                                                              \
     }
 #define LOGW(...)                                                                                                      \
     {                                                                                                                  \
         if (g_nDebugLevel >= 2)                                                                                        \
         {                                                                                                              \
-            if (gLayaLog)                                                                                              \
-            {                                                                                                          \
-                gLayaLog(static_cast<int>(laya::LogLevel::Warn), __FILE__, __LINE__, __VA_ARGS__);                     \
-            }                                                                                                          \
-            else                                                                                                       \
-            {                                                                                                          \
-                printf(__VA_ARGS__);                                                                                   \
-                printf("\n");                                                                                          \
-            }                                                                                                          \
+            printf(__VA_ARGS__);                                                                                       \
+            printf("\n");                                                                                              \
         }                                                                                                              \
         if (g_nDebugLevel >= 5)                                                                                        \
         {                                                                                                              \
@@ -236,15 +176,8 @@ void CToObjectCLogIExt(const char *str);
     {                                                                                                                  \
         if (g_nDebugLevel >= 1)                                                                                        \
         {                                                                                                              \
-            if (gLayaLog)                                                                                              \
-            {                                                                                                          \
-                gLayaLog(static_cast<int>(laya::LogLevel::Error), __FILE__, __LINE__, __VA_ARGS__);                    \
-            }                                                                                                          \
-            else                                                                                                       \
-            {                                                                                                          \
-                printf(__VA_ARGS__);                                                                                   \
-                printf("\n");                                                                                          \
-            }                                                                                                          \
+            printf(__VA_ARGS__);                                                                                       \
+            printf("\n");                                                                                              \
         }                                                                                                              \
         if (g_nDebugLevel >= 4)                                                                                        \
         {                                                                                                              \
