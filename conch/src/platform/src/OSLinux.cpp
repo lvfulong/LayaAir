@@ -109,4 +109,8 @@ std::string OSLinux::postSyncMessage(const std::string &eventName, const std::st
 
     return eventResult;
 }
+void OSLinux::setPreferredFramesPerSecond(uint64_t fps)
+{
+
+}
 } // namespace laya

@@ -25,8 +25,9 @@ class OS
     virtual int getSafeInsetBottom() = 0;
     virtual int getSafeInsetRight() = 0;
     virtual jsvm_value postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName,
-                                     const std::string &data) = 0;
+                                        const std::string &data) = 0;
     virtual std::string postSyncMessage(const std::string &eventName, const std::string &data) = 0;
+    virtual void setPreferredFramesPerSecond(uint64_t fps) = 0;
 };
 
 std::unique_ptr<OS> createOS();

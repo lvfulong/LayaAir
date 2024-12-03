@@ -28,7 +28,7 @@ public:
     bool dequeue(WorkerMessageData* data);
     void triggerMessageSignal();
     void run();
-    void changeFPS(uint64_t animationInterval);
+    void changeFPS(uint64_t animationIntervalMs);
 
 public:
     // NAPI interface

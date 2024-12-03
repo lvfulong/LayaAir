@@ -192,4 +192,8 @@ std::string OSAndroid::postSyncMessage(const std::string &eventName, const std::
     }
     return result;
 }
+void OSAndroid::setPreferredFramesPerSecond(uint64_t fps)
+{
+
+}
 } // namespace laya

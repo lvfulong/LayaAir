@@ -21,6 +21,7 @@ class OSLinux : public OS
     int getSafeInsetRight() override;
     jsvm_value postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data) override;
     std::string postSyncMessage(const std::string &eventName, const std::string &data) override;
+    void setPreferredFramesPerSecond(uint64_t fps) override;
 };
 } // namespace laya
 #endif

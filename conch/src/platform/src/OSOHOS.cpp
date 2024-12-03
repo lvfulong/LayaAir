@@ -2,6 +2,8 @@
 #include <JCConch.h>
 #include <aki/jsbind.h>
 #include <utils/Log.h>
+#include "platform/ohos/napi/render/plugin_render.h"
+
 namespace laya
 {
 
@@ -99,22 +101,11 @@ int OSOHOS::getSafeInsetRight()
 }
 jsvm_value OSOHOS::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
-    //auto isolate = v8::Isolate::GetCurrent();
-    //auto context = isolate->GetCurrentContext();
-
-    //napi_deferred deferred;
-    //napi_value promise;
-
-    //napi_create_promise(context, &deferred, &promise);
     auto promise = jsbind::Promise::Make();
     std::function<void(std::string)> cb = [promise, cbref](std::string message) {
         postToJS([promise, message, cbref]() {
             if (!cbref.lock())
                 return;
-            //auto isolate = v8::Isolate::GetCurrent();
-            //auto context = isolate->GetCurrentContext();
-            //napi_value v = jsvm_valueFromV8LocalValue(MakeJSValue<const char *>(message));
-            //napi_resolve_deferred(context, deferred, v);
              promise.resolve(message);
         });
     };
@@ -122,7 +113,6 @@ jsvm_value OSOHOS::postAsyncMessage(std::weak_ptr<int> cbref, const std::string 
     {
         post->Invoke<void>(eventName, data, cb);
     }
-    //return V8LocalValueFromjsvm_value(promise);
     return promise.getHandle();
 }
 std::string OSOHOS::postSyncMessage(const std::string &eventName, const std::string &data)
@@ -134,5 +124,13 @@ std::string OSOHOS::postSyncMessage(const std::string &eventName, const std::str
         eventResult = post->Invoke<std::string>(eventName, data);
     }
     return eventResult;
+}
+void OSOHOS::setPreferredFramesPerSecond(uint64_t fps)
+{
+    if (fps > 0)
+    {
+        uint64_t animationIntervalMs = (uint64_t)(1000.f / fps);
+        PluginRender::GetInstance()->changeFPS(fps);
+    }
 }
 } // namespace laya

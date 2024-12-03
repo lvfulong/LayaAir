@@ -120,4 +120,8 @@ std::string OSWin::postSyncMessage(const std::string &eventName, const std::stri
 
     return eventResult;
 }
+void OSWin::setPreferredFramesPerSecond(uint64_t fps)
+{
+
+}
 } // namespace laya

@@ -187,9 +187,13 @@ void PluginRender::run() {
     }
 }
 
-void PluginRender::changeFPS(uint64_t animationInterval) {
-    LOGI("PluginRender::changeFPS, animationInterval from %{public}lu to %{public}lu", animationInterval_, animationInterval);
-    animationInterval_ = animationInterval;
+void PluginRender::changeFPS(uint64_t animationIntervalMs) {
+    LOGI("PluginRender::changeFPS, animationInterval from %{public}lu to %{public}lu", animationInterval_, animationIntervalMs);
+    
+    if (timerInited_ && animationIntervalMs != animationInterval_) {
+        uv_timer_set_repeat(&timerHandle_, animationIntervalMs);
+    }
+    animationInterval_ = animationIntervalMs;
 }
 
 void PluginRender::OnSurfaceCreated(OH_NativeXComponent* component, void* window)
@@ -260,7 +264,7 @@ void PluginRender::OnCreateNative(napi_env env, uv_loop_t* loop) {
 void PluginRender::OnShowNative() {
     LOGI("PluginRender::OnShowNative");
     if (timerInited_) {
-        uv_timer_start(&timerHandle_, &PluginRender::timerCb, 0, 1);
+        uv_timer_start(&timerHandle_, &PluginRender::timerCb, 0, animationInterval_);
     }
     NAPIFun::ConchNAPI_OnAppResume();
 }

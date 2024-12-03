@@ -98,6 +98,7 @@ namespace laya
 
         static jsvm_value postAsyncMessage(const std::string &eventName, const std::string &data);
         static std::string postSyncMessage(const std::string &eventName, const std::string &data);
+        static void setPreferredFramesPerSecond(uint32_t fps);
     public:
 
         static jsvm_value readFileFromAsset(const char* file, const char* encode);

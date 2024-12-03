@@ -590,6 +590,10 @@ namespace laya
     {
         return JCConch::s_pConch->getOS()->postSyncMessage(eventName, data);
     }
+    void JSRuntime::setPreferredFramesPerSecond(uint32_t fps)
+    {
+        JCConch::s_pConch->getOS()->setPreferredFramesPerSecond(fps);
+    }
     void JSRuntime::exportJS(jsbind::Object& context)
     {
         jsbind::global_class_<JSRuntime> class_binding;
@@ -631,6 +635,7 @@ namespace laya
         class_binding.class_function("createArrayBufferRef", &JSRuntime::createArrayBufferRef);
         class_binding.class_function("registerFont", &JSRuntime::registerFont);
         class_binding.class_function("onError", &JSRuntime::setOnError);
+        class_binding.class_function("setPreferredFramesPerSecond", &JSRuntime::setPreferredFramesPerSecond);
 #if defined(USE_DCC)
         class_binding.class_function("downloadNoCache", &JSRuntime::downloadFile);
         class_binding.class_function("setDownloader", &JSRuntime::setDownloader);

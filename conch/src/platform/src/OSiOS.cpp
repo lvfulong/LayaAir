@@ -106,4 +106,8 @@ std::string OSiOS::postSyncMessage(const std::string &eventName, const std::stri
     std::string eventResult = CToObjectCPostSyncMessage(eventName, data);
     return eventResult;
 }
+void OSiOS::setPreferredFramesPerSecond(uint64_t fps)
+{
+
+}
 } // namespace laya
