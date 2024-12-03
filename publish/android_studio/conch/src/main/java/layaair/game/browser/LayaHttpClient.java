@@ -126,6 +126,7 @@ public class LayaHttpClient {
         return result.toString();
     }
     static void doRequest(LayaHttpClient connection) {
+        try{
         connection.eagerClient = connection
                 .eagerClientBuilder
                 .build();
@@ -171,6 +172,7 @@ public class LayaHttpClient {
                     } catch (Exception e) {
                         e.printStackTrace();
                         Log.e(TAG, "getResponseContent:" + e.toString());
+                        LayaHttpClient.onFailure(connection.ptr, -1);
                     }
                 }
                 else {
@@ -187,10 +189,15 @@ public class LayaHttpClient {
                     } catch (Exception e) {
                         e.printStackTrace();
                         Log.e(TAG, "getResponseContent:" + e.toString());
+                        LayaHttpClient.onFailure(connection.ptr, -1);
                     }
                 }
             }
         });
+        } catch (Exception e) {
+            Log.e(TAG, "Error in doRequest: " + e.toString());
+            LayaHttpClient.onFailure(connection.ptr, -1);
+        }
     }
     /*static void disconnect(LayaHttpClient http) {
         //Log.d(TAG, "HttpURLConnection disconnect ");
