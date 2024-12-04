@@ -130,7 +130,7 @@ void OSOHOS::setPreferredFramesPerSecond(uint64_t fps)
     if (fps > 0)
     {
         uint64_t animationIntervalMs = (uint64_t)(1000.f / fps);
-        PluginRender::GetInstance()->changeFPS(fps);
+        PluginRender::GetInstance()->changeFPS(animationIntervalMs);
     }
 }
 } // namespace laya

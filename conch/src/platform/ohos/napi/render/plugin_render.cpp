@@ -131,7 +131,6 @@ static uint64_t getCurrentMillSecond() {
 // static
 void PluginRender::timerCb(uv_timer_t* handle)
 {
-    // LOGI("PluginRender::timerCb, animationInterval_ is %{public}lu", animationInterval_);
     NAPIFun::ConchNAPI_onDrawFrame();
 }
 
@@ -188,8 +187,7 @@ void PluginRender::run() {
 }
 
 void PluginRender::changeFPS(uint64_t animationIntervalMs) {
-    LOGI("PluginRender::changeFPS, animationInterval from %{public}lu to %{public}lu", animationInterval_, animationIntervalMs);
-    
+    LOGI("PluginRender::changeFPS, animationInterval from %lu to %lu", animationInterval_, animationIntervalMs);
     if (timerInited_ && animationIntervalMs != animationInterval_) {
         uv_timer_set_repeat(&timerHandle_, animationIntervalMs);
     }
@@ -228,7 +226,7 @@ void PluginRender::DispatchTouchEvent(OH_NativeXComponent* component, void* wind
         ids[i] = touchEvent->touchPoints[i].id;
         xs[i] = touchEvent->touchPoints[i].x;
         ys[i] = touchEvent->touchPoints[i].y;
-        LOGI("Touch Info : x = %{public}f, y = %{public}f", xs[i], ys[i]);
+        LOGI("Touch Info : x = %f, y = %f", xs[i], ys[i]);
     }
     switch (touchEvent -> type) {
         case OH_NATIVEXCOMPONENT_DOWN:

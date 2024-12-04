@@ -5,51 +5,43 @@
 
 int g_nDebugLevel = 3;
 
-std::string vformat(const char *fmt, va_list args)
-{
-    va_list args_copy;
-    va_copy(args_copy, args);
-
-    // 使用一个足够大的固定大小数组来尝试格式化字符串
-    std::vector<char> buf(1024);
-    int needed = vsnprintf(buf.data(), buf.size(), fmt, args_copy);
-    va_end(args_copy);
-
-    // 检查是否足够，并重新尝试
-    if (needed < 0 || needed >= static_cast<int>(buf.size()))
-    {
-        buf.resize(needed + 1);
-        vsnprintf(buf.data(), buf.size(), fmt, args);
-    }
-
-    return std::string(buf.data(), buf.size());
-}
 #if defined(OS_OHOS)
 void logMessage(laya::LogType logType, const char *file, int line, const char *fmt, ...)
 {
-    va_list args;
-    va_start(args, fmt);
-    std::string message = vformat(fmt, args);
+    va_list args0;
+    va_list args1;
+
+    va_start(args0, fmt);
+    va_copy(args1, args0);
+    ssize_t const s = vsnprintf(nullptr, 0, fmt, args0);
+    va_end(args0);
+
+    std::vector<char> message;
+    message.resize(s + 1);
+    vsnprintf(message.data(), s, fmt, args1);
+
+    va_end(args1);
+
     switch (logType)
     {
     case laya::LogType::Warn:
         if (g_nDebugLevel >= 2)
         {
-            OH_LOG_Print(LOG_APP, LOG_WARN, LOG_DOMAIN, LOG_TAG, "%{public}s", message.c_str());
+            OH_LOG_Print(LOG_APP, LOG_WARN, LOG_DOMAIN, LOG_TAG, "%{public}s", message.data());
         }
         if (g_nDebugLevel >= 5)
         {
-            alert(message.c_str());
+            alert(message.data());
         }
         break;
     case laya::LogType::Error:
         if (g_nDebugLevel >= 1)
         {
-            OH_LOG_Print(LOG_APP, LOG_ERROR, LOG_DOMAIN, LOG_TAG, "%{public}s", message.c_str());
+            OH_LOG_Print(LOG_APP, LOG_ERROR, LOG_DOMAIN, LOG_TAG, "%{public}s", message.data());
         }
         if (g_nDebugLevel >= 4)
         {
-            alert(message.c_str());
+            alert(message.data());
         }
         break;
     case laya::LogType::Debug:
@@ -57,12 +49,12 @@ void logMessage(laya::LogType logType, const char *file, int line, const char *f
     case laya::LogType::Info:
         if (g_nDebugLevel >= 3)
         {
-            OH_LOG_Print(LOG_APP, LOG_INFO, LOG_DOMAIN, LOG_TAG, "%{public}s", message.c_str());
+            OH_LOG_Print(LOG_APP, LOG_INFO, LOG_DOMAIN, LOG_TAG, "%{public}s", message.data());
         }
         break;
     default:
         break;
     }
-    va_end(args);
+
 }
 #endif

@@ -50,7 +50,7 @@ namespace laya{
                 }
                 RawFile *fp = OH_ResourceManager_OpenRawFile(nativeResourceManager_,pathfile);
                 if(fp){
-                    LOGI("JCOHOSFileSource::isFileExist() - open %{public}s success", p_pszFile);
+                    LOGI("JCOHOSFileSource::isFileExist() - open %s success", p_pszFile);
                     OH_ResourceManager_CloseRawFile(fp);
                     return true;
                 }
@@ -65,7 +65,7 @@ namespace laya{
                     pathfile = szName;
                 }
                 RawFile *fp = OH_ResourceManager_OpenRawFile(nativeResourceManager_, pathfile);
-                LOGI("JSOHOSFileSource::getFileSize ============================> doGetFileData %{public}s",p_pszFile);
+                LOGI("JSOHOSFileSource::getFileSize ============================> doGetFileData %s",p_pszFile);
                 long size = OH_ResourceManager_GetRawFileSize(fp);
                 OH_ResourceManager_CloseRawFile(fp);
                 if(size!=-1){

@@ -82,7 +82,7 @@ namespace laya{
         return m_fOpacity;
     }
     void JSOHOSEditBox::set_Value(const char* p_sValue){
-        LOGI("JSOHOSEditBox::set_Value=%{public}s",p_sValue);
+        LOGI("JSOHOSEditBox::set_Value=s",p_sValue);
         m_sValue = (p_sValue!=NULL)?p_sValue:"";
         aki::JSBind::GetJSFunction("EditBox.setValue")->Invoke<void>(m_tag, m_sValue);
         //return m_sValue.c_str();
