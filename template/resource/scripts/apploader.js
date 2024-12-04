@@ -108,14 +108,15 @@ class measureText {
     ;
     ;
 }
-var LogLevel;
-(function (LogLevel) {
-    LogLevel[LogLevel["Warn"] = 0] = "Warn";
-    LogLevel[LogLevel["Error"] = 1] = "Error";
-    LogLevel[LogLevel["Debug"] = 2] = "Debug";
-    LogLevel[LogLevel["Info"] = 3] = "Info";
-    LogLevel[LogLevel["Runtime"] = 4] = "Runtime";
-})(LogLevel || (LogLevel = {}));
+var LogType;
+(function (LogType) {
+    LogType[LogType["Debug"] = 0] = "Debug";
+    LogType[LogType["Info"] = 1] = "Info";
+    LogType[LogType["Warn"] = 2] = "Warn";
+    LogType[LogType["Error"] = 3] = "Error";
+    LogType[LogType["Fatal"] = 4] = "Fatal";
+})(LogType || (LogType = {}));
+;
 class Console {
     constructor() {
     }
@@ -131,7 +132,7 @@ class Console {
     }
     debug(message) {
         var c = _console;
-        c.log(LogLevel.Debug, message);
+        c.log(LogType.Debug, message);
     }
     dir(value) {
     }
@@ -139,19 +140,19 @@ class Console {
     }
     error(message) {
         var c = _console;
-        c.log(LogLevel.Error, message);
+        c.log(LogType.Error, message);
     }
     group(groupTitle) { }
     groupCollapsed(groupTitle) { }
     groupEnd() { }
     info(message) {
         var c = _console;
-        c.log(LogLevel.Info, message);
+        c.log(LogType.Info, message);
     }
     log(...args) {
         var c = _console;
         let msg = args.join(' ');
-        c.log(LogLevel.Info, msg);
+        c.log(LogType.Info, msg);
     }
     profile(reportName) {
     }
@@ -163,11 +164,11 @@ class Console {
     }
     warn(message) {
         var c = _console;
-        c.log(LogLevel.Warn, message);
+        c.log(LogType.Warn, message);
     }
     table(message) {
         var c = _console;
-        c.log(LogLevel.Info, "console.table not support ");
+        c.log(LogType.Info, "console.table not support ");
     }
 }
 class GlobalEventHandlers {

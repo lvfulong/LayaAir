@@ -1,11 +1,11 @@
- enum LogLevel
- {
+enum LogType
+{
+    Debug,
+    Info,
     Warn,
-	Error,
-	Debug,
-	Info,
-	Runtime 
- }
+    Error,
+    Fatal,
+}
 class Console {
     constructor(){
     }
@@ -34,7 +34,7 @@ class Console {
     
     debug(message?: string/*, ...optionalParams: any[]*/): void{
         var c = _console;   //这样就不怕别的对象执行这个函数的时候遇到this的问题了
-        c.log(LogLevel.Debug,message);//+optionalParams.join());
+        c.log(LogType.Debug,message);//+optionalParams.join());
     }
     /**
      * 将传入对象的属性，包括子对象的属性以列表形式输出
@@ -47,19 +47,19 @@ class Console {
     }
     error(message?: any/*, ...optionalParams: any[]*/): void{
         var c = _console;
-        c.log(LogLevel.Error,message);//+optionalParams.join());
+        c.log(LogType.Error,message);//+optionalParams.join());
     }
     group(groupTitle?: string): void{}
     groupCollapsed(groupTitle?: string): void{}
     groupEnd(): void{}
     info(message?: any/*, ...optionalParams: any[]*/): void{
         var c = _console;
-        c.log(LogLevel.Info,message);//+optionalParams.join());
+        c.log(LogType.Info,message);//+optionalParams.join());
     }
     log(...args: any[]): void{
         var c = _console;
         let msg = args.join(' ');
-        c.log(LogLevel.Info, msg);
+        c.log(LogType.Info, msg);
     }
     //msIsIndependentlyComposed(element: Element): boolean;
     profile(reportName?: string): void{
@@ -72,11 +72,11 @@ class Console {
     }
     warn(message?: any/*, ...optionalParams: any[]*/): void{
         var c = _console;
-        c.log(LogLevel.Warn,message);//+optionalParams.join());
+        c.log(LogType.Warn,message);//+optionalParams.join());
     } 
     table(message?: any/*, ...optionalParams: any[]*/) {
         var c = _console;
-        c.log(LogLevel.Info,"console.table not support ");//+optionalParams.join());
+        c.log(LogType.Info,"console.table not support ");//+optionalParams.join());
     } 
 }
 

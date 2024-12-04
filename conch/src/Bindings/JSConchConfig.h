@@ -99,7 +99,7 @@ namespace laya
 		static void setLanguage(const char* pStrLanguage);
         static void setTouchMode(bool bMode);
         static bool getTouchMode();
-        static void setDebugLevel(int nLevel);
+        static void setLogLevel(int nLevel);
         //设置图片释放的间隔时间
         static void setImageReleaseSpaceTime(int nSpaceTime);
     

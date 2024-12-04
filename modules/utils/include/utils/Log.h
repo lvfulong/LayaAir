@@ -7,7 +7,7 @@
 #ifdef OS_WINDOWS
 #pragma execution_character_set("utf-8")
 #endif
-extern int g_nDebugLevel;
+extern int g_nLogLevel;
 
 #define LOG_TAG "LayaBox"
 #if defined(OS_ANDROID)
@@ -20,23 +20,22 @@ namespace laya
 {
 enum class LogType
 {
-    Warn,
-    Error,
     Debug,
     Info,
+    Warn,
+    Error,
+    Fatal,
 };
-// 通用的日志函数。
 enum class LogLevel
 {
-    Warn,
-    Error,
-    Debug,
-    Info,
-    Runtime,
+    Debug = 5,
+    Info = 4,
+    Warn = 3,
+    Error = 2,
+    Fatal = 1,
+    Close = 0,
 };
 } // namespace laya
-
-void alert(const char *fmt, ...);
 #if defined(OS_OHOS)
 void logMessage(laya::LogType logType, const char *file, int line, const char *fmt, ...);
 #endif
@@ -50,111 +49,90 @@ void CToObjectCLogE(const char *szFormat, ...);
 void CToObjectCLogIExt(const char *str);
 #define LOGIExt(str)                                                                                                   \
     {                                                                                                                  \
-        if (g_nDebugLevel >= 3)                                                                                        \
+        if (g_nLogLevel >= static_cast<int>(laya::LogLevel::Info))                                                     \
         {                                                                                                              \
             CToObjectCLogIExt(str);                                                                                    \
         }                                                                                                              \
     }
 #define LOGI(...)                                                                                                      \
     {                                                                                                                  \
-        if (g_nDebugLevel >= 3)                                                                                        \
+        if (g_nLogLevel >= static_cast<int>(laya::LogLevel::Info))                                                     \
         {                                                                                                              \
             CToObjectCLogI(__VA_ARGS__);                                                                               \
         }                                                                                                              \
     }
 #define LOGW(...)                                                                                                      \
     {                                                                                                                  \
-        if (g_nDebugLevel >= 2)                                                                                        \
+        if (g_nLogLevel >= static_cast<int>(laya::LogLevel::Warn))                                                     \
         {                                                                                                              \
             CToObjectCLogW(__VA_ARGS__);                                                                               \
         }                                                                                                              \
-        if (g_nDebugLevel >= 5)                                                                                        \
-        {                                                                                                              \
-            alert(__VA_ARGS__);                                                                                        \
-        }                                                                                                              \
+        \                                                                                                              \
     }
 #define LOGE(...)                                                                                                      \
     {                                                                                                                  \
-        if (g_nDebugLevel >= 1)                                                                                        \
+        if (g_nLogLevel >= static_cast<int>(laya::LogLevel::Error))                                                    \
         {                                                                                                              \
             CToObjectCLogE(__VA_ARGS__);                                                                               \
         }                                                                                                              \
-        if (g_nDebugLevel >= 4)                                                                                        \
-        {                                                                                                              \
-            alert(__VA_ARGS__);                                                                                        \
-        }                                                                                                              \
-    }
-#elif OS_LINUX
-#define LOGI(...)                                                                                                      \
-    {                                                                                                                  \
-        if (g_nDebugLevel >= 3)                                                                                        \
-        {                                                                                                              \
-            printf(__VA_ARGS__);                                                                                       \
-            printf("\n");                                                                                              \
-        }                                                                                                              \
-    }
-#define LOGW(...)                                                                                                      \
-    {                                                                                                                  \
-        if (g_nDebugLevel >= 2)                                                                                        \
-        {                                                                                                              \
-            printf(__VA_ARGS__);                                                                                       \
-            printf("\n");                                                                                              \
-        }                                                                                                              \
-        if (g_nDebugLevel >= 5)                                                                                        \
-        {                                                                                                              \
-            alert(__VA_ARGS__);                                                                                        \
-        }                                                                                                              \
-    }
-#define LOGE(...)                                                                                                      \
-    {                                                                                                                  \
-        if (g_nDebugLevel >= 1)                                                                                        \
-        {                                                                                                              \
-            printf(__VA_ARGS__);                                                                                       \
-            printf("\n");                                                                                              \
-        }                                                                                                              \
-        if (g_nDebugLevel >= 4)                                                                                        \
-        {                                                                                                              \
-            alert(__VA_ARGS__);                                                                                        \
-        }                                                                                                              \
+        \                                                                                                              \
     }
 #elif OS_ANDROID
+#define LOGD(...)                                                                                                      \
+    {                                                                                                                  \
+        if (g_nLogLevel >= static_cast<int>(laya::LogLevel::Debug))                                                    \
+        {                                                                                                              \
+            __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__);                                              \
+        }                                                                                                              \
+    }
 #define LOGI(...)                                                                                                      \
     {                                                                                                                  \
-        if (g_nDebugLevel >= 3)                                                                                        \
+        if (g_nLogLevel >= static_cast<int>(laya::LogLevel::Info))                                                     \
         {                                                                                                              \
             __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__);                                               \
         }                                                                                                              \
     }
 #define LOGW(...)                                                                                                      \
     {                                                                                                                  \
-        if (g_nDebugLevel >= 2)                                                                                        \
+        if (g_nLogLevel >= static_cast<int>(laya::LogLevel::Warn))                                                     \
         {                                                                                                              \
             __android_log_print(ANDROID_LOG_WARN, LOG_TAG, __VA_ARGS__);                                               \
-        }                                                                                                              \
-        if (g_nDebugLevel >= 5)                                                                                        \
-        {                                                                                                              \
-            alert(__VA_ARGS__);                                                                                        \
         }                                                                                                              \
     }
 #define LOGE(...)                                                                                                      \
     {                                                                                                                  \
-        if (g_nDebugLevel >= 1)                                                                                        \
+        if (g_nLogLevel >= static_cast<int>(laya::LogLevel::Error))                                                    \
         {                                                                                                              \
             __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__);                                              \
         }                                                                                                              \
-        if (g_nDebugLevel >= 4)                                                                                        \
+        \                                                                                                              \
+    }
+#define LOGF(...)                                                                                                      \
+    {                                                                                                                  \
+        if (g_nLogLevel >= static_cast<int>(laya::LogLevel::Fatal))                                                    \
         {                                                                                                              \
-            alert(__VA_ARGS__);                                                                                        \
+            __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__);                                              \
         }                                                                                                              \
+        \                                                                                                              \
     }
 #elif OS_OHOS
+#define LOGD(...) logMessage(laya::LogType::Debug, __FILE__, __LINE__, __VA_ARGS__);
 #define LOGI(...) logMessage(laya::LogType::Info, __FILE__, __LINE__, __VA_ARGS__);
 #define LOGW(...) logMessage(laya::LogType::Warn, __FILE__, __LINE__, __VA_ARGS__);
 #define LOGE(...) logMessage(laya::LogType::Error, __FILE__, __LINE__, __VA_ARGS__);
-#elif OS_WINDOWS
+#define LOGF(...) logMessage(laya::LogType::Fatal, __FILE__, __LINE__, __VA_ARGS__);
+#elif defined(OS_WINDOWS) || defined(OS_LINUX)
+#define LOGD(...)                                                                                                      \
+    {                                                                                                                  \
+        if (g_nLogLevel >= static_cast<int>(laya::LogLevel::Debug))                                                    \
+        {                                                                                                              \
+            printf(__VA_ARGS__);                                                                                       \
+            printf("\n");                                                                                              \
+        }                                                                                                              \
+    }
 #define LOGI(...)                                                                                                      \
     {                                                                                                                  \
-        if (g_nDebugLevel >= 3)                                                                                        \
+        if (g_nLogLevel >= static_cast<int>(laya::LogLevel::Info))                                                     \
         {                                                                                                              \
             printf(__VA_ARGS__);                                                                                       \
             printf("\n");                                                                                              \
@@ -162,35 +140,34 @@ void CToObjectCLogIExt(const char *str);
     }
 #define LOGW(...)                                                                                                      \
     {                                                                                                                  \
-        if (g_nDebugLevel >= 2)                                                                                        \
+        if (g_nLogLevel >= static_cast<int>(laya::LogLevel::Warn))                                                     \
         {                                                                                                              \
             printf(__VA_ARGS__);                                                                                       \
             printf("\n");                                                                                              \
-        }                                                                                                              \
-        if (g_nDebugLevel >= 5)                                                                                        \
-        {                                                                                                              \
-            alert(__VA_ARGS__);                                                                                        \
         }                                                                                                              \
     }
 #define LOGE(...)                                                                                                      \
     {                                                                                                                  \
-        if (g_nDebugLevel >= 1)                                                                                        \
+        if (g_nLogLevel >= static_cast<int>(laya::LogLevel::Error))                                                    \
         {                                                                                                              \
             printf(__VA_ARGS__);                                                                                       \
             printf("\n");                                                                                              \
         }                                                                                                              \
-        if (g_nDebugLevel >= 4)                                                                                        \
+    }
+#define LOGF(...)                                                                                                      \
+    {                                                                                                                  \
+        if (g_nLogLevel >= static_cast<int>(laya::LogLevel::Fatal))                                                    \
         {                                                                                                              \
-            alert(__VA_ARGS__);                                                                                        \
+            printf(__VA_ARGS__);                                                                                       \
+            printf("\n");                                                                                              \
         }                                                                                                              \
     }
-
 #endif
 
 #define ABORT(msg)                                                                                                     \
     do                                                                                                                 \
     {                                                                                                                  \
-        LOGE("%s:%d: fatal error: \"%s\"\n", __FILE__, __LINE__, #msg);                                                \
+        LOGF("%s:%d: fatal error: \"%s\"\n", __FILE__, __LINE__, #msg);                                                \
         ::abort();                                                                                                     \
     } while (false)
 

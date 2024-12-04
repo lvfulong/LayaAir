@@ -3,7 +3,7 @@
 #include <utils/Log.h>
 #include <vector>
 
-int g_nDebugLevel = 3;
+int g_nLogLevel = static_cast<int>(laya::LogLevel::Debug);
 
 #if defined(OS_OHOS)
 void logMessage(laya::LogType logType, const char *file, int line, const char *fmt, ...)
@@ -24,30 +24,32 @@ void logMessage(laya::LogType logType, const char *file, int line, const char *f
 
     switch (logType)
     {
+    case laya::LogType::Fatal:
+        if (g_nLogLevel >= static_cast<int>(laya::LogLevel::Fatal))
+        {
+            OH_LOG_Print(LOG_APP, LOG_FATAL, LOG_DOMAIN, LOG_TAG, "%{public}s", message.data());
+        }
+        break;
     case laya::LogType::Warn:
-        if (g_nDebugLevel >= 2)
+        if (g_nLogLevel >= static_cast<int>(laya::LogLevel::Warn))
         {
             OH_LOG_Print(LOG_APP, LOG_WARN, LOG_DOMAIN, LOG_TAG, "%{public}s", message.data());
         }
-        if (g_nDebugLevel >= 5)
-        {
-            alert(message.data());
-        }
         break;
     case laya::LogType::Error:
-        if (g_nDebugLevel >= 1)
+        if (g_nLogLevel >= static_cast<int>(laya::LogLevel::Error))
         {
             OH_LOG_Print(LOG_APP, LOG_ERROR, LOG_DOMAIN, LOG_TAG, "%{public}s", message.data());
         }
-        if (g_nDebugLevel >= 4)
-        {
-            alert(message.data());
-        }
         break;
     case laya::LogType::Debug:
+        if (g_nLogLevel >= static_cast<int>(laya::LogLevel::Debug))
+        {
+            OH_LOG_Print(LOG_APP, LOG_DEBUG, LOG_DOMAIN, LOG_TAG, "%{public}s", message.data());
+        }
         break;
     case laya::LogType::Info:
-        if (g_nDebugLevel >= 3)
+        if (g_nLogLevel >= static_cast<int>(laya::LogLevel::Info))
         {
             OH_LOG_Print(LOG_APP, LOG_INFO, LOG_DOMAIN, LOG_TAG, "%{public}s", message.data());
         }
@@ -55,6 +57,5 @@ void logMessage(laya::LogType logType, const char *file, int line, const char *f
     default:
         break;
     }
-
 }
 #endif

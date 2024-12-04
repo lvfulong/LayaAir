@@ -1,68 +1,79 @@
 #include "JSConsole.h"
 #include <jsbind/JSBind.h>
-#include <utils/Log.h>
-#include <utils/JCMemorySurvey.h>
 #include <utils/JCCommonMethod.h>
+#include <utils/JCMemorySurvey.h>
+#include <utils/Log.h>
 
-namespace laya 
+namespace laya
 {
-    void JSConsole::log(int p_nType,const char* p_sBuffer )
+void JSConsole::log(int p_nType, const char *p_sBuffer)
+{
+    LogType logType = (LogType)p_nType;
+    
+#if defined(OS_WINDOWS)
+    if (p_sBuffer == NULL)
+        return;
+    int nLen = strlen(p_sBuffer) + 3;
+    if (nLen > 3)
     {
-        LogLevel logLevel = (LogLevel)p_nType;
-    #if defined(OS_WINDOWS)
-	    if( p_sBuffer==NULL)
-		    return;
-	    int nLen = strlen( p_sBuffer ) + 3;
-        if (nLen>3) {
-            unsigned short* ucStr = new unsigned short[nLen];
-            int nlen = UTF8StrToUnicodeStr((unsigned char*)p_sBuffer, ucStr, nLen);
-            switch (logLevel)
-            {
-            case LogLevel::Warn:
-                wprintf(L"warn:%s\n", (wchar_t *)ucStr);
-                break;
-            case LogLevel::Error:
-                wprintf(L"error:%s\n", (wchar_t *)ucStr);
-                break;
-            default:
-                wprintf(L"%s\n", (wchar_t *)ucStr);
-                break;
-            }
-            delete[] ucStr;
-            ucStr = NULL;
-        }
-    #elif defined(OS_IOS)
-        switch (logLevel)
+        unsigned short *ucStr = new unsigned short[nLen];
+        int nlen = UTF8StrToUnicodeStr((unsigned char *)p_sBuffer, ucStr, nLen);
+        switch (logType)
         {
-            case LogLevel::Warn:
-                LOGIExt(p_sBuffer);
-                break;
-            case LogLevel::Error:
-                LOGIExt(p_sBuffer);
-                break;
-            default:
-                LOGIExt(p_sBuffer);
-                break;
-        }
-    #else
-        switch (logLevel)
-        {
-        case LogLevel::Warn:
-            LOGI(" %s", p_sBuffer);
+        case LogType::Warn:
+            wprintf(L"warn:%s\n", (wchar_t *)ucStr);
             break;
-        case LogLevel::Error:
-            LOGI(" %s", p_sBuffer);
+        case LogType::Error:
+            wprintf(L"error:%s\n", (wchar_t *)ucStr);
             break;
         default:
-            LOGI(" %s", p_sBuffer);
+            wprintf(L"%s\n", (wchar_t *)ucStr);
             break;
         }
-    #endif
+        delete[] ucStr;
+        ucStr = NULL;
     }
-    void JSConsole::exportJS(jsbind::Object& context)
+#elif defined(OS_IOS)
+    switch (logType)
     {
-        jsbind::global_class_<JSConsole> class_binding;
-        class_binding.class_function("log", &JSConsole::log);
-        context.global_class_("_console", class_binding);
+    case LogType::Warn:
+        LOGIExt(p_sBuffer);
+        break;
+    case LogType::Error:
+        LOGIExt(p_sBuffer);
+        break;
+    default:
+        LOGIExt(p_sBuffer);
+        break;
     }
+#else
+    switch (logType)
+    {
+    case LogType::Warn:
+        LOGW(" %s", p_sBuffer);
+        break;
+    case LogType::Error:
+        LOGE(" %s", p_sBuffer);
+        break;
+    case LogType::Debug:
+        LOGD(" %s", p_sBuffer);
+        break;
+    case LogType::Info:
+        LOGI(" %s", p_sBuffer);
+        break;
+    case LogType::Fatal:
+        LOGF(" %s", p_sBuffer);
+        break;
+    default:
+        LOGI(" %s", p_sBuffer);
+        break;
+    }
+#endif
 }
+void JSConsole::exportJS(jsbind::Object &context)
+{
+    jsbind::global_class_<JSConsole> class_binding;
+    class_binding.class_function("log", &JSConsole::log);
+    context.global_class_("_console", class_binding);
+}
+} // namespace laya

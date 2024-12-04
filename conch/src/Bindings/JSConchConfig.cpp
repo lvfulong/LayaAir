@@ -33,7 +33,7 @@
 
 #include "../../downloadCache/DCC1/JCFileResDCC.h"
 
-extern int g_nDebugLevel;
+extern int g_nLogLevel;
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
 extern bool g_bGLCanvasSizeChanged;
@@ -566,9 +566,9 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
     {
         return JSInput::getInstance()->getTouchMode();
     }
-    void JSConchConfig::setDebugLevel(int nLevel)
+    void JSConchConfig::setLogLevel(int nLevel)
     {
-        g_nDebugLevel = nLevel;
+        g_nLogLevel = nLevel;
     }
     void JSConchConfig::setImageReleaseSpaceTime(int nSpaceTime)
     {
@@ -679,7 +679,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 		 class_binding.class_function("setWebsocketProxy", &JSConchConfig::setWebsocketProxy);
 		 class_binding.class_function("setTouchMode", &JSConchConfig::setTouchMode);
 		 class_binding.class_function("getTouchMode", &JSConchConfig::getTouchMode);
-		 class_binding.class_function("setDebugLevel", &JSConchConfig::setDebugLevel);
+		 class_binding.class_function("setLogLevel", &JSConchConfig::setLogLevel);
 		 class_binding.class_function("setImageReleaseSpaceTime", &JSConchConfig::setImageReleaseSpaceTime);
 		 class_binding.class_function("enableMemorySurvey", &JSConchConfig::enableMemorySurvey);
 		 class_binding.class_function("getIPAddress", &JSConchConfig::getIPAddress);

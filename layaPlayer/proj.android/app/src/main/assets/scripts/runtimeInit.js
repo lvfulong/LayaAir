@@ -23,7 +23,7 @@ window.conch_FileReader = FileReader;
                 return func;
             }
             catch (e) {
-                _console.log(1,'require error:' + e);
+                _console.log(3,'require error:' + e);
                 return null;
             }
         }
@@ -35,7 +35,7 @@ window.conch_FileReader = FileReader;
         if (file.charAt(1) === ':' || file.charAt(0) === '/') { extfile = file; }
         else extfile = this.dir ? (this.dir + '/' + file) : null;
         var extfunc = null;
-        _console.log(3,'require(' + extfile + ')');
+        _console.log(1,'require(' + extfile + ')');
         var reqresult = mcache[extfile] ||
             (extfunc = evalreq(readFileSync(extfile, 'utf8'), extfile)) ||
             mcache[file] ||
