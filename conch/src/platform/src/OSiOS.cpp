@@ -77,27 +77,15 @@ int OSiOS::getSafeInsetRight()
 }
 jsvm_value OSiOS::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
-    auto isolate = v8::Isolate::GetCurrent();
-    auto context = isolate->GetCurrentContext();
-
-    //napi_deferred deferred;
-    //napi_value promise;
-
-    //napi_create_promise(context, &deferred, &promise);
     auto promise = jsbind::Promise::Make();
     std::function<void(std::string)> cb = [promise, cbref](std::string message) {
         postToJS([promise, message, cbref]() {
             if (!cbref.lock())
                 return;
-            //auto isolate = v8::Isolate::GetCurrent();
-            //auto context = isolate->GetCurrentContext();
-            //napi_value v = jsvm_valueFromV8LocalValue(MakeJSValue<const char *>(message));
-            //napi_resolve_deferred(context, deferred, v);
             promise.resolve(message);
         });
     };
     CToObjectCPostAsyncMessage(eventName, data, cb);
-    //return V8LocalValueFromjsvm_value(promise);
     return promise.getHandle();
 }
 std::string OSiOS::postSyncMessage(const std::string &eventName, const std::string &data)
@@ -108,6 +96,6 @@ std::string OSiOS::postSyncMessage(const std::string &eventName, const std::stri
 }
 void OSiOS::setPreferredFramesPerSecond(uint64_t fps)
 {
-
+    CToObjectCSetPreferredFramesPerSecond(fps);
 }
 } // namespace laya

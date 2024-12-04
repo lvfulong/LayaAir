@@ -1136,7 +1136,14 @@ void CToObjectCLogIExt(const char* str)
     NSString* nsFormat = [NSString stringWithUTF8String:str];
     NSLog(@"%@", nsFormat);
 }
-
+void CToObjectCLogD( const char* szFormat,...)
+{
+    va_list args;
+    va_start(args, szFormat);
+    NSString* nsFormat = [NSString stringWithUTF8String:szFormat];
+    NSLogv( nsFormat, args);
+    va_end(args);
+}
 void CToObjectCLogI( const char* szFormat,...)
 {
     va_list args;
@@ -1161,7 +1168,14 @@ void CToObjectCLogW( const char* szFormat,...)
     NSLogv( nsFormat, args);
     va_end(args);
 }
-
+void CToObjectCLogF( const char* szFormat,...)
+{
+    va_list args;
+    va_start(args, szFormat);
+    NSString* nsFormat = [NSString stringWithUTF8String:szFormat];
+    NSLogv( nsFormat, args);
+    va_end(args);
+}
 std::string CToObjectCCallMethod(int objid,bool isSync, const char*clsName, const char* methodName, const char* paramStr)
 {
     NSLog(@" %s %s %s",clsName,methodName,paramStr);
@@ -1437,6 +1451,16 @@ void CToObjectCPostAsyncMessage(const std::string &eventName, const std::string 
      dispatch_async(dispatch_get_main_queue(), ^{
         NSArray *params = @[nsEventName, nsData, callback];
         callClassMethodWithReflection(@"HandleMessageUtils", @"handleAsyncMessageWithEventName:data:callback:", params);
+    });
+}
+void CToObjectCSetPreferredFramesPerSecond(uint64_t fps)
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        CADisplayLink* displayLink = [conchRuntime GetIOSConchRuntime]->m_displayLink;
+        if (displayLink != nil && [displayLink respondsToSelector: @selector(preferredFramesPerSecond)] == YES)
+        {
+            displayLink.preferredFramesPerSecond = fps;
+        }
     });
 }
 // end video player

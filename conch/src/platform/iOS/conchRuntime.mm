@@ -94,6 +94,7 @@ static conchRuntime* g_pIOSConchRuntime = nil;
         [self setConchRuntimeParam:frame];
         m_nCurrentOrientation=-1;
         m_bStopEngine=false;
+        m_displayLink = nil;
         return self;
     }
     return nil;

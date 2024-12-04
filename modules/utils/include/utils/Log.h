@@ -43,15 +43,24 @@ void logMessage(laya::LogType logType, const char *file, int line, const char *f
 #define LOG_TAG "LayaBox"
 
 #ifdef OS_IOS
+void CToObjectCLogD(const char *szFormat, ...);
 void CToObjectCLogI(const char *szFormat, ...);
 void CToObjectCLogW(const char *szFormat, ...);
 void CToObjectCLogE(const char *szFormat, ...);
+void CToObjectCLogF(const char *szFormat, ...);
 void CToObjectCLogIExt(const char *str);
 #define LOGIExt(str)                                                                                                   \
     {                                                                                                                  \
         if (g_nLogLevel >= static_cast<int>(laya::LogLevel::Info))                                                     \
         {                                                                                                              \
             CToObjectCLogIExt(str);                                                                                    \
+        }                                                                                                              \
+    }
+#define LOGD(...)                                                                                                      \
+    {                                                                                                                  \
+        if (g_nLogLevel >= static_cast<int>(laya::LogLevel::Debug))                                                     \
+        {                                                                                                              \
+            CToObjectCLogD(__VA_ARGS__);                                                                               \
         }                                                                                                              \
     }
 #define LOGI(...)                                                                                                      \
@@ -67,7 +76,7 @@ void CToObjectCLogIExt(const char *str);
         {                                                                                                              \
             CToObjectCLogW(__VA_ARGS__);                                                                               \
         }                                                                                                              \
-        \                                                                                                              \
+                                                                                                          \
     }
 #define LOGE(...)                                                                                                      \
     {                                                                                                                  \
@@ -75,7 +84,15 @@ void CToObjectCLogIExt(const char *str);
         {                                                                                                              \
             CToObjectCLogE(__VA_ARGS__);                                                                               \
         }                                                                                                              \
-        \                                                                                                              \
+                                                                                                                     \
+    }
+#define LOGF(...)                                                                                                      \
+    {                                                                                                                  \
+        if (g_nLogLevel >= static_cast<int>(laya::LogLevel::Fatal))                                                    \
+        {                                                                                                              \
+            CToObjectCLogF(__VA_ARGS__);                                                                               \
+        }                                                                                                              \
+                                                                                                                     \
     }
 #elif OS_ANDROID
 #define LOGD(...)                                                                                                      \
