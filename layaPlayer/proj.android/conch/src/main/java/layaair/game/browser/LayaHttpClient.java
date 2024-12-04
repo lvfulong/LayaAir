@@ -1,9 +1,5 @@
 package layaair.game.browser;
-
 import android.util.Log;
-
-import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -11,9 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import okhttp3.Cache;
-import okhttp3.CacheControl;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Headers;
@@ -29,14 +22,13 @@ public class LayaHttpClient {
 
     public static OkHttpClient.Builder builder = new OkHttpClient.Builder();
     public static OkHttpClient client = null;//shared  client
-    public static CacheControl cacheControl = new CacheControl.Builder().build();
     public OkHttpClient eagerClient = null;
 
     public Response response;
 
     public Request.Builder requestBuilder = new Request.Builder();
 
-    public OkHttpClient.Builder eagerClientBuilder = client.newBuilder();
+    public OkHttpClient.Builder eagerClientBuilder;// = client.newBuilder();
 
     public String contentType = "";
 
@@ -51,7 +43,10 @@ public class LayaHttpClient {
 
     }
 
-    public static JSONObject tempJSON = new JSONObject();
+    public LayaHttpClient(){
+        eagerClientBuilder = client.newBuilder()
+        .retryOnConnectionFailure(false); //禁止重试，否则断网会导致3分钟的卡死
+    }
 
     public static LayaHttpClient create(long ptr, String url, String localFilePath) {
         if (client == null) {
@@ -126,10 +121,12 @@ public class LayaHttpClient {
         return result.toString();
     }
     static void doRequest(LayaHttpClient connection) {
+        try{
         connection.eagerClient = connection
                 .eagerClientBuilder
                 .build();
-        connection.call = connection.eagerClient.newCall(connection.requestBuilder.build());
+            connection.call = connection.eagerClient.newCall(connection.requestBuilder.build());
+        //Log.e(TAG,"下载："+connection.call.request().url().toString());
         connection.call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -153,7 +150,6 @@ public class LayaHttpClient {
                 //Log.e(TAG, "onResponse:code " + code);
                 if (connection.localFilePath.length() > 0) {
                     File file = new File(connection.localFilePath);
-                    InputStream is = null;
                     byte[] buffer = new byte[1024];
                     FileOutputStream fos = null;
                     try {
@@ -171,6 +167,7 @@ public class LayaHttpClient {
                     } catch (Exception e) {
                         e.printStackTrace();
                         Log.e(TAG, "getResponseContent:" + e.toString());
+                        LayaHttpClient.onFailure(connection.ptr, -1);
                     }
                 }
                 else {
@@ -187,10 +184,22 @@ public class LayaHttpClient {
                     } catch (Exception e) {
                         e.printStackTrace();
                         Log.e(TAG, "getResponseContent:" + e.toString());
+                        LayaHttpClient.onFailure(connection.ptr, -1);
                     }
                 }
+                try {
+                    if (in != null) {
+                        in.close();
+                    }
+                } catch (IOException e) {
+                }
+                response.close();
             }
         });
+        } catch (Exception e) {
+            Log.e(TAG, "Error in doRequest: " + e.toString());
+            LayaHttpClient.onFailure(connection.ptr, -1);
+        }
     }
     /*static void disconnect(LayaHttpClient http) {
         //Log.d(TAG, "HttpURLConnection disconnect ");
