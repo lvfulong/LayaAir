@@ -119,7 +119,6 @@ void CToObjectCLogIExt(const char *str);
         {                                                                                                              \
             __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__);                                              \
         }                                                                                                              \
-        \                                                                                                              \
     }
 #define LOGF(...)                                                                                                      \
     {                                                                                                                  \
@@ -127,7 +126,6 @@ void CToObjectCLogIExt(const char *str);
         {                                                                                                              \
             __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__);                                              \
         }                                                                                                              \
-        \                                                                                                              \
     }
 #elif OS_OHOS
 #define LOGD(...) logMessage(laya::LogType::Debug, __FILE__, __LINE__, __VA_ARGS__);
