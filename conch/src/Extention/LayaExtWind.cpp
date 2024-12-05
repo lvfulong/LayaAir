@@ -21,15 +21,18 @@ namespace laya
         std::string exePath = gRedistPath;
         GET_ENV
         fs::path dllPath;
+	    fs::path dllDir;
         // 检查是否是绝对路径
         if (fs::path(dll).is_absolute()){
             dllPath = dll;
+			dllDir = dllPath.parent_path();
         }else{
             // 相对路径，构建完整路径
             std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
             std::wstring wExePath = converter.from_bytes(exePath);
             fs::path exeDir = fs::path(wExePath).parent_path();
-            dllPath = exeDir / "extensions" / dll;
+        	dllDir = exeDir / "extensions";
+      		dllPath = dllDir / dll;
         }
 
         // 确保文件存在并且扩展名为 .dll
@@ -38,8 +41,20 @@ namespace laya
             return jsvm_value();
         }
 
+        // 保存当前 DLL 搜索目录
+        WCHAR oldDllDirectory[MAX_PATH];
+        DWORD oldDllDirectoryLength = GetDllDirectory(MAX_PATH, oldDllDirectory);
+
+    	// 设置新的 DLL 搜索目录
+    	SetDllDirectory(dllDir.c_str());
         // 加载 DLL
         HMODULE hModule = LoadLibraryW(dllPath.c_str());
+	    // 恢复原来的 DLL 搜索目录
+        if(oldDllDirectoryLength>0)
+	        SetDllDirectory(oldDllDirectory);
+        else
+            SetDllDirectory(NULL);
+		
         if (hModule == NULL){
             DWORD error = GetLastError();
             wchar_t msgBuf[512];
@@ -96,6 +111,12 @@ void importAllDynaLib(std::string extPath)
             return;
         }
 
+        // 保存原来的 DLL 搜索路径
+        WCHAR oldDllDirectory[MAX_PATH];
+        DWORD oldDllDirectoryLength = GetDllDirectory(MAX_PATH, oldDllDirectory);
+
+        // 将当前路径添加到 DLL 搜索路径
+        SetDllDirectoryW(currentPath.c_str());
         // 遍历扩展目录中的所有文件
         for (const auto &entry : fs::directory_iterator(currentPath))
         {
@@ -127,6 +148,15 @@ void importAllDynaLib(std::string extPath)
                     LOGE("Failed to load DLL: %s", entry.path().string().c_str());
                 }
             }
+        }
+        // 恢复原来的 DLL 搜索路径
+        if (oldDllDirectoryLength > 0)
+        {
+            SetDllDirectoryW(oldDllDirectory);
+        }
+        else
+        {
+            SetDllDirectoryW(NULL);
         }
     }
 }
