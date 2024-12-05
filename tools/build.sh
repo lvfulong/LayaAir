@@ -129,12 +129,43 @@ function build_windows {
 		     -G "Visual Studio 17 2022" \
             -A x64 \
             -DCMAKE_BUILD_TYPE="${build_type}" \
-            -DCMAKE_INSTALL_PREFIX="${install_dir}" \
+            -DCMAKE_INSTALL_PREFIX="${install_dir}/x64" \
             -DBUILDING_CONCH_SHARED=1 \
 		    ${root_dir}
     fi
     cmake --build . --config ${build_type} --target install 
     #make
+    cd ${current_dir}
+}
+function build_ohos {
+    local build_type=$1
+    local arch=$2
+    local platform=$3
+    local build_dir="build/ohos-${build_type}-${arch}"
+    local install_dir="${publish_dir}/ohos/entry/src/main/cpp/third_party/conch"
+    mkdir -p "${build_dir}"
+    cd "${build_dir}"
+
+
+    OHOS_NDK_CMAKE_PATH="E:/huawei/IDE/DevEcoStudio/sdk/default/openharmony/native/build-tools/cmake/bin"
+    OHOS_NDK_CMAKE_TOOLCHAIN_PATH="E:/huawei/IDE/DevEcoStudio/sdk/default/openharmony/native/build/cmake/ohos.toolchain.cmake"
+    #export PATH=${OHOS_NDK_CMAKE_PATH}:$PATH
+
+    ${OHOS_NDK_CMAKE_PATH}/cmake.exe \
+        -G "Ninja" \
+        -DCMAKE_BUILD_TYPE="${build_type}" \
+        -DOHOS_STL=c++_shared \
+        -DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
+        -DCMAKE_INSTALL_PREFIX="${install_dir}" \
+        -DBUILDING_CONCH_SHARED=1 \
+        ${root_dir}
+
+         
+
+    ${OHOS_NDK_CMAKE_PATH}/cmake.exe --build . --config ${build_type} --target install 
+    # 如果需要编译静态库则需要设置 cmake 变量 -DBUILD_SHARED_LIBS=OFF
+    # 可以通过-DCMAKE_INSTALL_PREFIX=xxx 设置库的安装目录
+    # 编译 arm32 -DOHOS_ARCH=armeabi-v7a
     cd ${current_dir}
 }
 function archive_ios {
@@ -338,14 +369,18 @@ fi
             ;;
 		android)
            	check_android_environment
-            build_android release "aarch64"
-            build_android release "arm7"
-            build_android release "x86_64"
-            build_android release "x86"
+            build_android Release "aarch64"
+            build_android Release "arm7"
+            build_android Release "x86_64"
+            build_android Release "x86"
             exit 1
             ;;
         windows)
             build_windows "Release" "win64"
+            exit 1
+            ;;
+        ohos)
+            build_ohos Release "arm64-v8a"
             exit 1
             ;;
     esac

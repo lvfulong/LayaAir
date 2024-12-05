@@ -104,18 +104,18 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>OS_WINDOWS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\Runtime\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\Runtime\$(Platform)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>conch.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>.\Runtime\lib\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>.\Runtime\$(Platform)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>xcopy $(SolutionDir)resource\* $(OutDir) /s /e /i /y
-xcopy /y $(SolutionDir)Runtime\lib\$(LibrariesArchitecture)\*.dll        $(OutDir)</Command>
+xcopy /y $(SolutionDir)Runtime\$(LibrariesArchitecture)\bin\*.dll        $(OutDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -126,7 +126,7 @@ xcopy /y $(SolutionDir)Runtime\lib\$(LibrariesArchitecture)\*.dll        $(OutDi
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>OS_WINDOWS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\Runtime\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\Runtime\$(Platform)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -135,11 +135,11 @@ xcopy /y $(SolutionDir)Runtime\lib\$(LibrariesArchitecture)\*.dll        $(OutDi
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>conch.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>.\Runtime\lib\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>.\Runtime\$(Platform)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>xcopy $(SolutionDir)resource\* $(OutDir) /s /e /i /y
-xcopy /y $(SolutionDir)Runtime\lib\$(LibrariesArchitecture)\*.dll        $(OutDir)</Command>
+xcopy /y $(SolutionDir)Runtime\$(LibrariesArchitecture)\bin\*.dll        $(OutDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

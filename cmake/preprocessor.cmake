@@ -13,7 +13,11 @@ if(NOT BUILDING_ARCH)
 endif()
 
 string(TOLOWER "${BUILDING_ARCH}" BUILDING_ARCH)
-string(REPLACE "amd64" "x64" BUILDING_ARCH "${BUILDING_ARCH}")
+if(MSVC)
+    string(REPLACE "amd64" "x64" BUILDING_ARCH "${BUILDING_ARCH}")
+elseif(OHOS)
+    string(REPLACE "amd64" "arm64-v8a" BUILDING_ARCH "${BUILDING_ARCH}")
+endif()
 
 if(NOT DIST_DIR)
     set(DIST_DIR "${BUILDING_ARCH}")
