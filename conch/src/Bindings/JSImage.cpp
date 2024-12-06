@@ -62,7 +62,9 @@ namespace laya
         //if (JCScriptRuntime::s_JSRT->m_bIsExit == true)return;
         //if (!IsMyJsEnv()) return;
 
-        if (GetWidth() <= 0 || GetHeight() <= 0|| m_pImage->m_kBitmapData.m_pImageData==NULL) {
+        if (GetWidth() <= 0 || GetHeight() <= 0|| m_pImage->m_kBitmapData.m_pImageData==NULL)
+        {
+            LOGW("empty bitmap, perhaps the format is not supported  %s", m_sUrl.c_str());
             m_pOnError.call<void>(jsbind::toLocal(this), 500);
         }
         else {
