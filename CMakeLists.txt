@@ -118,9 +118,10 @@ endif()
 
 # 设置可执行文件的输出目录
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
+if(BUILDING_CONCH_SHARED )
+   add_definitions(-DBUILDING_CONCH_SHARED)
+endif()
 if(NOT BUILDING_CONCH_SHARED AND NOT BUILDING_CONCH_STATIC)
-   add_definitions(-DBUILDING_CONCH_FROME_SOURCE)
    if(OS_LINUX OR OS_IOS OR OS_WINDOWS)
 		add_subdirectory(template)
    endif()
@@ -184,8 +185,3 @@ message("CMAKE_C_FLAGS_RELEASE:${CMAKE_C_FLAGS_RELEASE}")
 message("CMAKE_CXX_FLAGS_RELEASE:${CMAKE_CXX_FLAGS_RELEASE}")
 message("CMAKE_C_FLAGS_DEBUG:${CMAKE_C_FLAGS_DEBUG}")
 message("CMAKE_CXX_FLAGS_DEBUG:${CMAKE_CXX_FLAGS_DEBUG}")
-
-
-#if(NOT OS_OHOS)
-#install(DIRECTORY ./modules/binder/include/binder DESTINATION include)
-#endif()

@@ -2,24 +2,13 @@
 #define __JSVM_H__
 
 #include "JSVM_Types.h"
-// #include "ScriptThread.h"
 #include <cstdint>
+#include <utils/Config.h>
 #if defined(JS_OHOS_JSVM)
 #include "ark_runtime/jsvm.h"
-#else
-
-#endif
-#if defined(OS_WINDOWS)
-    #ifdef CONCH
-        #define JSVM_API __declspec(dllexport)
-    #else
-        //如果不是dll则不要导入导出
-        #define JSVM_API __declspec(dllimport)    
-    #endif
-#else
-    #define JSVM_API
 #endif
 
+#define JSVM_API CONCH_EXPORT
 
 
 #ifdef __cplusplus

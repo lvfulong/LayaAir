@@ -2,7 +2,7 @@
 //
 
 #include "LayaBox.h"
-#include "ExportsShared.h"
+#include "Exports.h"
 #include "framework.h"
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nShowCmd)

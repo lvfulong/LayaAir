@@ -1,9 +1,5 @@
 #include "stdafx.h"
-#if defined(BUILDING_CONCH_FROME_SOURCE)
 #include "Exports.h"
-#else
-#include "ExportsShared.h"
-#endif
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nShowCmd)
 {

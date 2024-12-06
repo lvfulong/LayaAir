@@ -20,6 +20,10 @@
 #include <jsvm/JSVM.h>
 #include <jsvm/JSVM_Types.h>
 #include <utils/JCMemorySurvey.h>
+#if defined(JS_V8)
+#include <jsvm/napi/js_native_api.h>
+#include <jsvm/napi/js_native_api_v8.h>
+#endif
 
 namespace jsbind
 {

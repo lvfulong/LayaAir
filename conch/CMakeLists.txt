@@ -22,9 +22,9 @@ set(PLATFORM_HEADER_DIR)
 
 
 set(PUBLIC_HEADER_DIR include)
-if(OS_WINDOWS)
+if(OS_WINDOWS OR OS_LINUX)
 	list(APPEND CONCH_PUBLIC_HEADERS
-		include/ExportsShared.h
+		include/Exports.h
 	)
 endif()
 

@@ -108,3 +108,19 @@ target_precompile_headers(${TARGET} PRIVATE ${HEADERS})
 # install(FILES ${HEADERS} DESTINATION include/${TARGET})
 
 
+set(CONCH_PUBLIC_HEADERS)
+set(CONCH_PUBLIC_HEADERS_NAPI)
+if(OS_WINDOWS OR OS_LINUX)
+	list(APPEND CONCH_PUBLIC_HEADERS
+        ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM.h
+        ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM_Types.h
+	)
+    install(FILES ${CONCH_PUBLIC_HEADERS} DESTINATION include/${TARGET})
+
+    list(APPEND CONCH_PUBLIC_HEADERS_NAPI
+        ${PUBLIC_HEADER_DIR}/${TARGET}/napi/js_native_api_types.h
+        ${PUBLIC_HEADER_DIR}/${TARGET}/napi/js_native_api.h
+	)
+    install(FILES ${CONCH_PUBLIC_HEADERS_NAPI} DESTINATION include/${TARGET}/napi)
+endif()
+

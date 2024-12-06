@@ -38,6 +38,7 @@ set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/Data.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Tracer.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Trace.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/Config.h
 )
 
 set(SOURCES
@@ -99,3 +100,11 @@ target_precompile_headers(${TARGET} PRIVATE ${HEADERS})
 # install(TARGETS ${TARGET} ${INSTALL_TYPE} DESTINATION lib/${HEADERS})
 # install(FILES ${HEADERS} DESTINATION include/${TARGET})
 message("utils: ${LINUX}")
+
+set(CONCH_PUBLIC_HEADERS)
+if(OS_WINDOWS OR OS_LINUX)
+	list(APPEND CONCH_PUBLIC_HEADERS
+        ${PUBLIC_HEADER_DIR}/${TARGET}/Config.h
+	)
+    install(FILES ${CONCH_PUBLIC_HEADERS} DESTINATION include/${TARGET})
+endif()

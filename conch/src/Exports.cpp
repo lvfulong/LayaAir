@@ -1,8 +1,4 @@
-#ifdef BUILDING_CONCH_FROME_SOURCE
 #include "Exports.h"
-#else
-#include "ExportsShared.h"
-#endif
 #include "JCConch.h"
 #include "JCSystemConfig.h"
 #include <Application/App.h>

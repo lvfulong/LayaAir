@@ -102,7 +102,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>OS_WINDOWS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USING_CONCH_SHARED</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>.\Runtime\$(Platform)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -124,7 +124,7 @@ xcopy /y $(SolutionDir)Runtime\$(LibrariesArchitecture)\bin\*.dll        $(OutDi
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>OS_WINDOWS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USING_CONCH_SHARED</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>.\Runtime\$(Platform)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>

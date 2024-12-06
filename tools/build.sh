@@ -119,7 +119,7 @@ function build_windows {
 		     -G "Visual Studio 17 2022" \
             -A x32 \
             -DCMAKE_BUILD_TYPE="${build_type}" \
-            -DCMAKE_INSTALL_PREFIX="${install_dir}" \
+            -DCMAKE_INSTALL_PREFIX="${install_dir}/x86" \
             -DBUILDING_CONCH_SHARED=1 \
 		    ${root_dir}
 	fi
@@ -135,6 +135,46 @@ function build_windows {
     fi
     cmake --build . --config ${build_type} --target install 
     #make
+    cd ${current_dir}
+}
+function build_windows_for_ext {
+    local build_type=$1
+    local arch=$2
+    local build_dir="build/windows-${build_type}-${arch}"
+    #local install_dir="install/windows-${build_type}-${arch}"
+    local install_dir="${current_dir}/laya-ext-creator/template/temp/layaRuntime"
+    mkdir -p "${install_dir}"
+    mkdir -p "${build_dir}"
+   
+    cd "${build_dir}"
+
+	if [[ "$2" == "win32" ]]; then
+		 cmake \
+		     -G "Visual Studio 17 2022" \
+            -A x32 \
+            -DCMAKE_BUILD_TYPE="${build_type}" \
+            -DCMAKE_INSTALL_PREFIX="${install_dir}/x86" \
+            -DBUILDING_CONCH_SHARED=1 \
+		    ${root_dir}
+         cmake --build . --config ${build_type} --target install 
+	fi
+	
+	if [[ "$2" == "win64" ]]; then
+        cmake \
+		     -G "Visual Studio 17 2022" \
+            -A x64 \
+            -DCMAKE_BUILD_TYPE="${build_type}" \
+            -DCMAKE_INSTALL_PREFIX="${install_dir}/x64" \
+            -DBUILDING_CONCH_SHARED=1 \
+		    ${root_dir}
+
+        cmake --build . --config ${build_type} --target install 
+        echo "delete Export.h ..."
+        rm -rf ${install_dir}/x64/include/Exports.h  #不要这个
+        echo "delete bin ..."
+        rm -rf ${install_dir}/x64/bin               #不要这个
+    fi
+    
     cd ${current_dir}
 }
 function build_ohos {
@@ -377,6 +417,10 @@ fi
             ;;
         windows)
             build_windows "Release" "win64"
+            exit 1
+            ;;
+        windows_for_ext)
+            build_windows_for_ext "Release" "win64"
             exit 1
             ;;
         ohos)

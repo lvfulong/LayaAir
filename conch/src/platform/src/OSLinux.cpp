@@ -1,9 +1,5 @@
 #include "OSLinux.h"
-#ifdef BUILDING_CONCH_FROME_SOURCE
 #include "Exports.h"
-#else
-#include "ExportsShared.h"
-#endif
 #include <JCConch.h>
 #include <future>
 #include <utils/Log.h>
