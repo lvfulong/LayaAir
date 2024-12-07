@@ -678,7 +678,7 @@ if(OS_ANDROID)
 		vorbisfile
 		vorbis
 		ogg
-		freetype
+		#freetype
 
 		# curl
 		#v8_monolith
@@ -737,7 +737,7 @@ elseif(OS_IOS)
 		vorbisfile
 		vorbis
 		ogg
-		freetype
+		#freetype
 
 		# curl
 		#v8_monolith
@@ -778,7 +778,7 @@ elseif(OS_WINDOWS)
 		vorbisfile
 		vorbis
 		ogg
-		freetype
+		#freetype
 		#v8
 		#v8_libbase
 		#v8_libplatform
@@ -833,10 +833,10 @@ endif()
 		) 
 elseif(OS_LINUX)
 	find_package(X11 REQUIRED)
-	find_package(Freetype REQUIRED)
-	find_package(SDL2 REQUIRED)
-	include_directories(${FREETYPE_INCLUDE_DIRS})
-	include_directories(${SDL2_INCLUDE_DIRS})
+	#find_package(Freetype REQUIRED)
+	#find_package(SDL2 REQUIRED)
+	#include_directories(${FREETYPE_INCLUDE_DIRS})
+	#include_directories(${SDL2_INCLUDE_DIRS})
 	find_package(Fontconfig REQUIRED)	
 	pkg_check_modules(CAIRO REQUIRED cairo)
 	add_subdirectory("../third_party/glad/glad-2.0.4/cmake" glad_cmake)
@@ -847,9 +847,12 @@ elseif(OS_LINUX)
 	    ${LINK_LIBS}
 		${LINKER_FLAGS}
 		X11
-		${FREETYPE_LIBRARIES}
+		#${FREETYPE_LIBRARIES}
 		${FONTCONFIG_LIBRARIES}
-  		${SDL2_LIBRARIES}
+  		#${SDL2_LIBRARIES}
+		freetype
+		SDL2
+		SDL2main
 		Xft
 		Xrender
 		cairo
@@ -872,7 +875,6 @@ elseif(OS_LINUX)
 		BulletDynamics
 		BulletCollision
 		LinearMath
-
 		# BulletSoftBody
 		glad
 		ssl
