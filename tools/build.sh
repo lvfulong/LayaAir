@@ -33,14 +33,14 @@ function build_linux {
     local build_dir="build/linux-${build_type}-${arch}"
     mkdir -p "${build_dir}"
     cd "${build_dir}"
-    local install_dir="${publish_dir}/linux-${arch}/Runtime/${arch}"
+    #local install_dir="${publish_dir}/linux-${arch}/Runtime/${arch}"
     local toolchain_file=
 	if [[ "$2" == "aarch64" ]]; then
-		toolchain_file=${root_dir}/cmake/toolchains/aarch64-linux-gnu.toolchain.cmake
+		#toolchain_file=${root_dir}/cmake/toolchains/aarch64-linux-gnu.toolchain.cmake
+        #-DCMAKE_TOOLCHAIN_FILE=${toolchain_file} \
         cmake \
 		-G "Unix Makefiles" \
 		-DCMAKE_BUILD_TYPE="${build_type}" \
-		-DCMAKE_TOOLCHAIN_FILE=${toolchain_file} \
         -DBUILDING_CONCH_SHARED=1 \
         -DCMAKE_INSTALL_PREFIX="${install_dir}" \
 		${root_dir}
@@ -462,9 +462,12 @@ fi
             build_ohos Release "arm64-v8a"
             exit 1
             ;;
-        linux)
+        linux-aarch64)
             build_linux Release "aarch64"
-            build_linux Release "arm"
+            exit 1
+            ;;
+        linux-x86_64)
+            build_linux Release "x86_64"
             exit 1
             ;;
     esac
