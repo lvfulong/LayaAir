@@ -1,9 +1,10 @@
 #!/bin/sh
 #export ANDROID_HOME=C:/Users/lvfulong/AppData/Local/Android/Sdk
 #CONCH_NDK_VERSION=21.0.6113669
-CONCH_NDK_PATH=${ANDROID_HOME}
+CONCH_NDK_PATH=
 CONCH_ANDROID_MINI_SDK_VERSION=android-21
 function check_android_environment {
+    CONCH_NDK_PATH=${ANDROID_HOME}
 	if [[ "${ANDROID_HOME}" == "" ]]; then
 		echo "Error: ANDROID_HOME not set"
 		exit 1
@@ -33,7 +34,7 @@ function build_linux {
     mkdir -p "${build_dir}"
     cd "${build_dir}"
     local install_dir="${publish_dir}/linux/Runtime/${arch}"
-    local toolchain_file
+    local toolchain_file=
 	if [[ "$2" == "aarch64" ]]; then
 		toolchain_file=${root_dir}/cmake/toolchains/aarch64-linux-gnu.toolchain.cmake
 	fi
