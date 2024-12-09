@@ -33,23 +33,27 @@ function build_linux {
     local build_dir="build/linux-${build_type}-${arch}"
     mkdir -p "${build_dir}"
     cd "${build_dir}"
-    local install_dir="${publish_dir}/linux/Runtime/${arch}"
+    local install_dir="${publish_dir}/linux-${arch}/Runtime/${arch}"
     local toolchain_file=
 	if [[ "$2" == "aarch64" ]]; then
 		toolchain_file=${root_dir}/cmake/toolchains/aarch64-linux-gnu.toolchain.cmake
-	fi
-	
-	if [[ "$2" == "arm" ]]; then
-		toolchain_file=${root_dir}/cmake/toolchains/arm-linux-gnueabihf.toolchain.cmake
-	fi
-
-    cmake \
+        cmake \
 		-G "Unix Makefiles" \
 		-DCMAKE_BUILD_TYPE="${build_type}" \
 		-DCMAKE_TOOLCHAIN_FILE=${toolchain_file} \
         -DBUILDING_CONCH_SHARED=1 \
         -DCMAKE_INSTALL_PREFIX="${install_dir}" \
 		${root_dir}
+	fi
+	
+	if [[ "$2" == "x86_64" ]]; then
+        cmake \
+		-G "Unix Makefiles" \
+		-DCMAKE_BUILD_TYPE="${build_type}" \
+        -DBUILDING_CONCH_SHARED=1 \
+        -DCMAKE_INSTALL_PREFIX="${install_dir}" \
+		${root_dir}
+	fi
 
 
     cmake --build .
