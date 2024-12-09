@@ -11,14 +11,16 @@ third_party_dir=${root_dir}/third_party
 
 #build_ios release arm64 iphoneos
 function build_linux {
+    
     local build_type=$1
     local arch=$2
-    local platform=$3
     local build_dir="build/linux-${build_type}-${arch}"
     mkdir -p "${build_dir}"
     cd "${build_dir}"
     local install_dir="${publish_dir}/linux/Runtime/${arch}"
+
     local toolchain_file=
+
 	if [[ "$2" == "aarch64" ]]; then
 		toolchain_file=${root_dir}/cmake/toolchains/aarch64-linux-gnu.toolchain.cmake
 	fi
@@ -40,6 +42,7 @@ function build_linux {
 	cmake --install .
     cd ${current_dir}
 }
+
 function build_ios {
     local build_type=$1
     local arch=$2
