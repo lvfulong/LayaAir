@@ -33,7 +33,7 @@ function build_linux {
     mkdir -p "${build_dir}"
     cd "${build_dir}"
     local install_dir="${publish_dir}/linux/Runtime/${arch}"
-    local toolchain_file;
+    local toolchain_file
 	if [[ "$2" == "aarch64" ]]; then
 		toolchain_file=${root_dir}/cmake/toolchains/aarch64-linux-gnu.toolchain.cmake
 	fi
