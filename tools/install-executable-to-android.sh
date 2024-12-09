@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 ANDROID_DIR=sdcard/ #/data/local/tmp
 LOG_DIR=`pwd`
 EXE_DIR=`pwd` 

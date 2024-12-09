@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 current_dir=`pwd`
 root_dir=${current_dir}/..

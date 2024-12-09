@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #export ANDROID_HOME=C:/Users/lvfulong/AppData/Local/Android/Sdk
 #CONCH_NDK_VERSION=21.0.6113669
 CONCH_NDK_PATH=
