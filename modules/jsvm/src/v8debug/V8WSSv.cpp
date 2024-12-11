@@ -338,7 +338,7 @@ namespace laya {
         printf("%s\n", line);
     }
     // 因为目前只有windows的websocket更新了
-#if defined(OS_WINDOWS) || defined(OS_OHOS)   
+#if defined(OS_WINDOWS) || defined(OS_LINUX)
     void startWSSV(int port, DebuggerAgent* pDbgAgent) {
         gpDbgAgent = pDbgAgent;
         interrupted = false;
