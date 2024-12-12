@@ -27,6 +27,9 @@ set_target_properties(conch PROPERTIES
 	IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/Runtime/${ARCH}/lib/libconch.so
 	INTERFACE_INCLUDE_DIRECTORIES  ${CONCH_INCLUDES}
 )
+
+
+set(CMAKE_INSTALL_RPATH $ORIGIN)
 file(GLOB_RECURSE PROJECT_SOURCE_FILES src/*.*)
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCE_FILES})
 target_include_directories(${TARGET} PRIVATE ${CONCH_INCLUDES} src)
@@ -40,3 +43,4 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/resource/cache DESTINATION bin)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/resource/font DESTINATION bin)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/resource/scripts DESTINATION bin)
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/resource/config.ini DESTINATION bin)
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/Runtime/${ARCH}/lib/libconch.so DESTINATION bin)
