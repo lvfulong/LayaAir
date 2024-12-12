@@ -193,4 +193,15 @@ if(OS_IOS)
 	set_xcode_property(${PROJECT_NAME} PRODUCT_BUNDLE_IDENTIFIER "com.layabox.conch6")
 endif()
 
+
+if(OS_LINUX)
+	install(TARGETS ${TARGET} RUNTIME DESTINATION bin)
+	install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/resource/ca DESTINATION bin)
+	install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/resource/cache DESTINATION bin)
+	install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/resource/font DESTINATION bin)
+	install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/resource/script DESTINATION bin)
+	install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/resource/config.ini DESTINATION bin)
+endif()
+
+
 message("main: ${LINUX} ${CONCH_ROOT_DIR}")

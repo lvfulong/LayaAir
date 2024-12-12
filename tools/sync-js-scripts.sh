@@ -15,7 +15,7 @@ dist3=${root_dir}/publish/windows/resource
 dist4=${root_dir}/publish/ohos/entry/src/main/resources/rawfile
 dist5=${root_dir}/layaPlayer/proj.android/app/src/main/assets
 dist6=${root_dir}/layaPlayer/proj.ios/resource
-
+dist7=${root_dir}/publish/linux/resource
 
 cp -r ${dist0}/* ${dist1}
 cp -r ${dist0}/* ${dist2}
@@ -23,4 +23,5 @@ cp -r ${dist0}/* ${dist3}
 cp -r ${dist0}/* ${dist4}
 cp -r ${dist0}/* ${dist5}
 cp -r ${dist0}/* ${dist6}
+cp -r ${dist0}/* ${dist7}
 

@@ -32,5 +32,12 @@ add_executable(${PROJECT_NAME} ${PROJECT_SOURCE_FILES})
 target_include_directories(${TARGET} PRIVATE ${CONCH_INCLUDES} src)
 target_link_libraries(${TARGET} conch)
 
-install(TARGETS ${TARGET} RUNTIME DESTINATION bin)
 
+
+
+install(TARGETS ${TARGET} RUNTIME DESTINATION bin)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/resource/ca DESTINATION bin)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/resource/cache DESTINATION bin)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/resource/font DESTINATION bin)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/resource/script DESTINATION bin)
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/resource/config.ini DESTINATION bin)
