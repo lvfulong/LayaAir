@@ -125,8 +125,11 @@ if(OS_LINUX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif()
 
+if(OS_LINUX)
+else()
 # 设置可执行文件的输出目录
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+endif()
 if(BUILDING_CONCH_SHARED )
    add_definitions(-DBUILDING_CONCH_SHARED)
 endif()
