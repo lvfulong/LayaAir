@@ -21,11 +21,7 @@
 #include "../../JCConchRender.h"
 #include "../../JCConch.h"
 #include "../../WebSocket/WebSocket.h"
-#ifdef OS_OHOS
-#include <resource/Audio/JCAudioWavPlayer-openharmony.h>
-#else
 #include <resource/Audio/JCAudioWavPlayer.h>
-#endif
 #include "../../Audio/JCAudioManager.h"
 #include <LayaGL/JCLayaGL.h>
 #include <LayaGL/JCLayaGLDispatch.h>

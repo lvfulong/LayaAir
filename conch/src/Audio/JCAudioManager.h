@@ -19,18 +19,14 @@
 #elif defined(OS_OHOS)
     #include "ohos/JCAudioMp3Player.h"
 #endif
-
-#ifdef OS_OHOS
-#include "resource/Audio/JCAudioWavPlayer-openharmony.h"
-#else
 #include "resource/Audio/JCAudioWavPlayer.h"
-#endif
 #include <map>
 #include <vector>
 #include "resource/Audio/JCWaveInfo.h"
 #include <utils/JCBuffer.h>
 #include "resource/Audio/JCMp3Interface.h"
 #include <mutex>
+
 namespace laya
 {
     /** 

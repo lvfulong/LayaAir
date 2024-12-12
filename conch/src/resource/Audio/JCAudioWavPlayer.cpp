@@ -11,7 +11,7 @@
 #include <utils/Log.h>
 #include "JCWaveParser.h"
 #include "JCOggParser.h"
-#ifdef OS_ANDROID
+#if defined(OS_ANDROID) || defined(OS_OHOS)
 #include "AL/alext.h"
 #endif
 #if !defined(OS_LINUX)
@@ -459,7 +459,7 @@ void JCAudioWavPlayer::pause()
     {
         alSourcePause(m_pOpenALSource[i]->m_nOpenALSouceID);
     }
-    #ifdef OS_ANDROID
+    #if defined(OS_ANDROID) || defined(OS_OHOS)
         alcDevicePauseSOFT(m_pDevice);
     #endif
 }
@@ -470,7 +470,7 @@ void JCAudioWavPlayer::resume()
     {
         alSourcePlay(m_pOpenALSource[i]->m_nOpenALSouceID);
     }
-    #ifdef OS_ANDROID
+    #if defined(OS_ANDROID) || defined(OS_OHOS)
         alcDeviceResumeSOFT(m_pDevice);
     #endif
 }

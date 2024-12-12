@@ -556,7 +556,7 @@ elseif(OS_OHOS)
 		src/Bindings/Video/JSVideo_OHOSImpl.cpp
 		src/2D/src/CanvasRenderingContext2DOHOS.cpp
 		src/Bindings/JSOHOSEditBox.cpp
-		src/resource/Audio/JCAudioWavplayer-openharmony.cpp
+		src/resource/Audio/JCAudioWavplayer.cpp
 		src/Audio/ohos/JCAudioMp3Player.cpp
 		src/network/src/HttpClientOHOS.cpp
 		src/resource/Audio/JCMp3Parser.cpp
@@ -834,6 +834,7 @@ endif()
 		ssl
 		crypto
 		mpg123
+		openal
 		) 
 elseif(OS_LINUX)
 	find_package(X11 REQUIRED)

@@ -66,25 +66,6 @@ namespace laya
 		    JCAudioWavPlayer* pWavPlayer = m_sAudioManager->m_pWavPlayer;
 		    if( pWavPlayer != NULL )
 		    {
-				#ifdef OS_OHOS
-				int nALCount = pWavPlayer->m_pAudioRenderSource.size();
-                for (int i = 0; i < nALCount; i++)
-			    {
-					if( pWavPlayer->m_pAudioRenderSource[i]->m_bPlaying == true ) {
-						AudioRenderInfo* pAudioRenderInfo = pWavPlayer->m_pAudioRenderSource[i];
-						if(pAudioRenderInfo->_audioRender != nullptr) {
-							//OH_AudioRenderer_Stop(pAudioRenderInfo->_audioRender);
-							OH_AudioRenderer_Release(pAudioRenderInfo->_audioRender);
-						}
-						if(pAudioRenderInfo->_builder != nullptr) {
-							OH_AudioStreamBuilder_Destroy(pAudioRenderInfo->_builder);
-						}
-						pAudioRenderInfo->m_pAudio = NULL;
-						pAudioRenderInfo->m_bPlaying = false;
-					}
-			    }
-
-				#else
                 int nALCount = pWavPlayer->m_pOpenALSource.size();
                 for (int i = 0; i < nALCount; i++)
 			    {
@@ -95,7 +76,6 @@ namespace laya
 					    pWavPlayer->m_pOpenALSource[i]->m_bPlaying = false;
 				    }
 			    }
-				#endif
 			    pWavPlayer->ClearAllWaveInfo();
 		    }
 		    m_sAudioManager->ClearAllAudioBufferPlay();
