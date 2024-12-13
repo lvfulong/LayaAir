@@ -5,8 +5,6 @@ import { NetworkUtils } from '../system/device/NetworkUtils'
 import ApplicationManager from '../system/application/ApplicationManager'
 import { WebView } from '../components/webview/WebView'
 import { VideoPlayer }  from '../components/videoplayer/VideoPlayer'
-import Accelerometer from '../system/sensor/AccelerometerUtils'
-import Orientation from '../system/sensor/OrientationUtils'
 import SoundUtils from '../system/sound/SoundUtils'
 import laya from "liblaya.so"
 import { EditBox } from '../components/EditBox'
@@ -51,12 +49,6 @@ export class NapiHelper {
     laya.JSBind.bindFunction("DeviceUtils.getAvalidMem", DeviceUtils.getAvalidMem);
     laya.JSBind.bindFunction('Dialog.showDialog', Dialog.showDialog);
     laya.JSBind.bindFunction("NetworkUtils.getNetworkType", NetworkUtils.getNetworkType);
-    laya.JSBind.bindFunction("Accelerometer.enable", Accelerometer.enable);
-    laya.JSBind.bindFunction("Accelerometer.disable", Accelerometer.disable);
-    laya.JSBind.bindFunction("Orientation.enable", Orientation.enable);
-    laya.JSBind.bindFunction("Orientation.disable", Orientation.disable);
-
-
   }
 
   private static registerVideoPlay() {

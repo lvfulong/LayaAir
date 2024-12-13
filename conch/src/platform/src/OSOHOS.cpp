@@ -3,6 +3,7 @@
 #include <aki/jsbind.h>
 #include <utils/Log.h>
 #include "platform/ohos/napi/render/plugin_render.h"
+#include "platform/ohos/napi/helper/Sensor.h"
 
 namespace laya
 {
@@ -62,25 +63,11 @@ void OSOHOS::setSensorAble(bool bSensorAble)
 {
     if (bSensorAble)
     {
-        if (auto accelerometerEnable = aki::JSBind::GetJSFunction("Accelerometer.enable"))
-        {
-            accelerometerEnable->Invoke<void>();
-        }
-        if (auto orientationEnable = aki::JSBind::GetJSFunction("Orientation.enable"))
-        {
-            orientationEnable->Invoke<void>();
-        }
+       Sensor::enableSensor();
     }
     else
     {
-        if (auto accelerometerDisable = aki::JSBind::GetJSFunction("Accelerometer.disable"))
-        {
-            accelerometerDisable->Invoke<void>();
-        }
-        if (auto orientationDisable = aki::JSBind::GetJSFunction("Orientation.disable"))
-        {
-            orientationDisable->Invoke<void>();
-        }
+       Sensor::disableSensor();
     }
 }
 int OSOHOS::getSafeInsetTop()

@@ -202,33 +202,6 @@ void NAPIFun::ConchNAPI_inputChange(int keycode)
 void NAPIFun::ConchNAPI_captureScreenCallBack(int w, int h, std::string byteArray)
 {
 }
-void NAPIFun::ConchNAPI_handleDeviceMotionEvent(float ax, float ay, float az, float agx, float agy, float agz, float ra, float rb, float rg, float interval)
-{
-    DeviceMotionEvent e;
-    e.nType = E_DEVICEMOTION;
-    e.ax = ax;
-    e.ay = ay;
-    e.az = az;
-    e.agx = agx;
-    e.agy = agy;
-    e.agz = agz;
-    e.ra = ra;
-    e.rb = rb;
-    e.rg = rg;
-    e.interval = interval;
-    strncpy(e.type, "devicemotion", 256);
-    JCConch::s_pConch->dispatchInputEvent(e);
-}
-void NAPIFun::ConchNAPI_handleDeviceOrientationEvent(float ra, float rb, float rg)
-{
-    DeviceOrientationEvent e;
-    e.nType = E_DEVICEORIENTATION;
-    e.ra = ra;
-    e.rb = rb;
-    e.rg = rg;
-    strncpy(e.type, "deviceorientation", 256);
-    JCConch::s_pConch->dispatchInputEvent(e);
-}
 void NAPIFun::ConchNAPI_RunJS(const std::string &js)
 {
      JCConch::s_pScriptRuntime->callJSString(js);
@@ -249,7 +222,5 @@ JSBIND_GLOBAL()
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_networkChanged, "ConchNAPI_networkChanged");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_inputChange, "ConchNAPI_inputChange");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_captureScreenCallBack, "ConchNAPI_captureScreenCallBack");
-    JSBIND_FUNCTION(NAPIFun::ConchNAPI_handleDeviceMotionEvent, "ConchNAPI_handleDeviceMotionEvent");
-    JSBIND_FUNCTION(NAPIFun::ConchNAPI_handleDeviceOrientationEvent, "ConchNAPI_handleDeviceOrientationEvent");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_RunJS, "ConchNAPI_RunJS");
 }

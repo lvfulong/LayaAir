@@ -546,6 +546,7 @@ elseif(OS_OHOS)
 	)
 	list(APPEND CONCH_SRC
 		src/platform/ohos/napi/helper/NapiHelper.cpp
+		src/platform/ohos/napi/helper/Sensor.cpp
     	src/platform/ohos/napi/plugin_manager.cpp
     	src/platform/ohos/napi/WorkerMessageQueue.cpp
     	src/platform/ohos/napi/render/plugin_render.cpp
@@ -820,6 +821,7 @@ endif()
 		libbundle_ndk.z.so
 		libnative_window.so 
 		libnative_buffer.so
+		libohsensor.so
 		utils
 		jsbind
 		jsvm

@@ -12,7 +12,6 @@
     #include "aki/jsbind.h"
     #include <string>
     #include "platform/ohos/napi/helper/NapiHelper.h"
-    //#include "JSSensor.h"
 #endif
 #include "platform/OS.h"
 #include "../../JCSystemConfig.h"
