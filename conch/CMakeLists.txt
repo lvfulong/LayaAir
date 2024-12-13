@@ -817,6 +817,9 @@ endif()
 		${rawfile-lib}
     	libohaudio.so
 		libavplayer.so
+		libbundle_ndk.z.so
+		libnative_window.so 
+		libnative_buffer.so
 		utils
 		jsbind
 		jsvm

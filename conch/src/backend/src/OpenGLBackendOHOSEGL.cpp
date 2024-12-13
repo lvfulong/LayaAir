@@ -116,6 +116,11 @@ void OpenGLBackendOHOSEGL::createScreenSurface(void *nativeHandle)
 }
 void OpenGLBackendOHOSEGL::destroyScreenSurface()
 {
+    if (!eglMakeCurrent(mEGLDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT)) {
+        //LOGE("EGL eglMakeCurrent error = %{public}d", eglGetError());
+    }
+    eglDestroySurface(mEGLDisplay, mEGLSurface);
+    mEGLSurface = nullptr;
 }
 void OpenGLBackendOHOSEGL::onScreenSurfaceResize(int width, int height)
 {

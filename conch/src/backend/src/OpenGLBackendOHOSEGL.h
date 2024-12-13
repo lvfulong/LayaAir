@@ -14,7 +14,7 @@ class OpenGLBackendOHOSEGL : public IBackend
   public:
     OpenGLBackendOHOSEGL();
     ~OpenGLBackendOHOSEGL();
-    void create(const BackendOptions &optionsoverride);
+    void create(const BackendOptions &optionsoverride) override;
     void makeCurrent() override;
     void swapBuffer() override;
     void createScreenSurface(void *nativeHandle) override;
