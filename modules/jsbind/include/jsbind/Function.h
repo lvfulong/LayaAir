@@ -29,7 +29,7 @@ inline jsvm_value makeFunction(std::function<ReturnType(Args...)> value)
     auto invoke = std::make_unique<std::function<ReturnType(Args...)>>(std::move(value));
     std::function<ReturnType(Args...)> *func = invoke.release();
     status =
-        jsvm_create_function(env, "", NAPI_AUTO_LENGTH,
+        jsvm_create_function(env, "", JSVM_AUTO_LENGTH,
                              internal::InvokeGlobalMethodOptionalOverride<ReturnType, Args...>, func, data, &result);
     DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     status = jsvm_add_finalizer(env, result, func, finalizer, nullptr, nullptr);
@@ -57,7 +57,7 @@ inline jsvm_value makeFunctionRaw(std::function<jsvm_value(jsvm_env env, jsvm_ca
     jsvm_value result = nullptr;
     auto invoke = std::make_unique<std::function<jsvm_value(jsvm_env env, jsvm_callback_info info)>>(std::move(value));
     std::function<jsvm_value(jsvm_env env, jsvm_callback_info info)> *func = invoke.release();
-    status = jsvm_create_function(env, "", NAPI_AUTO_LENGTH, callback, func, &result);
+    status = jsvm_create_function(env, "", JSVM_AUTO_LENGTH, callback, func, &result);
     DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     /// status = jsvm::AddFinalizer(env, result, func, finalizer, nullptr, nullptr);
     DEBUG_CHECK(status == jsvm_status::jsvm_ok);

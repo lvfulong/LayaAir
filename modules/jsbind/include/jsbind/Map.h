@@ -76,7 +76,7 @@ template <typename K, typename T> class Map
             };
 
             jsvm_value fn;
-            status = jsvm_create_function(env, "callback", NAPI_AUTO_LENGTH, forEachCallback, &map, &fn);
+            status = jsvm_create_function(env, "callback", JSVM_AUTO_LENGTH, forEachCallback, &map, &fn);
             DEBUG_CHECK(status == jsvm_status::jsvm_ok);
 
             jsvm_value return_val;

@@ -503,7 +503,7 @@ template <typename ClassType> class class_
         }
         // merge end
 
-        status = jsvm_define_class(env, className, NAPI_AUTO_LENGTH, New<ClassType>, propertyDescriptorVector.size(),
+        status = jsvm_define_class(env, className, JSVM_AUTO_LENGTH, New<ClassType>, propertyDescriptorVector.size(),
                                    propertyDescriptorVector.data(), &cons);
         DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         status = jsvm_create_reference(env, cons, 1, &classRegistry_.classRef_);
@@ -600,7 +600,7 @@ template <typename ClassType> class global_class_
         jsvm_status status;
         jsvm_value cons;
 
-        status = jsvm_define_class(env, className, NAPI_AUTO_LENGTH, NewGlobalClass<ClassType>,
+        status = jsvm_define_class(env, className, JSVM_AUTO_LENGTH, NewGlobalClass<ClassType>,
                                    propertyDescriptorVector_.size(), propertyDescriptorVector_.data(), &cons);
         DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         ClassRegistry<ClassType> &baseClassRegistry =

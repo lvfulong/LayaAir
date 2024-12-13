@@ -81,6 +81,7 @@ using jsvm_init_options = JSVM_InitOptions;
 using jsvm_create_vm_options = JSVM_CreateVMOptions;
 #endif
 #if defined(JS_V8)
+#define JSVM_AUTO_LENGTH SIZE_MAX
 typedef napi_env jsvm_env;
 typedef napi_deferred jsvm_deferred;
 typedef napi_value jsvm_value;
