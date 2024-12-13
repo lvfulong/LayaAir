@@ -617,7 +617,20 @@ jsvm_status jsvm_get_prototype(jsvm_env env, jsvm_value object, jsvm_value *resu
 {
     return static_cast<jsvm_status>(OH_JSVM_ObjectGetPrototypeOf(env, object, result));
 }
-jsvm_status jsvm_is_exception_pending(jsvm_env env, bool* result)
+jsvm_status jsvm_is_exception_pending(jsvm_env env, bool *result)
 {
     return static_cast<jsvm_status>(OH_JSVM_IsExceptionPending(env, result));
+}
+jsvm_status jsvm_get_last_error_info(jsvm_env env, const jsvm_extended_error_info **result)
+{
+    const JSVM_ExtendedErrorInfo *info;
+    jsvm_status status = static_cast<jsvm_status>(OH_JSVM_GetLastErrorInfo(env, &info));
+    static jsvm_extended_error_info s_info;
+    s_info.error_message = info->errorMessage;
+    s_info.engine_reserved = info->engineReserved;
+    s_info.engine_error_code = info->engineErrorCode;
+    s_info.error_code = static_cast<jsvm_status>(info->errorCode);
+
+    *result = &s_info;
+    return status;
 }

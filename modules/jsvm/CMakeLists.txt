@@ -67,6 +67,8 @@ if(USE_JS_OHOS_JSVM)
     list(APPEND HEADERS
         ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM.h
         ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM_Types.h
+        ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM_Common.h
+        ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM_Common-inl.h
     )
 
     list(APPEND SOURCES
@@ -82,6 +84,8 @@ if(USE_JS_V8)
     list(APPEND HEADERS
         ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM.h
         ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM_Types.h
+        ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM_Common.h
+        ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM_Common-inl.h
         ${PUBLIC_HEADER_DIR}/${TARGET}/napi/js_native_api_types.h
         ${PUBLIC_HEADER_DIR}/${TARGET}/napi/js_native_api_v8_internals.h
         ${PUBLIC_HEADER_DIR}/${TARGET}/napi/js_native_api_v8.h
@@ -114,12 +118,16 @@ if(OS_WINDOWS OR OS_LINUX)
 	list(APPEND CONCH_PUBLIC_HEADERS
         ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM.h
         ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM_Types.h
+        ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM_Common.h
+        ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM_Common-inl.h
 	)
     install(FILES ${CONCH_PUBLIC_HEADERS} DESTINATION include/${TARGET})
 
     list(APPEND CONCH_PUBLIC_HEADERS_NAPI
         ${PUBLIC_HEADER_DIR}/${TARGET}/napi/js_native_api_types.h
         ${PUBLIC_HEADER_DIR}/${TARGET}/napi/js_native_api.h
+        ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM_Common.h
+        ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM_Common-inl.h
 	)
     install(FILES ${CONCH_PUBLIC_HEADERS_NAPI} DESTINATION include/${TARGET}/napi)
 endif()

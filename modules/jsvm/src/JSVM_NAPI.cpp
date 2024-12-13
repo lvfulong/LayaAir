@@ -880,3 +880,16 @@ jsvm_status jsvm_close_inspector(jsvm_env env)
 #endif
     return jsvm_status::jsvm_ok;
 }
+jsvm_status jsvm_get_last_error_info(jsvm_env env, const jsvm_extended_error_info **result)
+{
+    const napi_extended_error_info *info;
+    jsvm_status status = static_cast<jsvm_status>(napi_get_last_error_info(env, &info));
+    static jsvm_extended_error_info s_info;
+    s_info.error_message = info->error_message;
+    s_info.engine_reserved = info->engine_reserved;
+    s_info.engine_error_code = info->engine_error_code;
+    s_info.error_code = static_cast<jsvm_status>(info->error_code);
+
+    *result = &s_info;
+    return status;
+}
