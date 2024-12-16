@@ -649,9 +649,18 @@ if(CONCH_USE_CURL_DOWNLOAD)
 	)
 endif()
 if(CONCH_USE_JPEG_XL)
-	list(APPEND LINK_LIBS
-		jxl
-	)
+	if(OS_WINDOWS)
+		list(APPEND LINK_LIBS
+			jxl
+		)
+	else()
+		list(APPEND LINK_LIBS
+			jxl
+			brotlidec
+			brotlicommon
+			hwy
+		)
+	endif()
 endif()
 
 if(OS_ANDROID)

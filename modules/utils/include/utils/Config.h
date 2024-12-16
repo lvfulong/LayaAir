@@ -26,7 +26,7 @@
 #define CONCH_EXPORT
 #endif
 
-#elif defined(CONCH_OS_LINUX)
+#elif defined(CONCH_OS_LINUX) || defined(CONCH_OS_IOS) || defined(CONCH_OS_ANDROID) || defined(CONCH_OS_OHOS)
 #ifdef BUILDING_CONCH_SHARED
 #define CONCH_EXPORT __attribute__((visibility("default")))
 #else
