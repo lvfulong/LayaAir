@@ -3,6 +3,7 @@
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalTex.h"
 #include "render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.h"
 #include "GLESRenderElement2D.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderCMD.h"
 
 namespace laya
 {
@@ -43,6 +44,18 @@ namespace laya
 	{
 		node->_preUpdatePre(this);
 		node->_render(this);
+	}
+
+	void GLESRenderContext2D::runOneCMD(GLESRenderCMD* cmd)
+	{
+		cmd->apply(this);
+	}
+
+	void GLESRenderContext2D::runCMDList(const std::vector<GLESRenderCMD*>& cmds)
+	{
+		for (GLESRenderCMD* i : cmds) {
+			i->apply(this);
+		}
 	}
 
 	void GLESRenderContext2D::setBlitScreenElement(GLESRenderElement2D* node)

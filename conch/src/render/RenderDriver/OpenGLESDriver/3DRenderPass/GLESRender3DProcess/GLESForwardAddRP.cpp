@@ -1,5 +1,5 @@
 #include "GLESForwardAddRP.h"
-
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderCMD.h"
 namespace laya {
 
     GLESForwardAddRP::GLESForwardAddRP() {

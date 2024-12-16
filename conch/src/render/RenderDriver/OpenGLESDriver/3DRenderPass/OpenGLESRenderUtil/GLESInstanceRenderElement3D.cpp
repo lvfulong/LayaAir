@@ -5,6 +5,7 @@
 #include <render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.h>
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderGeometryElement.h"
 #include "Bindings/LayaAir/3D/JSRTTransform.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h"
 namespace laya
 {
 	uint32_t GLESInstanceRenderElement3D::maxInstanceCount = 1024;
@@ -157,11 +158,6 @@ namespace laya
 	{
 		GLESInstanceRenderElement3D::_pool.push_back(this);
 		_instanceElementList.resize(0);
-	}
-
-	bool GLESInstanceRenderElement3D::_getInvertFront()
-	{
-		return _invertFrontFace;
 	}
 
 	void GLESInstanceRenderElement3D::_compileShader(GLESRenderContext3D* context)

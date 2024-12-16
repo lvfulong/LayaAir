@@ -8,14 +8,13 @@
 #include "render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESRenderListQueue.h"
 #include <array>
 #include <core/math/Types.h>
-#include <render/3D/RenderObjs/RuntimeOBJ/GLESRenderCMD.h>
 
 namespace laya
 {
 constexpr size_t _maxCascades = 4;
 class GLESShaderData;
 
-
+class GLESRenderCMD;
 class GLESInternalRT;
 class GLESRenderContext3D;
 class RTBaseRenderNode;

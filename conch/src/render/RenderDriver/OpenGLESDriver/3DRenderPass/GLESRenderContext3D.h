@@ -9,7 +9,6 @@
 #include <render/3D/design/renderEnum/RenderClearFlag.h>
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h>
 #include <utils/JCSingletonList.h>
-#include <render/3D/RenderObjs/RuntimeOBJ/GLESRenderCMD.h>
 
 namespace laya
 {

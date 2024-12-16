@@ -1,5 +1,6 @@
 #ifndef __GLESRenderElement2D_H_
 #define __GLESRenderElement2D_H_
+#include <vector>
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTSubShader.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderGeometryElement.h>
 
@@ -16,6 +17,10 @@ namespace laya
 		void destroy();
 		void _preUpdatePre(GLESRenderContext2D* context);
 		void _render(GLESRenderContext2D* context);
+		void setCommonUniformMap(const std::vector<std::string>& value)
+		{
+			this->_commonUniformMap = value;
+		}
 		void setValue2DShaderData(GLESShaderData* value)
 		{
 			value2DShaderData = value;
@@ -43,6 +48,7 @@ namespace laya
 		RTSubShader* subshader = nullptr;
 		bool renderStateIsBySprite = true;
 	private:
+		std::vector<std::string> _commonUniformMap;
 	protected:
 		JCSingletonList<GLESShaderInstance*> _shaderInstances = JCSingletonList<GLESShaderInstance*>(false);
 	};

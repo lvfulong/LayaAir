@@ -143,6 +143,18 @@ namespace laya
 				// this._glParam.type = gl.UNSIGNED_BYTE;
 			}
             break;
+        case TextureFormat::ETC2RGB_Alpha1:
+            if (m_compressedTextureETC != nullptr)
+            {
+                m_glParam.internalFormat = m_compressedTextureETC->COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2;
+            }
+            break;
+        case TextureFormat::ETC2SRGB_Alpha1:
+            if (m_compressedTextureETC != nullptr)
+            {
+                m_glParam.internalFormat = m_compressedTextureETC->COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2;
+            }
+            break;
         case TextureFormat::ASTC4x4:
 			if (m_compressedTextureASTC != nullptr)
 			{

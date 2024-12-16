@@ -87,12 +87,11 @@ void GLESShaderInstance::_create3D()
 }
 void GLESShaderInstance::_create2D()
 {
-    GLESCommandUniformMap* sprite2DParms = GLESCommandUniformMap::createGlobalUniformMap("Sprite2D");
     GLESCommandUniformMap* sceneParms = GLESCommandUniformMap::createGlobalUniformMap("Sprite2DGlobal");//�ֿ������ݲ�ͬ��Render
     std::vector<ShaderVariable*>& data = m_GLShaderInstance->getUniformMap();
     for (int i = 0, n = data.size(); i < n; i++) {
         ShaderVariable* one = data[i];
-        if (sprite2DParms->hasPtrID(one->dataOffset)) {
+        if (hasSpritePtrID(one->dataOffset)) {
             m_sprite2DUniformParamsMap.addShaderUniform(one);
         }
         else if (sceneParms->hasPtrID(one->dataOffset)) {

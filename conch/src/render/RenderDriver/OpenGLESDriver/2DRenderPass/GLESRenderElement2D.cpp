@@ -16,6 +16,7 @@ namespace laya
 	GLESRenderElement2D::GLESRenderElement2D()
 	{
 
+
 	}
 
 	GLESRenderElement2D::~GLESRenderElement2D()
@@ -86,6 +87,7 @@ namespace laya
 		
 			if (value2DShaderData) {
 				comDef->addDefineDatas(value2DShaderData->_defineDatas);
+				pass->nodeCommonMap = _commonUniformMap;
 			}
 			if (materialShaderData) {
 				comDef->addDefineDatas(materialShaderData->_defineDatas);
@@ -106,8 +108,10 @@ namespace laya
 		if (!shader->complete())
 			return;
 		shader->bind();
-		if(value2DShaderData)
-		shader->uploadUniforms(&(shader->m_sprite2DUniformParamsMap), value2DShaderData, true);
+		if (value2DShaderData) {
+			shader->uploadUniforms(&(shader->m_sprite2DUniformParamsMap), value2DShaderData, true);
+		}
+		
 		if (context->sceneData) {
 			shader->uploadUniforms(&(shader->m_sceneUniformParamsMap), context->sceneData, true);
 		}

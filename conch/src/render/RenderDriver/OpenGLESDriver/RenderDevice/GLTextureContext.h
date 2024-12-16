@@ -114,8 +114,7 @@ class GLTextureContext : public GLObject
     virtual void setCubeKTXData(GLESInternalTex *texture, const KTXTextureInfo &ktxInfo);
     virtual void readRenderTargetPixelData(GLESInternalRT *renderTarget, int xOffset, int yOffset, int width,
                                            int height, std::vector<uint8_t> &out);
-    virtual void getRenderTextureData(GLESInternalRT *internalTex, int x, int y, int width, int height,
-                                      std::vector<uint8_t> &out);
+   
     virtual void updateVideoTexture(GLESInternalTex *texture, JCImage *video, bool premultiplyAlpha, bool invertY);
 
     void setTexturePixelsDataJS(GLESInternalTex *texture, jsbind::ArrayBuffer arrayBuffer, bool premultiplyAlpha, bool invertY);

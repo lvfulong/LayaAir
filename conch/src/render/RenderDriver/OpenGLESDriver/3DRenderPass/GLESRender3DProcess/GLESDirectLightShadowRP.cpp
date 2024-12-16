@@ -6,6 +6,7 @@
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 #include <render/ShadowMode.h>
 #include <render/ShadowUtils.h>
+#include "render/RenderDriver/OpenGLESDriver/3DRenderPass/GLES3DRenderCMD.h"
 
 namespace laya
 {
@@ -138,7 +139,7 @@ void GLESDirectLightShadowRP::render(GLESRenderContext3D *context, std::vector<R
         }
         context->setClearData((RenderClearFlagBits)RenderClearFlag::Depth, Color::BLACK, 1, 0);
         this->_renderQueue.renderQueue((GLESRenderContext3D *)context);
-        GLESRenderCMD::applyCommandBuffers(context, _shadowCastCMDS);
+        GLES3DRenderCMD::applyCommandBuffers(context, _shadowCastCMDS);
     }
     this->_applyRenderData(context->sceneData, context->cameraData);
     this->_renderQueue._batch.recoverData();

@@ -4,6 +4,7 @@
 #include "render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTReflectionProb.h"
 #include "render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTVolumetricGI.h"
 #include "render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderElement3D.h"
+#include "render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.h"
 namespace laya
 {
 	GLESInstanceRenderBatch::GLESInstanceRenderBatch() :_recoverList(JCSingletonList<GLESInstanceRenderElement3D*>(false))
@@ -92,7 +93,6 @@ namespace laya
 						list->push_back(element);
 						elementArray[instanceIndex] =  instanceRenderElement;
 						instanceMark->batched = true;
-						instanceRenderElement->_invertFrontFace = element->transform!=nullptr ? element->transform->_isFrontFaceInvert() : false;
 					}
 				}
 				else

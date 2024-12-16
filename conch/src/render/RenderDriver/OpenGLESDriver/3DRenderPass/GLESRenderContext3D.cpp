@@ -2,6 +2,7 @@
 #include "render/LayaGL.h"
 #include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderElement3D.h>
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderCMD.h"
 namespace laya
 {
 GLESRenderContext3D::GLESRenderContext3D(){

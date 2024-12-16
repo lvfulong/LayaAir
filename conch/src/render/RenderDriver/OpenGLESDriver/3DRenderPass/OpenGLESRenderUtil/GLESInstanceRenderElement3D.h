@@ -3,12 +3,13 @@
 
 #include <utils/JCSingletonList.h>
 #include "render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderElement3D.h"
+#include "render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.h"
 namespace laya
 {
 
 	class GLESRenderElement3D;
 	class GLESVertexBuffer;
-	
+
 	struct GLESInstanceStateInfo
 	{
 	public:
@@ -42,7 +43,6 @@ namespace laya
 		void clearRenderData();
 		void recover();
 	protected:
-		bool _getInvertFront() override;
 		void _compileShader(GLESRenderContext3D* context) override;
 	private:
 		void _updateInstanceData();
@@ -50,7 +50,6 @@ namespace laya
 	public:
 		std::vector<GLESRenderElement3D*> _instanceElementList{};
 		uint32_t drawCount;
-		bool _invertFrontFace = true;
 		uint32_t updateNums;
 	private:
 		std::vector<GLESVertexBuffer*> _vertexBuffers{};

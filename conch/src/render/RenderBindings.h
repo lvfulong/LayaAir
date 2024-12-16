@@ -45,6 +45,9 @@
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTShaderPass.h>
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderCMD.h>
+#include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLES3DRenderCMD.h>
+#include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLES2DRenderCMD.h>
 
 namespace jsbind
 {
@@ -693,6 +696,7 @@ class RenderBindings
             class_binding.function("setSubShader", &GLESRenderElement2D::setSubShader);
             class_binding.class_function("setCompileDefine", &GLESRenderElement2D::setCompileDefine);
             class_binding.function("destroy", &GLESRenderElement2D::destroy);
+            class_binding.function("setCommonUniformMap", &GLESRenderElement2D::setCommonUniformMap);
             class_binding.property_field("renderStateIsBySprite", &GLESRenderElement2D::renderStateIsBySprite);
             context.class_("conchGLESRenderElement2D", class_binding);
         }
@@ -706,6 +710,8 @@ class RenderBindings
             class_binding.function("setBlitScreenElement", &GLESRenderContext2D::setBlitScreenElement);
             class_binding.property_field("invertY", &GLESRenderContext2D::invertY);
             class_binding.property_field("pipelineMode", &GLESRenderContext2D::pipelineMode);
+            class_binding.function("runOneCMD", &GLESRenderContext2D::runOneCMD);
+            class_binding.function("runCMDList", &GLESRenderContext2D::runCMDList);
             class_binding.function_optional_override(
                 "drawRenderElementList",
                 jsbind::optional_override(
@@ -1020,6 +1026,7 @@ class RenderBindings
             context.class_("conchGLESDrawNodeCMDData", class_binding);
         }
 
+        //3D CMD
         {
             jsbind::class_<GLESBlitQuadCMDData> class_binding;
             class_binding.constructor<>();
@@ -1058,7 +1065,36 @@ class RenderBindings
             class_binding.function("clearStencilValue", &GLESSetRenderTargetCMD::clearStencilValue);
             context.class_("conchGLESSetRenderTargetCMD", class_binding);
         }
+        //2D CMD
+        {
+            jsbind::class_<GLESBlit2DQuadCMD> class_binding;
+            class_binding.constructor<>();
+            class_binding.function("setDest", &GLESBlit2DQuadCMD::setDest);
+            class_binding.function("setSource", &GLESBlit2DQuadCMD::setSource);
+            class_binding.function("setOffsetScale", &GLESBlit2DQuadCMD::setOffsetScale);
+            class_binding.function("setRenderElement", &GLESBlit2DQuadCMD::setRenderElement);
+            context.class_("conchGLESBlit2DQuadCMD", class_binding);
+        }
 
+        {
+            jsbind::class_<GLESDraw2DElementCMD> class_binding;
+            class_binding.constructor<>();
+            class_binding.function("clearElement", &GLESDraw2DElementCMD::clearElement);
+            class_binding.function("addOneElement", &GLESDraw2DElementCMD::addOneElement);
+            context.class_("conchGLESDraw2DElementCMD", class_binding);
+        }
+
+        {
+            jsbind::class_<GLESSetRendertarget2DCMD> class_binding;
+            class_binding.constructor<>();
+            class_binding.function("setRT", &GLESSetRendertarget2DCMD::setRT);
+            class_binding.function("clearColorValue", &GLESSetRendertarget2DCMD::clearColorValue);
+            class_binding.function("setClearColor", &GLESSetRendertarget2DCMD::setClearColor);
+            class_binding.function("setinvertY", &GLESSetRendertarget2DCMD::setinvertY);
+            context.class_("conchGLESSetRendertarget2DCMD", class_binding);
+        }
+
+        //common CMD
         {
             jsbind::class_<GLESSetRenderData> class_binding;
             class_binding.constructor<>();

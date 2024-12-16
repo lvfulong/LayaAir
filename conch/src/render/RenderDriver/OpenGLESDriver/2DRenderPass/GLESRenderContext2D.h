@@ -6,6 +6,7 @@
 #include <utils/JCSingletonList.h>
 namespace laya
 {
+	class GLESRenderCMD;
 	class GLESRenderElement2D;
 	class GLESRenderContext2D {
 	public:
@@ -17,7 +18,8 @@ namespace laya
 		void setOffscreenView(uint32_t width, uint32_t height);
 		void drawRenderElementList(const JCSingletonList<GLESRenderElement2D*>& list);
 		void drawRenderElementOne(GLESRenderElement2D* node);
-
+		void runOneCMD(GLESRenderCMD* cmd);
+		void runCMDList(const std::vector<GLESRenderCMD*>& cmds);
 		void setBlitScreenElement(GLESRenderElement2D* node);
 
 		void setSceneShaderData(GLESShaderData* value)

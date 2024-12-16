@@ -116,8 +116,6 @@ list(APPEND CONCH_SRC
 	src/render/3D/renderInstance/MeshRenderNode.cpp
 	src/render/3D/renderInstance/RenderModuleData.h
 	src/render/3D/renderInstance/RenderModuleData.cpp
-	src/render/3D/RenderObjs/RuntimeOBJ/GLESRenderCMD.h
-	src/render/3D/RenderObjs/RuntimeOBJ/GLESRenderCMD.cpp
 
 	src/render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.h
 	src/render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.cpp
@@ -132,6 +130,8 @@ list(APPEND CONCH_SRC
 	src/render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.cpp
 	src/render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalTex.h
 	src/render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalTex.cpp
+	src/render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderCMD.h
+	src/render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderCMD.cpp
 	src/render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalRT.h
 	src/render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalRT.cpp
 	src/render/RenderDriver/OpenGLESDriver/RenderDevice/GL2TextureContext.h
@@ -218,6 +218,9 @@ list(APPEND CONCH_SRC
 	src/render/3D/temp/UniformBufferObject.cpp
 	src/render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderContext3D.h
 	src/render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderContext3D.cpp
+	src/render/RenderDriver/OpenGLESDriver/3DRenderPass/GLES3DRenderCMD.h
+	src/render/RenderDriver/OpenGLESDriver/3DRenderPass/GLES3DRenderCMD.cpp
+	
 	src/render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderElement3D.h
 	src/render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderElement3D.cpp
 	src/render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESSkinRenderElement.h
@@ -244,6 +247,8 @@ list(APPEND CONCH_SRC
 	src/render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderContext2D.cpp
 	src/render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.h
 	src/render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.cpp
+	src/render/RenderDriver/OpenGLESDriver/2DRenderPass/GLES2DRenderCMD.h
+	src/render/RenderDriver/OpenGLESDriver/2DRenderPass/GLES2DRenderCMD.cpp
 	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h
 	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.cpp
 	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTSubShader.cpp

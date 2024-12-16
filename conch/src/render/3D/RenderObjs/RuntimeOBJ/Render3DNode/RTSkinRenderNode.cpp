@@ -2,6 +2,7 @@
 #include "render/Utils3D.h"
 #include "Bindings/LayaAir/3D/JSRTTransform.h"
 #include <render/Property.h>
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h"
 
 namespace laya
 {

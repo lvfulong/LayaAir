@@ -222,6 +222,22 @@ const GLParam &GLTextureContext::glTextureParam(TextureFormat format, bool useSR
             m_glParam.type = GL_UNSIGNED_BYTE;
         }
         break;
+    case TextureFormat::ETC2RGB_Alpha1:
+        if (m_compressedTextureETC != nullptr)
+        {
+            m_glParam.internalFormat = m_compressedTextureETC->COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2;
+            m_glParam.format = m_glParam.internalFormat;
+            m_glParam.type = GL_UNSIGNED_BYTE;
+        }
+        break;
+    case TextureFormat::ETC2SRGB_Alpha1:
+        if (m_compressedTextureETC != nullptr)
+        {
+            m_glParam.internalFormat = m_compressedTextureETC->COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2;
+            m_glParam.format = m_glParam.internalFormat;
+            m_glParam.type = GL_UNSIGNED_BYTE;
+        }
+        break;
     case TextureFormat::ASTC4x4:
         if (m_compressedTextureASTC != nullptr)
         {
@@ -1708,66 +1724,7 @@ void GLTextureContext::updateVideoTexture(GLESInternalTex *texture, JCImage *sou
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 }
-void GLTextureContext::getRenderTextureData(GLESInternalRT *internalTex, int x, int y, int width, int height,
-                                            std::vector<uint8_t> &pixels)
-{
-    pixels.clear();
-    if (internalTex->m_colorFormat == RenderTargetFormat::None)
-        return;
-    glBindFramebuffer(GL_FRAMEBUFFER, internalTex->m_framebuffer);
-    bool canRead = (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
-    if (!canRead)
-    {
-        glBindFramebuffer(GL_FRAMEBUFFER, g_nMainFrameBuffer);
-        return;
-    }
-    int size = width * height;
-    int format, type;
-    switch (internalTex->m_colorFormat)
-    {
-    case RenderTargetFormat::R8G8B8:
-        format = GL_RGB;
-        type = GL_UNSIGNED_BYTE;
-        // pixels = new Uint8Array(size * 3);
-        pixels.resize(size * 3);
-        break;
-    case RenderTargetFormat::R8G8B8A8:
-        format = GL_RGBA;
-        type = GL_UNSIGNED_BYTE;
-        // pixels = new Uint8Array(size * 4);
-        pixels.resize(size * 4);
-        break;
-    case RenderTargetFormat::R16G16B16:
-        format = GL_RGB;
-        type = GL_UNSIGNED_SHORT_4_4_4_4;
-        // pixels = new Uint16Array(size * 3);
-        pixels.resize(sizeof(uint16_t) * size * 3);
-        break;
-    case RenderTargetFormat::R16G16B16A16:
-        format = GL_RGBA;
-        type = GL_UNSIGNED_SHORT_4_4_4_4;
-        // pixels = new Uint16Array(size * 4);
-        pixels.resize(sizeof(uint16_t) * size * 4);
-        break;
-    case RenderTargetFormat::R32G32B32:
-        format = GL_RGB;
-        type = GL_FLOAT;
-        // pixels = new Float32Array(size * 3);
-        pixels.resize(sizeof(float) * size * 3);
-        break;
-    case RenderTargetFormat::R32G32B32A32:
-        format = GL_RGBA;
-        type = GL_FLOAT;
-        // pixels = new Float32Array(size * 4);
-        pixels.resize(sizeof(float) * size * 4);
-        break;
-    default:
-        return;
-    }
-    glReadPixels(x, y, width, height, format, type, &pixels[0]);
-    glBindFramebuffer(GL_FRAMEBUFFER, g_nMainFrameBuffer);
-    return;
-}
+
 void GLTextureContext::setTexturePixelsDataJS(GLESInternalTex *texture, jsbind::ArrayBuffer arrayBuffer, bool premultiplyAlpha,
                                               bool invertY)
 {

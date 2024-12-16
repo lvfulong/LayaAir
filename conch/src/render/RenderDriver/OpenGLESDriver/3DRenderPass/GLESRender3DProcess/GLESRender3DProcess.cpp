@@ -5,6 +5,7 @@
 #include "GLESSpotLightShadowRP.h"
 #include "GLESForwardAddClusterRP.h"
 #include "render/Property.h"
+#include "render/RenderDriver/OpenGLESDriver/3DRenderPass/GLES3DRenderCMD.h"
 
 namespace laya {
 
@@ -43,11 +44,11 @@ namespace laya {
         passInfo->renderpass->render(context, renderNodeList, count);
 
 
-        GLESRenderCMD::applyCommandBuffers(context, passInfo->_beforeImageEffectCMDS);
+        GLES3DRenderCMD::applyCommandBuffers(context, passInfo->_beforeImageEffectCMDS);
         if (passInfo->enablePostProcess&& (passInfo->postProcessCMDS.size() != 0))
             context->runCMDList(passInfo->postProcessCMDS);
         
-        GLESRenderCMD::applyCommandBuffers(context, passInfo->_afterAllRenderCMDS);
+        GLES3DRenderCMD::applyCommandBuffers(context, passInfo->_afterAllRenderCMDS);
         //PostProcess
         if (passInfo->finalize.size() != 0) {
             context->runCMDList(passInfo->finalize);

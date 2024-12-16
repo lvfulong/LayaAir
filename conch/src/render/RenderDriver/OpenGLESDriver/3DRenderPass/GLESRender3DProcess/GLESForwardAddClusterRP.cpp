@@ -4,6 +4,7 @@
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 #include "render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESCullUtil.h"
 #include <render/3D/RenderObjs/RuntimeOBJ/RenderModuleData/RTModuleData.h>
+#include "render/RenderDriver/OpenGLESDriver/3DRenderPass/GLES3DRenderCMD.h"
 
 namespace laya
 {
@@ -83,14 +84,14 @@ namespace laya
     void GLESForwardAddClusterRP::_mainPass(GLESRenderContext3D* context)
     {
         context->pipelineMode = this->pipelineMode;
-        if(enableCMD) GLESRenderCMD::applyCommandBuffers(context, _beforeForwardCmds);
+        if(enableCMD) GLES3DRenderCMD::applyCommandBuffers(context, _beforeForwardCmds);
         _recoverRenderContext3D(context);
         context->setClearData(this->clearFlag, this->clearColor, 1, 0);
         if (enableOpaque)
         {
             this->opaqueList.renderQueue((GLESRenderContext3D*)context);
         }
-        if (enableCMD) GLESRenderCMD::applyCommandBuffers(context, _beforeSkyboxCmds);
+        if (enableCMD) GLES3DRenderCMD::applyCommandBuffers(context, _beforeSkyboxCmds);
         if (skyRenderNode != nullptr) {
             context->drawRenderElementOne(skyRenderNode->renderelements[0]);
         }
@@ -98,7 +99,7 @@ namespace laya
         {
             opaqueTexturePass(context);
         }
-        if (enableCMD) GLESRenderCMD::applyCommandBuffers(context, _beforeTransparentCmds);
+        if (enableCMD) GLES3DRenderCMD::applyCommandBuffers(context, _beforeTransparentCmds);
         this->_recoverRenderContext3D(context);
         if (enableTransparent) {
             transparent.renderQueue(context);

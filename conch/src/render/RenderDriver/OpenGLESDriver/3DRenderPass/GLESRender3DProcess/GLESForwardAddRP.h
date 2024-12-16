@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <stdint.h>
-#include <render/3D/RenderObjs/RuntimeOBJ/GLESRenderCMD.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderCMD.h>
 
 namespace laya {
 	class GLESDirectLightShadowRP;
