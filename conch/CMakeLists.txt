@@ -221,6 +221,15 @@ list(APPEND CONCH_SRC
 	src/render/RenderDriver/OpenGLESDriver/3DRenderPass/GLES3DRenderCMD.h
 	src/render/RenderDriver/OpenGLESDriver/3DRenderPass/GLES3DRenderCMD.cpp
 	
+	src/render/RenderDriver/UniformManager/UniformBufferManager.h
+	src/render/RenderDriver/UniformManager/UniformBufferManager.cpp
+	src/render/RenderDriver/UniformManager/IUniformBufferUser.h
+	src/render/RenderDriver/UniformManager/IUniformBufferUser.cpp
+	src/render/RenderDriver/UniformManager/UniformBufferBlock.h
+	src/render/RenderDriver/UniformManager/UniformBufferBlock.cpp
+	src/render/RenderDriver/UniformManager/UniformBufferCluster.h
+	src/render/RenderDriver/UniformManager/UniformBufferCluster.cpp
+
 	src/render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderElement3D.h
 	src/render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderElement3D.cpp
 	src/render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESSkinRenderElement.h
