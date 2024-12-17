@@ -34,14 +34,11 @@ inline bool getBool(jsvm_value value)
 inline jsvm_value makeBool(bool value)
 {
     GET_ENV
-    jsvm_value resultUint32;
-    jsvm_value resultBoolean;
+    jsvm_value result;
     jsvm_status status;
-    status = jsvm_create_uint32(env, static_cast<uint32_t>(value), &resultUint32); //  no create bool function
+    status = jsvm_get_boolean(env, value, &result);
     DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-    status = jsvm_coerce_to_bool(env, resultUint32, &resultBoolean);
-    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-    return resultBoolean;
+    return result;
 }
 inline double getDouble(jsvm_value value)
 {

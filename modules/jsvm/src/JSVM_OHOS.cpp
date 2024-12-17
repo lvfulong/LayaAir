@@ -78,11 +78,6 @@ jsvm_status jsvm_create_env(jsvm_vm vm, size_t propertyCount, const jsvm_propert
 
     return status;
 }
-jsvm_status jsvm_create_env_from_snapshot (jsvm_vm vm, size_t index, jsvm_env *result)
-{
-    //todo
-    return jsvm_status::jsvm_ok;
-}
 jsvm_status jsvm_destroy_env(jsvm_env env)
 {
     return static_cast<jsvm_status>(OH_JSVM_DestroyEnv(env));
@@ -91,13 +86,63 @@ jsvm_status jsvm_get_vm(jsvm_env env, jsvm_vm *result)
 {
     return static_cast<jsvm_status>(OH_JSVM_GetVM(env, result));
 }
-jsvm_status jsvm_compile_script(jsvm_env env, jsvm_value script, const uint8_t* cachedData, size_t cacheDataLength, bool eagerCompile, bool* cacheRejected, jsvm_script* result)
+jsvm_status jsvm_compile_script(jsvm_env env, jsvm_value script, const uint8_t *cachedData, size_t cacheDataLength,
+                                bool eagerCompile, bool *cacheRejected, jsvm_script *result)
 {
-    return static_cast<jsvm_status>(OH_JSVM_CompileScript(env, script, cachedData, cacheDataLength, eagerCompile, cacheRejected, result));
+    return static_cast<jsvm_status>(
+        OH_JSVM_CompileScript(env, script, cachedData, cacheDataLength, eagerCompile, cacheRejected, result));
 }
 jsvm_status jsvm_run_script(jsvm_env env, jsvm_script script, jsvm_value *result)
 {
     return static_cast<jsvm_status>(OH_JSVM_RunScript(env, script, result));
+}
+jsvm_status jsvm_throw(jsvm_env env, jsvm_value error)
+{
+    return static_cast<jsvm_status>(OH_JSVM_Throw(env, error));
+}
+jsvm_status jsvm_throw_error(jsvm_env env, const char *code, const char *msg)
+{
+    return static_cast<jsvm_status>(OH_JSVM_ThrowError(env, code, msg));
+}
+jsvm_status jsvm_throw_type_error(jsvm_env env, const char *code, const char *msg)
+{
+    return static_cast<jsvm_status>(OH_JSVM_ThrowTypeError(env, code, msg));
+}
+jsvm_status jsvm_throw_range_error(jsvm_env env, const char *code, const char *msg)
+{
+    return static_cast<jsvm_status>(OH_JSVM_ThrowRangeError(env, code, msg));
+}
+jsvm_status jsvm_throw_syntax_error(jsvm_env env, const char *code, const char *msg)
+{
+    return static_cast<jsvm_status>(OH_JSVM_ThrowSyntaxError(env, code, msg));
+}
+jsvm_status jsvm_is_error(jsvm_env env, jsvm_value value, bool *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_IsError(env, value, result));
+}
+jsvm_status jsvm_create_error(jsvm_env env, jsvm_value code, jsvm_value msg, jsvm_value *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_CreateError(env, code, msg, result));
+}
+jsvm_status jsvm_create_type_error(jsvm_env env, jsvm_value code, jsvm_value msg, jsvm_value *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_CreateTypeError(env, code, msg, result));
+}
+jsvm_status jsvm_create_range_error(jsvm_env env, jsvm_value code, jsvm_value msg, jsvm_value *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_CreateRangeError(env, code, msg, result));
+}
+jsvm_status jsvm_create_syntax_error(jsvm_env env, jsvm_value code, jsvm_value msg, jsvm_value *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_CreateSyntaxError(env, code, msg, result));
+}
+jsvm_status jsvm_get_and_clear_last_exception(jsvm_env env, jsvm_value *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_GetAndClearLastException(env, result));
+}
+jsvm_status jsvm_is_exception_pending(jsvm_env env, bool *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_IsExceptionPending(env, result));
 }
 jsvm_status jsvm_open_handle_scope(jsvm_env env, jsvm_handle_scope *result)
 {
@@ -107,13 +152,58 @@ jsvm_status jsvm_close_handle_scope(jsvm_env env, jsvm_handle_scope scope)
 {
     return static_cast<jsvm_status>(OH_JSVM_CloseHandleScope(env, scope));
 }
-jsvm_status jsvm_get_and_clear_last_exception(jsvm_env env, jsvm_value *result)
+jsvm_status jsvm_open_escapable_handle_scope(jsvm_env env, jsvm_escapable_handle_scope *result)
 {
-    return static_cast<jsvm_status>(OH_JSVM_GetAndClearLastException(env, result));
+    return static_cast<jsvm_status>(OH_JSVM_OpenEscapableHandleScope(env, result));
 }
-jsvm_status jsvm_throw_error(jsvm_env env, const char *code, const char *msg)
+jsvm_status jsvm_close_escapable_handle_scope(jsvm_env env, jsvm_escapable_handle_scope scope)
 {
-    return static_cast<jsvm_status>(OH_JSVM_ThrowError(env, code, msg));
+    return static_cast<jsvm_status>(OH_JSVM_CloseEscapableHandleScope(env, scope));
+}
+jsvm_status jsvm_escape_handle(jsvm_env env, jsvm_escapable_handle_scope scope, jsvm_value escapee, jsvm_value *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_EscapeHandle(env, scope, escapee, result));
+}
+jsvm_status jsvm_create_reference(jsvm_env env, jsvm_value value, uint32_t initialRefcount, jsvm_ref *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_CreateReference(env, value, initialRefcount, result));
+}
+jsvm_status jsvm_delete_reference(jsvm_env env, jsvm_ref ref)
+{
+    return static_cast<jsvm_status>(OH_JSVM_DeleteReference(env, ref));
+}
+jsvm_status jsvm_reference_ref(jsvm_env env, jsvm_ref ref, uint32_t *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_ReferenceRef(env, ref, result));
+}
+jsvm_status jsvm_reference_unref(jsvm_env env, jsvm_ref ref, uint32_t *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_ReferenceUnref(env, ref, result));
+}
+jsvm_status jsvm_get_reference_value(jsvm_env env, jsvm_ref ref, jsvm_value *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_GetReferenceValue(env, ref, result));
+}
+jsvm_status jsvm_create_array(jsvm_env env, jsvm_value *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_CreateArray(env, result));
+}
+jsvm_status jsvm_create_array_with_length(jsvm_env env, size_t length, jsvm_value *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_CreateArrayWithLength(env, length, result));
+}
+jsvm_status jsvm_create_arraybuffer(jsvm_env env, size_t byteLength, void **data, jsvm_value *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_CreateArraybuffer(env, byteLength, data, result));
+}
+jsvm_status jsvm_create_date(jsvm_env env, double time, jsvm_value *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_CreateDate(env, time, result));
+}
+jsvm_status jsvm_create_external(jsvm_env env, void *data, jsvm_finalize finalizeCb, void *finalizeHint,
+                                 jsvm_value *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_CreateExternal(env, data, finalizeCb, finalizeHint, result));
 }
 jsvm_status jsvm_get_array_length(jsvm_env env, jsvm_value value, uint32_t *result)
 {
@@ -126,14 +216,6 @@ jsvm_status jsvm_is_array(jsvm_env env, jsvm_value value, bool *result)
 jsvm_status jsvm_create_promise(jsvm_env env, jsvm_deferred *deferred, jsvm_value *promise)
 {
     return static_cast<jsvm_status>(OH_JSVM_CreatePromise(env, deferred, promise));
-}
-jsvm_status jsvm_create_array(jsvm_env env, jsvm_value *result)
-{
-    return static_cast<jsvm_status>(OH_JSVM_CreateArray(env, result));
-}
-jsvm_status jsvm_create_array_with_length(jsvm_env env, size_t length, jsvm_value *result)
-{
-    return static_cast<jsvm_status>(OH_JSVM_CreateArrayWithLength(env, length, result));
 }
 jsvm_status jsvm_create_double(jsvm_env env, double value, jsvm_value *result)
 {
@@ -165,6 +247,10 @@ jsvm_status jsvm_get_value_uint32(jsvm_env env, jsvm_value value, uint32_t *resu
 {
     return static_cast<jsvm_status>(OH_JSVM_GetValueUint32(env, value, result));
 }
+jsvm_status jsvm_get_boolean(jsvm_env env, bool value, jsvm_value *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_GetBoolean(env, value, result));
+}
 jsvm_status jsvm_get_value_int64(jsvm_env env, jsvm_value value, int64_t *result)
 {
     return static_cast<jsvm_status>(OH_JSVM_GetValueInt64(env, value, result));
@@ -188,6 +274,14 @@ jsvm_status jsvm_get_element(jsvm_env env, jsvm_value object, uint32_t index, js
 jsvm_status jsvm_set_element(jsvm_env env, jsvm_value object, uint32_t index, jsvm_value value)
 {
     return static_cast<jsvm_status>(OH_JSVM_SetElement(env, object, index, value));
+}
+jsvm_status jsvm_has_element(jsvm_env env, jsvm_value object, uint32_t index, bool *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_HasElement(env, object, index, result));
+}
+jsvm_status jsvm_delete_element(jsvm_env env, jsvm_value object, uint32_t index, bool *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_DeleteElement(env, object, index, result));
 }
 jsvm_status jsvm_create_string_utf8(jsvm_env env, const char *value, size_t length, jsvm_value *result)
 {
@@ -231,26 +325,7 @@ jsvm_status jsvm_remove_wrap(jsvm_env env, jsvm_value jsObject, void **result)
 {
     return static_cast<jsvm_status>(OH_JSVM_RemoveWrap(env, jsObject, result));
 }
-jsvm_status jsvm_create_reference(jsvm_env env, jsvm_value value, uint32_t initialRefcount, jsvm_ref *result)
-{
-    return static_cast<jsvm_status>(OH_JSVM_CreateReference(env, value, initialRefcount, result));
-}
-jsvm_status jsvm_delete_reference(jsvm_env env, jsvm_ref ref)
-{
-    return static_cast<jsvm_status>(OH_JSVM_DeleteReference(env, ref));
-}
-jsvm_status jsvm_reference_ref(jsvm_env env, jsvm_ref ref, uint32_t *result)
-{
-    return static_cast<jsvm_status>(OH_JSVM_ReferenceRef(env, ref, result));
-}
-jsvm_status jsvm_reference_unref(jsvm_env env, jsvm_ref ref, uint32_t *result)
-{
-    return static_cast<jsvm_status>(OH_JSVM_ReferenceUnref(env, ref, result));
-}
-jsvm_status jsvm_get_reference_value(jsvm_env env, jsvm_ref ref, jsvm_value *result)
-{
-    return static_cast<jsvm_status>(OH_JSVM_GetReferenceValue(env, ref, result));
-}
+
 jsvm_status jsvm_new_instance(jsvm_env env, jsvm_value constructor, size_t argc, const jsvm_value *argv,
                               jsvm_value *result)
 {
@@ -401,6 +476,14 @@ jsvm_status jsvm_define_properties(jsvm_env env, jsvm_value object, size_t prope
     jsenv->jsvm_object_properties_map_[object] = std::move(jsvm_properties);
     return s;
 }
+jsvm_status jsvm_object_freeze(jsvm_env env, jsvm_value object)
+{
+    return static_cast<jsvm_status>(OH_JSVM_ObjectFreeze(env, object));
+}
+jsvm_status jsvm_object_seal(jsvm_env env, jsvm_value object)
+{
+    return static_cast<jsvm_status>(OH_JSVM_ObjectSeal(env, object));
+}
 jsvm_status jsvm_call_function(jsvm_env env, jsvm_value recv, jsvm_value func, size_t argc, const jsvm_value *argv,
                                jsvm_value *result)
 {
@@ -432,9 +515,9 @@ jsvm_status jsvm_typeof(jsvm_env env, jsvm_value value, jsvm_valuetype *result)
     *result = static_cast<jsvm_valuetype>(napi_result);
     return static_cast<jsvm_status>(status);
 }
-jsvm_status jsvm_create_arraybuffer(jsvm_env env, size_t byteLength, void **data, jsvm_value *result)
+jsvm_status jsvm_instanceof(jsvm_env env, jsvm_value object, jsvm_value constructor, bool *result)
 {
-    return static_cast<jsvm_status>(OH_JSVM_CreateArraybuffer(env, byteLength, data, result));
+    return static_cast<jsvm_status>(OH_JSVM_Instanceof(env, object, constructor, result));
 }
 jsvm_status jsvm_is_arraybuffer(jsvm_env env, jsvm_value value, bool *result)
 {
@@ -448,6 +531,24 @@ jsvm_status jsvm_is_dataview(jsvm_env env, jsvm_value value, bool *result)
 {
     return static_cast<jsvm_status>(OH_JSVM_IsDataview(env, value, result));
 }
+jsvm_status jsvm_strict_equals(jsvm_env env, jsvm_value lhs, jsvm_value rhs, bool *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_StrictEquals(env, lhs, rhs, result));
+}
+jsvm_status jsvm_equals(jsvm_env env, jsvm_value lhs, jsvm_value rhs, bool *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_Equals(env, lhs, rhs, result));
+}
+#if 0
+jsvm_status jsvm_detach_arraybuffer(jsvm_env env, jsvm_value arraybuffer)
+{
+    return static_cast<jsvm_status>(OH_JSVM_DetachArraybuffer(env, arraybuffer));
+}
+jsvm_status jsvm_is_detached_arraybuffer(jsvm_env env, jsvm_value value, bool* result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_IsDetachedArraybuffer(env, value, result));
+}
+#endif
 jsvm_status jsvm_create_typedarray(jsvm_env env, jsvm_typedarray_type type, size_t length, jsvm_value arraybuffer,
                                    size_t byteOffset, jsvm_value *result)
 {
@@ -490,10 +591,7 @@ jsvm_status jsvm_get_instance_data(jsvm_env env, void **data)
 {
     return static_cast<jsvm_status>(OH_JSVM_GetInstanceData(env, data));
 }
-jsvm_status jsvm_create_date(jsvm_env env, double time, jsvm_value *result)
-{
-    return static_cast<jsvm_status>(OH_JSVM_CreateDate(env, time, result));
-}
+
 jsvm_status jsvm_is_date(jsvm_env env, jsvm_value value, bool *isDate)
 {
     return static_cast<jsvm_status>(OH_JSVM_IsDate(env, value, isDate));
@@ -501,10 +599,6 @@ jsvm_status jsvm_is_date(jsvm_env env, jsvm_value value, bool *isDate)
 jsvm_status jsvm_get_date_value(jsvm_env env, jsvm_value value, double *result)
 {
     return static_cast<jsvm_status>(OH_JSVM_GetDateValue(env, value, result));
-}
-jsvm_status jsvm_is_error(jsvm_env env, jsvm_value value, bool *result)
-{
-    return static_cast<jsvm_status>(OH_JSVM_IsError(env, value, result));
 }
 jsvm_status jsvm_create_string_utf16(jsvm_env env, const char16_t *str, size_t length, jsvm_value *result)
 {
@@ -526,19 +620,28 @@ jsvm_status jsvm_create_bigint_int64(jsvm_env env, int64_t value, jsvm_value *re
 {
     return static_cast<jsvm_status>(OH_JSVM_CreateBigintInt64(env, value, result));
 }
-jsvm_status jsvm_get_value_bigint_int64(jsvm_env env, jsvm_value value, int64_t *result, bool *lossless)
-{
-    return static_cast<jsvm_status>(OH_JSVM_GetValueBigintInt64(env, value, result, lossless));
-}
 jsvm_status jsvm_create_bigint_uint64(jsvm_env env, uint64_t value, jsvm_value *result)
 {
     return static_cast<jsvm_status>(OH_JSVM_CreateBigintUint64(env, value, result));
+}
+jsvm_status jsvm_create_bigint_words(jsvm_env env, int signBit, size_t wordCount, const uint64_t *words,
+                                     jsvm_value *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_CreateBigintWords(env, signBit, wordCount, words, result));
+}
+jsvm_status jsvm_get_value_bigint_int64(jsvm_env env, jsvm_value value, int64_t *result, bool *lossless)
+{
+    return static_cast<jsvm_status>(OH_JSVM_GetValueBigintInt64(env, value, result, lossless));
 }
 jsvm_status jsvm_get_value_bigint_uint64(jsvm_env env, jsvm_value value, uint64_t *result, bool *lossless)
 {
     return static_cast<jsvm_status>(OH_JSVM_GetValueBigintUint64(env, value, result, lossless));
 }
-
+jsvm_status jsvm_get_value_bigint_words(jsvm_env env, jsvm_value value, int *signBit, size_t *wordCount,
+                                        uint64_t *words)
+{
+    return static_cast<jsvm_status>(OH_JSVM_GetValueBigintWords(env, value, signBit, wordCount, words));
+}
 jsvm_status jsvm_pump_messageloop(jsvm_vm vm, bool *result)
 {
     return static_cast<jsvm_status>(OH_JSVM_PumpMessageLoop(vm, result));
@@ -550,6 +653,22 @@ jsvm_status jsvm_perform_microtask_checkpoint(jsvm_vm vm)
 jsvm_status jsvm_get_property(jsvm_env env, jsvm_value object, jsvm_value key, jsvm_value *result)
 {
     return static_cast<jsvm_status>(OH_JSVM_GetProperty(env, object, key, result));
+}
+jsvm_status jsvm_set_property(jsvm_env env, jsvm_value object, jsvm_value key, jsvm_value value)
+{
+    return static_cast<jsvm_status>(OH_JSVM_SetProperty(env, object, key, value));
+}
+jsvm_status jsvm_has_property(jsvm_env env, jsvm_value object, jsvm_value key, bool *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_HasProperty(env, object, key, result));
+}
+jsvm_status jsvm_delete_property(jsvm_env env, jsvm_value object, jsvm_value key, bool *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_DeleteProperty(env, object, key, result));
+}
+jsvm_status jsvm_has_own_property(jsvm_env env, jsvm_value object, jsvm_value key, bool *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_HasOwnProperty(env, object, key, result));
 }
 jsvm_status jsvm_set_named_property(jsvm_env env, jsvm_value object, const char *utf8name, jsvm_value value)
 {
@@ -567,6 +686,14 @@ jsvm_status jsvm_create_object(jsvm_env env, jsvm_value *result)
 {
     return static_cast<jsvm_status>(OH_JSVM_CreateObject(env, result));
 }
+jsvm_status jsvm_create_symbol(jsvm_env env, jsvm_value description, jsvm_value *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_CreateSymbol(env, description, result));
+}
+jsvm_status jsvm_symbol_for(jsvm_env env, const char *utf8description, size_t length, jsvm_value *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_SymbolFor(env, utf8description, length, result));
+}
 jsvm_status jsvm_resolve_deferred(jsvm_env env, jsvm_deferred deferred, jsvm_value resolution)
 {
     return static_cast<jsvm_status>(OH_JSVM_ResolveDeferred(env, deferred, resolution));
@@ -575,11 +702,7 @@ jsvm_status jsvm_reject_deferred(jsvm_env env, jsvm_deferred deferred, jsvm_valu
 {
     return static_cast<jsvm_status>(OH_JSVM_RejectDeferred(env, deferred, resolution));
 }
-jsvm_status jsvm_create_external(jsvm_env env, void *data, jsvm_finalize finalizeCb, void *finalizeHint,
-                                 jsvm_value *result)
-{
-    return static_cast<jsvm_status>(OH_JSVM_CreateExternal(env, data, finalizeCb, finalizeHint, result));
-}
+
 jsvm_status jsvm_get_value_external(jsvm_env env, jsvm_value value, void **result)
 {
     return static_cast<jsvm_status>(OH_JSVM_GetValueExternal(env, value, result));
@@ -610,6 +733,14 @@ jsvm_status jsvm_get_property_names(jsvm_env env, jsvm_value object, jsvm_value 
 {
     return static_cast<jsvm_status>(OH_JSVM_GetPropertyNames(env, object, result));
 }
+jsvm_status jsvm_get_all_property_names(jsvm_env env, jsvm_value object, jsvm_key_collection_mode keyMode,
+                                        jsvm_key_filter keyFilter, jsvm_key_conversion keyConversion,
+                                        jsvm_value *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_GetAllPropertyNames(
+        env, object, static_cast<JSVM_KeyCollectionMode>(keyMode), static_cast<JSVM_KeyFilter>(keyFilter),
+        static_cast<JSVM_KeyConversion>(keyConversion), result));
+}
 jsvm_status jsvm_object_set_prototype_of(jsvm_env env, jsvm_value object, jsvm_value prototype)
 {
     return static_cast<jsvm_status>(OH_JSVM_ObjectSetPrototypeOf(env, object, prototype));
@@ -621,10 +752,6 @@ jsvm_status jsvm_object_get_prototype_of(jsvm_env env, jsvm_value object, jsvm_v
 jsvm_status jsvm_get_prototype(jsvm_env env, jsvm_value object, jsvm_value *result)
 {
     return static_cast<jsvm_status>(OH_JSVM_ObjectGetPrototypeOf(env, object, result));
-}
-jsvm_status jsvm_is_exception_pending(jsvm_env env, bool *result)
-{
-    return static_cast<jsvm_status>(OH_JSVM_IsExceptionPending(env, result));
 }
 jsvm_status jsvm_get_last_error_info(jsvm_env env, const jsvm_extended_error_info **result)
 {

@@ -76,6 +76,7 @@ typedef JSVM_VM jsvm_vm;
 typedef JSVM_VMScope jsvm_vm_scope;
 typedef JSVM_EnvScope jsvm_env_scope;
 typedef JSVM_HandleScope jsvm_handle_scope;
+typedef JSVM_EscapableHandleScope jsvm_escapable_handle_scope;
 typedef JSVM_InitOptions jsvm_init_options;
 typedef JSVM_CreateVMOptions jsvm_create_vm_options;
 typedef JSVM_Script jsvm_script;
@@ -92,8 +93,9 @@ typedef napi_value(NAPI_CDECL *jsvm_callback)(napi_env env, napi_callback_info i
 typedef struct VM__ *jsvm_vm;
 typedef struct VMScope__ *jsvm_vm_scope;
 typedef struct EnvScope__ *jsvm_env_scope;
-typedef napi_handle_scope  jsvm_handle_scope;
-typedef napi_value  jsvm_script;
+typedef napi_handle_scope jsvm_handle_scope;
+typedef napi_escapable_handle_scope jsvm_escapable_handle_scope;
+typedef napi_value jsvm_script;
 struct jsvm_init_options
 {
     const intptr_t *externalReferences;
@@ -136,11 +138,34 @@ struct jsvm_property_descriptor
     jsvm_property_attributes attributes;
     void *data;
 };
+
 struct jsvm_extended_error_info
 {
-  const char* error_message;
-  void* engine_reserved;
-  uint32_t engine_error_code;
-  jsvm_status error_code;
+    const char *error_message;
+    void *engine_reserved;
+    uint32_t engine_error_code;
+    jsvm_status error_code;
+};
+
+enum jsvm_key_collection_mode
+{
+    jsvm_key_include_prototypes,
+    jsvm_key_own_only
+};
+
+enum jsvm_key_filter
+{
+    jsvm_key_all_properties = 0,
+    jsvm_key_writable = 1,
+    jsvm_key_enumerable = 1 << 1,
+    jsvm_key_configurable = 1 << 2,
+    jsvm_key_skip_strings = 1 << 3,
+    jsvm_key_skip_symbols = 1 << 4
+};
+
+enum jsvm_key_conversion
+{
+    jsvm_key_keep_numbers,
+    jsvm_key_numbers_to_strings
 };
 #endif
