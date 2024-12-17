@@ -7,12 +7,12 @@
 
 #include <vector>
 #include <memory>
-#include "UniformBufferBlock.h"
-#include "UniformBufferManager.h"
-#include "IUniformBufferUser.h"
+#include <render/RenderDriver/UniformManager/IUniformBufferUser.h>
 
 namespace laya {
 
+class UniformBufferBlock;
+class UniformBufferManager;
 /**
  * @struct UniformBlockUpdateRange
  * @brief 定义Uniform块的更新范围

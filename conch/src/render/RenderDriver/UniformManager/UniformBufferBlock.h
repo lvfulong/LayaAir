@@ -1,9 +1,8 @@
 #ifndef __UniformBufferBlock_H_
 #define __UniformBufferBlock_H_
 
-#include "IUniformBufferUser.h"
-#include "UniformBufferCluster.h"
-#include "UniformBufferManager.h"
+#include <render/RenderDriver/UniformManager/IUniformBufferUser.h>
+#include <render/RenderDriver/UniformManager/UniformBufferCluster.h>
 
 namespace laya {
 

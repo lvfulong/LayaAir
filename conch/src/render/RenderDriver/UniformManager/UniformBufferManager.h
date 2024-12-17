@@ -4,9 +4,9 @@
 #include <map>
 #include <vector>
 #include <memory>
-#include "./UniformBufferBlock.h"
-#include "./UniformBufferCluster.h"
-#include "./IUniformBufferUser.h"
+#include <render/RenderDriver/UniformManager/UniformBufferBlock.h>
+#include <render/RenderDriver/UniformManager/UniformBufferCluster.h>
+#include <render/RenderDriver/UniformManager/IUniformBufferUser.h>
 
 namespace laya {
 

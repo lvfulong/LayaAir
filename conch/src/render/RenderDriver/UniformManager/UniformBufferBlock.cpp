@@ -1,6 +1,7 @@
 #include "UniformBufferBlock.h"
 #include "UniformBufferCluster.h"
 #include "IUniformBufferUser.h"
+#include "UniformBufferManager.h"
 #include <iostream>
 
 namespace laya {
