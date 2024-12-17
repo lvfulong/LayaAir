@@ -172,6 +172,16 @@ list(APPEND CONCH_SRC
 	src/render/RenderDriver/OpenGLESDriver/RenderDevice/GLESVertexBuffer.cpp
 	src/render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h
 	src/render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.cpp
+	src/render/RenderDriver/OpenGLESDriver/RenderDevice/GLESUniformBufferDescriptor.h
+	src/render/RenderDriver/OpenGLESDriver/RenderDevice/GLESUniformBufferDescriptor.cpp
+	src/render/RenderDriver/OpenGLESDriver/RenderDevice/GLESUniformBuffer.h
+	src/render/RenderDriver/OpenGLESDriver/RenderDevice/GLESUniformBuffer.cpp
+	src/render/RenderDriver/OpenGLESDriver/RenderDevice/GLESUniformBufferBase.h
+	src/render/RenderDriver/OpenGLESDriver/RenderDevice/GLESUniformBufferBase.cpp
+	src/render/RenderDriver/OpenGLESDriver/RenderDevice/GLESUniformBufferManager.h
+	src/render/RenderDriver/OpenGLESDriver/RenderDevice/GLESUniformBufferManager.cpp
+	src/render/RenderDriver/OpenGLESDriver/RenderDevice/GLESSubUniformBuffer.h
+	src/render/RenderDriver/OpenGLESDriver/RenderDevice/GLESSubUniformBuffer.cpp
 	src/render/3D/design/renderEnum/RenderPologyMode.h
 	src/render/3D/design/renderEnum/DrawType.h
 	src/render/3D/design/renderEnum/IndexFormat.h
