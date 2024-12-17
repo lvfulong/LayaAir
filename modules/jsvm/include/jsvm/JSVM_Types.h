@@ -78,6 +78,7 @@ typedef JSVM_EnvScope jsvm_env_scope;
 typedef JSVM_HandleScope jsvm_handle_scope;
 typedef JSVM_InitOptions jsvm_init_options;
 typedef JSVM_CreateVMOptions jsvm_create_vm_options;
+typedef JSVM_Script jsvm_script;
 #endif
 #if defined(JS_V8)
 #define JSVM_AUTO_LENGTH SIZE_MAX
@@ -92,6 +93,7 @@ typedef struct VM__ *jsvm_vm;
 typedef struct VMScope__ *jsvm_vm_scope;
 typedef struct EnvScope__ *jsvm_env_scope;
 typedef napi_handle_scope  jsvm_handle_scope;
+typedef napi_value  jsvm_script;
 struct jsvm_init_options
 {
     const intptr_t *externalReferences;

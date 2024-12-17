@@ -20,11 +20,19 @@ extern "C"
     JSVM_API jsvm_status jsvm_destroy_vm(jsvm_vm vm);
     JSVM_API jsvm_status jsvm_open_vm_scope(jsvm_vm vm, jsvm_vm_scope *result);
     JSVM_API jsvm_status jsvm_close_vm_scope(jsvm_vm vm, jsvm_vm_scope scope);
-    JSVM_API jsvm_status jsvm_open_env_scope(jsvm_env env, jsvm_env_scope *result);
-    JSVM_API jsvm_status jsvm_close_env_scope(jsvm_env env, jsvm_env_scope scope);
     JSVM_API jsvm_status jsvm_create_env(jsvm_vm vm, size_t propertyCount, const jsvm_property_descriptor *properties,
                                          jsvm_env *result);
+    JSVM_API jsvm_status jsvm_create_env_from_snapshot(jsvm_vm vm, size_t index, jsvm_env *result);
     JSVM_API jsvm_status jsvm_destroy_env(jsvm_env env);
+    JSVM_API jsvm_status jsvm_open_env_scope(jsvm_env env, jsvm_env_scope *result);
+    JSVM_API jsvm_status jsvm_close_env_scope(jsvm_env env, jsvm_env_scope scope);
+    JSVM_API jsvm_status jsvm_get_vm(jsvm_env env, jsvm_vm *result);
+    JSVM_API jsvm_status jsvm_compile_script(jsvm_env env, jsvm_value script, const uint8_t *cachedData,
+                                             size_t cacheDataLength, bool eagerCompile, bool *cacheRejected,
+                                             jsvm_script *result);
+    JSVM_API jsvm_status jsvm_run_script(jsvm_env env, jsvm_script script, jsvm_value *result);
+    JSVM_API jsvm_status jsvm_set_instance_data(jsvm_env env, void *data, jsvm_finalize finalizeCb, void *finalizeHint);
+    JSVM_API jsvm_status jsvm_get_instance_data(jsvm_env env, void **data);
     JSVM_API jsvm_status jsvm_open_handle_scope(jsvm_env env, jsvm_handle_scope *result);
     JSVM_API jsvm_status jsvm_close_handle_scope(jsvm_env env, jsvm_handle_scope scope);
     JSVM_API jsvm_status jsvm_throw_error(jsvm_env env, const char *code, const char *msg);
@@ -32,7 +40,6 @@ extern "C"
     JSVM_API jsvm_status jsvm_create_promise(jsvm_env env, jsvm_deferred *deferred, jsvm_value *promise);
     JSVM_API jsvm_status jsvm_resolve_deferred(jsvm_env env, jsvm_deferred deferred, jsvm_value resolution);
     JSVM_API jsvm_status jsvm_reject_deferred(jsvm_env env, jsvm_deferred deferred, jsvm_value resolution);
-    JSVM_API jsvm_status jsvm_run_script(jsvm_env env, jsvm_value script, jsvm_value *result);
     JSVM_API jsvm_status jsvm_is_promise(jsvm_env env, jsvm_value value, bool *isPromise);
     JSVM_API jsvm_status jsvm_is_array(jsvm_env env, jsvm_value value, bool *result);
     JSVM_API jsvm_status jsvm_is_error(jsvm_env env, jsvm_value value, bool *result);
@@ -116,8 +123,6 @@ extern "C"
     JSVM_API jsvm_status jsvm_get_dataview_info(jsvm_env env, jsvm_value dataview, size_t *bytelength, void **data,
                                                 jsvm_value *arraybuffer, size_t *byteOffset);
     JSVM_API jsvm_status jsvm_get_global(jsvm_env env, jsvm_value *result);
-    JSVM_API jsvm_status jsvm_set_instance_data(jsvm_env env, void *data, jsvm_finalize finalizeCb, void *finalizeHint);
-    JSVM_API jsvm_status jsvm_get_instance_data(jsvm_env env, void **data);
     JSVM_API jsvm_status jsvm_create_bigint_int64(jsvm_env env, int64_t value, jsvm_value *result);
     JSVM_API jsvm_status jsvm_get_value_bigint_int64(jsvm_env env, jsvm_value value, int64_t *result, bool *lossless);
     JSVM_API jsvm_status jsvm_create_bigint_uint64(jsvm_env env, uint64_t value, jsvm_value *result);

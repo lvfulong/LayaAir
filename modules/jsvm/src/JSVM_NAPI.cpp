@@ -146,6 +146,7 @@ class LayaNapiEnv : public napi_env__
     std::string filename;
     bool destructing = false;
     bool finalization_scheduled = false;
+    jsvm_vm vm = nullptr;
 };
 void LayaNapiEnv::DeleteMe()
 {
@@ -392,12 +393,19 @@ jsvm_status jsvm_create_env(jsvm_vm vm, size_t propertyCount, const jsvm_propert
     // todo properties
     v8::HandleScope handle_scope(vm->isolate_);
     v8::Local<v8::Context> context = v8::Context::New(vm->isolate_);
-    *result = new LayaNapiEnv(context, NAPI_VERSION);
-
+    auto layaEnv = new LayaNapiEnv(context, NAPI_VERSION);
+    layaEnv->vm = vm;
+    *result = layaEnv;
+    
     jsvm::IsolateData *isolateData = new jsvm::IsolateData(vm->isolate_);     // delete ?
     jsvm::JSEnv *jsEnv = new jsvm::JSEnv(isolateData, vm->isolate_, *result); // delete ?
     jsvm::JSEnv::setCurrent(jsEnv);
 
+    return jsvm_status::jsvm_ok;
+}
+jsvm_status jsvm_create_env_from_snapshot (jsvm_vm vm, size_t index, jsvm_env *result)
+{
+    //todo
     return jsvm_status::jsvm_ok;
 }
 jsvm_status jsvm_destroy_env(jsvm_env env)
@@ -406,7 +414,78 @@ jsvm_status jsvm_destroy_env(jsvm_env env)
     env->DeleteMe();
     return jsvm_status::jsvm_ok; // todo
 }
+jsvm_status jsvm_get_vm(jsvm_env env, jsvm_vm *result)
+{
+    LayaNapiEnv* layaEnv = (LayaNapiEnv*)env;
+    *result = layaEnv->vm;
+    return jsvm_status::jsvm_ok;
+}
+namespace v8impl 
+{
 
+    inline jsvm_script JsValueFromV8LocalScript(v8::Local<v8::Script> local) {
+        return reinterpret_cast<jsvm_script>(*local);
+    }
+
+    inline v8::Local<v8::Script> V8LocalScriptFromJsValue(jsvm_script v) {
+        v8::Local<v8::Script> local;
+        memcpy(static_cast<void*>(&local), &v, sizeof(v));
+        return local;
+    }
+}
+static napi_status napi_compile_script(jsvm_env env, jsvm_value script, const uint8_t* cachedData, size_t cacheDataLength, bool eagerCompile, bool* cacheRejected, jsvm_script* result)
+{
+    //todo cachedData 代码缓存
+    NAPI_PREAMBLE(env);
+    CHECK_ARG(env, script);
+    CHECK_ARG(env, result);
+
+    v8::Local<v8::Value> v8_script = v8impl::V8LocalValueFromJsValue(script);
+
+    if (!v8_script->IsString()) {
+        return napi_set_last_error(env, napi_string_expected);
+    }
+
+    v8::Local<v8::Context> context = env->context();
+
+    auto maybe_script = v8::Script::Compile(context, v8_script.As<v8::String>());
+    CHECK_MAYBE_EMPTY(env, maybe_script, napi_generic_failure);
+
+    *result = v8impl::JsValueFromV8LocalScript(maybe_script.ToLocalChecked());
+    return GET_RETURN_STATUS(env);
+}
+jsvm_status jsvm_compile_script(jsvm_env env, jsvm_value script, const uint8_t* cachedData, size_t cacheDataLength, bool eagerCompile, bool* cacheRejected, jsvm_script* result)
+{
+    return static_cast<jsvm_status>(napi_compile_script(env, script, cachedData, cacheDataLength, eagerCompile, cacheRejected, result));
+}
+static napi_status NAPI_CDECL my_napi_run_script(napi_env env, jsvm_script script, napi_value* result) {
+    NAPI_PREAMBLE(env);
+    CHECK_ARG(env, script);
+    CHECK_ARG(env, result);
+
+    v8::Local<v8::Context> context = env->context();
+
+    v8::Local<v8::Script> local_script = v8impl::V8LocalScriptFromJsValue(script);
+
+
+    auto script_result = local_script->Run(context);
+    CHECK_MAYBE_EMPTY(env, script_result, napi_generic_failure);
+
+    *result = v8impl::JsValueFromV8LocalValue(script_result.ToLocalChecked());
+    return GET_RETURN_STATUS(env);
+}
+jsvm_status jsvm_run_script(jsvm_env env, jsvm_script script, jsvm_value* result)
+{
+    return static_cast<jsvm_status>(my_napi_run_script(env, script, result));
+}
+jsvm_status jsvm_set_instance_data(jsvm_env env, void* data, jsvm_finalize finalizeCb, void* finalizeHint)
+{
+    return static_cast<jsvm_status>(napi_set_instance_data(env, data, finalizeCb, finalizeHint));
+}
+jsvm_status jsvm_get_instance_data(jsvm_env env, void** data)
+{
+    return static_cast<jsvm_status>(napi_get_instance_data(env, data));
+}
 jsvm_status jsvm_open_handle_scope(jsvm_env env, jsvm_handle_scope* result)
 {
     return static_cast<jsvm_status>(napi_open_handle_scope(env, result));
@@ -675,14 +754,6 @@ jsvm_status jsvm_get_global(jsvm_env env, jsvm_value* result)
 {
     return static_cast<jsvm_status>(napi_get_global(env, result));
 }
-jsvm_status jsvm_set_instance_data(jsvm_env env, void* data, jsvm_finalize finalizeCb, void* finalizeHint)
-{
-    return static_cast<jsvm_status>(napi_set_instance_data(env, data, finalizeCb, finalizeHint));
-}
-jsvm_status jsvm_get_instance_data(jsvm_env env, void** data)
-{
-    return static_cast<jsvm_status>(napi_get_instance_data(env, data));
-}
 jsvm_status jsvm_create_date(jsvm_env env, double time, jsvm_value* result)
 {
     return static_cast<jsvm_status>(napi_create_date(env, time, result));
@@ -731,10 +802,7 @@ jsvm_status jsvm_get_value_bigint_uint64(jsvm_env env, jsvm_value value, uint64_
 {
     return static_cast<jsvm_status>(napi_get_value_bigint_uint64(env, value, result, lossless));
 }
-jsvm_status jsvm_run_script(jsvm_env env, jsvm_value script, jsvm_value* result)
-{
-    return static_cast<jsvm_status>(napi_run_script(env, script, result));
-}
+
 jsvm_status jsvm_pump_messageloop(jsvm_vm vm, bool* result)
 {
     DEBUG_CHECK(vm->isolate_ != nullptr);

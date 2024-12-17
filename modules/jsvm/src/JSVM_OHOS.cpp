@@ -78,11 +78,27 @@ jsvm_status jsvm_create_env(jsvm_vm vm, size_t propertyCount, const jsvm_propert
 
     return status;
 }
+jsvm_status jsvm_create_env_from_snapshot (jsvm_vm vm, size_t index, jsvm_env *result)
+{
+    //todo
+    return jsvm_status::jsvm_ok;
+}
 jsvm_status jsvm_destroy_env(jsvm_env env)
 {
     return static_cast<jsvm_status>(OH_JSVM_DestroyEnv(env));
 }
-
+jsvm_status jsvm_get_vm(jsvm_env env, jsvm_vm *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_GetVM(env, result));
+}
+jsvm_status jsvm_compile_script(jsvm_env env, jsvm_value script, const uint8_t* cachedData, size_t cacheDataLength, bool eagerCompile, bool* cacheRejected, jsvm_script* result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_CompileScript(env, script, cachedData, cacheDataLength, eagerCompile, cacheRejected, result));
+}
+jsvm_status jsvm_run_script(jsvm_env env, jsvm_script script, jsvm_value *result)
+{
+    return static_cast<jsvm_status>(OH_JSVM_RunScript(env, script, result));
+}
 jsvm_status jsvm_open_handle_scope(jsvm_env env, jsvm_handle_scope *result)
 {
     return static_cast<jsvm_status>(OH_JSVM_OpenHandleScope(env, result));
@@ -522,18 +538,7 @@ jsvm_status jsvm_get_value_bigint_uint64(jsvm_env env, jsvm_value value, uint64_
 {
     return static_cast<jsvm_status>(OH_JSVM_GetValueBigintUint64(env, value, result, lossless));
 }
-jsvm_status jsvm_run_script(jsvm_env env, jsvm_value script, jsvm_value *result)
-{
-    JSVM_Script jsvm_script;
-    JSVM_Status status = OH_JSVM_CompileScript(env, script, nullptr, 0, true, nullptr, &jsvm_script);
-    if (status != JSVM_OK)
-    {
-        // return napi_set_last_error((env), JSVM_GENERIC_FAILURE);
-        return static_cast<jsvm_status>(JSVM_GENERIC_FAILURE); // lvtodo throw ???
-    }
-    status = OH_JSVM_RunScript(env, jsvm_script, result);
-    return static_cast<jsvm_status>(status);
-}
+
 jsvm_status jsvm_pump_messageloop(jsvm_vm vm, bool *result)
 {
     return static_cast<jsvm_status>(OH_JSVM_PumpMessageLoop(vm, result));
