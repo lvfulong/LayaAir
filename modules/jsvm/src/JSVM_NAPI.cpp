@@ -1067,7 +1067,7 @@ jsvm_status jsvm_get_prototype(jsvm_env env, jsvm_value object, jsvm_value *resu
     return static_cast<jsvm_status>(napi_get_prototype(env, object, result));
 }
 laya::DebuggerAgent *pDbgAgent = nullptr;
-jsvm_status jsvm_open_inspector(jsvm_env env, int port)
+jsvm_status jsvm_open_inspector(jsvm_env env, const char *host, uint16_t port)
 {
 #ifdef JS_V8_DEBUGGER
     // std::shared_ptr<jsvm::ScriptThread> scriptThread

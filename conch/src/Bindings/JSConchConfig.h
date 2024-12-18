@@ -45,10 +45,6 @@ namespace laya
          */
         static void setDownloadVersionString(const char* p_pszVersion);
 
-		static void setMouseFrame(double thredholdms);
-        static void setSlowFrame(bool p_bIsSlow);
-        static void setLimitFPS(int nFpsNum);
-
         static void setScreenScale(float fScaleW, float fScaleH, float ftx, float fty);
         static float getScreenScaleW();
         static float getScreenScaleH();

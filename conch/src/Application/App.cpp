@@ -177,10 +177,17 @@ void App::run(const Config &config)
     // SDL_EventState(SDL_SYSWMEVENT, SDL_ENABLE);
     SDL_StopTextInput();
 
+
+
+
+    uint64_t frameStart;
+    uint64_t frameTime;
+
+
     SDL_Event event;
     while (!m_closed)
     {
-
+        frameStart = SDL_GetTicks();
         while (SDL_PollEvent(&event) != 0)
         {
             switch (event.type)
@@ -376,15 +383,25 @@ void App::run(const Config &config)
                 break;
             }
         }
+        laya::JCConch::s_pConch->update();
         int delay = 8;
         if (m_min)
+        {
             delay = 100;
+        }
         else if (!m_activate)
         {
             delay = 33;
         }
-        SDL_Delay(delay);
-        laya::JCConch::s_pConch->update();
+        else 
+        {
+            frameTime = SDL_GetTicks() - frameStart;
+            delay = g_kSystemConfig.m_frameIntervalInMs - frameTime;
+        }
+        if (delay > 0)
+        {
+            SDL_Delay(delay);
+        }
     }
     laya::JCConch::s_pConch->onAppDestroy();
     SDL_DestroyWindow(m_sdlWindow);

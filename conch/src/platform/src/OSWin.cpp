@@ -4,11 +4,11 @@
 #include <Windows.h>
 #include <future>
 #include <utils/Log.h>
-#if defined(OS_WINDOWS)
+#include "JCSystemConfig.h"
 #define WIN32_LEAN_AND_MEAN
 #include <psapi.h>
 #include <windows.h>
-#endif
+
 
 extern handleSyncMessageCallback g_handleSyncMessageCb;
 extern handleAsyncMessageCallback g_handleAsyncMessageCb;
@@ -118,6 +118,9 @@ std::string OSWin::postSyncMessage(const std::string &eventName, const std::stri
 }
 void OSWin::setPreferredFramesPerSecond(uint64_t fps)
 {
-
+    if (fps > 0)
+    {
+        g_kSystemConfig.m_frameIntervalInMs =  (uint64_t)(1000.f / fps);
+    }
 }
 } // namespace laya

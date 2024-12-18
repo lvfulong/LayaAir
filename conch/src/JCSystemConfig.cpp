@@ -43,9 +43,6 @@ JCSystemConfig::JCSystemConfig()
 }
 void JCSystemConfig::reset()
 {
-    m_nFrameType = FT_FAST;
-    m_nFrameThreshold = 2000;
-    m_nSleepTime = 0;
     m_strStartURL = "";
 }
 

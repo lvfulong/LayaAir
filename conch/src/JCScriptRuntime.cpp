@@ -194,22 +194,18 @@ namespace laya
     {
         LOGI("js thread started.");
         GET_ENV;
-#ifdef JS_V8_DEBUGGER
-        env->scriptThread = m_pScriptThread;
-#endif        
+        env->scriptThread = m_pScriptThread;     
         //m_nThreadState = 2;
         //JSObjNode::s_pListJSObj = new JCSimpList();
-#ifdef JS_V8_DEBUGGER
+
         if (g_kSystemConfig.m_nJSDebugMode != JS_DEBUG_MODE_OFF)
         {
-            jsvm_open_inspector(env, g_kSystemConfig.m_nJSDebugPort);
+            jsvm_open_inspector(env, "localhost", g_kSystemConfig.m_nJSDebugPort);
             if (g_kSystemConfig.m_nJSDebugMode == JS_DEBUG_MODE_WAIT) {
                 jsvm_wait_for_debugger(env, true);
             }
         }
 
-
-#endif
         JCConch::s_pConchRender->m_pImageManager->resetJSThread();
 
         //JS线程的数据清空一下
@@ -298,13 +294,7 @@ namespace laya
 #endif
         jsbind::runDeinitializers();
         JSGlobalDisExportC();
-#ifdef JS_V8
-#ifdef JS_V8_DEBUGGER
         jsvm_close_inspector(env);
-#endif
-#elif JS_JSC
-        JSP_RESET_GLOBAL_FUNCTION;
-#endif
 
         JCAudioManager::ClearAllWork();
         JCAudioManager::GetInstance()->stopMp3();

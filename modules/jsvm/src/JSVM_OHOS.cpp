@@ -766,3 +766,15 @@ jsvm_status jsvm_get_last_error_info(jsvm_env env, const jsvm_extended_error_inf
     *result = &s_info;
     return status;
 }
+jsvm_status jsvm_open_inspector(jsvm_env env, const char *host, uint16_t port)
+{
+    return static_cast<jsvm_status>(OH_JSVM_OpenInspector(env, host, port));
+}
+jsvm_status jsvm_wait_for_debugger(jsvm_env env, bool breakNextLine)
+{
+    return static_cast<jsvm_status>(OH_JSVM_WaitForDebugger(env, breakNextLine));
+}
+jsvm_status jsvm_close_inspector(jsvm_env env)
+{
+    return static_cast<jsvm_status>(OH_JSVM_CloseInspector(env));
+}
