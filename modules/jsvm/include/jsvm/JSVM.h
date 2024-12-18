@@ -170,7 +170,7 @@ extern "C"
     JSVM_API jsvm_status jsvm_resolve_deferred(jsvm_env env, jsvm_deferred deferred, jsvm_value resolution);
     JSVM_API jsvm_status jsvm_reject_deferred(jsvm_env env, jsvm_deferred deferred, jsvm_value resolution);
     JSVM_API jsvm_status jsvm_is_promise(jsvm_env env, jsvm_value value, bool *isPromise);
-    JSVM_API jsvm_status jsvm_open_inspector(jsvm_env env, int port);
+    JSVM_API jsvm_status jsvm_open_inspector(jsvm_env env, const char *host, uint16_t port);
     JSVM_API jsvm_status jsvm_close_inspector(jsvm_env env);
     JSVM_API jsvm_status jsvm_wait_for_debugger(jsvm_env env, bool breakNextLine);
     JSVM_API jsvm_status jsvm_object_get_prototype_of(jsvm_env env, jsvm_value object, jsvm_value *result);
