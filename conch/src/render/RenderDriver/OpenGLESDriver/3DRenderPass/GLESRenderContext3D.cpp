@@ -3,6 +3,8 @@
 #include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderElement3D.h>
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderCMD.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESUniformBufferManager.h"
+#include "render/RenderDriver/UniformManager/UniformBufferManager.h"
 namespace laya
 {
 GLESRenderContext3D::GLESRenderContext3D(){
@@ -24,6 +26,12 @@ uint32_t GLESRenderContext3D::drawRenderElementList(const JCSingletonList<GLESRe
     {
         list.m_vElements[i]->_preUpdatePre(this);
     }
+
+    GLESUniformBufferManager* bufferMgr = LayaGL::m_pWebglEngine->bufferMgr;
+    if (bufferMgr !=nullptr) {
+        bufferMgr->upload();
+    }
+
     for (uint32_t i = 0, n = list.getLength(); i < n; i++)
     {
         list.m_vElements[i]->_render(this);
@@ -40,6 +48,10 @@ uint32_t GLESRenderContext3D::drawRenderElementOne(GLESRenderElement3D*node)
         _needStart = false;
     }
     node->_preUpdatePre(this);
+    GLESUniformBufferManager* bufferMgr = LayaGL::m_pWebglEngine->bufferMgr;
+    if (bufferMgr != nullptr) {
+        bufferMgr->upload();
+    }
     node->_render(this);
     return 0;
 }

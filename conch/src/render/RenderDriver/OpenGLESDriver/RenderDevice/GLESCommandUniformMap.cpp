@@ -2,56 +2,30 @@
 
 namespace laya
 {
-std::unordered_map<std::string, GLESCommandUniformMap *> GLESCommandUniformMap::m_globalBlockMap;
-std::unordered_map<std::string, jsbind::Persistent> GLESCommandUniformMap::m_globalBlockMapJS;
+    std::unordered_map<std::string, GLESCommandUniformMap*> GLESCommandUniformMap::m_globalBlockMap;
 
-GLESCommandUniformMap::GLESCommandUniformMap()
-{
-}
-GLESCommandUniformMap::~GLESCommandUniformMap()
-{
-    //todo clean
-}
-GLESCommandUniformMap *GLESCommandUniformMap::createGlobalUniformMap(const char *blockName)
-{
-    std::unordered_map<std::string, GLESCommandUniformMap *>::iterator it = m_globalBlockMap.find(blockName);
-    if (it != m_globalBlockMap.end())
+
+    GLESCommandUniformMap* GLESCommandUniformMap::createGlobalUniformMap(const char* blockName)
     {
-        return it->second;
-    }
-    GLESCommandUniformMap *comMap = new GLESCommandUniformMap(blockName);
-    m_globalBlockMap[blockName] = comMap;
-    return comMap;
-}
-jsvm_value GLESCommandUniformMap::createGlobalUniformMapJS(const char* blockName)
-{
-    GLESCommandUniformMap* data = GLESCommandUniformMap::createGlobalUniformMap(blockName);
-    auto it = m_globalBlockMapJS.find(blockName);
-    if (it != m_globalBlockMapJS.end())
-    {
-        return it->second.getHandle();
-    }
-    auto comMap = jsbind::Persistent(jsbind::Make<GLESCommandUniformMap*>(data, false));
-    m_globalBlockMapJS[blockName] = comMap;
-    return comMap.getHandle();
-}
-bool GLESCommandUniformMap::hasPtrID(int propertyID)
-{
-    std::unordered_map<int, CommandUniformData>::iterator it = m_vData.find(propertyID);
-    if (it != m_vData.end())
-    {
-        return true;
-    }
-    return false;
-}
-    void  GLESCommandUniformMap::clean()
-    {
-        m_globalBlockMapJS.clear();
-        std::unordered_map<std::string, GLESCommandUniformMap *>::iterator it = m_globalBlockMap.begin();
-        for (;it != m_globalBlockMap.end();it++)
+        std::unordered_map<std::string, GLESCommandUniformMap*>::iterator it = m_globalBlockMap.find(blockName);
+        if (it != m_globalBlockMap.end())
         {
-            delete it->second;
+            return it->second;
         }
-        m_globalBlockMap.clear();
+        GLESCommandUniformMap* comMap = new GLESCommandUniformMap(blockName);
+        m_globalBlockMap[blockName] = comMap;
+        return comMap;
+    }
+
+    bool GLESCommandUniformMap::hasPtrID(int propertyID)
+    {
+        if (propertyID == _stateID)
+            return true;
+        std::unordered_map<int, UniformProperty>::iterator it = _idata.find(propertyID);
+        if (it != _idata.end())
+        {
+            return true;
+        }
+        return false;
     }
 } // namespace laya

@@ -4,10 +4,11 @@
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLObject.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalTex.h"
 #include <assert.h>
-#include <render/3D/temp/UniformBufferObject.h>
 #include <unordered_map>
 #include <utils/Log.h>
 #include <utils/Preprocessor.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESUniformBufferBase.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESUniformBuffer.h>
 namespace laya
 {
 GLShaderInstance::GLShaderInstance(GLESEngine *engine, const char *vs, const char *ps,
@@ -113,8 +114,7 @@ void GLShaderInstance::_create()
             const GLsizei nBufferSize = 256;
             char uniformBlockName[nBufferSize] = {0};
             GLsizei nLength = 0;
-            // GLint nActiveUniforms = 0;
-            // glGetActiveUniformBlockiv(m_program, i, GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS, &nActiveUniforms);
+          
             glGetActiveUniformBlockName(m_program, i, nBufferSize, &nLength, uniformBlockName);
             ShaderVariable *one = new ShaderVariable();
             one->name = uniformBlockName;
@@ -122,28 +122,8 @@ void GLShaderInstance::_create()
             one->type = GL_UNIFORM_BUFFER;
             one->dataOffset = m_engine->propertyNameToID(uniformBlockName);
             int location = one->location = glGetUniformBlockIndex(m_program, uniformBlockName);
-            /*if (!!UniformBufferObject.getBuffer(uniformBlockName, 0))//TODO
-            {
-                GLint nBytelength;
-                glGetActiveUniformBlockiv(m_program, i, GL_UNIFORM_BLOCK_DATA_SIZE, &nBytelength);
-
-                let indexPoint = UniformBufferObject.getBuffer(uniformBlockName, 0);
-                if (nBytelength != indexPoint.byteLength)
-                {
-                    LOGE("The length of the same UBO is not uniform");
-                }
-                glUniformBlockBinding(m_program, location, indexPoint._glPointer);
-            }
-            else
-            {
-                GLint bytelength = 0;
-                glGetActiveUniformBlockiv(m_program, i, GL_UNIFORM_BLOCK_DATA_SIZE, &bytelength);
-                //var bytelength : number = glGetActiveUniformBlockParameter(m_program, i, GL_UNIFORM_BLOCK_DATA_SIZE);
-                let buffer : UniformBufferObject = UniformBufferObject.creat(uniformBlockName, BufferUsage.Dynamic,
-            bytelength, UniformBufferObject.isCommon(uniformBlockName)); glUniformBlockBinding(m_program, location,
-            buffer._glPointer);
-            }*/
-            glUniformBlockBinding(m_program, location, m_engine->getUBOPointer(uniformBlockName));
+            int bindingPoint = i;
+            glUniformBlockBinding(m_program, location, location);
             m_uniformObjectMap[one->name] = one;
             m_uniformMap.push_back(one);
             _addShaderUnifiormFun(one);
@@ -196,7 +176,7 @@ void GLShaderInstance::_addShaderUnifiormFun(ShaderVariable *one)
         one->fun = isArray
                        ? std::bind(&GLShaderInstance::_uniform1iv, this, std::placeholders::_1, std::placeholders::_2)
                        : std::bind(&GLShaderInstance::_uniform1i, this, std::placeholders::_1,
-                                   std::placeholders::_2); // TODO:�Ż�
+                                   std::placeholders::_2); 
         one->byteSize = sizeof(GLint) * one->count;
         one->uploadedValue.resize(sizeof(GLint), 0);
         break;
@@ -231,12 +211,12 @@ void GLShaderInstance::_addShaderUnifiormFun(ShaderVariable *one)
     case GL_FLOAT_MAT2:
         one->fun = std::bind(&GLShaderInstance::_uniformMatrix2fv, this, std::placeholders::_1, std::placeholders::_2);
         one->byteSize = sizeof(GLfloat) * 4 * one->count;
-        // one->uploadedValue.resize(one->byteSize, 0);
         break;
     case GL_FLOAT_MAT3:
-        one->fun = std::bind(&GLShaderInstance::_uniformMatrix3fv, this, std::placeholders::_1, std::placeholders::_2);
+        one->fun = isArray
+            ? std::bind(&GLShaderInstance::_uniformMatrix3f, this, std::placeholders::_1, std::placeholders::_2)
+            : std::bind(&GLShaderInstance::_uniformMatrix3fv, this, std::placeholders::_1, std::placeholders::_2);
         one->byteSize = sizeof(GLfloat) * 9 * one->count;
-        // one->uploadedValue.resize(one->byteSize, 0);
         break;
     case GL_FLOAT_MAT4:
         one->fun =
@@ -431,6 +411,13 @@ int GLShaderInstance::_uniformMatrix3fv(ShaderVariable *one, const std::any &dat
     glUniformMatrix3fv(one->location, false, info.m_lengthInBytes / (9 * sizeof(float)), pData);
     return 1;
 }
+int GLShaderInstance::_uniformMatrix3f(ShaderVariable* one, const std::any& dataInfo) 
+{
+    const laya::Matrix3x3& info = std::any_cast<const laya::Matrix3x3&>(dataInfo);
+    glUniformMatrix3fv(one->location, 1, false, info.elements);
+    return 1;
+}
+
 int GLShaderInstance::_uniformMatrix4f(ShaderVariable *one, const std::any &dataInfo)
 {
     //linux compile error assert(dataInfo.type == std::typeid(ShaderData::BufferDataInfo));
@@ -445,6 +432,7 @@ int GLShaderInstance::_uniformMatrix4fv(ShaderVariable *one, const std::any &dat
     GLfloat *pData = (GLfloat *)(GLfloat *)info.m_data;
     glUniformMatrix4fv(one->location, info.m_lengthInBytes / (16 * sizeof(float)), false, pData);
     return 1;
+
 }
 
 int GLShaderInstance::_uniform1i(ShaderVariable *one, const std::any &dataInfo)
@@ -570,13 +558,8 @@ int GLShaderInstance::_uniform_samplerCube(ShaderVariable *one, const std::any &
 int GLShaderInstance::_uniform_UniformBuffer(ShaderVariable *one, const std::any &dataInfo)
 {
     //linux compile error assert(dataInfo.type == std::typeid(uint32_t));
-    int32_t id = std::any_cast<int32_t>(dataInfo);
-    UniformBufferObject *ubo = JCConch::s_pConchRender->m_pUniformBufferObjectManager->getObject(id);
-    if (ubo != nullptr)
-    {
-        ubo->_bindUniformBufferBase();
-    }
-
+    GLESUniformBuffer* buffer = std::any_cast<GLESUniformBuffer*>(dataInfo);
+    buffer->bind(one->location);
     return 0;
 }
 void GLShaderInstance::_bindTexture(int textureID, GLenum target, GLESInternalTex *texture)

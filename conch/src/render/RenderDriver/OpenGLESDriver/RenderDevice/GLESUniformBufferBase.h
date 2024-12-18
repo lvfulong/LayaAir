@@ -83,7 +83,7 @@ public:
     /**
      * @brief 设置缓冲区数据
      */
-    void setBuffer(int index, const float* data);
+    void setBuffer(int index, const void* data);
 
     /**
      * @brief 设置4x4矩阵数组
@@ -94,7 +94,11 @@ public:
      * @brief 统一的数据设置接口
      */
     void setUniformData(int index, ShaderDataType type, const void* data);
-
+    
+    /**
+     * @brief 统一的数据设置接口
+     */
+    void setUniformData(int index, ShaderDataType type, const std::any& dataInfo);
     /** @brief 标记是否需要上传数据到GPU */
     bool needUpload = false;
 

@@ -42,6 +42,7 @@ class GLShaderInstance : public GLObject
     int _uniform_vec4v(ShaderVariable *one, const std::any &dataInfo);
     int _uniformMatrix2fv(ShaderVariable *one, const std::any &dataInfo);
     int _uniformMatrix3fv(ShaderVariable *one, const std::any &dataInfo);
+    int _uniformMatrix3f(ShaderVariable* one, const std::any& dataInfo);
     int _uniformMatrix4f(ShaderVariable *one, const std::any &dataInfo);
     int _uniformMatrix4fv(ShaderVariable *one, const std::any &dataInfo);
     int _uniform1i(ShaderVariable *one, const std::any &dataInfo);

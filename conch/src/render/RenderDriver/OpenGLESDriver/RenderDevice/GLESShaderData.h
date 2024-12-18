@@ -11,6 +11,7 @@
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h>
 #include <stdio.h>
 #include <unordered_map>
+#include <functional>
 
 namespace laya
 {
@@ -33,14 +34,21 @@ enum class ShaderDataType
     Color,
     Matrix4x4,
     Texture2D,
+    Texture3D,
     TextureCube,
     Buffer,
     Matrix3x3,
+    Texture2DArray
 };
 
 class RTShaderDefine;
 class UniformBufferObject;
 class GLESInternalTex;
+class GLESUniformBuffer;
+class GLESSubUniformBuffer;
+class GLESUniformBufferBase;
+class GLESCommandUniformMap;
+struct UniformProperty;
 class GLESShaderData //: public ResourceBase<ShaderData>
 {
   public:
@@ -63,8 +71,6 @@ class GLESShaderData //: public ResourceBase<ShaderData>
 
     void destroy();
 
-    //RTDefineDatas *getOwnerDefineData();
-    //jsvm_value getOwnerDefineDataJS();
     void addDefine(RTShaderDefine define);
     void addDefines(RTDefineDatas *defines);
     void removeDefine(RTShaderDefine define);
@@ -94,17 +100,25 @@ class GLESShaderData //: public ResourceBase<ShaderData>
     const BufferDataInfo &getBuffer(int32_t index);
     void setInternalTexture(int32_t index, GLESInternalTex *value);
     GLESInternalTex *getInternalTexture(int32_t index);
-
+    void createUniformBuffer(std::string &name, GLESCommandUniformMap* uniformMap);
+    void updateUBOBuffer(std::string name);
+    GLESSubUniformBuffer* createSubUniformBuffer(std::string name, std::vector<UniformProperty>& uniformMap);
+    void clearData();
     void cloneTo(GLESShaderData *destObject);
 
   private:
     bool isDestroy{false};
     std::unordered_map<uint32_t, Color> m_gammaColorMap;
+    std::unordered_map<std::string, GLESUniformBuffer*> _uniformBuffers{};
+    std::unordered_map<std::string, GLESSubUniformBuffer*> _subUniformBuffers{};
+  
 
-  public:
+    bool _needCacheData{true};
+    public:
     std::unordered_map<uint32_t, std::any> m_data;
+    std::unordered_map<int, GLESUniformBufferBase*> _uniformBuffersPropertyMap{};
+    std::unordered_map<int, std::function<void(GLESShaderData*, int32_t)>> _updateCacheArray{};
     RTDefineDatas *_defineDatas = nullptr;
-    //Persistent m_pJSDefineDatas;
 };
 } // namespace laya
 #endif //__GLESShaderData_H__

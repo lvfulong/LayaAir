@@ -113,15 +113,9 @@ namespace laya
 	}
 	void GLBuffer::bindBufferBase(int glPointer)
 	{
-		//LayaMe 时代闪屏 注释这个检测好了
-		if (m_engine->_getBindUBOBuffer(glPointer) != this)
-		{
-			glBindBufferBase(m_glTarget, glPointer, m_glBuffer);
-			m_engine->_setBindUBOBuffer(glPointer, this);
-		}
-
+		glBindBufferBase(m_glTarget, glPointer, m_glBuffer);
 	}
-	//TODO:
+
 	void GLBuffer::bindBufferRange(int glPointer, int offset, int byteCount)
 	{
 		glBindBufferRange(m_glTarget, glPointer, m_glBuffer, offset, byteCount);

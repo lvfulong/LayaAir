@@ -104,7 +104,7 @@ namespace laya
         m_capabilityMap[RenderCapable::Texture_HalfFloatLinearFiltering] = value;
 		value = isWebgl2;
 		m_capabilityMap[RenderCapable::MSAA] = value;
-		m_capabilityMap[RenderCapable::UnifromBufferObject] = false;
+		m_capabilityMap[RenderCapable::UnifromBufferObject] = value;
 		m_capabilityMap[RenderCapable::Texture3D] = value;
 	}
 	void GLCapable::initExtension(bool isWebgl2)

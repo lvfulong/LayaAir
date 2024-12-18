@@ -38,6 +38,7 @@ class IRender2DContext;
 class RTShaderDefine;
 class RTDefineDatas;
 struct VertexStateContext;
+class GLESUniformBufferManager;
 class GLESEngine
 {
   public:
@@ -71,6 +72,8 @@ class GLESEngine
     void _setbindBuffer(BufferTargetType target, GLBuffer *buffer);
     void _bindTexture(GLenum target, GLESInternalTex *texture);
     int getParams(RenderParams type);
+    void startFrame();
+    void endFrame();
     void viewport(int x, int y, int width, int height);
     void scissor(int x, int y, int width, int height);
     void scissorTest(bool value);
@@ -90,11 +93,8 @@ class GLESEngine
     int uploadCustomUniforms(GLShaderInstance *shader, const std::unordered_map<int, ShaderVariable *> &custom,
                              int index, char *data, int byteSize);
     GLVertexState *m_GLBindVertexArray = nullptr;
-    int getUBOPointer(const char *name);
     void copySubFrameBuffertoTex(GLESInternalTex *texture, int level, int xoffset, int yoffset, int x, int y, int width,
                                  int height);
-    GLBuffer *_getBindUBOBuffer(int glPointer);
-    void _setBindUBOBuffer(int glPointer, GLBuffer *buffer);
     void _initStatisticsInfo();
     void _addStatisticsInfo(GPUEngineStatisticsInfo info, int value);
     void clearStatisticsInfo();
@@ -106,8 +106,12 @@ class GLESEngine
   private:
     bool getContext(const char *contextType);
     void _initBindBufferMap();
+    void _initBufferBlock();
     std::unordered_map<std::string, std::unordered_map<int32_t, VertexStateContext>*> _globalVertexDeclaration;
-  private:
+public:
+    GLESUniformBufferManager* bufferMgr;
+    WebGLConfig _config;
+private:
     friend class GLShaderInstance;
     friend class GLRender2DContext;
     GLShaderInstance *m_glUseProgram = nullptr;
@@ -137,14 +141,10 @@ class GLESEngine
         GL_TEXTURE8,  GL_TEXTURE9,  GL_TEXTURE10, GL_TEXTURE11, GL_TEXTURE12, GL_TEXTURE13, GL_TEXTURE14, GL_TEXTURE15,
         GL_TEXTURE16, GL_TEXTURE17, GL_TEXTURE18, GL_TEXTURE19, GL_TEXTURE20, GL_TEXTURE21, GL_TEXTURE22, GL_TEXTURE23,
         GL_TEXTURE24, GL_TEXTURE25, GL_TEXTURE26, GL_TEXTURE27, GL_TEXTURE28, GL_TEXTURE29, GL_TEXTURE30, GL_TEXTURE31};
-    int m_curUBOPointer = 0;
-    // ��¼��UBO��glPointer
-    std::unordered_map<std::string, int> m_GLUBOPointerMap;
-    // ��¼��Pointer��UBO
-    // GPUͳ������
+   
+
     typedef std::unordered_map<GPUEngineStatisticsInfo, int> RenderStatisticsInfoMapType;
     RenderStatisticsInfoMapType m_GLStatisticsInfo;
-    std::unordered_map<int, GLBuffer *> _GLBindPointerUBOMap;
     jsbind::Persistent m_pJSTextureContext;
     static std::unordered_map<std::string, RTShaderDefine> _defineMap;
     static int32_t _defineCounter;

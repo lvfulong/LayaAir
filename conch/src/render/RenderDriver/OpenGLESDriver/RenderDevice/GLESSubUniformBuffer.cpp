@@ -3,24 +3,26 @@
 #include "GLESUniformBufferDescriptor.h"
 #include "../../UniformManager/UniformBufferBlock.h"
 #include "GLESUniformBufferManager.h"
+#include "GLESCommandUniformMap.h"
 
 namespace laya {
 
-GLESSubUniformBuffer::GLESSubUniformBuffer(const std::string& name,
-                                         const std::map<int, UniformInfo>& uniformMap,
+GLESSubUniformBuffer::GLESSubUniformBuffer(std::string& name,
+                                         std::vector<UniformProperty>& uniformMap,
                                          GLESUniformBufferManager* mgr,
                                          GLESShaderData* data)
     : m_name(name)
-    , m_uniformMap(uniformMap)
+    , uniformArray(uniformMap)
     , m_data(data)
 {
-    this->manager = mgr;
+    manager = mgr;
 
     // 创建描述符
-    this->m_descriptor = new GLESUniformBufferDescriptor(name);
-    for(const auto& pair : uniformMap) {
-        const auto& uniform = pair.second;
-        this->m_descriptor->addUniform(uniform.id, uniform.uniformtype, uniform.arrayLength);
+    m_descriptor = new GLESUniformBufferDescriptor(name);
+    for (int i = 0; i < uniformArray.size(); i++) {
+        UniformProperty* uniform = &uniformArray[i];
+        m_uniformMap[uniform->id] = *uniform;
+        m_descriptor->addUniform(uniform->id, uniform->uniformtype, uniform->arrayLength);
     }
     this->m_descriptor->finish(mgr->byteAlign / 4);
     

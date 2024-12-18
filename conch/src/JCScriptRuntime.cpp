@@ -297,7 +297,6 @@ namespace laya
         m_pCurEditBox = NULL;
 #endif
         jsbind::runDeinitializers();
-        RenderBindings::clean();
         JSGlobalDisExportC();
 #ifdef JS_V8
 #ifdef JS_V8_DEBUGGER

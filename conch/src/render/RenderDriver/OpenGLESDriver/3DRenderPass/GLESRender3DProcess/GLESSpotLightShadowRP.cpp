@@ -48,19 +48,19 @@ void GLESSpotLightShadowRP::render(GLESRenderContext3D* context, std::vector<RTB
     context->cameraData = shadowSpotData.cameraShaderValue;
     context->_cameraUpdateMask++;
 
-    //if (_renderQueue._elements.getLength() > 0) {
         Viewport _tempViewport(shadowSpotData.offsetX, shadowSpotData.offsetY, shadowSpotData.resolution, shadowSpotData.resolution);
         Vector4 tempVec4(shadowSpotData.offsetX, shadowSpotData.offsetY, shadowSpotData.resolution, shadowSpotData.resolution);
-    //}
-    //else {
-    //    Viewport _tempViewport(shadowSpotData.offsetX, shadowSpotData.offsetY, shadowSpotData.resolution, shadowSpotData.resolution);
-    //    Vector4 tempVec4(shadowSpotData.offsetX, shadowSpotData.offsetY, shadowSpotData.resolution, shadowSpotData.resolution);
-    //}
+
     context->setViewport(_tempViewport);
     context->setScissor(tempVec4);
+
+    if (LayaGL::m_pWebglEngine->_config.enableUniformBufferObject) {
+        _shadowSpotData.cameraShaderValue->updateUBOBuffer(BaseCameraProperty::UBONAME_CAMERA);
+    }
+
     context->setClearData(static_cast<RenderClearFlagBits>(RenderClearFlag::Depth), Color::BLACK, 1.0f, 0);
     _renderQueue.renderQueue(context);
-    // TODOthis->_applyCasterPassCommandBuffer(context);
+
     this->_applyRenderData(context->sceneData, context->cameraData);
     this->_renderQueue._batch.recoverData();
     context->cameraData = originCameraData;

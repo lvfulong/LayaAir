@@ -21,6 +21,7 @@
 #include <unordered_map>
 #include "JCConch.h"
 #include "LayaAir/2D/ScreenCanvasContext2D.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESUniformBufferManager.h"
 namespace laya
 {
 std::unordered_map<std::string, RTShaderDefine> GLESEngine::_defineMap;
@@ -29,6 +30,7 @@ std::vector<std::unordered_map<int32_t, std::string>> GLESEngine::_maskMap;
 std::unordered_map<uint32_t, RTShaderDefine> GLESEngine::_texGammaDefine;
 GLESEngine::GLESEngine(WebGLConfig config, WebGLMode webglMode)
 {
+    _config = config;
     //assert(LayaGL::m_pWebglEngine == nullptr);
     LayaGL::m_pWebglEngine = this;
     if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::OpenGLES)
@@ -143,6 +145,20 @@ void GLESEngine::initRenderEngine()
     m_GLRenderDrawContext = new GLRenderDrawContext(this);
     m_GL2DRenderContext = new GLRender2DContext(this);
     createTextureContext(m_isWebGL2);
+    _initBufferBlock();
+}
+
+void  GLESEngine::_initBufferBlock() {
+    bool useUBO =_config.enableUniformBufferObject && getCapable(RenderCapable::UnifromBufferObject);
+    if (useUBO) {
+        
+        int offsetAlignment;
+        glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &offsetAlignment);
+        bufferMgr = new GLESUniformBufferManager(this, offsetAlignment);
+    }
+    else {
+        _config.enableUniformBufferObject = false;
+    }
 }
 
 void GLESEngine::_initBindBufferMap()
@@ -229,6 +245,19 @@ void GLESEngine::_bindTexture(GLenum target, GLESInternalTex *texture)
 int GLESEngine::getParams(RenderParams type)
 {
     return m_params->getParams(type);
+}
+void GLESEngine::startFrame()
+{
+    if (bufferMgr != nullptr) {
+        bufferMgr->startFrame();
+    }
+}
+void GLESEngine::endFrame()
+{
+    if (bufferMgr != nullptr) {
+        bufferMgr->endFrame();
+    }
+        
 }
 void GLESEngine::viewport(int x, int y, int width, int height)
 {
@@ -519,9 +548,7 @@ int GLESEngine::uploadUniforms(GLShaderInstance *shader, CommandEncoder *command
 int GLESEngine::uploadCustomUniforms(GLShaderInstance *shader, const std::unordered_map<int, ShaderVariable *> &custom,
                                      int index, char *data, int byteSize)
 {
-    shader->bind();
     int shaderCall = 0;
-
     static BufferDataInfo tempData;
     tempData.m_data = (uint8_t*)data;
     tempData.m_lengthInBytes = byteSize;
@@ -547,33 +574,7 @@ int GLESEngine::uploadCustomUniforms(GLShaderInstance *shader, const std::unorde
     }
     return shaderCall;
 }
-GLBuffer *GLESEngine::_getBindUBOBuffer(int glPointer)
-{
 
-    std::unordered_map<int, GLBuffer *>::iterator it = _GLBindPointerUBOMap.find(glPointer);
-    if (it == _GLBindPointerUBOMap.end())
-    {
-        return nullptr;
-    }
-    return it->second;
-}
-
-void GLESEngine::_setBindUBOBuffer(int glPointer, GLBuffer *buffer)
-{
-    this->_GLBindPointerUBOMap[glPointer] = buffer;
-}
-int GLESEngine::getUBOPointer(const char *name)
-{
-    std::unordered_map<std::string, int>::iterator it = m_GLUBOPointerMap.find(name);
-    if (it == m_GLUBOPointerMap.end())
-    {
-        int nUBOPointer = m_curUBOPointer;
-        m_curUBOPointer++;
-        m_GLUBOPointerMap.insert(std::make_pair(name, nUBOPointer));
-        return nUBOPointer;
-    }
-    return it->second;
-}
 void GLESEngine::copySubFrameBuffertoTex(GLESInternalTex *texture, int level, int xoffset, int yoffset, int x, int y,
                                          int width, int height)
 {

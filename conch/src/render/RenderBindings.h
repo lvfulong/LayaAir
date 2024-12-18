@@ -98,10 +98,6 @@ namespace laya
 class RenderBindings
 {
   public:
-      static void clean()
-      {
-        GLESCommandUniformMap::clean();
-    }
     static void exportJS(jsbind::Object &context)
     {
         // Math Bindings
@@ -445,9 +441,6 @@ class RenderBindings
             context.class_("conchGLESInternalTex", class_binding);
         }
         {
-            // todo UniformBufferObject
-        }
-        {
             jsbind::class_<GLESIndexBuffer> class_binding;
             class_binding.constructor<BufferTargetType, BufferUsage>();
             class_binding.property_field("_indexCount", &GLESIndexBuffer::_indexCount);
@@ -485,6 +478,8 @@ class RenderBindings
             class_binding.function("getStatisticsInfo", &GLESEngine::getStatisticsInfo);
             class_binding.function("viewport", &GLESEngine::viewport);
             class_binding.function("scissor", &GLESEngine::scissor);
+            class_binding.function("startFrame", &GLESEngine::startFrame);
+            class_binding.function("endFrame", &GLESEngine::endFrame);
             class_binding.function("regGlobalVertexDeclaration", &GLESEngine::regGlobalVertexDeclaration);
             class_binding.property_field("enableStatistics", &GLESEngine::enableStatistics);
             context.class_("conchGLESEngine", class_binding);
@@ -500,9 +495,9 @@ class RenderBindings
             jsbind::class_<GLESCommandUniformMap> class_binding;
             class_binding.constructor<>();
             // class_binding.function("hasPtrID", &JSCommandUniformMap::hasPtrID);
-            class_binding.function("addShaderBlockUniform", &GLESCommandUniformMap::addShaderBlockUniform);
+            class_binding.function("addShaderUniformArray", &GLESCommandUniformMap::addShaderUniformArray);
             class_binding.function("addShaderUniform", &GLESCommandUniformMap::addShaderUniform);
-            class_binding.class_function("create", &GLESCommandUniformMap::createGlobalUniformMapJS);
+            class_binding.class_function("create", &GLESCommandUniformMap::createGlobalUniformMap);
             context.class_("conchGLESCommandUniformMap", class_binding);
         }
         {
@@ -552,6 +547,7 @@ class RenderBindings
             class_binding.constructor<>();
             class_binding.function("addShaderPass", &RTSubShader::addShaderPass);
             class_binding.function("destroy", &RTSubShader::destroy);
+            class_binding.function("addUnifromProperty", &RTSubShader::addUnifromProperty);
             class_binding.property_field("enableInstance", &RTSubShader::enableInstance);
             context.class_("conchRTSubShader", class_binding);
         }
@@ -1004,7 +1000,6 @@ class RenderBindings
             class_binding.function("setMatrix3x3", &GLESShaderData::setMatrix3x3);
             class_binding.function("getMatrix3x3", &GLESShaderData::getMatrix3x3);
             class_binding.function("_setInternalTexture", &GLESShaderData::setInternalTexture);
-            // class_binding.function("setBuffer", &GLESShaderData::setBufferJS);
             class_binding.function("cloneTo", &GLESShaderData::cloneTo);
             class_binding.function("destroy", &GLESShaderData::destroy);
             class_binding.function_optional_override(
@@ -1013,6 +1008,9 @@ class RenderBindings
                     DEBUG_CHECK(arrayBuffer.isValid());
                     data.setBuffer(propertyIndex, arrayBuffer.getData(), arrayBuffer.getByteLength());
                 }));
+            class_binding.function("clearData", &GLESShaderData::clearData);
+            class_binding.function("createUniformBuffer", &GLESShaderData::createUniformBuffer);
+            class_binding.function("updateUBOBuffer", &GLESShaderData::updateUBOBuffer);
             context.class_("conchGLESShaderData", class_binding);
         }
 

@@ -224,8 +224,6 @@ list(APPEND CONCH_SRC
 
 	# render/3D/temp/InstanceRenderElementOBJ.h
 	# render/3D/temp/InstanceRenderElementOBJ.cpp
-	src/render/3D/temp/UniformBufferObject.h
-	src/render/3D/temp/UniformBufferObject.cpp
 	src/render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderContext3D.h
 	src/render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderContext3D.cpp
 	src/render/RenderDriver/OpenGLESDriver/3DRenderPass/GLES3DRenderCMD.h

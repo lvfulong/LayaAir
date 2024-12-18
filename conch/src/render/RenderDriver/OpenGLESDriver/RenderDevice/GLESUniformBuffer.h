@@ -14,7 +14,7 @@ class GLESUniformBufferDescriptor;
  */
 class GLESUniformBuffer : public GLESUniformBufferBase {
 public:
-    GLESUniformBuffer(const std::string& name);
+    GLESUniformBuffer(std::string& name);
     ~GLESUniformBuffer();
 
     /**

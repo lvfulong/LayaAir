@@ -16,7 +16,8 @@ class WebGLConfig
     bool failIfMajorPerformanceCaveat{ false };
     bool premultipliedAlpha{ false };
     bool preserveDrawingBuffer{ false };
-    // WebGLPowerPreference powerPreference;
+    bool enableUniformBufferObject{ true };
+    bool _matUseUBO{ false };
 };
 } // namespace laya
 #endif

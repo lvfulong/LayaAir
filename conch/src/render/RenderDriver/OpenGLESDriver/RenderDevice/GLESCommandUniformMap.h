@@ -7,6 +7,7 @@
 #include <string>
 #include <unordered_map>
 #include <utils/Preprocessor.h>
+#include "render/LayaGL.h"
 
 namespace laya
 {
@@ -15,54 +16,51 @@ struct UniformProperty
     int id;
     std::string propertyName;
     ShaderDataType uniformtype;
+    int arrayLength;
+    UniformProperty() {
+
+    }
+    UniformProperty(int idvalue, std::string name, ShaderDataType type, int arrayParam)
+    :id(idvalue),propertyName(name),uniformtype(type),arrayLength(arrayParam){}
+   
 };
-struct CommandUniformData
-{
-    std::string block;
-    std::string propertyName;
-    ShaderDataType uniformtype;
-    std::vector<UniformProperty> blockProperty;
-};
+
 class GLESCommandUniformMap
 {
-  public:
-    GLESCommandUniformMap();
-    ~GLESCommandUniformMap();
+public:
+    static GLESCommandUniformMap* createGlobalUniformMap(const char* blockName);
+      
+public:
+      ~GLESCommandUniformMap() {};
+      GLESCommandUniformMap() {};
+      GLESCommandUniformMap(const char* stateName)
+      {
+          m_stateName = stateName;
+          _stateID = LayaGL::m_pWebglEngine->propertyNameToID(stateName);
+      }
+   
 
-    static GLESCommandUniformMap *createGlobalUniformMap(const char *blockName);
-
-    static jsvm_value createGlobalUniformMapJS(const char *blockName);
-
-    GLESCommandUniformMap(const char *stateName)
-    {
-        m_stateName = stateName;
-    }
+   
 
     bool hasPtrID(int propertyID);
 
-    const std::unordered_map<int, CommandUniformData> &getMap()
+   
+    void addShaderUniformArray(int propertyID, const std::string& propertyKey, ShaderDataType uniformtype,int arrayLength)
     {
-        return m_vData;
+        _idata[propertyID] = UniformProperty(propertyID, propertyKey, uniformtype, arrayLength);
+        _uniformArray.push_back(&_idata[propertyID]);
     }
-    void addShaderUniform(int propertyID, const std::string& propertyKey, ShaderDataType uniformtype, const std::string& block)
-    {
-        m_vData[propertyID] = CommandUniformData{block, propertyKey, uniformtype, std::vector<UniformProperty>()};
+
+    void addShaderUniform(int propertyID, const std::string& propertyKey, ShaderDataType uniformtype) {
+        addShaderUniformArray(propertyID, propertyKey, uniformtype, 0);
     }
-    void addShaderBlockUniform(int propertyID, const std::string& blockName, const std::vector<UniformProperty> &blockProperty)
-    {
-        m_vData[propertyID] = CommandUniformData{"", blockName, ShaderDataType::None, blockProperty};
-        for (int i = 0, n = blockProperty.size(); i < n; i++)
-        {
-            addShaderUniform(blockProperty[i].id, blockProperty[i].propertyName, blockProperty[i].uniformtype,
-                             blockName);
-        }
-    }
-    static void clean();
+
   public:
     static std::unordered_map<std::string, GLESCommandUniformMap *> m_globalBlockMap;
     std::string m_stateName;
-    std::unordered_map<int, CommandUniformData> m_vData;
-    static std::unordered_map<std::string, jsbind::Persistent> m_globalBlockMapJS;
+    std::unordered_map<int, UniformProperty> _idata;
+    std::vector<UniformProperty*> _uniformArray{};
+    int _stateID;
 };
 } // namespace laya
 #endif //__GLESCommandUniformMap_H__

@@ -1,7 +1,7 @@
 #ifndef __GLESUniformBufferManager_H__
 #define __GLESUniformBufferManager_H__
 
-#include "../../UniformManager/UniformBufferManager.h"
+#include "render/RenderDriver/UniformManager/UniformBufferManager.h"
 
 namespace laya {
 
@@ -11,6 +11,7 @@ class GLBuffer;
 /**
  * @brief OpenGLES Uniform缓冲区管理器实现类
  */
+
 class GLESUniformBufferManager : public UniformBufferManager {
 public:
     /**

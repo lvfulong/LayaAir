@@ -111,7 +111,7 @@ void GLESUniformBufferBase::setArrayBuffer(int index, const void* data) {
     }
 }
 
-void GLESUniformBufferBase::setBuffer(int index, const float* data) {
+void GLESUniformBufferBase::setBuffer(int index, const void* data) {
     const auto& uniforms = m_descriptor->getUniforms();
     auto it = uniforms.find(index);
     if (it != uniforms.end()) {
@@ -179,6 +179,94 @@ void GLESUniformBufferBase::setUniformData(int index, ShaderDataType type, const
                 break;
             default:
                 break;
+        }
+    }
+}
+
+void GLESUniformBufferBase::setUniformData(int index, ShaderDataType type, const std::any& dataInfo) {
+    const auto& uniforms = m_descriptor->getUniforms();
+    auto it = uniforms.find(index);
+    if (it == uniforms.end()) return;
+
+    const auto& uniform = it->second;
+    if (uniform.arrayLength > 0) {
+        switch (type) {
+        case ShaderDataType::Matrix3x3:
+        {
+            laya::BufferDataInfo info = std::any_cast<laya::BufferDataInfo>(dataInfo);
+            setMatrix3x3Array(index, info.m_data);
+        }
+            break;
+        case ShaderDataType::Matrix4x4:
+        {
+            laya::BufferDataInfo info = std::any_cast<laya::BufferDataInfo>(dataInfo);
+            setMatrix4x4Array(index, info.m_data);
+        }
+            break;
+        case ShaderDataType::Buffer:
+        {
+            laya::BufferDataInfo info = std::any_cast<laya::BufferDataInfo>(dataInfo);
+            setBuffer(index, info.m_data);
+        }
+            break;
+        default:
+        {
+            laya::BufferDataInfo info = std::any_cast<laya::BufferDataInfo>(dataInfo);
+            setArrayBuffer(index, info.m_data);
+        }
+          
+            break;
+        }
+    }
+    else {
+        switch (type) {
+        case ShaderDataType::Int:
+        case ShaderDataType::Bool:
+        {
+            int32_t data = std::any_cast<int32_t>(dataInfo);
+            setInt(index, data);
+        }
+            break;
+        case ShaderDataType::Float:
+        {
+            float data = std::any_cast<float>(dataInfo);
+            setFloat(index, data);
+        }
+            break;
+        case ShaderDataType::Vector2:
+        {
+            Vector2 data = std::any_cast<Vector2>(dataInfo);
+            setVector2(index, data);
+        }
+            break;
+        case ShaderDataType::Vector3:
+        {
+            Vector3 data = std::any_cast<Vector3>(dataInfo);
+            setVector3(index, data);
+        }
+           
+            break;
+        case ShaderDataType::Vector4:
+        case ShaderDataType::Color:
+        {
+            Vector4 data = std::any_cast<Vector4>(dataInfo);
+            setVector4(index, data);
+        }
+            break;
+        case ShaderDataType::Matrix3x3:
+        {
+            const laya::Matrix3x3& info = std::any_cast<const laya::Matrix3x3&>(dataInfo);
+            setMatrix3x3(index, info);
+        }
+            break;
+        case ShaderDataType::Matrix4x4:
+        {
+            const laya::Matrix4x4& data = std::any_cast<const laya::Matrix4x4&>(dataInfo);
+            setMatrix4x4(index, data);
+        }
+            break;
+        default:
+            break;
         }
     }
 }

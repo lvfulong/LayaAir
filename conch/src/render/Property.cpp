@@ -4,6 +4,7 @@ namespace laya
     uint32_t BaseCameraProperty::VIEWMATRIX = 0;
     uint32_t BaseCameraProperty::PROJECTMATRIX = 0;
     uint32_t BaseCameraProperty::VIEWPROJECTMATRIX = 0;
+    std::string BaseCameraProperty::UBONAME_CAMERA = "CameraUniformBlock";
     void BaseCameraProperty::__init__()
     {
         BaseCameraProperty::VIEWMATRIX = LayaGL::m_pWebglEngine->propertyNameToID("u_View");
@@ -148,7 +149,8 @@ namespace laya
         ShadowCasterPassProperty::SHADOW_MATRICES = LayaGL::m_pWebglEngine->propertyNameToID("u_ShadowMatrices");
         ShadowCasterPassProperty::SHADOW_SPLIT_SPHERES = LayaGL::m_pWebglEngine->propertyNameToID("u_ShadowSplitSpheres");
     }
-
+    std::string Scene3DShaderDeclaration::UBONAME_SCENE = "SceneUniformBlock";
+    std::string Scene3DShaderDeclaration::UBONAME_SHADOW = "ShadowUniformBlock";
     RTShaderDefine Scene3DShaderDeclaration::SHADERDEFINE_SHADOW;
     RTShaderDefine Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT;
     RTShaderDefine Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_CASCADE;
@@ -156,6 +158,7 @@ namespace laya
     RTShaderDefine Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SOFT_SHADOW_HIGH;
     RTShaderDefine Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT_SOFT_SHADOW_LOW;
     RTShaderDefine Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT_SOFT_SHADOW_HIGH;
+    
     void Scene3DShaderDeclaration::__init__()
     {
         Scene3DShaderDeclaration::SHADERDEFINE_SHADOW =
