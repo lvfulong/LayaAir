@@ -8,12 +8,6 @@
 namespace laya
 {
 
-enum FRAME_TYPE
-{
-    FT_SLOW = 0,
-    FT_FAST,
-    FT_MOUSE,
-};
 enum class WindowMode
 {
     WM_Window,
@@ -28,9 +22,6 @@ class JCSystemConfig
 
   public:
     std::string m_strStartURL;
-    FRAME_TYPE m_nFrameType;
-    double m_nFrameThreshold;
-    int m_nSleepTime;
     std::string m_strPerfOut;
     static bool s_bIsPlug;
     GraphicsAPI m_graphicsAPI = GraphicsAPI::OpenGLES;
@@ -40,6 +31,7 @@ class JCSystemConfig
     int m_nJSDebugPort = 5959;
     WindowMode m_windowMode{WindowMode::WM_WindowResizable};
     bool m_showDebugConsole = false;
+    uint64_t m_frameIntervalInMs = (uint64_t)(1000.f / 60);
 };
 extern JCSystemConfig g_kSystemConfig;
 } // namespace laya

@@ -3,6 +3,7 @@
 #include <JCConch.h>
 #include <future>
 #include <utils/Log.h>
+#include "JCSystemConfig.h"
 
 extern handleSyncMessageCallback g_handleSyncMessageCb;
 extern handleAsyncMessageCallback g_handleAsyncMessageCb;
@@ -107,6 +108,9 @@ std::string OSLinux::postSyncMessage(const std::string &eventName, const std::st
 }
 void OSLinux::setPreferredFramesPerSecond(uint64_t fps)
 {
-
+    if (fps > 0)
+    {
+        g_kSystemConfig.m_frameIntervalInMs =  (uint64_t)(1000.f / fps);
+    }
 }
 } // namespace laya

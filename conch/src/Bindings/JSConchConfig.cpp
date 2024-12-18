@@ -517,29 +517,6 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
     {
         return m_fScreenScaleH;
     }
-    void JSConchConfig::setMouseFrame(double thredholdms)
-    {
-        g_kSystemConfig.m_nFrameType = FT_MOUSE;
-        g_kSystemConfig.m_nFrameThreshold = thredholdms;
-        g_kSystemConfig.m_nSleepTime = 32;
-    }
-    void JSConchConfig::setSlowFrame(bool p_bIsSlow)
-    {
-        g_kSystemConfig.m_nFrameType = p_bIsSlow ? FT_SLOW : FT_FAST;
-        g_kSystemConfig.m_nSleepTime = 32;
-    }
-    void JSConchConfig::setLimitFPS(int nFpsNum)
-    {
-        if( nFpsNum >= 60 )
-        {
-            g_kSystemConfig.m_nFrameType = FT_FAST;
-        }
-        else
-        {
-            g_kSystemConfig.m_nFrameType = FT_SLOW;
-            g_kSystemConfig.m_nSleepTime = 1000 / nFpsNum - 1;
-        }
-    }
     void JSConchConfig::setCurlProxy(const char* pProxy) {
         if (pProxy) {
             LOGI("setCurlProxy %s", pProxy);
@@ -668,9 +645,6 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 		 class_binding.class_function("getBrowserInfo", &JSConchConfig::getBrowserInfo);
 		 class_binding.class_function("getGuid", &JSConchConfig::getGuid);
 		 class_binding.class_function("getDeviceInfo", &JSConchConfig::getDeviceInfo);
-		 class_binding.class_function("setLimitFPS", &JSConchConfig::setLimitFPS);
-		 class_binding.class_function("setMouseFrame", &JSConchConfig::setMouseFrame);
-		 class_binding.class_function("setSlowFrame", &JSConchConfig::setSlowFrame);
 		 class_binding.class_function("setCurlProxy", &JSConchConfig::setCurlProxy);
 		 class_binding.class_function("setWebsocketProxy", &JSConchConfig::setWebsocketProxy);
 		 class_binding.class_function("setTouchMode", &JSConchConfig::setTouchMode);

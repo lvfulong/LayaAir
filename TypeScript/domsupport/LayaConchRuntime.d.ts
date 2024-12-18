@@ -579,11 +579,6 @@ interface conchConfig{
      * 例如"{\"resolution\":\"1920*1080\",	\"guid\":\"xxxxxxxxx\",\"imei\":[\"imeixxx\"],\"imsi\":[\"imsixxx\"],\"os\":\"windows\",\"osversion\":\"windows7 64\",\"phonemodel\":\"Wintel\"	}"
      */
 	getDeviceInfo():string;
-    /**
-     * 设置是否30帧
-     * @parms b 是否30帧
-     */
-    setSlowFrame(b:boolean);
     
 }
 
