@@ -9,7 +9,9 @@
 #endif
 #include "JCConch.h"
 #include <utils/JCFileSource.h>
-
+#if defined(USE_SWAPPY)
+#include <swappy/swappyGL.h>
+#endif
 extern std::string gAssetRootPath;
 extern std::string gRedistPath;
 extern int g_nInnerWidth;
@@ -45,7 +47,12 @@ void JCSystemConfig::reset()
 {
     m_strStartURL = "";
 }
-
+#if defined(USE_SWAPPY)
+bool JCSystemConfig::isSwappyEnabled()
+{
+    return m_swappyEnabled && SwappyGL_isEnabled();
+}
+#endif
 void JCSystemConfig::loadConfigIniFile()
 {
     // ���������ļ����ÿ���

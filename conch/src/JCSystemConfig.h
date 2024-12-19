@@ -19,7 +19,9 @@ class JCSystemConfig
   public:
     JCSystemConfig();
     void reset();
-
+#if defined(USE_SWAPPY)
+    bool isSwappyEnabled();
+#endif
   public:
     std::string m_strStartURL;
     std::string m_strPerfOut;
@@ -32,6 +34,7 @@ class JCSystemConfig
     WindowMode m_windowMode{WindowMode::WM_WindowResizable};
     bool m_showDebugConsole = false;
     uint64_t m_frameIntervalInMs = (uint64_t)(1000.f / 60);
+    bool m_swappyEnabled = true;
 };
 extern JCSystemConfig g_kSystemConfig;
 } // namespace laya

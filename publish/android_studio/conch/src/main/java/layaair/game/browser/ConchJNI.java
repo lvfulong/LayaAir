@@ -1,4 +1,5 @@
 package layaair.game.browser;
+import android.app.Activity;
 import android.content.res.AssetManager;
 import android.os.Build;
 
@@ -30,7 +31,7 @@ public class ConchJNI
 	
 	public static native void configSetParamExt(String p_strExt);
 	
-    public static native void InitDLib( AssetManager p_am,int nDownloadThreadNum, String p_strAssetRoot, String p_strCachePath, String p_strAPKExpansionMainPath, String p_strAPKExpansionPatchPath);
+    public static native void InitDLib(Activity activity, AssetManager p_am, int nDownloadThreadNum, String p_strAssetRoot, String p_strCachePath, String p_strAPKExpansionMainPath, String p_strAPKExpansionPatchPath);
 
 	public static native void handleTouch( int type,int id,int x,int y );
 

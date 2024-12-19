@@ -421,13 +421,13 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 				return;
 			}
 		}
-
+		Activity activity = (Activity)(mCtx);
 		String cachePath = getAppCacheDir() + "/LayaCache";
 		if (m_AM != null) {
-			ConchJNI.InitDLib(m_AM,getDownloadThreadNum(), "cache", cachePath, m_strExpansionMainPath == null ? "" : m_strExpansionMainPath,m_strExpansionPatchPath == null ? "" : m_strExpansionPatchPath);
+			ConchJNI.InitDLib(activity, m_AM,getDownloadThreadNum(), "cache", cachePath, m_strExpansionMainPath == null ? "" : m_strExpansionMainPath,m_strExpansionPatchPath == null ? "" : m_strExpansionPatchPath);
 		}
 		else {
-			ConchJNI.InitDLib(null,getDownloadThreadNum(), getJarFile(), cachePath, m_strExpansionMainPath == null ? "" : m_strExpansionMainPath,m_strExpansionPatchPath == null ? "" : m_strExpansionPatchPath);
+			ConchJNI.InitDLib(activity, null,getDownloadThreadNum(), getJarFile(), cachePath, m_strExpansionMainPath == null ? "" : m_strExpansionMainPath,m_strExpansionPatchPath == null ? "" : m_strExpansionPatchPath);
 		}
 		InitView();
 	}

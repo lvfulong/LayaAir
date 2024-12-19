@@ -37,7 +37,9 @@
 #include "network/src/HttpClientAndroid.h"
 #include "2D/src/CanvasRenderingContext2DAndroid.h"
 #include "HandleAsyncMessageMethodRecord.h"
-
+#if defined(USE_SWAPPY)
+#include <swappy/swappyGL.h>
+#endif
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
 extern bool g_bGLCanvasSizeChanged;
@@ -58,7 +60,7 @@ extern "C"
 {
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_configSetParamExt(JNIEnv * env, jobject obj,jstring p_strParamExt);//extparam
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_configSetURL(JNIEnv * env, jobject obj,jstring p_strUrl);
-    JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_InitDLib(JNIEnv * env, jobject obj,jobject assetManager,jint nDownloadThreadNum,jstring p_strAssetRootPath,jstring p_strCachePath, jstring p_strAPKExpansionMainPath, jstring p_strAPKExpansionPatchPath);
+    JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_InitDLib(JNIEnv * env, jobject obj, jobject activity, jobject assetManager,jint nDownloadThreadNum,jstring p_strAssetRootPath,jstring p_strCachePath, jstring p_strAPKExpansionMainPath, jstring p_strAPKExpansionPatchPath);
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleTouch(JNIEnv * env, jobject obj,jint type,jint id,jint x,jint y );
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleKeyEvent(JNIEnv * env, jobject obj,jint keyCode,jint actionType);
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleJoystickEvent(JNIEnv * env, jobject obj,float THUMBL_xOffset,float THUMBL_yOffset,float THUMBR_xOffset,float THUMBR_yOffset,float LT_Offset,float RT_Offset);
@@ -98,7 +100,7 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_configSetURL(JNIEnv * 
 	LOGI("JNI seturl: %s", pstrUrl);
 	env->ReleaseStringUTFChars(p_strUrl, pstrUrl);
 }
-JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_InitDLib(JNIEnv * env, jobject obj,jobject assetManager,int nThreadNum,jstring p_strAssetRootPath, jstring p_strCachePath , jstring p_strAPKExpansionMainPath, jstring p_strAPKExpansionPatchPath)
+JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_InitDLib(JNIEnv * env, jobject obj, jobject activity, jobject assetManager,int nThreadNum,jstring p_strAssetRootPath, jstring p_strCachePath , jstring p_strAPKExpansionMainPath, jstring p_strAPKExpansionPatchPath)
 {
 	LOGI("JNI InitDLib tid=%x", std::this_thread::get_id());
 	if(laya::JCConch::s_pConch)
@@ -155,6 +157,12 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_InitDLib(JNIEnv * env,
 	env->ReleaseStringUTFChars(p_strCachePath, pCachePath);
 	env->ReleaseStringUTFChars(p_strAPKExpansionMainPath, pAPKExpansionMain);
 	env->ReleaseStringUTFChars(p_strAPKExpansionPatchPath, pAPKExpansionPatch);
+#if defined(USE_SWAPPY)
+	SwappyGL_init(env, activity);
+  	SwappyGL_setSwapIntervalNS(SWAPPY_SWAP_60FPS);
+#endif
+
+
 	laya::JCConch::s_pConch.reset(new laya::JCConch());
 }
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleTouch( JNIEnv * env, jobject obj,jint type,jint id,jint x,jint y )

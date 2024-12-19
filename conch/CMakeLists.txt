@@ -659,6 +659,11 @@ if(USE_PHYSX)
 	PhysXFoundation
 	)
 endif()
+if(CONCH_USE_SWAPPY)
+	list(APPEND LINK_LIBS
+	swappy
+	)
+endif()
 if(CONCH_USE_CURL_DOWNLOAD)
 
 	list(APPEND LINK_LIBS

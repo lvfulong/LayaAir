@@ -3,6 +3,10 @@
 #include "HandleAsyncMessageMethodRecord.h"
 #include <JCConch.h>
 #include <utils/Log.h>
+#include "JCSystemConfig.h"
+#if defined(USE_SWAPPY)
+#include <swappy/swappyGL.h>
+#endif
 namespace laya
 {
 
@@ -194,6 +198,14 @@ std::string OSAndroid::postSyncMessage(const std::string &eventName, const std::
 }
 void OSAndroid::setPreferredFramesPerSecond(uint64_t fps)
 {
-
+    if (fps > 0)
+    {
+    #if defined(USE_SWAPPY)
+        if (g_kSystemConfig.isSwappyEnabled())
+        {
+            SwappyGL_setSwapIntervalNS(1000000000L / fps); //ns
+        }
+    #endif
+    }
 }
 } // namespace laya
