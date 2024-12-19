@@ -51,21 +51,23 @@ void GLESSubUniformBuffer::notifyGPUBufferChange() {
     GLESUniformBufferBase::needUpload = true;
 
     // 更新所有Uniform变量的视图
-    const auto& uniforms = this->m_descriptor->getUniforms();
+    auto& uniforms = this->m_descriptor->getUniforms();
     for (auto& uniform : uniforms) {
         size_t size = uniform.second.viewByteLength / uniform.second.size;
         size_t offset = uniform.second.offset + this->bufferBlock->offset;
         
         // 根据数据类型创建新的视图
-        // todo: 创建view
-        //uniform.second.view = createDataView(
-        //    bufferBlock->cluster->data.data(),
-        //    offset,
-        //    size,
-        //    uniform.second.dataType
-        //);
+        void* view = reinterpret_cast<void*>(reinterpret_cast<char*>(bufferBlock->cluster->data.data()) + offset);
+        const_cast<GLESUniform&>(uniform.second).view = view;
+    
     }
     GLESUniformBufferBase::needUpload = true;
+}
+
+void GLESSubUniformBuffer::updateOver()
+{
+    needUpload = false;
+    needUploadInManager = false;
 }
 
 void GLESSubUniformBuffer::destroy() {

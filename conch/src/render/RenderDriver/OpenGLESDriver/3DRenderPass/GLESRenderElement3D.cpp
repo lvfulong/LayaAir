@@ -4,6 +4,8 @@
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLRenderDrawContext.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTShaderPass.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESSubUniformBuffer.h>
+#include <render/RenderDriver/UniformManager/UniformBufferBlock.h>
 namespace laya
 {
 RTDefineDatas *GLESRenderElement3D::_compileDefines = nullptr;
@@ -84,7 +86,10 @@ void GLESRenderElement3D::_preUpdatePre(GLESRenderContext3D *context)
     _compileShader(context);
     if (materialShaderData != nullptr && LayaGL::m_pWebglEngine->_config._matUseUBO) {
         //subshader->
-        materialShaderData->createSubUniformBuffer("Material", subshader->_uniformMap);
+        GLESSubUniformBuffer* subBuffer = materialShaderData->createSubUniformBuffer("Material", subshader->_uniformMap);
+        if (subBuffer != nullptr && subBuffer->needUpload) {
+            subBuffer->bufferBlock->needUpload();
+        }
     }
     _invertFront = _getInvertFront();
 }

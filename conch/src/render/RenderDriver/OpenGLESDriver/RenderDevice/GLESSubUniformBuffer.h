@@ -2,7 +2,7 @@
 #define __GLESSubUniformBuffer_H__
 
 #include "GLESUniformBufferBase.h"
-#include "../../UniformManager/IUniformBufferUser.h"
+#include "render/RenderDriver/UniformManager/IUniformBufferUser.h"
 #include <map>
 #include <string>
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h"
@@ -52,12 +52,11 @@ public:
     // IUniformBufferUser接口实现
     void clearGPUBufferBind() override;
     void notifyGPUBufferChange() override;
-
+    void updateOver() override;
 private:
     std::unordered_map<int,UniformProperty> m_uniformMap;  ///< Uniform变量映射表
     std::vector<UniformProperty> uniformArray{}; //< Uniform顺序列表
     GLESShaderData* m_data = nullptr;             ///< 着色器数据
-    GLESUniformBufferDescriptor* m_descriptor = nullptr; ///< 缓冲区描述符
     int m_size = 0;                           ///< 缓冲区大小
     std::string m_name;                       ///< 缓冲区名称
 };

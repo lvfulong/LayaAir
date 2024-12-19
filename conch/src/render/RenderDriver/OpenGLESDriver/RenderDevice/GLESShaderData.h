@@ -49,6 +49,17 @@ class GLESSubUniformBuffer;
 class GLESUniformBufferBase;
 class GLESCommandUniformMap;
 struct UniformProperty;
+
+class uniformDataShell {
+public:
+    uniformDataShell() {};
+    ~uniformDataShell() {};
+    uniformDataShell(GLESUniformBufferBase* buffer) :ubo(buffer) {
+
+    }
+    GLESUniformBufferBase* ubo;
+};
+
 class GLESShaderData //: public ResourceBase<ShaderData>
 {
   public:
@@ -108,14 +119,14 @@ class GLESShaderData //: public ResourceBase<ShaderData>
 
   private:
     bool isDestroy{false};
-    std::unordered_map<uint32_t, Color> m_gammaColorMap;
+    std::unordered_map<uint32_t, Color> m_gammaColorMap{};
     std::unordered_map<std::string, GLESUniformBuffer*> _uniformBuffers{};
     std::unordered_map<std::string, GLESSubUniformBuffer*> _subUniformBuffers{};
   
 
     bool _needCacheData{true};
     public:
-    std::unordered_map<uint32_t, std::any> m_data;
+        std::unordered_map<uint32_t, std::any> m_data{};
     std::unordered_map<int, GLESUniformBufferBase*> _uniformBuffersPropertyMap{};
     std::unordered_map<int, std::function<void(GLESShaderData*, int32_t)>> _updateCacheArray{};
     RTDefineDatas *_defineDatas = nullptr;

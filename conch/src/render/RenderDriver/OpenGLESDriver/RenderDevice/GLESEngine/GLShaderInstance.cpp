@@ -78,7 +78,7 @@ void GLShaderInstance::_create()
         int length, count;
         glGetActiveUniform(m_program, i, sizeof(sVarName), &length, &count, &type, sVarName);
         int location = glGetUniformLocation(m_program, sVarName);
-        if (!location && location != 0)
+        if (location<0 )
             continue;
         ShaderVariable *one = new ShaderVariable();
         one->location = location;
@@ -121,9 +121,9 @@ void GLShaderInstance::_create()
             one->isArray = false;
             one->type = GL_UNIFORM_BUFFER;
             one->dataOffset = m_engine->propertyNameToID(uniformBlockName);
-            int location = one->location = glGetUniformBlockIndex(m_program, uniformBlockName);
-            int bindingPoint = i;
-            glUniformBlockBinding(m_program, location, location);
+            int location = glGetUniformBlockIndex(m_program, uniformBlockName);
+            int bindingPoint = one->location = i;
+            glUniformBlockBinding(m_program,location, bindingPoint);
             m_uniformObjectMap[one->name] = one;
             m_uniformMap.push_back(one);
             _addShaderUnifiormFun(one);
@@ -558,8 +558,11 @@ int GLShaderInstance::_uniform_samplerCube(ShaderVariable *one, const std::any &
 int GLShaderInstance::_uniform_UniformBuffer(ShaderVariable *one, const std::any &dataInfo)
 {
     //linux compile error assert(dataInfo.type == std::typeid(uint32_t));
-    GLESUniformBuffer* buffer = std::any_cast<GLESUniformBuffer*>(dataInfo);
-    buffer->bind(one->location);
+    uniformDataShell* buffer = std::any_cast<uniformDataShell*>(dataInfo);
+    buffer->ubo->bind(one->location);
+
+  ////GLESUniformBuffer
+  //  buffer->bind(one->location);
     return 0;
 }
 void GLShaderInstance::_bindTexture(int textureID, GLenum target, GLESInternalTex *texture)

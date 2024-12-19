@@ -17,6 +17,7 @@ UniformBufferCluster::UniformBufferCluster(int blockSize, int blockNum, UniformB
     _move.resize(_blockSize);
     buffer = manager->createGPUBuffer(_totalSize);
     manager->statisGPUMemory(_totalSize);
+    needUpload.resize(expand);
 }
 
 UniformBufferCluster::~UniformBufferCluster() {
@@ -129,6 +130,7 @@ void UniformBufferCluster::upload() {
             endIndex = i;
             next = true;
             this->needUpload[i] = false;
+            _blocks[i]->user->updateOver();
         } else {
             if (next) {
                 offset = startIndex * this->_blockSize;

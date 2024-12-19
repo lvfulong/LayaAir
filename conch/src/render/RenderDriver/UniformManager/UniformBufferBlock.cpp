@@ -19,13 +19,16 @@ UniformBufferBlock::UniformBufferBlock(UniformBufferCluster* cluster, int index,
 }
 
 void UniformBufferBlock::needUpload() {
-    if (this->user && this->user->needUpload) {
+    if (this->user && !this->user->needUploadInManager) {
         this->cluster->_addUploadBlock(this->index);
         if (!this->moved && this->uploadNum++ > this->cluster->manager->uploadThreshold) {
             this->cluster->manager->_addoptimizeBufferPos(this->cluster);
         }
+        this->user->needUploadInManager = true;
     }
 }
+
+
 
 bool UniformBufferBlock::destroy() {
     if (!this->_destroyed) {

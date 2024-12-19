@@ -15,7 +15,7 @@ public:
     virtual ~IUniformBufferUser() = default;
 
     /** @brief 标记是否需要上传数据到GPU */
-    bool needUpload = false;
+    bool needUploadInManager = false;
 
     /** @brief 指向分配给该用户的Uniform缓冲区块 */
     UniformBufferBlock* bufferBlock = nullptr;
@@ -37,6 +37,8 @@ public:
      * 当缓冲区的位置或内容发生变化时，需要通知使用者更新相关状态
      */
     virtual void notifyGPUBufferChange() = 0;
+
+    virtual void updateOver() = 0;
 };
 
 }

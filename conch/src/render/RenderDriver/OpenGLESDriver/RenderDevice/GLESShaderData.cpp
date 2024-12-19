@@ -35,7 +35,7 @@ void GLESShaderData::createUniformBuffer(std::string &name, GLESCommandUniformMa
     uboBuffer->create();
     _uniformBuffers[name] = uboBuffer;
     int id = LayaGL::m_pWebglEngine->propertyNameToID(name.c_str());
-    m_data[id] = uboBuffer;
+    m_data[id] = new uniformDataShell( uboBuffer);
     for (auto it = uniformMap->_idata.begin(); it != uniformMap->_idata.end(); ++it) {
         UniformProperty* a = &it->second;
         if (m_data.find(a->id) != m_data.end()) {
@@ -77,13 +77,15 @@ GLESSubUniformBuffer* GLESShaderData::createSubUniformBuffer(std::string name, s
     //create SubUniformBuffer
     GLESUniformBufferManager* mgr = LayaGL::m_pWebglEngine->bufferMgr;
 
-
     GLESSubUniformBuffer* subBuffer = new GLESSubUniformBuffer(name, uniformMap, mgr, this);
     subBuffer->notifyGPUBufferChange();
     _subUniformBuffers[name] = subBuffer;
     int id = LayaGL::m_pWebglEngine->propertyNameToID(name.c_str());
-    m_data[id] = subBuffer;
+    m_data[id] = new uniformDataShell(subBuffer);
     for (int i = 0,n = uniformMap.size(); i<n; i++) {
+        if (i == 2) {
+            int a = 10;
+        }
         UniformProperty* a = &uniformMap[i];
         if (m_data.find(a->id) != m_data.end()) {
             subBuffer->setUniformData(a->id, a->uniformtype, m_data[a->id]);
