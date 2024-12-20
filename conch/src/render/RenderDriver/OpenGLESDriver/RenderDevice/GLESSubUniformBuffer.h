@@ -6,6 +6,7 @@
 #include <map>
 #include <string>
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESCommandUniformMap.h"
 
 namespace laya {
 

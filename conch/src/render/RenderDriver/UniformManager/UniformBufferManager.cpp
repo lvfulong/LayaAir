@@ -2,7 +2,8 @@
 #include "UniformBufferCluster.h"
 #include "UniformBufferBlock.h"
 #include "IUniformBufferUser.h"
-#include <iostream>
+#include <utils/Log.h>
+#include <algorithm>
 
 namespace laya {
 
@@ -173,7 +174,7 @@ bool UniformBufferManager::destroy() {
         this->_destroyed = true;
         return true;
     }
-    std::cout << "Warning: UniformBufferManager: object alreay destroyed!" << std::endl;
+    LOGW("Warning: UniformBufferManager: object alreay destroyed!");
     return false;
 }
 

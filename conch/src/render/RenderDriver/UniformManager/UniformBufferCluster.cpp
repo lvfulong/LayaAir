@@ -3,7 +3,7 @@
 #include "UniformBufferManager.h"
 #include "IUniformBufferUser.h"
 #include <algorithm>
-#include <iostream>
+#include <utils/Log.h>
 
 namespace laya {
 
@@ -77,7 +77,7 @@ void UniformBufferCluster::_moveBlock(int index) {
 UniformBufferBlock* UniformBufferCluster::getBlock(int size, IUniformBufferUser* user) {
     const int alignedSize = roundUp(size, this->manager->byteAlign);
     if (alignedSize != this->_blockSize) {
-        std::cout << "Warning: WebGPUBufferCluster: 获取内存块时, 长度错误!" << std::endl;
+        LOGW("Warning: WebGPUBufferCluster: 获取内存块时, 长度错误!");
         return nullptr;
     }
 
@@ -264,7 +264,7 @@ bool UniformBufferCluster::destroy() {
         this->_destroyed = true;
         return true;
     }
-    std::cout << "Warning: UniformBufferCluster: object alreay destroyed!" << std::endl;
+    LOGW("Warning: UniformBufferCluster: object alreay destroyed!");
     return false;
 }
 
