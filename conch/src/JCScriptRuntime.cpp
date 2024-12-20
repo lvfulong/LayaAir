@@ -194,7 +194,9 @@ namespace laya
     {
         LOGI("js thread started.");
         GET_ENV;
-        env->scriptThread = m_pScriptThread;     
+    #ifdef JS_V8
+        env->scriptThread = m_pScriptThread;
+    #endif
         //m_nThreadState = 2;
         //JSObjNode::s_pListJSObj = new JCSimpList();
 

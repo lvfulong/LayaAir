@@ -40,7 +40,7 @@ public:
      * @param mgr UniformBuffer管理器
      * @param data 着色器数据
      */
-    GLESSubUniformBuffer(std::string& name, 
+    GLESSubUniformBuffer(const std::string& name, 
                         std::vector<UniformProperty>& uniformMap,
                         GLESUniformBufferManager* mgr,
                         GLESShaderData* data);

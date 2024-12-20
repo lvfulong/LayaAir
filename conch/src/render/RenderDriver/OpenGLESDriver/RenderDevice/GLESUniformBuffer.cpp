@@ -6,7 +6,7 @@
 
 namespace laya {
 
-GLESUniformBuffer::GLESUniformBuffer(std::string& name)
+GLESUniformBuffer::GLESUniformBuffer(const std::string& name)
     : m_name(name)
 {
     m_descriptor = new GLESUniformBufferDescriptor(name);

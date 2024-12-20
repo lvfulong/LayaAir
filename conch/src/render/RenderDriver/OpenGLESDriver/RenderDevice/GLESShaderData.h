@@ -111,9 +111,9 @@ class GLESShaderData //: public ResourceBase<ShaderData>
     const BufferDataInfo &getBuffer(int32_t index);
     void setInternalTexture(int32_t index, GLESInternalTex *value);
     GLESInternalTex *getInternalTexture(int32_t index);
-    void createUniformBuffer(std::string &name, GLESCommandUniformMap* uniformMap);
-    void updateUBOBuffer(std::string name);
-    GLESSubUniformBuffer* createSubUniformBuffer(std::string name, std::vector<UniformProperty>& uniformMap);
+    void createUniformBuffer(const std::string &name, GLESCommandUniformMap* uniformMap);
+    void updateUBOBuffer(const std::string &name);
+    GLESSubUniformBuffer* createSubUniformBuffer(const std::string &name, std::vector<UniformProperty>& uniformMap);
     void clearData();
     void cloneTo(GLESShaderData *destObject);
 

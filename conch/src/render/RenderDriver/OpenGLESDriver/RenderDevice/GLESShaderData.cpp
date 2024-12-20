@@ -23,7 +23,7 @@ GLESShaderData::~GLESShaderData()
     destroy();
 }
 
-void GLESShaderData::createUniformBuffer(std::string &name, GLESCommandUniformMap* uniformMap) {
+void GLESShaderData::createUniformBuffer(const std::string &name, GLESCommandUniformMap* uniformMap) {
     if (!LayaGL::m_pWebglEngine->_config.enableUniformBufferObject|| _uniformBuffers.find(name)!= _uniformBuffers.end() ){
         return;
     }
@@ -47,7 +47,7 @@ void GLESShaderData::createUniformBuffer(std::string &name, GLESCommandUniformMa
    
 }
 
-void GLESShaderData::updateUBOBuffer(std::string name) {
+void GLESShaderData::updateUBOBuffer(const std::string &name) {
     if (!LayaGL::m_pWebglEngine->_config.enableUniformBufferObject&& _uniformBuffers.find(name) != _uniformBuffers.end()) {
         return;
     }
@@ -61,7 +61,7 @@ void GLESShaderData::updateUBOBuffer(std::string name) {
     }
 }
 
-GLESSubUniformBuffer* GLESShaderData::createSubUniformBuffer(std::string name, std::vector<UniformProperty>& uniformMap){
+GLESSubUniformBuffer* GLESShaderData::createSubUniformBuffer(const std::string &name, std::vector<UniformProperty>& uniformMap){
     if (!LayaGL::m_pWebglEngine->_config.enableUniformBufferObject) {
         return nullptr;
     }

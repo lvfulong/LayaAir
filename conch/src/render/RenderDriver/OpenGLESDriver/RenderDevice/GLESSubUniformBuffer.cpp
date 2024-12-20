@@ -7,7 +7,7 @@
 
 namespace laya {
 
-GLESSubUniformBuffer::GLESSubUniformBuffer(std::string& name,
+GLESSubUniformBuffer::GLESSubUniformBuffer(const std::string& name,
                                          std::vector<UniformProperty>& uniformMap,
                                          GLESUniformBufferManager* mgr,
                                          GLESShaderData* data)
