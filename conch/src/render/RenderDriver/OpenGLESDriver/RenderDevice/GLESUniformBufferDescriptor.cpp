@@ -34,15 +34,15 @@ void GLESUniformBufferDescriptor::addUniform(int index, ShaderDataType type, int
         case ShaderDataType::Bool:
         case ShaderDataType::Int:
             size = 1;
-            alignStride = 1;
+            alignStride = 4;
             break;
         case ShaderDataType::Float:
             size = 1;
-            alignStride = 1;
+            alignStride = 4;
             break;
         case ShaderDataType::Vector2:
             size = 2;
-            alignStride = 2;
+            alignStride = 4;
             break;
         case ShaderDataType::Vector3:
             size = 3;
@@ -74,7 +74,7 @@ void GLESUniformBufferDescriptor::addUniform(int index, ShaderDataType type, int
     }
     
     if (arraySize > 0) {
-        alignmentPadding(size <= 2 ? size : 4);
+        alignmentPadding(4);
         int arrayStride = arraySize * alignStride;
         
         GLESUniform uniform = {
@@ -107,55 +107,56 @@ void GLESUniformBufferDescriptor::addUniform(int index, ShaderDataType type, int
         };
         
         m_uniforms[index] = uniform;
-        m_currentLength += alignStride;
-        m_byteLength += uniform.viewByteLength;
+        m_currentLength += size;
+        m_byteLength += size*sizeof(FLOAT);
     }
 }
-
-void GLESUniformBufferDescriptor::addUniformItem(int index, int size, int alignStride, int arraySize, int dataView) {
-    if (arraySize > 0) {
-        alignmentPadding(size <= 2 ? size : 4);
-        int arrayStride = arraySize * alignStride;
-        
-        GLESUniform uniform = {
-            index,
-            nullptr,
-            size, 
-            alignStride,
-            m_currentLength * 4,
-            dataView,
-            dataView * arrayStride,
-            arraySize
-        };
-        
-        m_uniforms[index] = uniform;
-        m_currentLength += arrayStride;
-        m_byteLength += uniform.viewByteLength;
-    }
-    else {
-        alignmentPadding(size <= 2 ? size : 4);
-        
-        GLESUniform uniform = {
-            index,
-            nullptr,
-            size,
-            alignStride, 
-            m_currentLength * 4,
-            dataView,
-            dataView * alignStride,
-            0
-        };
-        
-        m_uniforms[index] = uniform;
-        m_currentLength += alignStride;
-        m_byteLength += uniform.viewByteLength;
-    }
-}
+//
+//void GLESUniformBufferDescriptor::addUniformItem(int index, int size, int alignStride, int arraySize, int dataView) {
+//    if (arraySize > 0) {
+//        alignmentPadding(size <= 2 ? size : 4);
+//        int arrayStride = arraySize * alignStride;
+//        
+//        GLESUniform uniform = {
+//            index,
+//            nullptr,
+//            size, 
+//            alignStride,
+//            m_currentLength * 4,
+//            dataView,
+//            dataView * arrayStride,
+//            arraySize
+//        };
+//        
+//        m_uniforms[index] = uniform;
+//        m_currentLength += arrayStride;
+//        m_byteLength += uniform.viewByteLength;
+//    }
+//    else {
+//        alignmentPadding(size <= 2 ? size : 4);
+//        
+//        GLESUniform uniform = {
+//            index,
+//            nullptr,
+//            size,
+//            alignStride, 
+//            m_currentLength * 4,
+//            dataView,
+//            dataView * alignStride,
+//            0
+//        };
+//        
+//        m_uniforms[index] = uniform;
+//        m_currentLength += alignStride;
+//        m_byteLength += uniform.viewByteLength;
+//    }
+//}finish
 
 void GLESUniformBufferDescriptor::finish(int maxAlignment) {
-    if (maxAlignment > 0) {
-        alignmentPadding(maxAlignment);
-    }
+    maxAlignment = maxAlignment > m_maxAlignment ? maxAlignment : m_maxAlignment;
+    m_maxAlignment = maxAlignment;
+    alignmentPadding(maxAlignment);
+  
 }
 
 void GLESUniformBufferDescriptor::destroy() {
@@ -171,11 +172,7 @@ GLESUniformBufferDescriptor* GLESUniformBufferDescriptor::clone() const {
 void GLESUniformBufferDescriptor::cloneTo(GLESUniformBufferDescriptor* destObject) const {
     for(const auto& pair : m_uniforms) {
         const auto& uniform = pair.second;
-        destObject->addUniformItem(uniform.index, 
-                                 uniform.size,
-                                 uniform.alignStride,
-                                 uniform.arrayLength,
-                                 uniform.dataView);
+      
     }
     
     destObject->finish(m_maxAlignment);

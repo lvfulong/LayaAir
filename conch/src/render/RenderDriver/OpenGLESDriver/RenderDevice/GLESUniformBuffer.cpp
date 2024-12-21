@@ -3,6 +3,8 @@
 #include "GLESEngine/GLBuffer.h"
 #include "render/LayaGL.h"
 #include <render/3D/design/renderEnum/BufferTargetType.h>
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESUniformBufferManager.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine.h"
 
 namespace laya {
 

@@ -84,7 +84,7 @@ void GLESRenderElement3D::_render(GLESRenderContext3D *context)
 void GLESRenderElement3D::_preUpdatePre(GLESRenderContext3D *context)
 {
     _compileShader(context);
-    if (materialShaderData != nullptr && LayaGL::m_pWebglEngine->_config._matUseUBO) {
+    if (materialShaderData != nullptr && LayaGL::m_pWebglEngine->matUseUBO) {
         //subshader->
         GLESSubUniformBuffer* subBuffer = materialShaderData->createSubUniformBuffer("Material", subshader->_uniformMap);
         if (subBuffer != nullptr && subBuffer->needUpload) {

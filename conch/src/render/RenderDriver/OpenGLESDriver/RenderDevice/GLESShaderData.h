@@ -124,7 +124,7 @@ class GLESShaderData //: public ResourceBase<ShaderData>
     std::unordered_map<std::string, GLESSubUniformBuffer*> _subUniformBuffers{};
   
 
-    bool _needCacheData{true};
+    bool _needCacheData{false};
     public:
         std::unordered_map<uint32_t, std::any> m_data{};
     std::unordered_map<int, GLESUniformBufferBase*> _uniformBuffersPropertyMap{};

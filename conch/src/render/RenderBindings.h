@@ -482,6 +482,8 @@ class RenderBindings
             class_binding.function("endFrame", &GLESEngine::endFrame);
             class_binding.function("regGlobalVertexDeclaration", &GLESEngine::regGlobalVertexDeclaration);
             class_binding.property_field("enableStatistics", &GLESEngine::enableStatistics);
+            class_binding.property_field("enableUniformBufferObject", &GLESEngine::enableUniformBufferObject);
+            class_binding.property_field("matUseUBO", &GLESEngine::matUseUBO);
             context.class_("conchGLESEngine", class_binding);
         }
         {

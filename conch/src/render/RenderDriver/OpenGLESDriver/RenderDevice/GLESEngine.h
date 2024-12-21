@@ -39,6 +39,7 @@ class RTShaderDefine;
 class RTDefineDatas;
 struct VertexStateContext;
 class GLESUniformBufferManager;
+struct UboBindingMapInfo;
 class GLESEngine
 {
   public:
@@ -110,7 +111,10 @@ class GLESEngine
     std::unordered_map<std::string, std::unordered_map<int32_t, VertexStateContext>*> _globalVertexDeclaration;
 public:
     GLESUniformBufferManager* bufferMgr;
-    WebGLConfig _config;
+    bool enableUniformBufferObject{ false };//是否使用UBO模式 影响Scene和Camera
+    bool matUseUBO{ false };//是否使用Material UBO
+    bool spriteUseUBO{ false };//TODO
+    std::vector<UboBindingMapInfo> _uboBindingMap{};
 private:
     friend class GLShaderInstance;
     friend class GLRender2DContext;

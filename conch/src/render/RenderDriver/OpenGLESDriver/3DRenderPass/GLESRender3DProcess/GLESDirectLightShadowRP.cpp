@@ -138,8 +138,9 @@ void GLESDirectLightShadowRP::render(GLESRenderContext3D *context, std::vector<R
             context->setScissor(tempVec4);
         }
 
-        if (LayaGL::m_pWebglEngine->_config.enableUniformBufferObject) {
+        if (LayaGL::m_pWebglEngine->enableUniformBufferObject) {
             sliceData.cameraShaderValue->updateUBOBuffer(BaseCameraProperty::UBONAME_CAMERA);
+            shaderValues->updateUBOBuffer(Scene3DShaderDeclaration::UBONAME_SHADOW);
         }
 
         context->setClearData((RenderClearFlagBits)RenderClearFlag::Depth, Color::BLACK, 1, 0);

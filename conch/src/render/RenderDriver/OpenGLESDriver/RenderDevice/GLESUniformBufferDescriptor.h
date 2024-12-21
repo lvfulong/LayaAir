@@ -59,13 +59,13 @@ private:
      */
     void alignmentPadding(int alignment);
 
-    void addUniformItem(int index, int size, int alignStride, int arraySize, int dataView);
+    //void addUniformItem(int index, int size, int alignStride, int arraySize, int dataView);
 
 private:
     std::string m_name;                    ///< 描述符名称
     int m_currentLength = 0;               ///< 当前长度
     int m_byteLength = 0;                  ///< 字节长度
-    int m_maxAlignment = 0;                ///< 最大对齐值
+    int m_maxAlignment = 4;                ///< 最大对齐值
     std::map<int, GLESUniform> m_uniforms; ///< Uniform变量映射表
 };
 

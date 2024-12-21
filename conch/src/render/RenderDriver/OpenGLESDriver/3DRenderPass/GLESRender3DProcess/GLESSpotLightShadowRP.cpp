@@ -54,8 +54,9 @@ void GLESSpotLightShadowRP::render(GLESRenderContext3D* context, std::vector<RTB
     context->setViewport(_tempViewport);
     context->setScissor(tempVec4);
 
-    if (LayaGL::m_pWebglEngine->_config.enableUniformBufferObject) {
+    if (LayaGL::m_pWebglEngine->enableUniformBufferObject) {
         _shadowSpotData.cameraShaderValue->updateUBOBuffer(BaseCameraProperty::UBONAME_CAMERA);
+        shaderValues->updateUBOBuffer(Scene3DShaderDeclaration::UBONAME_SHADOW);
     }
 
     context->setClearData(static_cast<RenderClearFlagBits>(RenderClearFlag::Depth), Color::BLACK, 1.0f, 0);

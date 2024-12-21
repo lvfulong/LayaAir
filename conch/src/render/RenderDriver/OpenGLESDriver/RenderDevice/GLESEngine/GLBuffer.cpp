@@ -113,12 +113,26 @@ namespace laya
 	}
 	void GLBuffer::bindBufferBase(int glPointer)
 	{
-		glBindBufferBase(m_glTarget, glPointer, m_glBuffer);
+		UboBindingMapInfo* info = &m_engine->_uboBindingMap[glPointer];
+		if (info->buffer != this) {
+			glBindBufferBase(m_glTarget, glPointer, m_glBuffer);
+			
+			info->buffer = this;
+			info->offset = 0;
+			info->size = m_byteLength;
+		}
+	
 	}
 
 	void GLBuffer::bindBufferRange(int glPointer, int offset, int byteCount)
 	{
-		glBindBufferRange(m_glTarget, glPointer, m_glBuffer, offset, byteCount);
+		UboBindingMapInfo* info = &m_engine->_uboBindingMap[glPointer];
+		if (info->buffer != this || info->offset != offset || info->size != byteCount) {
+			glBindBufferRange(m_glTarget, glPointer, m_glBuffer, offset, byteCount);
+			info->buffer = this;
+			info->offset = offset;
+			info->size = byteCount;
+		}
 	}
 	void GLBuffer::resizeBuffer(int dataLength)
 	{

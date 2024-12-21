@@ -24,10 +24,11 @@ GLESShaderData::~GLESShaderData()
 }
 
 void GLESShaderData::createUniformBuffer(const std::string &name, GLESCommandUniformMap* uniformMap) {
-    if (!LayaGL::m_pWebglEngine->_config.enableUniformBufferObject|| _uniformBuffers.find(name)!= _uniformBuffers.end() ){
+    if (!LayaGL::m_pWebglEngine->enableUniformBufferObject|| _uniformBuffers.find(name)!= _uniformBuffers.end() ){
         return;
     }
     GLESUniformBuffer* uboBuffer = new GLESUniformBuffer(name);
+    _needCacheData = true;
     for (int i = 0, n = uniformMap->_uniformArray.size(); i < n; i++) {
         UniformProperty* a = uniformMap->_uniformArray[i];
         uboBuffer->addUniform(a->id, a->uniformtype, a->arrayLength);
@@ -48,7 +49,7 @@ void GLESShaderData::createUniformBuffer(const std::string &name, GLESCommandUni
 }
 
 void GLESShaderData::updateUBOBuffer(const std::string &name) {
-    if (!LayaGL::m_pWebglEngine->_config.enableUniformBufferObject&& _uniformBuffers.find(name) != _uniformBuffers.end()) {
+    if (!LayaGL::m_pWebglEngine->enableUniformBufferObject&& _uniformBuffers.find(name) != _uniformBuffers.end()) {
         return;
     }
     GLESUniformBuffer* uboBuffer = _uniformBuffers[name];
@@ -62,7 +63,7 @@ void GLESShaderData::updateUBOBuffer(const std::string &name) {
 }
 
 GLESSubUniformBuffer* GLESShaderData::createSubUniformBuffer(const std::string &name, std::vector<UniformProperty>& uniformMap){
-    if (!LayaGL::m_pWebglEngine->_config.enableUniformBufferObject) {
+    if (!LayaGL::m_pWebglEngine->enableUniformBufferObject) {
         return nullptr;
     }
     if (_subUniformBuffers.find(name) != _subUniformBuffers.end()) {
@@ -78,6 +79,7 @@ GLESSubUniformBuffer* GLESShaderData::createSubUniformBuffer(const std::string &
     GLESUniformBufferManager* mgr = LayaGL::m_pWebglEngine->bufferMgr;
 
     GLESSubUniformBuffer* subBuffer = new GLESSubUniformBuffer(name, uniformMap, mgr, this);
+    _needCacheData = true;
     subBuffer->notifyGPUBufferChange();
     _subUniformBuffers[name] = subBuffer;
     int id = LayaGL::m_pWebglEngine->propertyNameToID(name.c_str());
@@ -116,6 +118,7 @@ void GLESShaderData::clearData()
     m_gammaColorMap.clear();
 
     _defineDatas->clear();
+    _needCacheData = false;
 }
 
 void GLESShaderData::destroy()

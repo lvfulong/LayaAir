@@ -30,7 +30,6 @@ std::vector<std::unordered_map<int32_t, std::string>> GLESEngine::_maskMap;
 std::unordered_map<uint32_t, RTShaderDefine> GLESEngine::_texGammaDefine;
 GLESEngine::GLESEngine(WebGLConfig config, WebGLMode webglMode)
 {
-    _config = config;
     //assert(LayaGL::m_pWebglEngine == nullptr);
     LayaGL::m_pWebglEngine = this;
     if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::OpenGLES)
@@ -149,16 +148,22 @@ void GLESEngine::initRenderEngine()
 }
 
 void  GLESEngine::_initBufferBlock() {
-    bool useUBO =_config.enableUniformBufferObject && getCapable(RenderCapable::UnifromBufferObject);
-    if (useUBO) {
+    bool canUseUBO = getCapable(RenderCapable::UnifromBufferObject);
+    if (canUseUBO) {
         
         int offsetAlignment;
         glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &offsetAlignment);
         bufferMgr = new GLESUniformBufferManager(this, offsetAlignment);
+
+        int maxBlockCount;
+        glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &maxBlockCount);
+        maxBlockCount = maxBlockCount > 32 ? 32 : maxBlockCount;
+        _uboBindingMap.resize(maxBlockCount);
+        for (int i = 0; i++; i < maxBlockCount) {
+            _uboBindingMap[i] = UboBindingMapInfo(nullptr, 0, 0);
+        }
     }
-    else {
-        _config.enableUniformBufferObject = false;
-    }
+   
 }
 
 void GLESEngine::_initBindBufferMap()
