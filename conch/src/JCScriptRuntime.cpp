@@ -63,7 +63,8 @@ namespace laya
         {
             jsvm_value message;
             status = jsvm_get_named_property(env, exception, "message", &message);
-            if (status == jsvm_status::jsvm_ok)
+            jsbind::Local localMessage(message);
+            if (status == jsvm_status::jsvm_ok && localMessage.isString())
             {
                 size_t length;
                 status = jsvm_get_value_string_utf8(env, message, nullptr, 0, &length);
