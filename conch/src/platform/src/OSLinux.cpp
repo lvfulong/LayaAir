@@ -1,9 +1,9 @@
 #include "OSLinux.h"
 #include "Exports.h"
+#include "JCSystemConfig.h"
 #include <JCConch.h>
 #include <future>
 #include <utils/Log.h>
-#include "JCSystemConfig.h"
 
 extern handleSyncMessageCallback g_handleSyncMessageCb;
 extern handleAsyncMessageCallback g_handleAsyncMessageCb;
@@ -64,31 +64,19 @@ int OSLinux::getSafeInsetRight()
 }
 jsvm_value OSLinux::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
-    //auto isolate = v8::Isolate::GetCurrent();
-    //auto context = isolate->GetCurrentContext();
-
-    //napi_deferred deferred;
-    //napi_value promise;
-
-    //napi_create_promise(context, &deferred, &promise);
     auto promise = jsbind::Promise::Make();
-    std::function<void(std::string)> cb = [promise, cbref](std::string message) {
+    conchRegisterHandleMessageHandler(eventName.c_str(), [promise, cbref](const char *message) {
         postToJS([promise, message, cbref]() {
             if (!cbref.lock())
                 return;
-            //auto isolate = v8::Isolate::GetCurrent();
-            //auto context = isolate->GetCurrentContext();
-            //napi_value v = jsvm_valueFromV8LocalValue(MakeJSValue<const char *>(message));
-            //napi_resolve_deferred(context, deferred, v);
             promise.resolve(message);
         });
-    };
+    });
     if (g_handleAsyncMessageCb)
     {
         // handleAsyncMessage is called in platform os ui thread
         postToPlatform([eventName, data]() { g_handleAsyncMessageCb(eventName.c_str(), data.c_str()); });
     }
-    //return V8LocalValueFromjsvm_value(promise);
     return promise.getHandle();
 }
 std::string OSLinux::postSyncMessage(const std::string &eventName, const std::string &data)
@@ -110,7 +98,7 @@ void OSLinux::setPreferredFramesPerSecond(uint64_t fps)
 {
     if (fps > 0)
     {
-        g_kSystemConfig.m_frameIntervalInMs =  (uint64_t)(1000.f / fps);
+        g_kSystemConfig.m_frameIntervalInMs = (uint64_t)(1000.f / fps);
     }
 }
 } // namespace laya

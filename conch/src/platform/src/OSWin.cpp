@@ -1,14 +1,13 @@
 #include "OSWin.h"
 #include "Exports.h"
+#include "JCSystemConfig.h"
 #include <JCConch.h>
 #include <Windows.h>
 #include <future>
 #include <utils/Log.h>
-#include "JCSystemConfig.h"
 #define WIN32_LEAN_AND_MEAN
 #include <psapi.h>
 #include <windows.h>
-
 
 extern handleSyncMessageCallback g_handleSyncMessageCb;
 extern handleAsyncMessageCallback g_handleAsyncMessageCb;
@@ -82,10 +81,7 @@ int OSWin::getSafeInsetRight()
 }
 jsvm_value OSWin::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
-
-
     auto promise = jsbind::Promise::Make();
-
     conchRegisterHandleMessageHandler(eventName.c_str(), [promise, cbref](const char *message) {
         postToJS([promise, message, cbref]() {
             if (!cbref.lock())
@@ -120,7 +116,7 @@ void OSWin::setPreferredFramesPerSecond(uint64_t fps)
 {
     if (fps > 0)
     {
-        g_kSystemConfig.m_frameIntervalInMs =  (uint64_t)(1000.f / fps);
+        g_kSystemConfig.m_frameIntervalInMs = (uint64_t)(1000.f / fps);
     }
 }
 } // namespace laya

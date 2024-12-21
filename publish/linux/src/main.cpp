@@ -1,8 +1,10 @@
 #include "Exports.h"
+#include <cstring>
 
-
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
-	return conchMain(argc, argv);
-}
+    conchSetHandleMessageCallback([](const char *eventName, const char *data) -> void {},
+                                  [](const char *eventName, const char *data) -> void {});
 
+    return conchMain(argc, argv);
+}

@@ -280,6 +280,8 @@ namespace laya
         NapiHelper::GetInstance()->showDialog(p_sBuffer);
 #elif OS_IOS
         CToObjectCAlert(p_sBuffer);
+#else 
+        LOGI("%s", p_sBuffer);
 #endif
     }
     void JSAlert(const char* p_sBuffer)
