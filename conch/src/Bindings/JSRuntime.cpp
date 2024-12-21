@@ -634,7 +634,7 @@ namespace laya
 		class_binding.class_function("exit", &JSRuntime::exit);
         class_binding.class_function("createArrayBufferRef", &JSRuntime::createArrayBufferRef);
         class_binding.class_function("registerFont", &JSRuntime::registerFont);
-        class_binding.class_function("onError", &JSRuntime::setOnError);
+        class_binding.class_function("onerror", &JSRuntime::setOnError);
         class_binding.class_function("setPreferredFramesPerSecond", &JSRuntime::setPreferredFramesPerSecond);
 #if defined(USE_DCC)
         class_binding.class_function("downloadNoCache", &JSRuntime::downloadFile);

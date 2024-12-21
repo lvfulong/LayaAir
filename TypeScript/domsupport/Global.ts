@@ -204,7 +204,7 @@ window.onresize=function(e:UIEvent){
     //alert('kkkkk')
 }
 
-conch.onError(function (exception) {
+conch.onerror(function (exception) {
     if (window.onerror && exception)
     {
         var lineno = exception.lineNumber ? exception.lineNumber : -1;

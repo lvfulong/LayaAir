@@ -116,7 +116,6 @@ var LogType;
     LogType[LogType["Error"] = 3] = "Error";
     LogType[LogType["Fatal"] = 4] = "Fatal";
 })(LogType || (LogType = {}));
-;
 class Console {
     constructor() {
     }
@@ -6722,7 +6721,7 @@ class Screen {
 window.screen = new Screen();
 window.onresize = function (e) {
 };
-conch.onError(function (exception) {
+conch.onerror(function (exception) {
     if (window.onerror && exception) {
         var lineno = exception.lineNumber ? exception.lineNumber : -1;
         var colno = exception.columnNumber ? exception.columnNumber : -1;
