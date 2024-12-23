@@ -123,6 +123,9 @@ void GLESShaderData::clearData()
 
 void GLESShaderData::destroy()
 {
+    if (isDestroy) {
+        return;
+    }
     isDestroy = true;
     clearData();
     _defineDatas->destroy();
