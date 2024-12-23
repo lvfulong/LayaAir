@@ -108,7 +108,7 @@ void GLESUniformBufferDescriptor::addUniform(int index, ShaderDataType type, int
         
         m_uniforms[index] = uniform;
         m_currentLength += size;
-        m_byteLength += size*sizeof(FLOAT);
+        m_byteLength += size*sizeof(float);
     }
 }
 //

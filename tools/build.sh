@@ -16,6 +16,12 @@ function check_android_environment {
 	
 	#TODO
 }
+
+OHOS_NDK_CMAKE_PATH="E:/huawei/IDE/DevEcoStudio/sdk/default/openharmony/native/build-tools/cmake/bin"
+OHOS_NDK_CMAKE_TOOLCHAIN_PATH="E:/huawei/IDE/DevEcoStudio/sdk/default/openharmony/native/build/cmake/ohos.toolchain.cmake"
+#export PATH=${OHOS_NDK_CMAKE_PATH}:$PATH
+
+
 current_dir=`pwd`
 root_dir=${current_dir}/..
 echo ${root_dir}
@@ -222,9 +228,7 @@ function build_ohos {
     cd "${build_dir}"
 
 
-    OHOS_NDK_CMAKE_PATH="E:/huawei/IDE/DevEcoStudio/sdk/default/openharmony/native/build-tools/cmake/bin"
-    OHOS_NDK_CMAKE_TOOLCHAIN_PATH="E:/huawei/IDE/DevEcoStudio/sdk/default/openharmony/native/build/cmake/ohos.toolchain.cmake"
-    #export PATH=${OHOS_NDK_CMAKE_PATH}:$PATH
+
 
     ${OHOS_NDK_CMAKE_PATH}/cmake.exe \
         -G "Ninja" \
