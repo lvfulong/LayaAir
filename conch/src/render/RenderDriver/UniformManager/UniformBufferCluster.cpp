@@ -20,6 +20,7 @@ UniformBufferCluster::UniformBufferCluster(int blockSize, int blockNum, UniformB
     _move.resize(this->_blockSize);
     buffer = manager->createGPUBuffer(this->_totalSize);
     manager->statisGPUMemory(this->_totalSize);
+    _needUpload.resize(_expand);
 }
 
 UniformBufferCluster::~UniformBufferCluster() {
