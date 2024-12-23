@@ -56,10 +56,12 @@ void JCFileResDCC2::onDownloaded(JCBuffer &p_Buff, const std::string &pLocalAddr
                                  int pnCurlRet, int pnHttpRet, const std::string &pstrHeader, int p_nDownloadNum,
                                  const char *pszLocalPach, std::weak_ptr<int> p_cbref)
 {
+#if 0
     if (p_Buff.m_nLen <= 0)
     {
         return onDownloadError(0, 0, p_cbref); // 不知道错误码
     }
+#endif
     m_pBuffer = std::shared_ptr<char>(new char[p_Buff.m_nLen], std::default_delete<char[]>());
     memcpy(m_pBuffer.get(), p_Buff.m_pPtr, p_Buff.m_nLen);
     m_nLength = p_Buff.m_nLen;
@@ -85,8 +87,10 @@ void JCFileResDCC2::onResDownloadOK_JSThread(std::weak_ptr<int> p_cbref)
 {
     if (!p_cbref.lock())
         return;
+#if 0
     if (m_nLength == 0) // 如果已经为0了，则表示已经处理的，状态改变已经通知给需要的人了，直接返回。
         return;
+#endif
     // hugao add
     // checkIsEncrypted(m_pBuffer.get(), m_nLength);
     // if (gHandleDataFunc) {

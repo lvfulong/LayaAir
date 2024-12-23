@@ -46,7 +46,7 @@ void GLESSubUniformBuffer::bind(int location) {
 void GLESSubUniformBuffer::clearGPUBufferBind() {
 }
 
-void GLESSubUniformBuffer::notifyGPUBufferChange() {
+void GLESSubUniformBuffer::notifyGPUBufferChange(const std::string& info) {
     this->offset = this->bufferBlock->offset;
     GLESUniformBufferBase::needUpload = true;
 

@@ -1,3 +1,4 @@
+#include <string>
 #ifndef __IUniformBufferUser_H_
 #define __IUniformBufferUser_H_
 
@@ -36,7 +37,7 @@ public:
      * @brief 通知GPU缓冲区发生变化
      * 当缓冲区的位置或内容发生变化时，需要通知使用者更新相关状态
      */
-    virtual void notifyGPUBufferChange() = 0;
+    virtual void notifyGPUBufferChange(const std::string& info) = 0;
 
     virtual void updateOver() = 0;
 };

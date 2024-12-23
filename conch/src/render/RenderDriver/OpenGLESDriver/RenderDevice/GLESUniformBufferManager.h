@@ -24,7 +24,7 @@ public:
     void* createGPUBuffer(int size, const char* name = nullptr) override;
     void writeBuffer(void* buffer, const void* data, int offset, int size) override;
     void statisGPUMemory(int bytes) override;
-    void statisUpload(int count, int bytes) override;
+    void statisUpload(int count, int bytes);
 
 private:
     GLESEngine* m_engine;  ///< 渲染引擎实例

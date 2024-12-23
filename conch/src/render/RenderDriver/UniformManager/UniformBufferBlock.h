@@ -9,14 +9,15 @@ namespace laya {
 class UniformBufferBlock {
 private:
     bool _destroyed = false;
-
+    static int _idCounter;  // 添加静态计数器
+protected:
+    int _alignedSize = 0;// 字节对齐后的尺寸
 public:
-    int _sn;  // 序列号
+    int _id;  // 添加唯一ID
     UniformBufferCluster* cluster = nullptr;  // 大内存管理对象
     int index = 0;      // 在大内存中的序号
     int offset = 0;     // 在大内存中的偏移
     int size = 0;       // 实际尺寸
-    int alignedSize = 0;// 字节对齐后的尺寸
     int uploadNum = 0;  // 上传次数
     bool moved = false; // 是否已经完成移动
     IUniformBufferUser* user = nullptr; // 内存块使用者
