@@ -4,6 +4,7 @@
 #include "IUniformBufferUser.h"
 #include <utils/Log.h>
 #include <algorithm>
+#include <chrono>
 
 namespace laya {
 
@@ -18,17 +19,17 @@ UniformBufferManager::~UniformBufferManager() {
 
 UniformBufferCluster* UniformBufferManager::_addCluster(int size, int blockNum) {
     const int alignedSize = roundUp(size, this->byteAlign);
-    auto cluster = new UniformBufferCluster(alignedSize, blockNum, this);
+    auto cluster = this->_createBufferCluster(alignedSize, blockNum);
     
     auto& clusters = this->_clustersAll[alignedSize];
     if (!clusters.empty()) {
         clusters.push_back(cluster);
-        cluster->sn = clusters.size() - 1;
+        cluster->_sn = clusters.size() - 1;//大内存块的序号就是在相同尺寸大内存块数组中的序号
     } else {
         this->_clustersAll[alignedSize] = {cluster};
     }
     
-    this->_clustersCur[alignedSize] = cluster;
+    this->_clustersCur[alignedSize] = cluster;//新添加的大内存块作为当前大内存块
     return cluster;
 }
 
@@ -43,24 +44,30 @@ void UniformBufferManager::removeHole() {
 }
 
 void UniformBufferManager::startFrame() {
-    if (this->_enableStat) {
-        this->_state.uploadNum = 0;
-        this->_state.uploadByte = 0;
-    }
 }
 
 void UniformBufferManager::endFrame() {
-    if (!_useBigBuffer) return;
-
-    for (auto cluster : this->_removeHoleArray) {
-        cluster->removeHole();
+    if (this->_enableStat) {
+        //按帧计数的清零
+        this->_stat.moveNum = 0;
+        this->_stat.uploadNum = 0;
+        this->_stat.uploadByte = 0;
+        //记录累加帧数
+        this->_stat.timeCostCount++;
     }
-    this->_removeHoleArray.clear();
 
-    for (auto cluster : _optimizeBufferPosArray) {
-        cluster->optimize();
+    if (this->_useBigBuffer) {
+        if (this->_removeHoleArray.size() > 0) {
+            for (int i = this->_removeHoleArray.size() - 1; i > -1; i--)
+                this->_removeHoleArray[i]->removeHole();
+            this->_removeHoleArray.clear();
+        }
+        if (this->_optimizeBufferPosArray.size() > 0) {
+            for (int i = this->_optimizeBufferPosArray.size() - 1; i > -1; i--)
+                this->_optimizeBufferPosArray[i]->optimize();
+            this->_optimizeBufferPosArray.clear();
+        }
     }
-    this->_optimizeBufferPosArray.clear();
 }
 
 void* UniformBufferManager::getBufferAlone(int size, const char* name) {
@@ -71,13 +78,13 @@ void* UniformBufferManager::getBufferAlone(int size, const char* name) {
 
 void UniformBufferManager::removeCluster(int size, int sn) {
     const int alignedSize = roundUp(size, this->byteAlign);
-    if (sn == -1) {
+    if (sn < 0 ) {
         this->_clustersAll.erase(alignedSize);
         this->_clustersCur.erase(alignedSize);
         return;
     }
 
-    auto curCluster = this->_clustersCur[alignedSize];
+    const int curCluster_sn = _clustersCur[alignedSize] ? _clustersCur[alignedSize]->_sn : -1;
     auto& clusters = this->_clustersAll[alignedSize];
     
     if (clusters.size() > size_t(sn)) {
@@ -90,24 +97,24 @@ void UniformBufferManager::removeCluster(int size, int sn) {
         
         // Update sn for remaining clusters
         for (size_t i = sn; i < clusters.size(); i++) {
-            clusters[i]->sn--;
+            clusters[i]->_sn--;
         }
     } else return;
 
-    if (curCluster->sn == sn) {
-        if (clusters.size() == 1) {
-            this->_clustersCur[alignedSize] = clusters[0];
-        } else {
-            size_t index = 0;
-            int usedNum = clusters[0]->getUsedNum();
-            for (size_t i = 1; i < clusters.size(); i++) {
-                if (clusters[i]->getUsedNum() < usedNum) {
-                    index = i;
-                    usedNum = clusters[i]->getUsedNum();
-                }
+    if (curCluster_sn != -1 && curCluster_sn == sn) {
+        //找一个最大usedNum，且有剩余空间的大内存块作为当前大内存块
+        int usedNumMax = -1, usedNum = -1, index = -1;
+        for (int i = clusters.size() - 1; i > -1; i--) {
+            usedNum = clusters[i]->getUsedNum();
+            if (usedNum > usedNumMax
+                && usedNum < this->clusterMaxBlock) {
+                index = i;
+                usedNumMax = usedNum;
             }
-            this->_clustersCur[alignedSize] = clusters[index];
         }
+        if (index >= 0) //找到符合要求的大内存块
+            this->_clustersCur[alignedSize] = clusters[index];
+        else this->_clustersCur.erase(alignedSize); //没有符合要求的大内存块，当前该尺寸大内存块为空
     }
 }
 
@@ -124,23 +131,35 @@ UniformBufferBlock* UniformBufferManager::getBlock(int size, IUniformBufferUser*
         return cluster->getBlock(size, user);
     }
 
+    // 当前cluster已满，寻找新的可用cluster
     auto& clusters = this->_clustersAll[alignedSize];
-    for (auto it = clusters.rbegin(); it != clusters.rend(); ++it) {
-        if ((*it)->getUsedNum() < this->clusterMaxBlock) {
-            this->_clustersCur[alignedSize] = *it;
-            return (*it)->getBlock(size, user);
+    int usedNumMax = -1, usedNum = -1, index = -1;
+    for (int i = clusters.size() - 1; i > 0; i--) {
+        usedNum = clusters[i]->getUsedNum();
+        if (usedNum > usedNumMax
+            && usedNum < this->clusterMaxBlock) {
+            index = i;
+            usedNumMax = usedNum;
         }
     }
+    if (index >= 0) { // 找到符合要求的大内存块
+        cluster = clusters[index];
+        this->_clustersCur[alignedSize] = cluster;
+    } else {
+        this->_clustersCur.erase(alignedSize); // 没有符合要求的大内存块，当前该尺寸大内存块为空
+    }
 
-    return this->_addCluster(alignedSize)->getBlock(size, user);
+    if (cluster) // 已有符合要求的大内存块
+        return cluster->getBlock(size, user); // 直接在该大内存块中添加小内存块
+    return this->_addCluster(alignedSize)->getBlock(size, user); // 没有符合要求的大内存块，新建一个大内存块，并在其中添加小内存块
 }
 
 bool UniformBufferManager::freeBlock(UniformBufferBlock* bb) {
     auto cluster = bb->cluster;
     if (cluster) {
-        if (cluster->freeBlock(bb)) {
-            if (cluster->getUsedNum() == 0) {
-                removeCluster(cluster->_blockSize, cluster->sn);
+        if (cluster->freeBlock(bb)) { //释放小内存块
+            if (cluster->getUsedNum() == 0) {//该大内存块已经没有小内存块了
+                this->removeCluster(cluster->_blockSize, cluster->_sn);//删除该大内存块
             }
             return true;
         }
@@ -150,12 +169,24 @@ bool UniformBufferManager::freeBlock(UniformBufferBlock* bb) {
 
 void UniformBufferManager::upload() {
     if (this->_useBigBuffer) {
-        for (auto cluster : this->_needUpdateCluster) {
+        std::chrono::high_resolution_clock::time_point t;
+        if (this->_enableStat)
+            t = std::chrono::high_resolution_clock::now();
+
+        UniformBufferCluster* cluster;
+        for (int i = this->_needUpdateCluster.size() - 1; i > -1; i--) {
+            cluster = this->_needUpdateCluster[i];
             cluster->upload();
             cluster->_inManagerUpdateArray = false;
         }
+        this->_needUpdateCluster.clear();
+
+        if (this->_enableStat) {
+            auto duration = std::chrono::high_resolution_clock::now() - t;
+            auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+            this->statisTimeCostAvg(milliseconds);
+        }
     }
-    this->_needUpdateCluster.clear();
 }
 
 void UniformBufferManager::clear() {
@@ -179,16 +210,15 @@ bool UniformBufferManager::destroy() {
 }
 
 void UniformBufferManager::_addUpdateArray(UniformBufferCluster* cluster) {
-    if (cluster->_inManagerUpdateArray) return;
-    this->_needUpdateCluster.push_back(cluster);
-    cluster->_inManagerUpdateArray = true;
+    if (!cluster->_inManagerUpdateArray){
+        this->_needUpdateCluster.push_back(cluster);
+        cluster->_inManagerUpdateArray = true;
+    }
 }
 
 void UniformBufferManager::_addRemoveHoleCluster(UniformBufferCluster* cluster) {
-    if (std::find(this->_removeHoleArray.begin(), this->_removeHoleArray.end(), cluster) 
-        == this->_removeHoleArray.end()) {
+    if (std::find(this->_removeHoleArray.begin(), this->_removeHoleArray.end(), cluster) == this->_removeHoleArray.end())
         this->_removeHoleArray.push_back(cluster);
-    }
 }
 
 void UniformBufferManager::_addoptimizeBufferPos(UniformBufferCluster* cluster) {
@@ -198,4 +228,21 @@ void UniformBufferManager::_addoptimizeBufferPos(UniformBufferCluster* cluster) 
     }
 }
 
+UniformBufferCluster* UniformBufferManager::_createBufferCluster(int size, int blockNum) {
+    return new UniformBufferCluster(size, blockNum, this);
+}
+
+void UniformBufferManager::statisTimeCostAvg(int time) {
+    this->_stat.timeCostSum += time;
+    if (this->_stat.timeCostCount > 100) {
+        this->_stat.timeCostAvg = (this->_stat.timeCostSum / this->_stat.timeCostCount) * 10000 / 10; //微秒
+        this->_stat.timeCostSum = 0;
+        this->_stat.timeCostCount = 0;
+    }
+}
+
+void UniformBufferManager::statisUpload(int count, int bytes) {
+    this->_stat.uploadNum += count;
+    this->_stat.uploadByte += bytes;
+}
 }

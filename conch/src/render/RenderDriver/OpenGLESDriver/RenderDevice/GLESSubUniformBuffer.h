@@ -52,7 +52,7 @@ public:
     
     // IUniformBufferUser接口实现
     void clearGPUBufferBind() override;
-    void notifyGPUBufferChange() override;
+    void notifyGPUBufferChange(const std::string& info) override;
     void updateOver() override;
 private:
     std::unordered_map<int,UniformProperty> m_uniformMap;  ///< Uniform变量映射表

@@ -78,7 +78,7 @@ GLESSubUniformBuffer* GLESShaderData::createSubUniformBuffer(const std::string &
     GLESUniformBufferManager* mgr = LayaGL::m_pWebglEngine->bufferMgr;
 
     GLESSubUniformBuffer* subBuffer = new GLESSubUniformBuffer(name, uniformMap, mgr, this);
-    subBuffer->notifyGPUBufferChange();
+    subBuffer->notifyGPUBufferChange("");
     _subUniformBuffers[name] = subBuffer;
     int id = LayaGL::m_pWebglEngine->propertyNameToID(name.c_str());
     m_data[id] = new uniformDataShell(subBuffer);

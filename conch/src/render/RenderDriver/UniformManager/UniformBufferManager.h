@@ -1,7 +1,7 @@
 #ifndef __UniformBufferManager_H_
 #define __UniformBufferManager_H_
 
-#include <map>
+#include <unordered_map>
 #include <vector>
 #include <memory>
 #include <render/RenderDriver/UniformManager/UniformBufferBlock.h>
@@ -51,10 +51,10 @@ struct UBOStat {
 class UniformBufferManager {
 private:
     /** @brief 所有大内存块，按尺寸分组存储 */
-    std::map<int, std::vector<UniformBufferCluster*>> _clustersAll;
+    std::unordered_map<int, std::vector<UniformBufferCluster*>> _clustersAll;
 
     /** @brief 当前使用的大内存块，按尺寸分组 */
-    std::map<int, UniformBufferCluster*> _clustersCur;
+    std::unordered_map<int, UniformBufferCluster*> _clustersCur;
 
     /** @brief 标记该对象是否已经销毁 */
     bool _destroyed = false;
@@ -74,18 +74,24 @@ private:
      * @param blockNum 内存块数量
      * @return 新创建的集群指针
      */
-    UniformBufferCluster* _addCluster(int size, int blockNum = 10);
+    UniformBufferCluster* _addCluster(int size, int blockNum = 16);
 
+    /**
+     * 创建大内存块对象
+     * @param size 小内存块尺寸
+     * @param blockNum 小内存块初始容量
+     * @param manager 管理器
+     */
+    UniformBufferCluster* _createBufferCluster(int size, int blockNum);
 public:
     bool _useBigBuffer = true;  // 是否使用大内存模式
-    int _snCounter = 0;         // 序号计数器
     int byteAlign = 256;        // 字节对齐
     int clusterMaxBlock = 256;  // 每个Cluster最多容纳的Block数量
     int uploadThreshold = 200;  // 判定为动态块的上传次数阈值
-    int optimizeMemoryThreshold = 100; // 移除内存空洞的阈值
+    int removeHoleThreshold = 10; // 移除内存空洞的阈值
 
-    UBOStat _state;            ///< 统计信息
-    bool _enableStat = false;  ///< 是否启用统计
+    UBOStat _stat;            ///< 统计信息
+    bool _enableStat = true;  ///< 是否启用统计
 
     /**
      * @brief 构造函数
@@ -169,6 +175,8 @@ public:
      */
     bool destroy();
 
+    void statisTimeCostAvg(int time);
+
     // 内部管理方法
     void _addUpdateArray(UniformBufferCluster* cluster);
     void _addRemoveHoleCluster(UniformBufferCluster* cluster);
@@ -178,7 +186,7 @@ public:
     virtual void* createGPUBuffer(int size, const char* name = nullptr) = 0;
     virtual void writeBuffer(void* buffer, const void* data, int offset, int size) = 0;
     virtual void statisGPUMemory(int bytes) = 0;
-    virtual void statisUpload(int count, int bytes) = 0;
+    void statisUpload(int count, int bytes);
 };
 
 }

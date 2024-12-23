@@ -13,15 +13,6 @@ namespace laya {
 
 class UniformBufferBlock;
 class UniformBufferManager;
-/**
- * @struct UniformBlockUpdateRange
- * @brief 定义Uniform块的更新范围
- */
-struct UniformBlockUpdateRange {
-    int start;      // 更新的起始位置
-    int end;        // 更新的结束位置
-    bool upload;    // 是否需要上传到GPU
-};
 
 /**
  * @class UniformBufferCluster
@@ -32,24 +23,39 @@ struct UniformBlockUpdateRange {
  */
 class UniformBufferCluster {
 private:
-    bool _destroyed = false;
-    int _blockNum = 0;              // 小块总数量
-    std::vector<uint8_t> _move;     // 移动时的临时数据
-    int _totalSize = 0;             // 总体尺寸
-    std::vector<UniformBufferBlock*> _blocks; // 小内存块
-    std::vector<bool> needUpload;   // 需要上传的块
-    int _holeNums = 0;              // 空洞数量
+    static int _idCounter;  // 全局ID计数器
+    int _id = 0;                    // 唯一编号
 
-    void _expandBuffer();           // 扩展缓冲区
-    void _moveBlock(int index);     // 移动内存块
     int _getBlockWithExpand();      // 获取可用块（必要时扩展）
+    int _expand = 16;                // 每次扩展时增加的块数量
+
+protected:
+    int _blockNum = 0;              // 小块总数量
+    int _totalSize = 0;             // 总体尺寸
+    bool _destroyed = false;
+    std::vector<uint8_t> _move;     // 移动时的临时数据
+    std::vector<UniformBufferBlock*> _blocks; // 小内存块
+    int _holeNums = 0;              // 空洞数量
+    std::vector<bool> _needUpload;   // 需要上传的块
+
+    bool _expandBuffer();           // 扩展缓冲区
+    bool _moveBlock(int index);     // 移动内存块
+
+    /**
+     * @brief 创建小内存块对象
+     * @param index 块索引
+     * @param size 实际大小
+     * @param alignedSize 对齐后的大小
+     * @param user 使用者
+     * @return 新创建的内存块对象
+     */
+    UniformBufferBlock* _createBufferBlock(int index, int size, int alignedSize, IUniformBufferUser* user);
 
 public:
     bool _inManagerUpdateArray = false;  // 是否在管理器的更新数组中
-    int sn = 0;                     // 集群序号
+    int _sn = 0;                     // 集群序号
     int _blockSize = 0;             // 每个小块的大小（字节）
     void* buffer = nullptr;         // GPU端的缓冲区对象
-    int expand = 10;                // 每次扩展时增加的块数量
     std::vector<uint8_t> data;      // CPU端的数据缓冲区
     UniformBufferManager* manager = nullptr;  // 所属的UniformBuffer管理器
 
@@ -97,12 +103,12 @@ public:
     /**
      * @brief 优化内存布局
      */
-    void optimize();
+    bool optimize();
 
     /**
      * @brief 移除内存碎片
      */
-    void removeHole();
+    bool removeHole();
 
     /**
      * @brief 清理内存块
