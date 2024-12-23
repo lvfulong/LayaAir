@@ -113,8 +113,10 @@ void GLESShaderData::clearData()
 
     m_data.clear();
     m_gammaColorMap.clear();
-
-    _defineDatas->clear();
+    if (_defineDatas != nullptr)
+    {
+        _defineDatas->clear();
+    }
     _needCacheData = false;
 }
 
@@ -125,8 +127,11 @@ void GLESShaderData::destroy()
     }
     isDestroy = true;
     clearData();
-    _defineDatas->destroy();
-    _defineDatas = nullptr;
+    if (_defineDatas != nullptr)
+    {
+        _defineDatas->destroy();
+        _defineDatas = nullptr;
+    }
 }
 
 void GLESShaderData::addDefine(RTShaderDefine define)
