@@ -850,6 +850,8 @@ interface conch {
     setCmdBuffer(buf:ArrayBuffer):void;
     set2DCmdBuffer(buf:ArrayBuffer):void;
     strTobufer(s:string):ArrayBuffer;
+    postSyncMessage(eventName: string, data: string): string;
+    postAsyncMessage(eventName: string, data: string): Promise<string>;
     /**
      * 注册一个shaderdefine
      */
