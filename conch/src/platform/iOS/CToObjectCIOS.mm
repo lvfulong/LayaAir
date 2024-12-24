@@ -1419,8 +1419,10 @@ NSString *callClassMethodWithReflection(NSString *className, NSString *methodNam
             index++;
         }
         [invocation invoke];
+        id __unsafe_unretained tmpResult;
         if ([signature methodReturnLength] > 0) { // 如果有返回值
-            [invocation getReturnValue:&result];
+            [invocation getReturnValue:&tmpResult];
+            result = tmpResult;
         }
     } else {
         NSLog(@"Class %@ does not respond to selector %@", className, methodName);
