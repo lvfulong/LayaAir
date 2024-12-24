@@ -46,10 +46,10 @@ template <typename T> class ValueTraits<T, std::enable_if_t<std::is_enum<T>::val
     {
         return internal::makeInt32(static_cast<int32_t>(value));
     }
-    /*static bool is(jsvm_value value)
+    static bool is(jsvm_value value)
     {
-        return p_vl->IsInt32();
-    }*/
+        return internal::isNumber(value);
+    }
 };
 
 template <typename T> class ValueTraits<T, std::enable_if_t<internal::is_wrapped_class<T>::value>>
@@ -135,31 +135,12 @@ template <> class ValueTraits<int32_t>
     {
         return internal::makeInt32(value);
     }
-    /*
-    static bool is(Env env, Value value)
+    static bool is(jsvm_value value)
     {
-        return p_vl->IsInt32();
-    }*/
-};
-#if 0
-template <> class ValueTraits<int32_t *>
-{
-  public:
-    static int32_t ToCpp(jsvm_value value)
-    {
-        return internal::getInt32(value);
+        return internal::isNumber(value);
     }
-    static jsvm_value ToJs(int32_t *value, bool callDestructor = true)
-    {
-        return internal::makeInt32(*value);
-    }
-    /*
-    static bool is(v8::Local<v8::Value> p_vl)
-    {
-        return p_vl->IsInt32();
-    }*/
 };
-#endif
+
 template <> class ValueTraits<const int32_t &> : public ValueTraits<int32_t>
 {
 };
@@ -174,10 +155,10 @@ template <> class ValueTraits<uint32_t>
     {
         return internal::makeUint32(value);
     }
-    /*static bool is(v8::Local<v8::Value> p_vl)
+    static bool is(jsvm_value value)
     {
-        return p_vl->IsUint32();
-    }*/
+        return internal::isNumber(value);
+    }
 };
 
 #ifdef OS_IOS
@@ -198,11 +179,10 @@ template <> class ValueTraits<long>
         }*/
         return internal::getInt64Noloss(value);
     }
-
-    /*static bool is(v8::Local<v8::Value> p_vl)
+    static bool is(jsvm_value value)
     {
-        return p_vl->IsNumber();
-    }*/
+       return internal::isBigInt(value);
+    }
 };
 #endif
 // 用bigint 保证精度不丢失,可以用于bullet对象指针
@@ -225,10 +205,10 @@ template <> class ValueTraits<int64_t>
     {
         return internal::makeInt64Noloss(value);
     }
-    /*static bool is(v8::Local<v8::Value> p_vl)
-   {
-       return p_vl->IsNumber();
-   }*/
+    static bool is(jsvm_value value)
+    {
+       return internal::isBigInt(value);
+    }
 };
 template <> class ValueTraits<uint64_t>
 {
@@ -245,10 +225,10 @@ template <> class ValueTraits<uint64_t>
     {
         return internal::makeUint64Noloss(value);
     }
-    /*static bool is(jsvm_value value)
+    static bool is(jsvm_value value)
     {
-        return p_vl->IsNumber();
-    }*/
+       return internal::isBigInt(value);
+    }
 };
 
 template <> class ValueTraits<uint16_t>
@@ -262,10 +242,10 @@ template <> class ValueTraits<uint16_t>
     {
         return internal::makeUint32(static_cast<uint8_t>(value));
     }
-    //static bool is(v8::Local<v8::Value> p_vl)
-    //{
-    //    return p_vl->IsUint32();
-    //}
+    static bool is(jsvm_value value)
+    {
+        return internal::isNumber(value);
+    }
 };
 template <> class ValueTraits<uint8_t>
 {
@@ -278,10 +258,10 @@ template <> class ValueTraits<uint8_t>
     {
         return internal::makeUint32(static_cast<uint8_t>(value));
     }
-    // static bool is(v8::Local<v8::Value> p_vl)
-    //{
-    //     return p_vl->IsUint32();
-    // }
+    static bool is(jsvm_value value)
+    {
+        return internal::isNumber(value);
+    }
 };
 template <> class ValueTraits<const uint8_t &> : public ValueTraits<uint8_t>
 {
@@ -303,28 +283,7 @@ template <> class ValueTraits<bool>
         return internal::isBool(value);
     }
 };
-#if 0
-template <> class ValueTraits<bool *>
-{
-  public:
-    static bool ToCpp(jsvm_value value)
-    {
-        return internal::getBool(value);
-    }
-    static jsvm_value ToJs(bool *value, bool callDestructor = true)
-    {
-        if (value == nullptr)
-        {
-            internal::makeNull();
-        }
-        return internal::makeBool(*value);
-    }
-    static bool is(jsvm_value value)
-    {
-        return internal::isBool(value);
-    }
-};
-#endif
+
 template <> class ValueTraits<float>
 {
   public:
@@ -336,33 +295,12 @@ template <> class ValueTraits<float>
     {
         return internal::makeDouble(static_cast<float>(value));
     }
-    /*static bool is(jsvm_value value)
+   static bool is(jsvm_value value)
     {
-        return p_vl->IsNumber();
-    }*/
+        return internal::isNumber(value);
+    }
 };
-/*
-template <> class ValueTraits<float *>
-{
-  public:
-    static float ToCpp(v8::Local<v8::Value> p_vl)
-    {
-        return static_cast<float>(p_vl->NumberValue(v8::Isolate::GetCurrent()->GetCurrentContext()).ToChecked());
-        // return static_cast<float>(val.As<Number>()->Value());
-    }
-    static v8::Local<v8::Value> ToJs(float *p_vl, bool callDestructor = true)
-    {
-        if (p_vl == nullptr)
-        {
-            return v8::Null(v8::Isolate::GetCurrent());
-        }
-        return v8::Number::New(v8::Isolate::GetCurrent(), *p_vl);
-    }
-    static bool is(v8::Local<v8::Value> p_vl)
-    {
-        return p_vl->IsNumber();
-    }
-};*/
+
 
 template <> class ValueTraits<double>
 {
@@ -394,10 +332,10 @@ template <> class ValueTraits<std::u16string>
     {
         return internal::makeStringUtf16(value);
     }
-    /*static bool is(jsvm_value value)
+    static bool is(jsvm_value value)
     {
-        return p_vl->IsString();
-    }*/
+        return internal::isString(value);
+    }
 };
 // utf8 string
 template <> class ValueTraits<std::string>
@@ -420,10 +358,10 @@ template <> class ValueTraits<std::string>
     {
         return internal::makeStringUtf8(value);
     }
-    /*static bool is(jsvm_value value)
+    static bool is(jsvm_value value)
     {
-        return p_vl->IsString();
-    }*/
+        return internal::isString(value);
+    }
 };
 
 // const char* sColor = ValueTraits<const char*>::ToCpp(args);          so not save sColor for latter use   get right
@@ -465,10 +403,10 @@ template <> class ValueTraits<const char *>
     {
         return internal::makeStringUtf8(value.data());
     }
-    /*static bool is(jsvm_value value)
+    static bool is(jsvm_value value)
     {
-        return p_vl->IsString();
-    }*/
+        return internal::isString(value);
+    }
 };
 
 template <> class ValueTraits<jsvm_value>
@@ -482,10 +420,10 @@ template <> class ValueTraits<jsvm_value>
     {
         return value;
     }
-    /*static bool is(jsvm_value value)
- {
-     return true;
- }*/
+    static bool is(jsvm_value value)
+    {
+        return true;
+    }
 };
 template <> class ValueTraits<void>
 {

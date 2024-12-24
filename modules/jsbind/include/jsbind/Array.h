@@ -153,10 +153,10 @@ template <typename T> class ValueTraits<std::vector<T *>>
     {
         return Array<T>::ToJs(value, callDestructor);
     }
-    /*static bool is(v8::Local<v8::Value> p_vl)
+    static bool is(jsvm_value value)
     {
-        return p_vl->IsArray();
-    }*/
+        return internal::isArray(value);
+    }
 };
 template <typename T> class ValueTraits<const std::vector<T *> &> : public ValueTraits<std::vector<T *>>
 {

@@ -364,7 +364,14 @@ inline bool isDataView(jsvm_value value)
     jsvm_is_dataview(env, value, &isDataview);
     return isDataview;
 }
-
+inline bool isBigInt(jsvm_value value)
+{
+    GET_ENV
+    jsvm_valuetype valueType;
+    jsvm_status status = jsvm_typeof(env, value, &valueType);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+    return valueType == jsvm_valuetype::jsvm_bigint;
+}
 } // namespace internal
 } // namespace jsbind
 #endif

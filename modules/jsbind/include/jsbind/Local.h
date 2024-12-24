@@ -248,10 +248,10 @@ template <> class ValueTraits<Local>
     {
         return value.getHandle();
     }
-    /*static bool is(jsvm_value value)
+    static bool is(jsvm_value value)
     {
         return true;
-    }*/
+    }
 };
 } // namespace internal
 } // namespace jsbind
