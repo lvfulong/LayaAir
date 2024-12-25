@@ -152,7 +152,7 @@ void  GLESEngine::_initBufferBlock() {
     if (canUseUBO) {
         
         int offsetAlignment;
-        glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &offsetAlignment);
+        glGetIntegerv(GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, &offsetAlignment);
         bufferMgr = new GLESUniformBufferManager(this, offsetAlignment);
 
         int maxBlockCount;

@@ -4,6 +4,7 @@
 #include "render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRenderContext3D.h"
 #include "render/RenderDriver/OpenGLESDriver/3DRenderPass/OpenGLESRenderUtil/GLESCullUtil.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESCommandUniformMap.h"
 namespace laya
 {
 
@@ -146,6 +147,9 @@ void GLESSpotLightShadowRP::_applyRenderData(GLESShaderData* sceneData, GLESShad
 ShadowSpotData::ShadowSpotData()
 {
     cameraShaderValue = new GLESShaderData(new RTDefineDatas());
+    if (LayaGL::m_pWebglEngine->enableUniformBufferObject) {
+        cameraShaderValue->createUniformBuffer(BaseCameraProperty::UBONAME_CAMERA, GLESCommandUniformMap::createGlobalUniformMap(BaseCameraProperty::UBONAME_CAMERA.c_str()));
+    }
 }
 
 ShadowSpotData::~ShadowSpotData()

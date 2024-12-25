@@ -40,6 +40,7 @@ void GLESSubUniformBuffer::bind(int location) {
     if (bufferBlock) {
         GLBuffer* buffer = static_cast<GLBuffer*>(bufferBlock->cluster->buffer);
         buffer->bindBufferRange(location, bufferBlock->offset, bufferBlock->size);
+    
     }
 }
 

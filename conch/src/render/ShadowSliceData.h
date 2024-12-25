@@ -9,6 +9,9 @@
 #include <core/math/BoundFrustum.h>
 #include "render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESCommandUniformMap.h"
+#include "Property.h"
+#include "string"
 namespace laya
 {
 class GLESShaderData;
@@ -25,6 +28,10 @@ class ShadowSliceData
   public:
       ShadowSliceData() {
           cameraShaderValue = new GLESShaderData(new RTDefineDatas());
+          if (LayaGL::m_pWebglEngine->enableUniformBufferObject) {
+              cameraShaderValue->createUniformBuffer(BaseCameraProperty::UBONAME_CAMERA, GLESCommandUniformMap::createGlobalUniformMap(BaseCameraProperty::UBONAME_CAMERA.c_str()));
+          }
+          
       };
     GLESShaderData *cameraShaderValue; // todo LayaGL.renderOBJCreate.createShaderData(null);
     Vector3 position;

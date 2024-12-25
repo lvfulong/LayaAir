@@ -702,6 +702,7 @@ class RenderBindings
             jsbind::class_<GLESRenderContext2D> class_binding;
             class_binding.constructor<>();
             class_binding.function("setGlobalConfigShaderData", &GLESRenderContext2D::setGlobalConfigShaderData);
+            class_binding.function("setSceneShaderData", &GLESRenderContext2D::setSceneShaderData);
             class_binding.function("setRenderTarget", &GLESRenderContext2D::setRenderTarget);
             class_binding.function("setOffscreenView", &GLESRenderContext2D::setOffscreenView);
             class_binding.function("drawRenderElementOne", &GLESRenderContext2D::drawRenderElementOne);
