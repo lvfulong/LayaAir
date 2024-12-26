@@ -20,7 +20,7 @@ UniformBufferCluster::UniformBufferCluster(int blockSize, int blockNum, UniformB
     _move.resize(this->_blockSize);
     buffer = manager->createGPUBuffer(this->_totalSize);
     manager->statisGPUMemory(this->_totalSize);
-    _needUpload.resize(_expand);
+    _needUpload.resize(_expand,0);
 }
 
 UniformBufferCluster::~UniformBufferCluster() {
@@ -42,7 +42,7 @@ bool UniformBufferCluster::_expandBuffer() {
     const int expandSize = this->_blockSize * this->_expand;
     
     // 扩展needUpload数组
-    this->_needUpload.resize(this->_needUpload.size() + expandNum, false);
+    this->_needUpload.resize(this->_needUpload.size() + expandNum, 0);
 
     // 创建新的CPU缓冲区
     std::vector<uint8_t> newData(_totalSize);
@@ -103,7 +103,7 @@ UniformBufferBlock* UniformBufferCluster::getBlock(int size, IUniformBufferUser*
 }
 
 void UniformBufferCluster::_addUploadBlock(int index) {
-    this->_needUpload[index] = true;
+    this->_needUpload[index] = 1;
     if (!this->_inManagerUpdateArray) {
         this->manager->_addUpdateArray(this);
     }
@@ -145,7 +145,7 @@ void UniformBufferCluster::upload() {
                 startIndex = i;
             endIndex = i;
             next = true;
-            this->_needUpload[i] = false;
+            this->_needUpload[i] = 0;
             if (_blocks[i]) {
                 _blocks[i]->user->updateOver();
             }
@@ -261,7 +261,7 @@ void UniformBufferCluster::clear(int blockNum) {
     }
     
     this->_needUpload.resize(this->_blockNum);
-    std::fill(this->_needUpload.begin(), this->_needUpload.end(), false);
+    std::fill(this->_needUpload.begin(), this->_needUpload.end(), 0);
 }
 
 int UniformBufferCluster::_getBlockWithExpand() {

@@ -36,7 +36,7 @@ protected:
     std::vector<uint8_t> _move;     // 移动时的临时数据
     std::vector<UniformBufferBlock*> _blocks; // 小内存块
     int _holeNums = 0;              // 空洞数量
-    std::vector<bool> _needUpload;   // 需要上传的块
+    std::vector<int> _needUpload;   // 需要上传的块
 
     bool _expandBuffer();           // 扩展缓冲区
     bool _moveBlock(int index);     // 移动内存块
