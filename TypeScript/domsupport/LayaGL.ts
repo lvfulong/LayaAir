@@ -1898,6 +1898,7 @@ class GLCommandEncoder
         case LayaGLContext.STENCIL_FAIL:       case LayaGLContext.STENCIL_FUNC:      case LayaGLContext.STENCIL_PASS_DEPTH_FAIL:
         case LayaGLContext.STENCIL_PASS_DEPTH_PASS:    case LayaGLContext.STENCIL_REF:    case LayaGLContext.STENCIL_VALUE_MASK:
         case LayaGLContext.STENCIL_WRITEMASK:  case LayaGLContext.SUBPIXEL_BITS:    case LayaGLContext.UNPACK_ALIGNMENT:
+        case LayaGLContext.UNIFORM_BUFFER_OFFSET_ALIGNMENT: case LayaGLContext.MAX_UNIFORM_BUFFER_BINDINGS:
             result = gl._nativeObj.getIntegerv(pname)
             break;
         case LayaGLContext.CURRENT_PROGRAM: 
@@ -4015,11 +4016,17 @@ class LayaGLContext
     readonly MAX_VERTEX_UNIFORM_BLOCKS: number = 0x8A2B;
     readonly MAX_FRAGMENT_UNIFORM_BLOCKS: number = 0x8A2D;
     readonly MAX_COMBINED_UNIFORM_BLOCKS: number = 0x8A2E;
-    readonly MAX_UNIFORM_BUFFER_BINDINGS: number = 0x8A2F;
+
+    public static readonly MAX_UNIFORM_BUFFER_BINDINGS: number = 0x8A2F; 
+    public readonly MAX_UNIFORM_BUFFER_BINDINGS: number = 0x8A2F;
+
     readonly MAX_UNIFORM_BLOCK_SIZE: number = 0x8A30;
     readonly MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS: number = 0x8A31;
     readonly MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS: number = 0x8A33;
-    readonly UNIFORM_BUFFER_OFFSET_ALIGNMENT: number = 0x8A34;
+
+    public static readonly UNIFORM_BUFFER_OFFSET_ALIGNMENT: number = 0x8A34;
+    public readonly UNIFORM_BUFFER_OFFSET_ALIGNMENT: number = 0x8A34;
+
     readonly ACTIVE_UNIFORM_BLOCKS: number = 0x8A36;
     readonly UNIFORM_TYPE: number = 0x8A37;
     readonly UNIFORM_SIZE: number = 0x8A38;

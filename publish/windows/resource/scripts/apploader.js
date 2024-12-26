@@ -3239,6 +3239,8 @@ class GLCommandEncoder {
             case LayaGLContext.STENCIL_WRITEMASK:
             case LayaGLContext.SUBPIXEL_BITS:
             case LayaGLContext.UNPACK_ALIGNMENT:
+            case LayaGLContext.UNIFORM_BUFFER_OFFSET_ALIGNMENT:
+            case LayaGLContext.MAX_UNIFORM_BUFFER_BINDINGS:
                 result = gl._nativeObj.getIntegerv(pname);
                 break;
             case LayaGLContext.CURRENT_PROGRAM:
@@ -5455,6 +5457,8 @@ LayaGLContext.UNPACK_COLORSPACE_CONVERSION_WEBGL = 0x9243;
 LayaGLContext.BROWSER_DEFAULT_WEBGL = 0x9244;
 LayaGLContext.RGBA16F = 0x881A;
 LayaGLContext.HALF_FLOAT = 0x140B;
+LayaGLContext.MAX_UNIFORM_BUFFER_BINDINGS = 0x8A2F;
+LayaGLContext.UNIFORM_BUFFER_OFFSET_ALIGNMENT = 0x8A34;
 window["webglPlus"] = conch;
 window["WebGLRenderingContext"] = LayaGLContext;
 window["WebGL2RenderingContext"] = LayaGLContext;
