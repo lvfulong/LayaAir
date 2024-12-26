@@ -63,9 +63,6 @@ void GLESShaderData::updateUBOBuffer(const std::string &name) {
 }
 
 GLESSubUniformBuffer* GLESShaderData::createSubUniformBuffer(const std::string &name, std::vector<UniformProperty>& uniformMap){
-    if (!LayaGL::m_pWebglEngine->enableUniformBufferObject) {
-        return nullptr;
-    }
     if (_subUniformBuffers.find(name) != _subUniformBuffers.end()) {
         GLESSubUniformBuffer* subBuffer = _subUniformBuffers[name];
         for (auto it = _updateCacheArray.begin(); it != _updateCacheArray.end(); ++it) {
