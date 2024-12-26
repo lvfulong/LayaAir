@@ -214,8 +214,8 @@ void GLShaderInstance::_addShaderUnifiormFun(ShaderVariable *one)
         break;
     case GL_FLOAT_MAT3:
         one->fun = isArray
-            ? std::bind(&GLShaderInstance::_uniformMatrix3f, this, std::placeholders::_1, std::placeholders::_2)
-            : std::bind(&GLShaderInstance::_uniformMatrix3fv, this, std::placeholders::_1, std::placeholders::_2);
+            ? std::bind(&GLShaderInstance::_uniformMatrix3fv, this, std::placeholders::_1, std::placeholders::_2)
+            : std::bind(&GLShaderInstance::_uniformMatrix3f, this, std::placeholders::_1, std::placeholders::_2);
         one->byteSize = sizeof(GLfloat) * 9 * one->count;
         break;
     case GL_FLOAT_MAT4:
