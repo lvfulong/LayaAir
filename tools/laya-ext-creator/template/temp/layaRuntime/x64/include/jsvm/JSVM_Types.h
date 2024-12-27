@@ -65,22 +65,24 @@ enum jsvm_typedarray_type
 };
 
 #if defined(JS_OHOS_JSVM)
-using jsvm_env = JSVM_Env;
-using jsvm_deferred = JSVM_Deferred;
-using jsvm_value = JSVM_Value;
-using jsvm_callback_info = JSVM_CallbackInfo;
-using jsvm_finalize = JSVM_Finalize;
-using jsvm_ref = JSVM_Ref;
+typedef JSVM_Env jsvm_env;
+typedef JSVM_Deferred jsvm_deferred;
+typedef JSVM_Value jsvm_value;
+typedef JSVM_CallbackInfo jsvm_callback_info;
+typedef JSVM_Finalize jsvm_finalize;
+typedef JSVM_Ref jsvm_ref;
 typedef JSVM_Value(JSVM_CDECL *jsvm_callback)(JSVM_Env env, JSVM_CallbackInfo info);
-// using Script = JSVM_Script;
-using jsvm_vm = JSVM_VM;
-using jsvm_vm_scope = JSVM_VMScope;
-using jsvm_env_scope = JSVM_EnvScope;
-using jsvm_handle_scope = JSVM_HandleScope;
-using jsvm_init_options = JSVM_InitOptions;
-using jsvm_create_vm_options = JSVM_CreateVMOptions;
+typedef JSVM_VM jsvm_vm;
+typedef JSVM_VMScope jsvm_vm_scope;
+typedef JSVM_EnvScope jsvm_env_scope;
+typedef JSVM_HandleScope jsvm_handle_scope;
+typedef JSVM_EscapableHandleScope jsvm_escapable_handle_scope;
+typedef JSVM_InitOptions jsvm_init_options;
+typedef JSVM_CreateVMOptions jsvm_create_vm_options;
+typedef JSVM_Script jsvm_script;
 #endif
 #if defined(JS_V8)
+#define JSVM_AUTO_LENGTH SIZE_MAX
 typedef napi_env jsvm_env;
 typedef napi_deferred jsvm_deferred;
 typedef napi_value jsvm_value;
@@ -88,11 +90,12 @@ typedef napi_callback_info jsvm_callback_info;
 typedef node_api_basic_finalize jsvm_finalize;
 typedef napi_ref jsvm_ref;
 typedef napi_value(NAPI_CDECL *jsvm_callback)(napi_env env, napi_callback_info info);
-
 typedef struct VM__ *jsvm_vm;
 typedef struct VMScope__ *jsvm_vm_scope;
 typedef struct EnvScope__ *jsvm_env_scope;
-using jsvm_handle_scope = napi_handle_scope;
+typedef napi_handle_scope jsvm_handle_scope;
+typedef napi_escapable_handle_scope jsvm_escapable_handle_scope;
+typedef napi_value jsvm_script;
 struct jsvm_init_options
 {
     const intptr_t *externalReferences;
@@ -136,4 +139,33 @@ struct jsvm_property_descriptor
     void *data;
 };
 
+struct jsvm_extended_error_info
+{
+    const char *error_message;
+    void *engine_reserved;
+    uint32_t engine_error_code;
+    jsvm_status error_code;
+};
+
+enum jsvm_key_collection_mode
+{
+    jsvm_key_include_prototypes,
+    jsvm_key_own_only
+};
+
+enum jsvm_key_filter
+{
+    jsvm_key_all_properties = 0,
+    jsvm_key_writable = 1,
+    jsvm_key_enumerable = 1 << 1,
+    jsvm_key_configurable = 1 << 2,
+    jsvm_key_skip_strings = 1 << 3,
+    jsvm_key_skip_symbols = 1 << 4
+};
+
+enum jsvm_key_conversion
+{
+    jsvm_key_keep_numbers,
+    jsvm_key_numbers_to_strings
+};
 #endif
