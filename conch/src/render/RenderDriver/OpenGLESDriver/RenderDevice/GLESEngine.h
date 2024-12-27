@@ -39,7 +39,18 @@ class RTShaderDefine;
 class RTDefineDatas;
 struct VertexStateContext;
 class GLESUniformBufferManager;
-struct UboBindingMapInfo;
+struct UboBindingMapInfo {
+	UboBindingMapInfo() {};
+	UboBindingMapInfo(GLBuffer* glbuffer,int byteoffset,int bytesize):
+		buffer(glbuffer),offset(byteoffset), size(bytesize){};
+	~UboBindingMapInfo() {};
+	GLBuffer* buffer;
+	int offset;
+	int size;
+	bool operator==(const UboBindingMapInfo& other) const {
+		return (buffer == other.buffer && offset == other.offset && size == other.size);
+	}
+};
 class GLESEngine
 {
   public:
@@ -111,8 +122,8 @@ class GLESEngine
     std::unordered_map<std::string, std::unordered_map<int32_t, VertexStateContext>*> _globalVertexDeclaration;
 public:
     GLESUniformBufferManager* bufferMgr;
-    bool enableUniformBufferObject{ false };//是否使用UBO模式 影响Scene和Camera
-    bool matUseUBO{ false };//是否使用Material UBO
+    bool enableUniformBufferObject{ false };//鏄惁浣跨敤UBO妯″紡 褰卞搷Scene鍜孋amera
+    bool matUseUBO{ false };//鏄惁浣跨敤Material UBO
     bool spriteUseUBO{ false };//TODO
     std::vector<UboBindingMapInfo> _uboBindingMap{};
 private:
