@@ -243,7 +243,6 @@ class RenderBindings
             class_binding.function("setupRendertargetTextureAttachment",
                                    &GLTextureContext::setupRendertargetTextureAttachment);
             class_binding.function("initVideoTextureData", &GLTextureContext::initVideoTextureData);
-            class_binding.function("updateVideoTexture", &GLTextureContext::updateVideoTexture);
             class_binding.function_optional_override(
                 "updateVideoTexture", jsbind::optional_override([](GLTextureContext &ctx, GLESInternalTex *texture, int source,
                                                            bool premultiplyAlpha, bool invertY) {
