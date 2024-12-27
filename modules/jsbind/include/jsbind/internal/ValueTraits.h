@@ -173,10 +173,14 @@ template <> class ValueTraits<long>
     }
     static long ToCpp(jsvm_value value)
     {
-        /*if (!value->IsNumber() || value->IsNullOrUndefined())
+        GET_ENV
+        jsvm_valuetype valueType;
+        jsvm_status status = jsvm_typeof(env, value, &valueType);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+        if (valueType == jsvm_valuetype::jsvm_null || valueType == jsvm_valuetype::jsvm_undefined)
         {
             return 0;
-        }*/
+        }
         return internal::getInt64Noloss(value);
     }
     static bool is(jsvm_value value)
