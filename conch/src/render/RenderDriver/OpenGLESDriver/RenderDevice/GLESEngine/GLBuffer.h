@@ -8,18 +8,7 @@ namespace laya
 {
 	class GLESEngine;
 
-	struct UboBindingMapInfo {
-		UboBindingMapInfo() {};
-		UboBindingMapInfo(GLBuffer* glbuffer,int byteoffset,int bytesize):
-			buffer(glbuffer),offset(byteoffset), size(bytesize){};
-		~UboBindingMapInfo() {};
-		GLBuffer* buffer;
-		int offset;
-		int size;
-		bool operator==(const UboBindingMapInfo& other) const {
-			return (buffer == other.buffer && offset == other.offset && size == other.size);
-		}
-	};
+
 
 	class GLBuffer : public GLObject
 	{
