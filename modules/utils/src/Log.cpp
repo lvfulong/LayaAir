@@ -8,6 +8,9 @@ int g_nLogLevel = static_cast<int>(laya::LogLevel::Debug);
 #if defined(OS_OHOS)
 void logMessage(laya::LogType logType, const char *file, int line, const char *fmt, ...)
 {
+    if (!fmt)
+        return;
+
     va_list args0;
     va_list args1;
 
@@ -16,9 +19,20 @@ void logMessage(laya::LogType logType, const char *file, int line, const char *f
     ssize_t const s = vsnprintf(nullptr, 0, fmt, args0);
     va_end(args0);
 
+    if (s < 0)
+    {
+        va_end(args1);
+        return;
+    }
+
     std::vector<char> message;
     message.resize(s + 1);
-    vsnprintf(message.data(), s, fmt, args1);
+
+    if (vsnprintf(message.data(), s + 1, fmt, args1) < 0)
+    {
+        va_end(args1);
+        return;
+    }
 
     va_end(args1);
 
