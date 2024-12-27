@@ -1,6 +1,6 @@
 {
   "name": "laya-ext-creator",
-  "version": "1.1.2",
+  "version": "1.1.4",
   "description": "Create Visual Studio project templates for laya native extentions",
   "main": "index.js",
   "bin": {
@@ -19,7 +19,6 @@
   "license": "ISC",
   "dependencies": {
     "fs-extra": "^11.2.0",
-    "laya-ext-creator": "^1.1.2",
     "uuid": "^11.0.3"
   }
 }

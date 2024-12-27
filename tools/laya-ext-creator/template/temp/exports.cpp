@@ -66,7 +66,7 @@ jsvm_value jsBin(jsvm_env env, jsvm_callback_info info) {
     buff[0] = 22;
 
     jsvm_value retLen;
-    JSVM_CALL_CHECK(jsvm_create_int32(env, byteLen, &retLen));
+    JSVM_CALL_CHECK(jsvm_create_int32(env, (int)byteLen, &retLen));
     return retLen;
 }
 
