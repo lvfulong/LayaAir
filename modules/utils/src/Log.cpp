@@ -24,11 +24,10 @@ void logMessage(laya::LogType logType, const char *file, int line, const char *f
         va_end(args1);
         return;
     }
+    std::string message;
+    message.resize(s);
 
-    std::vector<char> message;
-    message.resize(s + 1);
-
-    if (vsnprintf(message.data(), s + 1, fmt, args1) < 0)
+    if (vsnprintf(&message[0], s + 1, fmt, args1) < 0)
     {
         va_end(args1);
         return;
@@ -41,31 +40,31 @@ void logMessage(laya::LogType logType, const char *file, int line, const char *f
     case laya::LogType::Fatal:
         if (g_nLogLevel >= static_cast<int>(laya::LogLevel::Fatal))
         {
-            OH_LOG_Print(LOG_APP, LOG_FATAL, LOG_DOMAIN, LOG_TAG, "%{public}s", message.data());
+            OH_LOG_Print(LOG_APP, LOG_FATAL, LOG_DOMAIN, LOG_TAG, "%{public}s", message.c_str());
         }
         break;
     case laya::LogType::Warn:
         if (g_nLogLevel >= static_cast<int>(laya::LogLevel::Warn))
         {
-            OH_LOG_Print(LOG_APP, LOG_WARN, LOG_DOMAIN, LOG_TAG, "%{public}s", message.data());
+            OH_LOG_Print(LOG_APP, LOG_WARN, LOG_DOMAIN, LOG_TAG, "%{public}s", message.c_str());
         }
         break;
     case laya::LogType::Error:
         if (g_nLogLevel >= static_cast<int>(laya::LogLevel::Error))
         {
-            OH_LOG_Print(LOG_APP, LOG_ERROR, LOG_DOMAIN, LOG_TAG, "%{public}s", message.data());
+            OH_LOG_Print(LOG_APP, LOG_ERROR, LOG_DOMAIN, LOG_TAG, "%{public}s", message.c_str());
         }
         break;
     case laya::LogType::Debug:
         if (g_nLogLevel >= static_cast<int>(laya::LogLevel::Debug))
         {
-            OH_LOG_Print(LOG_APP, LOG_DEBUG, LOG_DOMAIN, LOG_TAG, "%{public}s", message.data());
+            OH_LOG_Print(LOG_APP, LOG_DEBUG, LOG_DOMAIN, LOG_TAG, "%{public}s", message.c_str());
         }
         break;
     case laya::LogType::Info:
         if (g_nLogLevel >= static_cast<int>(laya::LogLevel::Info))
         {
-            OH_LOG_Print(LOG_APP, LOG_INFO, LOG_DOMAIN, LOG_TAG, "%{public}s", message.data());
+            OH_LOG_Print(LOG_APP, LOG_INFO, LOG_DOMAIN, LOG_TAG, "%{public}s", message.c_str());
         }
         break;
     default:
