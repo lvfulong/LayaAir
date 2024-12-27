@@ -126,8 +126,6 @@ if(OS_WINDOWS OR OS_LINUX)
     list(APPEND CONCH_PUBLIC_HEADERS_NAPI
         ${PUBLIC_HEADER_DIR}/${TARGET}/napi/js_native_api_types.h
         ${PUBLIC_HEADER_DIR}/${TARGET}/napi/js_native_api.h
-        ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM_Common.h
-        ${PUBLIC_HEADER_DIR}/${TARGET}/JSVM_Common-inl.h
 	)
     install(FILES ${CONCH_PUBLIC_HEADERS_NAPI} DESTINATION include/${TARGET}/napi)
 endif()
