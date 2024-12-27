@@ -130,6 +130,7 @@ UniformBufferBlock* UniformBufferManager::getBlock(int size, IUniformBufferUser*
     if (cluster->getUsedNum() < clusterMaxBlock) {
         return cluster->getBlock(size, user);
     }
+    cluster = nullptr;
 
     // 当前cluster已满，寻找新的可用cluster
     auto& clusters = this->_clustersAll[alignedSize];
