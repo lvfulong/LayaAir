@@ -44,8 +44,8 @@ public class LayaHttpClient {
     }
 
     public LayaHttpClient(){
-        eagerClientBuilder = client.newBuilder()
-        .retryOnConnectionFailure(false); //禁止重试，否则断网会导致3分钟的卡死
+        eagerClientBuilder = client.newBuilder();
+        //.retryOnConnectionFailure(false); //禁止重试，否则断网会导致3分钟的卡死
     }
 
     public static LayaHttpClient create(long ptr, String url, String localFilePath) {
