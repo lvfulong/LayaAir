@@ -299,7 +299,12 @@ void OpenGLBackendAndroidEGL::createScreenSurface(void *nativeHandle)
     EGLint format;
     eglGetConfigAttrib(m_impl->m_eglDisplay, m_impl->m_EGLConfig, EGL_NATIVE_VISUAL_ID, &format);
     // EGL_CHECK_ERROR
-
+#if defined(USE_SWAPPY)
+    if (g_kSystemConfig.isSwappyEnabled())
+    {
+        SwappyGL_setWindow(m_impl->m_aNativeWindow);
+    }
+#endif
     ANativeWindow_setBuffersGeometry(m_impl->m_aNativeWindow, 0, 0, format);
 
     std::vector<EGLint> egl_window_attributes;
@@ -316,12 +321,7 @@ void OpenGLBackendAndroidEGL::createScreenSurface(void *nativeHandle)
     {
         preserveBackBuffer();
     }
-#if defined(USE_SWAPPY)
-    if (g_kSystemConfig.isSwappyEnabled())
-    {
-        SwappyGL_setWindow(m_impl->m_aNativeWindow);
-    }
-#endif
+
 }
 void OpenGLBackendAndroidEGL::destroyScreenSurface()
 {
@@ -333,6 +333,12 @@ void OpenGLBackendAndroidEGL::destroyScreenSurface()
 }
 void OpenGLBackendAndroidEGL::onScreenSurfaceResize(int width, int height)
 {
+#if defined(USE_SWAPPY)
+    if (g_kSystemConfig.isSwappyEnabled())
+    {
+        SwappyGL_setWindow(m_impl->m_aNativeWindow);
+    }
+#endif
     // int width = ANativeWindow_getWidth(m_impl->m_aNativeWindow);
     // int height = ANativeWindow_getHeight(m_impl->m_aNativeWindow);
     if (m_impl->m_EGLSurface != EGL_NO_SURFACE && (m_impl->m_width != width || m_impl->m_height != height))
