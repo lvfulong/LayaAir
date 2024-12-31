@@ -20,7 +20,6 @@ GLESShaderData::GLESShaderData(RTDefineDatas* defineDatas) //: ResourceBase(JCCo
 
 GLESShaderData::~GLESShaderData()
 {
-    destroy();
 }
 
 void GLESShaderData::createUniformBuffer(const std::string &name, GLESCommandUniformMap* uniformMap) {
