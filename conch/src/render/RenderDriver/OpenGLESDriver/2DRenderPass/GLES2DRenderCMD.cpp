@@ -61,11 +61,16 @@ laya::GLESBlit2DQuadCMD::~GLESBlit2DQuadCMD()
 void laya::GLESBlit2DQuadCMD::apply(void* context)
 {
     GLESRenderContext2D* ctx = static_cast<GLESRenderContext2D*>(context);
+    bool cacheInvertY = ctx->invertY;
+    if (_dest == nullptr) {
+        ctx->invertY = false;
+    }
     _element->materialShaderData->setInternalTexture(CommandProperty::SCREENTEXTURE_ID, _source);
     _element->materialShaderData->setVector(CommandProperty::SCREENTEXTUREOFFSETSCALE_ID, _offsetScale);
     _element->materialShaderData->setVector(CommandProperty::MAINTEXTURE_TEXELSIZE_ID, _sourceTexelSize);
     ctx->setRenderTarget(_dest, false, Color::BLACK);
     ctx->drawRenderElementOne(_element);
+    ctx->invertY = cacheInvertY;
 }
 
 void laya::GLESBlit2DQuadCMD::setSource(GLESInternalTex* source)
