@@ -115,6 +115,10 @@ namespace laya
 	{
 		UboBindingMapInfo* info = &m_engine->_uboBindingMap[glPointer];
 		if (info->buffer != this) {
+			if (m_engine->_getbindBuffer(m_targetType) != this)
+			{
+				m_engine->_setbindBuffer(m_targetType, this);
+			}
 			glBindBufferBase(m_glTarget, glPointer, m_glBuffer);
 			
 			info->buffer = this;
@@ -128,6 +132,10 @@ namespace laya
 	{
 		UboBindingMapInfo* info = &m_engine->_uboBindingMap[glPointer];
 		if (info->buffer != this || info->offset != offset || info->size != byteCount) {
+			if (m_engine->_getbindBuffer(m_targetType) != this)
+			{
+				m_engine->_setbindBuffer(m_targetType, this);
+			}
 			glBindBufferRange(m_glTarget, glPointer, m_glBuffer, offset, byteCount);
 			info->buffer = this;
 			info->offset = offset;
