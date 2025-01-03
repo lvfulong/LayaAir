@@ -54,7 +54,7 @@ void GLESUniformBufferDescriptor::addUniform(int index, ShaderDataType type, int
             alignStride = 4;
             break;
         case ShaderDataType::Matrix3x3:
-            size = 9;
+            size = 12;
             alignStride = 12;  // mat3需要4字节对齐,每行需要4个float
             break;
         case ShaderDataType::Matrix4x4:
