@@ -38,6 +38,7 @@ CanvasRenderingContext2DWin::CanvasRenderingContext2DWin(int width, int height)
     m_gdiGraphics = new Gdiplus::Graphics(m_gdiBitmap);
     m_gdiGraphics->SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAliasGridFit);
     m_gdiGraphics->SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
+    m_gdiGraphics->SetPixelOffsetMode(Gdiplus::PixelOffsetModeHighQuality);
 
     m_bitmapData.m_nWidth = width;
     m_bitmapData.m_nHeight = height;
@@ -252,8 +253,8 @@ void CanvasRenderingContext2DWin::setTransform(double a, double b, double c, dou
     {
         return;
     }
-    // Gdiplus::Matrix m(a,  b,  c,  d,  e,  f);
-    // m_gdiGraphics->SetTransform(&m);
+    Gdiplus::Matrix m(a,  b,  c,  d,  e,  f);
+    m_gdiGraphics->SetTransform(&m);
 }
 void CanvasRenderingContext2DWin::scale(double x, double y)
 {
@@ -261,7 +262,7 @@ void CanvasRenderingContext2DWin::scale(double x, double y)
     {
         return;
     }
-    // m_gdiGraphics->ScaleTransform(x, y);
+    m_gdiGraphics->ScaleTransform(x, y);
 }
 /*void CanvasRenderingContext2DWin::setTextAlign(const char* textAlign)
 {
