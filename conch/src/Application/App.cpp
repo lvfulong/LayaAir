@@ -384,12 +384,13 @@ void App::run(const Config &config)
             }
         }
         laya::JCConch::s_pConch->update();
+
         int delay = 8;
-        if (m_min)
+        if (m_min && !laya::g_kSystemConfig.m_runInBackground)
         {
             delay = 100;
         }
-        else if (!m_activate)
+        else if (!m_activate && !laya::g_kSystemConfig.m_runInBackground)
         {
             delay = 33;
         }
