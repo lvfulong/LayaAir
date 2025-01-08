@@ -320,6 +320,8 @@ list(APPEND CONCH_SRC
 	src/2D/src/FontManager.cpp
 
 	# 暴露给JS的类
+	src/Bindings/JSDevice.h
+	src/Bindings/JSDevice.cpp
 	src/Bindings/Bullet/LayaBulletExport.h
 	src/Bindings/Bullet/LayaBulletExport.cpp
 	src/Bindings/Bullet/LayaBulletExportImp.cpp
