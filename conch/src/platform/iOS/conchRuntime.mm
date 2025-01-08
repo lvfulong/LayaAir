@@ -43,6 +43,7 @@
 @implementation conchRuntime
 {
     laya::BackendOptions m_options;
+    UIEditBoxWX*  m_UIEditBoxWX;
 }
 
 extern bool g_bGLCanvasSizeChanged;
@@ -343,7 +344,7 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
         
         // initialize the default values of LayaVideoPlayer
         [LayaVideoPlayer setCurParentView:m_pView withRetianValue:m_fRetinaValue];
-        //m_UIEditBoxWX = nil;
+        m_UIEditBoxWX = nil;
         
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChanged:)
         //                                             name:UIDeviceOrientationDidChangeNotification object:[UIDevice currentDevice]];
@@ -1011,9 +1012,8 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
     }
 #endif
 }
--(void)showEditBoxWX:(NSString*)defaultValue maxLength:(int)maxLength multiple:(bool)multiple confirmHold:(bool)confirmHold confirmType:(NSString*)confirmType prompt:(NSString*)prompt promptColor:(NSString*)promptColor inputType:(NSString*)inputType
+-(void)showKeyboard:(NSString*)defaultValue maxLength:(int)maxLength multiple:(bool)multiple confirmHold:(bool)confirmHold confirmType:(NSString*)confirmType prompt:(NSString*)prompt promptColor:(NSString*)promptColor inputType:(NSString*)inputType
 {
-#if 0
     if (m_UIEditBoxWX == nil) {
         m_UIEditBoxWX = [[UIEditBoxWX alloc] initWithMultiple:multiple];
     }
@@ -1029,17 +1029,14 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
     m_UIEditBoxWX.promptColor = promptColor;
     m_UIEditBoxWX.inputType = inputType;
     [m_UIEditBoxWX becomeFirstResponder];
-#endif
 }
 
--(void)hideEditBoxWX
+-(void)hideKeyboard
 {
-#if 0
     if (m_UIEditBoxWX != nil) {
         [m_UIEditBoxWX hide];
         m_UIEditBoxWX = nil;
     }
-#endif
 }
 -(void)alert:(NSString*)sInfo
 {

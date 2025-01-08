@@ -39,6 +39,24 @@
 @property (nonatomic, assign) BOOL multiple;
 @end
 
+@interface CustomUIView : UIView
+@end
+@implementation CustomUIView
+
+//点击输入框背景时(子view按钮，输入框不在此列)，事件不做拦截，传给父类的view处理
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event{
+    BOOL flag = NO;
+    for (UIView *view in self.subviews) {
+        if (CGRectContainsPoint(view.frame, point)){
+            flag = YES;
+            break;
+        }
+    }
+    return flag;
+}
+
+@end
+
 @implementation UIEditBoxWX
 
 - (instancetype)initWithMultiple:(BOOL)multiple
@@ -159,7 +177,7 @@
     {
         [_backgroundView removeFromSuperview];
     }
-    _backgroundView = [UIView new];
+    _backgroundView = [CustomUIView new];
     //0D0E0F
     _backgroundView.backgroundColor = [UIColor colorWithRed: 13 / 255.0 green: 14 / 255.0 blue: 15 / 255.0 alpha: 1];
     _backgroundView.frame=CGRectMake(0, SCREEN_HEIGHT, SCREEN_HEIGHT - BACKGROUND_VIEW_HEIGHT, BACKGROUND_VIEW_HEIGHT);

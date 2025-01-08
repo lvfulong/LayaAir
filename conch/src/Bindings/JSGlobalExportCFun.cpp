@@ -30,7 +30,7 @@
 #include "JSZip.h"
 #include "JSNotify.h"
 #include "Extention/LayaExtWin.h"
-
+#include "JSDevice.h"
 #include "JSCanvasRenderingContext2D.h"
 #if defined(OS_ANDROID)
     #include "JSAndroidEditBox.h"
@@ -575,5 +575,6 @@ namespace laya
         if(pfsMgr)
             pfsMgr->m_pDownloader.reset();
         //delete JSTextMemoryCanvas::getInstance();
+        JSDevice::reset();
     }
 }
