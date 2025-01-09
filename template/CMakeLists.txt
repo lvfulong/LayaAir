@@ -137,7 +137,7 @@ elseif(OS_WINDOWS)
 
 	foreach(file ${WIN_DLLS})
 		add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${file} $<TARGET_FILE_DIR:${PROJECT_NAME}>
+			COMMAND ${CMAKE_COMMAND} -E copy ${file} $<TARGET_FILE_DIR:${PROJECT_NAME}>
 		)
 	endforeach()
 
@@ -148,7 +148,7 @@ elseif(OS_WINDOWS)
 		set(relative_path)
 		file(RELATIVE_PATH relative_path ${CMAKE_CURRENT_SOURCE_DIR}/resource ${file}) 
 		add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${file} $<TARGET_FILE_DIR:${PROJECT_NAME}>/${relative_path}
+			COMMAND ${CMAKE_COMMAND} -E copy ${file} $<TARGET_FILE_DIR:${PROJECT_NAME}>/${relative_path}
 		)
 	endforeach()
 	target_link_libraries(${PROJECT_NAME} PRIVATE conch)
