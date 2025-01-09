@@ -491,8 +491,8 @@ if(OS_IOS)
 		src/platform/iOS/Notification/LayaNotifyManager.m
 		src/platform/iOS/Audio/JCMp3Player.h
 		src/platform/iOS/Audio/JCMp3Player.mm
-		platform/iOS/UIEditBoxWX.h
-		platform/iOS/UIEditBoxWX.mm
+		src/platform/iOS/UIEditBoxWX.h
+		src/platform/iOS/UIEditBoxWX.mm
 		src/platform/iOS/LayaOpenGLESView.h
 		src/platform/iOS/LayaOpenGLESView.mm
 		src/platform/iOS/Utils.h
