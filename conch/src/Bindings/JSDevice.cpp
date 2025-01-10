@@ -2,6 +2,10 @@
 #include "JCConch.h"
 #include <utils/JCMemorySurvey.h>
 #include <utils/Log.h>
+#if defined(OS_IOS)
+    #include "CToObjectC.h"
+#endif
+
 namespace laya
 {
 static const char *s_className = "layaair/game/browser/LayaEditBoxNew";
@@ -127,7 +131,8 @@ void JSDevice::showKeyboard(jsbind::Local object)
     pJNI->DeleteLocalRef(jPromptColor);
     pJNI->DeleteLocalRef(jInputType);
 #elif defined(OS_IOS)
-    CToObjectCShowKeyboard(defaultValue, maxLength, multiple, confirmHold, confirmType, prompt, promptColor, inputType);
+    CToObjectCShowKeyboard(defaultValue.c_str(), maxLength, multiple, confirmHold,
+                           confirmType.c_str(), prompt.c_str(), promptColor.c_str(), inputType.c_str());
 #elif defined(OS_WINDOWS)
     // todo
 #elif defined(OS_LINUX)
