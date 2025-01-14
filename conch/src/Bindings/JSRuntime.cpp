@@ -583,13 +583,53 @@ namespace laya
 #endif
     //todo 刷新生命周期
     std::shared_ptr<int> callbackRef(new int(1));
-    jsvm_value JSRuntime::postAsyncMessage(const std::string &eventName, const std::string &data)
+    jsvm_value JSRuntime::postAsyncMessage(jsbind::Local eventName, jsbind::Local data)
     {
-        return JCConch::s_pConch->getOS()->postAsyncMessage(callbackRef, eventName, data);
+        if (eventName.isNull() || eventName.isUndefined())
+        {
+            LOGE("Error: postAsyncMessage eventName is null or undefined");
+            return jsbind::MakeUndefined();
+        }
+        if (!eventName.isString())
+        {
+            LOGE("Error: postAsyncMessage eventName is not string");
+            return jsbind::MakeUndefined();
+        }
+        if (data.isNull() || data.isUndefined())
+        {
+            LOGE("Error: postAsyncMessage data is null or undefined");
+            return jsbind::MakeUndefined();
+        }
+        if (!data.isString())
+        {
+            LOGE("Error: postAsyncMessage data is not string");
+            return jsbind::MakeUndefined();
+        }
+        return JCConch::s_pConch->getOS()->postAsyncMessage(callbackRef, eventName.as<std::string>(), data.as<std::string>());
     }
-    std::string JSRuntime::postSyncMessage(const std::string &eventName, const std::string &data)
+    std::string JSRuntime::postSyncMessage(jsbind::Local eventName, jsbind::Local data)
     {
-        return JCConch::s_pConch->getOS()->postSyncMessage(eventName, data);
+        if (eventName.isNull() || eventName.isUndefined())
+        {
+            LOGE("Error: postSyncMessage eventName is null or undefined");
+            return "";
+        }
+        if (!eventName.isString())
+        {
+            LOGE("Error: postSyncMessage eventName is not string");
+            return "";
+        }
+        if (data.isNull() || data.isUndefined())
+        {
+            LOGE("Error: postSyncMessage data is null or undefined");
+            return "";
+        }
+        if (!data.isString())
+        {
+            LOGE("Error: postSyncMessage data is not string");
+            return "";
+        }
+        return JCConch::s_pConch->getOS()->postSyncMessage(eventName.as<std::string>(), data.as<std::string>());
     }
     void JSRuntime::setPreferredFramesPerSecond(uint32_t fps)
     {
