@@ -4,6 +4,7 @@
 #include <manager/JCArrayBufferManager.h>
 #include <utils/JCCommonMethod.h>
 #include "2D/CanvasRenderingContext2D.h"
+#include "../render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLUtils.h"
 
 namespace laya
 {
@@ -1253,16 +1254,28 @@ namespace laya
     {
 		CMD_iiiiiiiii* cmd = layaGLCmd.popp<CMD_iiiiiiiii>();
         char* value = NULL;
+        int target = cmd->a, level = cmd->b, interFmt = cmd->c, width=cmd->d, height=cmd->e;
+        int border = cmd->f, fmt = cmd->g, type=cmd->h;
 		if (cmd->k > 0)value = layaGLCmd.readBufferAlign(cmd->k);
-		ms_pLayaGL->texImage2D(cmd->a, cmd->b, cmd->c, cmd->d, cmd->e, cmd->f, cmd->g, cmd->h, value);
+        if(ms_pLayaGL-> m_bPremultiplyAlpha){
+            int sourceBytes = width * height * getBytesPerPixel(type, fmt);
+            JCImage::premultiplyPixels((const GLubyte *)value, (GLubyte *)value, sourceBytes, type, fmt);            
+        }
+		ms_pLayaGL->texImage2D(target, level, interFmt, width, height, border, fmt, type, value);
     }
     void JCLayaGLDispatch::_layaGL_texSubImage2D_pixel(JCCommandEncoderBuffer& layaGLCmd)
     {
 		CMD_iiiiiiiii* cmd = layaGLCmd.popp<CMD_iiiiiiiii>();
-		int a = cmd->a, b = cmd->b, c = cmd->c, d = cmd->d, e = cmd->e, f = cmd->f, g = cmd->g, h = cmd->h, k = cmd->k;
+		int target = cmd->a, level = cmd->b, xoff = cmd->c, yoff = cmd->d, width = cmd->e, height = cmd->f, 
+        format = cmd->g, type = cmd->h, k = cmd->k;
         char* value = NULL;
         if (k > 0)value = layaGLCmd.readBufferAlign(k);
-        ms_pLayaGL->texSubImage2D(a, b, c, d, e, f, g, h, value);
+        if(ms_pLayaGL-> m_bPremultiplyAlpha){
+            int sourceBytes = width * height * getBytesPerPixel(type, format);
+            JCImage::premultiplyPixels((const GLubyte *)value, (GLubyte *)value, sourceBytes, type, format);            
+        }
+
+        ms_pLayaGL->texSubImage2D(target, level, xoff, yoff, width, height, format, type, value);
     }
     void JCLayaGLDispatch::_layaGL_createVertexArray(JCCommandEncoderBuffer& layaGLCmd)
     {
