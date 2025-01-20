@@ -135,10 +135,6 @@ static void stream_close(VideoState *is)
         SDL_DestroyTexture(is->sub_texture);
     // av_free(is);
 
-    if (is->m_iobuffer_ptr)
-    {
-        av_freep(is->m_iobuffer_ptr);
-    }
 }
 void do_exit(VideoState *is)
 {
