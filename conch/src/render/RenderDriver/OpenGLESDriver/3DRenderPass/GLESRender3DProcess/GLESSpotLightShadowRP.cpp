@@ -154,27 +154,7 @@ ShadowSpotData::ShadowSpotData()
 
 ShadowSpotData::~ShadowSpotData()
 {
-
+    delete cameraShaderValue;
 }
 
-/*
-void GLESSpotLightShadowRP::set_position(Vector3 value)
-{
-}
-
-void GLESSpotLightShadowRP::set_lightforward(Vector3 value)
-{
-}
-void GLESSpotLightShadowRP::set_offsetx(uint32_t value)
-{
-}
-
-void GLESSpotLightShadowRP::set_offsety(uint32_t value)
-{
-}
-
-void GLESSpotLightShadowRP::set_resolution(uint32_t value)
-{
-}
-*/
 } // namespace laya

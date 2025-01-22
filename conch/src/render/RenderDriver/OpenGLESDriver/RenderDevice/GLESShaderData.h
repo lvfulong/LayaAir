@@ -122,7 +122,7 @@ class GLESShaderData //: public ResourceBase<ShaderData>
     std::unordered_map<uint32_t, Color> m_gammaColorMap{};
     std::unordered_map<std::string, GLESUniformBuffer*> _uniformBuffers{};
     std::unordered_map<std::string, GLESSubUniformBuffer*> _subUniformBuffers{};
-  
+    int _subUboBufferNumber = 0;
 
     bool _needCacheData{false};
     public:

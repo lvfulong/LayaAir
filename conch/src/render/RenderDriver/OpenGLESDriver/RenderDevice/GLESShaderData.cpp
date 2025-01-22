@@ -64,10 +64,20 @@ void GLESShaderData::updateUBOBuffer(const std::string &name) {
 GLESSubUniformBuffer* GLESShaderData::createSubUniformBuffer(const std::string &name, std::vector<UniformProperty>& uniformMap){
     if (_subUniformBuffers.find(name) != _subUniformBuffers.end()) {
         GLESSubUniformBuffer* subBuffer = _subUniformBuffers[name];
-        for (auto it = _updateCacheArray.begin(); it != _updateCacheArray.end(); ++it) {
-            it->second(this, it->first);
+        if (_subUboBufferNumber < 2) {
+            for (auto it = _updateCacheArray.begin(); it != _updateCacheArray.end(); ++it) {
+                it->second(this, it->first);
+            }
+            _updateCacheArray.clear();
         }
-        _updateCacheArray.clear();
+        else {
+
+            for (int i = 0, n = uniformMap.size(); i < n;i++) {
+                UniformProperty* property = &uniformMap[i];
+                subBuffer->setUniformData(property->id, property->uniformtype, m_data[property->id]);
+            }
+        }
+        
         return subBuffer;
     }
 
@@ -75,6 +85,7 @@ GLESSubUniformBuffer* GLESShaderData::createSubUniformBuffer(const std::string &
     GLESUniformBufferManager* mgr = LayaGL::m_pWebglEngine->bufferMgr;
 
     GLESSubUniformBuffer* subBuffer = new GLESSubUniformBuffer(name, uniformMap, mgr, this);
+    _subUboBufferNumber++;
     _needCacheData = true;
     subBuffer->notifyGPUBufferChange("");
     _subUniformBuffers[name] = subBuffer;
@@ -115,6 +126,7 @@ void GLESShaderData::clearData()
         _defineDatas->clear();
     }
     _needCacheData = false;
+    _subUboBufferNumber = 0;
 }
 
 void GLESShaderData::destroy()

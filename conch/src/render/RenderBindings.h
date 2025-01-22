@@ -550,6 +550,7 @@ class RenderBindings
             class_binding.function("destroy", &RTSubShader::destroy);
             class_binding.function("addUnifromProperty", &RTSubShader::addUnifromProperty);
             class_binding.property_field("enableInstance", &RTSubShader::enableInstance);
+            class_binding.property_field("shaderName", &RTSubShader::shaderName);
             context.class_("conchRTSubShader", class_binding);
         }
         {

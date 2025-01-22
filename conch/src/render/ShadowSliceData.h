@@ -31,8 +31,11 @@ class ShadowSliceData
           if (LayaGL::m_pWebglEngine->enableUniformBufferObject) {
               cameraShaderValue->createUniformBuffer(BaseCameraProperty::UBONAME_CAMERA, GLESCommandUniformMap::createGlobalUniformMap(BaseCameraProperty::UBONAME_CAMERA.c_str()));
           }
-          
       };
+
+      ~ShadowSliceData() {
+          delete cameraShaderValue;
+      }
     GLESShaderData *cameraShaderValue; // todo LayaGL.renderOBJCreate.createShaderData(null);
     Vector3 position;
     double offsetX;    // todo type
