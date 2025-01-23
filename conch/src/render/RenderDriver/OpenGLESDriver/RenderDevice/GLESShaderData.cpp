@@ -74,6 +74,9 @@ GLESSubUniformBuffer* GLESShaderData::createSubUniformBuffer(const std::string &
 
             for (int i = 0, n = uniformMap.size(); i < n;i++) {
                 UniformProperty* property = &uniformMap[i];
+                if (m_data.find(property->id)==m_data.end()) {
+                    continue;
+                }
                 subBuffer->setUniformData(property->id, property->uniformtype, m_data[property->id]);
             }
         }
