@@ -12,7 +12,7 @@ set(CONCH_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
 include(${CONCH_ROOT_DIR}/cmake/preprocessor.cmake)
 
 
-set(IOS_MINIMUM_DEPLOYMENTS_VERSION "15.6"  CACHE STRING " iOS minimum deployments version" FORCE)
+set(IOS_MINIMUM_DEPLOYMENTS_VERSION "12.0"  CACHE STRING " iOS minimum deployments version" FORCE)
 
 option(CONCH_USE_DCC "Use NEW DCC" ON)
 option(CONCH_TRACE_ENABLED "Trace enabled" ON)
