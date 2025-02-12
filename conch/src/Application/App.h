@@ -3,10 +3,20 @@
 
 #define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
+#include <functional>
 #include <string>
 
 namespace laya
 {
+extern Uint32 CUSTOM_EVENT_EDITBOX;
+
+struct EditBoxEventData
+{
+    // int data1;
+    // std::string data2;
+    std::function<void()> callback;
+};
+void SendEditBoxCustomEvent(std::function<void()> &&callback);
 class App
 {
   public:
