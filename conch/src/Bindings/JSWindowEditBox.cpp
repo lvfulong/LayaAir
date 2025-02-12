@@ -194,7 +194,7 @@ namespace laya
         //    char* pCharEnd = UnicodeToUTF8(m_vValue[i], pTemp);
         //    m_sValue.append(pTemp);
         //}
-		setValue(ms_EditBoxInst->GetText());
+		setValue(ms_EditBoxInst->GetText().c_str());
         return m_sValue.c_str();
     }
     //------------------------------------------------------------------------------
@@ -412,7 +412,7 @@ namespace laya
         m_bMouseDrag = false;
 
 		ms_EditBoxInst->SetFocus(false);
-		setValue(ms_EditBoxInst->GetText());
+		setValue(ms_EditBoxInst->GetText().c_str());
     }
     //------------------------------------------------------------------------------
     //显示光标
