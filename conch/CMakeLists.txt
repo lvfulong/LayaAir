@@ -545,8 +545,6 @@ elseif(OS_WINDOWS)
 		src/Audio/windows/JCAudioMp3Player.h
 		src/Bindings/EditBox/WinEditBox.h
 		src/Bindings/EditBox/WinEditBox.cpp
-		src/Bindings/EditBox/WinCtrl.h
-		src/Bindings/EditBox/WinCtrl.cpp
 		src/Bindings/Video/JSVideo_Win32Impl.cpp
 		src/Bindings/JSWindowEditBox.h
 		src/Bindings/JSWindowEditBox.cpp

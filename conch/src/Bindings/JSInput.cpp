@@ -74,6 +74,10 @@ namespace laya
         {
             JCConch::s_pScriptRuntime->m_pJSMouseEvtFunction.call<void>(jsvm::global(), e.nTouchType, e.type, e.posX, e.posY, e.nWheel, e.deltaMode, e.deltaX, e.deltaY, e.deltaZ);
         }
+        else if (e.nType == E_CLICK || e.nType == E_DOUBLE_CLICK)
+        {
+            JCConch::s_pScriptRuntime->m_pJSMouseEvtFunction.call<void>(jsvm::global(), e.nTouchType, e.type, e.posX, e.posY, e.nWheel, e.deltaMode, e.deltaX, e.deltaY, e.deltaZ);
+        }
         //keyboard
         else if (e.nType >= E_ONKEYDOWN && e.nType <= E_ONKEYUP)
         {
