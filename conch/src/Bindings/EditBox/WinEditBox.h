@@ -29,7 +29,7 @@ namespace laya {
 			void SetFontSize(int val);
 			void SetBgColor(COLORREF val);
 			void SetFontColor(COLORREF val);
-
+			void SetScale(float scaleX, float scaleY);
 
 		private:
 			void UpdatePaintOrDirty();
@@ -45,6 +45,8 @@ namespace laya {
 			int width;
 			int height;
 			int fontSize;
+			float scaleX{ 1.0f };
+			float scaleY{ 1.0f };
 
 			bool isDirty;
 

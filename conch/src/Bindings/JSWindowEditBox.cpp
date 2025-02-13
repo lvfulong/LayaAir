@@ -479,7 +479,7 @@ namespace laya
     //------------------------------------------------------------------------------
     void JSWindowEditBox::setScale(float p_nSx, float p_nSy)
     {
-
+        ms_EditBoxInst->GetStyle().SetScale(p_nSx, p_nSy);
     }
     //------------------------------------------------------------------------------
     void JSWindowEditBox::setMaxLength(int p_nMaxLength)

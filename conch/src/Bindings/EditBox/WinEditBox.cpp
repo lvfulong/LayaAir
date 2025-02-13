@@ -74,7 +74,12 @@ namespace laya {
 		fontColor = val;
 		UpdatePaintOrDirty();
 	}
-
+	void WinEditBox::Style::SetScale(float scaleX, float scaleY)
+	{
+		this->scaleX = scaleX;
+		this->scaleY = scaleY;
+		UpdateSizeOrDirty();
+	}
 	void WinEditBox::Style::UpdatePaintOrDirty()
 	{
 		if (m_owner->IsFocus())
@@ -158,7 +163,7 @@ namespace laya {
 			int adjustedTop;
 			int adjustedWidth;
 			int adjustedHeight;
-			getAdjustedPos(m_style->left, m_style->top, m_style->width, m_style->height, adjustedLeft, adjustedTop, adjustedWidth, adjustedHeight);
+			getAdjustedPos(m_style->left, m_style->top, m_style->width * m_style->scaleX, m_style->height * m_style->scaleY, adjustedLeft, adjustedTop, adjustedWidth, adjustedHeight);
 
 
 			m_hSingleEditWnd = CreateWindowEx(
@@ -208,7 +213,7 @@ namespace laya {
 		int adjustedTop;
 		int adjustedWidth;
 		int adjustedHeight;
-		getAdjustedPos(m_style->left, m_style->top, m_style->width, m_style->height, adjustedLeft, adjustedTop, adjustedWidth, adjustedHeight);
+		getAdjustedPos(m_style->left, m_style->top, m_style->width * m_style->scaleX, m_style->height * m_style->scaleY, adjustedLeft, adjustedTop, adjustedWidth, adjustedHeight);
 		SetWindowPos(GetCurHWND(), HWND_TOP, adjustedLeft, adjustedTop, adjustedWidth, adjustedHeight, SWP_SHOWWINDOW);
 	}
 
@@ -289,7 +294,7 @@ namespace laya {
 			int adjustedTop;
 			int adjustedWidth;
 			int adjustedHeight;
-			getAdjustedPos(m_style->left, m_style->top, m_style->width, m_style->height, adjustedLeft, adjustedTop, adjustedWidth, adjustedHeight);
+			getAdjustedPos(m_style->left, m_style->top, m_style->width * m_style->scaleX, m_style->height * m_style->scaleY, adjustedLeft, adjustedTop, adjustedWidth, adjustedHeight);
 			ShowWindow(GetCurHWND(), true);
 			SetWindowPos(GetCurHWND(), HWND_TOP, adjustedLeft, adjustedTop, adjustedWidth, adjustedHeight, SWP_SHOWWINDOW);
 			ForceSetFocus(GetCurHWND());
