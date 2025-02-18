@@ -2,8 +2,6 @@
 #include "Application/App.h"
 #include <utils/Log.h>
 #include <utils/JCCommonMethod.h>
-
-
 extern HWND g_hWnd;
 
 static HMENU IDL_EditBox = (HMENU) 100;
@@ -16,8 +14,18 @@ static LRESULT CALLBACK EditWndProc(HWND hWnd, UINT message, WPARAM wParam, LPAR
 
 	switch (message)
 	{
-	default:
-		return CallWindowProc(editBox->GetDefaultWndProc(), hWnd, message, wParam, lParam);
+		case WM_NCCALCSIZE: {
+			if (wParam == TRUE) {
+				NCCALCSIZE_PARAMS* pncsp = (NCCALCSIZE_PARAMS*)lParam;
+				// 调整客户区域的高度以实现垂直居中
+				int heightAdjustment = (pncsp->rgrc[0].bottom - pncsp->rgrc[0].top) / 4; // 例如，调整为原来的四分之一
+				pncsp->rgrc[0].top += heightAdjustment;
+				pncsp->rgrc[0].bottom -= heightAdjustment;
+			}
+			return 0;
+		}
+		default:
+			return CallWindowProc(editBox->GetDefaultWndProc(), hWnd, message, wParam, lParam);
 	}
 	return true;
 }
@@ -51,7 +59,7 @@ namespace laya {
 
 	void WinEditBox::Style::SetFontSize(int val)
 	{
-		fontSize = val + 2;
+		fontSize = val;
 		if (m_owner->IsFocus())
 		{
 			m_owner->UpdateFont();
@@ -118,7 +126,7 @@ namespace laya {
 	{
 		m_style = new Style(this);
 		//m_font = CreateFont(m_style->fontSize, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, TEXT("Arial"));
-		m_font = CreateFont(m_style->fontSize, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, TEXT("Arial"));
+		//m_font = CreateFont(-MulDiv(m_style->fontSize * m_style->scaleX, GetDeviceCaps(GetDC(g_hWnd), LOGPIXELSY), 72), 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, TEXT("Arial"));
 		// Send Message for creating
 		SendEditBoxCustomEvent([this]() {
 			this->Init();
@@ -148,7 +156,6 @@ namespace laya {
 		int adjustedY = adjustedTop = top + borderY + padding;
 		int adjustedW = adjustedWidth = width - ((borderX + padding) * 2);
 		int adjustedH = adjustedHeight = height - ((borderY + padding) * 2);
-
 	}
 	void WinEditBox::Init()
 	{
@@ -163,18 +170,16 @@ namespace laya {
 			int adjustedTop;
 			int adjustedWidth;
 			int adjustedHeight;
-			getAdjustedPos(m_style->left, m_style->top, m_style->width * m_style->scaleX, m_style->height * m_style->scaleY, adjustedLeft, adjustedTop, adjustedWidth, adjustedHeight);
-
-
+			getAdjustedPos(m_style->left, m_style->top, m_style->width, m_style->height, adjustedLeft, adjustedTop, adjustedWidth, adjustedHeight);
 			m_hSingleEditWnd = CreateWindowEx(
 				0,
 				L"EDIT",
 				TEXT(""),
 				WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL,  // �Ƴ�ES_CENTER
-				adjustedLeft, adjustedTop, adjustedWidth, adjustedHeight,
+				adjustedLeft, adjustedTop, adjustedWidth * m_style->scaleX, adjustedHeight * m_style->scaleY,
 				g_hWnd,
 				NULL,
-				GetModuleHandle(NULL),
+				(HINSTANCE)GetWindowLongPtr(g_hWnd, GWLP_HINSTANCE),//GetModuleHandle(NULL),
 				NULL
 			);
 
@@ -213,14 +218,17 @@ namespace laya {
 		int adjustedTop;
 		int adjustedWidth;
 		int adjustedHeight;
-		getAdjustedPos(m_style->left, m_style->top, m_style->width * m_style->scaleX, m_style->height * m_style->scaleY, adjustedLeft, adjustedTop, adjustedWidth, adjustedHeight);
-		SetWindowPos(GetCurHWND(), HWND_TOP, adjustedLeft, adjustedTop, adjustedWidth, adjustedHeight, SWP_SHOWWINDOW);
+		getAdjustedPos(m_style->left, m_style->top, m_style->width, m_style->height, adjustedLeft, adjustedTop, adjustedWidth, adjustedHeight);
+		SetWindowPos(GetCurHWND(), HWND_TOP, adjustedLeft, adjustedTop, adjustedWidth * m_style->scaleX , adjustedHeight * m_style->scaleY, SWP_SHOWWINDOW);
+
 	}
 
 	void WinEditBox::UpdateFont()
 	{
 		//m_font = CreateFont(m_style->fontSize, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, TEXT("Arial"));
-		m_font = CreateFont(m_style->fontSize, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, TEXT("Arial"));
+
+		m_font = CreateFont(-MulDiv(m_style->fontSize * m_style->scaleX, GetDeviceCaps(GetDC(g_hWnd), LOGPIXELSY), 72), 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, TEXT("Arial"));
+		//m_font = CreateFont(m_style->fontSize, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, TEXT("Arial"));
 		SendMessage(GetCurHWND(), WM_SETFONT, (WPARAM)m_font, true);
 	}
 	void WinEditBox::SetFocus(bool isFocus)
