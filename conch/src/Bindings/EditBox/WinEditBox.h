@@ -78,10 +78,11 @@ namespace laya {
 	private:
 		void UpdateSize();
 		void UpdateFont();
-
+		void UpdateStyle();
 		HWND GetCurHWND() { return m_isMultiLine ?  m_hMultiEditWnd : m_hSingleEditWnd;
 		}
 		void SetFocus_(bool isFocus);
+		void SetMutiLine_(bool val);
 	private:
 		WinEditBox(const WinEditBox& other) = delete;
 		void operator=(const WinEditBox& other) = delete;

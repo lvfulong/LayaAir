@@ -2,6 +2,8 @@
 #include "Application/App.h"
 #include <utils/Log.h>
 #include <utils/JCCommonMethod.h>
+#include <commctrl.h> // 包含控件相关的头文件
+#include "Richedit.h"
 extern HWND g_hWnd;
 
 static HMENU IDL_EditBox = (HMENU) 100;
@@ -14,6 +16,7 @@ static LRESULT CALLBACK EditWndProc(HWND hWnd, UINT message, WPARAM wParam, LPAR
 
 	switch (message)
 	{
+#if 0
 		case WM_NCCALCSIZE: {
 			if (wParam == TRUE) {
 				NCCALCSIZE_PARAMS* pncsp = (NCCALCSIZE_PARAMS*)lParam;
@@ -24,6 +27,7 @@ static LRESULT CALLBACK EditWndProc(HWND hWnd, UINT message, WPARAM wParam, LPAR
 			}
 			return 0;
 		}
+#endif
 		default:
 			return CallWindowProc(editBox->GetDefaultWndProc(), hWnd, message, wParam, lParam);
 	}
@@ -60,12 +64,12 @@ namespace laya {
 	void WinEditBox::Style::SetFontSize(int val)
 	{
 		fontSize = val;
-		if (m_owner->IsFocus())
-		{
-			m_owner->UpdateFont();
-			m_owner->ForceUpdateWindow();
-		}
-		else
+		//if (m_owner->IsFocus())
+		//{
+		//	m_owner->UpdateFont();
+		//	m_owner->ForceUpdateWindow();
+		//}
+		//else
 		{
 			isDirty = true;
 		}
@@ -90,11 +94,11 @@ namespace laya {
 	}
 	void WinEditBox::Style::UpdatePaintOrDirty()
 	{
-		if (m_owner->IsFocus())
-		{
-			m_owner->ForceUpdateWindow();
-		}
-		else
+		//if (m_owner->IsFocus())
+		//{
+		//	m_owner->ForceUpdateWindow();
+		//}
+		//else
 		{
 			isDirty = true;
 		}
@@ -102,12 +106,12 @@ namespace laya {
 
 	void WinEditBox::Style::UpdateSizeOrDirty()
 	{
-		if (m_owner->IsFocus())
-		{
-			m_owner->UpdateSize();
-			m_owner->ForceUpdateWindow();
-		}
-		else
+		//if (m_owner->IsFocus())
+		//{
+		//	m_owner->UpdateSize();
+		//	m_owner->ForceUpdateWindow();
+		//}
+		//else
 		{
 			isDirty = true;
 		}
@@ -130,7 +134,7 @@ namespace laya {
 		// Send Message for creating
 		SendEditBoxCustomEvent([this]() {
 			this->Init();
-			});
+		});
 	}
 
 	WinEditBox::~WinEditBox()
@@ -171,9 +175,10 @@ namespace laya {
 			int adjustedWidth;
 			int adjustedHeight;
 			getAdjustedPos(m_style->left, m_style->top, m_style->width, m_style->height, adjustedLeft, adjustedTop, adjustedWidth, adjustedHeight);
+			LoadLibrary(TEXT("Msftedit.dll"));
 			m_hSingleEditWnd = CreateWindowEx(
 				0,
-				L"EDIT",
+				MSFTEDIT_CLASS,
 				TEXT(""),
 				WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL,  // �Ƴ�ES_CENTER
 				adjustedLeft, adjustedTop, adjustedWidth * m_style->scaleX, adjustedHeight * m_style->scaleY,
@@ -183,17 +188,17 @@ namespace laya {
 				NULL
 			);
 
-			/*m_hMultiEditWnd = CreateWindowEx(
+			m_hMultiEditWnd = CreateWindowEx(
 				0,
-				L"EDIT",
+				MSFTEDIT_CLASS,
 				TEXT(""),
-				WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL,  // �Ƴ�ES_CENTER
-				m_style->left, m_style->top, m_style->width, m_style->height,
+				WS_CHILD | ES_MULTILINE | ES_WANTRETURN,
+				adjustedLeft, adjustedTop, adjustedWidth * m_style->scaleX, adjustedHeight * m_style->scaleY,
 				g_hWnd,
 				NULL,
-				GetModuleHandle(NULL),
+				(HINSTANCE)GetWindowLongPtr(g_hWnd, GWLP_HINSTANCE),//GetModuleHandle(NULL),
 				NULL
-			);*/
+			);
 			if (m_isMultiLine)
 			{
 				m_defaultWndProc = (WNDPROC)SetWindowLongPtr(m_hMultiEditWnd, GWLP_WNDPROC, (LONG_PTR)EditWndProc);
@@ -205,9 +210,9 @@ namespace laya {
 
 			SetWindowLongPtr(m_hSingleEditWnd, GWLP_USERDATA, (LONG_PTR)this);
 			SetWindowLongPtr(m_hMultiEditWnd, GWLP_USERDATA, (LONG_PTR)this);
+			UpdateStyle();
 
-
-
+			
 		}
 	}
 
@@ -231,11 +236,30 @@ namespace laya {
 		//m_font = CreateFont(m_style->fontSize, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, TEXT("Arial"));
 		SendMessage(GetCurHWND(), WM_SETFONT, (WPARAM)m_font, true);
 	}
+	void WinEditBox::UpdateStyle()
+	{
+		return;
+
+		CHARFORMAT2 cf;
+		ZeroMemory(&cf, sizeof(cf));
+		cf.cbSize = sizeof(CHARFORMAT2);
+		cf.dwMask = CFM_COLOR | CFM_SIZE;// CFM_BOLD | CFM_ITALIC | CFM_COLOR | CFM_SIZE; // 设置要修改的属性
+		//cf.dwEffects = CFE_BOLD | CFE_ITALIC; // 设置为粗体和斜体
+		cf.crTextColor = RGB(m_style->fontColor & 0x000000ff, (m_style->fontColor & 0x0000ff00) >> 8, (m_style->fontColor & 0x00ff0000) >> 16); // 设置文本颜色为蓝色
+		cf.crBackColor = RGB(m_style->fontColor & 0x000000ff, (m_style->fontColor & 0x0000ff00) >> 8, (m_style->fontColor & 0x00ff0000) >> 16); // 设置文本颜色为蓝色
+		cf.yHeight = m_style->fontSize; // 设置字体大小为 20pt（200/10）
+		//cf.yHeight = MulDiv(m_style->fontSize /** m_style->scaleX*/, GetDeviceCaps(GetDC(g_hWnd), LOGPIXELSY), 72);
+		lstrcpy(cf.szFaceName, TEXT("Arial")); // 设置字体名称为 Arial
+		// 应用格式到编辑控件
+		//SendMessage(GetCurHWND(), EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM)&cf);
+
+		SendMessage(GetCurHWND(), EM_SETCHARFORMAT, SCF_ALL, (LPARAM)&cf);
+	}
 	void WinEditBox::SetFocus(bool isFocus)
 	{
 		SendEditBoxCustomEvent([isFocus, this]() {
 			this->SetFocus_(isFocus);
-			});
+		});
 	}
 
 	static BOOL ForceSetFocus(HWND hWnd)
@@ -285,9 +309,16 @@ namespace laya {
 
 		if (m_style->isDirty)
 		{
-			UpdateSize();
-			UpdateFont();
-			m_style->isDirty = false;
+			//UpdateSize();
+			//UpdateFont();
+
+
+			//UpdateStyle();
+
+
+			//SendMessage(GetCurHWND(), EM_SETBKGNDCOLOR, 0, RGB(m_style->bgColor & 0x000000ff, (m_style->bgColor & 0x0000ff00) >> 8, (m_style->bgColor & 0x00ff0000) >> 16));
+
+			//m_style->isDirty = false;
 		}
 
 
@@ -314,19 +345,32 @@ namespace laya {
 			::SetFocus(NULL);
 			ShowWindow(GetCurHWND(), SW_HIDE);
 		}
+		if (m_style->isDirty)
+		{
+			//UpdateSize();
+			//UpdateFont();
+
+
+			UpdateStyle();
+
+
+			SendMessage(GetCurHWND(), EM_SETBKGNDCOLOR, 0, RGB(m_style->bgColor & 0x000000ff, (m_style->bgColor & 0x0000ff00) >> 8, (m_style->bgColor & 0x00ff0000) >> 16));
+
+			m_style->isDirty = false;
+		}
 
 		ForceUpdateWindow();
 	}
 
-	void WinEditBox::SetMutiLine(bool val)
+	void WinEditBox::SetMutiLine_(bool val)
 	{
 		if (m_isMultiLine == val)
 			return;
 
-		SetWindowLongPtr(GetCurHWND(), GWLP_WNDPROC, (LONG)m_defaultWndProc);
+		SetWindowLongPtr(GetCurHWND(), GWLP_WNDPROC, (LONG_PTR)m_defaultWndProc);
 		m_isMultiLine = val;
 
-		m_defaultWndProc = (WNDPROC) SetWindowLongPtr(GetCurHWND(), GWLP_WNDPROC, (LONG)EditWndProc);
+		m_defaultWndProc = (WNDPROC) SetWindowLongPtr(GetCurHWND(), GWLP_WNDPROC, (LONG_PTR)EditWndProc);
 
 		if (m_isFocus)
 		{
@@ -336,7 +380,12 @@ namespace laya {
 
 		ForceUpdateWindow();
 	}
-
+	void WinEditBox::SetMutiLine(bool val)
+	{
+		SendEditBoxCustomEvent([val, this]() {
+			this->SetMutiLine_(val);
+		});
+	}
 	void WinEditBox::ForceUpdateWindow()
 	{
 		RECT r;
