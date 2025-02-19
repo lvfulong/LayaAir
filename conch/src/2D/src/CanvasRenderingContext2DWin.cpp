@@ -39,7 +39,7 @@ CanvasRenderingContext2DWin::CanvasRenderingContext2DWin(int width, int height)
     m_gdiGraphics->SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAliasGridFit);
     m_gdiGraphics->SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
     m_gdiGraphics->SetPixelOffsetMode(Gdiplus::PixelOffsetModeHighQuality);
-
+    m_gdiGraphics->SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
     m_bitmapData.m_nWidth = width;
     m_bitmapData.m_nHeight = height;
     m_bitmapData.m_pImageData = new char[width * height * 4];
