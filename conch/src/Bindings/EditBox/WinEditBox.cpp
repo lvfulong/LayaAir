@@ -238,18 +238,16 @@ namespace laya {
 	}
 	void WinEditBox::UpdateStyle()
 	{
-		return;
-
 		CHARFORMAT2 cf;
 		ZeroMemory(&cf, sizeof(cf));
 		cf.cbSize = sizeof(CHARFORMAT2);
-		cf.dwMask = CFM_COLOR | CFM_SIZE;// CFM_BOLD | CFM_ITALIC | CFM_COLOR | CFM_SIZE; // 设置要修改的属性
+		cf.dwMask = CFM_COLOR;// CFM_BOLD | CFM_ITALIC | CFM_COLOR | CFM_SIZE; // 设置要修改的属性
 		//cf.dwEffects = CFE_BOLD | CFE_ITALIC; // 设置为粗体和斜体
 		cf.crTextColor = RGB(m_style->fontColor & 0x000000ff, (m_style->fontColor & 0x0000ff00) >> 8, (m_style->fontColor & 0x00ff0000) >> 16); // 设置文本颜色为蓝色
 		cf.crBackColor = RGB(m_style->fontColor & 0x000000ff, (m_style->fontColor & 0x0000ff00) >> 8, (m_style->fontColor & 0x00ff0000) >> 16); // 设置文本颜色为蓝色
-		cf.yHeight = m_style->fontSize; // 设置字体大小为 20pt（200/10）
+		//cf.yHeight = m_style->fontSize; // 设置字体大小为 20pt（200/10）
 		//cf.yHeight = MulDiv(m_style->fontSize /** m_style->scaleX*/, GetDeviceCaps(GetDC(g_hWnd), LOGPIXELSY), 72);
-		lstrcpy(cf.szFaceName, TEXT("Arial")); // 设置字体名称为 Arial
+		//lstrcpy(cf.szFaceName, TEXT("Arial")); // 设置字体名称为 Arial
 		// 应用格式到编辑控件
 		//SendMessage(GetCurHWND(), EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM)&cf);
 
