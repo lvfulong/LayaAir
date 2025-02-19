@@ -269,6 +269,7 @@ namespace laya
     void JSWindowEditBox::setFont(const char* p_sFont)
     {
         m_sFont = p_sFont;
+        ms_EditBoxInst->GetStyle().SetFont(p_sFont);
     }
     //------------------------------------------------------------------------------
     //并不是每帧都调，只有内容发生改变了，才会调用。包括光标位置改变

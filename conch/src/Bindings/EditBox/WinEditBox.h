@@ -30,7 +30,7 @@ namespace laya {
 			void SetBgColor(COLORREF val);
 			void SetFontColor(COLORREF val);
 			void SetScale(float scaleX, float scaleY);
-
+			void SetFont(const std::string& val);
 		private:
 			void UpdatePaintOrDirty();
 			void UpdateSizeOrDirty();
@@ -47,7 +47,7 @@ namespace laya {
 			int fontSize;
 			float scaleX{ 1.0f };
 			float scaleY{ 1.0f };
-
+			std::string	font{ "Arial" };
 			bool isDirty;
 
 			WinEditBox* m_owner;
