@@ -509,6 +509,7 @@ namespace laya
     void JSWindowEditBox::setForbidEdit(bool bForbidEdit)
     {
         m_bForbidEdit = bForbidEdit;
+        ms_EditBoxInst->setForbidEdit(bForbidEdit);
     }
     bool JSWindowEditBox::getForbidEdit()
     {

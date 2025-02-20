@@ -253,6 +253,9 @@ namespace laya {
 
 		// 应用格式到编辑控件
 		SendMessage(GetCurHWND(), EM_SETCHARFORMAT, SCF_ALL, (LPARAM)&cf);
+
+
+		SendMessage(GetCurHWND(), EM_SETBKGNDCOLOR, 0, RGB(m_style->bgColor & 0x000000ff, (m_style->bgColor & 0x0000ff00) >> 8, (m_style->bgColor & 0x00ff0000) >> 16));
 	}
 	void WinEditBox::SetFocus(bool isFocus)
 	{
@@ -328,6 +331,10 @@ namespace laya {
 
 		if (m_isFocus)
 		{
+			
+			ShowWindow(m_hSingleEditWnd, !m_isMultiLine);
+			ShowWindow(m_hMultiEditWnd, m_isMultiLine);
+
 			int adjustedLeft;
 			int adjustedTop;
 			int adjustedWidth;
@@ -337,7 +344,6 @@ namespace laya {
 			SetWindowPos(GetCurHWND(), HWND_TOP, adjustedLeft, adjustedTop, adjustedWidth, adjustedHeight, SWP_SHOWWINDOW);
 			ForceSetFocus(GetCurHWND());
 			SetCaretToEnd(GetCurHWND());
-			
 		}
 		else
 		{
@@ -348,13 +354,7 @@ namespace laya {
 		{
 			//UpdateSize();
 			//UpdateFont();
-
-
 			UpdateStyle();
-
-
-			SendMessage(GetCurHWND(), EM_SETBKGNDCOLOR, 0, RGB(m_style->bgColor & 0x000000ff, (m_style->bgColor & 0x0000ff00) >> 8, (m_style->bgColor & 0x00ff0000) >> 16));
-
 			m_style->isDirty = false;
 		}
 
@@ -363,8 +363,8 @@ namespace laya {
 
 	void WinEditBox::SetMutiLine_(bool val)
 	{
-		if (m_isMultiLine == val)
-			return;
+		//if (m_isMultiLine == val)
+		//	return;
 
 		SetWindowLongPtr(GetCurHWND(), GWLP_WNDPROC, (LONG_PTR)m_defaultWndProc);
 		m_isMultiLine = val;
@@ -384,6 +384,27 @@ namespace laya {
 		SendEditBoxCustomEvent([val, this]() {
 			this->SetMutiLine_(val);
 		});
+	}
+	void WinEditBox::setForbidEdit(bool val)
+	{
+		SendEditBoxCustomEvent([val, this]() {
+			this->setForbidEdit_(val);
+		});
+	}
+	void WinEditBox::setForbidEdit_(bool bForbidEdit)
+	{
+		HWND hWnd = GetCurHWND();
+		if (hWnd)
+		{
+			if (bForbidEdit)
+			{
+				EnableWindow(hWnd, FALSE); // 或者可以使用 SetWindowLong(hWnd, GWL_STYLE, GetWindowLong(hWnd, GWL_STYLE) | WS_DISABLED);
+			}
+			else
+			{
+				EnableWindow(hWnd, TRUE); // 或者可以使用 SetWindowLong(hWnd, GWL_STYLE, GetWindowLong(hWnd, GWL_STYLE) & ~WS_DISABLED);
+			}
+		}
 	}
 	void WinEditBox::ForceUpdateWindow()
 	{

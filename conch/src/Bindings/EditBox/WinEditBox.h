@@ -68,7 +68,7 @@ namespace laya {
 		std::string GetText();
 
 		void SetMutiLine(bool val);
-
+		void setForbidEdit(bool val);
 		void ForceUpdateWindow();
 
 		// ref count
@@ -83,6 +83,7 @@ namespace laya {
 		}
 		void SetFocus_(bool isFocus);
 		void SetMutiLine_(bool val);
+		void setForbidEdit_(bool val);
 	private:
 		WinEditBox(const WinEditBox& other) = delete;
 		void operator=(const WinEditBox& other) = delete;
