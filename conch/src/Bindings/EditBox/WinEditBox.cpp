@@ -28,6 +28,13 @@ static LRESULT CALLBACK EditWndProc(HWND hWnd, UINT message, WPARAM wParam, LPAR
 			return 0;
 		}
 #endif
+#if 0
+		case WM_CTLCOLORSTATIC: {
+			HDC hdcStatic = (HDC)wParam;
+			SetBkColor(hdcStatic, RGB(255, 0, 0)); // 设置背景颜色为红色
+			return (LRESULT)GetStockObject(NULL_BRUSH); // 返回无刷子以防止默认背景绘制
+		}
+#endif
 		default:
 			return CallWindowProc(editBox->GetDefaultWndProc(), hWnd, message, wParam, lParam);
 	}
@@ -398,12 +405,18 @@ namespace laya {
 		{
 			if (bForbidEdit)
 			{
-				EnableWindow(hWnd, FALSE); // 或者可以使用 SetWindowLong(hWnd, GWL_STYLE, GetWindowLong(hWnd, GWL_STYLE) | WS_DISABLED);
+				// 禁用输入框
+				EnableWindow(hWnd, FALSE);
+				//??? 无效 SendMessage(hWnd, EM_SETBKGNDCOLOR, 0, RGB(255, 0, 0)); // 设置背景颜色为红色
 			}
 			else
 			{
-				EnableWindow(hWnd, TRUE); // 或者可以使用 SetWindowLong(hWnd, GWL_STYLE, GetWindowLong(hWnd, GWL_STYLE) & ~WS_DISABLED);
+				// 启用输入框并恢复原来的背景颜色
+				EnableWindow(hWnd, TRUE);
+				//??? 无效 SendMessage(hWnd, EM_SETBKGNDCOLOR, 0, RGB(m_style->bgColor & 0x000000ff, (m_style->bgColor & 0x0000ff00) >> 8, (m_style->bgColor & 0x00ff0000) >> 16)); // 恢复原来的背景颜色
 			}
+
+			ForceUpdateWindow();
 		}
 	}
 	void WinEditBox::ForceUpdateWindow()
