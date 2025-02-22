@@ -1,14 +1,5 @@
-/**
- @file			UIEditBox.mm
- @brief         继承textField类
- @author		wyw
- @version		1.0
- @date			2012_12_17
- @company       JoyChina
- */
-
 #import "UIEditBoxWX.h"
-//#import <Bindings/JSLayaNative.h>
+#import <Bindings/JSDevice.h>
 
 #define BUTTON_WIDTH 70
 #define BUTTON_HEIGHT 40
@@ -192,6 +183,7 @@
     else
     {
         
+        
         self.textField.frame = CGRectMake(TEXT_VIEW_LEFT, TEXT_VIEW_TOP, SCREEN_WIDTH - TEXT_VIEW_LEFT * 3 - BUTTON_WIDTH, TEXT_VIEW_HEIGHT);
         [_backgroundView addSubview:self.textField];
         
@@ -292,13 +284,13 @@
     {
         NSString* text = self.textView.text;
         text = [text stringByReplacingOccurrencesOfString:@"\u2006" withString:@""];
-        //laya::JSLayaNative::getInstance()->handleKeyboardConfirm(text.UTF8String);
+        laya::JSDevice::handleKeyboardConfirm(text.UTF8String);
     }
     else
     {
         NSString* text = self.textField.text;
         text = [text stringByReplacingOccurrencesOfString:@"\u2006" withString:@""];
-        //laya::JSLayaNative::getInstance()->handleKeyboardConfirm(text.UTF8String);
+        laya::JSDevice::handleKeyboardConfirm(text.UTF8String);
     }
     if (!self.confirmHold)
     {
@@ -321,13 +313,13 @@
     {
         NSString* text = self.textView.text;
         text = [text stringByReplacingOccurrencesOfString:@"\u2006" withString:@""];
-        //laya::JSLayaNative::getInstance()->handleKeyboardComplete(text.UTF8String);
+        laya::JSDevice::handleKeyboardComplete(text.UTF8String);
     }
     else
     {
         NSString* text = self.textField.text;
         text = [text stringByReplacingOccurrencesOfString:@"\u2006" withString:@""];
-        //laya::JSLayaNative::getInstance()->handleKeyboardComplete(text.UTF8String);
+        laya::JSDevice::handleKeyboardComplete(text.UTF8String);
     }
     [_backgroundView  removeFromSuperview];
     [_backgroundView resignFirstResponder];
@@ -417,7 +409,7 @@
     }
     NSString* text = textField.text;
     text = [text stringByReplacingOccurrencesOfString:@"\u2006" withString:@""];
-    //laya::JSLayaNative::getInstance()->handleKeyboardInput([text UTF8String]);
+    laya::JSDevice::handleKeyboardInput([text UTF8String]);
 }
 -(void)textViewDidChange:(UITextView *)textView
 {
@@ -450,7 +442,7 @@
         
         NSString* text = self.textView.text;
         text = [text stringByReplacingOccurrencesOfString:@"\u2006" withString:@""];
-        //laya::JSLayaNative::getInstance()->handleKeyboardInput([text UTF8String]);
+        laya::JSDevice::handleKeyboardInput([text UTF8String]);
     }
     else
     {
