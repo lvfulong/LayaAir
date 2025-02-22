@@ -11,7 +11,7 @@
 #define BACKGROUND_VIEW_HEIGHT 58
 #define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
 #define SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
-#define TEXT_COLOR [UIColor whiteColor]
+#define TEXT_COLOR [UIColor blackColor]
 @interface UIEditBoxWX()
 
 //@property(nonatomic,strong)UITextView *textView;
@@ -169,27 +169,22 @@
         [_backgroundView removeFromSuperview];
     }
     _backgroundView = [CustomUIView new];
-    //0D0E0F
-    _backgroundView.backgroundColor = [UIColor colorWithRed: 13 / 255.0 green: 14 / 255.0 blue: 15 / 255.0 alpha: 1];
-    _backgroundView.frame=CGRectMake(0, SCREEN_HEIGHT, SCREEN_HEIGHT - BACKGROUND_VIEW_HEIGHT, BACKGROUND_VIEW_HEIGHT);
+    //F7F7F7
+    _backgroundView.backgroundColor = [UIColor colorWithRed: 247 / 255.0 green: 247 / 255.0 blue: 247 / 255.0 alpha: 1];
+    _backgroundView.frame = CGRectMake(0, SCREEN_HEIGHT, SCREEN_HEIGHT - BACKGROUND_VIEW_HEIGHT, BACKGROUND_VIEW_HEIGHT);
     [UIApplication.sharedApplication.delegate.window.rootViewController.view addSubview:_backgroundView];
     
     if (_multiple)
     {
-        
         self.textView.frame = CGRectMake(TEXT_VIEW_LEFT, TEXT_VIEW_TOP, SCREEN_WIDTH - TEXT_VIEW_LEFT * 3 - BUTTON_WIDTH, TEXT_VIEW_HEIGHT);
         [_backgroundView addSubview:self.textView];
     }
     else
     {
-        
-        
         self.textField.frame = CGRectMake(TEXT_VIEW_LEFT, TEXT_VIEW_TOP, SCREEN_WIDTH - TEXT_VIEW_LEFT * 3 - BUTTON_WIDTH, TEXT_VIEW_HEIGHT);
         [_backgroundView addSubview:self.textField];
-        
         //[textField setValue:[UIFont boldSystemFontOfSize:16] forKeyPath:@"_placeholderLabel.font"];
     }
-    
     self.button.frame = CGRectMake(SCREEN_WIDTH - BUTTON_WIDTH - TEXT_VIEW_LEFT, TEXT_VIEW_TOP, BUTTON_WIDTH, BUTTON_HEIGHT);
     [_backgroundView addSubview:self.button];
 }
@@ -226,9 +221,10 @@
         _textField.leftViewMode = UITextFieldViewModeAlways;
         _textField.delegate = self;
         _textField.textColor = TEXT_COLOR;
-        _textField.backgroundColor =  [UIColor colorWithRed: 43 / 255.0 green: 45 / 255.0 blue: 54 / 255.0 alpha: 1];
+        _textField.backgroundColor =  UIColor.whiteColor;
         _textField.layer.cornerRadius = 13;
         _textField.layer.masksToBounds = YES;
+        _textField.keyboardAppearance = UIKeyboardAppearanceLight;
         [_textField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
     }
     return _textField;
@@ -242,9 +238,10 @@
         _textView.layer.cornerRadius = 13;
         _textView.layer.masksToBounds = YES;
         _textView.textColor = TEXT_COLOR;
-        _textView.backgroundColor =  [UIColor colorWithRed: 43 / 255.0 green: 45 / 255.0 blue: 54 / 255.0 alpha: 1];
+        _textView.backgroundColor = UIColor.whiteColor;
         _textView.delegate = self;
         _textView.textContainerInset = UIEdgeInsetsMake(8, 8, 8, 8);
+        _textView.keyboardAppearance = UIKeyboardAppearanceLight;
         UILabel *placeHolderLabel = [[UILabel alloc] init];
         _placeHolderLabel = placeHolderLabel;
         placeHolderLabel.numberOfLines = 0;
