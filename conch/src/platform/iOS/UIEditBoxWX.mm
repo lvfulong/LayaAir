@@ -1,12 +1,9 @@
 #import "UIEditBoxWX.h"
 #import <Bindings/JSDevice.h>
 
-#define BUTTON_LEFT 8
-#define BUTTON_RIGHT 8
-#define BUTTON_WIDTH 70
-#define BUTTON_HEIGHT 40
 #define TEXT_VIEW_HEIGHT 40
 #define TEXT_VIEW_LEFT ([UIScreen mainScreen].bounds.size.width > [UIScreen mainScreen].bounds.size.height ? 40 : 8)
+#define TEXT_VIEW_RIGHT (TEXT_VIEW_LEFT)
 #define TEXT_VIEW_TOP ((BACKGROUND_VIEW_HEIGHT - TEXT_VIEW_HEIGHT) * 0.5)
 #define TEXT_VIEW_MAX_LINES 3
 #define TEXT_VIEW_MAX_HEIGHTS (TEXT_VIEW_MAX_LINES * TEXT_VIEW_HEIGHT)
@@ -28,7 +25,6 @@
 @property(nonatomic,strong) UITextField* textField;
 @property(nonatomic,strong) UITextView* textView;
 @property(nonatomic,strong) UIView* backgroundView;
-@property(nonatomic,strong) UIButton* button;
 @property(nonatomic,strong) UILabel *placeHolderLabel;
 @property (nonatomic, assign) BOOL multiple;
 @end
@@ -103,8 +99,6 @@
         else if ([self.confirmType isEqualToString:@"send"])
             self.textField.returnKeyType = UIReturnKeySend;
     }
-    
-    [self.button setTitle:NSLocalizedString(self.confirmType, nil) forState:UIControlStateNormal];
 }
 
 - (void)setPrompt:(NSString *)prompt
@@ -179,17 +173,15 @@
     
     if (_multiple)
     {
-        self.textView.frame = CGRectMake(TEXT_VIEW_LEFT, TEXT_VIEW_TOP, SCREEN_WIDTH - TEXT_VIEW_LEFT - BUTTON_LEFT - BUTTON_RIGHT - BUTTON_WIDTH, TEXT_VIEW_HEIGHT);
+        self.textView.frame = CGRectMake(TEXT_VIEW_LEFT, TEXT_VIEW_TOP, SCREEN_WIDTH - TEXT_VIEW_LEFT - TEXT_VIEW_RIGHT, TEXT_VIEW_HEIGHT);
         [_backgroundView addSubview:self.textView];
     }
     else
     {
-        self.textField.frame = CGRectMake(TEXT_VIEW_LEFT, TEXT_VIEW_TOP, SCREEN_WIDTH - TEXT_VIEW_LEFT - BUTTON_LEFT - BUTTON_RIGHT - BUTTON_WIDTH, TEXT_VIEW_HEIGHT);
+        self.textField.frame = CGRectMake(TEXT_VIEW_LEFT, TEXT_VIEW_TOP, SCREEN_WIDTH - TEXT_VIEW_LEFT - TEXT_VIEW_RIGHT, TEXT_VIEW_HEIGHT);
         [_backgroundView addSubview:self.textField];
         //[textField setValue:[UIFont boldSystemFontOfSize:16] forKeyPath:@"_placeholderLabel.font"];
     }
-    self.button.frame = CGRectMake(SCREEN_WIDTH - BUTTON_WIDTH - BUTTON_RIGHT, TEXT_VIEW_TOP, BUTTON_WIDTH, BUTTON_HEIGHT);
-    [_backgroundView addSubview:self.button];
 }
 
 - (void)becomeFirstResponder
@@ -199,19 +191,6 @@
     } else {
         [self.textField becomeFirstResponder];
     }
-}
-
-- (UIButton *)button {
-    if (!_button) {
-        _button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        _button.backgroundColor = [UIColor colorWithRed:30 / 255.0 green:32 / 255.0 blue:35 / 255.0 alpha: 1.0];
-        _button.layer.cornerRadius = 10;
-        _button.layer.masksToBounds = YES;
-        _button.titleLabel.font = [UIFont systemFontOfSize: 16];
-        [_button addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [_button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    }
-    return _button;
 }
 
 - (UITextField *)textField
@@ -373,30 +352,6 @@
     //[self hide];
     return YES;
 }
-/*-(UIView *)toolView{
-    
-    if (_toolView==nil) {
-        _toolView=[UIView new];
-        _toolView.backgroundColor=[UIColor colorWithRed:210/255.0 green:213/255.0 blue:219/255.0 alpha:1];
-        _toolView.frame=CGRectMake(0, 0, ScreenWidth, 40);
-        
-        UIButton *button=[UIButton buttonWithType:UIButtonTypeCustom];
-        [button setTitle:@"收起键盘" forState:UIControlStateNormal];
-        [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        button.titleLabel.font=[UIFont systemFontOfSize:13];
-        [button setBackgroundImage:[UIImage imageNamed:@"button_share"] forState:UIControlStateNormal];
-        [button addTarget:self action:@selector(buttonAction) forControlEvents:UIControlEventTouchUpInside];
-        button.frame=CGRectMake(ScreenWidth-60-15, (40-30)/2.0, 60, 30);
-        [_toolView addSubview:button];
-        
-        UIView *topLineView=[UIView new];
-        topLineView.backgroundColor=[UIColor grayColor];
-        topLineView.frame=CGRectMake(0, 0, ScreenWidth, 1);
-        [_toolView addSubview:topLineView];
-    }
-    return _toolView;
-}
-*/
 - (void)textFieldDidChange:(UITextField *)textField
 {
     if (textField.markedTextRange != nil)
@@ -430,12 +385,11 @@
     
     CGFloat width = SCREEN_WIDTH;
     CGFloat newBackgroundViewHeight = newTextViewHeight + 2 * TEXT_VIEW_TOP;
-    _backgroundView.frame=CGRectMake(0, (SCREEN_HEIGHT - self.keyboardHeight) - newBackgroundViewHeight, width, newBackgroundViewHeight);
+    _backgroundView.frame = CGRectMake(0, (SCREEN_HEIGHT - self.keyboardHeight) - newBackgroundViewHeight, width, newBackgroundViewHeight);
     
     if (_multiple)
     {
-        self.textView.frame=CGRectMake(TEXT_VIEW_LEFT,TEXT_VIEW_TOP , width - TEXT_VIEW_LEFT * 3 - BUTTON_WIDTH, newTextViewHeight);
-        self.button.frame = CGRectMake(SCREEN_WIDTH - BUTTON_WIDTH - TEXT_VIEW_LEFT, TEXT_VIEW_TOP, BUTTON_WIDTH, newTextViewHeight);
+        self.textView.frame = CGRectMake(TEXT_VIEW_LEFT, TEXT_VIEW_TOP , width - TEXT_VIEW_LEFT - TEXT_VIEW_RIGHT, newTextViewHeight);
         
         if (self.textView.text.length > self.maxLength)
             self.textView.text = [self.textView.text substringToIndex:self.maxLength];
@@ -449,28 +403,4 @@
         
     }
 }
-/*-(void)textViewDidBeginEditing:(UITextView *)textView {
-    if ([self.textView.text isEqualToString:self.prompt]) {
-        self.textView.text = @"";
-        self.textView.textColor = TEXT_COLOR;
-    }
-}
-- (void)textViewDidEndEditing:(UITextView *)textView {
-    if (self.textView.text.length < 1) {
-        textView.text = self.prompt;
-        if (![UIEditBoxWX isBlankString:self.promptColor])
-        {
-            textView.textColor = [UIEditBoxWX colorWithHexString:self.promptColor alpha:1.0F];
-        }
-        else
-        {
-            textView.textColor = TEXT_COLOR;
-        }
-    }
-}*/
-/*-(void)buttonAction{
-    
-    [self.view endEditing:YES];
-}
-*/
 @end
