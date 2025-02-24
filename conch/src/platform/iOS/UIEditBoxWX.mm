@@ -13,15 +13,9 @@
 #define TEXT_COLOR [UIColor blackColor]
 
 @interface UIEditBoxWX()
-
-//@property(nonatomic,strong)UITextView *textView;
-
 @property(nonatomic,strong)UIView *inputBackgroundView;
-
 @property(nonatomic,strong)UIView *toolView;
-
 @property(nonatomic,assign)CGFloat keyboardHeight;
-
 @property(nonatomic,strong) UITextField* textField;
 @property(nonatomic,strong) UITextView* textView;
 @property(nonatomic,strong) UIView* backgroundView;

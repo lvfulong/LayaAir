@@ -122,7 +122,6 @@
     NSDictionary* info = [aNotification userInfo];
     //kbSize即為鍵盤尺寸 (有width, height)
     CGSize kbSize = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;//得到鍵盤的高度
-    NSLog(@"keyboard height:%f",kbSize.height);
     
     UIView* pView = [conchRuntime GetIOSConchRuntime]->m_pView;
     CGPoint* pResolution = [conchRuntime GetIOSConchRuntime]->m_pResolution;

@@ -84,8 +84,6 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 
 	public static final int EditBoxTextId = 3;
 
-	public RelativeLayout.LayoutParams m_editBoxButtonLayoutParams;
-
 	public static LayaEditBoxNew instance = null;
 
 	public Context m_context = null;
@@ -189,16 +187,6 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 				LayaEditBoxNew.this.close();
 			}
 		});*/
-		m_pEditBoxButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				ConchJNI.handleKeyboardConfirm(LayaEditBoxNew.this.m_pEditBox.getText().toString());
-				if (!LayaEditBoxNew.this.m_confirmHold) {
-					LayaEditBoxNew.this.close();
-				}
-				LayaEditBoxNew.this.m_pEditBox.setText("");
-			}
-		});
 		m_pEditBox.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -258,7 +246,6 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 			mScrollView = m_rootLayout.findViewById(R.id.scroll_view);
 			m_pEditBox = m_rootLayout.findViewById(R.id.editbox_text);
 			//m_pEditBoxTouch = m_rootLayout.findViewById(R.id.editbox_touch);
-			m_pEditBoxButton = m_rootLayout.findViewById(R.id.editbox_button);
 			/*m_rootLayout.setKeyboardListener(new KeyboardLayout.KeyboardLayoutListener() {
 				@Override
 				public void onKeyboardStateChanged(boolean isActive, int keyboardHeight) {
@@ -336,41 +323,24 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 		}
 		switch(m_confirmType) {
 			case "done":
-				m_pEditBoxButton.setText(m_context.getResources().getString(R.string.done));
 				m_pEditBox.setImeOptions(EditorInfo.IME_ACTION_DONE);
 				break;
 			case "next":
-				m_pEditBoxButton.setText(m_context.getResources().getString(R.string.next));
 				m_pEditBox.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 				break;
 			case "search":
-				m_pEditBoxButton.setText(m_context.getResources().getString(R.string.search));
 				m_pEditBox.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
 				break;
 			case "go":
-				m_pEditBoxButton.setText(m_context.getResources().getString(R.string.go));
 				m_pEditBox.setImeOptions(EditorInfo.IME_ACTION_GO);
 				break;
 			case "send":
-				m_pEditBoxButton.setText(m_context.getResources().getString(R.string.send));
 				m_pEditBox.setImeOptions(EditorInfo.IME_ACTION_SEND);
 				break;
 			default:
 				m_confirmType = null;
-				m_pEditBoxButton.setText("");
 				m_pEditBox.setImeOptions(EditorInfo.IME_ACTION_UNSPECIFIED);
 				break;
-		}
-		if (TextUtils.isEmpty(m_confirmType)) {
-			m_pEditBoxButton.setText("");
-			m_pEditBoxButton.setPadding(0,0,0,0);
-			m_editBoxButtonLayoutParams = (RelativeLayout.LayoutParams)m_pEditBoxButton.getLayoutParams();
-			m_editBoxButtonLayoutParams.setMargins(0,0,0,0);
-			m_pEditBoxButton.setLayoutParams(m_editBoxButtonLayoutParams);
-			m_pEditBoxButton.setVisibility(View.INVISIBLE);
-		}
-		else {
-			m_pEditBoxButton.setVisibility(View.VISIBLE);
 		}
 	}
 	//键盘不遮挡按钮

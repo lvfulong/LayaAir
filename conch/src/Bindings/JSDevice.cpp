@@ -2,7 +2,10 @@
 #include "JCConch.h"
 #include <utils/JCMemorySurvey.h>
 #include <utils/Log.h>
-#if defined(OS_IOS)
+#if defined(OS_ANDROID)
+	#include <jni.h>
+	#include "CToJavaBridge.h"
+#elif defined(OS_IOS)
     #include "CToObjectC.h"
 #endif
 
@@ -24,7 +27,6 @@ void JSDevice::showKeyboard(jsbind::Local object)
     else
     {
         success = false;
-        LOGE("showKeyboard defaultValue must have a value");
     }
 
     int32_t maxLength = 0;
@@ -35,7 +37,6 @@ void JSDevice::showKeyboard(jsbind::Local object)
     else
     {
         success = false;
-        LOGE("showKeyboard maxLength must have a value");
     }
 
     bool multiple = false;
@@ -46,7 +47,6 @@ void JSDevice::showKeyboard(jsbind::Local object)
     else
     {
         success = false;
-        LOGE("showKeyboard multiple must have a value");
     }
 
     bool confirmHold = false;
@@ -57,7 +57,6 @@ void JSDevice::showKeyboard(jsbind::Local object)
     else
     {
         success = false;
-        LOGE("showKeyboard confirmHold must have a value");
     }
 
     std::string confirmType = "";
@@ -68,7 +67,6 @@ void JSDevice::showKeyboard(jsbind::Local object)
     else
     {
         success = false;
-        LOGE("showKeyboard confirmType must have a value");
     }
 
     // 扩展接口 非微信小游戏接口
@@ -81,7 +79,6 @@ void JSDevice::showKeyboard(jsbind::Local object)
     else
     {
         success = false;
-        LOGE("showKeyboard prompt must have a value");
     }
 
     std::string promptColor = ""; //???todo
@@ -92,7 +89,6 @@ void JSDevice::showKeyboard(jsbind::Local object)
     else
     {
         success = false;
-        LOGE("showKeyboard promptColor must have a value");
     }
 
     std::string inputType = "text";
@@ -103,7 +99,6 @@ void JSDevice::showKeyboard(jsbind::Local object)
     else
     {
         success = false;
-        LOGE("showKeyboard inputType must have a value");
     }
 #if defined(OS_ANDROID)
 
@@ -117,11 +112,11 @@ void JSDevice::showKeyboard(jsbind::Local object)
     DEBUG_CHECK(CToJavaBridge::GetInstance()->getClassAndStaticMethod(s_className, "show", s_methodSign, &pJNI,
                                                                       &thisClass, &methodID));
 
-    jstring jDefaultValue = pJNI->NewStringUTF(defaultValue);
-    jstring jConfirmType = pJNI->NewStringUTF(confirmType);
-    jstring jPrompt = pJNI->NewStringUTF(prompt);
-    jstring jPromptColor = pJNI->NewStringUTF(promptColor);
-    jstring jInputType = pJNI->NewStringUTF(inputType);
+    jstring jDefaultValue = pJNI->NewStringUTF(defaultValue.c_str());
+    jstring jConfirmType = pJNI->NewStringUTF(confirmType.c_str());
+    jstring jPrompt = pJNI->NewStringUTF(prompt.c_str());
+    jstring jPromptColor = pJNI->NewStringUTF(promptColor.c_str());
+    jstring jInputType = pJNI->NewStringUTF(inputType.c_str());
     success = (bool)pJNI->CallStaticBooleanMethod(thisClass, methodID, jDefaultValue, maxLength,
                                                   multiple ? JNI_TRUE : JNI_FALSE, confirmHold ? JNI_TRUE : JNI_FALSE,
                                                   jConfirmType, jPrompt, jPromptColor, jInputType);
