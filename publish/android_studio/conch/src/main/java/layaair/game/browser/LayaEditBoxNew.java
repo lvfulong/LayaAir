@@ -163,7 +163,7 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 		((Activity)exp.m_pEngine.mCtx).runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				if (LayaEditBoxNew.instance != null) {
+				if (LayaEditBoxNew.instance != null && !LayaEditBoxNew.instance.m_confirmHold) {
 					LayaEditBoxNew.instance.close();
 				}
 			}
@@ -191,7 +191,7 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 				ConchJNI.handleKeyboardConfirm(LayaEditBoxNew.this.m_pEditBox.getText().toString());
-				if (!LayaEditBoxNew.this.m_multiple) {
+				if (!LayaEditBoxNew.this.m_confirmHold) {
 					LayaEditBoxNew.this.close();
 				}
 				return false;
@@ -345,12 +345,13 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 	}
 	//键盘不遮挡按钮
 	private void setScroll() {
-		KeyboardUtil.assistActivity(((Activity)m_context), R.id.scroll_view);       //这个是别人给我的工具类，只用这个会有
-
+		KeyboardUtil.assistActivity(((Activity)m_context), R.id.scroll_view);
 		m_editbox_panel_bg.setOnTouchListener(new View.OnTouchListener() {                 //parent为Editext外面那层布局
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				LayaEditBoxNew.this.close();
+				if (!LayaEditBoxNew.this.m_confirmHold) {
+					LayaEditBoxNew.this.close();
+				}
 				return false;
 			}
 		});
