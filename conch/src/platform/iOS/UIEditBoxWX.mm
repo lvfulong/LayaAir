@@ -1,10 +1,12 @@
 #import "UIEditBoxWX.h"
 #import <Bindings/JSDevice.h>
 
+#define BUTTON_LEFT 8
+#define BUTTON_RIGHT 8
 #define BUTTON_WIDTH 70
 #define BUTTON_HEIGHT 40
 #define TEXT_VIEW_HEIGHT 40
-#define TEXT_VIEW_LEFT ([UIScreen mainScreen].bounds.size.width > [UIScreen mainScreen].bounds.size.height ? 40 : 15)
+#define TEXT_VIEW_LEFT ([UIScreen mainScreen].bounds.size.width > [UIScreen mainScreen].bounds.size.height ? 40 : 8)
 #define TEXT_VIEW_TOP ((BACKGROUND_VIEW_HEIGHT - TEXT_VIEW_HEIGHT) * 0.5)
 #define TEXT_VIEW_MAX_LINES 3
 #define TEXT_VIEW_MAX_HEIGHTS (TEXT_VIEW_MAX_LINES * TEXT_VIEW_HEIGHT)
@@ -12,6 +14,7 @@
 #define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
 #define SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
 #define TEXT_COLOR [UIColor blackColor]
+
 @interface UIEditBoxWX()
 
 //@property(nonatomic,strong)UITextView *textView;
@@ -176,16 +179,16 @@
     
     if (_multiple)
     {
-        self.textView.frame = CGRectMake(TEXT_VIEW_LEFT, TEXT_VIEW_TOP, SCREEN_WIDTH - TEXT_VIEW_LEFT * 3 - BUTTON_WIDTH, TEXT_VIEW_HEIGHT);
+        self.textView.frame = CGRectMake(TEXT_VIEW_LEFT, TEXT_VIEW_TOP, SCREEN_WIDTH - TEXT_VIEW_LEFT - BUTTON_LEFT - BUTTON_RIGHT - BUTTON_WIDTH, TEXT_VIEW_HEIGHT);
         [_backgroundView addSubview:self.textView];
     }
     else
     {
-        self.textField.frame = CGRectMake(TEXT_VIEW_LEFT, TEXT_VIEW_TOP, SCREEN_WIDTH - TEXT_VIEW_LEFT * 3 - BUTTON_WIDTH, TEXT_VIEW_HEIGHT);
+        self.textField.frame = CGRectMake(TEXT_VIEW_LEFT, TEXT_VIEW_TOP, SCREEN_WIDTH - TEXT_VIEW_LEFT - BUTTON_LEFT - BUTTON_RIGHT - BUTTON_WIDTH, TEXT_VIEW_HEIGHT);
         [_backgroundView addSubview:self.textField];
         //[textField setValue:[UIFont boldSystemFontOfSize:16] forKeyPath:@"_placeholderLabel.font"];
     }
-    self.button.frame = CGRectMake(SCREEN_WIDTH - BUTTON_WIDTH - TEXT_VIEW_LEFT, TEXT_VIEW_TOP, BUTTON_WIDTH, BUTTON_HEIGHT);
+    self.button.frame = CGRectMake(SCREEN_WIDTH - BUTTON_WIDTH - BUTTON_RIGHT, TEXT_VIEW_TOP, BUTTON_WIDTH, BUTTON_HEIGHT);
     [_backgroundView addSubview:self.button];
 }
 
