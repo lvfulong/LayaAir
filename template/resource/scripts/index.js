@@ -99,6 +99,22 @@ async function loadApp(url) {
         window["loadingView"].hideLoadingView();
     }
 }
+window.document.addEventListener('keydown', function (e) {
+    switch (e.keyCode) {
+        case 116:
+            reloadJS(true);
+            break;
+        case 117:
+            break;
+        case 118:
+            break;
+        case 119:
+            break;
+        case 120:
+            gc();
+            break;
+    }
+});
 function getBaseUrl(url) {
     let qidx = url.indexOf('?');
     if (qidx > 0) {
@@ -109,7 +125,7 @@ function getBaseUrl(url) {
 }
 window.loadConchUrl = loadApp;
 var enableDcc2 = true;
-var appUrl = 'http://10.1.127.98:8899/index.js';
+var appUrl = 'http://layabox.com/layanative3.0/demo/index.js';
 var dccHead = '';
 var dccUrl = null;
 var mapToDCC = null;
