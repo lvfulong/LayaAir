@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layaair.game.browser.KeyboardLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="false"
@@ -51,4 +51,4 @@
             </RelativeLayout>
         </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
-</layaair.game.browser.KeyboardLayout>
+</LinearLayout>
