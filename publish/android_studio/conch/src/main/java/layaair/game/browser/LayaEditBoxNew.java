@@ -8,6 +8,7 @@ import androidx.core.widget.NestedScrollView;
 
 import layaair.game.R;
 import layaair.game.conch.LayaConch5;
+import layaair.game.utility.DensityUtils;
 
 import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
@@ -362,8 +363,7 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 		});
 	}
 	@Override
-	public void onKeyboardHeightChanged(int visibleHeight, int keyboardHeight, int orientation) {
-		Log.d(TAG, "visibleHeight " + visibleHeight + " keyboardHeight " + keyboardHeight);
+	public void onSoftKeyboardOpened(int keyboardHeight) {
 		if (keyboardHeight >= 0) {
 			Point screenSize = new Point();
 			((Activity)m_context).getWindowManager().getDefaultDisplay().getSize(screenSize);
@@ -378,25 +378,22 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 			//int height = m_editbox_panel.getHeight();
 			//int orientation = getScreenOrientation();
 			//if (orientation != m_orientation) {
-				initView();
+			initView();
 			//}
 			//m_orientation = orientation;
-			if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-				params.setMargins(left, visibleHeight - m_editbox_panel_height, right, bottom);
-			}
-			else  {
-				params.setMargins(left, screenSize.y - m_editbox_panel_height, right, bottom);
-			}
+			//if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+				int screenHeight = DensityUtils.getScreenHeight(this.m_context);
+				params.setMargins(left, screenSize.y - keyboardHeight - m_editbox_panel_height, right, bottom);
+			//}
+			//else  {
+			//	params.setMargins(left, screenSize.y - m_editbox_panel_height, right, bottom);
+			//}
 			m_editbox_panel.setLayoutParams(params);
 		}
-		else {
-			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) m_editbox_panel.getLayoutParams();
-			int left = params.leftMargin;
-			int top = params.topMargin;
-			int right = params.rightMargin;
-			int bottom = params.bottomMargin;
-			params.setMargins(left,-99999, right, bottom);
-			m_editbox_panel.setLayoutParams(params);
-		}
+	}
+	@Override
+	public void onSoftKeyboardClosed() {
+		//m_rootLayout.setVisibility(View.INVISIBLE);
+		close();
 	}
 }

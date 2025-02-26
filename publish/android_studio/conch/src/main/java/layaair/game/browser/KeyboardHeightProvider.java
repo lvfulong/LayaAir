@@ -1,20 +1,3 @@
-/*
- * This file is part of Siebe Projects samples.
- *
- * Siebe Projects samples is free software: you can redistribute it and/or modify
- * it under the terms of the Lesser GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Siebe Projects samples is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * Lesser GNU General Public License for more details.
- *
- * You should have received a copy of the Lesser GNU General Public License
- * along with Siebe Projects samples.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package layaair.game.browser;
 
 import android.app.Activity;
@@ -37,40 +20,18 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.PopupWindow;
 
 import layaair.game.R;
+import layaair.game.utility.DensityUtils;
 
 
-/**
- * The keyboard height provider, this class uses a PopupWindow
- * to calculate the window height when the floating keyboard is opened and closed. 
- */
 public class KeyboardHeightProvider extends PopupWindow {
-
-    /** The tag for logging purposes */
-    private final static String TAG = "sample_KeyboardHeightProvider";
-
-    /** The keyboard height observer */
+    private final static String TAG = "KeyboardHeightProvider";
     private KeyboardHeightObserver observer;
-
-    /** The cached landscape height of the keyboard */
     private int keyboardLandscapeHeight;
-
-    /** The cached portrait height of the keyboard */
     private int keyboardPortraitHeight;
-
-    /** The view that is used to calculate the keyboard height */
     private View popupView;
-
-    /** The parent view */
     private View parentView;
-
-    /** The root activity that uses this KeyboardHeightProvider */
     private Activity activity;
-
-    /** 
-     * Construct a new KeyboardHeightProvider
-     * 
-     * @param activity The parent activity
-     */
+    private boolean isSoftKeyboardOpened = false;
     public KeyboardHeightProvider(Activity activity) {
 		super(activity);
         this.activity = activity;
@@ -98,11 +59,6 @@ public class KeyboardHeightProvider extends PopupWindow {
             });
     }
 
-    /**
-     * Start the KeyboardHeightProvider, this must be called after the onResume of the Activity.
-     * PopupWindows are not allowed to be registered before the onResume has finished
-     * of the Activity.
-     */
     public void start() {
 
         if (!isShowing() && parentView.getWindowToken() != null) {
@@ -111,68 +67,35 @@ public class KeyboardHeightProvider extends PopupWindow {
         }
     }
 
-    /**
-     * Close the keyboard height provider, 
-     * this provider will not be used anymore.
-     */
     public void close() {
         this.observer = null;
         dismiss();
     }
 
-    /** 
-     * Set the keyboard height observer to this provider. The 
-     * observer will be notified when the keyboard height has changed. 
-     * For example when the keyboard is opened or closed.
-     * 
-     * @param observer The observer to be added to this provider.
-     */
     public void setKeyboardHeightObserver(KeyboardHeightObserver observer) {
         this.observer = observer;
     }
-   
-    /**
-     * Popup window itself is as big as the window of the Activity. 
-     * The keyboard can then be calculated by extracting the popup view bottom 
-     * from the activity window height. 
-     */
+
     private void handleOnGlobalLayout() {
-
-        Point screenSize = new Point();
-        activity.getWindowManager().getDefaultDisplay().getSize(screenSize);
-
         Rect rect = new Rect();
         popupView.getWindowVisibleDisplayFrame(rect);
-
-        // REMIND, you may like to change this using the fullscreen size of the phone
-        // and also using the status bar and navigation bar heights of the phone to calculate
-        // the keyboard height. But this worked fine on a Nexus.
-        int orientation = getScreenOrientation();
-        int keyboardHeight = screenSize.y - rect.bottom;
-        
-        if (keyboardHeight == 0) {
-            notifyKeyboardHeightChanged(screenSize.y, 0, orientation);
-        }
-        else if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            this.keyboardPortraitHeight = keyboardHeight; 
-            notifyKeyboardHeightChanged(screenSize.y - keyboardPortraitHeight, keyboardPortraitHeight, orientation);
-        } 
-        else {
-            this.keyboardLandscapeHeight = keyboardHeight; 
-            notifyKeyboardHeightChanged(screenSize.y - keyboardPortraitHeight, keyboardLandscapeHeight, orientation);
+        int screenHeight = DensityUtils.getScreenHeight(this.activity);
+        int keyboardHeight = screenHeight - rect.bottom;
+        boolean visible = keyboardHeight > screenHeight / 4;
+        if (!isSoftKeyboardOpened && visible) {
+            isSoftKeyboardOpened = true;
+            if (observer != null) {
+                observer.onSoftKeyboardOpened(keyboardHeight);
+            }
+        } else if (isSoftKeyboardOpened && !visible) {
+            isSoftKeyboardOpened = false;
+            if (observer != null) {
+                observer.onSoftKeyboardClosed();
+            }
         }
     }
 
     private int getScreenOrientation() {
         return activity.getResources().getConfiguration().orientation;
-    }
-    
-    private void notifyKeyboardHeightChanged(int visibleHeight, int keyboardHeight, int orientation) {
-        if (observer != null) {
-            if (visibleHeight > 0 && keyboardHeight > 0) {
-                observer.onKeyboardHeightChanged(visibleHeight, keyboardHeight, orientation);
-                observer = null;
-            }
-        }
     }
 }
