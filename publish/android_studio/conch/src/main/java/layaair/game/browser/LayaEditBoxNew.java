@@ -344,7 +344,6 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 	}
 	//键盘不遮挡按钮
 	private void setScroll() {
-		KeyboardUtil.assistActivity(((Activity)m_context), R.id.scroll_view);
 		m_editbox_panel_bg.setOnTouchListener(new View.OnTouchListener() {                 //parent为Editext外面那层布局
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
