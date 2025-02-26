@@ -91,7 +91,7 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 	public KeyboardHeightProvider m_keyboardHeightProvider = null;
 	public RelativeLayout m_editbox_panel_bg;
 	public RelativeLayout m_editbox_panel;
-	public KeyboardLayout m_rootLayout = null;
+	public LinearLayout m_rootLayout = null;
 	public int m_orientation;
 	private NestedScrollView mScrollView;
 	private int m_editbox_panel_height = 0;
@@ -220,17 +220,16 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 	public void setLayout() {
 		if (m_rootLayout != null) {
 			LayaConch5.ms_layaConche.getAbsLayout().removeViewInLayout(m_rootLayout);
-			m_rootLayout.setKeyboardListener(null);
 			m_rootLayout = null;
 		}
 		if (true) {
 			LayoutInflater inflater = (LayoutInflater) m_context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			int orientation = getScreenOrientation();
 			if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-				m_rootLayout = (KeyboardLayout) inflater.inflate(R.layout.editbox_layout, null);
+				m_rootLayout = (LinearLayout) inflater.inflate(R.layout.editbox_layout, null);
 			}
 			else {
-				m_rootLayout = (KeyboardLayout) inflater.inflate(R.layout.editbox_layout_landscape, null);
+				m_rootLayout = (LinearLayout) inflater.inflate(R.layout.editbox_layout_landscape, null);
 			}
 			m_editbox_panel = m_rootLayout.findViewById(R.id.editbox_panel);
 			m_editbox_panel_bg = m_rootLayout.findViewById(R.id.editbox_panel_bg);
