@@ -70,15 +70,15 @@ class Navigator implements NavigatorID, NavigatorOnLine, NavigatorGeolocation {
     product: string;
     productSub: string;
     get userAgent(): string{
-        var os=window.layabox.devinfo.os;
-        if(os=="ios")
-        return "LayaBox(iPhone; CPU iPhone OS Mac OS X)";
-        else if(os=="android")
-        return "LayaBox Android";
+        var os = window.layabox.devinfo.os;
+        if (os == "ios")
+            return "LayaBox(iPhone; CPU iPhone OS Mac OS X) Mobile";
+        else if(os == "android")
+            return "LayaBox Android Mobile";
         else if(os == "OpenHarmony")
-            return "OpenHarmony";
+            return "OpenHarmony Mobile";
         else
-        return 'LayaBox/2.1';
+            return 'LayaBox/2.1';
     };
     vendor: string;
     vendorSub: string;

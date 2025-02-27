@@ -329,15 +329,6 @@ void App::run(const Config &config)
 
                     {
                         inputEvent e;
-                        e.nTouchType = e.nType = E_ONTOUCHSTART;
-                        e.posX = event.button.x;
-                        e.posY = event.button.y;
-                        strncpy(e.type, "mousedown", 256);
-
-                        JCConch::s_pConch->dispatchInputEvent(e);
-                    }
-                    {
-                        inputEvent e;
                         e.nTouchType = e.nType = E_CLICK;
                         e.posX = event.button.x;
                         e.posY = event.button.y;
