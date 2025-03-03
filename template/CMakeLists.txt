@@ -137,7 +137,7 @@ elseif(OS_WINDOWS)
 
 	foreach(file ${WIN_DLLS})
 		add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${file} $<TARGET_FILE_DIR:${PROJECT_NAME}>
+			COMMAND ${CMAKE_COMMAND} -E copy ${file} $<TARGET_FILE_DIR:${PROJECT_NAME}>
 		)
 	endforeach()
 
@@ -148,7 +148,7 @@ elseif(OS_WINDOWS)
 		set(relative_path)
 		file(RELATIVE_PATH relative_path ${CMAKE_CURRENT_SOURCE_DIR}/resource ${file}) 
 		add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${file} $<TARGET_FILE_DIR:${PROJECT_NAME}>/${relative_path}
+			COMMAND ${CMAKE_COMMAND} -E copy ${file} $<TARGET_FILE_DIR:${PROJECT_NAME}>/${relative_path}
 		)
 	endforeach()
 	target_link_libraries(${PROJECT_NAME} PRIVATE conch)
@@ -173,7 +173,6 @@ endfunction(set_xcode_property)
 if(OS_IOS)	
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fobjc-arc")
 	set(CMAKE_XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_ARC "YES" CACHE INTERNAL "")
-	SET (CMAKE_XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET 12.0)
 	#add_subdirectory(${CONCH_PATH} ${PROJECT_BINARY_DIR}/conch)
 	#set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/${app_name}")
     set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE 1)
@@ -191,6 +190,7 @@ if(OS_IOS)
 	set_xcode_property(${PROJECT_NAME} OTHER_LDFLAGS "$(inherited) -ObjC")
 	set_xcode_property(${PROJECT_NAME} VALIDATE_WORKSPACE "YES")
 	set_xcode_property(${PROJECT_NAME} PRODUCT_BUNDLE_IDENTIFIER "com.layabox.conch6")
+	set_property(TARGET ${PROJECT_NAME} PROPERTY XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET ${IOS_MINIMUM_DEPLOYMENTS_VERSION})
 endif()
 
 

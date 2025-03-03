@@ -113,6 +113,15 @@ void JCSystemConfig::loadConfigIniFile()
         LOGW("Warning: can not find desktop:ShowDebugConsole use default %d", showDebugConsole);
     }
 
+    bool runInBackground = false;
+    if (configIni.hasEntry("desktop:RunInBackground"))
+    {
+        m_runInBackground = configIni.getBoolOrDefault("desktop:RunInBackground", runInBackground);
+    }
+    else
+    {
+        LOGW("Warning: can not find desktop:RunInBackground use default %d", runInBackground);
+    }
 #endif
 #ifdef OS_IOS
     if (configIni.hasEntry("ios:orientation"))

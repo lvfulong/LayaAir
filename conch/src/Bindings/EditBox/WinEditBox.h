@@ -1,12 +1,11 @@
 #pragma once
 #include <Windows.h>
 #include <CommCtrl.h>
-#include "WinCtrl.h"
 #include <string>
 
 namespace laya {
 
-	class WinEditBox final : public WinControl{
+	class WinEditBox {
 	public:
 		class Style {
 		public:
@@ -30,8 +29,8 @@ namespace laya {
 			void SetFontSize(int val);
 			void SetBgColor(COLORREF val);
 			void SetFontColor(COLORREF val);
-
-
+			void SetScale(float scaleX, float scaleY);
+			void SetFont(const std::string& val);
 		private:
 			void UpdatePaintOrDirty();
 			void UpdateSizeOrDirty();
@@ -46,7 +45,9 @@ namespace laya {
 			int width;
 			int height;
 			int fontSize;
-
+			float scaleX{ 1.0f };
+			float scaleY{ 1.0f };
+			std::string	font{ "Arial" };
 			bool isDirty;
 
 			WinEditBox* m_owner;
@@ -54,8 +55,7 @@ namespace laya {
 
 	public:
 		WinEditBox();
-		virtual void Init() override;
-		virtual ControlType GetType() override { return CT_Edit; }
+		void Init();
 
 		WNDPROC GetDefaultWndProc() const { return m_defaultWndProc; }
 
@@ -64,21 +64,12 @@ namespace laya {
 		bool IsFocus() const { return m_isFocus; }
 		void SetFocus(bool isFocus);
 
-		void SetText(const char* text);
-		const char* GetText();
+		void SetText(const std::string& text);
+		std::string GetText();
 
 		void SetMutiLine(bool val);
-
+		void setForbidEdit(bool val);
 		void ForceUpdateWindow();
-
-
-		// event
-		virtual void OnPaint() override;
-		virtual void OnCtrlColor(HDC hdc) override;
-		virtual void OnSetFocus() override;
-
-		bool OnNCCalcSize(WPARAM wParam, LPARAM lParam);
-		bool OnNCPaint(WPARAM wParam, LPARAM lParam);
 
 		// ref count
 		void Retain();
@@ -87,12 +78,12 @@ namespace laya {
 	private:
 		void UpdateSize();
 		void UpdateFont();
-		void RenderClient();
-		void GetTextFromWindow();
-
+		void UpdateStyle();
 		HWND GetCurHWND() { return m_isMultiLine ?  m_hMultiEditWnd : m_hSingleEditWnd;
 		}
-
+		void SetFocus_(bool isFocus);
+		void SetMutiLine_(bool val);
+		void setForbidEdit_(bool val);
 	private:
 		WinEditBox(const WinEditBox& other) = delete;
 		void operator=(const WinEditBox& other) = delete;
@@ -102,7 +93,7 @@ namespace laya {
 		bool m_isInitialized;
 
 		bool m_isFocus;
-		std::string m_text;
+		//std::string m_text;
 
 		bool m_isMultiLine;
 

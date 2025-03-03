@@ -35,6 +35,7 @@ class JCSystemConfig
     bool m_showDebugConsole = false;
     uint64_t m_frameIntervalInMs = (uint64_t)(1000.f / 60);
     bool m_swappyEnabled = true;
+    bool m_runInBackground = false;
 };
 extern JCSystemConfig g_kSystemConfig;
 } // namespace laya

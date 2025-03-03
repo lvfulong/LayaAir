@@ -8,6 +8,7 @@ import androidx.core.widget.NestedScrollView;
 
 import layaair.game.R;
 import layaair.game.conch.LayaConch5;
+import layaair.game.utility.DensityUtils;
 
 import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
@@ -84,8 +85,6 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 
 	public static final int EditBoxTextId = 3;
 
-	public RelativeLayout.LayoutParams m_editBoxButtonLayoutParams;
-
 	public static LayaEditBoxNew instance = null;
 
 	public Context m_context = null;
@@ -93,7 +92,7 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 	public KeyboardHeightProvider m_keyboardHeightProvider = null;
 	public RelativeLayout m_editbox_panel_bg;
 	public RelativeLayout m_editbox_panel;
-	public KeyboardLayout m_rootLayout = null;
+	public LinearLayout m_rootLayout = null;
 	public int m_orientation;
 	private NestedScrollView mScrollView;
 	private int m_editbox_panel_height = 0;
@@ -165,7 +164,7 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 		((Activity)exp.m_pEngine.mCtx).runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				if (LayaEditBoxNew.instance != null) {
+				if (LayaEditBoxNew.instance != null && !LayaEditBoxNew.instance.m_confirmHold) {
 					LayaEditBoxNew.instance.close();
 				}
 			}
@@ -189,21 +188,11 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 				LayaEditBoxNew.this.close();
 			}
 		});*/
-		m_pEditBoxButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				ConchJNI.handleKeyboardConfirm(LayaEditBoxNew.this.m_pEditBox.getText().toString());
-				if (!LayaEditBoxNew.this.m_confirmHold) {
-					LayaEditBoxNew.this.close();
-				}
-				LayaEditBoxNew.this.m_pEditBox.setText("");
-			}
-		});
 		m_pEditBox.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 				ConchJNI.handleKeyboardConfirm(LayaEditBoxNew.this.m_pEditBox.getText().toString());
-				if (!LayaEditBoxNew.this.m_multiple) {
+				if (!LayaEditBoxNew.this.m_confirmHold) {
 					LayaEditBoxNew.this.close();
 				}
 				return false;
@@ -232,17 +221,16 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 	public void setLayout() {
 		if (m_rootLayout != null) {
 			LayaConch5.ms_layaConche.getAbsLayout().removeViewInLayout(m_rootLayout);
-			m_rootLayout.setKeyboardListener(null);
 			m_rootLayout = null;
 		}
 		if (true) {
 			LayoutInflater inflater = (LayoutInflater) m_context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			int orientation = getScreenOrientation();
 			if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-				m_rootLayout = (KeyboardLayout) inflater.inflate(R.layout.editbox_layout, null);
+				m_rootLayout = (LinearLayout) inflater.inflate(R.layout.editbox_layout, null);
 			}
 			else {
-				m_rootLayout = (KeyboardLayout) inflater.inflate(R.layout.editbox_layout_landscape, null);
+				m_rootLayout = (LinearLayout) inflater.inflate(R.layout.editbox_layout_landscape, null);
 			}
 			m_editbox_panel = m_rootLayout.findViewById(R.id.editbox_panel);
 			m_editbox_panel_bg = m_rootLayout.findViewById(R.id.editbox_panel_bg);
@@ -258,7 +246,6 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 			mScrollView = m_rootLayout.findViewById(R.id.scroll_view);
 			m_pEditBox = m_rootLayout.findViewById(R.id.editbox_text);
 			//m_pEditBoxTouch = m_rootLayout.findViewById(R.id.editbox_touch);
-			m_pEditBoxButton = m_rootLayout.findViewById(R.id.editbox_button);
 			/*m_rootLayout.setKeyboardListener(new KeyboardLayout.KeyboardLayoutListener() {
 				@Override
 				public void onKeyboardStateChanged(boolean isActive, int keyboardHeight) {
@@ -336,51 +323,34 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 		}
 		switch(m_confirmType) {
 			case "done":
-				m_pEditBoxButton.setText(m_context.getResources().getString(R.string.done));
 				m_pEditBox.setImeOptions(EditorInfo.IME_ACTION_DONE);
 				break;
 			case "next":
-				m_pEditBoxButton.setText(m_context.getResources().getString(R.string.next));
 				m_pEditBox.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 				break;
 			case "search":
-				m_pEditBoxButton.setText(m_context.getResources().getString(R.string.search));
 				m_pEditBox.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
 				break;
 			case "go":
-				m_pEditBoxButton.setText(m_context.getResources().getString(R.string.go));
 				m_pEditBox.setImeOptions(EditorInfo.IME_ACTION_GO);
 				break;
 			case "send":
-				m_pEditBoxButton.setText(m_context.getResources().getString(R.string.send));
 				m_pEditBox.setImeOptions(EditorInfo.IME_ACTION_SEND);
 				break;
 			default:
 				m_confirmType = null;
-				m_pEditBoxButton.setText("");
 				m_pEditBox.setImeOptions(EditorInfo.IME_ACTION_UNSPECIFIED);
 				break;
-		}
-		if (TextUtils.isEmpty(m_confirmType)) {
-			m_pEditBoxButton.setText("");
-			m_pEditBoxButton.setPadding(0,0,0,0);
-			m_editBoxButtonLayoutParams = (RelativeLayout.LayoutParams)m_pEditBoxButton.getLayoutParams();
-			m_editBoxButtonLayoutParams.setMargins(0,0,0,0);
-			m_pEditBoxButton.setLayoutParams(m_editBoxButtonLayoutParams);
-			m_pEditBoxButton.setVisibility(View.INVISIBLE);
-		}
-		else {
-			m_pEditBoxButton.setVisibility(View.VISIBLE);
 		}
 	}
 	//键盘不遮挡按钮
 	private void setScroll() {
-		KeyboardUtil.assistActivity(((Activity)m_context), R.id.scroll_view);       //这个是别人给我的工具类，只用这个会有
-
 		m_editbox_panel_bg.setOnTouchListener(new View.OnTouchListener() {                 //parent为Editext外面那层布局
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				LayaEditBoxNew.this.close();
+				if (!LayaEditBoxNew.this.m_confirmHold) {
+					LayaEditBoxNew.this.close();
+				}
 				return false;
 			}
 		});
@@ -393,8 +363,7 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 		});
 	}
 	@Override
-	public void onKeyboardHeightChanged(int visibleHeight, int keyboardHeight, int orientation) {
-		Log.d(TAG, "visibleHeight " + visibleHeight + " keyboardHeight " + keyboardHeight);
+	public void onSoftKeyboardOpened(int keyboardHeight) {
 		if (keyboardHeight >= 0) {
 			Point screenSize = new Point();
 			((Activity)m_context).getWindowManager().getDefaultDisplay().getSize(screenSize);
@@ -409,25 +378,22 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 			//int height = m_editbox_panel.getHeight();
 			//int orientation = getScreenOrientation();
 			//if (orientation != m_orientation) {
-				initView();
+			initView();
 			//}
 			//m_orientation = orientation;
-			if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-				params.setMargins(left, visibleHeight - m_editbox_panel_height, right, bottom);
-			}
-			else  {
-				params.setMargins(left, screenSize.y - m_editbox_panel_height, right, bottom);
-			}
+			//if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+				int screenHeight = DensityUtils.getScreenHeight(this.m_context);
+				params.setMargins(left, screenSize.y - keyboardHeight - m_editbox_panel_height, right, bottom);
+			//}
+			//else  {
+			//	params.setMargins(left, screenSize.y - m_editbox_panel_height, right, bottom);
+			//}
 			m_editbox_panel.setLayoutParams(params);
 		}
-		else {
-			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) m_editbox_panel.getLayoutParams();
-			int left = params.leftMargin;
-			int top = params.topMargin;
-			int right = params.rightMargin;
-			int bottom = params.bottomMargin;
-			params.setMargins(left,-99999, right, bottom);
-			m_editbox_panel.setLayoutParams(params);
-		}
+	}
+	@Override
+	public void onSoftKeyboardClosed() {
+		//m_rootLayout.setVisibility(View.INVISIBLE);
+		close();
 	}
 }

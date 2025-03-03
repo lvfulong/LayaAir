@@ -96,8 +96,8 @@ namespace laya
         static void downloadFile(const std::string& url, jsvm_value onProgress, jsvm_value onComplete, jsvm_value onError);
         static void setDownloader(jsvm_value obj);
 
-        static jsvm_value postAsyncMessage(const std::string &eventName, const std::string &data);
-        static std::string postSyncMessage(const std::string &eventName, const std::string &data);
+        static jsvm_value postAsyncMessage(jsbind::Local eventName, jsbind::Local data);
+        static std::string postSyncMessage(jsbind::Local eventName, jsbind::Local data);
         static void setPreferredFramesPerSecond(uint32_t fps);
     public:
 

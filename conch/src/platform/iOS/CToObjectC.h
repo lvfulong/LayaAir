@@ -99,8 +99,8 @@ const char* CToObjectCGetEditBoxValue();
 
 void CToObjectCSetEditBoxMultiAble(bool p_bMultiAble);
 
-void CToObjectCShowEditBoxWX(const char* defaultValue, int maxLength, bool multiple, bool confirmHold, const char* confirmType, const char* prompt, const char* promptColor, const char* inputType);
-void CToObjectCHideEditBoxWX();
+void CToObjectCShowKeyboard(const char* defaultValue, int maxLength, bool multiple, bool confirmHold, const char* confirmType, const char* prompt, const char* promptColor, const char* inputType);
+void CToObjectCHideKeyboard();
 
 void CToObjectCVibrateShort();
 

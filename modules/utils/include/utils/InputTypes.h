@@ -83,6 +83,8 @@ enum EINPUTTYPE
     E_JOYSTICK,
     E_DEVICEMOTION,
     E_DEVICEORIENTATION,
+    E_CLICK,
+    E_DOUBLE_CLICK,
     E_TYPE_COUNT,
 };
 } // namespace laya

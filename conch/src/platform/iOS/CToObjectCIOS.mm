@@ -317,7 +317,7 @@ static uint32_t CalcTableDataRefCheckSum(CFDataRef dataRef)
 }
 +(void) postCmdToHideEditBoxWX:(id)param
 {
-   [[conchRuntime GetIOSConchRuntime] hideEditBoxWX];
+   [[conchRuntime GetIOSConchRuntime] hideKeyboard];
 }
 +(void) postCmdToShowEditBoxWX:(id)param
 {
@@ -327,7 +327,7 @@ static uint32_t CalcTableDataRefCheckSum(CFDataRef dataRef)
     NSString* prompt = [NSString stringWithUTF8String:_param->m_prompt.c_str()];
     NSString* promptColor = [NSString stringWithUTF8String:_param->m_promptColor.c_str()];
     NSString* inputType = [NSString stringWithUTF8String:_param->m_inputType.c_str()];
-    [[conchRuntime GetIOSConchRuntime] showEditBoxWX:defaultValue maxLength:_param->m_maxLength multiple:_param->m_multiple confirmHold:_param->m_confirmHold confirmType:confirmType prompt:prompt promptColor:promptColor inputType:inputType];
+    [[conchRuntime GetIOSConchRuntime] showKeyboard:defaultValue maxLength:_param->m_maxLength multiple:_param->m_multiple confirmHold:_param->m_confirmHold confirmType:confirmType prompt:prompt promptColor:promptColor inputType:inputType];
 }
 +(void) postCmdToSaveImageToAlbum:(id)param
 {
@@ -790,13 +790,13 @@ const char* CToObjectCGetEditBoxValue()
     }
     return [sValue cStringUsingEncoding:NSUTF8StringEncoding];
 }
-void CToObjectCShowEditBoxWX(const char* defaultValue, int maxLength, bool multiple, bool confirmHold, const char* confirmType, const char* prompt, const char* promptColor, const char* inputType)
+void CToObjectCShowKeyboard(const char* defaultValue, int maxLength, bool multiple, bool confirmHold, const char* confirmType, const char* prompt, const char* promptColor, const char* inputType)
 {
     postCmdEditBoxWXParam* param = [[postCmdEditBoxWXParam alloc] init:defaultValue maxLength:(int)maxLength multiple:(bool)multiple confirmHold:confirmHold confirmType:confirmType prompt:prompt promptColor:promptColor inputType:inputType];
     [CToObjectCIOS performSelectorOnMainThread:@selector(postCmdToShowEditBoxWX:) withObject:param waitUntilDone:NO];
 }
 
-void CToObjectCHideEditBoxWX()
+void CToObjectCHideKeyboard()
 {
     postCmdToMainThreadParam* param = [[postCmdToMainThreadParam alloc] init];
     [CToObjectCIOS performSelectorOnMainThread:@selector(postCmdToHideEditBoxWX:) withObject:param waitUntilDone:NO];

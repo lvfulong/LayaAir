@@ -22,6 +22,7 @@ Window g_X11_window;
 
 namespace laya
 {
+Uint32 CUSTOM_EVENT_EDITBOX = -1;
 #if defined(OS_WINDOWS)
 static void createAndAttachConsole()
 {
@@ -57,7 +58,36 @@ std::array<int, 512> keycodeMap = {
     0,   0,   0,   0,   'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
     'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
 };
+static void initCustomEvents()
+{
+    CUSTOM_EVENT_EDITBOX = SDL_RegisterEvents(1);
+    if (CUSTOM_EVENT_EDITBOX == (Uint32)-1)
+    {
+        LOGE("Failed to register custom event");
+    }
+}
+void SendEditBoxCustomEvent(std::function<void()> &&callback)
+{
+    SDL_Event event;
+    SDL_memset(&event, 0, sizeof(event));
 
+    event.type = CUSTOM_EVENT_EDITBOX;
+
+    event.user.type = CUSTOM_EVENT_EDITBOX;
+    // event.user.code = static_cast<Sint32>(type);
+
+    EditBoxEventData *eventData = new EditBoxEventData();
+    eventData->callback = callback;
+    event.user.data1 = eventData;
+
+    // 将事件推送到SDL事件队列
+    if (SDL_PushEvent(&event) < 0)
+    {
+        // 推送失败处理
+        delete eventData;
+        LOGE("Failed to push custom event: %s", SDL_GetError());
+    }
+}
 void App::run(const Config &config)
 {
     keycodeMap[SDL_SCANCODE_RETURN] = 0x0d;       // VK_RETURN;
@@ -143,6 +173,8 @@ void App::run(const Config &config)
 
     m_sdlWindow = SDL_CreateWindow(config.title.c_str(), x, y, (int)g_nInnerWidth, (int)g_nInnerHeight, windowFlags);
 
+    initCustomEvents();
+
     SDL_SysWMinfo sys;
     SDL_VERSION(&sys.version);
     if (SDL_FALSE != SDL_GetWindowWMInfo(m_sdlWindow, &sys))
@@ -190,6 +222,13 @@ void App::run(const Config &config)
         frameStart = SDL_GetTicks();
         while (SDL_PollEvent(&event) != 0)
         {
+            if (event.type == CUSTOM_EVENT_EDITBOX)
+            {
+                EditBoxEventData *data = static_cast<EditBoxEventData *>(event.user.data1);
+                data->callback();
+                delete data;
+            }
+
             switch (event.type)
             {
             case SDL_QUIT:
@@ -264,8 +303,8 @@ void App::run(const Config &config)
                 inputEvent e;
                 e.nTouchType = e.nType = E_ONMOUSEWHEEL;
                 strncpy(e.type, "wheel", 256);
-//                e.posX = event.wheel.mouseX;
-//                e.posY = event.wheel.mouseY;
+                //                e.posX = event.wheel.mouseX;
+                //                e.posY = event.wheel.mouseY;
                 SDL_GetMouseState(&e.posX, &e.posY);
                 e.deltaMode = 0;
                 e.deltaX = -event.wheel.x * 100.0f; // 凑的
@@ -287,6 +326,16 @@ void App::run(const Config &config)
                     strncpy(e.type, "mousedown", 256);
 
                     JCConch::s_pConch->dispatchInputEvent(e);
+
+                    {
+                        inputEvent e;
+                        e.nTouchType = e.nType = E_CLICK;
+                        e.posX = event.button.x;
+                        e.posY = event.button.y;
+                        strncpy(e.type, "click", 256);
+
+                        JCConch::s_pConch->dispatchInputEvent(e);
+                    }
                 }
                 else if (SDL_BUTTON_RIGHT == event.button.button)
                 {
@@ -384,12 +433,13 @@ void App::run(const Config &config)
             }
         }
         laya::JCConch::s_pConch->update();
+
         int delay = 8;
-        if (m_min)
+        if (m_min && !laya::g_kSystemConfig.m_runInBackground)
         {
             delay = 100;
         }
-        else if (!m_activate)
+        else if (!m_activate && !laya::g_kSystemConfig.m_runInBackground)
         {
             delay = 33;
         }

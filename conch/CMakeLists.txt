@@ -320,6 +320,8 @@ list(APPEND CONCH_SRC
 	src/2D/src/FontManager.cpp
 
 	# 暴露给JS的类
+	src/Bindings/JSDevice.h
+	src/Bindings/JSDevice.cpp
 	src/Bindings/Bullet/LayaBulletExport.h
 	src/Bindings/Bullet/LayaBulletExport.cpp
 	src/Bindings/Bullet/LayaBulletExportImp.cpp
@@ -489,8 +491,8 @@ if(OS_IOS)
 		src/platform/iOS/Notification/LayaNotifyManager.m
 		src/platform/iOS/Audio/JCMp3Player.h
 		src/platform/iOS/Audio/JCMp3Player.mm
-		#platform/iOS/UIEditBoxWX.h
-		#platform/iOS/UIEditBoxWX.mm
+		src/platform/iOS/UIEditBoxWX.h
+		src/platform/iOS/UIEditBoxWX.mm
 		src/platform/iOS/LayaOpenGLESView.h
 		src/platform/iOS/LayaOpenGLESView.mm
 		src/platform/iOS/Utils.h
@@ -543,8 +545,6 @@ elseif(OS_WINDOWS)
 		src/Audio/windows/JCAudioMp3Player.h
 		src/Bindings/EditBox/WinEditBox.h
 		src/Bindings/EditBox/WinEditBox.cpp
-		src/Bindings/EditBox/WinCtrl.h
-		src/Bindings/EditBox/WinCtrl.cpp
 		src/Bindings/Video/JSVideo_Win32Impl.cpp
 		src/Bindings/JSWindowEditBox.h
 		src/Bindings/JSWindowEditBox.cpp
@@ -788,6 +788,7 @@ elseif(OS_IOS)
 
 	)
 	set_property(TARGET ${PROJECT_NAME} PROPERTY XCODE_ATTRIBUTE_ENABLE_BITCODE "NO")
+	set_property(TARGET ${PROJECT_NAME} PROPERTY XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET ${IOS_MINIMUM_DEPLOYMENTS_VERSION})
 elseif(OS_WINDOWS)
 	
 	#target_compile_definitions(${PROJECT_NAME} PRIVATE GL_GLEXT_PROTOTYPES)

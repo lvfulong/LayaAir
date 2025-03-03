@@ -11,7 +11,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <android/native_window_jni.h>
-#ifdef OS_ANDROID
+
+#if defined(OS_ANDROID)
+	#include <Bindings/JSDevice.h>
     #include <sys/syscall.h>
     #define gettidv1() syscall(__NR_gettid)
     #define gettidv2() syscall(SYS_gettid)
@@ -510,19 +512,19 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_LayaVideoPlayer_transferBitmap(
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleKeyboardInput(JNIEnv* env, jobject obj, jstring strValue)
 {
 	const char* value = env->GetStringUTFChars(strValue, NULL);
-	//JSLayaNative::getInstance()->handleKeyboardInput(value);
+	JSDevice::handleKeyboardInput(value);
 	env->ReleaseStringUTFChars(strValue, value);
 }
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleKeyboardConfirm(JNIEnv* env, jobject obj, jstring strValue)
 {
 	const char* value = env->GetStringUTFChars(strValue, NULL);
-	//JSLayaNative::getInstance()->handleKeyboardConfirm(value);
+	JSDevice::handleKeyboardConfirm(value);
 	env->ReleaseStringUTFChars(strValue, value);
 }
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleKeyboardComplete(JNIEnv* env, jobject obj, jstring strValue)
 {
 	const char* value = env->GetStringUTFChars(strValue, NULL);
-	//JSLayaNative::getInstance()->handleKeyboardComplete(value);
+	JSDevice::handleKeyboardComplete(value);
 	env->ReleaseStringUTFChars(strValue, value);
 }
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_reloadJS(JNIEnv* env, jobject obj)

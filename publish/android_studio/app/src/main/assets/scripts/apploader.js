@@ -812,11 +812,11 @@ class Navigator {
     get userAgent() {
         var os = window.layabox.devinfo.os;
         if (os == "ios")
-            return "LayaBox(iPhone; CPU iPhone OS Mac OS X)";
+            return "LayaBox(iPhone; CPU iPhone OS Mac OS X) Mobile";
         else if (os == "android")
-            return "LayaBox Android";
+            return "LayaBox Android Mobile";
         else if (os == "OpenHarmony")
-            return "OpenHarmony";
+            return "OpenHarmony Mobile";
         else
             return 'LayaBox/2.1';
     }

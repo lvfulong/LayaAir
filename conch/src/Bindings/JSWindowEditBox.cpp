@@ -194,7 +194,7 @@ namespace laya
         //    char* pCharEnd = UnicodeToUTF8(m_vValue[i], pTemp);
         //    m_sValue.append(pTemp);
         //}
-		setValue(ms_EditBoxInst->GetText());
+		setValue(ms_EditBoxInst->GetText().c_str());
         return m_sValue.c_str();
     }
     //------------------------------------------------------------------------------
@@ -269,6 +269,7 @@ namespace laya
     void JSWindowEditBox::setFont(const char* p_sFont)
     {
         m_sFont = p_sFont;
+        ms_EditBoxInst->GetStyle().SetFont(p_sFont);
     }
     //------------------------------------------------------------------------------
     //并不是每帧都调，只有内容发生改变了，才会调用。包括光标位置改变
@@ -412,7 +413,7 @@ namespace laya
         m_bMouseDrag = false;
 
 		ms_EditBoxInst->SetFocus(false);
-		setValue(ms_EditBoxInst->GetText());
+		setValue(ms_EditBoxInst->GetText().c_str());
     }
     //------------------------------------------------------------------------------
     //显示光标
@@ -479,7 +480,7 @@ namespace laya
     //------------------------------------------------------------------------------
     void JSWindowEditBox::setScale(float p_nSx, float p_nSy)
     {
-
+        ms_EditBoxInst->GetStyle().SetScale(p_nSx, p_nSy);
     }
     //------------------------------------------------------------------------------
     void JSWindowEditBox::setMaxLength(int p_nMaxLength)
@@ -508,6 +509,7 @@ namespace laya
     void JSWindowEditBox::setForbidEdit(bool bForbidEdit)
     {
         m_bForbidEdit = bForbidEdit;
+        ms_EditBoxInst->setForbidEdit(bForbidEdit);
     }
     bool JSWindowEditBox::getForbidEdit()
     {
