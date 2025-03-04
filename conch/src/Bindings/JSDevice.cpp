@@ -7,6 +7,9 @@
 	#include "CToJavaBridge.h"
 #elif defined(OS_IOS)
     #include "CToObjectC.h"
+#elif defined(OS_OHOS)
+    #include <aki/jsbind.h>
+    #include <jsbind/JSBind.h>
 #endif
 
 namespace laya
@@ -15,6 +18,10 @@ static const char *s_className = "layaair/game/browser/LayaEditBoxNew";
 jsbind::Persistent JSDevice::m_pOnKeyboardInput;
 jsbind::Persistent JSDevice::m_pOnKeyboardConfirm;
 jsbind::Persistent JSDevice::m_pOnKeyboardComplete;
+#if defined(OS_OHOS)
+    static int s_currentIndex = 0;
+    static int s_tag = 0;
+#endif
 void JSDevice::showKeyboard(jsbind::Local object)
 {
     bool success = true;
@@ -133,6 +140,9 @@ void JSDevice::showKeyboard(jsbind::Local object)
 #elif defined(OS_LINUX)
     // todo
 #elif defined(OS_OHOS)
+    s_tag = s_currentIndex;
+    s_currentIndex++;
+    success = aki::JSBind::GetJSFunction("EditBoxNew.show")->Invoke<bool>(s_tag, defaultValue.c_str(), maxLength, multiple, confirmHold, confirmType.c_str(), prompt.c_str(), promptColor.c_str(), inputType.c_str());
 #endif
     if (!success)
     {
@@ -238,6 +248,7 @@ void JSDevice::hideKeyboard(jsbind::Local object)
 #elif defined(OS_LINUX)
     // todo
 #elif defined(OS_OHOS)
+    success = aki::JSBind::GetJSFunction("EditBoxNew.hide")->Invoke<bool>(s_tag);
 #endif
 
     if (!success)

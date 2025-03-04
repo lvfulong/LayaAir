@@ -51,6 +51,9 @@ class NAPIFun
     static void ConchNAPI_inputChange(int keycode);
     static void ConchNAPI_captureScreenCallBack(int w, int h, std::string byteArray);
     static void ConchNAPI_RunJS(const std::string &js);
+    static void ConchNAPI_handleKeyboardInput(const std::string &value);
+    static void ConchNAPI_handleKeyboardConfirm(const std::string &value);
+    static void ConchNAPI_handleKeyboardComplete(const std::string &value);
 
   private:
     // bool g_bEngineInited =false;

@@ -10,6 +10,7 @@ import laya from "liblaya.so"
 import { EditBox } from '../components/EditBox'
 import HandleMessageUtils from '../event/HandleMessageUtils'
 import { LayaHttpClient } from '../system/network/LayaHttpClient'
+import { EditBoxNew } from '../components/EditBoxNew'
 
 export class NapiHelper {
   // 需要将JS代码执行在worker线程的在此处注册方法
@@ -22,6 +23,7 @@ export class NapiHelper {
   // 需要将JS代码执行在UI线程的在此处注册方法
   static registerUIFunctions() {
     NapiHelper.registerEditBox();
+    NapiHelper.registerEditBoxNew();
     NapiHelper.registerVideoPlay();
     laya.JSBind.bindFunction("DeviceUtils.getScreenInch", DeviceUtils.getScreenInch);
     laya.JSBind.bindFunction('DeviceUtils.setKeepScreenOn', DeviceUtils.setKeepScreenOn);
@@ -104,7 +106,10 @@ export class NapiHelper {
     laya.JSBind.bindFunction('EditBox.setMultiAble', EditBox.setMultiAble);
     laya.JSBind.bindFunction('EditBox.setForbidEdit', EditBox.setForbidEdit);
   }
-
+  private static registerEditBoxNew() {
+    laya.JSBind.bindFunction('EditBoxNew.show', EditBoxNew.show);
+    laya.JSBind.bindFunction('EditBoxNew.hide', EditBoxNew.hide);
+  }
   private static registerWebView() {
     laya.JSBind.bindFunction('WebUtils.createWebview', WebView.createWebview);
     laya.JSBind.bindFunction('WebUtils.closeWebview', WebView.closeWebview);

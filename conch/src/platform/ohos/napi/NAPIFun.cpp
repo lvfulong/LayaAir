@@ -1,6 +1,6 @@
 #include "./NAPIFun.h"
 #include "JCScriptRuntime.h"
-
+#include <Bindings/JSDevice.h>
 using namespace laya;
 
 NAPIFun NAPIFun::fun_;
@@ -206,6 +206,18 @@ void NAPIFun::ConchNAPI_RunJS(const std::string &js)
 {
      JCConch::s_pScriptRuntime->callJSString(js);
 }
+void NAPIFun::ConchNAPI_handleKeyboardInput(const std::string &value)
+{
+    JSDevice::handleKeyboardInput(value.c_str());
+}
+void NAPIFun::ConchNAPI_handleKeyboardConfirm(const std::string &value)
+{
+    JSDevice::handleKeyboardConfirm(value.c_str());
+}
+void NAPIFun::ConchNAPI_handleKeyboardComplete(const std::string &value)
+{   
+    JSDevice::handleKeyboardComplete(value.c_str());
+}
 JSBIND_GLOBAL()
 {
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_configSetURL, "ConchNAPI_configSetURL");
@@ -223,4 +235,7 @@ JSBIND_GLOBAL()
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_inputChange, "ConchNAPI_inputChange");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_captureScreenCallBack, "ConchNAPI_captureScreenCallBack");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_RunJS, "ConchNAPI_RunJS");
+    JSBIND_FUNCTION(NAPIFun::ConchNAPI_handleKeyboardInput, "ConchNAPI_handleKeyboardInput");
+    JSBIND_FUNCTION(NAPIFun::ConchNAPI_handleKeyboardConfirm, "ConchNAPI_handleKeyboardConfirm");
+    JSBIND_FUNCTION(NAPIFun::ConchNAPI_handleKeyboardComplete, "ConchNAPI_handleKeyboardComplete");
 }
