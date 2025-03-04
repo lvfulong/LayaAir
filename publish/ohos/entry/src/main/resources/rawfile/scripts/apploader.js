@@ -5818,6 +5818,17 @@ class HTMLImageElement extends HTMLElement {
     }
 }
 window["HTMLImageElement"] = HTMLImageElement;
+class HTMLInputElementNew extends HTMLElement {
+    setBgColor(c) { }
+    setForbidEdit(b) { }
+    focus() { }
+    blur() { }
+    setPos(x, y) { }
+    constructor() {
+        super();
+        this.tagName = "Input";
+    }
+}
 class HTMLInputElement extends HTMLElement {
     constructor() {
         super();
@@ -6299,7 +6310,7 @@ class Document extends Node {
         return ret;
     }
     create_input() {
-        var rs = new HTMLInputElement();
+        var rs = (conchConfig.getOS() == "Conch-window") ? new HTMLInputElement() : new HTMLInputElementNew();
         rs.ownerDocument = this;
         return rs;
     }

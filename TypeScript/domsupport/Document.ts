@@ -281,7 +281,7 @@ class Document extends Node implements GlobalEventHandlers, NodeSelector, Docume
         return ret;
     }
     private create_input(): HTMLInputElement {
-        var rs=new HTMLInputElement();
+        var rs =  (conchConfig.getOS() == "Conch-window") ? new HTMLInputElement() : new HTMLInputElementNew();
         rs.ownerDocument = this;
         return rs;
     }
