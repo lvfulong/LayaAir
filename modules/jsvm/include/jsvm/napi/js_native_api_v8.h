@@ -165,7 +165,6 @@ struct napi_env__ {
   int32_t module_api_version = NODE_API_DEFAULT_MODULE_API_VERSION;
   bool in_gc_finalizer = false;
 
-  std::shared_ptr<jsvm::ScriptThread> scriptThread;
 
  protected:
   // Should not be deleted directly. Delete with `napi_env__::DeleteMe()`

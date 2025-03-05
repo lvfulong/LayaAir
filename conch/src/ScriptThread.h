@@ -1,5 +1,5 @@
-#ifndef __JSVM_SCRIPT_THREAD_H__
-#define __JSVM_SCRIPT_THREAD_H__
+#ifndef __SCRIPT_THREAD_H__
+#define __SCRIPT_THREAD_H__
 
 #include <jsvm/JSVM.h>
 #include <mutex>
@@ -8,7 +8,7 @@
 #include <utils/Log.h>
 #include <utils/thread/JCWorkerThread.h>
 
-namespace jsvm
+namespace laya
 {
 class ScriptThread : public laya::JCWorkerThread
 {

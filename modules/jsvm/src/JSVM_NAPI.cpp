@@ -1,6 +1,5 @@
 #include "jsvm/JSEnv.h"
 #include "jsvm/JSVM.h"
-#include "jsvm/ScriptThread.h"
 #include "jsvm/napi/js_native_api.h"
 #include "jsvm/napi/js_native_api_v8.h"
 #include "v8debug/debug-agent.h"

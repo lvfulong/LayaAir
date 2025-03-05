@@ -15,7 +15,7 @@
 #include <mutex>
 #include <utils/JCCommonMethod.h>
 #include <vector>
-#include "jsvm/ScriptThread.h"
+#include "ScriptThread.h"
 #if defined(OS_ANDROID)
     #include <Bindings/JSAndroidEditBox.h>
 #elif defined(OS_OHOS)
@@ -120,7 +120,7 @@ namespace laya
 
     public:
         JCConch*                            m_pConch;
-        std::shared_ptr<jsvm::ScriptThread>       m_pScriptThread;
+        std::shared_ptr<ScriptThread>       m_pScriptThread;
         JCCommandEncoderBuffer*				m_pRenderCmd;                   
 		bool                                m_bHasJSThread;	                //js线程是否在工作
         jsbind::Persistent                         m_pJSOnFrameFunction;

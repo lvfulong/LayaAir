@@ -7,12 +7,10 @@ set(PUBLIC_HEADER_DIR include)
 
 set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/JSEnv.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/ScriptThread.h
 )
 
 set(SOURCES
     src/JSEnv.cpp
-    src/ScriptThread.cpp
 )
 
 if(OS_WINDOWS AND USE_JS_V8_DEBUGGER)

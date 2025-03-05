@@ -87,7 +87,7 @@ namespace laya
     }
     JCScriptRuntime::JCScriptRuntime()
     {
-        m_pScriptThread = std::make_shared<jsvm::ScriptThread>();
+        m_pScriptThread = std::make_shared<ScriptThread>();
         m_bHasJSThread = false;
         m_pFileResMgr = NULL;
         m_pAssetsRes = NULL;
@@ -195,9 +195,6 @@ namespace laya
     {
         LOGI("js thread started.");
         GET_ENV;
-    #ifdef JS_V8
-        env->scriptThread = m_pScriptThread;
-    #endif
         //m_nThreadState = 2;
         //JSObjNode::s_pListJSObj = new JCSimpList();
 

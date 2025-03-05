@@ -1,6 +1,6 @@
-#include "jsvm/ScriptThread.h"
+#include "ScriptThread.h"
 
-namespace jsvm
+namespace laya
 {
 
     void ScriptThread::_defRunLoop()
