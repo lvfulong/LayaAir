@@ -30,11 +30,41 @@ JSEnv *JSEnv::getCurrent()
 void JSEnv::setCurrent(JSEnv *env)
 {
     s_threadLocalEnv = env;
+    env->thread_id_ = std::this_thread::get_id();
 }
 #if defined(JS_V8)
 JSEnv::JSEnv(IsolateData *isolate_data, v8::Isolate *isolate, jsvm_env env)
     : isolate_data_(isolate_data), isolate_(isolate), env_(env)
 {
+}
+void JSEnv::pushDbgFunc(std::function<void(void)> task)
+{
+    m_DbgFuncLock.lock();
+    m_DbgFunction.push_back(task);
+    m_DbgFuncLock.unlock();
+}
+void JSEnv::runDbgFuncs()
+{
+    m_DbgFuncLock.lock();
+    for (std::function<void(void)>& task : m_DbgFunction)
+    {
+        task();
+    }
+    m_DbgFunction.clear();
+    m_DbgFuncLock.unlock();
+}
+void JSEnv::waitAndRunDbgFuncs()
+{
+    m_DbgFuncLock.lock();
+    m_DbgFuncLock.unlock();
+}
+bool JSEnv::hasDbgFuncs()
+{
+    bool bRet = false;
+    m_DbgFuncLock.lock();
+    bRet = m_DbgFunction.size() > 0;
+    m_DbgFuncLock.unlock();
+    return bRet;
 }
 #endif
 #if defined(JS_OHOS_JSVM)

@@ -333,9 +333,7 @@ namespace laya
         }).get();
         
         //PERF_INITVAR(nBenginTime);
-#ifdef JS_V8_DEBUGGER
-        m_pScriptThread->runDbgFuncs();
-#endif
+
         m_nUpdateCount++;
         bool bRunOnDraw = false;
         double nTime = tmGetCurms();

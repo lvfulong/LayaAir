@@ -78,7 +78,7 @@ namespace laya {
 		* 启动js线程了，创建一个新的jsid，以后js相关的消息，都使用这个jsid。
 		* 提供一个函数，希望js线程在循环中调用他。
 		*/
-		void onJSStart(std::shared_ptr<jsvm::ScriptThread> scriptThread);
+		void onJSStart(jsvm::JSEnv* jsEnv);
 		/**
 		* js线程结束了，当前的jsid就失效了，以后接收到的此id的消息都忽略。
 		*/
@@ -102,7 +102,7 @@ namespace laya {
 		bool terminate_;  
 		std::mutex session_access_;  // Mutex guarging access to session_.
 		//semaphore terminate_now_;  // Semaphore to signal termination.
-		std::shared_ptr<jsvm::ScriptThread>	pJSThread_;
+        jsvm::JSEnv*	pJSEnv_;
         per_session_data__v8dbg*    pWsSessionData=nullptr;
         bool        bHasFrontend = false;//等到有人连进来才跑js
         bool        bFirst = true;
