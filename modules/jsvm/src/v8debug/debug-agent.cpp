@@ -11,7 +11,6 @@
 #include "jsvm/JSEnv.h"
 
 namespace laya {
-    class jsvm::JSEnv;
     int   DebuggerAgent::sMsgID=0;
     std::string encodeStrForJSON(const char* pStr) {
         std::string ret = "";
