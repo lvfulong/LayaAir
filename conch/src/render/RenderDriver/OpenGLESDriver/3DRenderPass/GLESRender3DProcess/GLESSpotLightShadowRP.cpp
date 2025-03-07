@@ -35,8 +35,8 @@ void GLESSpotLightShadowRP::update(GLESRenderContext3D* context)
 
 void GLESSpotLightShadowRP::render(GLESRenderContext3D* context, std::vector<RTBaseRenderNode*>& list, uint32_t count)
 {
-    GLESShaderData* originCameraData = context->cameraData;
-    GLESShaderData* shaderValues = context->sceneData;
+    GLESShaderData* originCameraData = context->getCameraData();
+    GLESShaderData* shaderValues = context->getSceneShader();
     context->pipelineMode = "ShadowCaster";
     context->setRenderTarget(destTarget, static_cast<uint32_t>(RenderClearFlag::Depth));
 
@@ -46,7 +46,7 @@ void GLESSpotLightShadowRP::render(GLESRenderContext3D* context, std::vector<RTB
 
     // Culling
     GLESCullUtil::cullingSpotShadow(shadowSpotData.cameraCullInfo, list, count, this->_renderQueue, context);
-    context->cameraData = shadowSpotData.cameraShaderValue;
+    context->setCameraData(shadowSpotData.cameraShaderValue) ;
     context->_cameraUpdateMask++;
 
         Viewport _tempViewport(shadowSpotData.offsetX, shadowSpotData.offsetY, shadowSpotData.resolution, shadowSpotData.resolution);
@@ -55,17 +55,12 @@ void GLESSpotLightShadowRP::render(GLESRenderContext3D* context, std::vector<RTB
     context->setViewport(_tempViewport);
     context->setScissor(tempVec4);
 
-    if (LayaGL::m_pWebglEngine->enableUniformBufferObject) {
-        _shadowSpotData.cameraShaderValue->updateUBOBuffer(BaseCameraProperty::UBONAME_CAMERA);
-        shaderValues->updateUBOBuffer(Scene3DShaderDeclaration::UBONAME_SHADOW);
-    }
-
     context->setClearData(static_cast<RenderClearFlagBits>(RenderClearFlag::Depth), Color::BLACK, 1.0f, 0);
     _renderQueue.renderQueue(context);
 
-    this->_applyRenderData(context->sceneData, context->cameraData);
+    this->_applyRenderData(context->getSceneShader(), context->getCameraData());
     this->_renderQueue._batch.recoverData();
-    context->cameraData = originCameraData;
+    context->setCameraData(originCameraData);
     context->_cameraUpdateMask++;
 }
 
@@ -156,25 +151,4 @@ ShadowSpotData::~ShadowSpotData()
 {
 
 }
-
-/*
-void GLESSpotLightShadowRP::set_position(Vector3 value)
-{
-}
-
-void GLESSpotLightShadowRP::set_lightforward(Vector3 value)
-{
-}
-void GLESSpotLightShadowRP::set_offsetx(uint32_t value)
-{
-}
-
-void GLESSpotLightShadowRP::set_offsety(uint32_t value)
-{
-}
-
-void GLESSpotLightShadowRP::set_resolution(uint32_t value)
-{
-}
-*/
 } // namespace laya

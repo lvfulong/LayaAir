@@ -64,7 +64,12 @@ void laya::GLESBlit2DQuadCMD::apply(void* context)
     bool cacheInvertY = ctx->invertY;
     if (_dest == nullptr) {
         ctx->invertY = false;
+        _element->materialShaderData->addDefine(Render2DProperty::GAMMACORRECT);
     }
+    else {
+        _element->materialShaderData->removeDefine(Render2DProperty::GAMMACORRECT);
+    }
+
     _element->materialShaderData->setInternalTexture(CommandProperty::SCREENTEXTURE_ID, _source);
     _element->materialShaderData->setVector(CommandProperty::SCREENTEXTUREOFFSETSCALE_ID, _offsetScale);
     _element->materialShaderData->setVector(CommandProperty::MAINTEXTURE_TEXELSIZE_ID, _sourceTexelSize);

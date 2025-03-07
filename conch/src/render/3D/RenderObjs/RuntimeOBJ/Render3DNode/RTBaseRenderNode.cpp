@@ -101,10 +101,7 @@ void RTBaseRenderNode::_applyLightProb()
 void RTBaseRenderNode::_applyReflection()
 {
     if (probeReflection==nullptr || reflectionMode == 0) return;
-    if (probeReflection->updateMark != probeReflectionUpdateMark) {
-        probeReflectionUpdateMark = probeReflection->updateMark;
-        probeReflection->applyRenderData(shaderData);
-    }
+    probeReflection->applyRenderData();
 }
 void RTBaseRenderNode::_renderUpdatePre(GLESRenderContext3D *context3D)
 {
@@ -145,8 +142,27 @@ void RTBaseRenderNode::setRenderElements(const std::vector<GLESRenderElement3D *
 }
 void RTBaseRenderNode::destroy()
 {
-    // TODO
     m_JSFunctionRenderUpdatePre.reset();
     m_JSFunctionCalculateBoundingBox.reset();
+    renderelements.clear();
+    probeReflection = nullptr;
+    volumetricGI = nullptr;
+    lightmap = nullptr;
+    shaderData = nullptr;
+    transform = nullptr;
+    bounds = nullptr;
+    baseGeometryBounds = nullptr;
+    additionShaderData.clear();
+    _additionShaderDataKeys.clear();
+}
+void RTBaseRenderNode::clearAdditionalMap()
+{
+    additionShaderData.clear();
+    _additionShaderDataKeys.clear();
+}
+void RTBaseRenderNode::addOneAddiionalData(std::string &blockName, GLESShaderData* shaderData)
+{
+    additionShaderData[blockName] = shaderData;
+    _additionShaderDataKeys.push_back(blockName);
 }
 } // namespace laya

@@ -7,7 +7,9 @@ namespace laya {
     }
 
     GLESForwardAddRP::~GLESForwardAddRP() {
-
+        directLightShadowPass = nullptr;
+        spotLightShadowPass = nullptr;
+        renderpass = nullptr;
     }
 
     void GLESForwardAddRP::clearBeforeImageEffectCmds()

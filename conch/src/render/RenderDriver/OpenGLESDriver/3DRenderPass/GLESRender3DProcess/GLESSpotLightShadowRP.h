@@ -38,29 +38,9 @@ class GLESSpotLightShadowRP
     void _setupShadowCasterShaderValues(GLESShaderData* shaderValues, ShadowSpotData* shadowSliceData, const Vector4& shadowparams, const Vector4& shadowBias);
     void setRenderTarget(GLESInternalRT* value) { destTarget = value; }
     void setLight(RTSpotLight* value);
-    /*void set_position(Vector3 value);
-    void set_lightforward(Vector3 value);
-    void set_offsetx(uint32_t value);
-    void set_offsety(uint32_t value);
-    void set_resolution(uint32_t value);*/
     void _getShadowBias(float shadowResolution, Vector4& out);
     void _getSpotLightShadowData(ShadowSpotData& shadowSpotData, float resolution, Vector4& shadowParams, Matrix4x4& shadowSpotMatrices, Vector4& shadowMapSize);
   public:
-    //Vector3 position;
-    //Vector3 lightforward;
-    //uint32_t offsetx;
-    //uint32_t offsety;
-   // uint32_t resolution;
-
-    /*struct CameraFrustumCullInfo
-    {
-        Vector3 _position;
-        bool _useOcclusionCulling;
-        BoundFrustum _boundFrustum;
-        uint32_t _cullingMask;
-        uint32_t _staticMask = 0;
-    } spotlightCullInfo;*/
-
     RTSpotLight* light;
     Vector3 _lightPos;
     Matrix4x4 _lightWorldMatrix;

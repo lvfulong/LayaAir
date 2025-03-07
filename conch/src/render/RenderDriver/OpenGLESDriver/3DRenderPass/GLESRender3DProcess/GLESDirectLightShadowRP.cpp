@@ -94,13 +94,14 @@ void GLESDirectLightShadowRP::update(GLESRenderContext3D *context)
 void GLESDirectLightShadowRP::render(GLESRenderContext3D *context, std::vector<RTBaseRenderNode *> &list, uint32_t count)
 
 {
-    GLESShaderData *shaderValues = context->sceneData;
+    GLESShaderData *shaderValues = context->getSceneShader();
+    GLESShaderData* originCameraData = context->getCameraData();
     context->pipelineMode = "ShadowCaster";
     auto shadowMap = this->destTarget;
     context->setRenderTarget(shadowMap);
     context->setClearData(static_cast<uint32_t>(RenderClearFlag::Depth), Color::BLACK, 1, 0);
     
-    GLESShaderData* originCameraData = context->cameraData;
+    
     for (int i = 0, n = this->_cascadeCount; i < n; i++)
     {
         ShadowSliceData &sliceData = this->_shadowSliceDatas[i];
@@ -116,7 +117,7 @@ void GLESDirectLightShadowRP::render(GLESRenderContext3D *context, std::vector<R
         GLESCullUtil::culldirectLightShadow(shadowCullInfo, list, count, this->_renderQueue,
                                             (GLESRenderContext3D *)context);
 
-        context->cameraData = sliceData.cameraShaderValue;
+        context->setCameraData(sliceData.cameraShaderValue);
         context->_cameraUpdateMask++;
 
         auto resolution = sliceData.resolution;
@@ -138,18 +139,13 @@ void GLESDirectLightShadowRP::render(GLESRenderContext3D *context, std::vector<R
             context->setScissor(tempVec4);
         }
 
-        if (LayaGL::m_pWebglEngine->enableUniformBufferObject) {
-            sliceData.cameraShaderValue->updateUBOBuffer(BaseCameraProperty::UBONAME_CAMERA);
-            shaderValues->updateUBOBuffer(Scene3DShaderDeclaration::UBONAME_SHADOW);
-        }
-
         context->setClearData((RenderClearFlagBits)RenderClearFlag::Depth, Color::BLACK, 1, 0);
         this->_renderQueue.renderQueue((GLESRenderContext3D *)context);
         GLES3DRenderCMD::applyCommandBuffers(context, _shadowCastCMDS);
     }
-    this->_applyRenderData(context->sceneData, context->cameraData);
+    this->_applyRenderData(context->getSceneShader(), context->getCameraData());
     this->_renderQueue._batch.recoverData();
-    context->cameraData = originCameraData;
+    context->setCameraData( originCameraData);
     context->_cameraUpdateMask++;
 
 }

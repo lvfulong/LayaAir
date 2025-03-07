@@ -34,6 +34,7 @@ GLESEngine::GLESEngine(WebGLConfig config, WebGLMode webglMode)
     LayaGL::m_pWebglEngine = this;
     if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::OpenGLES)
     {
+        Render2DProperty::__init__();
         BaseCameraProperty::__init__();
         DepthPassProperty::__init__();
         RenderableSprite3DProperty::__init__();
@@ -48,6 +49,7 @@ GLESEngine::GLESEngine(WebGLConfig config, WebGLMode webglMode)
         CommandProperty::__init__();
         MeshSprite3DShaderDeclaration::__init__();
         SimpleSkinRender3DProperty::__init__();
+        
     }
     std::vector<std::string> names;
     switch (webglMode)
@@ -550,32 +552,11 @@ int GLESEngine::uploadUniforms(GLShaderInstance *shader, CommandEncoder *command
     }
     return shaderCall;
 }
-int GLESEngine::uploadCustomUniforms(GLShaderInstance *shader, const std::unordered_map<int, ShaderVariable *> &custom,
-                                     int index, char *data, int byteSize)
+int GLESEngine::uploadOneUniforms(GLShaderInstance* shader, ShaderVariable* shaderVariable, std::any &data)
 {
     int shaderCall = 0;
-    static BufferDataInfo tempData;
-    tempData.m_data = (uint8_t*)data;
-    tempData.m_lengthInBytes = byteSize;
-    static std::any tempAny;
-    tempAny = tempData;
-
-    std::unordered_map<int, ShaderVariable*>::const_iterator it = custom.find(index);
-    if (it != custom.end())
-    {
-        ShaderVariable* one = it->second;
-        if (one && data != nullptr)
-        {
-            try
-            {
-                shaderCall += one->fun(one, tempAny);
-            }
-            catch (const std::bad_any_cast& e)
-            {
-                LOGE("Error: uniform [%s] set shaderData with different types", one->name.c_str());
-            }
-        }
-        tempData.m_data = nullptr;
+    if (shaderVariable != nullptr) {
+        shaderCall+= shaderVariable->fun(shaderVariable, data);
     }
     return shaderCall;
 }

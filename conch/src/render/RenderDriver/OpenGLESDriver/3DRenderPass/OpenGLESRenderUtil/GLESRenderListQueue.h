@@ -21,6 +21,9 @@ class GLESRenderListQueue
     GLESRenderListQueue(bool isTransParent) : _isTransparent(isTransParent), _elements(false)
     {
     }
+    ~GLESRenderListQueue() {
+        _elements.clear();
+    }
 
     void addRenderElement(GLESRenderElement3D *renderelement)
     {

@@ -5,14 +5,20 @@
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderCMD.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESUniformBufferManager.h"
 #include "render/RenderDriver/UniformManager/UniformBufferManager.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESCommandUniformMap.h"
+#include "render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h"
+#include "render/Property.h"
 namespace laya
 {
-GLESRenderContext3D::GLESRenderContext3D(){
 
+   GLESRenderContext3D* GLESRenderContext3D::_instance;
+GLESRenderContext3D::GLESRenderContext3D(){
+    GLESRenderContext3D::_instance = this;
+    _cacheGlobalDefines = new RTDefineDatas();
 };
 
 GLESRenderContext3D::~GLESRenderContext3D(){
-
+    delete _cacheGlobalDefines;
 };
 uint32_t GLESRenderContext3D::drawRenderElementList(const JCSingletonList<GLESRenderElement3D*> &list)
 {
@@ -22,6 +28,9 @@ uint32_t GLESRenderContext3D::drawRenderElementList(const JCSingletonList<GLESRe
         _needStart = false;
     }
 
+    //����UBOBuffer
+    _prepareContext();
+
     for (uint32_t i = 0, n = list.getLength(); i < n; i++)
     {
         list.m_vElements[i]->_preUpdatePre(this);
@@ -30,6 +39,7 @@ uint32_t GLESRenderContext3D::drawRenderElementList(const JCSingletonList<GLESRe
     GLESUniformBufferManager* bufferMgr = LayaGL::m_pWebglEngine->bufferMgr;
     if (bufferMgr !=nullptr) {
         bufferMgr->upload();
+
     }
 
     for (uint32_t i = 0, n = list.getLength(); i < n; i++)
@@ -47,6 +57,8 @@ uint32_t GLESRenderContext3D::drawRenderElementOne(GLESRenderElement3D*node)
         _start();
         _needStart = false;
     }
+    //����UBOBuffer
+    _prepareContext();
     node->_preUpdatePre(this);
     GLESUniformBufferManager* bufferMgr = LayaGL::m_pWebglEngine->bufferMgr;
     if (bufferMgr != nullptr) {
@@ -65,6 +77,50 @@ void GLESRenderContext3D::runCMDList(const std::vector<GLESRenderCMD*>& cmds) {
         i->apply(this);
     }
 }
+
+void GLESRenderContext3D::setCameraData(GLESShaderData *shaderData)
+{
+    this->cameraData = shaderData;
+    if (shaderData != nullptr) {
+        GLESCommandUniformMap* cameraCommand = GLESCommandUniformMap::createGlobalUniformMap(BaseCameraProperty::UBONAME_CAMERA.c_str());
+        cameraData->createUniformBuffer(BaseCameraProperty::UBONAME_CAMERA, cameraCommand);
+    };
+}
+void GLESRenderContext3D::setSceneData(GLESShaderData *sceneData)
+{
+    this->sceneData = sceneData;
+    if (sceneData != nullptr) {
+        GLESCommandUniformMap* sceneCommand = GLESCommandUniformMap::createGlobalUniformMap(Scene3DShaderDeclaration::UBONAME_SCENE.c_str());
+        sceneData->createUniformBuffer(Scene3DShaderDeclaration::UBONAME_SCENE, sceneCommand);
+    };
+}
+
+RTDefineDatas* GLESRenderContext3D::_getContextShaderDefines()
+{
+    return _cacheGlobalDefines;
+}
+
+void GLESRenderContext3D::_prepareContext()
+{
+    GLESShaderInstance::_preDrawUnifromMaps = &_preDrawUnifromMaps;
+    if (sceneData!=nullptr) {
+        sceneData->_defineDatas->cloneTo(_cacheGlobalDefines);
+
+        for (int i = 0, n = _preDrawUnifromMaps.size();i < n;i++) {
+            sceneData->updateUBOBuffer(_preDrawUnifromMaps[i]);
+        }
+    }
+    else {
+        globalConfigShaderData->cloneTo(_cacheGlobalDefines);
+    }
+
+    if (cameraData!=nullptr) {
+        _cacheGlobalDefines->addDefineDatas(cameraData->_defineDatas);
+
+        cameraData->updateUBOBuffer(BaseCameraProperty::UBONAME_CAMERA);
+    }
+}
+
 void GLESRenderContext3D::_bindRenderTarget()
 {
     if (this->_renderTarget)
@@ -90,5 +146,14 @@ void GLESRenderContext3D::_start()
 }
 void GLESRenderContext3D::_end()
 {
+}
+
+void GLESRenderContext3D::setSceneNodeData(RTSceneNodeData* value)
+{
+    sceneNodeData = value;
+}
+void GLESRenderContext3D::setCameraNodeData(RTCameraModuleData* value)
+{
+    cameraNodeData = value;
 }
 } // namespace laya

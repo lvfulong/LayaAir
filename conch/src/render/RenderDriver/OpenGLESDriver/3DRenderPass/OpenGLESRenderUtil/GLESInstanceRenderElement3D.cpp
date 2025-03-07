@@ -164,37 +164,21 @@ namespace laya
 	{
 		std::vector<RTShaderPass*> passes = subshader->shaderpasses;
 		_clearShaderInstance();
+		RTDefineDatas* comDef = _getShaderInstanceDefins(context);
+		comDef->add(MeshSprite3DShaderDeclaration::SHADERDEFINE_GPU_INSTANCE);
 		for (uint32_t j = 0, m = passes.size(); j < m; j++)
 		{
 			RTShaderPass* pass = passes[j];
-			// NOTE:this will cause maybe a shader not render but do prepare before£¬but the developer can avoide this
-			// manual,for example shaderCaster=false.
 			if (pass->pipelineMode != context->pipelineMode)
 				continue;
-
-			RTDefineDatas* comDef = GLESRenderElement3D::_compileDefines;
-			if (context->sceneData)
-			{
-				context->sceneData->_defineDatas->cloneTo(comDef);
-			}
-			else
-			{
-				context->globalConfigShaderData->cloneTo(comDef);
-			}
-
-			if (context->cameraData != nullptr)
-				comDef->addDefineDatas(context->cameraData->_defineDatas);
 			if (renderShaderData != nullptr)
 			{
-				comDef->addDefineDatas(renderShaderData->_defineDatas);
 				pass->nodeCommonMap = owner->commonUniformMap;
 			}
 			else
 			{
 				pass->nodeCommonMap.clear();
 			}
-			comDef->addDefineDatas(materialShaderData->_defineDatas);
-			comDef->add(MeshSprite3DShaderDeclaration::SHADERDEFINE_GPU_INSTANCE);
 			
 			RTShaderPass::CacheShaderItem* item = pass->getCacheShader(comDef);
 			GLESShaderInstance* shader;

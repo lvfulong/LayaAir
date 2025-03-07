@@ -22,20 +22,21 @@ GLESShaderData::~GLESShaderData()
 {
 }
 
-void GLESShaderData::createUniformBuffer(const std::string &name, GLESCommandUniformMap* uniformMap) {
+GLESUniformBufferBase* GLESShaderData::createUniformBuffer(const std::string &name,GLESCommandUniformMap* uniformMap) {
     if (!LayaGL::m_pWebglEngine->enableUniformBufferObject|| _uniformBuffers.find(name)!= _uniformBuffers.end() ){
-        return;
+        return nullptr;
     }
-    GLESUniformBuffer* uboBuffer = new GLESUniformBuffer(name);
     _needCacheData = true;
+    GLESUniformBuffer* uboBuffer = new GLESUniformBuffer(name);
     for (int i = 0, n = uniformMap->_uniformArray.size(); i < n; i++) {
-        UniformProperty* a = uniformMap->_uniformArray[i];
+        UniformProperty* a = &(uniformMap->_uniformArray[i]);
         uboBuffer->addUniform(a->id, a->uniformtype, a->arrayLength);
     }
     uboBuffer->create();
     _uniformBuffers[name] = uboBuffer;
     int id = LayaGL::m_pWebglEngine->propertyNameToID(name.c_str());
     m_data[id] = new uniformDataShell( uboBuffer);
+
     for (auto it = uniformMap->_idata.begin(); it != uniformMap->_idata.end(); ++it) {
         UniformProperty* a = &it->second;
         if (m_data.find(a->id) != m_data.end()) {
@@ -43,7 +44,7 @@ void GLESShaderData::createUniformBuffer(const std::string &name, GLESCommandUni
         }
         _uniformBuffersPropertyMap[a->id] = uboBuffer;
     }
-   
+    return uboBuffer;
    
 }
 
@@ -51,9 +52,18 @@ void GLESShaderData::updateUBOBuffer(const std::string &name) {
     if (!LayaGL::m_pWebglEngine->enableUniformBufferObject&& _uniformBuffers.find(name) != _uniformBuffers.end()) {
         return;
     }
-    GLESUniformBuffer* uboBuffer = _uniformBuffers[name];
+    GLESUniformBufferBase* uboBuffer = nullptr;
+    auto uniformIt = _uniformBuffers.find(name);
+    if (uniformIt != _uniformBuffers.end()) {
+        uboBuffer = uniformIt->second;
+    } else if (_subUniformBuffers.find(name) != _subUniformBuffers.end()) {
+        uboBuffer = _subUniformBuffers.find(name)->second;
+    }
+    if (!uboBuffer) {
+        return;
+    }
     for (auto it = _updateCacheArray.begin(); it != _updateCacheArray.end(); ++it) {
-        it->second(this, it->first);
+        it->second(this,nullptr, it->first);
     }
     _updateCacheArray.clear();
     if (uboBuffer->needUpload) {
@@ -61,13 +71,25 @@ void GLESShaderData::updateUBOBuffer(const std::string &name) {
     }
 }
 
-GLESSubUniformBuffer* GLESShaderData::createSubUniformBuffer(const std::string &name, std::vector<UniformProperty>& uniformMap){
-    if (_subUniformBuffers.find(name) != _subUniformBuffers.end()) {
-        GLESSubUniformBuffer* subBuffer = _subUniformBuffers[name];
-        for (auto it = _updateCacheArray.begin(); it != _updateCacheArray.end(); ++it) {
-            it->second(this, it->first);
+GLESSubUniformBuffer* GLESShaderData::createSubUniformBuffer(const std::string &name, const std::string& cacheName, std::vector<UniformProperty>& uniformMap){
+    if (_subUniformBuffers.find(cacheName) != _subUniformBuffers.end()) {
+        GLESSubUniformBuffer* subBuffer = _subUniformBuffers[cacheName];
+        if (_subUboBufferNumber < 2) {
+            for (auto it = _updateCacheArray.begin(); it != _updateCacheArray.end(); ++it) {
+                it->second(this,nullptr, it->first);
+            }
+            _updateCacheArray.clear();
         }
-        _updateCacheArray.clear();
+        else
+        {
+            int count = uniformMap.size();
+            for (int i = 0;i < count;i++) {
+                const int id = uniformMap[i].id;
+                if (m_data.find(id) != m_data.end() && _updateCacheArray.find(id) != _updateCacheArray.end()) {
+                    _updateCacheArray[id](this,subBuffer, id);
+                }
+            }
+        }    
         return subBuffer;
     }
 
@@ -76,8 +98,9 @@ GLESSubUniformBuffer* GLESShaderData::createSubUniformBuffer(const std::string &
 
     GLESSubUniformBuffer* subBuffer = new GLESSubUniformBuffer(name, uniformMap, mgr, this);
     _needCacheData = true;
+    _subUboBufferNumber++;
     subBuffer->notifyGPUBufferChange("");
-    _subUniformBuffers[name] = subBuffer;
+    _subUniformBuffers[cacheName] = subBuffer;
     int id = LayaGL::m_pWebglEngine->propertyNameToID(name.c_str());
     m_data[id] = new uniformDataShell(subBuffer);
     for (int i = 0,n = uniformMap.size(); i<n; i++) {
@@ -99,12 +122,14 @@ void GLESShaderData::clearData()
     for (auto it = _uniformBuffers.begin(); it != _uniformBuffers.end(); ++it) {
         //TODO
         it->second->destroy();
+        delete it->second;
     }
     _uniformBuffers.clear();
 
     for (auto it = _subUniformBuffers.begin(); it != _subUniformBuffers.end(); ++it) {
         //TODO
         it->second->destroy();
+        delete it->second;
     }
     _subUniformBuffers.clear();
 
@@ -115,6 +140,7 @@ void GLESShaderData::clearData()
         _defineDatas->clear();
     }
     _needCacheData = false;
+    _subUboBufferNumber = 0;
 }
 
 void GLESShaderData::destroy()
@@ -180,9 +206,14 @@ void GLESShaderData::setInt(int32_t index, int32_t value)
 {
     m_data[index] = value;
     if (_needCacheData) {
-        std::function<void(GLESShaderData*, int32_t)> fun = [](GLESShaderData* data, int32_t index) {
-            if (data->_uniformBuffersPropertyMap.find(index) != data->_uniformBuffersPropertyMap.end()) {
-                data->_uniformBuffersPropertyMap[index]->setInt(index, std::any_cast<int32_t>(data->m_data[index]));
+        std::function<void(GLESShaderData*, GLESUniformBufferBase*, int32_t)> fun = [](GLESShaderData* data, GLESUniformBufferBase* replaceUbo, int32_t index) {
+            if (replaceUbo == nullptr) {
+                if (data->_uniformBuffersPropertyMap.find(index) != data->_uniformBuffersPropertyMap.end()) {
+                    data->_uniformBuffersPropertyMap[index]->setInt(index, std::any_cast<int32_t>(data->m_data[index]));
+                }
+                else {
+                    replaceUbo->setInt(index, std::any_cast<int32_t>(data->m_data[index]));
+                }
             }
             };
         _updateCacheArray[index] = fun;
@@ -205,9 +236,14 @@ void GLESShaderData::setNumber(int32_t index, float value)
 {
     m_data[index] = value;
     if (_needCacheData) {
-        std::function<void(GLESShaderData*, int32_t)> fun = [](GLESShaderData* data, int32_t index) {
-            if (data->_uniformBuffersPropertyMap.find(index) != data->_uniformBuffersPropertyMap.end()) {
-                data->_uniformBuffersPropertyMap[index]->setFloat(index, std::any_cast<float>(data->m_data[index]));
+        std::function<void(GLESShaderData*, GLESUniformBufferBase*, int32_t)> fun = [](GLESShaderData* data, GLESUniformBufferBase* replaceUbo, int32_t index) {
+            if(replaceUbo==nullptr){
+                if (data->_uniformBuffersPropertyMap.find(index) != data->_uniformBuffersPropertyMap.end()) {
+                    data->_uniformBuffersPropertyMap[index]->setFloat(index, std::any_cast<float>(data->m_data[index]));
+                }
+            }
+            else{
+                replaceUbo->setFloat(index, std::any_cast<float>(data->m_data[index]));
             }
             };
         _updateCacheArray[index] = fun;
@@ -231,9 +267,14 @@ void GLESShaderData::setVector2(int32_t index, const Vector2 &value)
     m_data[index] = value;
 
     if (_needCacheData) {
-        std::function<void(GLESShaderData*, int32_t)> fun = [](GLESShaderData* data, int32_t index) {
-            if (data->_uniformBuffersPropertyMap.find(index) != data->_uniformBuffersPropertyMap.end()) {
-                data->_uniformBuffersPropertyMap[index]->setVector2(index, std::any_cast<Vector2>(data->m_data[index]));
+        std::function<void(GLESShaderData*, GLESUniformBufferBase*, int32_t)> fun = [](GLESShaderData* data, GLESUniformBufferBase* replaceUbo, int32_t index) {
+            if(replaceUbo==nullptr){
+                if (data->_uniformBuffersPropertyMap.find(index) != data->_uniformBuffersPropertyMap.end()) {
+                    data->_uniformBuffersPropertyMap[index]->setVector2(index, std::any_cast<Vector2>(data->m_data[index]));
+                }
+            }
+            else{
+                replaceUbo->setVector2(index, std::any_cast<Vector2>(data->m_data[index]));
             }
             };
         _updateCacheArray[index] = fun;
@@ -257,9 +298,14 @@ void GLESShaderData::setVector(int32_t index, const Vector4 &value)
     this->m_data[index] = value;
 
     if (_needCacheData) {
-        std::function<void(GLESShaderData*, int32_t)> fun = [](GLESShaderData* data, int32_t index) {
-            if (data->_uniformBuffersPropertyMap.find(index) != data->_uniformBuffersPropertyMap.end()) {
-                data->_uniformBuffersPropertyMap[index]->setVector4(index, std::any_cast<Vector4>(data->m_data[index]));
+        std::function<void(GLESShaderData*, GLESUniformBufferBase*, int32_t)> fun = [](GLESShaderData* data, GLESUniformBufferBase* replaceUbo, int32_t index) {
+            if(replaceUbo==nullptr){
+                if (data->_uniformBuffersPropertyMap.find(index) != data->_uniformBuffersPropertyMap.end()) {
+                    data->_uniformBuffersPropertyMap[index]->setVector4(index, std::any_cast<Vector4>(data->m_data[index]));
+                }
+            }
+            else{
+                replaceUbo->setVector4(index, std::any_cast<Vector4>(data->m_data[index]));
             }
             };
         _updateCacheArray[index] = fun;
@@ -282,9 +328,14 @@ void GLESShaderData::setVector3(int32_t index, const Vector3 &value)
 {
     this->m_data[index] = value;
     if (_needCacheData) {
-        std::function<void(GLESShaderData*, int32_t)> fun = [](GLESShaderData* data, int32_t index) {
-            if (data->_uniformBuffersPropertyMap.find(index) != data->_uniformBuffersPropertyMap.end()) {
-                data->_uniformBuffersPropertyMap[index]->setVector3(index, std::any_cast<Vector3>(data->m_data[index]));
+        std::function<void(GLESShaderData*, GLESUniformBufferBase*, int32_t)> fun = [](GLESShaderData* data, GLESUniformBufferBase* replaceUbo, int32_t index) {
+            if(replaceUbo==nullptr){
+                if (data->_uniformBuffersPropertyMap.find(index) != data->_uniformBuffersPropertyMap.end()) {
+                    data->_uniformBuffersPropertyMap[index]->setVector3(index, std::any_cast<Vector3>(data->m_data[index]));
+                }
+            }
+            else{
+                replaceUbo->setVector3(index, std::any_cast<Vector3>(data->m_data[index]));
             }
             };
         _updateCacheArray[index] = fun;
@@ -326,9 +377,14 @@ void GLESShaderData::setColor(int32_t index, const Color &value)
     }
 
     if (_needCacheData) {
-        std::function<void(GLESShaderData*, int32_t)> fun = [](GLESShaderData* data, int32_t index) {
-            if (data->_uniformBuffersPropertyMap.find(index) != data->_uniformBuffersPropertyMap.end()) {
-                data->_uniformBuffersPropertyMap[index]->setVector4(index, std::any_cast<Vector4>(data->m_data[index]));
+        std::function<void(GLESShaderData*, GLESUniformBufferBase*, int32_t)> fun = [](GLESShaderData* data, GLESUniformBufferBase* replaceUbo, int32_t index) {
+            if(replaceUbo==nullptr){
+                if (data->_uniformBuffersPropertyMap.find(index) != data->_uniformBuffersPropertyMap.end()) {
+                    data->_uniformBuffersPropertyMap[index]->setVector4(index, std::any_cast<Vector4>(data->m_data[index]));
+                }
+            }
+            else{
+                replaceUbo->setVector4(index, std::any_cast<Vector4>(data->m_data[index]));
             }
             };
         _updateCacheArray[index] = fun;
@@ -348,9 +404,14 @@ void GLESShaderData::setMatrix3x3(int32_t index, const Matrix3x3 &value)
 {
     m_data[index] = value;
     if (_needCacheData) {
-        std::function<void(GLESShaderData*, int32_t)> fun = [](GLESShaderData* data, int32_t index) {
-            if (data->_uniformBuffersPropertyMap.find(index) != data->_uniformBuffersPropertyMap.end()) {
-                data->_uniformBuffersPropertyMap[index]->setMatrix3x3(index, std::any_cast<Matrix3x3>(data->m_data[index]));
+        std::function<void(GLESShaderData*, GLESUniformBufferBase*, int32_t)> fun = [](GLESShaderData* data, GLESUniformBufferBase* replaceUbo, int32_t index) {
+            if(replaceUbo==nullptr){
+                if (data->_uniformBuffersPropertyMap.find(index) != data->_uniformBuffersPropertyMap.end()) {
+                    data->_uniformBuffersPropertyMap[index]->setMatrix3x3(index, std::any_cast<Matrix3x3>(data->m_data[index]));
+                }
+            }
+            else{
+                replaceUbo->setMatrix3x3(index, std::any_cast<Matrix3x3>(data->m_data[index]));
             }
             };
         _updateCacheArray[index] = fun;
@@ -373,9 +434,14 @@ void GLESShaderData::setMatrix4x4(int32_t index, const Matrix4x4 &value)
 {
     m_data[index] = value;
     if (_needCacheData) {
-        std::function<void(GLESShaderData*, int32_t)> fun = [](GLESShaderData* data, int32_t index) {
-            if (data->_uniformBuffersPropertyMap.find(index) != data->_uniformBuffersPropertyMap.end()) {
-                data->_uniformBuffersPropertyMap[index]->setMatrix4x4(index, std::any_cast<Matrix4x4>(data->m_data[index]));
+        std::function<void(GLESShaderData*, GLESUniformBufferBase*, int32_t)> fun = [](GLESShaderData* data, GLESUniformBufferBase* replaceUbo, int32_t index) {
+            if(replaceUbo==nullptr){
+                if (data->_uniformBuffersPropertyMap.find(index) != data->_uniformBuffersPropertyMap.end()) {
+                    data->_uniformBuffersPropertyMap[index]->setMatrix4x4(index, std::any_cast<Matrix4x4>(data->m_data[index]));
+                }
+            }
+            else{
+                replaceUbo->setMatrix4x4(index, std::any_cast<Matrix4x4>(data->m_data[index]));
             }
             };
         _updateCacheArray[index] = fun;
@@ -401,9 +467,14 @@ void GLESShaderData::setBuffer(int32_t index, uint8_t *data, uint32_t lengthInBy
     info.m_lengthInBytes = lengthInBytes;
     m_data[index] = info;
     if (_needCacheData) {
-        std::function<void(GLESShaderData*, int32_t)> fun = [](GLESShaderData* data, int32_t index) {
-            if (data->_uniformBuffersPropertyMap.find(index) != data->_uniformBuffersPropertyMap.end()) {
-                data->_uniformBuffersPropertyMap[index]->setBuffer(index, std::any_cast<BufferDataInfo>(data->m_data[index]).m_data);
+        std::function<void(GLESShaderData*, GLESUniformBufferBase*, int32_t)> fun = [](GLESShaderData* data, GLESUniformBufferBase* replaceUbo, int32_t index) {
+            if(replaceUbo==nullptr){
+                if (data->_uniformBuffersPropertyMap.find(index) != data->_uniformBuffersPropertyMap.end()) {
+                    data->_uniformBuffersPropertyMap[index]->setBuffer(index, std::any_cast<BufferDataInfo>(data->m_data[index]).m_data);
+                }
+            }
+            else{
+                replaceUbo->setBuffer(index, std::any_cast<BufferDataInfo>(data->m_data[index]).m_data);
             }
             };
         _updateCacheArray[index] = fun;

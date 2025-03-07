@@ -22,6 +22,7 @@ class RTSubShader
     std::vector<RTShaderPass *> shaderpasses;
     std::vector<UniformProperty> _uniformMap;
     bool enableInstance;
+    std::string shaderName;
 };
 } // namespace laya
 

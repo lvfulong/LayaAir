@@ -17,6 +17,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <any>
 
 namespace laya
 {
@@ -102,8 +103,7 @@ class GLESEngine
     IRender2DContext *get2DRenderContext();
     int uploadUniforms(GLShaderInstance *shader, CommandEncoder *commandEncoder, GLESShaderData *shaderData,
                        bool uploadUnTexture);
-    int uploadCustomUniforms(GLShaderInstance *shader, const std::unordered_map<int, ShaderVariable *> &custom,
-                             int index, char *data, int byteSize);
+    int uploadOneUniforms(GLShaderInstance* shader, ShaderVariable* shaderVariable, std::any& data);
     GLVertexState *m_GLBindVertexArray = nullptr;
     void copySubFrameBuffertoTex(GLESInternalTex *texture, int level, int xoffset, int yoffset, int x, int y, int width,
                                  int height);
@@ -124,7 +124,6 @@ public:
     GLESUniformBufferManager* bufferMgr;
     bool enableUniformBufferObject{ false };//是否使用UBO模式 影响Scene和Camera
     bool matUseUBO{ false };//是否使用Material UBO
-    bool spriteUseUBO{ false };//TODO
     std::vector<UboBindingMapInfo> _uboBindingMap{};
 private:
     friend class GLShaderInstance;

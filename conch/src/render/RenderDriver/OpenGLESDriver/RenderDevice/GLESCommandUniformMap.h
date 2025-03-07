@@ -48,7 +48,7 @@ public:
     void addShaderUniformArray(int propertyID, const std::string& propertyKey, ShaderDataType uniformtype,int arrayLength)
     {
         _idata[propertyID] = UniformProperty(propertyID, propertyKey, uniformtype, arrayLength);
-        _uniformArray.push_back(&_idata[propertyID]);
+        _uniformArray.push_back(_idata[propertyID]);
     }
 
     void addShaderUniform(int propertyID, const std::string& propertyKey, ShaderDataType uniformtype) {
@@ -59,7 +59,7 @@ public:
     static std::unordered_map<std::string, GLESCommandUniformMap *> m_globalBlockMap;
     std::string m_stateName;
     std::unordered_map<int, UniformProperty> _idata;
-    std::vector<UniformProperty*> _uniformArray{};
+    std::vector<UniformProperty> _uniformArray{};
     int _stateID;
 };
 } // namespace laya

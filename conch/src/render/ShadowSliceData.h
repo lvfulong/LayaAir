@@ -33,6 +33,10 @@ class ShadowSliceData
           }
           
       };
+      ~ShadowSliceData() {
+          cameraShaderValue->destroy();
+          delete cameraShaderValue;
+      }
     GLESShaderData *cameraShaderValue; // todo LayaGL.renderOBJCreate.createShaderData(null);
     Vector3 position;
     double offsetX;    // todo type
