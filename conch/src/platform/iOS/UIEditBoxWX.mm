@@ -58,6 +58,7 @@
 
 - (void)dealloc
 {
+    if (_touchView != nil)
     {
         [_touchView removeFromSuperview];
         _touchView = nil;
