@@ -169,6 +169,7 @@
     if (_touchView != nil)
     {
         [_touchView removeFromSuperview];
+        _touchView = nil;
     }
     if (_backgroundView != nil)
     {
@@ -202,6 +203,7 @@
     [_touchView addGestureRecognizer:_tapGesture];
 }
 - (void)handleTap:(UITapGestureRecognizer *)sender {
+    //[slef handleKeyboardConfirm];
     [self hideKeyboard:TRUE];
 }
 - (void)becomeFirstResponder
@@ -277,7 +279,7 @@
 
     return [UIColor colorWithRed:((red)/255.0) green:((green)/255.0) blue:((blue)/255.0) alpha:(alpha)];
 }
--(void)hideKeyboard:(BOOL)forceClose
+-(void)handleKeyboardConfirm
 {
     if (_multiple)
     {
@@ -291,7 +293,9 @@
         text = [text stringByReplacingOccurrencesOfString:@"\u2006" withString:@""];
         laya::JSDevice::handleKeyboardConfirm(text.UTF8String);
     }
-    
+}
+-(void)hideKeyboard:(BOOL)forceClose
+{
     if ((!self.confirmHold && !forceClose) || forceClose)
     {
         [_touchView removeFromSuperview];
@@ -350,6 +354,7 @@
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [self handleKeyboardConfirm];
     [self hideKeyboard:FALSE];
     return YES;
 }
