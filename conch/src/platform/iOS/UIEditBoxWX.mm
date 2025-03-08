@@ -66,19 +66,20 @@
     if (_backgroundView != nil)
     {
         [_backgroundView removeFromSuperview];
-        [_backgroundView resignFirstResponder];
+        [self resignFirstResponder];
         _backgroundView = nil;
     }
+    _textView = nil;
+    _textField = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-
 - (void)setDefaultText:(NSString *)defaultText
 {
     _defaultText = defaultText;
     if (_multiple) {
-        self.textView.text = self.defaultText;
+        _textView.text = self.defaultText;
     } else {
-        self.textField.text = self.defaultText;
+        _textField.text = self.defaultText;
     }
     
     if (![UIEditBoxWX isBlankString:_defaultText]) {
@@ -94,15 +95,15 @@
     _confirmType = confirmType;
     if (_textField) {
         if ([self.confirmType isEqualToString:@"done"])
-            self.textField.returnKeyType = UIReturnKeyDone;
+            _textField.returnKeyType = UIReturnKeyDone;
         else if ([self.confirmType isEqualToString:@"next"])
-            self.textField.returnKeyType = UIReturnKeyNext;
+            _textField.returnKeyType = UIReturnKeyNext;
         else if ([self.confirmType isEqualToString:@"search"])
-            self.textField.returnKeyType = UIReturnKeySearch;
+            _textField.returnKeyType = UIReturnKeySearch;
         else if ([self.confirmType isEqualToString:@"go"])
-            self.textField.returnKeyType = UIReturnKeyGo;
+            _textField.returnKeyType = UIReturnKeyGo;
         else if ([self.confirmType isEqualToString:@"send"])
-            self.textField.returnKeyType = UIReturnKeySend;
+            _textField.returnKeyType = UIReturnKeySend;
     }
 }
 
@@ -116,7 +117,7 @@
     
     if (![UIEditBoxWX isBlankString:self.prompt])
     {
-        self.textField.placeholder = self.prompt;
+        _textField.placeholder = self.prompt;
     }
 }
 
@@ -130,7 +131,7 @@
     
     if (![UIEditBoxWX isBlankString: self.promptColor])
     {
-        [self.textField setValue:[UIEditBoxWX colorWithHexString: self.promptColor alpha:1.0F] forKeyPath:@"placeholderLabel.textColor"];
+        [_textField setValue:[UIEditBoxWX colorWithHexString: self.promptColor alpha:1.0F] forKeyPath:@"placeholderLabel.textColor"];
     }
 }
 
@@ -139,28 +140,28 @@
     _inputType = inputType;
     if ([self.inputType isEqualToString:@"password"])
     {
-        self.textField.secureTextEntry = TRUE;
-        self.textField.keyboardType = UIKeyboardTypeDefault;
+        _textField.secureTextEntry = TRUE;
+        _textField.keyboardType = UIKeyboardTypeDefault;
     }
     else if ([self.inputType isEqualToString:@"email"])
     {
-        self.textField.secureTextEntry = FALSE;
-        self.textField.keyboardType = UIKeyboardTypeEmailAddress;
+        _textField.secureTextEntry = FALSE;
+        _textField.keyboardType = UIKeyboardTypeEmailAddress;
     }
     else if ([self.inputType isEqualToString:@"number"])
     {
-        self.textField.secureTextEntry = FALSE;
-        self.textField.keyboardType = UIKeyboardTypeNumberPad;
+        _textField.secureTextEntry = FALSE;
+        _textField.keyboardType = UIKeyboardTypeNumberPad;
     }
     else if ([self.inputType isEqualToString:@"url"])
     {
-        self.textField.secureTextEntry = FALSE;
-        self.textField.keyboardType = UIKeyboardTypeURL;
+        _textField.secureTextEntry = FALSE;
+        _textField.keyboardType = UIKeyboardTypeURL;
     }
     else// if ([self.inputType isEqualToString:@"text"])
     {
-        self.textField.secureTextEntry = FALSE;
-        self.textField.keyboardType = UIKeyboardTypeDefault;
+        _textField.secureTextEntry = FALSE;
+        _textField.keyboardType = UIKeyboardTypeDefault;
     }
 }
 
@@ -176,6 +177,9 @@
         [_backgroundView removeFromSuperview];
         _backgroundView = nil;
     }
+    _textView = nil;
+    _textField = nil;
+    
     _touchView = [[UIView alloc] initWithFrame: UIApplication.sharedApplication.delegate.window.rootViewController.view.bounds];
     _touchView.backgroundColor = [UIColor clearColor];
     _touchView.userInteractionEnabled = YES;
@@ -188,13 +192,15 @@
     
     if (_multiple)
     {
-        self.textView.frame = CGRectMake(TEXT_VIEW_LEFT, TEXT_VIEW_TOP, SCREEN_WIDTH - TEXT_VIEW_LEFT - TEXT_VIEW_RIGHT, TEXT_VIEW_HEIGHT);
-        [_backgroundView addSubview:self.textView];
+        [self createTextView];
+        _textView.frame = CGRectMake(TEXT_VIEW_LEFT, TEXT_VIEW_TOP, SCREEN_WIDTH - TEXT_VIEW_LEFT - TEXT_VIEW_RIGHT, TEXT_VIEW_HEIGHT);
+        [_backgroundView addSubview:_textView];
     }
     else
     {
-        self.textField.frame = CGRectMake(TEXT_VIEW_LEFT, TEXT_VIEW_TOP, SCREEN_WIDTH - TEXT_VIEW_LEFT - TEXT_VIEW_RIGHT, TEXT_VIEW_HEIGHT);
-        [_backgroundView addSubview:self.textField];
+        [self createTextField];
+        _textField.frame = CGRectMake(TEXT_VIEW_LEFT, TEXT_VIEW_TOP, SCREEN_WIDTH - TEXT_VIEW_LEFT - TEXT_VIEW_RIGHT, TEXT_VIEW_HEIGHT);
+        [_backgroundView addSubview:_textField];
         //[textField setValue:[UIFont boldSystemFontOfSize:16] forKeyPath:@"_placeholderLabel.font"];
     }
     [UIApplication.sharedApplication.delegate.window.rootViewController.view addSubview:_touchView];
@@ -209,13 +215,21 @@
 - (void)becomeFirstResponder
 {
     if (_multiple) {
-        [self.textView becomeFirstResponder];
+        [_textView becomeFirstResponder];
     } else {
-        [self.textField becomeFirstResponder];
+        [_textField becomeFirstResponder];
+    }
+}
+- (void)resignFirstResponder
+{
+    if (_multiple) {
+        [_textView resignFirstResponder];
+    } else {
+        [_textField resignFirstResponder];
     }
 }
 
-- (UITextField *)textField
+- (UITextField *)createTextField
 {
     if (!_textField) {
         _textField = [[UITextField alloc] init];
@@ -234,7 +248,7 @@
     return _textField;
 }
 
-- (UITextView *)textView
+- (UITextView *)createTextView
 {
     if (!_textView) {
         _textView = [[UITextView alloc] init];
@@ -283,13 +297,13 @@
 {
     if (_multiple)
     {
-        NSString* text = self.textView.text;
+        NSString* text = _textView.text;
         text = [text stringByReplacingOccurrencesOfString:@"\u2006" withString:@""];
         laya::JSDevice::handleKeyboardConfirm(text.UTF8String);
     }
     else
     {
-        NSString* text = self.textField.text;
+        NSString* text = _textField.text;
         text = [text stringByReplacingOccurrencesOfString:@"\u2006" withString:@""];
         laya::JSDevice::handleKeyboardConfirm(text.UTF8String);
     }
@@ -302,18 +316,20 @@
         _touchView = nil;
         
         [_backgroundView removeFromSuperview];
-        [_backgroundView resignFirstResponder];
+        [self resignFirstResponder];
         _backgroundView = nil;
     }
     
     if (_multiple)
     {
-        self.textView.text = @"";
+        _textView.text = @"";
     }
     else
     {
-        self.textField.text = @"";
+        _textField.text = @"";
     }
+    _textView = nil;
+    _textField = nil;
 }
 
 - (void)keyboardWillShow:(NSNotification*) notification
@@ -395,12 +411,12 @@
     
     if (_multiple)
     {
-        self.textView.frame = CGRectMake(TEXT_VIEW_LEFT, TEXT_VIEW_TOP , width - TEXT_VIEW_LEFT - TEXT_VIEW_RIGHT, newTextViewHeight);
+        _textView.frame = CGRectMake(TEXT_VIEW_LEFT, TEXT_VIEW_TOP , width - TEXT_VIEW_LEFT - TEXT_VIEW_RIGHT, newTextViewHeight);
         
-        if (self.textView.text.length > self.maxLength)
-            self.textView.text = [self.textView.text substringToIndex:self.maxLength];
+        if (_textView.text.length > self.maxLength)
+            _textView.text = [_textView.text substringToIndex:self.maxLength];
         
-        NSString* text = self.textView.text;
+        NSString* text = _textView.text;
         text = [text stringByReplacingOccurrencesOfString:@"\u2006" withString:@""];
         laya::JSDevice::handleKeyboardInput([text UTF8String]);
     }
