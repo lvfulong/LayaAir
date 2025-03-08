@@ -1014,12 +1014,13 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
 }
 -(void)showKeyboard:(NSString*)defaultValue maxLength:(int)maxLength multiple:(bool)multiple confirmHold:(bool)confirmHold confirmType:(NSString*)confirmType prompt:(NSString*)prompt promptColor:(NSString*)promptColor inputType:(NSString*)inputType
 {
-    if (m_UIEditBoxWX == nil) {
+    if (m_UIEditBoxWX == nil)
+    {
         m_UIEditBoxWX = [[UIEditBoxWX alloc] initWithMultiple:multiple];
     }
-    else {
-        [m_UIEditBoxWX clean];
-        m_UIEditBoxWX = [[UIEditBoxWX alloc] initWithMultiple:multiple];
+    else
+    {
+        [m_UIEditBoxWX initWithMultiple:multiple];
     }
     m_UIEditBoxWX.defaultText = defaultValue;
     m_UIEditBoxWX.maxLength = maxLength;
@@ -1034,8 +1035,7 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
 -(void)hideKeyboard
 {
     if (m_UIEditBoxWX != nil) {
-        [m_UIEditBoxWX hide];
-        m_UIEditBoxWX = nil;
+        [m_UIEditBoxWX hideKeyboard:FALSE];
     }
 }
 -(void)alert:(NSString*)sInfo

@@ -160,7 +160,7 @@ void RTBaseRenderNode::clearAdditionalMap()
     additionShaderData.clear();
     _additionShaderDataKeys.clear();
 }
-void RTBaseRenderNode::addOneAddiionalData(std::string &blockName, GLESShaderData* shaderData)
+void RTBaseRenderNode::addOneAddiionalData(const std::string &blockName, GLESShaderData* shaderData)
 {
     additionShaderData[blockName] = shaderData;
     _additionShaderDataKeys.push_back(blockName);

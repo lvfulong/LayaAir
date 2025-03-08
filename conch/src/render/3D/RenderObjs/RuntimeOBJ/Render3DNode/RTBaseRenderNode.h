@@ -56,7 +56,7 @@ public: //binding
     void setRenderElements(const std::vector<GLESRenderElement3D*>& value);
     void destroy();
     void clearAdditionalMap();//JS call
-    void addOneAddiionalData(std::string &blockName, GLESShaderData* shaderData);//JS call
+    void addOneAddiionalData(const std::string &blockName, GLESShaderData* shaderData);//JS call
 public:
     void _applyReflection();
     void _applyLightmap();

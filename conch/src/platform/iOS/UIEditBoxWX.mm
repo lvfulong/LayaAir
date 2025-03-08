@@ -13,20 +13,21 @@
 #define TEXT_COLOR [UIColor blackColor]
 
 @interface UIEditBoxWX()
-@property(nonatomic,strong)UIView *inputBackgroundView;
-@property(nonatomic,strong)UIView *toolView;
-@property(nonatomic,assign)CGFloat keyboardHeight;
+@property(nonatomic,strong) UIView *inputBackgroundView;
+@property(nonatomic,strong) UIView *toolView;
+@property(nonatomic,assign) CGFloat keyboardHeight;
 @property(nonatomic,strong) UITextField* textField;
 @property(nonatomic,strong) UITextView* textView;
 @property(nonatomic,strong) UIView* backgroundView;
 @property(nonatomic,strong) UILabel *placeHolderLabel;
-@property (nonatomic, assign) BOOL multiple;
+@property(nonatomic,strong) UIView* touchView;
+@property(nonatomic,assign) BOOL multiple;
+@property(nonatomic,strong) UITapGestureRecognizer *tapGesture;
 @end
 
 @interface CustomUIView : UIView
 @end
 @implementation CustomUIView
-
 //点击输入框背景时(子view按钮，输入框不在此列)，事件不做拦截，传给父类的view处理
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event{
     BOOL flag = NO;
@@ -38,7 +39,6 @@
     }
     return flag;
 }
-
 @end
 
 @implementation UIEditBoxWX
@@ -58,6 +58,16 @@
 
 - (void)dealloc
 {
+    {
+        [_touchView removeFromSuperview];
+        _touchView = nil;
+    }
+    if (_backgroundView != nil)
+    {
+        [_backgroundView removeFromSuperview];
+        [_backgroundView resignFirstResponder];
+        _backgroundView = nil;
+    }
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -155,15 +165,24 @@
 
 -(void)initView
 {
+    if (_touchView != nil)
+    {
+        [_touchView removeFromSuperview];
+    }
     if (_backgroundView != nil)
     {
         [_backgroundView removeFromSuperview];
+        _backgroundView = nil;
     }
+    _touchView = [[UIView alloc] initWithFrame: UIApplication.sharedApplication.delegate.window.rootViewController.view.bounds];
+    _touchView.backgroundColor = [UIColor clearColor];
+    _touchView.userInteractionEnabled = YES;
+    _touchView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight; // 适应屏幕旋转
+    
     _backgroundView = [CustomUIView new];
     //F7F7F7
     _backgroundView.backgroundColor = [UIColor colorWithRed: 247 / 255.0 green: 247 / 255.0 blue: 247 / 255.0 alpha: 1];
     _backgroundView.frame = CGRectMake(0, SCREEN_HEIGHT, SCREEN_HEIGHT - BACKGROUND_VIEW_HEIGHT, BACKGROUND_VIEW_HEIGHT);
-    [UIApplication.sharedApplication.delegate.window.rootViewController.view addSubview:_backgroundView];
     
     if (_multiple)
     {
@@ -176,8 +195,14 @@
         [_backgroundView addSubview:self.textField];
         //[textField setValue:[UIFont boldSystemFontOfSize:16] forKeyPath:@"_placeholderLabel.font"];
     }
+    [UIApplication.sharedApplication.delegate.window.rootViewController.view addSubview:_touchView];
+    [UIApplication.sharedApplication.delegate.window.rootViewController.view addSubview:_backgroundView];
+    _tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    [_touchView addGestureRecognizer:_tapGesture];
 }
-
+- (void)handleTap:(UITapGestureRecognizer *)sender {
+    [self hideKeyboard:TRUE];
+}
 - (void)becomeFirstResponder
 {
     if (_multiple) {
@@ -251,7 +276,7 @@
 
     return [UIColor colorWithRed:((red)/255.0) green:((green)/255.0) blue:((blue)/255.0) alpha:(alpha)];
 }
-- (IBAction)buttonTapped:(UIButton *)button
+-(void)hideKeyboard:(BOOL)forceClose
 {
     if (_multiple)
     {
@@ -265,9 +290,15 @@
         text = [text stringByReplacingOccurrencesOfString:@"\u2006" withString:@""];
         laya::JSDevice::handleKeyboardConfirm(text.UTF8String);
     }
-    if (!self.confirmHold)
+    
+    if ((!self.confirmHold && !forceClose) || forceClose)
     {
-        [self hide];
+        [_touchView removeFromSuperview];
+        _touchView = nil;
+        
+        [_backgroundView removeFromSuperview];
+        [_backgroundView resignFirstResponder];
+        _backgroundView = nil;
     }
     
     if (_multiple)
@@ -280,30 +311,6 @@
     }
 }
 
--(void)hide
-{
-    if (_multiple)
-    {
-        NSString* text = self.textView.text;
-        text = [text stringByReplacingOccurrencesOfString:@"\u2006" withString:@""];
-        laya::JSDevice::handleKeyboardComplete(text.UTF8String);
-    }
-    else
-    {
-        NSString* text = self.textField.text;
-        text = [text stringByReplacingOccurrencesOfString:@"\u2006" withString:@""];
-        laya::JSDevice::handleKeyboardComplete(text.UTF8String);
-    }
-    [_backgroundView  removeFromSuperview];
-    [_backgroundView resignFirstResponder];
-    _backgroundView  = nil;
-}
--(void)clean
-{
-    [_backgroundView  removeFromSuperview];
-    [_backgroundView resignFirstResponder];
-    _backgroundView  = nil;
-}
 - (void)keyboardWillShow:(NSNotification*) notification
 {
     CGRect frame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
@@ -342,8 +349,7 @@
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    [self buttonTapped: nil];
-    //[self hide];
+    [self hideKeyboard:FALSE];
     return YES;
 }
 - (void)textFieldDidChange:(UITextField *)textField
