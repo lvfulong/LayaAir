@@ -188,7 +188,7 @@
     _backgroundView = [CustomUIView new];
     //F7F7F7
     _backgroundView.backgroundColor = [UIColor colorWithRed: 247 / 255.0 green: 247 / 255.0 blue: 247 / 255.0 alpha: 1];
-    _backgroundView.frame = CGRectMake(0, SCREEN_HEIGHT, SCREEN_HEIGHT - BACKGROUND_VIEW_HEIGHT, BACKGROUND_VIEW_HEIGHT);
+    _backgroundView.frame = CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, BACKGROUND_VIEW_HEIGHT);
     
     if (_multiple)
     {
