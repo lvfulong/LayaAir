@@ -6,6 +6,8 @@
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderInstance.h"
 #include <stdio.h>
 #include <utils/Preprocessor.h>
+#include <render/3D/design/renderShader/ShaderVariable.h>
+
 namespace laya
 {
 class GLStateMap;

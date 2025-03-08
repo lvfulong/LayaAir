@@ -71,7 +71,7 @@ export struct LayaEditBoxNew {
                 .borderRadius(8)
                 .maxLength(this.textInputInfo.maxLength)
                 .type(this.textInputInfo.inputTypeTextArea)
-                .enterKeyType(this.textInputInfo.confirmType)
+                //.enterKeyType(this.textInputInfo.confirmType)
                 .align(Alignment.TopStart)
                 .textAlign(TextAlign.Start)
                 .fontSize(px2fp(60))
@@ -82,7 +82,7 @@ export struct LayaEditBoxNew {
                 .onVisibleAreaChange([0.0, 1.0], (isVisible: boolean, currentRadio: number) => {
                   if (isVisible) {
                     this.textInputInfo.textAreaController.caretPosition(this.textInputInfo.defaultValue.length);
-                    focusControl.requestFocus('TextArea' + this.textInputInfo.viewTag);
+                    focusControl.requestFocus('TextAreaNew' + this.textInputInfo.viewTag);
                   }
 
                 })

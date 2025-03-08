@@ -35,8 +35,7 @@ export class EditBoxNew {
     log.debug("call EditBoxNew.show, viewTag: %{public}d", viewTag)
     let newTextInputInfo = new TextInputInfoNew(viewTag);
 
-    GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_EDIT_BOX_NEW_ARRAY).push(newTextInputInfo);
-    GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_EDIT_BOX_NEW_INDEX_MAP).set(viewTag, newTextInputInfo);
+
 
     newTextInputInfo.defaultValue = defaultValue;
     newTextInputInfo.maxLength = maxLength;
@@ -91,6 +90,8 @@ export class EditBoxNew {
         newTextInputInfo.inputTypeTextInput = InputType.Normal;
         newTextInputInfo.inputTypeTextArea = TextAreaType.NORMAL;
     }
+    GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_EDIT_BOX_NEW_ARRAY).push(newTextInputInfo);
+    GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_EDIT_BOX_NEW_INDEX_MAP).set(viewTag, newTextInputInfo);
     return true;
   }
 
