@@ -26,6 +26,7 @@ int OSiOS::getMemoryUsageInByte()
 }
 void OSiOS::exit()
 {
+    abort();
 }
 int OSiOS::getNetworkType()
 {
