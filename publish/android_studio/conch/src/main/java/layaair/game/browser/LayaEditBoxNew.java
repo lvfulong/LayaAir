@@ -225,13 +225,7 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 		}
 		if (true) {
 			LayoutInflater inflater = (LayoutInflater) m_context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			int orientation = getScreenOrientation();
-			if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-				m_rootLayout = (LinearLayout) inflater.inflate(R.layout.editbox_layout, null);
-			}
-			else {
-				m_rootLayout = (LinearLayout) inflater.inflate(R.layout.editbox_layout_landscape, null);
-			}
+			m_rootLayout = (LinearLayout) inflater.inflate(R.layout.editbox_layout, null);
 			m_editbox_panel = m_rootLayout.findViewById(R.id.editbox_panel);
 			m_editbox_panel_bg = m_rootLayout.findViewById(R.id.editbox_panel_bg);
 
