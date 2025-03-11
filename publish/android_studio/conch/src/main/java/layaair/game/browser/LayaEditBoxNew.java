@@ -293,7 +293,6 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 
 		}
 		m_pEditBox.setText(m_defaultValue);
-
 		switch(m_inputType) {
 			case "email":
 				m_pEditBox.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
@@ -317,23 +316,23 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 		}
 		switch(m_confirmType) {
 			case "done":
-				m_pEditBox.setImeOptions(EditorInfo.IME_ACTION_DONE);
+				m_pEditBox.setImeOptions(EditorInfo.IME_ACTION_DONE | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
 				break;
 			case "next":
-				m_pEditBox.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+				m_pEditBox.setImeOptions(EditorInfo.IME_ACTION_NEXT | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
 				break;
 			case "search":
-				m_pEditBox.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+				m_pEditBox.setImeOptions(EditorInfo.IME_ACTION_SEARCH | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
 				break;
 			case "go":
-				m_pEditBox.setImeOptions(EditorInfo.IME_ACTION_GO);
+				m_pEditBox.setImeOptions(EditorInfo.IME_ACTION_GO | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
 				break;
 			case "send":
-				m_pEditBox.setImeOptions(EditorInfo.IME_ACTION_SEND);
+				m_pEditBox.setImeOptions(EditorInfo.IME_ACTION_SEND | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
 				break;
 			default:
 				m_confirmType = null;
-				m_pEditBox.setImeOptions(EditorInfo.IME_ACTION_UNSPECIFIED);
+				m_pEditBox.setImeOptions(EditorInfo.IME_ACTION_UNSPECIFIED | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
 				break;
 		}
 	}
