@@ -57,38 +57,22 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 {
 	private static final String	TAG = "LayaEditBoxNew";
 
-	public EditText	m_pEditBox = null;
-
+	public EditText	mEditBox = null;
 	//public Button	m_pEditBoxTouch = null;
-
-	public Button	m_pEditBoxButton = null;
-
 	public String m_confirmType = null;
-
 	public String m_inputType = null;
-
 	public boolean m_multiple = false;
-
 	public boolean m_confirmHold = false;
-
 	public String m_defaultValue = null;
-
 	public String m_hint = null;
-
 	public String m_hintColor = null;
 	public int	m_maxLength = 0;
 	public static final int EditBoxTouchId = 0;
-
 	public static final int EditBoxPanelId = 1;
-
 	public static final int EditBoxButtonId = 2;
-
 	public static final int EditBoxTextId = 3;
-
 	public static LayaEditBoxNew instance = null;
-
 	public Context m_context = null;
-
 	public KeyboardHeightProvider m_keyboardHeightProvider = null;
 	public RelativeLayout m_editbox_panel_bg;
 	public RelativeLayout m_editbox_panel;
@@ -113,9 +97,9 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 		m_inputType = inputType;
 		initView();
 		m_orientation = getScreenOrientation();
-		InputMethodManager imm = (InputMethodManager)m_context.getSystemService(m_context.INPUT_METHOD_SERVICE );
+		InputMethodManager imm = (InputMethodManager)m_context.getSystemService(m_context.INPUT_METHOD_SERVICE);
 		//imm.showSoftInput(m_pEditBox, InputMethodManager.SHOW_IMPLICIT);
-		imm.showSoftInput(m_pEditBox, 0);
+		imm.showSoftInput(mEditBox, 0);
 		/*if (m_context.getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE) {
 			m_rootLayout.setVisibility(View.VISIBLE);
 			m_rootLayout.setX(-10000);
@@ -147,9 +131,9 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 	public void close() {
 		Log.d(TAG, "close ");
 		InputMethodManager imm = (InputMethodManager) m_context.getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(m_pEditBox.getWindowToken(), 0);
+		imm.hideSoftInputFromWindow(mEditBox.getWindowToken(), 0);
 		LayaEditBox.hideSoftKeyBorad();
-		ConchJNI.handleKeyboardComplete(m_pEditBox.getText().toString());
+		ConchJNI.handleKeyboardComplete(mEditBox.getText().toString());
 		m_rootLayout.setVisibility(View.INVISIBLE);
 		LayaConch5.ms_layaConche.getAbsLayout().removeViewInLayout(m_rootLayout);
 		m_keyboardHeightProvider.close();
@@ -174,8 +158,6 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 	void initView() {
 		setLayout();
 		setProperties();
-		//((Activity)m_context).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
 		/*m_pEditBoxTouch.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -188,17 +170,17 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 				LayaEditBoxNew.this.close();
 			}
 		});*/
-		m_pEditBox.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+		mEditBox.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-				ConchJNI.handleKeyboardConfirm(LayaEditBoxNew.this.m_pEditBox.getText().toString());
+				ConchJNI.handleKeyboardConfirm(LayaEditBoxNew.this.mEditBox.getText().toString());
 				if (!LayaEditBoxNew.this.m_confirmHold) {
 					LayaEditBoxNew.this.close();
 				}
 				return false;
 			}
 		});
-		m_pEditBox.addTextChangedListener(new TextWatcher() {
+		mEditBox.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -214,8 +196,8 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 				ConchJNI.handleKeyboardInput(s.toString());
 			}
 		});
-		m_pEditBox.setFilters(new InputFilter[]{new InputFilter.LengthFilter(m_maxLength) });
-		m_pEditBox.requestFocus();
+		mEditBox.setFilters(new InputFilter[]{new InputFilter.LengthFilter(m_maxLength) });
+		mEditBox.requestFocus();
 	}
 	@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
 	public void setLayout() {
@@ -238,39 +220,8 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 			m_editbox_panel.setLayoutParams(params);
 
 			mScrollView = m_rootLayout.findViewById(R.id.scroll_view);
-			m_pEditBox = m_rootLayout.findViewById(R.id.editbox_text);
+			mEditBox = m_rootLayout.findViewById(R.id.editbox_text);
 			//m_pEditBoxTouch = m_rootLayout.findViewById(R.id.editbox_touch);
-			/*m_rootLayout.setKeyboardListener(new KeyboardLayout.KeyboardLayoutListener() {
-				@Override
-				public void onKeyboardStateChanged(boolean isActive, int keyboardHeight) {
-					if (isActive && LayaEditBoxNew.instance != null) {
-						Point screenSize = new Point();
-						((Activity)m_context).getWindowManager().getDefaultDisplay().getSize(screenSize);
-						int visiableHeight = screenSize.y - keyboardHeight;
-						Log.e(TAG, isActive + " " + keyboardHeight);
-						RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) m_editbox_panel.getLayoutParams();
-						int left = params.leftMargin;
-						int top = params.topMargin;
-						int right = params.rightMargin;
-						int bottom = params.bottomMargin;
-						int orientation = getScreenOrientation();
-						if (orientation != m_orientation) {
-							Log.e(TAG, "!!!!!!!!!!!!!!!!!!!!!!!");
-							initView();
-						}
-						m_orientation = orientation;
-						if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-							Log.e(TAG, "!!!!!!!!!!!!!!!!!!!!!!! PORTRAIT");
-							params.setMargins(left, visiableHeight - m_editbox_panel.getHeight(), right, bottom);
-						}
-						else  {
-							Log.e(TAG, "!!!!!!!!!!!!!!!!!!!!!!! landscape");
-							params.setMargins(left, screenSize.y - m_editbox_panel.getHeight(), right, bottom);
-						}
-						m_editbox_panel.setLayoutParams(params);
-					}
-				}
-			});*/
 		}
 		LayaConch5.ms_layaConche.getAbsLayout().addView(m_rootLayout);
 
@@ -281,58 +232,58 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 	}
 	public void setProperties() {
 		if (!TextUtils.isEmpty(m_hint)) {
-			m_pEditBox.setHint(m_hint);
+			mEditBox.setHint(m_hint);
 		}
 		if (!TextUtils.isEmpty(m_hintColor)) {
 			try {
-				m_pEditBox.setHintTextColor(Color.parseColor(m_hintColor));
+				mEditBox.setHintTextColor(Color.parseColor(m_hintColor));
 			}
-			catch(Exception e){
+			catch(Exception e) {
 
 			}
 
 		}
-		m_pEditBox.setText(m_defaultValue);
+		mEditBox.setText(m_defaultValue);
 		switch(m_inputType) {
 			case "email":
-				m_pEditBox.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+				mEditBox.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
 				break;
 			case "number":
-				m_pEditBox.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
+				mEditBox.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
 				break;
 			case "phone":
-				m_pEditBox.setInputType(InputType.TYPE_CLASS_PHONE);
+				mEditBox.setInputType(InputType.TYPE_CLASS_PHONE);
 				break;
 			case "password":
-				m_pEditBox.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+				mEditBox.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 				break;
 			default:
 				if (m_multiple) {
-					m_pEditBox.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+					mEditBox.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
 				} else {
-					m_pEditBox.setInputType(InputType.TYPE_CLASS_TEXT);
+					mEditBox.setInputType(InputType.TYPE_CLASS_TEXT);
 				}
 				break;
 		}
 		switch(m_confirmType) {
 			case "done":
-				m_pEditBox.setImeOptions(EditorInfo.IME_ACTION_DONE | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+				mEditBox.setImeOptions(EditorInfo.IME_ACTION_DONE | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
 				break;
 			case "next":
-				m_pEditBox.setImeOptions(EditorInfo.IME_ACTION_NEXT | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+				mEditBox.setImeOptions(EditorInfo.IME_ACTION_NEXT | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
 				break;
 			case "search":
-				m_pEditBox.setImeOptions(EditorInfo.IME_ACTION_SEARCH | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+				mEditBox.setImeOptions(EditorInfo.IME_ACTION_SEARCH | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
 				break;
 			case "go":
-				m_pEditBox.setImeOptions(EditorInfo.IME_ACTION_GO | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+				mEditBox.setImeOptions(EditorInfo.IME_ACTION_GO | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
 				break;
 			case "send":
-				m_pEditBox.setImeOptions(EditorInfo.IME_ACTION_SEND | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+				mEditBox.setImeOptions(EditorInfo.IME_ACTION_SEND | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
 				break;
 			default:
 				m_confirmType = null;
-				m_pEditBox.setImeOptions(EditorInfo.IME_ACTION_UNSPECIFIED | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+				mEditBox.setImeOptions(EditorInfo.IME_ACTION_UNSPECIFIED | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
 				break;
 		}
 	}
