@@ -133,6 +133,7 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 		InputMethodManager imm = (InputMethodManager) m_context.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(mEditBox.getWindowToken(), 0);
 		LayaEditBox.hideSoftKeyBorad();
+		ConchJNI.handleKeyboardConfirm(mEditBox.getText().toString());
 		ConchJNI.handleKeyboardComplete(mEditBox.getText().toString());
 		m_rootLayout.setVisibility(View.INVISIBLE);
 		LayaConch5.ms_layaConche.getAbsLayout().removeViewInLayout(m_rootLayout);
@@ -173,11 +174,16 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 		mEditBox.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-				ConchJNI.handleKeyboardConfirm(LayaEditBoxNew.this.mEditBox.getText().toString());
-				if (!LayaEditBoxNew.this.m_confirmHold) {
-					LayaEditBoxNew.this.close();
+				if (LayaEditBoxNew.this.m_multiple) {
+					return false;
 				}
-				return false;
+				else {
+					ConchJNI.handleKeyboardConfirm(LayaEditBoxNew.this.mEditBox.getText().toString());
+					if (!LayaEditBoxNew.this.m_confirmHold) {
+						LayaEditBoxNew.this.close();
+					}
+					return false;
+				}
 			}
 		});
 		mEditBox.addTextChangedListener(new TextWatcher() {
@@ -286,7 +292,11 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 				mEditBox.setImeOptions(EditorInfo.IME_ACTION_UNSPECIFIED | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
 				break;
 		}
+		if (m_multiple) {
+			mEditBox.setImeOptions(EditorInfo.IME_ACTION_NONE | EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_FLAG_NO_ENTER_ACTION);
+		}
 	}
+
 	//键盘不遮挡按钮
 	private void setScroll() {
 		m_editbox_panel_bg.setOnTouchListener(new View.OnTouchListener() {                 //parent为Editext外面那层布局
