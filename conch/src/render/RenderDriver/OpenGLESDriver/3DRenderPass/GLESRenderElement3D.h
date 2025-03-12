@@ -58,7 +58,7 @@ class GLESRenderElement3D
     virtual void _compileShader(GLESRenderContext3D* context);
     virtual bool _getInvertFront();
     void _clearShaderInstance();
-    virtual RTDefineDatas* _getShaderInstanceDefins(GLESRenderContext3D* context);
+    virtual RTDefineDatas* _getShaderInstanceDefines(GLESRenderContext3D* context);
   public:
     GLESRenderGeometryElement *geometry = nullptr;
     RTSubShader *subshader = nullptr;

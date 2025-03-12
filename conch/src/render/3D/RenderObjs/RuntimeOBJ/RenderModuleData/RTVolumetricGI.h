@@ -26,7 +26,7 @@ public:
       Vector3 probeStep;
       Vector4 params;
       uint32_t _id;
-
+      GLESShaderData* shaderData = nullptr;
       void setIrradiance(GLESInternalTex* value) { irradiance = value; }
       void setDistance(GLESInternalTex* value) { distance = value; }
       void setBounds(JSBounds* value) { bound = value; }
@@ -43,8 +43,12 @@ public:
       {
           probeStep = value;
       }
+      void destroy()
+      {
+          shaderData = nullptr;
+      }
 
-      void applyRenderData(GLESShaderData* shaderData);
+      void applyRenderData();
 };
 } // namespace laya
 #endif

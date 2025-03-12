@@ -85,6 +85,7 @@ class GLESShaderData //: public ResourceBase<ShaderData>
     void addDefine(RTShaderDefine define);
     void addDefines(RTDefineDatas *defines);
     void removeDefine(RTShaderDefine define);
+    void removeDefines(RTDefineDatas *defines);
     bool hasDefine(RTShaderDefine define);
     void clearDefine();
 

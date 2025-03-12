@@ -164,7 +164,7 @@ namespace laya
 	{
 		std::vector<RTShaderPass*> passes = subshader->shaderpasses;
 		_clearShaderInstance();
-		RTDefineDatas* comDef = _getShaderInstanceDefins(context);
+		RTDefineDatas* comDef = _getShaderInstanceDefines(context);
 		comDef->add(MeshSprite3DShaderDeclaration::SHADERDEFINE_GPU_INSTANCE);
 		for (uint32_t j = 0, m = passes.size(); j < m; j++)
 		{

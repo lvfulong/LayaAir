@@ -172,6 +172,11 @@ void GLESShaderData::removeDefine(RTShaderDefine define)
     _defineDatas->remove(define);
 }
 
+void GLESShaderData::removeDefines(RTDefineDatas *defines)
+{
+    _defineDatas->removeDefineDatas(defines);
+}
+
 bool GLESShaderData::hasDefine(RTShaderDefine define)
 {
    return _defineDatas->has(define);

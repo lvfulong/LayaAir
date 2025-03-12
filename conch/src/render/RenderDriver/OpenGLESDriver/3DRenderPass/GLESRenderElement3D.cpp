@@ -52,16 +52,17 @@ void GLESRenderElement3D::_render(GLESRenderContext3D *context)
             }
             //additionShaderData
             if (owner!=nullptr) {
-                if (owner->_additionShaderDataKeys.size() > 0) {
-                    for (auto& pair : owner->additionShaderData) {
+                if(shaderIns->_additionUniformParamsMaps.size() > 0) {
+                    for(auto& pair : shaderIns->_additionUniformParamsMaps) {
                         const std::string& key = pair.first;
-                        GLESShaderData* shaderData = pair.second;
-
-                        bool needUpload = shaderIns->_additionShaderData[key] != shaderData || switchUpdateMark;
-                        if (needUpload || switchShader) {
-                            auto& encoder = shaderIns->_additionUniformParamsMaps[key];
-                            shaderIns->uploadUniforms(&encoder, shaderData, needUpload);
+                        CommandEncoder& uniformMap = pair.second;
+                        if(owner->additionShaderData.find(key) != owner->additionShaderData.end()) {
+                            GLESShaderData* shaderData = owner->additionShaderData[key];
+                           bool needUpload = shaderIns->_additionShaderData[key] != shaderData || switchUpdateMark;
+                           if(needUpload || switchShader) {
+                            shaderIns->uploadUniforms(&uniformMap, shaderData, needUpload);
                             shaderIns->_additionShaderData[key] = shaderData;
+                           }
                         }
                     }
                 }
@@ -132,7 +133,7 @@ void GLESRenderElement3D::_clearShaderInstance()
     _shaderInstances.clear();
 }
 
-RTDefineDatas* GLESRenderElement3D::_getShaderInstanceDefins(GLESRenderContext3D* context)
+RTDefineDatas* GLESRenderElement3D::_getShaderInstanceDefines(GLESRenderContext3D* context)
 {
     RTDefineDatas* comDef = GLESRenderElement3D::_compileDefines;
     
@@ -155,6 +156,7 @@ RTDefineDatas* GLESRenderElement3D::_getShaderInstanceDefins(GLESRenderContext3D
                 comDef->addDefineDatas(pair.second->_defineDatas);
             }
         }
+
     }
     
     return comDef;
@@ -169,7 +171,7 @@ void GLESRenderElement3D::_compileShader(GLESRenderContext3D *context)
 {
     std::vector<RTShaderPass *> passes = subshader->shaderpasses;
     _clearShaderInstance();
-    RTDefineDatas* comDef = _getShaderInstanceDefins(context);
+    RTDefineDatas* comDef = _getShaderInstanceDefines(context);
     for (uint32_t j = 0, m = passes.size(); j < m; j++)
     {
         RTShaderPass *pass = passes[j];

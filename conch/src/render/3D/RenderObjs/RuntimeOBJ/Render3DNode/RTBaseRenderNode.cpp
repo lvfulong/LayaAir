@@ -94,14 +94,17 @@ void RTBaseRenderNode::_applyLightProb()
     if (lightmapIndex >= 0 || !volumetricGI) return;
     if (volumetricGI->updateMark != lightProbUpdateMark) {
         lightProbUpdateMark = volumetricGI->updateMark;
-        volumetricGI->applyRenderData(shaderData);
+        volumetricGI->applyRenderData();
     }
 }
 
 void RTBaseRenderNode::_applyReflection()
 {
     if (probeReflection==nullptr || reflectionMode == 0) return;
-    probeReflection->applyRenderData();
+    if (probeReflection->_needUpdate()) {
+        probeReflection->applyRenderData();
+    }
+
 }
 void RTBaseRenderNode::_renderUpdatePre(GLESRenderContext3D *context3D)
 {

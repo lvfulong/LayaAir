@@ -11,11 +11,12 @@ namespace laya
             _id = RTReflectionProb::_idCounter++;
             shaderData = new GLESShaderData(new RTDefineDatas());   
     }
+
+    bool RTReflectionProb::_needUpdate() {
+        return updateMark != _updateMaskFlag;
+    }
     void RTReflectionProb::applyRenderData() {
-        if (updateMark == _updateMaskFlag) return;
         _updateMaskFlag = updateMark;
-        
-        
         if (!boxProjection) {
             shaderData->removeDefine(Sprite3DRenderDeclarationProperty::SHADERDEFINE_SPECCUBE_BOX_PROJECTION);
         }

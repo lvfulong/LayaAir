@@ -73,9 +73,10 @@ public:
     }
 
     void applyRenderData();
-
+    bool _needUpdate();
 private:
     int _updateMaskFlag{ -1 };
+    
 
 };
 } // namespace laya

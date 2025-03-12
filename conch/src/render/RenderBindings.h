@@ -639,6 +639,7 @@ class RenderBindings
             class_binding.function("setProbeReflection", &RTBaseRenderNode::setProbeReflection);
             class_binding.function("clearAdditionalMap", &RTBaseRenderNode::clearAdditionalMap);
             class_binding.function("addOneAddiionalData", &RTBaseRenderNode::addOneAddiionalData);
+            class_binding.function("_calculateBoundingBox",&RTBaseRenderNode::_calculateBoundingBox);
             class_binding.property("_bounds", &RTBaseRenderNode::getBounds, &RTBaseRenderNode::setBounds);
             class_binding.property_field("renderNodeType", &RTBaseRenderNode::renderNodeType);
             class_binding.property_field("distanceForSort", &RTBaseRenderNode::distanceForSort);
@@ -867,8 +868,10 @@ class RenderBindings
             class_binding.function("setBounds", &RTVolumetricGI::setBounds);
             class_binding.function("setIrradiance", &RTVolumetricGI::setIrradiance);
             class_binding.function("setDistance", &RTVolumetricGI::setDistance);
+             class_binding.function("destroy", &RTVolumetricGI::destroy);
             class_binding.property_field("_intensity", &RTVolumetricGI::intensity);
             class_binding.property_field("_updateMark", &RTVolumetricGI::updateMark);
+             class_binding.property_field("shaderData", &RTVolumetricGI::shaderData);
             context.class_("conchRTVolumetricGI", class_binding);
         }
         {
