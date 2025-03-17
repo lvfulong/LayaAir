@@ -7,6 +7,7 @@
 #include <iostream>
 #include <codecvt>
 #include <locale>
+#include <utils/JCCommonMethod.h>
 namespace fs = std::filesystem;
 
 #include "jsvm/JSEnv.h"
@@ -28,8 +29,9 @@ namespace laya
 			dllDir = dllPath.parent_path();
         }else{
             // 相对路径，构建完整路径
-            std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-            std::wstring wExePath = converter.from_bytes(exePath);
+            //std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+            //std::wstring wExePath = converter.from_bytes(exePath);
+            std::wstring wExePath = utf8ToWide(exePath);
             fs::path exeDir = fs::path(wExePath).parent_path();
         	dllDir = exeDir / "extensions";
       		dllPath = dllDir / dll;
@@ -99,8 +101,10 @@ void importAllDynaLib(std::string extPath)
     {
         GET_ENV
         // 将 std::string 转换为 std::wstring
-        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-        std::wstring wExtPath = converter.from_bytes(extPath);        
+        std::wstring wExtPath = utf8ToWide(extPath);
+
+        //std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+        //std::wstring wExtPath = converter.from_bytes(extPath);        
 
         //当前目录
         fs::path currentPath(std::move(wExtPath));
