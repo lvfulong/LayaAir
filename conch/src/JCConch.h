@@ -16,6 +16,8 @@
 #include <utils/InputTypes.h>
 #include "EngineEvent.h"
 #include <memory>
+#include <utils/MessageLoop.h>
+#include <core/Thread.h>
 
 namespace laya
 {
@@ -66,8 +68,6 @@ namespace laya
         }
         void update();
 
-        void postToPlatform(std::function<void(void)> task);
-
 		void onAppPause();
 
 		void onAppResume();
@@ -103,14 +103,8 @@ namespace laya
         std::vector<std::function<void(void)>>  m_tasks;
         std::mutex                              m_mutex;
         bool                                    m_isAppStarted = { false };
-        JCWorkSemaphore                         m_semaphoreFramePacer;
-        JCWorkSemaphore                         m_semaphore;
+        MessageLoop*                            m_scriptThreadMessageLoop;
 	};
-    // todo 当前Windows linux android有效 ohos是layaWorker
-    void postToPlatform(std::function<void(void)> task);
-
-    bool isInJSThread();
-	void postToJS(std::function<void(void)> task);
 };
 //------------------------------------------------------------------------------
 

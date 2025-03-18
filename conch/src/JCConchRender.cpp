@@ -236,7 +236,7 @@ void JCConchRender::createScreenSurface(void *nativeHandle)
     }
     else
     {
-        JCConch::s_pScriptRuntime->m_pScriptThread->post(func);
+        postToJS(func);
     }
 }
 void JCConchRender::onScreenSurfaceResize(int width, int height)
@@ -248,7 +248,7 @@ void JCConchRender::onScreenSurfaceResize(int width, int height)
     }
     else
     {
-        JCConch::s_pScriptRuntime->m_pScriptThread->post(func);
+        postToJS(func);
     }
 }
 void JCConchRender::destroyScreenSurface()
@@ -260,7 +260,7 @@ void JCConchRender::destroyScreenSurface()
     }
     else
     {
-        JCConch::s_pScriptRuntime->m_pScriptThread->post(func);
+        postToJS(func);
     }
 }
 void JCConchRender::createBackend(const BackendOptions &options)
@@ -277,7 +277,7 @@ void JCConchRender::createBackend(const BackendOptions &options)
     }
     else
     {
-        JCConch::s_pScriptRuntime->m_pScriptThread->post(func);
+        postToJS(func);
     }
 }
 } // namespace laya

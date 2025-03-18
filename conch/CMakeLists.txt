@@ -430,8 +430,8 @@ list(APPEND CONCH_SRC
 	src/JCSystemConfig.cpp
 	src/platform/src/OS.cpp
 	src/backend/src/IBackend.cpp
-	src/ScriptThread.h
-	src/ScriptThread.cpp
+	src/ScriptVM.h
+	src/ScriptVM.cpp
 )
 
 list(APPEND PLATFORM_HEADER_DIR
@@ -807,6 +807,7 @@ elseif(OS_WINDOWS)
 		shlwapi.lib
 		Iphlpapi.lib
 		utils
+		core
 		jsbind
 		jsvm
 		zlib

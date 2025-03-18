@@ -214,7 +214,7 @@ namespace laya{
     {
         std::weak_ptr<int> cbref(m_CallbackRef);
         std::function<void(void)> pFunction = std::bind(&JSOHOSEditBox::onInputCallJSFunction, this, cbref);
-        JCConch::s_pScriptRuntime->m_pScriptThread->post(pFunction);
+        postToJS(pFunction);
     }
     void JSOHOSEditBox::setMultiAble(bool p_bMultiAble){
         aki::JSBind::GetJSFunction("EditBox.setMultiAble")->Invoke<void>(m_tag, p_bMultiAble);

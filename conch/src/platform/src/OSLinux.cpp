@@ -74,8 +74,7 @@ jsvm_value OSLinux::postAsyncMessage(std::weak_ptr<int> cbref, const std::string
     });
     if (g_handleAsyncMessageCb)
     {
-        // handleAsyncMessage is called in platform os ui thread
-        postToPlatform([eventName, data]() { g_handleAsyncMessageCb(eventName.c_str(), data.c_str()); });
+        g_handleAsyncMessageCb(eventName.c_str(), data.c_str());
     }
     return promise.getHandle();
 }
@@ -88,7 +87,7 @@ std::string OSLinux::postSyncMessage(const std::string &eventName, const std::st
     {
         conchRegisterHandleMessageHandler(eventName.c_str(),
                                           [&promise](const char *message) { promise.set_value(message); });
-        postToPlatform([eventName, data]() { g_handleSyncMessageCb(eventName.c_str(), data.c_str()); });
+        g_handleSyncMessageCb(eventName.c_str(), data.c_str());
     }
     eventResult = promise.get_future().get();
 

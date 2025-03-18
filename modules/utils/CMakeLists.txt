@@ -28,6 +28,7 @@ set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/thread/JCLayaThreadPool.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/thread/JCWorkerThread.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/thread/JCWorkSemaphore.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/thread/BlockingQueue.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/JCEmitter.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/JCEventBase.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/InputTypes.h
@@ -39,6 +40,10 @@ set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/Tracer.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Trace.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Config.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/MessageLoop.h 
+    ${PUBLIC_HEADER_DIR}/${TARGET}/MessageLoopImpl.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/MessageLoopGeneric.h 
+    ${PUBLIC_HEADER_DIR}/${TARGET}/Time.h
 )
 
 set(SOURCES
@@ -65,6 +70,10 @@ set(SOURCES
     src/Types.cpp
     src/Data.cpp
     src/Tracer.cpp
+    src/MessageLoop.cpp
+    src/MessageLoopImpl.cpp
+    src/MessageLoopGeneric.cpp
+    src/Time.cpp
 )
 
 set(DEPS_GL)

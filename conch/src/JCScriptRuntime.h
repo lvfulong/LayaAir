@@ -15,7 +15,6 @@
 #include <mutex>
 #include <utils/JCCommonMethod.h>
 #include <vector>
-#include "ScriptThread.h"
 #if defined(OS_ANDROID)
     #include <Bindings/JSAndroidEditBox.h>
 #elif defined(OS_OHOS)
@@ -23,6 +22,8 @@
 #elif defined(OS_IOS)
     #include <Bindings/JSIOSEditBox.h>
 #endif
+#include "ScriptVM.h"
+#include <utils/MessageLoop.h>
 
 namespace laya
 {
@@ -66,9 +67,9 @@ namespace laya
 
         void reload();
 
-        void onThreadInit(JCEventEmitter::evtPtr evt);
+        void onThreadInit();
 
-        bool onUpdate(void* data);
+        bool onUpdate(jsvm_env env);
         
         void onUpdateTimer();
 
@@ -79,9 +80,11 @@ namespace laya
         //输入事件触发js
         void onUpdateInput();
 
-        void onThreadExit(JCEventEmitter::evtPtr evt);
+        void onThreadExit();
 
         void loadJSScript();
+
+        void update();
 
     public:
 
@@ -110,17 +113,13 @@ namespace laya
 
 		void onFocus();
 
-        void postToJS(const std::function<void(void)>& func);
-
         //void postToDownload(const std::function<void(void)>& funcf);
 
         //void postToDecoder(const std::function<void(void)>& func);
 
-        bool isInJSThread();
 
     public:
         JCConch*                            m_pConch;
-        std::shared_ptr<ScriptThread>       m_pScriptThread;
         JCCommandEncoderBuffer*				m_pRenderCmd;                   
 		bool                                m_bHasJSThread;	                //js线程是否在工作
         jsbind::Persistent                         m_pJSOnFrameFunction;
@@ -165,6 +164,8 @@ namespace laya
 #elif defined(OS_IOS)
         JSIOSEditBox *                      m_pCurEditBox;
 #endif
+        ScriptVM                            m_scriptVM;
+        MessageLoop*                            m_scriptThreadMessageLoop;
     };
 }
 

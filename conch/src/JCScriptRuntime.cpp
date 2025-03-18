@@ -87,7 +87,6 @@ namespace laya
     }
     JCScriptRuntime::JCScriptRuntime()
     {
-        m_pScriptThread = std::make_shared<ScriptThread>();
         m_bHasJSThread = false;
         m_pFileResMgr = NULL;
         m_pAssetsRes = NULL;
@@ -96,9 +95,6 @@ namespace laya
         //m_nThreadState = 0;
         m_pArrayBufferManager = new JCArrayBufferManager();
         m_pRenderCmd = new JCCommandEncoderBuffer(102400, 1280);
-        //事件现在有问题，只能添加不能删除。所以不要调用多次。
-        m_pScriptThread->on(JCWorkerThread::Event_threadStart, std::bind(&JCScriptRuntime::onThreadInit, this, std::placeholders::_1));
-        m_pScriptThread->on(JCWorkerThread::Event_threadStop, std::bind(&JCScriptRuntime::onThreadExit, this, std::placeholders::_1));
         m_nUpdateCount = 0;
 #if !defined(OS_LINUX) && !defined(OS_WINDOWS)
 		m_pCurEditBox = NULL;
@@ -130,6 +126,7 @@ namespace laya
         m_pConch = pConch;
         m_pFileResMgr = pFileMgr;
         m_pAssetsRes = pAssetRes;
+        m_scriptThreadMessageLoop = pConch->m_scriptThreadMessageLoop;
         FontManager::init();
 #if defined(OS_WINDOWS)
         ffplay::VideoPlayer::init();
@@ -153,10 +150,10 @@ namespace laya
         jsbind::setOnError(onError);
 
         m_debugPort = g_kSystemConfig.m_nJSDebugMode;
-        //m_pScriptThread->initialize(m_debugPort, std::bind(&onUnhandledRejection, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
         //m_nThreadState = 1;
-        m_pScriptThread->setLoopFunc(std::bind(&JCScriptRuntime::onUpdate, JCConch::s_pScriptRuntime.get(), std::placeholders::_1));
-        m_pScriptThread->start();
+
+        m_scriptVM.initialize();
+        this->onThreadInit();
     }
     void JCScriptRuntime::stop()
     {
@@ -167,8 +164,8 @@ namespace laya
             //LOGI("stop: wait for thread to start...");
             //std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
-        m_pScriptThread->stop();
-        //m_pScriptThread->uninitialize();
+        this->onThreadExit();
+        m_scriptVM.uninitialize();
         LOGI("Stop js end.");
     }
     void JCScriptRuntime::reload() 
@@ -191,7 +188,7 @@ namespace laya
         start(m_strStartJS.c_str());
         loadJSScript();
     }
-    void JCScriptRuntime::onThreadInit(JCEventEmitter::evtPtr evt) 
+    void JCScriptRuntime::onThreadInit() 
     {
         LOGI("js thread started.");
         GET_ENV;
@@ -230,7 +227,7 @@ namespace laya
     #endif
     }
     void JCScriptRuntime::loadJSScript() {
-        postToJS([this](){
+        DEBUG_CHECK(isScriptThread());
         //设置js的一些环境。必须在所有导出之后，执行其他脚本之前。
         {
             char* sJSRuntime = NULL;
@@ -257,9 +254,8 @@ namespace laya
         }
         jsvm_value result;
         jsbind::runScript("gc();gc();gc();", &result);
-        });
     }
-    void JCScriptRuntime::onThreadExit(JCEventEmitter::evtPtr evt)
+    void JCScriptRuntime::onThreadExit()
     {
         GET_ENV;
         //if (m_nThreadState == 0)
@@ -307,20 +303,20 @@ namespace laya
             return true;
         }).get();
     }
-    bool JCScriptRuntime::onUpdate(void* data) 
+    void JCScriptRuntime::update() 
     {
-        jsvm_env env = (jsvm_env)data;
+        GET_ENV;
+        m_scriptVM.runLoop(env, std::bind(&JCScriptRuntime::onUpdate, this, std::placeholders::_1));
+        m_scriptThreadMessageLoop->processExpiredTasks();
+    }
+    bool JCScriptRuntime::onUpdate(jsvm_env env) 
+    {
         if (!JCConch::s_pConch)
         {
             return true;
         }
-        bool stop = JCConch::s_pConch->m_semaphoreFramePacer.waitUntilHasData();
-        if (stop)
-        {
-             return true;
-        }
-        JCConch::s_pConch->m_semaphoreFramePacer.setDataNum(0);
-        
+        m_scriptThreadMessageLoop->processExpiredTasks();
+    
         JCConch::s_pConchRender->postTaskFromJSToRenderSync([this]()->bool {
             if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::OpenGLES) {
                 JCConch::s_pConchRender->start();
@@ -440,7 +436,7 @@ namespace laya
     void JCScriptRuntime::onNetworkChanged(int nType)
     {
         std::function<void(void)> pFunction = std::bind(&JCScriptRuntime::onNetworkChangedCallJSFunction, this, nType);
-        m_pScriptThread->post(pFunction);
+        postToJS(pFunction);
     }
     void JCScriptRuntime::onNetworkChangedCallJSFunction(int nType)
     {
@@ -449,7 +445,7 @@ namespace laya
     void JCScriptRuntime::jsGC()
     {
         std::function<void(void)> pFunction = std::bind(&JCScriptRuntime::jsGCCallJSFunction, this);
-        m_pScriptThread->post(pFunction);
+        postToJS(pFunction);
     }
     void JCScriptRuntime::jsGCCallJSFunction()
     {
@@ -459,12 +455,12 @@ namespace laya
     void JCScriptRuntime::callJC(std::string sFunctionName, std::string sJsonParam, std::string sCallbackFunction)
     {
         std::function<void(void)> pFunction = std::bind(&JCScriptRuntime::callJSFuncton, this, sFunctionName, sJsonParam, sCallbackFunction );
-        m_pScriptThread->post(pFunction);
+        postToJS(pFunction);
     }
     void JCScriptRuntime::callJSString( std::string sBuffer )
     {
         std::function<void(void)> pFunction = std::bind(&JCScriptRuntime::callJSStringFunction, this,sBuffer);
-        m_pScriptThread->post(pFunction);
+        postToJS(pFunction);
     }
     void JCScriptRuntime::callJSStringFunction( std::string sBuffer )
     {
@@ -486,7 +482,7 @@ namespace laya
     void JCScriptRuntime::restoreAudio()
     {
         std::function<void(void)> pFunction = std::bind(&JCScriptRuntime::jsRestoreAudioFunction, this);
-        m_pScriptThread->post(pFunction);
+        postToJS(pFunction);
     }
     void JCScriptRuntime::jsRestoreAudioFunction()
     {
@@ -498,7 +494,7 @@ namespace laya
     void JCScriptRuntime::jsReloadUrl()
     {
         std::function<void(void)> pFunction = std::bind(&JCScriptRuntime::jsReloadUrlJSFunction, this);
-        m_pScriptThread->post(pFunction);
+        postToJS(pFunction);
     }
     void JCScriptRuntime::jsReloadUrlJSFunction()
     {
@@ -508,7 +504,7 @@ namespace laya
     void JCScriptRuntime::jsUrlback()
     {
         std::function<void(void)> pFunction = std::bind(&JCScriptRuntime::jsUrlbackJSFunction, this);
-        m_pScriptThread->post(pFunction);
+        postToJS(pFunction);
     }
     void JCScriptRuntime::jsUrlbackJSFunction()
     {
@@ -516,15 +512,6 @@ namespace laya
         jsbind::runScript("history.back()", &result);
     }
 
-    bool JCScriptRuntime::isInJSThread(){
-        auto jsThreadID = m_pScriptThread->getTheadID();
-        return (std::this_thread::get_id() == jsThreadID);
-    }
-
-    void JCScriptRuntime::postToJS(const std::function<void(void)>& func)
-    {
-        m_pScriptThread->post(func);
-    }
     /*void JCScriptRuntime::postToDownload(const std::function<void(void)>& funcf)
     {
 
