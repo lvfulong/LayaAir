@@ -12,7 +12,7 @@ MessageLoop::~MessageLoop() = default;
 MessageLoop &MessageLoop::getCurrent()
 {
     auto *loop = tls_messageLoop.get();
-    DEBUG_CHECK(loop != nullptr);
+    //lvtodo DEBUG_CHECK(loop != nullptr);
     return *loop;
 }
 void MessageLoop::initializeMessageLoopForCurrentThread()

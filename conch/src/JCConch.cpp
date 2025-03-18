@@ -72,8 +72,6 @@ namespace laya
     }
     JCConch::JCConch()
     {
-        initializeCurrentThreadAsScriptThread();
-        m_scriptThreadMessageLoop = &MessageLoop::getCurrent();
         m_sCachePath = gRedistPath + "/appCache";
         if (!FileSystem::exists(m_sCachePath))
         {
@@ -161,8 +159,6 @@ namespace laya
         {
             return;
         }
-        initializeCurrentThreadAsScriptThread();
-        JCConch::s_pScriptRuntime->m_scriptThreadMessageLoop = &MessageLoop::getCurrent();
         JCConch::s_pScriptRuntime->start(m_strStartJS.c_str());
         JCAudioManager::GetInstance();
         m_isAppStarted = true;

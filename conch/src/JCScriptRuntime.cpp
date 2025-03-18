@@ -126,7 +126,6 @@ namespace laya
         m_pConch = pConch;
         m_pFileResMgr = pFileMgr;
         m_pAssetsRes = pAssetRes;
-        m_scriptThreadMessageLoop = pConch->m_scriptThreadMessageLoop;
         FontManager::init();
 #if defined(OS_WINDOWS)
         ffplay::VideoPlayer::init();
