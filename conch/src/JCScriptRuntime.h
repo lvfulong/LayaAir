@@ -71,14 +71,11 @@ namespace laya
 
         bool onUpdate(jsvm_env env);
         
-        void onUpdateTimer();
 
         void clearCmdBuffer();
 
         void dispatchLayaGLBuffer(bool bDispatchGC);
 
-        //输入事件触发js
-        void onUpdateInput();
 
         void onThreadExit();
 
@@ -106,8 +103,6 @@ namespace laya
         void onNetworkChanged(int nType);
         void onNetworkChangedCallJSFunction(int nType);
 
-        void callJC( std::string sFunctionName,std::string sJsonParam,std::string sCallbackFunction );
-        void callJSFuncton(std::string sFunctionName, std::string sJsonParam, std::string sCallbackFunction);
 
 		void onBlur();
 

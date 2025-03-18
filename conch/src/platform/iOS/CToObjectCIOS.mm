@@ -1432,28 +1432,29 @@ NSString *callClassMethodWithReflection(NSString *className, NSString *methodNam
 
 std::string CToObjectCPostSyncMessage(const std::string &eventName, const std::string &data)
 {
-    __block NSString* result = @"";
-    __block NSString* nsEventName = [NSString stringWithUTF8String:eventName.c_str()];
-    __block NSString* nsData = [NSString stringWithUTF8String:data.c_str()];
-    dispatch_sync(dispatch_get_main_queue(), ^{
-        NSArray *params = @[nsEventName, nsData];
-        result = callClassMethodWithReflection(@"HandleMessageUtils", @"handleSyncMessageWithEventName:data:", params);
-    });
+    DEBUG_CHECK(laya::isScriptThread());
+    NSString* result = @"";
+    NSString* nsEventName = [NSString stringWithUTF8String:eventName.c_str()];
+    NSString* nsData = [NSString stringWithUTF8String:data.c_str()];
+    
+    NSArray *params = @[nsEventName, nsData];
+    result = callClassMethodWithReflection(@"HandleMessageUtils", @"handleSyncMessageWithEventName:data:", params);
+
     return [result UTF8String];
 }
 void CToObjectCPostAsyncMessage(const std::string &eventName, const std::string &data, std::function<void(std::string)> cb)
 {
-    __block NSString* nsEventName = [NSString stringWithUTF8String:eventName.c_str()];
-    __block NSString* nsData = [NSString stringWithUTF8String:data.c_str()];
+    DEBUG_CHECK(laya::isScriptThread());
+    NSString* nsEventName = [NSString stringWithUTF8String:eventName.c_str()];
+    NSString* nsData = [NSString stringWithUTF8String:data.c_str()];
     typedef void (^TypeName)(NSString *);
-    __block TypeName callback = ^void (NSString *result) {
+    TypeName callback = ^void (NSString *result) {
         cb([result UTF8String]);
     };
     
-     dispatch_async(dispatch_get_main_queue(), ^{
-        NSArray *params = @[nsEventName, nsData, callback];
-        callClassMethodWithReflection(@"HandleMessageUtils", @"handleAsyncMessageWithEventName:data:callback:", params);
-    });
+    NSArray *params = @[nsEventName, nsData, callback];
+    callClassMethodWithReflection(@"HandleMessageUtils", @"handleAsyncMessageWithEventName:data:callback:", params);
+    
 }
 void CToObjectCSetPreferredFramesPerSecond(uint64_t fps)
 {

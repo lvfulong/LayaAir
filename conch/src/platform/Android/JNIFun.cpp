@@ -52,7 +52,7 @@ extern AAssetManager* g_pAssetManager;
 extern std::string gAssetRootPath;
 extern std::string gAPKExpansionMainPath;
 extern std::string gAPKExpansionPatchPath;
-int64_t g_nInitTime = 0;
+//int64_t g_nInitTime = 0;
 
 
 using namespace laya;
@@ -60,32 +60,25 @@ using namespace laya;
 //------------------------------------------------------------------------------
 extern "C"
 {
-	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_configSetParamExt(JNIEnv * env, jobject obj,jstring p_strParamExt);//extparam
-	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_configSetURL(JNIEnv * env, jobject obj,jstring p_strUrl);
-    JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_InitDLib(JNIEnv * env, jobject obj, jobject activity, jobject assetManager,jint nDownloadThreadNum,jstring p_strAssetRootPath,jstring p_strCachePath, jstring p_strAPKExpansionMainPath, jstring p_strAPKExpansionPatchPath);
-	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleTouch(JNIEnv * env, jobject obj,jint type,jint id,jint x,jint y );
-	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleKeyEvent(JNIEnv * env, jobject obj,jint keyCode,jint actionType);
-	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleJoystickEvent(JNIEnv * env, jobject obj,float THUMBL_xOffset,float THUMBL_yOffset,float THUMBR_xOffset,float THUMBR_yOffset,float LT_Offset,float RT_Offset);
-    JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleDeviceMotionEvent(JNIEnv * env, jobject obj, float ax, float ay, float az, float agx, float agy, float agz, float ra, float rb, float rg, float interval);
-    JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleDeviceOrientationEvent(JNIEnv * env, jobject obj, float ra, float rb, float rg);
-    JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_ReleaseDLib(JNIEnv * env, jobject obj );
-    JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_OnAppDestroy(JNIEnv * env, jobject obj );
-    JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_OnAppPause(JNIEnv * env, jobject obj );
+	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_init(JNIEnv* env, jobject obj, jobject activity, jobject options, jobject surface);
+	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_uninit(JNIEnv* env, jobject obj);
+	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleTouch(JNIEnv* env, jobject obj, jint type, jint id,jint x, jint y);
+	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleKeyEvent(JNIEnv* env, jobject obj,jint keyCode,jint actionType);
+	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleJoystickEvent(JNIEnv* env, jobject obj,float THUMBL_xOffset,float THUMBL_yOffset,float THUMBR_xOffset,float THUMBR_yOffset,float LT_Offset,float RT_Offset);
+    JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleDeviceMotionEvent(JNIEnv* env, jobject obj, float ax, float ay, float az, float agx, float agy, float agz, float ra, float rb, float rg, float interval);
+    JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleDeviceOrientationEvent(JNIEnv* env, jobject obj, float ra, float rb, float rg);
+    JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onAppPause(JNIEnv * env, jobject obj );
     JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onSurfaceCreated(JNIEnv * env, jobject obj, jobject surface);
-	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_OnSurfaceResize(JNIEnv * env, jobject obj, int width,int height);
-	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_OnSurfaceDestroy(JNIEnv * env, jobject obj);
-    JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_OnAppResume(JNIEnv * env, jobject obj );
-    JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onDrawFrame(JNIEnv * env, jobject obj );
+	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onSurfaceResize(JNIEnv * env, jobject obj, int width,int height);
+	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onSurfaceDestroy(JNIEnv * env, jobject obj);
+    JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onAppResume(JNIEnv * env, jobject obj );
+    JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_performUpdates(JNIEnv * env, jobject obj );
     JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_exportStaticMethodToC(JNIEnv * env, jobject obj, jstring packcls);
     JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_alertCallback(JNIEnv * env, jobject obj );
-    JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onSensorChanged(JNIEnv * env, jobject obj,float arc );
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_RunJS(JNIEnv* env, jobject obj, jstring jsstr );
-	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_postMsgToRuntime(JNIEnv* env, jobject obj, jstring msg, jstring params);
-	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_exitToPlatform( JNIEnv * env, jobject obj );
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_audioMusicPlayEnd( JNIEnv * env, jobject obj );
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_networkChanged(JNIEnv* env, jobject obj, jint nNetworkType );
     JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_inputChange(JNIEnv* env, jobject obj, jint keycode );	
-    JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_callConchJSFunction(JNIEnv* env, jobject obj, jstring sFunctionName,jstring sJsonParam,jstring sCallbackFunction);
     JNIEXPORT void JNICALL Java_layaair_game_browser_LayaVideoPlayer_emit(JNIEnv* env, jobject obj, jlong ptr, jstring str);
 	JNIEXPORT void JNICALL Java_layaair_game_browser_LayaVideoPlayer_transferBitmap(JNIEnv* env, jobject obj, jobject bitmap, jlong dataPtr);
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleKeyboardInput(JNIEnv* env, jobject obj, jstring strValue);
@@ -95,16 +88,30 @@ extern "C"
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_urlBack(JNIEnv* env, jobject obj);
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleAsyncMessageMethodNative(JNIEnv* env, jobject obj, jlong nativeHandle, jstring result);
 };
-JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_configSetURL(JNIEnv * env, jobject obj,jstring p_strUrl)
-{
-    char* pstrUrl =(char*) env->GetStringUTFChars( p_strUrl, NULL ); 
-	g_kSystemConfig.m_strStartURL = pstrUrl;
-	LOGI("JNI seturl: %s", pstrUrl);
-	env->ReleaseStringUTFChars(p_strUrl, pstrUrl);
+static std::string getStringField(JNIEnv *env, jobject obj, const char *fieldName) {
+	jclass cls = env->GetObjectClass(obj);
+	DEBUG_CHECK(cls != NULL && "getStringField cls is NULL");
+	jfieldID id = env->GetFieldID(cls, fieldName, "Ljava/lang/String;");
+	DEBUG_CHECK(id != NULL && "getStringField id is NULL");
+	jstring jstr = (jstring)env->GetObjectField(obj, id);
+	const char *strValue = env->GetStringUTFChars(jstr, NULL);
+	std::string result(strValue);
+	env->ReleaseStringUTFChars(jstr, strValue);
+	return strValue;
 }
-JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_InitDLib(JNIEnv * env, jobject obj, jobject activity, jobject assetManager,int nThreadNum,jstring p_strAssetRootPath, jstring p_strCachePath , jstring p_strAPKExpansionMainPath, jstring p_strAPKExpansionPatchPath)
+static jobject getObjectField(JNIEnv *env, jobject obj, const char *fieldName) {
+	jclass cls = env->GetObjectClass(obj);
+	DEBUG_CHECK(cls != NULL && "getStringField cls is NULL");
+	jfieldID id = env->GetFieldID(cls, fieldName, "Ljava/lang/Object;");
+    LOGI("cnm %s", fieldName);
+	//DEBUG_CHECK(id != NULL && "getStringField id is NULL");
+	jobject jobj = (jobject)env->GetObjectField(obj, id);
+	DEBUG_CHECK(jobj != NULL && "getObjectField jobj is NULL");
+	return jobj;
+}
+JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_init(JNIEnv * env, jobject obj, jobject activity, jobject joptions, jobject surface)
 {
-	LOGI("JNI InitDLib tid=%x", std::this_thread::get_id());
+	LOGI("JNI init");
 	if(laya::JCConch::s_pConch)
     {
         return;//下面导致线上crash
@@ -113,20 +120,25 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_InitDLib(JNIEnv * env,
 		//例如g_pConch突然为null，可能有人还在用。
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
         //必须走完整流程，例如有的线程还在创建，完了后就正常跑，然后这里g_pConch又被删了
-        Java_layaair_game_browser_ConchJNI_ReleaseDLib(env,obj);
+        Java_layaair_game_browser_ConchJNI_uninit(env,obj);
         LOGI("JNI del old end");        
 	}
-	
+	jobject assetManager = getObjectField(env, joptions, "am");
 	HttpClientAndroid::addStaticMethod(env, "layaair/game/browser/LayaHttpClient");
 	CanvasRenderingContext2DAndroid::addStaticMethod(env, "layaair/game/browser/LayaCanvasRenderingContext2D");
 
     //这个不要放到开始，以影响面上面的异常处理
-    g_nInitTime = tmGetCurms();
-    char* pAssetRootPath =(char*) env->GetStringUTFChars( p_strAssetRootPath, NULL ); 
-	char* pCachePath = (char*)env->GetStringUTFChars( p_strCachePath, NULL);
-	char* pAPKExpansionMain =(char*) env->GetStringUTFChars( p_strAPKExpansionMainPath, NULL ); 
-	char* pAPKExpansionPatch = (char*)env->GetStringUTFChars( p_strAPKExpansionPatchPath, NULL);
-	LOGI( "JNI InitDownLoadManager CachePath=%s, assetroot=%s, APKExpansionMain=%s, APKExpansionPatch=%s ", pCachePath, pAssetRootPath, pAPKExpansionMain, pAPKExpansionPatch);
+    //g_nInitTime = tmGetCurms();
+    std::string pAssetRootPath = getStringField(env, joptions, "assetRoot");
+	std::string pCachePath = getStringField(env, joptions, "cachePath");
+	std::string pAPKExpansionMain = getStringField(env, joptions, "apkExpansionMainPath");
+	std::string pAPKExpansionPatch = getStringField(env, joptions, "apkExpansionPatchPath");
+	std::string pUrl = getStringField(env, joptions, "url");
+
+	g_kSystemConfig.m_strStartURL = pUrl;
+
+
+	LOGI( "JNI Init CachePath = %s, assetroot = %s, APKExpansionMain = %s, APKExpansionPatch = %s ", pCachePath.c_str(), pAssetRootPath.c_str(), pAPKExpansionMain.c_str(), pAPKExpansionPatch.c_str());
 	gRedistPath = pCachePath;
 	gRedistPath +="/";
 	gAssetRootPath = pAssetRootPath;
@@ -136,8 +148,8 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_InitDLib(JNIEnv * env,
     {
 		LOGI("JNI Warning! AssetManager =NULL!! 下面要采用jar流程了。"); 
 		JCZipFile* pZip = new laya::JCZipFile();
-		if( strstr(pAssetRootPath,".jar" ) ||strstr(pAssetRootPath,".JAR" )||strstr(pAssetRootPath,".zip" )||strstr(pAssetRootPath,".apk")||strstr(pAssetRootPath,".APK") ){
-			if(pZip->open(pAssetRootPath))
+		if( strstr(pAssetRootPath.c_str(),".jar" ) ||strstr(pAssetRootPath.c_str(),".JAR" )||strstr(pAssetRootPath.c_str(),".zip" )||strstr(pAssetRootPath.c_str(),".apk")||strstr(pAssetRootPath.c_str(),".APK") ){
+			if(pZip->open(pAssetRootPath.c_str()))
             {
                 LOGI("JNI 打开jar成功。");
 				pZip->InitDir("assets");
@@ -155,10 +167,6 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_InitDLib(JNIEnv * env,
 		pAssets->Init(g_pAssetManager, "",gAPKExpansionMainPath, gAPKExpansionPatchPath);
 		JCConch::s_pAssetsFiles = pAssets;
 	}
-	env->ReleaseStringUTFChars(p_strAssetRootPath, pAssetRootPath);
-	env->ReleaseStringUTFChars(p_strCachePath, pCachePath);
-	env->ReleaseStringUTFChars(p_strAPKExpansionMainPath, pAPKExpansionMain);
-	env->ReleaseStringUTFChars(p_strAPKExpansionPatchPath, pAPKExpansionPatch);
 #if defined(USE_SWAPPY)
 	SwappyGL_init(env, activity);
   	SwappyGL_setSwapIntervalNS(SWAPPY_SWAP_60FPS);
@@ -166,6 +174,12 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_InitDLib(JNIEnv * env,
 
 
 	laya::JCConch::s_pConch.reset(new laya::JCConch());
+
+	ANativeWindow* aNativeWindow = ANativeWindow_fromSurface(env, surface);
+    laya::BackendOptions options;
+    laya::JCConch::s_pConchRender->createBackend(options);
+    laya::JCConch::s_pConchRender->createScreenSurface(aNativeWindow);
+	laya::JCConch::s_pConch->onAppStart();
 }
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleTouch( JNIEnv * env, jobject obj,jint type,jint id,jint x,jint y )
 {
@@ -330,30 +344,30 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleDeviceOrientatio
     strncpy(e.type, "deviceorientation", 256);
     JCConch::s_pConch->dispatchInputEvent(e);
 }
-JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_ReleaseDLib(JNIEnv * env, jobject obj )
+JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_uninit(JNIEnv * env, jobject obj )
 {
-	LOGI("JNI del engine tid=%x", std::this_thread::get_id());
+	LOGI("JNI uninit");
+	DEBUG_CHECK(isScriptThread());
 	JCAudioManager::GetInstance()->stopMp3();
 	laya::JCConch::s_pConch->onAppDestroy();
 	laya::JCConch::s_pConch.reset();
 }
-JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_OnAppDestroy(JNIEnv * env, jobject obj )
+JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onAppPause(JNIEnv * env, jobject obj )
 {
-	LOGI("JNI OnAppDestroy tid=%x", std::this_thread::get_id());
-}
-JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_OnAppPause(JNIEnv * env, jobject obj )
-{
-    LOGI("JNI OnAppPause tid=%x", std::this_thread::get_id());
+    LOGI("JNI onAppPause");
+	DEBUG_CHECK(isScriptThread());
 	laya::JCConch::s_pConch->onAppPause();
 }
-JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_OnAppResume(JNIEnv * env, jobject obj )
+JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onAppResume(JNIEnv * env, jobject obj )
 {
-    LOGI("JNI OnAppResume tid=%x", std::this_thread::get_id());
+    LOGI("JNI onAppResume");
+	DEBUG_CHECK(isScriptThread());
     laya::JCConch::s_pConch->onAppResume();
 }
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onSurfaceCreated(JNIEnv *env, jobject obj, jobject surface)
 {
-	LOGI("JNI OnCreated tid=%x", std::this_thread::get_id());
+	LOGI("JNI onSurfaceCreated");
+	DEBUG_CHECK(isScriptThread());
     ANativeWindow* aNativeWindow = ANativeWindow_fromSurface(env, surface);
     laya::BackendOptions options;
     laya::JCConch::s_pConchRender->createBackend(options);
@@ -361,28 +375,19 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onSurfaceCreated(JNIEn
 	laya::JCConch::s_pConch->onAppStart();
 }
 
-JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_OnSurfaceResize(JNIEnv *env, jobject obj, int width,int height)
+JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onSurfaceResize(JNIEnv *env, jobject obj, int width,int height)
 {
-	LOGI("JNI OnResize tid=%x", std::this_thread::get_id());
-	
-	if( g_nInnerWidth!=width || g_nInnerHeight != height )
-    {
-        LOGI("JNI surface innersize changed : g_nInnerWidth=%d,g_nInnerHeight=%d",width,height);
-		g_nInnerWidth = width;
-		g_nInnerHeight = height;
-		g_bGLCanvasSizeChanged = true;
-
-	}
+	LOGI("JNI onSurfaceResize(%d, %d)", width, height);
+	DEBUG_CHECK(isScriptThread());
     laya::JCConch::s_pConchRender->onScreenSurfaceResize(width, height);
-    LOGI("JNI init dev w=%d,h=%d",width,height);
-    //pRender->onGLDeviceLosted();
 }
-JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_OnSurfaceDestroy(JNIEnv * env, jobject obj)
+JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onSurfaceDestroy(JNIEnv * env, jobject obj)
 {
-	LOGI("JNI OnDestroy tid=%x", std::this_thread::get_id());
+	LOGI("JNI onSurfaceDestroy");
+	DEBUG_CHECK(isScriptThread());
 	laya::JCConch::s_pConchRender->destroyScreenSurface();
 }
-JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onDrawFrame(JNIEnv * env, jobject obj )
+JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_performUpdates(JNIEnv * env, jobject obj )
 {
     laya::JCConch::s_pConch->update();
 }
@@ -391,18 +396,14 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_alertCallback(JNIEnv *
 }
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_exportStaticMethodToC(JNIEnv * env, jobject obj, jstring packcls)
 {
-	LOGI("JNI exportStaticMethodToC tid=%x", std::this_thread::get_id());
+	LOGI("JNI exportStaticMethodToC");
     const char* rawPackCls = env->GetStringUTFChars(packcls, NULL);
 	CToJavaBridge::GetInstance()->addStaticMethod(env,rawPackCls);
     env->ReleaseStringUTFChars(packcls, rawPackCls);
 }
-
-JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onSensorChanged(JNIEnv * env, jobject obj,float arc )
-{
-}
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_RunJS(JNIEnv* env, jobject obj, jstring jsstr )
 {
-	LOGI("JNI RunJS tid=%x", std::this_thread::get_id());
+	LOGI("JNI RunJS");
     if (jsstr)
     {
         const char* rawString = env->GetStringUTFChars(jsstr, NULL);
@@ -410,57 +411,33 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_RunJS(JNIEnv* env, job
         env->ReleaseStringUTFChars(jsstr, rawString);
     }
 }
-JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_postMsgToRuntime(JNIEnv* env, jobject obj, jstring msg, jstring params)
-{
-	LOGI("JNI postMsgToRuntime tid=%x", std::this_thread::get_id());
-    const char* rawMsg = env->GetStringUTFChars(msg, NULL);
-    const char* rawParams = env->GetStringUTFChars(params, NULL);
-    env->ReleaseStringUTFChars(msg, rawMsg);
-    env->ReleaseStringUTFChars(params, rawParams);
-}
-JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_exitToPlatform( JNIEnv * env, jobject obj )
-{
-}
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_audioMusicPlayEnd( JNIEnv * env, jobject obj )
 {
-	LOGI("JNI audioMusicPlayEnd tid=%x", std::this_thread::get_id());
+	LOGI("JNI audioMusicPlayEnd");
 	laya::JCMp3Interface* pMp3Player = laya::JCAudioManager::GetInstance()->m_pMp3Player;
 	if( pMp3Player )
 	{
 		pMp3Player->onPlayEnd();
 	}
 }
-JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_networkChanged(JNIEnv* env, jobject obj, jint nNetworkType )
+JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_networkChanged(JNIEnv* env, jobject obj, jint nNetworkType)
 {
-	LOGI("JNI networkChanged tid=%x", std::this_thread::get_id());
+	LOGI("JNI networkChanged");
     JCConch::s_pScriptRuntime->onNetworkChanged(nNetworkType);
 }
 
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_inputChange(JNIEnv* env, jobject obj, jint keycode)
 {
-	LOGI("JNI inputChange tid=%x", std::this_thread::get_id());
+	LOGI("JNI inputChange");
 	
     if (JCConch::s_pScriptRuntime->m_pCurEditBox)
     {
         JCConch::s_pScriptRuntime->m_pCurEditBox->onInput();
     }
 }
-JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_callConchJSFunction(JNIEnv* env, jobject obj, jstring p_sFunctionName,jstring p_sJsonParam,jstring p_sCallbackFunction)
-{
-	LOGI("JNI callConchJSFunction tid=%x", std::this_thread::get_id());
-    const char* sFunctionName = env->GetStringUTFChars(p_sFunctionName, NULL);
-    const char* sJsonParam = env->GetStringUTFChars(p_sJsonParam, NULL);
-    const char* sCallbackFunction = env->GetStringUTFChars(p_sCallbackFunction, NULL);
-    LOGI(">>>>>>>>Java_layaair_game_browser_ConchJNI_callConchJSFunction functionName=%s, jsonParam=%s, callbackFuncton=%s",sFunctionName, sJsonParam,sCallbackFunction );
-    JCConch::s_pScriptRuntime->callJC( sFunctionName,sJsonParam,sCallbackFunction );
-	env->ReleaseStringUTFChars(p_sFunctionName, sFunctionName);
-    env->ReleaseStringUTFChars(p_sJsonParam, sJsonParam);
-    env->ReleaseStringUTFChars(p_sCallbackFunction, sCallbackFunction);
-}
-
 JNIEXPORT void JNICALL Java_layaair_game_browser_LayaVideoPlayer_emit(JNIEnv* env, jobject obj, jlong ptr, jstring str)
 {
-	LOGI("JNI LayaVideoPlayer_emit tid=%x", std::this_thread::get_id());
+	LOGI("JNI LayaVideoPlayer_emit");
 	
 	JSVideo* pVideo = reinterpret_cast<JSVideo*>(ptr);
 
@@ -477,7 +454,7 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_LayaVideoPlayer_emit(JNIEnv* en
 
 JNIEXPORT void JNICALL Java_layaair_game_browser_LayaVideoPlayer_transferBitmap(JNIEnv* env, jobject obj, jobject bitmap, jlong dataPtr)
 {
-	LOGI("JNI LayaVideoPlayer_transferBitmap tid=%x", std::this_thread::get_id());
+	LOGI("JNI LayaVideoPlayer_transferBitmap");
 	
     AndroidBitmapInfo bmpInfo={0};
 	if(AndroidBitmap_getInfo(env, bitmap, &bmpInfo) < 0)

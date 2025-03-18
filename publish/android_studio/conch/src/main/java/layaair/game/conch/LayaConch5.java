@@ -85,9 +85,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 import static android.content.Context.SENSOR_SERVICE;
 import static android.content.Context.WINDOW_SERVICE;
-public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.FrameCallback {
-	// view
-	private Choreographer mChoreographer;
+public class LayaConch5 implements ILayaGameEgine,OnKeyListener {
 	private static final String TAG = "LayaConch";
 	public AbsoluteLayout m_pAbsLayout = null;
 	public LayaEditBox m_pEditBox = null;
@@ -99,15 +97,13 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 	private boolean m_interceptKey = false;
 	public AssetManager m_AM = null;
 	public Context mCtx = null;
-	public String m_strUrl = "";
-	public String m_strExt = "";
+	public String mUrl = "";
 	public boolean m_bHorizontalScreen ; // 是否横屏
 	private NetworkReceiver m_pNetWorkReveiver;
 	private long m_nBackPressTime = 0;
-	protected int m_nDownloadThreadNum = 3;
 	protected String m_strCachePath = "";
-	protected String m_strExpansionMainPath = "";
-	protected String m_strExpansionPatchPath = "";
+	protected String mExpansionMainPath = "";
+	protected String mExpansionPatchPath = "";
 	static public String m_strSoPath = "";
 	static public String m_strJarFile = "";
 	static public String m_strSoFile = "/libconch.so";
@@ -280,7 +276,6 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 
 	public void onCreate() {
 		// 监听网络
-		Log.e(TAG, ">>>>>>>conchjar android-2.0.8");
 		IntentFilter pFilter = new IntentFilter();
 		pFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
 		try 
@@ -297,7 +292,7 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 
 		boolean initedNative = false;
 		if (m_strSoPath.length() > 0) {
-			String pluginPath = getSoPath() + m_strSoFile;// "libegret.so";
+			String pluginPath = getSoPath() + m_strSoFile;
 			initedNative = ConchJNI.initNativeLibrary(pluginPath, true);
 			if (!initedNative) {
 				throw new RuntimeException("Failed to load native runtime library");
@@ -308,9 +303,7 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 				throw new RuntimeException("Failed to load native runtime library");
 			}
 		}
-		if (m_strUrl.length() > 0) {
-			ConchJNI.configSetURL(m_strUrl);
-		}
+		
 		ExportJavaFunction.m_nState = 0;
 		ExportJavaFunction expjava = ExportJavaFunction.GetInstance();
 		expjava.m_pEngine = this;
@@ -318,20 +311,10 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 		String _marketName = getMarketBundle().getString(MARKET_MARKETNAME);
 
 		PlatformInitOK(0);
-		mChoreographer = Choreographer.getInstance();
-		mChoreographer.postFrameCallback(this);
 	}
 	public void PlatformInitOK(int p_nFlag) {
 		Log.e("0", "==============Java流程 InitMainCanvas()");
 		EngineStart();
-	}
-
-	@Override
-	public void doFrame(long frameTimeNanos) {
-		mChoreographer.postFrameCallback(this);
-		if (m_pCavans != null && m_pCavans.mIsReady) {
-			ConchJNI.onDrawFrame();
-		}
 	}
 
 	static class CacheInfo{
@@ -423,13 +406,22 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 		}
 		Activity activity = (Activity)(mCtx);
 		String cachePath = getAppCacheDir() + "/LayaCache";
+		ConchJNI.ConchOptions options = new ConchJNI.ConchOptions();
 		if (m_AM != null) {
-			ConchJNI.InitDLib(activity, m_AM,getDownloadThreadNum(), "cache", cachePath, m_strExpansionMainPath == null ? "" : m_strExpansionMainPath,m_strExpansionPatchPath == null ? "" : m_strExpansionPatchPath);
+			options.am = m_AM;
+			options.assetRoot = "cache";
 		}
 		else {
-			ConchJNI.InitDLib(activity, null,getDownloadThreadNum(), getJarFile(), cachePath, m_strExpansionMainPath == null ? "" : m_strExpansionMainPath,m_strExpansionPatchPath == null ? "" : m_strExpansionPatchPath);
+			options.am = null;
+			options.assetRoot = getJarFile();
 		}
-		InitView();
+
+
+		options.cachePath = cachePath;
+		options.apkExpansionMainPath = mExpansionMainPath;
+		options.apkExpansionPatchPath = mExpansionPatchPath;
+		options.url = mUrl;
+		InitView(options);
 	}
 
 	public  boolean isOpenNetwork()
@@ -517,8 +509,8 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 		}
 	}
 	@SuppressLint("NewApi") @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	void InitView() {
-		m_pCavans = new ConchSurfaceView(mCtx);
+	void InitView(ConchJNI.ConchOptions options) {
+		m_pCavans = new ConchSurfaceView(mCtx, options);
 		if (m_pAbsLayout == null) {
 			m_pAbsLayout = new AbsoluteLayout(this.mCtx);
 			m_pAbsLayout.setBackgroundColor(0x00ffffff);
@@ -799,13 +791,13 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 
 	public void onPause() 
 	{
-		mChoreographer.removeFrameCallback(this);
-
 		for (LayaVideoPlayer video :  m_videoPlayers) {
 			video.onPause();
 		}
 		if(mBIsSensor)unRegisterSensor();
-		ConchJNI.OnAppPause();//ui thread
+		if (m_pCavans != null) {
+			m_pCavans.onPause();
+		}
 	}
 
 	public NetworkReceiver getNetworkReceiver() {
@@ -846,13 +838,14 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 	// ------------------------------------------------------------------------------
 	public void onResume() 
 	{
-		mChoreographer.postFrameCallback(this);
-
 		for (LayaVideoPlayer video :  m_videoPlayers) {
 			video.onResume();
 		}
 		if(mBIsSensor)registerSensor();
-		ConchJNI.OnAppResume();//ui thread
+		if (m_pCavans != null) {
+			m_pCavans.onResume();
+		}
+
 	}
 	public void onStop() {
 	}
@@ -868,22 +861,16 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 		}
 		delInstance();
 
-		if(m_pCavans!=null){
-			m_pCavans.destroy();
-		}
-		else{
-			Log.e("Canvas", ">>>>>onDestroy m_pCavans is null");
-		}
-
 		LayaAudioMusic.uninit();
 		destroy();
-
-		ConchJNI.ReleaseDLib();
+		if (m_pCavans != null) {
+			m_pCavans.destroy();
+			m_pCavans.mConch.uninit();
+		}
 	}
 	@SuppressLint("NewApi") @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void destroy()
 	{
-		mChoreographer.removeFrameCallback(this);
 		if(m_pAbsLayout!=null)
 			m_pAbsLayout.removeAllViews();
 		m_pAbsLayout.setOnKeyListener(null);
@@ -955,43 +942,29 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 		return 10;
 	}
 
-	public void setGameUrl(String _param) {
-		m_strUrl = _param;
+	public void setGameUrl(String param) {
+		mUrl = param;
 	}
 	
-	public void setParamExt(String _param){
-		m_strExt = _param;
-	}
-	
-	public void setRuntimeExt()
-	{
-		if (m_strExt.length() > 0) {
-			ConchJNI.configSetParamExt(m_strExt);
-		}
-	}
-	
-	public void setSoFile(String _param) {
-		m_strSoFile = _param;
+	public void setSoFile(String param) {
+		m_strSoFile = param;
 	}
 
-	public void setSoPath(String _param) {
-		m_strSoPath = _param;
+	public void setSoPath(String param) {
+		m_strSoPath = param;
 	}
 
-	public void setJarFile(String _param) {
-		m_strJarFile = _param;
+	public void setJarFile(String param) {
+		m_strJarFile = param;
 	}
 
-	public void setAppCacheDir(String _param) {
-		m_strCachePath = _param;
+	public void setAppCacheDir(String param) {
+		m_strCachePath = param;
 	}
 
-	public void setDownloadThreadNum(int nNum){ m_nDownloadThreadNum = nNum;}
-
-	public void setExpansionZipDir( final String mainPath,final String patchPath )
-	{
-		m_strExpansionMainPath = mainPath;
-		m_strExpansionPatchPath = patchPath;
+	public void setExpansionZipDir(final String mainPath, final String patchPath) {
+		mExpansionMainPath = mainPath;
+		mExpansionPatchPath = patchPath;
 	}
 	// 获得so文件路径
 	public String getSoPath() {
@@ -1007,12 +980,6 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 	public String getAppCacheDir() {
 		return m_strCachePath;
 	}
-
-	public int getDownloadThreadNum()
-	{
-		return m_nDownloadThreadNum;
-	}
-
 	// 游戏主动退出游戏
 	public void game_plugin_exitGame() {
 		if (m_layaEventListener != null)

@@ -26,7 +26,6 @@ export const getContext: (a: number) => CPPFunctions;
 
 export const ConchNAPI_InitDLib: (rsmgr: resourceManager.ResourceManager, nThreadNum: number, p_strAssetRootPath: string, p_strCachePath: string) => void;
 export const ConchNAPI_configSetURL: (p_strUrl: string) => void;
-export const ConchNAPI_OnAppStart: () => void;
 export const ConchNAPI_inputChange:(keycode: number) => void;
 export const ConchNAPI_RunJS: (js: string) => void;
 export const ConchNAPI_handleKeyboardInput:(value: string) => void;

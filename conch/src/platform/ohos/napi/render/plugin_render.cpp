@@ -20,7 +20,7 @@ extern "C" {
 
 PluginRender* PluginRender::instance_ = nullptr;
 OH_NativeXComponent_Callback PluginRender::callback_;
-uint64_t PluginRender::animationInterval_ = 16;
+uint64_t PluginRender::animationInterval_ = 1;//16;  默认跑满，现在限制FPS存在问题：设置60，结果30  
 uint64_t PluginRender::lastTime = 0;
 
 
@@ -164,7 +164,7 @@ static uint64_t getCurrentMillSecond() {
 // static
 void PluginRender::timerCb(uv_timer_t* handle)
 {
-    NAPIFun::ConchNAPI_onDrawFrame();
+    laya::JCConch::s_pConch->update();
 }
 
 void PluginRender::SetNativeXComponent(OH_NativeXComponent* component)
@@ -237,8 +237,13 @@ void PluginRender::OnSurfaceCreated(OH_NativeXComponent* component, void* window
         int32_t code = SET_USAGE;
         OHNativeWindow *oHNativeWindow = static_cast<OHNativeWindow *>(window);
         int32_t ret = OH_NativeWindow_NativeWindowHandleOpt(oHNativeWindow, code, NATIVEBUFFER_USAGE_MEM_DMA);
-        NAPIFun::ConchNAPI_OnSurfaceCreated(window);
-        NAPIFun::ConchNAPI_OnSurfaceResize(width_,height_);
+
+        laya::BackendOptions options;
+        laya::JCConch::s_pConchRender->createBackend(options);
+        laya::JCConch::s_pConchRender->createScreenSurface(window);
+	    laya::JCConch::s_pConch->onAppStart();
+
+        laya::JCConch::s_pConchRender->onScreenSurfaceResize(width_, height_);
     }
 }
 
@@ -247,7 +252,7 @@ void PluginRender::OnSurfaceChanged(OH_NativeXComponent* component, void* window
     LOGI("PluginRender::OnSurfaceChanged");
     int32_t ret = OH_NativeXComponent_GetXComponentSize(component, window, &width_, &height_);
     if (ret == OH_NATIVEXCOMPONENT_RESULT_SUCCESS) {
-        NAPIFun::ConchNAPI_OnSurfaceResize(width_,height_);
+        laya::JCConch::s_pConchRender->onScreenSurfaceResize(width_, height_);
     }
 }
 
@@ -310,13 +315,13 @@ void PluginRender::OnShowNative() {
     if (timerInited_) {
         uv_timer_start(&timerHandle_, &PluginRender::timerCb, 0, animationInterval_);
     }
-    NAPIFun::ConchNAPI_OnAppResume();
+    laya::JCConch::s_pConch->onAppResume();
 }
 
 void PluginRender::OnHideNative() {
     LOGI("PluginRender::OnHideNative");
 
-    NAPIFun::ConchNAPI_OnAppPause();
+    laya::JCConch::s_pConch->onAppPause();
 
     if (timerInited_) {
         uv_timer_stop(&timerHandle_);
@@ -328,7 +333,9 @@ void PluginRender::OnDestroyNative() {
     if (timerInited_) {
         uv_timer_stop(&timerHandle_);
     }
-    NAPIFun::ConchNAPI_ReleaseDLib();
+    JCAudioManager::GetInstance()->stopMp3();
+	laya::JCConch::s_pConch->onAppDestroy();
+	laya::JCConch::s_pConch.reset();
 }
 
 napi_value PluginRender::Export(napi_env env, napi_value exports)

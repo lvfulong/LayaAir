@@ -868,7 +868,7 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
     const char* pScript = [script UTF8String];
     if (pScript){
         auto pFunction = std::bind(&CToObjectCRunJS,std::string(pScript));
-        laya::JCConch::s_pScriptRuntime->postToJS(pFunction);
+        laya::postToJS(pFunction);
     }
 }
 -(void)setFileDataHandler:(HandleFileData)func

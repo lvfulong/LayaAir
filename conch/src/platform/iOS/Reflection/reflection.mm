@@ -189,7 +189,7 @@ extern void reflectionCallback(const std::string& jsonret);
     const char* jason = [[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding] UTF8String];
     auto pFunction = std::bind(&reflectionCallback,std::string(jason));
     
-    laya::JCConch::s_pScriptRuntime->postToJS(pFunction);
+    laya::postToJS(pFunction);
 }
 -(void)callbackToJSWithObject:(id)obj methodName:(NSString*)name ret:(NSObject*)retObj
 {
@@ -213,6 +213,6 @@ extern void reflectionCallback(const std::string& jsonret);
     const char* jason = [[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding] UTF8String];
     auto pFunction = std::bind(&reflectionCallback,std::string(jason));
     
-    laya::JCConch::s_pScriptRuntime->postToJS(pFunction);
+    laya::postToJS(pFunction);
 }
 @end

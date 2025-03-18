@@ -22,6 +22,7 @@ class ScriptVM
     jsvm_vm_scope m_vmScope;
     jsvm_env m_env;
     jsvm_env_scope m_envScope;
+    jsvm_handle_scope m_handleScope;
 };
 } // namespace laya
 #endif

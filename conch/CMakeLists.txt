@@ -708,6 +708,7 @@ if(OS_ANDROID)
 		GLESv3
 		OpenSLES
 		utils
+		core
 		jsbind
 		jsvm
 		zlib
@@ -764,6 +765,7 @@ elseif(OS_IOS)
 		"-framework CoreHaptics"
 		${LINK_LIBS}
 		utils
+		core
 		jsbind
 		jsvm
 		zlib
@@ -863,6 +865,7 @@ endif()
 		libnative_buffer.so
 		libohsensor.so
 		utils
+		core
 		jsbind
 		jsvm
 		curl
@@ -900,6 +903,7 @@ elseif(OS_LINUX)
 		#${FREETYPE_LIBRARIES}
 		${FONTCONFIG_LIBRARIES}
   		#${SDL2_LIBRARIES}
+		core
 		freetype
 		SDL2
 		SDL2main

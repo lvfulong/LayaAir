@@ -317,13 +317,11 @@ namespace laya
         }
         m_scriptThreadMessageLoop->processExpiredTasks();
     
-        JCConch::s_pConchRender->postTaskFromJSToRenderSync([this]()->bool {
+        JCConch::s_pConchRender->postTaskFromJSToRenderAsync([this]() {
             if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::OpenGLES) {
                 JCConch::s_pConchRender->start();
             }
-            
-            return true;
-        }).get();
+        });
         
         //PERF_INITVAR(nBenginTime);
 
@@ -338,10 +336,9 @@ namespace laya
             m_pJSOnDrawFunction.call<void>(jsvm::global(), nTime);
             //JS_CATCH;
 
-            JCConch::s_pConchRender->postTaskFromJSToRenderSync([this]()->bool {
+            JCConch::s_pConchRender->postTaskFromJSToRenderAsync([this]() {
                 this->dispatchLayaGLBuffer(true);
-                return true;
-            }).get();
+            });
 			
         }
         JSInput* pInput = JSInput::getInstance();
@@ -452,11 +449,7 @@ namespace laya
         jsvm_value result;
         jsbind::runScript("gc()", &result);
     }
-    void JCScriptRuntime::callJC(std::string sFunctionName, std::string sJsonParam, std::string sCallbackFunction)
-    {
-        std::function<void(void)> pFunction = std::bind(&JCScriptRuntime::callJSFuncton, this, sFunctionName, sJsonParam, sCallbackFunction );
-        postToJS(pFunction);
-    }
+
     void JCScriptRuntime::callJSString( std::string sBuffer )
     {
         std::function<void(void)> pFunction = std::bind(&JCScriptRuntime::callJSStringFunction, this,sBuffer);
@@ -466,18 +459,6 @@ namespace laya
     {
         jsvm_value result;
         jsbind::runScript(sBuffer, &result);
-    }
-    void JCScriptRuntime::callJSFuncton(std::string sFunctionName, std::string sJsonParam, std::string sCallbackFunction)
-    {
-        std::string sBuffer = sFunctionName;
-        sBuffer += "(\"";
-        sBuffer += sJsonParam;
-        sBuffer += "\",\"";
-        sBuffer += sCallbackFunction;
-        sBuffer += "\");";
-        LOGI("JCScriptRuntime::callJSFuncton buffer=%s",sBuffer.c_str() );
-        jsvm_value result;
-        jsbind::runScript( sBuffer, &result);
     }
     void JCScriptRuntime::restoreAudio()
     {

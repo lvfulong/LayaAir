@@ -123,7 +123,7 @@ namespace laya
         {
             FileSystem::mkdir(m_strLocalStoragePath);
         }
-        JCConch::s_pScriptRuntime->start(m_strStartJS.c_str());
+        
 	}
     JCConch::~JCConch() {
 
@@ -161,8 +161,9 @@ namespace laya
         {
             return;
         }
-     
-
+        initializeCurrentThreadAsScriptThread();
+        JCConch::s_pScriptRuntime->m_scriptThreadMessageLoop = &MessageLoop::getCurrent();
+        JCConch::s_pScriptRuntime->start(m_strStartJS.c_str());
         JCAudioManager::GetInstance();
         m_isAppStarted = true;
         JCConch::s_pScriptRuntime->loadJSScript();

@@ -74,7 +74,6 @@ public class GameEngine implements IPlugin {
 			_path = (String) mGameEngineProxy.laya_get_value("CacheDir");
 		mLayaGameEngine.setAlertTitle(mContext.getString( R.string.alert_dialog_title ));
 		mLayaGameEngine.setStringOnBackPressed(mContext.getString( R.string.on_back_pressed ));
-		mLayaGameEngine.setDownloadThreadNum(nDownloadThreadNum);
 		mLayaGameEngine.setAppCacheDir(_path);
 		mLayaGameEngine.setExpansionZipDir( (String)mGameEngineProxy.laya_get_value("ExpansionMainPath"),(String)mGameEngineProxy.laya_get_value("ExpansionPatchPath"));
 		AssetManager am = mContext.getAssets();

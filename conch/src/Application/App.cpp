@@ -389,10 +389,7 @@ void App::run(const Config &config)
                 switch (event.window.event)
                 {
                 case SDL_WINDOWEVENT_RESIZED:
-                    g_nInnerWidth = event.window.data1;
-                    g_nInnerHeight = event.window.data2;
-                    g_bGLCanvasSizeChanged = true;
-                    laya::JCConch::s_pConchRender->onScreenSurfaceResize(g_nInnerWidth, g_nInnerHeight);
+                    laya::JCConch::s_pConchRender->onScreenSurfaceResize(event.window.data1, event.window.data2);
                     break;
                 case SDL_WINDOWEVENT_MINIMIZED:
                     if (!m_min)

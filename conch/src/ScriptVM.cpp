@@ -94,10 +94,13 @@ void ScriptVM::initialize()
 
     // 打开一个新的Env scope，Env只能在scope范围内使用
     jsvm_open_env_scope(m_env, &m_envScope);
+    // 打开一个Handle scope
+    jsvm_open_handle_scope(m_env, &m_handleScope);
 }
 
 void ScriptVM::uninitialize()
 {
+    jsvm_close_handle_scope(m_env, m_handleScope); // 关闭Handle scope
     jsvm_close_env_scope(m_env, m_envScope); // 关闭Env scope
     jsvm_close_vm_scope(m_vm, m_vmScope);    // 关闭VM scope
     jsvm_destroy_env(m_env);                 // 销毁一个JS执行上下文环境

@@ -43,7 +43,7 @@ template <typename T> class BlockingQueue
     }
 
   private:
-    std::mutex m_mutex;
+    mutable std::mutex m_mutex;
     std::condition_variable m_condition;
     std::queue<T> m_queue;
 };

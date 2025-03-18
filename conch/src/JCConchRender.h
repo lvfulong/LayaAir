@@ -44,11 +44,13 @@ class JCConchRender
     template <typename F, typename... Args>
     auto postTaskFromJSToRenderSync(F &&f, Args &&...args) -> std::future<std::result_of_t<F(Args...)>>
     {
+        #if 0
         if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
         {
             return m_WebGLThread->postTaskSync(f); // TODOs
         }
         else
+        #endif
         {
             std::promise<std::result_of_t<F(Args...)>> p;
             p.set_value(f());
@@ -57,11 +59,13 @@ class JCConchRender
     }
     void postTaskFromJSToRenderAsync(std::function<void()> task)
     {
+        #if 0
         if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
         {
-            m_WebGLThread->postTaskSync(task); // TODOs
+            m_WebGLThread->postTaskAsync(task); // TODOs
         }
         else
+        #endif
         {
             task();
         }

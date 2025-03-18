@@ -6,9 +6,7 @@ using namespace laya;
 NAPIFun NAPIFun::fun_;
 bool NAPIFun::m_bTakeScreenshot = false;
 
-void NAPIFun::postCmdToMainThread(int p_nCmd, int p_nParam1, int p_nParam2)
-{
-}
+
 void NAPIFun::ConchNAPI_configSetURL(std::string p_strUrl)
 {
     g_kSystemConfig.m_strStartURL = p_strUrl;
@@ -17,18 +15,9 @@ void NAPIFun::ConchNAPI_InitDLib(napi_value assetManager, int nThreadNum, std::s
 {
     auto fun = NAPIFun::GetInstance();
     LOGI("NAPI InitDLib");
-    if(laya::JCConch::s_pConch)
-    {
-        LOGI("NAPI has an old conch object! delete it");
-        // 如果上次不正常退出，如果时间太短，可能有的线程还在创建过程中。所以等待一会儿。
-        // 例如g_pConch突然为null，可能有人还在用。
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
-        // 必须走完整流程，例如有的线程还在创建，完了后就正常跑，然后这里g_pConch又被删了
-        NAPIFun::ConchNAPI_ReleaseDLib();
-        LOGI("NAPI del old end");
-    }
-    // 这个不要放到开始，以影响面上面的异常处理
-    fun->g_nInitTime = tmGetCurms();
+    DEBUG_CHECK(!laya::JCConch::s_pConch);
+
+    //fun->g_nInitTime = tmGetCurms();
 
     gRedistPath = p_strCachePath;
     gRedistPath += "/";
@@ -40,146 +29,9 @@ void NAPIFun::ConchNAPI_InitDLib(napi_value assetManager, int nThreadNum, std::s
     laya::JCOHOSFileSource *pAssets = new laya::JCOHOSFileSource();
     pAssets->Init(g_pAssetManager, "");
     JCConch::s_pAssetsFiles = pAssets;
-
     laya::JCConch::s_pConch.reset(new laya::JCConch());
+    
 }
-void NAPIFun::ConchNAPI_ReleaseDLib()
-{
-    LOGI("NAPI del engine");
-    /*JCAudioManager::GetInstance()->stopMp3();
-    auto fun = NAPIFun::GetInstance();
-
-    if (fun->g_pConch)
-    {
-        if (tmGetCurms() - fun->g_nInitTime < 2000)
-        {
-            LOGI("NAPI exit need a little wait");
-            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-        }
-        if (fun->g_bInBKGround)
-        {
-            LOGI("NAPI App in background!");
-            JCConch::s_pConchRender->willExit();
-        }
-        fun->g_pConch->onAppDestory();
-        if (g_kSystemConfig.m_nThreadMODE == THREAD_MODE_SINGLE)
-        {
-            JCScriptRuntime::s_JSRT->stop();
-        }
-        delete fun->g_pConch;
-        fun->g_pConch = NULL;
-    }
-    fun->g_bEngineInited = false;*/
-
-    JCAudioManager::GetInstance()->stopMp3();
-	laya::JCConch::s_pConch->onAppDestroy();
-	laya::JCConch::s_pConch.reset();
-
-}
-void NAPIFun::ConchNAPI_OnAppDestroy()
-{
-}
-void NAPIFun::ConchNAPI_OnAppPause()
-{
-    LOGI("NAPI OnAppPause");
-    /*auto fun = NAPIFun::GetInstance();
-    fun->g_bInBKGround = true;
-    if (laya::JCAudioManager::GetInstance()->getMp3Mute() == false && laya::JCAudioManager::GetInstance()->getMp3Stopped() == false)
-    {
-        JCAudioManager::GetInstance()->pauseMp3();
-    }
-    laya::JCAudioManager::GetInstance()->m_pWavPlayer->pause();*/
-
-    laya::JCConch::s_pConch->onAppPause();
-}
-void NAPIFun::ConchNAPI_OnAppResume()
-{
-    LOGI("NAPI OnAppResume");
-    /*auto fun = NAPIFun::GetInstance();
-
-    if (!fun->g_pConch)
-        return;
-    fun->g_bInBKGround = false;
-    // 继续声音
-    if (laya::JCAudioManager::GetInstance()->getMp3Mute() == false && laya::JCAudioManager::GetInstance()->getMp3Stopped() == false)
-    {
-        laya::JCAudioManager::GetInstance()->resumeMp3();
-    }
-    laya::JCAudioManager::GetInstance()->m_pWavPlayer->resume();*/
-
-    laya::JCConch::s_pConch->onAppResume();
-}
-void NAPIFun::ConchNAPI_OnSurfaceCreated(void* window)
-{
-	LOGI("JNI OnCreated tid = %x", std::this_thread::get_id());
-    //ANativeWindow* aNativeWindow = ANativeWindow_fromSurface(env, surface);
-    laya::BackendOptions options;
-    laya::JCConch::s_pConchRender->createBackend(options);
-    laya::JCConch::s_pConchRender->createScreenSurface(window);
-	laya::JCConch::s_pConch->onAppStart();
-}
-void NAPIFun::ConchNAPI_OnSurfaceResize(int width, int height)
-{
-    LOGI("NAPI onGLReady tid = %ld", std::this_thread::get_id());
-    /*auto pRender = JCConch::s_pConchRender;
-    if (g_nInnerWidth != width || g_nInnerHeight != height)
-    {
-        LOGI("NAPI surface innersize changed : g_nInnerWidth=%d,g_nInnerHeight=%d", width, height);
-        g_nInnerWidth = width;
-        g_nInnerHeight = height;
-        g_bGLCanvasSizeChanged = true;
-    }
-    LOGI("NAPI init dev w=%d,h=%d", width, height);
-    pRender->onGLReady();*/
-    LOGI("JNI OnResize tid = %x", std::this_thread::get_id());
-	
-	if( g_nInnerWidth!=width || g_nInnerHeight != height )
-    {
-        LOGI("JNI surface innersize changed : g_nInnerWidth=%d,g_nInnerHeight=%d",width,height);
-		g_nInnerWidth = width;
-		g_nInnerHeight = height;
-		g_bGLCanvasSizeChanged = true;
-
-	}
-    laya::JCConch::s_pConchRender->onScreenSurfaceResize(width, height);
-    LOGI("JNI init dev w = %d, h = %d", width, height);
-}
-void NAPIFun::ConchNAPI_OnAppStart()
-{
-    /*auto fun = NAPIFun::GetInstance();
-    if (fun->g_bEngineInited)
-    {
-        return;
-    }
-    fun->g_kReadyLock.lock();
-    // 启动js线程
-    fun->g_pConch->onAppStart();
-    fun->g_bEngineInited = true;
-    if (g_kSystemConfig.m_nThreadMODE == THREAD_MODE_SINGLE)
-    {
-        JCScriptRuntime::s_JSRT->start(JCConch::s_pConch->m_strStartJS.c_str());
-    }
-
-    fun->g_kReadyLock.unlock();*/
-    LOGI("JNI OnAppStart tid = %x", std::this_thread::get_id());
-}
-void NAPIFun::ConchNAPI_onDrawFrame()
-{
-    /*auto pRender = JCConch::s_pConchRender;
-    if (pRender)
-    {
-        pRender->renderFrame(0, false);
-    }*/
-    laya::JCConch::s_pConch->update();
-}
-/*void NAPIFun::ConchNAPI_onVSyncCallback(long VSynctm)
-{
-    double vsynctm = VSynctm / 1e6;
-    if (JCScriptRuntime::s_JSRT)
-    {
-        JCScriptRuntime::s_JSRT->onVSyncEvent(vsynctm);
-    }
-}*/
 void NAPIFun::ConchNAPI_audioMusicPlayEnd()
 {
     laya::JCMp3Interface *pMp3Player = laya::JCAudioManager::GetInstance()->m_pMp3Player;
@@ -198,9 +50,6 @@ void NAPIFun::ConchNAPI_inputChange(int keycode)
     {
         JCConch::s_pScriptRuntime->m_pCurEditBox->onInput();
     }
-}
-void NAPIFun::ConchNAPI_captureScreenCallBack(int w, int h, std::string byteArray)
-{
 }
 void NAPIFun::ConchNAPI_RunJS(const std::string &js)
 {
@@ -222,18 +71,9 @@ JSBIND_GLOBAL()
 {
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_configSetURL, "ConchNAPI_configSetURL");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_InitDLib, "ConchNAPI_InitDLib");
-    JSBIND_FUNCTION(NAPIFun::ConchNAPI_ReleaseDLib, "ConchNAPI_ReleaseDLib");
-    JSBIND_FUNCTION(NAPIFun::ConchNAPI_OnAppDestroy, "ConchNAPI_OnAppDestroy");
-    JSBIND_FUNCTION(NAPIFun::ConchNAPI_OnAppPause, "ConchNAPI_OnAppPause");
-    JSBIND_FUNCTION(NAPIFun::ConchNAPI_OnAppResume, "ConchNAPI_OnAppResume");
-    JSBIND_FUNCTION(NAPIFun::ConchNAPI_OnSurfaceResize, "ConchNAPI_OnSurfaceResize");
-    JSBIND_FUNCTION(NAPIFun::ConchNAPI_OnAppStart, "ConchNAPI_OnAppStart");
-    JSBIND_FUNCTION(NAPIFun::ConchNAPI_onDrawFrame, "ConchNAPI_onDrawFrame");
-    //JSBIND_FUNCTION(NAPIFun::ConchNAPI_onVSyncCallback, "ConchNAPI_onVSyncCallback");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_audioMusicPlayEnd, "ConchNAPI_audioMusicPlayEnd");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_networkChanged, "ConchNAPI_networkChanged");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_inputChange, "ConchNAPI_inputChange");
-    JSBIND_FUNCTION(NAPIFun::ConchNAPI_captureScreenCallBack, "ConchNAPI_captureScreenCallBack");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_RunJS, "ConchNAPI_RunJS");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_handleKeyboardInput, "ConchNAPI_handleKeyboardInput");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_handleKeyboardConfirm, "ConchNAPI_handleKeyboardConfirm");

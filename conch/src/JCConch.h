@@ -103,7 +103,6 @@ namespace laya
         std::vector<std::function<void(void)>>  m_tasks;
         std::mutex                              m_mutex;
         bool                                    m_isAppStarted = { false };
-        MessageLoop*                            m_scriptThreadMessageLoop;
 	};
 };
 //------------------------------------------------------------------------------

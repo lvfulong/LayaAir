@@ -32,24 +32,12 @@ class NAPIFun
     {
         return &NAPIFun::fun_;
     }
-
-    static void postCmdToMainThread(int p_nCmd, int p_nParam1, int p_nParam2);
     static void ConchNAPI_configSetURL(std::string p_strUrl);
     static void ConchNAPI_InitDLib(napi_value assetManager, int nThreadNum, std::string p_strAssetRootPath,
                                    std::string p_strCachePath);
-    static void ConchNAPI_ReleaseDLib();
-    static void ConchNAPI_OnAppDestroy();
-    static void ConchNAPI_OnAppPause();
-    static void ConchNAPI_OnAppResume();
-    static void ConchNAPI_OnSurfaceCreated(void *window);
-    static void ConchNAPI_OnSurfaceResize(int width, int height);
-    static void ConchNAPI_OnAppStart();
-    static void ConchNAPI_onDrawFrame();
-    static void ConchNAPI_onVSyncCallback(long VSynctm);
     static void ConchNAPI_audioMusicPlayEnd();
     static void ConchNAPI_networkChanged(int nNetworkType);
     static void ConchNAPI_inputChange(int keycode);
-    static void ConchNAPI_captureScreenCallBack(int w, int h, std::string byteArray);
     static void ConchNAPI_RunJS(const std::string &js);
     static void ConchNAPI_handleKeyboardInput(const std::string &value);
     static void ConchNAPI_handleKeyboardConfirm(const std::string &value);
@@ -60,7 +48,7 @@ class NAPIFun
     // std::mutex g_kReadyLock;
     // laya::JCConch *g_pConch= NULL;
     // bool g_bInBKGround = false;
-    int64_t g_nInitTime = 0;
+    //int64_t g_nInitTime = 0;
 
   private:
     static NAPIFun fun_;
