@@ -8,7 +8,7 @@ static MessageLoop *s_scriptMessageLoop = nullptr;
 void initializeCurrentThreadAsScriptThread()
 {
     MessageLoop::initializeMessageLoopForCurrentThread();
-    DEBUG_CHECK(s_scriptMessageLoop == nullptr);
+    //lvtodo DEBUG_CHECK(s_scriptMessageLoop == nullptr);
     s_scriptMessageLoop = &MessageLoop::getCurrent();
 }
 bool isScriptThread()

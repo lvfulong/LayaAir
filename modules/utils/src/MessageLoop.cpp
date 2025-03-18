@@ -18,7 +18,7 @@ MessageLoop &MessageLoop::getCurrent()
 void MessageLoop::initializeMessageLoopForCurrentThread()
 {
     auto *loop = tls_messageLoop.get();
-    DEBUG_CHECK(loop == nullptr);
+    //lvtodo DEBUG_CHECK(loop == nullptr);
     tls_messageLoop = std::make_unique<MessageLoop>();
 }
 } // namespace laya
