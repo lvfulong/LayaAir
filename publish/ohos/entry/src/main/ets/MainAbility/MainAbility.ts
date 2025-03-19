@@ -58,11 +58,11 @@ export default class MainAbility extends UIAbility {
       switch (stageEventType) {
         case 5:
         case window.WindowStageEventType.RESUMED:
-          nativeAppLifecycle.onShow();
+          //nativeAppLifecycle.onShow();
           break;
         case 6:
         case window.WindowStageEventType.PAUSED:
-          nativeAppLifecycle.onHide();
+          //nativeAppLifecycle.onHide();
           break;
         default:
           break;
