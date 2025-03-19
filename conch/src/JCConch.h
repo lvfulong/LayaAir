@@ -1,11 +1,3 @@
-/**
-@file			JCConch.h
-@brief			
-@author			James
-@version		1.0
-@date			2017_11_28
-*/
-
 #ifndef __JCConch_H__
 #define __JCConch_H__
 
@@ -80,7 +72,6 @@ namespace laya
 
         void dispatchEngineEvent(const EngineEventBase&  e);
 
-        OS* getOS();
     public:
 
         static std::shared_ptr<JCConch>         s_pConch;
@@ -97,7 +88,6 @@ namespace laya
         bool					                m_bDestroying;
         std::vector<std::string>                m_vUrlHistory;
         int                                     m_nUrlHistoryPos;
-        std::unique_ptr<OS>                     m_OS;
     public:
 
         std::vector<std::function<void(void)>>  m_tasks;
@@ -105,9 +95,4 @@ namespace laya
         bool                                    m_isAppStarted = { false };
 	};
 };
-//------------------------------------------------------------------------------
-
-
-#endif //__JCConch_H__
-
-//-----------------------------END FILE--------------------------------
+#endif

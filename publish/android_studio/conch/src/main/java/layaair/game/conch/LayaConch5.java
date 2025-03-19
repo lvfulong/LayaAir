@@ -407,16 +407,7 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener {
 		Activity activity = (Activity)(mCtx);
 		String cachePath = getAppCacheDir() + "/LayaCache";
 		ConchJNI.ConchOptions options = new ConchJNI.ConchOptions();
-		if (m_AM != null) {
-			options.am = m_AM;
-			options.assetRoot = "cache";
-		}
-		else {
-			options.am = null;
-			options.assetRoot = getJarFile();
-		}
-
-
+		options.am = m_AM;
 		options.cachePath = cachePath;
 		options.apkExpansionMainPath = mExpansionMainPath;
 		options.apkExpansionPatchPath = mExpansionPatchPath;

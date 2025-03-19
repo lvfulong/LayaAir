@@ -22,7 +22,6 @@ namespace fs = ghc::filesystem;
 #endif
 namespace laya
 {
-
 bool readFileSync(const char *p_pszFile, JCBuffer &p_buf, int p_nEncode = JCBuffer::raw);
 bool readFileSync(const char* p_pszFile, std::shared_ptr<Data>& p_buf, int p_nEncode = JCBuffer::raw);
 std::string readFileSync1(const char *p_pszFile, const char *p_pszEncode);

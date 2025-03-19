@@ -12,7 +12,6 @@
 #include <aki/jsbind.h>
 #include <rawfile/raw_file_manager.h>
 #include <utils/thread/JCLayaThreadPool.h>
-// using namespace laya;
 
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
@@ -20,7 +19,6 @@ extern bool g_bGLCanvasSizeChanged;
 extern std::string gRedistPath;
 
 extern NativeResourceManager *g_pAssetManager;
-extern std::string gAssetRootPath;
 
 class NAPIFun
 {
@@ -33,8 +31,7 @@ class NAPIFun
         return &NAPIFun::fun_;
     }
     static void ConchNAPI_configSetURL(std::string p_strUrl);
-    static void ConchNAPI_InitDLib(napi_value assetManager, int nThreadNum, std::string p_strAssetRootPath,
-                                   std::string p_strCachePath);
+    static void ConchNAPI_InitDLib(napi_value assetManager, std::string p_strCachePath);
     static void ConchNAPI_audioMusicPlayEnd();
     static void ConchNAPI_networkChanged(int nNetworkType);
     static void ConchNAPI_inputChange(int keycode);
@@ -44,17 +41,7 @@ class NAPIFun
     static void ConchNAPI_handleKeyboardComplete(const std::string &value);
 
   private:
-    // bool g_bEngineInited =false;
-    // std::mutex g_kReadyLock;
-    // laya::JCConch *g_pConch= NULL;
-    // bool g_bInBKGround = false;
-    //int64_t g_nInitTime = 0;
-
-  private:
     static NAPIFun fun_;
-
-  public:
-    static bool m_bTakeScreenshot;
 };
 
 #endif

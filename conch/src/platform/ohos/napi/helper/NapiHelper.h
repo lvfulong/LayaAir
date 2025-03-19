@@ -1,7 +1,6 @@
 #include "JCConch.h"
 #include <aki/jsbind.h>
 #include <hilog/log.h>
-// using namespace laya;
 
 class NapiHelper
 {

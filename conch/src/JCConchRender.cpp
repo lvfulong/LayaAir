@@ -284,9 +284,6 @@ void JCConchRender::destroyScreenSurface()
 }
 void JCConchRender::createBackend(const BackendOptions &options)
 {
-    initializeCurrentThreadAsScriptThread();
-    JCConch::s_pScriptRuntime->m_scriptThreadMessageLoop = &MessageLoop::getCurrent();
-
     auto func = [this, options]() {
         if (m_GfxBackend == nullptr)
         {

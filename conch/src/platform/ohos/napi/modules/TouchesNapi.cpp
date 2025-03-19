@@ -1,9 +1,10 @@
 #include "TouchesNapi.h"
-
-
 #include <utils/InputTypes.h>
 #include "JCConch.h"
+
+
 using namespace laya;
+
 extern "C"
 {
     void nativeHandleTouchDown(int id, int x, int y)

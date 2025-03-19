@@ -4,24 +4,20 @@
 using namespace laya;
 
 NAPIFun NAPIFun::fun_;
-bool NAPIFun::m_bTakeScreenshot = false;
-
+NativeResourceManager* g_pAssetManager = nullptr;
 
 void NAPIFun::ConchNAPI_configSetURL(std::string p_strUrl)
 {
     g_kSystemConfig.m_strStartURL = p_strUrl;
 }
-void NAPIFun::ConchNAPI_InitDLib(napi_value assetManager, int nThreadNum, std::string p_strAssetRootPath, std::string p_strCachePath)
+void NAPIFun::ConchNAPI_InitDLib(napi_value assetManager, std::string p_strCachePath)
 {
     auto fun = NAPIFun::GetInstance();
-    LOGI("NAPI InitDLib");
+    LOGI("NAPI InitDLib %s ", p_strCachePath.c_str());
     DEBUG_CHECK(!laya::JCConch::s_pConch);
-
-    //fun->g_nInitTime = tmGetCurms();
 
     gRedistPath = p_strCachePath;
     gRedistPath += "/";
-    gAssetRootPath = p_strAssetRootPath;
 
     napi_env env = aki::JSBind::GetScopedEnv();
     g_pAssetManager = OH_ResourceManager_InitNativeResourceManager(env, assetManager);
@@ -29,7 +25,7 @@ void NAPIFun::ConchNAPI_InitDLib(napi_value assetManager, int nThreadNum, std::s
     laya::JCOHOSFileSource *pAssets = new laya::JCOHOSFileSource();
     pAssets->Init(g_pAssetManager, "");
     JCConch::s_pAssetsFiles = pAssets;
-    laya::JCConch::s_pConch.reset(new laya::JCConch());
+
     
 }
 void NAPIFun::ConchNAPI_audioMusicPlayEnd()

@@ -48,7 +48,6 @@ endif()
 
 if(CONCH_USE_OLD_CURL_DOWNLOAD)
 	list(APPEND CONCH_SRC
-
 	src/downloadMgr/JCCurlWrap.h
 	src/downloadMgr/JCCurlWrap.cpp)
 endif()
@@ -60,11 +59,6 @@ if(CONCH_USE_JPEG_XL)
 endif()
 if(CONCH_USE_DCC)
 	list(APPEND CONCH_SRC
-
-	src/downloadCache/DCC1/JCFileTable.cpp
-	src/downloadCache/DCC1/JCServerFileCache.h
-	src/downloadCache/DCC1/JCServerFileCache.cpp
-	src/downloadCache/DCC1/JCFileResDCC.cpp
 	src/downloadCache/DCC2/JCFileResDCC2.cpp
 	src/downloadCache/DCC2/JSDownloader.cpp
 	)
@@ -428,7 +422,6 @@ list(APPEND CONCH_SRC
 	src/JCScriptRuntime.cpp
 	src/JCSystemConfig.h
 	src/JCSystemConfig.cpp
-	src/platform/src/OS.cpp
 	src/backend/src/IBackend.cpp
 	src/ScriptVM.h
 	src/ScriptVM.cpp
