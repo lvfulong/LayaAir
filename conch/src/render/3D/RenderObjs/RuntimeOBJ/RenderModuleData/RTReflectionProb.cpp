@@ -43,8 +43,10 @@ namespace laya
             else
                 shaderData->removeDefine(Sprite3DRenderDeclarationProperty::SHADERDEFINE_IBL_RGBD);
            
-            if(ambientSH!=nullptr)
+            if (ambientSH != nullptr) {
+
                 shaderData->setBuffer(RenderableSprite3DProperty::AMBIENTSH, (uint8_t*)ambientSH, ambientSHByteLength);
+            }
         }
         else {
             shaderData->removeDefine(Sprite3DRenderDeclarationProperty::SHADERDEFINE_GI_LEGACYIBL);

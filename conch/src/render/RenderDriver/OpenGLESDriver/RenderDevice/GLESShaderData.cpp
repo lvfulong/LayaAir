@@ -220,6 +220,7 @@ void GLESShaderData::setInt(int32_t index, int32_t value)
                     replaceUbo->setInt(index, std::any_cast<int32_t>(data->m_data[index]));
                 }
             }
+
             };
         _updateCacheArray[index] = fun;
     }

@@ -37,7 +37,7 @@ namespace laya
 			stateinfo->state = new GLESBufferState();
 			std::vector<GLESVertexBuffer*> vertexArray = geometry->_bufferState->_vertexBuffers;
 			GLESVertexBuffer* worldMatVertex = new GLESVertexBuffer(BufferTargetType::ARRAY_BUFFER, BufferUsage::Dynamic);
-			worldMatVertex->setDataLength(GLESInstanceRenderElement3D::maxInstanceCount * 16 * 4);
+			worldMatVertex->setDataLength(GLESInstanceRenderElement3D::maxInstanceCount * 20 * 4);
 			worldMatVertex->_shaderValues = *LayaGL::m_pWebglEngine->getGlobalVertexDeclaration("instanceWorldMatrixDeclaration");
 			worldMatVertex->_instanceBuffer = true;
 			vertexArray.push_back(worldMatVertex);
@@ -179,6 +179,14 @@ namespace laya
 			{
 				pass->nodeCommonMap.clear();
 			}
+
+			if (owner != nullptr) {
+				pass->additionShaderData = &owner->_additionShaderDataKeys;
+			}
+			else
+			{
+				pass->additionShaderData = nullptr;
+			}
 			
 			RTShaderPass::CacheShaderItem* item = pass->getCacheShader(comDef);
 			GLESShaderInstance* shader;
@@ -200,12 +208,18 @@ namespace laya
 
 		case BaseRenderType::MeshRender: 
 		{
-			worldMatrixData = addUpdateBuffer(_instanceStateInfo->worldInstanceVB,16, GLESInstanceRenderElement3D::maxInstanceCount)->data();
+			worldMatrixData = addUpdateBuffer(_instanceStateInfo->worldInstanceVB,20, GLESInstanceRenderElement3D::maxInstanceCount)->data();
 
 			drawCount = _instanceElementList.size();
 			geometry->setInstanceCount(drawCount);
 			for (uint32_t i = 0; i < drawCount; i++) {
-				memcpy(worldMatrixData + i * 16, _instanceElementList[i]->transform->getWorldMatrix().elements, 16 * sizeof(float));
+				memcpy(worldMatrixData + i * 20, _instanceElementList[i]->transform->getWorldMatrix().elements, 16 * sizeof(float));
+				Vector4& params = _instanceElementList[i]->owner->worldParams;
+				int ind = i * 20 + 16;
+				worldMatrixData[ind] = (float)params.x;
+				worldMatrixData[ind+1] = (float)params.y;
+				worldMatrixData[ind+2] = (float)params.z;
+				worldMatrixData[ind+3] = (float)params.w;
 			}
 			bool haveLightMap = renderShaderData->hasDefine(RenderableSprite3D::SAHDERDEFINE_LIGHTMAP) && renderShaderData->hasDefine(MeshSprite3DShaderDeclaration::SHADERDEFINE_UV1);
 			if (haveLightMap) {

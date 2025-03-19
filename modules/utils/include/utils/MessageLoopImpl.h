@@ -2,7 +2,7 @@
 #define __MESSAGELOOPIMPL_H__
 
 #include <memory>
-
+#include "utils/Time.h"
 namespace laya
 {
 

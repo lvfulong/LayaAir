@@ -161,7 +161,7 @@ void  GLESEngine::_initBufferBlock() {
         glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &maxBlockCount);
         maxBlockCount = maxBlockCount > 32 ? 32 : maxBlockCount;
         _uboBindingMap.resize(maxBlockCount);
-        for (int i = 0; i++; i < maxBlockCount) {
+        for (int i = 0;i < maxBlockCount; i++ ) {
             _uboBindingMap[i] = UboBindingMapInfo(nullptr, 0, 0);
         }
     }

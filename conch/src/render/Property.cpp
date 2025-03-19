@@ -201,7 +201,7 @@ namespace laya
     void Sprite3DProperty::__init__()
     {
         Sprite3DProperty::WORLDMATRIX = LayaGL::m_pWebglEngine->propertyNameToID("u_WorldMat");
-        Sprite3DProperty::WORLDINVERTFRONT = LayaGL::m_pWebglEngine->propertyNameToID("u_WroldInvertFront");
+        Sprite3DProperty::WORLDINVERTFRONT = LayaGL::m_pWebglEngine->propertyNameToID("u_WorldInvertFront");
     }
     RTShaderDefine Sprite3DRenderDeclarationProperty::SHADERDEFINE_SPECCUBE_BOX_PROJECTION;
     RTShaderDefine Sprite3DRenderDeclarationProperty::SHADERDEFINE_GI_LEGACYIBL;
