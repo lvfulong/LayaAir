@@ -6,7 +6,6 @@ project(${TARGET})
 set(PUBLIC_HEADER_DIR include)
 
 set(HEADERS
-    ${PUBLIC_HEADER_DIR}/${TARGET}/RefObject.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Log.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/ListNode.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/JCZlib.h
@@ -35,7 +34,6 @@ set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/Preprocessor.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/ColorParser.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/IniFile.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/Types.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Data.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Tracer.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Trace.h
@@ -67,7 +65,6 @@ set(SOURCES
     src/thread/JCWorkSemaphore.cpp
     src/ColorParser.cpp
     src/IniFile.cpp
-    src/Types.cpp
     src/Data.cpp
     src/Tracer.cpp
     src/MessageLoop.cpp

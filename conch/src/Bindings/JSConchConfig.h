@@ -40,11 +40,6 @@ namespace laya
 	    static void setDownloadNoResponseTimeout(int p_nDuration);
 	    static void resetDownloadNoResponseTimeout();
 
-        /** @brief 设置外部版本控制字符串，例如 index.htm?ver=10 则 p_pszVersion就是 ver
-         *  @param p_pszVersion NULL或者 "" 表示不进行外部版本管理
-         */
-        static void setDownloadVersionString(const char* p_pszVersion);
-
         static void setScreenScale(float fScaleW, float fScaleH, float ftx, float fty);
         static float getScreenScaleW();
         static float getScreenScaleH();
@@ -142,7 +137,6 @@ namespace laya
         static float                   m_fScreenScaleH;
         static float                   m_fScreenTx;
         static float                   m_fScreenTy;
-        static bool                     s_useDCC2;
     };
 }
 #endif

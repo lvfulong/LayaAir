@@ -1,4 +1,4 @@
-#include "OSAndroid.h"
+#include <platform/OS.h>
 #include "CToJavaBridge.h"
 #include "HandleAsyncMessageMethodRecord.h"
 #include <JCConch.h>
@@ -9,11 +9,7 @@
 #endif
 namespace laya
 {
-
-OSAndroid::~OSAndroid()
-{
-}
-int OSAndroid::getUsedMem()
+int OS::getUsedMem()
 {
     CToJavaBridge::JavaRet kRet;
     if (CToJavaBridge::GetInstance()->callMethod("layaair.game.utility.ProcessInfo", "getUsedMem", kRet,
@@ -23,7 +19,7 @@ int OSAndroid::getUsedMem()
     }
     return 0;
 }
-float OSAndroid::getTotalMem()
+float OS::getTotalMem()
 {
     CToJavaBridge::JavaRet kRet;
     if (CToJavaBridge::GetInstance()->callMethod("layaair.game.utility.ProcessInfo", "getTotalMem", kRet,
@@ -33,7 +29,7 @@ float OSAndroid::getTotalMem()
     }
     return 0;
 }
-int OSAndroid::getAvalidMem()
+int OS::getAvalidMem()
 {
 
     CToJavaBridge::JavaRet kRet;
@@ -45,7 +41,7 @@ int OSAndroid::getAvalidMem()
     return 0;
 }
 
-int OSAndroid::getMemoryUsageInByte()
+int OS::getMemoryUsageInByte()
 {
     CToJavaBridge::JavaRet kRet;
     if (CToJavaBridge::GetInstance()->callMethod("layaair.game.utility.ProcessInfo", "getMemoryUsageInByte", kRet,
@@ -55,12 +51,12 @@ int OSAndroid::getMemoryUsageInByte()
     }
     return 0;
 }
-void OSAndroid::exit()
+void OS::exit()
 {
     CToJavaBridge::JavaRet ret;
     CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "exit", ret);
 }
-int OSAndroid::getNetworkType()
+int OS::getNetworkType()
 {
     CToJavaBridge::JavaRet kRet;
     if (CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "getContextedType", kRet,
@@ -70,17 +66,17 @@ int OSAndroid::getNetworkType()
     }
     return 1;
 }
-void OSAndroid::setScreenWakeLock(bool bWakeLock)
+void OS::setScreenWakeLock(bool bWakeLock)
 {
     CToJavaBridge::JavaRet kRet;
     CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setScreenWakeLock", bWakeLock, kRet);
 }
-void OSAndroid::setSensorAble(bool bSensorAble)
+void OS::setSensorAble(bool bSensorAble)
 {
     CToJavaBridge::JavaRet kRet;
     CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setSensorAble", bSensorAble, kRet);
 }
-int OSAndroid::getSafeInsetTop()
+int OS::getSafeInsetTop()
 {
     int safeInsetTop = 0;
     int safeInsetLeft = 0;
@@ -89,7 +85,7 @@ int OSAndroid::getSafeInsetTop()
     CToJavaBridge::GetInstance()->getSafeInsetRect(safeInsetLeft, safeInsetTop, safeInsetRight, safeInsetBottom);
     return safeInsetTop;
 }
-int OSAndroid::getSafeInsetLeft()
+int OS::getSafeInsetLeft()
 {
     int safeInsetTop = 0;
     int safeInsetLeft = 0;
@@ -98,7 +94,7 @@ int OSAndroid::getSafeInsetLeft()
     CToJavaBridge::GetInstance()->getSafeInsetRect(safeInsetLeft, safeInsetTop, safeInsetRight, safeInsetBottom);
     return safeInsetLeft;
 }
-int OSAndroid::getSafeInsetBottom()
+int OS::getSafeInsetBottom()
 {
     int safeInsetTop = 0;
     int safeInsetLeft = 0;
@@ -107,7 +103,7 @@ int OSAndroid::getSafeInsetBottom()
     CToJavaBridge::GetInstance()->getSafeInsetRect(safeInsetLeft, safeInsetTop, safeInsetRight, safeInsetBottom);
     return safeInsetBottom;
 }
-int OSAndroid::getSafeInsetRight()
+int OS::getSafeInsetRight()
 {
     int safeInsetTop = 0;
     int safeInsetLeft = 0;
@@ -116,7 +112,7 @@ int OSAndroid::getSafeInsetRight()
     CToJavaBridge::GetInstance()->getSafeInsetRect(safeInsetLeft, safeInsetTop, safeInsetRight, safeInsetBottom);
     return safeInsetRight;
 }
-jsvm_value OSAndroid::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
+jsvm_value OS::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
     std::string result;
     static const char *s_methodSign = "(Ljava/lang/String;Ljava/lang/String;J)V";
@@ -126,23 +122,13 @@ jsvm_value OSAndroid::postAsyncMessage(std::weak_ptr<int> cbref, const std::stri
     jmethodID methodID = NULL;
 
     HandleAsyncMessageMethodRecord *pHandleAsyncMessageMethodRecord = new HandleAsyncMessageMethodRecord();
-    //auto isolate = v8::Isolate::GetCurrent();
-    //auto context = isolate->GetCurrentContext();
 
-    //napi_deferred deferred;
-    //napi_value promise;
-
-    //napi_create_promise(context, &deferred, &promise);
     auto promise = jsbind::Promise::Make();
     pHandleAsyncMessageMethodRecord->m_callback = [promise, cbref,
                                                    pHandleAsyncMessageMethodRecord](std::string message) {
         postToJS([promise, message, cbref, pHandleAsyncMessageMethodRecord]() {
             if (!cbref.lock())
                 return;
-            //auto isolate = v8::Isolate::GetCurrent();
-            //auto context = isolate->GetCurrentContext();
-            //napi_value v = jsvm_valueFromV8LocalValue(MakeJSValue<const char *>(message));
-            //napi_resolve_deferred(context, deferred, v);
             promise.resolve(message);
             delete pHandleAsyncMessageMethodRecord;
         });
@@ -163,10 +149,9 @@ jsvm_value OSAndroid::postAsyncMessage(std::weak_ptr<int> cbref, const std::stri
         env->ExceptionDescribe();
         env->ExceptionClear();
     }
-    //return V8LocalValueFromjsvm_value(promise);
     return promise.getHandle();
 }
-std::string OSAndroid::postSyncMessage(const std::string &eventName, const std::string &data)
+std::string OS::postSyncMessage(const std::string &eventName, const std::string &data)
 {
     std::string result;
     static const char *s_methodSign = "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;";
@@ -196,7 +181,7 @@ std::string OSAndroid::postSyncMessage(const std::string &eventName, const std::
     }
     return result;
 }
-void OSAndroid::setPreferredFramesPerSecond(uint64_t fps)
+void OS::setPreferredFramesPerSecond(uint64_t fps)
 {
     if (fps > 0)
     {
@@ -207,5 +192,19 @@ void OSAndroid::setPreferredFramesPerSecond(uint64_t fps)
         }
     #endif
     }
+}
+std::string OS::getExePath()
+{
+    char buf[2048];
+    memset(buf, 0, 2048);
+    ssize_t len = readlink("/proc/self/exe", buf, sizeof(buf) - 1);
+    if (len <= 0)
+    {
+        LOGE("getExePath failed");
+        return "";
+    }
+    buf[len] = 0;
+    std::string ret(buf);
+    return ret;
 }
 } // namespace laya

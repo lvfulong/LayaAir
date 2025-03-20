@@ -1,46 +1,43 @@
-#include "OSiOS.h"
+#include <platform/OS.h>
 #include "CToObjectC.h"
 #include <JCConch.h>
 #include <utils/Log.h>
 namespace laya
 {
 
-OSiOS::~OSiOS()
-{
-}
-int OSiOS::getUsedMem()
+int OS::getUsedMem()
 {
     return CToObjectCGetUsedMem();
 }
-float OSiOS::getTotalMem()
+float OS::getTotalMem()
 {
     return CToObjectCGetTotalMem();
 }
-int OSiOS::getAvalidMem()
+int OS::getAvalidMem()
 {
     return CToObjectCGetAvalidMem();
 }
-int OSiOS::getMemoryUsageInByte()
+int OS::getMemoryUsageInByte()
 {
     return CToObjectCGetMemoryUsageInByte();
 }
-void OSiOS::exit()
+void OS::exit()
 {
     abort();
 }
-int OSiOS::getNetworkType()
+int OS::getNetworkType()
 {
     return CToObjectCGetNetworkType();
 }
-void OSiOS::setScreenWakeLock(bool bWakeLock)
+void OS::setScreenWakeLock(bool bWakeLock)
 {
     CToObjectCSetScreenWakeLock(bWakeLock);
 }
-void OSiOS::setSensorAble(bool bSensorAble)
+void OS::setSensorAble(bool bSensorAble)
 {
     CToObjectCSetSensorAble(bSensorAble);
 }
-int OSiOS::getSafeInsetTop()
+int OS::getSafeInsetTop()
 {
     int safeInsetTop = 0;
     int safeInsetLeft = 0;
@@ -49,7 +46,7 @@ int OSiOS::getSafeInsetTop()
     CToObjectCGetSafeAreaInsets(&safeInsetTop, &safeInsetLeft, &safeInsetBottom, &safeInsetRight);
     return safeInsetTop;
 }
-int OSiOS::getSafeInsetLeft()
+int OS::getSafeInsetLeft()
 {
     int safeInsetTop = 0;
     int safeInsetLeft = 0;
@@ -58,7 +55,7 @@ int OSiOS::getSafeInsetLeft()
     CToObjectCGetSafeAreaInsets(&safeInsetTop, &safeInsetLeft, &safeInsetBottom, &safeInsetRight);
     return safeInsetLeft;
 }
-int OSiOS::getSafeInsetBottom()
+int OS::getSafeInsetBottom()
 {
     int safeInsetTop = 0;
     int safeInsetLeft = 0;
@@ -67,7 +64,7 @@ int OSiOS::getSafeInsetBottom()
     CToObjectCGetSafeAreaInsets(&safeInsetTop, &safeInsetLeft, &safeInsetBottom, &safeInsetRight);
     return safeInsetBottom;
 }
-int OSiOS::getSafeInsetRight()
+int OS::getSafeInsetRight()
 {
     int safeInsetTop = 0;
     int safeInsetLeft = 0;
@@ -76,7 +73,7 @@ int OSiOS::getSafeInsetRight()
     CToObjectCGetSafeAreaInsets(&safeInsetTop, &safeInsetLeft, &safeInsetBottom, &safeInsetRight);
     return safeInsetRight;
 }
-jsvm_value OSiOS::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
+jsvm_value OS::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
     auto promise = jsbind::Promise::Make();
     std::function<void(std::string)> cb = [promise, cbref](std::string message) {
@@ -89,14 +86,18 @@ jsvm_value OSiOS::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &
     CToObjectCPostAsyncMessage(eventName, data, cb);
     return promise.getHandle();
 }
-std::string OSiOS::postSyncMessage(const std::string &eventName, const std::string &data)
+std::string OS::postSyncMessage(const std::string &eventName, const std::string &data)
 {
     // handleSyncMessage is called in platform os ui thread
     std::string eventResult = CToObjectCPostSyncMessage(eventName, data);
     return eventResult;
 }
-void OSiOS::setPreferredFramesPerSecond(uint64_t fps)
+void OS::setPreferredFramesPerSecond(uint64_t fps)
 {
     CToObjectCSetPreferredFramesPerSecond(fps);
+}
+std::string OS::getExePath()
+{
+    return "";//todo
 }
 } // namespace laya

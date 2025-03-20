@@ -202,7 +202,6 @@ template <class Container> void split(const std::string &str, Container &cont, c
 std::u32string to_utf32(const std::string &s);
 std::string encodeURI(const char *value);
 
-std::string getExePath();
 std::string toLowerCase(const std::string &str);
 bool compareStrings(const std::string &str1, const std::string &str2, bool caseSensitive);
 

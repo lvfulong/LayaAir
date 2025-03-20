@@ -413,39 +413,6 @@ void correctUtfBytes(char* bytes)
 	}
 }
 void correctUtfBytes(char* bytes);
-/*
-void CToJavaBridge::getResultValue(JNIEnv* p_pJNI, jstring p_sJString, std::string &ret)
-{
-    ret = getJavaString(p_pJNI, p_sJString);
-    LOGI("JSAndroidEditBoxgetResultValue::get_Value=%s", ret.c_str());
-    laya::JCJson jcJson;
-    int msglen = ret.length();
-    char* ptmpMsg = new char[msglen + 1];
-    ptmpMsg[msglen] = 0;
-    memcpy(ptmpMsg, ret.c_str(), msglen);
-    if (jcJson.paserJson((char*)ptmpMsg)) {
-        laya::JsonObject* pRoot = (laya::JsonObject*)jcJson.getRoot();
-        laya::JsonValue* pCmd = (laya::JsonValue*)pRoot->getNode("v");
-        int jj = 0;
-        if (pCmd)
-        {
-            ret = pCmd->m_sValue;
-            LOGI("JSAndroidEditBoxgetResultValue::get_Value1=%s", ret.c_str());
-            replace_all_distinct(ret, "\\/", "/");
-            LOGI("JSAndroidEditBoxgetResultValue::get_Value2=%s", ret.c_str());
-        }
-        else
-        {
-            ret = "";
-        }
-    }
-    else
-    {
-        ret = "";
-    }
-    delete[]ptmpMsg;
-}
-*/
 bool CToJavaBridge::callMethodRefection(int objid,bool isSyn,const char* className, const char* methodName, const char* params, JavaRet& p_Ret)
 {
     ThreadJNIData* pThreadData = checkThreadJNI();

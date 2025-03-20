@@ -121,6 +121,9 @@ namespace laya
         {
             FileSystem::mkdir(m_strLocalStoragePath);
         }
+    
+        initializeCurrentThreadAsScriptThread();
+        JCConch::s_pScriptRuntime->m_scriptThreadMessageLoop = &MessageLoop::getCurrent();
         
 	}
     JCConch::~JCConch() {
@@ -292,16 +295,4 @@ namespace laya
                 pScriptRuntime->onFocus();
             }
     }
-    OS* JCConch::getOS()
-    {
-        if (!m_OS)
-        {
-            m_OS = createOS();
-        }
-        return m_OS.get();
-    }
-};
-//------------------------------------------------------------------------------
-
-
-//-----------------------------END FILE--------------------------------
+}

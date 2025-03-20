@@ -7,9 +7,9 @@
 #include <utils/JCCommonMethod.h>
 #include <utils/JCFileSystem.h>
 #include "JCScriptRuntime.h"
+#include <platform/OS.h>
 
 extern std::string gRedistPath;
-extern std::string gAssetRootPath;
 
 // conch6.exe [options] url
 handleSyncMessageCallback g_handleSyncMessageCb;
@@ -55,10 +55,9 @@ void conchRegisterHandleMessageHandler(const char *eventName, std::function<void
 }
 int mainImpl()
 {
-    std::string exePath = laya::getExePath();
+    std::string exePath = laya::OS::getExePath();
     std::string exeName = laya::removeFileExtension(laya::FileSystem::filename(exePath));
     gRedistPath = laya::FileSystem::remove_filename(exePath);
-    gAssetRootPath = gRedistPath;
     laya::JCIosFileSource *pAssets = new laya::JCIosFileSource();
     pAssets->Init(gRedistPath.c_str());
     laya::JCConch::s_pAssetsFiles = pAssets;

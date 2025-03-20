@@ -32,7 +32,6 @@ public class ConchJNI
 	public static class ConchOptions {
 		public String url;
 		public Object am;
-		public String assetRoot;
 		public String cachePath;
 		public String apkExpansionMainPath;
 		public String apkExpansionPatchPath;

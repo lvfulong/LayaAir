@@ -1,23 +1,12 @@
-﻿/**
-@file			JNIFun.cpp
-@brief			
-@author			James
-@version		1.0
-@date			2016_5_19
-*/
-
-#include <jni.h>
+﻿#include <jni.h>
 #include <android/log.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <android/native_window_jni.h>
-
-#if defined(OS_ANDROID)
-	#include <Bindings/JSDevice.h>
-    #include <sys/syscall.h>
-    #define gettidv1() syscall(__NR_gettid)
-    #define gettidv2() syscall(SYS_gettid)
-#endif
+#include <Bindings/JSDevice.h>
+#include <sys/syscall.h>
+#define gettidv1() syscall(__NR_gettid)
+#define gettidv2() syscall(SYS_gettid)
 #include <downloadCache/JCAndroidFileSource.h>
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
@@ -48,12 +37,9 @@ extern bool g_bGLCanvasSizeChanged;
 extern std::string gRedistPath;
 //------------------------------------------------------------------------------
 
-extern AAssetManager* g_pAssetManager;
-extern std::string gAssetRootPath;
-extern std::string gAPKExpansionMainPath;
-extern std::string gAPKExpansionPatchPath;
-//int64_t g_nInitTime = 0;
-
+AAssetManager* g_pAssetManager = nullptr;
+std::string gAPKExpansionMainPath = "";
+std::string gAPKExpansionPatchPath = "";
 
 using namespace laya;
 
@@ -103,7 +89,6 @@ static jobject getObjectField(JNIEnv *env, jobject obj, const char *fieldName) {
 	jclass cls = env->GetObjectClass(obj);
 	DEBUG_CHECK(cls != NULL && "getStringField cls is NULL");
 	jfieldID id = env->GetFieldID(cls, fieldName, "Ljava/lang/Object;");
-    LOGI("cnm %s", fieldName);
 	//DEBUG_CHECK(id != NULL && "getStringField id is NULL");
 	jobject jobj = (jobject)env->GetObjectField(obj, id);
 	DEBUG_CHECK(jobj != NULL && "getObjectField jobj is NULL");
@@ -127,9 +112,6 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_init(JNIEnv * env, job
 	HttpClientAndroid::addStaticMethod(env, "layaair/game/browser/LayaHttpClient");
 	CanvasRenderingContext2DAndroid::addStaticMethod(env, "layaair/game/browser/LayaCanvasRenderingContext2D");
 
-    //这个不要放到开始，以影响面上面的异常处理
-    //g_nInitTime = tmGetCurms();
-    std::string pAssetRootPath = getStringField(env, joptions, "assetRoot");
 	std::string pCachePath = getStringField(env, joptions, "cachePath");
 	std::string pAPKExpansionMain = getStringField(env, joptions, "apkExpansionMainPath");
 	std::string pAPKExpansionPatch = getStringField(env, joptions, "apkExpansionPatchPath");
@@ -138,35 +120,18 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_init(JNIEnv * env, job
 	g_kSystemConfig.m_strStartURL = pUrl;
 
 
-	LOGI( "JNI Init CachePath = %s, assetroot = %s, APKExpansionMain = %s, APKExpansionPatch = %s ", pCachePath.c_str(), pAssetRootPath.c_str(), pAPKExpansionMain.c_str(), pAPKExpansionPatch.c_str());
+	LOGI( "JNI Init CachePath = %s, APKExpansionMain = %s, APKExpansionPatch = %s ", pCachePath.c_str(), pAPKExpansionMain.c_str(), pAPKExpansionPatch.c_str());
 	gRedistPath = pCachePath;
 	gRedistPath +="/";
-	gAssetRootPath = pAssetRootPath;
 	gAPKExpansionMainPath= pAPKExpansionMain;
 	gAPKExpansionPatchPath = pAPKExpansionPatch;
-	if( assetManager==0 || !(g_pAssetManager = AAssetManager_fromJava(env,assetManager)))
-    {
-		LOGI("JNI Warning! AssetManager =NULL!! 下面要采用jar流程了。"); 
-		JCZipFile* pZip = new laya::JCZipFile();
-		if( strstr(pAssetRootPath.c_str(),".jar" ) ||strstr(pAssetRootPath.c_str(),".JAR" )||strstr(pAssetRootPath.c_str(),".zip" )||strstr(pAssetRootPath.c_str(),".apk")||strstr(pAssetRootPath.c_str(),".APK") ){
-			if(pZip->open(pAssetRootPath.c_str()))
-            {
-                LOGI("JNI 打开jar成功。");
-				pZip->InitDir("assets");
-			}
-			JCConch::s_pAssetsFiles = pZip;
-		}
-        else
-        {
-            LOGI("JNI 没有设置assetMgr，也没有传入jar包。");
-		} 
-	}
-    else
-    {
-		laya::JCAndroidFileSource* pAssets = new laya::JCAndroidFileSource();
-		pAssets->Init(g_pAssetManager, "",gAPKExpansionMainPath, gAPKExpansionPatchPath);
-		JCConch::s_pAssetsFiles = pAssets;
-	}
+
+	g_pAssetManager = AAssetManager_fromJava(env, assetManager);
+
+	laya::JCAndroidFileSource* pAssets = new laya::JCAndroidFileSource();
+	pAssets->Init(g_pAssetManager, "",gAPKExpansionMainPath, gAPKExpansionPatchPath);
+	JCConch::s_pAssetsFiles = pAssets;
+	
 #if defined(USE_SWAPPY)
 	SwappyGL_init(env, activity);
   	SwappyGL_setSwapIntervalNS(SWAPPY_SWAP_60FPS);

@@ -12,7 +12,6 @@
 #if defined(USE_SWAPPY)
 #include <swappy/swappyGL.h>
 #endif
-extern std::string gAssetRootPath;
 extern std::string gRedistPath;
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
@@ -38,6 +37,40 @@ static WindowMode stringToWindowMode(const std::string &mode)
         return WindowMode::WM_Window;
     }
 }
+std::string toString(GraphicsAPI api)
+{
+    switch (api)
+    {
+    case GraphicsAPI::Invalid:
+        return "Invalid";
+        break;
+    case GraphicsAPI::OpenGLES:
+        return "OpenGLES";
+        break;
+    case GraphicsAPI::WebGL:
+        return "WebGL";
+        break;
+    default:
+        return "Invalid";
+        break;
+    }
+
+}
+GraphicsAPI toGraphicsAPI(const std::string &str)
+{
+    if (compareStrings(str, "OpenGLES", false))
+    {
+        return GraphicsAPI::OpenGLES;
+    }
+    else if (compareStrings(str, "WebGL", false))
+    {
+        return GraphicsAPI::WebGL;
+    }
+    else
+    {
+        return GraphicsAPI::Invalid;
+    }
+}
 JCSystemConfig g_kSystemConfig;
 JCSystemConfig::JCSystemConfig()
 {
@@ -56,15 +89,14 @@ bool JCSystemConfig::isSwappyEnabled()
 void JCSystemConfig::loadConfigIniFile()
 {
     // ���������ļ����ÿ���
-    std::string configpath = gAssetRootPath;
-    configpath += "config.ini";
-#if defined(OS_IOS) || defined(OS_ANDROID) || defined(OS_OHOS)
+    std::string configpath = "";
+    //配置文件只支持路径，不支持数据缓冲区，所以写临时文件
     std::string content = JCConch::s_pAssetsFiles->readTextAsset("config.ini");
     JCBuffer buf((char *)content.c_str(), strlen(content.c_str()), false, false);
     std::string tempFilePath = gRedistPath + "appCache" + std::string("/tmp_config.ini");
     writeFileSync(tempFilePath.c_str(), buf, JCBuffer::utf8);
     configpath = tempFilePath;
-#endif
+
     if (!FileSystem::exists(configpath))
     {
         LOGE("No config.ini file found!");

@@ -76,13 +76,13 @@ export default class MainAbility extends UIAbility {
 
   onForeground() {
     // Ability has brought to foreground
-    console.info('[LIFECYCLE-App] onShow')
+    console.info('[LIFECYCLE-App] onForeground')
     nativeAppLifecycle.onShow();
   }
 
   onBackground() {
     // Ability has back to background
-    console.info('[LIFECYCLE-App] onDestroy')
+    console.info('[LIFECYCLE-App] onBackground')
     nativeAppLifecycle.onHide();
   }
 
@@ -102,6 +102,6 @@ export default class MainAbility extends UIAbility {
   initEngine() {
     let var1 = this.context.filesDir + "/LayaCache";
     //laya.ConchNAPI_configSetURL('http://nativetest.layabox.com/layaplayer2.0.1/index.js');
-    laya.ConchNAPI_InitDLib(this.context.resourceManager, 3, "cache", var1);
+    laya.ConchNAPI_InitDLib(this.context.resourceManager, var1);
   }
 };
