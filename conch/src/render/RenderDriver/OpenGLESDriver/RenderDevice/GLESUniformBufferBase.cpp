@@ -124,6 +124,7 @@ void GLESUniformBufferBase::setBuffer(int index, const void* data) {
         float* view = static_cast<float*>(it->second.view);
         memcpy(view, data, it->second.viewByteLength);
         needUpload = true;
+
     }
 }
 

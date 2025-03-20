@@ -216,11 +216,10 @@ void GLESShaderData::setInt(int32_t index, int32_t value)
                 if (data->_uniformBuffersPropertyMap.find(index) != data->_uniformBuffersPropertyMap.end()) {
                     data->_uniformBuffersPropertyMap[index]->setInt(index, std::any_cast<int32_t>(data->m_data[index]));
                 }
-                else {
-                    replaceUbo->setInt(index, std::any_cast<int32_t>(data->m_data[index]));
-                }
             }
-
+            else {
+                replaceUbo->setInt(index, std::any_cast<int32_t>(data->m_data[index]));
+            }
             };
         _updateCacheArray[index] = fun;
     }
