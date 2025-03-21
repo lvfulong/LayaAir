@@ -2,9 +2,10 @@
 #include "CToObjectC.h"
 #include <JCConch.h>
 #include <utils/Log.h>
+#include <utils/JCFileSystem.h>
+
 namespace laya
 {
-
 int OS::getUsedMem()
 {
     return CToObjectCGetUsedMem();
@@ -96,8 +97,27 @@ void OS::setPreferredFramesPerSecond(uint64_t fps)
 {
     CToObjectCSetPreferredFramesPerSecond(fps);
 }
-std::string OS::getExePath()
+std::string OS::getExecutablePath()
 {
-    return "";//todo
+    return CToObjectCGetExecutablePath();
+}
+std::string OS::getAssetFullPath(const std::string &assetRelativePath)
+{
+    static std::string rootAssetsPath = CToObjectCGetRootAssetsPath();
+    return rootAssetsPath + "/" + assetRelativePath;
+}
+std::string OS::getAssetRootPath()
+{
+    std::string exePath = laya::OS::getExecutablePath();
+    std::string assetRootPath = laya::FileSystem::parent_path(exePath);
+    return assetRootPath;
+}
+std::string OS::getPersistentDataPath()
+{
+    return CToObjectCGetPersistentDataPath();
+}
+std::string OS::getTemporaryCachePath()
+{
+    return CToObjectCGetTemporaryCachePath();
 }
 } // namespace laya

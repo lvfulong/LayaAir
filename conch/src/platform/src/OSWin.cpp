@@ -8,6 +8,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <psapi.h>
 #include <windows.h>
+#include <utils/JCFileSystem.h>
 
 extern handleSyncMessageCallback g_handleSyncMessageCb;
 extern handleAsyncMessageCallback g_handleAsyncMessageCb;
@@ -114,11 +115,29 @@ void OS::setPreferredFramesPerSecond(uint64_t fps)
         g_kSystemConfig.m_frameIntervalInMs = (uint64_t)(1000.f / fps);
     }
 }
-std::string OS::getExePath()
+std::string OS::getExecutablePath()
 {
     WCHAR szPath[MAX_PATH + 1];
     ::GetModuleFileNameW(NULL, szPath, MAX_PATH + 1);
-    std::string path = wideToUtf8(szPath);
-    return stringReplace(path, "\\", "/");
+    std::string result = wideToUtf8(szPath);
+    return stringReplace(result, "\\", "/");
+}
+std::string OS::getAssetFullPath(const std::string &assetRelativePath)
+{
+    return getAssetRootPath() + "/" + assetRelativePath;
+}
+std::string OS::getAssetRootPath()
+{
+    std::string exePath = laya::OS::getExecutablePath();
+    std::string assetRootPath = laya::FileSystem::parent_path(exePath);
+    return assetRootPath;
+}
+std::string OS::getPersistentDataPath()
+{
+    return getAssetRootPath();
+}
+std::string OS::getTemporaryCachePath()
+{
+    return getAssetRootPath();
 }
 } // namespace laya

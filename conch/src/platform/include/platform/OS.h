@@ -25,7 +25,15 @@ class OS
                                         const std::string &data);
     static std::string postSyncMessage(const std::string &eventName, const std::string &data);
     static void setPreferredFramesPerSecond(uint64_t fps);
-    static std::string getExePath();
+    static std::string getExecutablePath();
+    static std::string getAssetFullPath(const std::string &assetRelativePath);
+    static std::string getAssetRootPath();
+    static std::string getPersistentDataPath();
+    static std::string getTemporaryCachePath();
+    #if defined(OS_ANDROID) || defined(OS_OHOS)
+    static void setPersistentDataPath(const std::string &path);
+    static void setTemporaryCachePath(const std::string &path);
+    #endif
 };
 } // namespace laya
 #endif

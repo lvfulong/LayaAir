@@ -64,9 +64,6 @@ class JCTouchFilter;
     
     float                       m_fRetinaValue;         //Retina的缩放比例
     
-    NSString*                   m_nsRootResourcePath;   //Resoure的路径
-    
-    NSString*                   m_nsRootCachePath;      //Cache的根路径
     
     CGPoint*                    m_pResolution;          //当前分辨率
     
@@ -98,8 +95,6 @@ class JCTouchFilter;
 -(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event;
 -(void)update;
 -(int)checkNetworkState;
--(NSString*)getRootCachePath;
--(NSString*)getResourcePath;
 -(void)setScreenOrientation:(int)p_nType;
 -(void)reset;
 -(void)callbackToJSWithClass:(Class)cls methodName:(NSString*)name ret:(NSObject*)retObj;

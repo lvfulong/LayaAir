@@ -1466,5 +1466,19 @@ void CToObjectCSetPreferredFramesPerSecond(uint64_t fps)
         }
     });
 }
-// end video player
-//-------------------------------
+std::string CToObjectCGetExecutablePath()
+{
+    return "";//todo
+}
+std::string CToObjectCGetRootAssetsPath()
+{
+    return [[[NSBundle mainBundle] resourcePath] UTF8String];
+}
+std::string CToObjectCGetPersistentDataPath()
+{
+    return [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] UTF8String];
+}
+std::string CToObjectCGetTemporaryCachePath()
+{
+    return [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject] UTF8String];
+}

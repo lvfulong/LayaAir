@@ -9,7 +9,6 @@
 #include "JCScriptRuntime.h"
 #include <platform/OS.h>
 
-extern std::string gRedistPath;
 
 // conch6.exe [options] url
 handleSyncMessageCallback g_handleSyncMessageCb;
@@ -53,17 +52,21 @@ void conchRegisterHandleMessageHandler(const char *eventName, std::function<void
         LOGE("event with name %s already existed", eventName);
     }
 }
+static std::string getExecutableName()
+{
+    std::string exePath = laya::OS::getExecutablePath();
+    std::string exeName = laya::removeFileExtension(laya::FileSystem::filename(exePath));
+    return exeName;
+}
 int mainImpl()
 {
-    std::string exePath = laya::OS::getExePath();
-    std::string exeName = laya::removeFileExtension(laya::FileSystem::filename(exePath));
-    gRedistPath = laya::FileSystem::remove_filename(exePath);
+    auto assetRootPath = laya::OS::getAssetRootPath() +  "/";
     laya::JCIosFileSource *pAssets = new laya::JCIosFileSource();
-    pAssets->Init(gRedistPath.c_str());
+    pAssets->Init(assetRootPath.c_str());
     laya::JCConch::s_pAssetsFiles = pAssets;
     laya::App app;
     laya::App::Config config;
-    config.title = exeName;
+    config.title = getExecutableName();
 
     app.run(config);
     return 0;

@@ -519,7 +519,7 @@ namespace laya
         context.function("setJoystickEvtFunction", &setJoystickEvtFunc);
         context.function("tmGetCurms", &tmGetCurms);
         context.function("reloadJS", &reloadJSThread);
-        context.function("getExePath", &OS::getExePath);
+        context.function("getExePath", &OS::getExecutablePath);
         context.function("getInnerHeight", &getInnerHeight);
         context.function("getInnerWidth", &getInnerWidth);
         context.function("getDevicePixelRatio", &getDevicePixelRatio);

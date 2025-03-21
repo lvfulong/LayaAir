@@ -13,8 +13,8 @@
 #include <CoreText/CTFontManager.h>
 #include "FontDescription.h"
 #include <utils/JCFileSystem.h>
+#include <platform/OS.h>
 
-extern std::string gRedistPath;
 
 namespace laya
 {
@@ -484,7 +484,7 @@ bool CanvasRenderingContext2DCG::registerFontFromPath(const std::string &fontNam
 bool CanvasRenderingContext2DCG::registerFontFromBuffer(const std::string& fontName, uint8_t* buff, int len)
 {
     JCBuffer buffer((char *)buff, len, false, false);
-    std::string tempFilePath = gRedistPath + "/appCache" +  std::string("/tmp_") + fontName;
+    std::string tempFilePath = OS::getTemporaryCachePath() + std::string("/tmp_") + fontName;
     writeFileSync(tempFilePath.c_str(), buffer);
     CGDataProviderRef fontDataProvider = CGDataProviderCreateWithFilename(tempFilePath.c_str());
     //CGDataProviderRef fontDataProvider = CGDataProviderCreateWithData(nullptr, data, byteLength, nullptr);

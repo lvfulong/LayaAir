@@ -53,9 +53,9 @@ namespace laya
     float                   JSConchConfig::m_fScreenTy = 0.0f;
 
 
-    const char* JSConchConfig::getLocalStoragePath()
+    const std::string& JSConchConfig::getLocalStoragePath()
     {
-        return JCConch::s_pConch->getLocalStoragePath();
+        return JCConch::getLocalStoragePath();
     }
     float JSConchConfig::getTotalMem()
     {
@@ -553,7 +553,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         std::string sWritePath = "";
         if (sPath == NULL || strlen(sPath) <= 0)
         {
-            sWritePath = JCConch::s_pConch->m_sCachePath.c_str();
+            sWritePath = JCConch::getAppCachePath();
         }
         else
         {

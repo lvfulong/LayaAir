@@ -31,15 +31,11 @@
 #if defined(USE_SWAPPY)
 #include <swappy/swappyGL.h>
 #endif
+
+
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
 extern bool g_bGLCanvasSizeChanged;
-extern std::string gRedistPath;
-//------------------------------------------------------------------------------
-
-AAssetManager* g_pAssetManager = nullptr;
-std::string gAPKExpansionMainPath = "";
-std::string gAPKExpansionPatchPath = "";
 
 using namespace laya;
 
@@ -108,28 +104,28 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_init(JNIEnv * env, job
         Java_layaair_game_browser_ConchJNI_uninit(env,obj);
         LOGI("JNI del old end");        
 	}
-	jobject assetManager = getObjectField(env, joptions, "am");
+	jobject jAssetManager = getObjectField(env, joptions, "assetManager");
+	DEBUG_CHECK(jAssetManager != NULL && "assetManager is NULL");
 	HttpClientAndroid::addStaticMethod(env, "layaair/game/browser/LayaHttpClient");
 	CanvasRenderingContext2DAndroid::addStaticMethod(env, "layaair/game/browser/LayaCanvasRenderingContext2D");
 
-	std::string pCachePath = getStringField(env, joptions, "cachePath");
+	std::string pPersistentDataPath = getStringField(env, joptions, "persistentDataPath");
+	std::string pTemporaryCachePath = getStringField(env, joptions, "temporaryCachePath");
 	std::string pAPKExpansionMain = getStringField(env, joptions, "apkExpansionMainPath");
 	std::string pAPKExpansionPatch = getStringField(env, joptions, "apkExpansionPatchPath");
 	std::string pUrl = getStringField(env, joptions, "url");
 
 	g_kSystemConfig.m_strStartURL = pUrl;
 
+	laya::OS::setPersistentDataPath(pPersistentDataPath);
+	laya::OS::setTemporaryCachePath(pTemporaryCachePath);
 
-	LOGI( "JNI Init CachePath = %s, APKExpansionMain = %s, APKExpansionPatch = %s ", pCachePath.c_str(), pAPKExpansionMain.c_str(), pAPKExpansionPatch.c_str());
-	gRedistPath = pCachePath;
-	gRedistPath +="/";
-	gAPKExpansionMainPath= pAPKExpansionMain;
-	gAPKExpansionPatchPath = pAPKExpansionPatch;
+	LOGD( "JNI Init PersistentDataPath = %s, TemporaryCachePath = %s, APKExpansionMain = %s, APKExpansionPatch = %s ", pPersistentDataPath.c_str(), pTemporaryCachePath.c_str(), pAPKExpansionMain.c_str(), pAPKExpansionPatch.c_str());
 
-	g_pAssetManager = AAssetManager_fromJava(env, assetManager);
 
+	AAssetManager* assetManager = AAssetManager_fromJava(env, jAssetManager);
 	laya::JCAndroidFileSource* pAssets = new laya::JCAndroidFileSource();
-	pAssets->Init(g_pAssetManager, "",gAPKExpansionMainPath, gAPKExpansionPatchPath);
+	pAssets->Init(assetManager, "", pAPKExpansionMain, pAPKExpansionPatch);
 	JCConch::s_pAssetsFiles = pAssets;
 	
 #if defined(USE_SWAPPY)

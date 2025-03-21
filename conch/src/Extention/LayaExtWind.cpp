@@ -8,10 +8,11 @@
 #include <codecvt>
 #include <locale>
 #include <utils/JCCommonMethod.h>
+#include "platform/OS.h"
+
 namespace fs = std::filesystem;
 
 #include "jsvm/JSEnv.h"
-extern std::string gRedistPath;
 
 namespace laya
 {
@@ -19,7 +20,7 @@ namespace laya
     typedef void (*LayaInitFunc)(jsvm_env, jsvm_value);
 
     jsvm_value importNative_win(std::string dll){
-        std::string exePath = gRedistPath;
+        std::string exePath = fs::path(OS::getExecutablePath()).parent_path().string();
         GET_ENV
         fs::path dllPath;
 	    fs::path dllDir;

@@ -95,13 +95,13 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener {
 	public DevID m_pDevID = null;
 	private ILayaEventListener m_layaEventListener = null;
 	private boolean m_interceptKey = false;
-	public AssetManager m_AM = null;
+	public AssetManager mAssetManager = null;
 	public Context mCtx = null;
 	public String mUrl = "";
 	public boolean m_bHorizontalScreen ; // 是否横屏
 	private NetworkReceiver m_pNetWorkReveiver;
 	private long m_nBackPressTime = 0;
-	protected String m_strCachePath = "";
+	protected String mCachePath = "";
 	protected String mExpansionMainPath = "";
 	protected String mExpansionPatchPath = "";
 	static public String m_strSoPath = "";
@@ -269,8 +269,6 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener {
 		}
 		@Override
 		public void onAccuracyChanged(Sensor sensor, int accuracy) {
-			// TODO Auto-generated method stub
-			int a=accuracy;
 		}
 	};
 
@@ -310,122 +308,20 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener {
 		expjava.Init(mCtx);
 		String _marketName = getMarketBundle().getString(MARKET_MARKETNAME);
 
-		PlatformInitOK(0);
-	}
-	public void PlatformInitOK(int p_nFlag) {
-		Log.e("0", "==============Java流程 InitMainCanvas()");
 		EngineStart();
 	}
-
-	static class CacheInfo{
-		int id;
-		String path;
-	}
-	//cachePath 需要到 appCache 那一层。
-	public static Vector<CacheInfo> getCachedApp(String cachePath){
-		Vector<CacheInfo> vecFile = new Vector<CacheInfo>();
-		File file = new File(cachePath);
-		File[] subFile = file.listFiles();
-
-		for (File aSubFile : subFile) {
-			CacheInfo cinfo = new CacheInfo();
-			// 判断是否为文件夹
-			if (aSubFile.isDirectory()) {
-				String filename = aSubFile.getName();
-				//vecFile.add(filename);
-				cinfo.path = cachePath + "/" + filename;
-				if (filename.compareTo("sessionFiles") == 0) {
-					//vecFile.add("-1");//临时缓存
-					cinfo.id = -1;
-				} else {
-					//找有没有id
-					String appidfile = cachePath + "/" + filename + "/sourceid/appid";
-					File appidFile = new File(appidfile);
-					if (appidFile.exists()) {
-						try {
-							BufferedReader br = new BufferedReader(new FileReader(appidfile));
-							String data = br.readLine();
-							//vecFile.add(data);
-							cinfo.id = Integer.parseInt(data);
-						} catch (Exception e) {
-							//vecFile.add("-2");//无法获得
-							cinfo.id = -2;
-						}
-					} else {
-						//vecFile.add("-3");//无法获得
-						cinfo.id = -3;
-					}
-				}
-			}
-			vecFile.add(cinfo);
-		}
-        return vecFile;		
-	}
-	/**
-	 * 删除一个目录。
-	 * @param file
-	 */
-	public static void deletePath(File file) {
-		Log.e("2jni", "cacheMgr delete dir: " + file.toString());
-		if (file.isFile()) {
-			file.delete();
-			return;
-		}
-
-		if (file.isDirectory()) {
-			File[] childFiles = file.listFiles();
-			if (childFiles == null || childFiles.length == 0) {
-				file.delete();
-				return;
-			}
-
-			for (int i = 0; i < childFiles.length; i++) {
-				deletePath(childFiles[i]);
-			}
-			file.delete();
-		}
-	}
-
-	//TEST
 	public void EngineStart() {
-		String strLayaCache = getAppCacheDir() + "/LayaCache";
-		File cacheFolder = new File(strLayaCache);
-		if (!cacheFolder.exists()) {
-			cacheFolder.mkdir();
-		}
-		Log.e(TAG, "plugin-----------------EngineStart() = " + (strLayaCache + "/localstorage"));
-		// 准备localStorage目录
-		File localStoragePath = new File(strLayaCache + "/localstorage");
-		if (!localStoragePath.exists()) {
-			if (!localStoragePath.mkdirs()) {
-				Log.e("", "创建localStorage目录失败！");
-				ExportJavaFunction.alert("创建游戏目录失败，请清理空间或重启应用再试");
-				game_plugin_exitGame();
-				return;
-			}
-		}
-		Activity activity = (Activity)(mCtx);
-		String cachePath = getAppCacheDir() + "/LayaCache";
+		Log.d(TAG, "==============Java流程 EngineStart()");
+		Activity activity= (Activity) (mCtx);
 		ConchJNI.ConchOptions options = new ConchJNI.ConchOptions();
-		options.am = m_AM;
-		options.cachePath = cachePath;
+		options.assetManager = mAssetManager;
+		options.persistentDataPath = activity.getFilesDir().toString();
+		options.temporaryCachePath = activity.getCacheDir().toString();
 		options.apkExpansionMainPath = mExpansionMainPath;
 		options.apkExpansionPatchPath = mExpansionPatchPath;
 		options.url = mUrl;
 		InitView(options);
 	}
-
-	public  boolean isOpenNetwork()
-	{
-		ConnectivityManager connManager = (ConnectivityManager) mCtx.getSystemService(Context.CONNECTIVITY_SERVICE);
-		return connManager.getActiveNetworkInfo() != null && (connManager.getActiveNetworkInfo().isAvailable() && connManager.getActiveNetworkInfo().isConnected());
-	}
-
-	// 设备控制相关
-	public void setScreenOrientation(int ori) {
-		// IGameApp.setScreenOrientation(ori);
-	}
-
 	public void setScreenWakeLock( boolean p_bWakeLock ) 
 	{
 		try
@@ -592,46 +488,6 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener {
 		}
 	}
 
-    //获取是否存在NavigationBar
-    public static boolean checkDeviceHasNavigationBar(Context context) {
-        boolean hasNavigationBar = false;
-        try {
-            Resources rs = context.getResources();
-            int id = rs.getIdentifier("config_showNavigationBar", "bool", "android");
-            if (id > 0) {
-                hasNavigationBar = rs.getBoolean(id);
-            }
-            Class systemPropertiesClass = Class.forName("android.os.SystemProperties");
-            Method m = systemPropertiesClass.getMethod("get", String.class);
-            String navBarOverride = (String) m.invoke(systemPropertiesClass, "qemu.hw.mainkeys");
-            if ("1".equals(navBarOverride)) {
-                hasNavigationBar = false;
-            } else if ("0".equals(navBarOverride)) {
-                hasNavigationBar = true;
-            }
-        } catch (Exception e) {
-
-        }
-
-        return hasNavigationBar;
-    }
-
-    /*
-    private ContentObserver mNavigationStatusObserver = new ContentObserver(null) {
-        @Override
-        public void onChange(boolean selfChange) {
-            int navigationBarIsMin = Settings.System.getInt(getGameContext().getContentResolver(),
-                    "navigationbar_is_min", 0);
-            if (navigationBarIsMin == 1) {
-                //导航键隐藏了
-            } else {
-                //导航键显示了
-            }
-
-        }
-    };
-    */
-
 	/**
 	 * 判断activity是否处于可用状态
 	 * @param context
@@ -702,16 +558,6 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener {
 		wm.getDefaultDisplay().getMetrics(pDm);
 		m_iScreenHeight = pDm.heightPixels;
 		return m_iScreenHeight;
-	}
-
-	// ------------------------------------------------------------------------------
-
-	public void game_conch3_setAssetInfo(AssetManager am) {
-		m_AM = am;
-	}
-
-	public void game_conch3_setAppWorkPath(String runpath) {// 在这里保存运行数据。
-		m_strCachePath = runpath;
 	}
 
 	public AbsoluteLayout getAbsLayout() {
@@ -950,7 +796,7 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener {
 	}
 
 	public void setAppCacheDir(String param) {
-		m_strCachePath = param;
+		mCachePath = param;
 	}
 
 	public void setExpansionZipDir(final String mainPath, final String patchPath) {
@@ -969,7 +815,7 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener {
 
 	// 获得游戏缓存目录
 	public String getAppCacheDir() {
-		return m_strCachePath;
+		return mCachePath;
 	}
 	// 游戏主动退出游戏
 	public void game_plugin_exitGame() {
@@ -979,31 +825,6 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener {
 	public void game_plugin_finish() {
 		if (m_layaEventListener != null)
 			m_layaEventListener.Finish();
-	}
-
-	// 游戏插件初始化
-	public void game_conch3_init() {
-		this.onCreate();
-	}
-
-	// 获得游戏需要显示的view
-	public View game_conch3_get_view() {
-		return m_pAbsLayout;
-	}
-
-	// 进入后台时调用
-	public void game_conch3_onPause() {
-		this.onPause();
-	}
-
-	// 恢复前台时调用
-	public void game_conch3_onResume() {
-		this.onResume();
-	}
-
-	// 退出游戏时调用
-	public void game_conch3_onStop() {
-		this.onStop();
 	}
 
 	@Override
@@ -1048,7 +869,7 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener {
 
     @Override
     public void setAssetInfo(AssetManager am) {
-        game_conch3_setAssetInfo(am);        
+        mAssetManager = am; 
     }
 
 	public static String getLocalVersion(Context ctx) {

@@ -23,7 +23,6 @@
 
 extern Display *g_X11_display;
 extern Window g_X11_window;
-extern std::string gRedistPath;
 
 std::map<std::string, std::string> privateFontMap;
 FT_Library  gFTLibrary=nullptr;
@@ -603,16 +602,13 @@ void CanvasRenderingContext2DLinux::getTextPosition(const std::string &text, dou
 }
 bool CanvasRenderingContext2DLinux::registerFontFromPath(const std::string &fontName, const std::string &path)
 {
-    bool isAbsPath = (path[0]=='/' || path[1]==':');
-    std::string absPath = isAbsPath?path:(gRedistPath+path);
-
     if(!gFTLibrary)
         FT_Init_FreeType(&gFTLibrary);
 
     // 加载字体文件。检查文件是否存在
     FT_Face face;
     if (FT_New_Face(gFTLibrary, absPath.c_str(), 0, &face) != 0) {
-        std::cerr << "Failed to load font: " << absPath << std::endl;
+        LOGE("Failed to load font: %s", absPath.c_str());
         return false;
     }
     FT_Done_Face(face);

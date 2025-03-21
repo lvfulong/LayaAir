@@ -33,11 +33,12 @@
 #endif
 #include "Extention/LayaExtWin.h"
 #include <filesystem>
+#include <platform/OS.h>
+
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
 extern bool g_bGLCanvasSizeChanged;
 extern laya::JCZip *g_ZipPackage;
-extern std::string gRedistPath;
 
 namespace laya 
 {
@@ -218,8 +219,9 @@ namespace laya
 
         JSGlobalExportC();
     #if defined(OS_WINDOWS)
-        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-        std::wstring wExePath = converter.from_bytes(gRedistPath);          
+        //std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+        //std::wstring wExePath = converter.from_bytes(FileSystem::parent_path(OS::getExecutablePath()));   
+        std::wstring wExePath = utf8ToWide(FileSystem::parent_path(OS::getExecutablePath()));       
         std::filesystem::path currentPath(std::move(wExePath));
         std::filesystem::path extensionPath = currentPath / std::filesystem::path( L"extensions");
         importAllDynaLib(extensionPath.string());

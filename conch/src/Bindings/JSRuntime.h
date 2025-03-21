@@ -100,7 +100,7 @@ namespace laya
 
         static const char* callMethod(int objid,bool isSyn,const char*clsName, const char* methodName, const char* paramStr);
 
-        static const char* getCachePath();
+        static std::string getCachePath();
 
         static const char* getPresetUrl();
 

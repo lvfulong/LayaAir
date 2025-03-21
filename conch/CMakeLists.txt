@@ -425,6 +425,8 @@ list(APPEND CONCH_SRC
 	src/backend/src/IBackend.cpp
 	src/ScriptVM.h
 	src/ScriptVM.cpp
+
+	src/platform/src/OS.cpp
 )
 
 list(APPEND PLATFORM_HEADER_DIR

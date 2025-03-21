@@ -22,7 +22,6 @@
 #include "../../downloadCache/DCC2/JCFileResDCC2.h"
 #include <Bindings/JSConchConfig.h>
 
-extern std::string gRedistPath;
 namespace laya
 {
     HandleFileData gHandleDataFunc = nullptr;
@@ -54,10 +53,6 @@ namespace laya
     JCFileResManager::~JCFileResManager() {
         clear();
         m_pDownloader = nullptr;
-    }
-
-    std::string JCFileResManager::getAppCachePath() {
-        return gRedistPath + "/appCache";
     }
 
     void JCFileResManager::clear() {

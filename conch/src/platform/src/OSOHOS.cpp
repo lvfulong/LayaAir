@@ -116,7 +116,7 @@ void OS::setPreferredFramesPerSecond(uint64_t fps)
         PluginRender::GetInstance()->changeFPS(animationIntervalMs);
     }
 }
-std::string OS::getExePath()
+std::string OS::getExecutablePath()
 {
     return "";//todo
 }

@@ -10,6 +10,7 @@
 #include <memory>
 #include <utils/MessageLoop.h>
 #include <core/Thread.h>
+#include <platform/OS.h>
 
 namespace laya
 {
@@ -54,9 +55,13 @@ namespace laya
 
 		void exit();
 
-		const char* getLocalStoragePath() 
+		static const std::string& getLocalStoragePath()
         {
-            return m_strLocalStoragePath.c_str(); 
+            return s_localStoragePath;
+        }
+        static const std::string& getAppCachePath()
+        {
+            return s_cachePath;
         }
         void update();
 
@@ -77,12 +82,12 @@ namespace laya
         static std::shared_ptr<JCConch>         s_pConch;
         static int64_t			                s_nUpdateTime;
         static std::shared_ptr<JCConchRender>	s_pConchRender;
-        std::string				                m_strLocalStoragePath;
+        static std::string				        s_localStoragePath;
         static std::shared_ptr<JCScriptRuntime> s_pScriptRuntime;
         static JCFileSource*	                s_pAssetsFiles;
         JCFileSource*			                m_pAssetsRes;
         std::string				                m_strStartJS;
-        std::string                             m_sCachePath;
+        static std::string                      s_cachePath;
         JCFileResManager*	                    m_pFileResMgr;
     protected:
         bool					                m_bDestroying;

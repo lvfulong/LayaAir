@@ -238,7 +238,7 @@ namespace laya
         //设置url的名字
         char sCachePath[1024];
         memset(sCachePath, 0, 1024);
-        sprintf(sCachePath, "%s/%d.LayaBoxImg", JCConch::s_pConch->m_sCachePath.c_str(), m_nID);
+        sprintf(sCachePath, "%s/%d.LayaBoxImg", JCConch::getAppCachePath().c_str(), m_nID);
         m_sUrl = sCachePath;
         std::weak_ptr<int> cbref(m_CallbackRef);
         imgDecodeCB cb = std::bind(&JSImage::onDecodeEndDecThread, this, std::placeholders::_1, cbref);
@@ -253,7 +253,7 @@ namespace laya
         //设置url的名字
         char sCachePath[1024];
         memset(sCachePath, 0, 1024);
-        sprintf(sCachePath, "%s/%d.LayaBoxImg", JCConch::s_pConch->m_sCachePath.c_str(), m_nID);
+        sprintf(sCachePath, "%s/%d.LayaBoxImg", JCConch::getAppCachePath().c_str(), m_nID);
         m_sUrl = sCachePath;
         std::weak_ptr<int> cbref(m_CallbackRef);
         imgDecodeCB cb = std::bind(&JSImage::onDecodeEndDecThread, this, std::placeholders::_1, cbref);
@@ -275,7 +275,7 @@ namespace laya
         //设置url的名字
         char sCachePath[1024];
         memset(sCachePath, 0, 1024);
-        sprintf(sCachePath,"%s/%d.LayaBoxImg", JCConch::s_pConch->m_sCachePath.c_str(),m_nID);
+        sprintf(sCachePath,"%s/%d.LayaBoxImg", JCConch::getAppCachePath().c_str(),m_nID);
         //写入文件
         writeFileSync1(sCachePath, pData, width*height * 4);
         m_sUrl = sCachePath;

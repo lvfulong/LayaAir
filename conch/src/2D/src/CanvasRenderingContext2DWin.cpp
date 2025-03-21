@@ -10,9 +10,9 @@
 #include <gdiplusgraphics.h>
 #include <map>
 #include "FontDescription.h"
+#include <platform/OS.h>
 
 extern HWND g_hWnd;
-extern std::string gRedistPath;
 
 using namespace Gdiplus;
 std::map<std::wstring, Gdiplus::FontFamily*> privateFontMap;
@@ -419,20 +419,22 @@ void CanvasRenderingContext2DWin::setFont(const char *font)
 
 bool CanvasRenderingContext2DWin::registerFontFromPath(const std::string &fontName, const std::string &path)
 {
-    bool isAbsPath = (path[0]=='/' || path[1]==':');
     std::wstring nameW = utf8ToWide(fontName.c_str());
-	// 创建一个PrivateFontCollection对象 
-    std::wstring strWide = utf8ToWide(isAbsPath?path.c_str():(gRedistPath+path).c_str());
+    std::wstring strWide = utf8ToWide(path.c_str());
     auto coll = new PrivateFontCollection();
-	coll->AddFontFile(strWide.data());
-
+	auto status = coll->AddFontFile(strWide.data());
+    if (status != Gdiplus::Ok) {
+        delete coll;
+        LOGE("registerFontFromPath failed %s", path.c_str());
+        return false;
+    }
     Gdiplus::FontFamily fontFamilies[1];
     int findNum = 0;
-    Gdiplus::Status status = coll->GetFamilies(1, fontFamilies, &findNum); // 从字体集中获取字体家族
+    status = coll->GetFamilies(1, fontFamilies, &findNum);
     if (status == Gdiplus::Ok) {
         privateFontMap[nameW] = fontFamilies[0].Clone();
     }
-
+    delete coll;
     return true;
 }
 
