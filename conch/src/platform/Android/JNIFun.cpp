@@ -317,13 +317,17 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onAppPause(JNIEnv * en
 {
     LOGI("JNI onAppPause");
 	DEBUG_CHECK(isScriptThread());
-	laya::JCConch::s_pConch->onAppPause();
+	if (laya::JCConch::s_pConch) {
+		laya::JCConch::s_pConch->onAppPause();
+	}
 }
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onAppResume(JNIEnv * env, jobject obj )
 {
     LOGI("JNI onAppResume");
 	DEBUG_CHECK(isScriptThread());
-    laya::JCConch::s_pConch->onAppResume();
+	if (laya::JCConch::s_pConch) {
+    	laya::JCConch::s_pConch->onAppResume();
+	}
 }
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onSurfaceCreated(JNIEnv *env, jobject obj, jobject surface)
 {

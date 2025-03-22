@@ -114,7 +114,7 @@ std::string OS::getAssetRootPath()
 }
 const std::string& OS::getPersistentDataPath()
 {
-    static std::string path = CToObjectCGetPersistentDataPath();    
+    static std::string path = CToObjectCGetPersistentDataPath();//待确认，这个会上传icloud,删除APP后还存在  
     return path;
 }
 const std::string& OS::getTemporaryCachePath()

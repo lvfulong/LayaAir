@@ -22,11 +22,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ConchSurfaceView extends SurfaceView implements Conch.RunCallback {
     private static final String TAG = "ConchSurfaceView";
-    public boolean mIsReady = false;
     public TouchFilter mTouchFilter = new TouchFilter();
     private GLThread mGLThread;
-    private boolean mPaused = false;
-    private Handler mGLLooperHandler;
     private Activity mActivity;
     public Conch mConch = null;
     private ConchJNI.ConchOptions mOptions = null;
@@ -37,18 +34,6 @@ public class ConchSurfaceView extends SurfaceView implements Conch.RunCallback {
     }
 
     private void init(Context context, ConchJNI.ConchOptions options) {
-
-        setFocusable(true);
-        setFocusableInTouchMode(true);
-        setClickable(true);
-        ArrayList<View> view = new ArrayList<>();
-        view.add(this);
-        addTouchables(view);
-        setWillNotCacheDrawing(false);
-        //initGestures(context);
-
-
-        this.getHolder().setFormat(PixelFormat.OPAQUE);
         mOptions = options;
         mActivity = (Activity) context;
         mGLThread = new GLThread(mActivity, this);
@@ -105,7 +90,6 @@ public class ConchSurfaceView extends SurfaceView implements Conch.RunCallback {
 
         public void surfaceCreated(SurfaceHolder holder) {
             Log.d(TAG, "surfaceCreated()");
-            //mIsReady = true;
             Surface surface = holder.getSurface();
             if (mSurfaceView.mConch == null) {
                 mSurfaceView.mConch = new Conch(mActivity, mOptions, (Conch.RunCallback) mSurfaceView, surface);
@@ -125,18 +109,6 @@ public class ConchSurfaceView extends SurfaceView implements Conch.RunCallback {
             Log.d(TAG, "surfaceDestroyed()");
             mSurfaceView.mConch.onSurfaceDestroy();
         }
-
-        public void shutdown() {
-            mGLLooperHandler.getLooper().quitSafely();
-        }
-
-        /*public void run() {
-            Looper.prepare();
-
-            mGLLooperHandler = new Handler();
-
-            Looper.loop();
-        }*/
         volatile boolean mPause;
         volatile boolean mQuit;
 
@@ -152,15 +124,13 @@ public class ConchSurfaceView extends SurfaceView implements Conch.RunCallback {
                     while (!mQuit && !mPause)
                     {
                         executeGLThreadJobs();
-                        //if (!isFinishing() && !nativeRender())
-                        //    finish();
                         if (mSurfaceView.mConch != null) {
                             ConchJNI.performUpdates();
                         }
                     }
                 }
+            } catch (InterruptedException e) {
             }
-            catch (InterruptedException quit) {}
         }
 
         public void quit()
@@ -182,17 +152,23 @@ public class ConchSurfaceView extends SurfaceView implements Conch.RunCallback {
         }
     }
     public void onPause() {
-        mGLThread.pauseExecution();
-        if (mConch != null) {
-            mConch.onPause();
-        }
+        runInGLThread(new Runnable() {
+            @Override
+            public void run() {
+                ConchJNI.onAppPause();
+                mGLThread.pauseExecution();
+            }
+        });
     }
 
-    public void onResume() {
+    public void onResume() {  
         mGLThread.resumeExecution();
-        if (mConch != null) {
-            mConch.onResume();
-        }
+        runInGLThread(new Runnable() {
+            @Override
+            public void run() {
+                ConchJNI.onAppResume();
+            }
+        });
     }
 }
 

@@ -6,8 +6,7 @@ import android.view.Surface;
 
 import layaair.game.conch.LayaConch5;
 
-public class ConchJNI
-{
+public class ConchJNI {
 	public static boolean g_bInitialized=false;
 	public static boolean initNativeLibrary(String library, boolean plugin) {
 		try {

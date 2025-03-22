@@ -6,8 +6,7 @@ import android.view.Surface;
 
 import layaair.game.conch.LayaConch5;
 
-public class Conch
-{
+public class Conch {
 	public interface RunCallback {
 		void runInGLThread(Runnable f);
 
@@ -15,7 +14,7 @@ public class Conch
 	}
 	public Conch(Activity activity, ConchJNI.ConchOptions options, RunCallback runCallbacks, Surface surface) {
 		mRunCallback = runCallbacks;
-		mRunCallback.runInGLThread(()->{
+		mRunCallback.runInGLThread(()-> {
 			ConchJNI.init(activity, options, surface);
 		});
 	}
@@ -28,12 +27,6 @@ public class Conch
 	}
 	public void onSurfaceCreated(Surface surface) {
 		mRunCallback.runInGLThread(() -> ConchJNI.onSurfaceCreated(surface));
-	}
-	public void onPause() {
-		mRunCallback.runInGLThread(() -> ConchJNI.onAppPause());
-	}
-	public void onResume() {
-		mRunCallback.runInGLThread(() -> ConchJNI.onAppResume());
 	}
 	public void uninit() {
 		mRunCallback.runInGLThread(() -> ConchJNI.uninit());
