@@ -104,7 +104,8 @@ namespace laya
         if (!cbref.lock())return;
         closeTime = closetm;
         LOGI("JSWebSocket::onSocketCloseCallJSFunction this=%lx", (long)this);
-        if (m_nWebSocketState == WSS_OPEN || m_nWebSocketState == WSS_CLOSEING)
+        //if (m_nWebSocketState == WSS_OPEN || m_nWebSocketState == WSS_CLOSEING)
+        if (m_nWebSocketState != WSS_CLOSE)
         {  
             m_nWebSocketState = WSS_CLOSE;
             m_pJSFunctionOnClose.call<void>(jsbind::toLocal(this), p_sEvent.c_str());
