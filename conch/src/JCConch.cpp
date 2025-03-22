@@ -73,7 +73,7 @@ namespace laya
     }
     JCConch::JCConch()
     {
-        s_cachePath = OS::getPersistentDataPath() + "/appCache";
+        s_cachePath = OS::getTemporaryCachePath() + "/appCache";
         if (!FileSystem::exists(s_cachePath))
         {
             if (!FileSystem::mkdir(s_cachePath))
@@ -82,7 +82,7 @@ namespace laya
             }
         }
 
-        s_localStoragePath = OS::getPersistentDataPath() + "/localstorage";
+        s_localStoragePath = OS::getTemporaryCachePath() + "/localstorage";
         if (!FileSystem::exists(s_localStoragePath))
         {
             if (!FileSystem::mkdir(s_localStoragePath))

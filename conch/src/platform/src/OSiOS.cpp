@@ -112,12 +112,14 @@ std::string OS::getAssetRootPath()
     std::string assetRootPath = laya::FileSystem::parent_path(exePath);
     return assetRootPath;
 }
-std::string OS::getPersistentDataPath()
+const std::string& OS::getPersistentDataPath()
 {
-    return CToObjectCGetPersistentDataPath();
+    static std::string path = CToObjectCGetPersistentDataPath();    
+    return path;
 }
-std::string OS::getTemporaryCachePath()
+const std::string& OS::getTemporaryCachePath()
 {
-    return CToObjectCGetTemporaryCachePath();
+    static std::string path = CToObjectCGetTemporaryCachePath();
+    return path;
 }
 } // namespace laya

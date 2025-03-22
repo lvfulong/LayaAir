@@ -8,12 +8,12 @@ namespace laya
 #if defined(OS_ANDROID) || defined(OS_OHOS)
 static std::string s_persistentDataPath = "";
 static std::string s_temporaryCachePath = "";
-std::string OS::getPersistentDataPath()
+const std::string& OS::getPersistentDataPath()
 {
     DEBUG_CHECK(!s_persistentDataPath.empty() && "persistentDataPath is not initialized");
     return s_persistentDataPath;
 }
-std::string OS::getTemporaryCachePath()
+const std::string& OS::getTemporaryCachePath()
 {
     DEBUG_CHECK(!s_temporaryCachePath.empty() && "temporaryCachePath is not initialized");
     return s_temporaryCachePath;
@@ -35,7 +35,7 @@ static unsigned char* _readAssetAlloc(int sz, void* pUserData)
 }
 std::string OS::getAssetFullPath(const std::string &assetRelativePath)
 {
-    static std::string androidExtractedAssetsPath = OS::getPersistentDataPath() + std::string("/android_assets");
+    static std::string androidExtractedAssetsPath = OS::getTemporaryCachePath() + std::string("/android_assets");
     if (!FileSystem::exists(androidExtractedAssetsPath))
     {
         if (!FileSystem::mkdir(androidExtractedAssetsPath))

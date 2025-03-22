@@ -28,8 +28,8 @@ class OS
     static std::string getExecutablePath();
     static std::string getAssetFullPath(const std::string &assetRelativePath);
     static std::string getAssetRootPath();
-    static std::string getPersistentDataPath();
-    static std::string getTemporaryCachePath();
+    static const std::string& getPersistentDataPath();
+    static const std::string& getTemporaryCachePath();
     #if defined(OS_ANDROID) || defined(OS_OHOS)
     static void setPersistentDataPath(const std::string &path);
     static void setTemporaryCachePath(const std::string &path);
