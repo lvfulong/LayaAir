@@ -121,7 +121,8 @@ namespace laya
     {
         if (!cbref.lock())
             return;
-        if (m_nWebSocketState == WSS_OPEN) 
+        //if (m_nWebSocketState == WSS_OPEN)
+        if (m_nWebSocketState != WSS_CLOSE)
         {
             m_nWebSocketState = WSS_CLOSE;
             m_pJSFunctionOnError.call<void>(jsbind::toLocal(this), p_sEvent.c_str());
