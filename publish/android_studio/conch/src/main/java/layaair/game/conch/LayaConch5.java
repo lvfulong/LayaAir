@@ -700,10 +700,6 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener {
 
 		LayaAudioMusic.uninit();
 		destroy();
-		if (m_pCavans != null) {
-			m_pCavans.destroy();
-			m_pCavans.mConch.uninit();
-		}
 	}
 	@SuppressLint("NewApi") @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void destroy()
@@ -714,26 +710,27 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
 			m_pAbsLayout.setOnGenericMotionListener(null);
 		}
-		m_pAbsLayout=null;
-		if(m_pCavans!=null) {
+		m_pAbsLayout = null;
+		if (m_pCavans != null) {
+			m_pCavans.shutdown();
 			m_pCavans.destroy();
 			m_pCavans = null;
 		}
 		ms_layaConche = null;
-		m_marketBundle=null;
+		m_marketBundle = null;
 
-		if(m_pEditBoxLayout!=null)
+		if(m_pEditBoxLayout != null)
 		{
 			m_pEditBoxLayout.removeAllViews();
 		    m_pEditBoxLayout = null;
 		}
-		if(m_pEditBox!=null)
+		if(m_pEditBox != null)
 		{
 			m_pEditBox.destroy();
 			m_pEditBox=null;
 		}
-		mCtx=null;
-		m_layaEventListener=null;
+		mCtx = null;
+		m_layaEventListener = null;
 	}
 
 	public void delInstance()

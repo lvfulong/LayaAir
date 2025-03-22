@@ -20,12 +20,12 @@ import androidx.annotation.RequiresApi;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class ConchSurfaceView extends SurfaceView implements Conch.RunCallback {
+public class ConchSurfaceView extends SurfaceView {
     private static final String TAG = "ConchSurfaceView";
     public TouchFilter mTouchFilter = new TouchFilter();
     private GLThread mGLThread;
     private Activity mActivity;
-    public Conch mConch = null;
+    private boolean mIsReady = false;
     private ConchJNI.ConchOptions mOptions = null;
     private final ConcurrentLinkedQueue<Runnable> mEvents = new ConcurrentLinkedQueue<Runnable>();
     public ConchSurfaceView(Context context, ConchJNI.ConchOptions options) {
@@ -63,7 +63,6 @@ public class ConchSurfaceView extends SurfaceView implements Conch.RunCallback {
             job.run();
     }
 
-    @Override
     public void runInGLThread(Runnable f) {
         //mGLLooperHandler.post(r);
         //if (!mState.librariesHasBeenLoaded())
@@ -75,7 +74,6 @@ public class ConchSurfaceView extends SurfaceView implements Conch.RunCallback {
         mEvents.add(f);
     }
 
-    @Override
     public void runInUIThread(Runnable f) {
         post(f);
     }
@@ -91,40 +89,37 @@ public class ConchSurfaceView extends SurfaceView implements Conch.RunCallback {
         public void surfaceCreated(SurfaceHolder holder) {
             Log.d(TAG, "surfaceCreated()");
             Surface surface = holder.getSurface();
-            if (mSurfaceView.mConch == null) {
-                mSurfaceView.mConch = new Conch(mActivity, mOptions, (Conch.RunCallback) mSurfaceView, surface);
+            if (!mIsReady) {
+                runInGLThread(() -> ConchJNI.init(mActivity, mOptions, surface));
+                mIsReady = true;
             }
             else {
-                mSurfaceView.mConch.onSurfaceCreated(surface);
+                runInGLThread(() -> ConchJNI.onSurfaceCreated(surface));
             }
 
         }
 
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
             Log.d(TAG, "surfaceChanged(" + width + ", " + height + ")");
-            mSurfaceView.mConch.onSurfaceResize(width, height);
+            runInGLThread(() -> ConchJNI.onSurfaceResize(width, height));
         }
 
         public void surfaceDestroyed(SurfaceHolder holder) {
             Log.d(TAG, "surfaceDestroyed()");
-            mSurfaceView.mConch.onSurfaceDestroy();
+            runInGLThread(() -> ConchJNI.onSurfaceDestroy());
         }
         volatile boolean mPause;
         volatile boolean mQuit;
 
         @Override
-        public void run()
-        {
+        public void run() {
             setName("ScriptThread");
-            try
-            {
-                while (!mQuit)
-                {
+            try {
+                while (!mQuit) {
                     synchronized (this)	{ wait(); }
-                    while (!mQuit && !mPause)
-                    {
+                    while (!mQuit && !mPause) {
                         executeGLThreadJobs();
-                        if (mSurfaceView.mConch != null) {
+                        if (mIsReady) {
                             ConchJNI.performUpdates();
                         }
                     }
@@ -133,20 +128,17 @@ public class ConchSurfaceView extends SurfaceView implements Conch.RunCallback {
             }
         }
 
-        public void quit()
-        {
+        public void quit() {
             mQuit = true;
             synchronized (this)	{ notify(); }
         }
 
-        public void resumeExecution()
-        {
+        public void resumeExecution() {
             mPause = false;
             synchronized (this)	{ notify(); }
         }
 
-        public void pauseExecution()
-        {
+        public void pauseExecution() {
             mPause = true;
             synchronized (this)	{ notify(); }
         }
@@ -170,5 +162,7 @@ public class ConchSurfaceView extends SurfaceView implements Conch.RunCallback {
             }
         });
     }
+    public void shutdown() {
+        runInGLThread(() -> ConchJNI.uninit());
+    }
 }
-

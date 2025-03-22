@@ -388,7 +388,10 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_audioMusicPlayEnd( JNI
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_networkChanged(JNIEnv* env, jobject obj, jint nNetworkType)
 {
 	LOGI("JNI networkChanged");
-    JCConch::s_pScriptRuntime->onNetworkChanged(nNetworkType);
+	if (JCConch::s_pScriptRuntime)
+	{
+    	JCConch::s_pScriptRuntime->onNetworkChanged(nNetworkType);
+	}
 }
 
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_inputChange(JNIEnv* env, jobject obj, jint keycode)
