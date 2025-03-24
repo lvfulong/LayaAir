@@ -607,12 +607,12 @@ bool CanvasRenderingContext2DLinux::registerFontFromPath(const std::string &font
 
     // 加载字体文件。检查文件是否存在
     FT_Face face;
-    if (FT_New_Face(gFTLibrary, absPath.c_str(), 0, &face) != 0) {
-        LOGE("Failed to load font: %s", absPath.c_str());
+    if (FT_New_Face(gFTLibrary, path.c_str(), 0, &face) != 0) {
+        LOGE("Failed to load font: %s", path.c_str());
         return false;
     }
     FT_Done_Face(face);
-    privateFontMap[fontName] = absPath;
+    privateFontMap[fontName] = path;
     return true;
 
     // 将字体添加到FontConfig
