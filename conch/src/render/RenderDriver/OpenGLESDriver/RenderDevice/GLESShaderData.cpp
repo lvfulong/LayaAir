@@ -475,11 +475,11 @@ void GLESShaderData::setBuffer(int32_t index, uint8_t *data, uint32_t lengthInBy
         std::function<void(GLESShaderData*, GLESUniformBufferBase*, int32_t)> fun = [](GLESShaderData* data, GLESUniformBufferBase* replaceUbo, int32_t index) {
             if(replaceUbo==nullptr){
                 if (data->_uniformBuffersPropertyMap.find(index) != data->_uniformBuffersPropertyMap.end()) {
-                    data->_uniformBuffersPropertyMap[index]->setBuffer(index, std::any_cast<BufferDataInfo>(data->m_data[index]).m_data);
+                    data->_uniformBuffersPropertyMap[index]->setArrayBuffer(index, std::any_cast<BufferDataInfo>(data->m_data[index]).m_data);
                 }
             }
             else{
-                replaceUbo->setBuffer(index, std::any_cast<BufferDataInfo>(data->m_data[index]).m_data);
+                replaceUbo->setArrayBuffer(index, std::any_cast<BufferDataInfo>(data->m_data[index]).m_data);
             }
             };
         _updateCacheArray[index] = fun;
