@@ -1458,13 +1458,12 @@ void CToObjectCPostAsyncMessage(const std::string &eventName, const std::string 
 }
 void CToObjectCSetPreferredFramesPerSecond(uint64_t fps)
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        CADisplayLink* displayLink = [conchRuntime GetIOSConchRuntime]->m_displayLink;
-        if (displayLink != nil && [displayLink respondsToSelector: @selector(preferredFramesPerSecond)] == YES)
-        {
-            displayLink.preferredFramesPerSecond = fps;
-        }
-    });
+    DEBUG_CHECK(laya::isScriptThread());
+    CADisplayLink* displayLink = [conchRuntime GetIOSConchRuntime]->m_displayLink;
+    if (displayLink != nil && [displayLink respondsToSelector: @selector(preferredFramesPerSecond)] == YES)
+    {
+        displayLink.preferredFramesPerSecond = fps;
+    }
 }
 std::string CToObjectCGetExecutablePath()
 {
