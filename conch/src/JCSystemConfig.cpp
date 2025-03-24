@@ -84,7 +84,7 @@ void JCSystemConfig::reset()
 #if defined(USE_SWAPPY)
 bool JCSystemConfig::isSwappyEnabled()
 {
-    return m_swappyEnabled && SwappyGL_isEnabled();
+    return m_useSwappy && SwappyGL_isEnabled(); 
 }
 #endif
 void JCSystemConfig::loadConfigIniFile()
@@ -159,6 +159,18 @@ void JCSystemConfig::loadConfigIniFile()
     {
         LOGW("Warning: can not find ios:orientation use default %d", 24);
     }
+#endif
+#if defined(OS_ANDROID)
+    m_useSwappy = true;
+    if (configIni.hasEntry("android:UseSwappy"))
+    {
+        m_useSwappy = configIni.getBoolOrDefault("android:UseSwappy", true);
+    }
+    else
+    {
+        LOGW("Warning: can not find android:UseSwappy use default %d", true);
+    }
+
 #endif
     m_nJSDebugMode = configIni.getIntOrDefault("common:JSDebugMode", 0);
     m_nJSDebugPort = configIni.getIntOrDefault("common:JSDebugPort", 5959);

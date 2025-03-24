@@ -64,13 +64,6 @@ public class ConchSurfaceView extends SurfaceView {
     }
 
     public void runInGLThread(Runnable f) {
-        //mGLLooperHandler.post(r);
-        //if (!mState.librariesHasBeenLoaded())
-        //    return;
-
-        //if (Thread.currentThread() == m_MainThread)
-        //    r.run();
-        //else
         mEvents.add(f);
     }
 

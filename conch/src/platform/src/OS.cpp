@@ -46,10 +46,10 @@ std::string OS::getAssetFullPath(const std::string &assetRelativePath)
     }
     std::string assetFullPath = androidExtractedAssetsPath + "/" + assetRelativePath;
     
-    if (FileSystem::exists(assetFullPath))
-    {
-        return assetFullPath;
-    }
+    //if (FileSystem::exists(assetFullPath))
+    //{
+    //    return assetFullPath;
+    //}
 
     if (JCConch::s_pAssetsFiles->isFileExist(assetRelativePath.c_str()))
     { 

@@ -128,13 +128,17 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_init(JNIEnv * env, job
 	pAssets->Init(assetManager, "", pAPKExpansionMain, pAPKExpansionPatch);
 	JCConch::s_pAssetsFiles = pAssets;
 	
-#if defined(USE_SWAPPY)
-	SwappyGL_init(env, activity);
-  	SwappyGL_setSwapIntervalNS(SWAPPY_SWAP_60FPS);
-#endif
 
 
 	laya::JCConch::s_pConch.reset(new laya::JCConch());
+
+#if defined(USE_SWAPPY)
+	if (g_kSystemConfig.m_useSwappy)
+	{
+		SwappyGL_init(env, activity);
+		SwappyGL_setSwapIntervalNS(SWAPPY_SWAP_60FPS);
+	}
+#endif
 
 	ANativeWindow* aNativeWindow = ANativeWindow_fromSurface(env, surface);
     laya::BackendOptions options;
