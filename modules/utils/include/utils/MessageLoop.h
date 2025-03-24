@@ -3,6 +3,7 @@
 
 #include <future>
 #include <memory>
+#include <functional>
 #include <utils/Marcos.h>
 #include <utils/Time.h>
 #include <utils/MessageLoopImpl.h>

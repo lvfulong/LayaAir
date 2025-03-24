@@ -86,6 +86,6 @@ public class NetworkReceiver extends BroadcastReceiver
 	public void handleConnected( int nState )
 	{
 		Log.i("0", "connected type=" + nState );
-		//lvtodo ConchJNI.networkChanged(nState);
+		ConchJNI.networkChanged(nState);
 	}
 }

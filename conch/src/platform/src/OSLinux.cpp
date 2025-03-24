@@ -4,6 +4,7 @@
 #include <JCConch.h>
 #include <future>
 #include <utils/Log.h>
+#include <utils/JCFileSystem.h>
 
 extern handleSyncMessageCallback g_handleSyncMessageCb;
 extern handleAsyncMessageCallback g_handleAsyncMessageCb;
@@ -97,18 +98,38 @@ void OS::setPreferredFramesPerSecond(uint64_t fps)
         g_kSystemConfig.m_frameIntervalInMs = (uint64_t)(1000.f / fps);
     }
 }
-std::string OS::getExePath()
+std::string OS::getExecutablePath()
 {
     char buf[2048];
     memset(buf, 0, 2048);
     ssize_t len = readlink("/proc/self/exe", buf, sizeof(buf) - 1);
     if (len <= 0)
     {
-        LOGE("getExePath failed");
+        LOGE("getExecutablePath failed");
         return "";
     }
     buf[len] = 0;
     std::string ret(buf);
     return ret;
+}
+std::string OS::getAssetFullPath(const std::string &assetRelativePath)
+{
+    return getAssetRootPath() + "/" + assetRelativePath;
+}
+std::string OS::getAssetRootPath()
+{
+    std::string exePath = laya::OS::getExecutablePath();
+    std::string assetRootPath = laya::FileSystem::parent_path(exePath);
+    return assetRootPath;
+}
+const std::string& OS::getPersistentDataPath()
+{
+    static std::string path = getAssetRootPath();
+    return path;
+}
+const std::string& OS::getTemporaryCachePath()
+{
+    static std::string path = getAssetRootPath();
+    return path;
 }
 } // namespace laya

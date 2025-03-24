@@ -16,7 +16,6 @@
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
 extern bool g_bGLCanvasSizeChanged;
-extern std::string gRedistPath;
 
 extern NativeResourceManager *g_pAssetManager;
 
@@ -30,8 +29,7 @@ class NAPIFun
     {
         return &NAPIFun::fun_;
     }
-    static void ConchNAPI_configSetURL(std::string p_strUrl);
-    static void ConchNAPI_InitDLib(napi_value assetManager, std::string p_strCachePath);
+    static void ConchNAPI_init(napi_value assetManager, std::string url, std::string persistentDataPath, std::string temporaryCachePath);
     static void ConchNAPI_audioMusicPlayEnd();
     static void ConchNAPI_networkChanged(int nNetworkType);
     static void ConchNAPI_inputChange(int keycode);

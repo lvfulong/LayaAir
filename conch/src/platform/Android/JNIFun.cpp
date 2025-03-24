@@ -31,15 +31,11 @@
 #if defined(USE_SWAPPY)
 #include <swappy/swappyGL.h>
 #endif
+
+
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
 extern bool g_bGLCanvasSizeChanged;
-extern std::string gRedistPath;
-//------------------------------------------------------------------------------
-
-AAssetManager* g_pAssetManager = nullptr;
-std::string gAPKExpansionMainPath = "";
-std::string gAPKExpansionPatchPath = "";
 
 using namespace laya;
 
@@ -108,37 +104,41 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_init(JNIEnv * env, job
         Java_layaair_game_browser_ConchJNI_uninit(env,obj);
         LOGI("JNI del old end");        
 	}
-	jobject assetManager = getObjectField(env, joptions, "am");
+	jobject jAssetManager = getObjectField(env, joptions, "assetManager");
+	DEBUG_CHECK(jAssetManager != NULL && "assetManager is NULL");
 	HttpClientAndroid::addStaticMethod(env, "layaair/game/browser/LayaHttpClient");
 	CanvasRenderingContext2DAndroid::addStaticMethod(env, "layaair/game/browser/LayaCanvasRenderingContext2D");
 
-	std::string pCachePath = getStringField(env, joptions, "cachePath");
+	std::string pPersistentDataPath = getStringField(env, joptions, "persistentDataPath");
+	std::string pTemporaryCachePath = getStringField(env, joptions, "temporaryCachePath");
 	std::string pAPKExpansionMain = getStringField(env, joptions, "apkExpansionMainPath");
 	std::string pAPKExpansionPatch = getStringField(env, joptions, "apkExpansionPatchPath");
 	std::string pUrl = getStringField(env, joptions, "url");
 
 	g_kSystemConfig.m_strStartURL = pUrl;
 
+	laya::OS::setPersistentDataPath(pPersistentDataPath);
+	laya::OS::setTemporaryCachePath(pTemporaryCachePath);
 
-	LOGI( "JNI Init CachePath = %s, APKExpansionMain = %s, APKExpansionPatch = %s ", pCachePath.c_str(), pAPKExpansionMain.c_str(), pAPKExpansionPatch.c_str());
-	gRedistPath = pCachePath;
-	gRedistPath +="/";
-	gAPKExpansionMainPath= pAPKExpansionMain;
-	gAPKExpansionPatchPath = pAPKExpansionPatch;
+	LOGD( "JNI Init PersistentDataPath = %s, TemporaryCachePath = %s, APKExpansionMain = %s, APKExpansionPatch = %s ", pPersistentDataPath.c_str(), pTemporaryCachePath.c_str(), pAPKExpansionMain.c_str(), pAPKExpansionPatch.c_str());
 
-	g_pAssetManager = AAssetManager_fromJava(env, assetManager);
 
+	AAssetManager* assetManager = AAssetManager_fromJava(env, jAssetManager);
 	laya::JCAndroidFileSource* pAssets = new laya::JCAndroidFileSource();
-	pAssets->Init(g_pAssetManager, "",gAPKExpansionMainPath, gAPKExpansionPatchPath);
+	pAssets->Init(assetManager, "", pAPKExpansionMain, pAPKExpansionPatch);
 	JCConch::s_pAssetsFiles = pAssets;
 	
-#if defined(USE_SWAPPY)
-	SwappyGL_init(env, activity);
-  	SwappyGL_setSwapIntervalNS(SWAPPY_SWAP_60FPS);
-#endif
 
 
 	laya::JCConch::s_pConch.reset(new laya::JCConch());
+
+#if defined(USE_SWAPPY)
+	if (g_kSystemConfig.m_useSwappy)
+	{
+		SwappyGL_init(env, activity);
+		SwappyGL_setSwapIntervalNS(SWAPPY_SWAP_60FPS);
+	}
+#endif
 
 	ANativeWindow* aNativeWindow = ANativeWindow_fromSurface(env, surface);
     laya::BackendOptions options;
@@ -321,13 +321,17 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onAppPause(JNIEnv * en
 {
     LOGI("JNI onAppPause");
 	DEBUG_CHECK(isScriptThread());
-	laya::JCConch::s_pConch->onAppPause();
+	if (laya::JCConch::s_pConch) {
+		laya::JCConch::s_pConch->onAppPause();
+	}
 }
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onAppResume(JNIEnv * env, jobject obj )
 {
     LOGI("JNI onAppResume");
 	DEBUG_CHECK(isScriptThread());
-    laya::JCConch::s_pConch->onAppResume();
+	if (laya::JCConch::s_pConch) {
+    	laya::JCConch::s_pConch->onAppResume();
+	}
 }
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onSurfaceCreated(JNIEnv *env, jobject obj, jobject surface)
 {
@@ -388,7 +392,10 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_audioMusicPlayEnd( JNI
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_networkChanged(JNIEnv* env, jobject obj, jint nNetworkType)
 {
 	LOGI("JNI networkChanged");
-    JCConch::s_pScriptRuntime->onNetworkChanged(nNetworkType);
+	if (JCConch::s_pScriptRuntime)
+	{
+    	JCConch::s_pScriptRuntime->onNetworkChanged(nNetworkType);
+	}
 }
 
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_inputChange(JNIEnv* env, jobject obj, jint keycode)

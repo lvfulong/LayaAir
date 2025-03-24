@@ -3,7 +3,7 @@
 #include <Application/App.h>
 #include <SDL2/SDL_syswm.h>
 #include <assert.h>
-extern std::string gRedistPath;
+
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
 extern bool g_bGLCanvasSizeChanged;

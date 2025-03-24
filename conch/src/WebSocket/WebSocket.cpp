@@ -28,8 +28,9 @@
 #include <utils/Log.h>
 #include <utils/Preprocessor.h>
 #include <utils/JCFileSystem.h>
-extern std::string gRedistPath;
-extern std::string gResourcePath;
+#include <platform/OS.h>
+#include <utils/JCFileSystem.h>
+
 const uint32_t RX_BUFFER_SIZE = 65536;
 namespace laya{
 
@@ -767,62 +768,16 @@ lws_context_creation_info WebSocket::createContextCreationInfo(const struct lws_
 
 lws_vhost* WebSocket::createVhost(struct lws_protocols* protocols, int& sslConnection)
 {
-    std::string caFileName = "cacert.pem";
-#ifdef OS_WINDOWS
-    static std::string caFilePath = gRedistPath + std::string("ca\\") + caFileName;
-    bool isCAFileExist = FileSystem::exists(caFilePath);
-
-#elif defined(OS_LINUX)
-    static std::string caFilePath = gRedistPath + std::string("ca/") + caFileName;
-    bool isCAFileExist = FileSystem::exists(caFilePath);
-#else
-    static std::string caFilePath = gResourcePath + "ca/" + caFileName;
-    bool isCAFileExist = JCConch::s_pAssetsFiles->isFileExist(("ca/" + caFileName).c_str());
-#endif
+    static std::string caFilePath = OS::getAssetFullPath("ca/cacert.pem");
+    bool isCAFileExist = FileSystem::exists(caFilePath); 
 
     lws_context_creation_info info = createContextCreationInfo(protocols, isCAFileExist);
-
     if (sslConnection != 0)
     {
         if (isCAFileExist)
         {
-#if defined(OS_ANDROID) || defined(OS_OHOS)   
-            // if ca file is in the apk, try to extract it to writable path
-            std::string writablePath = gRedistPath;
-            static std::string newCaFilePath = writablePath + caFileName;
-
-            if (FileSystem::exists(newCaFilePath))
-            {
-                LOGI("ca file already exists in apk [%s]", newCaFilePath.c_str());
-                info.ssl_ca_filepath = newCaFilePath.c_str();
-            }
-            else
-            {
-                char* sJSRuntime = NULL;
-                int nSize = 0;
-                if (JCConch::s_pAssetsFiles->loadFileContent(caFilePath.c_str(), sJSRuntime, nSize))
-                {
-                    if (writeFileSync1(newCaFilePath.c_str(), sJSRuntime, nSize))
-                    {
-                        info.ssl_ca_filepath = newCaFilePath.c_str();
-                        LOGE("copy ca file succeed");
-                    }
-                    else
-                    {
-                        LOGE("write ca file failed while copy it to apk");
-                        sslConnection = sslConnection | LCCSCF_ALLOW_SELFSIGNED | LCCSCF_SKIP_SERVER_CERT_HOSTNAME_CHECK;
-                    }
-                }
-                else
-                {
-                    LOGE("read ca file failed while copy it to apk");
-                    sslConnection = sslConnection | LCCSCF_ALLOW_SELFSIGNED | LCCSCF_SKIP_SERVER_CERT_HOSTNAME_CHECK;
-                }
-            }
-#else
             LOGI("find ca file in [%s]", caFilePath.c_str());
             info.ssl_ca_filepath = caFilePath.c_str();
-#endif
         }
         else
         {

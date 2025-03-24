@@ -115,7 +115,7 @@ namespace laya
                 if (n>0)
                     ss.at(n) = '.';
 
-                std::string cookiefile = JSConchConfig::getLocalStoragePath() + ss + "_curlcookie.txt";
+                std::string cookiefile = JSConchConfig::getLocalStoragePath() + "/" + ss + "_curlcookie.txt";
                 pdm->setCookieFile(cookiefile.c_str());
             }
         }
@@ -145,9 +145,9 @@ namespace laya
         JCConch::s_pScriptRuntime->m_pJSOnceOtherEvtFuction = jsbind::Persistent(p_pFunction);
         JCConch::s_pConchRender->requestCaptureScreen();
     }
-    const char* JSRuntime::getCachePath() 
+    std::string JSRuntime::getCachePath() 
     {
-        return JCConch::s_pConch->m_sCachePath.c_str();
+        return JCConch::getAppCachePath();
     }
     unsigned char* _readAssetAlloc(int sz, void* pUserData) 
     {
@@ -207,7 +207,7 @@ namespace laya
     {
         JCImageManager* pImageManger = JCConch::s_pConchRender->m_pImageManager;
         if (pImageManger == NULL) return;
-        std::string sFilePath = JCConch::s_pConch->m_strLocalStoragePath;
+        std::string sFilePath = JCConch::getLocalStoragePath();
         sFilePath += "/imagesLog.txt";
         pImageManger->printCorpseImages(sFilePath.c_str());
     }

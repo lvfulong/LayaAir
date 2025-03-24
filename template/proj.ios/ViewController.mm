@@ -37,7 +37,9 @@
     
     _cellularData = [[CTCellularData alloc] init];
     if (_cellularData.restrictedState == kCTCellularDataNotRestricted || _pNetworkListener.currentReachabilityStatus != NotReachable) {
-        [self initConch];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self initConch];
+        });
     } else {
         __weak ViewController* weakSelf = self;
         [self networkAuthorizationAvalible:^{

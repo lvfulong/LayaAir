@@ -44,9 +44,6 @@
 #include "platform/ohos/napi/helper/NapiHelper.h"
 #endif
 
-std::string gRedistPath = "";
-std::string gResourcePath = "";
-std::string gAssetRootPath = "";
 
 int g_nInnerWidth = 1024;
 int g_nInnerHeight = 768;
@@ -61,6 +58,10 @@ namespace laya
     JCFileSource* JCConch::s_pAssetsFiles = NULL;
     std::shared_ptr<JCConchRender> JCConch::s_pConchRender;
     std::shared_ptr<JCScriptRuntime> JCConch::s_pScriptRuntime;
+
+    std::string JCConch::s_localStoragePath;
+    std::string JCConch::s_cachePath;
+
     void _vibrate()
     {
 #if defined(OS_ANDROID)
@@ -72,11 +73,25 @@ namespace laya
     }
     JCConch::JCConch()
     {
-        m_sCachePath = gRedistPath + "/appCache";
-        if (!FileSystem::exists(m_sCachePath))
+        s_cachePath = OS::getTemporaryCachePath() + "/appCache";
+        if (!FileSystem::exists(s_cachePath))
         {
-            FileSystem::mkdir(m_sCachePath);
+            if (!FileSystem::mkdir(s_cachePath))
+            {
+                LOGE("Failed to create cache path: %s", s_cachePath.c_str());
+            }
         }
+
+        s_localStoragePath = OS::getTemporaryCachePath() + "/localstorage";
+        if (!FileSystem::exists(s_localStoragePath))
+        {
+            if (!FileSystem::mkdir(s_localStoragePath))
+            {
+                LOGE("Failed to create localStorage path: %s", s_localStoragePath.c_str());
+            }
+        }
+    
+
         laya::g_kSystemConfig.loadConfigIniFile();
 #ifdef OS_APPLE
 #elif defined(OS_WINDOWS)
@@ -86,7 +101,6 @@ namespace laya
 #endif
         m_nUrlHistoryPos = -1;
         
-
         g_DecThread = std::make_shared<JCWorkerThread>(new JCWorkerThread(true));
         g_DecThread->setThreadName("image decode");
 		g_FileIOThread = new JCWorkerThread(true);
@@ -98,30 +112,17 @@ namespace laya
         m_pFileResMgr = new JCFileResManager(pdmgr);
 
 
-       
         LOGI("Graphics API %s", toString(g_kSystemConfig.m_graphicsAPI).c_str());
-
-
         s_pConchRender.reset(new JCConchRender(m_pFileResMgr));
         s_pConchRender->init();
 
         s_pScriptRuntime.reset(new JCScriptRuntime());
-        //------------------------------------------------------------------------------
-
+ 
         m_pAssetsRes = JCConch::s_pAssetsFiles;
         m_strStartJS = "scripts/apploader.js";
 
         JCConch::s_pScriptRuntime->init(m_pFileResMgr, m_pAssetsRes, this);
 
-
-        //onAppStart();
-        m_strLocalStoragePath = gRedistPath + "/localstorage/";
-
-        if (!FileSystem::exists(m_strLocalStoragePath))
-        {
-            FileSystem::mkdir(m_strLocalStoragePath);
-        }
-    
         initializeCurrentThreadAsScriptThread();
         JCConch::s_pScriptRuntime->m_scriptThreadMessageLoop = &MessageLoop::getCurrent();
         

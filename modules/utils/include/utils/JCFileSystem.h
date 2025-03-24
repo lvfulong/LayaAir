@@ -42,10 +42,12 @@ bool rm(const std::string &path);
 std::vector<std::string> readdirSync(const std::string& path);
 bool is_directory(const std::string &path);
 bool is_regular_file(const std::string &path);
+bool is_absolute(const std::string &path);
 uintmax_t file_size(const std::string &path);
 std::time_t last_write_time(const std::string &path);
 std::string filename(const std::string &path);
 std::string remove_filename(const std::string& path);
+std::string parent_path(const std::string& path);
 } // namespace FileSystem
 } // namespace laya
 

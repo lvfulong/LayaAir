@@ -54,7 +54,7 @@ namespace laya
         static int getJSDebugPort();
 
     public:
-	    static const char* getLocalStoragePath();
+	    static const std::string& getLocalStoragePath();
 	    static float getTotalMem();
 	    static int getUsedMem();
 	    static int getAvalidMem();

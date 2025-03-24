@@ -6,18 +6,16 @@ using namespace laya;
 NAPIFun NAPIFun::fun_;
 NativeResourceManager* g_pAssetManager = nullptr;
 
-void NAPIFun::ConchNAPI_configSetURL(std::string p_strUrl)
-{
-    g_kSystemConfig.m_strStartURL = p_strUrl;
-}
-void NAPIFun::ConchNAPI_InitDLib(napi_value assetManager, std::string p_strCachePath)
+
+void NAPIFun::ConchNAPI_init(napi_value assetManager, std::string url, std::string persistentDataPath, std::string temporaryCachePath)   
 {
     auto fun = NAPIFun::GetInstance();
-    LOGI("NAPI InitDLib %s ", p_strCachePath.c_str());
+    LOGI("NAPI init %s %s %s", url.c_str(), persistentDataPath.c_str(), temporaryCachePath.c_str());  
     DEBUG_CHECK(!laya::JCConch::s_pConch);
 
-    gRedistPath = p_strCachePath;
-    gRedistPath += "/";
+    OS::setPersistentDataPath(persistentDataPath);
+    OS::setTemporaryCachePath(temporaryCachePath);  
+    g_kSystemConfig.m_strStartURL = url;
 
     napi_env env = aki::JSBind::GetScopedEnv();
     g_pAssetManager = OH_ResourceManager_InitNativeResourceManager(env, assetManager);
@@ -65,8 +63,7 @@ void NAPIFun::ConchNAPI_handleKeyboardComplete(const std::string &value)
 }
 JSBIND_GLOBAL()
 {
-    JSBIND_FUNCTION(NAPIFun::ConchNAPI_configSetURL, "ConchNAPI_configSetURL");
-    JSBIND_FUNCTION(NAPIFun::ConchNAPI_InitDLib, "ConchNAPI_InitDLib");
+    JSBIND_FUNCTION(NAPIFun::ConchNAPI_init, "ConchNAPI_init");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_audioMusicPlayEnd, "ConchNAPI_audioMusicPlayEnd");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_networkChanged, "ConchNAPI_networkChanged");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_inputChange, "ConchNAPI_inputChange");

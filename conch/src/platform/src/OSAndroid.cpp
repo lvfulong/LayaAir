@@ -7,6 +7,9 @@
 #if defined(USE_SWAPPY)
 #include <swappy/swappyGL.h>
 #endif
+#include <utils/JCFileSystem.h>
+#include <utils/JCFileSource.h>
+
 namespace laya
 {
 int OS::getUsedMem()
@@ -193,14 +196,14 @@ void OS::setPreferredFramesPerSecond(uint64_t fps)
     #endif
     }
 }
-std::string OS::getExePath()
+std::string OS::getExecutablePath()
 {
     char buf[2048];
     memset(buf, 0, 2048);
     ssize_t len = readlink("/proc/self/exe", buf, sizeof(buf) - 1);
     if (len <= 0)
     {
-        LOGE("getExePath failed");
+        LOGE("getExecutablePath failed");
         return "";
     }
     buf[len] = 0;

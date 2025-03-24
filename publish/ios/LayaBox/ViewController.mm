@@ -37,7 +37,9 @@
     
     _cellularData = [[CTCellularData alloc] init];
     if (_cellularData.restrictedState == kCTCellularDataNotRestricted || _pNetworkListener.currentReachabilityStatus != NotReachable) {
-        [self initConch];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self initConch];
+        });
     } else {
         __weak ViewController* weakSelf = self;
         [self networkAuthorizationAvalible:^{
@@ -107,7 +109,7 @@
      UIInterfaceOrientationMaskLandscapeLeft,        ===8
      UIInterfaceOrientationMaskLandscapeRight,       ===16
      */
-     return [conchRuntime getOrientationMask];
+    return [conchRuntime getOrientationMask];
 }
 //-------------------------------------------------------------------------------
 - (BOOL)shouldAutorotate
@@ -137,6 +139,7 @@
         _displayLink.preferredFramesPerSecond = 60;
     }
     [_displayLink addToRunLoop: [NSRunLoop mainRunLoop] forMode: NSDefaultRunLoopMode];
+    _conchRuntime->m_displayLink = _displayLink;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
 }

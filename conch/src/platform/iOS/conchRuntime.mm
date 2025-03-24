@@ -49,9 +49,6 @@
 extern bool g_bGLCanvasSizeChanged;
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
-extern std::string gRedistPath;
-extern std::string gResourcePath;
-extern std::string gAssetRootPath;
 extern bool gbBackground;
 //------------------------------------------------------------------------------
 static conchRuntime* g_pIOSConchRuntime = nil;
@@ -83,8 +80,6 @@ static conchRuntime* g_pIOSConchRuntime = nil;
         m_pMp3Player = NULL;
         m_pNetworkListener = NULL;
         m_fRetinaValue = 1;
-        m_nsRootResourcePath = nil;
-        m_nsRootCachePath = nil;
         m_pNSTimer = nil;
         m_bIgnoreCurEvent = false;
         m_fIOSVersion = 0;
@@ -135,8 +130,6 @@ static conchRuntime* g_pIOSConchRuntime = nil;
                                                           kEAGLDrawablePropertyColorFormat : colorFormat };
     
     
-    m_nsRootResourcePath = [self getResourcePath];
-    m_nsRootCachePath = [self getRootCachePath];
     //NSLog(@"AppVersion=%@",[conchConfig GetInstance]->m_sAppVersion );
     //if( [conchConfig GetInstance]->m_bNotification)
     //{
@@ -239,19 +232,6 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
     m_pNetworkListener=[LayaReachability reachabilityForInternetConnection];
     [m_pNetworkListener startNotifier];
 }
-//------------------------------------------------------------------------------
--(NSString*) getRootCachePath
-{
-    NSString* sAppDirctory = NSHomeDirectory();
-    NSString* sDownloadRootPath = [ NSString stringWithFormat: @"%@/Library/Caches/", sAppDirctory ];
-    return sDownloadRootPath;
-}
-//------------------------------------------------------------------------------
--(NSString*) getResourcePath
-{
-    return [[NSBundle mainBundle] resourcePath];
-}
-//------------------------------------------------------------------------------
 -(void)destroy
 {
     if (m_pTouchFilter != nullptr)
@@ -297,15 +277,17 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
 {
     if( m_bEngineInited == false )
     {
+        NSURLCache *URLCache = [[NSURLCache alloc] initWithMemoryCapacity:4 * 1024 * 1024
+                                                               diskCapacity:100 * 1024 * 1024
+                                                                   diskPath:nil];
+        [NSURLCache setSharedURLCache:URLCache];
+        
         g_nInnerWidth = m_pResolution->x*m_fRetinaValue;
         g_nInnerHeight = m_pResolution->y*m_fRetinaValue;
-        gRedistPath = [m_nsRootCachePath cStringUsingEncoding:NSUTF8StringEncoding];
-        const char* sResourcePath = [m_nsRootResourcePath cStringUsingEncoding:NSUTF8StringEncoding];
+        std::string resourcePath = CToObjectCGetRootAssetsPath();
         laya::JCIosFileSource* pRedistFileResource = new laya::JCIosFileSource();
-        gResourcePath = sResourcePath;
-        gResourcePath += "/";
-        gAssetRootPath= gResourcePath+"/cache/";
-        pRedistFileResource->Init( gResourcePath.c_str() );
+        resourcePath += "/";
+        pRedistFileResource->Init(resourcePath.c_str());
         laya::JCConch::s_pAssetsFiles = pRedistFileResource;
         laya::JCConch::s_pConch.reset(new laya::JCConch());
         laya::JCConch::s_pConchRender->createBackend(m_options);

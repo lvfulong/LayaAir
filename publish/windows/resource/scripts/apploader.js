@@ -1488,7 +1488,7 @@ class XMLHttpRequest extends EventTarget {
         var onPostError = function (e1, e2) {
             var _t = this._t;
             _t._readyState = 4;
-            _t._status = 404;
+            _t._status = e2;
             _t.xhr._changeState(4);
             if (_t.onerror) {
                 var ev = new _lbEvent("error");

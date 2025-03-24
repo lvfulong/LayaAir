@@ -6,14 +6,11 @@ import android.view.Surface;
 
 import layaair.game.conch.LayaConch5;
 
-public class ConchJNI
-{
+public class ConchJNI {
 	public static boolean g_bInitialized=false;
-	public static boolean initNativeLibrary(String library, boolean plugin)
-	{
-		try
-		{
-			if(plugin){
+	public static boolean initNativeLibrary(String library, boolean plugin) {
+		try {
+			if(plugin) {
 				System.load(library);
 			}
 			else {
@@ -21,8 +18,7 @@ public class ConchJNI
 			}
 			g_bInitialized = true;
 		}
-		catch(Exception e)
-		{
+		catch(Exception e) {
 			e.printStackTrace();
 			g_bInitialized = false;
 		}
@@ -31,8 +27,9 @@ public class ConchJNI
 
 	public static class ConchOptions {
 		public String url;
-		public Object am;
-		public String cachePath;
+		public Object assetManager;
+		public String persistentDataPath;
+        public String temporaryCachePath;
 		public String apkExpansionMainPath;
 		public String apkExpansionPatchPath;
 	}
@@ -54,19 +51,12 @@ public class ConchJNI
 	public static native void alertCallback();
 	public static native void RunJS(String jsstring);
 	public static native void audioMusicPlayEnd();
-
 	public static native void networkChanged( int p_nNetworkType );
-
 	public static native void inputChange(int keyCode);
 	public static native void handleKeyboardInput(String strValue);
-
 	public static native void handleKeyboardConfirm(String strValue);
-
 	public static native void handleKeyboardComplete(String strValue);
-
 	public static native void reloadJS();
-
 	public static native void urlBack();
-
 	public static native void handleAsyncMessageMethodNative(long nativeHandle, String result);
 }
