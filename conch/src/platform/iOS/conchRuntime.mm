@@ -277,6 +277,11 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
 {
     if( m_bEngineInited == false )
     {
+        NSURLCache *URLCache = [[NSURLCache alloc] initWithMemoryCapacity:4 * 1024 * 1024
+                                                               diskCapacity:100 * 1024 * 1024
+                                                                   diskPath:nil];
+        [NSURLCache setSharedURLCache:URLCache];
+        
         g_nInnerWidth = m_pResolution->x*m_fRetinaValue;
         g_nInnerHeight = m_pResolution->y*m_fRetinaValue;
         std::string resourcePath = CToObjectCGetRootAssetsPath();
