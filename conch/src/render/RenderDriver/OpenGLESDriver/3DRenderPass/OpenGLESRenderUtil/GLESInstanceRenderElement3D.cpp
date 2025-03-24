@@ -238,11 +238,17 @@ namespace laya
 		case BaseRenderType::SimpleSkinRender: 
 		{
 
-			worldMatrixData = addUpdateBuffer(_instanceStateInfo->worldInstanceVB, 16, GLESInstanceRenderElement3D::maxInstanceCount)->data();
+			worldMatrixData = addUpdateBuffer(_instanceStateInfo->worldInstanceVB,20, GLESInstanceRenderElement3D::maxInstanceCount)->data();
 			drawCount = _instanceElementList.size();
 			geometry->setInstanceCount(drawCount);
 			for (uint32_t i = 0; i < drawCount; i++) {
-				memcpy(worldMatrixData + i * 16, _instanceElementList[i]->transform->getWorldMatrix().elements, 16 * sizeof(float));
+				memcpy(worldMatrixData + i * 20, _instanceElementList[i]->transform->getWorldMatrix().elements, 16 * sizeof(float));
+				Vector4& params = _instanceElementList[i]->owner->worldParams;
+				int ind = i * 20 + 16;
+				worldMatrixData[ind] = (float)params.x;
+				worldMatrixData[ind + 1] = (float)params.y;
+				worldMatrixData[ind + 2] = (float)params.z;
+				worldMatrixData[ind + 3] = (float)params.w;
 			}
 			//simpleAnimationData
 			float* simpleAnimatorData = addUpdateBuffer(_instanceStateInfo->simpleAnimatorVB, 4, GLESInstanceRenderElement3D::maxInstanceCount)->data();
