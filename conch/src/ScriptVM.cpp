@@ -1,4 +1,5 @@
 #include "ScriptVM.h"
+#include <cstring>
 
 namespace laya
 {
