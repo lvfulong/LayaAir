@@ -19,11 +19,9 @@
 #include <utils/JCCrypto.h>
 #include "../downloadMgr/JCHttpHeader.h"
 #include "../JCSystemConfig.h"
-#include "../../downloadCache/DCC1/JCFileResDCC.h"
 #include "../../downloadCache/DCC2/JCFileResDCC2.h"
 #include <Bindings/JSConchConfig.h>
 
-extern std::string gRedistPath;
 namespace laya
 {
     HandleFileData gHandleDataFunc = nullptr;
@@ -57,10 +55,6 @@ namespace laya
         m_pDownloader = nullptr;
     }
 
-    std::string JCFileResManager::getAppCachePath() {
-        return gRedistPath + "/appCache";
-    }
-
     void JCFileResManager::clear() {
         std::lock_guard<std::mutex> lock(m_maplock);
         FileResMap::iterator it = m_ResMap.begin();
@@ -78,29 +72,12 @@ namespace laya
         JCFileRes* pRes = NULL;
         FileResMap::iterator it = m_ResMap.find(url);
         if (it == m_ResMap.end()) {
-
-            if(JSConchConfig::s_useDCC2){
-                auto dcc2 = new JCFileResDCC2(this);
-                dcc2->setDownloader(m_pDownloader.get());
-                pRes = dcc2;
-                m_ResMap[url] = pRes;
-                pRes->load(url.c_str(), nullptr);
-                return pRes;
-            }else{
-                pRes = new JCFileResDCC(m_pDownloadMgr,this);
-                if (p_nConnTimeout>0) {
-                    pRes->m_nConnTimeout = p_nConnTimeout;
-                }
-                if (p_nOptTimeout > 0) {
-                    pRes->m_nOptTimeout = p_nOptTimeout;
-                }
-                m_ResMap[url] = pRes;
-                //问题：load和下载回调不在一个线程会有问题么？
-                // 如果load不修改表和文件内容，下载回调在最后再设置ready，应该没事
-                pRes->load(url.c_str(),nullptr);
-                //m_pThread = workerThread::getCurThread();
-                return pRes;
-            }
+            auto dcc2 = new JCFileResDCC2(this);
+            dcc2->setDownloader(m_pDownloader.get());
+            pRes = dcc2;
+            m_ResMap[url] = pRes;
+            pRes->load(url.c_str(), nullptr);
+            return pRes;
         }
         pRes = (*it).second;
         if (p_nConnTimeout>0) {

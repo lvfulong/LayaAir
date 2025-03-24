@@ -1,11 +1,22 @@
 #include "RTReflectionProb.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalTex.h"
+#include "render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h"
 #include "render/Property.h"
 namespace laya
 {
     uint32_t RTReflectionProb::_idCounter = 0;
-	void RTReflectionProb::applyRenderData(GLESShaderData* shaderData) {
+    RTReflectionProb::RTReflectionProb()
+    {
+            _id = RTReflectionProb::_idCounter++;
+            shaderData = new GLESShaderData(new RTDefineDatas());   
+    }
+
+    bool RTReflectionProb::_needUpdate() {
+        return updateMark != _updateMaskFlag;
+    }
+    void RTReflectionProb::applyRenderData() {
+        _updateMaskFlag = updateMark;
         if (!boxProjection) {
             shaderData->removeDefine(Sprite3DRenderDeclarationProperty::SHADERDEFINE_SPECCUBE_BOX_PROJECTION);
         }
@@ -32,8 +43,10 @@ namespace laya
             else
                 shaderData->removeDefine(Sprite3DRenderDeclarationProperty::SHADERDEFINE_IBL_RGBD);
            
-            if(ambientSH!=nullptr)
+            if (ambientSH != nullptr) {
+
                 shaderData->setBuffer(RenderableSprite3DProperty::AMBIENTSH, (uint8_t*)ambientSH, ambientSHByteLength);
+            }
         }
         else {
             shaderData->removeDefine(Sprite3DRenderDeclarationProperty::SHADERDEFINE_GI_LEGACYIBL);

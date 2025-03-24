@@ -73,8 +73,6 @@ namespace laya{
 
 		~JCFileResManager();
 
-        static std::string getAppCachePath();
-
 		void setFileCache( JCServerFileCache* p_pFileCache){
 			m_pFileCache = p_pFileCache;
 		}

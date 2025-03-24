@@ -282,7 +282,7 @@ void JSIOSEditBox::onInput()
 {
     std::weak_ptr<int> cbref(m_CallbackRef);
     std::function<void(void)>pFunction =std::bind(&JSIOSEditBox::onInputCallJSFunction,this,cbref);
-    JCConch::s_pScriptRuntime->postToJS(pFunction);
+    laya::postToJS(pFunction);
 }  
 void JSIOSEditBox::onInputCallJSFunction(std::weak_ptr<int> callbackref)
 {

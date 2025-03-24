@@ -3,7 +3,7 @@
 #include <Application/App.h>
 #include <SDL2/SDL_syswm.h>
 #include <assert.h>
-extern std::string gRedistPath;
+
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
 extern bool g_bGLCanvasSizeChanged;
@@ -389,10 +389,7 @@ void App::run(const Config &config)
                 switch (event.window.event)
                 {
                 case SDL_WINDOWEVENT_RESIZED:
-                    g_nInnerWidth = event.window.data1;
-                    g_nInnerHeight = event.window.data2;
-                    g_bGLCanvasSizeChanged = true;
-                    laya::JCConch::s_pConchRender->onScreenSurfaceResize(g_nInnerWidth, g_nInnerHeight);
+                    laya::JCConch::s_pConchRender->onScreenSurfaceResize(event.window.data1, event.window.data2);
                     break;
                 case SDL_WINDOWEVENT_MINIMIZED:
                     if (!m_min)

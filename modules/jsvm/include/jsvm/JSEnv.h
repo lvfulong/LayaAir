@@ -4,6 +4,9 @@
 #include <jsvm/JSVM.h>
 #include <map>
 #include <vector>
+#include <mutex>
+#include <thread>
+#include <functional>
 #if defined(JS_V8)
 #include <v8.h>
 #endif
@@ -40,12 +43,20 @@ class JSEnv
     {
         return env_;
     }
+    std::thread::id getThreadID()
+    {
+        return thread_id_;
+    }
 #if defined(JS_V8)
     inline v8::Local<v8::Private> napi_wrapper() const
     {
         return isolate_data_->napi_wrapper();
     }
     JSEnv(IsolateData *isolate_data, v8::Isolate *isolate, jsvm_env env);
+    void pushDbgFunc(std::function<void(void)> task);
+    void runDbgFuncs();
+    void waitAndRunDbgFuncs();
+    bool hasDbgFuncs();
 #endif
 #if defined(JS_OHOS_JSVM)
     JSEnv(IsolateData *isolate_data, jsvm_env env);
@@ -53,8 +64,11 @@ class JSEnv
   private:
     jsvm_env env_;
     IsolateData *isolate_data_;
+    std::thread::id thread_id_;
 #if defined(JS_V8)
     v8::Isolate *isolate_;
+    std::vector<std::function<void(void)>> m_DbgFunction; // 调试函数
+    std::mutex m_DbgFuncLock;
 #endif
 #if defined(JS_OHOS_JSVM)
   public:

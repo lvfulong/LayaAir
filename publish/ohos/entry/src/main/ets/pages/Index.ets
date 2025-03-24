@@ -1,12 +1,14 @@
 import laya from 'liblaya.so'
 import { ContextType } from '@ohos/libSysCapabilities'
 import { TextInputInfo } from '@ohos/libSysCapabilities/src/main/ets/components/EditBox'
+import { TextInputInfoNew } from '@ohos/libSysCapabilities/src/main/ets/components/EditBoxNew'
 import { TextInputDialogEntity } from '@ohos/libSysCapabilities'
 import { WebViewInfo } from '@ohos/libSysCapabilities/src/main/ets/components/webview/WebViewMsg'
 import { VideoPlayerInfo } from '@ohos/libSysCapabilities/src/main/ets/components/videoplayer/VideoPlayer'
 import { WorkerMsgUtils } from '@ohos/libSysCapabilities/src/main/ets/utils/WorkerMsgUtils'
 import { WorkerManager } from '../workers/WorkerManager'
 import { LayaEditBox } from '../components/LayaEditBox'
+import { LayaEditBoxNew } from '../components/LayaEditBoxNew'
 import { LayaWebview } from '../components/LayaWebview'
 import { LayaVideoPlayer } from '../components/LayaVideoPlayer'
 import { TextInputDialog } from '../components/TextInputDialog'
@@ -29,6 +31,9 @@ struct Index {
   // EditBox
   @State editBoxArray: TextInputInfo[] = [];
   private editBoxIndexMap: Map<number, TextInputInfo> = new Map;
+  // EditBoxNew
+  @State editBoxNewArray: TextInputInfoNew[] = [];
+  private editBoxNewIndexMap: Map<number, TextInputInfoNew> = new Map;
   // WebView
   @State webViewArray: WebViewInfo[] = [];
   private webViewIndexMap: Map<number, number> = new Map;
@@ -54,11 +59,12 @@ struct Index {
   })
   // PanGesture
   private panOption: PanGestureOptions = new PanGestureOptions({ direction: PanDirection.Up | PanDirection.Down });
-
   onPageShow() {
     console.log('[LIFECYCLE-Page] onPageShow');
     GlobalContext.storeGlobalThis(GlobalContextConstants.LAYA_EDIT_BOX_ARRAY, this.editBoxArray);
     GlobalContext.storeGlobalThis(GlobalContextConstants.LAYA_EDIT_BOX_INDEX_MAP, this.editBoxIndexMap);
+    GlobalContext.storeGlobalThis(GlobalContextConstants.LAYA_EDIT_BOX_NEW_ARRAY, this.editBoxNewArray);
+    GlobalContext.storeGlobalThis(GlobalContextConstants.LAYA_EDIT_BOX_NEW_INDEX_MAP, this.editBoxNewIndexMap);
     GlobalContext.storeGlobalThis(GlobalContextConstants.LAYA_WORKER, layaWorker);
     GlobalContext.storeGlobalThis(GlobalContextConstants.LAYA_WEB_VIEW_ARRAY, this.webViewArray);
     GlobalContext.storeGlobalThis(GlobalContextConstants.LAYA_WEB_VIEW_INDEX_MAP, this.webViewIndexMap);
@@ -133,10 +139,13 @@ struct Index {
         })
         .onDestroy(() => {
         })
+        .expandSafeArea([SafeAreaType.KEYBOARD])
       ForEach(this.editBoxArray, (item: TextInputInfo) => {
         LayaEditBox({ textInputInfo: item });
       }, (item: TextInputInfo) => item.viewTag.toString())
-
+      ForEach(this.editBoxNewArray, (item: TextInputInfoNew) => {
+        LayaEditBoxNew({ textInputInfo: item });
+      }, (item: TextInputInfoNew) => item.viewTag.toString())
       ForEach(this.webViewArray, (item: WebViewInfo) => {
         LayaWebview({ viewInfo: item })
       }, (item: WebViewInfo) => item.uniqueId.toString())

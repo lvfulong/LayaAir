@@ -4,6 +4,7 @@
 #include <utils/JCCommonMethod.h>
 #include <utils/JCFileSystem.h>
 #include <utils/Log.h>
+#include <platform/OS.h>
 #ifdef OS_WINDOWS
 #include <windows.h>
 #endif
@@ -12,8 +13,7 @@
 #if defined(USE_SWAPPY)
 #include <swappy/swappyGL.h>
 #endif
-extern std::string gAssetRootPath;
-extern std::string gRedistPath;
+
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
 
@@ -38,6 +38,40 @@ static WindowMode stringToWindowMode(const std::string &mode)
         return WindowMode::WM_Window;
     }
 }
+std::string toString(GraphicsAPI api)
+{
+    switch (api)
+    {
+    case GraphicsAPI::Invalid:
+        return "Invalid";
+        break;
+    case GraphicsAPI::OpenGLES:
+        return "OpenGLES";
+        break;
+    case GraphicsAPI::WebGL:
+        return "WebGL";
+        break;
+    default:
+        return "Invalid";
+        break;
+    }
+
+}
+GraphicsAPI toGraphicsAPI(const std::string &str)
+{
+    if (compareStrings(str, "OpenGLES", false))
+    {
+        return GraphicsAPI::OpenGLES;
+    }
+    else if (compareStrings(str, "WebGL", false))
+    {
+        return GraphicsAPI::WebGL;
+    }
+    else
+    {
+        return GraphicsAPI::Invalid;
+    }
+}
 JCSystemConfig g_kSystemConfig;
 JCSystemConfig::JCSystemConfig()
 {
@@ -50,26 +84,19 @@ void JCSystemConfig::reset()
 #if defined(USE_SWAPPY)
 bool JCSystemConfig::isSwappyEnabled()
 {
-    return m_swappyEnabled && SwappyGL_isEnabled();
+    return m_useSwappy && SwappyGL_isEnabled(); 
 }
 #endif
 void JCSystemConfig::loadConfigIniFile()
 {
     // ���������ļ����ÿ���
-    std::string configpath = gAssetRootPath;
-    configpath += "config.ini";
-#if defined(OS_IOS) || defined(OS_ANDROID) || defined(OS_OHOS)
-    std::string content = JCConch::s_pAssetsFiles->readTextAsset("config.ini");
-    JCBuffer buf((char *)content.c_str(), strlen(content.c_str()), false, false);
-    std::string tempFilePath = gRedistPath + "appCache" + std::string("/tmp_config.ini");
-    writeFileSync(tempFilePath.c_str(), buf, JCBuffer::utf8);
-    configpath = tempFilePath;
-#endif
-    if (!FileSystem::exists(configpath))
+    std::string configPath = OS::getAssetFullPath("config.ini");
+
+    if (!FileSystem::exists(configPath))
     {
         LOGE("No config.ini file found!");
     }
-    IniFile configIni(configpath.c_str());
+    IniFile configIni(configPath.c_str());
 
 #if defined(OS_WINDOWS) || defined(OS_LINUX)
     int defaultWidth = 1280;
@@ -132,6 +159,18 @@ void JCSystemConfig::loadConfigIniFile()
     {
         LOGW("Warning: can not find ios:orientation use default %d", 24);
     }
+#endif
+#if defined(OS_ANDROID)
+    m_useSwappy = true;
+    if (configIni.hasEntry("android:UseSwappy"))
+    {
+        m_useSwappy = configIni.getBoolOrDefault("android:UseSwappy", true);
+    }
+    else
+    {
+        LOGW("Warning: can not find android:UseSwappy use default %d", true);
+    }
+
 #endif
     m_nJSDebugMode = configIni.getIntOrDefault("common:JSDebugMode", 0);
     m_nJSDebugPort = configIni.getIntOrDefault("common:JSDebugPort", 5959);

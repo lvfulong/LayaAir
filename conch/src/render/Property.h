@@ -8,6 +8,12 @@
 #include <string>
 namespace laya
 {
+    class Render2DProperty {
+    public:
+        static RTShaderDefine GAMMACORRECT;
+        static void __init__();
+        
+};
 
 class BaseCameraProperty
 {
@@ -101,6 +107,7 @@ class Scene3DShaderDeclaration
   public:
       static std::string UBONAME_SCENE;
       static std::string UBONAME_SHADOW;
+      static std::string UBONAME_GLOBAL;
       
     static RTShaderDefine SHADERDEFINE_SHADOW;
     static RTShaderDefine SHADERDEFINE_SHADOW_SPOT;

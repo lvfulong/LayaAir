@@ -37,7 +37,7 @@ namespace laya
 			stateinfo->state = new GLESBufferState();
 			std::vector<GLESVertexBuffer*> vertexArray = geometry->_bufferState->_vertexBuffers;
 			GLESVertexBuffer* worldMatVertex = new GLESVertexBuffer(BufferTargetType::ARRAY_BUFFER, BufferUsage::Dynamic);
-			worldMatVertex->setDataLength(GLESInstanceRenderElement3D::maxInstanceCount * 16 * 4);
+			worldMatVertex->setDataLength(GLESInstanceRenderElement3D::maxInstanceCount * 20 * 4);
 			worldMatVertex->_shaderValues = *LayaGL::m_pWebglEngine->getGlobalVertexDeclaration("instanceWorldMatrixDeclaration");
 			worldMatVertex->_instanceBuffer = true;
 			vertexArray.push_back(worldMatVertex);
@@ -164,37 +164,29 @@ namespace laya
 	{
 		std::vector<RTShaderPass*> passes = subshader->shaderpasses;
 		_clearShaderInstance();
+		RTDefineDatas* comDef = _getShaderInstanceDefines(context);
+		comDef->add(MeshSprite3DShaderDeclaration::SHADERDEFINE_GPU_INSTANCE);
 		for (uint32_t j = 0, m = passes.size(); j < m; j++)
 		{
 			RTShaderPass* pass = passes[j];
-			// NOTE:this will cause maybe a shader not render but do prepare before£¬but the developer can avoide this
-			// manual,for example shaderCaster=false.
 			if (pass->pipelineMode != context->pipelineMode)
 				continue;
-
-			RTDefineDatas* comDef = GLESRenderElement3D::_compileDefines;
-			if (context->sceneData)
-			{
-				context->sceneData->_defineDatas->cloneTo(comDef);
-			}
-			else
-			{
-				context->globalConfigShaderData->cloneTo(comDef);
-			}
-
-			if (context->cameraData != nullptr)
-				comDef->addDefineDatas(context->cameraData->_defineDatas);
 			if (renderShaderData != nullptr)
 			{
-				comDef->addDefineDatas(renderShaderData->_defineDatas);
 				pass->nodeCommonMap = owner->commonUniformMap;
 			}
 			else
 			{
 				pass->nodeCommonMap.clear();
 			}
-			comDef->addDefineDatas(materialShaderData->_defineDatas);
-			comDef->add(MeshSprite3DShaderDeclaration::SHADERDEFINE_GPU_INSTANCE);
+
+			if (owner != nullptr) {
+				pass->additionShaderData = &owner->_additionShaderDataKeys;
+			}
+			else
+			{
+				pass->additionShaderData = nullptr;
+			}
 			
 			RTShaderPass::CacheShaderItem* item = pass->getCacheShader(comDef);
 			GLESShaderInstance* shader;
@@ -216,12 +208,18 @@ namespace laya
 
 		case BaseRenderType::MeshRender: 
 		{
-			worldMatrixData = addUpdateBuffer(_instanceStateInfo->worldInstanceVB,16, GLESInstanceRenderElement3D::maxInstanceCount)->data();
+			worldMatrixData = addUpdateBuffer(_instanceStateInfo->worldInstanceVB,20, GLESInstanceRenderElement3D::maxInstanceCount)->data();
 
 			drawCount = _instanceElementList.size();
 			geometry->setInstanceCount(drawCount);
 			for (uint32_t i = 0; i < drawCount; i++) {
-				memcpy(worldMatrixData + i * 16, _instanceElementList[i]->transform->getWorldMatrix().elements, 16 * sizeof(float));
+				memcpy(worldMatrixData + i * 20, _instanceElementList[i]->transform->getWorldMatrix().elements, 16 * sizeof(float));
+				Vector4& params = _instanceElementList[i]->owner->worldParams;
+				int ind = i * 20 + 16;
+				worldMatrixData[ind] = (float)params.x;
+				worldMatrixData[ind+1] = (float)params.y;
+				worldMatrixData[ind+2] = (float)params.z;
+				worldMatrixData[ind+3] = (float)params.w;
 			}
 			bool haveLightMap = renderShaderData->hasDefine(RenderableSprite3D::SAHDERDEFINE_LIGHTMAP) && renderShaderData->hasDefine(MeshSprite3DShaderDeclaration::SHADERDEFINE_UV1);
 			if (haveLightMap) {
@@ -240,11 +238,17 @@ namespace laya
 		case BaseRenderType::SimpleSkinRender: 
 		{
 
-			worldMatrixData = addUpdateBuffer(_instanceStateInfo->worldInstanceVB, 16, GLESInstanceRenderElement3D::maxInstanceCount)->data();
+			worldMatrixData = addUpdateBuffer(_instanceStateInfo->worldInstanceVB,20, GLESInstanceRenderElement3D::maxInstanceCount)->data();
 			drawCount = _instanceElementList.size();
 			geometry->setInstanceCount(drawCount);
 			for (uint32_t i = 0; i < drawCount; i++) {
-				memcpy(worldMatrixData + i * 16, _instanceElementList[i]->transform->getWorldMatrix().elements, 16 * sizeof(float));
+				memcpy(worldMatrixData + i * 20, _instanceElementList[i]->transform->getWorldMatrix().elements, 16 * sizeof(float));
+				Vector4& params = _instanceElementList[i]->owner->worldParams;
+				int ind = i * 20 + 16;
+				worldMatrixData[ind] = (float)params.x;
+				worldMatrixData[ind + 1] = (float)params.y;
+				worldMatrixData[ind + 2] = (float)params.z;
+				worldMatrixData[ind + 3] = (float)params.w;
 			}
 			//simpleAnimationData
 			float* simpleAnimatorData = addUpdateBuffer(_instanceStateInfo->simpleAnimatorVB, 4, GLESInstanceRenderElement3D::maxInstanceCount)->data();

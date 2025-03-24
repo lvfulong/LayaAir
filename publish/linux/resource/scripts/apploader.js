@@ -812,11 +812,11 @@ class Navigator {
     get userAgent() {
         var os = window.layabox.devinfo.os;
         if (os == "ios")
-            return "LayaBox(iPhone; CPU iPhone OS Mac OS X)";
+            return "LayaBox(iPhone; CPU iPhone OS Mac OS X) Mobile";
         else if (os == "android")
-            return "LayaBox Android";
+            return "LayaBox Android Mobile";
         else if (os == "OpenHarmony")
-            return "OpenHarmony";
+            return "OpenHarmony Mobile";
         else
             return 'LayaBox/2.1';
     }
@@ -1488,7 +1488,7 @@ class XMLHttpRequest extends EventTarget {
         var onPostError = function (e1, e2) {
             var _t = this._t;
             _t._readyState = 4;
-            _t._status = 404;
+            _t._status = e2;
             _t.xhr._changeState(4);
             if (_t.onerror) {
                 var ev = new _lbEvent("error");
@@ -5818,6 +5818,17 @@ class HTMLImageElement extends HTMLElement {
     }
 }
 window["HTMLImageElement"] = HTMLImageElement;
+class HTMLInputElementNew extends HTMLElement {
+    setBgColor(c) { }
+    setForbidEdit(b) { }
+    focus() { }
+    blur() { }
+    setPos(x, y) { }
+    constructor() {
+        super();
+        this.tagName = "Input";
+    }
+}
 class HTMLInputElement extends HTMLElement {
     constructor() {
         super();
@@ -6299,7 +6310,7 @@ class Document extends Node {
         return ret;
     }
     create_input() {
-        var rs = new HTMLInputElement();
+        var rs = (conchConfig.getOS() == "Conch-window") ? new HTMLInputElement() : new HTMLInputElementNew();
         rs.ownerDocument = this;
         return rs;
     }

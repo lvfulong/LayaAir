@@ -85,9 +85,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 import static android.content.Context.SENSOR_SERVICE;
 import static android.content.Context.WINDOW_SERVICE;
-public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.FrameCallback {
-	// view
-	private Choreographer mChoreographer;
+public class LayaConch5 implements ILayaGameEgine,OnKeyListener {
 	private static final String TAG = "LayaConch";
 	public AbsoluteLayout m_pAbsLayout = null;
 	public LayaEditBox m_pEditBox = null;
@@ -97,17 +95,15 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 	public DevID m_pDevID = null;
 	private ILayaEventListener m_layaEventListener = null;
 	private boolean m_interceptKey = false;
-	public AssetManager m_AM = null;
+	public AssetManager mAssetManager = null;
 	public Context mCtx = null;
-	public String m_strUrl = "";
-	public String m_strExt = "";
+	public String mUrl = "";
 	public boolean m_bHorizontalScreen ; // 是否横屏
 	private NetworkReceiver m_pNetWorkReveiver;
 	private long m_nBackPressTime = 0;
-	protected int m_nDownloadThreadNum = 3;
-	protected String m_strCachePath = "";
-	protected String m_strExpansionMainPath = "";
-	protected String m_strExpansionPatchPath = "";
+	protected String mCachePath = "";
+	protected String mExpansionMainPath = "";
+	protected String mExpansionPatchPath = "";
 	static public String m_strSoPath = "";
 	static public String m_strJarFile = "";
 	static public String m_strSoFile = "/libconch.so";
@@ -273,14 +269,11 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 		}
 		@Override
 		public void onAccuracyChanged(Sensor sensor, int accuracy) {
-			// TODO Auto-generated method stub
-			int a=accuracy;
 		}
 	};
 
 	public void onCreate() {
 		// 监听网络
-		Log.e(TAG, ">>>>>>>conchjar android-2.0.8");
 		IntentFilter pFilter = new IntentFilter();
 		pFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
 		try 
@@ -297,7 +290,7 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 
 		boolean initedNative = false;
 		if (m_strSoPath.length() > 0) {
-			String pluginPath = getSoPath() + m_strSoFile;// "libegret.so";
+			String pluginPath = getSoPath() + m_strSoFile;
 			initedNative = ConchJNI.initNativeLibrary(pluginPath, true);
 			if (!initedNative) {
 				throw new RuntimeException("Failed to load native runtime library");
@@ -308,141 +301,27 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 				throw new RuntimeException("Failed to load native runtime library");
 			}
 		}
-		if (m_strUrl.length() > 0) {
-			ConchJNI.configSetURL(m_strUrl);
-		}
+		
 		ExportJavaFunction.m_nState = 0;
 		ExportJavaFunction expjava = ExportJavaFunction.GetInstance();
 		expjava.m_pEngine = this;
 		expjava.Init(mCtx);
 		String _marketName = getMarketBundle().getString(MARKET_MARKETNAME);
 
-		PlatformInitOK(0);
-		mChoreographer = Choreographer.getInstance();
-		mChoreographer.postFrameCallback(this);
-	}
-	public void PlatformInitOK(int p_nFlag) {
-		Log.e("0", "==============Java流程 InitMainCanvas()");
 		EngineStart();
 	}
-
-	@Override
-	public void doFrame(long frameTimeNanos) {
-		mChoreographer.postFrameCallback(this);
-		if (m_pCavans != null && m_pCavans.mIsReady) {
-			ConchJNI.onDrawFrame();
-		}
-	}
-
-	static class CacheInfo{
-		int id;
-		String path;
-	}
-	//cachePath 需要到 appCache 那一层。
-	public static Vector<CacheInfo> getCachedApp(String cachePath){
-		Vector<CacheInfo> vecFile = new Vector<CacheInfo>();
-		File file = new File(cachePath);
-		File[] subFile = file.listFiles();
-
-		for (File aSubFile : subFile) {
-			CacheInfo cinfo = new CacheInfo();
-			// 判断是否为文件夹
-			if (aSubFile.isDirectory()) {
-				String filename = aSubFile.getName();
-				//vecFile.add(filename);
-				cinfo.path = cachePath + "/" + filename;
-				if (filename.compareTo("sessionFiles") == 0) {
-					//vecFile.add("-1");//临时缓存
-					cinfo.id = -1;
-				} else {
-					//找有没有id
-					String appidfile = cachePath + "/" + filename + "/sourceid/appid";
-					File appidFile = new File(appidfile);
-					if (appidFile.exists()) {
-						try {
-							BufferedReader br = new BufferedReader(new FileReader(appidfile));
-							String data = br.readLine();
-							//vecFile.add(data);
-							cinfo.id = Integer.parseInt(data);
-						} catch (Exception e) {
-							//vecFile.add("-2");//无法获得
-							cinfo.id = -2;
-						}
-					} else {
-						//vecFile.add("-3");//无法获得
-						cinfo.id = -3;
-					}
-				}
-			}
-			vecFile.add(cinfo);
-		}
-        return vecFile;		
-	}
-	/**
-	 * 删除一个目录。
-	 * @param file
-	 */
-	public static void deletePath(File file) {
-		Log.e("2jni", "cacheMgr delete dir: " + file.toString());
-		if (file.isFile()) {
-			file.delete();
-			return;
-		}
-
-		if (file.isDirectory()) {
-			File[] childFiles = file.listFiles();
-			if (childFiles == null || childFiles.length == 0) {
-				file.delete();
-				return;
-			}
-
-			for (int i = 0; i < childFiles.length; i++) {
-				deletePath(childFiles[i]);
-			}
-			file.delete();
-		}
-	}
-
-	//TEST
 	public void EngineStart() {
-		String strLayaCache = getAppCacheDir() + "/LayaCache";
-		File cacheFolder = new File(strLayaCache);
-		if (!cacheFolder.exists()) {
-			cacheFolder.mkdir();
-		}
-		Log.e(TAG, "plugin-----------------EngineStart() = " + (strLayaCache + "/localstorage"));
-		// 准备localStorage目录
-		File localStoragePath = new File(strLayaCache + "/localstorage");
-		if (!localStoragePath.exists()) {
-			if (!localStoragePath.mkdirs()) {
-				Log.e("", "创建localStorage目录失败！");
-				ExportJavaFunction.alert("创建游戏目录失败，请清理空间或重启应用再试");
-				game_plugin_exitGame();
-				return;
-			}
-		}
-		Activity activity = (Activity)(mCtx);
-		String cachePath = getAppCacheDir() + "/LayaCache";
-		if (m_AM != null) {
-			ConchJNI.InitDLib(activity, m_AM,getDownloadThreadNum(), "cache", cachePath, m_strExpansionMainPath == null ? "" : m_strExpansionMainPath,m_strExpansionPatchPath == null ? "" : m_strExpansionPatchPath);
-		}
-		else {
-			ConchJNI.InitDLib(activity, null,getDownloadThreadNum(), getJarFile(), cachePath, m_strExpansionMainPath == null ? "" : m_strExpansionMainPath,m_strExpansionPatchPath == null ? "" : m_strExpansionPatchPath);
-		}
-		InitView();
+		Log.d(TAG, "==============Java流程 EngineStart()");
+		Activity activity= (Activity) (mCtx);
+		ConchJNI.ConchOptions options = new ConchJNI.ConchOptions();
+		options.assetManager = mAssetManager;
+		options.persistentDataPath = activity.getFilesDir().toString();
+		options.temporaryCachePath = activity.getCacheDir().toString();
+		options.apkExpansionMainPath = mExpansionMainPath;
+		options.apkExpansionPatchPath = mExpansionPatchPath;
+		options.url = mUrl;
+		InitView(options);
 	}
-
-	public  boolean isOpenNetwork()
-	{
-		ConnectivityManager connManager = (ConnectivityManager) mCtx.getSystemService(Context.CONNECTIVITY_SERVICE);
-		return connManager.getActiveNetworkInfo() != null && (connManager.getActiveNetworkInfo().isAvailable() && connManager.getActiveNetworkInfo().isConnected());
-	}
-
-	// 设备控制相关
-	public void setScreenOrientation(int ori) {
-		// IGameApp.setScreenOrientation(ori);
-	}
-
 	public void setScreenWakeLock( boolean p_bWakeLock ) 
 	{
 		try
@@ -517,8 +396,8 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 		}
 	}
 	@SuppressLint("NewApi") @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	void InitView() {
-		m_pCavans = new ConchSurfaceView(mCtx);
+	void InitView(ConchJNI.ConchOptions options) {
+		m_pCavans = new ConchSurfaceView(mCtx, options);
 		if (m_pAbsLayout == null) {
 			m_pAbsLayout = new AbsoluteLayout(this.mCtx);
 			m_pAbsLayout.setBackgroundColor(0x00ffffff);
@@ -609,46 +488,6 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 		}
 	}
 
-    //获取是否存在NavigationBar
-    public static boolean checkDeviceHasNavigationBar(Context context) {
-        boolean hasNavigationBar = false;
-        try {
-            Resources rs = context.getResources();
-            int id = rs.getIdentifier("config_showNavigationBar", "bool", "android");
-            if (id > 0) {
-                hasNavigationBar = rs.getBoolean(id);
-            }
-            Class systemPropertiesClass = Class.forName("android.os.SystemProperties");
-            Method m = systemPropertiesClass.getMethod("get", String.class);
-            String navBarOverride = (String) m.invoke(systemPropertiesClass, "qemu.hw.mainkeys");
-            if ("1".equals(navBarOverride)) {
-                hasNavigationBar = false;
-            } else if ("0".equals(navBarOverride)) {
-                hasNavigationBar = true;
-            }
-        } catch (Exception e) {
-
-        }
-
-        return hasNavigationBar;
-    }
-
-    /*
-    private ContentObserver mNavigationStatusObserver = new ContentObserver(null) {
-        @Override
-        public void onChange(boolean selfChange) {
-            int navigationBarIsMin = Settings.System.getInt(getGameContext().getContentResolver(),
-                    "navigationbar_is_min", 0);
-            if (navigationBarIsMin == 1) {
-                //导航键隐藏了
-            } else {
-                //导航键显示了
-            }
-
-        }
-    };
-    */
-
 	/**
 	 * 判断activity是否处于可用状态
 	 * @param context
@@ -721,16 +560,6 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 		return m_iScreenHeight;
 	}
 
-	// ------------------------------------------------------------------------------
-
-	public void game_conch3_setAssetInfo(AssetManager am) {
-		m_AM = am;
-	}
-
-	public void game_conch3_setAppWorkPath(String runpath) {// 在这里保存运行数据。
-		m_strCachePath = runpath;
-	}
-
 	public AbsoluteLayout getAbsLayout() {
 		return m_pAbsLayout;
 	}
@@ -799,13 +628,13 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 
 	public void onPause() 
 	{
-		mChoreographer.removeFrameCallback(this);
-
 		for (LayaVideoPlayer video :  m_videoPlayers) {
 			video.onPause();
 		}
 		if(mBIsSensor)unRegisterSensor();
-		ConchJNI.OnAppPause();//ui thread
+		if (m_pCavans != null) {
+			m_pCavans.onPause();
+		}
 	}
 
 	public NetworkReceiver getNetworkReceiver() {
@@ -846,13 +675,14 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 	// ------------------------------------------------------------------------------
 	public void onResume() 
 	{
-		mChoreographer.postFrameCallback(this);
-
 		for (LayaVideoPlayer video :  m_videoPlayers) {
 			video.onResume();
 		}
 		if(mBIsSensor)registerSensor();
-		ConchJNI.OnAppResume();//ui thread
+		if (m_pCavans != null) {
+			m_pCavans.onResume();
+		}
+
 	}
 	public void onStop() {
 	}
@@ -868,48 +698,39 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 		}
 		delInstance();
 
-		if(m_pCavans!=null){
-			m_pCavans.destroy();
-		}
-		else{
-			Log.e("Canvas", ">>>>>onDestroy m_pCavans is null");
-		}
-
 		LayaAudioMusic.uninit();
 		destroy();
-
-		ConchJNI.ReleaseDLib();
 	}
 	@SuppressLint("NewApi") @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void destroy()
 	{
-		mChoreographer.removeFrameCallback(this);
 		if(m_pAbsLayout!=null)
 			m_pAbsLayout.removeAllViews();
 		m_pAbsLayout.setOnKeyListener(null);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
 			m_pAbsLayout.setOnGenericMotionListener(null);
 		}
-		m_pAbsLayout=null;
-		if(m_pCavans!=null) {
+		m_pAbsLayout = null;
+		if (m_pCavans != null) {
+			m_pCavans.shutdown();
 			m_pCavans.destroy();
 			m_pCavans = null;
 		}
 		ms_layaConche = null;
-		m_marketBundle=null;
+		m_marketBundle = null;
 
-		if(m_pEditBoxLayout!=null)
+		if(m_pEditBoxLayout != null)
 		{
 			m_pEditBoxLayout.removeAllViews();
 		    m_pEditBoxLayout = null;
 		}
-		if(m_pEditBox!=null)
+		if(m_pEditBox != null)
 		{
 			m_pEditBox.destroy();
 			m_pEditBox=null;
 		}
-		mCtx=null;
-		m_layaEventListener=null;
+		mCtx = null;
+		m_layaEventListener = null;
 	}
 
 	public void delInstance()
@@ -955,43 +776,29 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 		return 10;
 	}
 
-	public void setGameUrl(String _param) {
-		m_strUrl = _param;
+	public void setGameUrl(String param) {
+		mUrl = param;
 	}
 	
-	public void setParamExt(String _param){
-		m_strExt = _param;
-	}
-	
-	public void setRuntimeExt()
-	{
-		if (m_strExt.length() > 0) {
-			ConchJNI.configSetParamExt(m_strExt);
-		}
-	}
-	
-	public void setSoFile(String _param) {
-		m_strSoFile = _param;
+	public void setSoFile(String param) {
+		m_strSoFile = param;
 	}
 
-	public void setSoPath(String _param) {
-		m_strSoPath = _param;
+	public void setSoPath(String param) {
+		m_strSoPath = param;
 	}
 
-	public void setJarFile(String _param) {
-		m_strJarFile = _param;
+	public void setJarFile(String param) {
+		m_strJarFile = param;
 	}
 
-	public void setAppCacheDir(String _param) {
-		m_strCachePath = _param;
+	public void setAppCacheDir(String param) {
+		mCachePath = param;
 	}
 
-	public void setDownloadThreadNum(int nNum){ m_nDownloadThreadNum = nNum;}
-
-	public void setExpansionZipDir( final String mainPath,final String patchPath )
-	{
-		m_strExpansionMainPath = mainPath;
-		m_strExpansionPatchPath = patchPath;
+	public void setExpansionZipDir(final String mainPath, final String patchPath) {
+		mExpansionMainPath = mainPath;
+		mExpansionPatchPath = patchPath;
 	}
 	// 获得so文件路径
 	public String getSoPath() {
@@ -1005,14 +812,8 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 
 	// 获得游戏缓存目录
 	public String getAppCacheDir() {
-		return m_strCachePath;
+		return mCachePath;
 	}
-
-	public int getDownloadThreadNum()
-	{
-		return m_nDownloadThreadNum;
-	}
-
 	// 游戏主动退出游戏
 	public void game_plugin_exitGame() {
 		if (m_layaEventListener != null)
@@ -1021,31 +822,6 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 	public void game_plugin_finish() {
 		if (m_layaEventListener != null)
 			m_layaEventListener.Finish();
-	}
-
-	// 游戏插件初始化
-	public void game_conch3_init() {
-		this.onCreate();
-	}
-
-	// 获得游戏需要显示的view
-	public View game_conch3_get_view() {
-		return m_pAbsLayout;
-	}
-
-	// 进入后台时调用
-	public void game_conch3_onPause() {
-		this.onPause();
-	}
-
-	// 恢复前台时调用
-	public void game_conch3_onResume() {
-		this.onResume();
-	}
-
-	// 退出游戏时调用
-	public void game_conch3_onStop() {
-		this.onStop();
 	}
 
 	@Override
@@ -1090,7 +866,7 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener, Choreographer.F
 
     @Override
     public void setAssetInfo(AssetManager am) {
-        game_conch3_setAssetInfo(am);        
+        mAssetManager = am; 
     }
 
 	public static String getLocalVersion(Context ctx) {

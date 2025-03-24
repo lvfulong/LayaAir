@@ -41,7 +41,6 @@ class GLESSpotLightShadowRP
     void _getShadowBias(float shadowResolution, Vector4& out);
     void _getSpotLightShadowData(ShadowSpotData& shadowSpotData, float resolution, Vector4& shadowParams, Matrix4x4& shadowSpotMatrices, Vector4& shadowMapSize);
   public:
-
     RTSpotLight* light;
     Vector3 _lightPos;
     Matrix4x4 _lightWorldMatrix;

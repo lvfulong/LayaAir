@@ -150,6 +150,13 @@ GLESShaderInstance *RTShaderPass::callCreateShaderInstanceFunction()
 void RTShaderPass::setCommonUniformMap(const std::vector<std::string>& value)
 {
     this->nodeCommonMap = value;
+
+}
+void RTShaderPass::setAdditionShaderData(const std::vector<std::string>& value)
+{
+    static std::vector<std::string> cacheAdditional;
+    cacheAdditional = value;
+    additionShaderData = &cacheAdditional;
 }
 void RTShaderPass::destroy()
 {

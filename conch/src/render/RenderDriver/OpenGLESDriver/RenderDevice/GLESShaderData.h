@@ -85,6 +85,7 @@ class GLESShaderData //: public ResourceBase<ShaderData>
     void addDefine(RTShaderDefine define);
     void addDefines(RTDefineDatas *defines);
     void removeDefine(RTShaderDefine define);
+    void removeDefines(RTDefineDatas *defines);
     bool hasDefine(RTShaderDefine define);
     void clearDefine();
 
@@ -111,9 +112,9 @@ class GLESShaderData //: public ResourceBase<ShaderData>
     const BufferDataInfo &getBuffer(int32_t index);
     void setInternalTexture(int32_t index, GLESInternalTex *value);
     GLESInternalTex *getInternalTexture(int32_t index);
-    void createUniformBuffer(const std::string &name, GLESCommandUniformMap* uniformMap);
+    GLESUniformBufferBase* createUniformBuffer(const std::string &name,GLESCommandUniformMap* uniformMap);
     void updateUBOBuffer(const std::string &name);
-    GLESSubUniformBuffer* createSubUniformBuffer(const std::string &name, std::vector<UniformProperty>& uniformMap);
+    GLESSubUniformBuffer* createSubUniformBuffer(const std::string& name, const std::string& cacheName, std::vector<UniformProperty>& uniformMap);
     void clearData();
     void cloneTo(GLESShaderData *destObject);
 
@@ -122,13 +123,13 @@ class GLESShaderData //: public ResourceBase<ShaderData>
     std::unordered_map<uint32_t, Color> m_gammaColorMap{};
     std::unordered_map<std::string, GLESUniformBuffer*> _uniformBuffers{};
     std::unordered_map<std::string, GLESSubUniformBuffer*> _subUniformBuffers{};
-    int _subUboBufferNumber = 0;
 
     bool _needCacheData{false};
+    int _subUboBufferNumber{ 0 };
     public:
         std::unordered_map<uint32_t, std::any> m_data{};
     std::unordered_map<int, GLESUniformBufferBase*> _uniformBuffersPropertyMap{};
-    std::unordered_map<int, std::function<void(GLESShaderData*, int32_t)>> _updateCacheArray{};
+    std::unordered_map<int, std::function<void(GLESShaderData*, GLESUniformBufferBase*, int32_t)>> _updateCacheArray{};
     RTDefineDatas *_defineDatas = nullptr;
 };
 } // namespace laya

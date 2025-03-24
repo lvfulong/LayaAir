@@ -43,9 +43,7 @@
 #include <string>
 #include "platform/ohos/napi/helper/NapiHelper.h"
 #endif
-std::string gRedistPath = "";
-std::string gResourcePath = "";
-std::string gAssetRootPath = "";
+
 
 int g_nInnerWidth = 1024;
 int g_nInnerHeight = 768;
@@ -60,6 +58,10 @@ namespace laya
     JCFileSource* JCConch::s_pAssetsFiles = NULL;
     std::shared_ptr<JCConchRender> JCConch::s_pConchRender;
     std::shared_ptr<JCScriptRuntime> JCConch::s_pScriptRuntime;
+
+    std::string JCConch::s_localStoragePath;
+    std::string JCConch::s_cachePath;
+
     void _vibrate()
     {
 #if defined(OS_ANDROID)
@@ -71,11 +73,25 @@ namespace laya
     }
     JCConch::JCConch()
     {
-        m_sCachePath = gRedistPath + "/appCache";
-        if (!FileSystem::exists(m_sCachePath))
+        s_cachePath = OS::getTemporaryCachePath() + "/appCache";
+        if (!FileSystem::exists(s_cachePath))
         {
-            FileSystem::mkdir(m_sCachePath);
+            if (!FileSystem::mkdir(s_cachePath))
+            {
+                LOGE("Failed to create cache path: %s", s_cachePath.c_str());
+            }
         }
+
+        s_localStoragePath = OS::getTemporaryCachePath() + "/localstorage";
+        if (!FileSystem::exists(s_localStoragePath))
+        {
+            if (!FileSystem::mkdir(s_localStoragePath))
+            {
+                LOGE("Failed to create localStorage path: %s", s_localStoragePath.c_str());
+            }
+        }
+    
+
         laya::g_kSystemConfig.loadConfigIniFile();
 #ifdef OS_APPLE
 #elif defined(OS_WINDOWS)
@@ -85,7 +101,6 @@ namespace laya
 #endif
         m_nUrlHistoryPos = -1;
         
-
         g_DecThread = std::make_shared<JCWorkerThread>(new JCWorkerThread(true));
         g_DecThread->setThreadName("image decode");
 		g_FileIOThread = new JCWorkerThread(true);
@@ -96,37 +111,29 @@ namespace laya
         pdmgr->init(nDownloadThreadNum);
         m_pFileResMgr = new JCFileResManager(pdmgr);
 
-        //m_pScriptThread = new JSMulThread();//m_pScriptThread = new JSSingleThread();
-       
+
         LOGI("Graphics API %s", toString(g_kSystemConfig.m_graphicsAPI).c_str());
-
-
         s_pConchRender.reset(new JCConchRender(m_pFileResMgr));
         s_pConchRender->init();
 
         s_pScriptRuntime.reset(new JCScriptRuntime());
-        //------------------------------------------------------------------------------
-
+ 
         m_pAssetsRes = JCConch::s_pAssetsFiles;
         m_strStartJS = "scripts/apploader.js";
 
         JCConch::s_pScriptRuntime->init(m_pFileResMgr, m_pAssetsRes, this);
 
-
-        //onAppStart();
-        m_strLocalStoragePath = gRedistPath + "/localstorage/";
-
-        if (!FileSystem::exists(m_strLocalStoragePath))
-        {
-            FileSystem::mkdir(m_strLocalStoragePath);
-        }
-        JCConch::s_pScriptRuntime->start(m_strStartJS.c_str());
+        initializeCurrentThreadAsScriptThread();
+        JCConch::s_pScriptRuntime->m_scriptThreadMessageLoop = &MessageLoop::getCurrent();
+        
 	}
     JCConch::~JCConch() {
+
 
     }
 	void JCConch::onAppDestroy()
     { 
+        DEBUG_CHECK(isScriptThread());
         m_isAppStarted = false;
   
         //关闭下载线程
@@ -137,8 +144,6 @@ namespace laya
       
         g_DecThread.reset();
         delete g_FileIOThread;
-        m_semaphoreFramePacer.notifyAllWait();
-        m_semaphore.notifyAllWait();
 
         JCConch::s_pScriptRuntime->stop();
           
@@ -153,25 +158,25 @@ namespace laya
 
     void JCConch::onAppStart()
     {   
+        DEBUG_CHECK(isScriptThread());
         if (m_isAppStarted)
         {
             return;
         }
-
-
+        JCConch::s_pScriptRuntime->start(m_strStartJS.c_str());
         JCAudioManager::GetInstance();
         m_isAppStarted = true;
         JCConch::s_pScriptRuntime->loadJSScript();
 	}
     void JCConch::reload() 
     {
+        DEBUG_CHECK(isScriptThread());
         LOGI("JCConch::reload start...");
         //先通知消息管理器，关闭各个线程之间的post
         //lvtodo m_ThreadCmdMgr.stop();
-        postToPlatform([this](){
-            JCConch::s_pScriptRuntime->reload();
-            LOGI("JCConch::reload end.");
-        });
+        JCConch::s_pScriptRuntime->reload();
+        LOGI("JCConch::reload end.");
+        
     }
     int JCConch::urlHistoryLength() 
     {
@@ -217,15 +222,11 @@ namespace laya
         }
     }
     void JCConch::update() {
-        m_semaphoreFramePacer.setDataNum(1);
-        //todo
+        DEBUG_CHECK(isScriptThread());
+        auto pScriptRuntime = JCConch::s_pScriptRuntime;
+        if (pScriptRuntime)
         {
-            std::unique_lock<std::mutex> lock(m_mutex);
-            for (int i = 0, size = m_tasks.size(); i < size; i++ )
-            {
-                m_tasks[i]();
-            }
-            m_tasks.clear();
+            pScriptRuntime->update();
         }
     }
     void JCConch::dispatchInputEvent(inputEvent e)
@@ -254,40 +255,8 @@ namespace laya
                 break;
          }
     }
-    void JCConch::postToPlatform(std::function<void(void)> task) {
-        std::unique_lock<std::mutex> lock(m_mutex);
-        m_tasks.emplace_back(task);
-    }
-
-    void postToPlatform(std::function<void(void)> task) {
-        auto pConch = JCConch::s_pConch;
-        if (pConch) {
-            pConch->postToPlatform(task);
-        }
-    }
-
-    bool isInJSThread() {
-        auto pScriptRuntime = JCConch::s_pScriptRuntime;
-        if (!pScriptRuntime)
-            return false;
-        return pScriptRuntime->isInJSThread();
-    }
-
-	void postToJS(std::function<void(void)> task) {
-        if (isInJSThread()) {
-            task();
-        }
-        else {
-            auto pScriptRuntime = JCConch::s_pScriptRuntime;
-            if (pScriptRuntime) {
-                pScriptRuntime->m_pScriptThread->post(task);
-            }
-        }
-    }
     void JCConch::onAppPause() {
-        m_semaphore.setDataNum(0);
-        m_semaphoreFramePacer.stop();
-        postToJS([]() {
+        DEBUG_CHECK(isScriptThread());
 #if defined(OS_ANDROID) || defined(OS_OHOS)  
             if( laya::JCAudioManager::GetInstance()->getMp3Mute() == false && laya::JCAudioManager::GetInstance()->getMp3Stopped() == false)
             {
@@ -305,16 +274,9 @@ namespace laya
             {
                 pScriptRuntime->onBlur();
             }
-            auto pConch = JCConch::s_pConch;
-            if (pConch) {
-                pConch->m_semaphore.waitUntilHasData();
-            }
-        });
     }
     void JCConch::onAppResume() {
-        m_semaphore.setDataNum(1);
-        m_semaphoreFramePacer.resume();
-        postToJS([]() {
+        DEBUG_CHECK(isScriptThread());
 #if defined(OS_ANDROID) || defined(OS_OHOS)  
             //继续声音
             if( laya::JCAudioManager::GetInstance()->getMp3Mute() == false && laya::JCAudioManager::GetInstance()->getMp3Stopped() == false)
@@ -333,18 +295,5 @@ namespace laya
             {
                 pScriptRuntime->onFocus();
             }
-        });
     }
-    OS* JCConch::getOS()
-    {
-        if (!m_OS)
-        {
-            m_OS = createOS();
-        }
-        return m_OS.get();
-    }
-};
-//------------------------------------------------------------------------------
-
-
-//-----------------------------END FILE--------------------------------
+}

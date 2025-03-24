@@ -8,10 +8,9 @@
 #include <chrono>
 #include <thread>
 #include "V8WSSv.h"
-#include "jsvm/ScriptThread.h"
+#include "jsvm/JSEnv.h"
 
 namespace laya {
-
     int   DebuggerAgent::sMsgID=0;
     std::string encodeStrForJSON(const char* pStr) {
         std::string ret = "";
@@ -122,8 +121,8 @@ namespace laya {
 	}
     class MyV8InspectorClient :public v8_inspector::V8InspectorClient {
     public:
-        MyV8InspectorClient(std::shared_ptr<jsvm::ScriptThread> pJS) {
-            pJSThread = pJS;
+        MyV8InspectorClient(jsvm::JSEnv* env) {
+            pJSEnv_ = env;
         }
         virtual ~MyV8InspectorClient() {
         }
@@ -137,8 +136,8 @@ namespace laya {
         }
 
         bool waitForFrontendEvent() {
-            if (pJSThread->hasDbgFuncs()) {
-                pJSThread->runDbgFuncs();
+            if (pJSEnv_->hasDbgFuncs()) {
+                pJSEnv_->runDbgFuncs();
             }
             else {
                 std::this_thread::sleep_for(std::chrono::microseconds(100));
@@ -191,7 +190,7 @@ namespace laya {
 
 
         bool        terminated_ = false;
-        std::shared_ptr<jsvm::ScriptThread>   pJSThread;
+        jsvm::JSEnv* pJSEnv_;
     };
 
 
@@ -335,8 +334,8 @@ namespace laya {
                 v8_inspector::StringView message_view(pUTF16, uniLen);
 
                 //v8::Locker(agent_->isolate_);
-                if (pJSThread_) {
-                    pJSThread_->pushDbgFunc(std::bind(dispatchProtocolMsg_inJSThread, this, message_view, nFrontEndMsgID));
+                if (pJSEnv_) {
+                    pJSEnv_->pushDbgFunc(std::bind(dispatchProtocolMsg_inJSThread, this, message_view, nFrontEndMsgID));
                 }
                 //delete[] pUTF16;  发送到js执行的话，就不要在这里删除了
             }
@@ -376,7 +375,7 @@ namespace laya {
     }
 
     bool DebuggerAgent::_isInJSThread(){
-        auto jsThreadID = pJSThread_->getTheadID();
+        auto jsThreadID = pJSEnv_->getThreadID();
         return (std::this_thread::get_id() == jsThreadID);
     }
 
@@ -384,13 +383,13 @@ namespace laya {
     {
         while (!bHasFrontend)
         {
-            pJSThread_->runDbgFuncs();
+            pJSEnv_->runDbgFuncs();
             std::this_thread::sleep_for(std::chrono::microseconds(100));
         }
     }
 
-    void DebuggerAgent::onJSStart(std::shared_ptr<jsvm::ScriptThread> scriptThread) {
-		pJSThread_ = scriptThread;
+    void DebuggerAgent::onJSStart(jsvm::JSEnv* env) {
+        pJSEnv_ = env;
         isolate_ = (v8::Isolate::GetCurrent());
 		v8::HandleScope handle_scope(isolate_);
         v8::Local<v8::String> nameStr = v8::String::NewFromUtf8(isolate_, "layabox", v8::NewStringType::kNormal).ToLocalChecked();
@@ -398,7 +397,7 @@ namespace laya {
         std::unique_ptr<uint16_t[]> nameBuffer(new uint16_t[nameLen]);
         nameStr->Write(isolate_, nameBuffer.get(), 0, nameLen);
 
-        m_pInspectorClient = new MyV8InspectorClient(pJSThread_);
+        m_pInspectorClient = new MyV8InspectorClient(pJSEnv_);
         _new_inspector = v8_inspector::V8Inspector::create(isolate_, m_pInspectorClient);
         v8::Local<v8::Context> context = isolate_->GetCurrentContext();
         m_pInspectorChannel = new InspectorFrontend(context);
@@ -425,20 +424,20 @@ namespace laya {
             if(inJSThread){
                 this->_waitDebugger();
             }else{
-                if(pJSThread_){
-                    pJSThread_->pushDbgFunc(std::bind(&DebuggerAgent::_waitDebugger, this));
+                if(pJSEnv_){
+                    pJSEnv_->pushDbgFunc(std::bind(&DebuggerAgent::_waitDebugger, this));
                 }
             }
             bIsWaitingForDebugger = true;
         }
         //中断
         if(breakNextLine){
-            if(pJSThread_){
+            if(pJSEnv_){
                 if(inJSThread){
                     //如果在js线程，则直接执行
                     _breakJS();
                 }else{
-                    pJSThread_->pushDbgFunc(std::bind(&DebuggerAgent::_breakJS, this));
+                    pJSEnv_->pushDbgFunc(std::bind(&DebuggerAgent::_breakJS, this));
                 }
             }
         }
@@ -499,7 +498,7 @@ namespace laya {
         }
     }
     void DebuggerAgent::onJSExit() { 
-		pJSThread_ = NULL;
+        pJSEnv_ = NULL;
 		isolate_ = NULL;
 
         if (m_pInspectorClient)

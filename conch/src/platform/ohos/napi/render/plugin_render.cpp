@@ -20,29 +20,29 @@ extern "C" {
 
 PluginRender* PluginRender::instance_ = nullptr;
 OH_NativeXComponent_Callback PluginRender::callback_;
-uint64_t PluginRender::animationInterval_ = 16;
+uint64_t PluginRender::animationInterval_ = 1;//16;  默认跑满，现在限制FPS存在问题：设置60，结果30  
 uint64_t PluginRender::lastTime = 0;
 
 
 void OnSurfaceCreatedCB(OH_NativeXComponent* component, void* window)
 {
-    LOGI("OnSurfaceCreatedCB");
+    LOGD("OnSurfaceCreatedCB");
     PluginRender::GetInstance()->sendMsgToWorker(MessageType::WM_XCOMPONENT_SURFACE_CREATED, component, window);
 }
 
 void OnSurfaceChangedCB(OH_NativeXComponent* component, void* window)
 {
-    LOGI("OnSurfaceChangedCB");
+    LOGD("OnSurfaceChangedCB");
     PluginRender::GetInstance()->sendMsgToWorker(MessageType::WM_XCOMPONENT_SURFACE_CHANGED, component, window);
 }
 
 void OnSurfaceDestroyedCB(OH_NativeXComponent* component, void* window)
 {
-    LOGI("OnSurfaceDestroyedCB");
+    LOGD("OnSurfaceDestroyedCB");
     PluginRender::GetInstance()->sendMsgToWorker(MessageType::WM_XCOMPONENT_SURFACE_DESTROY, component, window);
 }
 void OnSurfaceHideCB(OH_NativeXComponent* component, void* window) {
-    LOGI("OnSurfaceHideCB");
+    LOGD("OnSurfaceHideCB");
     
     int32_t ret;
     char idStr[OH_XCOMPONENT_ID_LEN_MAX + 1] = {};
@@ -56,7 +56,7 @@ void OnSurfaceHideCB(OH_NativeXComponent* component, void* window) {
 }
 
 void OnSurfaceShowCB(OH_NativeXComponent* component, void* window) {
-    LOGI("OnSurfaceShowCB");
+    LOGD("OnSurfaceShowCB");
     
     int32_t ret;
     char idStr[OH_XCOMPONENT_ID_LEN_MAX + 1] = {};
@@ -73,7 +73,7 @@ void DispatchTouchEventCB(OH_NativeXComponent* component, void* window)
 {
     OH_NativeXComponent_TouchEvent* touchEvent = new(std::nothrow) OH_NativeXComponent_TouchEvent();
     if (!touchEvent) {
-        LOGI("DispatchTouchEventCB::touchEvent alloc failed");
+        LOGE("DispatchTouchEventCB::touchEvent alloc failed");
         return;
     }
     int32_t ret = OH_NativeXComponent_GetTouchEvent(component, window, touchEvent);
@@ -164,7 +164,7 @@ static uint64_t getCurrentMillSecond() {
 // static
 void PluginRender::timerCb(uv_timer_t* handle)
 {
-    NAPIFun::ConchNAPI_onDrawFrame();
+    laya::JCConch::s_pConch->update();
 }
 
 void PluginRender::SetNativeXComponent(OH_NativeXComponent* component)
@@ -176,9 +176,10 @@ void PluginRender::SetNativeXComponent(OH_NativeXComponent* component)
 }
 
 void PluginRender::workerInit(napi_env env, uv_loop_t* loop) {
-    LOGI("PluginRender::workerInit");
+    LOGD("PluginRender::workerInit");
     workerLoop_ = loop;
     if (workerLoop_) {
+        laya::JCConch::s_pConch.reset(new laya::JCConch());
         uv_async_init(workerLoop_, &messageSignal_, reinterpret_cast<uv_async_cb>(PluginRender::onMessageCallback));
         if (!messageQueue_.empty()) {
             triggerMessageSignal(); // trigger the signal to handle the pending message
@@ -214,7 +215,7 @@ void PluginRender::triggerMessageSignal() {
 }
 
 void PluginRender::run() {
-    LOGI("PluginRender::run");
+    LOGD("PluginRender::run");
     if (workerLoop_) {
         uv_timer_init(workerLoop_, &timerHandle_);
         timerInited_ = true;
@@ -222,7 +223,7 @@ void PluginRender::run() {
 }
 
 void PluginRender::changeFPS(uint64_t animationIntervalMs) {
-    LOGI("PluginRender::changeFPS, animationInterval from %lu to %lu", animationInterval_, animationIntervalMs);
+    LOGD("PluginRender::changeFPS, animationInterval from %lu to %lu", animationInterval_, animationIntervalMs);
     if (timerInited_ && animationIntervalMs != animationInterval_) {
         uv_timer_set_repeat(&timerHandle_, animationIntervalMs);
     }
@@ -231,36 +232,44 @@ void PluginRender::changeFPS(uint64_t animationIntervalMs) {
 
 void PluginRender::OnSurfaceCreated(OH_NativeXComponent* component, void* window)
 {
-    LOGI("PluginRender::OnSurfaceCreated");
+    LOGD("PluginRender::OnSurfaceCreated");
     int32_t ret = OH_NativeXComponent_GetXComponentSize(component, window, &width_, &height_);
     if (ret == OH_NATIVEXCOMPONENT_RESULT_SUCCESS) {
         int32_t code = SET_USAGE;
         OHNativeWindow *oHNativeWindow = static_cast<OHNativeWindow *>(window);
         int32_t ret = OH_NativeWindow_NativeWindowHandleOpt(oHNativeWindow, code, NATIVEBUFFER_USAGE_MEM_DMA);
-        NAPIFun::ConchNAPI_OnSurfaceCreated(window);
-        NAPIFun::ConchNAPI_OnSurfaceResize(width_,height_);
+
+        laya::BackendOptions options;
+        laya::JCConch::s_pConchRender->createBackend(options);
+        laya::JCConch::s_pConchRender->createScreenSurface(window);
+	    laya::JCConch::s_pConch->onAppStart();
+
+        laya::JCConch::s_pConchRender->onScreenSurfaceResize(width_, height_);
     }
 }
 
 void PluginRender::OnSurfaceChanged(OH_NativeXComponent* component, void* window)
 {
-    LOGI("PluginRender::OnSurfaceChanged");
+    LOGD("PluginRender::OnSurfaceChanged");
     int32_t ret = OH_NativeXComponent_GetXComponentSize(component, window, &width_, &height_);
     if (ret == OH_NATIVEXCOMPONENT_RESULT_SUCCESS) {
-        NAPIFun::ConchNAPI_OnSurfaceResize(width_,height_);
+        laya::JCConch::s_pConchRender->onScreenSurfaceResize(width_, height_);
     }
 }
 
 void PluginRender::OnSurfaceDestroyed(OH_NativeXComponent* component, void* window)
 {
+    LOGD("PluginRender::OnSurfaceDestroyed");
 }
 void PluginRender::OnSurfaceHide()
 {
+    LOGD("PluginRender::OnSurfaceHide");
     laya::JCConch::s_pConchRender->destroyScreenSurface();
 }
 
 void PluginRender::OnSurfaceShow(void* window)
 {
+    LOGD("PluginRender::OnSurfaceShow");
     laya::JCConch::s_pConchRender->createScreenSurface(window);
 }
 void PluginRender::DispatchTouchEvent(OH_NativeXComponent* component, void* window, OH_NativeXComponent_TouchEvent* touchEvent)
@@ -272,51 +281,51 @@ void PluginRender::DispatchTouchEvent(OH_NativeXComponent* component, void* wind
         ids[i] = touchEvent->touchPoints[i].id;
         xs[i] = touchEvent->touchPoints[i].x;
         ys[i] = touchEvent->touchPoints[i].y;
-        LOGI("Touch Info : x = %f, y = %f", xs[i], ys[i]);
+        LOGD("Touch Info : x = %f, y = %f", xs[i], ys[i]);
     }
     switch (touchEvent -> type) {
         case OH_NATIVEXCOMPONENT_DOWN:
             nativeHandleTouchDown(touchEvent->id, touchEvent->x,touchEvent->y);
-            LOGI("Touch Info : OH_NATIVEXCOMPONENT_DOWN");
+            LOGD("Touch Info : OH_NATIVEXCOMPONENT_DOWN");
             break;
         case OH_NATIVEXCOMPONENT_UP:
             nativeHandleTouchUp(touchEvent->id, touchEvent->x,touchEvent->y);
-            LOGI("Touch Info : OH_NATIVEXCOMPONENT_UP");
+            LOGD("Touch Info : OH_NATIVEXCOMPONENT_UP");
             break;
         case OH_NATIVEXCOMPONENT_MOVE:
             nativeHandleTouchMove(touchEvent->id, touchEvent->x,touchEvent->y);
-            LOGI("Touch Info : OH_NATIVEXCOMPONENT_MOVE");
+            LOGD("Touch Info : OH_NATIVEXCOMPONENT_MOVE");
             break;
         case OH_NATIVEXCOMPONENT_CANCEL:
             nativeHandleTouchCancel(touchEvent->id, touchEvent->x,touchEvent->y);
-            LOGI("Touch Info : OH_NATIVEXCOMPONENT_CANCEL");
+            LOGD("Touch Info : OH_NATIVEXCOMPONENT_CANCEL");
             break;
         case OH_NATIVEXCOMPONENT_UNKNOWN:
-            LOGI("Touch Info : OH_NATIVEXCOMPONENT_UNKNOWN");
+            LOGD("Touch Info : OH_NATIVEXCOMPONENT_UNKNOWN");
             break;
         default:
-            LOGI("Touch Info : default");
+            LOGD("Touch Info : default");
             break;
     }
     delete touchEvent;
 }
 
 void PluginRender::OnCreateNative(napi_env env, uv_loop_t* loop) {
-    LOGI("PluginRender::OnCreateNative");
+    LOGD("PluginRender::OnCreateNative");
 }
 
 void PluginRender::OnShowNative() {
-    LOGI("PluginRender::OnShowNative");
+    LOGD("PluginRender::OnShowNative");
     if (timerInited_) {
         uv_timer_start(&timerHandle_, &PluginRender::timerCb, 0, animationInterval_);
     }
-    NAPIFun::ConchNAPI_OnAppResume();
+    laya::JCConch::s_pConch->onAppResume();
 }
 
 void PluginRender::OnHideNative() {
-    LOGI("PluginRender::OnHideNative");
+    LOGD("PluginRender::OnHideNative");
 
-    NAPIFun::ConchNAPI_OnAppPause();
+    laya::JCConch::s_pConch->onAppPause();
 
     if (timerInited_) {
         uv_timer_stop(&timerHandle_);
@@ -324,16 +333,18 @@ void PluginRender::OnHideNative() {
 }
 
 void PluginRender::OnDestroyNative() {
-    LOGI("PluginRender::OnDestoryNative");
+    LOGD("PluginRender::OnDestoryNative");
     if (timerInited_) {
         uv_timer_stop(&timerHandle_);
     }
-    NAPIFun::ConchNAPI_ReleaseDLib();
+    JCAudioManager::GetInstance()->stopMp3();
+	laya::JCConch::s_pConch->onAppDestroy();
+	laya::JCConch::s_pConch.reset();
 }
 
 napi_value PluginRender::Export(napi_env env, napi_value exports)
 {
-    LOGI("PluginRender::Export");
+    LOGD("PluginRender::Export");
     // Register JS API
     napi_property_descriptor desc[] = {
         DECLARE_NAPI_FUNCTION("changeShape", PluginRender::NapiChangeShape),
@@ -346,7 +357,7 @@ napi_value PluginRender::Export(napi_env env, napi_value exports)
 
 napi_value PluginRender::NapiChangeShape(napi_env env, napi_callback_info info)
 {
-    LOGI("PluginRender::NapiChangeShape");
+    LOGD("PluginRender::NapiChangeShape");
     PluginRender* instance = PluginRender::GetInstance();
     if (instance) {
         //instance->eglCore_->Update();
@@ -356,13 +367,13 @@ napi_value PluginRender::NapiChangeShape(napi_env env, napi_callback_info info)
 
 napi_value PluginRender::NapiDrawTriangle(napi_env env, napi_callback_info info)
 {
-    LOGI("NapiDrawTriangle");
+    LOGD("NapiDrawTriangle");
     return nullptr;
 }
 
 napi_value PluginRender::NapiChangeColor(napi_env env, napi_callback_info info)
 {
-    LOGI("NapiChangeColor");
+    LOGD("NapiChangeColor");
     return nullptr;
 }
 

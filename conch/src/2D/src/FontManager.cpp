@@ -13,7 +13,6 @@
 #include "CanvasRenderingContext2DLinux.h"
 #endif
 
-extern std::string gRedistPath;
 namespace laya
 {
 #if defined(OS_IOS)

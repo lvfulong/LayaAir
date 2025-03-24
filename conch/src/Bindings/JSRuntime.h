@@ -11,14 +11,7 @@ namespace laya
     class JSRuntime 
     {
     public:
-        enum 
-        {
-            onframeid, ondrawid, onresizeid, ontouchevtid,ondevicemotionevtid, onkeyevtid, onmouseevtid, oninvalidglid,onotherevtid,onnetworkevt,onblurid,onfocusid, bulletsetid, bulletgetid, zippackageid,onunhandledrejection, screenorientationchangeid, setglobalrepaintid, bulletdrawlineid, bulletclearlineid
-        };
-    
 	    static void exportJS(jsbind::Object& context);
-	    
-    public:
 
         static void setOnFrameFunction( jsvm_value p_pFunction );
         static void setOnDrawFunction(jsvm_value p_pFunction);
@@ -107,7 +100,7 @@ namespace laya
 
         static const char* callMethod(int objid,bool isSyn,const char*clsName, const char* methodName, const char* paramStr);
 
-        static const char* getCachePath();
+        static std::string getCachePath();
 
         static const char* getPresetUrl();
 

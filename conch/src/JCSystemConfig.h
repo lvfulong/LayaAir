@@ -3,7 +3,6 @@
 #define _LAYA_CONFIG_H__
 
 #include <string>
-#include <utils/Types.h>
 
 namespace laya
 {
@@ -14,6 +13,14 @@ enum class WindowMode
     WM_WindowResizable,
     WM_FullScreen
 };
+enum class GraphicsAPI
+{
+    Invalid = 0,
+    OpenGLES = 1,
+    WebGL = 2,
+};
+std::string toString(GraphicsAPI api);
+GraphicsAPI toGraphicsAPI(const std::string &str);
 class JCSystemConfig
 {
   public:
@@ -34,7 +41,7 @@ class JCSystemConfig
     WindowMode m_windowMode{WindowMode::WM_WindowResizable};
     bool m_showDebugConsole = false;
     uint64_t m_frameIntervalInMs = (uint64_t)(1000.f / 60);
-    bool m_swappyEnabled = true;
+    bool m_useSwappy = true;
     bool m_runInBackground = false;
 };
 extern JCSystemConfig g_kSystemConfig;

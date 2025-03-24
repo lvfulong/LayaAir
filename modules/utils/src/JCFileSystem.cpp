@@ -230,10 +230,35 @@ std::string remove_filename(const std::string &path)
     std::wstring wide_path = utf8ToWide(path);
     fs::path p(wide_path);
     std::error_code error;
-    return wideToUtf8(p.remove_filename().wstring());
+    std::string result = wideToUtf8(p.remove_filename().wstring());
+    return stringReplace(result, "\\", "/");
 #else
     fs::path p(path);
     return p.remove_filename().string();
+#endif
+}
+std::string parent_path(const std::string& path)
+{
+#if defined(OS_WINDOWS)
+    std::wstring wide_path = utf8ToWide(path);
+    fs::path p(wide_path);
+    std::error_code error;
+    std::string result = wideToUtf8(p.parent_path().wstring());
+    return stringReplace(result, "\\", "/");
+#else
+    fs::path p(path);
+    return p.parent_path().string();
+#endif
+}
+bool is_absolute(const std::string &path)
+{
+#if defined(OS_WINDOWS)
+    std::wstring wide_path = utf8ToWide(path);
+    fs::path p(wide_path);
+    return p.is_absolute();
+#else
+    fs::path p(path);
+    return p.is_absolute();
 #endif
 }
 } // namespace FileSystem

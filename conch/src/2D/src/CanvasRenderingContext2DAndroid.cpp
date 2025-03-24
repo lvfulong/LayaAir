@@ -3,9 +3,9 @@
 #include <cassert>
 #include <utils/JCBuffer.h>
 #include <utils/JCFileSystem.h>
+#include <platform/OS.h>
 #include "FontDescription.h"
 
-extern std::string gRedistPath;
 namespace laya
 {
 jclass CanvasRenderingContext2DAndroid::s_cls = nullptr;
@@ -390,7 +390,7 @@ bool CanvasRenderingContext2DAndroid::registerFontFromPath(const std::string &fo
 bool CanvasRenderingContext2DAndroid::registerFontFromBuffer(const std::string& fontName, uint8_t* buff, int len) 
 {
     JCBuffer buf((char *)buff, len, false, false);
-    std::string tempFilePath = gRedistPath + "/appCache" +  std::string("/tmp_") + fontName;
+    std::string tempFilePath = OS::getTemporaryCachePath() + std::string("/tmp_") + fontName;
     writeFileSync(tempFilePath.c_str(), buf);
     return CanvasRenderingContext2DAndroid::registerFontFromPath(fontName, tempFilePath);
 }

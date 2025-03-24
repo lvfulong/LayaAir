@@ -26,6 +26,7 @@ class RTShaderPass
     jsvm_value getCacheShaderJS(RTDefineDatas *compileDefine);
     GLESShaderInstance *callCreateShaderInstanceFunction();
     void setCommonUniformMap(const std::vector<std::string>& value);
+    void setAdditionShaderData(const std::vector<std::string>& value);
     void setRenderState(RenderState *value)
     {
         renderState = value;
@@ -54,8 +55,8 @@ class RTShaderPass
     bool statefirst = false;
     RTDefineDatas *validDefine = nullptr;
     RenderState *renderState = nullptr;
-    std::vector<std::string> nodeCommonMap;
-    //RTDefineDatas *_compileDefines = nullptr;
+    std::vector<std::string> nodeCommonMap{};
+    std::vector<std::string>* additionShaderData = nullptr;
 
   private:
     std::unordered_map<uint32_t, void *> _cacheSharders{};

@@ -13,10 +13,7 @@
      _launchView = [[LaunchView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [_window.rootViewController.view addSubview:_launchView.view];
 	
-	NSURLCache *URLCache = [[NSURLCache alloc] initWithMemoryCapacity:4 * 1024 * 1024
-                                                           diskCapacity:100 * 1024 * 1024
-                                                               diskPath:nil];
-    [NSURLCache setSharedURLCache:URLCache];
+
     return YES;
     
 }

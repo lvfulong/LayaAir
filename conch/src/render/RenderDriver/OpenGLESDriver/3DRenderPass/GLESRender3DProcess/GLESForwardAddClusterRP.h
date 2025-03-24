@@ -17,6 +17,9 @@ class RTBaseRenderNode;
 class GLESForwardAddClusterRP
 {
   public:
+    static Viewport _context3DViewPortCatch;
+    static Vector4 _contextScissorPortCatch;
+  public:
     enum class DepthTextureMode
     {
         None = 0,
@@ -96,8 +99,7 @@ class GLESForwardAddClusterRP
     GLESInternalRT *depthNormalTarget;
     RTBaseRenderNode *skyRenderNode;
     DepthTextureMode renderpassNode;
-    static Viewport _context3DViewPortCatch;
-    static Vector4 _contextScissorPortCatch;
+   
     std::string pipelineMode;
     Color clearColor;
     uint32_t clearFlag;

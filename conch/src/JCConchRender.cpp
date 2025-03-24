@@ -15,7 +15,7 @@
 #include <utils/Log.h>
 extern int g_nInnerHeight;
 extern int g_nInnerWidth;
-
+extern bool g_bGLCanvasSizeChanged;
 namespace laya
 {
 extern int g_nMainFrameBuffer;
@@ -46,10 +46,12 @@ void JCConchRender::init()
     // m_pRenderGeometryElementManager = new ResourceManager<RenderGeometryElement>();
     // m_pWordTextManager = new ObjectManager<WordText>();
     m_pUniformBufferObjectManager = new ObjectManager<UniformBufferObject>();
+#if 0
     if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
     {
         m_WebGLThread = new WebGLThread();
     }
+#endif
 }
 JCConchRender::~JCConchRender()
 {
@@ -86,12 +88,13 @@ JCConchRender::~JCConchRender()
         delete m_pProgramLocationTable;
         m_pProgramLocationTable = NULL;
     }
-
+#if 0
     if (m_WebGLThread != nullptr)
     {
         delete m_WebGLThread;
         m_WebGLThread = nullptr;
     }
+#endif
     if (m_pScreenContext)
     {
         delete m_pScreenContext;
@@ -230,37 +233,53 @@ void JCConchRender::createScreenSurface(void *nativeHandle)
         m_GfxBackend->createScreenSurface(nativeHandle);
         m_GfxBackend->makeCurrent();
     };
+    #if 0
     if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
     {
         m_WebGLThread->postTaskAsync(func);
     }
     else
+    #endif
     {
-        JCConch::s_pScriptRuntime->m_pScriptThread->post(func);
+        postToJS(func);
     }
 }
 void JCConchRender::onScreenSurfaceResize(int width, int height)
 {
-    auto func = [this, width, height]() { m_GfxBackend->onScreenSurfaceResize(width, height); };
+    auto func = [this, width, height]() {
+#if !defined(OS_IOS)
+        if( g_nInnerWidth != width || g_nInnerHeight != height )
+        {
+		    g_nInnerWidth = width;
+		    g_nInnerHeight = height;
+		    g_bGLCanvasSizeChanged = true;
+	    }
+#endif
+        m_GfxBackend->onScreenSurfaceResize(width, height);
+    };
+    #if 0
     if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
     {
         m_WebGLThread->postTaskAsync(func);
     }
     else
+    #endif
     {
-        JCConch::s_pScriptRuntime->m_pScriptThread->post(func);
+        postToJS(func);
     }
 }
 void JCConchRender::destroyScreenSurface()
 {
     auto func = [this]() { m_GfxBackend->destroyScreenSurface(); };
+    #if 0
     if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
     {
         m_WebGLThread->postTaskAsync(func);
     }
     else
+    #endif
     {
-        JCConch::s_pScriptRuntime->m_pScriptThread->post(func);
+        postToJS(func);
     }
 }
 void JCConchRender::createBackend(const BackendOptions &options)
@@ -271,13 +290,15 @@ void JCConchRender::createBackend(const BackendOptions &options)
             m_GfxBackend = laya::createBackend(options);
         }
     };
+    #if 0
     if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
     {
         m_WebGLThread->postTaskAsync(func);
     }
     else
+    #endif
     {
-        JCConch::s_pScriptRuntime->m_pScriptThread->post(func);
+        postToJS(func);
     }
 }
 } // namespace laya

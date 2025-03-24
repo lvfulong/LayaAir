@@ -16,6 +16,12 @@ namespace laya
         _defaultNormalDepthColor = Color(0.5, 0.5, 1.0, 0.0);
         depthPipelineMode = "ShadowCaster";
         depthNormalPipelineMode = "DepthNormal";
+
+        GLESRenderContext3D* context= GLESRenderContext3D::_instance;
+        context->_preDrawUnifromMaps.push_back(Scene3DShaderDeclaration::UBONAME_SCENE);
+        context->_preDrawUnifromMaps.push_back(Scene3DShaderDeclaration::UBONAME_SHADOW);
+        context->_preDrawUnifromMaps.push_back(Scene3DShaderDeclaration::UBONAME_GLOBAL);
+
     }
     GLESForwardAddClusterRP::~GLESForwardAddClusterRP(){
 
@@ -42,7 +48,7 @@ namespace laya
     void GLESForwardAddClusterRP::_renderDepthPass(GLESRenderContext3D* context){
         context->pipelineMode = this->depthPipelineMode;
         Viewport& viewport = this->viewPort;
-        GLESShaderData* shadervalue = context->sceneData;
+        GLESShaderData* shadervalue = context->getSceneShader();
         shadervalue->addDefine(DepthPassProperty::DEPTHPASS);
         shadervalue->setVector(DepthPassProperty::DEFINE_SHADOW_BIAS, Vector4::ZERO);
         Viewport _tempViewport(viewport.x, viewport.y, viewport.width, viewport.height);
@@ -56,9 +62,10 @@ namespace laya
         float far_ = this->camera->farplane;
         float near_ = this->camera->nearplane;
         this->_zBufferParams.setValue(1.0 - far_ / near_, far_ / near_, (near_ - far_) / (near_ * far_), 1 / near_);
-        context->cameraData->setVector(DepthPassProperty::DEFINE_SHADOW_BIAS, DepthPassProperty::SHADOW_BIAS);
+        GLESShaderData* cameraData = context->getCameraData();
+        cameraData->setVector(DepthPassProperty::DEFINE_SHADOW_BIAS, DepthPassProperty::SHADOW_BIAS);
 
-        context->cameraData->setVector(DepthPassProperty::DEPTHZBUFFERPARAMS, this->_zBufferParams);
+        cameraData->setVector(DepthPassProperty::DEPTHZBUFFERPARAMS, this->_zBufferParams);
         shadervalue->removeDefine(DepthPassProperty::DEPTHPASS);
     }
 

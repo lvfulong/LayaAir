@@ -838,7 +838,6 @@ public class ExportJavaFunction
 	//------------------------------------------------------------------------------
 	public static void setScreenWakeLock( boolean p_bWakeLock )
 	{
-		LayaConch5.GetInstance().setRuntimeExt();//set runtime ext
 		ExportJavaFunction pExport = ExportJavaFunction.GetInstance();
 		if(pExport!=null){
 			pExport.m_bScreenWakeLock = p_bWakeLock;

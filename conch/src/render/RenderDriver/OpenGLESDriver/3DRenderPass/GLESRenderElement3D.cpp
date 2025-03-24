@@ -19,8 +19,8 @@ void GLESRenderElement3D::_render(GLESRenderContext3D *context)
 {
     bool forceInvertFace = context->invertY;
     uint32_t updateMark = context->_cameraUpdateMask;
-    GLESShaderData *sceneShaderData = context->sceneData;
-    GLESShaderData *cameraShaderData = context->cameraData;
+    GLESShaderData *sceneShaderData = context->getSceneShader();
+    GLESShaderData *cameraShaderData = context->getCameraData();
     if (isRender)
     {
         for (uint32_t j = 0, m = _shaderInstances.getLength(); j < m; j++)
@@ -50,6 +50,24 @@ void GLESRenderElement3D::_render(GLESRenderContext3D *context)
                     shaderIns->m_uploadRender = renderShaderData;
                 }
             }
+            //additionShaderData
+            if (owner!=nullptr) {
+                if(shaderIns->_additionUniformParamsMaps.size() > 0) {
+                    for(auto& pair : shaderIns->_additionUniformParamsMaps) {
+                        const std::string& key = pair.first;
+                        CommandEncoder& uniformMap = pair.second;
+                        if(owner->additionShaderData.find(key) != owner->additionShaderData.end()) {
+                            GLESShaderData* shaderData = owner->additionShaderData[key];
+                           bool needUpload = shaderIns->_additionShaderData[key] != shaderData || switchUpdateMark;
+                           if(needUpload || switchShader) {
+                            shaderIns->uploadUniforms(&uniformMap, shaderData, needUpload);
+                            shaderIns->_additionShaderData[key] = shaderData;
+                           }
+                        }
+                    }
+                }
+            }
+
             // camera
             bool uploadCamera = shaderIns->m_uploadCameraShaderValue != cameraShaderData || switchUpdateMark;
             if (uploadCamera || switchShader)
@@ -85,10 +103,21 @@ void GLESRenderElement3D::_preUpdatePre(GLESRenderContext3D *context)
 {
     _compileShader(context);
     if (materialShaderData != nullptr && LayaGL::m_pWebglEngine->matUseUBO) {
-        //subshader->
-        GLESSubUniformBuffer* subBuffer = materialShaderData->createSubUniformBuffer("Material"+subshader->shaderName, subshader->_uniformMap);
+        GLESSubUniformBuffer* subBuffer = materialShaderData->createSubUniformBuffer("Material",subshader->shaderName, subshader->_uniformMap);
         if (subBuffer != nullptr && subBuffer->needUpload) {
             subBuffer->bufferBlock->needUpload();
+        }
+    }
+
+    if (owner != nullptr && LayaGL::m_pWebglEngine->enableUniformBufferObject) {
+        for(auto& pair : owner->additionShaderData) {
+            const std::string& key = pair.first;
+            GLESShaderData* shaderData = pair.second;
+            GLESCommandUniformMap* uniformMap = GLESCommandUniformMap::createGlobalUniformMap(key.c_str());
+            GLESSubUniformBuffer* uniformBuffer = shaderData->createSubUniformBuffer(key, key, uniformMap->_uniformArray);
+            if(uniformBuffer->needUpload) {
+                uniformBuffer->bufferBlock->needUpload();
+            }
         }
     }
     _invertFront = _getInvertFront();
@@ -104,6 +133,35 @@ void GLESRenderElement3D::_clearShaderInstance()
     _shaderInstances.clear();
 }
 
+RTDefineDatas* GLESRenderElement3D::_getShaderInstanceDefines(GLESRenderContext3D* context)
+{
+    RTDefineDatas* comDef = GLESRenderElement3D::_compileDefines;
+    
+    RTDefineDatas* globalShaderDefines = context->_getContextShaderDefines();
+    
+    globalShaderDefines->cloneTo(comDef);
+    
+    if (renderShaderData != nullptr) {
+        comDef->addDefineDatas(renderShaderData->_defineDatas);
+    }
+    
+    if (materialShaderData != nullptr) {
+        comDef->addDefineDatas(materialShaderData->_defineDatas);
+    }
+    
+    if (owner != nullptr) {
+        auto& additionShaderData = owner->additionShaderData;
+        if (!additionShaderData.empty()) {
+            for (const auto& pair : additionShaderData) {
+                comDef->addDefineDatas(pair.second->_defineDatas);
+            }
+        }
+
+    }
+    
+    return comDef;
+}
+
 bool GLESRenderElement3D::_getInvertFront()
 {
     return (owner != nullptr && owner->transform != nullptr) ? (owner->transform->_isFrontFaceInvert()) : false;
@@ -113,36 +171,28 @@ void GLESRenderElement3D::_compileShader(GLESRenderContext3D *context)
 {
     std::vector<RTShaderPass *> passes = subshader->shaderpasses;
     _clearShaderInstance();
+    RTDefineDatas* comDef = _getShaderInstanceDefines(context);
     for (uint32_t j = 0, m = passes.size(); j < m; j++)
     {
         RTShaderPass *pass = passes[j];
-        // NOTE:this will cause maybe a shader not render but do prepare before，but the developer can avoide this
-        // manual,for example shaderCaster=false.
         if (pass->pipelineMode != context->pipelineMode)
             continue;
 
-        RTDefineDatas *comDef = GLESRenderElement3D::_compileDefines;
-        if (context->sceneData)
-        {
-            context->sceneData->_defineDatas->cloneTo(comDef);
-        }
-        else
-        {
-            context->globalConfigShaderData->cloneTo(comDef);
-        }
-
-        if (context->cameraData != nullptr)
-            comDef->addDefineDatas(context->cameraData->_defineDatas);
         if (renderShaderData != nullptr)
         {
-            comDef->addDefineDatas(renderShaderData->_defineDatas);
             pass->nodeCommonMap = owner->commonUniformMap;
         }
         else
         {
             pass->nodeCommonMap.clear();
         }
-        comDef->addDefineDatas(materialShaderData->_defineDatas);
+        if (owner != nullptr) {
+            pass->additionShaderData = &owner->_additionShaderDataKeys;
+        }
+        else
+        {
+            pass->additionShaderData = nullptr;
+        }
 
         RTShaderPass::CacheShaderItem* item = pass->getCacheShader(comDef);
         GLESShaderInstance* shader;

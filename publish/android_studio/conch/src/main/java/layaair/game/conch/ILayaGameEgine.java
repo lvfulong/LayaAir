@@ -10,8 +10,6 @@ import android.widget.AbsoluteLayout;
  public abstract interface ILayaGameEgine {
 	//	设置游戏缓存目录
 	 void setAppCacheDir(String _cacheDir);
-	 // 设置下载线程的个数
-	 void setDownloadThreadNum(int nNum);
     //  设置扩展包路径
 	 void setExpansionZipDir( final String mainPath,final String patchPath );
 

@@ -1,10 +1,16 @@
 #include "Property.h"
 namespace laya
 {
+    RTShaderDefine Render2DProperty::GAMMACORRECT;
+    void Render2DProperty::__init__() {
+        Render2DProperty::GAMMACORRECT = LayaGL::m_pWebglEngine->propertyNameToID("GAMMACORRECT");
+    }
+
+
     uint32_t BaseCameraProperty::VIEWMATRIX = 0;
     uint32_t BaseCameraProperty::PROJECTMATRIX = 0;
     uint32_t BaseCameraProperty::VIEWPROJECTMATRIX = 0;
-    std::string BaseCameraProperty::UBONAME_CAMERA = "CameraUniformBlock";
+    std::string BaseCameraProperty::UBONAME_CAMERA = "BaseCamera";
     void BaseCameraProperty::__init__()
     {
         BaseCameraProperty::VIEWMATRIX = LayaGL::m_pWebglEngine->propertyNameToID("u_View");
@@ -149,8 +155,9 @@ namespace laya
         ShadowCasterPassProperty::SHADOW_MATRICES = LayaGL::m_pWebglEngine->propertyNameToID("u_ShadowMatrices");
         ShadowCasterPassProperty::SHADOW_SPLIT_SPHERES = LayaGL::m_pWebglEngine->propertyNameToID("u_ShadowSplitSpheres");
     }
-    std::string Scene3DShaderDeclaration::UBONAME_SCENE = "SceneUniformBlock";
-    std::string Scene3DShaderDeclaration::UBONAME_SHADOW = "ShadowUniformBlock";
+    std::string Scene3DShaderDeclaration::UBONAME_SCENE = "Scene3D";
+    std::string Scene3DShaderDeclaration::UBONAME_SHADOW = "Shadow";
+    std::string Scene3DShaderDeclaration::UBONAME_GLOBAL = "Global";
     RTShaderDefine Scene3DShaderDeclaration::SHADERDEFINE_SHADOW;
     RTShaderDefine Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT;
     RTShaderDefine Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_CASCADE;
@@ -194,7 +201,7 @@ namespace laya
     void Sprite3DProperty::__init__()
     {
         Sprite3DProperty::WORLDMATRIX = LayaGL::m_pWebglEngine->propertyNameToID("u_WorldMat");
-        Sprite3DProperty::WORLDINVERTFRONT = LayaGL::m_pWebglEngine->propertyNameToID("u_WroldInvertFront");
+        Sprite3DProperty::WORLDINVERTFRONT = LayaGL::m_pWebglEngine->propertyNameToID("u_WorldInvertFront");
     }
     RTShaderDefine Sprite3DRenderDeclarationProperty::SHADERDEFINE_SPECCUBE_BOX_PROJECTION;
     RTShaderDefine Sprite3DRenderDeclarationProperty::SHADERDEFINE_GI_LEGACYIBL;

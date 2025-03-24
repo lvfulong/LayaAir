@@ -202,6 +202,10 @@ void CToObjectCGetSafeAreaInsets(int *top, int *left, int *bottom, int *right);
 std::string CToObjectCPostSyncMessage(const std::string &eventName, const std::string &data);
 void CToObjectCPostAsyncMessage(const std::string &eventName, const std::string &data, std::function<void(std::string)> cb);
 void CToObjectCSetPreferredFramesPerSecond(uint64_t fps);
+std::string CToObjectCGetExecutablePath();
+std::string CToObjectCGetRootAssetsPath();
+std::string CToObjectCGetPersistentDataPath();
+std::string CToObjectCGetTemporaryCachePath();
 #endif //_CToObjectC_H_
 
 //-----------------------------END FILE--------------------------------

@@ -14,20 +14,22 @@ const videoPlayNapi: laya.CPPFunctions = laya.getContext(ContextType.VIDEOPLAYER
 const napiContext: laya.CPPFunctions = laya.getContext(ContextType.NATIVE_API);
 workerContext.workerInit();
 
+const workerPort: ThreadWorkerGlobalScope = worker.workerPort;
+
+Dialog.init(workerPort);
+JumpManager.init(workerPort);
+WebView.init(workerPort);
+
 napiContext.nativeEngineStart();
 NapiHelper.registerWorkerFunctions()
 
-const workerPort: ThreadWorkerGlobalScope = worker.workerPort;
+
 
 workerPort.onmessage = (e: MessageEvents): void => {
   let data: WorkerDataEntity = e.data;
   switch (data.type) {
     case "onXCLoad":
       console.log("[laya] onXCLoad Callback");
-      Dialog.init(workerPort);
-      JumpManager.init(workerPort);
-      WebView.init(workerPort);
-      laya.ConchNAPI_OnAppStart();
       break;
     case "abilityContextInit":
       GlobalContext.storeGlobalThis(GlobalContextConstants.LAYA_ABILITY_CONTEXT, data.context);

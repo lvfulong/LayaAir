@@ -19,8 +19,8 @@ void GLESUniformBufferBase::setInt(int index, int value) {
     const auto& uniforms = m_descriptor->getUniforms();
     auto it = uniforms.find(index);
     if (it != uniforms.end()) {
-        float* view = static_cast<float*>(it->second.view);
-        view[0] = static_cast<float>(value);
+        int* view = static_cast<int*>(it->second.view);
+        view[0] = static_cast<int>(value);
         needUpload = true;
     }
 }
@@ -32,6 +32,7 @@ void GLESUniformBufferBase::setFloat(int index, float value) {
         float* view = static_cast<float*>(it->second.view);
         view[0] = value;
         needUpload = true;
+                
     }
 }
 
@@ -102,11 +103,16 @@ void GLESUniformBufferBase::setMatrix3x3Array(int index, const void* data) {
 }
 
 void GLESUniformBufferBase::setArrayBuffer(int index, const void* data) {
-    const auto& uniforms = m_descriptor->getUniforms();
+    auto& uniforms = m_descriptor->getUniforms();
     auto it = uniforms.find(index);
     if (it != uniforms.end()) {
+        int n = it->second.arrayLength;
+        int size = it->second.size;
+        int alignStride = it->second.alignStride;
         float* view = static_cast<float*>(it->second.view);
-        memcpy(view, data, it->second.viewByteLength);
+        for (int i = 0;i < n;i++) {
+            memcpy(view + i * alignStride, (float*)data + i * size,sizeof(float)* size);
+        }
         needUpload = true;
     }
 }
@@ -118,6 +124,7 @@ void GLESUniformBufferBase::setBuffer(int index, const void* data) {
         float* view = static_cast<float*>(it->second.view);
         memcpy(view, data, it->second.viewByteLength);
         needUpload = true;
+
     }
 }
 

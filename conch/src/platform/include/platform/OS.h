@@ -9,27 +9,31 @@ namespace laya
 class OS
 {
   public:
-    virtual ~OS()
-    {
-    }
-    virtual int getUsedMem() = 0;
-    virtual float getTotalMem() = 0;
-    virtual int getAvalidMem() = 0;
-    virtual int getMemoryUsageInByte() = 0;
-    virtual void exit() = 0;
-    virtual int getNetworkType() = 0;
-    virtual void setScreenWakeLock(bool bWakeLock) = 0;
-    virtual void setSensorAble(bool bSensorAble) = 0;
-    virtual int getSafeInsetTop() = 0;
-    virtual int getSafeInsetLeft() = 0;
-    virtual int getSafeInsetBottom() = 0;
-    virtual int getSafeInsetRight() = 0;
-    virtual jsvm_value postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName,
-                                        const std::string &data) = 0;
-    virtual std::string postSyncMessage(const std::string &eventName, const std::string &data) = 0;
-    virtual void setPreferredFramesPerSecond(uint64_t fps) = 0;
+    static int getUsedMem();
+    static float getTotalMem();
+    static int getAvalidMem();
+    static int getMemoryUsageInByte();
+    static void exit();
+    static int getNetworkType();
+    static void setScreenWakeLock(bool bWakeLock);
+    static void setSensorAble(bool bSensorAble);
+    static int getSafeInsetTop();
+    static int getSafeInsetLeft();
+    static int getSafeInsetBottom();
+    static int getSafeInsetRight();
+    static jsvm_value postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName,
+                                        const std::string &data);
+    static std::string postSyncMessage(const std::string &eventName, const std::string &data);
+    static void setPreferredFramesPerSecond(uint64_t fps);
+    static std::string getExecutablePath();
+    static std::string getAssetFullPath(const std::string &assetRelativePath);
+    static std::string getAssetRootPath();
+    static const std::string& getPersistentDataPath();
+    static const std::string& getTemporaryCachePath();
+    #if defined(OS_ANDROID) || defined(OS_OHOS)
+    static void setPersistentDataPath(const std::string &path);
+    static void setTemporaryCachePath(const std::string &path);
+    #endif
 };
-
-std::unique_ptr<OS> createOS();
 } // namespace laya
 #endif

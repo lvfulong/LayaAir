@@ -245,8 +245,8 @@ void OpenGLBackendAndroidEGL::create(const BackendOptions &options)
     assert(result != EGL_FALSE);
 
     bool use_es3 = true;
-    // chooseConfig(options);
-    m_impl->m_EGLConfig = GetConfig(m_impl->m_eglDisplay, &use_es3);
+    chooseConfig(options);
+    //m_impl->m_EGLConfig = GetConfig(m_impl->m_eglDisplay, &use_es3);
     printConfig(m_impl->m_eglDisplay, m_impl->m_EGLConfig);
     std::vector<EGLint> context_attributes;
     context_attributes.push_back(EGL_CONTEXT_CLIENT_VERSION);
@@ -305,8 +305,7 @@ void OpenGLBackendAndroidEGL::createScreenSurface(void *nativeHandle)
         SwappyGL_setWindow(m_impl->m_aNativeWindow);
     }
 #endif
-    ANativeWindow_setBuffersGeometry(m_impl->m_aNativeWindow, 0, 0, format);
-
+    ANativeWindow_setBuffersGeometry(m_impl->m_aNativeWindow,  m_impl->m_width, m_impl->m_height, format);
     std::vector<EGLint> egl_window_attributes;
     egl_window_attributes.push_back(EGL_NONE);
     m_impl->m_EGLSurface =
@@ -351,7 +350,8 @@ void OpenGLBackendAndroidEGL::onScreenSurfaceResize(int width, int height)
         EGLint format;
         eglGetConfigAttrib(m_impl->m_eglDisplay, m_impl->m_EGLConfig, EGL_NATIVE_VISUAL_ID, &format);
         // EGL_CHECK_ERROR
-        ANativeWindow_setBuffersGeometry(m_impl->m_aNativeWindow, 0, 0, format);
+
+        ANativeWindow_setBuffersGeometry(m_impl->m_aNativeWindow, width, height, 4);
         // createScreenSurface(m_impl->m_aNativeWindow);
         // makeCurrent();
         m_impl->m_width = width;

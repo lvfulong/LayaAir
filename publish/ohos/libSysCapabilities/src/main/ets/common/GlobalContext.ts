@@ -11,6 +11,8 @@ export class GlobalContext {
 export class GlobalContextConstants {
   static readonly LAYA_EDIT_BOX_ARRAY = "laya.editBoxArray";
   static readonly LAYA_EDIT_BOX_INDEX_MAP = "laya.editBoxIndexMap";
+  static readonly LAYA_EDIT_BOX_NEW_ARRAY = "laya.editBoxNewArray";
+  static readonly LAYA_EDIT_BOX_NEW_INDEX_MAP = "laya.editBoxNewIndexMap";
   static readonly LAYA_WORKER = "laya.layaWorker";
   static readonly LAYA_WEB_VIEW_ARRAY = "laya.WebViewArray";
   static readonly LAYA_WEB_VIEW_INDEX_MAP = "laya.WebViewIndexMap";

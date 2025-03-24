@@ -45,6 +45,9 @@ namespace laya
 		//Index Uint32
 		bool value = isWebgl2 || !!(getExtension(WebGLExtension::OES_element_index_uint));
 		m_capabilityMap[RenderCapable::Element_Index_Uint32] = value;
+
+		m_capabilityMap[RenderCapable::Element_Index_Uint8] = true;
+
 		//FLoat32Texture
 		value = isWebgl2 || !!(getExtension(WebGLExtension::OES_texture_float));
 		m_capabilityMap[RenderCapable::TextureFormat_R32G32B32A32] = value;

@@ -48,7 +48,6 @@ endif()
 
 if(CONCH_USE_OLD_CURL_DOWNLOAD)
 	list(APPEND CONCH_SRC
-
 	src/downloadMgr/JCCurlWrap.h
 	src/downloadMgr/JCCurlWrap.cpp)
 endif()
@@ -60,11 +59,6 @@ if(CONCH_USE_JPEG_XL)
 endif()
 if(CONCH_USE_DCC)
 	list(APPEND CONCH_SRC
-
-	src/downloadCache/DCC1/JCFileTable.cpp
-	src/downloadCache/DCC1/JCServerFileCache.h
-	src/downloadCache/DCC1/JCServerFileCache.cpp
-	src/downloadCache/DCC1/JCFileResDCC.cpp
 	src/downloadCache/DCC2/JCFileResDCC2.cpp
 	src/downloadCache/DCC2/JSDownloader.cpp
 	)
@@ -428,8 +422,11 @@ list(APPEND CONCH_SRC
 	src/JCScriptRuntime.cpp
 	src/JCSystemConfig.h
 	src/JCSystemConfig.cpp
-	src/platform/src/OS.cpp
 	src/backend/src/IBackend.cpp
+	src/ScriptVM.h
+	src/ScriptVM.cpp
+
+	src/platform/src/OS.cpp
 )
 
 list(APPEND PLATFORM_HEADER_DIR
@@ -706,6 +703,7 @@ if(OS_ANDROID)
 		GLESv3
 		OpenSLES
 		utils
+		core
 		jsbind
 		jsvm
 		zlib
@@ -762,6 +760,7 @@ elseif(OS_IOS)
 		"-framework CoreHaptics"
 		${LINK_LIBS}
 		utils
+		core
 		jsbind
 		jsvm
 		zlib
@@ -805,6 +804,7 @@ elseif(OS_WINDOWS)
 		shlwapi.lib
 		Iphlpapi.lib
 		utils
+		core
 		jsbind
 		jsvm
 		zlib
@@ -860,6 +860,7 @@ endif()
 		libnative_buffer.so
 		libohsensor.so
 		utils
+		core
 		jsbind
 		jsvm
 		curl
@@ -897,6 +898,7 @@ elseif(OS_LINUX)
 		#${FREETYPE_LIBRARIES}
 		${FONTCONFIG_LIBRARIES}
   		#${SDL2_LIBRARIES}
+		core
 		freetype
 		SDL2
 		SDL2main

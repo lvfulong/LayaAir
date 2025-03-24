@@ -559,11 +559,6 @@ interface conchConfig{
      */
 	setDownloadUnmask(ext:string,key:number,len:number):void;
     /**
-     * 设置版本控制字符串
-     * 如 xxx.png?v=123  既可以传入conchConfig.setDownloadVersionString("v");
-    */
-    setDownloadVersionString(str:string):void;
-    /**
      * 返回平台类型
         "Conch-ios"
         "Conch-android"

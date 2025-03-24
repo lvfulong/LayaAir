@@ -27,8 +27,6 @@
 #include <LayaGL/JCLayaGLDispatch.h>
 #include <string>
 
-#include "../../downloadCache/DCC1/JCFileResDCC.h"
-
 extern int g_nLogLevel;
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
@@ -40,7 +38,6 @@ extern HWND g_hWnd;
 
 namespace laya
 {
-    bool                    JSConchConfig::s_useDCC2 = true;
 	std::string				JSConchConfig::m_sGUID = "unknow";
     std::string				JSConchConfig::m_sDeviceModel = "unknow";
 	std::string				JSConchConfig::m_sDeviceInfo= "{\"resolution\":\"unknow\",	\"guid\":\"unknow\",\"imei\":[\"unknow\"],\"imsi\":[\"unknow\"],\"os\":\"unknow\",\"osversion\":\"unknow\",\"phonemodel\":\"unknow\"	}";
@@ -56,21 +53,21 @@ namespace laya
     float                   JSConchConfig::m_fScreenTy = 0.0f;
 
 
-    const char* JSConchConfig::getLocalStoragePath()
+    const std::string& JSConchConfig::getLocalStoragePath()
     {
-        return JCConch::s_pConch->getLocalStoragePath();
+        return JCConch::getLocalStoragePath();
     }
     float JSConchConfig::getTotalMem()
     {
-        return JCConch::s_pConch->getOS()->getTotalMem();
+        return OS::getTotalMem();
     }
     int JSConchConfig::getUsedMem()
     {
-        return JCConch::s_pConch->getOS()->getUsedMem();
+        return OS::getUsedMem();
     }
     int JSConchConfig::getAvalidMem()
     {
-        return JCConch::s_pConch->getOS()->getAvalidMem();
+        return OS::getAvalidMem();
     }
     float JSConchConfig::getScreenInch()
     {
@@ -178,7 +175,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 
     int JSConchConfig::getNetworkType()
     {
-        return JCConch::s_pConch->getOS()->getNetworkType();
+        return OS::getNetworkType();
     }
 
 	const char* JSConchConfig::getIPAddress()
@@ -261,16 +258,6 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
     void JSConchConfig::resetDownloadNoResponseTimeout() {
         JCDownloadMgr::s_nNoResponseTimeout = 15000;
     }
-
-    void JSConchConfig::setDownloadVersionString(const char* p_pszVersion) {
-        if (p_pszVersion && strlen(p_pszVersion) > 0) {
-            JCFileResDCC::s_strExtVersion = p_pszVersion;
-            JCFileResDCC::s_strExtVersion += "=";
-        }
-        else
-            JCFileResDCC::s_strExtVersion = "";
-    }
-
     const char* JSConchConfig::getOS()
     {
 #ifdef OS_IOS
@@ -566,7 +553,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         std::string sWritePath = "";
         if (sPath == NULL || strlen(sPath) <= 0)
         {
-            sWritePath = JCConch::s_pConch->m_sCachePath.c_str();
+            sWritePath = JCConch::getAppCachePath();
         }
         else
         {
@@ -608,7 +595,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
     }
     int JSConchConfig::getMemoryUsageInByte()
     {
-        return JCConch::s_pConch->getOS()->getMemoryUsageInByte();
+        return OS::getMemoryUsageInByte();
     }
     void JSConchConfig::exportJS(jsbind::Object& context)
     {
@@ -638,7 +625,6 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 		 class_binding.class_function("clearChkIgnoreChksumExt", &JSConchConfig::clearChkIgnoreChksumExt);
 		 class_binding.class_function("setDownloadUnmask", &JSConchConfig::setDownloadUnmask);
 		 class_binding.class_function("resetDownloadUnmask", &JSConchConfig::resetDownloadUnmask);
-		 //class_binding.class_function("setDownloadVersionString", &JSConchConfig::setDownloadVersionString);
 		 class_binding.class_function("getOS", &JSConchConfig::getOS);
 		 class_binding.class_function("getAppVersion", &JSConchConfig::getAppVersion);
 		 class_binding.class_function("getAppLocalVersion", &JSConchConfig::getAppLocalVersion);

@@ -294,7 +294,7 @@ namespace laya
 						char tmpBuf[32];
 						sprintf(tmpBuf, "%x_%x",pFileRes->m_nLength, rand());
 						const char* local = tmpBuf;
-						m_sLocalFileName = JCFileResManager::getAppCachePath() + "/" + local + audiofile;
+						m_sLocalFileName = JCConch::getAppCachePath() + "/" + local + audiofile;
 						writeFileSync(m_sLocalFileName.c_str(), p_buf);
 						ms_vSaveMp3File[m_sSrc] = m_sLocalFileName;
 					}

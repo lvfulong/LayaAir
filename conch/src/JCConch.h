@@ -1,11 +1,3 @@
-/**
-@file			JCConch.h
-@brief			
-@author			James
-@version		1.0
-@date			2017_11_28
-*/
-
 #ifndef __JCConch_H__
 #define __JCConch_H__
 
@@ -16,6 +8,9 @@
 #include <utils/InputTypes.h>
 #include "EngineEvent.h"
 #include <memory>
+#include <utils/MessageLoop.h>
+#include <core/Thread.h>
+#include <platform/OS.h>
 
 namespace laya
 {
@@ -60,13 +55,15 @@ namespace laya
 
 		void exit();
 
-		const char* getLocalStoragePath() 
+		static const std::string& getLocalStoragePath()
         {
-            return m_strLocalStoragePath.c_str(); 
+            return s_localStoragePath;
+        }
+        static const std::string& getAppCachePath()
+        {
+            return s_cachePath;
         }
         void update();
-
-        void postToPlatform(std::function<void(void)> task);
 
 		void onAppPause();
 
@@ -80,41 +77,27 @@ namespace laya
 
         void dispatchEngineEvent(const EngineEventBase&  e);
 
-        OS* getOS();
     public:
 
         static std::shared_ptr<JCConch>         s_pConch;
         static int64_t			                s_nUpdateTime;
         static std::shared_ptr<JCConchRender>	s_pConchRender;
-        std::string				                m_strLocalStoragePath;
+        static std::string				        s_localStoragePath;
         static std::shared_ptr<JCScriptRuntime> s_pScriptRuntime;
         static JCFileSource*	                s_pAssetsFiles;
         JCFileSource*			                m_pAssetsRes;
         std::string				                m_strStartJS;
-        std::string                             m_sCachePath;
+        static std::string                      s_cachePath;
         JCFileResManager*	                    m_pFileResMgr;
     protected:
         bool					                m_bDestroying;
         std::vector<std::string>                m_vUrlHistory;
         int                                     m_nUrlHistoryPos;
-        std::unique_ptr<OS>                     m_OS;
     public:
 
         std::vector<std::function<void(void)>>  m_tasks;
         std::mutex                              m_mutex;
         bool                                    m_isAppStarted = { false };
-        JCWorkSemaphore                         m_semaphoreFramePacer;
-        JCWorkSemaphore                         m_semaphore;
 	};
-    // todo 当前Windows linux android有效 ohos是layaWorker
-    void postToPlatform(std::function<void(void)> task);
-
-    bool isInJSThread();
-	void postToJS(std::function<void(void)> task);
 };
-//------------------------------------------------------------------------------
-
-
-#endif //__JCConch_H__
-
-//-----------------------------END FILE--------------------------------
+#endif

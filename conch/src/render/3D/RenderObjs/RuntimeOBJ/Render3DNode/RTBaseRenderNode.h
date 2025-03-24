@@ -55,6 +55,8 @@ public: //binding
     void setCommonUniformMap(const std::vector<std::string>& value);
     void setRenderElements(const std::vector<GLESRenderElement3D*>& value);
     void destroy();
+    void clearAdditionalMap();//JS call
+    void addOneAddiionalData(const std::string &blockName, GLESShaderData* shaderData);//JS call
 public:
     void _applyReflection();
     void _applyLightmap();
@@ -79,14 +81,15 @@ public://bind
     bool boundsChange = false;
     uint32_t staticMask;
     int lightmapIndex = -1;
-    int probeReflectionUpdateMark = -1;
     uint32_t reflectionMode = 0;
     int lightProbUpdateMark = -1;
     IrradianceMode irradianceMode;
     GLESShaderData* shaderData;
     jsbind::Persistent	m_JSFunctionRenderUpdatePre;//js call
     jsbind::Persistent	m_JSFunctionCalculateBoundingBox;//js call
-    std::vector<std::string> commonUniformMap;
+    std::vector<std::string> commonUniformMap{};
+    std::unordered_map<std::string, GLESShaderData*> additionShaderData{};
+    std::vector<std::string> _additionShaderDataKeys{};
     //---------------------
     bool customCull = false;//TODO
     bool customCullResoult = false;//TODO

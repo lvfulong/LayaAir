@@ -7,7 +7,6 @@
 #include <core/math/Viewport.h>
 #include <functional>
 #include <render/3D/design/renderEnum/RenderClearFlag.h>
-#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h>
 #include <utils/JCSingletonList.h>
 
 namespace laya
@@ -18,8 +17,11 @@ class GLESInternalRT;
 class RTSceneNodeData;
 class RTCameraModuleData;
 class GLESRenderCMD;
+class RTDefineDatas;
 class GLESRenderContext3D
 {
+public:
+    static GLESRenderContext3D* _instance;
   public:
     GLESRenderContext3D();
     ~GLESRenderContext3D();
@@ -27,6 +29,8 @@ class GLESRenderContext3D
     uint32_t drawRenderElementOne(GLESRenderElement3D *node);
     void runOneCMD(GLESRenderCMD* cmd);
     void runCMDList(const std::vector<GLESRenderCMD*>& cmds);
+    RTDefineDatas* _getContextShaderDefines();
+    void _prepareContext();
     void setRenderTarget(GLESInternalRT* renderTarget, RenderClearFlagBits flag = 0)
     {
         _clearFlag = flag;
@@ -37,14 +41,18 @@ class GLESRenderContext3D
         _needStart = true;
       ;
     }
-    void setCameraData(GLESShaderData *shaderData)
-    {
-        this->cameraData = shaderData;
+    void setCameraData(GLESShaderData* shaderData);
+
+    GLESShaderData* getSceneShader() {
+        return sceneData;
     }
-    void setSceneData(GLESShaderData *sceneData)
-    {
-        this->sceneData = sceneData;
+
+    GLESShaderData* getCameraData() {
+        return cameraData;
     }
+
+    void setSceneData(GLESShaderData* sceneData);
+   
     void setViewport(const Viewport &value)
     {
         this->viewPort = value;
@@ -63,14 +71,10 @@ class GLESRenderContext3D
         clearStencil = stencilValue;
         return 0;
     }
-    void setSceneNodeData(RTSceneNodeData *value)
-    {
-        sceneNodeData = value;
-    }
-    void setCameraNodeData(RTCameraModuleData *value)
-    {
-        cameraNodeData = value;
-    }
+    void setSceneNodeData(RTSceneNodeData* value);
+
+    void setCameraNodeData(RTCameraModuleData* value);
+
     void setGlobalShaderData(GLESShaderData *value)
     {
         this->globalShaderData = value;
@@ -86,9 +90,11 @@ class GLESRenderContext3D
     void _end();
 
   public:
-    GLESShaderData *globalShaderData = nullptr;
-    RTDefineDatas*globalConfigShaderData = nullptr;
-    GLESInternalRT *_renderTarget = nullptr;
+    std::vector<std::string> _preDrawUnifromMaps{};
+    
+    GLESShaderData* globalShaderData = nullptr;
+    RTDefineDatas* globalConfigShaderData = nullptr;//根据不同平台决定的全局宏
+    GLESInternalRT* _renderTarget = nullptr;
     Viewport viewPort;
     Vector4 scissor;
     bool invertY;
@@ -99,9 +105,7 @@ class GLESRenderContext3D
     uint8_t clearStencil;
     Color clearColor;
 
-    // data
-    GLESShaderData *cameraData = nullptr;
-    GLESShaderData *sceneData = nullptr;
+    
 
     // upload flag
     uint32_t _sceneUpdateMask = 0;
@@ -110,6 +114,10 @@ class GLESRenderContext3D
     RTCameraModuleData *cameraNodeData = nullptr;
 private:
     bool _needStart = true;
+    RTDefineDatas* _cacheGlobalDefines = nullptr;//用来缓存全局ShaderDefine
+    // data
+    GLESShaderData *cameraData = nullptr;
+    GLESShaderData *sceneData = nullptr;
 };
 } // namespace laya
 #endif

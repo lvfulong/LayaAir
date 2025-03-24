@@ -467,6 +467,21 @@ class HTMLImageElement extends HTMLElement /*implements NativeObjWrapper*/ {
 }
 window["HTMLImageElement"] = HTMLImageElement;
 
+
+class HTMLInputElementNew extends HTMLElement {
+    setBgColor(c) { }
+    setForbidEdit(b) { }
+    focus() { }
+    blur() { }
+    setPos(x, y) { }
+    constructor() {
+        super();
+        
+        this.tagName = "Input";
+    }
+}
+
+
 class HTMLInputElement extends HTMLElement implements NativeObjWrapper {
 
     // _nativeObj: ConchInput;

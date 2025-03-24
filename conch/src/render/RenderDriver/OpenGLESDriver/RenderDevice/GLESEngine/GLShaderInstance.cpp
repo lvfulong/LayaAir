@@ -560,9 +560,6 @@ int GLShaderInstance::_uniform_UniformBuffer(ShaderVariable *one, const std::any
     //linux compile error assert(dataInfo.type == std::typeid(uint32_t));
     uniformDataShell* buffer = std::any_cast<uniformDataShell*>(dataInfo);
     buffer->ubo->bind(one->location);
-
-  ////GLESUniformBuffer
-  //  buffer->bind(one->location);
     return 0;
 }
 void GLShaderInstance::_bindTexture(int textureID, GLenum target, GLESInternalTex *texture)

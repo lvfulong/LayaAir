@@ -586,6 +586,7 @@ class RenderBindings
             class_binding.function("setValidDefine", &RTShaderPass::setValidDefine);
             class_binding.function("setCreateShaderInstanceFunction", &RTShaderPass::setCreateShaderInstanceFunction);
             class_binding.function("setCommonUniformMap", &RTShaderPass::setCommonUniformMap);
+            class_binding.function("setAdditionShaderData", &RTShaderPass::setAdditionShaderData);
             class_binding.function("setCacheShader", &RTShaderPass::setCacheShaderJS);
             class_binding.function("getCacheShader", &RTShaderPass::getCacheShaderJS);
             class_binding.function("destroy", &RTShaderPass::destroy);
@@ -636,6 +637,9 @@ class RenderBindings
             class_binding.function("setLightmap", &RTBaseRenderNode::setLightmap);
             class_binding.function("setVolumetricGI", &RTBaseRenderNode::setVolumetricGI);
             class_binding.function("setProbeReflection", &RTBaseRenderNode::setProbeReflection);
+            class_binding.function("clearAdditionalMap", &RTBaseRenderNode::clearAdditionalMap);
+            class_binding.function("addOneAddiionalData", &RTBaseRenderNode::addOneAddiionalData);
+            class_binding.function("_calculateBoundingBox",&RTBaseRenderNode::_calculateBoundingBox);
             class_binding.property("_bounds", &RTBaseRenderNode::getBounds, &RTBaseRenderNode::setBounds);
             class_binding.property_field("renderNodeType", &RTBaseRenderNode::renderNodeType);
             class_binding.property_field("distanceForSort", &RTBaseRenderNode::distanceForSort);
@@ -649,10 +653,10 @@ class RenderBindings
             class_binding.property_field("boundsChange", &RTBaseRenderNode::boundsChange);
             class_binding.property_field("staticMask", &RTBaseRenderNode::staticMask);
             class_binding.property_field("lightmapIndex", &RTBaseRenderNode::lightmapIndex);
-            class_binding.property_field("probeReflectionUpdateMark", &RTBaseRenderNode::probeReflectionUpdateMark);
             class_binding.property_field("reflectionMode", &RTBaseRenderNode::reflectionMode);
             class_binding.property_field("lightProbUpdateMark", &RTBaseRenderNode::lightProbUpdateMark);
             class_binding.property_field("irradianceMode", &RTBaseRenderNode::irradianceMode);
+
             context.class_("conchRTBaseRenderNode", class_binding);
         }
         {
@@ -864,8 +868,10 @@ class RenderBindings
             class_binding.function("setBounds", &RTVolumetricGI::setBounds);
             class_binding.function("setIrradiance", &RTVolumetricGI::setIrradiance);
             class_binding.function("setDistance", &RTVolumetricGI::setDistance);
+             class_binding.function("destroy", &RTVolumetricGI::destroy);
             class_binding.property_field("_intensity", &RTVolumetricGI::intensity);
             class_binding.property_field("_updateMark", &RTVolumetricGI::updateMark);
+             class_binding.property_field("shaderData", &RTVolumetricGI::shaderData);
             context.class_("conchRTVolumetricGI", class_binding);
         }
         {
@@ -907,6 +913,7 @@ class RenderBindings
             class_binding.property_field("_ambientMode", &RTReflectionProb::ambientMode);
             class_binding.property_field("_boxProjection", &RTReflectionProb::boxProjection);
             class_binding.property_field("_ambientIntensity", &RTReflectionProb::ambientIntensity);
+            class_binding.property_field("shaderData", &RTReflectionProb::shaderData);
             class_binding.function_optional_override(
                 "setAmbientSH", jsbind::optional_override([](RTReflectionProb &ctx, jsbind::ArrayBuffer arrayBuffer) {
                     bool bIsArrayBuffer = arrayBuffer.isValid();
@@ -1012,8 +1019,6 @@ class RenderBindings
                     data.setBuffer(propertyIndex, arrayBuffer.getData(), arrayBuffer.getByteLength());
                 }));
             class_binding.function("clearData", &GLESShaderData::clearData);
-            class_binding.function("createUniformBuffer", &GLESShaderData::createUniformBuffer);
-            class_binding.function("updateUBOBuffer", &GLESShaderData::updateUBOBuffer);
             context.class_("conchGLESShaderData", class_binding);
         }
 

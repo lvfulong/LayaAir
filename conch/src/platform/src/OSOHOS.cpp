@@ -1,4 +1,4 @@
-#include "OSOHOS.h"
+#include <platform/OS.h>
 #include <JCConch.h>
 #include <aki/jsbind.h>
 #include <utils/Log.h>
@@ -7,11 +7,7 @@
 
 namespace laya
 {
-
-OSOHOS::~OSOHOS()
-{
-}
-int OSOHOS::getUsedMem()
+int OS::getUsedMem()
 {
     int usedMem = 0;
     if (auto getUsedMem = aki::JSBind::GetJSFunction("DeviceUtils.getPrivateDirty"))
@@ -20,11 +16,11 @@ int OSOHOS::getUsedMem()
     }
     return usedMem;
 }
-float OSOHOS::getTotalMem()
+float OS::getTotalMem()
 {
     return 0; // todo
 }
-int OSOHOS::getAvalidMem()
+int OS::getAvalidMem()
 {
     if (auto getAvalidMem = aki::JSBind::GetJSFunction("DeviceUtils.getAvalidMem"))
     {
@@ -32,18 +28,18 @@ int OSOHOS::getAvalidMem()
     }
     return 0;
 }
-int OSOHOS::getMemoryUsageInByte()
+int OS::getMemoryUsageInByte()
 {
     return 0; // todo
 }
-void OSOHOS::exit()
+void OS::exit()
 {
     if (auto exit = aki::JSBind::GetJSFunction("ApplicationManager.exit"))
     {
         exit->Invoke<void>();
     }
 }
-int OSOHOS::getNetworkType()
+int OS::getNetworkType()
 {
     int networkType = 0;
     if (auto getNetworkType = aki::JSBind::GetJSFunction("NetworkUtils.getNetworkType"))
@@ -52,14 +48,14 @@ int OSOHOS::getNetworkType()
     }
     return networkType;
 }
-void OSOHOS::setScreenWakeLock(bool bWakeLock)
+void OS::setScreenWakeLock(bool bWakeLock)
 {
     if (auto setKeepScreenOn = aki::JSBind::GetJSFunction("DeviceUtils.setKeepScreenOn"))
     {
         setKeepScreenOn->Invoke<void>(bWakeLock);
     }
 }
-void OSOHOS::setSensorAble(bool bSensorAble)
+void OS::setSensorAble(bool bSensorAble)
 {
     if (bSensorAble)
     {
@@ -70,23 +66,23 @@ void OSOHOS::setSensorAble(bool bSensorAble)
        Sensor::disableSensor();
     }
 }
-int OSOHOS::getSafeInsetTop()
+int OS::getSafeInsetTop()
 {
     return 0;
 }
-int OSOHOS::getSafeInsetLeft()
+int OS::getSafeInsetLeft()
 {
     return 0;
 }
-int OSOHOS::getSafeInsetBottom()
+int OS::getSafeInsetBottom()
 {
     return 0;
 }
-int OSOHOS::getSafeInsetRight()
+int OS::getSafeInsetRight()
 {
     return 0;
 }
-jsvm_value OSOHOS::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
+jsvm_value OS::postAsyncMessage(std::weak_ptr<int> cbref, const std::string &eventName, const std::string &data)
 {
     auto promise = jsbind::Promise::Make();
     std::function<void(std::string)> cb = [promise, cbref](std::string message) {
@@ -102,7 +98,7 @@ jsvm_value OSOHOS::postAsyncMessage(std::weak_ptr<int> cbref, const std::string 
     }
     return promise.getHandle();
 }
-std::string OSOHOS::postSyncMessage(const std::string &eventName, const std::string &data)
+std::string OS::postSyncMessage(const std::string &eventName, const std::string &data)
 {
     // handleSyncMessage is called in ohos ui thread
     std::string eventResult;
@@ -112,12 +108,16 @@ std::string OSOHOS::postSyncMessage(const std::string &eventName, const std::str
     }
     return eventResult;
 }
-void OSOHOS::setPreferredFramesPerSecond(uint64_t fps)
+void OS::setPreferredFramesPerSecond(uint64_t fps)
 {
     if (fps > 0)
     {
         uint64_t animationIntervalMs = (uint64_t)(1000.f / fps);
         PluginRender::GetInstance()->changeFPS(animationIntervalMs);
     }
+}
+std::string OS::getExecutablePath()
+{
+    return "";//todo
 }
 } // namespace laya

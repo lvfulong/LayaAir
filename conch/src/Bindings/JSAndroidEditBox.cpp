@@ -319,7 +319,7 @@ void JSAndroidEditBox::onInput()
 {
     std::weak_ptr<int> cbref(m_CallbackRef);
     std::function<void(void)> pFunction = std::bind(&JSAndroidEditBox::onInputCallJSFunction,this, cbref);
-    JCConch::s_pScriptRuntime->m_pScriptThread->post( pFunction );
+    postToJS(pFunction);
 }
 void JSAndroidEditBox::setMultiAble(bool p_bMultiAble)
 {

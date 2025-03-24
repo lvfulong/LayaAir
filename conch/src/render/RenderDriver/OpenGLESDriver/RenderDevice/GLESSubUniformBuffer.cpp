@@ -33,7 +33,7 @@ GLESSubUniformBuffer::GLESSubUniformBuffer(const std::string& name,
 }
 
 void GLESSubUniformBuffer::upload() {
-    // sub buffer value already upload in buffer manager
+    bufferBlock->needUpload();
 }
 
 void GLESSubUniformBuffer::bind(int location) {

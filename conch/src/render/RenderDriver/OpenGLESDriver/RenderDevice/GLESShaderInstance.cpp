@@ -11,6 +11,7 @@
 #include <utils/Log.h>
 namespace laya
 {
+    std::vector<std::string>* GLESShaderInstance::_preDrawUnifromMaps = nullptr;
 GLESShaderInstance::GLESShaderInstance(
     bool is2D, const char *vs, const char *ps, const std::unordered_map<std::string, int32_t> &attributeMap,
     RTShaderPass *shaderPass) // :
@@ -54,16 +55,24 @@ void GLESShaderInstance::destroy()
 }
 void GLESShaderInstance::_create3D()
 {
-    GLESCommandUniformMap *sceneParams = GLESCommandUniformMap::createGlobalUniformMap("Scene3D");
-    // GLESCommandUniformMap* spriteParms = GLESCommandUniformMap::createGlobalUniformMap("Sprite3D");
-    GLESCommandUniformMap *cameraParams = GLESCommandUniformMap::createGlobalUniformMap("BaseCamera");
-    GLESCommandUniformMap *customParams = GLESCommandUniformMap::createGlobalUniformMap("Custom");
+    std::vector<std::string>* preDrawUniforms = GLESShaderInstance::_preDrawUnifromMaps;
+    std::vector<GLESCommandUniformMap*> preDrawParams;
+    if (preDrawUniforms != nullptr) {
+        for (int i = 0, n = preDrawUniforms->size(); i < n;i++) {
+            preDrawParams.push_back( GLESCommandUniformMap::createGlobalUniformMap((*preDrawUniforms)[i].c_str()));
+        }
+    }
+    GLESCommandUniformMap *cameraParams = GLESCommandUniformMap::createGlobalUniformMap(BaseCameraProperty::UBONAME_CAMERA.c_str());
+    
 
     std::vector<ShaderVariable *> &data = m_GLShaderInstance->getUniformMap();
     for (int i = 0, n = data.size(); i < n; i++)
     {
         ShaderVariable *one = data[i];
-        if (sceneParams->hasPtrID(one->dataOffset))
+        if (std::any_of(preDrawParams.begin(), preDrawParams.end(), 
+            [dataOffset = one->dataOffset](GLESCommandUniformMap* map) { 
+                return map->hasPtrID(dataOffset); 
+            }))
         {
             m_sceneUniformParamsMap.addShaderUniform(one);
         }
@@ -75,9 +84,13 @@ void GLESShaderInstance::_create3D()
         {
         	m_spriteUniformParamsMap.addShaderUniform(one);
         }
-        else if (customParams->hasPtrID(one->dataOffset))
+        else if (_hasAdditionShaderData(one->dataOffset)!="")
         {
-            m_customUniformParamsMap[one->dataOffset] = one;
+            std::string str = _hasAdditionShaderData(one->dataOffset);
+            if (_additionUniformParamsMaps.find(str) == _additionUniformParamsMaps.end()) {
+                _additionUniformParamsMaps[str] = CommandEncoder();
+            }
+            _additionUniformParamsMaps[str].addShaderUniform(one);
         }
         else
         {
@@ -118,25 +131,37 @@ bool GLESShaderInstance::hasSpritePtrID(int32_t dataOffset)
         return false;
     }
 }
+std::string GLESShaderInstance::_hasAdditionShaderData(int dataOffset)
+{
+    std::vector<std::string>* additionShaderData = _shaderPass->additionShaderData;
+    if (additionShaderData == nullptr) {
+        return "";
+    }
+    else {
+        for (int i = 0, n = additionShaderData->size(); i < n; i++) {
+            if (GLESCommandUniformMap::createGlobalUniformMap((*additionShaderData)[i].c_str())->hasPtrID(dataOffset))
+                return (*additionShaderData)[i];
+        }
+    }
+    return "";
+    
+}
 void GLESShaderInstance::_disposeResource()
 {
-    // this._renderShaderInstance.destroy();
     m_sceneUniformParamsMap.clear();
     m_cameraUniformParamsMap.clear();
     m_spriteUniformParamsMap.clear();
     m_materialUniformParamsMap.clear();
-    m_customUniformParamsMap.clear();
-    // m_renderState = nullptr;
+    _cacheShaerVariable.clear();
+    _additionUniformParamsMaps.clear();
+    _additionShaderData.clear();
 }
 
 void GLESShaderInstance::uploadUniforms(CommandEncoder *shaderUniform, GLESShaderData *shaderDatas, bool uploadUnTexture)
 {
     m_pGLESEngine->_addStatisticsInfo(GPUEngineStatisticsInfo::C_UniformBufferUploadCount, m_pGLESEngine->uploadUniforms(m_GLShaderInstance, shaderUniform, shaderDatas, uploadUnTexture));
 }
-int GLESShaderInstance::uploadCustomUniforms(int index, char *data, int byteSize)
-{
-    return m_pGLESEngine->uploadCustomUniforms(m_GLShaderInstance, m_customUniformParamsMap, index, data, byteSize);
-}
+
 void GLESShaderInstance::uploadRenderStateBlendDepth(GLESShaderData *shaderDatas)
 {
     if (this->_shaderPass->statefirst)

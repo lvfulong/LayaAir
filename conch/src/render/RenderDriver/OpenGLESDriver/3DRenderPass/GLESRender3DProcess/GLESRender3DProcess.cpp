@@ -10,34 +10,41 @@
 namespace laya {
 
     void GLESRender3DProcess::renderFowarAddCameraPass(GLESRenderContext3D* context, GLESForwardAddRP* passInfo, std::vector<RTBaseRenderNode*> renderNodeList, uint32_t count){
+        
+        GLESShaderData* sceneShaderData = context->getSceneShader();
+        GLESShaderData* cameraShaderData = context->getCameraData();
+        if(passInfo->enableDirectLightShadow||passInfo->enableSpotLightShadowPass){
+            GLESCommandUniformMap* shadowMap = GLESCommandUniformMap::createGlobalUniformMap(Scene3DShaderDeclaration::UBONAME_SHADOW.c_str());
+            sceneShaderData->createSubUniformBuffer(Scene3DShaderDeclaration::UBONAME_SHADOW, Scene3DShaderDeclaration::UBONAME_SHADOW, shadowMap->_uniformArray);
+        }
         //先渲染ShadowTexture
         if (passInfo->shadowCastPass) {
             if (passInfo->enableDirectLightShadow) {
-                context->sceneData->addDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW);
-                context->sceneData->removeDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT);
+                sceneShaderData->addDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW);
+                sceneShaderData->removeDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT);
                 passInfo->directLightShadowPass->update(context);
                 passInfo->directLightShadowPass->render(context, renderNodeList, count);
             }
             if (passInfo->enableSpotLightShadowPass) {
-                context->sceneData->addDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT);
-                context->sceneData->removeDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW);
+                sceneShaderData->addDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT);
+                sceneShaderData->removeDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW);
                 passInfo->spotLightShadowPass->update(context);
                 passInfo->spotLightShadowPass->render(context, renderNodeList, count);
             }
         }
         
         if (passInfo->enableDirectLightShadow) {
-            context->sceneData->addDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW);
+            sceneShaderData->addDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW);
         }
         else {
-            context->sceneData->removeDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW);
+            sceneShaderData->removeDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW);
         }
 
         if (passInfo->enableSpotLightShadowPass) {
-            context->sceneData->addDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT);
+            sceneShaderData->addDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT);
         }
         else {
-            context->sceneData->removeDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT);
+            sceneShaderData->removeDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT);
         }
 
         //postProcess TODO

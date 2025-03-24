@@ -279,7 +279,7 @@ void JSLinuxEditBox::onInput()
 {
     std::weak_ptr<int> cbref(m_CallbackRef);
     std::function<void(void)> pFunction = std::bind(&JSLinuxEditBox::onInputCallJSFunction,this, cbref);
-    JCConch::s_pScriptRuntime->m_pScriptThread->post( pFunction );
+    postToJS( pFunction );
 }
 void JSLinuxEditBox::setMultiAble(bool p_bMultiAble)
 {

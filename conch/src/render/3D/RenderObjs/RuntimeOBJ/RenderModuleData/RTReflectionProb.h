@@ -12,18 +12,15 @@ namespace laya
 {
 enum class AmbientMode
 {
-    /** �̶���ɫ��*/
-    SolidColor,
-    /** ��г����, ͨ����պ����ɵ���г���ݡ� */
+    SolidColor,   
     SphericalHarmonics
 };
-
 class RTReflectionProb
 {
 public:
     static uint32_t _idCounter;
   public:
-      RTReflectionProb() { _id = RTReflectionProb::_idCounter++; };
+      RTReflectionProb();
       ~RTReflectionProb() {};
       bool boxProjection;
     uint32_t _id;
@@ -42,8 +39,9 @@ public:
     GLESInternalTex *iblTex = nullptr;
     uint32_t updateMark = 0;
     bool iblTexRGBD;
-    Vector3 probePosition;
-    Color ambientColor;
+    Vector3 probePosition{};
+    Color ambientColor{};
+    GLESShaderData* shaderData = nullptr;
 
     void setReflectionTexture(GLESInternalTex *value)
     {
@@ -71,10 +69,15 @@ public:
     }
     void destroy()
     {
-        // todo
+        shaderData = nullptr;
     }
 
-    void applyRenderData(GLESShaderData* shaderData);
+    void applyRenderData();
+    bool _needUpdate();
+private:
+    int _updateMaskFlag{ -1 };
+    
+
 };
 } // namespace laya
 #endif

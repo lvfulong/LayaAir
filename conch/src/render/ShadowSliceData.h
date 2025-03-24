@@ -32,8 +32,8 @@ class ShadowSliceData
               cameraShaderValue->createUniformBuffer(BaseCameraProperty::UBONAME_CAMERA, GLESCommandUniformMap::createGlobalUniformMap(BaseCameraProperty::UBONAME_CAMERA.c_str()));
           }
       };
-
       ~ShadowSliceData() {
+          cameraShaderValue->destroy();
           delete cameraShaderValue;
       }
     GLESShaderData *cameraShaderValue; // todo LayaGL.renderOBJCreate.createShaderData(null);

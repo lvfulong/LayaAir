@@ -1,6 +1,5 @@
 #include "jsvm/JSEnv.h"
 #include "jsvm/JSVM.h"
-#include "jsvm/ScriptThread.h"
 #include "jsvm/napi/js_native_api.h"
 #include "jsvm/napi/js_native_api_v8.h"
 #include "v8debug/debug-agent.h"
@@ -935,6 +934,9 @@ jsvm_status jsvm_perform_microtask_checkpoint(jsvm_vm vm)
 
     DEBUG_CHECK(vm->isolate_ != nullptr);
     vm->isolate_->PerformMicrotaskCheckpoint();
+#ifdef JS_V8_DEBUGGER
+    jsvm::JSEnv::getCurrent()->runDbgFuncs();
+#endif
     return jsvm_status::jsvm_ok; // todo
 }
 jsvm_status jsvm_get_property(jsvm_env env, jsvm_value object, jsvm_value key, jsvm_value *result)
@@ -1072,7 +1074,7 @@ jsvm_status jsvm_open_inspector(jsvm_env env, const char *host, uint16_t port)
 #ifdef JS_V8_DEBUGGER
     // std::shared_ptr<jsvm::ScriptThread> scriptThread
     pDbgAgent = new laya::DebuggerAgent("layabox", port);
-    pDbgAgent->onJSStart(env->scriptThread);
+    pDbgAgent->onJSStart(jsvm::JSEnv::getCurrent());
 #endif
     return jsvm_status::jsvm_ok;
 }

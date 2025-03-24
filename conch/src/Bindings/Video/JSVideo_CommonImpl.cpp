@@ -138,10 +138,7 @@ void JSVideo::CallHandle(const char *evtName)
     auto it = m_evtMap.find(evtName);
     if (it != m_evtMap.end())
     {
-        if (JCConch::s_pScriptRuntime)
-        {
-            JCConch::s_pScriptRuntime->m_pScriptThread->post(std::bind(&JSVideo::DispatchEvtToJS, this, evt));
-        }
+        postToJS(std::bind(&JSVideo::DispatchEvtToJS, this, evt));
     }
 }
 

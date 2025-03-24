@@ -77,6 +77,7 @@
 #include "2D/FontManager.h"
 #include <stdarg.h>
 #include <render/RenderBindings.h>
+#include <platform/OS.h>
 
 extern int g_nInnerWidth ;
 extern int g_nInnerHeight ;
@@ -518,7 +519,7 @@ namespace laya
         context.function("setJoystickEvtFunction", &setJoystickEvtFunc);
         context.function("tmGetCurms", &tmGetCurms);
         context.function("reloadJS", &reloadJSThread);
-        context.function("getExePath", &getExePath);
+        context.function("getExePath", &OS::getExecutablePath);
         context.function("getInnerHeight", &getInnerHeight);
         context.function("getInnerWidth", &getInnerWidth);
         context.function("getDevicePixelRatio", &getDevicePixelRatio);

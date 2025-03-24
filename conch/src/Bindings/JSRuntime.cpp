@@ -21,7 +21,6 @@
 #include "JSLayaGL.h"
 #include "JSZip.h"
 #include "JSLaunchOptions.h"
-//#include "LayaAir/3D/JSTransform.h"
 #include "JSArrayBufferRef.h"
 #include "2D/FontManager.h"
 #include "../downloadCache/DCC2/JSDownloader.h"
@@ -116,7 +115,7 @@ namespace laya
                 if (n>0)
                     ss.at(n) = '.';
 
-                std::string cookiefile = JSConchConfig::getLocalStoragePath() + ss + "_curlcookie.txt";
+                std::string cookiefile = JSConchConfig::getLocalStoragePath() + "/" + ss + "_curlcookie.txt";
                 pdm->setCookieFile(cookiefile.c_str());
             }
         }
@@ -146,9 +145,9 @@ namespace laya
         JCConch::s_pScriptRuntime->m_pJSOnceOtherEvtFuction = jsbind::Persistent(p_pFunction);
         JCConch::s_pConchRender->requestCaptureScreen();
     }
-    const char* JSRuntime::getCachePath() 
+    std::string JSRuntime::getCachePath() 
     {
-        return JCConch::s_pConch->m_sCachePath.c_str();
+        return JCConch::getAppCachePath();
     }
     unsigned char* _readAssetAlloc(int sz, void* pUserData) 
     {
@@ -188,11 +187,11 @@ namespace laya
     }
     void JSRuntime::setScreenWakeLock(bool bWakeLock)
     {
-        JCConch::s_pConch->getOS()->setScreenWakeLock(bWakeLock);
+        OS::setScreenWakeLock(bWakeLock);
     }
     void JSRuntime::setSensorAble(bool bSensorAble)
     {
-        JCConch::s_pConch->getOS()->setSensorAble(bSensorAble);
+        OS::setSensorAble(bSensorAble);
     }
     jsvm_value JSRuntime::strTobufer(const char* s)
     {
@@ -208,7 +207,7 @@ namespace laya
     {
         JCImageManager* pImageManger = JCConch::s_pConchRender->m_pImageManager;
         if (pImageManger == NULL) return;
-        std::string sFilePath = JCConch::s_pConch->m_strLocalStoragePath;
+        std::string sFilePath = JCConch::getLocalStoragePath();
         sFilePath += "/imagesLog.txt";
         pImageManger->printCorpseImages(sFilePath.c_str());
     }
@@ -282,23 +281,23 @@ namespace laya
     }
 	void JSRuntime::exit()
     {
-        JCConch::s_pConch->getOS()->exit();
+        OS::exit();
     }
 	int JSRuntime::getSafeInsetTop()
 	{
-        return JCConch::s_pConch->getOS()->getSafeInsetTop();
+        return OS::getSafeInsetTop();
 	}
 	int JSRuntime::GetSafeInsetLeft()
 	{
-        return JCConch::s_pConch->getOS()->getSafeInsetLeft();
+        return OS::getSafeInsetLeft();
 	}
 	int JSRuntime::GetSafeInsetBottom()
 	{
-        return JCConch::s_pConch->getOS()->getSafeInsetBottom();
+        return OS::getSafeInsetBottom();
 	}
 	int JSRuntime::GetSafeInsetRight()
 	{
-        return JCConch::s_pConch->getOS()->getSafeInsetRight();
+        return OS::getSafeInsetRight();
 	}
 
 	jsvm_value JSRuntime::getLaunchOptionsSync()
@@ -351,92 +350,6 @@ namespace laya
 		int batchIndex;
 		int batchBoneIndex;
 	};
-	/*void JSRuntime::computeSubSkinnedDataForNative(jsvm_value inverseBindPosesBuffer, jsvm_value boneIndices, jsvm_value subData, jsvm_value skinnedMatrixCaches, jsvm_value bonesTransform, jsvm_value skinnedDataLoopMarks, jsvm_value skinnedData)
-	{
-		char* pInverseBindPosesBuffer = NULL;
-		int nInverseBindPosesBufferSize = 0;
-		if (!extractJSAB(inverseBindPosesBuffer, pInverseBindPosesBuffer, nInverseBindPosesBufferSize))
-		{
-			LOGE("computeSubSkinnedDataForNative BindPoses error");
-			return;
-		}
-
-		char* pBoneIndices = NULL;
-		int nBoneIndicesSize = 0;
-		if (!extractJSAB(boneIndices, pBoneIndices, nBoneIndicesSize))
-		{
-			LOGE("computeSubSkinnedDataForNative bone indices error");
-			return;
-		}
-
-
-		char* pSubData = NULL;
-		int nSubDataSize = 0;
-		if (!extractJSAB(subData, pSubData, nSubDataSize))
-		{
-			LOGE("computeSubSkinnedDataForNative SubData error");
-			return;
-		}
-
-		char* pSkinnedMatrixCaches = NULL;
-		int nSkinnedMatrixCachesSize = 0;
-		if (!extractJSAB(skinnedMatrixCaches, pSkinnedMatrixCaches, nSkinnedMatrixCachesSize))
-		{
-			LOGE("computeSubSkinnedDataForNative SkinnedMatrixCaches error");
-			return;
-
-		}
-		char* pSkinnedDataLoopMarks = NULL;
-		int nSkinnedDataLoopMarksSize = 0;
-		if (!extractJSAB(skinnedDataLoopMarks, pSkinnedDataLoopMarks, nSkinnedDataLoopMarksSize))
-		{
-			LOGE("computeSubSkinnedDataForNative SkinnedDataLoopMarks error");
-			return;
-		}
-		uint32_t* _skinnedDataLoopMarks = (uint32_t*)pSkinnedDataLoopMarks;
-		float* data = (float*)pSubData;
-	
-		v8::Isolate* isolate = Isolate::GetCurrent();
-		v8::Local< v8::Context> context = isolate->GetCurrentContext();
-
-		for (int k = 0, q = nBoneIndicesSize / sizeof(uint16_t); k < q; k++)
-		{
-			uint16_t index = ((uint16_t*)pBoneIndices)[k];
-			if (_skinnedDataLoopMarks[index] == RenderInfo::loopCount)
-			{
-				SkinnedMatrixCache& c = ((SkinnedMatrixCache*)pSkinnedMatrixCaches)[index];
-
-				v8::Local<Array> __array = skinnedData.As<Array>();
-				v8::Local<Array> __subArray = __array->Get(context, c.subMeshIndex).ToLocalChecked().As<Array>();
-				jsvm_value ab =  __subArray->Get(context, c.batchIndex).ToLocalChecked();
-				//float* preData = _skinnedData[c.subMeshIndex][c.batchIndex];
-				char* pPreData = NULL;
-				int npPreDataSize = 0;
-				if (!extractJSAB(ab, pPreData, npPreDataSize))
-				{
-					LOGE("computeSubSkinnedDataForNative preData error");
-					return;
-				}
-
-				int srcIndex = c.batchBoneIndex * 16;
-				int dstIndex = k * 16;
-				for (int d = 0; d < 16; d++)
-					data[dstIndex + d] = ((float*)pPreData)[srcIndex + d];
-			}
-			else
-			{
-				v8::Local<Array> _bones = bonesTransform.As<Array>();
-				jsvm_value bone = _bones->Get(context, index).ToLocalChecked();
-				JSTransform* pBone = __TransferToCpp<JSTransform*> ::ToCpp(bone);
-				if (pBone)
-				{
-					pBone->_getWorldMatrix();
-					_mulMatrixArray((float*)(&pBone->m_pTransform3D->getWorldMatrix().elements[0]), (float*)pInverseBindPosesBuffer + index * 16, 0, data, k * 16);
-				}
-				_skinnedDataLoopMarks[index] = RenderInfo::loopCount;
-			}
-		}
-	}*/
     jsvm_value JSRuntime::createArrayBufferRef(jsbind::ArrayBuffer arrayBuffer, int nType, bool bSyncToRender, int nRefType)
     {
        
@@ -605,7 +518,7 @@ namespace laya
             LOGE("Error: postAsyncMessage data is not string");
             return jsbind::MakeUndefined();
         }
-        return JCConch::s_pConch->getOS()->postAsyncMessage(callbackRef, eventName.as<std::string>(), data.as<std::string>());
+        return OS::postAsyncMessage(callbackRef, eventName.as<std::string>(), data.as<std::string>());
     }
     std::string JSRuntime::postSyncMessage(jsbind::Local eventName, jsbind::Local data)
     {
@@ -629,11 +542,11 @@ namespace laya
             LOGE("Error: postSyncMessage data is not string");
             return "";
         }
-        return JCConch::s_pConch->getOS()->postSyncMessage(eventName.as<std::string>(), data.as<std::string>());
+        return OS::postSyncMessage(eventName.as<std::string>(), data.as<std::string>());
     }
     void JSRuntime::setPreferredFramesPerSecond(uint32_t fps)
     {
-        JCConch::s_pConch->getOS()->setPreferredFramesPerSecond(fps);
+        OS::setPreferredFramesPerSecond(fps);
     }
     void JSRuntime::exportJS(jsbind::Object& context)
     {

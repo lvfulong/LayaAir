@@ -4,7 +4,7 @@
 #include "JCConch.h"
 #include <resource/JCFileResManager.h>
 #include <utils/JCFileSystem.h>
-
+#include <core/Thread.h>
 namespace laya
 {
 JCFileResDCC2::JCFileResDCC2(JCFileResManager *manager) : m_manager(manager)
@@ -39,7 +39,7 @@ void JCFileResDCC2::onDownloadError(int p_nError, int p_nHttpResponse, std::weak
     // m_pMgr->delRes(m_strURL.c_str());	到资源管理器中统一做
     // auto it = m_ResMap.find(m_strURL.c_str());
     std::weak_ptr<int> wptr(m_CallbackRef);
-    if (isInJSThread())
+    if (isScriptThread())
     {
         onResDownloadErr_JSThread(wptr, p_nError, p_nHttpResponse);
     }
@@ -70,7 +70,7 @@ void JCFileResDCC2::onDownloaded(JCBuffer &p_Buff, const std::string &pLocalAddr
     {
         std::weak_ptr<int> wptr(m_CallbackRef);
         m_bSendToJS_complete = true; // 这里肯定是js线程，可以处理这个标志
-        if (isInJSThread())
+        if (isScriptThread())
         {
             // 如果本身就在js线程，则立即做，这样可以节省一帧
             onResDownloadOK_JSThread(wptr);
