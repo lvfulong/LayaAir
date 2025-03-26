@@ -310,15 +310,15 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
     const char* JSConchConfig::getRuntimeVersion()
     {
 #ifdef OS_IOS
-        return "ios-conch6-release-3.3.0-beta.2";
+        return "ios-conch6-release-3.3.0-beta.3";
 #elif OS_ANDROID
-        return "android-conch6-release-3.3.0-beta.2";
+        return "android-conch6-release-3.3.0-beta.3";
 #elif OS_WINDOWS
-        return "window-conch6-release-3.3.0-beta.2";
+        return "window-conch6-release-3.3.0-beta.3";
 #elif OS_OHOS
-        return "ohos-conch6-release-3.3.0-beta.2";
+        return "ohos-conch6-release-3.3.0-beta.3";
 #elif OS_LINUX
-        return "linux-conch6-release-3.3.0-beta.2";
+        return "linux-conch6-release-3.3.0-beta.3";
 #endif
     }
 	//机型
