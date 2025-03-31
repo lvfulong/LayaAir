@@ -308,7 +308,6 @@ namespace laya
     {
         GET_ENV;
         m_scriptVM.runLoop(env, std::bind(&JCScriptRuntime::onUpdate, this, std::placeholders::_1));
-        m_scriptThreadMessageLoop->processExpiredTasks();
     }
     bool JCScriptRuntime::onUpdate(jsvm_env env) 
     {

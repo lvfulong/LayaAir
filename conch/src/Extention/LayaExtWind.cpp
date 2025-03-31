@@ -33,7 +33,7 @@ namespace laya
             //std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
             //std::wstring wExePath = converter.from_bytes(exePath);
             std::wstring wExePath = utf8ToWide(exePath);
-            fs::path exeDir = fs::path(wExePath).parent_path();
+            fs::path exeDir = fs::path(wExePath);
         	dllDir = exeDir / "extensions";
       		dllPath = dllDir / dll;
         }

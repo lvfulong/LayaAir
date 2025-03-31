@@ -150,16 +150,6 @@ void JCSystemConfig::loadConfigIniFile()
         LOGW("Warning: can not find desktop:RunInBackground use default %d", runInBackground);
     }
 #endif
-#ifdef OS_IOS
-    if (configIni.hasEntry("ios:orientation"))
-    {
-        m_nOrientationType = configIni.getUIntOrDefault("ios:orientation", 24);
-    }
-    else
-    {
-        LOGW("Warning: can not find ios:orientation use default %d", 24);
-    }
-#endif
 #if defined(OS_ANDROID)
     m_useSwappy = true;
     if (configIni.hasEntry("android:UseSwappy"))
