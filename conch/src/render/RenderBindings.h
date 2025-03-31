@@ -656,6 +656,7 @@ class RenderBindings
             class_binding.property_field("reflectionMode", &RTBaseRenderNode::reflectionMode);
             class_binding.property_field("lightProbUpdateMark", &RTBaseRenderNode::lightProbUpdateMark);
             class_binding.property_field("irradianceMode", &RTBaseRenderNode::irradianceMode);
+            class_binding.property_field("worldParams", &RTBaseRenderNode::worldParams);
 
             context.class_("conchRTBaseRenderNode", class_binding);
         }
