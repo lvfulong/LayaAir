@@ -9,7 +9,7 @@
 
 namespace laya {
 
-    void GLESRender3DProcess::renderFowarAddCameraPass(GLESRenderContext3D* context, GLESForwardAddRP* passInfo, std::vector<RTBaseRenderNode*> renderNodeList, uint32_t count){
+    void GLESRender3DProcess::renderFowarAddCameraPass(GLESRenderContext3D* context, GLESForwardAddRP* passInfo){
         
         GLESShaderData* sceneShaderData = context->getSceneShader();
         GLESShaderData* cameraShaderData = context->getCameraData();
@@ -23,13 +23,13 @@ namespace laya {
                 sceneShaderData->addDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW);
                 sceneShaderData->removeDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT);
                 passInfo->directLightShadowPass->update(context);
-                passInfo->directLightShadowPass->render(context, renderNodeList, count);
+                passInfo->directLightShadowPass->render(context, renderManager->list.m_vElements, renderManager->list.getLength());
             }
             if (passInfo->enableSpotLightShadowPass) {
                 sceneShaderData->addDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW_SPOT);
                 sceneShaderData->removeDefine(Scene3DShaderDeclaration::SHADERDEFINE_SHADOW);
                 passInfo->spotLightShadowPass->update(context);
-                passInfo->spotLightShadowPass->render(context, renderNodeList, count);
+                passInfo->spotLightShadowPass->render(context, renderManager->list.m_vElements, renderManager->list.getLength());
             }
         }
         
@@ -48,7 +48,7 @@ namespace laya {
         }
 
         //postProcess TODO
-        passInfo->renderpass->render(context, renderNodeList, count);
+        passInfo->renderpass->render(context, renderManager->list.m_vElements, renderManager->list.getLength());
 
 
         GLES3DRenderCMD::applyCommandBuffers(context, passInfo->_beforeImageEffectCMDS);

@@ -111,6 +111,8 @@ list(APPEND CONCH_SRC
 	src/render/3D/renderInstance/RenderModuleData.h
 	src/render/3D/renderInstance/RenderModuleData.cpp
 
+	src/render/3D/RenderObjs/RuntimeOBJ/RTScene3DRenderManager.h
+	src/render/3D/RenderObjs/RuntimeOBJ/RTScene3DRenderManager.cpp
 	src/render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.h
 	src/render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.cpp
 	src/render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTSkinRenderNode.h
