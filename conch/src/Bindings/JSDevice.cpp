@@ -24,26 +24,17 @@ jsbind::Persistent JSDevice::m_pOnKeyboardComplete;
 #endif
 void JSDevice::showKeyboard(jsbind::Local object)
 {
-    bool success = true;
-
     std::string defaultValue = "";
     if (object["defaultValue"].isString())
     {
         defaultValue = object["defaultValue"].as<std::string>();
     }
-    else
-    {
-        success = false;
-    }
+
 
     int32_t maxLength = 0;
     if (object["maxLength"].isNumber())
     {
         maxLength = object["maxLength"].as<int32_t>();
-    }
-    else
-    {
-        success = false;
     }
 
     bool multiple = false;
@@ -51,30 +42,21 @@ void JSDevice::showKeyboard(jsbind::Local object)
     {
         multiple = object["multiple"].as<bool>();
     }
-    else
-    {
-        success = false;
-    }
+
 
     bool confirmHold = false;
     if (object["confirmHold"].isBool())
     {
         confirmHold = object["confirmHold"].as<bool>();
     }
-    else
-    {
-        success = false;
-    }
+
 
     std::string confirmType = "";
     if (object["confirmType"].isString())
     {
         confirmType = object["confirmType"].as<std::string>();
     }
-    else
-    {
-        success = false;
-    }
+
 
     // 扩展接口 非微信小游戏接口
 
@@ -83,38 +65,21 @@ void JSDevice::showKeyboard(jsbind::Local object)
     {
         prompt = object["prompt"].as<std::string>();
     }
-    else
-    {
-        success = false;
-    }
+
 
     std::string promptColor = ""; //???todo
     if (object["promptColor"].isString())
     {
         promptColor = object["promptColor"].as<std::string>();
     }
-    else
-    {
-        success = false;
-    }
+
 
     std::string inputType = "text";
     if (object["inputType"].isString())
     {
         inputType = object["inputType"].as<std::string>();
     }
-    else
-    {
-        success = false;
-    }
-    if (!success)
-    {
-        if (object["fail"].isFunction())
-        {
-            object.call<void>("fail");
-            return;
-        }
-    }
+
 #if defined(OS_ANDROID)
 
     static const char *s_methodSign =
@@ -159,20 +124,12 @@ void JSDevice::showKeyboard(jsbind::Local object)
     s_currentIndex++;
     success = aki::JSBind::GetJSFunction("EditBoxNew.show")->Invoke<bool>(s_tag, defaultValue.c_str(), maxLength, multiple, confirmHold, confirmType.c_str(), prompt.c_str(), promptColor.c_str(), inputType.c_str());
 #endif
-    if (!success)
+
+    if (object["success"].isFunction())
     {
-        if (object["fail"].isFunction())
-        {
-            object.call<void>("fail");
-        }
+        object.call<void>("success");
     }
-    else
-    {
-        if (object["success"].isFunction())
-        {
-            object.call<void>("success");
-        }
-    }
+    
     if (object["complete"].isFunction())
     {
         object.call<void>("complete");
