@@ -107,6 +107,14 @@ void JSDevice::showKeyboard(jsbind::Local object)
     {
         success = false;
     }
+    if (!success)
+    {
+        if (object["fail"].isFunction())
+        {
+            object.call<void>("fail");
+            return;
+        }
+    }
 #if defined(OS_ANDROID)
 
     static const char *s_methodSign =
@@ -116,9 +124,16 @@ void JSDevice::showKeyboard(jsbind::Local object)
     jclass thisClass = NULL;
     jmethodID methodID = NULL;
 
-    DEBUG_CHECK(CToJavaBridge::GetInstance()->getClassAndStaticMethod(s_className, "show", s_methodSign, &pJNI,
-                                                                      &thisClass, &methodID));
-
+    bool isSuccess = CToJavaBridge::GetInstance()->getClassAndStaticMethod(s_className, "show", s_methodSign, &pJNI,
+                                                                      &thisClass, &methodID);
+    if (!isSuccess)
+    {
+        if (object["fail"].isFunction())
+        {
+            object.call<void>("fail");
+            return;
+        }
+    }
     jstring jDefaultValue = pJNI->NewStringUTF(defaultValue.c_str());
     jstring jConfirmType = pJNI->NewStringUTF(confirmType.c_str());
     jstring jPrompt = pJNI->NewStringUTF(prompt.c_str());
