@@ -19,7 +19,6 @@ class JCTouchFilter;
 @class LayaEditBoxDelegate;
 @class LayaAlert;
 @class Reflection;
-@class UIEditBoxWX;
 
 @interface FuncObj : NSObject
 {
@@ -65,6 +64,7 @@ class JCTouchFilter;
     float                       m_fRetinaValue;         //Retina的缩放比例
     
     
+    
     CGPoint*                    m_pResolution;          //当前分辨率
     
     float                       m_fIOSVersion;          //ios设备的版本
@@ -81,6 +81,8 @@ class JCTouchFilter;
     bool                        m_bStopEngine;
     
     NSRunLoop*                  m_pJSRunLoop;
+    
+    CADisplayLink*              m_displayLink;
 }
 
 
@@ -106,8 +108,8 @@ class JCTouchFilter;
 -(void)runJsLoop;
 -(void)runFunc:(NSTimer*)timer;
 -(void)chooseImage:(int)count sizeType:(NSString*)sizeType sourceType:(NSString*)sourceType;
--(void)showEditBoxWX:(NSString*)defaultValue maxLength:(int)maxLength multiple:(bool)multiple confirmHold:(bool)confirmHold confirmType:(NSString*)confirmType prompt:(NSString*)prompt promptColor:(NSString*)promptColor inputType:(NSString*)inputType;
--(void)hideEditBoxWX;
+-(void)showKeyboard:(NSString*)defaultValue maxLength:(int)maxLength multiple:(bool)multiple confirmHold:(bool)confirmHold confirmType:(NSString*)confirmType prompt:(NSString*)prompt promptColor:(NSString*)promptColor inputType:(NSString*)inputType;
+-(void)hideKeyboard;
 -(void)onOrientationChanged:(CGSize)size;
 -(void)onResize:(CGSize)size;
 -(void)alert:(NSString*)sInfo;
