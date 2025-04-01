@@ -97,7 +97,6 @@ GLESSubUniformBuffer* GLESShaderData::createSubUniformBuffer(const std::string &
     GLESUniformBufferManager* mgr = LayaGL::m_pWebglEngine->bufferMgr;
 
     GLESSubUniformBuffer* subBuffer = new GLESSubUniformBuffer(name, uniformMap, mgr, this);
-    _subUboBufferNumber++;
     _needCacheData = true;
     _subUboBufferNumber++;
     subBuffer->notifyGPUBufferChange("");
