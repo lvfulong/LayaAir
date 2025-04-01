@@ -104,9 +104,17 @@ void JSDevice::showKeyboard(jsbind::Local object)
     jstring jPrompt = pJNI->NewStringUTF(prompt.c_str());
     jstring jPromptColor = pJNI->NewStringUTF(promptColor.c_str());
     jstring jInputType = pJNI->NewStringUTF(inputType.c_str());
-    success = (bool)pJNI->CallStaticBooleanMethod(thisClass, methodID, jDefaultValue, maxLength,
+    isSuccess = (bool)pJNI->CallStaticBooleanMethod(thisClass, methodID, jDefaultValue, maxLength,
                                                   multiple ? JNI_TRUE : JNI_FALSE, confirmHold ? JNI_TRUE : JNI_FALSE,
                                                   jConfirmType, jPrompt, jPromptColor, jInputType);
+    if (!isSuccess)
+    {
+        if (object["fail"].isFunction())
+        {
+            object.call<void>("fail");
+            return;
+        }
+    }
     pJNI->DeleteLocalRef(jDefaultValue);
     pJNI->DeleteLocalRef(jConfirmType);
     pJNI->DeleteLocalRef(jPrompt);
