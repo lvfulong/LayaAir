@@ -360,6 +360,10 @@ function archive_ios {
     cp ios-${build_type}-arm64/modules/jsvm/libjsvm.a armv64
     cp ios-${build_type}-x86_64/modules/jsvm/libjsvm.a x86_64
 
+    cp ios-${build_type}-arm64/modules/core/libcore.a armv64
+    cp ios-${build_type}-x86_64/modules/core/libcore.a x86_64
+
+
     cp ios-${build_type}-arm64/modules/utils/libutils.a armv64
     cp ios-${build_type}-x86_64/modules/utils/libutils.a x86_64
     
