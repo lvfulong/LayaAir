@@ -30,6 +30,8 @@
 #include "HandleAsyncMessageMethodRecord.h"
 #if defined(USE_SWAPPY)
 #include <swappy/swappyGL.h>
+#include <swappy/swappyGL_extra.h>
+
 #endif
 
 
@@ -136,6 +138,11 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_init(JNIEnv * env, job
 	if (g_kSystemConfig.m_useSwappy)
 	{
 		SwappyGL_init(env, activity);
+		//推荐的模式 “自动模式 + 流水线”模式
+		//https://developer.android.google.cn/games/sdk/frame-pacing?hl=zh-cn
+        SwappyGL_setAutoSwapInterval(false);
+        SwappyGL_setAutoPipelineMode(false);
+        SwappyGL_enableStats(false);
 		SwappyGL_setSwapIntervalNS(SWAPPY_SWAP_60FPS);
 	}
 #endif
