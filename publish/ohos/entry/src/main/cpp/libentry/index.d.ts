@@ -24,7 +24,7 @@ export interface CPPFunctions {
 
 export const getContext: (a: number) => CPPFunctions;
 
-export const ConchNAPI_init: (rsmgr: resourceManager.ResourceManager, url: string, persistentDataPath: string, temporaryCachePath: string) => void;
+export const ConchNAPI_init: (rsmgr: resourceManager.ResourceManager, url: string, filesDir: string, cacheDir: string) => void; 
 export const ConchNAPI_inputChange:(keycode: number) => void;
 export const ConchNAPI_RunJS: (js: string) => void;
 export const ConchNAPI_handleKeyboardInput:(value: string) => void;

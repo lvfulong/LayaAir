@@ -112,14 +112,14 @@ std::string OS::getAssetRootPath()
     std::string assetRootPath = laya::FileSystem::parent_path(exePath);
     return assetRootPath;
 }
-const std::string& OS::getPersistentDataPath()
+const std::string& OS::getFilesDir()
 {
-    static std::string path = CToObjectCGetPersistentDataPath();//待确认，这个会上传icloud,删除APP后还存在  
+    static std::string path = CToObjectCGetFilesDir();
     return path;
 }
-const std::string& OS::getTemporaryCachePath()
+const std::string& OS::getCacheDir()
 {
-    static std::string path = CToObjectCGetTemporaryCachePath();
+    static std::string path = CToObjectCGetCacheDir();
     return path;
 }
 } // namespace laya

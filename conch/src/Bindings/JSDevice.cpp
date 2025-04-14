@@ -130,7 +130,15 @@ void JSDevice::showKeyboard(jsbind::Local object)
 #elif defined(OS_OHOS)
     s_tag = s_currentIndex;
     s_currentIndex++;
-    success = aki::JSBind::GetJSFunction("EditBoxNew.show")->Invoke<bool>(s_tag, defaultValue.c_str(), maxLength, multiple, confirmHold, confirmType.c_str(), prompt.c_str(), promptColor.c_str(), inputType.c_str());
+    bool isSuccess = aki::JSBind::GetJSFunction("EditBoxNew.show")->Invoke<bool>(s_tag, defaultValue.c_str(), maxLength, multiple, confirmHold, confirmType.c_str(), prompt.c_str(), promptColor.c_str(), inputType.c_str());
+    if (!isSuccess)
+    {
+        if (object["fail"].isFunction())
+        {
+            object.call<void>("fail");
+            return;
+        }
+    }
 #endif
 
     if (object["success"].isFunction())

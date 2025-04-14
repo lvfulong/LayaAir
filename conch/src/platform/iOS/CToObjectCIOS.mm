@@ -1473,11 +1473,11 @@ std::string CToObjectCGetRootAssetsPath()
 {
     return [[[NSBundle mainBundle] resourcePath] UTF8String];
 }
-std::string CToObjectCGetPersistentDataPath()
+std::string CToObjectCGetFilesDir()
 {
-    return [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] UTF8String];
+    return [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject] UTF8String];
 }
-std::string CToObjectCGetTemporaryCachePath()
+std::string CToObjectCGetCacheDir()
 {
     return [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject] UTF8String];
 }

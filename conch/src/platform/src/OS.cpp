@@ -6,26 +6,26 @@
 namespace laya
 {
 #if defined(OS_ANDROID) || defined(OS_OHOS)
-static std::string s_persistentDataPath = "";
-static std::string s_temporaryCachePath = "";
-const std::string& OS::getPersistentDataPath()
+static std::string s_filesDir = "";
+static std::string s_cacheDir = "";
+const std::string& OS::getFilesDir()
 {
-    DEBUG_CHECK(!s_persistentDataPath.empty() && "persistentDataPath is not initialized");
-    return s_persistentDataPath;
+    DEBUG_CHECK(!s_filesDir.empty() && "filesDir is not initialized");
+    return s_filesDir;
 }
-const std::string& OS::getTemporaryCachePath()
+const std::string& OS::getCacheDir()
 {
-    DEBUG_CHECK(!s_temporaryCachePath.empty() && "temporaryCachePath is not initialized");
-    return s_temporaryCachePath;
+    DEBUG_CHECK(!s_cacheDir.empty() && "cacheDir is not initialized");
+    return s_cacheDir;
 }
 
-void OS::setPersistentDataPath(const std::string &path)
+void OS::setFilesDir(const std::string &path)
 {
-    s_persistentDataPath = path;
+    s_filesDir = path;
 }
-void OS::setTemporaryCachePath(const std::string &path)
+void OS::setCacheDir(const std::string &path)
 {
-    s_temporaryCachePath = path;
+    s_cacheDir = path;
 }
 static unsigned char* _readAssetAlloc(int sz, void* pUserData) 
 {
@@ -35,7 +35,7 @@ static unsigned char* _readAssetAlloc(int sz, void* pUserData)
 }
 std::string OS::getAssetFullPath(const std::string &assetRelativePath)
 {
-    static std::string androidExtractedAssetsPath = OS::getTemporaryCachePath() + std::string("/android_assets");
+    static std::string androidExtractedAssetsPath = OS::getCacheDir() + std::string("/android_assets");
     if (!FileSystem::exists(androidExtractedAssetsPath))
     {
         if (!FileSystem::mkdir(androidExtractedAssetsPath))

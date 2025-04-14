@@ -28,11 +28,15 @@ class OS
     static std::string getExecutablePath();
     static std::string getAssetFullPath(const std::string &assetRelativePath);
     static std::string getAssetRootPath();
-    static const std::string& getPersistentDataPath();
-    static const std::string& getTemporaryCachePath();
+    static const std::string& getFilesDir();
+    static const std::string& getCacheDir();
+    //static const std::string& getExternalFilesDir();
+    //static const std::string& getExternalCacheDir();
     #if defined(OS_ANDROID) || defined(OS_OHOS)
-    static void setPersistentDataPath(const std::string &path);
-    static void setTemporaryCachePath(const std::string &path);
+    static void setFilesDir(const std::string &path); 
+    static void setCacheDir(const std::string &path);
+    //static void setExternalFilesDir(const std::string &path);
+    //static void setExternalCacheDir(const std::string &path);
     #endif
 };
 } // namespace laya

@@ -29,7 +29,7 @@ class NAPIFun
     {
         return &NAPIFun::fun_;
     }
-    static void ConchNAPI_init(napi_value assetManager, std::string url, std::string persistentDataPath, std::string temporaryCachePath);
+    static void ConchNAPI_init(napi_value assetManager, std::string url, std::string filesDir, std::string cacheDir);
     static void ConchNAPI_audioMusicPlayEnd();
     static void ConchNAPI_networkChanged(int nNetworkType);
     static void ConchNAPI_inputChange(int keycode);

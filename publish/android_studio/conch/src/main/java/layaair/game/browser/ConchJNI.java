@@ -28,8 +28,8 @@ public class ConchJNI {
 	public static class ConchOptions {
 		public String url;
 		public Object assetManager;
-		public String persistentDataPath;
-        public String temporaryCachePath;
+		public String filesDir;
+        public String cacheDir;
 		public String apkExpansionMainPath;
 		public String apkExpansionPatchPath;
 	}

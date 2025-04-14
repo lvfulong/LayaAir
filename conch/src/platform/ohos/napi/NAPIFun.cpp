@@ -7,14 +7,14 @@ NAPIFun NAPIFun::fun_;
 NativeResourceManager* g_pAssetManager = nullptr;
 
 
-void NAPIFun::ConchNAPI_init(napi_value assetManager, std::string url, std::string persistentDataPath, std::string temporaryCachePath)   
+void NAPIFun::ConchNAPI_init(napi_value assetManager, std::string url, std::string filesDir, std::string cacheDir)   
 {
     auto fun = NAPIFun::GetInstance();
-    LOGI("NAPI init %s %s %s", url.c_str(), persistentDataPath.c_str(), temporaryCachePath.c_str());  
+    LOGI("NAPI init %s %s %s", url.c_str(), filesDir.c_str(), cacheDir.c_str());  
     DEBUG_CHECK(!laya::JCConch::s_pConch);
 
-    OS::setPersistentDataPath(persistentDataPath);
-    OS::setTemporaryCachePath(temporaryCachePath);  
+    OS::setFilesDir(filesDir);  
+    OS::setCacheDir(cacheDir);  
     g_kSystemConfig.m_strStartURL = url;
 
     napi_env env = aki::JSBind::GetScopedEnv();
