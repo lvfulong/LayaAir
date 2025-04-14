@@ -37,6 +37,12 @@ list(APPEND CONCH_INCLUDE
 	${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
+if(TRACY_ENABLE)
+list(APPEND CONCH_SRC
+../third_party/tracy/public/TracyClient.cpp
+)
+endif()
+
 if(USE_PHYSX)
 list(APPEND CONCH_SRC
 src/Bindings/PhysX/LayaPhysXExport.h
@@ -669,6 +675,12 @@ if(CONCH_USE_CURL_DOWNLOAD)
 		network
 	)
 endif()
+if(TRACY_ENABLE)
+	list(APPEND LINK_LIBS 
+	Tracy::TracyClient
+	)
+endif()
+
 if(CONCH_USE_JPEG_XL)
 	if(OS_WINDOWS)
 		list(APPEND LINK_LIBS
