@@ -3,7 +3,7 @@
 #include "Render3DNode/RTBaseRenderNode.h"
 namespace laya
 {
-    RTScene3DRenderManager::RTScene3DRenderManager():list(JCSimpleSingletonList<RTBaseRenderNode*>())
+    RTScene3DRenderManager::RTScene3DRenderManager():list(JCSimpleSingletonList<RTBaseRenderNode*>(false))
     {
         int a = 10;
     }
