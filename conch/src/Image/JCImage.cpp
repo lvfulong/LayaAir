@@ -161,54 +161,6 @@ namespace laya
     {
         m_kBitmapData.releaseData();
     }
-    bool JCImage::enableImage()
-    {
-        if (m_kBitmapData.m_pImageData == NULL)
-        {
-            if (m_pFileResManager)
-            {
-                JCFileRes* pRes = m_pFileResManager->getRes(m_sUrl);
-                JCBuffer kBuffer;
-                if (pRes && pRes->loadFromCache(kBuffer, false))
-                {
-                    if (m_bPushBitmapData == false)
-                    {
-                        if (loadImageMemSync(kBuffer.m_pPtr, kBuffer.m_nLen, m_kBitmapData) == false)
-                        {
-                            LOGE("JCImage::gpuRestoreRes decode image error url=%s", m_sUrl.c_str());
-                            m_kBitmapData.releaseData();
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        int nImageLenght = m_kBitmapData.m_nWidth * m_kBitmapData.m_nHeight * 4;
-                        if (kBuffer.m_nLen == nImageLenght)
-                        {
-                            m_kBitmapData.m_pImageData = new char[nImageLenght];
-                            memcpy(m_kBitmapData.m_pImageData, kBuffer.m_pPtr, nImageLenght);
-                        }
-                        else
-                        {
-                            LOGE("JCImage::gpuRestoreRes image lenght != buffer.lenght");
-                            return false;
-                        }
-                    }
-                }
-                else
-                {
-                    LOGE("JCImage::gpuRestoreRes load file error url=%s", m_sUrl.c_str());
-                    m_kBitmapData.releaseData();
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
-        }
-        return true;
-    }
 }
 //------------------------------------------------------------------------------
 

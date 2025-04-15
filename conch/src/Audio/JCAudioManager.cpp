@@ -231,9 +231,9 @@ namespace laya
 	    return true;
     }
     //------------------------------------------------------------------------------
-    void JCAudioManager::delWav(JCAudioInterface* p_pAudio)
+    void JCAudioManager::delWav(JCAudioInterface* p_pAudio, const std::string& p_sUrl)
     {
-	    m_pWavPlayer->delAudio(p_pAudio);
+	    m_pWavPlayer->delAudio(p_pAudio, p_sUrl);
     }
     //------------------------------------------------------------------------------
     JCWaveInfo* JCAudioManager::AddWaveInfo( const std::string& p_sUrl,unsigned char* p_pBuffer,int p_nSize,const char* p_sFilePath,void* p_pExternalMark,bool p_bIsOgg )
@@ -251,15 +251,15 @@ namespace laya
 	    return m_pWavPlayer->FindWaveInfo( p_sUrl );
     }
 #if !defined(OS_LINUX)
-    AudioRenderInfo*  JCAudioManager::playWavMp3(JCAudioInterface* p_pAudio, const std::string& p_sUrl, const char* p_sFilePath, float currentTime)
+    AudioRenderInfo*  JCAudioManager::playWavMp3(JCAudioInterface* p_pAudio, const std::string& p_sUrl, float currentTime)
 	{
-		return m_pWavPlayer->playAudioMp3(p_pAudio, p_sUrl, p_sFilePath, currentTime);
+		return m_pWavPlayer->playAudioMp3(p_pAudio, p_sUrl, currentTime);
 	}
 #endif
 	//------------------------------------------------------------------------------
-	JCWaveInfo* JCAudioManager::AddWaveInfoMp3(const std::string& p_sUrl, const std::string& p_sFilePath, void* p_pExternalMark)
+	JCWaveInfo* JCAudioManager::AddWaveInfoMp3(const std::string& p_sUrl,  unsigned char* p_pBuffer, int p_nSize, void* p_pExternalMark)
 	{
-		return m_pWavPlayer->AddWaveInfoMp3(p_sUrl, p_sFilePath, p_pExternalMark);
+		return m_pWavPlayer->AddWaveInfoMp3(p_sUrl, p_pBuffer, p_nSize, p_pExternalMark);
 	}
 
 }

@@ -113,8 +113,6 @@ namespace laya
         float                   m_nVolume;				//音量
 		float 					m_fDuration;			//秒
 
-        std::string		        m_sLocalFileName;
-
 	    std::shared_ptr<int>	m_CallbackRef;
 
     public:

@@ -403,8 +403,6 @@ list(APPEND CONCH_SRC
 
 	src/resource/JCResource.h
 	src/resource/JCResource.cpp
-	src/resource/JCResManager.h
-	src/resource/JCResManager.cpp
 	src/resource/JCFileResManager.h
 	src/resource/JCFileResManager.cpp
 	src/resource/Audio/JCAudioInterface.h

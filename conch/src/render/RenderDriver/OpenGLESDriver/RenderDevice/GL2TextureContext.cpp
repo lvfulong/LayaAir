@@ -431,7 +431,6 @@ namespace laya
 	}
 	void GL2TextureContext::setTextureImageData(GLESInternalTex* texture, JCImage* source/*HTMLImageElement | HTMLCanvasElement | ImageBitmap*/, bool premultiplyAlpha, bool invertY)
 	{	
-		source->enableImage();
 		source->updateTexImage();
 		if (texture->m_width != source->getWidth() || texture->m_height != source->getHeight())
 		{
@@ -473,7 +472,6 @@ namespace laya
 				delete[] outData;
 			}
 		}
-		source->releaseBitmapData();
         if (texture->mipmap())
 		{
             glGenerateMipmap(texture->m_target);
@@ -567,7 +565,6 @@ namespace laya
         texture->setGpuMemory(getGLtexMemory(texture));
         for(int i = 0; i < sources.size(); i++) {
             auto source = sources[i]->m_pImage;
-            source->enableImage();
             source->updateTexImage();
             
             if (premultiplyAlpha)
@@ -591,7 +588,6 @@ namespace laya
                     delete[] outData;
                 }
             }
-            source->releaseBitmapData();
         }
 
         if (texture->mipmap())
@@ -792,7 +788,6 @@ namespace laya
 
 			auto pImage = sources[index]->m_pImage;
 			
-			pImage->enableImage();
 			pImage->updateTexImage();
 			if (premultiplyAlpha)
 			{
@@ -814,7 +809,6 @@ namespace laya
 					delete[] outData;
 				}
 			}
-			pImage->releaseBitmapData();
         }
 
         if (texture->mipmap()) 
