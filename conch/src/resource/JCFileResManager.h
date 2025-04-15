@@ -50,7 +50,6 @@ namespace laya{
             DOWNLOADED,
             UPDATECACHE,
         };
-        virtual bool loadFromCache(JCBuffer& buff, bool bDoCheckSum) = 0;
         virtual void load(const char* p_pszURL, JCSharedBuffer* pSyncResult) = 0;
         void setIgnoreError(bool b) { m_bIgnoreError = b; };
         int m_nConnTimeout = 0;

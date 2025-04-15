@@ -374,7 +374,7 @@ namespace laya
             break;
         case 1:
             //如果有需要清理的或者update可以放到这 
-            JCAudioManager::GetInstance()->m_pWavPlayer->autoGarbageCollection();
+            //JCAudioManager::GetInstance()->m_pWavPlayer->autoGarbageCollection();
             break;
         case 2:
             //如果有需要清理的或者update可以放到这

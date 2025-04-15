@@ -3,7 +3,6 @@
 
 // 包含头文件
 #include <jsbind/JSBind.h>
-#include <resource/JCResource.h>
 #include <stdio.h>
 
 namespace laya

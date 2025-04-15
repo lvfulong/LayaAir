@@ -121,29 +121,17 @@ AudioRenderInfo* JCAudioWavPlayer::playAudio(JCAudioInterface* p_pAudio,const st
 	{
 		pInfo = iter->second;
 	}
-    else
-    {
-        JCFileRes* pRes = m_pFileResManager->getRes(p_sSrc.c_str());
-        JCBuffer kBuffer;
-        if (pRes && pRes->loadFromCache(kBuffer, false))
-        {
-            pInfo = AddWaveInfo(p_sSrc, (unsigned char*)kBuffer.m_pPtr, kBuffer.m_nLen, NULL, p_pAudio, bIsOgg);
-        }
-        else
-        {
-            LOGE("JCAudioWavPlayer::playAudio load res error");
-        }
-    }
     if (pInfo != NULL)
     {
         pInfo->m_nTouchTime = tmGetCurms();
         WAVE_FORMAT* pFormat = &(pInfo->m_kFmtBlock.wavFormat);
         return playAudioFromBuffer(p_pAudio, (char*)(pInfo->m_pData), pInfo->m_nRealDataSize, pFormat->dwSamplesPerSec, pFormat->wBitsPerSample, pFormat->wChannels, currentTime);
     }
+    LOGE("JCAudioWavPlayer::playAudio find no data error");
     return NULL;
 }
 //------------------------------------------------------------------------------
-AudioRenderInfo* JCAudioWavPlayer::playAudioMp3(JCAudioInterface* p_pAudio, const std::string& p_sSrc, const char* p_sFilePath, float currentTime)
+AudioRenderInfo* JCAudioWavPlayer::playAudioMp3(JCAudioInterface* p_pAudio, const std::string& p_sSrc, float currentTime)
 {
     JCWaveInfo* pInfo = NULL;
     MapWaveInfoIter iter = m_vWaveInfos.find( p_sSrc );
@@ -151,19 +139,16 @@ AudioRenderInfo* JCAudioWavPlayer::playAudioMp3(JCAudioInterface* p_pAudio, cons
     {
         pInfo = iter->second;
     }
-    else
-    {
-        pInfo = AddWaveInfoMp3(p_sSrc, p_sFilePath, p_pAudio);
-    }
     if (pInfo != NULL)
     {
         pInfo->m_nTouchTime = tmGetCurms();
         WAVE_FORMAT* pFormat = &(pInfo->m_kFmtBlock.wavFormat);
         return playAudioFromBuffer(p_pAudio, (char*)(pInfo->m_pData), pInfo->m_nRealDataSize, pFormat->dwSamplesPerSec, pFormat->wBitsPerSample, pFormat->wChannels, currentTime);
     }
+    LOGE("JCAudioWavPlayer::playAudioMp3 find no data error");
     return NULL;
 }
-void JCAudioWavPlayer::delAudio(JCAudioInterface* p_pAudio)
+void JCAudioWavPlayer::delAudio(JCAudioInterface* p_pAudio, const std::string& p_sUrl)
 {
     int m_nALCount = m_pOpenALSource.size();
 	for ( int i = 0; i < m_nALCount; i++){
@@ -171,6 +156,7 @@ void JCAudioWavPlayer::delAudio(JCAudioInterface* p_pAudio)
 			m_pOpenALSource[i]->m_pAudio = NULL;
 		}
 	}
+    removeWavInfo(p_sUrl);
 }
 //------------------------------------------------------------------------------
 void JCAudioWavPlayer::releaseOpenAL(AudioRenderInfo* pOpenALInfo)
@@ -367,7 +353,6 @@ JCWaveInfo* JCAudioWavPlayer::AddWaveInfo( const std::string& p_sUrl,unsigned ch
 		if( pInfo != NULL )
 		{
             pInfo->m_sUrl = p_sUrl;
-            pInfo->m_sLocalFile = p_sFilePath;
             pInfo->m_nTouchTime = tmGetCurms();
 			pInfo->m_pExternalMark = p_pExternalMark;
 			m_vWaveInfos[ p_sUrl ] = pInfo;
@@ -380,7 +365,7 @@ JCWaveInfo* JCAudioWavPlayer::AddWaveInfo( const std::string& p_sUrl,unsigned ch
 	return pInfo;
 }
 //------------------------------------------------------------------------------
-JCWaveInfo* JCAudioWavPlayer::AddWaveInfoMp3(const std::string& p_sUrl, const std::string& p_sFilePath, void* p_pExternalMark)
+JCWaveInfo* JCAudioWavPlayer::AddWaveInfoMp3(const std::string& p_sUrl, unsigned char* p_pBuffer, int p_nSize, void* p_pExternalMark)
 { 
     #if defined(OS_LINUX)
     return nullptr;
@@ -388,11 +373,10 @@ JCWaveInfo* JCAudioWavPlayer::AddWaveInfoMp3(const std::string& p_sUrl, const st
 	JCWaveInfo* pInfo = FindWaveInfo( p_sUrl );
     if( pInfo == NULL )
     {
-        pInfo = JCMp3Parser::GetInstance()->GetWaveInfo(p_sFilePath.c_str());
+        pInfo = JCMp3Parser::GetInstance()->GetWaveInfo(p_pBuffer, p_nSize);
         if( pInfo != NULL )
         {
             pInfo->m_sUrl = p_sUrl;
-            pInfo->m_sLocalFile = p_sFilePath;
             pInfo->m_nTouchTime = tmGetCurms();
             pInfo->m_pExternalMark = p_pExternalMark;
             m_vWaveInfos[ p_sUrl ] = pInfo;
@@ -405,6 +389,7 @@ JCWaveInfo* JCAudioWavPlayer::AddWaveInfoMp3(const std::string& p_sUrl, const st
     return pInfo;
     #endif
 }
+#if 0
 void JCAudioWavPlayer::autoGarbageCollection()
 {
     if (m_vWaveInfos.size() <= 0)return;
@@ -425,6 +410,7 @@ void JCAudioWavPlayer::autoGarbageCollection()
         
     }
 }
+#endif
 //------------------------------------------------------------------------------
 JCWaveInfo* JCAudioWavPlayer::FindWaveInfo( const std::string& p_sUrl )
 {
@@ -480,6 +466,14 @@ float JCAudioWavPlayer::getCurrentTime(AudioRenderInfo* pOpenALInfo)
 	alGetSourcef(pOpenALInfo->m_nOpenALSouceID, AL_SEC_OFFSET, &currentTime );
 	return currentTime;
 }
+void JCAudioWavPlayer::removeWavInfo(const std::string& p_sUrl)
+{
+    MapWaveInfoIter iter = m_vWaveInfos.find( p_sUrl );
+    if( iter != m_vWaveInfos.end() )
+    {
+        delete iter->second;
+        m_vWaveInfos.erase(iter);
+    }   
 }
-
+}
 //-----------------------------END FILE--------------------------------

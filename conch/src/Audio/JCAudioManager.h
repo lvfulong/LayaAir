@@ -96,15 +96,13 @@ namespace laya
 
         void stopWav(AudioRenderInfo* pOpenALInfo );
 		
-		AudioRenderInfo* playWavMp3(JCAudioInterface* p_pAudio, const std::string& p_sUrl, const char* p_sFilePath, float currentTime);
+		AudioRenderInfo* playWavMp3(JCAudioInterface* p_pAudio, const std::string& p_sUrl, float currentTime);
 		float getCurrentTime(AudioRenderInfo* pOpenALInfo);
 
 		
 
-        /** @brief 删除wav
-         *  @param[in] 声音的interface
-        */
-        void delWav(JCAudioInterface* p_pAudio);
+
+        void delWav(JCAudioInterface* p_pAudio, const std::string& p_sUrl);
 
 
         void stopAllWav();
@@ -118,7 +116,7 @@ namespace laya
 
         JCWaveInfo* AddWaveInfo( const std::string& p_sUrl,JCBuffer& p_pBuffer,int p_nSize,void* p_pExternalMark,bool p_bIsOgg );
 
-		JCWaveInfo* AddWaveInfoMp3(const std::string& p_sUrl, const std::string& p_sFilePath, void* p_pExternalMark);
+		JCWaveInfo* AddWaveInfoMp3(const std::string& p_sUrl,  unsigned char* p_pBuffer, int p_nSize, void* p_pExternalMark);
 
 	    JCWaveInfo* FindWaveInfo( const std::string& p_sUrl );
 

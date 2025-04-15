@@ -49,7 +49,6 @@ namespace laya
 		}
 
 		void updateTexImage() override;
-		virtual bool enableImage() override { return true; }
 
     private:
 		IVideoHandler*		m_videoHandler;

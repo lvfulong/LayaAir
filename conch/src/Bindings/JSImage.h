@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <jsbind/JSBind.h>
 #include <Image/JCImage.h>
-#include <resource/JCResource.h>
 
 /** 
  * @brief 

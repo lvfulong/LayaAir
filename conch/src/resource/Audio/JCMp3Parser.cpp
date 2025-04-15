@@ -10,6 +10,10 @@
 #include "JCMp3Parser.h"
 #include <utils/Log.h>
 #include <vector>
+#include <string>
+#include <platform/OS.h>
+#include <utils/JCFileSystem.h>
+
 
 namespace laya
 {
@@ -58,8 +62,13 @@ uint32_t JCMp3Parser::read(uint32_t framesToRead, char* pcmBuf)
 }
 
 //------------------------------------------------------------------------------
-JCWaveInfo* JCMp3Parser::GetWaveInfo(const char* path)
+JCWaveInfo* JCMp3Parser::GetWaveInfo(unsigned char* p_pBuffer, int p_nSize)
 {
+    char path[1024];
+    memset(path, 0, 1024);
+    sprintf(path,"%s/tempLayaBoxMp3.mp3", OS::getCacheDir().c_str());
+    writeFileSync1(path, (char*)p_pBuffer, p_nSize);
+
     int error = MPG123_OK;
     m_mpg123handle = mpg123_new(nullptr, &error);
     if (nullptr == m_mpg123handle)
