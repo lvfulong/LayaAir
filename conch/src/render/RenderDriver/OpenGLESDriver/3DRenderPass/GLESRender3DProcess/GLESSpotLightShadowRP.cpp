@@ -33,7 +33,7 @@ void GLESSpotLightShadowRP::update(GLESRenderContext3D* context)
     this->_getSpotLightShadowData(shadowSpotData, this->_shadowResolution, this->_shadowParams, this->_shadowSpotMatrices, this->_shadowSpotMapSize);
 }
 
-void GLESSpotLightShadowRP::render(GLESRenderContext3D* context, std::vector<RTBaseRenderNode*>& list, uint32_t count)
+void GLESSpotLightShadowRP::render(GLESRenderContext3D* context, std::unordered_set<RTBaseRenderNode*>& list, uint32_t count)
 {
     GLESShaderData* originCameraData = context->getCameraData();
     GLESShaderData* shaderValues = context->getSceneShader();

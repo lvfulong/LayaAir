@@ -3,17 +3,16 @@
 
 namespace laya
 {
-void GLESCullUtil::cullByCameraCullInfo(CameraCullInfo &cameraCullInfo, std::vector<RTBaseRenderNode *> &list,
+void GLESCullUtil::cullByCameraCullInfo(CameraCullInfo &cameraCullInfo, std::unordered_set<RTBaseRenderNode *> &list,
                                         uint32_t count, GLESRenderListQueue &opaqueList,
                                         GLESRenderListQueue &transparent, GLESRenderContext3D *context)
 {
-    std::vector<RTBaseRenderNode *> &renders = list;
+    std::unordered_set<RTBaseRenderNode *> &renders = list;
     BoundFrustum &boundFrustum = cameraCullInfo._boundFrustum;
     uint32_t cullMask = cameraCullInfo._cullingMask;
     uint32_t staticMask = cameraCullInfo._staticMask;
-    for (int i = 0, n = count; i < n; i++)
+    for (auto render : renders)
     {
-        auto render = renders[i];
         bool canPass;
         canPass = (static_cast<uint32_t>(pow(static_cast<uint32_t>(2), render->layer)) & cullMask) != 0 &&
                   (render->renderbitFlag == 0);
@@ -50,14 +49,13 @@ void GLESCullUtil::cullByCameraCullInfo(CameraCullInfo &cameraCullInfo, std::vec
     }
 }
 
-void GLESCullUtil::culldirectLightShadow(const ShadowCullInfo &shadowCullInfo, std::vector<RTBaseRenderNode *> &list,
+void GLESCullUtil::culldirectLightShadow(const ShadowCullInfo &shadowCullInfo, std::unordered_set<RTBaseRenderNode *> &list,
                                          uint32_t count, GLESRenderListQueue &opaqueList, GLESRenderContext3D *context)
 {
     opaqueList.clear();
-    std::vector<RTBaseRenderNode *> &renders = list;
-    for (int i = 0, n = count; i < n; i++)
+    std::unordered_set<RTBaseRenderNode *> &renders = list;
+    for (auto render : renders)
     {
-        auto render = renders[i];
         bool canPass = render->shadowCullPass();
         if (canPass)
         {
@@ -80,15 +78,14 @@ void GLESCullUtil::culldirectLightShadow(const ShadowCullInfo &shadowCullInfo, s
     }
 }
 
-void GLESCullUtil::cullingSpotShadow(CameraCullInfo &cameraCullInfo, std::vector<RTBaseRenderNode *> &list,
+void GLESCullUtil::cullingSpotShadow(CameraCullInfo &cameraCullInfo, std::unordered_set<RTBaseRenderNode *> &list,
                                      uint32_t count, GLESRenderListQueue &opaqueList, GLESRenderContext3D *context)
 {
     opaqueList.clear();
-    std::vector<RTBaseRenderNode *> &renders = list;
+    std::unordered_set<RTBaseRenderNode *> &renders = list;
     BoundFrustum &boundFrustum = cameraCullInfo._boundFrustum;
-    for (int i = 0, n = count; i < n; i++)
+    for (auto render : renders)
     {
-        auto render = renders[i];
         bool canPass = render->shadowCullPass();
         render->_renderUpdatePre(context); // TS OR Native
         if (canPass)

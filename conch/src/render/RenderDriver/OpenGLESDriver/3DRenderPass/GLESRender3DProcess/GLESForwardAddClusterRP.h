@@ -32,7 +32,7 @@ class GLESForwardAddClusterRP
   public:
     GLESForwardAddClusterRP();
     ~GLESForwardAddClusterRP();
-    void render(GLESRenderContext3D *context, std::vector<RTBaseRenderNode *> renderNodeList, uint32_t count);
+    void render(GLESRenderContext3D *context, std::unordered_set<RTBaseRenderNode *> renderNodeList, uint32_t count);
 
     void setCameraCullInfo(const CameraCullInfo &value)
     {

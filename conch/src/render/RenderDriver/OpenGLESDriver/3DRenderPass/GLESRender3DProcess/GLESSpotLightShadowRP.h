@@ -33,7 +33,7 @@ class GLESSpotLightShadowRP
       GLESSpotLightShadowRP();
       ~GLESSpotLightShadowRP();
     void update(GLESRenderContext3D*context);
-    void render(GLESRenderContext3D* context, std::vector<RTBaseRenderNode*>& list, uint32_t count);
+    void render(GLESRenderContext3D* context, std::unordered_set<RTBaseRenderNode*>& list, uint32_t count);
     void _applyRenderData(GLESShaderData* sceneData, GLESShaderData* cameraData);
     void _setupShadowCasterShaderValues(GLESShaderData* shaderValues, ShadowSpotData* shadowSliceData, const Vector4& shadowparams, const Vector4& shadowBias);
     void setRenderTarget(GLESInternalRT* value) { destTarget = value; }
