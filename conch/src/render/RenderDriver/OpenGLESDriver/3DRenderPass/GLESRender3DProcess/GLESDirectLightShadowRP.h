@@ -26,7 +26,7 @@ class GLESDirectLightShadowRP : public IDirectLightShadowRP
     ~GLESDirectLightShadowRP();
 
     void update(GLESRenderContext3D* context);
-    void render(GLESRenderContext3D* context, std::unordered_set<RTBaseRenderNode*>& list, uint32_t count);
+    void render(GLESRenderContext3D* context, std::vector<RTBaseRenderNode*>& list, uint32_t count);
 
 public:
     void setRenderTarget(GLESInternalRT* value) { destTarget = value; }

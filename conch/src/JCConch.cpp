@@ -25,7 +25,7 @@
 #include <Bindings/JSInput.h>
 #include <thread>
 #include <platform/OS.h>
-//#include "../../third_party/tracy/public/tracy/Tracy.hpp"
+#include "../../third_party/tracy/public/tracy/Tracy.hpp"
 #if defined(OS_ANDROID)
     #include "WebSocket/WebSocket.h"
     #include "CToJavaBridge.h"
@@ -227,10 +227,10 @@ namespace laya
         auto pScriptRuntime = JCConch::s_pScriptRuntime;
         if (pScriptRuntime)
         {
-            //ZoneScopedN("jsupdate");
+            ZoneScopedN("jsupdate");
             pScriptRuntime->update();
         }
-       // FrameMark;
+        FrameMark;
     }
     void JCConch::dispatchInputEvent(inputEvent e)
     {

@@ -26,7 +26,7 @@ namespace laya
     GLESForwardAddClusterRP::~GLESForwardAddClusterRP(){
 
     }
-    void GLESForwardAddClusterRP::render(GLESRenderContext3D* context, std::unordered_set<RTBaseRenderNode*> list, uint32_t count){
+    void GLESForwardAddClusterRP::render(GLESRenderContext3D* context, std::vector<RTBaseRenderNode*> list, uint32_t count){
         context->_cameraUpdateMask++;
         this->opaqueList.clear();
         this->transparent.clear();
