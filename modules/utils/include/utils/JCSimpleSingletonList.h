@@ -44,9 +44,10 @@ namespace laya
 		}
 		void add(T element)
 		{
-			auto it = std::find(m_vElements.begin(), m_vElements.end(), element);
+			auto end = m_vElements.begin() + m_nLength;
+			auto it = std::find(m_vElements.begin(), end, element);
 
-			if (it != m_vElements.end()) {
+			if (it != end) {
 				return;
 			}
 			if (m_vElements.size() == m_nLength)
@@ -61,14 +62,15 @@ namespace laya
 		}
 		void remove(T element)
 		{
-			auto it = std::find(m_vElements.begin(), m_vElements.end(), element);
+			auto end = m_vElements.begin() + m_nLength;
+			auto it = std::find(m_vElements.begin(), end, element);
 
-			if (it != m_vElements.end()) {
+			if (it != end) {
 
 				int index = std::distance(m_vElements.begin(), it);
 				if (index < m_nLength) {
 					m_vElements[index] = m_vElements[m_nLength - 1];
-					//m_vElements[m_nLength - 1] = null;//È¥µôÒýÓÃ
+					//m_vElements[m_nLength - 1] = null;//åŽ»æŽ‰å¼•ç”¨
 					m_nLength--;
 				}
 			}
