@@ -387,8 +387,8 @@ class Document extends Node implements GlobalEventHandlers, NodeSelector, Docume
         return _Cookie.toLocalString();
     }
     loadCookie(): boolean {   
-        this._cookiePath=window.localStorage.fileNamePre+"_cookie.txt";
-        var temp=readFileSync(this._cookiePath,"utf8");
+        this._cookiePath = /*window.localStorage.fileNamePre+*/"_cookie.txt";
+        var temp = readFileSync(this._cookiePath,"utf8");
         //alert(temp);
         _Cookie.init(temp);
         return true;

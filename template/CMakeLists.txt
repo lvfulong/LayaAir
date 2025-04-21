@@ -114,7 +114,6 @@ if(OS_IOS)
 		"-framework SystemConfiguration"
 		"-lz"
 		"-lc++"
-		"-lsqlite3"
 		"-framework JavaScriptCore"
 		"-framework AdSupport"
 		"-framework Accounts"

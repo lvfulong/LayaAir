@@ -436,26 +436,17 @@ declare class Bluetooth extends EventTarget implements BluetoothDeviceEventHandl
     requestDevice(options: RequestDeviceOptions): Promise<BluetoothDevice>;
 }
 declare class Storage {
-    private storagePath;
-    private filename;
-    private db;
-    private _len;
-    fileNamePre: string;
     length: number;
     getItem(key: string): any;
     key(index: number): string;
     removeItem(key: string): void;
-    _setItem(key: string, data: string): void;
     setItem(key: string, data: string): void;
     constructor();
-    create(url: string): Storage;
-    onChange(changes: any): void;
     clear(): void;
-    savedb(): void;
 }
-declare class WindowLocalStorage {
-    localStorage: Storage;
-}
+//declare class WindowLocalStorage {
+//    localStorage: Storage;
+//}
 declare class WindowSessionStorage {
     getItem(i: string): any;
     setItem(i: string, b: Object): void;
@@ -1720,7 +1711,6 @@ interface Window extends EventTarget, WindowTimers {
     screen: Screen;
     SetupWebglContext(): any;
     downloadfile(url: string, force: boolean, onok: (data: string) => void, onerr: () => void): any;
-    loadLocalStorage(url: string): Storage;
     XMLHttpRequest: typeof XMLHttpRequest;
     innerHeight: number;
     innerWidth: number;

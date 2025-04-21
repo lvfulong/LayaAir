@@ -25,7 +25,6 @@ interface Window extends EventTarget, WindowTimers{
     screen:Screen;
     SetupWebglContext();
     downloadfile(url:string, force:boolean, onok:(data:string)=>void, onerr:()=>void);
-    loadLocalStorage(url:string):Storage;
     XMLHttpRequest:typeof XMLHttpRequest;
     innerHeight: number;
     innerWidth: number;
@@ -102,7 +101,7 @@ window.getComputedStyle=function(ele:Element,parm:any):any
     return null;
 }
 window.pageXOffset=window.pageYOffset=0;
-window.localStorage = new Storage();       //这时候还没有url。
+//window.localStorage = new Storage();       //这时候还没有url。
 //window.sessionStorage = new Storage();  有的项目会使用这个，但是如果没有的话，一般都会再用localStorage,为了避免出错，先不要这个。
 window.sessionStorage=new WindowSessionStorage();
 var location = window.location = new Location;

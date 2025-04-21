@@ -154,7 +154,7 @@ class Location {
         this.bk_setHref(url);
         //对应的localStorage
         //注意必须在 bk_setHref， 因为需要解析结果。
-        window.localStorage.create(this.fullpath);
+        //window.localStorage.create(this.fullpath);
 
     };
 

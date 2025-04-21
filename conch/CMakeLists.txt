@@ -389,6 +389,8 @@ list(APPEND CONCH_SRC
 	src/Bindings/JSPromiseRejectionEvent.h
 	src/Bindings/JSPromiseRejectionEvent.cpp
 	src/Bindings/JSCanvasRenderingContext2D.cpp
+	src/Bindings/JSLocalStorage.h
+	src/Bindings/JSLocalStorage.cpp
 	src/Extention/LayaExtWind.cpp
 	
 	src/OpenAL/
@@ -739,7 +741,7 @@ if(OS_ANDROID)
 		BulletDynamics
 		BulletCollision
 		LinearMath
-
+		webstorage
 		ssl
 		crypto
 	)
@@ -796,7 +798,7 @@ elseif(OS_IOS)
 		BulletDynamics
 		BulletCollision
 		LinearMath
-
+		webstorage
 	)
 	set_property(TARGET ${PROJECT_NAME} PROPERTY XCODE_ATTRIBUTE_ENABLE_BITCODE "NO")
 	set_property(TARGET ${PROJECT_NAME} PROPERTY XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET ${IOS_MINIMUM_DEPLOYMENTS_VERSION})
@@ -847,6 +849,7 @@ elseif(OS_WINDOWS)
 		SDL2main
 		video
 		curl
+		webstorage
 	)
 elseif(OS_OHOS)
 if(USE_JS_V8)
@@ -890,6 +893,7 @@ endif()
 		crypto
 		mpg123
 		openal
+		webstorage	
 		) 
 elseif(OS_LINUX)
 	find_package(X11 REQUIRED)
@@ -940,7 +944,8 @@ elseif(OS_LINUX)
 		glad
 		ssl
 		crypto
-		pthread
+		pthread	
+		webstorage
 	)
 endif()
 
