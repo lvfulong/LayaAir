@@ -44,7 +44,7 @@ public:
 	/*
 	 * 从文件中读取wave数据 
 	*/
-	JCWaveInfo* GetWaveInfo(const char* path);
+	JCWaveInfo* GetWaveInfo(unsigned char* p_pBuffer, int p_nSize);		
 
     uint32_t read(uint32_t framesToRead, char* pcmBuf);
     

@@ -32,6 +32,7 @@
 #include "Extention/LayaExtWin.h"
 #include "JSDevice.h"
 #include "JSCanvasRenderingContext2D.h"
+#include "JSLocalStorage.h"
 #if defined(OS_ANDROID)
     #include "JSAndroidEditBox.h"
 	#include "CToJavaBridge.h"
@@ -461,6 +462,7 @@ namespace laya
         GET_ENV
         jsbind::Object context(jsvm::global());
         ///Module global(context.isolate());
+        JSLocalStorage::exportJS(context);
         JSCanvasRenderingContext2D::exportJS(context);
         JsFile::exportJS(context);
         JsFileReader::exportJS(context);

@@ -390,7 +390,7 @@ bool CanvasRenderingContext2DAndroid::registerFontFromPath(const std::string &fo
 bool CanvasRenderingContext2DAndroid::registerFontFromBuffer(const std::string& fontName, uint8_t* buff, int len) 
 {
     JCBuffer buf((char *)buff, len, false, false);
-    std::string tempFilePath = OS::getTemporaryCachePath() + std::string("/tmp_") + fontName;
+    std::string tempFilePath = OS::getCacheDir() + std::string("/tmp_") + fontName;
     writeFileSync(tempFilePath.c_str(), buf);
     return CanvasRenderingContext2DAndroid::registerFontFromPath(fontName, tempFilePath);
 }

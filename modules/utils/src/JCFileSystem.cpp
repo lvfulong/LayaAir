@@ -194,10 +194,10 @@ uintmax_t file_size(const std::string &path)
 #if defined(OS_WINDOWS)
     std::wstring wide_path = utf8ToWide(path);
     std::error_code error;
-    return fs::is_regular_file(wide_path, error);
+    return fs::file_size(wide_path, error);
 #else
     std::error_code error;
-    return fs::is_regular_file(path, error);
+    return fs::file_size(path, error);
 #endif
 }
 std::time_t last_write_time(const std::string &path)

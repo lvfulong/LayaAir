@@ -7,7 +7,6 @@
 */
 
 #include "JCResource.h"
-#include "JCResManager.h"
 
 namespace laya{
 
@@ -16,25 +15,10 @@ namespace laya{
 		m_nResState = getting;
 		m_nErrNo = noError;
 	}
-    JCResource::JCResource()
-    {
-		m_pResManager = NULL;
-		m_nUsedMem=0;
-		m_nResSize =0;
-		m_nTouch = 0;
-	}
-	JCResource::~JCResource()
-    {
-		if(m_pResManager && m_nUsedMem )
-        {
-			m_pResManager->freeRes(this,true);
-		}
-		m_pResManager = NULL;
-	}
 	/*
 		注意：资源释放后再恢复，如果不做特殊处理，是不会再次出发onload的回调的。因为已经被删掉了。
 	*/
-	void JCResStateDispatcher::setState( JCResource::ResState p_state )
+	void JCResStateDispatcher::setState(ResState p_state )
     {
 		m_nResState = p_state;
 		switch(p_state)
@@ -82,7 +66,7 @@ namespace laya{
 	}
 
 	//资源准备好之后的回调。可以调用多次，添加多个回调
-	void JCResStateDispatcher::setOnReadyCB( JCResource::ResOnReadyCB cb )
+	void JCResStateDispatcher::setOnReadyCB(ResOnReadyCB cb )
     {
 		switch( m_nResState )
         {
@@ -102,7 +86,7 @@ namespace laya{
 			break;
 		}
 	}
-	void JCResStateDispatcher::setOnFreeCB( JCResource::ResOnReadyCB cb )
+	void JCResStateDispatcher::setOnFreeCB(ResOnReadyCB cb )
     {
 		switch( m_nResState ){
 		case error:
@@ -131,20 +115,6 @@ namespace laya{
 			restoreRes();
 			//cb(this,mnErrNo );
 			break;
-		}
-	}
-	void JCResource::touch(bool p_bRestoreRes)
-    {
-		if(m_pResManager){
-			m_pResManager->touchRes(this,p_bRestoreRes);
-		}
-	}
-	void JCResource::setResSize(int sz)
-    { 
-		if(sz==m_nResSize)return;
-		m_nResSize = sz; 
-		if(m_pResManager){
-			m_pResManager->updateRes(this);
 		}
 	}
 }

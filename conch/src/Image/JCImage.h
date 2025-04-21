@@ -42,8 +42,6 @@ namespace laya
 
         char* getImageData();
 
-        virtual bool enableImage();
-
         void releaseBitmapData();
 
 		void premultiplyAlpha();

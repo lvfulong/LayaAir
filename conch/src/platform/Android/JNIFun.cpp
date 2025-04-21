@@ -111,18 +111,18 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_init(JNIEnv * env, job
 	HttpClientAndroid::addStaticMethod(env, "layaair/game/browser/LayaHttpClient");
 	CanvasRenderingContext2DAndroid::addStaticMethod(env, "layaair/game/browser/LayaCanvasRenderingContext2D");
 
-	std::string pPersistentDataPath = getStringField(env, joptions, "persistentDataPath");
-	std::string pTemporaryCachePath = getStringField(env, joptions, "temporaryCachePath");
+	std::string pFilesDir = getStringField(env, joptions, "filesDir");
+	std::string pCacheDir = getStringField(env, joptions, "cacheDir");
 	std::string pAPKExpansionMain = getStringField(env, joptions, "apkExpansionMainPath");
 	std::string pAPKExpansionPatch = getStringField(env, joptions, "apkExpansionPatchPath");
 	std::string pUrl = getStringField(env, joptions, "url");
 
 	g_kSystemConfig.m_strStartURL = pUrl;
 
-	laya::OS::setPersistentDataPath(pPersistentDataPath);
-	laya::OS::setTemporaryCachePath(pTemporaryCachePath);
+	laya::OS::setFilesDir(pFilesDir);	
+	laya::OS::setCacheDir(pCacheDir);
 
-	LOGD( "JNI Init PersistentDataPath = %s, TemporaryCachePath = %s, APKExpansionMain = %s, APKExpansionPatch = %s ", pPersistentDataPath.c_str(), pTemporaryCachePath.c_str(), pAPKExpansionMain.c_str(), pAPKExpansionPatch.c_str());
+	LOGD( "JNI Init FilesDir = %s, CacheDir = %s, APKExpansionMain = %s, APKExpansionPatch = %s ", pFilesDir.c_str(), pCacheDir.c_str(), pAPKExpansionMain.c_str(), pAPKExpansionPatch.c_str());
 
 
 	AAssetManager* assetManager = AAssetManager_fromJava(env, jAssetManager);

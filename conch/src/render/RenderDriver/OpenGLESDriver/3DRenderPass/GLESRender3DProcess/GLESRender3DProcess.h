@@ -2,6 +2,7 @@
 #define __GLESRender3DProcess_H_
 
 #include "render/ShadowCullInfo.h"
+#include "render/3D/RenderObjs/RuntimeOBJ/RTScene3DRenderManager.h"
 #include <vector>
 
 namespace laya
@@ -12,8 +13,9 @@ class GLESRenderContext3D;
 class GLESRender3DProcess
 {
   public:
-    void renderFowarAddCameraPass(GLESRenderContext3D *context, GLESForwardAddRP *passInfo,
-                                  std::vector<RTBaseRenderNode *> renderNodeList, uint32_t count);
+    void renderFowarAddCameraPass(GLESRenderContext3D *context, GLESForwardAddRP *passInfo);
+public:
+    RTScene3DRenderManager* renderManager{ nullptr };
 };
 } // namespace laya
 #endif

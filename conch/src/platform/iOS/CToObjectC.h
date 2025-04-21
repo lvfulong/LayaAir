@@ -204,8 +204,8 @@ void CToObjectCPostAsyncMessage(const std::string &eventName, const std::string 
 void CToObjectCSetPreferredFramesPerSecond(uint64_t fps);
 std::string CToObjectCGetExecutablePath();
 std::string CToObjectCGetRootAssetsPath();
-std::string CToObjectCGetPersistentDataPath();
-std::string CToObjectCGetTemporaryCachePath();
+std::string CToObjectCGetFilesDir();
+std::string CToObjectCGetCacheDir();
 #endif //_CToObjectC_H_
 
 //-----------------------------END FILE--------------------------------

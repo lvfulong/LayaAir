@@ -398,80 +398,6 @@ class ProgressEvent extends Event {
     }
 }
 var _lbProgressEvent = window["ProgressEvent"] = ProgressEvent;
-class Storage {
-    constructor() {
-        this.storagePath = conchConfig.getStoragePath();
-        this.filename = '';
-        this.db = {};
-        this._len = 0;
-    }
-    get length() {
-        return this._len;
-    }
-    getItem(key) {
-        return this.db[key] || null;
-    }
-    key(index) {
-        var keys = Object.keys(this.db);
-        keys.sort();
-        return keys[index] || null;
-    }
-    removeItem(key) {
-        if (this.db[key])
-            this._len--;
-        delete this.db[key];
-        this.savedb();
-    }
-    _setItem(key, data) {
-        if (this.db[key] == null)
-            this._len++;
-        this.db[key] = data;
-        Object.defineProperty(this, key, {
-            get: function () {
-                return this.db[key];
-            },
-            enumerable: true,
-            configurable: true
-        });
-    }
-    setItem(key, data) {
-        this._setItem(key, data);
-        this.savedb();
-    }
-    create(url) {
-        if (location.protocol == "file:") {
-            this.filename = url.substring(8).replace(/:/g, '_').replace(/[\\\/]/g, '__');
-            this.fileNamePre = this.storagePath + '/' + this.filename;
-        }
-        else {
-            this.fileNamePre = this.storagePath + '/' + url.split('/')[2].replace(':', '_');
-        }
-        this.filename = this.fileNamePre + '.txt';
-        var strdb = readFileSync(this.filename, 'utf8') || '{}';
-        var db = JSON.parse(strdb);
-        for (var v in db) {
-            this._setItem(v, db[v]);
-        }
-        return this;
-    }
-    onChange(changes) {
-        if (changes && changes.length) {
-        }
-    }
-    clear() {
-        this.db = {};
-        this.savedb();
-    }
-    savedb() {
-        writeStrFileSync(this.filename, JSON.stringify(this.db));
-    }
-}
-window["Storage"] = Storage;
-class WindowLocalStorage {
-    constructor() {
-        this.localStorage = new Storage();
-    }
-}
 class WindowSessionStorage {
     getItem(i) {
         return this[i] || null;
@@ -480,9 +406,6 @@ class WindowSessionStorage {
         this[i] = b;
     }
 }
-window.loadLocalStorage = function (url) {
-    return new Storage().create(url);
-};
 class _Cookie {
     constructor() {
         this.domain = "";
@@ -1159,7 +1082,6 @@ class Location {
                 alert("您的地址不符合要求");
             }
             this.bk_setHref(url);
-            window.localStorage.create(this.fullpath);
         };
         this.bk_setHref = this._nativeObj.setHref.bind(this._nativeObj);
     }
@@ -6399,7 +6321,7 @@ class Document extends Node {
         return _Cookie.toLocalString();
     }
     loadCookie() {
-        this._cookiePath = window.localStorage.fileNamePre + "_cookie.txt";
+        this._cookiePath = "_cookie.txt";
         var temp = readFileSync(this._cookiePath, "utf8");
         _Cookie.init(temp);
         return true;
@@ -6666,7 +6588,6 @@ window.getComputedStyle = function (ele, parm) {
     return null;
 };
 window.pageXOffset = window.pageYOffset = 0;
-window.localStorage = new Storage();
 window.sessionStorage = new WindowSessionStorage();
 var location = window.location = new Location;
 window.console = new Console();

@@ -162,6 +162,7 @@ namespace laya
     void JCImageManager::update(int nFrameCount)
     {
         _batchHandleDeleteImage();
+#if 0
         if (nFrameCount % 5 == 0)
         {
             if (m_vOccupiedMemImages.size() > 0)
@@ -181,8 +182,10 @@ namespace laya
                     }
                 }
             }
-        }
+        }   
+#endif
     }
+
     void JCImageManager::printCorpseImages(const char* sFileName)
     {
 #ifdef OS_WINDOWS

@@ -148,11 +148,12 @@ void App::run(const Config &config)
     keycodeMap[SDL_SCANCODE_KP_0] = 0x60;         // VK_NUMPAD0
     keycodeMap[SDL_SCANCODE_KP_PERIOD] = 0x6E;    // VK_DECIMAL //小键盘的‘.’
 
-    laya::JCConch::s_pConch.reset(new laya::JCConch());
+    
 
 #if defined(OS_WINDOWS)
     createAndAttachConsole();
 #endif
+    laya::JCConch::s_pConch.reset(new laya::JCConch());
 
     const int x = SDL_WINDOWPOS_CENTERED;
     const int y = SDL_WINDOWPOS_CENTERED;

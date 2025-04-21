@@ -1,88 +1,4 @@
 
-/**
- * 问题：现在不支持 [] 方式的访问
- * 不支持length
- */
-class Storage {
-    private storagePath = conchConfig.getStoragePath();
-    private filename = '';
-    private db = {};//只保存了值，因为有根据idx索引的需求
-    private _len:number=0;
-    fileNamePre:string;
-    get length():number
-    {
-        return this._len;
-    }
-    getItem(key: string): any {
-        return this.db[key]||null;
-    }
-    key(index: number): string {
-        var keys:Array<string>=Object.keys(this.db);
-        keys.sort();
-        return keys[index]||null;
-    }
-    removeItem(key: string): void {
-        if(this.db[key])this._len--;
-        delete this.db[key];
-        this.savedb();
-    }
-    _setItem(key: string, data: string): void
-    {
-        if(this.db[key]==null)this._len++;
-        this.db[key]=data;
-        Object.defineProperty(this as any,key, {
-            get: function(){
-                return this.db[key];
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-    }
-    setItem(key: string, data: string): void {
-        this._setItem(key,data);
-        this.savedb();
-    }
-    
-    constructor() {
-        //Object.observe(this,this.onChange.bind(this));
-    }
-    /**
-     * 根据url来创建一个。在window初始化的时候做。
-     */
-    create(url: string):Storage {
-        if (location.protocol=="file:") {
-            this.filename = url.substring(8).replace(/:/g, '_').replace(/[\\\/]/g, '__')
-            this.fileNamePre=this.storagePath + '/'+this.filename;
-        } else{
-            this.fileNamePre=this.storagePath + '/'+url.split('/')[2].replace(':', '_');
-        }
-        this.filename =  this.fileNamePre + '.txt';
-        var strdb = readFileSync(this.filename, 'utf8') || '{}';
-        var db = JSON.parse(strdb);
-        for(var v in db){
-            this._setItem(v,db[v]);
-        }
-        return this;
-    }
-    onChange(changes) {
-        if (changes && changes.length) {
-            //save
-        }
-    }
-    clear() {
-        this.db = {};
-        this.savedb();
-    }
-    savedb() {
-        writeStrFileSync(this.filename, JSON.stringify(this.db));
-    }
-}
-window["Storage"]=Storage;
-class WindowLocalStorage {
-    localStorage = new Storage();
-}
-
 class WindowSessionStorage  {
     getItem(i:string)
     {
@@ -96,9 +12,6 @@ class WindowSessionStorage  {
     //todo  sessionStorage 
 }
 
-window.loadLocalStorage = function( url ):Storage{
-     return new Storage().create(url);
-};
 
 
 class _Cookie{

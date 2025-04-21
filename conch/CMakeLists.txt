@@ -37,6 +37,12 @@ list(APPEND CONCH_INCLUDE
 	${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
+if(TRACY_ENABLE)
+list(APPEND CONCH_SRC
+../third_party/tracy/public/TracyClient.cpp
+)
+endif()
+
 if(USE_PHYSX)
 list(APPEND CONCH_SRC
 src/Bindings/PhysX/LayaPhysXExport.h
@@ -111,6 +117,8 @@ list(APPEND CONCH_SRC
 	src/render/3D/renderInstance/RenderModuleData.h
 	src/render/3D/renderInstance/RenderModuleData.cpp
 
+	src/render/3D/RenderObjs/RuntimeOBJ/RTScene3DRenderManager.h
+	src/render/3D/RenderObjs/RuntimeOBJ/RTScene3DRenderManager.cpp
 	src/render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.h
 	src/render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTBaseRenderNode.cpp
 	src/render/3D/RenderObjs/RuntimeOBJ/Render3DNode/RTSkinRenderNode.h
@@ -381,6 +389,8 @@ list(APPEND CONCH_SRC
 	src/Bindings/JSPromiseRejectionEvent.h
 	src/Bindings/JSPromiseRejectionEvent.cpp
 	src/Bindings/JSCanvasRenderingContext2D.cpp
+	src/Bindings/JSLocalStorage.h
+	src/Bindings/JSLocalStorage.cpp
 	src/Extention/LayaExtWind.cpp
 	
 	src/OpenAL/
@@ -395,8 +405,6 @@ list(APPEND CONCH_SRC
 
 	src/resource/JCResource.h
 	src/resource/JCResource.cpp
-	src/resource/JCResManager.h
-	src/resource/JCResManager.cpp
 	src/resource/JCFileResManager.h
 	src/resource/JCFileResManager.cpp
 	src/resource/Audio/JCAudioInterface.h
@@ -667,6 +675,12 @@ if(CONCH_USE_CURL_DOWNLOAD)
 		network
 	)
 endif()
+if(TRACY_ENABLE)
+	list(APPEND LINK_LIBS 
+	Tracy::TracyClient
+	)
+endif()
+
 if(CONCH_USE_JPEG_XL)
 	if(OS_WINDOWS)
 		list(APPEND LINK_LIBS
@@ -727,7 +741,7 @@ if(OS_ANDROID)
 		BulletDynamics
 		BulletCollision
 		LinearMath
-
+		webstorage
 		ssl
 		crypto
 	)
@@ -784,7 +798,7 @@ elseif(OS_IOS)
 		BulletDynamics
 		BulletCollision
 		LinearMath
-
+		webstorage
 	)
 	set_property(TARGET ${PROJECT_NAME} PROPERTY XCODE_ATTRIBUTE_ENABLE_BITCODE "NO")
 	set_property(TARGET ${PROJECT_NAME} PROPERTY XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET ${IOS_MINIMUM_DEPLOYMENTS_VERSION})
@@ -835,6 +849,7 @@ elseif(OS_WINDOWS)
 		SDL2main
 		video
 		curl
+		webstorage
 	)
 elseif(OS_OHOS)
 if(USE_JS_V8)
@@ -878,6 +893,7 @@ endif()
 		crypto
 		mpg123
 		openal
+		webstorage	
 		) 
 elseif(OS_LINUX)
 	find_package(X11 REQUIRED)
@@ -928,7 +944,8 @@ elseif(OS_LINUX)
 		glad
 		ssl
 		crypto
-		pthread
+		pthread	
+		webstorage
 	)
 endif()
 

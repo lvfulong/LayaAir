@@ -11,6 +11,7 @@
 #include <utils/MessageLoop.h>
 #include <core/Thread.h>
 #include <platform/OS.h>
+#include <webstorage/WebStorage.h>
 
 namespace laya
 {
@@ -22,11 +23,8 @@ namespace laya
         JS_DEBUG_MODE_NORMAL,       //正常
         JS_DEBUG_MODE_WAIT,         //等待
     };
-    class JSThreadInterface;
     class JCFileResManager;
 	class JCFileSource;
-	class DebuggerAgent;
-    class JSMulThread;
     class JCScriptRuntime;
     class OS;
 	class JCConch
@@ -77,6 +75,16 @@ namespace laya
 
         void dispatchEngineEvent(const EngineEventBase&  e);
 
+        LocalStorage& getLocalStorage()
+        {
+            //惰性初始化
+            if (!m_pLocalStorage)
+            {
+                m_pLocalStorage = std::make_unique<LocalStorage>();
+                m_pLocalStorage->initialize(getLocalStoragePath());
+            }   
+            return *m_pLocalStorage;
+        }           
     public:
 
         static std::shared_ptr<JCConch>         s_pConch;
@@ -93,6 +101,7 @@ namespace laya
         bool					                m_bDestroying;
         std::vector<std::string>                m_vUrlHistory;
         int                                     m_nUrlHistoryPos;
+        std::unique_ptr<LocalStorage>           m_pLocalStorage{nullptr};
     public:
 
         std::vector<std::function<void(void)>>  m_tasks;

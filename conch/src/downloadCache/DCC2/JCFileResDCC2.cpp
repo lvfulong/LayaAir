@@ -169,30 +169,6 @@ void JCFileResDCC2::load(const char *p_pszURL, JCSharedBuffer *pSyncResult)
     }
 }
 
-bool JCFileResDCC2::loadFromCache(JCBuffer &buff, bool bDoCheckSum)
-{
-    if (m_url.m_nProto == JCUrl::wxblob)
-    {
-        int bytes;
-        if (m_manager->searchBufferURL(m_strURL, &buff.m_pPtr, bytes))
-        {
-            LOGI("found file local blob %s", m_strURL.c_str());
-            buff.m_nLen = bytes;
-            return true;
-        }
-        LOGI("not found file local blob %s", m_strURL.c_str());
-        return false;
-    }
-    else
-    {
-        if (m_strLocalPath.length() > 0)
-        {
-            return readFileSync(m_strLocalPath.c_str(), buff);
-        }
-        return false;
-    }
-}
-
 bool JCFileResDCC2::restoreRes()
 {
     load(m_strURL.c_str(), nullptr);

@@ -16,61 +16,38 @@
 
 namespace laya
 {
-	class JCSingletonElement
-	{
-	public:
-		JCSingletonElement()
-		{
-			m_nIndex = -1;
-		}
-		virtual ~JCSingletonElement()
-		{
-
-		}
-		int getIndexInList()
-		{
-			return m_nIndex;
-		}
-		void setIndexInList(int  index)
-		{
-			m_nIndex = index;
-		}
-	public:
-		int m_nIndex;
-	};
-
+	template <class T>
 	class JCSimpleSingletonList
 	{
 	public:
 		JCSimpleSingletonList( bool bNeedDel )
 		{
-			//m_bNeedDelete = bNeedDel;
+			m_bNeedDelete = bNeedDel;
 			m_nLength = 0;
 		}
 		~JCSimpleSingletonList()
 		{
-            clear();
-			/*if (m_bNeedDelete)
+			if (m_bNeedDelete)
 			{
 				for (int i = 0; i < m_nLength; i++)
 				{
-					delete m_vElements[i];
-					m_vElements[i] = NULL;
+					T* pElement = &(m_vElements[i]);
+					if (pElement)
+					{
+						delete pElement;
+						pElement = NULL;
+					}
 				}
-				m_vElements.clear();
-				m_nLength = 0;
 			}
-			else
-			{
-				clear();
-			}*/
+			m_nLength = 0;
+			m_vElements.clear();
 		}
-		void add(JCSingletonElement* element)
+		void add(T element)
 		{
-			int nIndex = element->getIndexInList();
-			if (nIndex != -1)
-			{
-				LOGE("JCSimpleSingletonList add: element + has  in  SingletonList.");
+			auto end = m_vElements.begin() + m_nLength;
+			auto it = std::find(m_vElements.begin(), end, element);
+
+			if (it != end) {
 				return;
 			}
 			if (m_vElements.size() == m_nLength)
@@ -81,51 +58,39 @@ namespace laya
 			{
 				m_vElements[m_nLength] = element;
 			}
-			element->setIndexInList(m_nLength++);
+			m_nLength++;
 		}
-		void remove(JCSingletonElement* element)
+		void remove(T element)
 		{
-			int index = element->getIndexInList();
-            if (index == -1)
-            {
-               return;
-            }
-			m_nLength--;
-			if (index != m_nLength)
-			{
-				JCSingletonElement* pEnd = m_vElements[m_nLength];
-				m_vElements[index] = pEnd;
-				pEnd->setIndexInList(index);
+			auto end = m_vElements.begin() + m_nLength;
+			auto it = std::find(m_vElements.begin(), end, element);
+
+			if (it != end) {
+
+				int index = std::distance(m_vElements.begin(), it);
+				if (index < m_nLength) {
+					m_vElements[index] = m_vElements[m_nLength - 1];
+					//m_vElements[m_nLength - 1] = null;//去掉引用
+					m_nLength--;
+				}
 			}
-			element->setIndexInList(-1);
 		}
 		void clear()
 		{
-			//assert(!m_bNeedDelete);
-			for (int i = 0; i < m_nLength; i++)
-			{
-				m_vElements[i]->setIndexInList(-1);
-			}
+		
 			m_nLength = 0;
 			m_vElements.clear();
 		}
-		void resetLength()
-		{
-			for (int i = 0; i < m_nLength; i++)
-			{
-				m_vElements[i]->setIndexInList(-1);
-			}
-			m_nLength = 0;
-		}
+		
 		inline int getLength()
 		{
 			return m_nLength;
 		}
 	public:
-		std::vector<JCSingletonElement*>	m_vElements;
+		std::vector<T>	m_vElements;
 	private:
 		bool								m_bNeedDelete;
-		int									m_nLength;
+		int									m_nLength{0};
 	};
 }
 

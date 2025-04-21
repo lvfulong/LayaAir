@@ -17,8 +17,6 @@
 
 namespace laya
 {
-	//为了确保mp3只被写入文件一次
-    std::map<std::string,std::string>	ms_vSaveMp3File;
     //------------------------------------------------------------------------------
     JSAudio::JSAudio()
     {
@@ -29,7 +27,6 @@ namespace laya
 	    m_bMuted = false;
 	    m_nVolume = 1;
 	    m_sSrc = "";
-	    m_sLocalFileName = "";
 	    m_bDownloaded = false;
         m_audioRenderInfo = NULL;
 		m_fDuration = std::numeric_limits<double>::quiet_NaN();
@@ -41,7 +38,7 @@ namespace laya
     JSAudio::~JSAudio()
     {
         JCMemorySurvey::GetInstance()->releaseClass( "audio",this );
-	    JCAudioManager::GetInstance()->delWav(this);
+	    JCAudioManager::GetInstance()->delWav(this, m_sSrc);
 	    JCAudioManager::GetInstance()->delMp3Obj(this);
     }
     //------------------------------------------------------------------------------
@@ -112,9 +109,12 @@ namespace laya
     //------------------------------------------------------------------------------
     void JSAudio::setSrc( const char* p_sSrc )
     {
-		m_sLocalFileName = "";
 	    //如果和原来播放的一样，直接播放就行了
         std::string sSrc = p_sSrc;
+		if (sSrc == "")
+		{
+			return;
+		}
 	    if( m_sSrc == sSrc )
 	    {
             std::weak_ptr<int> cbref(m_CallbackRef);
@@ -167,8 +167,6 @@ namespace laya
 	    JCWaveInfo* pWavInfo = JCAudioManager::GetInstance()->FindWaveInfo( p_sSrc );
 	    if( pWavInfo != NULL )
 	    {
-			//设置一下这个值，防止pWavInfo被垃圾 回收以后无法重建
-			m_sLocalFileName = pWavInfo->m_sLocalFile;
 		    m_bDownloaded = true;
 			m_fDuration = pWavInfo->m_fDuration;
             std::weak_ptr<int> cbref(m_CallbackRef);
@@ -181,57 +179,11 @@ namespace laya
 		    return;
 	    }
 	    
-	    if(m_nType == EXT_MP3)
-	    {
-		    //必须确保 如果是mp3必须每次都new JSAudio这个类，否则会出问题
-		    //临时用的这种办法，现在不好，因为有二次写文件的事情。。
-		    //TODO以后得修改
-		    std::map<std::string,std::string>::iterator iter = ms_vSaveMp3File.find( m_sSrc );
-		    if( iter == ms_vSaveMp3File.end() )
-		    {
-			    laya::JCFileRes* res = JCConch::s_pScriptRuntime->m_pFileResMgr->getRes(m_sSrc);
-			    std::weak_ptr<int> cbref(m_CallbackRef);
-			    res->setOnReadyCB( std::bind(&JSAudio::onDownloaded,this, std::placeholders::_1,cbref));
-			    res->setOnErrorCB(std::bind(&JSAudio::onDownloadErr, this, std::placeholders::_1, std::placeholders::_2, cbref));
-		    }
-		    else
-		    {
-			    m_sLocalFileName = iter->second;
-			    if(FileSystem::exists(m_sLocalFileName))
-                {
-				    m_bDownloaded = true;
-                    std::weak_ptr<int> cbref(m_CallbackRef);
-                    auto pFunction = std::bind(&JSAudio::onCanplayCallJSFunction,this, cbref);
-                    postToJS( pFunction );
-				    //if( m_nType == 0 )
-				    {
-					    if( m_bAutoPlay || m_bNeedHandlePlay == true )
-					    {
-						    m_bNeedHandlePlay = false;
-							if(!m_bShouldStop)
-								play();
-					    }
-				    }
-			    }
-                else
-                {
-				    LOGW("JSAudio::setSrc music 当前文件不存在,%s",m_sLocalFileName.c_str());
-				    ms_vSaveMp3File.erase(iter);
-				    laya::JCFileRes* res = JCConch::s_pScriptRuntime->m_pFileResMgr->getRes(m_sSrc);
-
-				    std::weak_ptr<int> cbref(m_CallbackRef);
-				    res->setOnReadyCB( std::bind(&JSAudio::onDownloaded,this, std::placeholders::_1,cbref));
-				    res->setOnErrorCB(std::bind(&JSAudio::onDownloadErr, this, std::placeholders::_1, std::placeholders::_2, cbref));
-			    }
-		    }
-	    }
-		else
-	    {
-		    laya::JCFileRes* res = JCConch::s_pScriptRuntime->m_pFileResMgr->getRes(m_sSrc);
-		    std::weak_ptr<int> cbref(m_CallbackRef);
-		    res->setOnReadyCB( std::bind(&JSAudio::onDownloaded,this, std::placeholders::_1,cbref));
-		    res->setOnErrorCB( std::bind(&JSAudio::onDownloadErr,this,std::placeholders::_1,std::placeholders::_2,cbref));
-	    }
+	    
+		laya::JCFileRes* res = JCConch::s_pScriptRuntime->m_pFileResMgr->getRes(m_sSrc);
+		std::weak_ptr<int> cbref(m_CallbackRef);
+		res->setOnReadyCB( std::bind(&JSAudio::onDownloaded,this, std::placeholders::_1,cbref));
+		res->setOnErrorCB( std::bind(&JSAudio::onDownloadErr,this,std::placeholders::_1,std::placeholders::_2,cbref));
     }
     //------------------------------------------------------------------------------
     bool JSAudio::onDownloadErr(void* p_pRes, int p_nErrCode,std::weak_ptr<int> callbackref)
@@ -256,52 +208,6 @@ namespace laya
 	    m_bDownloaded = true;
        // std::weak_ptr<int> cbref(m_CallbackRef);
         //std::function<void(void)> pFunction = std::bind(&JSAudio::onCanplayCallJSFunction,this, callbackref);
-		if( m_nType == EXT_MP3)
-	    {
-
-                //必须确保 如果是mp3必须每次都new JSAudio这个类，否则会出问题
-                //临时用的这种办法，现在不好，因为有二次写文件的事情。。
-                //TODO以后得修改
-                std::map<std::string, std::string>::iterator iter = ms_vSaveMp3File.find(m_sSrc);
-                if (iter != ms_vSaveMp3File.end())
-                {
-                    m_sLocalFileName = iter->second;
-                }
-                else
-                {
-                    int p1 = m_sSrc.rfind('/');
-                    int p2 = m_sSrc.rfind('\\');
-                    int pos = std::max<int>(p1, p2);
-                    std::string audiofile = m_sSrc.substr(pos + 1, m_sSrc.length());
-                    //去掉?后面的，因为可能增加版本号
-                    int p3 = audiofile.rfind('?');
-                    char* sT = (char*)(audiofile.c_str());
-                    if (p3 != -1)
-                    {
-                        sT[p3] = 0;
-                    }
-                    //unsigned int hash = JCCachedFileSys::hashRaw(m_sSrc.c_str());
-                    //char tmpBuf[32];
-                    //sprintf(tmpBuf, "%x_", hash);
-                    //m_sLocalFileName = JCConch::s_pScriptRuntime->m_pFileResMgr->m_pFileCache->getAppPath() + "/" + tmpBuf + audiofile;
-#ifdef OS_WINDOWS
-					//windows下可以直接使用这个文件
-					// 不行，需要扩展名
-					//m_sLocalFileName = pFileRes->m_strLocalPath;
-#else
-#endif
-					if (m_sLocalFileName.length() <= 0) {
-						char tmpBuf[32];
-						sprintf(tmpBuf, "%x_%x",pFileRes->m_nLength, rand());
-						const char* local = tmpBuf;
-						m_sLocalFileName = JCConch::getAppCachePath() + "/" + local + audiofile;
-						writeFileSync(m_sLocalFileName.c_str(), p_buf);
-						ms_vSaveMp3File[m_sSrc] = m_sLocalFileName;
-					}
-					
-                   
-                }
-	    }
 
 		JCWaveInfo* info=nullptr;
 	    /*if( m_nType == EXT_MP3 && m_bIsBackgroundMusic)
@@ -314,9 +220,9 @@ namespace laya
 	    }
 		else */
 		if (m_nType == EXT_MP3){
-			info = JCAudioManager::GetInstance()->AddWaveInfoMp3(m_sSrc, m_sLocalFileName, this);
+			info = JCAudioManager::GetInstance()->AddWaveInfoMp3(m_sSrc, (unsigned char*)p_buf.m_pPtr, (int)(p_buf.m_nLen), this);
 		}else{
-		    info = JCAudioManager::GetInstance()->AddWaveInfo( m_sSrc,p_buf,(int)(p_buf.m_nLen),this, m_nType == EXT_OGG);
+		    info = JCAudioManager::GetInstance()->AddWaveInfo( m_sSrc, p_buf, (int)(p_buf.m_nLen), this, m_nType == EXT_OGG);
 	    }
 		if(info){
 			m_fDuration = info->m_fDuration;
@@ -409,7 +315,7 @@ namespace laya
 	    else */if (m_nType == EXT_MP3/* && !m_bIsBackgroundMusic*/)
 	    {			
 #if !defined(OS_LINUX)
-		    m_audioRenderInfo = JCAudioManager::GetInstance()->playWavMp3( this, m_sSrc, m_sLocalFileName.c_str(), m_nCurrentTime);
+		    m_audioRenderInfo = JCAudioManager::GetInstance()->playWavMp3( this, m_sSrc, m_nCurrentTime);
 #endif
 	    }
 		else

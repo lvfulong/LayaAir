@@ -12,6 +12,7 @@
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESVertexBuffer.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLTextureContext.h"
 #include "render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTSubShader.h"
+#include "render/3D/RenderObjs/RuntimeOBJ/RTScene3DRenderManager.h"
 #include <Bindings/Video/JSVideo.h>
 #include <jsbind/JSBind.h>
 #include <core/math/Color.h>
@@ -661,6 +662,14 @@ class RenderBindings
             context.class_("conchRTBaseRenderNode", class_binding);
         }
         {
+            jsbind::class_<RTScene3DRenderManager> class_binding;
+            class_binding.constructor<>();
+            class_binding.function("addBaseRenderNode", &RTScene3DRenderManager::addBaseRenderNode);
+            class_binding.function("removeBaseRenderNode", &RTScene3DRenderManager::removeBaseRenderNode);
+            class_binding.function("clearBaseRenderNode", &RTScene3DRenderManager::clearBaseRenderNode);
+            context.class_("conchRTScene3DRenderManager", class_binding);
+        }
+        {
             jsbind::class_<RTSkinRenderNode> class_binding;
             class_binding.constructor<>();
             class_binding.inherit<RTBaseRenderNode>();
@@ -766,8 +775,10 @@ class RenderBindings
             jsbind::class_<GLESRender3DProcess> class_binding;
             class_binding.constructor<>();
             class_binding.function("renderFowarAddCameraPass", &GLESRender3DProcess::renderFowarAddCameraPass);
+            class_binding.property_field("renderManager", &GLESRender3DProcess::renderManager);
             context.class_("conchGLESRender3DProcess", class_binding);
         }
+        
         {
             jsbind::class_<GLESForwardAddRP> class_binding;
             class_binding.constructor<>();

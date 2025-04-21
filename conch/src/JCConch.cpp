@@ -25,6 +25,7 @@
 #include <Bindings/JSInput.h>
 #include <thread>
 #include <platform/OS.h>
+#include "../../third_party/tracy/public/tracy/Tracy.hpp"
 #if defined(OS_ANDROID)
     #include "WebSocket/WebSocket.h"
     #include "CToJavaBridge.h"
@@ -73,7 +74,7 @@ namespace laya
     }
     JCConch::JCConch()
     {
-        s_cachePath = OS::getTemporaryCachePath() + "/appCache";
+        s_cachePath = OS::getFilesDir() + "/LayaCache/appCache";
         if (!FileSystem::exists(s_cachePath))
         {
             if (!FileSystem::mkdir(s_cachePath))
@@ -82,7 +83,7 @@ namespace laya
             }
         }
 
-        s_localStoragePath = OS::getTemporaryCachePath() + "/localstorage";
+        s_localStoragePath = OS::getFilesDir() + "/LayaCache/localstorage";
         if (!FileSystem::exists(s_localStoragePath))
         {
             if (!FileSystem::mkdir(s_localStoragePath))
@@ -226,8 +227,10 @@ namespace laya
         auto pScriptRuntime = JCConch::s_pScriptRuntime;
         if (pScriptRuntime)
         {
+            ZoneScopedN("jsupdate");
             pScriptRuntime->update();
         }
+        FrameMark;
     }
     void JCConch::dispatchInputEvent(inputEvent e)
     {

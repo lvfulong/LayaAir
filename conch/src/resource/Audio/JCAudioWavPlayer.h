@@ -72,11 +72,11 @@ public:
 
 public:
 
-	AudioRenderInfo* playAudioMp3(JCAudioInterface* p_pAudio, const std::string& p_sSrc, const char* p_sFilePath, float currentTime);
+	AudioRenderInfo* playAudioMp3(JCAudioInterface* p_pAudio, const std::string& p_sSrc, float currentTime);
 
     AudioRenderInfo* playAudio( JCAudioInterface* p_pAudio,const std::string& p_sSrc,bool bIsOgg, float currentTime);
 
-	void delAudio(JCAudioInterface* p_pAudio);
+	void delAudio(JCAudioInterface* p_pAudio, const std::string& p_sUrl);
 
     AudioRenderInfo* playAudioFromBuffer( JCAudioInterface* p_pAudio,const char* p_pBuffer,unsigned int p_nBufferSize,int p_nRate, int p_nBitsPerSample, int nChannels, float currentTime);
 
@@ -98,12 +98,12 @@ public:
 
 public:
 
-	JCWaveInfo* AddWaveInfoMp3(const std::string& p_sUrl, const std::string& p_sFilePath, void* p_pExternalMark);
+	JCWaveInfo* AddWaveInfoMp3(const std::string& p_sUrl, unsigned char* p_pBuffer, int p_nSize, void* p_pExternalMark);
 
 	/** @brief 添加资源
 	 *  @return
 	*/
-    JCWaveInfo* AddWaveInfo( const std::string& p_sUrl,unsigned char* p_pBuffer,int p_nSize, const std::string& p_sFilePath,void* p_pExternalMark,bool p_bIsOgg );
+    JCWaveInfo* AddWaveInfo( const std::string& p_sUrl, unsigned char* p_pBuffer, int p_nSize, const std::string& p_sFilePath,void* p_pExternalMark,bool p_bIsOgg );
 
 	/** @brief 查找资源根据 ulid
 	 *  @param[in] ulID
@@ -115,7 +115,9 @@ public:
 	*/
 	bool ClearAllWaveInfo( void );
 
-    void autoGarbageCollection();
+    //void autoGarbageCollection();
+
+	void removeWavInfo(const std::string& p_sUrl);
 
 private:
 

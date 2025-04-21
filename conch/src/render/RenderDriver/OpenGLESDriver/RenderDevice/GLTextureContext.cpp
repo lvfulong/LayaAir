@@ -679,7 +679,6 @@ void GLTextureContext::setTextureImageData(GLESInternalTex *texture,
                                            JCImage *source /*HTMLImageElement | HTMLCanvasElement | ImageBitmap*/,
                                            bool premultiplyAlpha, bool invertY)
 {
-    source->enableImage();
     source->updateTexImage();
     if (texture->m_width != source->getWidth() || texture->m_height != source->getHeight())
     {
@@ -721,7 +720,6 @@ void GLTextureContext::setTextureImageData(GLESInternalTex *texture,
             delete[] outData;
         }
     }
-    source->releaseBitmapData();
 
     // gl.texImage2D(target, 0, internalFormat, width, height, 0, format, type, null);
     // gl.texSubImage2D(target, 0, 0, 0, format, type, source);
@@ -1002,7 +1000,6 @@ void GLTextureContext::setCubeImageData(GLESInternalTex *texture, const std::vec
         GLenum target = cubeFace[index];
         auto pImage = sources[index]->m_pImage;
 
-        pImage->enableImage();
         pImage->updateTexImage();
         if (premultiplyAlpha)
         {
@@ -1027,7 +1024,6 @@ void GLTextureContext::setCubeImageData(GLESInternalTex *texture, const std::vec
                 delete[] outData;
             }
         }
-        pImage->releaseBitmapData();
     }
 
     if (texture->mipmap())
@@ -1678,7 +1674,6 @@ void GLTextureContext::updateVideoTexture(GLESInternalTex *texture, JCImage *sou
     {
         return;
     }
-    source->enableImage();
     source->updateTexImage();
 
     int target = texture->m_target;
@@ -1718,7 +1713,6 @@ void GLTextureContext::updateVideoTexture(GLESInternalTex *texture, JCImage *sou
             delete[] outData;
         }
     }
-    source->releaseBitmapData();
 
     m_engine->_bindTexture(texture->m_target, nullptr);
 

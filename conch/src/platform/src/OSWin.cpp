@@ -132,12 +132,12 @@ std::string OS::getAssetRootPath()
     std::string assetRootPath = laya::FileSystem::parent_path(exePath);
     return assetRootPath;
 }
-const std::string& OS::getPersistentDataPath()
+const std::string& OS::getFilesDir()
 {
     static std::string path = getAssetRootPath();
     return path;
 }
-const std::string& OS::getTemporaryCachePath()
+const std::string& OS::getCacheDir()
 {
     static std::string path = getAssetRootPath();
     return path;

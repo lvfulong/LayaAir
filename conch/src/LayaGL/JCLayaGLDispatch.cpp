@@ -839,7 +839,6 @@ namespace laya
         auto pImage = ms_pLayaGL->m_pImageManager->getImage(cmd->n);
         if (pImage)
         {
-            pImage->enableImage();
 			pImage->updateTexImage();
 			if (ms_pLayaGL->m_bPremultiplyAlpha)
 			{
@@ -863,7 +862,6 @@ namespace laya
                    delete[] outData;
                 }
             }
-            pImage->releaseBitmapData();
         }
         else
         {
@@ -910,7 +908,6 @@ namespace laya
         auto pImage = ms_pLayaGL->m_pImageManager->getImage(cmd->k);
         if (pImage)
         {
-            pImage->enableImage();
 			pImage->updateTexImage();
 			if (ms_pLayaGL->m_bPremultiplyAlpha)
 			{
@@ -934,7 +931,6 @@ namespace laya
                    delete[] outData;
                 }
             }
-            pImage->releaseBitmapData();
         }
     }
     void JCLayaGLDispatch::_layaGL_texImage3D_offset(JCCommandEncoderBuffer& layaGLCmd)
@@ -959,7 +955,6 @@ namespace laya
         auto pImage = ms_pLayaGL->m_pImageManager->getImage(cmd->g);
         if (pImage)
         {
-            pImage->enableImage();
 			pImage->updateTexImage();
 			if (ms_pLayaGL->m_bPremultiplyAlpha)
 			{
@@ -983,7 +978,6 @@ namespace laya
                     delete[] outData;
                 }
             }
-            pImage->releaseBitmapData();
         }
         else
         {
