@@ -37,12 +37,6 @@ list(APPEND CONCH_INCLUDE
 	${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-if(TRACY_ENABLE)
-list(APPEND CONCH_SRC
-../third_party/tracy/public/TracyClient.cpp
-)
-endif()
-
 if(USE_PHYSX)
 list(APPEND CONCH_SRC
 src/Bindings/PhysX/LayaPhysXExport.h
@@ -649,7 +643,9 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 	PUBLIC_HEADER "${CONCH_PUBLIC_HEADERS}"
 )
 
-set(LINK_LIBS)
+set(LINK_LIBS
+	profiler
+	)
 if(USE_PHYSX)
 	set(LINK_LIBS
 	PhysXVehicle
@@ -673,11 +669,6 @@ if(CONCH_USE_CURL_DOWNLOAD)
 
 	list(APPEND LINK_LIBS
 		network
-	)
-endif()
-if(TRACY_ENABLE)
-	list(APPEND LINK_LIBS 
-	Tracy::TracyClient
 	)
 endif()
 
