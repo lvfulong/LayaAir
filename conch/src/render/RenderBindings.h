@@ -49,7 +49,7 @@
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderCMD.h>
 #include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLES3DRenderCMD.h>
 #include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLES2DRenderCMD.h>
-
+#include <experimental/Test.h>
 namespace jsbind
 {
     namespace internal
@@ -101,6 +101,25 @@ class RenderBindings
   public:
     static void exportJS(jsbind::Object &context)
     {
+        {
+            jsbind::global_class_<Test> class_binding;
+
+		    class_binding.class_function("createObject", &Test::createObject);
+            class_binding.class_function("destroyObject", &Test::destroyObject);
+            context.global_class_("test", class_binding);
+        }
+        {
+            jsbind::class_<TestNormal> class_binding;
+            class_binding.constructor<>();
+            class_binding.function("testInt32", &TestNormal::testInt32);
+            class_binding.function("testFloat", &TestNormal::testFloat);
+            class_binding.function("testString", &TestNormal::testString);
+            class_binding.function("testBoolean", &TestNormal::testBoolean);
+            class_binding.function("testArrayBuffer", &TestNormal::testArrayBuffer);
+            class_binding.function("testArrayBufferView", &TestNormal::testArrayBufferView);
+            class_binding.function("destroy", &TestNormal::destroy);
+            context.class_("TestNormal", class_binding);
+        }
         // Math Bindings
         jsbind::value_object<Vector2>("conchVector2").field("x", &Vector2::x).field("y", &Vector2::y);
         jsbind::value_object<Vector3>("conchVector3").field("x", &Vector3::x).field("y", &Vector3::y).field("z", &Vector3::z);

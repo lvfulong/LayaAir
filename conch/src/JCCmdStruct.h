@@ -524,4 +524,16 @@ namespace laya
         float x;
         float y;
     };
+
+
+    struct CMD_i64i
+    {
+        int64_t a;
+        int b;
+    };
+    struct CMD_i64f
+    {
+        int64_t a;
+        float b;
+    };
 }
