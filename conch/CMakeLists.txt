@@ -649,17 +649,17 @@ set(LINK_LIBS
 	profiler
 	)
 if(USE_PHYSX)
-	set(LINK_LIBS
-	PhysXVehicle
-	PhysXVehicle2
-	PhysXCharacterKinematic
-	PhysXExtensions
-	PhysX
+	list(APPEND LINK_LIBS
+		PhysXVehicle
+		PhysXVehicle2
+		PhysXCharacterKinematic
+		PhysXExtensions
+		PhysX
 
-	# PhysXPvdSDK
-	PhysXCooking
-	PhysXCommon
-	PhysXFoundation
+		PhysXPvdSDK
+		PhysXCooking
+		PhysXCommon
+		PhysXFoundation
 	)
 endif()
 if(CONCH_USE_SWAPPY)
