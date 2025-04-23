@@ -119,6 +119,7 @@ class RenderBindings
             class_binding.function("testBoolean", &TestNormal::testBoolean);
             class_binding.function("testArrayBuffer", &TestNormal::testArrayBuffer);
             class_binding.function("testArrayBufferView", &TestNormal::testArrayBufferView);
+            class_binding.function("testVector4", &TestNormal::testVector4);
             class_binding.function("destroy", &TestNormal::destroy);
             context.class_("TestNormal", class_binding);
         }

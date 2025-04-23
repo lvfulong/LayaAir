@@ -7,6 +7,7 @@ var TEST_FUNCTION_ID;
     TEST_FUNCTION_ID[TEST_FUNCTION_ID["testBoolean"] = 3] = "testBoolean";
     TEST_FUNCTION_ID[TEST_FUNCTION_ID["testArrayBuffer"] = 4] = "testArrayBuffer";
     TEST_FUNCTION_ID[TEST_FUNCTION_ID["testArrayBufferView"] = 5] = "testArrayBufferView";  
+    TEST_FUNCTION_ID[TEST_FUNCTION_ID["testVector4"] = 6] = "testVector4";
 })(TEST_FUNCTION_ID || (TEST_FUNCTION_ID = {}));
 
 
@@ -64,6 +65,19 @@ function test_wab(arraybuffer, length, nAlignLength, offset) {
     }
     this.commandStreamInt32Array[0] += nAlignLength / 4;
 }
+class TestVector4 {
+    x;
+    y;
+    z;
+    w;
+    constructor() {
+        this.x = 1.0;
+        this.y = 2.0;
+        this.z = 3.0;
+        this.w = 4.0;
+    }
+    
+}  
 // 测试命令缓冲区
 //缺点
 //不支持返回值
@@ -112,6 +126,14 @@ class TestCommandBuffer {
         test_add_i(this.objectID);
         test_wab(value, value.byteLength, nAlignLength);
     }
+    testVector4(value) {
+        test_add_i(TEST_FUNCTION_ID.testVector4);
+        test_add_i(this.objectID);
+        test_add_f(value.x);
+        test_add_f(value.y);
+        test_add_f(value.z);
+        test_add_f(value.w);
+    }
     flush() {
         test.flush();
     }   
@@ -141,12 +163,14 @@ abv[6] = 7;
 abv[7] = 8;
 abv[8] = 9;
 abv[9] = 10;
+var vec4 = new TestVector4();
 let commandBuffer = new TestCommandBuffer();
 for (let i = 0; i < maxNum; i++) {        
     commandBuffer.testInt32(i);
     commandBuffer.testFloat32(i);
     commandBuffer.testString("Hello, world!");
     commandBuffer.testBoolean(true);
+    commandBuffer.testVector4(vec4);
     //commandBuffer.testArrayBuffer(ab);
     //commandBuffer.testArrayBufferView(abv);
     commandBuffer.flush();
@@ -162,15 +186,16 @@ for (let i = 0; i < maxNum; i++) {
     normal.testFloat(i);
     normal.testString("Hello, world!");
     normal.testBoolean(true);
+    normal.testVector4(vec4);
     //normal.testArrayBuffer(ab);
     //normal.testArrayBufferView(abv);
-    //normal.testFlush();
 }       
 normal.destroy();
 endTime = Date.now();
 console.log(`TestNormal Time taken: ${endTime - startTime}ms`); 
 
 
+ 
 
 
 

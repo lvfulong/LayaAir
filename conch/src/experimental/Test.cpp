@@ -78,6 +78,7 @@ namespace laya
             &Test::_test_testBoolean,
             &Test::_test_testArrayBuffer,
             &Test::_test_testArrayBufferView,       
+            &Test::_test_testVector4,
         };
         static const int nFuncs = sizeof(g_svProcFunctions) / sizeof(g_svProcFunctions[0]);
         char* pCmdBuffer = pRenderCmd.getReadPtr();
@@ -154,6 +155,12 @@ namespace laya
         }
 
     }   
+    void Test::_test_testVector4(JCCommandEncoderBuffer& layaGLCmd)
+    {
+        CMD_iffff* cmd = layaGLCmd.popp<CMD_iffff>();
+        TestCommandBuffer* pTestCommandBuffer = s_map[cmd->i];
+        pTestCommandBuffer->testVector4(Vector4(cmd->x, cmd->y, cmd->w, cmd->h));
+    }   
 
     TestNormal::TestNormal()
     {
@@ -211,7 +218,15 @@ namespace laya
         buffer.resize(value.getByteLength());
         memcpy(buffer.data(), value.getData(), value.getByteLength());
     }
+    void TestNormal::testVector4(const Vector4& v4)
+    {
+        m_v4.x = 1.0f;
+        m_v4.y = 2.0f;
+        m_v4.z = 3.0f;
+        m_v4.w = 4.0f;
 
+        //LOGI("testVector4 %f, %f, %f, %f", m_v4.x, m_v4.y, m_v4.z, m_v4.w);
+    }
     void TestNormal::destroy()      
     {
 
@@ -284,7 +299,14 @@ namespace laya
         //    LOGI("testArrayBufferView %d", buffer[i]);
         //}
     }
-
+    void TestCommandBuffer::testVector4(const Vector4& v4)
+    {
+        m_v4.x = 1.0f;
+        m_v4.y = 2.0f;
+        m_v4.z = 3.0f;
+        m_v4.w = 4.0f;
+        //LOGI("testVector4 %f, %f, %f, %f", m_v4.x, m_v4.y, m_v4.z, m_v4.w);
+    }
     void TestCommandBuffer::destroy()      
     {
 

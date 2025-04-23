@@ -3,6 +3,7 @@
 
 #include <jsbind/JSBind.h>
 #include "utils/JCBuffer.h"
+#include <core/math/Vector4.h>
 
 namespace laya
 {
@@ -14,7 +15,8 @@ namespace laya
     testBoolean = 3,
     testArrayBuffer = 4,
     testArrayBufferView = 5,
-    count = 6,
+    testVector4 = 6,
+    count = 7,
   };    
   class Test
   {
@@ -33,6 +35,7 @@ namespace laya
       static void _test_testBoolean(JCCommandEncoderBuffer& layaGLCmd);
       static void _test_testArrayBuffer(JCCommandEncoderBuffer& layaGLCmd);
       static void _test_testArrayBufferView(JCCommandEncoderBuffer& layaGLCmd); 
+      static void _test_testVector4(JCCommandEncoderBuffer& layaGLCmd);
       static char* m_pBuffer;
       static JCCommandEncoderBuffer m_renderCmd;
   };
@@ -47,8 +50,10 @@ namespace laya
       void testBoolean(bool value);
       void testArrayBuffer(char* value, int bytes);
       void testArrayBufferView(char* value, int bytes);
+      void testVector4(const Vector4& v4);
       void destroy();
       std::unordered_map<std::string, std::string> m_map; 
+      Vector4 m_v4;
   };  
   class TestNormal
   {
@@ -61,8 +66,10 @@ namespace laya
       void testBoolean(bool value);
       void testArrayBuffer(jsbind::ArrayBuffer value);
       void testArrayBufferView(jsbind::ArrayBuffer value);
+      void testVector4(const Vector4& v4);
       void destroy();
       std::unordered_map<std::string, std::string> m_map; 
+      Vector4 m_v4;
   };  
 } // namespace laya
 #endif  
