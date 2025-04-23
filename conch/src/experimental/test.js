@@ -8,6 +8,7 @@ var TEST_FUNCTION_ID;
     TEST_FUNCTION_ID[TEST_FUNCTION_ID["testArrayBuffer"] = 4] = "testArrayBuffer";
     TEST_FUNCTION_ID[TEST_FUNCTION_ID["testArrayBufferView"] = 5] = "testArrayBufferView";  
     TEST_FUNCTION_ID[TEST_FUNCTION_ID["testVector4"] = 6] = "testVector4";
+    TEST_FUNCTION_ID[TEST_FUNCTION_ID["testMatrix4x4"] = 7] = "testMatrix4x4";
 })(TEST_FUNCTION_ID || (TEST_FUNCTION_ID = {}));
 
 
@@ -78,6 +79,27 @@ class TestVector4 {
     }
     
 }  
+class TestMatrix4x4 {
+    elements = new Float32Array(16);
+    constructor() {
+        this.elements[0] = 1.0;
+        this.elements[1] = 2.0;
+        this.elements[2] = 3.0;
+        this.elements[3] = 4.0;
+        this.elements[4] = 5.0;
+        this.elements[5] = 6.0;
+        this.elements[6] = 7.0;
+        this.elements[7] = 8.0;
+        this.elements[8] = 9.0;
+        this.elements[9] = 10.0;
+        this.elements[10] = 11.0;
+        this.elements[11] = 12.0;
+        this.elements[12] = 13.0;
+        this.elements[13] = 14.0;
+        this.elements[14] = 15.0;
+        this.elements[15] = 16.0;
+    }                   
+}                   
 // 测试命令缓冲区
 //缺点
 //不支持返回值
@@ -134,6 +156,11 @@ class TestCommandBuffer {
         test_add_f(value.z);
         test_add_f(value.w);
     }
+    testMatrix4x4(value) {
+        test_add_i(TEST_FUNCTION_ID.testMatrix4x4);
+        test_add_i(this.objectID);
+        test_wab(value.elements, 64, 64);
+    }       
     flush() {
         test.flush();
     }   
@@ -164,6 +191,7 @@ abv[7] = 8;
 abv[8] = 9;
 abv[9] = 10;
 var vec4 = new TestVector4();
+var mat4 = new TestMatrix4x4();
 let commandBuffer = new TestCommandBuffer();
 for (let i = 0; i < maxNum; i++) {        
     commandBuffer.testInt32(i);
@@ -171,6 +199,7 @@ for (let i = 0; i < maxNum; i++) {
     commandBuffer.testString("Hello, world!");
     commandBuffer.testBoolean(true);
     commandBuffer.testVector4(vec4);
+    commandBuffer.testMatrix4x4(mat4);
     //commandBuffer.testArrayBuffer(ab);
     //commandBuffer.testArrayBufferView(abv);
     commandBuffer.flush();
@@ -187,6 +216,7 @@ for (let i = 0; i < maxNum; i++) {
     normal.testString("Hello, world!");
     normal.testBoolean(true);
     normal.testVector4(vec4);
+    normal.testMatrix4x4(mat4);
     //normal.testArrayBuffer(ab);
     //normal.testArrayBufferView(abv);
 }       

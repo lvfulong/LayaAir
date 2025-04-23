@@ -4,7 +4,7 @@
 #include <sstream>
 #include <string>
 #include "../JCCmdStruct.h"
-
+#include <core/math/Matrix4x4.h>
 namespace laya
 {
     static int s_currentID = 0;
@@ -79,6 +79,7 @@ namespace laya
             &Test::_test_testArrayBuffer,
             &Test::_test_testArrayBufferView,       
             &Test::_test_testVector4,
+            &Test::_test_testMatrix4x4,
         };
         static const int nFuncs = sizeof(g_svProcFunctions) / sizeof(g_svProcFunctions[0]);
         char* pCmdBuffer = pRenderCmd.getReadPtr();
@@ -161,6 +162,14 @@ namespace laya
         TestCommandBuffer* pTestCommandBuffer = s_map[cmd->i];
         pTestCommandBuffer->testVector4(Vector4(cmd->x, cmd->y, cmd->w, cmd->h));
     }   
+    void Test::_test_testMatrix4x4(JCCommandEncoderBuffer& layaGLCmd)
+    {
+        CMD_ii* cmd = layaGLCmd.popp<CMD_ii>();
+        TestCommandBuffer* pTestCommandBuffer = s_map[cmd->i];
+        Matrix4x4 mat4; 
+        memcpy(&mat4.elements[0], layaGLCmd.readBufferAlign(cmd->j), cmd->j);
+        pTestCommandBuffer->testMatrix4x4(mat4);
+    }      
 
     TestNormal::TestNormal()
     {
@@ -227,6 +236,15 @@ namespace laya
 
         //LOGI("testVector4 %f, %f, %f, %f", m_v4.x, m_v4.y, m_v4.z, m_v4.w);
     }
+    void TestNormal::testMatrix4x4(const Matrix4x4& mat4)
+    {
+        memcpy(m_mat4.elements, mat4.elements, 16 * sizeof(float));
+
+        /*for (int i = 0; i < 16; i++)
+        {
+            LOGI("testMatrix4x4 %f", m_mat4.elements[i]);
+        }*/
+    }   
     void TestNormal::destroy()      
     {
 
@@ -307,6 +325,16 @@ namespace laya
         m_v4.w = 4.0f;
         //LOGI("testVector4 %f, %f, %f, %f", m_v4.x, m_v4.y, m_v4.z, m_v4.w);
     }
+    void TestCommandBuffer::testMatrix4x4(const Matrix4x4& mat4)
+    {
+        memcpy(m_mat4.elements, mat4.elements, 16 * sizeof(float));
+
+        //for (int i = 0; i < 16; i++)
+        //{
+        //    LOGI("testMatrix4x4 %f", m_mat4.elements[i]);
+        //}
+
+    }   
     void TestCommandBuffer::destroy()      
     {
 
