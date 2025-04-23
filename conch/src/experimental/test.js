@@ -118,15 +118,37 @@ class TestCommandBuffer {
 }
 let maxNum = 1000000;
 let startTime = Date.now();
-
+let ab = new ArrayBuffer(10);
+let abv1 = new Uint8Array(ab);
+abv1[0] = 1;
+abv1[1] = 2;
+abv1[2] = 3;
+abv1[3] = 4;
+abv1[4] = 5;
+abv1[5] = 6;
+abv1[6] = 7;
+abv1[7] = 8;
+abv1[8] = 9;  
+abv1[9] = 10;
+let abv = new Uint8Array(10);
+abv[0] = 1;
+abv[1] = 2;
+abv[2] = 3;
+abv[3] = 4;
+abv[4] = 5;
+abv[5] = 6;
+abv[6] = 7;
+abv[7] = 8;
+abv[8] = 9;
+abv[9] = 10;
 let commandBuffer = new TestCommandBuffer();
 for (let i = 0; i < maxNum; i++) {        
     commandBuffer.testInt32(i);
     commandBuffer.testFloat32(i);
     commandBuffer.testString("Hello, world!");
     commandBuffer.testBoolean(true);
-    commandBuffer.testArrayBuffer(new ArrayBuffer(10));
-    commandBuffer.testArrayBufferView(new Uint8Array(10));
+    //commandBuffer.testArrayBuffer(ab);
+    //commandBuffer.testArrayBufferView(abv);
     commandBuffer.flush();
 }
 commandBuffer.destroy();
@@ -140,8 +162,8 @@ for (let i = 0; i < maxNum; i++) {
     normal.testFloat(i);
     normal.testString("Hello, world!");
     normal.testBoolean(true);
-    normal.testArrayBuffer(new ArrayBuffer(10));
-    normal.testArrayBufferView(new Uint8Array(10));
+    //normal.testArrayBuffer(ab);
+    //normal.testArrayBufferView(abv);
     //normal.testFlush();
 }       
 normal.destroy();

@@ -47,7 +47,7 @@ namespace laya
     void Test::flush()
     {
         char* pBuffer = Test::m_pBuffer;
-        int nLen = (*(int*)pBuffer/* - 1*/) * 4;
+        int nLen = (*(int*)pBuffer - 1) * 4;
         m_renderCmd.setShareBuffer(pBuffer + 4, nLen);
         
         Test::dispatchAllCmds(&m_renderCmd);
@@ -136,7 +136,7 @@ namespace laya
     {
         CMD_ii* cmd = layaGLCmd.popp<CMD_ii>();
         TestCommandBuffer* pTestCommandBuffer = s_map[cmd->i];
-        if (cmd->i > 0)
+        if (cmd->j > 0)
         {
             char* value = layaGLCmd.readBufferAlign(cmd->j);
             pTestCommandBuffer->testArrayBuffer(value, cmd->j);
@@ -147,10 +147,10 @@ namespace laya
     {
         CMD_ii* cmd = layaGLCmd.popp<CMD_ii>();
         TestCommandBuffer* pTestCommandBuffer = s_map[cmd->i];
-        if (cmd->i > 0)
+        if (cmd->j > 0)
         {
             char* value = layaGLCmd.readBufferAlign(cmd->j);
-            pTestCommandBuffer->testArrayBuffer(value, cmd->j);
+            pTestCommandBuffer->testArrayBufferView(value, cmd->j);
         }
 
     }   
@@ -168,7 +168,8 @@ namespace laya
         std::stringstream ss;
         ss << value;
         std::string str = ss.str();
-        m_map["testInt32"] = str;   
+        m_map["testInt32"] = str;  
+        //LOGI("11 testInt32 %d", value);
     }
 
     void TestNormal::testFloat(float value)
@@ -200,6 +201,8 @@ namespace laya
         static std::vector<uint8_t> buffer;
         buffer.resize(value.getByteLength());
         memcpy(buffer.data(), value.getData(), value.getByteLength());
+
+
     }
 
     void TestNormal::testArrayBufferView(jsbind::ArrayBuffer value)
@@ -229,7 +232,8 @@ namespace laya
         std::stringstream ss;
         ss << value;
         std::string str = ss.str();
-        m_map["testInt32"] = str;   
+        m_map["testInt32"] = str; 
+        //LOGI("testInt32 %d", value);
     }
 
     void TestCommandBuffer::testFloat(float value)
@@ -238,6 +242,7 @@ namespace laya
         ss << value;
         std::string str = ss.str();
         m_map["testFloat"] = str;
+        //LOGI("testFloat %f", value);
     }
 
     void TestCommandBuffer::testString(const std::string& value)
@@ -246,6 +251,7 @@ namespace laya
         ss << value;
         std::string str = ss.str();
         m_map["testString"] = str;
+        //LOGI("testString %s", value.c_str());
     }
 
     void TestCommandBuffer::testBoolean(bool value)
@@ -254,6 +260,7 @@ namespace laya
         ss << value;
         std::string str = ss.str(); 
         m_map["testBoolean"] = str;
+        //LOGI("testBoolean %s", str.c_str());
     }   
 
     void TestCommandBuffer::testArrayBuffer(char* value, int bytes)
@@ -261,6 +268,10 @@ namespace laya
         static std::vector<uint8_t> buffer;
         buffer.resize(bytes);
         memcpy(buffer.data(), value, bytes);
+        //for (int i = 0; i < bytes; i++) 
+        //{
+        //    LOGI("testArrayBuffer %d", buffer[i]);
+        //}   
     }
 
     void TestCommandBuffer::testArrayBufferView(char* value, int bytes)
@@ -268,6 +279,10 @@ namespace laya
         static std::vector<uint8_t> buffer;
         buffer.resize(bytes);
         memcpy(buffer.data(), value, bytes);
+        //for (int i = 0; i < bytes; i++) 
+        //{
+        //    LOGI("testArrayBufferView %d", buffer[i]);
+        //}
     }
 
     void TestCommandBuffer::destroy()      
