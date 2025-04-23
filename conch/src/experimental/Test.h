@@ -21,8 +21,8 @@ namespace laya
     public:
       Test();
       ~Test();
-      static int64_t createObject(const std::string& className);
-      static void destroyObject(const std::string& className, int64_t ptr);
+      static int createObject(const std::string& className);
+      static void destroyObject(const std::string& className, int ptr);
       static void setBuffer(jsbind::ArrayBuffer value);
       static void flush();
       static void dispatchAllCmds(JCCommandEncoderBuffer* pTemplateMem);
@@ -45,8 +45,8 @@ namespace laya
       void testFloat(float value);
       void testString(const std::string& value);
       void testBoolean(bool value);
-      void testArrayBuffer(jsbind::ArrayBuffer value);
-      void testArrayBufferView(jsbind::ArrayBuffer value);
+      void testArrayBuffer(char* value, int bytes);
+      void testArrayBufferView(char* value, int bytes);
       void destroy();
       std::unordered_map<std::string, std::string> m_map; 
   };  

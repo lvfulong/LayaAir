@@ -106,6 +106,8 @@ class RenderBindings
 
 		    class_binding.class_function("createObject", &Test::createObject);
             class_binding.class_function("destroyObject", &Test::destroyObject);
+            class_binding.class_function("setBuffer", &Test::setBuffer);
+            class_binding.class_function("flush", &Test::flush);
             context.global_class_("test", class_binding);
         }
         {

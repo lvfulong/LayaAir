@@ -7,6 +7,8 @@
 
 namespace laya
 {
+    static int s_currentID = 0;
+    static std::unordered_map<int, TestCommandBuffer*> s_map;    
     JCCommandEncoderBuffer Test::m_renderCmd(128, 128);
     char* Test::m_pBuffer = nullptr;
     Test::Test()
@@ -17,20 +19,25 @@ namespace laya
     {
     }   
 
-    int64_t Test::createObject(const std::string& className)       
+    int Test::createObject(const std::string& className)
     {
         if (className == "TestCommandBuffer")
         {
-            return (int64_t)new TestCommandBuffer();
+            TestCommandBuffer* pTestCommandBuffer = new TestCommandBuffer();
+            int id = s_currentID;
+            s_map[id] = pTestCommandBuffer;
+            s_currentID++;
+            return id;
         }
-        return 0;
+        return -1;
     }
 
-    void Test::destroyObject(const std::string& className, int64_t ptr)      
+    void Test::destroyObject(const std::string& className, int ptr)
     {
         if (className == "TestCommandBuffer")
         {
-            delete (TestCommandBuffer*)ptr;
+            delete s_map[ptr];
+            s_map.erase(ptr);
         }       
     }
     void Test::setBuffer(jsbind::ArrayBuffer value)
@@ -40,10 +47,12 @@ namespace laya
     void Test::flush()
     {
         char* pBuffer = Test::m_pBuffer;
-        int nLen = (*(int*)pBuffer - 1) * 4;
+        int nLen = (*(int*)pBuffer/* - 1*/) * 4;
         m_renderCmd.setShareBuffer(pBuffer + 4, nLen);
-        ((int*)pBuffer)[0] = 1;
+        
         Test::dispatchAllCmds(&m_renderCmd);
+        
+        ((int*)pBuffer)[0] = 1;
         m_renderCmd.clearData();
     }   
     void Test::dispatchAllCmds(JCCommandEncoderBuffer* pTemplateMem)
@@ -95,30 +104,55 @@ namespace laya
     }
     void Test::_test_testInt32(JCCommandEncoderBuffer& layaGLCmd)
     {
-        CMD_i64i* cmd = layaGLCmd.popp<CMD_i64i>();
-        TestCommandBuffer* pTestCommandBuffer = (TestCommandBuffer*)cmd->a;
-        pTestCommandBuffer->testInt32(cmd->b);
+        CMD_ii* cmd = layaGLCmd.popp<CMD_ii>();
+        TestCommandBuffer* pTestCommandBuffer = s_map[cmd->i];
+        pTestCommandBuffer->testInt32(cmd->j);
     }
     void Test::_test_testFloat(JCCommandEncoderBuffer& layaGLCmd)
     {
-        CMD_i64f* cmd = layaGLCmd.popp<CMD_i64f>();
-        TestCommandBuffer* pTestCommandBuffer = (TestCommandBuffer*)cmd->a;
-        pTestCommandBuffer->testFloat(cmd->b);
+        CMD_if* cmd = layaGLCmd.popp<CMD_if>();
+
+        TestCommandBuffer* pTestCommandBuffer = s_map[cmd->i];
+        pTestCommandBuffer->testFloat(cmd->j);
     }   
     void Test::_test_testString(JCCommandEncoderBuffer& layaGLCmd)
     {
+        CMD_ii* cmd = layaGLCmd.popp<CMD_ii>();
+        TestCommandBuffer* pTestCommandBuffer = s_map[cmd->i];
+        if (cmd->j > 0)
+        {
+            char* value = layaGLCmd.readBufferAlign(cmd->j);
+            pTestCommandBuffer->testString(value);
+        }
+
     }
     void Test::_test_testBoolean(JCCommandEncoderBuffer& layaGLCmd)
     {
-        CMD_i64i* cmd = layaGLCmd.popp<CMD_i64i>();
-        TestCommandBuffer* pTestCommandBuffer = (TestCommandBuffer*)cmd->a;
-        pTestCommandBuffer->testBoolean((bool)cmd->b);
+        CMD_ii* cmd = layaGLCmd.popp<CMD_ii>();
+        TestCommandBuffer* pTestCommandBuffer = s_map[cmd->i];
+        pTestCommandBuffer->testBoolean((bool)cmd->j);
     }
     void Test::_test_testArrayBuffer(JCCommandEncoderBuffer& layaGLCmd)
     {
+        CMD_ii* cmd = layaGLCmd.popp<CMD_ii>();
+        TestCommandBuffer* pTestCommandBuffer = s_map[cmd->i];
+        if (cmd->i > 0)
+        {
+            char* value = layaGLCmd.readBufferAlign(cmd->j);
+            pTestCommandBuffer->testArrayBuffer(value, cmd->j);
+        }
+        
     }
     void Test::_test_testArrayBufferView(JCCommandEncoderBuffer& layaGLCmd)
     {
+        CMD_ii* cmd = layaGLCmd.popp<CMD_ii>();
+        TestCommandBuffer* pTestCommandBuffer = s_map[cmd->i];
+        if (cmd->i > 0)
+        {
+            char* value = layaGLCmd.readBufferAlign(cmd->j);
+            pTestCommandBuffer->testArrayBuffer(value, cmd->j);
+        }
+
     }   
 
     TestNormal::TestNormal()
@@ -222,18 +256,18 @@ namespace laya
         m_map["testBoolean"] = str;
     }   
 
-    void TestCommandBuffer::testArrayBuffer(jsbind::ArrayBuffer value)
+    void TestCommandBuffer::testArrayBuffer(char* value, int bytes)
     {
         static std::vector<uint8_t> buffer;
-        buffer.resize(value.getByteLength());
-        memcpy(buffer.data(), value.getData(), value.getByteLength());
+        buffer.resize(bytes);
+        memcpy(buffer.data(), value, bytes);
     }
 
-    void TestCommandBuffer::testArrayBufferView(jsbind::ArrayBuffer value)
+    void TestCommandBuffer::testArrayBufferView(char* value, int bytes)
     {
         static std::vector<uint8_t> buffer;
-        buffer.resize(value.getByteLength());
-        memcpy(buffer.data(), value.getData(), value.getByteLength());
+        buffer.resize(bytes);
+        memcpy(buffer.data(), value, bytes);
     }
 
     void TestCommandBuffer::destroy()      
