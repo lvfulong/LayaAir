@@ -59,7 +59,7 @@ int QuickSort::_partitionRenderObject(int left, int right)
 
 float QuickSort::_compare(GLESRenderElement3D *left, GLESRenderElement3D *right)
 {
-    float renderQueue = left->materialRenderQueue - right->materialRenderQueue;
+    float renderQueue =(float)left->materialRenderQueue - (float)right->materialRenderQueue;
     if (renderQueue == 0)
     {
         float sort = m_bIsTransparent ? right->owner->distanceForSort - left->owner->distanceForSort
