@@ -9,6 +9,7 @@
 #include <utils/Marcos.h>
 #include <utils/MessageLoopImpl.h>
 #include <utils/Time.h>
+#include <atomic>
 
 namespace laya
 {
@@ -31,15 +32,15 @@ class MessageLoopGeneric : public MessageLoopImpl
     };
 
   public:
-    void iterate()
+    void iterate() override
     {
-        // if (!exitPending())
+        if (m_running)
         {
-            waitForWork();
+            //waitForWork();
             processExpiredTasks();
         }
     }
-    void processExpiredTasks() override
+    void processExpiredTasks() 
     {
         auto now = MonotonicClock::now();
         std::vector<Task> toProcess;
@@ -64,9 +65,14 @@ class MessageLoopGeneric : public MessageLoopImpl
     }
     void enqueue(nano_seconds_t time, std::function<void()> &&task) override
     {
+        if (!m_running)
+            return;
         enqueueTask(Task{std::move(task), time});
     }
-
+    void stop() override
+    {
+        m_running = false;
+    }   
   private:
     nano_seconds_t nextWakeup()
     {
@@ -97,7 +103,7 @@ class MessageLoopGeneric : public MessageLoopImpl
     }
     void wakeUp()
     {
-        // std::unique_lock<std::mutex> lock(m_mutex);
+        std::unique_lock<std::mutex> lock(m_mutex);
         m_condition.notify_one();
     }
     void waitForWork()
@@ -119,7 +125,7 @@ class MessageLoopGeneric : public MessageLoopImpl
     std::vector<Task> m_tasks;
     std::mutex m_mutex;
     std::condition_variable m_condition;
-    // bool m_running;
+    std::atomic_bool m_running = true;
 };
 } // namespace laya
 #endif

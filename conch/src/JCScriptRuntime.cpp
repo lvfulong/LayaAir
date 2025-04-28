@@ -151,7 +151,7 @@ namespace laya
 
         m_debugPort = g_kSystemConfig.m_nJSDebugMode;
         //m_nThreadState = 1;
-
+        
         m_scriptVM.initialize();
         this->onThreadInit();
     }
@@ -164,6 +164,7 @@ namespace laya
             //LOGI("stop: wait for thread to start...");
             //std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
+        m_scriptThreadMessageLoop->stop();
         this->onThreadExit();
         m_scriptVM.uninitialize();
         LOGI("Stop js end.");
@@ -315,7 +316,7 @@ namespace laya
         {
             return true;
         }
-        m_scriptThreadMessageLoop->processExpiredTasks();
+        m_scriptThreadMessageLoop->iterate();
     
         JCConch::s_pConchRender->postTaskFromJSToRenderAsync([this]() {
             if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::OpenGLES) {
