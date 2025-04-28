@@ -108,6 +108,8 @@ namespace laya {
                 new (&pss->pSendTask) std::deque<std::string>();
                 //new (&pss->pSendTask) std::vector<std::string>();
                 gpDbgAgent->onAcceptNewFrontend(pss);
+                
+                lws_callback_on_writable(wsi);
 
             }else{
                 printf("另一个连接建立 %x\n", pss);
@@ -117,6 +119,10 @@ namespace laya {
 
         case LWS_CALLBACK_SERVER_WRITEABLE: //可以发送了
             //缺省的是继续发送。例如上一次可能只发送了一部分
+                if (!frontUser || pss != frontUser) {
+                    lws_callback_on_writable(wsi);
+                    break;
+                }
             n = LWS_WRITE_CONTINUATION;
             if (!pss->continuation) {
                 //如果是新的任务，就设置文本或者二进制。
@@ -338,7 +344,7 @@ namespace laya {
         printf("%s\n", line);
     }
     // 因为目前只有windows的websocket更新了
-#if defined(OS_WINDOWS) || defined(OS_LINUX)
+#if defined(OS_WINDOWS) || defined(OS_LINUX) || defined(OS_IOS)
     void startWSSV(int port, DebuggerAgent* pDbgAgent) {
         gpDbgAgent = pDbgAgent;
         interrupted = false;
