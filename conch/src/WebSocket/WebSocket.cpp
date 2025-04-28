@@ -369,7 +369,7 @@ int WebSocket::onSubThreadLoop()
 
 	return 0;
 }
-#if defined(OS_WINDOWS) || defined(OS_LINUX) 
+#if defined(OS_WINDOWS) || defined(OS_LINUX) || defined(OS_IOS) 
 void WebSocket::onSubThreadStarted() {
 
 

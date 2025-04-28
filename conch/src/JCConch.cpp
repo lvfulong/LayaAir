@@ -25,7 +25,7 @@
 #include <Bindings/JSInput.h>
 #include <thread>
 #include <platform/OS.h>
-#include "../../third_party/tracy/public/tracy/Tracy.hpp"
+#include <profiler/Profiler.h>  
 #if defined(OS_ANDROID)
     #include "WebSocket/WebSocket.h"
     #include "CToJavaBridge.h"

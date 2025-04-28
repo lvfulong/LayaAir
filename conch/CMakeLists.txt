@@ -37,12 +37,6 @@ list(APPEND CONCH_INCLUDE
 	${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-if(TRACY_ENABLE)
-list(APPEND CONCH_SRC
-../third_party/tracy/public/TracyClient.cpp
-)
-endif()
-
 if(USE_PHYSX)
 list(APPEND CONCH_SRC
 src/Bindings/PhysX/LayaPhysXExport.h
@@ -71,6 +65,8 @@ if(CONCH_USE_DCC)
 endif()
 
 list(APPEND CONCH_SRC
+	src/experimental/Test.h
+	src/experimental/Test.cpp	
 	# 分开数据库类core/Math 和相关方法类core/Util
 	src/core/math/Matrix3x3.h
 	src/core/math/Matrix3x3.cpp
@@ -647,19 +643,21 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 	PUBLIC_HEADER "${CONCH_PUBLIC_HEADERS}"
 )
 
-set(LINK_LIBS)
+set(LINK_LIBS
+	profiler
+	)
 if(USE_PHYSX)
-	set(LINK_LIBS
-	PhysXVehicle
-	PhysXVehicle2
-	PhysXCharacterKinematic
-	PhysXExtensions
-	PhysX
+	list(APPEND LINK_LIBS
+		PhysXVehicle
+		PhysXVehicle2
+		PhysXCharacterKinematic
+		PhysXExtensions
+		PhysX
 
-	# PhysXPvdSDK
-	PhysXCooking
-	PhysXCommon
-	PhysXFoundation
+		PhysXPvdSDK
+		PhysXCooking
+		PhysXCommon
+		PhysXFoundation
 	)
 endif()
 if(CONCH_USE_SWAPPY)
@@ -671,11 +669,6 @@ if(CONCH_USE_CURL_DOWNLOAD)
 
 	list(APPEND LINK_LIBS
 		network
-	)
-endif()
-if(TRACY_ENABLE)
-	list(APPEND LINK_LIBS 
-	Tracy::TracyClient
 	)
 endif()
 
