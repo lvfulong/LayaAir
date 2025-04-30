@@ -387,6 +387,10 @@ list(APPEND CONCH_SRC
 	src/Bindings/JSCanvasRenderingContext2D.cpp
 	src/Bindings/JSLocalStorage.h
 	src/Bindings/JSLocalStorage.cpp
+	src/Bindings/JSSubtleCrypto.h
+	src/Bindings/JSSubtleCrypto.cpp
+	src/Bindings/JSProfiler.h
+	src/Bindings/JSProfiler.cpp
 	src/Extention/LayaExtWind.cpp
 	
 	src/OpenAL/
@@ -647,6 +651,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 
 set(LINK_LIBS
 	profiler
+	crypto-core
 	)
 if(USE_PHYSX)
 	list(APPEND LINK_LIBS

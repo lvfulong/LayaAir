@@ -36,7 +36,7 @@ interface Window extends EventTarget, WindowTimers{
     location:Location;
     document:Document;
     Audio:typeof HTMLAudioElement;
-    //crypto:Crypto;
+    crypto:Crypto;
     console:Console;
     pageXOffset: number;
     pageYOffset: number;
@@ -111,7 +111,7 @@ window.removeEventListener = _window.removeEventListener.bind(_window);
 window.dispatchEvent = _window.dispatchEvent.bind(_window);
 window.document = new Document();  //是不是应该在sethref之后呢
 window.layaDoc = window.document;
-//window.crypto = new Crypto();
+window.crypto = new Crypto();
 window.devicePixelRatio=1.0;
 var Image = window.Image = HTMLImageElement;
 var Audio = window.Audio = HTMLAudioElement;

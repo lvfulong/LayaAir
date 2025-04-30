@@ -79,6 +79,8 @@
 #include <stdarg.h>
 #include <render/RenderBindings.h>
 #include <platform/OS.h>
+#include "JSSubtleCrypto.h"
+#include "JSProfiler.h"
 
 extern int g_nInnerWidth ;
 extern int g_nInnerHeight ;
@@ -462,6 +464,8 @@ namespace laya
         GET_ENV
         jsbind::Object context(jsvm::global());
         ///Module global(context.isolate());
+        JSSubtleCrypto::exportJS(context);
+        JSProfiler::exportJS(context);
         JSLocalStorage::exportJS(context);
         JSCanvasRenderingContext2D::exportJS(context);
         JsFile::exportJS(context);

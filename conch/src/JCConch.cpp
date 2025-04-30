@@ -224,13 +224,13 @@ namespace laya
     }
     void JCConch::update() {
         DEBUG_CHECK(isScriptThread());
+        Profiler_ZoneScoped("update", 0x00ff00);
         auto pScriptRuntime = JCConch::s_pScriptRuntime;
         if (pScriptRuntime)
         {
-            ZoneScopedN("jsupdate");
             pScriptRuntime->update();
         }
-        FrameMark;
+        Profiler_MarkFrame(); 
     }
     void JCConch::dispatchInputEvent(inputEvent e)
     {

@@ -34,6 +34,7 @@
 #include "Extention/LayaExtWin.h"
 #include <filesystem>
 #include <platform/OS.h>
+#include <profiler/Profiler.h>
 
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
@@ -332,7 +333,7 @@ namespace laya
 
         if (m_pJSOnDrawFunction.isValid())
         {
-			
+			Profiler_ZoneScoped("JSOnDraw", 0x00ff00);
             //JS_TRY;
             m_pJSOnDrawFunction.call<void>(jsvm::global(), nTime);
             //JS_CATCH;
@@ -385,6 +386,7 @@ namespace laya
         //JS_TRY;
         if (m_pJSOnFrameFunction.isValid())
         {
+            Profiler_ZoneScoped("JSOnFrame", 0x00ff00);
             m_pJSOnFrameFunction.call<void>(jsvm::global());
         }
         //JS_CATCH;

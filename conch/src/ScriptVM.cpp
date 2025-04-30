@@ -1,6 +1,6 @@
 #include "ScriptVM.h"
 #include <cstring>
-
+#include <profiler/Profiler.h>
 namespace laya
 {
 
@@ -31,6 +31,7 @@ void ScriptVM::runLoop(jsvm_env env, std::function<bool(jsvm_env)> funcLoop)
             bool result = false;
             do
             {
+                Profiler_ZoneScoped("jsvm_pump_messageloop", 0xff0000);
                 status = jsvm_pump_messageloop(m_vm, &result);
                 DEBUG_CHECK(status == jsvm_status::jsvm_ok);
             } while (result);

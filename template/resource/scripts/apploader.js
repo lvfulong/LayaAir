@@ -108,6 +108,64 @@ class measureText {
     ;
     ;
 }
+class SubtleCrypto {
+    decrypt(algorithm, key, data) {
+        throw 'not implemented';
+    }
+    deriveBits(algorithm, baseKey, length) {
+        throw 'not implemented';
+    }
+    deriveKey(algorithm, baseKey, derivedKeyType, extractable, keyUsages) {
+        throw 'not implemented';
+    }
+    digest(algorithm, data) {
+        if (algorithm == 'SHA-1') {
+            let result = window.conchSubtleCrypto.digest(algorithm, data);
+            return new Promise((resolve, reject) => {
+                if (result) {
+                    resolve(result);
+                }
+                else {
+                    reject(new Error('Failed to digest'));
+                }
+            });
+        }
+        throw 'not implemented';
+    }
+    encrypt(algorithm, key, data) {
+        throw 'not implemented';
+    }
+    exportKey(format, key) {
+        throw 'not implemented';
+    }
+    generateKey(algorithm, extractable, keyUsages) {
+        throw 'not implemented';
+    }
+    importKey(format, keyData, algorithm, extractable, keyUsages) {
+        throw 'not implemented';
+    }
+    sign(algorithm, key, data) {
+        throw 'not implemented';
+    }
+    unwrapKey(format, wrappedKey, unwrappingKey, unwrapAlgorithm, unwrappedKeyAlgorithm, extractable, keyUsages) {
+        throw 'not implemented';
+    }
+    verify(algorithm, key, signature, data) {
+        throw 'not implemented';
+    }
+    wrapKey(format, key, wrappingKey, wrapAlgorithm) {
+        throw 'not implemented';
+    }
+}
+class Crypto {
+    constructor() {
+        this.subtle = new SubtleCrypto();
+    }
+    getRandomValues(array) {
+        throw 'not implemented';
+        return null;
+    }
+}
 var LogType;
 (function (LogType) {
     LogType[LogType["Debug"] = 0] = "Debug";
@@ -6596,6 +6654,7 @@ window.removeEventListener = _window.removeEventListener.bind(_window);
 window.dispatchEvent = _window.dispatchEvent.bind(_window);
 window.document = new Document();
 window.layaDoc = window.document;
+window.crypto = new Crypto();
 window.devicePixelRatio = 1.0;
 var Image = window.Image = HTMLImageElement;
 var Audio = window.Audio = HTMLAudioElement;
