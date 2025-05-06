@@ -10,7 +10,9 @@
 
 namespace laya
 {
+#if defined(TRACY_PROFILER_ENABLED)
 static std::stack<TracyCZoneCtx> s_stackTracyZone;
+#endif
 void Profiler_ZoneStartForJS(const std::string &strName)
 {
 #if defined(TRACY_PROFILER_ENABLED)
