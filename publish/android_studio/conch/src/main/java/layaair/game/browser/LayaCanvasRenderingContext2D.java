@@ -157,6 +157,8 @@ public class LayaCanvasRenderingContext2D {
         context.canvas.scale(x, y);
     }
     static void clearRect(LayaCanvasRenderingContext2D context, float x, float y, float width, float height) {
+        x = Math.max(0, x);
+        y = Math.max(0, y);
         Matrix mat = context.canvas.getMatrix();//todo deprecated
         mat.getValues(context.valuesTemp);
         float scaleX = context.valuesTemp[Matrix.MSCALE_X];

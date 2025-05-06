@@ -214,13 +214,10 @@ TextMetrics CanvasRenderingContext2DCG::measureText(const std::string &text)
 void CanvasRenderingContext2DCG::clearRect(double x, double y, double width, double height)
 {
     CGRect rect = CGRectMake(x, y, width, height);
-    // save();
-    //  CGContextSetBlendMode(x->m_context, kCGBlendModeClear);
-    //  CGContextFillRect(m_impl->m_context, rect);
-
-    // CGContextFillRect(m_impl->m_context, CGRectMake(0, 0, m_impl->m_width, m_impl->m_height));
-    memset(m_impl->m_bitmapData->m_pImageData, 0, m_impl->m_bitmapData->m_nWidth * m_impl->m_bitmapData->m_nHeight * 4);
-    // restore();
+    save();
+    CGContextSetBlendMode(m_impl->m_context, kCGBlendModeClear);
+    CGContextFillRect(m_impl->m_context, rect);
+    restore();
 }
 void CanvasRenderingContext2DCG::save()
 {
