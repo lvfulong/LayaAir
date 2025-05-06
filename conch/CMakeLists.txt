@@ -980,3 +980,9 @@ if(OS_OHOS)
 	install(TARGETS ${PROJECT_NAME} DESTINATION lib/${BUILDING_ARCH})
 endif()
 
+
+add_executable(test_canvas2d
+		src/2D/tests/testFontParser.cpp
+)
+target_link_libraries(test_canvas2d PRIVATE gtest conch)
+set_target_properties(test_canvas2d PROPERTIES FOLDER tests)
