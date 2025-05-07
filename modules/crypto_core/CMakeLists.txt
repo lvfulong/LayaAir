@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-set(TARGET crypto-core)
+set(TARGET crypto_core)
 
 project(${TARGET})
 set(PUBLIC_HEADER_DIR include)
@@ -34,5 +34,5 @@ set_target_properties(${TARGET} PROPERTIES FOLDER modules)
 # set(INSTALL_TYPE ARCHIVE)
 # install(TARGETS ${TARGET} ${INSTALL_TYPE} DESTINATION lib/${HEADERS})
 # install(FILES ${HEADERS} DESTINATION include/${TARGET})
-message("crypto-core: ${LINUX}")
+message("crypto_core: ${LINUX}")
 

@@ -1,6 +1,6 @@
 #include "JSSubtleCrypto.h"
 #include "../../JCConch.h"
-#include <crypto-core/CryptoCore.h>
+#include <crypto_core/CryptoCore.h>
 #include <profiler/Profiler.h>
 namespace laya 
 {

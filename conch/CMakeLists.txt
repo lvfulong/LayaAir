@@ -651,7 +651,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 
 set(LINK_LIBS
 	profiler
-	crypto-core
+	crypto_core
 	)
 if(USE_PHYSX)
 	list(APPEND LINK_LIBS
@@ -982,7 +982,7 @@ endif()
 
 
 add_executable(test_canvas2d
-		src/2D/tests/testFontParser.cpp
+		src/2D/tests/TestFontParser.cpp
 )
 target_link_libraries(test_canvas2d PRIVATE gtest conch)
 set_target_properties(test_canvas2d PROPERTIES FOLDER tests)

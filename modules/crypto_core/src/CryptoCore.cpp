@@ -1,4 +1,4 @@
-#include <crypto-core/CryptoCore.h>
+#include <crypto_core/CryptoCore.h>
 #include <utils/Log.h>
 #include <mbedtls/sha1.h>
 #include <cstring>
