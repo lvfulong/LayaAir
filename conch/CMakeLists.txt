@@ -316,6 +316,9 @@ list(APPEND CONCH_SRC
 	src/2D/src/CanvasRenderingContext2D.cpp
 	src/2D/src/FontDescriptionParser.cpp
 	src/2D/src/FontManager.cpp
+	src/2D/src/font_parser/FontParser.cpp
+	src/2D/src/font_parser/FontParser.h
+	src/2D/src/font_parser/CharData.h
 
 	# 暴露给JS的类
 	src/Bindings/JSDevice.h
@@ -986,3 +989,11 @@ add_executable(test_canvas2d
 )
 target_link_libraries(test_canvas2d PRIVATE gtest conch)
 set_target_properties(test_canvas2d PROPERTIES FOLDER tests)
+
+
+add_executable(benchmark_canvas2d
+		src/2D/benchmark/BenchmarkFontParser.cpp
+)
+target_compile_definitions(benchmark_canvas2d PRIVATE BENCHMARK_STATIC_DEFINE)
+target_link_libraries(benchmark_canvas2d PRIVATE benchmark benchmark_main conch)
+set_target_properties(benchmark_canvas2d PROPERTIES FOLDER benchmarks)

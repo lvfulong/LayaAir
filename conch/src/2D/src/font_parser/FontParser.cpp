@@ -264,7 +264,8 @@ Token Tokenizer::parseIdentifier()
         }
         else if (charData[static_cast<uint8_t>(c)] & flags)
         {
-            identifier += advance() + (c >= 'A' && c <= 'Z' ? 32 : 0);
+            //identifier += advance() + (c >= 'A' && c <= 'Z' ? 32 : 0);//转小写
+            identifier += advance();//不转小写
             flags = CharData::Nmchar;
         }
         else

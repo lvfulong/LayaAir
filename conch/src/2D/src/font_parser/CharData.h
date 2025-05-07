@@ -3,6 +3,7 @@
 
 #pragma once
 // copy from https://github.com/Automattic/node-canvas
+#include <cstdint>
 
 namespace CharData
 {
