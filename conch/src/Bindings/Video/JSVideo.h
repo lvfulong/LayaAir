@@ -90,6 +90,8 @@ class JSVideo
 
     int getImageID();
 
+    void LoadJS();
+
     void _releaseHandler();
 
     static void executeVideoCallback(int index, int event);
