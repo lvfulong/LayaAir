@@ -35,8 +35,6 @@ set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/ColorParser.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/IniFile.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Data.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/Tracer.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/Trace.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Config.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/MessageLoop.h 
     ${PUBLIC_HEADER_DIR}/${TARGET}/MessageLoopImpl.h
@@ -66,7 +64,6 @@ set(SOURCES
     src/ColorParser.cpp
     src/IniFile.cpp
     src/Data.cpp
-    src/Tracer.cpp
     src/MessageLoop.cpp
     src/MessageLoopImpl.cpp
     src/MessageLoopGeneric.cpp
