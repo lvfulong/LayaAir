@@ -816,30 +816,6 @@ void flipPixelsY(uint8_t *pixels, int bytesPerRow, int rows)
         }
     }
 }
-#if _MSC_VER >= 1900
-std::u32string to_utf32(const std::string &s)
-{
-    std::wstring_convert<std::codecvt_utf8<int32_t>, int32_t> convert;
-    auto asInt = convert.from_bytes(s);
-    return std::u32string(reinterpret_cast<char32_t const *>(asInt.data()), asInt.length());
-}
-#else
-std::u32string to_utf32(const std::string &s)
-{
-    std::u32string asInt;
-    // try
-    //{
-    std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> convert;
-    asInt = convert.from_bytes(s);
-    //}
-    // catch (const std::range_error & exception)
-    //{
-    //	LOGE("to_utf32 range_error %s", s.c_str());
-    //	return std::u32string(U"");
-    //}
-    return std::u32string(reinterpret_cast<char32_t const *>(asInt.data()), asInt.length());
-}
-#endif
 std::string encodeURI(const char *value)
 {
     if (!value)
