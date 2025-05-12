@@ -4,8 +4,10 @@
 #include "2D/ImageData.h"
 #include "2D/TextMetrics.h"
 #include "imageLib/BitmapData.h"
+#include "2D/FontProperties.h"
 #include <optional>
 #include <string>
+
 namespace laya
 {
 enum class TextAlign
@@ -31,7 +33,6 @@ enum class LineJoin
     Bevel,
     Miter
 };
-class FontDescription;
 class CanvasRenderingContext2D
 {
   public:
@@ -91,7 +92,7 @@ class CanvasRenderingContext2D
     int m_height;
     int32_t m_id{0};
     std::string m_font;
-    std::unique_ptr<FontDescription> m_fontDescription;
+    FontProperties m_fontProperties; 
     TextAlign m_textAlign{TextAlign::Left};
     TextBaseline m_textBaseline{TextBaseline::Alphabetic};
     LineJoin m_lineJoin{LineJoin::Miter};

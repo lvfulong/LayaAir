@@ -11,7 +11,6 @@
 #include <utils/JCBuffer.h>
 #include "2D/FontManager.h"
 #include <CoreText/CTFontManager.h>
-#include "FontDescription.h"
 #include <utils/JCFileSystem.h>
 #include <platform/OS.h>
 
@@ -277,8 +276,8 @@ void CanvasRenderingContext2DCG::scale(double x, double y)
 }
 void CanvasRenderingContext2DCG::chooseFont(const std::string& strFontName)
 {
-    bool isBold = m_fontDescription->isBold();
-    bool isItalic = m_fontDescription->isItalic();
+    bool isBold = m_fontProperties.isBold(); 
+    bool isItalic = m_fontProperties.isItalic();
     NSString *fontName = [NSString stringWithUTF8String:strFontName.c_str()];
     /*if (isBold && isItalic)
     {
@@ -297,16 +296,16 @@ void CanvasRenderingContext2DCG::chooseFont(const std::string& strFontName)
         if (pair.first) {
             NSString *fontNameBold = [NSString stringWithUTF8String:pair.second.c_str()];
             m_impl->m_UIFont =
-            [UIFont fontWithName:fontNameBold size:m_fontDescription->m_size];
+            [UIFont fontWithName:fontNameBold size:m_fontProperties.fontSize];
         }
         else {
             m_impl->m_UIFont =
-            [UIFont fontWithName:[fontName stringByAppendingString:@"-Bold"] size:m_fontDescription->m_size];
+            [UIFont fontWithName:[fontName stringByAppendingString:@"-Bold"] size:m_fontProperties.fontSize];
         }
     }
     else
     {
-        m_impl->m_UIFont = [UIFont fontWithName:fontName size:m_fontDescription->m_size];
+        m_impl->m_UIFont = [UIFont fontWithName:fontName size:m_fontProperties.fontSize];
     }
 }
 
@@ -315,17 +314,17 @@ void CanvasRenderingContext2DCG::setFont(const char *font)
 {
     CanvasRenderingContext2D::setFont(font);
     m_impl->m_UIFont = nil;
-    bool isBold = m_fontDescription->isBold();
-    bool isItalic = m_fontDescription->isItalic();
+    bool isBold = m_fontProperties.isBold();
+    bool isItalic = m_fontProperties.isItalic();
     
-    auto pair = CanvasRenderingContext2DCG::getRealFontName(m_fontDescription->m_family);
+    auto pair = CanvasRenderingContext2DCG::getRealFontName(m_fontProperties.fontFamily[0]);
     
     if (pair.first) {
         chooseFont(pair.second);
     }
     if (m_impl->m_UIFont == nil)
     {
-        chooseFont(m_fontDescription->m_family);
+        chooseFont(m_fontProperties.fontFamily[0]);    
     }
 
     if (m_impl->m_UIFont == nil)
@@ -336,7 +335,7 @@ void CanvasRenderingContext2DCG::setFont(const char *font)
         }
         else */if (isBold)
         {
-            m_impl->m_UIFont = [UIFont boldSystemFontOfSize:m_fontDescription->m_size];
+            m_impl->m_UIFont = [UIFont boldSystemFontOfSize:m_fontProperties.fontSize];
         }
         /*else if (isItalic)
         {
@@ -344,7 +343,7 @@ void CanvasRenderingContext2DCG::setFont(const char *font)
         }*/
         else
         {
-            m_impl->m_UIFont = [UIFont systemFontOfSize:m_fontDescription->m_size];
+            m_impl->m_UIFont = [UIFont systemFontOfSize:m_fontProperties.fontSize];
         }
     }
     assert (m_impl->m_UIFont != nil);
