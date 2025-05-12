@@ -3,7 +3,7 @@
 #include "2D/CanvasRenderingContext2D.h"
 #include <utils/JCMemorySurvey.h>
 #include <utils/Log.h>
-
+#include <profiler/Profiler.h>
 #include "../../JCConch.h"
 #include "../../JCSystemConfig.h"
 
@@ -47,6 +47,7 @@ int JSCanvasRenderingContext2D::getID()
 }
 void JSCanvasRenderingContext2D::clearRect(double x, double y, double width, double height)
 {
+    Profiler_ZoneScoped("JSCanvasRenderingContext2D::clearRect", 0xff000000);
     m_context->clearRect(x, y, width, height);
 }
 void JSCanvasRenderingContext2D::save()
@@ -59,6 +60,7 @@ void JSCanvasRenderingContext2D::restore()
 }
 jsvm_value JSCanvasRenderingContext2D::getImageData(double x, double y, double width, double height)
 {
+    Profiler_ZoneScoped("JSCanvasRenderingContext2D::getImageData", 0x00ff0000);
     ImageData data = m_context->getImageData(x, y, width, height);
     ImageData *copy = new ImageData(std::move(data));
     return jsbind::Make<ImageData*>(copy);
@@ -77,6 +79,7 @@ const char *JSCanvasRenderingContext2D::getFont()
 }
 void JSCanvasRenderingContext2D::setFont(const char *font)
 {
+    Profiler_ZoneScoped("JSCanvasRenderingContext2D::setFont", 0x0000ff00);
     m_context->setFont(font);
 }
 void JSCanvasRenderingContext2D::setTextAlign(const char *textAlign)

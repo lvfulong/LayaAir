@@ -48,11 +48,14 @@ class MessageLoop
         post([&task]() { std::invoke(task); });
         return task.get_future().get();
     }
-    void processExpiredTasks()
+    void iterate()
     {
-        m_impl->processExpiredTasks();
+        m_impl->iterate();
     }
-
+    void stop()
+    {
+        m_impl->stop();
+    }
   private:
     std::unique_ptr<MessageLoopImpl> m_impl;
 };

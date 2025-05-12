@@ -280,7 +280,8 @@ list(APPEND CONCH_SRC
 	src/WebGL/source/JCGpuProgram.cpp
 	src/WebGL/include/WebGL/WebGLThread.h
 	src/WebGL/source/WebGLThread.cpp
-
+	src/network/include/network/IUploadTask.h
+	src/network/src/IUploadTask.cpp
 	# fontMgr/JCFontInfo.h
 	# fontMgr/JCFontInfo.cpp
 	# fontMgr/JCFontManager.h
@@ -314,10 +315,15 @@ list(APPEND CONCH_SRC
 	src/2D/src/CanvasRenderingContext2D.cpp
 	src/2D/src/FontDescriptionParser.cpp
 	src/2D/src/FontManager.cpp
+	src/2D/src/font_parser/FontParser.cpp
+	src/2D/src/font_parser/FontParser.h
+	src/2D/src/font_parser/CharData.h
 
 	# 暴露给JS的类
 	src/Bindings/JSDevice.h
 	src/Bindings/JSDevice.cpp
+	src/Bindings/JSNetwork.h
+	src/Bindings/JSNetwork.cpp
 	src/Bindings/Bullet/LayaBulletExport.h
 	src/Bindings/Bullet/LayaBulletExport.cpp
 	src/Bindings/Bullet/LayaBulletExportImp.cpp
@@ -385,6 +391,10 @@ list(APPEND CONCH_SRC
 	src/Bindings/JSCanvasRenderingContext2D.cpp
 	src/Bindings/JSLocalStorage.h
 	src/Bindings/JSLocalStorage.cpp
+	src/Bindings/JSSubtleCrypto.h
+	src/Bindings/JSSubtleCrypto.cpp
+	src/Bindings/JSProfiler.h
+	src/Bindings/JSProfiler.cpp
 	src/Extention/LayaExtWind.cpp
 	
 	src/OpenAL/
@@ -499,6 +509,8 @@ if(OS_IOS)
 		src/platform/src/OSiOS.cpp
 		src/backend/src/OpenGLBackendiOS.mm
 		src/network/src/HttpClientiOS.mm
+		src/network/src/UploadTaskiOS.h
+		src/network/src/UploadTaskiOS.mm
 		src/2D/src/CanvasRenderingContext2DCG.mm
 		src/resource/Audio/JCMp3Parser.h
 		src/resource/Audio/JCMp3Parser.cpp
@@ -532,6 +544,8 @@ elseif(OS_ANDROID)
 		src/resource/Audio/JCMp3Parser.cpp
 		src/resource/Audio/JCAudioWavPlayer.h
 		src/resource/Audio/JCAudioWavPlayer.cpp
+		src/network/src/UploadTaskAndroid.h	
+		src/network/src/UploadTaskAndroid.cpp
 	)
 elseif(OS_WINDOWS)
 	list(APPEND PLATFORM_HEADER_DIR
@@ -556,6 +570,8 @@ elseif(OS_WINDOWS)
 		src/resource/Audio/JCAudioWavPlayer.h
 		src/resource/Audio/JCAudioWavPlayer.cpp
 		src/platform/src/OSWin.cpp
+		src/network/src/UploadTaskCurl.h
+		src/network/src/UploadTaskCurl.cpp
 	)
 	if(CONCH_USE_CURL_DOWNLOAD)
 		list(APPEND CONCH_SRC
@@ -581,6 +597,8 @@ elseif(OS_OHOS)
 		src/resource/Audio/JCAudioWavplayer.cpp
 		src/Audio/ohos/JCAudioMp3Player.cpp
 		src/network/src/HttpClientOHOS.cpp
+		src/network/src/UploadTaskCurl.h
+		src/network/src/UploadTaskCurl.cpp
 		src/resource/Audio/JCMp3Parser.cpp
 	)
 elseif(OS_LINUX)
@@ -599,6 +617,8 @@ elseif(OS_LINUX)
 		src/resource/Audio/JCAudioWavPlayer.h
 		src/resource/Audio/JCAudioWavPlayer.cpp
 		src/platform/src/OSLinux.cpp
+		src/network/src/UploadTaskCurl.h
+		src/network/src/UploadTaskCurl.cpp
 	)
 endif()
 set(CONCH_HEADERS_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
@@ -645,6 +665,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 
 set(LINK_LIBS
 	profiler
+	crypto_core
 	)
 if(USE_PHYSX)
 	list(APPEND LINK_LIBS
@@ -973,3 +994,30 @@ if(OS_OHOS)
 	install(TARGETS ${PROJECT_NAME} DESTINATION lib/${BUILDING_ARCH})
 endif()
 
+
+add_executable(test_canvas2d
+		src/2D/tests/TestFontParser.cpp
+)
+target_link_libraries(test_canvas2d PRIVATE gtest conch)
+set_target_properties(test_canvas2d PROPERTIES FOLDER tests)
+
+
+add_executable(benchmark_canvas2d
+		src/2D/benchmark/BenchmarkFontParser.cpp
+)
+target_compile_definitions(benchmark_canvas2d PRIVATE BENCHMARK_STATIC_DEFINE)
+target_link_libraries(benchmark_canvas2d PRIVATE benchmark benchmark_main conch)
+set_target_properties(benchmark_canvas2d PROPERTIES FOLDER benchmarks)
+
+
+
+
+add_executable(test_uploadfile
+		src/network/tests/UploadFileTest.cpp
+)
+set(TETS_LIBS)
+if(OS_IOS)
+	list(APPEND TETS_LIBS "-framework Foundation")
+endif()
+target_link_libraries(test_uploadfile PRIVATE gtest conch ${TETS_LIBS})
+set_target_properties(test_uploadfile PROPERTIES FOLDER tests)

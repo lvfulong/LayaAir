@@ -142,7 +142,19 @@ template <> struct is_string<char32_t const *> : std::true_type
 template <> struct is_string<wchar_t const *> : std::true_type
 {
 };
+template<typename T, typename U = void>
+struct is_mapping_impl : std::false_type
+{
+};
 
+template<typename T>
+struct is_mapping_impl<T, std::void_t<typename T::key_type, typename T::mapped_type,
+    decltype(std::declval<T>().begin()), decltype(std::declval<T>().end())>> : std::true_type
+{
+};
+
+template<typename T>
+using is_mapping = is_mapping_impl<T>;
 template <typename T, typename U = void> struct is_sequence_impl : std::false_type
 {
 };

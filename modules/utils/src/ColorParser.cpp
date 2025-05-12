@@ -415,4 +415,17 @@ bool parseRGBAFromString(const char *str, uint32_t &r, uint32_t &g, uint32_t &b,
         return RGBAFromHSLString(str, r, g, b, a);
     return RGBAFromNameString(str, r, g, b, a);
 }
+
+uint32_t getColor(const char* strColor)
+{
+    uint32_t colorR{ 0 };
+    uint32_t colorG{ 0 };
+    uint32_t colorB{ 0 };
+    uint32_t colorA{ 0 };
+    parseRGBAFromString(strColor, colorR, colorG, colorB, colorA);
+    uint32_t nColor = colorA << 24 | colorR << 16 | colorG << 8 | colorB;
+    return nColor;
+}
+
+
 } // namespace laya

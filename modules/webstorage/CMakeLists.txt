@@ -36,7 +36,7 @@ set_target_properties(${TARGET} PROPERTIES FOLDER conch/${TARGET})
 target_link_libraries(${TARGET} utils ${DEPS})
 
 target_precompile_headers(${TARGET} PRIVATE ${HEADERS})
-
+set_target_properties(${TARGET} PROPERTIES FOLDER modules)
 # set(INSTALL_TYPE ARCHIVE)
 # install(TARGETS ${TARGET} ${INSTALL_TYPE} DESTINATION lib/${HEADERS})
 # install(FILES ${HEADERS} DESTINATION include/${TARGET})

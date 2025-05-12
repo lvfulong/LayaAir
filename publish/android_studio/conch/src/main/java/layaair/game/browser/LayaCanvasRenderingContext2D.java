@@ -15,6 +15,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,6 +47,8 @@ public class LayaCanvasRenderingContext2D {
     public int width = 0;
     public int height = 0;
     public TextBaseline textBaseline = TextBaseline.Alphabetic;
+    public int[] transparentPixels = null;
+    float[] valuesTemp = new float[9];
     public static HashMap<String, Typeface> typefaceMap = new HashMap<String, Typeface>();
     public static LayaCanvasRenderingContext2D create(long ptr, int width, int height) {
         LayaCanvasRenderingContext2D context = new LayaCanvasRenderingContext2D(width, height);
@@ -59,6 +62,9 @@ public class LayaCanvasRenderingContext2D {
         this.canvas = new Canvas(this.bitmap);
         this.paint.setAntiAlias(true);
         this.paint.setSubpixelText(true);
+        int pixelCount = width * height;
+        this.transparentPixels = new int [pixelCount];
+        Arrays.fill(this.transparentPixels, Color.TRANSPARENT);
     }
     @SuppressLint("LongLogTag")
     static float getTextY(TextBaseline textBaseline, float y, Paint paint) {
@@ -151,14 +157,25 @@ public class LayaCanvasRenderingContext2D {
         context.canvas.scale(x, y);
     }
     static void clearRect(LayaCanvasRenderingContext2D context, float x, float y, float width, float height) {
-        //int bytes = (int)(width * height);
-        int bytes = (int)(context.width * context.height);
-        int[] pixels = new int[bytes];
-        for (int i = 0; i < bytes; ++i) {
-            pixels[i] = Color.TRANSPARENT;
+        x = Math.max(0, x);
+        y = Math.max(0, y);
+        Matrix mat = context.canvas.getMatrix();//todo deprecated
+        mat.getValues(context.valuesTemp);
+        float scaleX = context.valuesTemp[Matrix.MSCALE_X];
+        float scaleY = context.valuesTemp[Matrix.MSCALE_Y];
+        int w = (int)Math.ceil(width * scaleX);
+        int h = (int)Math.ceil(height * scaleY);
+
+        int ix = (int)Math.floor(x * scaleX);
+        int iy = (int)Math.floor(y * scaleY);
+        int maxW = Math.min(ix + w, context.width);
+        int maxH = Math.min(iy + h, context.height);
+        w = maxW - ix;
+        h = maxH - iy;
+        if (w <= 0 || h <= 0) {
+            return;
         }
-        //context.bitmap.setPixels(pixels, 0, (int)width, (int)x, (int)y, (int)width, (int)height);
-        context.bitmap.setPixels(pixels, 0, (int)context.width, (int)x, (int)y, (int)context.width, (int)context.height);
+        context.bitmap.setPixels(context.transparentPixels, 0, context.width, ix, iy, w, h);
     }
     static void setStrokeColor(LayaCanvasRenderingContext2D context, int r, int g, int b, int a) {
         context.strokeColorR = r;

@@ -199,7 +199,6 @@ template <class Container> void split(const std::string &str, Container &cont, c
     cont.push_back(str.substr(previous, current - previous));
 }
 
-std::u32string to_utf32(const std::string &s);
 std::string encodeURI(const char *value);
 
 std::string toLowerCase(const std::string &str);

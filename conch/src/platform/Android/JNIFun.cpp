@@ -31,9 +31,8 @@
 #if defined(USE_SWAPPY)
 #include <swappy/swappyGL.h>
 #include <swappy/swappyGL_extra.h>
-
 #endif
-
+#include "network/src/UploadTaskAndroid.h"
 
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
@@ -109,6 +108,7 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_init(JNIEnv * env, job
 	jobject jAssetManager = getObjectField(env, joptions, "assetManager");
 	DEBUG_CHECK(jAssetManager != NULL && "assetManager is NULL");
 	HttpClientAndroid::addStaticMethod(env, "layaair/game/browser/LayaHttpClient");
+	UploadTaskAndroid::addStaticMethod(env, "layaair/game/browser/LayaUploadTask");
 	CanvasRenderingContext2DAndroid::addStaticMethod(env, "layaair/game/browser/LayaCanvasRenderingContext2D");
 
 	std::string pFilesDir = getStringField(env, joptions, "filesDir");

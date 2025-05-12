@@ -10,6 +10,7 @@
     },
     "files": [
         "RuntimeExt.ts",
+        "Crypto.ts",
         "Console.ts",
         "Event.ts",
         "Storage.ts",

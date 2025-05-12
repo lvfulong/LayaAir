@@ -146,12 +146,16 @@ void JSVideo::DispatchEvtToJS(const std::string evtName)
 {
     m_dispatchHandle.call<void>(jsbind::toLocal(this), evtName.c_str());
 }
+void JSVideo::LoadJS()
+{
 
+    Load(m_src.c_str());
+}
 void JSVideo::exportJS(jsbind::Object &context)
 {
     jsbind::class_<JSVideo> class_binding;
     class_binding.constructor<>();
-    class_binding.function("load", &JSVideo::Load);
+    class_binding.function("load", &JSVideo::LoadJS);
     class_binding.function("play", &JSVideo::Play);
     class_binding.function("pause", &JSVideo::Pause);
     class_binding.function("stop", &JSVideo::Stop);

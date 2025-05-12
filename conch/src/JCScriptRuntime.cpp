@@ -34,6 +34,7 @@
 #include "Extention/LayaExtWin.h"
 #include <filesystem>
 #include <platform/OS.h>
+#include <profiler/Profiler.h>
 
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
@@ -151,7 +152,7 @@ namespace laya
 
         m_debugPort = g_kSystemConfig.m_nJSDebugMode;
         //m_nThreadState = 1;
-
+        
         m_scriptVM.initialize();
         this->onThreadInit();
     }
@@ -164,6 +165,7 @@ namespace laya
             //LOGI("stop: wait for thread to start...");
             //std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
+        m_scriptThreadMessageLoop->stop();
         this->onThreadExit();
         m_scriptVM.uninitialize();
         LOGI("Stop js end.");
@@ -315,7 +317,7 @@ namespace laya
         {
             return true;
         }
-        m_scriptThreadMessageLoop->processExpiredTasks();
+        m_scriptThreadMessageLoop->iterate();
     
         JCConch::s_pConchRender->postTaskFromJSToRenderAsync([this]() {
             if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::OpenGLES) {
@@ -331,7 +333,7 @@ namespace laya
 
         if (m_pJSOnDrawFunction.isValid())
         {
-			
+			Profiler_ZoneScoped("JSOnDraw", 0x00ff00);
             //JS_TRY;
             m_pJSOnDrawFunction.call<void>(jsvm::global(), nTime);
             //JS_CATCH;
@@ -384,6 +386,7 @@ namespace laya
         //JS_TRY;
         if (m_pJSOnFrameFunction.isValid())
         {
+            Profiler_ZoneScoped("JSOnFrame", 0x00ff00);
             m_pJSOnFrameFunction.call<void>(jsvm::global());
         }
         //JS_CATCH;

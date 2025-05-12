@@ -30,7 +30,7 @@ target_compile_definitions(${TARGET} PUBLIC TRACY_ENABLE)
 target_link_libraries(${TARGET} ${LINK_LIBS} utils)
 
 target_precompile_headers(${TARGET} PRIVATE ${HEADERS})
-
+set_target_properties(${TARGET} PROPERTIES FOLDER modules)
 
 # set(INSTALL_TYPE ARCHIVE)
 # install(TARGETS ${TARGET} ${INSTALL_TYPE} DESTINATION lib/${HEADERS})

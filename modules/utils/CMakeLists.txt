@@ -35,8 +35,6 @@ set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/ColorParser.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/IniFile.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Data.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/Tracer.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/Trace.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Config.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/MessageLoop.h 
     ${PUBLIC_HEADER_DIR}/${TARGET}/MessageLoopImpl.h
@@ -66,7 +64,6 @@ set(SOURCES
     src/ColorParser.cpp
     src/IniFile.cpp
     src/Data.cpp
-    src/Tracer.cpp
     src/MessageLoop.cpp
     src/MessageLoopImpl.cpp
     src/MessageLoopGeneric.cpp
@@ -101,7 +98,7 @@ target_link_libraries(${TARGET}
 )
 
 target_precompile_headers(${TARGET} PRIVATE ${HEADERS})
-
+set_target_properties(${TARGET} PROPERTIES FOLDER modules)
 # set(INSTALL_TYPE ARCHIVE)
 # install(TARGETS ${TARGET} ${INSTALL_TYPE} DESTINATION lib/${HEADERS})
 # install(FILES ${HEADERS} DESTINATION include/${TARGET})
@@ -114,3 +111,7 @@ if(OS_WINDOWS OR OS_LINUX)
 	)
     install(FILES ${CONCH_PUBLIC_HEADERS} DESTINATION include/${TARGET})
 endif()
+
+add_executable(test_lrucache tests/TestLRUCache.cpp)
+target_link_libraries(test_lrucache PRIVATE gtest utils)
+set_target_properties(test_lrucache PROPERTIES FOLDER tests)

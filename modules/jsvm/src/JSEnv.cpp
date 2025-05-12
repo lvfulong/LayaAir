@@ -30,7 +30,10 @@ JSEnv *JSEnv::getCurrent()
 void JSEnv::setCurrent(JSEnv *env)
 {
     s_threadLocalEnv = env;
-    env->thread_id_ = std::this_thread::get_id();
+    if (env)
+    {
+        env->thread_id_ = std::this_thread::get_id();
+    }
 }
 #if defined(JS_V8)
 JSEnv::JSEnv(IsolateData *isolate_data, v8::Isolate *isolate, jsvm_env env)
