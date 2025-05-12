@@ -315,7 +315,6 @@ list(APPEND CONCH_SRC
 	src/LayaAir/2D/ScreenCanvasContext2D.cpp
    
 	src/2D/src/CanvasRenderingContext2D.cpp
-	src/2D/src/FontDescriptionParser.cpp
 	src/2D/src/FontManager.cpp
 	src/2D/src/font_parser/FontParser.cpp
 	src/2D/src/font_parser/FontParser.h
@@ -999,6 +998,8 @@ endif()
 
 add_executable(test_canvas2d
 		src/2D/tests/TestFontParser.cpp
+		src/2D/tests/FontDescription.cpp
+		src/2D/tests/FontDescriptionParser.cpp
 )
 target_link_libraries(test_canvas2d PRIVATE gtest conch)
 set_target_properties(test_canvas2d PROPERTIES FOLDER tests)
@@ -1006,6 +1007,8 @@ set_target_properties(test_canvas2d PROPERTIES FOLDER tests)
 
 add_executable(benchmark_canvas2d
 		src/2D/benchmark/BenchmarkFontParser.cpp
+		src/2D/tests/FontDescription.cpp
+		src/2D/tests/FontDescriptionParser.cpp
 )
 target_compile_definitions(benchmark_canvas2d PRIVATE BENCHMARK_STATIC_DEFINE)
 target_link_libraries(benchmark_canvas2d PRIVATE benchmark benchmark_main conch)

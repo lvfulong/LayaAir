@@ -4,7 +4,6 @@
 #include <utils/JCBuffer.h>
 #include <utils/JCFileSystem.h>
 #include <platform/OS.h>
-#include "FontDescription.h"
 
 namespace laya
 {
@@ -350,8 +349,8 @@ void CanvasRenderingContext2DAndroid::setFont(const char *font)
 
     CToJavaBridge::ThreadJNIData *threadJniData = CToJavaBridge::GetInstance()->checkThreadJNI();
     JNIEnv *env = threadJniData->pThreadJNI;
-    bool isBold = m_fontDescription->isBold();
-    bool isItalic = m_fontDescription->isItalic();
+    bool isBold = m_fontProperties.isBold(); 
+    bool isItalic = m_fontProperties.isItalic();
     int style = 0;
     if (isBold)
     {
@@ -361,8 +360,9 @@ void CanvasRenderingContext2DAndroid::setFont(const char *font)
     {
         style |= 2;
     }
-    setTypeface(env, m_fontDescription->m_family, style);
-    setTextSize(env, m_fontDescription->m_size);
+    DEBUG_CHECK(m_fontProperties.fontFamily.size() > 0 && "fontFamily is empty");
+    setTypeface(env, m_fontProperties.fontFamily[0].c_str(), style);
+    setTextSize(env, m_fontProperties.fontSize);
 }
 
 void CanvasRenderingContext2DAndroid::setTextSize(JNIEnv *env, float size)

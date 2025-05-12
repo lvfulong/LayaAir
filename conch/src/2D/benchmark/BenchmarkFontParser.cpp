@@ -1,6 +1,6 @@
 #include <benchmark/benchmark.h>
 #include "../src/font_parser/FontParser.h"
-#include "../src/FontDescriptionParser.h"
+#include "../tests/FontDescriptionParser.h"
 #include <utils/LRUCache.h>
 
 using namespace laya;

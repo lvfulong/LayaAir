@@ -11,12 +11,14 @@
 #include "CanvasRenderingContext2DLinux.h"
 #endif
 #include <utils/ColorParser.h>
-#include "FontDescription.h"
-#include "FontDescriptionParser.h"
 #include "JCConch.h"
+#include "font_parser/FontParser.h"
+#include <utils/LRUCache.h>
 
 namespace laya
 {
+constexpr int32_t FONT_CACHE_SIZE = 128;
+static LRUCache<std::string, FontProperties> s_fontCache(FONT_CACHE_SIZE);
 static int32_t s_id = 0;
 static std::unordered_map<int32_t, CanvasRenderingContext2D *> s_canvasRenderingContext2DMap;
 CanvasRenderingContext2D *CanvasRenderingContext2D::create(int width, int height)
@@ -42,7 +44,7 @@ CanvasRenderingContext2D *CanvasRenderingContext2D::get(int id)
     }
     return nullptr;
 }
-CanvasRenderingContext2D::CanvasRenderingContext2D(int width, int height) : m_width(width), m_height(height), m_fontDescription(std::make_unique<FontDescription>())
+CanvasRenderingContext2D::CanvasRenderingContext2D(int width, int height) : m_width(width), m_height(height)
 {
     this->m_id = s_id;
     s_id++;
@@ -58,7 +60,21 @@ CanvasRenderingContext2D::~CanvasRenderingContext2D()
 void CanvasRenderingContext2D::setFont(const char* font)
 {
     m_font = font;
-    FontDescriptionParser::parse(font, *m_fontDescription.get());
+    std::optional<FontProperties> fontProperties = s_fontCache.get(font);
+    if (fontProperties.has_value()) 
+    {
+        m_fontProperties = fontProperties.value();
+    } 
+    else
+    {
+        bool isSuccess;
+        auto fontProperties = FontParser::parse(font, &isSuccess);
+        if (isSuccess)
+        {
+            m_fontProperties = fontProperties;
+            s_fontCache.put(font, m_fontProperties);
+        }
+    }
 }
 void CanvasRenderingContext2D::setDefault()
 {

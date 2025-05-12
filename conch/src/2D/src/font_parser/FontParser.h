@@ -7,31 +7,11 @@
 #include <unordered_map>
 #include <variant>
 #include <vector>
+#include "2D/FontProperties.h"
 
 // copy from https://github.com/Automattic/node-canvas
 namespace laya
 {
-enum class FontStyle
-{
-    Normal,
-    Italic,
-    Oblique
-};
-
-enum class FontVariant
-{
-    Normal,
-    SmallCaps
-};
-
-struct FontProperties
-{
-    double fontSize{16.0f};
-    std::vector<std::string> fontFamily;
-    uint16_t fontWeight{400};
-    FontVariant fontVariant{FontVariant::Normal};
-    FontStyle fontStyle{FontStyle::Normal};
-};
 
 class Token
 {

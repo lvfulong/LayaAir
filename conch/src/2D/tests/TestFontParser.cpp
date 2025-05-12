@@ -1,5 +1,5 @@
 #include "../src/font_parser/FontParser.h"
-#include "../src/FontDescriptionParser.h"
+#include "../tests/FontDescriptionParser.h"
 #include <gtest/gtest.h>
 using namespace laya;
 
