@@ -25,6 +25,7 @@
 #include "2D/FontManager.h"
 #include "../downloadCache/DCC2/JSDownloader.h"
 #include "JSDevice.h"
+#include "JSNetwork.h"
 
 laya::JCZip *g_ZipPackage = NULL;
 //------------------------------------------------------------------------------
@@ -552,6 +553,7 @@ namespace laya
     {
         jsbind::global_class_<JSRuntime> class_binding;
         JSDevice::exportJS(class_binding);
+        JSNetwork::exportJS(context, class_binding);
 		class_binding.class_function("postAsyncMessage", &JSRuntime::postAsyncMessage);
         class_binding.class_function("postSyncMessage", &JSRuntime::postSyncMessage);
 		class_binding.class_function("setGlobalRepaint", &JSRuntime::setGlobalRepaint);

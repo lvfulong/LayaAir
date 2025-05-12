@@ -23,7 +23,7 @@ template <class T> struct is_value_object;
 template <typename T>
 struct is_wrapped_class : std::conjunction<std::is_class<T>, std::negation<internal::is_value_object<T>>,
                                            // std::negation<detail::is_string<T>>,
-                                           // std::negation<detail::is_mapping<T>>,
+                                           std::negation<internal::is_mapping<T>>,
                                            std::negation<internal::is_sequence<T>>>
 // std::negation<detail::is_array<T>>,
 // std::negation<detail::is_tuple<T>>,
