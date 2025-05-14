@@ -511,7 +511,6 @@ declare class ConchVideo {
 interface conchConfig{
 	//启动程序的时候的额外参数
     //paramExt:string;
-    //glCaps:GL_CAPS;
 	maxFileMemSize:number;
 	maxTextureMemSize:number;
 	atlasWidth:number;
