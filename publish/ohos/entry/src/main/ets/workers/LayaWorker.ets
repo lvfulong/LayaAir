@@ -1,12 +1,7 @@
 import worker, { MessageEvents, ThreadWorkerGlobalScope } from '@ohos.worker';
 import laya from "liblaya.so";
-import { ContextType } from "@ohos/libSysCapabilities"
-import { Dialog } from "@ohos/libSysCapabilities"
-import { WebView } from "@ohos/libSysCapabilities"
-import { JumpManager } from "@ohos/libSysCapabilities"
-import { NapiHelper } from "@ohos/libSysCapabilities/src/main/ets/napi/NapiHelper"
-import { GlobalContext, GlobalContextConstants } from "@ohos/libSysCapabilities"
 import { WorkerDataEntity } from './WorkerDataEntity';
+import { HandleMessageUtils, NapiHelper, GlobalContext, GlobalContextConstants, ContextType, Dialog, WebView, JumpManager } from "@ohos/libSysCapabilities
 
 const appLifecycle: laya.CPPFunctions = laya.getContext(ContextType.APP_LIFECYCLE);
 const workerContext: laya.CPPFunctions = laya.getContext(ContextType.WORKER_INIT);
@@ -32,7 +27,7 @@ workerPort.onmessage = (e: MessageEvents): void => {
       console.log("[laya] onXCLoad Callback");
       break;
     case "abilityContextInit":
-      GlobalContext.storeGlobalThis(GlobalContextConstants.LAYA_ABILITY_CONTEXT, data.context);
+      GlobalContext.storeGlobalThis(GlobalContextConstants.LAYA_ABILITY_CONTEXT, data.context!);
       break;
     case "onVideoCallBack":
       videoPlayNapi.onVideoCallBack(data.viewTag, data.event);

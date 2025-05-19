@@ -1,5 +1,10 @@
+interface ResultMsg {
+  errCode: number;
+  errMsg: string;
+  data?: Object;
+}
 export class Result {
-  public static success(data) {
+  public static success(data?: Object): ResultMsg {
     return {
       "errCode": 0,
       "errMsg": "",
@@ -7,11 +12,10 @@ export class Result {
     };
   }
 
-  public static error(errCode, errMsg) {
+  public static error(errCode: number, errMsg: string): ResultMsg {
     return {
       "errCode": errCode,
       "errMsg": errMsg,
     };
   }
-}
-;
+};

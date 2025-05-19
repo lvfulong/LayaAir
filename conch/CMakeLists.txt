@@ -589,6 +589,7 @@ elseif(OS_OHOS)
     	src/platform/ohos/napi/WorkerMessageQueue.cpp
     	src/platform/ohos/napi/render/plugin_render.cpp
     	src/platform/ohos/napi/modules/TouchesNapi.cpp
+		src/platform/ohos/napi/modules/KeyNapi.cpp
     	src/platform/ohos/napi/modules/VideoPlayerNapi.cpp
 		src/platform/src/OSOHOS.cpp
 		src/backend/src/OpenGLBackendOHOSEGL.cpp

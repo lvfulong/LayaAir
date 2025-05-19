@@ -1,26 +1,18 @@
 import laya from 'liblaya.so'
-import { ContextType } from '@ohos/libSysCapabilities'
-import { TextInputInfo } from '@ohos/libSysCapabilities/src/main/ets/components/EditBox'
-import { TextInputInfoNew } from '@ohos/libSysCapabilities/src/main/ets/components/EditBoxNew'
-import { TextInputDialogEntity } from '@ohos/libSysCapabilities'
-import { WebViewInfo } from '@ohos/libSysCapabilities/src/main/ets/components/webview/WebViewMsg'
-import { VideoPlayerInfo } from '@ohos/libSysCapabilities/src/main/ets/components/videoplayer/VideoPlayer'
-import { WorkerMsgUtils } from '@ohos/libSysCapabilities/src/main/ets/utils/WorkerMsgUtils'
 import { WorkerManager } from '../workers/WorkerManager'
 import { LayaEditBox } from '../components/LayaEditBox'
 import { LayaEditBoxNew } from '../components/LayaEditBoxNew'
 import { LayaWebview } from '../components/LayaWebview'
 import { LayaVideoPlayer } from '../components/LayaVideoPlayer'
 import { TextInputDialog } from '../components/TextInputDialog'
-import { GlobalContext, GlobalContextConstants } from "@ohos/libSysCapabilities"
-import { NapiHelper } from "@ohos/libSysCapabilities/src/main/ets/napi/NapiHelper"
-import { Dialog } from "@ohos/libSysCapabilities"
-import deviceInfo from '@ohos.deviceInfo';
+import { GlobalContext, GlobalContextConstants, TextInputInfo, TextInputDialogEntity, ContextType, WebViewInfo, VideoPlayerInfo, WorkerMsgUtils, NapiHelper, Dialog } from "@ohos/libSysCapabilities"
 import promptAction from '@ohos.promptAction'
 import process from '@ohos.process';
 import { LayaHttpClient } from '@ohos/libSysCapabilities/src/main/ets/system/network/LayaHttpClient'
 
 const nativePageLifecycle: laya.CPPFunctions = laya.getContext(ContextType.JSPAGE_LIFECYCLE);
+const napiContext: laya.CPPFunctions = laya.getContext(ContextType.NATIVE_API);
+const  mouseWheelNapi: laya.CPPFunctions = laya.getContext(ContextType.MOUSE_WHEEL_NAPI);
 NapiHelper.registerUIFunctions();
 
 let layaWorker = WorkerManager.getInstance().getWorker();
@@ -100,8 +92,11 @@ struct Index {
     return true;
   }
 
-  onMouseWheel(eventType: string, scrollY: number) {
-    // layaWorker.postMessage({ type: "onMouseWheel", eventType: eventType, scrollY: scrollY });
+  onMouseWheel(eventType: string, event: PanGestureEvent) {
+    if (event.source == SourceType.Mouse) {
+      const  validFinger = event.fingerList?.find(item => item.globalX && item.globalY);
+      validFinger && mouseWheelNapi.onMouseWheel(eventType, validFinger.localX, validFinger.localY, event.offsetY);
+    }
   }
 
   build() {
@@ -114,18 +109,17 @@ struct Index {
         controller: this.xcomponentController
       })
         .focusable(true)
+        .defaultFocus(true)
         .gesture(
           PanGesture(this.panOption)
-            .onActionStart(() => {
-              this.onMouseWheel("actionStart", 0);
+            .onActionStart((event: GestureEvent) => {
+              this.onMouseWheel("actionStart", event);
             })
             .onActionUpdate((event: GestureEvent) => {
-              if (deviceInfo.deviceType === '2in1') {
-                this.onMouseWheel("actionUpdate", event.offsetY);
-              }
+              this.onMouseWheel("actionUpdate", event);
             })
-            .onActionEnd(() => {
-              this.onMouseWheel("actionEnd", 0);
+            .onActionEnd((event: GestureEvent) => {
+              this.onMouseWheel("actionEnd", event);
             })
         )
         .onLoad((context) => {

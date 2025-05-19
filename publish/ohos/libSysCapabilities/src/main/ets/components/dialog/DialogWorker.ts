@@ -3,7 +3,7 @@ import { DialogMsgEntity } from '../../entity/WorkerMsgEntity';
 
 export class Dialog {
   static MODULE_NAME: string = 'Dialog';
-  static workerPort;
+  static workerPort: ThreadWorkerGlobalScope;
   static title = "";
 
   static init(workerPort: ThreadWorkerGlobalScope): void {
@@ -11,7 +11,7 @@ export class Dialog {
   }
 
   static setTitle(title:string){
-    this.title = title;
+    Dialog.title = title;
   }
 
   static showDialog(message: string, title?: string): void {
