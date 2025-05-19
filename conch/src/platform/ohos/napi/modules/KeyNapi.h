@@ -1,7 +1,6 @@
 #ifndef _KEYNAPI_H_
 #define _KEYNAPI_H_
 
-#include "conch/JCScriptRuntime.h"
 #include <ace/xcomponent/native_xcomponent_key_event.h>
 
 enum class KeyCode {
@@ -35,7 +34,7 @@ enum class KeyCode {
     INSERT = 45,
 };
 
-using namespace laya;
+//using namespace laya;
 
 extern "C"
 {

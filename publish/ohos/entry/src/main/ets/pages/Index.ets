@@ -5,7 +5,7 @@ import { LayaEditBoxNew } from '../components/LayaEditBoxNew'
 import { LayaWebview } from '../components/LayaWebview'
 import { LayaVideoPlayer } from '../components/LayaVideoPlayer'
 import { TextInputDialog } from '../components/TextInputDialog'
-import { GlobalContext, GlobalContextConstants, TextInputInfo, TextInputDialogEntity, ContextType, WebViewInfo, VideoPlayerInfo, WorkerMsgUtils, NapiHelper, Dialog } from "@ohos/libSysCapabilities"
+import { GlobalContext, GlobalContextConstants, TextInputInfo, TextInputInfoNew, TextInputDialogEntity, ContextType, WebViewInfo, VideoPlayerInfo, WorkerMsgUtils, NapiHelper, Dialog } from "@ohos/libSysCapabilities"
 import promptAction from '@ohos.promptAction'
 import process from '@ohos.process';
 import { LayaHttpClient } from '@ohos/libSysCapabilities/src/main/ets/system/network/LayaHttpClient'

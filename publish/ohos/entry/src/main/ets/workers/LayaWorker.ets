@@ -1,7 +1,7 @@
 import worker, { MessageEvents, ThreadWorkerGlobalScope } from '@ohos.worker';
 import laya from "liblaya.so";
 import { WorkerDataEntity } from './WorkerDataEntity';
-import { HandleMessageUtils, NapiHelper, GlobalContext, GlobalContextConstants, ContextType, Dialog, WebView, JumpManager } from "@ohos/libSysCapabilities
+import { HandleMessageUtils, NapiHelper, GlobalContext, GlobalContextConstants, ContextType, Dialog, WebView, JumpManager } from "@ohos/libSysCapabilities"
 
 const appLifecycle: laya.CPPFunctions = laya.getContext(ContextType.APP_LIFECYCLE);
 const workerContext: laya.CPPFunctions = laya.getContext(ContextType.WORKER_INIT);

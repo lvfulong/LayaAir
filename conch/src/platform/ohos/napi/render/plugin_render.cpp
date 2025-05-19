@@ -221,7 +221,7 @@ void PluginRender::dispatchMouseWheelCB(std::string eventType, float localX, flo
         e.posY = localY;
         e.nWheel = moveScrollY;
         if (!e.nWheel) return;
-        JCScriptRuntime::s_JSRT->dispatchInputEvent(e);
+        JCConch::s_pConch->dispatchInputEvent(e);
     } else {
         scrollDistance = 0;
     }
@@ -422,7 +422,7 @@ void PluginRender::DispatchMouseEvent(OH_NativeXComponent* component, void* wind
     }
     e.nWheel = 0;
     
-    JCScriptRuntime::s_JSRT->dispatchInputEvent(e);
+    JCConch::s_pConch->dispatchInputEvent(e);
     delete mouseEvent;
 }
 void PluginRender::OnCreateNative(napi_env env, uv_loop_t* loop) {

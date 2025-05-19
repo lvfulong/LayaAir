@@ -1,5 +1,7 @@
 #include "KeyNapi.h"
 #include <ace/xcomponent/native_xcomponent_key_event.h>
+#include "JCConch.h"
+
 using namespace laya;
 extern "C"
 {
@@ -68,7 +70,7 @@ extern "C"
                 e.bCtrl = true;        
             }
             strncpy(e.type, "keydown", 256);
-            JCScriptRuntime::s_JSRT->dispatchInputEvent(e);
+            JCConch::s_pConch->dispatchInputEvent(e);
         }
         else if (action == OH_NATIVEXCOMPONENT_KEY_ACTION_UP) {
             e.nType = E_ONKEYUP;
@@ -83,7 +85,7 @@ extern "C"
                 e.bCtrl = true;        
             }
             strncpy(e.type, "keyup", 256);
-            JCScriptRuntime::s_JSRT->dispatchInputEvent(e);
+            JCConch::s_pConch->dispatchInputEvent(e);
         }
         else {
             // KEY_ACTION_UNKNOWN

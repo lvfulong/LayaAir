@@ -7,7 +7,7 @@ import { VideoPlayer }  from '../components/videoplayer/VideoPlayer'
 import SoundUtils from '../system/sound/SoundUtils'
 import laya from "liblaya.so"
 import { EditBox } from '../components/EditBox'
-import HandleMessageUtils from '../event/HandleMessageUtils'
+import { HandleMessageUtils } from '../event/HandleMessageUtils'
 import { LayaHttpClient } from '../system/network/LayaHttpClient'
 import { EditBoxNew } from '../components/EditBoxNew'
 

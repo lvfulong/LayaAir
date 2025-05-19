@@ -4,6 +4,7 @@ export { GlobalContext,GlobalContextConstants } from './src/main/ets/common/Glob
 export { Dialog } from './src/main/ets/components/dialog/DialogWorker'
 export { WebView } from './src/main/ets/components/webview/WebView'
 export { WebViewInfo } from './src/main/ets/components/webview/WebViewMsg'
+export { HandleMessageUtils } from './src/main/ets/event/HandleMessageUtils'
 export { TextInputDialogEntity } from './src/main/ets/entity/TextInputDialogEntity'
 
 export { JumpManager } from './src/main/ets/system/appJump/JumpManager'
@@ -12,6 +13,7 @@ export { NetworkUtils } from './src/main/ets/system/device/NetworkUtils'
 export { Logger } from './src/main/ets/utils/Logger'
 
 export { EditBox, TextInputInfo } from './src/main/ets/components/EditBox'
+export { EditBoxNew, TextInputInfoNew } from './src/main/ets/components/EditBoxNew'
 export { VideoPlayerInfo, VideoEvent } from './src/main/ets/components/videoplayer/VideoPlayer'
 
 export { WorkerMsgUtils } from './src/main/ets/utils/WorkerMsgUtils'

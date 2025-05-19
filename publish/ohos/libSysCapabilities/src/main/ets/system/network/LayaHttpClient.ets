@@ -26,50 +26,56 @@ export class LayaHttpClient {
     httpClient.url = url;
     httpClient.localFilePath = localFilePath;
     //GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_HTTP_CLIENT_ARRAY).push(httpClient);
-    GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_HTTP_CLIENT_INDEX_MAP).set(tag, httpClient);
+    let map = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_HTTP_CLIENT_INDEX_MAP) as Map<number, LayaHttpClient>;
+    map.set(tag, httpClient);
   }
   public static destroy(tag: number) {
-    GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_HTTP_CLIENT_INDEX_MAP).delete(tag);
+    let map = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_HTTP_CLIENT_INDEX_MAP) as Map<number, LayaHttpClient>;
+    map.delete(tag);
   }
   public static cancel(tag: number) {
-    let connection: LayaHttpClient = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_HTTP_CLIENT_INDEX_MAP).get(tag);
-    connection.httpRequest.destroy();
+    let map = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_HTTP_CLIENT_INDEX_MAP) as Map<number, LayaHttpClient>;
+    let connection = map.get(tag);
+    connection!.httpRequest.destroy();
   }
   public static postData(tag: number, postData: ArrayBuffer) {
-    let connection: LayaHttpClient = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_HTTP_CLIENT_INDEX_MAP).get(tag);
-    connection.postData = postData;
+    let map = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_HTTP_CLIENT_INDEX_MAP) as Map<number, LayaHttpClient>;
+    let connection = map.get(tag);
+    connection!.postData = postData;
   }
   public static addHeader(tag: number, key: string, value: string) {
-    let connection: LayaHttpClient = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_HTTP_CLIENT_INDEX_MAP).get(tag);
+    let map = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_HTTP_CLIENT_INDEX_MAP) as Map<number, LayaHttpClient>;
+    let connection = map.get(tag);
     if (key.toUpperCase() === "Content-Type".toUpperCase())
     {
         //contentType = value;
     }
-    connection.header[key] = value;
+    connection!.header[key] = value;
   }
   public static setMethod(tag: number, method: string) {
-    let connection: LayaHttpClient = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_HTTP_CLIENT_INDEX_MAP).get(tag);
+    let map = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_HTTP_CLIENT_INDEX_MAP) as Map<number, LayaHttpClient>;
+    let connection = map.get(tag);
     if (method.toUpperCase() === "POST") {
-      connection.method = http.RequestMethod.POST;
+      connection!.method = http.RequestMethod.POST;
     }
     else if (method.toUpperCase() === "GET") {
-      connection.method = http.RequestMethod.GET;
+      connection!.method = http.RequestMethod.GET;
     }
     else if (method.toUpperCase() === "HEAD") {
-      connection.method = http.RequestMethod.HEAD;
+      connection!.method = http.RequestMethod.HEAD;
     }
   }
   public static doRequest(tag: number) {
-    let connection: LayaHttpClient =
-      GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_HTTP_CLIENT_INDEX_MAP).get(tag);
-    if (connection.localFilePath !== "") {
+    let map = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_HTTP_CLIENT_INDEX_MAP) as Map<number, LayaHttpClient>;
+    let connection = map.get(tag);
+    if (connection!.localFilePath !== "") {
       let httpRequest = http.createHttp();
       let resHeader = "";
       let res = new ArrayBuffer(0);
       httpRequest.on('headersReceive', (header: Object) => {
         resHeader = JSON.stringify(header);
       });
-      let outputStream = fs.createStreamSync(connection.localFilePath, "w+");
+      let outputStream = fs.createStreamSync(connection!.localFilePath, "w+");
       httpRequest.on('dataReceive', (data: ArrayBuffer) => {
          outputStream.write(data);
       });
@@ -81,28 +87,28 @@ export class LayaHttpClient {
         totalSize: number = 0;
       }
       httpRequest.on('dataReceiveProgress', (data: Data) => {
-        napiHttp.HttpClientOHOS_onProgress(connection.ptr, data.totalSize, data.receiveSize, 0);
+        napiHttp.HttpClientOHOS_onProgress(connection!.ptr, data.totalSize, data.receiveSize, 0);
       });
       let streamInfo: http.HttpRequestOptions = {
-        method: connection.method,
-        header:connection.header,
+        method: connection!.method,
+        header:connection!.header,
         extraData: undefined,
         expectDataType:  http.HttpDataType.ARRAY_BUFFER,
         usingCache: false,
         priority: 1,
-        connectTimeout: connection.connectTimeout,
-        readTimeout: connection.readTimeout,
+        connectTimeout: connection!.connectTimeout,
+        readTimeout: connection!.readTimeout,
       }
       httpRequest.requestInStream(
-        connection.url,
+        connection!.url,
         streamInfo, (err: BusinessError, data: number) => {
         if (err) {
-          napiHttp.HttpClientOHOS_onFailure(connection.ptr, err.code);
+          napiHttp.HttpClientOHOS_onFailure(connection!.ptr, err.code);
           console.error('error:' + JSON.stringify(err));
         }
         else {
           outputStream.closeSync();
-          napiHttp.HttpClientOHOS_onResponse(connection.ptr, res, data, resHeader);
+          napiHttp.HttpClientOHOS_onResponse(connection!.ptr, res, data, resHeader);
         }
         
         console.info('ResponseCode :' + JSON.stringify(data));
@@ -115,41 +121,43 @@ export class LayaHttpClient {
       );
     }
     else {
-      connection.httpRequest.request(
-        connection.url,
+      connection!.httpRequest.request(
+        connection!.url,
         {
-          method: connection.method,
-          header: connection.header,
-          extraData: connection.postData != null ? connection.postData : undefined,
+          method: connection!.method,
+          header: connection!.header,
+          extraData: connection!.postData != null ? connection!.postData : undefined,
           expectDataType: http.HttpDataType.ARRAY_BUFFER,
           usingCache: false,
           priority: 1,
-          connectTimeout: connection.connectTimeout,
-          readTimeout: connection.readTimeout,
+          connectTimeout: connection!.connectTimeout,
+          readTimeout: connection!.readTimeout,
         }, (err: BusinessError, data: http.HttpResponse) => {
         if (!err) {
           if (data.result instanceof ArrayBuffer) {
-            napiHttp.HttpClientOHOS_onResponse(connection.ptr, data.result, data.responseCode, JSON.stringify(data.header));
+            napiHttp.HttpClientOHOS_onResponse(connection!.ptr, data.result, data.responseCode, JSON.stringify(data.header));
           }
           else {
             log.error("LayaHttpClient.HttpResponse not ArrayBuffer")
           }
-          connection.httpRequest.destroy();
+          connection!.httpRequest.destroy();
         }
         else {
           log.error("LayaHttpClient.HttpResponse " + err.message + " " +  err.code)
-          napiHttp.HttpClientOHOS_onFailure(connection.ptr, err.code);
-          connection.httpRequest.destroy();
+          napiHttp.HttpClientOHOS_onFailure(connection!.ptr, err.code);
+          connection!.httpRequest.destroy();
         }
       });
     }
   }
   public static setReadTimeout(tag: number, miliseconds: number) {
-    let connection: LayaHttpClient = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_HTTP_CLIENT_INDEX_MAP).get(tag);
-    connection.readTimeout = miliseconds;
+    let map = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_HTTP_CLIENT_INDEX_MAP) as Map<number, LayaHttpClient>;
+    let connection = map.get(tag);
+    connection!.readTimeout = miliseconds;
   }
   public static setConnectTimeout(tag: number, miliseconds: number) {
-    let connection: LayaHttpClient = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_HTTP_CLIENT_INDEX_MAP).get(tag);
-    connection.connectTimeout = miliseconds;
+    let map = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_HTTP_CLIENT_INDEX_MAP) as Map<number, LayaHttpClient>;
+    let connection = map.get(tag);
+    connection!.connectTimeout = miliseconds;
   }
 }
