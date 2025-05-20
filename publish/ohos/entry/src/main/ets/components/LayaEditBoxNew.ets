@@ -12,14 +12,15 @@ export struct LayaEditBoxNew {
   @ObjectLink textInputInfo: TextInputInfoNew;
   removeSelf() {
     let removeIndex = -1;
-    GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_EDIT_BOX_NEW_ARRAY)
-      .forEach((item: TextInputInfoNew, index: number) => {
+    let arr = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_EDIT_BOX_NEW_ARRAY) as TextInputInfoNew[];
+    arr.forEach((item: TextInputInfoNew, index: number) => {
         if (item.viewTag == this.textInputInfo.viewTag) {
           removeIndex = index;
         }
     });
-  GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_EDIT_BOX_NEW_ARRAY).splice(removeIndex, 1);
-  GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_EDIT_BOX_NEW_INDEX_MAP).delete(this.textInputInfo.viewTag);
+    arr.splice(removeIndex, 1);
+    let map = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_EDIT_BOX_NEW_INDEX_MAP) as Map<number, TextInputInfoNew>;
+    map.delete(this.textInputInfo.viewTag);
 }
   onComplete() {
     this.getUIContext().getFocusController().clearFocus();

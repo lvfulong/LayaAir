@@ -17,6 +17,7 @@ export interface CPPFunctions {
   onDurationBack: (viewTag: number, duration: number) => void;
   onCurrentTimeBack: (viewTag: number, currentTime: number) => void;
   loadedmetadata: (viewTag: number) => void;
+  onMouseWheel: (type: string, x: number, y: number, offsetY: number) => void;
   HttpClientOHOS_onFailure: (ptr: number, code: number) => void;
   HttpClientOHOS_onResponse: (ptr: number, ab: ArrayBuffer, responseCode: number, header: string) => void;
   HttpClientOHOS_onProgress: (ptr: number, total: number, now: number, speed: number) => void;

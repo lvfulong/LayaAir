@@ -1,8 +1,14 @@
 import { GlobalContext, GlobalContextConstants } from "../common/GlobalContext";
+import { ThreadWorkerGlobalScope } from "@ohos.worker";
 import laya from "liblaya.so";
 
-export default class HandleMessageUtils {
+export class HandleMessageUtils {
     private static context = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_ABILITY_CONTEXT);
+    private static workerPort: ThreadWorkerGlobalScope;
+    static init(workerPort: ThreadWorkerGlobalScope): void {
+        HandleMessageUtils.workerPort = workerPort;
+    }
+
     static RunJS(data: string): void {
         laya.ConchNAPI_RunJS(data);
     }

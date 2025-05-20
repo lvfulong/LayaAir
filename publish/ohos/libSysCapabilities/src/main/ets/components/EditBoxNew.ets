@@ -90,29 +90,32 @@ export class EditBoxNew {
         newTextInputInfo.inputTypeTextInput = InputType.Normal;
         newTextInputInfo.inputTypeTextArea = TextAreaType.NORMAL;
     }
-    GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_EDIT_BOX_NEW_ARRAY).push(newTextInputInfo);
-    GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_EDIT_BOX_NEW_INDEX_MAP).set(viewTag, newTextInputInfo);
+    let arr = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_EDIT_BOX_NEW_ARRAY) as TextInputInfoNew[];
+    arr.push(newTextInputInfo);
+    let map = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_EDIT_BOX_NEW_INDEX_MAP) as Map<number, TextInputInfoNew>;
+    map.set(viewTag, newTextInputInfo);
     return true;
   }
 
   static hide(viewTag: number) : boolean {
     log.debug("call EditBoxNew.hide, viewTag: %{public}d", viewTag)
 
-    let textInputInfo: TextInputInfoNew = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_EDIT_BOX_NEW_INDEX_MAP).get(viewTag);
+    let map = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_EDIT_BOX_NEW_INDEX_MAP) as Map<number, TextInputInfoNew>;
+    let textInputInfo = map.get(viewTag);
     if (textInputInfo) {
       textInputInfo.visible = false;
       laya.ConchNAPI_handleKeyboardComplete(textInputInfo.defaultValue);
       laya.ConchNAPI_handleKeyboardConfirm(textInputInfo.defaultValue);
     }
     let removeIndex = -1;
-    GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_EDIT_BOX_NEW_ARRAY)
-      .forEach((item: TextInputInfoNew, index: number) => {
+    let arr = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_EDIT_BOX_NEW_ARRAY) as TextInputInfoNew[];
+    arr.forEach((item: TextInputInfoNew, index: number) => {
         if (item.viewTag == viewTag) {
           removeIndex = index;
         }
       });
-    GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_EDIT_BOX_NEW_ARRAY).splice(removeIndex, 1);
-    GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_EDIT_BOX_NEW_INDEX_MAP).delete(viewTag);
+    arr.splice(removeIndex, 1);
+    map.delete(viewTag);
     return true;
   }
 }
