@@ -2,15 +2,6 @@
 /**
  * 全局变量
  */
-enum GL_CAPS
-{
-    NONE = 0,
-    TEXTURE_COMPRESSION_PVR = 1 << 1,
-    TEXTURE_COMPRESSION_ETC1 = 1 << 2,
-    TEXTURE_COMPRESSION_ETC2 = 1 << 3,
-    TEXTURE_TPG = 1 << 5,
-    INSTANCEING = 1 << 6,
-}
 
 interface ErrorEventHandler {
     (message: string, filename?: string, lineno?: number, colno?: number, error?:Error): void;
@@ -23,7 +14,6 @@ interface LayaBox{
 interface Window extends EventTarget, WindowTimers{
     layaHtml5:any;
     screen:Screen;
-    SetupWebglContext();
     downloadfile(url:string, force:boolean, onok:(data:string)=>void, onerr:()=>void);
     XMLHttpRequest:typeof XMLHttpRequest;
     innerHeight: number;
@@ -278,9 +268,6 @@ window.postRuntimeMessage=function(d)
    }
    window.dispatchEvent(e);
 }
-
-//为了兼容性而保留的
-window.SetupWebglContext = function(){};
 //document.createElement("canvas").getContext("conch");
 window.downloadfile = function (url, force, onok, onerr) {
     //url = encodeURI(url);
@@ -315,10 +302,9 @@ window["wx"].getSystemInfoSync = function () {
     return JSON.parse(window["LayaNative"].getSystemInfoSyncString());
 };*/
 if(window.navigator.platform!="windows")window["ontouchstart"]=null;
-window['GL_CAPS'] = GL_CAPS;
 window.focus=function() {}
 //根据内存设置大图合集参数
-var nMem=conchConfig.getTotalMem();//单位是KB
+/*var nMem=conchConfig.getTotalMem();//单位是KB
 if( nMem <= 524288 )
 {
     //设置引擎的大图集的个数
@@ -339,7 +325,7 @@ else if( nMem > 1048576 )
     conchConfig.atlasNum=20;
     //贴图资源的cache的大小。单位是byte
     conchConfig.maxTextureMemSize=128*1024*1024;
-}
+}*/
 
 class Performance{
     now(){
