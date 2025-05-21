@@ -71,6 +71,7 @@ class MessageLoopGeneric : public MessageLoopImpl
     }
     void stop() override
     {
+        // 福龙看这里，现在有问题，刷新要=true，否则流程就不跑了。刷新应该把当前的任务全部清理
         m_running = false;
     }   
   private:
