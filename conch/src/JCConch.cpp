@@ -49,6 +49,7 @@
 int g_nInnerWidth = 1024;
 int g_nInnerHeight = 768;
 bool g_bGLCanvasSizeChanged = false;
+bool needReload = false;
 
 namespace laya
 {
@@ -169,15 +170,19 @@ namespace laya
         m_isAppStarted = true;
         JCConch::s_pScriptRuntime->loadJSScript();
 	}
-    void JCConch::reload() 
-    {
+
+    void JCConch::_realReload() {
         DEBUG_CHECK(isScriptThread());
         LOGI("JCConch::reload start...");
+
         //先通知消息管理器，关闭各个线程之间的post
         //lvtodo m_ThreadCmdMgr.stop();
         JCConch::s_pScriptRuntime->reload();
         LOGI("JCConch::reload end.");
-        
+    }
+    void JCConch::reload()
+    {
+        needReload = true;        
     }
     int JCConch::urlHistoryLength() 
     {
@@ -229,6 +234,10 @@ namespace laya
         if (pScriptRuntime)
         {
             pScriptRuntime->update();
+        }
+        if (needReload) {
+            _realReload();
+            needReload = false;
         }
         Profiler_MarkFrame(); 
     }
