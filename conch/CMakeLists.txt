@@ -268,6 +268,17 @@ list(APPEND CONCH_SRC
 	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTSubShader.h
 	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTShaderPass.cpp
 	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTShaderPass.h
+	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTRender2DPass.cpp	
+	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTRender2DPass.h
+	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTRenderStruct2D.cpp
+	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTRenderStruct2D.h
+	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTRenderDataHandle.cpp
+	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTRenderDataHandle.h
+	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/PassRenderList.cpp
+	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/PassRenderList.h
+	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTDynamicVIBuffer.cpp
+	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTDynamicVIBuffer.h	
+
 
 	src/Audio/JCAudioManager.cpp
 	src/Audio/JCAudioManager.h
