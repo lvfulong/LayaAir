@@ -50,6 +50,8 @@
 #include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLES3DRenderCMD.h>
 #include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLES2DRenderCMD.h>
 #include <experimental/Test.h>
+#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTRender2DPass.h>
+
 namespace jsbind
 {
     namespace internal
@@ -1162,6 +1164,33 @@ class RenderBindings
             class_binding.function("setDest", &GLESSetShaderDefine::setDest);
             class_binding.function("setDefine", &GLESSetShaderDefine::setDefine);
             context.class_("conchGLESSetShaderDefine", class_binding);
+        }
+
+        //2D
+        {
+            jsbind::class_<RTRender2DPass> class_binding;
+            class_binding.constructor<>();
+            class_binding.property_field("enable", &RTRender2DPass::enable);
+            class_binding.property_field("enableBatch", &RTRender2DPass::enableBatch);
+            class_binding.property_field("isSupport", &RTRender2DPass::isSupport);
+            class_binding.property("root", &RTRender2DPass::getRoot, &RTRender2DPass::setRoot);
+            class_binding.property_field("doClearColor", &RTRender2DPass::doClearColor);
+            class_binding.property("postProcess", &RTRender2DPass::getPostProcess, &RTRender2DPass::setPostProcess);
+            class_binding.property("mask", &RTRender2DPass::getMask, &RTRender2DPass::setMask);
+            class_binding.property_field("repaint", &RTRender2DPass::repaint);
+            class_binding.property("renderTexture", &RTRender2DPass::getRenderTexture, &RTRender2DPass::setRenderTexture);
+            class_binding.property_field("priority", &RTRender2DPass::priority);
+            class_binding.property_field("renderLayerMask", &RTRender2DPass::renderLayerMask);
+            class_binding.property_field("cullRect", &RTRender2DPass::cullRect);
+            class_binding.property("shaderData", &RTRender2DPass::getShaderData, &RTRender2DPass::setShaderData);
+            class_binding.function("setClearColor", &GLESSetShaderDefine::setClearColor);
+            class_binding.function("addStruct", &GLESSetShaderDefine::addStruct);
+            class_binding.function("removeStruct", &GLESSetShaderDefine::removeStruct);
+            class_binding.function("fowardRender", &GLESSetShaderDefine::fowardRender);
+            class_binding.function("render", &GLESSetShaderDefine::render);
+            class_binding.function("destroy", &GLESSetShaderDefine::destroy);
+            class_binding.function("setBuffer", &GLESSetShaderDefine::setBuffer);
+            context.class_("conchRTRender2DPass", class_binding);
         }
     }
 };

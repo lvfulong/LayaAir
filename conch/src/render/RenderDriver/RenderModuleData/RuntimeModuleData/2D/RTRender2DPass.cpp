@@ -48,30 +48,37 @@ void BatchManager::regisBatch(int renderElementType, IBatch2DRender* batch) {
 
 // WebRender2DPass实现
 RTRender2DPass::RTRender2DPass() {
-    shaderData = LayaGL::renderDeviceFactory->createShaderData(nullptr);
+    this->shaderData = nullptr;  
+    _invertMat_0 = Vector3(1, 1, 0);
+    _invertMat_1 = Vector3(0, 0, 0);
+  
+}
+RTRender2DPass(ShaderData *shaderData) {
+    this->shaderData = shaderData;  
     _invertMat_0 = Vector3(1, 1, 0);
     _invertMat_1 = Vector3(0, 0, 0);
 }
-
 RTRender2DPass::~RTRender2DPass() {
-    destroy();
+
 }
 
-void RTRender2DPass::addStruct(WebRenderStruct2D* object, int zOrder) {
-    if (!_lists[zOrder]) {
+void RTRender2DPass::addStruct(RTRenderStruct2D* object, uint32_t zOrder) {
+    auto it = _lists.find(zOrder);
+    if (it == _lists.end()) {
         _lists[zOrder] = new PassRenderList();
         _lists[zOrder]->zOrder = zOrder;
     }
     _lists[zOrder]->add(object);
 }
-
-void RTRender2DPass::removeStruct(WebRenderStruct2D* object, int zOrder) {
-    if (_lists[zOrder]) {
-        _lists[zOrder]->remove(object);
+//lvtodo checkout 由下到达顺序
+void RTRender2DPass::removeStruct(RTRenderStruct2D* object, uint32_t zOrder) {
+    auto it = _lists.find(zOrder);
+    if (it != _lists.end()) {
+        it->second->remove(object);
     }
 }
 
-void RTRender2DPass::cullAndSort(IRenderContext2D* context2D, WebRenderStruct2D* struct) {
+void RTRender2DPass::cullAndSort(IRenderContext2D* context2D, RTRenderStruct2D* struct) {
     if (!struct->enable) return;
     struct->_handleInterData();
 
@@ -149,10 +156,10 @@ void RTRender2DPass::_initRenderProcess(IRenderContext2D* context) {
     _setRenderSize(sizeX, sizeY);
 }
 
-void RTRender2DPass::setBuffer(WebDynamicVIBuffer* buffer) {
+void RTRender2DPass::setBuffer(RTDynamicVIBuffer* buffer) {
     if (buffer->_inPass) return;
     buffer->_inPass = true;
-    buffers.insert(buffer);
+    this->buffers.insert(buffer);
 }
 
 void RTRender2DPass::uploadBuffer() {
@@ -205,6 +212,7 @@ void RTRender2DPass::recover(IRenderContext2D* context) {
 }
 
 void RTRender2DPass::destroy() {
+#if 0
     for (auto list : _lists) {
         delete list;
     }
@@ -217,5 +225,6 @@ void RTRender2DPass::destroy() {
         delete shaderData;
         shaderData = nullptr;
     }
+#endif
 } 
 } // namespace laya
