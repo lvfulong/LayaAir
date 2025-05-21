@@ -1,7 +1,7 @@
 #include "BatchManager.h"
 #include <unordered_map>
 #include <vector>
-
+#include <utils/Log.h>
 
 namespace laya
 {
@@ -26,7 +26,7 @@ void Batch2DInfo::recover(Batch2DInfo* info) {
 // BatchManager实现
 void BatchManager::regisBatch(int renderElementType, IBatch2DRender* batch) {
     if (_batchMapManager.find(renderElementType) != _batchMapManager.end()) {
-        throw std::runtime_error("Overlapping batch optimization");
+        LOGE("Overlapping batch optimization");
     }
     _batchMapManager[renderElementType] = batch;
 }

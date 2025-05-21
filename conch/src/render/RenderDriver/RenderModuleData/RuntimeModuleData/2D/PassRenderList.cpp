@@ -7,8 +7,8 @@ namespace laya
 {
 
 PassRenderList::PassRenderList() {
-    renderElements = new FastSinglelist<IRenderElement2D*>();
-    structs = new FastSinglelist<WebRenderStruct2D*>();
+    renderElements = new FastSinglelist<RTRenderElement2D*>();
+    structs = new FastSinglelist<RTRenderStruct2D*>();
 }
 
 PassRenderList::~PassRenderList() {
@@ -24,7 +24,7 @@ void PassRenderList::add(RTRenderStruct2D* struct2d) {
     if (n == 0) return;
 
     for (int i = 0; i < n; i++) {
-        IRenderElement2D* element = struct2d->renderElements->get(i);
+        GLESRenderElement2D* element = struct2d->renderElements->get(i);
         if (element) {
             renderElements->add(element);
         }
@@ -40,7 +40,7 @@ void PassRenderList::clear() {
     structs->clear();
     clearRenderElements();
 }
-
+  
 void PassRenderList::clearRenderElements() {
     renderElements->clear();
     _currentType = -1;
@@ -62,7 +62,7 @@ void PassRenderList::batch() {
     _currentBatch = nullptr;
 
     for (int i = 0; i < renderElements->size(); i++) {
-        IRenderElement2D* element = renderElements->get(i);
+        GLESRenderElement2D* element = renderElements->get(i);
         if (!element) continue;
 
         int type = element->getType();

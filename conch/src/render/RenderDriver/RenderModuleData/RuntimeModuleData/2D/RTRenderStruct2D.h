@@ -1,6 +1,7 @@
 #ifndef __RTRENDERSTRUCT2D_H__
 #define __RTRENDERSTRUCT2D_H__
 
+#include <string>
 namespace laya
 {
 
@@ -15,20 +16,20 @@ class WebGlobalRenderData : public IGlobalRenderData {
 public:
     Vector4* cullRect;
     uint32_t renderLayerMask;
-    ShaderData* globalShaderData;
+    GLESShaderData* globalShaderData;
 };
 
-class WebRenderStruct2D : public IRenderStruct2D {
+class RTRenderStruct2D {
 public:
-    WebRenderStruct2D();
-    ~WebRenderStruct2D();
+    RTRenderStruct2D();
+    ~RTRenderStruct2D();
 
     // 2D渲染组织流程数据
     int zOrder;
     Rectangle* rect;
     uint32_t renderLayer;
-    WebRenderStruct2D* parent;
-    std::vector<WebRenderStruct2D*> children;
+    RTRenderStruct2D* parent;
+    std::vector<RTRenderStruct2D*> children;
     int renderType;
     uint32_t renderUpdateMask;
 
@@ -42,16 +43,16 @@ public:
 
     // 渲染数据
     bool isRenderStruct;
-    std::vector<IRenderElement2D*>* renderElements;
-    ShaderData* spriteShaderData;
+    std::vector<GLESRenderElement2D*>* renderElements;
+    GLESShaderData* spriteShaderData;
     std::vector<std::string>* commonUniformMap;
 
     // 属性访问器
-    WebRender2DDataHandle* getRenderDataHandler() const { return _renderDataHandler; }
-    void setRenderDataHandler(WebRender2DDataHandle* value);
+    RTRender2DDataHandle* getRenderDataHandler() const { return _renderDataHandler; }
+    void setRenderDataHandler(RTRender2DDataHandle* value);
     
-    WebRender2DPass* getPass() const { return _pass ? _pass : _parentPass; }
-    void setPass(WebRender2DPass* value);
+    RTRender2DPass* getPass() const { return _pass ? _pass : _parentPass; }
+    void setPass(RTRender2DPass* value);
 
     // 方法
     void set_renderNodeUpdateCall(void* call, void* renderUpdateFun);
@@ -63,21 +64,21 @@ public:
     IClipInfo* getClipInfo();
     void _updateChildren(int type);
     void setRepaint();
-    WebRenderStruct2D* addChild(WebRenderStruct2D* child);
-    void removeChild(WebRenderStruct2D* child);
+    RTRenderStruct2D* addChild(RTRenderStruct2D* child);
+    void removeChild(RTRenderStruct2D* child);
     void renderUpdate(IRenderContext2D* context);
     void destroy();
 
 protected:
-    void updateChildren(WebRenderStruct2D* struct);
+    void updateChildren(RTRenderStruct2D* struct);
 
 private:
     void _updateBlendMode();
     void _initClipInfo();
 
-    WebRender2DDataHandle* _renderDataHandler;
-    WebRender2DPass* _pass;
-    WebRender2DPass* _parentPass;
+    RTRender2DDataHandle* _renderDataHandler;
+    RTRender2DPass* _pass;
+    RTRender2DPass* _parentPass;
     Rectangle* _clipRect;
     IClipInfo* _parentClipInfo;
     IClipInfo* _clipInfo;

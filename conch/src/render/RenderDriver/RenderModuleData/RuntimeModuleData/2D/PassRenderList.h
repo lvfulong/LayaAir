@@ -6,7 +6,7 @@ namespace laya
 {
 class Batch2DInfo;
 class RTRenderStruct2D;
-class IRenderElement2D;
+class GLESRenderElement2D;
 
 class PassRenderList {
 public:
@@ -20,7 +20,7 @@ public:
     void reset();
     void batch();
 
-private:
+public:
     void _batchStart(int type, int elementLength);
 
     FastSinglelist<Batch2DInfo*> _batchInfoList;
@@ -28,7 +28,7 @@ private:
     int _currentElementCount = 0;
     Batch2DInfo* _currentBatch = nullptr;
     FastSinglelist<RTRenderStruct2D*>* structs = nullptr;
-    FastSinglelist<IRenderElement2D*>* renderElements = nullptr;
+    FastSinglelist<GLESRenderElement2D*>* renderElements = nullptr;
     int renderListType = -1;
     int zOrder = 0;
     uint32_t _dirtyFlag = 0;
