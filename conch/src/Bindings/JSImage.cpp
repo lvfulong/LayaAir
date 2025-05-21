@@ -59,8 +59,6 @@ namespace laya
     void JSImage::onLoadedCallJSFunction(std::weak_ptr<int> callbackref)
     {
 	    if (!callbackref.lock()) return;
-        //if (JCScriptRuntime::s_JSRT->m_bIsExit == true)return;
-        //if (!IsMyJsEnv()) return;
 
         if (GetWidth() <= 0 || GetHeight() <= 0|| m_pImage->m_kBitmapData.m_pImageData==NULL)
         {
@@ -82,8 +80,6 @@ namespace laya
     void JSImage::onErrorCallJSFunction( int p_nError,std::weak_ptr<int> callbackref )
     {
 	    if (!callbackref.lock())return;
-        //if (JCScriptRuntime::s_JSRT->m_bIsExit == true)return;
-	    //if (!IsMyJsEnv())return;
         LOGW("download image file error! %s\n", m_sUrl.c_str());
         m_pOnError.call<void>(jsbind::toLocal(this), p_nError);
         jsbind::makeWeak(this);

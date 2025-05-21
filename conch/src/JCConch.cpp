@@ -49,7 +49,7 @@
 int g_nInnerWidth = 1024;
 int g_nInnerHeight = 768;
 bool g_bGLCanvasSizeChanged = false;
-bool needReload = false;
+static bool s_needReload = false;
 
 namespace laya
 {
@@ -182,7 +182,8 @@ namespace laya
     }
     void JCConch::reload()
     {
-        needReload = true;        
+        DEBUG_CHECK(isScriptThread());
+        s_needReload = true;        
     }
     int JCConch::urlHistoryLength() 
     {
@@ -235,9 +236,9 @@ namespace laya
         {
             pScriptRuntime->update();
         }
-        if (needReload) {
+        if (s_needReload) {
             _realReload();
-            needReload = false;
+            s_needReload = false;
         }
         Profiler_MarkFrame(); 
     }

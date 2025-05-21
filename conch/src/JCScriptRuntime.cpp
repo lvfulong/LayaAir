@@ -89,10 +89,8 @@ namespace laya
     }
     JCScriptRuntime::JCScriptRuntime()
     {
-        m_bHasJSThread = false;
         m_pFileResMgr = NULL;
         m_pAssetsRes = NULL;
-        m_bIsExit = false;
         m_pUrl = new JCUrl();
         //m_nThreadState = 0;
         m_pArrayBufferManager = new JCArrayBufferManager();
