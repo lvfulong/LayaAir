@@ -149,10 +149,9 @@ namespace laya
         if (pStartJS)m_strStartJS = pStartJS;
 
         jsbind::setOnError(onError);
-
         m_debugPort = g_kSystemConfig.m_nJSDebugMode;
         //m_nThreadState = 1;
-        
+        m_scriptThreadMessageLoop->start();
         m_scriptVM.initialize();
         this->onThreadInit();
     }

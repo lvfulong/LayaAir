@@ -52,6 +52,10 @@ class MessageLoop
     {
         m_impl->iterate();
     }
+    void start()
+    {
+        m_impl->start();
+    }
     void stop()
     {
         m_impl->stop();

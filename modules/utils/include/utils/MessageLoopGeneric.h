@@ -71,9 +71,16 @@ class MessageLoopGeneric : public MessageLoopImpl
     }
     void stop() override
     {
-        // 福龙看这里，现在有问题，刷新要=true，否则流程就不跑了。刷新应该把当前的任务全部清理
         m_running = false;
-    }   
+    }
+    void start() override
+    {
+        {
+            std::unique_lock lock{ m_mutex };
+            m_tasks.clear();
+        }
+        m_running = true;
+    }
   private:
     nano_seconds_t nextWakeup()
     {
@@ -126,7 +133,7 @@ class MessageLoopGeneric : public MessageLoopImpl
     std::vector<Task> m_tasks;
     std::mutex m_mutex;
     std::condition_variable m_condition;
-    std::atomic_bool m_running = true;
+    std::atomic_bool m_running = false;
 };
 } // namespace laya
 #endif
