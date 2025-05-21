@@ -1183,13 +1183,13 @@ class RenderBindings
             class_binding.property_field("renderLayerMask", &RTRender2DPass::renderLayerMask);
             class_binding.property_field("cullRect", &RTRender2DPass::cullRect);
             class_binding.property("shaderData", &RTRender2DPass::getShaderData, &RTRender2DPass::setShaderData);
-            class_binding.function("setClearColor", &GLESSetShaderDefine::setClearColor);
-            class_binding.function("addStruct", &GLESSetShaderDefine::addStruct);
-            class_binding.function("removeStruct", &GLESSetShaderDefine::removeStruct);
-            class_binding.function("fowardRender", &GLESSetShaderDefine::fowardRender);
-            class_binding.function("render", &GLESSetShaderDefine::render);
-            class_binding.function("destroy", &GLESSetShaderDefine::destroy);
-            class_binding.function("setBuffer", &GLESSetShaderDefine::setBuffer);
+            class_binding.function("setClearColor", &RTRender2DPass::setClearColor);
+            class_binding.function("addStruct", &RTRender2DPass::addStruct);
+            class_binding.function("removeStruct", &RTRender2DPass::removeStruct);
+            class_binding.function("fowardRender", &RTRender2DPass::fowardRender);
+            class_binding.function("render", &RTRender2DPass::render);
+            class_binding.function("destroy", &RTRender2DPass::destroy);
+            class_binding.function("setBuffer", &RTRender2DPass::setBuffer);
             context.class_("conchRTRender2DPass", class_binding);
         }
     }

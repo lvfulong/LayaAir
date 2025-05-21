@@ -1,16 +1,20 @@
 #ifndef __PASSRENDERLIST_H__
 #define __PASSRENDERLIST_H__
 
+#include <utils/FastSinglelist.h>
 namespace laya
 {
+class Batch2DInfo;
+class RTRenderStruct2D;
+class IRenderElement2D;
 
 class PassRenderList {
 public:
     PassRenderList();
     ~PassRenderList();
 
-    void add(WebRenderStruct2D* struct);
-    void remove(WebRenderStruct2D* struct);
+    void add(RTRenderStruct2D* struct2d);
+    void remove(RTRenderStruct2D* struct2d);
     void clear();
     void clearRenderElements();
     void reset();
@@ -23,7 +27,7 @@ private:
     int _currentType = -1;
     int _currentElementCount = 0;
     Batch2DInfo* _currentBatch = nullptr;
-    FastSinglelist<WebRenderStruct2D*>* structs = nullptr;
+    FastSinglelist<RTRenderStruct2D*>* structs = nullptr;
     FastSinglelist<IRenderElement2D*>* renderElements = nullptr;
     int renderListType = -1;
     int zOrder = 0;

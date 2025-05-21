@@ -1,50 +1,13 @@
 #include "RTRender2DPass.h"
-#include "../../../../maths/Color.h"
-#include "../../../../maths/Vector4.h"
-#include "../../../DriverDesign/2DRenderPass/IRenderContext2D.h"
-#include "../../../DriverDesign/2DRenderPass/IRenderElement2D.h"
-#include "../../../../resource/RenderTexture2D.h"
-#include "../../../../utils/SingletonList.h"
-#include "../../../../webgl/utils/RenderState2D.h"
-#include "WebRenderStruct2D.h"
-#include "../../Design/2D/IRender2DPass.h"
-#include "../../../DriverDesign/RenderDevice/ShaderData.h"
-#include "../../../../layagl/LayaGL.h"
-#include "../../../../maths/Vector2.h"
-#include "../../../../webgl/shader/d2/ShaderDefines2D.h"
-#include "../../../../maths/Matrix.h"
-#include "PostProcess2D.h"
-#include "../../../../maths/Vector3.h"
-#include "../../../../display/Scene2DSpecial/RenderCMD2D/CommandBuffer2D.h"
+#include "RTRenderStruct2D.h"
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
+#include "PassRenderList.h"
 
 namespace laya
 {
+#if 0
 
-// 静态成员初始化
-std::vector<Batch2DInfo*> Batch2DInfo::_pool;
-std::unordered_map<int, IBatch2DRender*> BatchManager::_batchMapManager;
-
-// Batch2DInfo实现
-Batch2DInfo* Batch2DInfo::create() {
-    if (!_pool.empty()) {
-        Batch2DInfo* info = _pool.back();
-        _pool.pop_back();
-        return info;
-    }
-    return new Batch2DInfo();
-}
-
-void Batch2DInfo::recover(Batch2DInfo* info) {
-    _pool.push_back(info);
-}
-
-// BatchManager实现
-void BatchManager::regisBatch(int renderElementType, IBatch2DRender* batch) {
-    if (_batchMapManager.find(renderElementType) != _batchMapManager.end()) {
-        throw std::runtime_error("Overlapping batch optimization");
-    }
-    _batchMapManager[renderElementType] = batch;
-}
+#endif
 
 // WebRender2DPass实现
 RTRender2DPass::RTRender2DPass() {
@@ -53,7 +16,7 @@ RTRender2DPass::RTRender2DPass() {
     _invertMat_1 = Vector3(0, 0, 0);
   
 }
-RTRender2DPass(ShaderData *shaderData) {
+RTRender2DPass::RTRender2DPass(GLESShaderData* shaderData) {
     this->shaderData = shaderData;  
     _invertMat_0 = Vector3(1, 1, 0);
     _invertMat_1 = Vector3(0, 0, 0);
@@ -78,16 +41,16 @@ void RTRender2DPass::removeStruct(RTRenderStruct2D* object, uint32_t zOrder) {
     }
 }
 
-void RTRender2DPass::cullAndSort(IRenderContext2D* context2D, RTRenderStruct2D* struct) {
-    if (!struct->enable) return;
-    struct->_handleInterData();
+void RTRender2DPass::cullAndSort(IRenderContext2D* context2D, RTRenderStruct2D* struct2d) {
+    if (!struct2d->enable) return;
+    struct2d->_handleInterData();
 
-    if (struct->renderDataHandler) {
-        struct->renderUpdate(context2D);
-        addStruct(struct);
+    if (struct2d->renderDataHandler) {
+        struct2d->renderUpdate(context2D);
+        addStruct(struct2d);
     }
 
-    for (auto& child : struct->children) {
+    for (auto& child : struct2d->children) {
         cullAndSort(context2D, child);
     }
 }
@@ -180,7 +143,7 @@ void RTRender2DPass::_updateInvertMatrix() {
         Matrix::mul(maskMatrix, rootMatrix, temp);
         temp.invert();
     } else {
-        root->transform->getMatrixInv(temp);
+        root->transform->getMatrixInv(  temp);
     }
     _setInvertMatrix(temp.a, temp.b, temp.c, temp.d, temp.tx, temp.ty);
 }

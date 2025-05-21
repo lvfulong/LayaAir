@@ -1,20 +1,6 @@
 #ifndef __RTRENDERSTRUCT2D_H__
 #define __RTRENDERSTRUCT2D_H__
 
-#include "../../../DriverDesign/2DRenderPass/IRenderContext2D.h"
-#include "../../../DriverDesign/2DRenderPass/IRenderElement2D.h"
-#include "../../Design/2D/IRenderStruct2D.h"
-#include "../../../../maths/Rectangle.h"
-#include "../../../../display/SpriteGlobaTransform.h"
-#include "WebRender2DPass.h"
-#include "../../../DriverDesign/RenderDevice/ShaderData.h"
-#include "../../../../maths/Matrix.h"
-#include "../../../../maths/Vector4.h"
-#include "../../../../Const.h"
-#include "WebRenderDataHandle.h"
-#include "../../../../webgl/canvas/BlendMode.h"
-#include "../../Design/2D/IRender2DDataHandle.h"
-
 namespace laya
 {
 

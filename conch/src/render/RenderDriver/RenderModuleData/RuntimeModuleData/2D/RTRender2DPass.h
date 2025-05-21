@@ -2,8 +2,12 @@
 #define __RTRENDER2DPASS_H__
 
 #include <vector>
-#include <unordered_map>
+#include <map>
 #include <set>
+#include <core/math/Color.h>
+#include <core/math/Vector4.h>
+#include <core/math/Vector2.h>
+#include <core/math/Vector3.h>
 
 namespace laya
 {
@@ -13,17 +17,14 @@ class IRenderContext2D;
 class IRenderElement2D;
 class FastSinglelist;
 class RTRenderStruct2D;
-class ShaderData;
+class GLESShaderData;
 class RenderTexture2D;
 class PostProcess2D;
 class CommandBuffer2D;
 class RTDynamicVIBuffer;
-class Vector2;
-class Vector3;
-class Vector4;
-class Color;
-class Matrix;
-
+class PassRenderList;
+class GLESInternalRT;
+#if 0
 // 合批渲染接口
 class IBatch2DRender
 {
@@ -60,22 +61,25 @@ class BatchManager
   private:
     static std::unordered_map<int, IBatch2DRender *> _batchMapManager;
 };
-
+#endif
 // 渲染通道类
 class RTRender2DPass
 {
   public:
     RTRender2DPass();
-    RTRender2DPass(ShaderData *shaderData);
+    RTRender2DPass(GLESShaderData *shaderData);
     ~RTRender2DPass();
 
     void setClearColor(float r, float g, float b, float a)
     {
-       this->_clearColor.setValue(r, g, b, a);
+       this->_clearColor.r = r;
+       this->_clearColor.g = g;
+       this->_clearColor.b = b;
+       this->_clearColor.a = a;
     }
     void addStruct(RTRenderStruct2D *object, uint32_t zOrder);
     void removeStruct(RTRenderStruct2D *object, uint32_t zOrder);
-    void cullAndSort(IRenderContext2D *context2D, RTRenderStruct2D *struct);
+    void cullAndSort(IRenderContext2D *context2D, RTRenderStruct2D *struct2d);
     void updateRenderQueue(IRenderContext2D *context);
     void fowardRender(IRenderContext2D *context);
     void render(IRenderContext2D *context);
@@ -98,10 +102,10 @@ class RTRender2DPass
     RTRenderStruct2D* getMask() const { return mask; }
     void setMask(RTRenderStruct2D* value);  
 
-    RenderTexture2D* getRenderTexture() const { return renderTexture; }
-    void setRenderTexture(RenderTexture2D* value);
-    ShaderData* getShaderData() const { return shaderData; }
-    void setShaderData(ShaderData* value){ shaderData = value; }
+    GLESInternalRT* getRenderTexture() const { return renderTexture; }
+    void setRenderTexture(GLESInternalRT* value);
+    GLESShaderData* getShaderData() const { return shaderData; }
+    void setShaderData(GLESShaderData* value){ shaderData = value; }
     
     
   private:
@@ -132,11 +136,11 @@ class RTRender2DPass
     RTRenderStruct2D *mask = nullptr;
     bool repaint = false;
 
-    RenderTexture2D *renderTexture = nullptr; // lvtodo
+    GLESInternalRT *renderTexture = nullptr;
     int32_t priority = 0;
     uint32_t renderLayerMask = 0x00000000;
     Vector4 cullRect;
-    ShaderData *shaderData = nullptr;
+    GLESShaderData *shaderData = nullptr;
 };
 } // namespace laya
 #endif // __RTRENDER2DPASS_H__

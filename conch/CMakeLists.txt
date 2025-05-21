@@ -276,6 +276,8 @@ list(APPEND CONCH_SRC
 	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTRenderDataHandle.h
 	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/PassRenderList.cpp
 	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/PassRenderList.h
+	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/BatchManager.cpp
+	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/BatchManager.h
 	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTDynamicVIBuffer.cpp
 	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTDynamicVIBuffer.h	
 

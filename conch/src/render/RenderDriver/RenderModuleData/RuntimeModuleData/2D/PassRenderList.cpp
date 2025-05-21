@@ -1,6 +1,6 @@
 #include "PassRenderList.h"
-#include "../../../DriverDesign/2DRenderPass/IRenderElement2D.h"
-#include "WebRenderStruct2D.h"
+#include <unordered_map>
+#include "RTRenderStruct2D.h"
 #include "BatchManager.h"
 
 namespace laya
@@ -17,22 +17,22 @@ PassRenderList::~PassRenderList() {
     delete structs;
 }
 
-void PassRenderList::add(WebRenderStruct2D* struct) {
-    structs->add(struct);
+void PassRenderList::add(RTRenderStruct2D* struct2d) {
+    structs->add(struct2d);
 
-    int n = struct->renderElements ? struct->renderElements->size() : 0;
+    int n = struct2d->renderElements ? struct2d->renderElements->size() : 0;
     if (n == 0) return;
 
     for (int i = 0; i < n; i++) {
-        IRenderElement2D* element = struct->renderElements->get(i);
+        IRenderElement2D* element = struct2d->renderElements->get(i);
         if (element) {
             renderElements->add(element);
         }
     }
 }
 
-void PassRenderList::remove(WebRenderStruct2D* struct) {
-    structs->remove(struct);
+void PassRenderList::remove(RTRenderStruct2D* struct2d) {
+    structs->remove(struct2d);
     clearRenderElements();
 }
 
