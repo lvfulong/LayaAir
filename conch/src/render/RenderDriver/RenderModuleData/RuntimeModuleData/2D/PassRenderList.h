@@ -23,7 +23,7 @@ public:
 public:
     void _batchStart(int type, int elementLength);
 
-    FastSinglelist<Batch2DInfo*> _batchInfoList;
+    FastSinglelist<Batch2DInfo*> _batchInfoList(false);
     int _currentType = -1;
     int _currentElementCount = 0;
     Batch2DInfo* _currentBatch = nullptr;

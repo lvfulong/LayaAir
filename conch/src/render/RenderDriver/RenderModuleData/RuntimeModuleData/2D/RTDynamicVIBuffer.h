@@ -2,6 +2,7 @@
 #define __RTDYNAMICVIBUFFER_H__
 
 
+#include <vector>
 
 namespace laya
 {

@@ -1,48 +1,33 @@
 #ifndef __RTRENDERDATAHANDLE_H__
 #define __RTRENDERDATAHANDLE_H__
 
-#include "../../../../maths/Color.h"
-#include "../../../../maths/Matrix.h"
-#include "../../../../maths/Vector2.h"
-#include "../../../../maths/Vector3.h"
-#include "../../../../maths/Vector4.h"
-#include "../../../../NodeRender2D/BaseRenderNode2D.h"
-#include "../../../../resource/BaseTexture.h"
-#include "../../../../resource/Texture.h"
-#include "../../../../resource/Texture2D.h"
-#include "../../../../spine/material/SpineShaderInit.h"
-#include "../../../../utils/Stat.h"
-#include "../../../../webgl/shader/d2/ShaderDefines2D.h"
-#include "../../../DriverDesign/2DRenderPass/IRenderContext2D.h"
-#include "../../Design/2D/IRender2DDataHandle.h"
-#include "WebDynamicVIBuffer.h"
-#include "WebRenderStruct2D.h"
 
 namespace laya
 {
-
+    class RTRenderStruct2D;
 // 基础渲染数据处理器
-class WebRender2DDataHandle : public IRender2DDataHandle {
+class RTRender2DDataHandle
+ {
 public:
-    WebRender2DDataHandle();
-    virtual ~WebRender2DDataHandle();
+    RTRender2DDataHandle();
+    virtual ~RTRender2DDataHandle();
 
-    WebRenderStruct2D* getOwner() const { return _owner; }
-    void setOwner(WebRenderStruct2D* value) { _owner = value; }
+    RTRenderStruct2D* getOwner() const { return _owner; }
+    void setOwner(RTRenderStruct2D* value) { _owner = value; }
 
     bool getNeedUseMatrix() const { return _needUseMatrix; }
     void setNeedUseMatrix(bool value);
 
-    virtual void destroy() override;
-    virtual void inheriteRenderData(IRenderContext2D* context) override;
+    void destroy()
+    virtual void inheriteRenderData(GLESRenderContext2D* context) override;
 
 protected:
-    WebRenderStruct2D* _owner;
+    RTRenderStruct2D* _owner;
     Vector3 _nMatrix_0;
     Vector3 _nMatrix_1;
     bool _needUseMatrix;
 };
-
+#if 0
 // 图元渲染数据处理器
 class WebPrimitiveDataHandle : public WebRender2DDataHandle, public I2DPrimitiveDataHandle {
 public:
@@ -52,7 +37,7 @@ public:
     IRenderStruct2D* mask;
 
     virtual void applyVertexBufferBlock(const std::vector<VertexBufferBlock>& blocks) override;
-    virtual void inheriteRenderData(IRenderContext2D* context) override;
+    virtual void inheriteRenderData(GLESRenderContext2D* context) override;
 
 private:
     std::vector<VertexBufferBlock> _vertexBufferBlocks;
@@ -107,5 +92,6 @@ private:
     BaseTexture* _normal2DTexture;
     float _renderAlpha;
 }; 
+#endif 
 } // namespace laya
 #endif // __RTRENDERDATAHANDLE_H__  

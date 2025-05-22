@@ -31,7 +31,7 @@ class RTGlobalRenderData
 class GLESRenderElement2D;
 class RTRender2DDataHandle;
 class RTRender2DPass;
-class IRenderContext2D;
+class GLESRenderContext2D;
 class RTRenderStruct2D
 {
   public:
@@ -48,7 +48,7 @@ class RTRenderStruct2D
     uint32_t renderUpdateMask;
 
     // 渲染继承累加数据
-    SpriteGlobalTransform *transform;
+    Matrix renderMatrix;
     float globalAlpha;
     float alpha;
     std::string blendMode;
@@ -92,7 +92,7 @@ class RTRenderStruct2D
     void removeChild(RTRenderStruct2D *child);
     void setClipRect(Rectangle rect);
 
-    void renderUpdate(IRenderContext2D *context);
+    void renderUpdate(GLESRenderContext2D *context);
 
     void set_renderNodeUpdateCall(void *call, void *renderUpdateFun); // lvtodo
     void destroy();

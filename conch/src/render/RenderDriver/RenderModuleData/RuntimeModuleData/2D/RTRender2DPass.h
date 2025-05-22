@@ -14,7 +14,7 @@ namespace laya
 {
 
 // 前向声明
-class IRenderContext2D;
+class GLESRenderContext2D;
 class RTRenderStruct2D;
 class GLESShaderData;
 class PostProcess2D;
@@ -67,7 +67,11 @@ class RTRender2DPass
     RTRender2DPass();
     RTRender2DPass(GLESShaderData *shaderData);
     ~RTRender2DPass();
-
+    bool needRender() {
+      return this->enable
+         && !this->isSupport
+         && (this->repaint || !this->renderTexture);
+   }
     void setClearColor(float r, float g, float b, float a)
     {
        this->_clearColor.r = r;
@@ -77,13 +81,13 @@ class RTRender2DPass
     }
     void addStruct(RTRenderStruct2D *object, uint32_t zOrder);
     void removeStruct(RTRenderStruct2D *object, uint32_t zOrder);
-    void cullAndSort(IRenderContext2D *context2D, RTRenderStruct2D *struct2d);
-    void updateRenderQueue(IRenderContext2D *context);
-    void fowardRender(IRenderContext2D *context);
-    void render(IRenderContext2D *context);
+    void cullAndSort(GLESRenderContext2D *context2D, RTRenderStruct2D *struct2d);
+    void updateRenderQueue(GLESRenderContext2D *context);
+    void fowardRender(GLESRenderContext2D *context);
+    void render(GLESRenderContext2D *context);
     void setBuffer(RTDynamicVIBuffer *buffer);
     void uploadBuffer();
-    void recover(IRenderContext2D *context);
+    void recover(GLESRenderContext2D *context);
     void destroy();
 
     // 属性设置
@@ -107,7 +111,7 @@ class RTRender2DPass
     
     
   private:
-    void _initRenderProcess(IRenderContext2D *context);
+    void _initRenderProcess(GLESRenderContext2D *context);
     void _updateInvertMatrix();
     void _setInvertMatrix(float a = 1, float b = 0, float c = 0, float d = 1, float tx = 0, float ty = 0);
     void _setRenderSize(float x, float y);
@@ -139,6 +143,20 @@ class RTRender2DPass
     uint32_t renderLayerMask = 0x00000000;
     Vector4 cullRect;
     GLESShaderData *shaderData = nullptr;
+};
+
+class RTRender2DPassManager {
+private:
+    bool _modefy = false;
+    std::vector<RTRender2DPass*> _passes;
+
+    void _sortPassesByPriority();
+
+public:
+    void removePass(RTRender2DPass* pass);
+    void apply(GLESRenderContext2D* context);
+    void clear();
+    void addPass(RTRender2DPass* pass);
 };
 } // namespace laya
 #endif // __RTRENDER2DPASS_H__

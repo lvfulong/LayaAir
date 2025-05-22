@@ -68,7 +68,7 @@ namespace laya
         Rectangle clone(Rectangle* out = nullptr) const;
         void cloneTo(Rectangle& destObject) const;
 
-    private:
+    public:
         float x;
         float y;
         float width;

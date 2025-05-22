@@ -1,5 +1,6 @@
 #include "RTRenderStruct2D.h"
-#include "../../../../webgl/canvas/BlendMode.h"
+#include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderContext2D.h>
+#include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.h>
 
 namespace laya
 {
@@ -9,10 +10,8 @@ _DefaultClipInfo.clipMatrix = Matrix();
 _DefaultClipInfo.clipMatDir = Vector4(Const::MAX_CLIP_SIZE, 0, 0, Const::MAX_CLIP_SIZE);
 _DefaultClipInfo.clipMatPos = Vector4(0, 0, 0, 0);
 
- = {new Matrix(), new Vector4(Const::MAX_CLIP_SIZE, 0, 0, Const::MAX_CLIP_SIZE),
-                                    new Vector4(0, 0, 0, 0)};
 
-WebRenderStruct2D::WebRenderStruct2D() {
+ RTRenderStruct2D::RTRenderStruct2D() {
     rect = new Rectangle(0, 0, 0, 0);
     renderLayer = 0;
     parent = nullptr;
@@ -36,35 +35,35 @@ WebRenderStruct2D::WebRenderStruct2D() {
     _rnUpdateFun = nullptr;
 }
 
-WebRenderStruct2D::~WebRenderStruct2D() {
-    destroy();
+ RTRenderStruct2D::~RTRenderStruct2D() {
+
 }
 
-void WebRenderStruct2D::setRenderDataHandler(WebRender2DDataHandle* value) {
+void RTRenderStruct2D::setRenderDataHandler(RTRender2DDataHandle* value) {
     _renderDataHandler = value;
     if (value) {
         value->owner = this;
     }
 }
 
-void WebRenderStruct2D::setPass(WebRender2DPass* value) {
+void RTRenderStruct2D::setPass(RTRender2DPass* value) {
     _pass = value;
     if (value) {
         updateChildren(this);
     }
 }
 
-void WebRenderStruct2D::set_renderNodeUpdateCall(void* call, void* renderUpdateFun) {
+void RTRenderStruct2D::set_renderNodeUpdateCall(void* call, void* renderUpdateFun) {
     _rnUpdateCall = call;
     _rnUpdateFun = renderUpdateFun;
 }
 
-void WebRenderStruct2D::setAlpha(float alpha) {
+void RTRenderStruct2D::setAlpha(float alpha) {
     this->alpha = alpha;
     _updateChildren(2);
 }
 
-void WebRenderStruct2D::_handleInterData() {
+void RTRenderStruct2D::_handleInterData() {
     if (_clipRect) {
         IClipInfo* info = _clipInfo;
         Matrix* mat = transform->getMatrix();
@@ -86,46 +85,43 @@ void WebRenderStruct2D::_handleInterData() {
     }
 }
 
-std::string WebRenderStruct2D::getBlendMode() {
+std::string RTRenderStruct2D::getBlendMode() {
     return !blendMode.empty() ? blendMode : 
            !_parentBlendMode.empty() ? _parentBlendMode : 
            BlendMode::NORMAL;
 }
 
-void WebRenderStruct2D::setBlendMode(const std::string& blendMode) {
+void RTRenderStruct2D::setBlendMode(const std::string& blendMode) {
     this->blendMode = blendMode;
     _updateBlendMode();
     _updateChildren(1);
 }
 
-void WebRenderStruct2D::_updateBlendMode() {
+void RTRenderStruct2D::_updateBlendMode() {
     if (!spriteShaderData) return;
     std::string blendMode = getBlendMode();
     BlendMode::setShaderData(blendMode, spriteShaderData);
 }
 
-void WebRenderStruct2D::setClipRect(Rectangle* rect) {
+void RTRenderStruct2D::setClipRect(Rectangle* rect) {
     _clipRect = rect;
     _initClipInfo();
     _updateChildren(0);
 }
 
-void WebRenderStruct2D::_initClipInfo() {
+void RTRenderStruct2D::_initClipInfo() {
     if (!_clipInfo) {
         _clipInfo = new IClipInfo();
-        _clipInfo->clipMatDir = new Vector4();
-        _clipInfo->clipMatPos = new Vector4();
-        _clipInfo->clipMatrix = new Matrix();
     }
 }
 
-IClipInfo* WebRenderStruct2D::getClipInfo() {
+IClipInfo* RTRenderStruct2D::getClipInfo() {
     return _clipInfo ? _clipInfo : 
            _parentClipInfo ? _parentClipInfo : 
            &_DefaultClipInfo;
 }
 
-void WebRenderStruct2D::_updateChildren(int type) {
+void RTRenderStruct2D::_updateChildren(int type) {
     IClipInfo* info = nullptr;
     std::string blendMode;
     float alpha = 0.0f;
@@ -178,28 +174,28 @@ void WebRenderStruct2D::_updateChildren(int type) {
     }
 }
 
-void WebRenderStruct2D::setRepaint() {
+void RTRenderStruct2D::setRepaint() {
     // Implementation needed
 }
 
-WebRenderStruct2D* WebRenderStruct2D::addChild(WebRenderStruct2D* child) {
+RTRenderStruct2D* RTRenderStruct2D::addChild(RTRenderStruct2D* child) {
     // Implementation needed
     return nullptr;
 }
 
-void WebRenderStruct2D::removeChild(WebRenderStruct2D* child) {
+void RTRenderStruct2D::removeChild(RTRenderStruct2D* child) {
     // Implementation needed
 }
 
-void WebRenderStruct2D::renderUpdate(IRenderContext2D* context) {
+void RTRenderStruct2D::renderUpdate(GLESRenderContext2D* context) {
     // Implementation needed
 }
 
-void WebRenderStruct2D::destroy() {
+void RTRenderStruct2D::destroy() {
     // Implementation needed
 }
 
-void WebRenderStruct2D::updateChildren(WebRenderStruct2D* struct) {
+void RTRenderStruct2D::updateChildren(RTRenderStruct2D* struct) {
     // Implementation needed
 } 
 } // namespace laya

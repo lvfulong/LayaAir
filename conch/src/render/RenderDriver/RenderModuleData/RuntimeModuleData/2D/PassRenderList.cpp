@@ -9,8 +9,8 @@ namespace laya
 {
 
 PassRenderList::PassRenderList() {
-    renderElements = new FastSinglelist<GLESRenderElement2D*>();
-    structs = new FastSinglelist<RTRenderStruct2D*>();
+    renderElements = new FastSinglelist<GLESRenderElement2D*>(false);
+    structs = new FastSinglelist<RTRenderStruct2D*>(false);
 }
 
 PassRenderList::~PassRenderList() {

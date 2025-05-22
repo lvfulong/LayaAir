@@ -1165,7 +1165,7 @@ class RenderBindings
             class_binding.function("setDefine", &GLESSetShaderDefine::setDefine);
             context.class_("conchGLESSetShaderDefine", class_binding);
         }
-
+#if 0
         //2D
         {
             jsbind::class_<RTRender2DPass> class_binding;
@@ -1192,7 +1192,9 @@ class RenderBindings
             class_binding.function("setBuffer", &RTRender2DPass::setBuffer);
             context.class_("conchRTRender2DPass", class_binding);
         }
+#endif
     }
+
 };
 
 } // namespace laya

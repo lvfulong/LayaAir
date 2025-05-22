@@ -1,7 +1,10 @@
 #include "RTRender2DPass.h"
 #include "RTRenderStruct2D.h"
+#include "RTDynamicVIBuffer.h"
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalRT.h>
+#include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderContext2D.h>
+#include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.h>
 #include "PassRenderList.h"
 
 namespace laya
@@ -42,7 +45,7 @@ void RTRender2DPass::removeStruct(RTRenderStruct2D* object, uint32_t zOrder) {
     }
 }
 
-void RTRender2DPass::cullAndSort(IRenderContext2D* context2D, RTRenderStruct2D* struct2d) {
+void RTRender2DPass::cullAndSort(GLESRenderContext2D* context2D, RTRenderStruct2D* struct2d) {
     if (!struct2d->enable) return;
     struct2d->_handleInterData();
 
@@ -56,17 +59,17 @@ void RTRender2DPass::cullAndSort(IRenderContext2D* context2D, RTRenderStruct2D* 
     }
 }
 
-void RTRender2DPass::updateRenderQueue(IRenderContext2D* context) {
+void RTRender2DPass::updateRenderQueue(GLESRenderContext2D* context) {
     if (!root) return;
     cullAndSort(context, root);
 }
 
-void RTRender2DPass::fowardRender(IRenderContext2D* context) {
+void RTRender2DPass::fowardRender(GLESRenderContext2D* context) {
     _initRenderProcess(context);
     render(context);
 }
 
-void RTRender2DPass::render(IRenderContext2D* context) {
+void RTRender2DPass::render(GLESRenderContext2D* context) {
     // 清理zOrder相关队列
     for (auto& list : _lists) {
         if (list) list->reset();
@@ -91,12 +94,12 @@ void RTRender2DPass::render(IRenderContext2D* context) {
         mask->pass->renderTexture = nullptr;
     }
 
-    if (postProcess && postProcess->enabled) {
-        postProcess->_context->command->apply(true);
-    }
+    //if (postProcess && postProcess->enabled) {
+    //    postProcess->_context->command->apply(true);
+    //}
 }
 
-void RTRender2DPass::_initRenderProcess(IRenderContext2D* context) {
+void RTRender2DPass::_initRenderProcess(GLESRenderContext2D* context) {
     float sizeX, sizeY;
 
     if (renderTexture) {
@@ -169,7 +172,7 @@ void RTRender2DPass::_setRenderSize(float x, float y) {
     shaderData->setVector2(ShaderDefines2D::UNIFORM_SIZE, _rtsize);
 }
 
-void RTRender2DPass::recover(IRenderContext2D* context) {
+void RTRender2DPass::recover(GLESRenderContext2D* context) {
     if (renderTexture) {
         context->setRenderTarget(nullptr, repaint, repaint ? nullptr : &_clearColor);
     }
@@ -191,4 +194,41 @@ void RTRender2DPass::destroy() {
     }
 #endif
 } 
+
+void RTRender2DPassManager::removePass(RTRender2DPass* pass) {
+    auto it = std::find(_passes.begin(), _passes.end(), pass);
+    if (it != _passes.end()) {
+        _passes.erase(it);
+        _modefy = true;
+    }
+}
+
+void RTRender2DPassManager::apply(GLESRenderContext2D* context) {
+    if (_modefy) {
+        _modefy = false;
+        _sortPassesByPriority();
+    }
+
+    for (auto pass : _passes) {
+        if (pass->needRender()) {
+            pass->fowardRender(context);
+        }
+    }
+}
+
+void RTRender2DPassManager::clear() {
+    _passes.clear();
+}
+
+void RTRender2DPassManager::addPass(RTRender2DPass* pass) {
+    _passes.push_back(pass);
+    _modefy = true;
+}
+
+void RTRender2DPassManager::_sortPassesByPriority() {
+    std::sort(_passes.begin(), _passes.end(), 
+        [](RTRender2DPass* a, RTRender2DPass* b) {
+            return b->priority > a->priority;
+        });
+}
 } // namespace laya

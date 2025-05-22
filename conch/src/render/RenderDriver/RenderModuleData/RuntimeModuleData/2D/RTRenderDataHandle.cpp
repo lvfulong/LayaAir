@@ -1,19 +1,20 @@
 #include "RTRenderDataHandle.h"
-
+#include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderContext2D.h>
+#include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.h>
+#include <core/math/Matrix.h>
 namespace laya  
 {
 
 // WebRender2DDataHandle实现
-WebRender2DDataHandle::WebRender2DDataHandle() {
+RTRender2DDataHandle::RTRender2DDataHandle() {
     _owner = nullptr;
     _needUseMatrix = true;
 }
 
-WebRender2DDataHandle::~WebRender2DDataHandle() {
-    destroy();
+RTRender2DDataHandle::~RTRender2DDataHandle() {
 }
 
-void WebRender2DDataHandle::setNeedUseMatrix(bool value) {
+void RTRender2DDataHandle::setNeedUseMatrix(bool value) {
     _needUseMatrix = value;
     if (!value) {
         _nMatrix_0.setValue(1, 0, 0);
@@ -23,11 +24,11 @@ void WebRender2DDataHandle::setNeedUseMatrix(bool value) {
     }
 }
 
-void WebRender2DDataHandle::destroy() {
+void RTRender2DDataHandle::destroy() {
     // 基类实现为空
 }
 
-void WebRender2DDataHandle::inheriteRenderData(IRenderContext2D* context) {
+void RTRender2DDataHandle::inheriteRenderData(GLESRenderContext2D* context) {
     if (!_owner->spriteShaderData) return;
 
     if (_needUseMatrix) {
@@ -43,7 +44,7 @@ void WebRender2DDataHandle::inheriteRenderData(IRenderContext2D* context) {
     _owner->spriteShaderData->setVector(ShaderDefines2D::UNIFORM_CLIPMATDIR, info->clipMatDir);
     _owner->spriteShaderData->setVector(ShaderDefines2D::UNIFORM_CLIPMATPOS, info->clipMatPos);
 }
-
+#if 0
 // WebPrimitiveDataHandle实现
 WebPrimitiveDataHandle::WebPrimitiveDataHandle() {
     mask = nullptr;
@@ -60,7 +61,7 @@ void WebPrimitiveDataHandle::applyVertexBufferBlock(const std::vector<VertexBuff
     _needUpdateVertexBuffer = !blocks.empty();
 }
 
-void WebPrimitiveDataHandle::inheriteRenderData(IRenderContext2D* context) {
+void WebPrimitiveDataHandle::inheriteRenderData(GLESRenderContext2D* context) {
     if (!_owner->spriteShaderData) return;
 
     Matrix* mat = _owner->transform->getMatrix();
@@ -103,5 +104,6 @@ void WebPrimitiveDataHandle::inheriteRenderData(IRenderContext2D* context) {
         _needUpdateVertexBuffer = false;
         _modifiedFrame = _owner->transform->_modifiedFrame;
     }
-} 
+}
+#endif
 } // namespace laya
