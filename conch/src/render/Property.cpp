@@ -235,8 +235,17 @@ namespace laya
     RTShaderDefine ShaderDefines2D::INVERTY;
     void ShaderDefines2D::__init__()
     {
+        ShaderDefines2D::UNIFORM_VERTALPHA = LayaGL::m_pWebglEngine->propertyNameToID("u_VertAlpha");
+        ShaderDefines2D::UNIFORM_SIZE = LayaGL::m_pWebglEngine->propertyNameToID("u_size");
+        ShaderDefines2D::UNIFORM_NMATRIX_0 = LayaGL::m_pWebglEngine->propertyNameToID("u_NMatrix_0");
+        ShaderDefines2D::UNIFORM_NMATRIX_1 = LayaGL::m_pWebglEngine->propertyNameToID("u_NMatrix_1");
+        ShaderDefines2D::UNIFORM_INVERTMAT_0 = LayaGL::m_pWebglEngine->propertyNameToID("u_InvertMat_0");
+        ShaderDefines2D::UNIFORM_INVERTMAT_1 = LayaGL::m_pWebglEngine->propertyNameToID("u_InvertMat_1");
+        ShaderDefines2D::RENDERTEXTURE = LayaGL::m_pWebglEngine->getDefineByName("RENDERTEXTURE");
         ShaderDefines2D::GAMMASPACE = LayaGL::m_pWebglEngine->getDefineByName("GAMMASPACE");
         ShaderDefines2D::INVERTY = LayaGL::m_pWebglEngine->getDefineByName("INVERTY");
+        ShaderDefines2D::UNIFORM_CLIPMATDIR = LayaGL::m_pWebglEngine->propertyNameToID("u_clipMatDir");
+        ShaderDefines2D::UNIFORM_CLIPMATPOS = LayaGL::m_pWebglEngine->propertyNameToID("u_clipMatPos");
     }
 
     //RenderableSprite3D

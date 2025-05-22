@@ -2,6 +2,7 @@
 #include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderContext2D.h>
 #include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.h>
 #include <core/math/Matrix.h>
+#include <render/Property.h>
 namespace laya  
 {
 

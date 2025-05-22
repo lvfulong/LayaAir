@@ -164,8 +164,17 @@ public:
 class ShaderDefines2D
 {
 public:
+    static uint32_t UNIFORM_VERTALPHA;
+    static uint32_t UNIFORM_NMATRIX_0;
+    static uint32_t UNIFORM_NMATRIX_1;
+    static uint32_t UNIFORM_INVERTMAT_0; 
+    static uint32_t UNIFORM_INVERTMAT_1; 
+    static uint32_t UNIFORM_SIZE;
     static RTShaderDefine GAMMASPACE;
     static RTShaderDefine INVERTY;
+    static RTShaderDefine RENDERTEXTURE;
+    static RTShaderDefine UNIFORM_CLIPMATDIR;
+    static RTShaderDefine UNIFORM_CLIPMATPOS;
     static void __init__();
 };
 
@@ -185,15 +194,15 @@ public:
 
 class MeshSprite3DShaderDeclaration {
 public:
-    /**UV0Í¨µÀ¶¥µãÊı¾İºê */
+    /**UV0é€šé“é¡¶ç‚¹æ•°æ®å® */
     static RTShaderDefine SHADERDEFINE_UV0 ;
-    /**¶¥µãÉ«¶¥µãÊı¾İºê */
+    /**é¡¶ç‚¹è‰²é¡¶ç‚¹æ•°æ®å® */
     static RTShaderDefine SHADERDEFINE_COLOR;
-    /**UV1Í¨µÀ¶¥µãÊı¾İºê */
+    /**UV1é€šé“é¡¶ç‚¹æ•°æ®å® */
     static RTShaderDefine SHADERDEFINE_UV1;
-    /** Tangent Í¨µÀ¶¥µãÊı¾İºê */
+    /** Tangent é€šé“é¡¶ç‚¹æ•°æ®å® */
     static RTShaderDefine SHADERDEFINE_TANGENT;
-    /**instanceµ÷ÓÃºê */
+    /**instanceè°ƒç”¨å® */
     static RTShaderDefine SHADERDEFINE_GPU_INSTANCE;
     static void __init__();
 };

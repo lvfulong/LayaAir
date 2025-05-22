@@ -17,8 +17,6 @@ namespace laya
 class GLESRenderContext2D;
 class RTRenderStruct2D;
 class GLESShaderData;
-class PostProcess2D;
-class CommandBuffer2D;
 class RTDynamicVIBuffer;
 class PassRenderList;
 class GLESInternalRT;
@@ -98,8 +96,8 @@ class RTRender2DPass
     RTRenderStruct2D* getRoot() const { return root; }
     void setRoot(RTRenderStruct2D* value);  
 
-    PostProcess2D* getPostProcess() const { return postProcess; }
-    void setPostProcess(PostProcess2D* value);
+    //PostProcess2D* getPostProcess() const { return postProcess; }
+    //void setPostProcess(PostProcess2D* value);
 
     RTRenderStruct2D* getMask() const { return mask; }
     void setMask(RTRenderStruct2D* value);  
@@ -117,7 +115,7 @@ class RTRender2DPass
     void _setRenderSize(float x, float y);
     Color _clearColor;
 
-    CommandBuffer2D *finalize = nullptr;
+    //CommandBuffer2D *finalize = nullptr;
     std::set<RTDynamicVIBuffer *> buffers;
 
     std::map<uint32_t, PassRenderList *> _lists;
@@ -134,7 +132,7 @@ class RTRender2DPass
     RTRenderStruct2D *root = nullptr;
     bool doClearColor = false;
 
-    PostProcess2D *postProcess = nullptr;
+    //PostProcess2D *postProcess = nullptr;
     RTRenderStruct2D *mask = nullptr;
     bool repaint = false;
 

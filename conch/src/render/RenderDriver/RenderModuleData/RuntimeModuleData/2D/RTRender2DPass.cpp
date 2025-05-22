@@ -6,7 +6,7 @@
 #include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderContext2D.h>
 #include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.h>
 #include "PassRenderList.h"
-
+#include <render/Property.h>
 namespace laya
 {
 #if 0
@@ -88,11 +88,11 @@ void RTRender2DPass::render(GLESRenderContext2D* context) {
 
     repaint = false;
 
-    if (mask && mask->pass->enable) {
-        mask->pass->renderTexture = renderTexture;
-        mask->pass->fowardRender(context);
-        mask->pass->renderTexture = nullptr;
-    }
+    //if (mask && mask->pass->enable) {
+    //    mask->pass->renderTexture = renderTexture;
+    //    mask->pass->fowardRender(context);
+    //    mask->pass->renderTexture = nullptr;
+    //}
 
     //if (postProcess && postProcess->enabled) {
     //    postProcess->_context->command->apply(true);
