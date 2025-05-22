@@ -1,6 +1,7 @@
 #include "RTRender2DPass.h"
 #include "RTRenderStruct2D.h"
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalRT.h>
 #include "PassRenderList.h"
 
 namespace laya

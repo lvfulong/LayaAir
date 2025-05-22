@@ -8,17 +8,15 @@
 #include <core/math/Vector4.h>
 #include <core/math/Vector2.h>
 #include <core/math/Vector3.h>
+#include <utils/FastSinglelist.h>
 
 namespace laya
 {
 
 // 前向声明
 class IRenderContext2D;
-class IRenderElement2D;
-class FastSinglelist;
 class RTRenderStruct2D;
 class GLESShaderData;
-class RenderTexture2D;
 class PostProcess2D;
 class CommandBuffer2D;
 class RTDynamicVIBuffer;
@@ -31,7 +29,7 @@ class IBatch2DRender
   public:
     virtual ~IBatch2DRender() = default;
     // 合批范围，合批的RenderElement2D直接add进list中
-    virtual void batchRenderElement(FastSinglelist<IRenderElement2D *> &list, int start, int length) = 0;
+    virtual void batchRenderElement(FastSinglelist<GLESRenderElement2D *> &list, int start, int length) = 0;
     virtual void recover() = 0;
 };
 

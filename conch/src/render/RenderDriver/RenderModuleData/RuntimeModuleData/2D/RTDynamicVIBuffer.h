@@ -1,15 +1,7 @@
 #ifndef __RTDYNAMICVIBUFFER_H__
 #define __RTDYNAMICVIBUFFER_H__
 
-#include "../../../../layagl/LayaGL.h"
-#include "../../../../RenderEngine/RenderEnum/BufferTargetType.h"
-#include "../../../../RenderEngine/RenderEnum/IndexFormat.h"
-#include "../../../../RenderEngine/VertexDeclaration.h"
-#include "../../../../utils/Stat.h"
-#include "../../../DriverDesign/RenderDevice/IBufferState.h"
-#include "../../../DriverDesign/RenderDevice/IIndexBuffer.h"
-#include "../../../DriverDesign/RenderDevice/IVertexBuffer.h"
-#include "../../Design/2D/IRender2DDataHandle.h"
+
 
 namespace laya
 {

@@ -29,6 +29,9 @@ class RTGlobalRenderData
     GLESShaderData *globalShaderData;
 };
 class GLESRenderElement2D;
+class RTRender2DDataHandle;
+class RTRender2DPass;
+class IRenderContext2D;
 class RTRenderStruct2D
 {
   public:
@@ -95,7 +98,7 @@ class RTRenderStruct2D
     void destroy();
 
   protected:
-    void updateChildren(RTRenderStruct2D *struct);
+    void updateChildren(RTRenderStruct2D *struct2d);
 
     void setAlpha(float alpha);
     void _handleInterData();

@@ -3,9 +3,14 @@
 
 #include <algorithm>
 #include <math.h>
+#include <utils/JCCommonMethod.h>
+
 
 namespace laya
 {
+	constexpr double _pi = 180 / PI;
+	constexpr double _pi2 = PI / 180;
+
 	class MathUtils3D
 	{
 	public:
@@ -35,6 +40,15 @@ namespace laya
 				return value;
 			return 1.0f / sqrt(value);
 		}
+		static double toRadian(double angle)
+		{
+			return angle * _pi2;
+		}
+
+    	static double toAngle(double radian)
+    	{
+       	 	return radian * _pi;
+    	}
 	};
 }
 #endif

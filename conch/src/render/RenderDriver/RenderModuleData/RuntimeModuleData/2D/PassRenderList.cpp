@@ -2,12 +2,14 @@
 #include <unordered_map>
 #include "RTRenderStruct2D.h"
 #include "BatchManager.h"
+#include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderContext2D.h>
+#include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.h>
 
 namespace laya
 {
 
 PassRenderList::PassRenderList() {
-    renderElements = new FastSinglelist<RTRenderElement2D*>();
+    renderElements = new FastSinglelist<GLESRenderElement2D*>();
     structs = new FastSinglelist<RTRenderStruct2D*>();
 }
 
