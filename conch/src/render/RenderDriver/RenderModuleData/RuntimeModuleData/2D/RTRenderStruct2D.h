@@ -5,12 +5,21 @@
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 #include <core/math/Vector4.h>
 #include <core/math/Rectangle.h>
+#include <core/math/Matrix.h>
+
+
 namespace laya
 {
 
-// 默认裁剪信息
-const IClipInfo _DefaultClipInfo = {new Matrix(), new Vector4(Const::MAX_CLIP_SIZE, 0, 0, Const::MAX_CLIP_SIZE),
-                                    new Vector4(0, 0, 0, 0)};
+
+
+class IClipInfo {
+public:
+   Vector4 clipMatDir;
+   Vector4 clipMatPos;
+   Matrix clipMatrix;
+};
+
 
 class RTGlobalRenderData
 {
@@ -19,7 +28,7 @@ class RTGlobalRenderData
     uint32_t renderLayerMask;
     GLESShaderData *globalShaderData;
 };
-
+class GLESRenderElement2D;
 class RTRenderStruct2D
 {
   public:

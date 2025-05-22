@@ -100,7 +100,12 @@ list(APPEND CONCH_SRC
 	src/core/math/Color.cpp
 	src/core/math/Viewport.h
 	src/core/math/Viewport.cpp
-
+	src/core/math/Rectangle.h
+	src/core/math/Rectangle.cpp
+	src/core/math/Matrix.h
+	src/core/math/Matrix.cpp
+	src/core/math/Point.h	
+	src/core/math/Point.cpp
 	src/render/ShadowCullInfo.h
 	src/render/LayaGL.h
 	src/render/LayaGL.cpp

@@ -3,6 +3,14 @@
 
 namespace laya
 {
+// 默认裁剪信息
+IClipInfo _DefaultClipInfo;
+_DefaultClipInfo.clipMatrix = Matrix();
+_DefaultClipInfo.clipMatDir = Vector4(Const::MAX_CLIP_SIZE, 0, 0, Const::MAX_CLIP_SIZE);
+_DefaultClipInfo.clipMatPos = Vector4(0, 0, 0, 0);
+
+ = {new Matrix(), new Vector4(Const::MAX_CLIP_SIZE, 0, 0, Const::MAX_CLIP_SIZE),
+                                    new Vector4(0, 0, 0, 0)};
 
 WebRenderStruct2D::WebRenderStruct2D() {
     rect = new Rectangle(0, 0, 0, 0);
