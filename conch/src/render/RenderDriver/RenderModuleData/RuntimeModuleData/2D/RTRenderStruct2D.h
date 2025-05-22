@@ -2,39 +2,41 @@
 #define __RTRENDERSTRUCT2D_H__
 
 #include <string>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
+#include <core/math/Vector4.h>
+#include <core/math/Rectangle.h>
 namespace laya
 {
 
 // 默认裁剪信息
-const IClipInfo _DefaultClipInfo = {
-    new Matrix(),
-    new Vector4(Const::MAX_CLIP_SIZE, 0, 0, Const::MAX_CLIP_SIZE),
-    new Vector4(0, 0, 0, 0)
-};
+const IClipInfo _DefaultClipInfo = {new Matrix(), new Vector4(Const::MAX_CLIP_SIZE, 0, 0, Const::MAX_CLIP_SIZE),
+                                    new Vector4(0, 0, 0, 0)};
 
-class WebGlobalRenderData : public IGlobalRenderData {
-public:
-    Vector4* cullRect;
+class RTGlobalRenderData
+{
+  public:
+    Vector4 cullRect;
     uint32_t renderLayerMask;
-    GLESShaderData* globalShaderData;
+    GLESShaderData *globalShaderData;
 };
 
-class RTRenderStruct2D {
-public:
+class RTRenderStruct2D
+{
+  public:
     RTRenderStruct2D();
     ~RTRenderStruct2D();
 
     // 2D渲染组织流程数据
-    int zOrder;
-    Rectangle* rect;
-    uint32_t renderLayer;
-    RTRenderStruct2D* parent;
-    std::vector<RTRenderStruct2D*> children;
-    int renderType;
+    uint32_t zOrder;
+    Rectangle rect;
+    int32_t renderLayer;
+    RTRenderStruct2D *parent;
+    std::vector<RTRenderStruct2D *> children;
+    int32_t renderType;
     uint32_t renderUpdateMask;
 
     // 渲染继承累加数据
-    SpriteGlobalTransform* transform;
+    SpriteGlobalTransform *transform;
     float globalAlpha;
     float alpha;
     std::string blendMode;
@@ -43,47 +45,69 @@ public:
 
     // 渲染数据
     bool isRenderStruct;
-    std::vector<GLESRenderElement2D*>* renderElements;
-    GLESShaderData* spriteShaderData;
-    std::vector<std::string>* commonUniformMap;
+    std::vector<GLESRenderElement2D *> *renderElements;
+    GLESShaderData *spriteShaderData;
+    std::vector<std::string> commonUniformMap;
 
     // 属性访问器
-    RTRender2DDataHandle* getRenderDataHandler() const { return _renderDataHandler; }
-    void setRenderDataHandler(RTRender2DDataHandle* value);
-    
-    RTRender2DPass* getPass() const { return _pass ? _pass : _parentPass; }
-    void setPass(RTRender2DPass* value);
+    RTRender2DDataHandle *getRenderDataHandler() const
+    {
+        return _renderDataHandler;
+    }
+    void setRenderDataHandler(RTRender2DDataHandle *value)
+    {
+        _renderDataHandler = value;
+    }
 
-    // 方法
-    void set_renderNodeUpdateCall(void* call, void* renderUpdateFun);
+    RTGlobalRenderData *getGlobalRenderData() const
+    {
+        return _globalRenderData;
+    }
+    void setGlobalRenderData(RTGlobalRenderData *value)
+    {
+        _globalRenderData = value;
+    }
+
+    RTRender2DPass *getPass() const
+    {
+        return _pass ? _pass : _parentPass;
+    }
+    void setPass(RTRender2DPass *value);
+
+    void setRepaint();
+    RTRenderStruct2D *addChild(RTRenderStruct2D *child, int32_t index);
+    void updateChildIndex(RTRenderStruct2D *child, int32_t oldIndex, int32_t index);
+    void removeChild(RTRenderStruct2D *child);
+    void setClipRect(Rectangle rect);
+
+    void renderUpdate(IRenderContext2D *context);
+
+    void set_renderNodeUpdateCall(void *call, void *renderUpdateFun); // lvtodo
+    void destroy();
+
+  protected:
+    void updateChildren(RTRenderStruct2D *struct);
+
     void setAlpha(float alpha);
     void _handleInterData();
     std::string getBlendMode();
-    void setBlendMode(const std::string& blendMode);
-    void setClipRect(Rectangle* rect);
-    IClipInfo* getClipInfo();
+    void setBlendMode(const std::string &blendMode);
+
+    IClipInfo *getClipInfo();
     void _updateChildren(int type);
-    void setRepaint();
-    RTRenderStruct2D* addChild(RTRenderStruct2D* child);
-    void removeChild(RTRenderStruct2D* child);
-    void renderUpdate(IRenderContext2D* context);
-    void destroy();
 
-protected:
-    void updateChildren(RTRenderStruct2D* struct);
-
-private:
+  private:
     void _updateBlendMode();
     void _initClipInfo();
-
-    RTRender2DDataHandle* _renderDataHandler;
-    RTRender2DPass* _pass;
-    RTRender2DPass* _parentPass;
-    Rectangle* _clipRect;
-    IClipInfo* _parentClipInfo;
-    IClipInfo* _clipInfo;
-    void* _rnUpdateCall;
-    void* _rnUpdateFun;
-}; 
+    RTGlobalRenderData *_globalRenderData;
+    RTRender2DDataHandle *_renderDataHandler;
+    RTRender2DPass *_pass;
+    RTRender2DPass *_parentPass;
+    Rectangle *_clipRect;
+    IClipInfo *_parentClipInfo;
+    IClipInfo *_clipInfo;
+    void *_rnUpdateCall;
+    void *_rnUpdateFun;
+};
 } // namespace laya
 #endif // __RTRENDERSTRUCT2D_H__
