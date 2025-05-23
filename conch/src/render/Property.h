@@ -173,8 +173,8 @@ public:
     static RTShaderDefine GAMMASPACE;
     static RTShaderDefine INVERTY;
     static RTShaderDefine RENDERTEXTURE;
-    static RTShaderDefine UNIFORM_CLIPMATDIR;
-    static RTShaderDefine UNIFORM_CLIPMATPOS;
+    static uint32_t UNIFORM_CLIPMATDIR;
+    static uint32_t UNIFORM_CLIPMATPOS;
     static void __init__();
 };
 

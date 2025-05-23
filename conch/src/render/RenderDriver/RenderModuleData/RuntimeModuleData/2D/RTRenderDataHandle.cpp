@@ -3,6 +3,7 @@
 #include <render/Property.h>
 #include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderContext2D.h>
 #include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.h>
+#include "RTRenderStruct2D.h"
 namespace laya
 {
 
@@ -41,9 +42,9 @@ void RTRender2DDataHandle::inheriteRenderData(GLESRenderContext2D *context)
 
     if (_needUseMatrix)
     {
-        Matrix *mat = _owner->transform->getMatrix();
-        _nMatrix_0.setValue(mat->a, mat->c, mat->tx);
-        _nMatrix_1.setValue(mat->b, mat->d, mat->ty);
+        const Matrix& mat = _owner->getRenderMatrix();
+        _nMatrix_0.setValue(mat.a, mat.c, mat.tx);
+        _nMatrix_1.setValue(mat.b, mat.d, mat.ty);
         _owner->spriteShaderData->setVector3(ShaderDefines2D::UNIFORM_NMATRIX_0, _nMatrix_0);
         _owner->spriteShaderData->setVector3(ShaderDefines2D::UNIFORM_NMATRIX_1, _nMatrix_1);
     }
