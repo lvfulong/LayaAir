@@ -65,7 +65,7 @@ namespace laya
 
 
 
-	void GLESRenderContext2D::drawRenderElementList(const JCSingletonList<GLESRenderElement2D*>& list)
+	void GLESRenderContext2D::drawRenderElementList(const FastSinglelist<GLESRenderElement2D*>& list)
 	{
 		for (int i  = 0, n  = list.getLength(); i < n; i++) {
 			GLESRenderElement2D* element = list.m_vElements[i];

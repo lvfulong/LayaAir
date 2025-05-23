@@ -44,13 +44,13 @@ enum class BufferState {
 };
 
 // 动态顶点索引缓冲区
-class WebDynamicVIBuffer : public IDynamicVIBuffer {
+class RTDynamicVIBuffer : public IDynamicVIBuffer {
 public:
     static const int MAX_VERTEX = 65535;
     static const int DEFAULT_BLOCK_SIZE = 1024;
 
-    WebDynamicVIBuffer(int vertexBlockSize, int indexBlockSize);
-    virtual ~WebDynamicVIBuffer();
+    RTDynamicVIBuffer(int vertexBlockSize, int indexBlockSize);
+    virtual ~RTDynamicVIBuffer();
 
     IVertexBuffer* getVertexBuffer() const { return _vertexBuffer; }
     IIndexBuffer* getIndexBuffer() const { return _indexBuffer; }
@@ -63,7 +63,7 @@ public:
     void upload();
     void destroy();
 
-private:
+public:
     IBufferState* _bufferState;
     IVertexBuffer* _vertexBuffer;
     IIndexBuffer* _indexBuffer;

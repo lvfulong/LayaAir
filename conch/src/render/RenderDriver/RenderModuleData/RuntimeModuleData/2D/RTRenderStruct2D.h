@@ -148,13 +148,8 @@ class RTRenderStruct2D
 
   public:
     IClipInfo *getClipInfo();
-
-  protected:
     void _handleInterData();
-
     void updateChildren(ChildrenUpdateType type);
-
-  private:
     void _updateBlendMode();
     void _initClipInfo();
     Matrix _matrix;

@@ -1,14 +1,14 @@
 #ifndef __RTRENDER2DPASS_H__
 #define __RTRENDER2DPASS_H__
 
-#include <vector>
-#include <map>
-#include <set>
 #include <core/math/Color.h>
-#include <core/math/Vector4.h>
 #include <core/math/Vector2.h>
 #include <core/math/Vector3.h>
+#include <core/math/Vector4.h>
+#include <map>
+#include <set>
 #include <utils/FastSinglelist.h>
+#include <vector>
 
 namespace laya
 {
@@ -19,45 +19,8 @@ class RTRenderStruct2D;
 class GLESShaderData;
 class RTDynamicVIBuffer;
 class PassRenderList;
+class GLESInternalTex;
 class GLESInternalRT;
-#if 0
-// 合批渲染接口
-class IBatch2DRender
-{
-  public:
-    virtual ~IBatch2DRender() = default;
-    // 合批范围，合批的RenderElement2D直接add进list中
-    virtual void batchRenderElement(FastSinglelist<GLESRenderElement2D *> &list, int start, int length) = 0;
-    virtual void recover() = 0;
-};
-
-// 合批信息类
-class Batch2DInfo
-{
-  public:
-    IBatch2DRender *batchFun = nullptr;
-    bool batch = false;
-    int indexStart = -1;
-    int elementLength = 0;
-    int elementCount = 0;
-
-    static Batch2DInfo *create();
-    static void recover(Batch2DInfo *info);
-
-  private:
-    static std::vector<Batch2DInfo *> _pool;
-};
-
-// 合批管理器
-class BatchManager
-{
-  public:
-    static void regisBatch(int renderElementType, IBatch2DRender *batch);
-
-  private:
-    static std::unordered_map<int, IBatch2DRender *> _batchMapManager;
-};
-#endif
 // 渲染通道类
 class RTRender2DPass
 {
@@ -65,49 +28,61 @@ class RTRender2DPass
     RTRender2DPass();
     RTRender2DPass(GLESShaderData *shaderData);
     ~RTRender2DPass();
-    bool needRender() {
-      return this->enable
-         && !this->isSupport
-         && (this->repaint || !this->renderTexture);
-   }
+    bool needRender()
+    {
+        return this->enable && !this->isSupport && (this->repaint || !this->renderTexture);
+    }
     void setClearColor(float r, float g, float b, float a)
     {
-       this->_clearColor.r = r;
-       this->_clearColor.g = g;
-       this->_clearColor.b = b;
-       this->_clearColor.a = a;
+        this->_clearColor.r = r;
+        this->_clearColor.g = g;
+        this->_clearColor.b = b;
+        this->_clearColor.a = a;
     }
-    void addStruct(RTRenderStruct2D *object, uint32_t zOrder);
-    void removeStruct(RTRenderStruct2D *object, uint32_t zOrder);
+    void addStruct(RTRenderStruct2D *object);
+    void removeStruct(RTRenderStruct2D *object);
     void cullAndSort(GLESRenderContext2D *context2D, RTRenderStruct2D *struct2d);
     void updateRenderQueue(GLESRenderContext2D *context);
     void fowardRender(GLESRenderContext2D *context);
     void render(GLESRenderContext2D *context);
     void setBuffer(RTDynamicVIBuffer *buffer);
     void uploadBuffer();
-    void recover(GLESRenderContext2D *context);
     void destroy();
 
     // 属性设置
-    
+
     void setCullRect(const Vector4 &value);
     void setRenderLayerMask(uint32_t value);
 
-    RTRenderStruct2D* getRoot() const { return root; }
-    void setRoot(RTRenderStruct2D* value);  
+    RTRenderStruct2D *getRoot() const
+    {
+        return root;
+    }
+    void setRoot(RTRenderStruct2D *value);
 
-    //PostProcess2D* getPostProcess() const { return postProcess; }
-    //void setPostProcess(PostProcess2D* value);
+    // PostProcess2D* getPostProcess() const { return postProcess; }
+    // void setPostProcess(PostProcess2D* value);
 
-    RTRenderStruct2D* getMask() const { return mask; }
-    void setMask(RTRenderStruct2D* value);  
+    RTRenderStruct2D *getMask() const
+    {
+        return mask;
+    }
+    void setMask(RTRenderStruct2D *value);
 
-    GLESInternalRT* getRenderTexture() const { return renderTexture; }
-    void setRenderTexture(GLESInternalRT* value);
-    GLESShaderData* getShaderData() const { return shaderData; }
-    void setShaderData(GLESShaderData* value){ shaderData = value; }
-    
-    
+    GLESInternalRT *getRenderTexture() const
+    {
+        return renderTexture;
+    }
+    void setRenderTexture(GLESInternalRT *value);
+    GLESShaderData *getShaderData() const
+    {
+        return shaderData;
+    }
+    void setShaderData(GLESShaderData *value)
+    {
+        shaderData = value;
+    }
+
   private:
     void _initRenderProcess(GLESRenderContext2D *context);
     void _updateInvertMatrix();
@@ -115,7 +90,7 @@ class RTRender2DPass
     void _setRenderSize(float x, float y);
     Color _clearColor;
 
-    //CommandBuffer2D *finalize = nullptr;
+    // CommandBuffer2D *finalize = nullptr;
     std::set<RTDynamicVIBuffer *> buffers;
 
     std::map<uint32_t, PassRenderList *> _lists;
@@ -127,34 +102,47 @@ class RTRender2DPass
 
   public:
     bool enable = false;
-    bool enableBatch = false;
+    bool _enableBatch = true;
+    bool getEnableBatch()
+    {
+        return this->_enableBatch;
+    }
+
+    void setEnableBatch(bool value)
+    {
+        this->repaint = true;
+        this->_enableBatch = value;
+    }
     bool isSupport = false;
     RTRenderStruct2D *root = nullptr;
     bool doClearColor = false;
 
-    //PostProcess2D *postProcess = nullptr;
+    // PostProcess2D *postProcess = nullptr;
     RTRenderStruct2D *mask = nullptr;
     bool repaint = false;
 
     GLESInternalRT *renderTexture = nullptr;
+    GLESInternalTex *texture = nullptr;
     int32_t priority = 0;
     uint32_t renderLayerMask = 0x00000000;
     Vector4 cullRect;
     GLESShaderData *shaderData = nullptr;
+    Vector2 renderOffset;
 };
 
-class RTRender2DPassManager {
-private:
+class RTRender2DPassManager
+{
+  private:
     bool _modefy = false;
-    std::vector<RTRender2DPass*> _passes;
+    std::vector<RTRender2DPass *> _passes;
 
     void _sortPassesByPriority();
 
-public:
-    void removePass(RTRender2DPass* pass);
-    void apply(GLESRenderContext2D* context);
+  public:
+    void removePass(RTRender2DPass *pass);
+    void apply(GLESRenderContext2D *context);
     void clear();
-    void addPass(RTRender2DPass* pass);
+    void addPass(RTRender2DPass *pass);
 };
 } // namespace laya
 #endif // __RTRENDER2DPASS_H__

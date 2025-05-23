@@ -4,11 +4,12 @@
 #include <core/math/Color.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalRT.h>
 #include <utils/JCSingletonList.h>
+#include <utils/FastSinglelist.h>
 namespace laya
 {
 	class GLESRenderCMD;
 	class GLESRenderElement2D;
-	class GLESRenderContext2D {
+	class GLESRenderContext2D {//lvtodo
 	public:
 		static GLESRenderElement2D* blitscreenElement2D;
 	public:
@@ -16,7 +17,7 @@ namespace laya
 		~GLESRenderContext2D();
 		void setRenderTarget(GLESInternalRT* renderRT, bool clear, const Color &clearColor);
 		void setOffscreenView(uint32_t width, uint32_t height);
-		void drawRenderElementList(const JCSingletonList<GLESRenderElement2D*>& list);
+		void drawRenderElementList(const FastSinglelist<GLESRenderElement2D*>& list);
 		void drawRenderElementOne(GLESRenderElement2D* node);
 		void runOneCMD(GLESRenderCMD* cmd);
 		void runCMDList(const std::vector<GLESRenderCMD*>& cmds);
@@ -24,7 +25,7 @@ namespace laya
 
 		void setSceneShaderData(GLESShaderData* value)
 		{
-			sceneData = value;
+			passData = value;
 
 		}
 		void setGlobalConfigShaderData(RTDefineDatas* value)
@@ -34,7 +35,7 @@ namespace laya
 	public:
 		bool invertY;
 		std::string pipelineMode; 
-		GLESShaderData* sceneData = nullptr;
+		GLESShaderData* passData = nullptr;
 		RTDefineDatas* globalConfigShaderData = nullptr;
 		GLESInternalRT* destRT = nullptr;
 	private:
