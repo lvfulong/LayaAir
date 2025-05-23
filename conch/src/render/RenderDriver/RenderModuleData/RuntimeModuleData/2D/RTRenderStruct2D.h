@@ -97,7 +97,7 @@ class RTRenderStruct2D
 
     // 渲染数据
     bool isRenderStruct;
-    std::vector<GLESRenderElement2D *> *renderElements;
+    std::vector<GLESRenderElement2D *> renderElements;
     GLESShaderData *spriteShaderData;
     std::vector<std::string> commonUniformMap;
 
