@@ -1,17 +1,12 @@
 #include "RTRenderStruct2D.h"
 #include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderContext2D.h>
 #include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.h>
-
+#include <render/Const.h>
 #include "RTRender2DPass.h"
 namespace laya
 {
 // 默认裁剪信息
-static IClipInfo _DefaultClipInfo;
-
-//_DefaultClipInfo.clipMatrix = Matrix();
-_DefaultClipInfo.clipMatDir = Vector4(Const::MAX_CLIP_SIZE, 0, 0, Const::MAX_CLIP_SIZE);
-_DefaultClipInfo.clipMatPos = Vector4(0, 0, 0, 0);
-
+static IClipInfo s_DefaultClipInfo(Vector4((float)Const::MAX_CLIP_SIZE, 0.0f, 0.0f, (float)Const::MAX_CLIP_SIZE), Vector4(0.0f, 0.0f, 0.0f, 0.0f), Matrix());
 RTRenderStruct2D::RTRenderStruct2D()
 {
 }
@@ -75,7 +70,7 @@ void RTRenderStruct2D::_initClipInfo()
 
 IClipInfo *RTRenderStruct2D::getClipInfo()
 {
-    return _clipInfo ? _clipInfo : _parentClipInfo ? _parentClipInfo : &_DefaultClipInfo;
+    return _clipInfo ? _clipInfo : _parentClipInfo ? _parentClipInfo : &s_DefaultClipInfo;
 }
 
 void RTRenderStruct2D::updateChildren(ChildrenUpdateType type)
@@ -146,7 +141,7 @@ void RTRenderStruct2D::updateChildren(ChildrenUpdateType type)
 
             if (child->_pass && child->_pass != pass)
             {
-                child->_pass.priority = priority;
+                child->_pass->priority = priority;
             }
 
             updateChild = true;
@@ -184,10 +179,10 @@ void RTRenderStruct2D::removeChild(RTRenderStruct2D *child)
         child->parent = nullptr;
         children.erase(it);
 
-        child._parentPass = nullptr;
-        child._parentClipInfo = nullptr;
-        child._parentBlendMode = ""; // todo
-        child.updateChildren(ChildrenUpdateType::All);
+        child->_parentPass = nullptr;
+        child->_parentClipInfo = nullptr;
+        child->_parentBlendMode = ""; // todo
+        child->updateChildren(ChildrenUpdateType::All);
     }
 }
 

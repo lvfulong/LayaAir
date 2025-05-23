@@ -17,6 +17,8 @@ class IClipInfo
     Vector4 clipMatDir;
     Vector4 clipMatPos;
     Matrix clipMatrix;
+    IClipInfo() = default;
+    IClipInfo(const Vector4& dir, const Vector4& pos, const Matrix& m) :clipMatDir(dir), clipMatPos(pos), clipMatrix(m) {}
 };
 class RT2DGlobalRenderData
 {
