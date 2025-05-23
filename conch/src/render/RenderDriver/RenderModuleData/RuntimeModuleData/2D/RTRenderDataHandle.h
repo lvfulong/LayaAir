@@ -1,28 +1,37 @@
 #ifndef __RTRENDERDATAHANDLE_H__
 #define __RTRENDERDATAHANDLE_H__
-
-
+#include <core/math/Vector3.h>
 namespace laya
 {
-    class RTRenderStruct2D;
+class RTRenderStruct2D;
+class GLESRenderContext2D;
 // 基础渲染数据处理器
 class RTRender2DDataHandle
- {
-public:
+{
+  public:
     RTRender2DDataHandle();
     virtual ~RTRender2DDataHandle();
 
-    RTRenderStruct2D* getOwner() const { return _owner; }
-    void setOwner(RTRenderStruct2D* value) { _owner = value; }
+    RTRenderStruct2D *getOwner() const
+    {
+        return _owner;
+    }
+    void setOwner(RTRenderStruct2D *value)
+    {
+        _owner = value;
+    }
 
-    bool getNeedUseMatrix() const { return _needUseMatrix; }
+    bool getNeedUseMatrix() const
+    {
+        return _needUseMatrix;
+    }
     void setNeedUseMatrix(bool value);
 
-    void destroy()
-    virtual void inheriteRenderData(GLESRenderContext2D* context) override;
+    void destroy();
+    virtual void inheriteRenderData(GLESRenderContext2D *context);
 
-protected:
-    RTRenderStruct2D* _owner;
+  public:
+    RTRenderStruct2D *_owner;
     Vector3 _nMatrix_0;
     Vector3 _nMatrix_1;
     bool _needUseMatrix;
@@ -91,7 +100,7 @@ private:
     Vector4* _baseTextureRange;
     BaseTexture* _normal2DTexture;
     float _renderAlpha;
-}; 
-#endif 
+};
+#endif
 } // namespace laya
-#endif // __RTRENDERDATAHANDLE_H__  
+#endif // __RTRENDERDATAHANDLE_H__

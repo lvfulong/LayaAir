@@ -1,35 +1,39 @@
 #ifndef __RTRENDERSTRUCT2D_H__
 #define __RTRENDERSTRUCT2D_H__
 
-#include <string>
-#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
-#include <core/math/Vector4.h>
-#include <core/math/Rectangle.h>
+#include "RTRenderDataHandle.h"
 #include <core/math/Matrix.h>
-
+#include <core/math/Rectangle.h>
+#include <core/math/Vector4.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
+#include <string>
 
 namespace laya
 {
 
-
-
-class IClipInfo {
-public:
-   Vector4 clipMatDir;
-   Vector4 clipMatPos;
-   Matrix clipMatrix;
+class IClipInfo
+{
+  public:
+    Vector4 clipMatDir;
+    Vector4 clipMatPos;
+    Matrix clipMatrix;
 };
-
-
-class RTGlobalRenderData
+class RT2DGlobalRenderData
 {
   public:
     Vector4 cullRect;
     uint32_t renderLayerMask;
     GLESShaderData *globalShaderData;
 };
+enum class ChildrenUpdateType
+{
+    All = -1,
+    Clip = 1,
+    Blend = 2,
+    Alpha = 4,
+    Pass = 8,
+};
 class GLESRenderElement2D;
-class RTRender2DDataHandle;
 class RTRender2DPass;
 class GLESRenderContext2D;
 class RTRenderStruct2D
@@ -39,7 +43,7 @@ class RTRenderStruct2D
     ~RTRenderStruct2D();
 
     // 2D渲染组织流程数据
-    uint32_t zOrder;
+    int32_t zIndex;
     Rectangle rect;
     int32_t renderLayer;
     RTRenderStruct2D *parent;
@@ -49,9 +53,41 @@ class RTRenderStruct2D
 
     // 渲染继承累加数据
     Matrix renderMatrix;
+
+    const Matrix &getRenderMatrix()
+    {
+        return this->_matrix;
+    }
+
+    void setRenderMatrix(const Matrix &value)
+    {
+        _matrix = value;
+        //_modifiedFrame = Stat::loopCount;lvtodo
+    }
+
     float globalAlpha;
     float alpha;
+    float getAlpha()
+    {
+        return this->alpha;
+    }
+    void setAlpha(float value)
+    {
+        this->alpha = value;
+        this->updateChildren(ChildrenUpdateType::Alpha);
+    }
     std::string blendMode;
+    std::string getBlendMode()
+    {
+        return ""; // lvtodo
+    }
+
+    void setBlendMode(const std::string &blendMode)
+    {
+        this->blendMode = blendMode;
+        _updateBlendMode();
+        updateChildren(ChildrenUpdateType::Blend);
+    }
     std::string _parentBlendMode;
     bool enable;
 
@@ -69,13 +105,15 @@ class RTRenderStruct2D
     void setRenderDataHandler(RTRender2DDataHandle *value)
     {
         _renderDataHandler = value;
+        if (value)
+            _renderDataHandler->_owner = this;
     }
 
-    RTGlobalRenderData *getGlobalRenderData() const
+    RT2DGlobalRenderData *getGlobalRenderData() const
     {
         return _globalRenderData;
     }
-    void setGlobalRenderData(RTGlobalRenderData *value)
+    void setGlobalRenderData(RT2DGlobalRenderData *value)
     {
         _globalRenderData = value;
     }
@@ -84,7 +122,14 @@ class RTRenderStruct2D
     {
         return _pass ? _pass : _parentPass;
     }
-    void setPass(RTRender2DPass *value);
+    void setPass(RTRender2DPass *value)
+    {
+        _pass = value;
+        if (value)
+        {
+            updateChildren(ChildrenUpdateType::Pass);
+        }
+    }
 
     void setRepaint();
     RTRenderStruct2D *addChild(RTRenderStruct2D *child, int32_t index);
@@ -98,24 +143,21 @@ class RTRenderStruct2D
     void destroy();
 
   protected:
-    void updateChildren(RTRenderStruct2D *struct2d);
-
-    void setAlpha(float alpha);
     void _handleInterData();
-    std::string getBlendMode();
-    void setBlendMode(const std::string &blendMode);
 
     IClipInfo *getClipInfo();
-    void _updateChildren(int type);
+    void updateChildren(ChildrenUpdateType type);
 
   private:
     void _updateBlendMode();
     void _initClipInfo();
-    RTGlobalRenderData *_globalRenderData;
+    Matrix _matrix;
+    int32_t _modifiedFrame; // lvtodo
+    RT2DGlobalRenderData *_globalRenderData;
     RTRender2DDataHandle *_renderDataHandler;
     RTRender2DPass *_pass;
     RTRender2DPass *_parentPass;
-    Rectangle *_clipRect;
+    Rectangle *_clipRect = nullptr;
     IClipInfo *_parentClipInfo;
     IClipInfo *_clipInfo;
     void *_rnUpdateCall;

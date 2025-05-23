@@ -1,23 +1,27 @@
 #include "RTRenderDataHandle.h"
-#include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderContext2D.h>
-#include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.h>
 #include <core/math/Matrix.h>
 #include <render/Property.h>
-namespace laya  
+#include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderContext2D.h>
+#include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.h>
+namespace laya
 {
 
 // WebRender2DDataHandle实现
-RTRender2DDataHandle::RTRender2DDataHandle() {
+RTRender2DDataHandle::RTRender2DDataHandle()
+{
     _owner = nullptr;
     _needUseMatrix = true;
 }
 
-RTRender2DDataHandle::~RTRender2DDataHandle() {
+RTRender2DDataHandle::~RTRender2DDataHandle()
+{
 }
 
-void RTRender2DDataHandle::setNeedUseMatrix(bool value) {
+void RTRender2DDataHandle::setNeedUseMatrix(bool value)
+{
     _needUseMatrix = value;
-    if (!value) {
+    if (!value)
+    {
         _nMatrix_0.setValue(1, 0, 0);
         _nMatrix_1.setValue(0, 1, 0);
         _owner->spriteShaderData->setVector3(ShaderDefines2D::UNIFORM_NMATRIX_0, _nMatrix_0);
@@ -25,22 +29,26 @@ void RTRender2DDataHandle::setNeedUseMatrix(bool value) {
     }
 }
 
-void RTRender2DDataHandle::destroy() {
+void RTRender2DDataHandle::destroy()
+{
     // 基类实现为空
 }
 
-void RTRender2DDataHandle::inheriteRenderData(GLESRenderContext2D* context) {
-    if (!_owner->spriteShaderData) return;
+void RTRender2DDataHandle::inheriteRenderData(GLESRenderContext2D *context)
+{
+    if (!_owner->spriteShaderData)
+        return;
 
-    if (_needUseMatrix) {
-        Matrix* mat = _owner->transform->getMatrix();
+    if (_needUseMatrix)
+    {
+        Matrix *mat = _owner->transform->getMatrix();
         _nMatrix_0.setValue(mat->a, mat->c, mat->tx);
         _nMatrix_1.setValue(mat->b, mat->d, mat->ty);
         _owner->spriteShaderData->setVector3(ShaderDefines2D::UNIFORM_NMATRIX_0, _nMatrix_0);
         _owner->spriteShaderData->setVector3(ShaderDefines2D::UNIFORM_NMATRIX_1, _nMatrix_1);
     }
 
-    IClipInfo* info = _owner->getClipInfo();
+    IClipInfo *info = _owner->getClipInfo();
     _owner->spriteShaderData->setNumber(ShaderDefines2D::UNIFORM_VERTALPHA, _owner->globalAlpha);
     _owner->spriteShaderData->setVector(ShaderDefines2D::UNIFORM_CLIPMATDIR, info->clipMatDir);
     _owner->spriteShaderData->setVector(ShaderDefines2D::UNIFORM_CLIPMATPOS, info->clipMatPos);
