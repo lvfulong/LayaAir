@@ -28,8 +28,8 @@ class PassRenderList
     int _currentType = -1;
     int _currentElementCount = 0;
     Batch2DInfo *_currentBatch = nullptr;
-    FastSinglelist<RTRenderStruct2D *> *structs = nullptr;
-    FastSinglelist<GLESRenderElement2D *> *renderElements = nullptr;
+    FastSinglelist<RTRenderStruct2D *> structs{false};
+    FastSinglelist<GLESRenderElement2D *> renderElements{false};
     int renderListType = -1;
     int zOrder = 0;
     uint32_t _dirtyFlag = 0;

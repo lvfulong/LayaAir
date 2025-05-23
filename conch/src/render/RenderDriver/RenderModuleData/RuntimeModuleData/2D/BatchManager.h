@@ -55,7 +55,7 @@ class BatchManager
   public:
     static void regisBatch(int renderElementType, IBatch2DRender *batch);
 
-  private:
+ public:
     static std::unordered_map<int, IBatch2DRender *> _batchMapManager;
 };
 } // namespace laya

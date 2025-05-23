@@ -10,20 +10,16 @@ namespace laya
 
 PassRenderList::PassRenderList()
 {
-    renderElements = new FastSinglelist<GLESRenderElement2D *>(false);
-    structs = new FastSinglelist<RTRenderStruct2D *>(false);
 }
 
 PassRenderList::~PassRenderList()
 {
     clear();
-    delete renderElements;
-    delete structs;
 }
 
 void PassRenderList::add(RTRenderStruct2D *struct2d)
 {
-    structs->add(struct2d);
+    structs.add(struct2d);
 
     int n = struct2d->renderElements.size();
     if (n == 0)
@@ -32,104 +28,82 @@ void PassRenderList::add(RTRenderStruct2D *struct2d)
     if (n == 1)
     {
         this->_batchStart(struct2d->renderType, 1);
-        this->renderElements->add(struct2d->renderElements[0]);
+        this->renderElements.add(struct2d->renderElements[0]);
     }
     else
     {
         this->_batchStart(struct2d->renderType, n);
         for (int i = 0; i < n; i++)
         {
-            this->renderElements->add(struct2d->renderElements[i]);
+            this->renderElements.add(struct2d->renderElements[i]);
         }
     }
 }
 void PassRenderList::_batchStart(int type, int elementLength)
 {
-    if (_currentBatch)
+    if (this->_currentType == type && this->_currentElementCount == elementLength)
     {
-        _currentBatch->elementLength = _currentElementCount;
-        _currentBatch->elementCount = _currentElementCount;
+        this->_currentBatch->batch = !!(this->_currentBatch->batchFun);
+        this->_currentBatch->elementLength += elementLength;
+        return;
     }
 
-    _currentElementCount = elementLength;
-    _currentBatch = Batch2DInfo::create();
-    _currentBatch->indexStart = renderElements->size() - elementLength;
-    _currentBatch->elementLength = elementLength;
-    _currentBatch->elementCount = elementLength;
-
-    auto it = BatchManager::_batchMapManager.find(type);
-    if (it != BatchManager::_batchMapManager.end())
+    if (this->_currentBatch)
     {
-        _currentBatch->batchFun = it->second;
-        _currentBatch->batch = true;
+        _batchInfoList.add(this->_currentBatch);
     }
-
-    _batchInfoList.add(_currentBatch);
+    this->_currentBatch = Batch2DInfo::create();
+    this->_currentBatch->batch = false;
+    this->_currentBatch->batchFun = BatchManager::_batchMapManager[type];
+    this->_currentBatch->indexStart = this->renderElements.getLength();
+    this->_currentBatch->elementLength = elementLength;
+    this->_currentType = type;
+    this->_currentElementCount = elementLength;
 }
 void PassRenderList::batch()
 {
-    if (renderElements->empty())
-        return;
-
-    _currentType = -1;
-    _currentElementCount = 0;
-    _currentBatch = nullptr;
-
-    for (int i = 0; i < renderElements->size(); i++)
+    if (this->_currentBatch)
     {
-        GLESRenderElement2D *element = renderElements->get(i);
-        if (!element)
-            continue;
+        _batchInfoList.add(this->_currentBatch);
+    }
 
-        int type = element->getType();
-        if (type != _currentType)
+    this->renderElements.resetLength();
+
+    for (int i = 0, n = _batchInfoList.getLength(); i < n; i++)
+    {
+        Batch2DInfo *info = _batchInfoList.m_vElements[i];
+        if (info->batch)
         {
-            _batchStart(type, 1);
-            _currentType = type;
+            info->batchFun->batchRenderElement(this->renderElements, info->indexStart, info->elementLength);
         }
         else
         {
-            _currentElementCount++;
-        }
-    }
-
-    // 处理最后一批
-    if (_currentBatch)
-    {
-        _currentBatch->elementLength = _currentElementCount;
-        _currentBatch->elementCount = _currentElementCount;
-    }
-
-    // 执行合批
-    for (auto batchInfo : _batchInfoList)
-    {
-        if (batchInfo->batch)
-        {
-            batchInfo->batchFun->batchRenderElement(*renderElements, batchInfo->indexStart, batchInfo->elementLength);
+            for (int j = info->indexStart, m = info->elementLength + info->indexStart; j < m; j++)
+                this->renderElements.add(this->renderElements.m_vElements[j]);
         }
     }
 }
 void PassRenderList::remove(RTRenderStruct2D *struct2d)
 {
-    structs->remove(struct2d);
+    structs.remove(struct2d);
 }
 
 void PassRenderList::clear()
 {
-    structs->clear();
+    structs.clear();
     clearRenderElements();
 }
 
 void PassRenderList::clearRenderElements()
 {
-    renderElements->clear();
+    renderElements.clear();
     _batchInfoList.clear();
 }
 
 void PassRenderList::reset()
 {
-    this->structs->resetLength();
-    this->renderElements->resetLength();
+    this->structs.resetLength();
+    this->renderElements.resetLength();
 
     for (int i = 0, n = _batchInfoList.getLength(); i < n; i++)
     {
