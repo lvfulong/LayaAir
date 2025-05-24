@@ -56,6 +56,11 @@ namespace laya
 	    {
 		    m_pJSFunctionCanPlay = jsbind::Persistent(p_pFunction);
 	    }
+		else if (strcmp(p_sName, "canplay") == 0)
+		{
+			//todo
+			LOGW("JSAudio::addEventListener(%s)尚未支持", p_sName);
+		}
 	    else if (strcmp(p_sName, "error") == 0)
 	    {
 		    m_pJSFunctionError = jsbind::Persistent(p_pFunction);

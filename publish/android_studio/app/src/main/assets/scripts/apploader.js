@@ -6026,6 +6026,18 @@ class HTMLAudioElement extends HTMLMediaElement {
     get muted() {
         return this._nativeObj.muted;
     }
+    set onended(v) {
+        this.addEventListener("ended", v);
+    }
+    set onerror(v) {
+        this.addEventListener("error", v);
+    }
+    set oncanplaythrough(v) {
+        this.addEventListener("canplaythrough", v);
+    }
+    set oncanplay(v) {
+        this.addEventListener("canplay", v);
+    }
     addEventListener(type, listener, useCapture) {
         super.addEventListener(type, listener, useCapture);
         var _t = this;
