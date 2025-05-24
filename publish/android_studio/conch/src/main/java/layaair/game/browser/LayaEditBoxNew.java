@@ -174,6 +174,7 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 				}
 				else {
 					ConchJNI.handleKeyboardConfirm(LayaEditBoxNew.this.mEditBox.getText().toString());
+					ConchJNI.handleKeyboardComplete(LayaEditBoxNew.this.mEditBox.getText().toString());
 					if (!LayaEditBoxNew.this.mConfirmHold) {
 						LayaEditBoxNew.this.close();
 					}
