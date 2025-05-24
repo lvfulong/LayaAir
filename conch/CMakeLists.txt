@@ -323,6 +323,8 @@ list(APPEND CONCH_SRC
 	# 暴露给JS的类
 	src/Bindings/JSDevice.h
 	src/Bindings/JSDevice.cpp
+	src/Bindings/JSDataCache.h
+	src/Bindings/JSDataCache.cpp
 	src/Bindings/JSNetwork.h
 	src/Bindings/JSNetwork.cpp
 	src/Bindings/Bullet/LayaBulletExport.h

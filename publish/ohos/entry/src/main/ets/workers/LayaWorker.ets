@@ -14,6 +14,7 @@ const workerPort: ThreadWorkerGlobalScope = worker.workerPort;
 Dialog.init(workerPort);
 JumpManager.init(workerPort);
 WebView.init(workerPort);
+HandleMessageUtils.init(workerPort);
 
 napiContext.nativeEngineStart();
 NapiHelper.registerWorkerFunctions()
