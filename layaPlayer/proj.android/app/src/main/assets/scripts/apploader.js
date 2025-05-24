@@ -6020,12 +6020,6 @@ class HTMLAudioElement extends HTMLMediaElement {
     stop() {
         this._nativeObj.stop();
     }
-    set isBackgroundMusic(v) {
-        this._nativeObj.isBackgroundMusic = v;
-    }
-    get isBackgroundMusic() {
-        return this._nativeObj.isBackgroundMusic;
-    }
     set muted(v) {
         this._nativeObj.muted = v;
     }

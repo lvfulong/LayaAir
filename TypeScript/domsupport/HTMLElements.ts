@@ -925,13 +925,6 @@ class HTMLAudioElement extends HTMLMediaElement<ConchAudio> {
 	}
     */
 
-    set isBackgroundMusic(v) {
-        this._nativeObj.isBackgroundMusic = v;
-    }
-    get isBackgroundMusic() {
-        return this._nativeObj.isBackgroundMusic;
-    }
-
     set muted(v) {
         this._nativeObj.muted = v;
     }

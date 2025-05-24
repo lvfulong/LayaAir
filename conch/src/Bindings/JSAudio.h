@@ -65,10 +65,6 @@ namespace laya
 
 		float getDuration();
 
-		void setIsBackgroundMusic(bool p_bIsBackgroundMusic);
-
-		bool getIsBackgroundMusic();
-
     public:
 
 	    void addEventListener( const char* p_sName, jsvm_value p_pFunction );
@@ -126,7 +122,6 @@ namespace laya
 
         bool			        m_bNeedHandlePlay;
 
-		bool					m_bIsBackgroundMusic = false;
 
 		int						m_nState = EXT_STATE_INVALID;
 
