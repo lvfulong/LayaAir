@@ -20,16 +20,7 @@ namespace laya
     //------------------------------------------------------------------------------
     JSAudio::JSAudio()
     {
-        m_nCurrentTime = 0;
-	    m_bNeedHandlePlay = false;
-	    m_bAutoPlay = false;
-	    m_bLoop = false;
-	    m_bMuted = false;
-	    m_nVolume = 1;
-	    m_sSrc = "";
-	    m_bDownloaded = false;
-        m_audioRenderInfo = NULL;
-		m_fDuration = std::numeric_limits<double>::quiet_NaN();
+	    reset();
 	    jsbind::AdjustAmountOfExternalAllocatedMemory( 534 );
 	    JCMemorySurvey::GetInstance()->newClass( "audio",534,this );
 	    m_CallbackRef.reset(new int(1));
@@ -41,6 +32,19 @@ namespace laya
 	    JCAudioManager::GetInstance()->delWav(this, m_sSrc);
 	    JCAudioManager::GetInstance()->delMp3Obj(this);
     }
+	void JSAudio::reset()
+	{
+		 m_nCurrentTime = 0;
+	    m_bNeedHandlePlay = false;
+	    m_bAutoPlay = false;
+	    m_bLoop = false;
+	    m_bMuted = false;
+	    m_nVolume = 1;
+	    m_sSrc = "";
+	    m_bDownloaded = false;
+        m_audioRenderInfo = NULL;
+		m_fDuration = std::numeric_limits<double>::quiet_NaN();
+	}
     //------------------------------------------------------------------------------
     void JSAudio::addEventListener( const char* p_sName, jsvm_value p_pFunction )
     {
@@ -113,6 +117,7 @@ namespace laya
         std::string sSrc = p_sSrc;
 		if (sSrc == "")
 		{
+			reset();
 			return;
 		}
 	    if( m_sSrc == sSrc )

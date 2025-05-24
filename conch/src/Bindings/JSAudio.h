@@ -121,7 +121,7 @@ namespace laya
 		jsbind::Persistent         m_pJSFunctionCanPlay;   //JS的回调
 		jsbind::Persistent         m_pJSFunctionError;     //JS的回调
         AudioRenderInfo* m_audioRenderInfo;
-
+		void reset();
     private:
 
         bool			        m_bNeedHandlePlay;
