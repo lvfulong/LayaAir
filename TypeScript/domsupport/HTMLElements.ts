@@ -782,7 +782,7 @@ class HTMLMediaElement<ConchMedia extends any> extends HTMLElement /*implements 
     set src(val) {
         this._src = val;
         //this._src = encodeURI(this._src);
-        this._nativeObj.src = window.location.resolve(this._src);
+        this._nativeObj.src = (val == "") ? "" : window.location.resolve(this._src);
     }
 
     get src() {
