@@ -125,11 +125,11 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 	}
 	public void close() {
 		Log.d(TAG, "close ");
+		ConchJNI.handleKeyboardConfirm(mEditBox.getText().toString());
+		ConchJNI.handleKeyboardComplete(mEditBox.getText().toString());
 		InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(mEditBox.getWindowToken(), 0);
 		LayaEditBox.hideSoftKeyBorad();
-		ConchJNI.handleKeyboardConfirm(mEditBox.getText().toString());
-		ConchJNI.handleKeyboardComplete(mEditBox.getText().toString());
 		mRootLayout.setVisibility(View.INVISIBLE);
 		LayaConch5.ms_layaConche.getAbsLayout().removeViewInLayout(mRootLayout);
 		mKeyboardHeightProvider.close();
@@ -173,8 +173,6 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 					return false;
 				}
 				else {
-					ConchJNI.handleKeyboardConfirm(LayaEditBoxNew.this.mEditBox.getText().toString());
-					ConchJNI.handleKeyboardComplete(LayaEditBoxNew.this.mEditBox.getText().toString());
 					if (!LayaEditBoxNew.this.mConfirmHold) {
 						LayaEditBoxNew.this.close();
 					}
