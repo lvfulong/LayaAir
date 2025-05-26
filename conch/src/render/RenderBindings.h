@@ -727,6 +727,7 @@ class RenderBindings
         {
             jsbind::class_<GLESRenderElement2D> class_binding;
             class_binding.constructor<>();
+            class_binding.function("setOwner", &GLESRenderElement2D::setOwner);
             class_binding.property("type", &GLESRenderElement2D::getType, &GLESRenderElement2D::setType);
             class_binding.function("setValue2DShaderData", &GLESRenderElement2D::setValue2DShaderData);
             class_binding.function("setMaterialShaderData", &GLESRenderElement2D::setMaterialShaderData);

@@ -45,6 +45,10 @@ namespace laya
 		{
 			return this->_type;
 		}
+		void setOwner(RTRenderStruct2D* value)
+		{
+			this->_owner = value;
+		}
 	private:
 		void _compileShader(GLESRenderContext2D* context);
 		void _renderByShaderInstance(GLESShaderInstance* shader, GLESRenderContext2D* context);
@@ -56,6 +60,7 @@ namespace laya
 		RTSubShader* subShader = nullptr;
 		bool renderStateIsBySprite = true;
 		int32_t _type = 0;
+		RTRenderStruct2D* _owner = nullptr;
 	private:
 		std::vector<std::string> _commonUniformMap;
 	protected:

@@ -1,5 +1,6 @@
 #include "RTGraphicsBatch.h" 
 #include <utils/Log.h>
+#include "RTRenderStruct2D.h"
 #include <render/3D/design/renderEnum/DrawType.h>
 #include <render/3D/design/renderEnum/IndexFormat.h>
 #include <render/3D/design/renderEnum/RenderPologyMode.h>
@@ -150,7 +151,7 @@ bool RTGraphicsBatch::check(GLESRenderElement2D* left, GLESRenderElement2D* righ
         
         if (leftType & 32) { // 或者比对材质 clip 优先忽略
             return false;
-        } else if (left->owner->getClipInfo() == right->owner->getClipInfo()) {
+        } else if (left->_owner->getClipInfo() == right->_owner->getClipInfo()) {
             return true;
         }
         return false;
