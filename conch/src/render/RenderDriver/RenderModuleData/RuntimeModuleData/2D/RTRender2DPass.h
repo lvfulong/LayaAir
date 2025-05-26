@@ -17,7 +17,7 @@ namespace laya
 class GLESRenderContext2D;
 class RTRenderStruct2D;
 class GLESShaderData;
-class RTDynamicVIBuffer;
+class RT2DGraphicWholeBuffer;
 class PassRenderList;
 class GLESInternalTex;
 class GLESInternalRT;
@@ -45,7 +45,7 @@ class RTRender2DPass
     void updateRenderQueue(GLESRenderContext2D *context);
     void fowardRender(GLESRenderContext2D *context);
     void render(GLESRenderContext2D *context);
-    void setBuffer(RTDynamicVIBuffer *buffer);
+    void setBuffer(RT2DGraphicWholeBuffer*buffer);
     void uploadBuffer();
     void destroy();
 
@@ -91,7 +91,7 @@ class RTRender2DPass
     Color _clearColor;
 
     // CommandBuffer2D *finalize = nullptr;
-    std::set<RTDynamicVIBuffer *> buffers;
+    std::set<RT2DGraphicWholeBuffer*> buffers;
 
     std::map<uint32_t, PassRenderList *> _lists;
 

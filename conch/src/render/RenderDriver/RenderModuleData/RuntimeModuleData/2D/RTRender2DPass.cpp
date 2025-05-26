@@ -92,13 +92,13 @@ void RTRender2DPass::render(GLESRenderContext2D *context)
 
     for (auto &list : _lists)
     {
-        if (!list.second || !list.second->renderElements->getLength())
+        if (!list.second || !list.second->renderElements.getLength())
             continue;
         if (getEnableBatch())
         {
             list.second->batch();
         }
-        context->drawRenderElementList(*(list.second->renderElements));
+        context->drawRenderElementList(list.second->renderElements);
     }
 
     repaint = false;
@@ -140,7 +140,7 @@ void RTRender2DPass::_initRenderProcess(GLESRenderContext2D *context)
     _setRenderSize(sizeX, sizeY);
 }
 
-void RTRender2DPass::setBuffer(RTDynamicVIBuffer *buffer)
+void RTRender2DPass::setBuffer(RT2DGraphicWholeBuffer*buffer)
 {
     if (buffer->_inPass)
         return;
