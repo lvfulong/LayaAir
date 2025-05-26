@@ -285,6 +285,8 @@ list(APPEND CONCH_SRC
 	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/BatchManager.h	
 	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTGraphicsBatch.cpp
 	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTGraphicsBatch.h
+	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RT2DGraphic2DBufferDataView.cpp
+	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RT2DGraphic2DBufferDataView.h
 
 
 	src/Audio/JCAudioManager.cpp

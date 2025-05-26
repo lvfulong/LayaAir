@@ -1,6 +1,6 @@
 #include "RTRender2DPass.h"
 #include "PassRenderList.h"
-#include "RTDynamicVIBuffer.h"
+#include "RT2DGraphic2DBufferDataView.h"
 #include "RTRenderStruct2D.h"
 #include <render/Property.h>
 #include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderContext2D.h>
