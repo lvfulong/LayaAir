@@ -12,13 +12,13 @@ namespace laya
 {
 RTRender2DPass::RTRender2DPass()
 {
-    this->shaderData = nullptr;
     _invertMat_0 = Vector3(1, 1, 0);
     _invertMat_1 = Vector3(0, 0, 0);
 }
-RTRender2DPass::RTRender2DPass(GLESShaderData *shaderData)
+RTRender2DPass::RTRender2DPass(jsvm_value value)
 {
-    this->shaderData = shaderData;
+    this->_shaderDataJS = jsbind::Persistent(value);
+    _shaderdata = jsbind::as<GLESShaderData*>(value);;
     _invertMat_0 = Vector3(1, 1, 0);
     _invertMat_1 = Vector3(0, 0, 0);
 }
@@ -136,7 +136,7 @@ void RTRender2DPass::_initRenderProcess(GLESRenderContext2D *context)
         this->shaderData->removeDefine(ShaderDefines2D::RENDERTEXTURE);
     }
 #endif
-    context->passData = shaderData;
+    context->_passDataJS = this->_shaderDataJS;
     _setRenderSize(sizeX, sizeY);
 }
 
@@ -196,8 +196,8 @@ void RTRender2DPass::_setInvertMatrix(float a, float b, float c, float d, float 
     _invertMat_0.setValue(a, c, tx);
     _invertMat_1.setValue(b, d, ty);
 
-    shaderData->setVector3(ShaderDefines2D::UNIFORM_INVERTMAT_0, _invertMat_0);
-    shaderData->setVector3(ShaderDefines2D::UNIFORM_INVERTMAT_1, _invertMat_1);
+    _shaderdata->setVector3(ShaderDefines2D::UNIFORM_INVERTMAT_0, _invertMat_0);
+    _shaderdata->setVector3(ShaderDefines2D::UNIFORM_INVERTMAT_1, _invertMat_1);
 }
 
 void RTRender2DPass::_setRenderSize(float x, float y)
@@ -205,7 +205,7 @@ void RTRender2DPass::_setRenderSize(float x, float y)
     if (x == _rtsize.x && y == _rtsize.y)
         return;
     _rtsize.setValue(x, y);
-    shaderData->setVector2(ShaderDefines2D::UNIFORM_SIZE, _rtsize);
+    _shaderdata->setVector2(ShaderDefines2D::UNIFORM_SIZE, _rtsize);
 }
 
 void RTRender2DPass::destroy()

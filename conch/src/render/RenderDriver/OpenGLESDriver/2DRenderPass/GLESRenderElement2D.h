@@ -8,6 +8,7 @@
 namespace laya
 {
 	class GLESRenderContext2D;
+	class RTRenderStruct2D;
 	class GLESRenderElement2D
 	{
 	public:
@@ -37,7 +38,7 @@ namespace laya
 		{
 			geometry = value;
 		}
-		void seType(int32_t value)
+		void setType(int32_t value)
 		{
 			this->_type = value;
 		}

@@ -68,11 +68,11 @@ namespace laya
 	void GLESRenderContext2D::drawRenderElementList(const FastSinglelist<GLESRenderElement2D*>& list)
 	{
 		for (int i  = 0, n  = list.getLength(); i < n; i++) {
-			GLESRenderElement2D* element = list.m_vElements[i];
+			GLESRenderElement2D* element = list._elements[i];
 			element->_preUpdatePre(this);//render
 		}
 		for (int i = 0, n = list.getLength(); i < n; i++) {
-			GLESRenderElement2D* element = list.m_vElements[i];
+			GLESRenderElement2D* element = list._elements[i];
 			element->_render(this);//render
 		}
 		return ;

@@ -1,6 +1,6 @@
 #ifndef __RTRENDER2DPASS_H__
 #define __RTRENDER2DPASS_H__
-
+#include <jsbind/JSBind.h>
 #include <core/math/Color.h>
 #include <core/math/Vector2.h>
 #include <core/math/Vector3.h>
@@ -26,7 +26,7 @@ class RTRender2DPass
 {
   public:
     RTRender2DPass();
-    RTRender2DPass(GLESShaderData *shaderData);
+    RTRender2DPass(jsvm_value value);
     ~RTRender2DPass();
     bool needRender()
     {
@@ -74,15 +74,15 @@ class RTRender2DPass
         return renderTexture;
     }
     void setRenderTexture(GLESInternalRT *value);
-    GLESShaderData *getShaderData() const
-    {
-        return shaderData;
-    }
-    void setShaderData(GLESShaderData *value)
-    {
-        shaderData = value;
-    }
 
+    void setShaderDataJS(jsvm_value value)
+    {
+        _shaderDataJS = jsbind::Persistent(value);
+    }
+    jsvm_value getShaderDataJS()
+    {
+        return _shaderDataJS.getHandle();
+    }
   private:
     void _initRenderProcess(GLESRenderContext2D *context);
     void _updateInvertMatrix();
@@ -126,8 +126,9 @@ class RTRender2DPass
     int32_t priority = 0;
     uint32_t renderLayerMask = 0x00000000;
     Vector4 cullRect;
-    GLESShaderData *shaderData = nullptr;
     Vector2 renderOffset;
+    jsbind::Persistent _shaderDataJS;
+    GLESShaderData* _shaderdata = nullptr;
 };
 
 class RTRender2DPassManager

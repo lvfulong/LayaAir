@@ -756,8 +756,8 @@ class RenderBindings
                 "drawRenderElementList",
                 jsbind::optional_override(
                     [](GLESRenderContext2D &ctx, const std::vector<GLESRenderElement2D *> elements, uint32_t length) {
-                        JCSingletonList<GLESRenderElement2D *> list(false);
-                        list.m_vElements = elements;
+                        FastSinglelist<GLESRenderElement2D *> list(false);
+                        list._elements = elements;
                         list.setLength(length);
                         ctx.drawRenderElementList(list);
                     }));

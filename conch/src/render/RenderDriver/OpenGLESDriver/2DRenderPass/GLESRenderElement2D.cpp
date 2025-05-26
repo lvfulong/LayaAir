@@ -52,7 +52,7 @@ namespace laya
 
 	void GLESRenderElement2D::_compileShader(GLESRenderContext2D* context)
 	{
-		std::vector<RTShaderPass*> passes = subshader->shaderpasses;
+		std::vector<RTShaderPass*> passes = subShader->shaderpasses;
 		_shaderInstances.clear();
 		for (uint32_t j = 0, m = passes.size(); j < m; j++)
 		{

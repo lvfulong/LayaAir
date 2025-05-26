@@ -1,10 +1,15 @@
 #ifndef __GLESRenderContext2D_H_
 #define __GLESRenderContext2D_H_
-#include "string"
+
+#include <jsbind/JSBind.h>
+#include <string>
 #include <core/math/Color.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalRT.h>
 #include <utils/JCSingletonList.h>
 #include <utils/FastSinglelist.h>
+
+
+
 namespace laya
 {
 	class GLESRenderCMD;
@@ -25,21 +30,29 @@ namespace laya
 
 		void setSceneShaderData(GLESShaderData* value)
 		{
-			passData = value;
+			sceneData = value;
 
 		}
 		void setGlobalConfigShaderData(RTDefineDatas* value)
 		{
 			globalConfigShaderData = value;
 		}
+		void setPassDataJS(jsvm_value value)
+		{
+			_passDataJS = jsbind::Persistent(value);
+		}
+		jsvm_value getPassDataJS()
+		{
+			return _passDataJS.getHandle();
+		}
 	public:
 		bool invertY;
 		std::string pipelineMode; 
-		GLESShaderData* passData = nullptr;
+		GLESShaderData* sceneData = nullptr;
 		RTDefineDatas* globalConfigShaderData = nullptr;
 		GLESInternalRT* destRT = nullptr;
+		jsbind::Persistent _passDataJS;
 	private:
-		
 		Color _clearColor;
 		uint32_t _offscreenWidth;
 		uint32_t _offscreenHeight;

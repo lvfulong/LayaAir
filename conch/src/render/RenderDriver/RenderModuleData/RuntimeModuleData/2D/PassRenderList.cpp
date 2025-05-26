@@ -71,7 +71,7 @@ void PassRenderList::batch()
 
     for (int i = 0, n = _batchInfoList.getLength(); i < n; i++)
     {
-        Batch2DInfo *info = _batchInfoList.m_vElements[i];
+        Batch2DInfo *info = _batchInfoList._elements[i];
         if (info->batch)
         {
             info->batchFun->batchRenderElement(this->renderElements, info->indexStart, info->elementLength);
@@ -79,7 +79,7 @@ void PassRenderList::batch()
         else
         {
             for (int j = info->indexStart, m = info->elementLength + info->indexStart; j < m; j++)
-                this->renderElements.add(this->renderElements.m_vElements[j]);
+                this->renderElements.add(this->renderElements._elements[j]);
         }
     }
 }
@@ -107,7 +107,7 @@ void PassRenderList::reset()
 
     for (int i = 0, n = _batchInfoList.getLength(); i < n; i++)
     {
-        Batch2DInfo *element = _batchInfoList.m_vElements[i];
+        Batch2DInfo *element = _batchInfoList._elements[i];
         if (element->batch)
         {
             element->batchFun->recover();
