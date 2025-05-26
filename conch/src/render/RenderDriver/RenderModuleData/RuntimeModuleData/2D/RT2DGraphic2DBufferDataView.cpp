@@ -50,11 +50,11 @@ void RT2DGraphicWholeBuffer::upload()
     {
         if (BufferModifyType::Index == _modifyType)
         {
-            buffers.indexBuffer->_setIndexData((char *)_uint16ArrayBufferData, uint16ArrayByteLength, 0);
+            buffers_indexBuffer->_setIndexData((char *)_uint16ArrayBufferData, uint16ArrayByteLength, 0);
         }
         else
         {
-            buffers.vertexBuffers[0]->setData((char *)floatArrays0, floatArrays0ByteLength, 0, 0,
+            buffers_vertexBuffers[0]->setData((char *)floatArrays0, floatArrays0ByteLength, 0, 0,
                                               floatArrays0ByteLength);
         }
 
@@ -71,7 +71,7 @@ void RT2DGraphicWholeBuffer::upload()
 
         if (BufferModifyType::Index != _modifyType)
         {
-            buffers.vertexBuffers[0]->setData((char *)floatArrays0, floatArrays0ByteLength, _updateRange.x * 4,
+            buffers_vertexBuffers[0]->setData((char *)floatArrays0, floatArrays0ByteLength, _updateRange.x * 4,
                                               _updateRange.x * 4, (_updateRange.y - _updateRange.x) * 4);
         }
         else
@@ -80,7 +80,7 @@ void RT2DGraphicWholeBuffer::upload()
             int32_t offset = _updateRange.x * 2;
             auto length = _updateRange.y - _updateRange.x;
             uint16_t *tempView = _uint16ArrayBufferData + offset;
-            buffers.indexBuffer->_setIndexData((char *)tempView, length, _updateRange.x * 2);
+            buffers_indexBuffer->_setIndexData((char *)tempView, length, _updateRange.x * 2);
             delete tempView;
         }
     }

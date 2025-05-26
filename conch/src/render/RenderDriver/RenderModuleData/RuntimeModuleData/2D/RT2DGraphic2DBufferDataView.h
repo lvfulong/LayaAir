@@ -18,10 +18,9 @@ class RT2DGraphic2DBufferDataView;
 class RT2DGraphicWholeBuffer
 {
   public:
-    union {
-        GLESIndexBuffer *indexBuffer;
-        std::vector<GLESVertexBuffer *> vertexBuffers;
-    } buffers;
+    GLESIndexBuffer *buffers_indexBuffer = nullptr;
+    std::vector<GLESVertexBuffer *> buffers_vertexBuffers;
+
     void setBuffers(jsvm_value value);
 
     uint16_t *_uint16ArrayBufferData = nullptr;
