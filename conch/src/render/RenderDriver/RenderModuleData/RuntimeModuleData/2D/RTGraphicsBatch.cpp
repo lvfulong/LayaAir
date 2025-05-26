@@ -91,7 +91,7 @@ void RTGraphicsBatch::batch(FastSinglelist<GLESRenderElement2D*>& list, int star
         auto geometry = element->geometry;
         
         if (!i) {
-            staticBatchRenderElement->geometry->bufferState = geometry->bufferState;
+            staticBatchRenderElement->geometry->_bufferState = geometry->_bufferState;
             staticBatchRenderElement->materialShaderData = element->materialShaderData;
             staticBatchRenderElement->value2DShaderData = element->value2DShaderData;
             staticBatchRenderElement->subShader = element->subShader;
@@ -141,11 +141,11 @@ void RTGraphicsBatch::batch(FastSinglelist<GLESRenderElement2D*>& list, int star
 }
 
 bool RTGraphicsBatch::check(GLESRenderElement2D* left, GLESRenderElement2D* right) {
-    int leftType = left->type;
-    int rightType = right->type;
+    int leftType = left->_type;
+    int rightType = right->_type;
 
     if (left->subShader == right->subShader &&
-        left->geometry->bufferState == right->geometry->bufferState &&
+        left->geometry->_bufferState == right->geometry->_bufferState &&
         leftType == rightType) {
         
         if (leftType & 32) { // 或者比对材质 clip 优先忽略

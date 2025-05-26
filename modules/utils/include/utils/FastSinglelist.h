@@ -31,27 +31,27 @@ template <class T> class FastSinglelist
             }
         }
         m_nLength = 0;
-        m_vElements.clear();
+        elements.clear();
     }
     inline void add(T element)
     {
-        if (m_vElements.size() == m_nLength)
+        if (elements.size() == m_nLength)
         {
-            m_vElements.push_back(element);
+            elements.push_back(element);
         }
         else
         {
-            m_vElements[m_nLength] = element;
+            elements[m_nLength] = element;
         }
         m_nLength++;
     }
     inline void remove(T element)
     {
-        int index = std::find(m_vElements.begin(), m_vElements.end(), element) - m_vElements.begin();
+        int index = std::find(elements.begin(), elements.end(), element) - elements.begin();
         if (index < m_nLength)
         {
-            m_vElements[index] = m_vElements[m_nLength - 1];
-            m_vElements[m_nLength - 1] = nullptr; // 去掉引用
+            elements[index] = elements[m_nLength - 1];
+            elements[m_nLength - 1] = nullptr; // 去掉引用
             m_nLength--;
         }
     }
@@ -69,7 +69,7 @@ template <class T> class FastSinglelist
     {
         assert(!m_bNeedDelete);
         m_nLength = 0;
-        m_vElements.clear();
+        elements.clear();
     }
     inline int getLength()
     {
@@ -85,7 +85,7 @@ template <class T> class FastSinglelist
     }
 
   public:
-    std::vector<T> m_vElements;
+    std::vector<T> elements;
 
   private:
     int m_nLength;

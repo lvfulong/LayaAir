@@ -31,11 +31,19 @@ namespace laya
 		}
 		void setSubShader(RTSubShader* value)
 		{
-			subshader = value;
+			subShader = value;
 		}
 		void setGeometry(GLESRenderGeometryElement* value)
 		{
 			geometry = value;
+		}
+		void seType(int32_t value)
+		{
+			this->_type = value;
+		}
+		int32_t getType()
+		{
+			return this->_type;
 		}
 	private:
 		void _compileShader(GLESRenderContext2D* context);
@@ -45,8 +53,9 @@ namespace laya
 		GLESShaderData* materialShaderData = nullptr;
 		GLESShaderData* value2DShaderData = nullptr;
 		GLESRenderGeometryElement* geometry = nullptr;
-		RTSubShader* subshader = nullptr;
+		RTSubShader* subShader = nullptr;
 		bool renderStateIsBySprite = true;
+		int32_t _type = 0;
 	private:
 		std::vector<std::string> _commonUniformMap;
 	protected:
