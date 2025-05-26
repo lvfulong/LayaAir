@@ -47,7 +47,7 @@ void RTGraphicsBatch::recoverRenderElement2D(GLESRenderElement2D* value) {
 }
 
 void RTGraphicsBatch::batchRenderElement(FastSinglelist<GLESRenderElement2D*>& list, int start, int length) {
-    auto& elementArray = list.elements;
+    auto& elementArray = list._elements;
     int batchStart = -1;
     int count = 0;
     int end = length - 1;
@@ -83,7 +83,7 @@ void RTGraphicsBatch::batchRenderElement(FastSinglelist<GLESRenderElement2D*>& l
 }
 
 void RTGraphicsBatch::batch(FastSinglelist<GLESRenderElement2D*>& list, int start, int length) {
-    auto& elementArray = list.elements;
+    auto& elementArray = list._elements;
     GLESRenderElement2D* staticBatchRenderElement = createRenderElement2D();
     std::vector<std::vector<int>> drawArray;
     
@@ -101,7 +101,7 @@ void RTGraphicsBatch::batch(FastSinglelist<GLESRenderElement2D*>& list, int star
         
         TEMP_SINGLE_LIST.clear();
         geometry->getDrawDataParams(TEMP_SINGLE_LIST);
-        drawArray.push_back(TEMP_SINGLE_LIST.elements);
+        drawArray.push_back(TEMP_SINGLE_LIST._elements);
     }
     
     auto geometry = staticBatchRenderElement->geometry;
@@ -126,7 +126,7 @@ void RTGraphicsBatch::batch(FastSinglelist<GLESRenderElement2D*>& list, int star
             if (currentOffset + currentCount * 2 == offset) {
                 currentCount += count;
             } else {
-                geometry->setDrawElemenParams(currentCount, currentOffset);
+                geometry->setDrawElementParams(currentCount, currentOffset);
                 currentOffset = offset;
                 currentCount = count;
             }
@@ -134,7 +134,7 @@ void RTGraphicsBatch::batch(FastSinglelist<GLESRenderElement2D*>& list, int star
     }
 
     if (!isFirst) {
-        geometry->setDrawElemenParams(currentCount, currentOffset);
+        geometry->setDrawElementParams(currentCount, currentOffset);
     }
 
     _recoverList.add(staticBatchRenderElement);
@@ -161,7 +161,7 @@ bool RTGraphicsBatch::check(GLESRenderElement2D* left, GLESRenderElement2D* righ
 
 void RTGraphicsBatch::recover() {
     int length = _recoverList.getLength();
-    auto& recoverArray = _recoverList.elements;
+    auto& recoverArray = _recoverList._elements;
     for (int i = 0; i < length; i++) {
         GLESRenderElement2D* info = recoverArray[i];
         recoverRenderElement2D(info);

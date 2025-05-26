@@ -22,7 +22,7 @@ template <class T> class FastSinglelist
         {
             for (int i = 0; i < m_nLength; i++)
             {
-                T *pElement = &(m_vElements[i]);
+                T *pElement = &(_elements[i]);
                 if (pElement)
                 {
                     delete pElement;
@@ -31,27 +31,27 @@ template <class T> class FastSinglelist
             }
         }
         m_nLength = 0;
-        elements.clear();
+        _elements.clear();
     }
     inline void add(T element)
     {
-        if (elements.size() == m_nLength)
+        if (_elements.size() == m_nLength)
         {
-            elements.push_back(element);
+            _elements.push_back(element);
         }
         else
         {
-            elements[m_nLength] = element;
+            _elements[m_nLength] = element;
         }
         m_nLength++;
     }
     inline void remove(T element)
     {
-        int index = std::find(elements.begin(), elements.end(), element) - elements.begin();
+        int index = std::find(_elements.begin(), _elements.end(), element) - _elements.begin();
         if (index < m_nLength)
         {
-            elements[index] = elements[m_nLength - 1];
-            elements[m_nLength - 1] = nullptr; // 去掉引用
+            _elements[index] = _elements[m_nLength - 1];
+            _elements[m_nLength - 1] = nullptr; // 去掉引用
             m_nLength--;
         }
     }
@@ -69,7 +69,7 @@ template <class T> class FastSinglelist
     {
         assert(!m_bNeedDelete);
         m_nLength = 0;
-        elements.clear();
+        _elements.clear();
     }
     inline int getLength()
     {
@@ -82,10 +82,9 @@ template <class T> class FastSinglelist
     inline void subLengthOne()
     {
         m_nLength--;
-    }
-
+    }  
   public:
-    std::vector<T> elements;
+    std::vector<T> _elements;
 
   private:
     int m_nLength;

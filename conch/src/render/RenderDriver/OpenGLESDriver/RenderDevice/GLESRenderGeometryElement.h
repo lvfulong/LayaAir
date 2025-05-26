@@ -6,6 +6,7 @@
 #include <render/3D/design/renderEnum/RenderPologyMode.h>
 #include <stdio.h>
 #include <utils/JCSingletonList.h>
+#include <utils/FastSinglelist.h>
 #include <utils/Preprocessor.h>
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLRenderDrawContext.h"
 namespace laya
@@ -21,6 +22,11 @@ public:
     ~GLESRenderGeometryElement();
     void setDrawArrayParams(int first, int count);
     void setDrawElementParams(int count, int offset);
+    void getDrawDataParams(FastSinglelist<int>& out)
+    {
+        out._elements = this->m_pDrawParams->m_vElements;
+        out.setLength(this->m_pDrawParams->getLength());
+    }
     void clearRenderParams();
     void cloneTo(GLESRenderGeometryElement* geometry);
     void destroy();
