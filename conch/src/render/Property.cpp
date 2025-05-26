@@ -230,9 +230,17 @@ namespace laya
         CommandProperty::SCREENTEXTUREOFFSETSCALE_ID = LayaGL::m_pWebglEngine->propertyNameToID("u_OffsetScale");
         CommandProperty::MAINTEXTURE_TEXELSIZE_ID = LayaGL::m_pWebglEngine->propertyNameToID("u_MainTex_TexelSize");
     }
-
+    uint32_t ShaderDefines2D::UNIFORM_VERTALPHA = 0;
+    uint32_t ShaderDefines2D::UNIFORM_NMATRIX_0 = 0;
+    uint32_t ShaderDefines2D::UNIFORM_NMATRIX_1 = 0;
+    uint32_t ShaderDefines2D::UNIFORM_INVERTMAT_0 = 0;
+    uint32_t ShaderDefines2D::UNIFORM_INVERTMAT_1 = 0;
+    uint32_t ShaderDefines2D::UNIFORM_SIZE = 0;
     RTShaderDefine ShaderDefines2D::GAMMASPACE;
     RTShaderDefine ShaderDefines2D::INVERTY;
+    RTShaderDefine ShaderDefines2D::RENDERTEXTURE;
+    uint32_t ShaderDefines2D::UNIFORM_CLIPMATDIR;
+    uint32_t ShaderDefines2D::UNIFORM_CLIPMATPOS;
     void ShaderDefines2D::__init__()
     {
         ShaderDefines2D::UNIFORM_VERTALPHA = LayaGL::m_pWebglEngine->propertyNameToID("u_VertAlpha");
