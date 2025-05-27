@@ -11,7 +11,7 @@
 @property (nonatomic, copy) NSString *inputType;
 
 -(instancetype)initWithMultiple: (BOOL)multiple;
--(void)hideKeyboard:(BOOL)forceClose;
+-(void)hideKeyboard;
 -(void)becomeFirstResponder;
 
 @end

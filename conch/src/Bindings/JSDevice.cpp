@@ -185,7 +185,7 @@ void JSDevice::offKeyboardConfirm()
 void JSDevice::handleKeyboardConfirm(const char *strValue)
 {
 
-    std::string value(strValue);
+    std::string value(strValue == nullptr ? "" : strValue);
     postToJS([value]() {
         auto obj = jsbind::MakeObject();
         jsbind::set_option(obj, "value", value);
@@ -207,7 +207,7 @@ void JSDevice::offKeyboardComplete()
 void JSDevice::handleKeyboardComplete(const char *strValue)
 {
 
-    std::string value(strValue);
+    std::string value(strValue == nullptr ? "" : strValue);
     postToJS([value]() {
         auto obj = jsbind::MakeObject();
         jsbind::set_option(obj, "value", value);

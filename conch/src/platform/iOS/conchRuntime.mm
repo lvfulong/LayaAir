@@ -1017,7 +1017,7 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
 -(void)hideKeyboard
 {
     if (m_UIEditBoxWX != nil) {
-        [m_UIEditBoxWX hideKeyboard:FALSE];
+        [m_UIEditBoxWX hideKeyboard];
     }
 }
 -(void)alert:(NSString*)sInfo
