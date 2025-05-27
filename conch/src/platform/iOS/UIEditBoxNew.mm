@@ -1,4 +1,4 @@
-#import "UIEditBoxWX.h"
+#import "UIEditBoxNew.h"
 #import <Bindings/JSDevice.h>
 
 #define TEXT_VIEW_HEIGHT 40
@@ -12,7 +12,7 @@
 #define SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
 #define TEXT_COLOR [UIColor blackColor]
 
-@interface UIEditBoxWX()
+@interface UIEditBoxNew()
 @property(nonatomic,strong) UIView *inputBackgroundView;
 @property(nonatomic,assign) CGFloat keyboardHeight;
 @property(nonatomic,strong) UITextField* textField;
@@ -22,7 +22,7 @@
 @property(nonatomic,assign) BOOL multiple;
 @end
 
-@implementation UIEditBoxWX
+@implementation UIEditBoxNew
 
 - (instancetype)initWithMultiple:(BOOL)multiple
 {
@@ -58,7 +58,7 @@
         _textField.text = self.defaultText;
     }
     
-    if (![UIEditBoxWX isBlankString:_defaultText]) {
+    if (![UIEditBoxNew isBlankString:_defaultText]) {
         _placeHolderLabel.hidden = true;
     }
     else {
@@ -86,12 +86,12 @@
 - (void)setPrompt:(NSString *)prompt
 {
     _prompt = prompt;
-    if (![UIEditBoxWX isBlankString:self.prompt])
+    if (![UIEditBoxNew isBlankString:self.prompt])
     {
         _placeHolderLabel.text = prompt;
     }
     
-    if (![UIEditBoxWX isBlankString:self.prompt])
+    if (![UIEditBoxNew isBlankString:self.prompt])
     {
         _textField.placeholder = self.prompt;
     }
@@ -100,14 +100,14 @@
 - (void)setPromptColor:(NSString *)promptColor
 {
     _promptColor = promptColor;
-    if (![UIEditBoxWX isBlankString: self.promptColor])
+    if (![UIEditBoxNew isBlankString: self.promptColor])
     {
-        _placeHolderLabel.textColor = [UIEditBoxWX colorWithHexString: self.promptColor alpha:1.0F];
+        _placeHolderLabel.textColor = [UIEditBoxNew colorWithHexString: self.promptColor alpha:1.0F];
     }
     
-    if (![UIEditBoxWX isBlankString: self.promptColor])
+    if (![UIEditBoxNew isBlankString: self.promptColor])
     {
-        [_textField setValue:[UIEditBoxWX colorWithHexString: self.promptColor alpha:1.0F] forKeyPath:@"placeholderLabel.textColor"];
+        [_textField setValue:[UIEditBoxNew colorWithHexString: self.promptColor alpha:1.0F] forKeyPath:@"placeholderLabel.textColor"];
     }
 }
 

@@ -21,7 +21,7 @@
 #import "LayaDeviceSensor.h"
 #import <resource/JCFileResManager.h>
 #import "JCSystemConfig.h"
-#import "UIEditBoxWX.h"
+#import "UIEditBoxNew.h"
 #import "LayaVideoPlayer.h"
 #import <Bindings/JSConchConfig.h>
 #import "LayaOpenGLESView.h"
@@ -43,7 +43,7 @@
 @implementation conchRuntime
 {
     laya::BackendOptions m_options;
-    UIEditBoxWX*  m_UIEditBoxWX;
+    UIEditBoxNew*  m_UIEditBoxNew;
 }
 
 extern bool g_bGLCanvasSizeChanged;
@@ -326,7 +326,7 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
         
         // initialize the default values of LayaVideoPlayer
         [LayaVideoPlayer setCurParentView:m_pView withRetianValue:m_fRetinaValue];
-        m_UIEditBoxWX = nil;
+        m_UIEditBoxNew = nil;
         
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChanged:)
         //                                             name:UIDeviceOrientationDidChangeNotification object:[UIDevice currentDevice]];
@@ -996,28 +996,28 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
 }
 -(void)showKeyboard:(NSString*)defaultValue maxLength:(int)maxLength multiple:(bool)multiple confirmHold:(bool)confirmHold confirmType:(NSString*)confirmType prompt:(NSString*)prompt promptColor:(NSString*)promptColor inputType:(NSString*)inputType
 {
-    if (m_UIEditBoxWX == nil)
+    if (m_UIEditBoxNew == nil)
     {
-        m_UIEditBoxWX = [[UIEditBoxWX alloc] initWithMultiple:multiple];
+        m_UIEditBoxNew = [[UIEditBoxNew alloc] initWithMultiple:multiple];
     }
     else
     {
-        [m_UIEditBoxWX initWithMultiple:multiple];
+        [m_UIEditBoxNew initWithMultiple:multiple];
     }
-    m_UIEditBoxWX.defaultText = defaultValue;
-    m_UIEditBoxWX.maxLength = maxLength;
-    m_UIEditBoxWX.confirmHold = confirmHold;
-    m_UIEditBoxWX.confirmType = confirmType;
-    m_UIEditBoxWX.prompt = prompt;
-    m_UIEditBoxWX.promptColor = promptColor;
-    m_UIEditBoxWX.inputType = inputType;
-    [m_UIEditBoxWX becomeFirstResponder];
+    m_UIEditBoxNew.defaultText = defaultValue;
+    m_UIEditBoxNew.maxLength = maxLength;
+    m_UIEditBoxNew.confirmHold = confirmHold;
+    m_UIEditBoxNew.confirmType = confirmType;
+    m_UIEditBoxNew.prompt = prompt;
+    m_UIEditBoxNew.promptColor = promptColor;
+    m_UIEditBoxNew.inputType = inputType;
+    [m_UIEditBoxNew becomeFirstResponder];
 }
 
 -(void)hideKeyboard
 {
-    if (m_UIEditBoxWX != nil) {
-        [m_UIEditBoxWX hideKeyboard];
+    if (m_UIEditBoxNew != nil) {
+        [m_UIEditBoxNew hideKeyboard];
     }
 }
 -(void)alert:(NSString*)sInfo
