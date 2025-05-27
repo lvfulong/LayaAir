@@ -902,25 +902,7 @@ bool memoryInfo(vm_statistics_data_t *vmStats)
 }
 long CToObjectCGetTotalMem()
 {
-    vm_statistics_data_t vmStats;
-    if ( memoryInfo(&vmStats))
-    {
-        NSLog(@">>>>>>>>>>>>>>>>>>>ios info free: %u\nactive: %u\ninactive: %u\nwire: %u\nzero fill: %u\nreactivations: %u\npageins: %u\npageouts: %u\nfaults: %u\ncow_faults: %u\nlookups: %u\nhits: %u",
-              vmStats.free_count * vm_page_size,
-              vmStats.active_count * vm_page_size,
-              vmStats.inactive_count * vm_page_size,
-              vmStats.wire_count * vm_page_size,
-              vmStats.zero_fill_count * vm_page_size,
-              vmStats.reactivations * vm_page_size,
-              vmStats.pageins * vm_page_size,
-              vmStats.pageouts * vm_page_size,
-              vmStats.faults,
-              vmStats.cow_faults,
-              vmStats.lookups,
-              vmStats.hits
-              );
-    }
-    return (long)(NSRealMemoryAvailable() / 1024);
+    return (long)([NSProcessInfo processInfo].physicalMemory / 1024);
 }
 long CToObjectCGetUsedMem()
 {
