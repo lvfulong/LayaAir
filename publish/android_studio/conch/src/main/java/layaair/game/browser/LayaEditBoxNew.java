@@ -144,7 +144,7 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 		((Activity)exp.m_pEngine.mCtx).runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				if (LayaEditBoxNew.instance != null && !LayaEditBoxNew.instance.mConfirmHold) {
+				if (LayaEditBoxNew.instance != null) {
 					LayaEditBoxNew.instance.close();
 				}
 			}
@@ -173,9 +173,7 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 					return false;
 				}
 				else {
-					if (!LayaEditBoxNew.this.mConfirmHold) {
-						LayaEditBoxNew.this.close();
-					}
+					LayaEditBoxNew.this.close();
 					return false;
 				}
 			}
@@ -296,9 +294,7 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 		mEditboxPanelBg.setOnTouchListener(new View.OnTouchListener() {                 //parent为Editext外面那层布局
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				if (!LayaEditBoxNew.this.mConfirmHold) {
-					LayaEditBoxNew.this.close();
-				}
+				LayaEditBoxNew.this.close();
 				return false;
 			}
 		});
