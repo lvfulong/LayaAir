@@ -166,11 +166,26 @@ RTRenderStruct2D *RTRenderStruct2D::addChild(RTRenderStruct2D *child, int32_t in
 {
     child->parent = this;
     children.insert(children.begin() + index, child);
-    // 效率
+    
+    child->_parentClipInfo = this->getClipInfo();
+    child->_parentBlendMode = this->getBlendMode();
+    child->_parentPass = this->_pass;
+
     updateChildren(ChildrenUpdateType::All);
     return child;
 }
+void RTRenderStruct2D::updateChildIndex(RTRenderStruct2D *child, int32_t oldIndex, int32_t index)
+{   
+    if (oldIndex == index)
+        return;
 
+    children.erase(children.begin() + oldIndex);
+    if (index >= children.size()) {
+        children.push_back(child);
+    } else {
+        children.insert(children.begin() + index, child);
+    }
+}
 void RTRenderStruct2D::removeChild(RTRenderStruct2D *child)
 {
     auto it = std::find(children.begin(), children.end(), child);
@@ -194,7 +209,7 @@ void RTRenderStruct2D::renderUpdate(GLESRenderContext2D *context)
     }
 
     // f (this->_rnUpdateFun)
-    //    this->_rnUpdateFun(this->_rnUpdateCall, context);
+    //    this->_rnUpdateFun(this->_rnUpdateCall, context);//lvtodo
 }
 
 void RTRenderStruct2D::destroy()

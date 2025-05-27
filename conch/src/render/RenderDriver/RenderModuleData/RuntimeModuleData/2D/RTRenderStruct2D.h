@@ -23,12 +23,20 @@ class IClipInfo
     {
     }
 };
-class RT2DGlobalRenderData
+class RTGlobalRenderData
 {
   public:
     Vector4 cullRect;
+    void setCullRect(const Vector4 &value)
+    {
+        this->cullRect = value;
+    }
     uint32_t renderLayerMask;
     GLESShaderData *globalShaderData;
+    void setGlobalShaderData(GLESShaderData *value)
+    {
+        this->globalShaderData = value;
+    }   
 };
 enum class ChildrenUpdateType
 {
@@ -99,13 +107,17 @@ class RTRenderStruct2D
         this->updateChildren(ChildrenUpdateType::Alpha);
     }
 
-    BlendMode _blendMode = BlendMode::Normal;
-    BlendMode _parentBlendMode = BlendMode::Normal;
+    BlendMode _blendMode = BlendMode::Invalid;
+    BlendMode _parentBlendMode = BlendMode::Invalid;
 
     BlendMode getBlendMode()
     {
-        //return this->_blendMode || this->_parentBlendMode || BlendMode::Normal;//lvtodo
-        return this->_blendMode;
+        //return this->_blendMode || this->_parentBlendMode || BlendMode::Normal;
+        if (this->_blendMode != Invalid)
+            return this->_blendMode;
+        if (this->_parentBlendMode != Invalid)
+            return this->_parentBlendMode;
+        return BlendMode::Normal;
     }
 
     void setBlendMode(BlendMode value)
@@ -119,13 +131,16 @@ class RTRenderStruct2D
     // 渲染数据
     bool isRenderStruct = false;
     std::vector<GLESRenderElement2D *> renderElements;
+    void setRenderElements(const std::vector<GLESRenderElement2D *> &value)
+    {
+        this->renderElements = value;
+    } 
+      
     GLESShaderData *spriteShaderData;
     std::vector<std::string> commonUniformMap;
-
-    // 属性访问器
-    RTRender2DDataHandle *getRenderDataHandler() const
+    void setCommonUniformMap(const std::vector<std::string> &value)
     {
-        return _renderDataHandler;
+        this->commonUniformMap = value;
     }
     void setRenderDataHandler(RTRender2DDataHandle *value)
     {
@@ -134,11 +149,11 @@ class RTRenderStruct2D
             _renderDataHandler->_owner = this;
     }
 
-    RT2DGlobalRenderData *getGlobalRenderData() const
+    RTGlobalRenderData*getGlobalRenderData() const
     {
         return _globalRenderData;
     }
-    void setGlobalRenderData(RT2DGlobalRenderData *value)
+    void setGlobalRenderData(RTGlobalRenderData*value)
     {
         _globalRenderData = value;
     }
@@ -175,15 +190,15 @@ class RTRenderStruct2D
     void _initClipInfo();
     Matrix _matrix;
     int32_t _modifiedFrame; // lvtodo
-    RT2DGlobalRenderData *_globalRenderData;
-    RTRender2DDataHandle *_renderDataHandler;
-    RTRender2DPass *_pass;
-    RTRender2DPass *_parentPass;
+    RTGlobalRenderData*_globalRenderData = nullptr;
+    RTRender2DDataHandle *_renderDataHandler = nullptr;
+    RTRender2DPass *_pass = nullptr;
+    RTRender2DPass *_parentPass = nullptr;
     Rectangle *_clipRect = nullptr;
-    IClipInfo *_parentClipInfo;
-    IClipInfo *_clipInfo;
-    void *_rnUpdateCall;
-    void *_rnUpdateFun;
+    IClipInfo *_parentClipInfo = nullptr;
+    IClipInfo *_clipInfo = nullptr;
+    void *_rnUpdateCall = nullptr;
+    void *_rnUpdateFun = nullptr;
 };
 } // namespace laya
 #endif // __RTRENDERSTRUCT2D_H__

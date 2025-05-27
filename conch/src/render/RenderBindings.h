@@ -1170,6 +1170,14 @@ class RenderBindings
 #if 0
         //2D
         {
+            jsbind::class_<RTGlobalRenderData> class_binding;
+            class_binding.constructor<>();
+            class_binding.function("setCullRect", &RTGlobalRenderData::setCullRect);
+            class_binding.property_field("renderLayerMask", &RTGlobalRenderData::renderLayerMask);
+            class_binding.function("setGlobalShaderData", &RTGlobalRenderData::setGlobalShaderData);
+            context.class_("conchRTGlobalRenderData", class_binding);
+        }
+        {
             jsbind::class_<RTRenderStruct2D> class_binding;
             class_binding.constructor<>();
             class_binding.property_field("zIndex", &RTRenderStruct2D::zIndex);
@@ -1184,6 +1192,17 @@ class RenderBindings
             class_binding.property("blendMode", &RTRenderStruct2D::getBlendMode, &RTRenderStruct2D::setBlendMode);
             class_binding.property_field("enable", &RTRenderStruct2D::enable);
             class_binding.property_field("isRenderStruct", &RTRenderStruct2D::isRenderStruct);
+            class_binding.function("setRenderElements", &RTRenderStruct2D::setRenderElements);
+            class_binding.function("setCommonUniformMap", &RTRenderStruct2D::setCommonUniformMap);
+            class_binding.function("setRenderDataHandler", &RTRenderStruct2D::setRenderDataHandler);
+            class_binding.function("setPass", &RTRenderStruct2D::setPass);
+            class_binding.function("setRepaint", &RTRenderStruct2D::setRepaint);
+            class_binding.function("addChild", &RTRenderStruct2D::addChild);
+            class_binding.function("updateChildIndex", &RTRenderStruct2D::updateChildIndex);
+            class_binding.function("removeChild", &RTRenderStruct2D::removeChild);
+            class_binding.function("setClipRect", &RTRenderStruct2D::setClipRect);
+            class_binding.function("renderUpdate", &RTRenderStruct2D::renderUpdate);
+            class_binding.function("destroy", &RTRenderStruct2D::destroy);
             context.class_("conchRTRenderStruct2D", class_binding);
         }
         {

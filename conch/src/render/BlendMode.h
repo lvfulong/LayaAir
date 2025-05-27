@@ -5,8 +5,8 @@ namespace laya
 {
 enum BlendMode
 {
-    Invalid = -1,
-    Normal = 0,
+    Invalid = 0,
+    Normal,
     Add,
     Multiply,
     Screen,
