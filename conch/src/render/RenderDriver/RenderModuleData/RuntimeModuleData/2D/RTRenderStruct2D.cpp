@@ -49,7 +49,7 @@ void RTRenderStruct2D::_updateBlendMode()
 {
     if (!spriteShaderData)
         return;
-    std::string blendMode = getBlendMode();
+    //std::string blendMode = getBlendMode();
     // BlendModeHandler::setShaderData(blendMode, spriteShaderData); lvtodo
 }
 
@@ -76,7 +76,7 @@ IClipInfo *RTRenderStruct2D::getClipInfo()
 void RTRenderStruct2D::updateChildren(ChildrenUpdateType type)
 {
     IClipInfo *info = nullptr;
-    std::string blendMode;
+    BlendMode blendMode;
     float alpha;
     int32_t priority = 0;
     RTRender2DPass *pass = nullptr;
@@ -90,7 +90,7 @@ void RTRenderStruct2D::updateChildren(ChildrenUpdateType type)
 
     if (static_cast<uint32_t>(type) & static_cast<uint32_t>(ChildrenUpdateType::Blend))
     {
-        blendMode = this->blendMode;
+        blendMode = this->getBlendMode();
         updateBlend = true;
     }
 
@@ -121,7 +121,7 @@ void RTRenderStruct2D::updateChildren(ChildrenUpdateType type)
 
         if (updateBlend)
         {
-            if (child->blendMode == "invalid")
+            if (child->getBlendMode() != BlendMode::Invalid)//lvtodo
             { // lvtodo
                 child->_parentBlendMode = blendMode;
                 child->_updateBlendMode();
@@ -181,7 +181,7 @@ void RTRenderStruct2D::removeChild(RTRenderStruct2D *child)
 
         child->_parentPass = nullptr;
         child->_parentClipInfo = nullptr;
-        child->_parentBlendMode = ""; // todo
+        child->_parentBlendMode = BlendMode::Invalid; // lvtodo
         child->updateChildren(ChildrenUpdateType::All);
     }
 }

@@ -7,6 +7,7 @@
 #include <core/math/Vector4.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 #include <string>
+#include <render/BlendMode.h>
 
 namespace laya
 {
@@ -49,11 +50,28 @@ class RTRenderStruct2D
     // 2D渲染组织流程数据
     int32_t zIndex;
     Rectangle rect;
-    int32_t renderLayer;
-    RTRenderStruct2D *parent;
+    const Rectangle &getRect()
+    {
+        return this->rect;
+    }
+
+    void setRect(const Rectangle &value)
+    {
+        this->rect = value;
+    }
+    int32_t renderLayer = -1;
+    RTRenderStruct2D *parent = nullptr;
+    void setParent(RTRenderStruct2D *value)
+    {
+        this->parent = value;
+    }
     std::vector<RTRenderStruct2D *> children;
-    int32_t renderType;
-    uint32_t renderUpdateMask;
+    void setChildren(const std::vector<RTRenderStruct2D *> &value)
+    {
+        this->children = value;
+    }
+    int32_t renderType = -1;
+    uint32_t renderUpdateMask = 0;
 
     // 渲染继承累加数据
     Matrix renderMatrix;
@@ -80,23 +98,26 @@ class RTRenderStruct2D
         this->alpha = value;
         this->updateChildren(ChildrenUpdateType::Alpha);
     }
-    std::string blendMode;
-    std::string getBlendMode()
+
+    BlendMode _blendMode = BlendMode::Normal;
+    BlendMode _parentBlendMode = BlendMode::Normal;
+
+    BlendMode getBlendMode()
     {
-        return ""; // lvtodo
+        //return this->_blendMode || this->_parentBlendMode || BlendMode::Normal;//lvtodo
+        return this->_blendMode;
     }
 
-    void setBlendMode(const std::string &blendMode)
+    void setBlendMode(BlendMode value)
     {
-        this->blendMode = blendMode;
-        _updateBlendMode();
-        updateChildren(ChildrenUpdateType::Blend);
+        this->_blendMode = value;
+        this->_updateBlendMode();
+        this->updateChildren(ChildrenUpdateType::Blend);
     }
-    std::string _parentBlendMode;
-    bool enable;
+    bool enable = true;
 
     // 渲染数据
-    bool isRenderStruct;
+    bool isRenderStruct = false;
     std::vector<GLESRenderElement2D *> renderElements;
     GLESShaderData *spriteShaderData;
     std::vector<std::string> commonUniformMap;

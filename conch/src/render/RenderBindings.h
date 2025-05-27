@@ -1170,6 +1170,23 @@ class RenderBindings
 #if 0
         //2D
         {
+            jsbind::class_<RTRenderStruct2D> class_binding;
+            class_binding.constructor<>();
+            class_binding.property_field("zIndex", &RTRenderStruct2D::zIndex);
+            class_binding.property("rect", &RTRenderStruct2D::getRect, &RTRenderStruct2D::setRect);
+            class_binding.property_field("renderLayer", &RTRenderStruct2D::renderLayer);
+            class_binding.function("setParent", &RTRenderStruct2D::setParent);
+            class_binding.function("setChildren", &RTRenderStruct2D::setChildren);
+            class_binding.property_field("renderType", &RTRenderStruct2D::renderType);
+            class_binding.property_field("renderUpdateMask", &RTRenderStruct2D::renderUpdateMask);
+            class_binding.property_field("globalAlpha", &RTRenderStruct2D::globalAlpha);
+            class_binding.property("alpha", &RTRenderStruct2D::getAlpha, &RTRenderStruct2D::setAlpha);
+            class_binding.property("blendMode", &RTRenderStruct2D::getBlendMode, &RTRenderStruct2D::setBlendMode);
+            class_binding.property_field("enable", &RTRenderStruct2D::enable);
+            class_binding.property_field("isRenderStruct", &RTRenderStruct2D::isRenderStruct);
+            context.class_("conchRTRenderStruct2D", class_binding);
+        }
+        {
             jsbind::class_<RTRender2DPass> class_binding;
             class_binding.constructor<>();
             class_binding.property_field("enable", &RTRender2DPass::enable);
