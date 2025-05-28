@@ -17,8 +17,7 @@ RTRender2DPass::RTRender2DPass()
 }
 RTRender2DPass::RTRender2DPass(jsvm_value value)
 {
-    this->_shaderDataJS = jsbind::Persistent(value);
-    _shaderdata = jsbind::as<GLESShaderData*>(value);;
+    setShaderDataJS(value);
     _invertMat_0 = Vector3(1, 1, 0);
     _invertMat_1 = Vector3(0, 0, 0);
 }
@@ -103,11 +102,15 @@ void RTRender2DPass::render(GLESRenderContext2D *context)
 
     repaint = false;
 
-    // if (mask && mask->pass->enable) {
-    //     mask->pass->renderTexture = renderTexture;
-    //     mask->pass->fowardRender(context);
-    //     mask->pass->renderTexture = nullptr;
-    // }
+
+    if (this->mask && this->mask->getPass() && this->mask->getPass()->enable) {
+         this->mask->getPass()->renderTexture = this->renderTexture;
+         this->mask->getPass()->fowardRender(context);
+         this->mask->getPass()->renderTexture = nullptr;
+      }
+
+
+    callRenderCallback();
 
     // if (postProcess && postProcess->enabled) {
     //     postProcess->_context->command->apply(true);

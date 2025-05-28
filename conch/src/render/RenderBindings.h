@@ -761,6 +761,7 @@ class RenderBindings
                         list.setLength(length);
                         ctx.drawRenderElementList(list);
                     }));
+            class_binding.property("passData", &GLESRenderContext2D::getPassDataJS, &GLESRenderContext2D::setPassDataJS);
             context.class_("conchGLESRenderContext2D", class_binding);
         }
 
@@ -1170,11 +1171,31 @@ class RenderBindings
 #if 0
         //2D
         {
+            
+            jsbind::class_<RTRender2DPassManager> class_binding;
+            class_binding.constructor<>();
+            class_binding.function("removePass", &RTRender2DPassManager::removePass);
+            class_binding.function("addPass", &RTRender2DPassManager::addPass);
+            class_binding.function("apply", &RTRender2DPassManager::apply);
+            class_binding.function("clear", &RTRender2DPassManager::clear); 
+            context.class_("conchRTRender2DPassManager", class_binding);
+            
+        }
+        {
+            jsbind::class_<RTRender2DDataHandle> class_binding;
+            class_binding.constructor<>();
+            class_binding.function("setOwner", &RTRender2DDataHandle::setOwner);
+            class_binding.property("needUseMatrix", &RTRender2DDataHandle::getNeedUseMatrix, &RTRender2DDataHandle::setNeedUseMatrix);
+            class_binding.function("destroy", &RTRender2DDataHandle::destroy);
+            context.class_("conchRTRender2DDataHandle", class_binding);
+        }
+        {
             jsbind::class_<RTGlobalRenderData> class_binding;
             class_binding.constructor<>();
             class_binding.function("setCullRect", &RTGlobalRenderData::setCullRect);
             class_binding.property_field("renderLayerMask", &RTGlobalRenderData::renderLayerMask);
             class_binding.function("setGlobalShaderData", &RTGlobalRenderData::setGlobalShaderData);
+            class_binding.function("inheriteRenderData", &RTGlobalRenderData::inheriteRenderData);
             context.class_("conchRTGlobalRenderData", class_binding);
         }
         {
@@ -1209,18 +1230,18 @@ class RenderBindings
             jsbind::class_<RTRender2DPass> class_binding;
             class_binding.constructor<>();
             class_binding.property_field("enable", &RTRender2DPass::enable);
-            class_binding.property_field("enableBatch", &RTRender2DPass::enableBatch);
+            class_binding.property("enableBatch", &RTRender2DPass::getEnableBatch, &RTRender2DPass::setEnableBatch);
             class_binding.property_field("isSupport", &RTRender2DPass::isSupport);
-            class_binding.property("root", &RTRender2DPass::getRoot, &RTRender2DPass::setRoot);
+            class_binding.function("setRoot", &RTRender2DPass::setRoot);
             class_binding.property_field("doClearColor", &RTRender2DPass::doClearColor);
             class_binding.property("postProcess", &RTRender2DPass::getPostProcess, &RTRender2DPass::setPostProcess);
-            class_binding.property("mask", &RTRender2DPass::getMask, &RTRender2DPass::setMask);
+            class_binding.function("setMask", &RTRender2DPass::setMask);
             class_binding.property_field("repaint", &RTRender2DPass::repaint);
-            class_binding.property("renderTexture", &RTRender2DPass::getRenderTexture, &RTRender2DPass::setRenderTexture);
+            class_binding.function("setRenderTexture", &RTRender2DPass::setRenderTexture);
             class_binding.property_field("priority", &RTRender2DPass::priority);
             class_binding.property_field("renderLayerMask", &RTRender2DPass::renderLayerMask);
             class_binding.property_field("cullRect", &RTRender2DPass::cullRect);
-            class_binding.property("shaderData", &RTRender2DPass::getShaderData, &RTRender2DPass::setShaderData);
+            class_binding.function("setShaderData", &RTRender2DPass::setShaderData);
             class_binding.function("setClearColor", &RTRender2DPass::setClearColor);
             class_binding.function("addStruct", &RTRender2DPass::addStruct);
             class_binding.function("removeStruct", &RTRender2DPass::removeStruct);
@@ -1228,6 +1249,9 @@ class RenderBindings
             class_binding.function("render", &RTRender2DPass::render);
             class_binding.function("destroy", &RTRender2DPass::destroy);
             class_binding.function("setBuffer", &RTRender2DPass::setBuffer);
+            class_binding.function("needRender", &RTRender2DPass::needRender);
+            class_binding.property("renderOffset", &RTRender2DPass::getRenderOffset, &RTRender2DPass::setRenderOffset);  
+            class_binding.function("setRenderCallback", &RTRender2DPass::setRenderCallbackJS);
             context.class_("conchRTRender2DPass", class_binding);
         }
 #endif

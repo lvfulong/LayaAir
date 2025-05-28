@@ -54,34 +54,49 @@ class RTRender2DPass
     void setCullRect(const Vector4 &value);
     void setRenderLayerMask(uint32_t value);
 
-    RTRenderStruct2D *getRoot() const
+    void setRoot(RTRenderStruct2D *value)
     {
-        return root;
+        this->root = value;
     }
-    void setRoot(RTRenderStruct2D *value);
-
-    // PostProcess2D* getPostProcess() const { return postProcess; }
-    // void setPostProcess(PostProcess2D* value);
-
-    RTRenderStruct2D *getMask() const
+    void setMask(RTRenderStruct2D *value)
     {
-        return mask;
+        this->mask = value;
     }
-    void setMask(RTRenderStruct2D *value);
-
-    GLESInternalRT *getRenderTexture() const
+    void setRenderTexture(GLESInternalRT *value)
     {
-        return renderTexture;
+        this->renderTexture = value;
     }
-    void setRenderTexture(GLESInternalRT *value);
-
-    void setShaderDataJS(jsvm_value value)
+    void setShaderDataJS(jsbind::Local value)
     {
-        _shaderDataJS = jsbind::Persistent(value);
+        _shaderDataJS = jsbind::Persistent(value.getHandle());
+        if (value.isNull() || value.isUndefined())
+        {
+            _shaderdata = nullptr;
+        }
+        else
+        {
+            _shaderdata = jsbind::as<GLESShaderData*>(value["_nativeObj"].getHandle());
+        }
     }
     jsvm_value getShaderDataJS()
     {
         return _shaderDataJS.getHandle();
+    }
+    const Vector2& getRenderOffset()
+    {
+        return this->renderOffset;
+    } 
+    void setRenderOffset(const Vector2& value)
+    {
+        this->renderOffset = value;
+    }
+    void setRenderCallbackJS(jsvm_value value)
+    {
+        m_renderCallbackJS = jsbind::Persistent(value);
+    }
+    void callRenderCallback()
+    {
+      return m_renderCallbackJS.call<void>(jsvm::global());
     }
   private:
     void _initRenderProcess(GLESRenderContext2D *context);
@@ -99,10 +114,10 @@ class RTRender2DPass
 
     Vector3 _invertMat_0;
     Vector3 _invertMat_1;
-
+    GLESShaderData* _shaderdata = nullptr;
   public:
-    bool enable = false;
-    bool _enableBatch = true;
+    bool enable = true;
+    bool _enableBatch = false;
     bool getEnableBatch()
     {
         return this->_enableBatch;
@@ -115,11 +130,11 @@ class RTRender2DPass
     }
     bool isSupport = false;
     RTRenderStruct2D *root = nullptr;
-    bool doClearColor = false;
+    bool doClearColor = true;
 
     // PostProcess2D *postProcess = nullptr;
     RTRenderStruct2D *mask = nullptr;
-    bool repaint = false;
+    bool repaint = true;
 
     GLESInternalRT *renderTexture = nullptr;
     GLESInternalTex *texture = nullptr;
@@ -128,7 +143,7 @@ class RTRender2DPass
     Vector4 cullRect;
     Vector2 renderOffset;
     jsbind::Persistent _shaderDataJS;
-    GLESShaderData* _shaderdata = nullptr;
+    jsbind::Persistent m_renderCallbackJS;
 };
 
 class RTRender2DPassManager
