@@ -189,6 +189,7 @@ void HttpURLSessionDownloaderImpl::setMethod(const std::string& method)
 {
     m_method = method;
 }
+static NSURLSession *s_singletonSession = nil;
 void HttpURLSessionDownloaderImpl::doRequest()
 {
 
@@ -201,11 +202,25 @@ void HttpURLSessionDownloaderImpl::doRequest()
     }
     else
     {
+
         NSURLSessionConfiguration *defaultConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
         defaultConfig.timeoutIntervalForRequest = m_downloader->m_readTimeout;
         // defaultConfig.timeoutIntervalForResource = m_downloader->m_connectTimeout;
+        //one http request one session
+#if  0
         NSURLSession *session = [NSURLSession sessionWithConfiguration:defaultConfig];
-
+#else
+        //one singleton shared session
+        if (s_singletonSession == nil)
+        {
+            LOGD("HTTPMaximumConnectionsPerHost %d",defaultConfig.HTTPMaximumConnectionsPerHost);
+            defaultConfig.HTTPMaximumConnectionsPerHost = 6;//default is 6
+            s_singletonSession = [NSURLSession sessionWithConfiguration:defaultConfig];
+            
+        }
+        NSURLSession *session = s_singletonSession;
+        
+#endif
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:m_url];
         //if (g_kSystemConfig.m_bUseDcc)
         {
