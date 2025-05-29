@@ -5935,7 +5935,7 @@ class HTMLMediaElement extends HTMLElement {
     }
     set src(val) {
         this._src = val;
-        this._nativeObj.src = window.location.resolve(this._src);
+        this._nativeObj.src = (val == "") ? "" : window.location.resolve(this._src);
     }
     get src() {
         return this._nativeObj.src;
@@ -6020,17 +6020,23 @@ class HTMLAudioElement extends HTMLMediaElement {
     stop() {
         this._nativeObj.stop();
     }
-    set isBackgroundMusic(v) {
-        this._nativeObj.isBackgroundMusic = v;
-    }
-    get isBackgroundMusic() {
-        return this._nativeObj.isBackgroundMusic;
-    }
     set muted(v) {
         this._nativeObj.muted = v;
     }
     get muted() {
         return this._nativeObj.muted;
+    }
+    set onended(v) {
+        this.addEventListener("ended", v);
+    }
+    set onerror(v) {
+        this.addEventListener("error", v);
+    }
+    set oncanplaythrough(v) {
+        this.addEventListener("canplaythrough", v);
+    }
+    set oncanplay(v) {
+        this.addEventListener("canplay", v);
     }
     addEventListener(type, listener, useCapture) {
         super.addEventListener(type, listener, useCapture);
@@ -6632,15 +6638,6 @@ class _jsXmlNode extends _jsXmlAttr {
 }
 class _jsXmlDocument extends _jsXmlNode {
 }
-var GL_CAPS;
-(function (GL_CAPS) {
-    GL_CAPS[GL_CAPS["NONE"] = 0] = "NONE";
-    GL_CAPS[GL_CAPS["TEXTURE_COMPRESSION_PVR"] = 2] = "TEXTURE_COMPRESSION_PVR";
-    GL_CAPS[GL_CAPS["TEXTURE_COMPRESSION_ETC1"] = 4] = "TEXTURE_COMPRESSION_ETC1";
-    GL_CAPS[GL_CAPS["TEXTURE_COMPRESSION_ETC2"] = 8] = "TEXTURE_COMPRESSION_ETC2";
-    GL_CAPS[GL_CAPS["TEXTURE_TPG"] = 32] = "TEXTURE_TPG";
-    GL_CAPS[GL_CAPS["INSTANCEING"] = 64] = "INSTANCEING";
-})(GL_CAPS || (GL_CAPS = {}));
 var _window = new _Window();
 window.getComputedStyle = function (ele, parm) {
     return null;
@@ -6762,7 +6759,6 @@ window.postRuntimeMessage = function (d) {
     }
     window.dispatchEvent(e);
 };
-window.SetupWebglContext = function () { };
 window.downloadfile = function (url, force, onok, onerr) {
     if (force) {
         url = (function (url) {
@@ -6784,21 +6780,7 @@ window.downloadfile = function (url, force, onok, onerr) {
 };
 if (window.navigator.platform != "windows")
     window["ontouchstart"] = null;
-window['GL_CAPS'] = GL_CAPS;
 window.focus = function () { };
-var nMem = conchConfig.getTotalMem();
-if (nMem <= 524288) {
-    conchConfig.atlasNum = 10;
-    conchConfig.maxTextureMemSize = 64 * 1024 * 1024;
-}
-else if (nMem > 524288 && nMem <= 1048576) {
-    conchConfig.atlasNum = 16;
-    conchConfig.maxTextureMemSize = 84 * 1024 * 1024;
-}
-else if (nMem > 1048576) {
-    conchConfig.atlasNum = 20;
-    conchConfig.maxTextureMemSize = 128 * 1024 * 1024;
-}
 class Performance {
     now() {
         return tmGetCurms();

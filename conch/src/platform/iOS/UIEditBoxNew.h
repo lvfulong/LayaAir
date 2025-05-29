@@ -1,6 +1,6 @@
 #import "UIKit/UIKit.h"
 
-@interface UIEditBoxWX: NSObject<UITextViewDelegate, UITextFieldDelegate>
+@interface UIEditBoxNew: NSObject<UITextViewDelegate, UITextFieldDelegate>
 
 @property (nonatomic, copy) NSString *defaultText;
 @property (nonatomic, assign) int maxLength;
@@ -11,7 +11,7 @@
 @property (nonatomic, copy) NSString *inputType;
 
 -(instancetype)initWithMultiple: (BOOL)multiple;
--(void)hideKeyboard:(BOOL)forceClose;
+-(void)hideKeyboard;
 -(void)becomeFirstResponder;
 
 @end

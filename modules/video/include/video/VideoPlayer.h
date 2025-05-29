@@ -30,6 +30,11 @@ class VideoPlayer
     void stop();
     double getVideoWidth();
     double getVideoHeight();
+    double getCurrentPosition();
+    double getDuration();
+    double getVolume();
+    void setVolume(double volume);
+    void seekTo(double time);
     static void init();
     static void destroy();
 

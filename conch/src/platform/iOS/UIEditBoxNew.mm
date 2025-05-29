@@ -1,4 +1,4 @@
-#import "UIEditBoxWX.h"
+#import "UIEditBoxNew.h"
 #import <Bindings/JSDevice.h>
 
 #define TEXT_VIEW_HEIGHT 40
@@ -12,36 +12,17 @@
 #define SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
 #define TEXT_COLOR [UIColor blackColor]
 
-@interface UIEditBoxWX()
+@interface UIEditBoxNew()
 @property(nonatomic,strong) UIView *inputBackgroundView;
-@property(nonatomic,strong) UIView *toolView;
 @property(nonatomic,assign) CGFloat keyboardHeight;
 @property(nonatomic,strong) UITextField* textField;
 @property(nonatomic,strong) UITextView* textView;
 @property(nonatomic,strong) UIView* backgroundView;
 @property(nonatomic,strong) UILabel *placeHolderLabel;
-@property(nonatomic,strong) UIView* touchView;
 @property(nonatomic,assign) BOOL multiple;
-@property(nonatomic,strong) UITapGestureRecognizer *tapGesture;
 @end
 
-@interface CustomUIView : UIView
-@end
-@implementation CustomUIView
-//点击输入框背景时(子view按钮，输入框不在此列)，事件不做拦截，传给父类的view处理
-- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event{
-    BOOL flag = NO;
-    for (UIView *view in self.subviews) {
-        if (CGRectContainsPoint(view.frame, point)){
-            flag = YES;
-            break;
-        }
-    }
-    return flag;
-}
-@end
-
-@implementation UIEditBoxWX
+@implementation UIEditBoxNew
 
 - (instancetype)initWithMultiple:(BOOL)multiple
 {
@@ -58,11 +39,6 @@
 
 - (void)dealloc
 {
-    if (_touchView != nil)
-    {
-        [_touchView removeFromSuperview];
-        _touchView = nil;
-    }
     if (_backgroundView != nil)
     {
         [_backgroundView removeFromSuperview];
@@ -82,7 +58,7 @@
         _textField.text = self.defaultText;
     }
     
-    if (![UIEditBoxWX isBlankString:_defaultText]) {
+    if (![UIEditBoxNew isBlankString:_defaultText]) {
         _placeHolderLabel.hidden = true;
     }
     else {
@@ -110,12 +86,12 @@
 - (void)setPrompt:(NSString *)prompt
 {
     _prompt = prompt;
-    if (![UIEditBoxWX isBlankString:self.prompt])
+    if (![UIEditBoxNew isBlankString:self.prompt])
     {
         _placeHolderLabel.text = prompt;
     }
     
-    if (![UIEditBoxWX isBlankString:self.prompt])
+    if (![UIEditBoxNew isBlankString:self.prompt])
     {
         _textField.placeholder = self.prompt;
     }
@@ -124,14 +100,14 @@
 - (void)setPromptColor:(NSString *)promptColor
 {
     _promptColor = promptColor;
-    if (![UIEditBoxWX isBlankString: self.promptColor])
+    if (![UIEditBoxNew isBlankString: self.promptColor])
     {
-        _placeHolderLabel.textColor = [UIEditBoxWX colorWithHexString: self.promptColor alpha:1.0F];
+        _placeHolderLabel.textColor = [UIEditBoxNew colorWithHexString: self.promptColor alpha:1.0F];
     }
     
-    if (![UIEditBoxWX isBlankString: self.promptColor])
+    if (![UIEditBoxNew isBlankString: self.promptColor])
     {
-        [_textField setValue:[UIEditBoxWX colorWithHexString: self.promptColor alpha:1.0F] forKeyPath:@"placeholderLabel.textColor"];
+        [_textField setValue:[UIEditBoxNew colorWithHexString: self.promptColor alpha:1.0F] forKeyPath:@"placeholderLabel.textColor"];
     }
 }
 
@@ -167,11 +143,6 @@
 
 -(void)initView
 {
-    if (_touchView != nil)
-    {
-        [_touchView removeFromSuperview];
-        _touchView = nil;
-    }
     if (_backgroundView != nil)
     {
         [_backgroundView removeFromSuperview];
@@ -180,12 +151,8 @@
     _textView = nil;
     _textField = nil;
     
-    _touchView = [[UIView alloc] initWithFrame: UIApplication.sharedApplication.delegate.window.rootViewController.view.bounds];
-    _touchView.backgroundColor = [UIColor clearColor];
-    _touchView.userInteractionEnabled = YES;
-    _touchView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight; // 适应屏幕旋转
     
-    _backgroundView = [CustomUIView new];
+    _backgroundView = [[UIView alloc] init];
     //F7F7F7
     _backgroundView.backgroundColor = [UIColor colorWithRed: 247 / 255.0 green: 247 / 255.0 blue: 247 / 255.0 alpha: 1];
     _backgroundView.frame = CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, BACKGROUND_VIEW_HEIGHT);
@@ -203,14 +170,7 @@
         [_backgroundView addSubview:_textField];
         //[textField setValue:[UIFont boldSystemFontOfSize:16] forKeyPath:@"_placeholderLabel.font"];
     }
-    [UIApplication.sharedApplication.delegate.window.rootViewController.view addSubview:_touchView];
     [UIApplication.sharedApplication.delegate.window.rootViewController.view addSubview:_backgroundView];
-    _tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-    [_touchView addGestureRecognizer:_tapGesture];
-}
-- (void)handleTap:(UITapGestureRecognizer *)sender {
-    //[slef handleKeyboardConfirm];
-    [self hideKeyboard:TRUE];
 }
 - (void)becomeFirstResponder
 {
@@ -295,42 +255,34 @@
 }
 -(void)handleKeyboardConfirm
 {
+    NSString* text = nil;
     if (_multiple)
     {
-        NSString* text = _textView.text;
+        text = _textView.text;
         text = [text stringByReplacingOccurrencesOfString:@"\u2006" withString:@""];
-        laya::JSDevice::handleKeyboardConfirm(text.UTF8String);
     }
     else
     {
-        NSString* text = _textField.text;
+        text = _textField.text;
         text = [text stringByReplacingOccurrencesOfString:@"\u2006" withString:@""];
-        laya::JSDevice::handleKeyboardConfirm(text.UTF8String);
     }
+    laya::JSDevice::handleKeyboardConfirm(text.UTF8String);
+    laya::JSDevice::handleKeyboardComplete(text.UTF8String);
 }
--(void)hideKeyboard:(BOOL)forceClose
+-(void)hideKeyboard
 {
-    if ((!self.confirmHold && !forceClose) || forceClose)
+    //if (!self.confirmHold)
     {
-        [_touchView removeFromSuperview];
-        _touchView = nil;
-        
+        [self handleKeyboardConfirm];
         [_backgroundView removeFromSuperview];
         [self resignFirstResponder];
         _backgroundView = nil;
+
+        _textView = nil;
+        _textField = nil;
     }
-    
-    if (_multiple)
-    {
-        _textView.text = @"";
-    }
-    else
-    {
-        _textField.text = @"";
-    }
-    _textView = nil;
-    _textField = nil;
 }
+
 
 - (void)keyboardWillShow:(NSNotification*) notification
 {
@@ -370,8 +322,8 @@
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    [self handleKeyboardConfirm];
-    [self hideKeyboard:FALSE];
+    
+    [self hideKeyboard];
     return YES;
 }
 - (void)textFieldDidChange:(UITextField *)textField

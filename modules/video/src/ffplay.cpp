@@ -318,4 +318,15 @@ bool stream_open(VideoState *is, unsigned char *buffer, int length, const AVInpu
     is->m_iobuffer_ptr = (unsigned char *)av_malloc(IO_BUFFER_SIZE);
     return stream_open(is, iformat);
 }
+
+void stream_seek(VideoState *is, int64_t pos, int rel) {
+    if (!is->seek_req) {
+        is->seek_pos = pos;
+        is->seek_rel = rel;
+        is->seek_flags &= ~AVSEEK_FLAG_BYTE;
+        is->seek_req = 1;
+        SDL_CondSignal(is->continue_read_thread);
+    }
+}
 } // namespace ffplay
+

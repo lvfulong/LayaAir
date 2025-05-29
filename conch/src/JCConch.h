@@ -107,6 +107,8 @@ namespace laya
         std::vector<std::function<void(void)>>  m_tasks;
         std::mutex                              m_mutex;
         bool                                    m_isAppStarted = { false };
+    private:
+        void _realReload();
 	};
 };
 #endif

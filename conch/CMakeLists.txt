@@ -321,6 +321,8 @@ list(APPEND CONCH_SRC
 	# 暴露给JS的类
 	src/Bindings/JSDevice.h
 	src/Bindings/JSDevice.cpp
+	src/Bindings/JSDataCache.h
+	src/Bindings/JSDataCache.cpp
 	src/Bindings/JSNetwork.h
 	src/Bindings/JSNetwork.cpp
 	src/Bindings/Bullet/LayaBulletExport.h
@@ -499,8 +501,8 @@ if(OS_IOS)
 		src/platform/iOS/Notification/LayaNotifyManager.m
 		src/platform/iOS/Audio/JCMp3Player.h
 		src/platform/iOS/Audio/JCMp3Player.mm
-		src/platform/iOS/UIEditBoxWX.h
-		src/platform/iOS/UIEditBoxWX.mm
+		src/platform/iOS/UIEditBoxNew.h
+		src/platform/iOS/UIEditBoxNew.mm
 		src/platform/iOS/LayaOpenGLESView.h
 		src/platform/iOS/LayaOpenGLESView.mm
 		src/platform/iOS/Utils.h

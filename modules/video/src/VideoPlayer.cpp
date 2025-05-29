@@ -166,4 +166,36 @@ double VideoPlayer::getVideoHeight()
     }
     return 0;
 }
+double VideoPlayer::getCurrentPosition() {
+    if (m_impl) {
+        return m_impl->m_is.audio_clock;
+    }
+    return 0.0;
+}
+
+double VideoPlayer::getDuration() {
+    if (m_impl) {
+        return m_impl->m_is.duration;
+    }
+    return 0.0;
+}
+
+double VideoPlayer::getVolume() {
+    if (m_impl) {
+        return m_impl->m_is.audio_volume;
+    }
+    return 0.0;
+}
+
+void VideoPlayer::setVolume(double volume) {
+    if (m_impl) {
+        m_impl->m_is.audio_volume = volume;
+    }
+}
+
+void VideoPlayer::seekTo(double time) {
+    if (m_impl) {
+        stream_seek(&m_impl->m_is, (int64_t)(time * AV_TIME_BASE), 0);
+    }
+}
 } // namespace ffplay
