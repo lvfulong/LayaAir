@@ -87,7 +87,6 @@ include_directories(${PUBLIC_HEADER_DIR})
 
 add_library(${TARGET} STATIC ${HEADERS} ${SOURCES})
 target_include_directories(${TARGET} PUBLIC ${PUBLIC_HEADER_DIR})
-set_target_properties(${TARGET} PROPERTIES FOLDER conch/${TARGET})
 target_link_libraries(${TARGET}
     rapidxml
     ghc

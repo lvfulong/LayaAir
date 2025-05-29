@@ -23,7 +23,6 @@ include_directories(${PUBLIC_HEADER_DIR})
 
 add_library(${TARGET} STATIC ${HEADERS} ${SOURCES})
 target_include_directories(${TARGET} PUBLIC ${PUBLIC_HEADER_DIR})
-set_target_properties(${TARGET} PROPERTIES FOLDER conch/${TARGET})
 target_compile_definitions(${TARGET} PUBLIC TRACY_PORT=5958)
 target_compile_definitions(${TARGET} PUBLIC TRACY_ENABLE)
 target_link_libraries(${TARGET} ${LINK_LIBS} utils)
