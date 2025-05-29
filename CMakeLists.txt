@@ -16,7 +16,8 @@ include(${CONCH_ROOT_DIR}/cmake/preprocessor.cmake)
 set(IOS_MINIMUM_DEPLOYMENTS_VERSION "12.0"  CACHE STRING " iOS minimum deployments version" FORCE)
 
 option(CONCH_USE_DCC "Use NEW DCC" ON)
-
+option(BUILD_TESTING "Build tests" OFF)
+option(BUILD_BENCHMARK "Build benchmark" OFF)
 if(OS_OHOS)
 	option(TRACY_PROFILER_ENABLED "Profiler enabled" OFF) 
 else()
