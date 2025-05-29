@@ -333,6 +333,11 @@ function archive_ios {
     lipo -extract arm64 ${third_party_dir}/physx/lib/ios/libPhysXFoundation_static.a -o armv64/libPhysXFoundation_static.a
     lipo -extract x86_64 ${third_party_dir}/physx/lib/ios/libPhysXFoundation_static.a -o x86_64/libPhysXFoundation_static.a
 
+    lipo -extract arm64 ${third_party_dir}/mbedtls/lib/ios/libmbedcrypto.a -o armv64/libmbedcrypto.a
+    lipo -extract x86_64 ${third_party_dir}/mbedtls/lib/ios/libmbedcrypto.a -o x86_64/libmbedcrypto.a
+
+    lipo -extract arm64 ${third_party_dir}/mbedtls/lib/ios/libmbedtls.a -o armv64/libmbedtls.a
+    lipo -extract x86_64 ${third_party_dir}/mbedtls/lib/ios/libmbedtls.a -o x86_64/libmbedtls.a
     #lipo -extract arm64 ${third_party_dir}/physx/lib/ios/libPhysXPvdSDK_static.a -o armv64/libPhysXPvdSDK_static.a
     #lipo -extract x86_64 ${third_party_dir}/physx/lib/ios/libPhysXPvdSDK_static.a -o x86_64/libPhysXPvdSDK_static.a
 
@@ -349,7 +354,7 @@ function archive_ios {
     cp ios-${build_type}-x86_64/conch/libconch.a x86_64
     
     cp ios-${build_type}-arm64/ghc/libghc.a armv64
-    cp ios-${build_type}-x86_64/ghc/lighc.a x86_64
+    cp ios-${build_type}-x86_64/ghc/libghc.a x86_64
 
     cp ios-${build_type}-arm64/rapidxml/librapidxml.a armv64
     cp ios-${build_type}-x86_64/rapidxml/librapidxml.a x86_64
@@ -369,6 +374,19 @@ function archive_ios {
     
     cp ios-${build_type}-arm64/iniparser/libiniparser.a armv64
     cp ios-${build_type}-x86_64/iniparser/libiniparser.a x86_64
+
+
+    cp ios-${build_type}-arm64/modules/webstorage/libwebstorage.a armv64
+    cp ios-${build_type}-x86_64/modules/webstorage/libwebstorage.a x86_64
+
+    cp ios-${build_type}-arm64/modules/core/libcore.a armv64
+    cp ios-${build_type}-x86_64/modules/core/libcore.a x86_64
+
+    cp ios-${build_type}-arm64/modules/crypto_core/libcrypto_core.a armv64
+    cp ios-${build_type}-x86_64/modules/crypto_core/libcrypto_core.a x86_64
+
+    cp ios-${build_type}-arm64/modules/profiler/libprofiler.a armv64
+    cp ios-${build_type}-x86_64/modules/profiler/libprofiler.a x86_64
     
     cd armv64
     libtool -static *.a -o libconch_static.a

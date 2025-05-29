@@ -14,6 +14,7 @@
 		5E6CC3BB1EA4F60500FA49A3 /* libbz2.1.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E6CC3BA1EA4F60500FA49A3 /* libbz2.1.0.tbd */; };
 		5EAE9BE01D6FFF6E00BDC3F5 /* IAPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EAE9BDF1D6FFF6E00BDC3F5 /* IAPManager.m */; };
 		5EAEEAA81D8E6C1000F2A257 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EAEEAA71D8E6C1000F2A257 /* CoreMotion.framework */; };
+		8A77FD0C2DE80F910002B71E /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A2460A8B1C8DB4370032CD8D /* libsqlite3.tbd */; };
 		8AB91D7E2C4E0C360093E491 /* HandleMessageUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8AB91D7C2C4E0C360093E491 /* HandleMessageUtils.mm */; };
 		8AC6E3602A28B7EC00CCB117 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8AC6E3622A28B7EC00CCB117 /* Localizable.strings */; };
 		8AF2AAFE2959716A009F77F8 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AF2AAFD2959716A009F77F8 /* CoreMedia.framework */; };
@@ -124,6 +125,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8A77FD0C2DE80F910002B71E /* libsqlite3.tbd in Frameworks */,
 				8AF2AB002959718A009F77F8 /* CoreHaptics.framework in Frameworks */,
 				8AF2AAFE2959716A009F77F8 /* CoreMedia.framework in Frameworks */,
 				24439D3C233DE33E009F46C9 /* WebKit.framework in Frameworks */,
