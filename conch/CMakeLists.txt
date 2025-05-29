@@ -998,34 +998,36 @@ if(OS_OHOS)
 	install(TARGETS ${PROJECT_NAME} DESTINATION lib/${BUILDING_ARCH})
 endif()
 
-
-add_executable(test_canvas2d
+if(BUILD_TESTING)
+	add_executable(test_canvas2d
 		src/2D/tests/TestFontParser.cpp
 		src/2D/tests/FontDescription.cpp
 		src/2D/tests/FontDescriptionParser.cpp
-)
-target_link_libraries(test_canvas2d PRIVATE gtest conch)
-set_target_properties(test_canvas2d PROPERTIES FOLDER tests)
+	)
+	target_link_libraries(test_canvas2d PRIVATE gtest conch)
+	set_target_properties(test_canvas2d PROPERTIES FOLDER tests)
+endif()
 
-
-add_executable(benchmark_canvas2d
+if(BUILD_BENCHMARK)
+	add_executable(benchmark_canvas2d
 		src/2D/benchmark/BenchmarkFontParser.cpp
 		src/2D/tests/FontDescription.cpp
 		src/2D/tests/FontDescriptionParser.cpp
-)
-target_compile_definitions(benchmark_canvas2d PRIVATE BENCHMARK_STATIC_DEFINE)
-target_link_libraries(benchmark_canvas2d PRIVATE benchmark benchmark_main conch)
-set_target_properties(benchmark_canvas2d PROPERTIES FOLDER benchmarks)
-
-
-
-
-add_executable(test_uploadfile
-		src/network/tests/UploadFileTest.cpp
-)
-set(TETS_LIBS)
-if(OS_IOS)
-	list(APPEND TETS_LIBS "-framework Foundation")
+	)
+	target_compile_definitions(benchmark_canvas2d PRIVATE BENCHMARK_STATIC_DEFINE)
+	target_link_libraries(benchmark_canvas2d PRIVATE benchmark benchmark_main conch)
+	set_target_properties(benchmark_canvas2d PROPERTIES FOLDER benchmarks)
 endif()
-target_link_libraries(test_uploadfile PRIVATE gtest conch ${TETS_LIBS})
-set_target_properties(test_uploadfile PROPERTIES FOLDER tests)
+
+
+if(BUILD_TESTING)
+	add_executable(test_uploadfile
+		src/network/tests/UploadFileTest.cpp
+	)
+	set(TETS_LIBS)
+	if(OS_IOS)
+		list(APPEND TETS_LIBS "-framework Foundation")
+	endif()
+	target_link_libraries(test_uploadfile PRIVATE gtest conch ${TETS_LIBS})
+	set_target_properties(test_uploadfile PROPERTIES FOLDER tests)
+endif()
