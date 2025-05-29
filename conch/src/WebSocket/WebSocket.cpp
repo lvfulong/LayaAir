@@ -335,7 +335,7 @@ void WebSocket::close()
 	m_readyState = State::CLOSED;	
 	
 	m_bWantClose = true;
-
+	lws_cancel_service(m_wsContext);
 	m_wsHelper->joinSubThread();
     
 	// onClose callback needs to be invoked at the end of this method
