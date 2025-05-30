@@ -217,7 +217,7 @@ public:
      * @param dec 要复制当前矩阵数据的矩阵对象
      * @return 已复制当前矩阵数据的矩阵对象
      */
-    Matrix& copyTo(Matrix& dec) const;
+    Matrix& copyTo(Matrix& dec) const {}//lvtodo
 
     /**
      * @brief 设置矩阵
