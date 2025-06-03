@@ -98,23 +98,24 @@ void RTPrimitiveDataHandle::inheriteRenderData(GLESRenderContext2D* context) {
                 float m00 = mat.a, m01 = mat.b, m10 = mat.c, m11 = mat.d, tx = mat.tx, ty = mat.ty;
                 char* vbdata = nullptr;
                 std::vector<Graphic2DBufferBlock>& blocks = this->_vertexBufferBlocks;
-                int vertexCount = 0;
-                , positions: number[] = null, vertexViews : Web2DGraphic2DBufferDataView[] = null;
+               // int vertexCount = 0;
+               //vertexViews : Web2DGraphic2DBufferDataView[] = null;
                 for (int i = 0, n = this->_vertexBufferBlocks.size(); i < n; i++) {
-                    positions = blocks[i].positions;
-                    vertexViews = blocks[i].vertexViews as Web2DGraphic2DBufferDataView[];
-                    vertexCount = positions.length / 2;
-                    dataView = null;
+                    std::vector<float>& positions = blocks[i].positions;
+                    std::vector <jsvm_value>& vertexViews = blocks[i].vertexViews;
+                    int vertexCount = positions.size() / 2;
+                    RT2DGraphic2DBufferDataView* dataView = nullptr;
                     pos = 0, ci = 0, dataViewIndex = 0;
 
                     for (int j = 0; j < vertexCount; j++) {
 
-                        if (!dataView || dataView.length <= pos) {
-                            dataView = vertexViews[dataViewIndex];
-                            dataView.modify();
+                        if (!dataView || dataView->_length <= pos) {
+                            //dataView = vertexViews[dataViewIndex];
+                            dataView = jsbind::Local(vertexViews[dataViewIndex])["_nativeObj"].as<RT2DGraphic2DBufferDataView*>();
+                            dataView->modify();
                             dataViewIndex++;
                             pos = 0;
-                            vbdata = dataView.getData();
+                            vbdata = dataView->getData();
                         }
 
                         float x = positions[ci], y = positions[ci + 1];
@@ -132,12 +133,13 @@ void RTPrimitiveDataHandle::inheriteRenderData(GLESRenderContext2D* context) {
 
         //更新indexView
         for (int i = 0, n = this->_indexViews.size(); i < n; i++) {
-            jsvm_value indexView = this->_indexViews[i];
+            jsvm_value  v = this->_indexViews[i];
+
+
+            RT2DGraphic2DBufferDataView* indexView = jsbind::Local(v)["_nativeObj"].as<RT2DGraphic2DBufferDataView*>();
             if(indexView){
-                indexView.modify();
+                indexView->modify();
             }
         }
     }
-}
-
 } // namespace laya
