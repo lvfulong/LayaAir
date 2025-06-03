@@ -232,7 +232,7 @@ void RT2DGraphic2DBufferDataView::updateView(jsvm_value wholeData)
         if (type == jsvm_typedarray_type::jsvm_float32_array)
         {
             jsvm_value float32_array;
-            status = jsvm_create_typedarray(env, jsvm_typedarray_type::jsvm_float32_array, this->_length, wholeData,
+            status = jsvm_create_typedarray(env, jsvm_typedarray_type::jsvm_float32_array, this->_length, jsbind::Local(wholeData)["buffer"].getHandle(),
                                             this->_start * 4 /*Float32Array.BYTES_PER_ELEMENT*/, &float32_array);
             DEBUG_CHECK(status == jsvm_status::jsvm_ok);
             this->_data = jsbind::Persistent(float32_array);
@@ -240,7 +240,7 @@ void RT2DGraphic2DBufferDataView::updateView(jsvm_value wholeData)
         else if (type == jsvm_typedarray_type::jsvm_uint16_array)
         {
             jsvm_value uint16_array;
-            status = jsvm_create_typedarray(env, jsvm_typedarray_type::jsvm_uint16_array, this->_length, wholeData,
+            status = jsvm_create_typedarray(env, jsvm_typedarray_type::jsvm_uint16_array, this->_length, jsbind::Local(wholeData)["buffer"].getHandle(),
                                             this->_start * 2 /*Uint16Array.BYTES_PER_ELEMENT*/, &uint16_array);
             DEBUG_CHECK(status == jsvm_status::jsvm_ok);
             this->_data = jsbind::Persistent(uint16_array);
