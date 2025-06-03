@@ -4,6 +4,8 @@
 #include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderContext2D.h>
 #include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.h>
 #include "RTRenderStruct2D.h"
+#include "RT2DGraphic2DBufferDataView.h"
+
 namespace laya
 {
 
@@ -48,11 +50,8 @@ void RTRender2DDataHandle::inheriteRenderData(GLESRenderContext2D *context)
     }
 }
 
-#if 0
+
 RTPrimitiveDataHandle::RTPrimitiveDataHandle() {
-    mask = nullptr;
-    _needUpdateVertexBuffer = false;
-    _modifiedFrame = -1;
 }
 
 RTPrimitiveDataHandle::~RTPrimitiveDataHandle() {
@@ -70,19 +69,19 @@ void RTPrimitiveDataHandle::inheriteRenderData(GLESRenderContext2D* context) {
         if (!data)
             return;
 
-        //auto trans = this->_owner.trans;
+        structTransform* trans = this->_owner->_trans;
 
-        if (this->_needUpdateBuffer || this->_modifiedFrame < this->_owner->_modifiedFrame) 
+        if (this->_needUpdateBuffer || this->_modifiedFrame < trans->modifiedFrame) 
         {
            
-            auto mat = trans.matrix;
+            Matrix& mat = trans->matrix;
 
             if (/*!this._vertexBufferBlocks || */this->_vertexBufferBlocks.empty())
             {
                 //更新位置
-                if (this->mask && this->mask.trans) {
-                    let maskMatrix = this.mask.renderMatrix;
-                    let tempMatirx = Matrix.mul(maskMatrix, mat, Matrix.TEMP);
+                if (this->_mask && this->_mask->_trans) {
+                    const Matrix& maskMatrix = this->_mask->getRenderMatrix();
+                    Matrix tempMatirx = Matrix::mul(maskMatrix, mat, Matrix::TEMP);
                     this->_nMatrix_0.setValue(tempMatirx.a, tempMatirx.c, tempMatirx.tx);
                     this->_nMatrix_1.setValue(tempMatirx.b, tempMatirx.d, tempMatirx.ty);
                 }
@@ -91,23 +90,24 @@ void RTPrimitiveDataHandle::inheriteRenderData(GLESRenderContext2D* context) {
                     this->_nMatrix_1.setValue(mat.b, mat.d, mat.ty);
                 }
 
-                this._owner.spriteShaderData.setVector3(ShaderDefines2D.UNIFORM_NMATRIX_0, this._nMatrix_0);
-                this._owner.spriteShaderData.setVector3(ShaderDefines2D.UNIFORM_NMATRIX_1, this._nMatrix_1);
+                this->_owner->spriteShaderData->setVector3(ShaderDefines2D::UNIFORM_NMATRIX_0, this->_nMatrix_0);
+                this->_owner->spriteShaderData->setVector3(ShaderDefines2D::UNIFORM_NMATRIX_1, this->_nMatrix_1);
             } else {
-                let pos = 0, dataViewIndex = 0, ci = 0;
-                let dataView: Web2DGraphic2DBufferDataView = null;
-                let m00 = mat.a, m01 = mat.b, m10 = mat.c, m11 = mat.d, tx = mat.tx, ty = mat.ty;
-                let vbdata = null;
-                let blocks = this._vertexBufferBlocks;
-                let vertexCount = 0, positions: number[] = null, vertexViews: Web2DGraphic2DBufferDataView[] = null;
-                for (let i = 0, n = this._vertexBufferBlocks.length; i < n; i++) {
+                int pos = 0, dataViewIndex = 0, ci = 0;
+                RT2DGraphic2DBufferDataView* dataView = nullptr;
+                float m00 = mat.a, m01 = mat.b, m10 = mat.c, m11 = mat.d, tx = mat.tx, ty = mat.ty;
+                char* vbdata = nullptr;
+                std::vector<Graphic2DBufferBlock>& blocks = this->_vertexBufferBlocks;
+                int vertexCount = 0;
+                , positions: number[] = null, vertexViews : Web2DGraphic2DBufferDataView[] = null;
+                for (int i = 0, n = this->_vertexBufferBlocks.size(); i < n; i++) {
                     positions = blocks[i].positions;
                     vertexViews = blocks[i].vertexViews as Web2DGraphic2DBufferDataView[];
                     vertexCount = positions.length / 2;
                     dataView = null;
                     pos = 0, ci = 0, dataViewIndex = 0;
 
-                    for (let j = 0; j < vertexCount; j++) {
+                    for (int j = 0; j < vertexCount; j++) {
 
                         if (!dataView || dataView.length <= pos) {
                             dataView = vertexViews[dataViewIndex];
@@ -117,27 +117,27 @@ void RTPrimitiveDataHandle::inheriteRenderData(GLESRenderContext2D* context) {
                             vbdata = dataView.getData();
                         }
 
-                        let x = positions[ci], y = positions[ci + 1];
+                        float x = positions[ci], y = positions[ci + 1];
                         vbdata[pos] = x * m00 + y * m10 + tx;
                         vbdata[pos + 1] = x * m01 + y * m11 + ty;
                         pos += 12;
                         ci += 2;
                     }
                 }
-                this._needUpdateBuffer = false;
+                this->_needUpdateBuffer = false;
             }
 
-            this._modifiedFrame = trans.modifiedFrame;
+            this->_modifiedFrame = trans->modifiedFrame;
         }
 
         //更新indexView
-        for (let i = 0, n = this._indexViews.length; i < n; i++) {
-            let indexView = this._indexViews[i];
+        for (int i = 0, n = this->_indexViews.size(); i < n; i++) {
+            jsvm_value indexView = this->_indexViews[i];
             if(indexView){
                 indexView.modify();
             }
         }
     }
 }
-#endif
+
 } // namespace laya

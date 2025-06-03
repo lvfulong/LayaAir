@@ -8,7 +8,7 @@ namespace laya
     class RT2DGraphicBufferDataView;
     struct Graphic2DBufferBlock
     {
-        std::vector<int> positions;
+        std::vector<float> positions;
         std::vector<jsvm_value/*RT2DGraphicBufferDataView*/> vertexViews;
         // indexView: I2DGraphicBufferDataView,
     };
@@ -47,7 +47,7 @@ class RTRender2DDataHandle
     Vector3 _nMatrix_1;
     bool _needUseMatrix = true;
 };
-#if 0
+
 class RTPrimitiveDataHandle : public RTRender2DDataHandle {
 public:
     RTPrimitiveDataHandle();
@@ -58,7 +58,7 @@ public:
     {
         _mask = value;
     }   
-    void applyVertexBufferBlock(const std::vector<Graphic2DBufferBlock>& blocks, const std::vector<jsvm_value>& indexViews)) override;
+    void applyVertexBufferBlock(const std::vector<Graphic2DBufferBlock>& blocks, const std::vector<jsvm_value>& indexViews);
     void inheriteRenderData(GLESRenderContext2D* context) override;
 
 private:
@@ -69,11 +69,11 @@ private:
 
 
     std::vector<Graphic2DBufferBlock> _vertexBufferBlocks;
-    bool _needUpdateBuffer;
-    int _modifiedFrame;
+    bool _needUpdateBuffer{false};
+    int _modifiedFrame{-1};
     std::vector<jsvm_value/*RT2DGraphicBufferDataView*/> _indexViews;
 };
-
+#if 0
 // 基础2D渲染数据处理器
 class Web2DBaseRenderDataHandle : public WebRender2DDataHandle, public I2DBaseRenderDataHandle {
 public:
