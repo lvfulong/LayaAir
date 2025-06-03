@@ -96,10 +96,12 @@ void RTPrimitiveDataHandle::inheriteRenderData(GLESRenderContext2D* context) {
                 int pos = 0, dataViewIndex = 0, ci = 0;
                 RT2DGraphic2DBufferDataView* dataView = nullptr;
                 float m00 = mat.a, m01 = mat.b, m10 = mat.c, m11 = mat.d, tx = mat.tx, ty = mat.ty;
-                char* vbdata = nullptr;
+                float* vbdata = nullptr;
                 std::vector<Graphic2DBufferBlock>& blocks = this->_vertexBufferBlocks;
                // int vertexCount = 0;
                //vertexViews : Web2DGraphic2DBufferDataView[] = null;
+                GET_ENV
+                jsvm_status status;
                 for (int i = 0, n = this->_vertexBufferBlocks.size(); i < n; i++) {
                     std::vector<float>& positions = blocks[i].positions;
                     std::vector <jsvm_value>& vertexViews = blocks[i].vertexViews;
@@ -115,7 +117,14 @@ void RTPrimitiveDataHandle::inheriteRenderData(GLESRenderContext2D* context) {
                             dataView->modify();
                             dataViewIndex++;
                             pos = 0;
-                            vbdata = dataView->getData();
+
+                            size_t length;
+                            jsvm_typedarray_type type;
+                            jsvm_value buffer;
+                            size_t byteOffset;
+                            //vbdata = dataView->getData();
+                            status = jsvm_get_typedarray_info(env, dataView->getData(), &type, &length, (void**)&vbdata, &buffer, &byteOffset);
+                            DEBUG_CHECK(status == jsvm_status::jsvm_ok);
                         }
 
                         float x = positions[ci], y = positions[ci + 1];
