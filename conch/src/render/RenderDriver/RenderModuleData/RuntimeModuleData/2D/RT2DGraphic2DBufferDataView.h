@@ -34,9 +34,18 @@ class RT2DGraphicWholeBuffer
     }
     void setBufferJS(jsvm_value value)
     {   
-        //lvtoo null
-         _bufferAsIndexBuffer = jsbind::as<GLESIndexBuffer *>(value);
-         _bufferAsVertexBuffer = jsbind::as<GLESVertexBuffer *>(value);
+        jsbind::Local v(value);
+        if (v.isUndefined() || v.isNull())
+        {
+            _bufferAsIndexBuffer = nullptr;
+            _bufferAsVertexBuffer = nullptr;
+        }
+        else
+        {
+            _bufferAsIndexBuffer = jsbind::as<GLESIndexBuffer *>(v["_nativeObj"].getHandle());
+            _bufferAsVertexBuffer = jsbind::as<GLESVertexBuffer *>(v["_nativeObj"].getHandle());
+        }
+        
         _buffer = jsbind::Persistent(value);
     }
     jsvm_value getBufferDataJS()

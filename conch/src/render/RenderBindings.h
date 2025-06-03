@@ -1214,13 +1214,22 @@ class RenderBindings
             context.class_("conchRTRender2DPassManager", class_binding);
             
         }
-        {
+        /*{
             jsbind::class_<RTRender2DDataHandle> class_binding;
             class_binding.constructor<>();
             class_binding.function("setOwner", &RTRender2DDataHandle::setOwner);
             class_binding.property("needUseMatrix", &RTRender2DDataHandle::getNeedUseMatrix, &RTRender2DDataHandle::setNeedUseMatrix);
             class_binding.function("destroy", &RTRender2DDataHandle::destroy);
             context.class_("conchRTRender2DDataHandle", class_binding);
+        }*/
+        {
+            jsbind::class_<RTPrimitiveDataHandle> class_binding;
+            class_binding.constructor<>();
+            class_binding.function("setOwner", &RTPrimitiveDataHandle::setOwner);
+            class_binding.property("needUseMatrix", &RTPrimitiveDataHandle::getNeedUseMatrix, &RTPrimitiveDataHandle::setNeedUseMatrix);
+            class_binding.function("destroy", &RTPrimitiveDataHandle::destroy);
+            class_binding.function("setMask", &RTPrimitiveDataHandle::setMask);
+            context.class_("conchRTPrimitiveDataHandle", class_binding);
         }
         {
             jsbind::class_<RTGlobalRenderData> class_binding;
@@ -1246,7 +1255,6 @@ class RenderBindings
             class_binding.property_field("enable", &RTRenderStruct2D::enable);
             class_binding.property_field("isRenderStruct", &RTRenderStruct2D::isRenderStruct);
             class_binding.function("setRenderElements", &RTRenderStruct2D::setRenderElements);
-            class_binding.function("setCommonUniformMap", &RTRenderStruct2D::setCommonUniformMap);
             class_binding.function("setRenderDataHandler", &RTRenderStruct2D::setRenderDataHandler);
             class_binding.function("setPass", &RTRenderStruct2D::setPass);
             class_binding.function("setRepaint", &RTRenderStruct2D::setRepaint);
