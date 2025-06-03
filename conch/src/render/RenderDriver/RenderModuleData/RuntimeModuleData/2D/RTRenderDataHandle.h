@@ -1,8 +1,19 @@
 #ifndef __RTRENDERDATAHANDLE_H__
 #define __RTRENDERDATAHANDLE_H__
 #include <core/math/Vector3.h>
+#include <jsbind/JSBind.h>
 namespace laya
 {
+
+    class RT2DGraphicBufferDataView;
+    struct Graphic2DBufferBlock
+    {
+        std::vector<int> positions;
+        std::vector<jsvm_value/*RT2DGraphicBufferDataView*/> vertexViews;
+        // indexView: I2DGraphicBufferDataView,
+    };
+
+
 class RTRenderStruct2D;
 class GLESRenderContext2D;
 // 基础渲染数据处理器
@@ -31,28 +42,36 @@ class RTRender2DDataHandle
     virtual void inheriteRenderData(GLESRenderContext2D *context);
 
   public:
-    RTRenderStruct2D *_owner;
+    RTRenderStruct2D *_owner = nullptr;
     Vector3 _nMatrix_0;
     Vector3 _nMatrix_1;
-    bool _needUseMatrix;
+    bool _needUseMatrix = true;
 };
 #if 0
-// 图元渲染数据处理器
-class WebPrimitiveDataHandle : public WebRender2DDataHandle, public I2DPrimitiveDataHandle {
+class RTPrimitiveDataHandle : public RTRender2DDataHandle {
 public:
-    WebPrimitiveDataHandle();
-    virtual ~WebPrimitiveDataHandle();
+    RTPrimitiveDataHandle();
+    virtual ~RTPrimitiveDataHandle();
 
-    IRenderStruct2D* mask;
-
-    virtual void applyVertexBufferBlock(const std::vector<VertexBufferBlock>& blocks) override;
-    virtual void inheriteRenderData(GLESRenderContext2D* context) override;
+    RTRenderStruct2D* _mask = nullptr;
+    void setMask(RTRenderStruct2D* value)
+    {
+        _mask = value;
+    }   
+    void applyVertexBufferBlock(const std::vector<Graphic2DBufferBlock>& blocks, const std::vector<jsvm_value>& indexViews)) override;
+    void inheriteRenderData(GLESRenderContext2D* context) override;
 
 private:
-    std::vector<VertexBufferBlock> _vertexBufferBlocks;
-    bool _needUpdateVertexBuffer;
+    //std::vector<VertexBufferBlock> _vertexBufferBlocks;
+    //bool _needUpdateVertexBuffer;
+    //int _modifiedFrame;
+    //Matrix _matrix;
+
+
+    std::vector<Graphic2DBufferBlock> _vertexBufferBlocks;
+    bool _needUpdateBuffer;
     int _modifiedFrame;
-    Matrix _matrix;
+    std::vector<jsvm_value/*RT2DGraphicBufferDataView*/> _indexViews;
 };
 
 // 基础2D渲染数据处理器

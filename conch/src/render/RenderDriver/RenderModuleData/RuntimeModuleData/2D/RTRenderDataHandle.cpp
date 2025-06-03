@@ -10,8 +10,6 @@ namespace laya
 // WebRender2DDataHandle实现
 RTRender2DDataHandle::RTRender2DDataHandle()
 {
-    _owner = nullptr;
-    _needUseMatrix = true;
 }
 
 RTRender2DDataHandle::~RTRender2DDataHandle()
@@ -48,71 +46,97 @@ void RTRender2DDataHandle::inheriteRenderData(GLESRenderContext2D *context)
         _owner->spriteShaderData->setVector3(ShaderDefines2D::UNIFORM_NMATRIX_0, _nMatrix_0);
         _owner->spriteShaderData->setVector3(ShaderDefines2D::UNIFORM_NMATRIX_1, _nMatrix_1);
     }
-
-    IClipInfo *info = _owner->getClipInfo();
-    _owner->spriteShaderData->setNumber(ShaderDefines2D::UNIFORM_VERTALPHA, _owner->globalAlpha);
-    _owner->spriteShaderData->setVector(ShaderDefines2D::UNIFORM_CLIPMATDIR, info->clipMatDir);
-    _owner->spriteShaderData->setVector(ShaderDefines2D::UNIFORM_CLIPMATPOS, info->clipMatPos);
 }
+
 #if 0
-// WebPrimitiveDataHandle实现
-WebPrimitiveDataHandle::WebPrimitiveDataHandle() {
+RTPrimitiveDataHandle::RTPrimitiveDataHandle() {
     mask = nullptr;
     _needUpdateVertexBuffer = false;
     _modifiedFrame = -1;
 }
 
-WebPrimitiveDataHandle::~WebPrimitiveDataHandle() {
+RTPrimitiveDataHandle::~RTPrimitiveDataHandle() {
     // 清理资源
 }
-
-void WebPrimitiveDataHandle::applyVertexBufferBlock(const std::vector<VertexBufferBlock>& blocks) {
-    _vertexBufferBlocks = blocks;
-    _needUpdateVertexBuffer = !blocks.empty();
+void RTPrimitiveDataHandle::applyVertexBufferBlock(const std::vector<Graphic2DBufferBlock>& blocks, const std::vector<jsvm_value>& indexViews) {
+    this->_vertexBufferBlocks = blocks;
+    this->_needUpdateBuffer = !blocks.empty();
+    this->_indexViews = indexViews;
 }
 
-void WebPrimitiveDataHandle::inheriteRenderData(GLESRenderContext2D* context) {
-    if (!_owner->spriteShaderData) return;
+void RTPrimitiveDataHandle::inheriteRenderData(GLESRenderContext2D* context) {
+        auto data = this->_owner->spriteShaderData;
 
-    Matrix* mat = _owner->transform->getMatrix();
-    if (mask) {
-        Matrix* maskMatrix = mask->transform->getMatrix();
-        Matrix* tempMatrix = Matrix::mul(maskMatrix, mat, Matrix::TEMP);
-        _nMatrix_0.setValue(tempMatrix->a, tempMatrix->c, tempMatrix->tx);
-        _nMatrix_1.setValue(tempMatrix->b, tempMatrix->d, tempMatrix->ty);
-    } else {
-        _nMatrix_0.setValue(mat->a, mat->c, mat->tx);
-        _nMatrix_1.setValue(mat->b, mat->d, mat->ty);
-    }
+        if (!data)
+            return;
 
-    _owner->spriteShaderData->setVector3(ShaderDefines2D::UNIFORM_NMATRIX_0, _nMatrix_0);
-    _owner->spriteShaderData->setVector3(ShaderDefines2D::UNIFORM_NMATRIX_1, _nMatrix_1);
+        //auto trans = this->_owner.trans;
 
-    IClipInfo* info = _owner->getClipInfo();
-    _owner->spriteShaderData->setNumber(ShaderDefines2D::UNIFORM_VERTALPHA, _owner->globalAlpha);
-    _owner->spriteShaderData->setVector(ShaderDefines2D::UNIFORM_CLIPMATDIR, info->clipMatDir);
-    _owner->spriteShaderData->setVector(ShaderDefines2D::UNIFORM_CLIPMATPOS, info->clipMatPos);
+        if (this->_needUpdateBuffer || this->_modifiedFrame < this->_owner->_modifiedFrame) 
+        {
+           
+            auto mat = trans.matrix;
 
-    if (_needUpdateVertexBuffer || _modifiedFrame < _owner->transform->_modifiedFrame || 
-        !Matrix::equals(_matrix, mat)) {
-        
-        int pos = 0, dataViewIndex = 0, ci = 0;
-        BufferDataView* dataView = nullptr;
-        float m00 = mat->a, m01 = mat->b, m10 = mat->c, m11 = mat->d, tx = mat->tx, ty = mat->ty;
-        _matrix.setTo(m00, m01, m10, m11, tx, ty);
+            if (/*!this._vertexBufferBlocks || */this->_vertexBufferBlocks.empty())
+            {
+                //更新位置
+                if (this->mask && this->mask.trans) {
+                    let maskMatrix = this.mask.renderMatrix;
+                    let tempMatirx = Matrix.mul(maskMatrix, mat, Matrix.TEMP);
+                    this->_nMatrix_0.setValue(tempMatirx.a, tempMatirx.c, tempMatirx.tx);
+                    this->_nMatrix_1.setValue(tempMatirx.b, tempMatirx.d, tempMatirx.ty);
+                }
+                else {
+                    this->_nMatrix_0.setValue(mat.a, mat.c, mat.tx);
+                    this->_nMatrix_1.setValue(mat.b, mat.d, mat.ty);
+                }
 
-        for (size_t i = 0; i < _vertexBufferBlocks.size(); ++i) {
-            VertexBufferBlock& block = _vertexBufferBlocks[i];
-            for (size_t j = 0; j < block.vertices.size(); ++j) {
-                Vertex& vertex = block.vertices[j];
-                vertex.position = Matrix::mul(mat, &vertex.position, Matrix::TEMP);
-                vertex.position.x += vertex.offset.x;
-                vertex.position.y += vertex.offset.y;
+                this._owner.spriteShaderData.setVector3(ShaderDefines2D.UNIFORM_NMATRIX_0, this._nMatrix_0);
+                this._owner.spriteShaderData.setVector3(ShaderDefines2D.UNIFORM_NMATRIX_1, this._nMatrix_1);
+            } else {
+                let pos = 0, dataViewIndex = 0, ci = 0;
+                let dataView: Web2DGraphic2DBufferDataView = null;
+                let m00 = mat.a, m01 = mat.b, m10 = mat.c, m11 = mat.d, tx = mat.tx, ty = mat.ty;
+                let vbdata = null;
+                let blocks = this._vertexBufferBlocks;
+                let vertexCount = 0, positions: number[] = null, vertexViews: Web2DGraphic2DBufferDataView[] = null;
+                for (let i = 0, n = this._vertexBufferBlocks.length; i < n; i++) {
+                    positions = blocks[i].positions;
+                    vertexViews = blocks[i].vertexViews as Web2DGraphic2DBufferDataView[];
+                    vertexCount = positions.length / 2;
+                    dataView = null;
+                    pos = 0, ci = 0, dataViewIndex = 0;
+
+                    for (let j = 0; j < vertexCount; j++) {
+
+                        if (!dataView || dataView.length <= pos) {
+                            dataView = vertexViews[dataViewIndex];
+                            dataView.modify();
+                            dataViewIndex++;
+                            pos = 0;
+                            vbdata = dataView.getData();
+                        }
+
+                        let x = positions[ci], y = positions[ci + 1];
+                        vbdata[pos] = x * m00 + y * m10 + tx;
+                        vbdata[pos + 1] = x * m01 + y * m11 + ty;
+                        pos += 12;
+                        ci += 2;
+                    }
+                }
+                this._needUpdateBuffer = false;
             }
+
+            this._modifiedFrame = trans.modifiedFrame;
         }
 
-        _needUpdateVertexBuffer = false;
-        _modifiedFrame = _owner->transform->_modifiedFrame;
+        //更新indexView
+        for (let i = 0, n = this._indexViews.length; i < n; i++) {
+            let indexView = this._indexViews[i];
+            if(indexView){
+                indexView.modify();
+            }
+        }
     }
 }
 #endif

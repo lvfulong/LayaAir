@@ -11,7 +11,10 @@
 
 namespace laya
 {
-
+struct structTransform {
+   Matrix matrix;
+   int32_t modifiedFrame;
+};
 class IClipInfo
 {
   public:
@@ -86,13 +89,19 @@ class RTRenderStruct2D
 
     const Matrix &getRenderMatrix()
     {
-        return this->_matrix;
+        return this->_trans->matrix;
     }
 
     void setRenderMatrix(const Matrix &value)
     {
-        _matrix = value;
-        //_modifiedFrame = Stat::loopCount;lvtodo
+        if (!_trans)
+        {
+            _trans = new structTransform();
+            //this.trans.matrix = new Matrix();
+        }
+
+        _trans->matrix = value;
+        //_trans->modifiedFrame = Stat::loopCount;lvtodo
     }
 
     float globalAlpha;
@@ -137,11 +146,7 @@ class RTRenderStruct2D
     } 
       
     GLESShaderData *spriteShaderData;
-    std::vector<std::string> commonUniformMap;
-    void setCommonUniformMap(const std::vector<std::string> &value)
-    {
-        this->commonUniformMap = value;
-    }
+ 
     void setRenderDataHandler(RTRender2DDataHandle *value)
     {
         _renderDataHandler = value;
@@ -188,8 +193,9 @@ class RTRenderStruct2D
     void updateChildren(ChildrenUpdateType type);
     void _updateBlendMode();
     void _initClipInfo();
-    Matrix _matrix;
-    int32_t _modifiedFrame; // lvtodo
+    //Matrix _matrix;
+    //int32_t _modifiedFrame; // lvtodo
+    structTransform* _trans = nullptr;
     RTGlobalRenderData*_globalRenderData = nullptr;
     RTRender2DDataHandle *_renderDataHandler = nullptr;
     RTRender2DPass *_pass = nullptr;

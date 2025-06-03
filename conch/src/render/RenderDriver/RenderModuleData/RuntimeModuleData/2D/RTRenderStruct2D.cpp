@@ -13,6 +13,11 @@ RTRenderStruct2D::RTRenderStruct2D()
 
 RTRenderStruct2D::~RTRenderStruct2D()
 {
+    if (_trans != nullptr)
+    {
+        delete _trans;
+        _trans = nullptr;
+    }
 }
 
 void RTRenderStruct2D::set_renderNodeUpdateCall(void *call, void *renderUpdateFun)

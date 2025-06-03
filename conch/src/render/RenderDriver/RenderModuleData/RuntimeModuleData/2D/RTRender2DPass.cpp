@@ -120,15 +120,14 @@ void RTRender2DPass::render(GLESRenderContext2D *context)
 void RTRender2DPass::_initRenderProcess(GLESRenderContext2D *context)
 {
     float sizeX, sizeY;
-#if 0
     auto rt = this->renderTexture;
     if (rt) {
-        context->invertY = rt->_invertY;
-        context->setRenderTarget(rt->_renderTarget, this->doClearColor, this->_clearColor);    
+        //context->invertY = rt->_invertY;
+        context->setRenderTarget(rt, this->doClearColor, this->_clearColor);    
         sizeX = this->texture->getWidth();
         sizeY = this->texture->getHeight();
         this->_updateInvertMatrix();
-        this->shaderData->addDefine(ShaderDefines2D::RENDERTEXTURE);
+        this->_shaderdata->addDefine(ShaderDefines2D::RENDERTEXTURE);
     } else {
         context->invertY = false;
         sizeX = 0;//RenderState2D::width;//lvtodo
@@ -136,9 +135,8 @@ void RTRender2DPass::_initRenderProcess(GLESRenderContext2D *context)
         context->setOffscreenView(sizeX, sizeY);
         context->setRenderTarget(nullptr, this->doClearColor, this->_clearColor);
         this->_setInvertMatrix(1, 0, 0, 1, 0, 0);
-        this->shaderData->removeDefine(ShaderDefines2D::RENDERTEXTURE);
+        this->_shaderdata->removeDefine(ShaderDefines2D::RENDERTEXTURE);
     }
-#endif
     context->_passDataJS = this->_shaderDataJS;
     _setRenderSize(sizeX, sizeY);
 }
@@ -166,22 +164,22 @@ void RTRender2DPass::uploadBuffer()
 
 void RTRender2DPass::_updateInvertMatrix()
 {
-    RTRenderStruct2D *root = this->root;
+    structTransform * rootTrans = this->root->_trans;
     Matrix temp;
     RTRenderStruct2D *mask = this->mask;
-    if (mask)
+    if (mask && mask->_trans)
     {
         // globalMatrix
-        Matrix &rootMatrix = root->_matrix;
+        Matrix &rootMatrix = rootTrans->matrix;
         // localMatrix
-        Matrix &maskMatrix = mask->_matrix;
+        Matrix &maskMatrix = mask->_trans->matrix;
 
         Matrix::mul(maskMatrix, rootMatrix, temp);
         temp.invert();
     }
     else
     {
-        root->_matrix.copyTo(temp);
+        rootTrans->matrix.copyTo(temp);
         temp.invert();
     }
     this->_setInvertMatrix(temp.a, temp.b, temp.c, temp.d, temp.tx + this->renderOffset.x,
