@@ -10,6 +10,7 @@
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 namespace laya
 {
+std::set<RT2DGraphicWholeBuffer *> RTRender2DPass::buffers;
 RTRender2DPass::RTRender2DPass()
 {
     _invertMat_0 = Vector3(1, 1, 0);
@@ -102,13 +103,12 @@ void RTRender2DPass::render(GLESRenderContext2D *context)
 
     repaint = false;
 
-
-    if (this->mask && this->mask->getPass() && this->mask->getPass()->enable) {
-         this->mask->getPass()->renderTexture = this->renderTexture;
-         this->mask->getPass()->fowardRender(context);
-         this->mask->getPass()->renderTexture = nullptr;
-      }
-
+    if (this->mask && this->mask->getPass() && this->mask->getPass()->enable)
+    {
+        this->mask->getPass()->renderTexture = this->renderTexture;
+        this->mask->getPass()->fowardRender(context);
+        this->mask->getPass()->renderTexture = nullptr;
+    }
 
     callRenderCallback();
 
@@ -143,24 +143,24 @@ void RTRender2DPass::_initRenderProcess(GLESRenderContext2D *context)
     _setRenderSize(sizeX, sizeY);
 }
 
-void RTRender2DPass::setBuffer(RT2DGraphicWholeBuffer*buffer)
+void RTRender2DPass::setBuffer(RT2DGraphicWholeBuffer *buffer)
 {
     if (buffer->_inPass)
         return;
     buffer->_inPass = true;
-    this->buffers.insert(buffer);
+    RTRender2DPass::buffers.insert(buffer);
 }
 
 void RTRender2DPass::uploadBuffer()
 {
-    if (!buffers.empty())
+    if (!RTRender2DPass::buffers.empty())
     {
-        for (auto buffer : buffers)
+        for (auto buffer : RTRender2DPass::buffers)
         {
             buffer->upload();
             buffer->_inPass = false;
         }
-        buffers.clear();
+        RTRender2DPass::buffers.clear();
     }
 }
 
@@ -226,49 +226,5 @@ void RTRender2DPass::destroy()
         shaderData = nullptr;
     }
 #endif
-}
-
-void RTRender2DPassManager::removePass(RTRender2DPass *pass)
-{
-    auto it = std::find(_passes.begin(), _passes.end(), pass);
-    if (it != _passes.end())
-    {
-        _passes.erase(it);
-        _modefy = true;
-    }
-}
-
-void RTRender2DPassManager::apply(GLESRenderContext2D *context)
-{
-    if (_modefy)
-    {
-        _modefy = false;
-        _sortPassesByPriority();
-    }
-
-    for (auto pass : _passes)
-    {
-        if (pass->needRender())
-        {
-            pass->fowardRender(context);
-        }
-    }
-}
-
-void RTRender2DPassManager::clear()
-{
-    _passes.clear();
-}
-
-void RTRender2DPassManager::addPass(RTRender2DPass *pass)
-{
-    _passes.push_back(pass);
-    _modefy = true;
-}
-
-void RTRender2DPassManager::_sortPassesByPriority()
-{
-    std::sort(_passes.begin(), _passes.end(),
-              [](RTRender2DPass *a, RTRender2DPass *b) { return b->priority > a->priority; });
 }
 } // namespace laya

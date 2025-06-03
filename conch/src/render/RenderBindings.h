@@ -51,7 +51,7 @@
 #include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLES2DRenderCMD.h>
 #include <experimental/Test.h>
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTRender2DPass.h>
-
+#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTRender2DPassManager.h>
 namespace jsbind
 {
     namespace internal
@@ -1171,6 +1171,38 @@ class RenderBindings
 #if 0
         //2D
         {
+            jsbind::class_<RT2DGraphic2DBufferDataView> class_binding;
+            class_binding.constructor<BufferModifyType, int, int, int>();
+            class_binding.property_field("start", &RT2DGraphic2DBufferDataView::_start);
+            class_binding.property_field("length", &RT2DGraphic2DBufferDataView::_length);
+            class_binding.property_field("stride", &RT2DGraphic2DBufferDataView::_stride);
+            class_binding.property_field("modifyType", &RT2DGraphic2DBufferDataView::modifyType);
+            class_binding.property_field("isModified", &RT2DGraphic2DBufferDataView::isModified);
+            class_binding.function("setGeometry", &RT2DGraphic2DBufferDataView::setGeometry);
+            class_binding.function("setOwner", &RT2DGraphic2DBufferDataView::setOwner); 
+            class_binding.property_field("_needResetData", &RT2DGraphic2DBufferDataView::_needResetData);
+            class_binding.function("clearBufferViews", &RT2DGraphic2DBufferDataView::clearBufferViews);
+            class_binding.function("getData", &RT2DGraphic2DBufferDataView::getData);
+            class_binding.function("updateView", &RT2DGraphic2DBufferDataView::updateView);
+            class_binding.function("modify", &RT2DGraphic2DBufferDataView::modify);
+            class_binding.property("_data", &RT2DGraphic2DBufferDataView::getDataJS, &RT2DGraphic2DBufferDataView::setDataJS);
+            context.class_("conchRT2DGraphic2DBufferDataView", class_binding);
+            
+        }
+        {
+            jsbind::class_<RT2DGraphicWholeBuffer> class_binding;
+            class_binding.constructor<>();
+            class_binding.property("buffer", &RT2DGraphicWholeBuffer::getBufferJS, &RT2DGraphicWholeBuffer::setBufferJS);
+            class_binding.property("bufferData", &RT2DGraphicWholeBuffer::getBufferDataJS, &RT2DGraphicWholeBuffer::setBufferDataJS);   
+            class_binding.property_field("modifyType", &RT2DGraphicWholeBuffer::modifyType);
+            class_binding.property_field("needResetData", &RT2DGraphicWholeBuffer::needResetData);
+            class_binding.function("addDataView", &RT2DGraphicWholeBuffer::addDataView);
+            class_binding.function("clearBufferViews", &RT2DGraphicWholeBuffer::clearBufferViews);
+            class_binding.function("destroy", &RT2DGraphicWholeBuffer::destroy); 
+            context.class_("conchRT2DGraphicWholeBuffer", class_binding);
+            
+        }
+        {
             
             jsbind::class_<RTRender2DPassManager> class_binding;
             class_binding.constructor<>();
@@ -1250,7 +1282,8 @@ class RenderBindings
             class_binding.function("destroy", &RTRender2DPass::destroy);
             class_binding.function("setBuffer", &RTRender2DPass::setBuffer);
             class_binding.function("needRender", &RTRender2DPass::needRender);
-            class_binding.property("renderOffset", &RTRender2DPass::getRenderOffset, &RTRender2DPass::setRenderOffset);  
+            class_binding.property("renderOffset", &RTRender2DPass::getRenderOffset, &RTRender2DPass::setRenderOffset); 
+            class_binding.property("shaderData", &RTRender2DPass::getShaderDataJS, &RTRender2DPass::setShaderDataJS); 
             class_binding.function("setRenderCallback", &RTRender2DPass::setRenderCallbackJS);
             context.class_("conchRTRender2DPass", class_binding);
         }

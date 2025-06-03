@@ -217,8 +217,7 @@ public:
      * @param dec 要复制当前矩阵数据的矩阵对象
      * @return 已复制当前矩阵数据的矩阵对象
      */
-    Matrix& copyTo(Matrix& dec) const {}//lvtodo
-
+    Matrix& copyTo(Matrix& dec) const;
     /**
      * @brief 设置矩阵
      * 输出矩阵 = 平移矩阵*旋转矩阵*斜切矩阵*缩放矩阵*描点矩阵

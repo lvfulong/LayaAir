@@ -1,42 +1,50 @@
-#include "RTGraphicsBatch.h" 
-#include <utils/Log.h>
+#include "RTGraphicsBatch.h"
 #include "RTRenderStruct2D.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderGeometryElement.h"
 #include <render/3D/design/renderEnum/DrawType.h>
 #include <render/3D/design/renderEnum/IndexFormat.h>
 #include <render/3D/design/renderEnum/RenderPologyMode.h>
-#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderGeometryElement.h"
-namespace laya {
+#include <utils/Log.h>
+namespace laya
+{
 
-RTGraphicsBatch* RTGraphicsBatch::instance = nullptr;
-std::vector<GLESRenderElement2D*> RTGraphicsBatch::_pool;
+RTGraphicsBatch *RTGraphicsBatch::instance = nullptr;
+std::vector<GLESRenderElement2D *> RTGraphicsBatch::_pool;
 FastSinglelist<int> RTGraphicsBatch::TEMP_SINGLE_LIST(false);
 
-RTGraphicsBatch::RTGraphicsBatch() {
+RTGraphicsBatch::RTGraphicsBatch()
+{
 }
 
-RTGraphicsBatch::~RTGraphicsBatch() {
+RTGraphicsBatch::~RTGraphicsBatch()
+{
     recover();
 }
 
-GLESRenderElement2D* RTGraphicsBatch::createRenderElement2D() {
-    if (!_pool.empty()) {
-        GLESRenderElement2D* element = _pool.back();
+GLESRenderElement2D *RTGraphicsBatch::createRenderElement2D()
+{
+    if (!_pool.empty())
+    {
+        GLESRenderElement2D *element = _pool.back();
         _pool.pop_back();
         return element;
     }
 
-    GLESRenderElement2D* element = new GLESRenderElement2D();
+    GLESRenderElement2D *element = new GLESRenderElement2D();
     element->geometry = new GLESRenderGeometryElement();
     element->geometry->setMeshTopology(MeshTopology::Triangles);
     element->geometry->setDrawType(DrawType::DrawElement);
     element->geometry->setIndexFormat(IndexFormat::UInt16);
+    // element.nodeCommonMap = ["Sprite2D"];
     element->renderStateIsBySprite = false;
     return element;
 }
 
-void RTGraphicsBatch::recoverRenderElement2D(GLESRenderElement2D* value) {
-    if (!value) return;
-    
+void RTGraphicsBatch::recoverRenderElement2D(GLESRenderElement2D *value)
+{
+    if (!value)
+        return;
+
     value->geometry->clearRenderParams();
     value->geometry->setBufferState(nullptr);
     value->materialShaderData = nullptr;
@@ -46,28 +54,39 @@ void RTGraphicsBatch::recoverRenderElement2D(GLESRenderElement2D* value) {
     _pool.push_back(value);
 }
 
-void RTGraphicsBatch::batchRenderElement(FastSinglelist<GLESRenderElement2D*>& list, int start, int length) {
-    auto& elementArray = list._elements;
+void RTGraphicsBatch::batchRenderElement(FastSinglelist<GLESRenderElement2D *> &list, int start, int length)
+{
+    auto &elementArray = list._elements;
     int batchStart = -1;
     int count = 0;
     int end = length - 1;
 
-    for (int index = 0; index < end; index++) {
+    for (int index = 0; index < end; index++)
+    {
         int offset = start + index;
-        GLESRenderElement2D* cElement = elementArray[offset];
-        GLESRenderElement2D* nElement = elementArray[offset + 1];
+        GLESRenderElement2D *cElement = elementArray[offset];
+        GLESRenderElement2D *nElement = elementArray[offset + 1];
 
-        if (check(cElement, nElement)) {
-            if (batchStart == -1) {
+        if (check(cElement, nElement))
+        {
+            if (batchStart == -1)
+            {
                 batchStart = index;
                 count = 2;
-            } else {
+            }
+            else
+            {
                 count++;
             }
-        } else {
-            if (count != 0) {
+        }
+        else
+        {
+            if (count != 0)
+            {
                 batch(list, batchStart + start, count);
-            } else {
+            }
+            else
+            {
                 list.add(cElement);
             }
             count = 0;
@@ -75,57 +94,69 @@ void RTGraphicsBatch::batchRenderElement(FastSinglelist<GLESRenderElement2D*>& l
         }
     }
 
-    if (count != 0) {
+    if (count != 0)
+    {
         batch(list, batchStart + start, count);
-    } else {
+    }
+    else
+    {
         list.add(elementArray[end + start]);
     }
 }
 
-void RTGraphicsBatch::batch(FastSinglelist<GLESRenderElement2D*>& list, int start, int length) {
-    auto& elementArray = list._elements;
-    GLESRenderElement2D* staticBatchRenderElement = createRenderElement2D();
+void RTGraphicsBatch::batch(FastSinglelist<GLESRenderElement2D *> &list, int start, int length)
+{
+    auto &elementArray = list._elements;
+    GLESRenderElement2D *staticBatchRenderElement = createRenderElement2D();
     std::vector<std::vector<int>> drawArray;
-    
-    for (int i = 0; i < length; i++) {
-        GLESRenderElement2D* element = elementArray[start + i];
+
+    for (int i = 0; i < length; i++)
+    {
+        GLESRenderElement2D *element = elementArray[start + i];
         auto geometry = element->geometry;
-        
-        if (!i) {
+
+        if (!i)
+        {
             staticBatchRenderElement->geometry->_bufferState = geometry->_bufferState;
             staticBatchRenderElement->materialShaderData = element->materialShaderData;
             staticBatchRenderElement->value2DShaderData = element->value2DShaderData;
             staticBatchRenderElement->subShader = element->subShader;
             staticBatchRenderElement->renderStateIsBySprite = element->renderStateIsBySprite;
         }
-        
+
         TEMP_SINGLE_LIST.clear();
         geometry->getDrawDataParams(TEMP_SINGLE_LIST);
         drawArray.push_back(TEMP_SINGLE_LIST._elements);
     }
-    
+
     auto geometry = staticBatchRenderElement->geometry;
     int len = drawArray.size();
     int currentOffset = 0;
     int currentCount = 0;
     bool isFirst = true;
 
-    for (int i = 0; i < len; i++) {
-        auto& drawParam = drawArray[i];
-        for (size_t j = 0; j < drawParam.size(); j += 2) {
+    for (int i = 0; i < len; i++)
+    {
+        auto &drawParam = drawArray[i];
+        for (size_t j = 0; j < drawParam.size(); j += 2)
+        {
             int offset = drawParam[j];
             int count = drawParam[j + 1];
 
-            if (isFirst) {
+            if (isFirst)
+            {
                 currentOffset = offset;
                 currentCount = count;
                 isFirst = false;
                 continue;
             }
 
-            if (currentOffset + currentCount * 2 == offset) {
+            if (currentOffset + currentCount * 2 == offset)
+            {
                 currentCount += count;
-            } else {
+            }
+            else
+            {
                 geometry->setDrawElementParams(currentCount, currentOffset);
                 currentOffset = offset;
                 currentCount = count;
@@ -133,7 +164,8 @@ void RTGraphicsBatch::batch(FastSinglelist<GLESRenderElement2D*>& list, int star
         }
     }
 
-    if (!isFirst) {
+    if (!isFirst)
+    {
         geometry->setDrawElementParams(currentCount, currentOffset);
     }
 
@@ -141,17 +173,21 @@ void RTGraphicsBatch::batch(FastSinglelist<GLESRenderElement2D*>& list, int star
     list.add(staticBatchRenderElement);
 }
 
-bool RTGraphicsBatch::check(GLESRenderElement2D* left, GLESRenderElement2D* right) {
+bool RTGraphicsBatch::check(GLESRenderElement2D *left, GLESRenderElement2D *right)
+{
     int leftType = left->_type;
     int rightType = right->_type;
 
-    if (left->subShader == right->subShader &&
-        left->geometry->_bufferState == right->geometry->_bufferState &&
-        leftType == rightType) {
-        
-        if (leftType & 32) { // 或者比对材质 clip 优先忽略
+    if (left->subShader == right->subShader && left->geometry->_bufferState == right->geometry->_bufferState &&
+        leftType == rightType)
+    {
+
+        if (leftType & 32)
+        { // 或者比对材质 clip 优先忽略
             return false;
-        } else if (left->_owner->getClipInfo() == right->_owner->getClipInfo()) {
+        }
+        else if (left->_owner->getClipInfo() == right->_owner->getClipInfo())
+        {
             return true;
         }
         return false;
@@ -159,14 +195,16 @@ bool RTGraphicsBatch::check(GLESRenderElement2D* left, GLESRenderElement2D* righ
     return false;
 }
 
-void RTGraphicsBatch::recover() {
+void RTGraphicsBatch::recover()
+{
     int length = _recoverList.getLength();
-    auto& recoverArray = _recoverList._elements;
-    for (int i = 0; i < length; i++) {
-        GLESRenderElement2D* info = recoverArray[i];
-        recoverRenderElement2D(info);
+    auto &recoverArray = _recoverList._elements;
+    for (int i = 0; i < length; i++)
+    {
+        GLESRenderElement2D *info = recoverArray[i];
+        RTGraphicsBatch::recoverRenderElement2D(info);
     }
     _recoverList.clear();
 }
 
-} // namespace laya 
+} // namespace laya

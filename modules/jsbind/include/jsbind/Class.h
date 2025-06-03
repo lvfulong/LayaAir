@@ -18,7 +18,6 @@ template <typename ClassType> class ClassRegistry;
 struct ObjectRegistry
 {
     jsvm_ref objectRef_ = nullptr;
-    bool callDestructor = true;
 };
 class ClassRegistryBase
 {
@@ -117,7 +116,7 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
         status = jsvm_wrap(env, instance, reinterpret_cast<void *>(objectPointer), internal::destructor<ClassType>,
                            nullptr, &objectRef);
 
-        this->objects_.emplace(objectPointer, ObjectRegistry{objectRef, callDestructor});
+        this->objects_.emplace(objectPointer, ObjectRegistry{objectRef});
 
         return instance;
     }
@@ -151,7 +150,6 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
     void removeObjectRegistry(jsvm_env env, ObjectRegistry *registry, ClassType *objectPointer)
     {
         jsvm_status status;
-        if (registry->callDestructor)
         {
             internal::raw_destructor(objectPointer);
             // isolate_->AdjustAmountOfExternalAllocatedMemory(-static_cast<int64_t>(sizeof(ClassType)));
@@ -266,7 +264,7 @@ template <typename ClassType> static jsvm_value New(jsvm_env env, jsvm_callback_
             status = jsvm_wrap(env, jsThis, reinterpret_cast<void *>(object), internal::destructor<ClassType>, nullptr,
                                &objectRef);
             DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-            classRegistry.objects_.emplace(object, ObjectRegistry{objectRef, callDestructor});
+            classRegistry.objects_.emplace(object, ObjectRegistry{objectRef});
             return jsThis;
         }
     }

@@ -233,5 +233,14 @@ namespace laya {
         out.ty = atx * bb + aty * bd + bty;
         return out;
     }
-
+    Matrix& Matrix::copyTo(Matrix& dec) const {
+        dec.a = this->a; 
+        dec.b = this->b;
+        dec.c = this->c;
+        dec.d = this->d;
+        dec.tx = this->tx;
+        dec.ty = this->ty;
+        dec._bTransform = this->_bTransform;
+        return dec;
+    }
 }

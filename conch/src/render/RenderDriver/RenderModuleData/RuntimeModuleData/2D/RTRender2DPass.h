@@ -1,10 +1,10 @@
 #ifndef __RTRENDER2DPASS_H__
 #define __RTRENDER2DPASS_H__
-#include <jsbind/JSBind.h>
 #include <core/math/Color.h>
 #include <core/math/Vector2.h>
 #include <core/math/Vector3.h>
 #include <core/math/Vector4.h>
+#include <jsbind/JSBind.h>
 #include <map>
 #include <set>
 #include <utils/FastSinglelist.h>
@@ -45,8 +45,8 @@ class RTRender2DPass
     void updateRenderQueue(GLESRenderContext2D *context);
     void fowardRender(GLESRenderContext2D *context);
     void render(GLESRenderContext2D *context);
-    void setBuffer(RT2DGraphicWholeBuffer*buffer);
-    void uploadBuffer();
+    static void setBuffer(RT2DGraphicWholeBuffer *buffer);
+    static void uploadBuffer();
     void destroy();
 
     // 属性设置
@@ -75,18 +75,18 @@ class RTRender2DPass
         }
         else
         {
-            _shaderdata = jsbind::as<GLESShaderData*>(value["_nativeObj"].getHandle());
+            _shaderdata = jsbind::as<GLESShaderData *>(value["_nativeObj"].getHandle());
         }
     }
     jsvm_value getShaderDataJS()
     {
         return _shaderDataJS.getHandle();
     }
-    const Vector2& getRenderOffset()
+    const Vector2 &getRenderOffset()
     {
         return this->renderOffset;
-    } 
-    void setRenderOffset(const Vector2& value)
+    }
+    void setRenderOffset(const Vector2 &value)
     {
         this->renderOffset = value;
     }
@@ -96,8 +96,9 @@ class RTRender2DPass
     }
     void callRenderCallback()
     {
-      return m_renderCallbackJS.call<void>(jsvm::global());
+        return m_renderCallbackJS.call<void>(jsvm::global());
     }
+
   private:
     void _initRenderProcess(GLESRenderContext2D *context);
     void _updateInvertMatrix();
@@ -106,7 +107,7 @@ class RTRender2DPass
     Color _clearColor;
 
     // CommandBuffer2D *finalize = nullptr;
-    std::set<RT2DGraphicWholeBuffer*> buffers;
+    static std::set<RT2DGraphicWholeBuffer *> buffers;
 
     std::map<uint32_t, PassRenderList *> _lists;
 
@@ -114,7 +115,8 @@ class RTRender2DPass
 
     Vector3 _invertMat_0;
     Vector3 _invertMat_1;
-    GLESShaderData* _shaderdata = nullptr;
+    GLESShaderData *_shaderdata = nullptr;
+
   public:
     bool enable = true;
     bool _enableBatch = false;
@@ -146,19 +148,5 @@ class RTRender2DPass
     jsbind::Persistent m_renderCallbackJS;
 };
 
-class RTRender2DPassManager
-{
-  private:
-    bool _modefy = false;
-    std::vector<RTRender2DPass *> _passes;
-
-    void _sortPassesByPriority();
-
-  public:
-    void removePass(RTRender2DPass *pass);
-    void apply(GLESRenderContext2D *context);
-    void clear();
-    void addPass(RTRender2DPass *pass);
-};
 } // namespace laya
 #endif // __RTRENDER2DPASS_H__

@@ -1,125 +1,173 @@
 #include "RT2DGraphic2DBufferDataView.h"
 #include "RTRender2DPass.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESIndexBuffer.h"
+#include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderGeometryElement.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESVertexBuffer.h"
 #include <utils/Log.h>
 #include <utils/Preprocessor.h>
 namespace laya
 {
 
-RT2DGraphicWholeBuffer::RT2DGraphicWholeBuffer() : _needResetData(false), _inPass(false)
+RT2DGraphicWholeBuffer::RT2DGraphicWholeBuffer()
 {
-    _updateRange.setValue(100000000, -100000000);
 }
 
 RT2DGraphicWholeBuffer::~RT2DGraphicWholeBuffer()
 {
 }
 
-/*void RT2DGraphicWholeBuffer::resetData(int byteLength) {
-    _needResetData = true;
-    _updateRange.setValue(0, byteLength);
-
-    GET_ENV
-    jsvm_status status;
-    jsvm_value value;
-    if (BufferModifyType::Index == modifyType) {
-        status = jsvm_create_typedarray(env, jsvm_uint16_array, byteLength / 2, wholeData, this->_start * 2, &value);
-        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-
-        if (_buffers.isValid()) {
-            newData->set(bufferData.uint16Array);
-        }
-        bufferData.uint16Array = newData;
-    } else {
-        Float32Array* newData = new Float32Array(byteLength / 4);
-        if (!bufferData.floatArrays.empty()) {
-            newData->set(bufferData.floatArrays[0]);
-        }
-        bufferData.floatArrays.clear();
-        bufferData.floatArrays.push_back(newData);
-    }
-}*/
-void RT2DGraphicWholeBuffer::setBuffers(jsvm_value value)
-{
-    // todo
-}
 void RT2DGraphicWholeBuffer::upload()
 {
-    if (_needResetData)
+    GET_ENV
+    if (BufferModifyType::Index == this->_modifyType)
     {
-        if (BufferModifyType::Index == _modifyType)
+        int start = 0;
+        int length = 0;
+        GLESRenderGeometryElement *geometry = nullptr;
+        // geometry 相同一定是紧凑的
+        RT2DGraphic2DBufferDataView *view = this->_first;
+        // let totalLength = 0;
+        // let totalArr = [];
+        while (view)
         {
-            buffers_indexBuffer->_setIndexData((char *)_uint16ArrayBufferData, uint16ArrayByteLength, 0);
-        }
-        else
-        {
-            buffers_vertexBuffers[0]->setData((char *)floatArrays0, floatArrays0ByteLength, 0, 0,
-                                              floatArrays0ByteLength);
+            if (!view->geometry)
+            {
+                start = view->_length;
+                length = view->_length;
+
+                // totalLength += view.length;
+                // totalArr.push(view.length);
+
+                view->updateView(this->_bufferData.getHandle()); // 先更新偏移再提交
+                view = view->_next;
+                continue;
+            }
+
+            if (geometry != view->geometry)
+            {
+                if (length && geometry)
+                {
+                    geometry->clearRenderParams();
+                    geometry->setDrawElementParams(length, start * 2);
+                }
+                geometry = view->geometry;
+                start = start + length;
+                length = 0;
+            }
+
+            view->_start = start + length;
+            length += view->_length;
+
+            // totalLength += view.length;
+            // totalArr.push(view.length);
+
+            view->updateView(this->_bufferData.getHandle());
+            view = view->_next;
         }
 
-        for (auto view : _views)
+        if (length && geometry)
         {
-            view->updateView(this->_bufferData.getHandle());
+            geometry->clearRenderParams();
+            geometry->setDrawElementParams(length, start * 2);
         }
-        _needResetData = false;
+
+        int tempLength = this->_last->_start + this->_last->_length;
+
+        jsvm_value ab = jsbind::Local(this->_bufferData.getHandle())["buffer"].getHandle();
+        DEBUG_CHECK(jsbind::Local(ab).isArrayBuffer());
+        void* data = nullptr;
+        size_t l;
+        jsvm_get_arraybuffer_info(env, ab, &data, &l);
+        //let tempUint16Array = new Uint16Array(this.bufferData.buffer, 0, tempLength);
+        _bufferAsIndexBuffer->_setIndexData((char*)data, tempLength, 0);
+        // this._first = null;
+        // this._last = null;
+        // this._num = 0;
     }
     else
     {
-        if (_updateRange.y <= _updateRange.x)
-            return;
-
-        if (BufferModifyType::Index != _modifyType)
+        if (this->_needResetData)
         {
-            buffers_vertexBuffers[0]->setData((char *)floatArrays0, floatArrays0ByteLength, _updateRange.x * 4,
-                                              _updateRange.x * 4, (_updateRange.y - _updateRange.x) * 4);
+            auto view = this->_first;
+            while (view)
+            {
+                view->updateView(this->_bufferData.getHandle()); // 先更新偏移再提交
+                view = view->_next;
+            }
+
+            jsvm_value ab = jsbind::Local(this->_bufferData.getHandle())["buffer"].getHandle();
+            DEBUG_CHECK(jsbind::Local(ab).isArrayBuffer());
+            void* data = nullptr;
+            size_t byteLength;
+            jsvm_get_arraybuffer_info(env, ab, &data, &byteLength);
+
+            _bufferAsVertexBuffer->setData((const char*)ab, byteLength, 0, 0, byteLength);
+            this->_needResetData = false;
         }
         else
         {
+            if (this->_updateRange.y <= this->_updateRange.x)
+                return;
 
-            int32_t offset = _updateRange.x * 2;
-            auto length = _updateRange.y - _updateRange.x;
-            uint16_t *tempView = _uint16ArrayBufferData + offset;
-            buffers_indexBuffer->_setIndexData((char *)tempView, length, _updateRange.x * 2);
-            delete tempView;
+            jsvm_value ab = jsbind::Local(this->_bufferData.getHandle())["buffer"].getHandle();
+            DEBUG_CHECK(jsbind::Local(ab).isArrayBuffer());
+            void* data = nullptr;
+            size_t byteLength;
+            jsvm_get_arraybuffer_info(env, ab, &data, &byteLength);
+            _bufferAsVertexBuffer->setData((const char*)ab, byteLength, this->_updateRange.x * 4, this->_updateRange.x * 4,
+                         (this->_updateRange.y - this->_updateRange.x) * 4);
         }
+        this->_updateRange.setValue(100000000, -100000000);
     }
-    _updateRange.setValue(100000000, -100000000);
 }
 
 void RT2DGraphicWholeBuffer::modifyOneView(RT2DGraphic2DBufferDataView *view)
 {
-    _updateRange.y = std::max(double(view->_start + view->_length), _updateRange.y);
-    _updateRange.x = std::min(double(view->_start), _updateRange.x);
+    if (this->_modifyType == BufferModifyType::Index)
+    {
+        this->addDataView(view);
+    }
+    else
+    {
+        _updateRange.y = std::max(double(view->_start + view->_length), _updateRange.y);
+        _updateRange.x = std::min(double(view->_start), _updateRange.x);
+    }
 }
 
 void RT2DGraphicWholeBuffer::addDataView(RT2DGraphic2DBufferDataView *view)
 {
-    _views.push_back(view);
-}
+    view->_next = nullptr;
+    view->_prev = nullptr;
 
+    if (!this->_first)
+    {
+        this->_first = view;
+    }
+    if (this->_last)
+    {
+        this->_last->_next = view;
+        view->_prev = this->_last;
+    }
+    this->_last = view;
+    this->_num++;
+}
+void RT2DGraphicWholeBuffer::clearBufferViews()
+{
+    this->_first = nullptr;
+    this->_last = nullptr;
+    this->_num = 0;
+    this->_mark++;
+}
 void RT2DGraphicWholeBuffer::destroy()
 {
-#if 0
-    _views.clear();
-    if (BufferModifyType::Index == modifyType) {
-        delete bufferData.uint16Array;
-        bufferData.uint16Array = nullptr;
-    } else {
-        for (auto arr : bufferData.floatArrays) {
-            delete arr;
-        }
-        bufferData.floatArrays.clear();
-    }
-#endif
+    this->_first = nullptr;
+    this->_last = nullptr;
+    this->_bufferData.reset();
 }
 
-RT2DGraphic2DBufferDataView::RT2DGraphic2DBufferDataView(RT2DGraphicWholeBuffer *owner, BufferModifyType type,
-                                                         int start, int length, int stride)
-    : owner(owner), modifyType(type), _start(start), _length(length), stride(stride), isModified(false)
+RT2DGraphic2DBufferDataView::RT2DGraphic2DBufferDataView(BufferModifyType type, int start, int length, int stride)
+    : owner(nullptr), modifyType(type), _start(start), _length(length), _stride(stride), isModified(false)
 {
-    updateView(owner->_bufferData.getHandle());
-    owner->addDataView(this);
 }
 
 RT2DGraphic2DBufferDataView::~RT2DGraphic2DBufferDataView()
@@ -128,7 +176,7 @@ RT2DGraphic2DBufferDataView::~RT2DGraphic2DBufferDataView()
 
 jsvm_value RT2DGraphic2DBufferDataView::getData()
 {
-    if (owner->_needResetData)
+    if (this->modifyType == BufferModifyType::Vertex && owner->_needResetData)
     {
         updateView(owner->_bufferData.getHandle());
     }
@@ -137,51 +185,70 @@ jsvm_value RT2DGraphic2DBufferDataView::getData()
 
 void RT2DGraphic2DBufferDataView::modify()
 {
-    owner->modifyOneView(this);
-    // RTRender2DPass::setBuffer(owner); lvtodo
+    if (this->modifyType == BufferModifyType::Index)
+    {
+        if (this->_mark != this->owner->_mark)
+        {
+            this->owner->modifyOneView(this);
+            RTRender2DPass::setBuffer(this->owner);
+            this->_mark = this->owner->_mark;
+        }
+    }
+    else
+    {
+        this->owner->modifyOneView(this);
+        RTRender2DPass::setBuffer(this->owner);
+    }
 }
 
 void RT2DGraphic2DBufferDataView::updateView(jsvm_value wholeData)
 {
-    if (modifyType == BufferModifyType::Index)
+    if (this->modifyType == BufferModifyType::Index)
     {
         GET_ENV
         jsvm_status status;
         jsvm_value value;
-        status = jsvm_create_typedarray(env, jsvm_uint16_array, this->_length, wholeData,
-                                        this->_start * 2 /*Uint16Array.BYTES_PER_ELEMENT*/, &value);
-        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-        _data = jsbind::Persistent(value);
+
+        // wholeData.set(this._data, this.start);
+        jsbind::Local setFunction = jsbind::Local(wholeData)["set"];
+        setFunction.call<void>(wholeData, _data.getHandle(), this->_start);
     }
     else
     {
         GET_ENV
         jsvm_value array;
         jsvm_status status;
-        // this._data = [];
-        status = jsvm_create_array_with_length(env, 0, &array);
-        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-        _data = jsbind::Persistent(array);
 
-        bool isArray;
-        status = jsvm_is_array(env, wholeData, &isArray);
-        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-        DEBUG_CHECK(isArray);
+        void *data = nullptr;
+        size_t length;
+        jsvm_typedarray_type type;
+        jsvm_value buffer;
+        size_t byteOffset;
 
-        // let newData = (wholeData as Float32Array[])[0];
-        jsvm_value newData;
-        status = jsvm_get_element(env, wholeData, 0, &newData);
+        status = jsvm_get_typedarray_info(env, wholeData, &type, &length, &data, &buffer, &byteOffset);
         DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-
-        // this._data[0] = new (newData.constructor as any)(newData.buffer, this.start * newData.BYTES_PER_ELEMENT,
+        // this._data = new (wholeData.constructor as any)(wholeData.buffer, this.start * wholeData.BYTES_PER_ELEMENT,
         // this.length);
-        jsvm_value float32_array;
-        status = jsvm_create_typedarray(env, jsvm_float32_array, this->_length, wholeData,
-                                        this->_start * 4 /*Float32Array.BYTES_PER_ELEMENT*/, &float32_array);
-        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-
-        status = jsvm_set_element(env, array, 0, float32_array);
-        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+        if (type == jsvm_typedarray_type::jsvm_float32_array)
+        {
+            jsvm_value float32_array;
+            status = jsvm_create_typedarray(env, jsvm_typedarray_type::jsvm_float32_array, this->_length, wholeData,
+                                            this->_start * 4 /*Float32Array.BYTES_PER_ELEMENT*/, &float32_array);
+            DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+            this->_data = jsbind::Persistent(float32_array);
+        }
+        else if (type == jsvm_typedarray_type::jsvm_uint16_array)
+        {
+            jsvm_value uint16_array;
+            status = jsvm_create_typedarray(env, jsvm_typedarray_type::jsvm_uint16_array, this->_length, wholeData,
+                                            this->_start * 2 /*Uint16Array.BYTES_PER_ELEMENT*/, &uint16_array);
+            DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+            this->_data = jsbind::Persistent(uint16_array);
+        }
+        else
+        {
+            DEBUG_CHECK(false);
+        }
     }
 }
 

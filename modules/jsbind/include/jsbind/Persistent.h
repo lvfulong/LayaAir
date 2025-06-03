@@ -73,10 +73,18 @@ class Persistent
         GET_ENV
         jsvm_status status;
         jsvm_value value;
-
-        status = jsvm_get_reference_value(env, ref_, &value);
-        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-        return value;
+        if (isValid())
+        {
+            status = jsvm_get_reference_value(env, ref_, &value);
+            DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+            return value;
+        }
+        else
+        {
+            status = jsvm_get_null(env, &value);
+            DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+            return value;
+        }
     }
 
     void reset();

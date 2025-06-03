@@ -15,53 +15,100 @@ enum class BufferModifyType
 class GLESIndexBuffer;
 class GLESVertexBuffer;
 class RT2DGraphic2DBufferDataView;
+class GLESRenderGeometryElement;
 class RT2DGraphicWholeBuffer
 {
   public:
-    GLESIndexBuffer *buffers_indexBuffer = nullptr;
-    std::vector<GLESVertexBuffer *> buffers_vertexBuffers;
+    //GLESIndexBuffer *buffers_indexBuffer = nullptr;
+    //std::vector<GLESVertexBuffer *> buffers_vertexBuffers;
 
-    void setBuffers(jsvm_value value);
+    //uint16_t *_uint16ArrayBufferData = nullptr;
+    //int32_t uint16ArrayByteLength = 0;
 
-    uint16_t *_uint16ArrayBufferData = nullptr;
-    int32_t uint16ArrayByteLength = 0;
+    //float *floatArrays0 = nullptr;
+    //int32_t floatArrays0ByteLength = 0;
 
-    float *floatArrays0 = nullptr;
-    int32_t floatArrays0ByteLength = 0;
-
-    jsbind::Persistent _bufferData;
+    jsvm_value getBufferJS()
+    {
+        return _buffer.getHandle();
+    }
+    void setBufferJS(jsvm_value value)
+    {   
+        //lvtoo null
+         _bufferAsIndexBuffer = jsbind::as<GLESIndexBuffer *>(value);
+         _bufferAsVertexBuffer = jsbind::as<GLESVertexBuffer *>(value);
+        _buffer = jsbind::Persistent(value);
+    }
+    jsvm_value getBufferDataJS()
+    {
+        return _bufferData.getHandle();
+    }
+    void setBufferDataJS(jsvm_value value)
+    {
+        _bufferData = jsbind::Persistent(value);
+    }
+    jsbind::Persistent _buffer;     // IVertexBuffer | IIndexBuffer
+    jsbind::Persistent _bufferData; // Float32Array | Uint16Array
     BufferModifyType _modifyType;
-    bool _needResetData;
-    bool _inPass;
+    bool _needResetData{false};
+    bool _inPass{false};
 
     RT2DGraphicWholeBuffer();
     ~RT2DGraphicWholeBuffer();
-
-    // void resetData(int byteLength);
     void upload();
     void modifyOneView(RT2DGraphic2DBufferDataView *view);
     void addDataView(RT2DGraphic2DBufferDataView *view);
+    void clearBufferViews();
     void destroy();
 
   private:
+    friend class RT2DGraphic2DBufferDataView;
     std::vector<RT2DGraphic2DBufferDataView *> _views;
-    Vector2 _updateRange;
+    Vector2 _updateRange = Vector2(100000000, -100000000);
+    RT2DGraphic2DBufferDataView *_first = nullptr;
+    RT2DGraphic2DBufferDataView *_last = nullptr;
+
+    int _mark = 0;
+    int _num = 0;
+
+    GLESIndexBuffer* _bufferAsIndexBuffer = nullptr;
+    GLESVertexBuffer* _bufferAsVertexBuffer = nullptr;
 };
 
 class RT2DGraphic2DBufferDataView
 {
   public:
-    RT2DGraphic2DBufferDataView(RT2DGraphicWholeBuffer *owner, BufferModifyType type, int start, int length,
-                                int stride = 1);
+    RT2DGraphic2DBufferDataView(BufferModifyType type, int start, int length, int stride);
     ~RT2DGraphic2DBufferDataView();
-    int _start;     // element start
-    int _length;    // element length
-    int stride = 1; // element stride
+    int _start;      // element start
+    int _length;     // element length
+    int _stride = 1; // element stride
     RT2DGraphicWholeBuffer *owner;
+    int _mark = 0;
+    void setOwner(RT2DGraphicWholeBuffer *owner)
+    {
+        this->owner = owner;
+    }
     BufferModifyType modifyType;
     bool isModified = false;
     jsbind::Persistent _data; // Float32Array[] | Uint16Array;
+    void setDataJS(jsvm_value data)
+    {
+        _data = jsbind::Persistent(data);
+    }
+    jsvm_value getDataJS()
+    {
+        return _data.getHandle();
+    }
     jsvm_value getData();
+
+    RT2DGraphic2DBufferDataView *_next = nullptr;
+    RT2DGraphic2DBufferDataView *_prev = nullptr;
+    GLESRenderGeometryElement *geometry = nullptr;
+    void setGeometry(GLESRenderGeometryElement *geometry)
+    {
+        this->geometry = geometry;
+    }
     void modify();
     void updateView(jsvm_value wholeData);
     std::pair<int, int> getDataRange()
