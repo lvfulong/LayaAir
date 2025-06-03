@@ -66,9 +66,10 @@ class RTRender2DPass
     {
         this->renderTexture = value;
     }
-    void setShaderDataJS(jsbind::Local value)
+    void setShaderDataJS(jsvm_value v)
     {
-        _shaderDataJS = jsbind::Persistent(value.getHandle());
+        jsbind::Local  value(v);
+        _shaderDataJS = jsbind::Persistent(v);
         if (value.isNull() || value.isUndefined())
         {
             _shaderdata = nullptr;

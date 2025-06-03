@@ -52,6 +52,9 @@
 #include <experimental/Test.h>
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTRender2DPass.h>
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTRender2DPassManager.h>
+#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RT2DGraphic2DBufferDataView.h>
+#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTRenderDataHandle.h>
+#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTRenderStruct2D.h>
 namespace jsbind
 {
     namespace internal
@@ -1168,7 +1171,7 @@ class RenderBindings
             class_binding.function("setDefine", &GLESSetShaderDefine::setDefine);
             context.class_("conchGLESSetShaderDefine", class_binding);
         }
-#if 0
+
         //2D
         {
             jsbind::class_<RT2DGraphic2DBufferDataView> class_binding;
@@ -1180,8 +1183,6 @@ class RenderBindings
             class_binding.property_field("isModified", &RT2DGraphic2DBufferDataView::isModified);
             class_binding.function("setGeometry", &RT2DGraphic2DBufferDataView::setGeometry);
             class_binding.function("setOwner", &RT2DGraphic2DBufferDataView::setOwner); 
-            class_binding.property_field("_needResetData", &RT2DGraphic2DBufferDataView::_needResetData);
-            class_binding.function("clearBufferViews", &RT2DGraphic2DBufferDataView::clearBufferViews);
             class_binding.function("getData", &RT2DGraphic2DBufferDataView::getData);
             class_binding.function("updateView", &RT2DGraphic2DBufferDataView::updateView);
             class_binding.function("modify", &RT2DGraphic2DBufferDataView::modify);
@@ -1194,10 +1195,10 @@ class RenderBindings
             class_binding.constructor<>();
             class_binding.property("buffer", &RT2DGraphicWholeBuffer::getBufferJS, &RT2DGraphicWholeBuffer::setBufferJS);
             class_binding.property("bufferData", &RT2DGraphicWholeBuffer::getBufferDataJS, &RT2DGraphicWholeBuffer::setBufferDataJS);   
-            class_binding.property_field("modifyType", &RT2DGraphicWholeBuffer::modifyType);
-            class_binding.property_field("needResetData", &RT2DGraphicWholeBuffer::needResetData);
+            class_binding.property_field("modifyType", &RT2DGraphicWholeBuffer::_modifyType);
+            class_binding.property_field("needResetData", &RT2DGraphicWholeBuffer::_needResetData);
             class_binding.function("addDataView", &RT2DGraphicWholeBuffer::addDataView);
-            class_binding.function("clearBufferViews", &RT2DGraphicWholeBuffer::clearBufferViews);
+            class_binding.function("clearBufferViews", &RT2DGraphicWholeBuffer::clearBufferViews); 
             class_binding.function("destroy", &RT2DGraphicWholeBuffer::destroy); 
             context.class_("conchRT2DGraphicWholeBuffer", class_binding);
             
@@ -1227,7 +1228,6 @@ class RenderBindings
             class_binding.function("setCullRect", &RTGlobalRenderData::setCullRect);
             class_binding.property_field("renderLayerMask", &RTGlobalRenderData::renderLayerMask);
             class_binding.function("setGlobalShaderData", &RTGlobalRenderData::setGlobalShaderData);
-            class_binding.function("inheriteRenderData", &RTGlobalRenderData::inheriteRenderData);
             context.class_("conchRTGlobalRenderData", class_binding);
         }
         {
@@ -1266,28 +1266,24 @@ class RenderBindings
             class_binding.property_field("isSupport", &RTRender2DPass::isSupport);
             class_binding.function("setRoot", &RTRender2DPass::setRoot);
             class_binding.property_field("doClearColor", &RTRender2DPass::doClearColor);
-            class_binding.property("postProcess", &RTRender2DPass::getPostProcess, &RTRender2DPass::setPostProcess);
             class_binding.function("setMask", &RTRender2DPass::setMask);
             class_binding.property_field("repaint", &RTRender2DPass::repaint);
             class_binding.function("setRenderTexture", &RTRender2DPass::setRenderTexture);
             class_binding.property_field("priority", &RTRender2DPass::priority);
             class_binding.property_field("renderLayerMask", &RTRender2DPass::renderLayerMask);
             class_binding.property_field("cullRect", &RTRender2DPass::cullRect);
-            class_binding.function("setShaderData", &RTRender2DPass::setShaderData);
             class_binding.function("setClearColor", &RTRender2DPass::setClearColor);
             class_binding.function("addStruct", &RTRender2DPass::addStruct);
             class_binding.function("removeStruct", &RTRender2DPass::removeStruct);
             class_binding.function("fowardRender", &RTRender2DPass::fowardRender);
             class_binding.function("render", &RTRender2DPass::render);
             class_binding.function("destroy", &RTRender2DPass::destroy);
-            class_binding.function("setBuffer", &RTRender2DPass::setBuffer);
             class_binding.function("needRender", &RTRender2DPass::needRender);
             class_binding.property("renderOffset", &RTRender2DPass::getRenderOffset, &RTRender2DPass::setRenderOffset); 
             class_binding.property("shaderData", &RTRender2DPass::getShaderDataJS, &RTRender2DPass::setShaderDataJS); 
             class_binding.function("setRenderCallback", &RTRender2DPass::setRenderCallbackJS);
             context.class_("conchRTRender2DPass", class_binding);
         }
-#endif
     }
 
 };

@@ -21,7 +21,7 @@ class RTRender2DDataHandle
         _owner = value;
     }
 
-    bool getNeedUseMatrix() const
+    bool getNeedUseMatrix()
     {
         return _needUseMatrix;
     }
