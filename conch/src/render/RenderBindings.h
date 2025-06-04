@@ -1214,20 +1214,21 @@ class RenderBindings
             context.class_("conchRTRender2DPassManager", class_binding);
             
         }
-        /*{
+        {
             jsbind::class_<RTRender2DDataHandle> class_binding;
             class_binding.constructor<>();
             class_binding.function("setOwner", &RTRender2DDataHandle::setOwner);
             class_binding.property("needUseMatrix", &RTRender2DDataHandle::getNeedUseMatrix, &RTRender2DDataHandle::setNeedUseMatrix);
             class_binding.function("destroy", &RTRender2DDataHandle::destroy);
             context.class_("conchRTRender2DDataHandle", class_binding);
-        }*/
+        }
         {
             jsbind::class_<RTPrimitiveDataHandle> class_binding;
             class_binding.constructor<>();
-            class_binding.function("setOwner", &RTPrimitiveDataHandle::setOwner);
-            class_binding.property("needUseMatrix", &RTPrimitiveDataHandle::getNeedUseMatrix, &RTPrimitiveDataHandle::setNeedUseMatrix);
-            class_binding.function("destroy", &RTPrimitiveDataHandle::destroy);
+            class_binding.inherit<RTRender2DDataHandle>();
+            //class_binding.function("setOwner", &RTPrimitiveDataHandle::setOwner);
+            //class_binding.property("needUseMatrix", &RTPrimitiveDataHandle::getNeedUseMatrix, &RTPrimitiveDataHandle::setNeedUseMatrix);
+            //class_binding.function("destroy", &RTPrimitiveDataHandle::destroy);
             class_binding.function("setMask", &RTPrimitiveDataHandle::setMask);
             context.class_("conchRTPrimitiveDataHandle", class_binding);
         }
@@ -1264,6 +1265,8 @@ class RenderBindings
             class_binding.function("setClipRect", &RTRenderStruct2D::setClipRect);
             class_binding.function("renderUpdate", &RTRenderStruct2D::renderUpdate);
             class_binding.function("destroy", &RTRenderStruct2D::destroy);
+            class_binding.function("setSpriteShaderData", &RTRenderStruct2D::setSpriteShaderData);
+            class_binding.function("setGlobalRenderData", &RTRenderStruct2D::setGlobalRenderData);
             context.class_("conchRTRenderStruct2D", class_binding);
         }
         {

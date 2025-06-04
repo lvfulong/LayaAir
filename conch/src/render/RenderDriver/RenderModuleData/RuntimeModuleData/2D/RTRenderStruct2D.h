@@ -146,7 +146,10 @@ class RTRenderStruct2D
     } 
       
     GLESShaderData *spriteShaderData;
- 
+    void setSpriteShaderData(GLESShaderData *value)
+    {
+        this->spriteShaderData = value;
+    }   
     void setRenderDataHandler(RTRender2DDataHandle *value)
     {
         _renderDataHandler = value;
