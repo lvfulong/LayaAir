@@ -206,6 +206,10 @@ class RenderBindings
             .field("mipmapCount", &KTXTextureInfoJS::mipmapCount)
             .field("bytesOfKeyValueData", &KTXTextureInfoJS::bytesOfKeyValueData)
             .field("headerOffset", &KTXTextureInfoJS::headerOffset);
+
+        jsbind::value_object<Graphic2DBufferBlock>("conchGraphic2DBufferBlock")
+            .field("positions", &Graphic2DBufferBlock::positions)
+            .field("vertexViews", &Graphic2DBufferBlock::vertexViews);
         {
             jsbind::class_<JSBounds> class_binding;
             class_binding.constructor<>();
@@ -1230,6 +1234,7 @@ class RenderBindings
             //class_binding.property("needUseMatrix", &RTPrimitiveDataHandle::getNeedUseMatrix, &RTPrimitiveDataHandle::setNeedUseMatrix);
             //class_binding.function("destroy", &RTPrimitiveDataHandle::destroy);
             class_binding.function("setMask", &RTPrimitiveDataHandle::setMask);
+            class_binding.function("applyVertexBufferBlock", &RTPrimitiveDataHandle::applyVertexBufferBlock);
             context.class_("conchRTPrimitiveDataHandle", class_binding);
         }
         {
@@ -1386,6 +1391,12 @@ namespace jsbind
         {
         };
         template <> struct is_wrapped_class<laya::Viewport> : std::false_type
+        {
+        };
+        template <> struct is_value_object<laya::Graphic2DBufferBlock> : std::true_type
+        {
+        };
+        template <> struct is_wrapped_class<laya::Graphic2DBufferBlock> : std::false_type
         {
         };
     }
