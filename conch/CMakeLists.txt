@@ -604,6 +604,8 @@ elseif(OS_OHOS)
 		src/network/src/UploadTaskCurl.h
 		src/network/src/UploadTaskCurl.cpp
 		src/resource/Audio/JCMp3Parser.cpp
+				src/2D/tests/FontDescription.cpp
+		src/2D/tests/FontDescriptionParser.cpp
 	)
 elseif(OS_LINUX)
 	list(APPEND PLATFORM_HEADER_DIR
@@ -670,6 +672,8 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 set(LINK_LIBS
 	profiler
 	crypto_core
+	benchmark 
+	benchmark_main
 	)
 if(USE_PHYSX)
 	list(APPEND LINK_LIBS
@@ -874,6 +878,7 @@ endif()
 if(USE_JS_OHOS_JSVM)
 	#list(APPEND LINK_LIBS)
 endif()
+	target_compile_definitions(${PROJECT_NAME} PRIVATE BENCHMARK_STATIC_DEFINE)
 	target_link_libraries(${PROJECT_NAME} PUBLIC
 	${LINK_LIBS}
 		${EGL-lib}
