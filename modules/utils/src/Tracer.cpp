@@ -29,7 +29,7 @@ void Tracer::dump()
     LOGI("BENCHMARK:");
     for (const std::pair<std::string, int64_t>& pair : m_marksResult) 
     {
-        LOGI("\t[%s] \t - \t %lld microseconds", pair.first.c_str(), pair.second);
+        LOGI("\t[%s] \t - \t %lld microseconds \t - \t %lld milliseconds", pair.first.c_str(), pair.second, pair.second / 1000);
     }
 }
 } // namespace internal
