@@ -210,6 +210,19 @@ class RenderBindings
         jsbind::value_object<Graphic2DBufferBlock>("conchGraphic2DBufferBlock")
             .field("positions", &Graphic2DBufferBlock::positions)
             .field("vertexViews", &Graphic2DBufferBlock::vertexViews);
+        jsbind::value_object<Matrix>("conchMatrix")
+            .field("a", &Matrix::a)
+            .field("b", &Matrix::b)
+            .field("c", &Matrix::c)
+            .field("d", &Matrix::d)
+            .field("tx", &Matrix::tx)
+            .field("ty", &Matrix::ty);
+
+        jsbind::value_object<Rectangle>("conchRectangle")
+            .field("x", &Rectangle::x)
+            .field("y", &Rectangle::y)
+            .field("width", &Rectangle::width)
+            .field("height", &Rectangle::height);
         {
             jsbind::class_<JSBounds> class_binding;
             class_binding.constructor<>();
@@ -1251,6 +1264,7 @@ class RenderBindings
             class_binding.property_field("zIndex", &RTRenderStruct2D::zIndex);
             class_binding.property("rect", &RTRenderStruct2D::getRect, &RTRenderStruct2D::setRect);
             class_binding.property_field("renderLayer", &RTRenderStruct2D::renderLayer);
+            class_binding.property("renderMatrix", &RTRenderStruct2D::getRenderMatrix, &RTRenderStruct2D::setRenderMatrix);
             class_binding.function("setParent", &RTRenderStruct2D::setParent);
             class_binding.function("setChildren", &RTRenderStruct2D::setChildren);
             class_binding.property_field("renderType", &RTRenderStruct2D::renderType);
@@ -1397,6 +1411,18 @@ namespace jsbind
         {
         };
         template <> struct is_wrapped_class<laya::Graphic2DBufferBlock> : std::false_type
+        {
+        };
+        template <> struct is_value_object<laya::Matrix> : std::true_type
+        {
+        };
+        template <> struct is_wrapped_class<laya::Matrix> : std::false_type
+        {
+        };
+        template <> struct is_value_object<laya::Rectangle> : std::true_type
+        {
+        };
+        template <> struct is_wrapped_class<laya::Rectangle> : std::false_type
         {
         };
     }

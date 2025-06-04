@@ -3,6 +3,7 @@
 #include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.h>
 #include <render/Const.h>
 #include "RTRender2DPass.h"
+#include <render/Property.h>
 namespace laya
 {
 // 默认裁剪信息
@@ -31,23 +32,46 @@ void RTRenderStruct2D::_handleInterData()
     if (_clipRect)
     {
         IClipInfo *info = _clipInfo;
-        const Matrix &mat = getRenderMatrix();
-        Matrix &cm = info->clipMatrix;
-        float x = _clipRect->x;
-        float y = _clipRect->y;
-        float width = _clipRect->width;
-        float height = _clipRect->height;
+        auto trans = this->_trans;
+        if (trans && info->_updateFrame < trans->modifiedFrame)
+        {
+            const Matrix& mat = this->_trans->matrix;
+            Matrix& cm = info->clipMatrix;
+            float x = _clipRect->x;
+            float y = _clipRect->y;
+            float width = _clipRect->width;
+            float height = _clipRect->height;
 
-        cm.tx = x * mat.a + y * mat.c + mat.tx;
-        cm.ty = x * mat.b + y * mat.d + mat.ty;
-        cm.a = width * mat.a;
-        cm.b = width * mat.b;
-        cm.c = height * mat.c;
-        cm.d = height * mat.d;
+            cm.tx = x * mat.a + y * mat.c + mat.tx;
+            cm.ty = x * mat.b + y * mat.d + mat.ty;
+            cm.a = width * mat.a;
+            cm.b = width * mat.b;
+            cm.c = height * mat.c;
+            cm.d = height * mat.d;
 
-        info->clipMatDir.setValue(cm.a, cm.b, cm.c, cm.d);
-        info->clipMatPos.setValue(cm.tx, cm.ty, mat.tx, mat.ty);
+            info->clipMatDir.setValue(cm.a, cm.b, cm.c, cm.d);
+            info->clipMatPos.setValue(cm.tx, cm.ty, mat.tx, mat.ty);
+            info->_updateFrame = trans->modifiedFrame;
+        }
     }
+
+    if (this->_renderDataHandler) {
+
+         auto data = this->spriteShaderData;
+         // clip
+         if (this->needUploadClip) {
+            auto info = this->getClipInfo();
+            data->setVector(ShaderDefines2D::UNIFORM_CLIPMATDIR, info->clipMatDir);
+            data->setVector(ShaderDefines2D::UNIFORM_CLIPMATPOS, info->clipMatPos);
+            this->needUploadClip = false;
+         }
+
+         // global alpha
+         if (this->needUploadAlpha) {
+            data->setNumber(ShaderDefines2D::UNIFORM_VERTALPHA, this->globalAlpha);
+            this->needUploadAlpha = false;
+         }
+      }
 }
 
 void RTRenderStruct2D::_updateBlendMode()

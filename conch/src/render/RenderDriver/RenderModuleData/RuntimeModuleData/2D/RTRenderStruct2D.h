@@ -13,7 +13,7 @@ namespace laya
 {
 struct structTransform {
    Matrix matrix;
-   int32_t modifiedFrame;
+   int64_t modifiedFrame;
 };
 class IClipInfo
 {
@@ -21,6 +21,7 @@ class IClipInfo
     Vector4 clipMatDir;
     Vector4 clipMatPos;
     Matrix clipMatrix;
+    int64_t _updateFrame;
     IClipInfo() = default;
     IClipInfo(const Vector4 &dir, const Vector4 &pos, const Matrix &m) : clipMatDir(dir), clipMatPos(pos), clipMatrix(m)
     {
@@ -208,6 +209,8 @@ class RTRenderStruct2D
     IClipInfo *_clipInfo = nullptr;
     void *_rnUpdateCall = nullptr;
     void *_rnUpdateFun = nullptr;
+    bool needUploadClip = true;
+    bool needUploadAlpha = true;
 };
 } // namespace laya
 #endif // __RTRENDERSTRUCT2D_H__
