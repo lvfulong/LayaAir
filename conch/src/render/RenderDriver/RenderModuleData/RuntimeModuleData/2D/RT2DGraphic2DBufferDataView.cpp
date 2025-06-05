@@ -15,74 +15,72 @@ RT2DGraphicWholeBuffer::RT2DGraphicWholeBuffer()
 RT2DGraphicWholeBuffer::~RT2DGraphicWholeBuffer()
 {
 }
-
+void RT2DGraphicWholeBuffer::resetData(int byteLength)
+{
+    _resetDataCallback.call<void>(jsvm::global(), byteLength);
+}
 void RT2DGraphicWholeBuffer::upload()
 {
     GET_ENV
+    jsvm_status status;
     if (BufferModifyType::Index == this->_modifyType)
     {
+        jsbind::Persistent view = this->_first;
+        RT2DGraphic2DBufferDataView* pView = view.getLocal().as<RT2DGraphic2DBufferDataView*>();
+
         int start = 0;
         int length = 0;
-        GLESRenderGeometryElement *geometry = nullptr;
-        // geometry 相同一定是紧凑的
-        RT2DGraphic2DBufferDataView *view = this->_first;
-        // let totalLength = 0;
-        // let totalArr = [];
-        while (view)
-        {
-            if (!view->geometry)
-            {
-                start = view->_length;
-                length = view->_length;
+        auto geometry = pView->geometry;
+        bool needUpdate = false;
+        bool uploadStart = this->_needResetData ? 0 : this->_updateRange.x;
 
-                // totalLength += view.length;
-                // totalArr.push(view.length);
 
-                view->updateView(this->_bufferData.getHandle()); // 先更新偏移再提交
-                view = view->_next;
-                continue;
-            }
-
-            if (geometry != view->geometry)
-            {
-                if (length && geometry)
-                {
-                    geometry->clearRenderParams();
-                    geometry->setDrawElementParams(length, start * 2);
+        auto pGeometry = geometry.getLocal().as<GLESRenderGeometryElement*>();
+        // let mark = 0 ;
+        while (view) {
+            // mark++;
+            if (pGeometry != pView->geometry.getLocal().as<GLESRenderGeometryElement*>()) {//切换geometry时，检查上一个是否需要提交
+                if (needUpdate) {// 设置上一个的绘制状态
+                    pGeometry->clearRenderParams();
+                    pGeometry->setDrawElementParams(length, start * 2);
                 }
-                geometry = view->geometry;
+                geometry = pView->geometry;
+                pGeometry = geometry.getLocal().as<GLESRenderGeometryElement*>();
                 start = start + length;
                 length = 0;
             }
 
-            view->_start = start + length;
-            length += view->_length;
+            start = start + length;
+            //在需要更新的段落内
+            needUpdate = this->_needResetData || start >= uploadStart;
 
-            // totalLength += view.length;
-            // totalArr.push(view.length);
+            if (needUpdate) {
+                pView->_start = start;
+                pView->updateView(this->_bufferData.getHandle());
+            }
 
-            view->updateView(this->_bufferData.getHandle());
-            view = view->_next;
+            length += pView->_length;
+            view = pView->_next;
         }
 
-        if (length && geometry)
-        {
-            geometry->clearRenderParams();
-            geometry->setDrawElementParams(length, start * 2);
+        if (needUpdate) {
+            pGeometry->clearRenderParams();
+            pGeometry->setDrawElementParams(length, start * 2);
         }
-
-        int tempLength = this->_last->_start + this->_last->_length;
+        RT2DGraphic2DBufferDataView* pLast = this->_last.getLocal().as<RT2DGraphic2DBufferDataView*>();
+        int len = pLast->_start + pLast->_length - uploadStart;
 
         jsvm_value ab = jsbind::Local(this->_bufferData.getHandle())["buffer"].getHandle();
         DEBUG_CHECK(jsbind::Local(ab).isArrayBuffer());
         void* data = nullptr;
         size_t l;
-        jsvm_get_arraybuffer_info(env, ab, &data, &l);
-        //let tempUint16Array = new Uint16Array(this.bufferData.buffer, 0, tempLength);
-        _bufferAsIndexBuffer->_setIndexData((char*)data, tempLength, 0);
-        // this._first = null;
-        // this._last = null;
-        // this._num = 0;
+        status = jsvm_get_arraybuffer_info(env, ab, &data, &l);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+        //let tempUint16Array = new Uint16Array(this.bufferData.buffer, uploadStart * 2, len);
+        //(this.buffer as IIndexBuffer)._setIndexData(tempUint16Array, uploadStart * 2);
+        _bufferAsIndexBuffer->_setIndexData((char*)data, uploadStart * 2, len);
+
+        this->_needResetData = false;
     }
     else
     {
@@ -91,16 +89,17 @@ void RT2DGraphicWholeBuffer::upload()
             auto view = this->_first;
             while (view)
             {
-                view->updateView(this->_bufferData.getHandle()); // 先更新偏移再提交
-                view = view->_next;
+                RT2DGraphic2DBufferDataView* p = view.getLocal().as<RT2DGraphic2DBufferDataView*>();
+                p->updateView(this->_bufferData.getHandle()); // 先更新偏移再提交
+                view = p->_next;
             }
 
             jsvm_value ab = jsbind::Local(this->_bufferData.getHandle())["buffer"].getHandle();
             DEBUG_CHECK(jsbind::Local(ab).isArrayBuffer());
             void* data = nullptr;
             size_t byteLength;
-            jsvm_get_arraybuffer_info(env, ab, &data, &byteLength);
-
+            status = jsvm_get_arraybuffer_info(env, ab, &data, &byteLength);
+            DEBUG_CHECK(status == jsvm_status::jsvm_ok);
             _bufferAsVertexBuffer->setData((const char*)ab, byteLength, 0, 0, byteLength);
             this->_needResetData = false;
         }
@@ -113,7 +112,8 @@ void RT2DGraphicWholeBuffer::upload()
             DEBUG_CHECK(jsbind::Local(ab).isArrayBuffer());
             void* data = nullptr;
             size_t byteLength;
-            jsvm_get_arraybuffer_info(env, ab, &data, &byteLength);
+            status = jsvm_get_arraybuffer_info(env, ab, &data, &byteLength);
+            DEBUG_CHECK(status == jsvm_status::jsvm_ok);
             _bufferAsVertexBuffer->setData((const char*)ab, byteLength, this->_updateRange.x * 4, this->_updateRange.x * 4,
                          (this->_updateRange.y - this->_updateRange.x) * 4);
         }
@@ -136,37 +136,66 @@ void RT2DGraphicWholeBuffer::modifyOneView(RT2DGraphic2DBufferDataView *view)
 
 void RT2DGraphicWholeBuffer::addDataView(RT2DGraphic2DBufferDataView *view)
 {
-    view->_next = nullptr;
-    view->_prev = nullptr;
+    view->_next.reset();// = nullptr;
+    view->_prev.reset();// = nullptr;
 
     if (!this->_first)
     {
-        this->_first = view;
+        this->_first = jsbind::toPersistent(view);
+        this->_first.getLocal().as<RT2DGraphic2DBufferDataView*>()->_start = 0;
     }
     if (this->_last)
     {
-        this->_last->_next = view;
+        this->_last.getLocal().as<RT2DGraphic2DBufferDataView*>()->_next = jsbind::toPersistent(view);
         view->_prev = this->_last;
     }
-    this->_last = view;
+    view->owner = jsbind::toPersistent(this);
+    this->_last = jsbind::toPersistent(view);
     this->_num++;
 }
 void RT2DGraphicWholeBuffer::clearBufferViews()
 {
-    this->_first = nullptr;
-    this->_last = nullptr;
+    this->_first.reset();// = nullptr;
+    this->_last.reset();// = nullptr;
     this->_num = 0;
-    this->_mark++;
+    this->_updateRange.setValue(100000000, -100000000);
+}
+void RT2DGraphicWholeBuffer::removeDataView(RT2DGraphic2DBufferDataView* view)
+{
+    view->owner.reset();// = null;
+    //ib 调用
+    // let index = this._views.indexOf(view);
+    // this._views.splice(index, 1);
+    // this._needResetData = true;
+    if (view->_prev) {
+        view->_prev.getLocal().as<RT2DGraphic2DBufferDataView*>()->_next = view->_next; //view->_prev._next = view->_next;
+    }
+    if (view->_next) {
+        view->_next.getLocal().as<RT2DGraphic2DBufferDataView*>()->_prev = view->_prev;
+    }
+    if (view == this->_first.getLocal().as<RT2DGraphic2DBufferDataView*>()) {
+        this->_first = view->_next;
+    }
+    if (view == this->_last.getLocal().as<RT2DGraphic2DBufferDataView*>()) {
+        this->_last = view->_prev;
+    }
+
+    view->_next.reset();// = nullptr;
+    view->_prev.reset();// = nullptr;
+
+    this->_updateRange.x = std::min((double)view->_start, this->_updateRange.x);
+    this->_updateRange.y = std::max((double)view->_start + view->_length, this->_updateRange.y);
+    this->_num--;
 }
 void RT2DGraphicWholeBuffer::destroy()
 {
-    this->_first = nullptr;
-    this->_last = nullptr;
+    this->_first.reset();// = nullptr;
+    this->_last.reset();// = nullptr;
     this->_bufferData.reset();
 }
 
 RT2DGraphic2DBufferDataView::RT2DGraphic2DBufferDataView(BufferModifyType type, int start, int length, int stride)
-    : owner(nullptr), modifyType(type), _start(start), _length(length), _stride(stride), isModified(false)
+    : modifyType(type), _start(start), _length(length), _stride(stride), isModified(false)
 {
 }
 
@@ -176,28 +205,26 @@ RT2DGraphic2DBufferDataView::~RT2DGraphic2DBufferDataView()
 
 jsvm_value RT2DGraphic2DBufferDataView::getData()
 {
-    if (this->modifyType == BufferModifyType::Vertex && owner->_needResetData)
+    RT2DGraphicWholeBuffer* p = owner.getLocal().as<RT2DGraphicWholeBuffer*>();
+    if (this->modifyType == BufferModifyType::Vertex && p->_needResetData)
     {
-        updateView(owner->_bufferData.getHandle());
+        updateView(p->_bufferData.getHandle());
     }
     return _data.getHandle();
 }
 
 void RT2DGraphic2DBufferDataView::modify()
 {
+    RT2DGraphicWholeBuffer* p = owner.getLocal().as<RT2DGraphicWholeBuffer*>();
     if (this->modifyType == BufferModifyType::Index)
     {
-        if (this->_mark != this->owner->_mark)
-        {
-            this->owner->modifyOneView(this);
-            RTRender2DPass::setBuffer(this->owner);
-            this->_mark = this->owner->_mark;
-        }
+        p->modifyOneView(this);
+        RTRender2DPass::setBuffer(p);
     }
     else
     {
-        this->owner->modifyOneView(this);
-        RTRender2DPass::setBuffer(this->owner);
+        p->modifyOneView(this);
+        RTRender2DPass::setBuffer(p);
     }
 }
 

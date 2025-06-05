@@ -11,7 +11,7 @@ class Persistent
 {
   public:
     Persistent() = default;
-
+    explicit Persistent(jsvm_ref);
     explicit Persistent(jsvm_value);
 
     Persistent(const Persistent &);
@@ -67,7 +67,10 @@ class Persistent
     {
         return ref_ != nullptr;
     }
-
+    explicit operator bool() const noexcept 
+    { 
+        return isValid() && !getLocal().isUndefined() && !getLocal().isNull();
+    }
     inline jsvm_value getHandle() const
     {
         GET_ENV

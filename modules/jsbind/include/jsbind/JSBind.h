@@ -49,6 +49,16 @@ template <typename ClassType> jsvm_value toLocal(ClassType *objectPointer)
     DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     return result;
 }
+
+template <typename ClassType> Persistent toPersistent(ClassType* objectPointer)
+{
+    GET_ENV
+        ClassRegistry<ClassType>& classRegistry = ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
+    auto objectRegistry = classRegistry.getObjectRegistry(objectPointer);
+    DEBUG_CHECK(objectRegistry != nullptr);
+
+    return Persistent(objectRegistry->objectRef_);
+}
 extern void AdjustAmountOfExternalAllocatedMemory(int p_nMemorySize);
 } // namespace jsbind
 #endif

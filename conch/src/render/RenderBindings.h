@@ -1201,8 +1201,12 @@ class RenderBindings
             class_binding.function("setGeometry", &RT2DGraphic2DBufferDataView::setGeometry);
             class_binding.function("setOwner", &RT2DGraphic2DBufferDataView::setOwner); 
             class_binding.function("getData", &RT2DGraphic2DBufferDataView::getData);
-            class_binding.function("updateView", &RT2DGraphic2DBufferDataView::updateView);
+            
             class_binding.function("modify", &RT2DGraphic2DBufferDataView::modify);
+
+
+           
+            class_binding.function("_updateView", &RT2DGraphic2DBufferDataView::updateView);
             class_binding.property("_data", &RT2DGraphic2DBufferDataView::getDataJS, &RT2DGraphic2DBufferDataView::setDataJS);
             context.class_("conchRT2DGraphic2DBufferDataView", class_binding);
             
@@ -1213,10 +1217,15 @@ class RenderBindings
             class_binding.property("buffer", &RT2DGraphicWholeBuffer::getBufferJS, &RT2DGraphicWholeBuffer::setBufferJS);
             class_binding.property("bufferData", &RT2DGraphicWholeBuffer::getBufferDataJS, &RT2DGraphicWholeBuffer::setBufferDataJS);   
             class_binding.property_field("modifyType", &RT2DGraphicWholeBuffer::_modifyType);
-            class_binding.property_field("needResetData", &RT2DGraphicWholeBuffer::_needResetData);
-            class_binding.function("addDataView", &RT2DGraphicWholeBuffer::addDataView);
+            //class_binding.function("resetData", &RT2DGraphicWholeBuffer::resetData);
+            class_binding.function("removeDataView", &RT2DGraphicWholeBuffer::removeDataView);
             class_binding.function("clearBufferViews", &RT2DGraphicWholeBuffer::clearBufferViews); 
-            class_binding.function("destroy", &RT2DGraphicWholeBuffer::destroy); 
+            class_binding.function("destroy", &RT2DGraphicWholeBuffer::destroy);
+            
+
+            class_binding.function("_addDataView", &RT2DGraphicWholeBuffer::addDataView);
+            class_binding.function("setResetDataCallback", &RT2DGraphicWholeBuffer::setResetDataCallback);
+            class_binding.property_field("_needResetData", &RT2DGraphicWholeBuffer::_needResetData);
             context.class_("conchRT2DGraphicWholeBuffer", class_binding);
             
         }

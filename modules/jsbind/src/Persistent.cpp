@@ -12,7 +12,17 @@ Persistent::Persistent(jsvm_value value)
         DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     }
 }
+Persistent::Persistent(jsvm_ref value)
+{
+    DEBUG_CHECK(value != nullptr);
+    GET_ENV
+    ref_ = value;
+    jsvm_status status;
+    uint32_t count;
+    status = jsvm_reference_ref(env, ref_, &count);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
 
+}
 Persistent::Persistent(const Persistent &that)
 {
     GET_ENV
