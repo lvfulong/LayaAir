@@ -79,6 +79,7 @@
 #include <platform/OS.h>
 #include "JSSubtleCrypto.h"
 #include "JSProfiler.h"
+#include "JSMemory.h"
 
 extern int g_nInnerWidth ;
 extern int g_nInnerHeight ;
@@ -572,5 +573,6 @@ namespace laya
             pfsMgr->m_pDownloader.reset();
         //delete JSTextMemoryCanvas::getInstance();
         JSDevice::reset();
+        JSMemory::reset();
     }
 }

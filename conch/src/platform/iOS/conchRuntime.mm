@@ -271,6 +271,7 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
     {
         pScriptRuntime->jsGC();
     }
+    CToObjectCOnMemoryWarning();
 }
 //------------------------------------------------------------------------------
 -(void) initConch

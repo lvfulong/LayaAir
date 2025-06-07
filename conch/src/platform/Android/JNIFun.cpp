@@ -33,6 +33,8 @@
 #include <swappy/swappyGL_extra.h>
 #endif
 #include "network/src/UploadTaskAndroid.h"
+#include <Bindings/JSMemory.h>
+
 
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
@@ -70,6 +72,7 @@ extern "C"
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_reloadJS(JNIEnv* env, jobject obj);
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_urlBack(JNIEnv* env, jobject obj);
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleAsyncMessageMethodNative(JNIEnv* env, jobject obj, jlong nativeHandle, jstring result);
+	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onTrimMemory(JNIEnv* env, jobject obj, jint level);
 };
 static std::string getStringField(JNIEnv *env, jobject obj, const char *fieldName) {
 	jclass cls = env->GetObjectClass(obj);
@@ -504,3 +507,7 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_handleAsyncMessageMeth
 	env->ReleaseStringUTFChars(result, strResult);
 }
 
+JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_onTrimMemory(JNIEnv* env, jobject obj, jint level)
+{
+	JSMemory::fireMemoryWarning(level);
+}

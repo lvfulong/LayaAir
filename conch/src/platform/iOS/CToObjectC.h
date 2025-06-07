@@ -206,6 +206,7 @@ std::string CToObjectCGetExecutablePath();
 std::string CToObjectCGetRootAssetsPath();
 std::string CToObjectCGetFilesDir();
 std::string CToObjectCGetCacheDir();
+void CToObjectCOnMemoryWarning();
 #endif //_CToObjectC_H_
 
 //-----------------------------END FILE--------------------------------

@@ -59,4 +59,5 @@ public class ConchJNI {
 	public static native void reloadJS();
 	public static native void urlBack();
 	public static native void handleAsyncMessageMethodNative(long nativeHandle, String result);
+	public static native void onTrimMemory(int level);
 }

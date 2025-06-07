@@ -35,6 +35,7 @@
 #import "JCSystemConfig.h"
 #import <CoreHaptics/CoreHaptics.h>
 #include <sys/sysctl.h>
+#import <Bindings/JSMemory.h>
 
 //文字相关的函数
 //-----------------------------------------------------------------
@@ -1462,4 +1463,8 @@ std::string CToObjectCGetFilesDir()
 std::string CToObjectCGetCacheDir()
 {
     return [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject] UTF8String];
+}
+void CToObjectCOnMemoryWarning()
+{
+    laya::JSMemory::fireMemoryWarning(-1);
 }

@@ -27,6 +27,7 @@
 #include "JSDevice.h"
 #include "JSNetwork.h"
 #include "JSDataCache.h"
+#include "JSMemory.h"
 
 laya::JCZip *g_ZipPackage = NULL;
 //------------------------------------------------------------------------------
@@ -556,6 +557,7 @@ namespace laya
         JSDevice::exportJS(class_binding);
         JSNetwork::exportJS(context, class_binding);
         JSDataCache::exportJS(class_binding);
+        JSMemory::exportJS(class_binding);
 		class_binding.class_function("postAsyncMessage", &JSRuntime::postAsyncMessage);
         class_binding.class_function("postSyncMessage", &JSRuntime::postSyncMessage);
 		class_binding.class_function("setGlobalRepaint", &JSRuntime::setGlobalRepaint);

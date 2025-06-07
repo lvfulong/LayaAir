@@ -901,4 +901,8 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener {
 	public void  setStringOnBackPressed(String str) {
 		m_strOnBackPressed = str;
 	}
+	@Override
+	public void onTrimMemory(int level) {
+		ConchJNI.onTrimMemory(level);
+	}
 }

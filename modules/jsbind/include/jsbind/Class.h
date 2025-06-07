@@ -576,6 +576,23 @@ template <typename ClassType> class global_class_
         propertyDescriptorVector_.push_back(descriptor);
         return *this;
     }
+    const global_class_& class_function_raw(const char* name, jsvm_value(*func)(jsvm_env env, jsvm_callback_info info)) const
+    {
+        FuncInfo<decltype(func)>* data = new FuncInfo<decltype(func)>(func);
+        internal::addDeinitializer([data]() { delete data; });
+        data->name = name;
+        jsvm_property_descriptor descriptor;
+        descriptor.utf8name = name;
+        descriptor.name = NULL;
+        descriptor.method = func;
+        descriptor.getter = NULL;
+        descriptor.setter = NULL;
+        descriptor.value = NULL;
+        descriptor.attributes = jsvm_property_attributes::jsvm_default;
+        descriptor.data = data;
+        propertyDescriptorVector_.push_back(descriptor);
+        return *this;
+    }
     template <typename PropertyType>
     global_class_ &class_property(const char *name, PropertyType (*get)(void),
                                   void (*set)(PropertyType value) = nullptr)

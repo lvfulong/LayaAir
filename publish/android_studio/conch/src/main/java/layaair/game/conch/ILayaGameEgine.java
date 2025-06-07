@@ -57,4 +57,6 @@ import android.widget.AbsoluteLayout;
 	 void setAlertTitle(String title);
 
 	 void setStringOnBackPressed(String str);
+
+	 void onTrimMemory(int level);
 }

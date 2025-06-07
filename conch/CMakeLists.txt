@@ -398,6 +398,8 @@ list(APPEND CONCH_SRC
 	src/Bindings/JSSubtleCrypto.cpp
 	src/Bindings/JSProfiler.h
 	src/Bindings/JSProfiler.cpp
+	src/Bindings/JSMemory.h
+	src/Bindings/JSMemory.cpp
 	src/Extention/LayaExtWind.cpp
 	
 	src/OpenAL/
