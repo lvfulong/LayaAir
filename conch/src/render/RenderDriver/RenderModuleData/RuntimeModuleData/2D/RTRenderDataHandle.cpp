@@ -183,7 +183,7 @@ RT2DGraphic2DBufferDataView *RTPrimitiveDataHandle::_cloneView(RT2DGraphic2DBuff
         geometry->setIndexFormat(IndexFormat::UInt16);
         clone->geometry = jsbind::toPersistent(geometry);
     }
-
+    clone->_data = view->_data;
     return clone;
 }
 
