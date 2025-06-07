@@ -2,6 +2,8 @@
 #define __PASSRENDERLIST_H__
 
 #include <utils/FastSinglelist.h>
+#include "RTBatchBuffer.h"
+
 namespace laya
 {
 class Batch2DInfo;
@@ -30,6 +32,8 @@ class PassRenderList
     Batch2DInfo *_currentBatch = nullptr;
     FastSinglelist<RTRenderStruct2D *> structs{false};
     FastSinglelist<GLESRenderElement2D *> renderElements{false};
+    FastSinglelist<GLESRenderElement2D *> _recoverList{false};
+    RTBatchBuffer* _batchBuffer = nullptr;
     int renderListType = -1;
     int zOrder = 0;
     uint32_t _dirtyFlag = 0;

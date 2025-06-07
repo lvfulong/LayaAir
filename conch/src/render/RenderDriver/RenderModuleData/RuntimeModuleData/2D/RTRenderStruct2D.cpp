@@ -21,12 +21,6 @@ RTRenderStruct2D::~RTRenderStruct2D()
     }
 }
 
-void RTRenderStruct2D::set_renderNodeUpdateCall(void *call, void *renderUpdateFun)
-{
-    _rnUpdateCall = call;
-    _rnUpdateFun = renderUpdateFun;
-}
-
 void RTRenderStruct2D::_handleInterData()
 {
     if (_clipRect)
@@ -191,11 +185,11 @@ void RTRenderStruct2D::setRepaint()
     }
 }
 
-RTRenderStruct2D *RTRenderStruct2D::addChild(RTRenderStruct2D *child, int32_t index)
+RTRenderStruct2D* RTRenderStruct2D::addChild(RTRenderStruct2D* child, int32_t index)
 {
     child->parent = this;
     children.insert(children.begin() + index, child);
-    
+
     child->_parentClipInfo = this->getClipInfo();
     child->_parentBlendMode = this->getBlendMode();
     child->_parentPass = this->_pass;
@@ -203,19 +197,20 @@ RTRenderStruct2D *RTRenderStruct2D::addChild(RTRenderStruct2D *child, int32_t in
     updateChildren(ChildrenUpdateType::All);
     return child;
 }
-void RTRenderStruct2D::updateChildIndex(RTRenderStruct2D *child, int32_t oldIndex, int32_t index)
-{   
+void RTRenderStruct2D::updateChildIndex(RTRenderStruct2D* child, int32_t oldIndex, int32_t index)
+{
     if (oldIndex == index)
         return;
 
     children.erase(children.begin() + oldIndex);
     if (index >= children.size()) {
         children.push_back(child);
-    } else {
+    }
+    else {
         children.insert(children.begin() + index, child);
     }
 }
-void RTRenderStruct2D::removeChild(RTRenderStruct2D *child)
+void RTRenderStruct2D::removeChild(RTRenderStruct2D* child)
 {
     auto it = std::find(children.begin(), children.end(), child);
     if (it != children.end())
@@ -230,15 +225,21 @@ void RTRenderStruct2D::removeChild(RTRenderStruct2D *child)
     }
 }
 
-void RTRenderStruct2D::renderUpdate(GLESRenderContext2D *context)
+void RTRenderStruct2D::renderUpdate(GLESRenderContext2D* context)
 {
     if (this->_renderDataHandler)
     {
         this->_renderDataHandler->inheriteRenderData(context);
     }
 
-    // f (this->_rnUpdateFun)
-    //    this->_rnUpdateFun(this->_rnUpdateCall, context);//lvtodo
+    if (m_JSFunctionRenderUpdate.isValid())
+    {
+        m_JSFunctionRenderUpdate.call<void>(jsvm::global());
+    }
+}
+
+void RTRenderStruct2D::setRenderUpdate(jsvm_value function){
+    m_JSFunctionRenderUpdate = jsbind::Persistent(function);
 }
 
 void RTRenderStruct2D::destroy()

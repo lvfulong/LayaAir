@@ -1,9 +1,10 @@
 #ifndef __RT_2D_GRAPHIC_2D_BUFFER_DATA_VIEW_H__
 #define __RT_2D_GRAPHIC_2D_BUFFER_DATA_VIEW_H__
 
+#include <vector>
 #include <core/math/Vector2.h>
 #include <jsbind/JSBind.h>
-#include <vector>
+
 namespace laya
 {
 
@@ -50,6 +51,23 @@ class RT2DGraphicWholeBuffer
     void setBufferDataJS(jsvm_value value)
     {
         _bufferData = jsbind::Persistent(value);
+    }
+
+    void setIndexBuffer(GLESIndexBuffer* value)
+    {
+        _bufferAsIndexBuffer = value;
+    }
+    void setVertexBuffer(GLESVertexBuffer* value)
+    {
+        _bufferAsVertexBuffer = value;
+    }
+    GLESIndexBuffer* getIndexBuffer()
+    {
+        return _bufferAsIndexBuffer;
+    }
+    GLESVertexBuffer* getVertexBuffer()
+    {
+        return _bufferAsVertexBuffer;
     }
     jsbind::Persistent _buffer;     // IVertexBuffer | IIndexBuffer
     jsbind::Persistent _bufferData; // Float32Array | Uint16Array

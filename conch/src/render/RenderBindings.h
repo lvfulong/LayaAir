@@ -207,9 +207,14 @@ class RenderBindings
             .field("bytesOfKeyValueData", &KTXTextureInfoJS::bytesOfKeyValueData)
             .field("headerOffset", &KTXTextureInfoJS::headerOffset);
 
-        jsbind::value_object<Graphic2DBufferBlock>("conchGraphic2DBufferBlock")
-            .field("positions", &Graphic2DBufferBlock::positions)
-            .field("vertexViews", &Graphic2DBufferBlock::vertexViews);
+        jsbind::value_object<Graphics2DVertexBlock>("conchGraphics2DVertexView")
+            .field("positions", &Graphics2DVertexBlock::positions)
+            .field("vertexViews", &Graphics2DVertexBlock::vertexViews);
+        jsbind::value_object<Graphics2DBufferBlock>("conchGraphics2DBufferBlock")
+            .field("vertexs", &Graphics2DBufferBlock::vertexs)
+            .field("indexView", &Graphics2DBufferBlock::indexView)
+            .field("vertexBuffer", &Graphics2DBufferBlock::vertexBuffer);
+            
         jsbind::value_object<Matrix>("conchMatrix")
             .field("a", &Matrix::a)
             .field("b", &Matrix::b)
@@ -1273,7 +1278,7 @@ class RenderBindings
             class_binding.property_field("zIndex", &RTRenderStruct2D::zIndex);
             class_binding.property("rect", &RTRenderStruct2D::getRect, &RTRenderStruct2D::setRect);
             class_binding.property_field("renderLayer", &RTRenderStruct2D::renderLayer);
-            class_binding.property("renderMatrix", &RTRenderStruct2D::getRenderMatrix, &RTRenderStruct2D::setRenderMatrix);
+            // class_binding.property("renderMatrix", &RTRenderStruct2D::getRenderMatrix, &RTRenderStruct2D::setRenderMatrix);
             class_binding.function("setParent", &RTRenderStruct2D::setParent);
             class_binding.function("setChildren", &RTRenderStruct2D::setChildren);
             class_binding.property_field("renderType", &RTRenderStruct2D::renderType);
@@ -1416,10 +1421,10 @@ namespace jsbind
         template <> struct is_wrapped_class<laya::Viewport> : std::false_type
         {
         };
-        template <> struct is_value_object<laya::Graphic2DBufferBlock> : std::true_type
+        template <> struct is_value_object<laya::Graphics2DBufferBlock> : std::true_type
         {
         };
-        template <> struct is_wrapped_class<laya::Graphic2DBufferBlock> : std::false_type
+        template <> struct is_wrapped_class<laya::Graphics2DBufferBlock> : std::false_type
         {
         };
         template <> struct is_value_object<laya::Matrix> : std::true_type

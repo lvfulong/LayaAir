@@ -1,10 +1,12 @@
 #include "RTGraphicsBatch.h"
 #include "RTRenderStruct2D.h"
+#include "RT2DGraphic2DBufferDataView.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderGeometryElement.h"
 #include <render/3D/design/renderEnum/DrawType.h>
 #include <render/3D/design/renderEnum/IndexFormat.h>
 #include <render/3D/design/renderEnum/RenderPologyMode.h>
 #include <utils/Log.h>
+#include <jsbind/jsbind.h>
 namespace laya
 {
 
@@ -18,7 +20,6 @@ RTGraphicsBatch::RTGraphicsBatch()
 
 RTGraphicsBatch::~RTGraphicsBatch()
 {
-    recover();
 }
 
 GLESRenderElement2D *RTGraphicsBatch::createRenderElement2D()
@@ -54,7 +55,7 @@ void RTGraphicsBatch::recoverRenderElement2D(GLESRenderElement2D *value)
     _pool.push_back(value);
 }
 
-void RTGraphicsBatch::batchRenderElement(FastSinglelist<GLESRenderElement2D *> &list, int start, int length)
+void RTGraphicsBatch::batchRenderElement(FastSinglelist<GLESRenderElement2D *> &list, int start, int length, FastSinglelist<GLESRenderElement2D *> &recoverList, RTBatchBuffer* buffer)
 {
     auto &elementArray = list._elements;
     int batchStart = -1;
@@ -83,7 +84,7 @@ void RTGraphicsBatch::batchRenderElement(FastSinglelist<GLESRenderElement2D *> &
         {
             if (count != 0)
             {
-                batch(list, batchStart + start, count);
+                batch(list, batchStart + start, count, recoverList, buffer);
             }
             else
             {
@@ -96,7 +97,7 @@ void RTGraphicsBatch::batchRenderElement(FastSinglelist<GLESRenderElement2D *> &
 
     if (count != 0)
     {
-        batch(list, batchStart + start, count);
+        batch(list, batchStart + start, count, recoverList, buffer);
     }
     else
     {
@@ -104,7 +105,7 @@ void RTGraphicsBatch::batchRenderElement(FastSinglelist<GLESRenderElement2D *> &
     }
 }
 
-void RTGraphicsBatch::batch(FastSinglelist<GLESRenderElement2D *> &list, int start, int length)
+void RTGraphicsBatch::batch(FastSinglelist<GLESRenderElement2D *> &list, int start, int length, FastSinglelist<GLESRenderElement2D *> &recoverList, RTBatchBuffer* buffer)
 {
     auto &elementArray = list._elements;
     GLESRenderElement2D *staticBatchRenderElement = createRenderElement2D();
@@ -112,8 +113,9 @@ void RTGraphicsBatch::batch(FastSinglelist<GLESRenderElement2D *> &list, int sta
 
     for (int i = 0; i < length; i++)
     {
-        GLESRenderElement2D *element = elementArray[start + i];
-        auto geometry = element->geometry;
+        int offset = start + i;
+        GLESRenderElement2D *element = elementArray[offset];
+        auto geometry = buffer->geometryList[i] ? buffer->geometryList[i] : element->geometry;
 
         if (!i)
         {
@@ -169,7 +171,7 @@ void RTGraphicsBatch::batch(FastSinglelist<GLESRenderElement2D *> &list, int sta
         geometry->setDrawElementParams(currentCount, currentOffset);
     }
 
-    _recoverList.add(staticBatchRenderElement);
+    recoverList.add(staticBatchRenderElement);
     list.add(staticBatchRenderElement);
 }
 
@@ -186,8 +188,10 @@ bool RTGraphicsBatch::check(GLESRenderElement2D *left, GLESRenderElement2D *righ
         { // 或者比对材质 clip 优先忽略
             return false;
         }
-        else if (left->_owner->getClipInfo() == right->_owner->getClipInfo())
-        {
+        else if (left->_owner->globalAlpha != right->_owner->globalAlpha) {
+            return false;
+        }
+        else if (left->_owner->getClipInfo() == right->_owner->getClipInfo()) {
             return true;
         }
         return false;
@@ -195,16 +199,43 @@ bool RTGraphicsBatch::check(GLESRenderElement2D *left, GLESRenderElement2D *righ
     return false;
 }
 
-void RTGraphicsBatch::recover()
+void RTGraphicsBatch::batchIndexBuffer(RTRenderStruct2D* struct2d, RTBatchBuffer* buffer, int offset)
 {
-    int length = _recoverList.getLength();
-    auto &recoverArray = _recoverList._elements;
+    RTPrimitiveDataHandle* handle = static_cast<RTPrimitiveDataHandle*>(struct2d->_renderDataHandler);
+    std::vector<Graphics2DBufferBlock>& blocks = handle->_getBlocks();
+    if (blocks.empty()) return;
+
+    std::vector<RT2DGraphic2DBufferDataView*>& cviews = handle->_getCloneViews();
+    for (size_t i = 0, n = blocks.size(); i < n; i++)
+    {
+        RT2DGraphic2DBufferDataView* cview = cviews[i];
+        Graphics2DBufferBlock& block = blocks[i];
+        GLESBufferState* bufferState = buffer->bindBuffer(block.vertexBuffer);
+        
+        // Update buffer state and geometry
+        buffer->indexCount += cview->_length;
+        buffer->wholeBuffer->modifyOneView(cview);
+        GLESRenderGeometryElement* geometry = cview->geometry.getLocal().as<GLESRenderGeometryElement*>();
+
+        geometry->setBufferState(bufferState);
+        buffer->geometryList.push_back(geometry);
+    }
+
+    // Set buffer and update length
+    RTRender2DPass::setBuffer(buffer->wholeBuffer);
+    buffer->updateBufLength();
+}
+
+void RTGraphicsBatch::recover(FastSinglelist<GLESRenderElement2D *> &list)
+{
+    int length = list.getLength();
+    auto &recoverArray = list._elements;
     for (int i = 0; i < length; i++)
     {
         GLESRenderElement2D *info = recoverArray[i];
         RTGraphicsBatch::recoverRenderElement2D(info);
     }
-    _recoverList.clear();
+    list.clear();
 }
 
 } // namespace laya

@@ -1,16 +1,24 @@
 #ifndef __RTRENDERDATAHANDLE_H__
 #define __RTRENDERDATAHANDLE_H__
 #include <core/math/Vector3.h>
-#include <jsbind/JSBind.h>
+#include <render/3D/design/renderEnum/DrawType.h>
+#include <render/3D/design/renderEnum/IndexFormat.h>
+#include "RT2DGraphic2DBufferDataView.h"
+
 namespace laya
 {
 
-    class RT2DGraphicBufferDataView;
-    struct Graphic2DBufferBlock
+    struct Graphics2DVertexBlock
     {
         std::vector<float> positions;
-        std::vector<jsvm_value/*RT2DGraphicBufferDataView*/> vertexViews;
-        // indexView: I2DGraphicBufferDataView,
+        std::vector<jsvm_value/*RT2DGraphic2DBufferDataView*/> vertexViews;
+    };
+
+    struct Graphics2DBufferBlock
+    {
+        std::vector<Graphics2DVertexBlock> vertexs;
+        jsvm_value indexView;//RT2DGraphic2DBufferDataView*
+        jsvm_value vertexBuffer;//GLESVertexBuffer*
     };
 
 
@@ -58,20 +66,17 @@ public:
     {
         _mask = value;
     }   
-    void applyVertexBufferBlock(const std::vector<Graphic2DBufferBlock>& blocks, const std::vector<jsvm_value>& indexViews);
+    void applyVertexBufferBlock(const std::vector<Graphics2DBufferBlock>& blocks);
     void inheriteRenderData(GLESRenderContext2D* context) override;
-
+    std::vector<Graphics2DBufferBlock>& _getBlocks() { return _bufferBlocks; };
+    std::vector<RT2DGraphic2DBufferDataView*>& _getCloneViews();
+    void updateCloneViews();
 private:
-    //std::vector<VertexBufferBlock> _vertexBufferBlocks;
-    //bool _needUpdateVertexBuffer;
-    //int _modifiedFrame;
-    //Matrix _matrix;
-
-
-    std::vector<Graphic2DBufferBlock> _vertexBufferBlocks;
+    std::vector<Graphics2DBufferBlock> _bufferBlocks;
     bool _needUpdateBuffer{false};
     int _modifiedFrame{-1};
-    std::vector<jsvm_value/*RT2DGraphicBufferDataView*/> _indexViews;
+    std::vector<RT2DGraphic2DBufferDataView*> _cloneViews;
+    RT2DGraphic2DBufferDataView* _cloneView(RT2DGraphic2DBufferDataView* view, RT2DGraphic2DBufferDataView* oView = nullptr);
 };
 #if 0
 // 基础2D渲染数据处理器

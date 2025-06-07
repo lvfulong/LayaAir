@@ -4,6 +4,8 @@
 #include <unordered_map>
 #include <utils/FastSinglelist.h>
 #include <vector>
+#include "RTBatchBuffer.h"
+#include "render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTRenderStruct2D.h"
 
 namespace laya
 {
@@ -12,8 +14,9 @@ class IBatch2DRender
 {
   public:
     virtual ~IBatch2DRender() = default;
-    virtual void batchRenderElement(FastSinglelist<GLESRenderElement2D *> &list, int start, int length) = 0;
-    virtual void recover() = 0;
+    virtual void batchRenderElement(FastSinglelist<GLESRenderElement2D *> &list, int start, int length , FastSinglelist<GLESRenderElement2D *> &recoverList, RTBatchBuffer* buffer) = 0;
+    virtual void recover(FastSinglelist<GLESRenderElement2D *> &list) = 0;
+    virtual void batchIndexBuffer(RTRenderStruct2D* struct2d, RTBatchBuffer* buffer, int offset) = 0;
 };
 
 class Batch2DInfo

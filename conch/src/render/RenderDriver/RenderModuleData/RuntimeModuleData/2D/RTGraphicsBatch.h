@@ -3,6 +3,7 @@
 
 #include "BatchManager.h"
 #include "RTRender2DPass.h"
+#include "RTBatchBuffer.h"
 #include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.h>
 #include <utils/FastSinglelist.h>
 
@@ -32,7 +33,7 @@ class RTGraphicsBatch : public IBatch2DRender
     /**
      * @brief 批量渲染元素
      */
-    void batchRenderElement(FastSinglelist<GLESRenderElement2D *> &list, int start, int length) override;
+    void batchRenderElement(FastSinglelist<GLESRenderElement2D *> &list, int start, int length, FastSinglelist<GLESRenderElement2D *> &recoverList, RTBatchBuffer* buffer) override;
 
     /**
      * @brief 检查两个渲染元素是否可以合并
@@ -42,15 +43,20 @@ class RTGraphicsBatch : public IBatch2DRender
     /**
      * @brief 回收资源
      */
-    void recover();
+    void recover(FastSinglelist<GLESRenderElement2D *> &list);
+
+    /**
+     * @brief 处理索引缓冲区
+     */
+    void batchIndexBuffer(RTRenderStruct2D* struct2d, RTBatchBuffer* buffer, int offset);
 
   private:
     /**
      * @brief 执行批量处理
      */
-    void batch(FastSinglelist<GLESRenderElement2D *> &list, int start, int length);
+    void batch(FastSinglelist<GLESRenderElement2D *> &list, int start, int length, FastSinglelist<GLESRenderElement2D *> &recoverList, RTBatchBuffer* buffer);
 
-    FastSinglelist<GLESRenderElement2D *> _recoverList{false};
+    // FastSinglelist<GLESRenderElement2D *> _recoverList{false};
     static std::vector<GLESRenderElement2D *> _pool;
     static FastSinglelist<int> TEMP_SINGLE_LIST;
 };

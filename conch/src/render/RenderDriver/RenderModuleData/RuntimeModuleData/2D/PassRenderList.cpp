@@ -10,11 +10,17 @@ namespace laya
 
 PassRenderList::PassRenderList()
 {
+    _batchBuffer = new RTBatchBuffer();
 }
 
 PassRenderList::~PassRenderList()
 {
     clear();
+    if (_batchBuffer)
+    {
+        delete _batchBuffer;
+        _batchBuffer = nullptr;
+    }
 }
 
 void PassRenderList::add(RTRenderStruct2D *struct2d)
@@ -38,10 +44,17 @@ void PassRenderList::add(RTRenderStruct2D *struct2d)
             this->renderElements.add(struct2d->renderElements[i]);
         }
     }
+
+    if (this->_currentBatch && this->_currentBatch->batchFun)
+    {
+        int offset = this->_currentBatch->indexStart + this->_currentBatch->elementLength - n;
+        this->_currentBatch->batchFun->batchIndexBuffer(struct2d, this->_batchBuffer, offset);
+    }
 }
+
 void PassRenderList::_batchStart(int type, int elementLength)
 {
-    if (this->_currentType == type && this->_currentElementCount == elementLength)
+    if (this->_currentType == type)
     {
         this->_currentBatch->batch = !!(this->_currentBatch->batchFun);
         this->_currentBatch->elementLength += elementLength;
@@ -58,8 +71,8 @@ void PassRenderList::_batchStart(int type, int elementLength)
     this->_currentBatch->indexStart = this->renderElements.getLength();
     this->_currentBatch->elementLength = elementLength;
     this->_currentType = type;
-    this->_currentElementCount = elementLength;
 }
+
 void PassRenderList::batch()
 {
     if (this->_currentBatch)
@@ -74,7 +87,7 @@ void PassRenderList::batch()
         Batch2DInfo *info = _batchInfoList._elements[i];
         if (info->batch)
         {
-            info->batchFun->batchRenderElement(this->renderElements, info->indexStart, info->elementLength);
+            info->batchFun->batchRenderElement(this->renderElements, info->indexStart, info->elementLength, this->_recoverList, this->_batchBuffer);
         }
         else
         {
@@ -83,6 +96,7 @@ void PassRenderList::batch()
         }
     }
 }
+
 void PassRenderList::remove(RTRenderStruct2D *struct2d)
 {
     structs.remove(struct2d);
@@ -105,19 +119,20 @@ void PassRenderList::reset()
     this->structs.resetLength();
     this->renderElements.resetLength();
 
+    this->_batchBuffer->clear();
+
     for (int i = 0, n = _batchInfoList.getLength(); i < n; i++)
     {
         Batch2DInfo *element = _batchInfoList._elements[i];
         if (element->batch)
         {
-            element->batchFun->recover();
+            element->batchFun->recover(this->_recoverList);
         }
         Batch2DInfo::recover(element);
     }
     _batchInfoList.resetLength();
     _currentBatch = nullptr;
     _currentType = -1;
-    _currentElementCount = 0;
 }
 
 } // namespace laya

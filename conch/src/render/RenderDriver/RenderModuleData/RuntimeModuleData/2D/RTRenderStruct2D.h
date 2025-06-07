@@ -8,6 +8,7 @@
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 #include <string>
 #include <render/BlendMode.h>
+#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTRender2DPass.h>
 
 namespace laya
 {
@@ -93,16 +94,15 @@ class RTRenderStruct2D
         return this->_trans->matrix;
     }
 
-    void setRenderMatrix(const Matrix &value)
+    void setRenderMatrix(const Matrix &value , int64_t loopCount)
     {
         if (!_trans)
         {
             _trans = new structTransform();
-            //this.trans.matrix = new Matrix();
         }
 
         _trans->matrix = value;
-        //_trans->modifiedFrame = Stat::loopCount;lvtodo
+        _trans->modifiedFrame = loopCount;
     }
 
     float globalAlpha;
@@ -114,6 +114,11 @@ class RTRenderStruct2D
     void setAlpha(float value)
     {
         this->alpha = value;
+        if (this->parent){
+            this->globalAlpha = this->parent->globalAlpha * value;
+        }else{
+            this->globalAlpha = value;
+        }
         this->updateChildren(ChildrenUpdateType::Alpha);
     }
 
@@ -176,6 +181,9 @@ class RTRenderStruct2D
         _pass = value;
         if (value)
         {
+            if (_parentPass) {
+                value->priority = _parentPass->priority + 1;
+            }
             updateChildren(ChildrenUpdateType::Pass);
         }
     }
@@ -187,8 +195,7 @@ class RTRenderStruct2D
     void setClipRect(Rectangle rect);
 
     void renderUpdate(GLESRenderContext2D *context);
-
-    void set_renderNodeUpdateCall(void *call, void *renderUpdateFun); // lvtodo
+    void setRenderUpdate(jsvm_value function);
     void destroy();
 
   public:
@@ -197,8 +204,6 @@ class RTRenderStruct2D
     void updateChildren(ChildrenUpdateType type);
     void _updateBlendMode();
     void _initClipInfo();
-    //Matrix _matrix;
-    //int32_t _modifiedFrame; // lvtodo
     structTransform* _trans = nullptr;
     RTGlobalRenderData*_globalRenderData = nullptr;
     RTRender2DDataHandle *_renderDataHandler = nullptr;
@@ -207,8 +212,7 @@ class RTRenderStruct2D
     Rectangle *_clipRect = nullptr;
     IClipInfo *_parentClipInfo = nullptr;
     IClipInfo *_clipInfo = nullptr;
-    void *_rnUpdateCall = nullptr;
-    void *_rnUpdateFun = nullptr;
+    jsbind::Persistent	m_JSFunctionRenderUpdate;//js call
     bool needUploadClip = true;
     bool needUploadAlpha = true;
 };
