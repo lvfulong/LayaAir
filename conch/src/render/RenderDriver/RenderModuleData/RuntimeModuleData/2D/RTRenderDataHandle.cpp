@@ -128,8 +128,9 @@ void RTPrimitiveDataHandle::inheriteRenderData(GLESRenderContext2D *context)
                         if (!dataView || dataView->_length <= pos)
                         {
                             // dataView = vertexViews[dataViewIndex];
-                            dataView = jsbind::Local(vertexViews[dataViewIndex])["_nativeObj"]
-                                           .as<RT2DGraphic2DBufferDataView *>();
+                            dataView = jsbind::Local(vertexViews[dataViewIndex])["_nativeObj"].as<RT2DGraphic2DBufferDataView*>();
+                            // jsvm_value value = vertexViews[dataViewIndex];
+                            // dataView = jsbind::as<RT2DGraphic2DBufferDataView*>(jsbind::Local(value)["_nativeObj"].getHandle());
                             dataView->modify();
                             dataViewIndex++;
                             pos = 0;

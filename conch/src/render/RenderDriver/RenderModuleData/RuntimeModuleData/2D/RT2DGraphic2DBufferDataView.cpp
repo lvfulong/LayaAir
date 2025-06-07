@@ -25,8 +25,7 @@ void RT2DGraphicWholeBuffer::upload()
     jsvm_status status;
     if (BufferModifyType::Index == this->_modifyType)
     {
-        jsbind::Persistent view = this->_first;
-        RT2DGraphic2DBufferDataView* pView = view.getLocal().as<RT2DGraphic2DBufferDataView*>();
+        RT2DGraphic2DBufferDataView* pView = this->_first.getLocal().as<RT2DGraphic2DBufferDataView*>();
 
         int start = 0;
         int length = 0;
@@ -37,7 +36,7 @@ void RT2DGraphicWholeBuffer::upload()
 
         auto pGeometry = geometry.getLocal().as<GLESRenderGeometryElement*>();
         // let mark = 0 ;
-        while (view) {
+        while (pView) {
             // mark++;
             if (pGeometry != pView->geometry.getLocal().as<GLESRenderGeometryElement*>()) {//切换geometry时，检查上一个是否需要提交
                 if (needUpdate) {// 设置上一个的绘制状态
@@ -60,7 +59,7 @@ void RT2DGraphicWholeBuffer::upload()
             }
 
             length += pView->_length;
-            view = pView->_next;
+            pView = pView->_next.getLocal().as<RT2DGraphic2DBufferDataView*>();
         }
 
         if (needUpdate) {
