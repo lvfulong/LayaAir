@@ -14,7 +14,7 @@ namespace laya
 {
 struct structTransform {
    Matrix matrix;
-   int64_t modifiedFrame;
+   int modifiedFrame;
 };
 class IClipInfo
 {
@@ -22,7 +22,7 @@ class IClipInfo
     Vector4 clipMatDir;
     Vector4 clipMatPos;
     Matrix clipMatrix;
-    int64_t _updateFrame;
+    int _updateFrame;
     IClipInfo() = default;
     IClipInfo(const Vector4 &dir, const Vector4 &pos, const Matrix &m) : clipMatDir(dir), clipMatPos(pos), clipMatrix(m)
     {
@@ -94,7 +94,7 @@ class RTRenderStruct2D
         return this->_trans->matrix;
     }
 
-    void setRenderMatrix(const Matrix &value , int64_t loopCount)
+    void setRenderMatrix(const Matrix &value , int loopCount)
     {
         if (!_trans)
         {

@@ -1279,6 +1279,8 @@ class RenderBindings
             class_binding.property("rect", &RTRenderStruct2D::getRect, &RTRenderStruct2D::setRect);
             class_binding.property_field("renderLayer", &RTRenderStruct2D::renderLayer);
             // class_binding.property("renderMatrix", &RTRenderStruct2D::getRenderMatrix, &RTRenderStruct2D::setRenderMatrix);
+            class_binding.function("setRenderMatrix", &RTRenderStruct2D::setRenderMatrix);
+            class_binding.function("getRenderMatrix", &RTRenderStruct2D::getRenderMatrix);
             class_binding.function("setParent", &RTRenderStruct2D::setParent);
             class_binding.function("setChildren", &RTRenderStruct2D::setChildren);
             class_binding.property_field("renderType", &RTRenderStruct2D::renderType);
@@ -1437,6 +1439,13 @@ namespace jsbind
         {
         };
         template <> struct is_wrapped_class<laya::Rectangle> : std::false_type
+        {
+        };
+
+        template <> struct is_value_object<laya::Graphics2DVertexBlock> : std::true_type
+        {
+        };
+        template <> struct is_wrapped_class<laya::Graphics2DVertexBlock> : std::false_type
         {
         };
     }
