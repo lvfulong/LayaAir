@@ -52,11 +52,6 @@ if(CONCH_USE_OLD_CURL_DOWNLOAD)
 	src/downloadMgr/JCCurlWrap.cpp)
 endif()
 
-if(CONCH_USE_JPEG_XL)
-	list(APPEND CONCH_SRC
-	src/imageLib/JPEGXLImageDecoder.h
-	src/imageLib/JPEGXLImageDecoder.cpp)
-endif()
 if(CONCH_USE_DCC)
 	list(APPEND CONCH_SRC
 	src/downloadCache/DCC2/JCFileResDCC2.cpp
@@ -699,20 +694,7 @@ if(CONCH_USE_CURL_DOWNLOAD)
 	)
 endif()
 
-if(CONCH_USE_JPEG_XL)
-	if(OS_WINDOWS)
-		list(APPEND LINK_LIBS
-			jxl
-		)
-	else()
-		list(APPEND LINK_LIBS
-			jxl
-			brotlidec
-			brotlicommon
-			hwy
-		)
-	endif()
-endif()
+
 
 if(OS_ANDROID)
 	# if(ANDROID_ABI STREQUAL "x86")
