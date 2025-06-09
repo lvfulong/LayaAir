@@ -700,6 +700,11 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener {
 
 		LayaAudioMusic.uninit();
 		destroy();
+
+		ConchJNI.uninit();
+		//退出进程，否则会出现某一进程执行了退出然后又执行初始化，流程脏数据导致崩溃
+		android.os.Process.killProcess(android.os.Process.myPid());
+		System.exit(0);
 	}
 	@SuppressLint("NewApi") @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void destroy()
@@ -731,6 +736,7 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener {
 		}
 		mCtx = null;
 		m_layaEventListener = null;
+	
 	}
 
 	public void delInstance()
