@@ -117,7 +117,7 @@ void RTPrimitiveDataHandle::inheriteRenderData(GLESRenderContext2D *context)
                 for (int index = 0, n = vertexs.size(); index < n; index++)
                 {
                     std::vector<float> &positions = vertexs[index].positions;
-                    std::vector<jsvm_value> &vertexViews = vertexs[index].vertexViews;
+                    std::vector<jsbind::Persistent> &vertexViews = vertexs[index].vertexViews;
                     int vertexCount = positions.size() / 2;
                     RT2DGraphic2DBufferDataView *dataView = nullptr;
                     pos = 0, ci = 0, dataViewIndex = 0;
@@ -128,7 +128,7 @@ void RTPrimitiveDataHandle::inheriteRenderData(GLESRenderContext2D *context)
                         if (!dataView || dataView->_length <= pos)
                         {
                             // dataView = vertexViews[dataViewIndex];
-                            dataView = jsbind::Local(vertexViews[dataViewIndex])["_nativeObj"].as<RT2DGraphic2DBufferDataView*>();
+                            dataView = vertexViews[dataViewIndex].getLocal()["_nativeObj"].as<RT2DGraphic2DBufferDataView*>();
                             // jsvm_value value = vertexViews[dataViewIndex];
                             // dataView = jsbind::as<RT2DGraphic2DBufferDataView*>(jsbind::Local(value)["_nativeObj"].getHandle());
                             dataView->modify();

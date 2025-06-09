@@ -4,7 +4,7 @@
 #include <jsbind/Class.h>
 #include <jsbind/Local.h>
 #include <jsvm/JSVM_Types.h>
-
+#include <jsbind/internal/ValueTraits.h>
 namespace jsbind
 {
 class Persistent
@@ -99,6 +99,24 @@ class Persistent
   private:
     jsvm_ref ref_ = nullptr;
 };
-
+namespace internal
+{
+    template <> class ValueTraits<Persistent>
+    {
+    public:
+        static Persistent ToCpp(jsvm_value value)
+        {
+            return Persistent(value);
+        }
+        static jsvm_value ToJs(Persistent value, bool callDestructor = true)
+        {
+            return value.getHandle();
+        }
+        static bool is(jsvm_value value)
+        {
+            return true;
+        }
+    };
+}
 } // namespace jsbind
 #endif

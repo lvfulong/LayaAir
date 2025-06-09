@@ -11,7 +11,7 @@ namespace laya
     struct Graphics2DVertexBlock
     {
         std::vector<float> positions;
-        std::vector<jsvm_value/*RT2DGraphic2DBufferDataView*/> vertexViews;
+        std::vector<jsbind::Persistent/*RT2DGraphic2DBufferDataView**/> vertexViews;
     };
 
     struct Graphics2DBufferBlock
