@@ -40,7 +40,7 @@ void RT2DGraphicWholeBuffer::upload()
         int length = 0;
         auto geometry = pView->geometry;
         bool needUpdate = false;
-        bool uploadStart = this->_needResetData ? 0 : this->_updateRange.x;
+        int uploadStart = this->_needResetData ? 0 : this->_updateRange.x;
 
 
         auto pGeometry = geometry.getLocal().as<GLESRenderGeometryElement*>();
@@ -86,8 +86,7 @@ void RT2DGraphicWholeBuffer::upload()
         // DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         //let tempUint16Array = new Uint16Array(this.bufferData.buffer, uploadStart * 2, len);
         //(this.buffer as IIndexBuffer)._setIndexData(tempUint16Array, uploadStart * 2);
-        _bufferAsIndexBuffer->_setIndexData((char*)data, uploadStart * 2, len);
-
+        _bufferAsIndexBuffer->_setIndexData((char*)data, len, uploadStart * 2);
 
         this->_needResetData = false;
     }
