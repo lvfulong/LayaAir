@@ -24,7 +24,7 @@ public:
     ~RTBatchBuffer();
 
     void updateBufLength();
-    GLESBufferState* bindBuffer(jsvm_value buffer);
+    GLESBufferState* bindBuffer(jsbind::Persistent buffer);
     void clear();
 
 public:
@@ -32,7 +32,7 @@ public:
     RT2DGraphicWholeBuffer* wholeBuffer;
     int indexCount;
     int maxIndexCount;
-    std::map<jsvm_value, GLESBufferState*> bufferStates;
+    std::map<GLESVertexBuffer*, GLESBufferState*> bufferStates;
     std::vector<GLESRenderGeometryElement*> geometryList;
 };
 

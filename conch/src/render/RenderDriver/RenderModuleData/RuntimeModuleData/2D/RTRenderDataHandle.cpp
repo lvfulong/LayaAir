@@ -195,9 +195,9 @@ std::vector<RT2DGraphic2DBufferDataView*>& RTPrimitiveDataHandle::_getCloneViews
         _cloneViews.resize(_bufferBlocks.size());
         for (size_t i = 0; i < _bufferBlocks.size(); i++)
         {
-            jsvm_value view = _bufferBlocks[i].indexView;
+            jsbind::Persistent view = _bufferBlocks[i].indexView;
             RT2DGraphic2DBufferDataView *nativeView =
-                jsbind::Local(view)["_nativeObj"].as<RT2DGraphic2DBufferDataView *>();
+                view.getLocal()["_nativeObj"].as<RT2DGraphic2DBufferDataView *>();
             _cloneViews[i] = _cloneView(nativeView);
         }
     }
@@ -215,9 +215,9 @@ void RTPrimitiveDataHandle::updateCloneViews()
         RT2DGraphic2DBufferDataView *_cView = cloneViews[i];
         if (i < _bufferBlocks.size())
         {
-            jsvm_value jsView = _bufferBlocks[i].indexView;
+            jsbind::Persistent jsView = _bufferBlocks[i].indexView;
             RT2DGraphic2DBufferDataView *nativeView =
-                jsbind::Local(jsView)["_nativeObj"].as<RT2DGraphic2DBufferDataView *>();
+                jsView.getLocal()["_nativeObj"].as<RT2DGraphic2DBufferDataView *>();
             cloneViews[i] = _cloneView(nativeView, _cView);
         }
         else

@@ -51,15 +51,15 @@ void RTBatchBuffer::updateBufLength()
     }
 }
 
-GLESBufferState* RTBatchBuffer::bindBuffer(jsvm_value buffer)
+GLESBufferState* RTBatchBuffer::bindBuffer(jsbind::Persistent buffer)
 {
-    auto it = bufferStates.find(buffer);
+    GLESVertexBuffer* vertexBuffer = buffer.getLocal()["_nativeObj"].as<GLESVertexBuffer*>();
+    auto it = bufferStates.find(vertexBuffer);
     if (it == bufferStates.end())
     {
         GLESBufferState* bufferState = new GLESBufferState();
-        GLESVertexBuffer* vertexBuffer = jsbind::Local(buffer)["_nativeObj"].as<GLESVertexBuffer*>();
         bufferState->applyState({vertexBuffer}, indexBuffer);
-        bufferStates[buffer] = bufferState;
+        bufferStates[vertexBuffer] = bufferState;
         return bufferState;
     }
     return it->second;

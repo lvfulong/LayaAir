@@ -17,8 +17,8 @@ namespace laya
     struct Graphics2DBufferBlock
     {
         std::vector<Graphics2DVertexBlock> vertexs;
-        jsvm_value indexView;//RT2DGraphic2DBufferDataView*
-        jsvm_value vertexBuffer;//GLESVertexBuffer*
+        jsbind::Persistent indexView;//RT2DGraphic2DBufferDataView*
+        jsbind::Persistent vertexBuffer;//GLESVertexBuffer*
     };
 
 

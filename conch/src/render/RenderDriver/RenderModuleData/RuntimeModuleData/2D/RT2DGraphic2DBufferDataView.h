@@ -105,6 +105,7 @@ class RT2DGraphic2DBufferDataView
   public:
     RT2DGraphic2DBufferDataView(BufferModifyType type, int start, int length, int stride);
     ~RT2DGraphic2DBufferDataView();
+    void destroy();
     int _start;      // element start
     int _length;     // element length
     int _stride = 1; // element stride
