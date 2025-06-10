@@ -23,6 +23,15 @@ void RT2DGraphicWholeBuffer::upload()
 {
     GET_ENV
     jsvm_status status;
+    void* data = nullptr; //data
+    size_t length;
+    jsvm_typedarray_type type;
+    jsvm_value buffer; //arraybuffer
+    size_t byteOffset;
+    jsvm_value jsArray = this->_bufferData.getHandle();
+    status = jsvm_get_typedarray_info(env, jsArray, &type, &length, &data, &buffer, &byteOffset);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+
     if (BufferModifyType::Index == this->_modifyType)
     {
         RT2DGraphic2DBufferDataView* pView = this->_first.getLocal().as<RT2DGraphic2DBufferDataView*>();
@@ -55,7 +64,7 @@ void RT2DGraphicWholeBuffer::upload()
 
             if (needUpdate) {
                 pView->_start = start;
-                pView->updateView(this->_bufferData.getHandle());
+                pView->updateView(jsArray);
             }
 
             length += pView->_length;
@@ -69,15 +78,16 @@ void RT2DGraphicWholeBuffer::upload()
         RT2DGraphic2DBufferDataView* pLast = this->_last.getLocal().as<RT2DGraphic2DBufferDataView*>();
         int len = pLast->_start + pLast->_length - uploadStart;
 
-        jsvm_value ab = jsbind::Local(this->_bufferData.getHandle())["buffer"].getHandle();
-        DEBUG_CHECK(jsbind::Local(ab).isArrayBuffer());
-        void* data = nullptr;
-        size_t l;
-        status = jsvm_get_arraybuffer_info(env, ab, &data, &l);
-        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+        // jsvm_value ab = jsbind::Local(this->_bufferData.getHandle())["buffer"].getHandle();
+        // DEBUG_CHECK(jsbind::Local(ab).isArrayBuffer());
+        // void* data = nullptr;
+        // size_t l;
+        // status = jsvm_get_arraybuffer_info(env, ab, &data, &l);
+        // DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         //let tempUint16Array = new Uint16Array(this.bufferData.buffer, uploadStart * 2, len);
         //(this.buffer as IIndexBuffer)._setIndexData(tempUint16Array, uploadStart * 2);
         _bufferAsIndexBuffer->_setIndexData((char*)data, uploadStart * 2, len);
+
 
         this->_needResetData = false;
     }
@@ -88,31 +98,30 @@ void RT2DGraphicWholeBuffer::upload()
             RT2DGraphic2DBufferDataView* pView = this->_first.getLocal().as<RT2DGraphic2DBufferDataView*>();
             while (pView)
             {
-                pView->updateView(this->_bufferData.getHandle()); // 先更新偏移再提交
+                pView->updateView(jsArray); // 先更新偏移再提交
                 pView = pView->_next.getLocal().as<RT2DGraphic2DBufferDataView*>();
             }
+            // jsvm_value ab = jsbind::Local(this->_bufferData.getHandle())["buffer"].getHandle();
+            // DEBUG_CHECK(jsbind::Local(ab).isArrayBuffer());
+            // void* data = nullptr;
+            // size_t byteLength;
+            // status = jsvm_get_arraybuffer_info(env, ab, &data, &byteLength);
+            // DEBUG_CHECK(status == jsvm_status::jsvm_ok);
 
-            jsvm_value ab = jsbind::Local(this->_bufferData.getHandle())["buffer"].getHandle();
-            DEBUG_CHECK(jsbind::Local(ab).isArrayBuffer());
-            void* data = nullptr;
-            size_t byteLength;
-            status = jsvm_get_arraybuffer_info(env, ab, &data, &byteLength);
-            DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-            _bufferAsVertexBuffer->setData((const char*)ab, byteLength, 0, 0, byteLength);
+            _bufferAsVertexBuffer->setData((const char*)data, length * 4, 0, 0, length * 4);
             this->_needResetData = false;
         }
         else
         {
             if (this->_updateRange.y <= this->_updateRange.x)
                 return;
+            
+            // jsvm_value ab = jsbind::Local(this->_bufferData.getHandle())["buffer"].getHandle();
 
-            jsvm_value ab = jsbind::Local(this->_bufferData.getHandle())["buffer"].getHandle();
-            DEBUG_CHECK(jsbind::Local(ab).isArrayBuffer());
-            void* data = nullptr;
-            size_t byteLength;
-            status = jsvm_get_arraybuffer_info(env, ab, &data, &byteLength);
-            DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-            _bufferAsVertexBuffer->setData((const char*)ab, byteLength, this->_updateRange.x * 4, this->_updateRange.x * 4,
+            size_t byteLength = (this->_updateRange.y - this->_updateRange.x) * 4;
+            // status = jsvm_get_arraybuffer_info(env, ab, &data, &byteLength);
+            // DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+            _bufferAsVertexBuffer->setData((const char*)data, byteLength, this->_updateRange.x * 4, this->_updateRange.x * 4,
                          (this->_updateRange.y - this->_updateRange.x) * 4);
         }
         this->_updateRange.setValue(100000000, -100000000);
