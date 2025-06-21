@@ -8,6 +8,8 @@
 #if defined(OS_ANDROID) || defined(OS_OHOS)
 #include "AL/alext.h"
 #endif
+#include <profiler/Profiler.h>
+using namespace laya;
 namespace audio
 {
 AudioPlayer::AudioPlayer()
@@ -21,6 +23,7 @@ AudioPlayer::AudioPlayer()
         {
             if (m_exit)
                 break;
+            Profiler_ZoneScoped("audio::AudioPlayer::update", 0x00ff00);
             m_pool->update();
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
