@@ -1,7 +1,10 @@
 #include "ALSourcePool.h"
 #include <cstring>
 #include <utils/Log.h>
-
+#include <thread> // Added for std::thread and std::this_thread::sleep_for
+#include <chrono> // Added for std::chrono::milliseconds
+#include <profiler/Profiler.h>
+using namespace laya;
 namespace audio
 {
 ALSourcePool::ALSourcePool()
@@ -19,12 +22,65 @@ ALSourcePool::ALSourcePool()
 
     for (int i = 0; i < m_sourceCount; i++)
         m_sources.push(sources[i]);
+    
+    // 启动更新线程
+    startUpdateThread();
 }
 
 ALSourcePool::~ALSourcePool()
 {
-   requestShutdown();
+   stopUpdateThread();
 }
+
+// 线程管理实现
+void ALSourcePool::startUpdateThread()
+{
+    if (m_updateThread.joinable())
+        return;
+        
+    m_updateThread = std::thread(&ALSourcePool::updateThreadWorker, this);
+}
+
+void ALSourcePool::stopUpdateThread()
+{
+    if (!m_updateThread.joinable())
+        return;
+        
+    requestShutdown();
+    m_updateThread.join();
+}
+
+bool ALSourcePool::isUpdateThreadRunning() const
+{
+    return m_updateThread.joinable();
+}
+
+void ALSourcePool::updateThreadWorker()
+{
+    while (!isShutdownRequested())
+    {
+        Profiler_ZoneScoped("audio::ALSourcePool::updateThreadWorker", 0xff0000);
+        // 检查是否有活跃的音频播放
+        if (hasActiveAudio())
+        {
+            Profiler_ZoneScoped("audio::ALSourcePool::update", 0xff0000);
+            update();
+            // 有音频播放时使用较短间隔
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
+        else
+        {
+            Profiler_ZoneScoped("audio::ALSourcePool::waitForAudio", 0x00ff00);
+            // 无音频播放时，使用信号量等待
+            waitForAudio();
+            
+            // 被唤醒后，检查是否应该退出
+            if (isShutdownRequested())
+                break;
+        }
+    }
+}
+
 void ALSourcePool::requestShutdown()
 {
     m_shutdown.store(true);

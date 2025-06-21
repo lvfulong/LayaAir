@@ -48,7 +48,6 @@ class AudioPlayer
     std::unique_ptr<ALSourcePool> m_pool;
     ALCdevice *m_alDevice;
     ALCcontext *m_alContext;
-    std::thread m_thread;
 };
 } // namespace audio
 #endif

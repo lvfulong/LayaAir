@@ -19,6 +19,7 @@
 #include <unordered_map>
 #include <condition_variable>
 #include <atomic>
+#include <thread>
 
 namespace audio
 {
@@ -63,6 +64,12 @@ class ALSourcePool
     bool hasActiveAudioThreadSafe() const;
     void requestShutdown();
     bool isShutdownRequested() const;
+    
+    // 线程管理
+    void startUpdateThread();
+    void stopUpdateThread();
+    bool isUpdateThreadRunning() const;
+    
   private:
     std::mutex m_mutex;
     std::queue<ALuint> m_sources;
@@ -74,6 +81,12 @@ class ALSourcePool
     std::atomic<int> m_activeAudioCount{0};
     std::atomic<bool> m_shutdown{false};
     std::mutex m_waitMutex;  // 专门用于等待的独立锁
+    
+    // 线程管理相关成员
+    std::thread m_updateThread;
+    
+    // 线程工作函数
+    void updateThreadWorker();
 };
 } // namespace audio
 #endif
