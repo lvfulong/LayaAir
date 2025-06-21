@@ -1460,7 +1460,6 @@ declare class HTMLAudioElement extends HTMLMediaElement implements NativeObjWrap
     constructor();
     readyState: number;
     load(): void;
-    setLoop(loop: any): void;
     play(): void;
     pause(): void;
     stop(): void;

@@ -1,6 +1,5 @@
 #import "conchRuntime.h"
 #import "Reachability/Reachability.h"
-#import "Audio/JCMp3Player.h"
 #import <utils/JCColor.h>
 #import "JCScriptRuntime.h"
 #import "CToObjectC.h"
@@ -8,12 +7,10 @@
 #import "Notification/LayaNotifyManager.h"
 #import <downloadCache/JCIosFileSource.h>
 #import "JCConch.h"
-#import "Audio/JCAudioManager.h"
 #import "LayaEditBoxDelegate.h"
 #import "LayaEditBox.h"
 #import "TouchFilter.h"
 #import <jsbind/JSBind.h>
-//#import <Bindings/JSLayaNative.h>
 #import "LayaAlert.h"
 #import "CToObjectCIOS.h"
 #import "Reflection/refection.h"
@@ -25,7 +22,7 @@
 #import "LayaVideoPlayer.h"
 #import <Bindings/JSConchConfig.h>
 #import "LayaOpenGLESView.h"
-
+#import <audio/AudioPlayer.h>
 
 @implementation FuncObj
 -(id)init:(std::function<void(void)>)func
@@ -77,7 +74,6 @@ static conchRuntime* g_pIOSConchRuntime = nil;
         m_nGLViewOffset = 0;
         m_pEditBox = NULL;
         m_pEditBoxDelegate = NULL;
-        m_pMp3Player = NULL;
         m_pNetworkListener = NULL;
         m_fRetinaValue = 1;
         m_pNSTimer = nil;
@@ -166,41 +162,37 @@ static conchRuntime* g_pIOSConchRuntime = nil;
 
     [m_pEditBoxDelegate setRetinaValue:m_fRetinaValue];
     m_pEditBox = [[LayaEditBox alloc]initWithParentView:m_pView EditBoxDelegate:m_pEditBoxDelegate ScreenRatio:m_fRetinaValue ];
-    m_pMp3Player = [[JCMp3Player alloc] init];
 }
 
 void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruption_state)
 {
-    ALCcontext *context = laya::JCAudioManager::GetInstance()->m_pWavPlayer->m_pContext;
     if (kAudioSessionBeginInterruption == interruption_state)
     {
-        alcMakeContextCurrent(nullptr);
+        laya::JCConch::s_pConch->getAudioPlayer().onPause();
     }
     else if (kAudioSessionEndInterruption == interruption_state)
     {
         OSStatus result = AudioSessionSetActive(true);
         if (result) NSLog(@"Error setting audio session active! %d\n", result);
         
-        alcMakeContextCurrent(context);
+        laya::JCConch::s_pConch->getAudioPlayer().onResume();
     }
 }
 
 -(void)handleInterruption:(NSNotification*)notification
 {
     static bool resumeOnBecomingActive = false;
-    ALCcontext *context = laya::JCAudioManager::GetInstance()->m_pWavPlayer->m_pContext;
     if ([notification.name isEqualToString:AVAudioSessionInterruptionNotification]) {
         NSInteger reason = [[[notification userInfo] objectForKey:AVAudioSessionInterruptionTypeKey] integerValue];
         if (reason == AVAudioSessionInterruptionTypeBegan) {
-            alcMakeContextCurrent(NULL);
+            laya::JCConch::s_pConch->getAudioPlayer().onPause();
         }
         
         if (reason == AVAudioSessionInterruptionTypeEnded) {
             if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
                 NSError *error = nil;
                 [[AVAudioSession sharedInstance] setActive:YES error:&error];
-                alcMakeContextCurrent(context);
-                laya::JCConch::s_pScriptRuntime->restoreAudio();
+                laya::JCConch::s_pConch->getAudioPlayer().onResume();
             } else {
                 resumeOnBecomingActive = true;
             }
@@ -218,8 +210,7 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
             return;
         }
         [[AVAudioSession sharedInstance] setActive:YES error:&error];
-        alcMakeContextCurrent(context);
-        laya::JCConch::s_pScriptRuntime->restoreAudio();
+        laya::JCConch::s_pConch->getAudioPlayer().onResume();
     }
 }
 -(void)update

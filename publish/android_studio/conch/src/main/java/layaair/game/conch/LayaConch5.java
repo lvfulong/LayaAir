@@ -26,7 +26,6 @@ import layaair.game.browser.ConchJNI;
 import layaair.game.browser.LayaEditBox;
 import layaair.game.device.DevID;
 import layaair.game.utility.Constants;
-import layaair.game.utility.LayaAudioMusic;
 import layaair.game.utility.ProcessInfo;
 import layaair.game.utility.Utils;
 
@@ -698,7 +697,6 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener {
 		}
 		delInstance();
 
-		LayaAudioMusic.uninit();
 		destroy();
 
 		ConchJNI.uninit();

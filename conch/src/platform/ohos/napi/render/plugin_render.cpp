@@ -452,7 +452,6 @@ void PluginRender::OnDestroyNative() {
     if (timerInited_) {
         uv_timer_stop(&timerHandle_);
     }
-    JCAudioManager::GetInstance()->stopMp3();
 	laya::JCConch::s_pConch->onAppDestroy();
 	laya::JCConch::s_pConch.reset();
 }

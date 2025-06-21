@@ -52,7 +52,6 @@ export default class SoundUtils {
                     break;
                 case 'completed': // 播放结束后触发该状态机上报
                     console.info('AVPlayer state completed called.');
-                    laya.ConchNAPI_audioMusicPlayEnd();
                     break;
                 case 'stopped': // stop接口成功调用后触发该状态机上报
                     console.info('AVPlayer state stopped called.');

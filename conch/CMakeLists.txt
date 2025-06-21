@@ -266,8 +266,7 @@ list(APPEND CONCH_SRC
 	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTShaderPass.cpp
 	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTShaderPass.h
 
-	src/Audio/JCAudioManager.cpp
-	src/Audio/JCAudioManager.h
+
 	src/downloadMgr/JCDownloadMgr.h
 	src/downloadMgr/JCDownloadMgr.cpp
 	src/downloadMgr/JCHttpHeader.h
@@ -397,7 +396,7 @@ list(APPEND CONCH_SRC
 	src/Bindings/JSMemory.cpp
 	src/Extention/LayaExtWind.cpp
 	
-	src/OpenAL/
+
 	src/LayaGL/JCIDGenerator.h
 	src/LayaGL/JCIDGenerator.cpp
 	src/LayaGL/JCLayaGL.h
@@ -411,14 +410,6 @@ list(APPEND CONCH_SRC
 	src/resource/JCResource.cpp
 	src/resource/JCFileResManager.h
 	src/resource/JCFileResManager.cpp
-	src/resource/Audio/JCAudioInterface.h
-	src/resource/Audio/JCMp3Interface.h
-	src/resource/Audio/JCOggParser.h
-	src/resource/Audio/JCOggParser.cpp
-	src/resource/Audio/JCWaveInfo.h
-	src/resource/Audio/JCWaveInfo.cpp
-	src/resource/Audio/JCWaveParser.h
-	src/resource/Audio/JCWaveParser.cpp
 	src/WebSocket/Uri.h
 	src/WebSocket/Uri.cpp
 	src/WebSocket/WebSocket.h
@@ -451,8 +442,6 @@ if(OS_IOS)
 		src/platform/iOS
 	)
 	list(APPEND CONCH_SRC
-		src/Audio/ios/JCAudioMp3Player.cpp
-		src/Audio/ios/JCAudioMp3Player.h
 		src/downloadCache/JCIosFileSource.h
 		src/downloadCache/JCIosFileSource.cpp
 		src/Bindings/Video/JSVideo_IOSImpl.cpp
@@ -498,8 +487,6 @@ if(OS_IOS)
 		src/platform/iOS/Notification/LayaNotifyInterface.h
 		src/platform/iOS/Notification/LayaNotifyManager.h
 		src/platform/iOS/Notification/LayaNotifyManager.m
-		src/platform/iOS/Audio/JCMp3Player.h
-		src/platform/iOS/Audio/JCMp3Player.mm
 		src/platform/iOS/UIEditBoxNew.h
 		src/platform/iOS/UIEditBoxNew.mm
 		src/platform/iOS/LayaOpenGLESView.h
@@ -512,23 +499,12 @@ if(OS_IOS)
 		src/network/src/UploadTaskiOS.h
 		src/network/src/UploadTaskiOS.mm
 		src/2D/src/CanvasRenderingContext2DCG.mm
-		src/resource/Audio/JCMp3Parser.h
-		src/resource/Audio/JCMp3Parser.cpp
-		src/resource/Audio/JCAudioWavPlayer.h
-		src/resource/Audio/JCAudioWavPlayer.cpp
 	)
 elseif(OS_ANDROID)
 	list(APPEND PLATFORM_HEADER_DIR
 		src/platform/Android
-		src/OpenAL/include
-		src/OpenAL/OpenAL32/Include
 	)
 	list(APPEND CONCH_SRC
-	src/Audio/android/JCAudioMp3Media.cpp
-		src/Audio/android/JCAudioMp3Media.h
-
-		# Audio/android/JCAudioMp3Player.cpp
-		# Audio/android/JCAudioMp3Player.h
 		src/downloadCache/JCAndroidFileSource.h
 		src/network/src/HttpClientAndroid.cpp
 		src/platform/Android/JNIFun.cpp
@@ -540,10 +516,6 @@ elseif(OS_ANDROID)
 		src/Bindings/JSAndroidEditBox.cpp
 		src/backend/src/OpenGLBackendAndroidEGL.cpp
 		src/2D/src/CanvasRenderingContext2DAndroid.cpp
-		src/resource/Audio/JCMp3Parser.h
-		src/resource/Audio/JCMp3Parser.cpp
-		src/resource/Audio/JCAudioWavPlayer.h
-		src/resource/Audio/JCAudioWavPlayer.cpp
 		src/network/src/UploadTaskAndroid.h	
 		src/network/src/UploadTaskAndroid.cpp
 	)
@@ -554,8 +526,6 @@ elseif(OS_WINDOWS)
 	list(APPEND CONCH_SRC
 		src/downloadCache/JCIosFileSource.h
 		src/downloadCache/JCIosFileSource.cpp
-		src/Audio/windows/JCAudioMp3Player.cpp
-		src/Audio/windows/JCAudioMp3Player.h
 		src/Bindings/EditBox/WinEditBox.h
 		src/Bindings/EditBox/WinEditBox.cpp
 		src/Bindings/Video/JSVideo_Win32Impl.cpp
@@ -563,12 +533,8 @@ elseif(OS_WINDOWS)
 		src/Bindings/JSWindowEditBox.cpp
 		src/backend/src/OpenGLBackendWinEGL.cpp
 		src/2D/src/CanvasRenderingContext2DWin.cpp
-		src/resource/Audio/JCMp3Parser.h
-		src/resource/Audio/JCMp3Parser.cpp
 		src/Exports.cpp
 		src/Application/App.cpp
-		src/resource/Audio/JCAudioWavPlayer.h
-		src/resource/Audio/JCAudioWavPlayer.cpp
 		src/platform/src/OSWin.cpp
 		src/network/src/UploadTaskCurl.h
 		src/network/src/UploadTaskCurl.cpp
@@ -595,12 +561,9 @@ elseif(OS_OHOS)
 		src/Bindings/Video/JSVideo_OHOSImpl.cpp
 		src/2D/src/CanvasRenderingContext2DOHOS.cpp
 		src/Bindings/JSOHOSEditBox.cpp
-		src/resource/Audio/JCAudioWavplayer.cpp
-		src/Audio/ohos/JCAudioMp3Player.cpp
 		src/network/src/HttpClientOHOS.cpp
 		src/network/src/UploadTaskCurl.h
 		src/network/src/UploadTaskCurl.cpp
-		src/resource/Audio/JCMp3Parser.cpp
 	)
 elseif(OS_LINUX)
 	list(APPEND PLATFORM_HEADER_DIR
@@ -615,8 +578,6 @@ elseif(OS_LINUX)
 		src/Bindings/JSLinuxEditBox.cpp
 		src/Exports.cpp
 		src/Application/App.cpp
-		src/resource/Audio/JCAudioWavPlayer.h
-		src/resource/Audio/JCAudioWavPlayer.cpp
 		src/platform/src/OSLinux.cpp
 		src/network/src/UploadTaskCurl.h
 		src/network/src/UploadTaskCurl.cpp
@@ -667,6 +628,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 set(LINK_LIBS
 	profiler
 	crypto_core
+	audio
 	)
 if(USE_PHYSX)
 	list(APPEND LINK_LIBS
@@ -701,9 +663,6 @@ if(OS_ANDROID)
 	# set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-warn-shared-textrel")
 	# endif()
 	message(${ANDROID_PLATFORM_LEVEL})
-
-	# for openal
-	target_compile_definitions(${PROJECT_NAME} PRIVATE AL_ALEXT_PROTOTYPES)
 	target_link_libraries(${PROJECT_NAME}
 	${LINK_LIBS}
 		android
@@ -721,16 +680,11 @@ if(OS_ANDROID)
 		jsbind
 		jsvm
 		zlib
-		mpg123
 		zip
 		websockets
 		png
 		jpeg
 		jpeg-turbo
-		openal
-		vorbisfile
-		vorbis
-		ogg
 		#freetype
 
 		# curl
@@ -778,7 +732,6 @@ elseif(OS_IOS)
 		jsbind
 		jsvm
 		zlib
-		mpg123
 		zip
 		crypto
 		ssl
@@ -787,10 +740,6 @@ elseif(OS_IOS)
 		jpeg
 		jpeg-turbo
 
-		# openal
-		vorbisfile
-		vorbis
-		ogg
 		#freetype
 
 		# curl
@@ -822,7 +771,6 @@ elseif(OS_WINDOWS)
 		jsbind
 		jsvm
 		zlib
-		mpg123
 		zip
 		crypto
 		ssl
@@ -830,10 +778,6 @@ elseif(OS_WINDOWS)
 		png
 		jpeg
 		jpeg-turbo
-		openal
-		vorbisfile
-		vorbis
-		ogg
 		#freetype
 		#v8
 		#v8_libbase
@@ -885,14 +829,9 @@ endif()
 		BulletDynamics
 		BulletCollision
 		LinearMath
-		vorbisfile
-		vorbis
-		ogg
 		aki_jsbind
 		ssl
 		crypto
-		mpg123
-		openal
 		webstorage	
 		) 
 elseif(OS_LINUX)
@@ -925,16 +864,11 @@ elseif(OS_LINUX)
 		utils
 		jsbind
 		zlib
-		#mpg123
 		zip
 		websockets
 		png
 		jpeg
 		jpeg-turbo
-		openal
-		vorbisfile
-		vorbis
-		ogg
 		curl
 		v8_monolith
 		BulletDynamics

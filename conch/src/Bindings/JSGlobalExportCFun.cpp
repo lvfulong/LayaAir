@@ -480,7 +480,11 @@ namespace laya
         JSXmlDocument::exportJS(context);
         JSXmlAttr::exportJS(context);
         JSDOMParser::exportJS(context);
+#ifdef CONCH_USE_NEW_AUDIO
         JSAudio::exportJS(context);
+#else
+        JSAudioDeprecated::exportJS(context);
+#endif
         JSWebSocket::exportJS(context);
         JSZip::exportJS(context);
         JSNotify::exportJS(context);

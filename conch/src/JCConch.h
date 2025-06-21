@@ -12,6 +12,7 @@
 #include <core/Thread.h>
 #include <platform/OS.h>
 #include <webstorage/WebStorage.h>
+#include <audio/AudioPlayer.h>
 
 namespace laya
 {
@@ -84,7 +85,15 @@ namespace laya
                 m_pLocalStorage->initialize(getLocalStoragePath());
             }   
             return *m_pLocalStorage;
-        }           
+        }
+        audio::AudioPlayer& getAudioPlayer()
+        {
+            if (!m_pAudioPlayer)
+            {
+                m_pAudioPlayer = std::make_unique<audio::AudioPlayer>();
+            }
+            return *m_pAudioPlayer;
+        }
     public:
 
         static std::shared_ptr<JCConch>         s_pConch;
@@ -102,6 +111,7 @@ namespace laya
         std::vector<std::string>                m_vUrlHistory;
         int                                     m_nUrlHistoryPos;
         std::unique_ptr<LocalStorage>           m_pLocalStorage{nullptr};
+        std::unique_ptr<audio::AudioPlayer>            m_pAudioPlayer{nullptr};
     public:
 
         std::vector<std::function<void(void)>>  m_tasks;

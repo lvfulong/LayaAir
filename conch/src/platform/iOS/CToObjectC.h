@@ -13,8 +13,6 @@
 #include <string>
 #include <vector>
 #include <JavaScriptCore/JSBase.h>
-#include "resource/Audio/JCAudioInterface.h"
-#include "resource/Audio/JCWaveInfo.h"
 #include <functional>
 #include "Image/JCVideo.h"
 
@@ -108,15 +106,6 @@ void CToObjectCVibrateLong();
 
 void CToObjectCChooseImage(int count, const char* sizeType, const char* sourceType);
 void CToObjectCSaveImageToAlbum(const char* imgPath);
-//------------------------------------------------------------------------------
-//以下是声音相关的
-//------------------------------------------------------------------------------
-void CToObjectCPlayMp3Audio( const char* p_sUrl,int p_nTimes,float nCurrentTime );
-void CToObjectCSetMp3Volume( float p_nVolume );
-void CToObjectCStopMp3();
-void CToObjectCResumeMp3();
-void CToObjectCPauseMp3();
-
 //------------------------------------------------------------------------------
 //以下是视频相关的
 //------------------------------------------------------------------------------

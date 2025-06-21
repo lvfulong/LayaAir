@@ -26,14 +26,6 @@ void NAPIFun::ConchNAPI_init(napi_value assetManager, std::string url, std::stri
 
     
 }
-void NAPIFun::ConchNAPI_audioMusicPlayEnd()
-{
-    laya::JCMp3Interface *pMp3Player = laya::JCAudioManager::GetInstance()->m_pMp3Player;
-    if (pMp3Player)
-    {
-        pMp3Player->onPlayEnd();
-    }
-}
 void NAPIFun::ConchNAPI_networkChanged(int nNetworkType)
 {
     JCConch::s_pScriptRuntime->onNetworkChanged(nNetworkType);
@@ -64,7 +56,6 @@ void NAPIFun::ConchNAPI_handleKeyboardComplete(const std::string &value)
 JSBIND_GLOBAL()
 {
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_init, "ConchNAPI_init");
-    JSBIND_FUNCTION(NAPIFun::ConchNAPI_audioMusicPlayEnd, "ConchNAPI_audioMusicPlayEnd");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_networkChanged, "ConchNAPI_networkChanged");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_inputChange, "ConchNAPI_inputChange");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_RunJS, "ConchNAPI_RunJS");

@@ -466,7 +466,6 @@ declare class ConchAudio{
     src:string;
     volume:number;
     currentTime:Number;
-    setLoop(b:boolean):void;
     play():void;
     pause():void;
     stop():void;

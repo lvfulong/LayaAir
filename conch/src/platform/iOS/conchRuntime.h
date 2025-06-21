@@ -53,10 +53,6 @@ class JCTouchFilter;
     
     LayaEditBoxDelegate*        m_pEditBoxDelegate;     //eiditBoxDelegate
     
-    //-----------------------------------------------------------------
-    
-    JCMp3Player*                m_pMp3Player;           //MP3播放器
-    
     LayaReachability*           m_pNetworkListener;     //网络监听
     
     //-----------------------------------------------------------------

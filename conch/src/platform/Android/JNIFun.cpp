@@ -16,7 +16,6 @@
 #include "JCConch.h"
 #include <Bindings/JSConchConfig.h>
 #include "CToJavaBridge.h"
-#include "Audio/JCAudioManager.h"
 #include <Bindings/JSInput.h>
 #include <utils/JCZipFile.h>
 #include "JCSystemConfig.h"
@@ -61,7 +60,6 @@ extern "C"
     JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_exportStaticMethodToC(JNIEnv * env, jobject obj, jstring packcls);
     JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_alertCallback(JNIEnv * env, jobject obj );
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_RunJS(JNIEnv* env, jobject obj, jstring jsstr );
-	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_audioMusicPlayEnd( JNIEnv * env, jobject obj );
 	JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_networkChanged(JNIEnv* env, jobject obj, jint nNetworkType );
     JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_inputChange(JNIEnv* env, jobject obj, jint keycode );	
     JNIEXPORT void JNICALL Java_layaair_game_browser_LayaVideoPlayer_emit(JNIEnv* env, jobject obj, jlong ptr, jstring str);
@@ -323,7 +321,6 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_uninit(JNIEnv * env, j
 {
 	LOGI("JNI uninit");
 	DEBUG_CHECK(isScriptThread());
-	JCAudioManager::GetInstance()->stopMp3();
 	laya::JCConch::s_pConch->onAppDestroy();
 	laya::JCConch::s_pConch.reset();
 }
@@ -389,15 +386,6 @@ JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_RunJS(JNIEnv* env, job
         JCConch::s_pScriptRuntime->callJSString(rawString);
         env->ReleaseStringUTFChars(jsstr, rawString);
     }
-}
-JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_audioMusicPlayEnd( JNIEnv * env, jobject obj )
-{
-	LOGI("JNI audioMusicPlayEnd");
-	laya::JCMp3Interface* pMp3Player = laya::JCAudioManager::GetInstance()->m_pMp3Player;
-	if( pMp3Player )
-	{
-		pMp3Player->onPlayEnd();
-	}
 }
 JNIEXPORT void JNICALL Java_layaair_game_browser_ConchJNI_networkChanged(JNIEnv* env, jobject obj, jint nNetworkType)
 {

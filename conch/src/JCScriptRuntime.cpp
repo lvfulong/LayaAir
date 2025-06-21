@@ -15,7 +15,6 @@
 #include <Bindings/JSInput.h>
 #include <utils/JCFileSource.h>
 #include <resource/JCFileResManager.h>
-#include "Audio/JCAudioManager.h"
 #include "JCSystemConfig.h"
 #include "JCConch.h"
 #include <downloadMgr/JCDownloadMgr.h>
@@ -292,9 +291,7 @@ namespace laya
         JSGlobalDisExportC();
         jsvm_close_inspector(env);
 
-        JCAudioManager::ClearAllWork();
-        JCAudioManager::GetInstance()->stopMp3();
-        JCAudioManager::GetInstance()->pauseMp3();
+        JCConch::s_pConch->getAudioPlayer().clear();
     
         m_pArrayBufferManager->clearAll();
         
@@ -364,20 +361,6 @@ namespace laya
             m_pJSOnResizeFunction.call<void>(jsvm::global(), g_nInnerWidth, g_nInnerHeight);
             //m_pRootCanvas->size( g_nInnerWidth,g_nInnerHeight );
             g_bGLCanvasSizeChanged = false;
-        }
-        int nUpdateNum = m_nUpdateCount % 3;
-        switch (nUpdateNum)
-        {
-        case 0:
-            JCAudioManager::GetInstance()->update();
-            break;
-        case 1:
-            //如果有需要清理的或者update可以放到这 
-            //JCAudioManager::GetInstance()->m_pWavPlayer->autoGarbageCollection();
-            break;
-        case 2:
-            //如果有需要清理的或者update可以放到这
-            break;
         }
 		
         //JS_TRY;
@@ -459,18 +442,6 @@ namespace laya
     {
         jsvm_value result;
         jsbind::runScript(sBuffer, &result);
-    }
-    void JCScriptRuntime::restoreAudio()
-    {
-        std::function<void(void)> pFunction = std::bind(&JCScriptRuntime::jsRestoreAudioFunction, this);
-        postToJS(pFunction);
-    }
-    void JCScriptRuntime::jsRestoreAudioFunction()
-    {
-        if(JCAudioManager::GetInstance()->getMp3Mute() == false && JCAudioManager::GetInstance()->getMp3Stopped() == false)
-        {
-            JCAudioManager::GetInstance()->resumeMp3();
-        }
     }
     void JCScriptRuntime::jsReloadUrl()
     {
