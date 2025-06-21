@@ -49,7 +49,6 @@ class AudioPlayer
     ALCdevice *m_alDevice;
     ALCcontext *m_alContext;
     std::thread m_thread;
-    std::atomic<bool> m_exit{false};
 };
 } // namespace audio
 #endif

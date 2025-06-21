@@ -21,18 +21,36 @@ AudioPlayer::AudioPlayer()
     m_thread = std::thread([this]() {
         while (true)
         {
-            if (m_exit)
-                break;
-            Profiler_ZoneScoped("audio::AudioPlayer::update", 0x00ff00);
-            m_pool->update();
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            Profiler_ZoneScoped("audio::AudioPlayer::update", 0xff0000);
+            
+            // 检查是否有活跃的音频播放
+            if (m_pool->hasActiveAudio())
+            {
+                m_pool->update();
+                // 有音频播放时使用较短间隔
+                Profiler_ZoneScoped("audio::AudioPlayer::sleep_formilliseconds(10)", 0xff0000);
+                std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            }
+            else
+            {
+                Profiler_ZoneScoped("audio::AudioPlayer::waitForAudio", 0x00ff00);
+                // 无音频播放时，使用信号量等待
+                LOGI("No active audio, audio thread entering wait state");
+                m_pool->waitForAudio();
+                
+                // 被唤醒后，检查是否应该退出
+                if (m_pool->isShutdownRequested())
+                    break;
+                    
+                //LOGI("Audio thread woken up, resuming update loop");
+            }
         }
     });
 }
 
 AudioPlayer::~AudioPlayer()
 {
-    m_exit = true;
+    m_pool->requestShutdown();
     m_thread.join();
     m_pool.reset();
     alcMakeContextCurrent(nullptr);
