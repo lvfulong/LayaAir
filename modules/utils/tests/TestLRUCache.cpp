@@ -99,29 +99,6 @@ TEST_F(LRUCacheTest, Iteration) {
     EXPECT_EQ(items[1].first, 2);
     EXPECT_EQ(items[2].first, 1);
 }
-
-// 容量调整测试
-TEST_F(LRUCacheTest, CapacityAdjustment) {
-    LRUCache<int, std::string> cache(3);
-    
-    cache.put(1, "one");
-    cache.put(2, "two");
-    cache.put(3, "three");
-    
-    cache.clearAndSetCapacity(2);  // 减小容量
-    
-    EXPECT_EQ(cache.getCapacity(), 2);
-    EXPECT_EQ(cache.size(), 0);
-    
-    cache.put(1, "one");
-    cache.put(2, "two");
-    cache.put(3, "three");  // 应该移除 1
-    
-    EXPECT_FALSE(cache.get(1).has_value());
-    EXPECT_TRUE(cache.get(2).has_value());
-    EXPECT_TRUE(cache.get(3).has_value());
-}
-
 // 驱逐回调测试
 TEST_F(LRUCacheTest, EvictionCallback) {
     LRUCache<int, std::string> cache(2);

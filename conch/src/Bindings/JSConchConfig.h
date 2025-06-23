@@ -120,9 +120,10 @@ namespace laya
 
         static int getMemoryUsageInByte();
 
-        static void setAudioMaxCacheNum(int num);
-        static int getAudioMaxCacheNum();
-
+        static void setAudioMaxCacheSizeInBytes(size_t size);
+        static size_t getAudioMaxCacheSizeInBytes();
+        static size_t getAudioCurrentCacheSizeInBytes();
+        static void clearAudioCache();
         static void setAudioStreamThreshold(int byteNum);
         static int getAudioStreamThreshold();
 

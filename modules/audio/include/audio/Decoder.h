@@ -34,7 +34,7 @@ class Decoder : public std::enable_shared_from_this<Decoder>
     {
         return m_sampleRate;
     }
-    size_t getSize() const
+    size_t getSizeInBytes() const
     {
         return m_size;
     }

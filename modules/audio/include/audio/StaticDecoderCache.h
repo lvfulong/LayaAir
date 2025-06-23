@@ -30,10 +30,14 @@ class StaticDecoderCache
     ~StaticDecoderCache() = default;
     static std::shared_ptr<Decoder> get(const std::string &url);
     static std::shared_ptr<Decoder> createDecoder(const std::string &url, uint8_t *data, size_t size);
-    static void setMaxCacheNum(int num);
-    static int getMaxCacheNum();
+    static void setMaxSizeInBytes(size_t size);
+    static size_t getMaxSizeInBytes();
+    static size_t getCurrentSizeInBytes();
+    static void clear();
   private:
     static laya::LRUCache<std::string, std::shared_ptr<Decoder>> m_cache;
+    static size_t m_maxSizeInBytes;
+    static size_t m_currentSizeInBytes;
 };
 } // namespace audio
 #endif

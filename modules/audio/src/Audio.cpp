@@ -16,7 +16,7 @@ Audio::Audio(AudioPlayer *player, std::shared_ptr<StaticDecoder> decoder)
         format = AL_FORMAT_STEREO16;
     }
     alGenBuffers(1, &m_staticBuffer);
-    alBufferData(m_staticBuffer, format, decoder->getData(), decoder->getSize(), decoder->getSampleRate());
+    alBufferData(m_staticBuffer, format, decoder->getData(), decoder->getSizeInBytes(), decoder->getSampleRate());
 }
 Audio::Audio(AudioPlayer *player, std::shared_ptr<StreamDecoder> decoder)
     : m_player(player), m_type(TYPE_STREAM), m_streamDecoder(decoder)

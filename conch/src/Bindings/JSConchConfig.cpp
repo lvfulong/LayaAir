@@ -592,13 +592,21 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
     {
         return OS::getMemoryUsageInByte();
     }
-    void JSConchConfig::setAudioMaxCacheNum(int num)
+    void JSConchConfig::setAudioMaxCacheSizeInBytes(size_t size)
     {
-        audio::StaticDecoderCache::setMaxCacheNum(num);
+        audio::StaticDecoderCache::setMaxSizeInBytes(size);
     }
-    int JSConchConfig::getAudioMaxCacheNum()
+    size_t JSConchConfig::getAudioMaxCacheSizeInBytes()
     {
-        return audio::StaticDecoderCache::getMaxCacheNum();
+        return audio::StaticDecoderCache::getMaxSizeInBytes();
+    }
+    size_t JSConchConfig::getAudioCurrentCacheSizeInBytes()
+    {
+        return audio::StaticDecoderCache::getCurrentSizeInBytes();
+    }
+    void JSConchConfig::clearAudioCache()
+    {
+        audio::StaticDecoderCache::clear();
     }
     void JSConchConfig::setAudioStreamThreshold(int byteNum)
     {
@@ -666,7 +674,9 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         class_binding.class_property("JSDebugPort", &JSConchConfig::getJSDebugPort, &JSConchConfig::setJSDebugPort);
         class_binding.class_property("conchWebGL", &JSConchConfig::getConchWebGL);
         class_binding.class_property("urlIgnoreCase", &JSConchConfig::getUrlIgnoreCase, &JSConchConfig::setUrlIgnoreCase);
-        class_binding.class_property("audioMaxCacheNum", &JSConchConfig::getAudioMaxCacheNum, &JSConchConfig::setAudioMaxCacheNum);
+        class_binding.class_property("audioMaxCacheSizeInBytes", &JSConchConfig::getAudioMaxCacheSizeInBytes, &JSConchConfig::setAudioMaxCacheSizeInBytes);
+        class_binding.class_function("getAudioCurrentCacheSizeInBytes", &JSConchConfig::getAudioCurrentCacheSizeInBytes);
+        class_binding.class_function("clearAudioCache", &JSConchConfig::clearAudioCache);
         class_binding.class_property("audioStreamThreshold", &JSConchConfig::getAudioStreamThreshold, &JSConchConfig::setAudioStreamThreshold);
         context.global_class_("conchConfig", class_binding);
     }
