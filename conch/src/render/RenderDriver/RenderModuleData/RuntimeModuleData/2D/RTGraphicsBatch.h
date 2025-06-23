@@ -4,7 +4,7 @@
 #include "BatchManager.h"
 #include "RTRender2DPass.h"
 #include "RTBatchBuffer.h"
-#include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.h>
+#include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESPrimitiveRenderElement2D.h>
 #include <utils/FastSinglelist.h>
 
 #include <vector>
@@ -23,27 +23,27 @@ class RTGraphicsBatch : public IBatch2DRender
     /**
      * @brief 创建渲染元素
      */
-    static GLESRenderElement2D *createRenderElement2D();
+    static GLESPrimitiveRenderElement2D *createRenderElement2D();
 
     /**
      * @brief 回收渲染元素
      */
-    static void recoverRenderElement2D(GLESRenderElement2D *value);
+    static void recoverRenderElement2D(GLESPrimitiveRenderElement2D *value);
 
     /**
      * @brief 批量渲染元素
      */
-    void batchRenderElement(FastSinglelist<GLESRenderElement2D *> &list, int start, int length, FastSinglelist<GLESRenderElement2D *> &recoverList, RTBatchBuffer* buffer) override;
+    void batchRenderElement(FastSinglelist<GLESPrimitiveRenderElement2D *> &list, int start, int length, FastSinglelist<GLESPrimitiveRenderElement2D *> &recoverList, RTBatchBuffer* buffer);
 
     /**
      * @brief 检查两个渲染元素是否可以合并
      */
-    bool check(GLESRenderElement2D *left, GLESRenderElement2D *right);
+    bool check(GLESPrimitiveRenderElement2D *left, GLESPrimitiveRenderElement2D *right);
 
     /**
      * @brief 回收资源
      */
-    void recover(FastSinglelist<GLESRenderElement2D *> &list);
+    void recover(FastSinglelist<GLESPrimitiveRenderElement2D *> &list);
 
     /**
      * @brief 处理索引缓冲区
@@ -54,10 +54,10 @@ class RTGraphicsBatch : public IBatch2DRender
     /**
      * @brief 执行批量处理
      */
-    void batch(FastSinglelist<GLESRenderElement2D *> &list, int start, int length, FastSinglelist<GLESRenderElement2D *> &recoverList, RTBatchBuffer* buffer);
+    void batch(FastSinglelist<GLESPrimitiveRenderElement2D *> &list, int start, int length, FastSinglelist<GLESPrimitiveRenderElement2D *> &recoverList, RTBatchBuffer* buffer);
 
-    // FastSinglelist<GLESRenderElement2D *> _recoverList{false};
-    static std::vector<GLESRenderElement2D *> _pool;
+  private:
+    static std::vector<GLESPrimitiveRenderElement2D *> _pool;
     static FastSinglelist<int> TEMP_SINGLE_LIST;
 };
 

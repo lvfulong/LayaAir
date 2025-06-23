@@ -3,7 +3,7 @@
 #include <vector>
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/3D/RTSubShader.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderGeometryElement.h>
-
+#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTRenderStruct2D.h>
 
 namespace laya
 {
@@ -50,9 +50,6 @@ namespace laya
 		{
 			this->_owner = value;
 		}
-	private:
-		void _compileShader(GLESRenderContext2D* context);
-		void _renderByShaderInstance(GLESShaderInstance* shader, GLESRenderContext2D* context);
 	public:
 		static RTDefineDatas* _compileDefines;
 		GLESShaderData* materialShaderData = nullptr;
@@ -62,10 +59,15 @@ namespace laya
 		bool renderStateIsBySprite = true;
 		int32_t _type = 0;
 		RTRenderStruct2D* _owner = nullptr;
-	private:
-		std::vector<std::string> _commonUniformMap;
 	protected:
+		std::vector<std::string> _commonUniformMap;
 		JCSingletonList<GLESShaderInstance*> _shaderInstances = JCSingletonList<GLESShaderInstance*>(false);
+		GLESShaderData* getGlobalShaderData();
+
+	protected:
+		virtual void _compileShader(GLESRenderContext2D* context);
+		virtual void _renderByShaderInstance(GLESShaderInstance* shader, GLESRenderContext2D* context);
 	};
+
 } // namespace laya
 #endif

@@ -23,49 +23,94 @@ RTRenderStruct2D::~RTRenderStruct2D()
 
 void RTRenderStruct2D::_handleInterData()
 {
-    if (_clipRect)
-    {
-        IClipInfo *info = _clipInfo;
-        auto trans = this->_trans;
-        if (trans && info->_updateFrame < trans->modifiedFrame)
-        {
-            const Matrix& mat = this->_trans->matrix;
-            Matrix& cm = info->clipMatrix;
-            float x = _clipRect->x;
-            float y = _clipRect->y;
-            float width = _clipRect->width;
-            float height = _clipRect->height;
+    // 处理裁剪区域
+    if (_clipRect) {
+        IClipInfo* info = _clipInfo;
+        structTransform* trans = _trans;
+        int parentClipUpdateFrame = _parentClipInfo && _parentClipInfo != &s_DefaultClipInfo ? _parentClipInfo->_updateFrame : -1;
 
-            cm.tx = x * mat.a + y * mat.c + mat.tx;
-            cm.ty = x * mat.b + y * mat.d + mat.ty;
-            cm.a = width * mat.a;
-            cm.b = width * mat.b;
-            cm.c = height * mat.c;
-            cm.d = height * mat.d;
+        if (trans) {
+            if (info->_updateFrame < trans->modifiedFrame || info->_updateFrame < parentClipUpdateFrame) {
+                Matrix* mat = &trans->matrix;
+                Matrix* cm = &info->clipMatrix;
+                float x = _clipRect->x, y = _clipRect->y;
+                float width = _clipRect->width, height = _clipRect->height;
+                float tx = mat->tx, ty = mat->ty;
+                
+                cm->tx = x * mat->a + y * mat->c + tx;
+                cm->ty = x * mat->b + y * mat->d + ty;
+                cm->a = width * mat->a;
+                cm->b = width * mat->b;
+                cm->c = height * mat->c;
+                cm->d = height * mat->d;
 
-            info->clipMatDir.setValue(cm.a, cm.b, cm.c, cm.d);
-            info->clipMatPos.setValue(cm.tx, cm.ty, mat.tx, mat.ty);
-            info->_updateFrame = trans->modifiedFrame;
+                if (parentClipUpdateFrame != -1) {
+                    Matrix* parentMat = &_parentClipInfo->clipMatrix;
+                    float parentMinX = parentMat->tx;
+                    float parentMinY = parentMat->ty;
+                    float parentMaxX = parentMinX + parentMat->a;
+                    float parentMaxY = parentMinY + parentMat->d;
+
+                    Vector4* parentClipPos = &_parentClipInfo->clipMatPos;
+                    float offsetx = parentClipPos->z - parentClipPos->x;
+                    float offsety = parentClipPos->w - parentClipPos->y;
+
+                    // 计算交集
+                    if (cm->a > 0 && cm->d > 0) {
+                        float cmaxx = tx + cm->a;
+                        float cmaxy = ty + cm->d;
+
+                        if (cmaxx <= parentMinX || cmaxy <= parentMinY || tx >= parentMaxX || ty >= parentMaxY) {
+                            // 超出范围
+                            cm->a = -0.1f;
+                            cm->d = -0.1f;
+                        } else {
+                            if (tx < parentMinX) {
+                                cm->a -= (parentMinX - tx);
+                                tx = cm->tx = parentMinX;
+                            }
+                            if (cmaxx > parentMaxX) {
+                                cm->a -= (cmaxx - parentMaxX);
+                            }
+                            if (ty < parentMinY) {
+                                cm->d -= (parentMinY - ty);
+                                ty = cm->ty = parentMinY;
+                            }
+                            if (cmaxy > parentMaxY) {
+                                cm->d -= (cmaxy - parentMaxY);
+                            }
+                            if (cm->a <= 0) cm->a = -0.1f;
+                            if (cm->d <= 0) cm->d = -0.1f;
+                        }
+                    }
+
+                    tx += offsetx;
+                    ty += offsety;
+                }
+                info->clipMatDir.setValue(cm->a, cm->b, cm->c, cm->d);
+                info->clipMatPos.setValue(cm->tx, cm->ty, tx, ty);
+
+                info->_updateFrame = std::max(trans->modifiedFrame, parentClipUpdateFrame);
+            }
         }
     }
 
     if (this->_renderDataHandler) {
-
-         auto data = this->spriteShaderData;
-         // clip
-         if (this->needUploadClip) {
-            auto info = this->getClipInfo();
+        GLESShaderData* data = this->spriteShaderData;
+        // clip
+        IClipInfo* info = getClipInfo();
+        if (needUploadClip < info->_updateFrame) {
             data->setVector(ShaderDefines2D::UNIFORM_CLIPMATDIR, info->clipMatDir);
             data->setVector(ShaderDefines2D::UNIFORM_CLIPMATPOS, info->clipMatPos);
-            this->needUploadClip = false;
-         }
+            needUploadClip = info->_updateFrame;
+        }
 
-         // global alpha
-         if (this->needUploadAlpha) {
-            data->setNumber(ShaderDefines2D::UNIFORM_VERTALPHA, this->globalAlpha);
-            this->needUploadAlpha = false;
-         }
-      }
+        // global alpha
+        if (needUploadAlpha) {
+            data->setNumber(ShaderDefines2D::UNIFORM_VERTALPHA, globalAlpha);
+            needUploadAlpha = false;
+        }
+    }
 }
 
 void RTRenderStruct2D::_updateBlendMode()
@@ -108,6 +153,7 @@ void RTRenderStruct2D::updateChildren(ChildrenUpdateType type)
     if (static_cast<uint32_t>(type) & static_cast<uint32_t>(ChildrenUpdateType::Clip))
     {
         info = this->getClipInfo();
+        this->needUploadClip = -1;
         updateClip = true;
     }
 
@@ -120,6 +166,7 @@ void RTRenderStruct2D::updateChildren(ChildrenUpdateType type)
     if (static_cast<uint32_t>(type) & static_cast<uint32_t>(ChildrenUpdateType::Alpha))
     {
         alpha = this->globalAlpha;
+        this->needUploadAlpha = true;
         updateAlpha = true;
     }
 

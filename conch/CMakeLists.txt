@@ -265,6 +265,8 @@ list(APPEND CONCH_SRC
 	src/render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderContext2D.cpp
 	src/render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.h
 	src/render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.cpp
+	src/render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESPrimitiveRenderElement2D.h
+	src/render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESPrimitiveRenderElement2D.cpp
 	src/render/RenderDriver/OpenGLESDriver/2DRenderPass/GLES2DRenderCMD.h
 	src/render/RenderDriver/OpenGLESDriver/2DRenderPass/GLES2DRenderCMD.cpp
 	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/RTDefineDatas.h

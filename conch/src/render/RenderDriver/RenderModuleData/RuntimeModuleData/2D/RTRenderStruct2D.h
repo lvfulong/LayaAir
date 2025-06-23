@@ -105,8 +105,9 @@ class RTRenderStruct2D
         _trans->modifiedFrame = loopCount;
     }
 
-    float globalAlpha;
-    float alpha;
+    float globalAlpha = 1.0;
+    float alpha = 1.0;
+
     float getAlpha()
     {
         return this->alpha;
@@ -213,7 +214,7 @@ class RTRenderStruct2D
     IClipInfo *_parentClipInfo = nullptr;
     IClipInfo *_clipInfo = nullptr;
     jsbind::Persistent	m_JSFunctionRenderUpdate;//js call
-    bool needUploadClip = true;
+    int needUploadClip = -1;
     bool needUploadAlpha = true;
 };
 } // namespace laya

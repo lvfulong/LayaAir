@@ -34,6 +34,7 @@
 #include <render/3D/temp/RenderState.h>
 #include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderContext2D.h>
 #include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.h>
+#include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESPrimitiveRenderElement2D.h>
 #include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRender3DProcess/GLESDirectLightShadowRP.h>
 #include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRender3DProcess/GLESForwardAddClusterRP.h>
 #include <render/RenderDriver/OpenGLESDriver/3DRenderPass/GLESRender3DProcess/GLESForwardAddRP.h>
@@ -764,11 +765,20 @@ class RenderBindings
             class_binding.property_field("renderStateIsBySprite", &GLESRenderElement2D::renderStateIsBySprite);
             context.class_("conchGLESRenderElement2D", class_binding);
         }
+
+        {
+            jsbind::class_<GLESPrimitiveRenderElement2D> class_binding;
+            class_binding.inherit<GLESRenderElement2D>();
+            class_binding.function("setPrimitiveShaderData", &GLESPrimitiveRenderElement2D::setPrimitiveShaderData);
+            class_binding.constructor<>();
+            context.class_("conchGLESPrimitiveRenderElement2D", class_binding);
+        }
+
         {
             jsbind::class_<GLESRenderContext2D> class_binding;
             class_binding.constructor<>();
             class_binding.function("setGlobalConfigShaderData", &GLESRenderContext2D::setGlobalConfigShaderData);
-            class_binding.function("setSceneShaderData", &GLESRenderContext2D::setSceneShaderData);
+            class_binding.function("setPassShaderData", &GLESRenderContext2D::setPassShaderData);
             class_binding.function("setRenderTarget", &GLESRenderContext2D::setRenderTarget);
             class_binding.function("setOffscreenView", &GLESRenderContext2D::setOffscreenView);
             class_binding.function("drawRenderElementOne", &GLESRenderContext2D::drawRenderElementOne);
@@ -786,7 +796,7 @@ class RenderBindings
                         list.setLength(length);
                         ctx.drawRenderElementList(list);
                     }));
-            class_binding.property("passData", &GLESRenderContext2D::getPassDataJS, &GLESRenderContext2D::setPassDataJS);
+            // class_binding.property("passData", &GLESRenderContext2D::getPassDataJS, &GLESRenderContext2D::setPassDataJS);
             context.class_("conchGLESRenderContext2D", class_binding);
         }
 

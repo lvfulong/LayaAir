@@ -3,11 +3,14 @@
 #include "RT2DGraphic2DBufferDataView.h"
 #include "RTRenderStruct2D.h"
 #include <render/Property.h>
+#include <JCConch.h>
 #include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderContext2D.h>
 #include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalRT.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalTex.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
+#include <LayaAir/2D/ScreenCanvasContext2D.h>
+
 namespace laya
 {
 std::set<RT2DGraphicWholeBuffer *> RTRender2DPass::buffers;
@@ -119,7 +122,7 @@ void RTRender2DPass::render(GLESRenderContext2D *context)
 
 void RTRender2DPass::_initRenderProcess(GLESRenderContext2D *context)
 {
-    float sizeX, sizeY;
+    int sizeX, sizeY;
     auto rt = this->renderTexture;
     if (rt) {
         //context->invertY = rt->_invertY;
@@ -130,14 +133,14 @@ void RTRender2DPass::_initRenderProcess(GLESRenderContext2D *context)
         this->_shaderdata->addDefine(ShaderDefines2D::RENDERTEXTURE);
     } else {
         context->invertY = false;
-        sizeX = 0;//RenderState2D::width;//lvtodo
-        sizeY = 0;//RenderState2D::height;
+        sizeX = JCConch::s_pConchRender->m_pScreenContext->m_width;
+        sizeY = JCConch::s_pConchRender->m_pScreenContext->m_height;
         context->setOffscreenView(sizeX, sizeY);
         context->setRenderTarget(nullptr, this->doClearColor, this->_clearColor);
         this->_setInvertMatrix(1, 0, 0, 1, 0, 0);
         this->_shaderdata->removeDefine(ShaderDefines2D::RENDERTEXTURE);
     }
-    context->_passDataJS = this->_shaderDataJS;
+    context->passData = this->_shaderdata;
     _setRenderSize(sizeX, sizeY);
 }
 

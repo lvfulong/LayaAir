@@ -106,7 +106,6 @@ void RT2DGraphicWholeBuffer::upload()
             // size_t byteLength;
             // status = jsvm_get_arraybuffer_info(env, ab, &data, &byteLength);
             // DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-
             _bufferAsVertexBuffer->setData((const char*)data, length * 4, 0, 0, length * 4);
             this->_needResetData = false;
         }
@@ -114,9 +113,7 @@ void RT2DGraphicWholeBuffer::upload()
         {
             if (this->_updateRange.y <= this->_updateRange.x)
                 return;
-            
             // jsvm_value ab = jsbind::Local(this->_bufferData.getHandle())["buffer"].getHandle();
-
             size_t byteLength = (this->_updateRange.y - this->_updateRange.x) * 4;
             // status = jsvm_get_arraybuffer_info(env, ab, &data, &byteLength);
             // DEBUG_CHECK(status == jsvm_status::jsvm_ok);
@@ -209,7 +206,6 @@ RT2DGraphic2DBufferDataView::~RT2DGraphic2DBufferDataView()
 
 void RT2DGraphic2DBufferDataView::destroy()
 {
-
     _data.reset();
     _next.reset();
     _prev.reset();
@@ -249,7 +245,6 @@ void RT2DGraphic2DBufferDataView::updateView(jsvm_value wholeData)
         jsvm_status status;
         jsvm_value value;
 
-        // wholeData.set(this._data, this.start);
         jsbind::Local setFunction = jsbind::Local(wholeData)["set"];
         setFunction.call<void>(wholeData, _data.getHandle(), this->_start);
     }

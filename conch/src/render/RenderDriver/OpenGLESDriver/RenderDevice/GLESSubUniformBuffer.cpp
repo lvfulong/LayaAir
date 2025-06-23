@@ -60,7 +60,6 @@ void GLESSubUniformBuffer::notifyGPUBufferChange(const std::string& info) {
         // 根据数据类型创建新的视图
         void* view = reinterpret_cast<void*>(reinterpret_cast<char*>(bufferBlock->cluster->data.data()) + offset);
         const_cast<GLESUniform&>(uniform.second).view = view;
-    
     }
     GLESUniformBufferBase::needUpload = true;
 }

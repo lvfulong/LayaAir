@@ -11,7 +11,7 @@ namespace laya
 {
 
 RTGraphicsBatch *RTGraphicsBatch::instance = nullptr;
-std::vector<GLESRenderElement2D *> RTGraphicsBatch::_pool;
+std::vector<GLESPrimitiveRenderElement2D *> RTGraphicsBatch::_pool;
 FastSinglelist<int> RTGraphicsBatch::TEMP_SINGLE_LIST(false);
 
 RTGraphicsBatch::RTGraphicsBatch()
@@ -22,16 +22,16 @@ RTGraphicsBatch::~RTGraphicsBatch()
 {
 }
 
-GLESRenderElement2D *RTGraphicsBatch::createRenderElement2D()
+GLESPrimitiveRenderElement2D *RTGraphicsBatch::createRenderElement2D()
 {
     if (!_pool.empty())
     {
-        GLESRenderElement2D *element = _pool.back();
+        GLESPrimitiveRenderElement2D *element = _pool.back();
         _pool.pop_back();
         return element;
     }
 
-    GLESRenderElement2D *element = new GLESRenderElement2D();
+    GLESPrimitiveRenderElement2D *element = new GLESPrimitiveRenderElement2D();
     element->geometry = new GLESRenderGeometryElement();
     element->geometry->setMeshTopology(MeshTopology::Triangles);
     element->geometry->setDrawType(DrawType::DrawElement);
@@ -41,7 +41,7 @@ GLESRenderElement2D *RTGraphicsBatch::createRenderElement2D()
     return element;
 }
 
-void RTGraphicsBatch::recoverRenderElement2D(GLESRenderElement2D *value)
+void RTGraphicsBatch::recoverRenderElement2D(GLESPrimitiveRenderElement2D *value)
 {
     if (!value)
         return;
@@ -50,12 +50,13 @@ void RTGraphicsBatch::recoverRenderElement2D(GLESRenderElement2D *value)
     value->geometry->setBufferState(nullptr);
     value->materialShaderData = nullptr;
     value->value2DShaderData = nullptr;
+    value->primitiveShaderData = nullptr;
     value->subShader = nullptr;
     value->renderStateIsBySprite = false;
     _pool.push_back(value);
 }
 
-void RTGraphicsBatch::batchRenderElement(FastSinglelist<GLESRenderElement2D *> &list, int start, int length, FastSinglelist<GLESRenderElement2D *> &recoverList, RTBatchBuffer* buffer)
+void RTGraphicsBatch::batchRenderElement(FastSinglelist<GLESPrimitiveRenderElement2D *> &list, int start, int length, FastSinglelist<GLESPrimitiveRenderElement2D *> &recoverList, RTBatchBuffer* buffer)
 {
     auto &elementArray = list._elements;
     int batchStart = -1;
@@ -65,8 +66,8 @@ void RTGraphicsBatch::batchRenderElement(FastSinglelist<GLESRenderElement2D *> &
     for (int index = 0; index < end; index++)
     {
         int offset = start + index;
-        GLESRenderElement2D *cElement = elementArray[offset];
-        GLESRenderElement2D *nElement = elementArray[offset + 1];
+        GLESPrimitiveRenderElement2D *cElement = elementArray[offset];
+        GLESPrimitiveRenderElement2D *nElement = elementArray[offset + 1];
 
         if (check(cElement, nElement))
         {
@@ -105,16 +106,16 @@ void RTGraphicsBatch::batchRenderElement(FastSinglelist<GLESRenderElement2D *> &
     }
 }
 
-void RTGraphicsBatch::batch(FastSinglelist<GLESRenderElement2D *> &list, int start, int length, FastSinglelist<GLESRenderElement2D *> &recoverList, RTBatchBuffer* buffer)
+void RTGraphicsBatch::batch(FastSinglelist<GLESPrimitiveRenderElement2D *> &list, int start, int length, FastSinglelist<GLESPrimitiveRenderElement2D *> &recoverList, RTBatchBuffer* buffer)
 {
     auto &elementArray = list._elements;
-    GLESRenderElement2D *staticBatchRenderElement = createRenderElement2D();
+    GLESPrimitiveRenderElement2D *staticBatchRenderElement = createRenderElement2D();
     std::vector<std::vector<int>> drawArray;
 
     for (int i = 0; i < length; i++)
     {
         int offset = start + i;
-        GLESRenderElement2D *element = elementArray[offset];
+        GLESPrimitiveRenderElement2D *element = elementArray[offset];
         auto geometry = buffer->geometryList[i] ? buffer->geometryList[i] : element->geometry;
 
         if (!i)
@@ -122,6 +123,7 @@ void RTGraphicsBatch::batch(FastSinglelist<GLESRenderElement2D *> &list, int sta
             staticBatchRenderElement->geometry->_bufferState = geometry->_bufferState;
             staticBatchRenderElement->materialShaderData = element->materialShaderData;
             staticBatchRenderElement->value2DShaderData = element->value2DShaderData;
+            staticBatchRenderElement->primitiveShaderData = element->primitiveShaderData;
             staticBatchRenderElement->subShader = element->subShader;
             staticBatchRenderElement->renderStateIsBySprite = element->renderStateIsBySprite;
         }
@@ -175,7 +177,7 @@ void RTGraphicsBatch::batch(FastSinglelist<GLESRenderElement2D *> &list, int sta
     list.add(staticBatchRenderElement);
 }
 
-bool RTGraphicsBatch::check(GLESRenderElement2D *left, GLESRenderElement2D *right)
+bool RTGraphicsBatch::check(GLESPrimitiveRenderElement2D *left, GLESPrimitiveRenderElement2D *right)
 {
     int leftType = left->_type;
     int rightType = right->_type;
@@ -226,13 +228,13 @@ void RTGraphicsBatch::batchIndexBuffer(RTRenderStruct2D* struct2d, RTBatchBuffer
     buffer->updateBufLength();
 }
 
-void RTGraphicsBatch::recover(FastSinglelist<GLESRenderElement2D *> &list)
+void RTGraphicsBatch::recover(FastSinglelist<GLESPrimitiveRenderElement2D *> &list)
 {
     int length = list.getLength();
     auto &recoverArray = list._elements;
     for (int i = 0; i < length; i++)
     {
-        GLESRenderElement2D *info = recoverArray[i];
+        GLESPrimitiveRenderElement2D *info = recoverArray[i];
         RTGraphicsBatch::recoverRenderElement2D(info);
     }
     list.clear();

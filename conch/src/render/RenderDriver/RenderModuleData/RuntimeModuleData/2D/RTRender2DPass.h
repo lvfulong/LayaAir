@@ -145,8 +145,8 @@ class RTRender2DPass
     uint32_t renderLayerMask = 0x00000000;
     Vector4 cullRect;
     Vector2 renderOffset;
-    jsbind::Persistent _shaderDataJS;
-    jsbind::Persistent m_renderCallbackJS;
+    jsbind::Persistent _shaderDataJS;// GLESShaderData
+    jsbind::Persistent m_renderCallbackJS;// js call
 };
 
 } // namespace laya
