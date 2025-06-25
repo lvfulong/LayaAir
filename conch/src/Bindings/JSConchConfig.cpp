@@ -592,15 +592,15 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
     {
         return OS::getMemoryUsageInByte();
     }
-    void JSConchConfig::setAudioMaxCacheSizeInBytes(size_t size)
+    void JSConchConfig::setAudioMaxCacheSizeInBytes(int size)
     {
         audio::StaticDecoderCache::setMaxSizeInBytes(size);
     }
-    size_t JSConchConfig::getAudioMaxCacheSizeInBytes()
+    int JSConchConfig::getAudioMaxCacheSizeInBytes()
     {
         return audio::StaticDecoderCache::getMaxSizeInBytes();
     }
-    size_t JSConchConfig::getAudioCurrentCacheSizeInBytes()
+    int JSConchConfig::getAudioCurrentCacheSizeInBytes()
     {
         return audio::StaticDecoderCache::getCurrentSizeInBytes();
     }

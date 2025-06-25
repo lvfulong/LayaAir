@@ -80,6 +80,7 @@
 #include "JSSubtleCrypto.h"
 #include "JSProfiler.h"
 #include "JSMemory.h"
+#include "JSTestSharedPointer.h"
 
 extern int g_nInnerWidth ;
 extern int g_nInnerHeight ;
@@ -463,6 +464,7 @@ namespace laya
         GET_ENV
         jsbind::Object context(jsvm::global());
         ///Module global(context.isolate());
+        JSTestSharedPointer::exportJS(context);
         JSSubtleCrypto::exportJS(context);
         JSProfiler::exportJS(context);
         JSLocalStorage::exportJS(context);

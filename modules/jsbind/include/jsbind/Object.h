@@ -256,13 +256,13 @@ class Object
     {
         return Enum_(this, name);
     }
-    template <typename T> Object &class_(const char *name, jsbind::class_<T> &cl)
+    template <typename T, typename Traits> Object &class_(const char *name, jsbind::class_<T, Traits> &cl)
     {
         GET_ENV
         cl.Export(env, object_, name);
         return *this;
     }
-    template <typename T> Object &global_class_(const char *name, jsbind::global_class_<T> &cl, T *instance = nullptr)
+    template <typename T, typename Traits> Object &global_class_(const char *name, jsbind::global_class_<T, Traits> &cl, T *instance = nullptr)
     {
         GET_ENV
         cl.Export(env, object_, name);

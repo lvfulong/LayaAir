@@ -394,6 +394,8 @@ list(APPEND CONCH_SRC
 	src/Bindings/JSProfiler.cpp
 	src/Bindings/JSMemory.h
 	src/Bindings/JSMemory.cpp
+	src/Bindings/JSTestSharedPointer.h
+	src/Bindings/JSTestSharedPointer.cpp
 	src/Extention/LayaExtWind.cpp
 	
 

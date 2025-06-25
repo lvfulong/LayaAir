@@ -223,9 +223,12 @@ template <typename ClassType, typename BaseSpecifier> Class_<ClassType, BaseSpec
     }
 
     mclass_->function_optional_override("delete",
-                                        jsbind::optional_override([](ClassType &THIS) { jsbind::ClassRegistryManager::removeObject<ClassType>(&THIS); }));
+                                        jsbind::optional_override([](ClassType &THIS) { jsbind::ClassRegistryManager::removeObject<ClassType, jsbind::raw_ptr_traits>(&THIS); }));
 
-    jsbind::ClassRegistry<ClassType> &classRegistry = jsbind::ClassRegistryManager::getClassRegistry<ClassType>(jsbind::type_id<ClassType>());
+    jsbind::ClassRegistry<ClassType, jsbind::raw_ptr_traits> *classRegistry = 
+        static_cast<jsbind::ClassRegistry<ClassType, jsbind::raw_ptr_traits>*>(
+            jsbind::ClassRegistryManager::getClassRegistry(jsbind::type_id<ClassType>())
+        );
 
     jsbind::Object *m = &adapter_->module_;
     auto className = this->name_;

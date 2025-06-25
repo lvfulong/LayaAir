@@ -11,11 +11,15 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#include <memory>
+#include <type_traits>
 
 namespace jsbind
 {
 template <typename ClassType> bool isWrappedClassOf();
-template <typename ClassType> jsvm_value wrapCppObject(ClassType *objectPointer, bool callDestructor);
+template <typename ClassType, typename Traits> jsvm_value wrapCppObject(ClassType *objectPointer, bool callDestructor);
+template <typename ClassType, typename Traits> typename Traits::template object_pointer_type<ClassType> unwrapCppObject(jsvm_value value);
+
 namespace internal
 {
 template <class T> struct is_value_object;
@@ -24,10 +28,10 @@ template <typename T>
 struct is_wrapped_class : std::conjunction<std::is_class<T>, std::negation<internal::is_value_object<T>>,
                                            // std::negation<detail::is_string<T>>,
                                            std::negation<internal::is_mapping<T>>,
-                                           std::negation<internal::is_sequence<T>>>
+                                           std::negation<internal::is_sequence<T>>,
+                                           std::negation<internal::is_shared_ptr<T>>>
 // std::negation<detail::is_array<T>>,
-// std::negation<detail::is_tuple<T>>,
-// std::negation<detail::is_shared_ptr<T>>>
+// std::negation<detail::is_tuple<T>>
 {
 };
 
@@ -58,7 +62,7 @@ template <typename T> class ValueTraits<T, std::enable_if_t<internal::is_wrapped
     static jsvm_value ToJs(T value, bool callDestructor = true)
     {
         T *object = new T(value); // copy construct to avoid life cycle issues
-        return wrapCppObject<T>(object, callDestructor);
+        return wrapCppObject<T, raw_ptr_traits>(object, callDestructor);
     }
 
     static T &ToCpp(jsvm_value value)
@@ -89,9 +93,9 @@ template <typename T> class ValueTraits<T *, std::enable_if_t<internal::is_wrapp
     {
         if (value == nullptr)
         {
-            internal::makeNull();
+            return internal::makeNull();
         }
-        return wrapCppObject<T>(value, callDestructor);
+        return wrapCppObject<T, raw_ptr_traits>(value, callDestructor);
     }
     static T *ToCpp(jsvm_value value)
     {
@@ -123,6 +127,28 @@ template <typename T> struct ValueTraits<T &> : ValueTraits<T>
 
 template <typename T> struct ValueTraits<const T &> : ValueTraits<T>
 {
+};
+
+template <typename T> class ValueTraits<std::shared_ptr<T>, std::enable_if_t<internal::is_wrapped_class<T>::value>>
+{
+  public:
+    static jsvm_value ToJs(std::shared_ptr<T> value, bool callDestructor = true)
+    {
+        if (value == nullptr)
+        {
+            return internal::makeNull();
+        }
+        return wrapCppObject<T, shared_ptr_traits>(value, callDestructor);
+    }
+    static std::shared_ptr<T> ToCpp(jsvm_value value)
+    {
+        DEBUG_CHECK(value != nullptr);
+        return unwrapCppObject<T, shared_ptr_traits>(value);
+    }
+    static bool is(jsvm_value value)
+    {
+        return isWrappedClassOf<T>();
+    }
 };
 template <> class ValueTraits<int32_t>
 {
@@ -240,11 +266,11 @@ template <> class ValueTraits<uint16_t>
   public:
     static uint16_t ToCpp(jsvm_value value)
     {
-        return static_cast<uint8_t>(internal::getUint32(value));
+        return static_cast<uint16_t>(internal::getUint32(value));
     }
     static jsvm_value ToJs(uint16_t value, bool callDestructor = true)
     {
-        return internal::makeUint32(static_cast<uint8_t>(value));
+        return internal::makeUint32(static_cast<uint32_t>(value));
     }
     static bool is(jsvm_value value)
     {

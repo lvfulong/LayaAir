@@ -40,8 +40,8 @@ template <typename ClassType> void makeStrong(ClassType *objectPointer)
 template <typename ClassType> jsvm_value toLocal(ClassType *objectPointer)
 {
     GET_ENV
-    ClassRegistry<ClassType> &classRegistry = ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
-    auto objectRegistry = classRegistry.getObjectRegistry(objectPointer);
+    ClassRegistryBase *classRegistry = ClassRegistryManager::getClassRegistry(type_id<ClassType>());
+    auto objectRegistry = classRegistry->getObjectRegistry(objectPointer);
     DEBUG_CHECK(objectRegistry != nullptr);
     jsvm_value result;
     jsvm_status status;
