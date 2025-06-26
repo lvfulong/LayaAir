@@ -1,21 +1,7 @@
 ﻿#include "JSTestSharedPointer.h"
 #include <jsbind/JSBind.h>
 #include <utils/Log.h>
-#include <utils/JCCommonMethod.h>
-#include <downloadMgr/JCDownloadMgr.h>
-#include <utils/JCMemorySurvey.h>
-#include <utils/JCFileSystem.h>
-#include <resource/JCFileResManager.h>
-#include <utils/JCLayaUrl.h>
-#include <utils/JCCommonMethod.h>
-#include "JSFile.h"
-#include "../../JCScriptRuntime.h"
-#include <functional>
-#include "../../JCSystemConfig.h"
-#include "JCConch.h"
-#include <audio/StaticDecoderCache.h>
-#include <audio/StreamDecoder.h>
-#include <profiler/Profiler.h>
+
 namespace laya
 {
 	std::shared_ptr<JSTestSharedPointer> s_testSharedPointer;

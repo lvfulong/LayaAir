@@ -11,7 +11,7 @@ set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/AudioPlayer.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Audio.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Decoder.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/StaticDecoderCache.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/AudioDecoderCache.h
     src/ALSourcePool.h
     src/StaticDecoderMp3.h
     src/StreamDecoderMp3.h
@@ -25,7 +25,7 @@ set(SOURCES
     src/Audio.cpp
     src/ALSourcePool.cpp
     src/Decoder.cpp
-    src/StaticDecoderCache.cpp
+    src/AudioDecoderCache.cpp
     src/StaticDecoderMp3.cpp
     src/StreamDecoderMp3.cpp
     src/StreamDecoderOgg.cpp
@@ -86,6 +86,10 @@ if(BUILD_TESTING)
     add_executable(test_stream_decoder_ogg_real tests/StreamDecoderOggRealTest.cpp)
     target_link_libraries(test_stream_decoder_ogg_real PRIVATE gtest audio utils)
     set_target_properties(test_stream_decoder_ogg_real PROPERTIES FOLDER tests)
+
+    add_executable(test_audio_decoder_cache tests/AudioDecoderCacheTest.cpp)
+    target_link_libraries(test_audio_decoder_cache PRIVATE gtest audio utils)
+    set_target_properties(test_audio_decoder_cache PROPERTIES FOLDER tests)
 endif()
 
 

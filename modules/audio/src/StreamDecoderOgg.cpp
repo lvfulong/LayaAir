@@ -18,6 +18,11 @@ StreamDecoderOgg::~StreamDecoderOgg()
 
 bool StreamDecoderOgg::load(const std::shared_ptr<laya::Data>& data)
 {
+    // 首先检查是否为OGG格式
+    if (!Decoder::isOggFormat(data->bytes(), data->size()))
+    {
+        return false;
+    }
     {
         Profiler_ZoneScoped("audio::StreamDecoderOgg::load reference data", 0xff0000);
         m_data = data;

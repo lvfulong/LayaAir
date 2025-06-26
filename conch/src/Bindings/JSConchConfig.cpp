@@ -24,7 +24,7 @@
 #include <LayaGL/JCLayaGL.h>
 #include <LayaGL/JCLayaGLDispatch.h>
 #include <string>
-#include <audio/StaticDecoderCache.h>
+#include <audio/AudioDecoderCache.h>
 
 extern int g_nLogLevel;
 extern int g_nInnerWidth;
@@ -594,19 +594,19 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
     }
     void JSConchConfig::setAudioMaxCacheSizeInBytes(int size)
     {
-        audio::StaticDecoderCache::setMaxSizeInBytes(size);
+        audio::AudioDecoderCache::setMaxSizeInBytes(size);
     }
     int JSConchConfig::getAudioMaxCacheSizeInBytes()
     {
-        return audio::StaticDecoderCache::getMaxSizeInBytes();
+        return audio::AudioDecoderCache::getMaxSizeInBytes();
     }
     int JSConchConfig::getAudioCurrentCacheSizeInBytes()
     {
-        return audio::StaticDecoderCache::getCurrentSizeInBytes();
+        return audio::AudioDecoderCache::getCurrentSizeInBytes();
     }
     void JSConchConfig::clearAudioCache()
     {
-        audio::StaticDecoderCache::clear();
+        audio::AudioDecoderCache::clear();
     }
     void JSConchConfig::setAudioStreamThreshold(int byteNum)
     {

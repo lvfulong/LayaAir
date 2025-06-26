@@ -31,7 +31,7 @@ class StreamDecoder : public Decoder
     {
       return m_loop;
     }
-    static std::shared_ptr<StreamDecoder> create(const std::string &url, const std::shared_ptr<laya::Data>& data);
+    static std::shared_ptr<StreamDecoder> create(const std::shared_ptr<laya::Data>& data);
   protected:
     bool m_loop{false};
 };

@@ -9,7 +9,7 @@ namespace audio
 {
 bool StaticDecoderOgg::load(const std::shared_ptr<laya::Data>& data)
 {
-    DEBUG_CHECK(data && data->size() > 0);
+    DEBUG_CHECK(data);
     DEBUG_CHECK(m_data == nullptr);
     
     // 首先检查是否为OGG格式

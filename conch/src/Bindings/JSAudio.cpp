@@ -13,7 +13,7 @@
 #include <functional>
 #include "../../JCSystemConfig.h"
 #include "JCConch.h"
-#include <audio/StaticDecoderCache.h>
+#include <audio/AudioDecoderCache.h>
 #include <audio/StreamDecoder.h>
 #include <profiler/Profiler.h>
 namespace laya
@@ -173,7 +173,7 @@ namespace laya
 			return;
 		}
 
-		auto decoder = audio::StaticDecoderCache::get(m_sSrc);
+		auto decoder = audio::AudioDecoderCache::get(m_sSrc);
 	    if(decoder)
 	    {
 		    m_bDownloaded = true;
@@ -218,15 +218,15 @@ namespace laya
 
 		if (pFileRes->m_data->size() >= g_kSystemConfig.m_audioStreamThreshold && (m_nType == EXT_MP3 || m_nType == EXT_OGG))
 		{
-			Profiler_ZoneScoped("audio::StreamDecoder::create", 0x00ff00);
-			m_decoder = audio::StreamDecoder::create(m_sSrc, pFileRes->m_data); 
+			Profiler_ZoneScoped("audio::AudioDecoderCache::createStreamDecoder", 0x00ff00);
+			m_decoder = audio::AudioDecoderCache::createStreamDecoder(m_sSrc, pFileRes->m_data);
 			//流式解码
-			//m_decoder = audio::StaticDecoderCache::createDecoder(m_sSrc, (uint8_t*)p_buf.m_pPtr, p_buf.m_nLen);
+			//m_decoder = audio::AudioDecoderCache::createDecoder(m_sSrc, (uint8_t*)p_buf.m_pPtr, p_buf.m_nLen);
 		}
 		else
 		{
-			Profiler_ZoneScoped("audio::StaticDecoderCache::createDecoder", 0xff00);
-			m_decoder = audio::StaticDecoderCache::createDecoder(m_sSrc, pFileRes->m_data);
+			Profiler_ZoneScoped("audio::AudioDecoderCache::createStaticDecoder", 0xff00);
+			m_decoder = audio::AudioDecoderCache::createStaticDecoder(m_sSrc, pFileRes->m_data);
 		}
 		if(m_decoder) 
 		{

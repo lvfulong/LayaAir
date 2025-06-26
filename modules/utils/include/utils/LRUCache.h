@@ -64,7 +64,7 @@ template <typename K, typename V> class LRUCache
   public:
     enum Capacity
     {
-        UnlimitedCapacity,
+        kUnlimitedCapacity,
     };
     explicit LRUCache(size_t capacity, std::function<void(const K &key, const V &value)> onEvict = nullptr) : capacity(capacity), onEvict(onEvict)
     {
@@ -109,7 +109,7 @@ template <typename K, typename V> class LRUCache
             Node *node = new Node(key, value);
             cache[key] = node;
             addNode(node);
-            while (capacity != UnlimitedCapacity && cache.size() > capacity)
+            while (capacity != kUnlimitedCapacity && cache.size() > capacity)
             {
                 removeOldest();
             }

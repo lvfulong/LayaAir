@@ -17,6 +17,11 @@ StreamDecoderMp3::~StreamDecoderMp3()
 }
 bool StreamDecoderMp3::load(const std::shared_ptr<laya::Data>& data)
 {
+    // 首先检查是否为MP3格式
+    if (!Decoder::isMp3Format(data->bytes(), data->size()))
+    {
+        return false;
+    }
     {
         Profiler_ZoneScoped("audio::StreamDecoderMp3::load reference data", 0xff0000);
         m_data = data;
