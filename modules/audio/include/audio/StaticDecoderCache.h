@@ -19,6 +19,7 @@
 #include <thread>
 #include <unordered_map>
 #include <utils/LRUCache.h>
+#include <utils/Data.h>
 
 namespace audio
 {
@@ -29,7 +30,7 @@ class StaticDecoderCache
     StaticDecoderCache() = default;
     ~StaticDecoderCache() = default;
     static std::shared_ptr<Decoder> get(const std::string &url);
-    static std::shared_ptr<Decoder> createDecoder(const std::string &url, uint8_t *data, size_t size);
+    static std::shared_ptr<Decoder> createDecoder(const std::string &url, const std::shared_ptr<laya::Data>& data);
     static void setMaxSizeInBytes(size_t size);
     static size_t getMaxSizeInBytes();
     static size_t getCurrentSizeInBytes();

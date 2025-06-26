@@ -52,7 +52,7 @@ template <typename T> class VectorWrapper
         }
         else
         {
-            return jsbind::MakeUndefined();
+            return jsbind::makeUndefined();
         }
     }
 
@@ -140,7 +140,7 @@ template <typename ClassType, typename BaseSpecifier = NoBaseClass> class Class_
 class PhysxAdapter
 {
   public:
-    PhysxAdapter() : module_(jsbind::MakeObject())
+    PhysxAdapter() : module_(jsbind::makeObject())
     {
     }
     template <typename Value> jsbind::Object &constant(const char * name, Value const &value)

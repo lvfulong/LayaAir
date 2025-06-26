@@ -164,7 +164,7 @@ void JSDevice::handleKeyboardInput(const char *strValue)
     {
         std::string value(strValue);
         postToJS([value]() {
-            auto obj = jsbind::MakeObject();
+            auto obj = jsbind::makeObject();
             jsbind::set_option(obj, "value", value);
             JSDevice::m_pOnKeyboardInput.call<void>(jsvm::global(), obj);
         });
@@ -187,7 +187,7 @@ void JSDevice::handleKeyboardConfirm(const char *strValue)
 
     std::string value(strValue == nullptr ? "" : strValue);
     postToJS([value]() {
-        auto obj = jsbind::MakeObject();
+        auto obj = jsbind::makeObject();
         jsbind::set_option(obj, "value", value);
         JSDevice::m_pOnKeyboardConfirm.call<void>(jsvm::global(), obj);
     });
@@ -209,7 +209,7 @@ void JSDevice::handleKeyboardComplete(const char *strValue)
 
     std::string value(strValue == nullptr ? "" : strValue);
     postToJS([value]() {
-        auto obj = jsbind::MakeObject();
+        auto obj = jsbind::makeObject();
         jsbind::set_option(obj, "value", value);
         JSDevice::m_pOnKeyboardComplete.call<void>(jsvm::global(), obj);
     });

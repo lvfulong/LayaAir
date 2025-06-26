@@ -168,7 +168,7 @@ namespace laya
         }
         delete pWrapper;
     }
-    void downloadBig_onComp(JCBuffer& buff, const std::string& localip,const std::string& svip, int curlret, int httpret,const std::string& httpresheader, JSFuncWrapper* pWrapper)
+    void downloadBig_onComp(const std::shared_ptr<Data>& data, const std::string& localip,const std::string& svip, int curlret, int httpret,const std::string& httpresheader, JSFuncWrapper* pWrapper)
     {
         postToJS(std::bind(downloadBig_onComp_js, curlret,httpret, pWrapper));
     }
@@ -209,17 +209,17 @@ namespace laya
         }
         delete pWrapper;
     }
-    void downloadHeader_onComp(JCBuffer& buff, const std::string& localip,
+    void downloadHeader_onComp(const std::shared_ptr<Data>& data, const std::string& localip,
         const std::string& svip, int curlret, int httpret,
         const std::string& httpresheader, JSFuncWrapper* pWrapper)
     {
         char* pBuff = nullptr;
-        if (buff.m_pPtr && buff.m_nLen) 
+        if (data && data->size() > 0) 
         {
             //这个肯定是字符串
-            pBuff = new char[buff.m_nLen+1];
-            memcpy(pBuff, buff.m_pPtr, buff.m_nLen);
-            pBuff[buff.m_nLen] = 0;
+            pBuff = new char[data->size()+1];
+            memcpy(pBuff, data->bytes(), data->size());
+            pBuff[data->size()] = 0;
         }
         postToJS(std::bind(downloadHeader_onComp_js, pBuff, curlret, httpret, pWrapper));
     }
@@ -423,20 +423,23 @@ namespace laya
     {
         return toBase64(type, encoderOptions, ab, w, h, false);
     }
-    std::string btoa(const jsbind::StringLatin1& val)
+    std::string btoa(jsvm_value val)
     {
-        if (val.getValue().empty())
-            return std::string();
-        return base64Encode(val.getValue().data(), val.getValue().length());
+        std::string v = jsbind::getStringLatin1(val);
+        if (v.empty())
+        {
+            return "";
+        }
+        return base64Encode(v.data(), v.length());
     }
     jsvm_value atob(const char* encodedString)
     {
         std::vector<char> out;
         if (!base64Decode(std::string(encodedString), out, isHTMLSpace<uint16_t>, Base64ValidatePadding)) 
         {
-            return jsbind::StringLatin1::Make(std::string(out.data())).getHandle();
+            return jsbind::makeStringLatin1(std::string(out.data()));
         }
-        return jsbind::StringLatin1::Make(std::string(out.data())).getHandle();
+        return jsbind::makeStringLatin1(std::string(out.data()));
     }
     bool getEnableTouch()
     {
@@ -454,7 +457,7 @@ namespace laya
             return jsbind::Make<JSImageBitmap*>(jsImageBitmap);
         }
         //return JSP_TO_JS_PROMISE;
-        return jsbind::MakeNull();
+        return jsbind::makeNull();
     }
 	void JSGlobalExportC()	
     {

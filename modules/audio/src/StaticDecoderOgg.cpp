@@ -7,19 +7,19 @@
 using namespace laya;
 namespace audio
 {
-bool StaticDecoderOgg::load(const uint8_t *data, size_t length)
+bool StaticDecoderOgg::load(const std::shared_ptr<laya::Data>& data)
 {
-    DEBUG_CHECK(data != nullptr && length > 0);
+    DEBUG_CHECK(data && data->size() > 0);
     DEBUG_CHECK(m_data == nullptr);
     
     // 首先检查是否为OGG格式
-    if (!Decoder::isOggFormat(data, length))
+    if (!Decoder::isOggFormat(data->bytes(), data->size()))
     {
         return false;
     }
     Profiler_ZoneScoped("audio::StaticDecoderOgg::load", 0x00ff00);
     OggVorbis_File oggStream;
-    int result = ov_open_callbacks(NULL, &oggStream, (const char *)data, length, OV_CALLBACKS_DEFAULT);
+    int result = ov_open_callbacks(NULL, &oggStream, (const char *)data->data(), data->size(), OV_CALLBACKS_DEFAULT);
     if (result < 0)
     {
         return false;

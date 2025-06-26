@@ -6,6 +6,7 @@
 #include <memory>
 #include <string>
 #include <utils/Log.h>
+#include <utils/Data.h>
 
 namespace audio
 {
@@ -21,7 +22,7 @@ class Decoder : public std::enable_shared_from_this<Decoder>
     Decoder() = default;
     virtual ~Decoder() = default;
     virtual bool canDecode(int8_t *data, size_t size) = 0;
-    virtual bool load(const uint8_t *data, size_t size) = 0;
+    virtual bool load(const std::shared_ptr<laya::Data>& data) = 0;     
     size_t getSampleCount() const
     {
         return m_sampleCount;

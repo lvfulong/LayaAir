@@ -48,21 +48,25 @@ namespace laya
         }
         return bmp;
     }
-	void _AsyncLoadImage(std::shared_ptr<char> p_pBuff, int p_nLenth, imgDecodeCB p_CB){
-		std::shared_ptr<char> pMem = p_pBuff;
+	void _AsyncLoadImage(const std::shared_ptr<Data>& data, imgDecodeCB p_CB)
+	{
         BitmapData bmp;
-		bool b = loadImageMemSync(pMem.get(), p_nLenth, bmp );
-		if( b ){
+		bool b = loadImageMemSync((const char*)data->bytes(), data->size(), bmp );
+		if(b)
+		{
 			p_CB(bmp);
-		}else{
+		}
+		else
+		{
 			if(bmp.m_pImageData ) delete [] bmp.m_pImageData ;
 			bmp.m_pImageData = 0;
 			p_CB(bmp);
 		}
 	}
-	void loadImageMemASync(std::shared_ptr<char> p_pBuff, int p_nLenth, imgDecodeCB p_CB){
+	void loadImageMemASync(const std::shared_ptr<Data>& data, imgDecodeCB p_CB)
+	{
 		if (g_DecThread) {
-			g_DecThread->post( std::bind(_AsyncLoadImage, p_pBuff, p_nLenth,p_CB ) );
+			g_DecThread->post(std::bind(_AsyncLoadImage, data, p_CB));
 		}
 	}
 	ImageType getImgType( const char* p_pMem, int p_nLength ){

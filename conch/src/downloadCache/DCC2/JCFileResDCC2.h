@@ -26,7 +26,7 @@ class JCFileResDCC2 : public JCFileRes
   private:
     int onProgress(unsigned int now, unsigned int total, float speed, std::weak_ptr<int> p_cbref);
     void onDownloadError(int p_nError, int p_nHttpResponse, std::weak_ptr<int> p_cbref);
-    void onDownloaded(JCBuffer &p_Buff, const std::string &pLocalAddr, const std::string &pSvAddr, int pnCurlRet,
+    void onDownloaded(const std::shared_ptr<Data> &data, const std::string &pLocalAddr, const std::string &pSvAddr, int pnCurlRet,
                       int pnHttpRet, const std::string &pstrHeader, int p_nDownloadNum, const char *pszLocalPach,
                       std::weak_ptr<int> p_cbref);
     void onResDownloadOK_JSThread(std::weak_ptr<int> p_cbref);

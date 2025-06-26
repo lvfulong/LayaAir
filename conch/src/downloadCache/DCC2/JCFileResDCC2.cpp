@@ -15,7 +15,7 @@ JCFileResDCC2::JCFileResDCC2(JCFileResManager *manager) : m_manager(manager)
 }
 JCFileResDCC2::~JCFileResDCC2()
 {
-    m_pBuffer.reset((char *)0);
+    m_data.reset();
     m_CallbackRef.reset();
 }
 
@@ -28,8 +28,7 @@ void JCFileResDCC2::onDownloadError(int p_nError, int p_nHttpResponse, std::weak
 {
     if (!p_cbref.lock())
         return;
-    m_pBuffer.reset((char *)0);
-    m_nLength = 0;
+    m_data.reset();
 
     if (!m_bIgnoreError)
     {
@@ -52,7 +51,7 @@ void JCFileResDCC2::onDownloadError(int p_nError, int p_nHttpResponse, std::weak
     }
 }
 
-void JCFileResDCC2::onDownloaded(JCBuffer &p_Buff, const std::string &pLocalAddr, const std::string &pSvAddr,
+void JCFileResDCC2::onDownloaded(const std::shared_ptr<Data> &data, const std::string &pLocalAddr, const std::string &pSvAddr,
                                  int pnCurlRet, int pnHttpRet, const std::string &pstrHeader, int p_nDownloadNum,
                                  const char *pszLocalPach, std::weak_ptr<int> p_cbref)
 {
@@ -62,9 +61,7 @@ void JCFileResDCC2::onDownloaded(JCBuffer &p_Buff, const std::string &pLocalAddr
         return onDownloadError(0, 0, p_cbref); // 不知道错误码
     }
 #endif
-    m_pBuffer = std::shared_ptr<char>(new char[p_Buff.m_nLen], std::default_delete<char[]>());
-    memcpy(m_pBuffer.get(), p_Buff.m_pPtr, p_Buff.m_nLen);
-    m_nLength = p_Buff.m_nLen;
+    m_data = data;
     m_strLocalPath = pszLocalPach ? pszLocalPach : "";
     if (!m_bSendToJS_complete)
     {
@@ -103,8 +100,7 @@ void JCFileResDCC2::onResDownloadOK_JSThread(std::weak_ptr<int> p_cbref)
     // }
     setState(ready);
     // 立即失效。如果再有相同请求，需要重新加载
-    m_pBuffer.reset((char *)0); // TODO 测试：这个不一定会导致释放
-    m_nLength = 0;
+    m_data.reset();
     setState(freed);
     m_bSendToJS_complete = false; // 处理完了，可以继续post了。
 }
@@ -118,8 +114,7 @@ void JCFileResDCC2::onResDownloadErr_JSThread(std::weak_ptr<int> p_cbref, int p_
     m_nLastHttpResponse = p_nHttpResponse;
     setState(error);
     // 立即失效。如果再有相同请求，需要重新加载
-    m_pBuffer.reset((char *)0); // TODO 测试：这个不一定会导致释放
-    m_nLength = 0;
+    m_data.reset();
 }
 
 void JCFileResDCC2::setDownloader(IDownloader *downloader)
@@ -133,13 +128,12 @@ void JCFileResDCC2::load(const char *p_pszURL, JCSharedBuffer *pSyncResult)
     std::weak_ptr<int> wptr(m_CallbackRef);
     if (m_url.m_nProto == JCUrl::wxblob)
     {
-        JCBuffer buffer;
         int bytes;
-        if (m_manager->searchBufferURL(m_strURL, &buffer.m_pPtr, bytes))
+        if (std::shared_ptr<Data> data = m_manager->searchBufferURL(m_strURL))
         {
-            buffer.m_nLen = bytes;
-            LOGI("found file local blob %s", m_strURL.c_str());
-            onDownloaded(buffer, "", "", 0, 0, "", 0, "", wptr);
+
+			LOGI("found file local blob %s", m_strURL.c_str());
+            onDownloaded(data, "", "", 0, 0, "", 0, "", wptr);
         }
         else
         {

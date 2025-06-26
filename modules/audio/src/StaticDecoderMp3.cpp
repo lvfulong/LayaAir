@@ -9,17 +9,17 @@
 using namespace laya;
 namespace audio
 {
-bool StaticDecoderMp3::load(const uint8_t *data, size_t size)
+bool StaticDecoderMp3::load(const std::shared_ptr<laya::Data>& data)
 {
    
     // 首先检查是否为MP3格式
-    if (!Decoder::isMp3Format(data, size))
+    if (!Decoder::isMp3Format(data->bytes(), data->size()))
     {
         return false;
     }
     Profiler_ZoneScoped("audio::StaticDecoderMp3::load", 0x00ff00);
     drmp3 decoder;
-    if (!drmp3_init_memory(&decoder, data, size, NULL))
+    if (!drmp3_init_memory(&decoder, data->data(), data->size(), NULL))
     {
         return false;
     }

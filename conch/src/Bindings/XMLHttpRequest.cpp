@@ -179,19 +179,21 @@ namespace laya
                 //v8::HandleScope scope(v8::Isolate::GetCurrent());
 #endif
                 jsvm_value ab = jsbind::ArrayBuffer::MakeArrayBuffer((uint8_t*)p_Buff, p_nLen).getHandle();
-                pxhr->m_jsfunPostComplete.call<void>(jsbind::toLocal(pxhr), ab, (const char*)p_Buff);
+                jsvm_value str = jsbind::makeStringUtf8((const char*)p_Buff, p_nLen);
+                pxhr->m_jsfunPostComplete.call<void>(jsbind::toLocal(pxhr), ab, str);
             }
             else 
             {
                 if (p_nLen > 0)
                 {
-                    std::string strBuff;
                     unsigned char* pBuff = (unsigned char*)p_Buff;
-                    if (p_nLen >= 3 && pBuff[0] == 0xef && pBuff[1] == 0xbb && pBuff[2] == 0xbf) {
-                        strBuff.append(p_Buff + 3);
+                    if (p_nLen >= 3 && pBuff[0] == 0xef && pBuff[1] == 0xbb && pBuff[2] == 0xbf) 
+                    {
+                        p_Buff += 3;
+                        p_nLen -= 3;
                     }
-                    else strBuff = p_Buff;
-                    pxhr->m_jsfunPostComplete.call<void>(jsbind::toLocal(pxhr), strBuff);
+                    jsvm_value str = jsbind::makeStringUtf8((const char*)p_Buff, p_nLen);
+                    pxhr->m_jsfunPostComplete.call<void>(jsbind::toLocal(pxhr), str);
                 }
                 else
                 {
@@ -220,25 +222,27 @@ namespace laya
     {
         postToJS(std::bind(_onPostError_JSThread, xhr, curle, httpresponse, cbref));
     }
-    void _onPostComplete(XMLHttpRequest* pxhr, bool bBin, JCBuffer& p_Buff,
-            const std::string&, const std::string&,int curlr, int httpr, const std::string&,std::weak_ptr<int> callbackref) 
+    void _onPostComplete(XMLHttpRequest* pxhr, bool bBin, const std::shared_ptr<Data>& data,
+            const std::string&, const std::string&,int curlr, int httpr, const std::string&,std::weak_ptr<int> callbackref)
     {
 		if (!callbackref.lock())
             return;
         //bool bin = pxhr->isBin();
+#if 0
+        //wtf????
         char* pBuff = new char[p_Buff.m_nLen + 1];//(bin?0:1)];
         memcpy(pBuff, p_Buff.m_pPtr, p_Buff.m_nLen);
         //if(!bin){
         pBuff[p_Buff.m_nLen] = 0;	//不管是不是二进制都保护一下
-        if (curlr != 0 || httpr<200 || httpr>300) 
+#endif
+        if (curlr != 0 || httpr < 200 || httpr > 300)
         {
             //错误
             postToJS(std::bind(_onPostError_JSThread, pxhr, curlr, httpr, callbackref));
         }
         else
         {
-            int len = p_Buff.m_nLen;
-            postToJS(std::bind(_onPostComplete_JSThread, pxhr, pBuff, len, bBin, callbackref));
+            postToJS(std::bind(_onPostComplete_JSThread, pxhr, (char*)data->data(), (int)data->size(), bBin, callbackref));
         }
     }
     /*

@@ -72,7 +72,7 @@ void JSMemory::fireMemoryWarning(int level)
     postToJS([level]() {
         for (auto it = JSMemory::m_onMemoryWarningsLists.begin(); it != JSMemory::m_onMemoryWarningsLists.end(); it++)
         {
-            auto res = jsbind::MakeObject();
+            auto res = jsbind::makeObject();
             jsbind::set_option(res, "level", level);
             it->call<void>(jsvm::global(), res);
         }

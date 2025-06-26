@@ -46,19 +46,19 @@ std::shared_ptr<Decoder> StaticDecoderCache::get(const std::string &url)
 {
     return StaticDecoderCache::m_cache.get(url).value_or(nullptr);
 }
-using DecoderCreateFunctionType = std::function<std::shared_ptr<Decoder>(uint8_t *, size_t)>;
+using DecoderCreateFunctionType = std::function<std::shared_ptr<Decoder>(const std::shared_ptr<laya::Data>&)>;
 template <typename DecoderType> DecoderCreateFunctionType DecoderCreateTrait()
 {
-    return [](uint8_t *data, size_t size) -> std::shared_ptr<Decoder> {
+    return [](const std::shared_ptr<laya::Data>& data) -> std::shared_ptr<Decoder> {
         auto decoder = std::make_shared<DecoderType>();
-        if (decoder->load(data, size))
+        if (decoder->load(data))
         {
             return decoder;
         }
         return nullptr;
     };
 }
-std::shared_ptr<Decoder> StaticDecoderCache::createDecoder(const std::string &url, uint8_t *data, size_t size)
+std::shared_ptr<Decoder> StaticDecoderCache::createDecoder(const std::string &url, const std::shared_ptr<laya::Data>& data)
 {
     static std::vector<DecoderCreateFunctionType> allStaticDecoders = {
         DecoderCreateTrait<StaticDecoderMp3>(),
@@ -67,11 +67,11 @@ std::shared_ptr<Decoder> StaticDecoderCache::createDecoder(const std::string &ur
     };
     for (auto &testDecoder : allStaticDecoders)
     {
-        auto d = testDecoder(data, size);
+        auto d = testDecoder(data);
         if (d)
         {
-            bool canCache = size < m_maxSizeInBytes;
-            while (canCache && m_currentSizeInBytes + size > m_maxSizeInBytes) 
+            bool canCache = data->size() < m_maxSizeInBytes;
+            while (canCache && m_currentSizeInBytes + data->size() > m_maxSizeInBytes) 
             {
                 auto oldest = m_cache.peekOldest();
                 if (oldest) 

@@ -14,7 +14,6 @@
 #include <jsbind/Persistent.h>
 #include <jsbind/Promise.h>
 #include <jsbind/Script.h>
-#include <jsbind/String.h>
 #include <jsbind/Value.h>
 #include <jsvm/JSEnv.h>
 #include <jsvm/JSVM.h>
@@ -50,5 +49,16 @@ template <typename ClassType> jsvm_value toLocal(ClassType *objectPointer)
     return result;
 }
 extern void AdjustAmountOfExternalAllocatedMemory(int p_nMemorySize);
+
+template <class T> jsvm_value Make(T t, bool callDestructor = true)
+{
+    return jsbind::internal::ValueTraits<T>::ToJs(t, callDestructor);
+}
+template <typename T> T as(jsvm_value value)
+{
+    DEBUG_CHECK(value != nullptr);
+    GET_ENV
+    return jsbind::internal::ValueTraits<T>::ToCpp(value);
+}
 } // namespace jsbind
 #endif

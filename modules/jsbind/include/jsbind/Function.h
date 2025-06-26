@@ -2,7 +2,7 @@
 #define __JSBIND_FUNCTION_H__
 
 #include <jsbind/internal/Invoke.h>
-#include <jsbind/internal/Value.h>
+#include <jsbind/Value.h>
 #include <jsvm/JSEnv.h>
 #include <jsvm/JSVM.h>
 #include <jsvm/JSVM_Types.h>

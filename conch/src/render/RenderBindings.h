@@ -70,7 +70,7 @@ namespace jsbind
         static jsvm_value ToJs(const laya::Matrix3x3& p_vl, bool callDestructor)
         {
             DEBUG_CHECK(false && "not implemented");
-            return jsbind::MakeUndefined();
+            return jsbind::makeUndefined();
         }
     };
     template <> class ValueTraits<laya::Matrix4x4>
@@ -89,7 +89,7 @@ namespace jsbind
         static jsvm_value ToJs(const laya::Matrix4x4& p_vl,bool callDestructor)
         {
             DEBUG_CHECK(false && "not implemented");
-            return jsbind::MakeUndefined();
+            return jsbind::makeUndefined();
         }
     };
     }
@@ -1003,7 +1003,7 @@ class RenderBindings
                     }
                     else
                     {
-                        return jsbind::MakeUndefined();
+                        return jsbind::makeUndefined();
                     }
                 }));
             class_binding.function("setInt", &GLESShaderData::setInt);
@@ -1016,7 +1016,7 @@ class RenderBindings
                     }
                     else
                     {
-                        return jsbind::MakeUndefined();
+                        return jsbind::makeUndefined();
                     }
                 }));
             class_binding.function("setNumber", &GLESShaderData::setNumber);
@@ -1029,7 +1029,7 @@ class RenderBindings
                     }
                     else
                     {
-                        return jsbind::MakeUndefined();
+                        return jsbind::makeUndefined();
                     }
                 }));
             class_binding.function("setVector2", &GLESShaderData::setVector2);

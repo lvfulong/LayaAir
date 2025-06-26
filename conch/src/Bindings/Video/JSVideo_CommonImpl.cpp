@@ -62,10 +62,10 @@ void JSVideo::onDownloadOK(JCResStateDispatcher *p_pRes, bool p_bDecodeSync, std
     }
     // m_nDownloadState = 0;
     JCFileRes *pFileRes = (JCFileRes *)p_pRes;
-    if (pFileRes->m_pBuffer.get())
+    if (pFileRes->m_data)
     {
-        m_buffer = pFileRes->m_pBuffer;
-        LoadInternal(pFileRes->m_pBuffer.get(), pFileRes->m_nLength);
+        m_data = pFileRes->m_data;
+        LoadInternal((char*)m_data->data(), (int)m_data->size());
     }
     else
     {

@@ -1,4 +1,7 @@
 #include <jsbind/Enum.h>
+#include <jsvm/JSEnv.h>
+#include <jsbind/Object.h>
+
 namespace jsbind
 {
 Enum_::Enum_(Object *owner, const char * name) : owner_(owner), name_(name)

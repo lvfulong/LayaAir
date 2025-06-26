@@ -8,11 +8,6 @@ namespace audio
 {
 StreamDecoderOgg::~StreamDecoderOgg()
 {
-    if (m_buffer != nullptr)
-    {
-        delete[] m_buffer;
-        m_buffer = nullptr;
-    }
     if (m_decoder != nullptr)
     {
         ov_clear(m_decoder);
@@ -21,19 +16,17 @@ StreamDecoderOgg::~StreamDecoderOgg()
     }
 }
 
-bool StreamDecoderOgg::load(const uint8_t *data, size_t size)
+bool StreamDecoderOgg::load(const std::shared_ptr<laya::Data>& data)
 {
     {
-        Profiler_ZoneScoped("audio::StreamDecoderOgg::load memcpy", 0xff0000);
-        m_buffer = new uint8_t[size];
-        memcpy(m_buffer, data, size);
+        Profiler_ZoneScoped("audio::StreamDecoderOgg::load reference data", 0xff0000);
+        m_data = data;
     }
-    m_bufferSize = size;
     DEBUG_CHECK(m_decoder == nullptr);
     
     Profiler_ZoneScoped("audio::StreamDecoderOgg::load", 0x00ff00);
     m_decoder = new OggVorbis_File();
-    int result = ov_open_callbacks(NULL, m_decoder, (const char *)m_buffer, m_bufferSize, OV_CALLBACKS_DEFAULT);
+    int result = ov_open_callbacks(NULL, m_decoder, (const char *)m_data->data(), m_data->size(), OV_CALLBACKS_DEFAULT);
     if (result < 0)
     {
         delete m_decoder;

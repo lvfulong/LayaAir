@@ -2,13 +2,15 @@
 #define _IDOWNLOADER__H_______
 
 #include <functional>
+#include <utils/Data.h>
 
-namespace laya{
-    class JCBuffer;
-    class IDownloader{
+namespace laya
+{
+    class IDownloader
+    {
     public:
-        typedef std::function<void(JCBuffer& p_Buff, const char* localPath)> onDownloadedFunc;
-        virtual void download(const char* pszUrl, onDownloadedFunc onok)=0;
+        typedef std::function<void (const std::shared_ptr<Data>& data, const char* localPath)> onDownloadedFunc;
+        virtual void download(const char* pszUrl, onDownloadedFunc onok) = 0;
     };
 }
 #endif

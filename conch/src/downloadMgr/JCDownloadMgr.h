@@ -16,6 +16,7 @@
 #include <map>
 #include <atomic>
 #include <utils/thread/JCLayaThreadPool.h>
+#include <utils/Data.h>
 
 namespace laya{
 
@@ -41,12 +42,12 @@ namespace laya{
         //回调
         typedef std::function<int(unsigned int, unsigned int, float)> onProgressFunc;	//返回1表示终止下载
         //数据，localip，svip，curlret，httpret，header
-        typedef std::function<void(JCBuffer& buff, const std::string& localip, 
+        typedef std::function<void(const std::shared_ptr<Data>& data, const std::string& localip, 
             const std::string& svip, int curlret, int httpret,
             const std::string& httpresheader)> onEndFunc;
 	
     public:
-		static void defCompleteFunc(JCBuffer&, const std::string&, const std::string&,
+		static void defCompleteFunc(const std::shared_ptr<Data>& data, const std::string&, const std::string&,
             int, int, const std::string&);
 		static int defProgressFunc(unsigned int, unsigned int,float);
 

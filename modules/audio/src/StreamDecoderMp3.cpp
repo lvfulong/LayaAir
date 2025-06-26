@@ -8,11 +8,6 @@ namespace audio
 {
 StreamDecoderMp3::~StreamDecoderMp3()
 {
-    if (m_buffer != nullptr)
-    {
-        delete[] m_buffer;
-        m_buffer = nullptr;
-    }
     if (m_decoder != nullptr)
     {
         drmp3_uninit(m_decoder);
@@ -20,18 +15,16 @@ StreamDecoderMp3::~StreamDecoderMp3()
         m_decoder = nullptr;
     }
 }
-bool StreamDecoderMp3::load(const uint8_t *data, size_t size)
+bool StreamDecoderMp3::load(const std::shared_ptr<laya::Data>& data)
 {
     {
-        Profiler_ZoneScoped("audio::StreamDecoderMp3::load memcpy", 0xff0000);
-        m_buffer = new uint8_t[size];
-        memcpy(m_buffer, data, size);
-        DEBUG_CHECK(m_decoder == nullptr);
+        Profiler_ZoneScoped("audio::StreamDecoderMp3::load reference data", 0xff0000);
+        m_data = data;
     }
     
     Profiler_ZoneScoped("audio::StreamDecoderMp3::load", 0x00ff00);
     m_decoder = new drmp3();
-    if (!drmp3_init_memory(m_decoder, m_buffer, size, NULL))
+    if (!drmp3_init_memory(m_decoder, m_data->data(), m_data->size(), NULL))
     {
         delete m_decoder;
         m_decoder = nullptr;

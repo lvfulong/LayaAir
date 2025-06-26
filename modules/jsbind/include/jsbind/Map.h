@@ -99,7 +99,7 @@ template <typename K, typename T> class ValueTraits<std::unordered_map<K, T>>
     static jsvm_value ToJs(const std::unordered_map<K, T> &map, bool callDestructor = true)
     {
         DEBUG_CHECK(false); // todo
-        return internal::makeUndefined();
+        return makeUndefined();
     }
 };
 
@@ -115,7 +115,7 @@ template <typename T, typename R> class ValueTraits<const std::unordered_map<T, 
     static jsvm_value ToJs(const std::unordered_map<T, R> &map, bool callDestructor = true)
     {
         DEBUG_CHECK(false); // todo
-        return internal::makeUndefined();
+        return makeUndefined();
     }
 };
 } // namespace internal

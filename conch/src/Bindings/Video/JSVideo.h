@@ -126,7 +126,7 @@ class JSVideo
     std::shared_ptr<JCVideo> m_pJCVideo;
     int m_nID;
     std::shared_ptr<int> m_CallbackRef;
-    std::shared_ptr<char> m_buffer;
+    std::shared_ptr<Data> m_data;
 };
 }; // namespace laya
 #endif

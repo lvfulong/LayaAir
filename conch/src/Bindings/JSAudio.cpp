@@ -208,28 +208,25 @@ namespace laya
 	    if( !callbackref.lock() )return false;
 	    laya::JCResStateDispatcher* pRes = (laya::JCResStateDispatcher*)p_pRes;
 	    laya::JCFileRes* pFileRes = (laya::JCFileRes*)pRes;
-	    if( pFileRes->m_pBuffer.get()==NULL || pFileRes->m_nLength==0 )
+	    if( !pFileRes->m_data || pFileRes->m_data->size() == 0)
         {
 		    return false;
 	    }
-	    JCBuffer p_buf;
-	    p_buf.m_pPtr=pFileRes->m_pBuffer.get();
-	    p_buf.m_nLen = pFileRes->m_nLength;
 	    m_bDownloaded = true;
        // std::weak_ptr<int> cbref(m_CallbackRef);
         //std::function<void(void)> pFunction = std::bind(&JSAudio::onCanplayCallJSFunction,this, callbackref);
 
-		if (p_buf.m_nLen >= g_kSystemConfig.m_audioStreamThreshold && (m_nType == EXT_MP3 || m_nType == EXT_OGG))
+		if (pFileRes->m_data->size() >= g_kSystemConfig.m_audioStreamThreshold && (m_nType == EXT_MP3 || m_nType == EXT_OGG))
 		{
 			Profiler_ZoneScoped("audio::StreamDecoder::create", 0x00ff00);
-			m_decoder = audio::StreamDecoder::create(m_sSrc, (uint8_t*)p_buf.m_pPtr, p_buf.m_nLen);
+			m_decoder = audio::StreamDecoder::create(m_sSrc, pFileRes->m_data); 
 			//流式解码
 			//m_decoder = audio::StaticDecoderCache::createDecoder(m_sSrc, (uint8_t*)p_buf.m_pPtr, p_buf.m_nLen);
 		}
 		else
 		{
 			Profiler_ZoneScoped("audio::StaticDecoderCache::createDecoder", 0xff00);
-			m_decoder = audio::StaticDecoderCache::createDecoder(m_sSrc, (uint8_t*)p_buf.m_pPtr, p_buf.m_nLen);
+			m_decoder = audio::StaticDecoderCache::createDecoder(m_sSrc, pFileRes->m_data);
 		}
 		if(m_decoder) 
 		{

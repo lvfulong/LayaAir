@@ -6,6 +6,7 @@
 #include <vector>
 #include <ogg/ogg.h>
 #include <vorbis/vorbisfile.h>
+#include <utils/Data.h>
 
 namespace audio
 {
@@ -15,7 +16,7 @@ class StreamDecoderOgg : public StreamDecoder
     StreamDecoderOgg() = default;
     ~StreamDecoderOgg();
     virtual bool canDecode(int8_t *data, size_t size) override;
-    virtual bool load(const uint8_t *data, size_t size) override;
+    virtual bool load(const std::shared_ptr<laya::Data>& data) override;
     virtual size_t getAudio(uint8_t *buffer, size_t bufferSize) override;
     virtual bool seek(size_t seconds) override;
     virtual bool rewind() override;
@@ -24,9 +25,8 @@ class StreamDecoderOgg : public StreamDecoder
   private:
     OggVorbis_File* m_decoder{nullptr};
     bool m_eof{false};
-    uint8_t *m_buffer{nullptr};
-    size_t m_bufferSize{0};
     vorbis_info* m_vorbisInfo{nullptr};
+    std::shared_ptr<laya::Data> m_data;//流式解码器需要引用数据，否则数据会被释放
 };
 } // namespace audio
 #endif

@@ -7,16 +7,16 @@
 using namespace laya;
 namespace audio
 {
-bool StaticDecoderWav::load(const uint8_t *data, size_t size)
+bool StaticDecoderWav::load(const std::shared_ptr<laya::Data>& data)
 {
     // 首先检查是否为WAV格式
-    if (!Decoder::isWavFormat(data, size))
+    if (!Decoder::isWavFormat(data->bytes(), data->size()))
     {
         return false;
     }
     Profiler_ZoneScoped("audio::StaticDecoderWav::load", 0x00ff00);
     drwav decoder;
-    if (!drwav_init_memory(&decoder, data, size, NULL))
+    if (!drwav_init_memory(&decoder, data->data(), data->size(), NULL))
     {
         return false;
     }

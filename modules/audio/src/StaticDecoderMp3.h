@@ -13,7 +13,7 @@ class StaticDecoderMp3 : public StaticDecoder
     StaticDecoderMp3() = default;
     ~StaticDecoderMp3() = default;
     bool canDecode(int8_t *data, size_t size) override;
-    bool load(const uint8_t *data, size_t size) override;
+    bool load(const std::shared_ptr<laya::Data>& data) override;
 };
 } // namespace audio
 #endif

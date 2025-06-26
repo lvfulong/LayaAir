@@ -152,8 +152,8 @@ extern "C"
         if (bBigFile)
         {
             // ���ļ�û��buffer
-            JCBuffer jb;
-            downloader->m_functionOnEnd(jb, "", "", 0 /*CURLE_OK*/, responseCode, header);
+            std::shared_ptr<Data> data = Data::makeEmpty();
+            downloader->m_functionOnEnd(data, "", "", 0 /*CURLE_OK*/, responseCode, header);
         }
         else
         {
@@ -161,20 +161,17 @@ extern "C"
             jint len = env->GetArrayLength(byteArray);
             if (len <= 0)
             {
-                JCBuffer jb;
-                downloader->m_functionOnEnd(jb, "", "", 0 /*CURLE_OK*/, responseCode, header);
+                std::shared_ptr<Data> data = Data::makeEmpty();
+                downloader->m_functionOnEnd(data, "", "", 0 /*CURLE_OK*/, responseCode, header);
             }
             else
             {
                 jbyte *ba = env->GetByteArrayElements(byteArray, JNI_FALSE);
-                char *result = new char[len];
-                memcpy(result, ba, len);
-
-                JCBuffer buf((void *)result, len, false, true);
                 // request->m_responseCallback(buf, pCurl->m_strLocalAddr,
                 // pCurl->m_strSvAddr, 0/*CURLE_OK*/, pCurl->m_nResponseCode,
                 // pCurl->m_strResponseHead);
-                downloader->m_functionOnEnd(buf, "", "", 0 /*CURLE_OK*/, responseCode, header);
+                std::shared_ptr<Data> data = Data::makeWithCopy((void *)ba, len);
+                downloader->m_functionOnEnd(data, "", "", 0 /*CURLE_OK*/, responseCode, header);
 
                 env->ReleaseByteArrayElements(byteArray, ba, 0);
             }
@@ -194,8 +191,8 @@ extern "C"
         {
             // curl ִ��ʧ��
             static std::string nullstr;
-            JCBuffer jb;
-            downloader->m_functionOnEnd(jb, "", "", 7 /*CURLE_COULDNT_CONNECT*/, code, nullstr);
+            std::shared_ptr<Data> data = Data::makeEmpty();
+            downloader->m_functionOnEnd(data, "", "", 7 /*CURLE_COULDNT_CONNECT*/, code, nullstr);
         }
 
         delete downloader;

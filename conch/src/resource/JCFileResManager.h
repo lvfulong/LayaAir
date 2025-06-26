@@ -10,6 +10,7 @@
 #include <mutex>
 #include <utils/JCLayaUrl.h>
 #include "../downloadCache/DCC2/IDownloader.h"
+#include <utils/Data.h>
 
 #define MAXDOWNLOADTRY 3
 
@@ -54,8 +55,7 @@ namespace laya{
         void setIgnoreError(bool b) { m_bIgnoreError = b; };
         int m_nConnTimeout = 0;
         int m_nOptTimeout = 0;
-        std::shared_ptr<char> m_pBuffer;	            //注意必须指定deleter std::default_delete<char[]>
-        int m_nLength;
+        std::shared_ptr<Data> m_data;
         bool m_bIgnoreError = false;			//是否忽略下载错误
         std::string m_strSvIP;      //调试用
         int m_nLastHttpResponse = 0;
@@ -80,7 +80,7 @@ namespace laya{
         void clear();
 		void createBufferURL(const std::string& url, const char* data, int bytes);
 		void revokeBufferURL(const std::string& url);
-		bool searchBufferURL(const std::string& url, char** data, int& bytes);
+		std::shared_ptr<Data> searchBufferURL(const std::string& url);
 	public:
 		JCServerFileCache*		    m_pFileCache;
 		bool			            m_bUrlToLowerCase;
@@ -90,7 +90,7 @@ namespace laya{
     protected:
         JCDownloadMgr*              m_pDownloadMgr;
         FileResMap			        m_ResMap;
-		std::map<std::string, JCBuffer*> m_BufferURLMap;
+		std::map<std::string, std::shared_ptr<Data>> m_BufferURLMap;
 	};
 }
 //------------------------------------------------------------------------------
