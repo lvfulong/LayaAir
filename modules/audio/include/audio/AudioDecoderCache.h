@@ -16,9 +16,7 @@
 #include <audio/StreamDecoder.h>
 #include <cstddef>
 #include <memory>
-#include <mutex>
 #include <queue>
-#include <thread>
 #include <unordered_map>
 #include <utils/Data.h>
 #include <utils/LRUCache.h>
@@ -42,6 +40,8 @@ class AudioDecoderCache
     static void clear();
 
   private:
+    static bool tryMakeSpace(size_t requiredSize);
+
     enum class DecoderType
     {
         Static,

@@ -9,7 +9,6 @@
 #include <cstring>
 #include <functional>
 #include <memory>
-#include <mutex>
 #include <string>
 #include <unordered_map>
 #include <utils/Log.h>
@@ -28,22 +27,26 @@ void AudioDecoderCache::clear()
     AudioDecoderCache::m_cache.clear();
     AudioDecoderCache::m_currentSizeInBytes = 0;
 }
+
 void AudioDecoderCache::setMaxSizeInBytes(size_t size)
 {
-    AudioDecoderCache::m_maxSizeInBytes = size;
-    while (AudioDecoderCache::m_currentSizeInBytes > AudioDecoderCache::m_maxSizeInBytes)
+    m_maxSizeInBytes = size;
+    while (m_currentSizeInBytes > m_maxSizeInBytes && m_cache.size() > 0)
     {
-        AudioDecoderCache::m_cache.removeOldest();
+        m_cache.removeOldest();
     }
 }
+
 size_t AudioDecoderCache::getMaxSizeInBytes()
 {
     return AudioDecoderCache::m_maxSizeInBytes;
 }
+
 size_t AudioDecoderCache::getCurrentSizeInBytes()
 {
     return AudioDecoderCache::m_currentSizeInBytes;
 }
+
 std::shared_ptr<Decoder> AudioDecoderCache::get(const std::string &url)
 {
     auto decoderInfo = AudioDecoderCache::m_cache.get(url);
@@ -53,7 +56,9 @@ std::shared_ptr<Decoder> AudioDecoderCache::get(const std::string &url)
     }
     return nullptr;
 }
+
 using DecoderCreateFunctionType = std::function<std::shared_ptr<Decoder>(const std::shared_ptr<laya::Data> &)>;
+
 template <typename DecoderType> DecoderCreateFunctionType DecoderCreateTrait()
 {
     return [](const std::shared_ptr<laya::Data> &data) -> std::shared_ptr<Decoder> {
@@ -65,6 +70,29 @@ template <typename DecoderType> DecoderCreateFunctionType DecoderCreateTrait()
         return nullptr;
     };
 }
+
+// 新增：统一的缓存空间回收逻辑
+bool AudioDecoderCache::tryMakeSpace(size_t requiredSize)
+{
+    if (requiredSize >= m_maxSizeInBytes)
+    {
+        return false;
+    }
+    while (m_currentSizeInBytes + requiredSize > m_maxSizeInBytes && m_cache.size() > 0)
+    {
+        auto oldest = m_cache.peekOldest();
+        if (oldest.has_value())
+        {
+            m_cache.removeOldest();
+        }
+        else
+        {
+            break;
+        }
+    }
+    return m_currentSizeInBytes + requiredSize <= m_maxSizeInBytes;
+}
+
 std::shared_ptr<Decoder> AudioDecoderCache::createStaticDecoder(const std::string &url,
                                                                 const std::shared_ptr<laya::Data> &data)
 {
@@ -82,29 +110,20 @@ std::shared_ptr<Decoder> AudioDecoderCache::createStaticDecoder(const std::strin
         auto decoder = testDecoder(data);
         if (decoder)
         {
-            bool canCache = decoder->getSizeInBytes() < m_maxSizeInBytes;
-            while (canCache && m_currentSizeInBytes + decoder->getSizeInBytes() > m_maxSizeInBytes)
-            {
-                auto oldest = m_cache.peekOldest();
-                if (oldest)
-                {
-                    m_cache.removeOldest();
-                }
-                else
-                {
-                    canCache = false;
-                }
-            }
-            if (canCache)
+            size_t decoderSize = decoder->getSizeInBytes();
+            if (tryMakeSpace(decoderSize))
             {
                 m_cache.put(url, DecoderInfo(decoder));
-                m_currentSizeInBytes += decoder->getSizeInBytes();
+                m_currentSizeInBytes += decoderSize;
                 return decoder;
             }
+            // 无法缓存也返回解码器
+            return decoder;
         }
     }
     return nullptr;
 }
+
 std::shared_ptr<Decoder> AudioDecoderCache::createStreamDecoder(const std::string &url,
                                                                 const std::shared_ptr<laya::Data> &data)
 {
@@ -121,27 +140,18 @@ std::shared_ptr<Decoder> AudioDecoderCache::createStreamDecoder(const std::strin
         auto decoder = testDecoder(data);
         if (decoder)
         {
-            bool canCache = data->size() < m_maxSizeInBytes;
-            while (canCache && m_currentSizeInBytes + data->size() > m_maxSizeInBytes)
-            {
-                auto oldest = m_cache.peekOldest();
-                if (oldest)
-                {
-                    m_cache.removeOldest();
-                }
-                else
-                {
-                    canCache = false;
-                }
-            }
-            if (canCache)
+            size_t dataSize = data->size();
+            if (tryMakeSpace(dataSize))
             {
                 m_cache.put(url, DecoderInfo(data));
-                m_currentSizeInBytes += data->size();
+                m_currentSizeInBytes += dataSize;
                 return decoder;
             }
+            // 无法缓存也返回解码器
+            return decoder;
         }
     }
     return nullptr;
 }
+
 } // namespace audio
