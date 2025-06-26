@@ -4,6 +4,8 @@
 #include <cstring>
 #include <utils/Log.h>
 #include <utils/Preprocessor.h>
+#include <profiler/Profiler.h>
+
 namespace audio
 {
 Audio::Audio(AudioPlayer *player, std::shared_ptr<StaticDecoder> decoder)
@@ -95,23 +97,26 @@ bool Audio::play()
         LOGE("Error: player or pool is null");
         return false;
     }
-    
+    Profiler_ZoneScoped("audio::Audio::play outter", 0xff0000);
     ALSourcePool::ScopedLock lock(*m_player->m_pool);
-    ALuint out;
-    bool isInPool;
-    if (!m_player->m_pool->allocateSource(Audio::shared_from_this(), out, isInPool))
     {
-        return false;
-    }
+        Profiler_ZoneScoped("audio::Audio::play inner", 0x00ff00);
+        ALuint out;
+        bool isInPool;
+        if (!m_player->m_pool->allocateSource(Audio::shared_from_this(), out, isInPool))
+        {
+            return false;
+        }
 
-    if (isInPool)
-    {
-        doResume();
-        return true;
-    }
-    else
-    {
-        return doPlay(out);
+        if (isInPool)
+        {
+            doResume();
+            return true;
+        }
+        else
+        {
+            return doPlay(out);
+        }
     }
 }
 void Audio::pause()

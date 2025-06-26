@@ -218,14 +218,14 @@ namespace laya
 
 		if (pFileRes->m_data->size() >= g_kSystemConfig.m_audioStreamThreshold && (m_nType == EXT_MP3 || m_nType == EXT_OGG))
 		{
-			Profiler_ZoneScoped("audio::AudioDecoderCache::createStreamDecoder", 0x00ff00);
+			Profiler_ZoneScoped("audio::AudioDecoderCache::createStreamDecoder", 0xff0000);
 			m_decoder = audio::AudioDecoderCache::createStreamDecoder(m_sSrc, pFileRes->m_data);
 			//流式解码
-			//m_decoder = audio::AudioDecoderCache::createDecoder(m_sSrc, (uint8_t*)p_buf.m_pPtr, p_buf.m_nLen);
+			//m_decoder = audio::AudioDecoderCache::createStaticDecoder(m_sSrc, pFileRes->m_data);
 		}
 		else
 		{
-			Profiler_ZoneScoped("audio::AudioDecoderCache::createStaticDecoder", 0xff00);
+			Profiler_ZoneScoped("audio::AudioDecoderCache::createStaticDecoder", 0xff0000);
 			m_decoder = audio::AudioDecoderCache::createStaticDecoder(m_sSrc, pFileRes->m_data);
 		}
 		if(m_decoder) 

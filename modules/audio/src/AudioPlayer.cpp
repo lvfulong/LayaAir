@@ -14,6 +14,7 @@ namespace audio
 {
 AudioPlayer::AudioPlayer()
 {
+    Profiler_ZoneScoped("audio::AudioPlayer::AudioPlayer", 0xff0000);
     m_alDevice = alcOpenDevice(NULL);
     m_alContext = alcCreateContext(m_alDevice, NULL);
     alcMakeContextCurrent(m_alContext);
@@ -29,6 +30,7 @@ AudioPlayer::~AudioPlayer()
 }
 std::shared_ptr<Audio> AudioPlayer::createAudio(std::shared_ptr<Decoder> decoder)
 {
+    Profiler_ZoneScoped("audio::AudioPlayer::createAudio", 0xff0000);
     if (!decoder) {
         return nullptr;
     }
@@ -45,46 +47,57 @@ std::shared_ptr<Audio> AudioPlayer::createAudio(std::shared_ptr<Decoder> decoder
 }
 std::shared_ptr<Audio> AudioPlayer::createAudio(std::shared_ptr<StaticDecoder> decoder)
 {
+    Profiler_ZoneScoped("audio::AudioPlayer::createAudio", 0xff0000);
     return std::make_shared<Audio>(this, decoder);
 }
 std::shared_ptr<Audio> AudioPlayer::createAudio(std::shared_ptr<StreamDecoder> decoder)
 {
+    Profiler_ZoneScoped("audio::AudioPlayer::createAudio", 0xff0000);
     return std::make_shared<Audio>(this, decoder);
 }
 void AudioPlayer::play(std::shared_ptr<Audio> audio)
 {
+    Profiler_ZoneScoped("audio::AudioPlayer::play", 0xff0000);
     audio->play();
 }
 void AudioPlayer::pause(std::shared_ptr<Audio> audio)
 {
+    Profiler_ZoneScoped("audio::AudioPlayer::pause", 0xff0000);
     audio->pause();
 }
 void AudioPlayer::stop(std::shared_ptr<Audio> audio)
 {
+    Profiler_ZoneScoped("audio::AudioPlayer::stop", 0xff0000);
     audio->stop();
 }
 void AudioPlayer::setVolume(std::shared_ptr<Audio> audio, float volume)
 {
+    Profiler_ZoneScoped("audio::AudioPlayer::setVolume", 0xff0000);
     audio->setVolume(volume);
 }
 float AudioPlayer::getVolume(std::shared_ptr<Audio> audio)
-{
+{   
+    Profiler_ZoneScoped("audio::AudioPlayer::getVolume", 0xff0000);
     return audio->getVolume();
 }
 double AudioPlayer::getDuration(std::shared_ptr<Audio> audio)
-{
+{   
+    Profiler_ZoneScoped("audio::AudioPlayer::getDuration", 0xff0000);
     return audio->getDuration();
 }
 void AudioPlayer::seek(std::shared_ptr<Audio> audio, double seconds)
 {
+    Profiler_ZoneScoped("audio::AudioPlayer::seek", 0xff0000);
     audio->seek(seconds);
 }
 double AudioPlayer::tell(std::shared_ptr<Audio> audio)
 {
+    Profiler_ZoneScoped("audio::AudioPlayer::tell", 0xff0000);
     return audio->tell();
 }
 void AudioPlayer::onPause()
 {
+    Profiler_ZoneScoped("audio::AudioPlayer::onPause", 0xff0000);
     ALSourcePool::ScopedLock lock(*m_pool);
     
     #if defined(OS_ANDROID) || defined(OS_OHOS)
@@ -95,6 +108,7 @@ void AudioPlayer::onPause()
 }
 void AudioPlayer::onResume()
 {
+    Profiler_ZoneScoped("audio::AudioPlayer::onResume", 0xff0000);
     ALSourcePool::ScopedLock lock(*m_pool);
     #if defined(OS_ANDROID) || defined(OS_OHOS)
         alcDeviceResumeSOFT(m_alDevice);
@@ -107,6 +121,7 @@ void AudioPlayer::onResume()
 }
 void AudioPlayer::clear()
 {
+    Profiler_ZoneScoped("audio::AudioPlayer::clear", 0xff0000);
     m_pool->clear();
 }
 } // namespace audio
