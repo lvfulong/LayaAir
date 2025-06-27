@@ -93,12 +93,8 @@ const char *JSVideo::GetSrc()
 
 void JSVideo::SetSrc(const char *url)
 {
-    if (!m_src.empty())
-    {
-        return;
-    }
     m_src = url;
-    Load(url);
+    //Load(url);
 }
 
 int JSVideo::getImageID()
@@ -158,7 +154,7 @@ void JSVideo::exportJS(jsbind::Object &context)
     class_binding.function("load", &JSVideo::LoadJS);
     class_binding.function("play", &JSVideo::Play);
     class_binding.function("pause", &JSVideo::Pause);
-    class_binding.function("stop", &JSVideo::Stop);
+    //class_binding.function("stop", &JSVideo::Stop);
     class_binding.function("addEvent", &JSVideo::AddEvent);
     class_binding.function("removeEvent", &JSVideo::RemoveEvent);
     class_binding.function("_setDispatchEventFunc", &JSVideo::_setDispatchEventFunc);

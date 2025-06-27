@@ -37,8 +37,10 @@ class VideoPlayer
     void seekTo(double time);
     static void init();
     static void destroy();
-
   private:
+    bool isValid();
+  private:
+    std::function<void(const char*)> m_emitFunc;
     std::unique_ptr<VideoPlayerImpl> m_impl;
 };
 } // namespace ffplay

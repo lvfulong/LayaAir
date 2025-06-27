@@ -508,7 +508,19 @@ int read_thread(void *arg)
             goto fail;
         }
     }
-
+    //LOGI("ccc ic->duration %lld", ic->duration);
+    /*************************************************************** */
+    //获取总时长
+    if (ic->duration != AV_NOPTS_VALUE)
+    {
+        is->duration = ic->duration;
+    }
+    else
+    {
+        is->duration = 0;
+    }
+    /*************************************************************** */
+    //LOGI("ccc is->duration %lld", is->duration);
     if (ic->pb)
         ic->pb->eof_reached = 0; // FIXME hack, ffplay maybe should not use avio_feof() to test for the end
 

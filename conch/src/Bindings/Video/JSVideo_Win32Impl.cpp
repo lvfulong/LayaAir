@@ -71,7 +71,9 @@ JSVideo::JSVideo()
     m_pJCVideo->setVideoHandler(m_pVideoHandler);
 
     ((Win32VideoHandler *)m_pVideoHandler)
-        ->m_videoPlayer.setEmit(std::bind(&JSVideo::CallHandle, this, std::placeholders::_1));
+        ->m_videoPlayer.setEmit([this](const std::string& eventName) {
+            CallHandle(eventName.c_str());
+        });
 }
 
 JSVideo::~JSVideo()
@@ -89,7 +91,6 @@ void JSVideo::_releaseHandler()
 void JSVideo::LoadInternal(const std::string &path)
 {
     ((Win32VideoHandler *)m_pVideoHandler)->m_videoPlayer.setMedia(path);
-    // CallHandle("loadedmetadata");
 }
 void JSVideo::LoadInternal(char *buffer, int length)
 {
