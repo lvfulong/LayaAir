@@ -101,7 +101,7 @@ template <typename ClassType, typename Traits> class ClassRegistry : public Clas
                           static_cast<jsvm_finalize>(internal::destructor<ClassType, Traits>),
                           nullptr, &objectRef);
 
-        this->objects_.emplace(Traits::to_pointer_type(objectPointer), std::make_unique<ObjectRegistry>(ObjectRegistry{objectRef, callDestructor}));
+        this->objects_.emplace(Traits::to_pointer_type(objectPointer), std::make_unique<ObjectRegistry>(ObjectRegistry{objectRef}));
 
         return instance;
     }
@@ -308,7 +308,7 @@ template <typename ClassType, typename Traits> static jsvm_value New(jsvm_env en
                               static_cast<jsvm_finalize>(internal::destructor<ClassType, Traits>), nullptr,
                               &objectRef);
             DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-            classRegistry->objects_.emplace(object, std::make_unique<ObjectRegistry>(ObjectRegistry{objectRef, callDestructor}));
+            classRegistry->objects_.emplace(object, std::make_unique<ObjectRegistry>(ObjectRegistry{objectRef}));
             return jsThis;
         }
     }

@@ -52,8 +52,8 @@ template <typename ClassType> jsvm_value toLocal(ClassType *objectPointer)
 template <typename ClassType> Persistent toPersistent(ClassType* objectPointer)
 {
     GET_ENV
-        ClassRegistry<ClassType>& classRegistry = ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
-    auto objectRegistry = classRegistry.getObjectRegistry(objectPointer);
+    ClassRegistryBase* classRegistry = ClassRegistryManager::getClassRegistry(type_id<ClassType>());
+    auto objectRegistry = classRegistry->getObjectRegistry(objectPointer);
     DEBUG_CHECK(objectRegistry != nullptr);
 
     return Persistent(objectRegistry->objectRef_);
