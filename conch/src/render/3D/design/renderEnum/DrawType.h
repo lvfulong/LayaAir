@@ -6,10 +6,12 @@ namespace laya
 
 	enum class DrawType
 	{
-		DrawArray,
-		DrawArrayInstance,
-		DrawElement,
-		DrawElementInstance
+    	DrawArray,
+    	DrawArrayInstance,
+    	DrawArrayIndirect,
+    	DrawElement,
+    	DrawElementInstance,
+    	DrawElementIndirect
 	};
 }
 
