@@ -62,11 +62,11 @@ namespace laya
 	protected:
 		std::vector<std::string> _commonUniformMap;
 		JCSingletonList<GLESShaderInstance*> _shaderInstances = JCSingletonList<GLESShaderInstance*>(false);
-		GLESShaderData* getGlobalShaderData();
 
 	protected:
 		virtual void _compileShader(GLESRenderContext2D* context);
 		virtual void _renderByShaderInstance(GLESShaderInstance* shader, GLESRenderContext2D* context);
+		GLESShaderData* getGlobalShaderData();
 	};
 
 } // namespace laya

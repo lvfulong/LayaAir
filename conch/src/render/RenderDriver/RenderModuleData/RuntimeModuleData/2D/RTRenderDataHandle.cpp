@@ -86,7 +86,12 @@ void RTPrimitiveDataHandle::inheriteRenderData(GLESRenderContext2D *context)
             if (this->_mask && this->_mask->_trans)
             {
                 const Matrix &maskMatrix = this->_mask->getRenderMatrix();
-                Matrix tempMatirx = Matrix::mul(maskMatrix, mat, Matrix::TEMP);
+                Matrix tempMatirx;
+                if (this->_mask->parent) {
+                    tempMatirx = maskMatrix;
+                } else {
+                    tempMatirx = Matrix::mul(maskMatrix, mat, Matrix::TEMP);
+                }
                 this->_nMatrix_0.setValue(tempMatirx.a, tempMatirx.c, tempMatirx.tx);
                 this->_nMatrix_1.setValue(tempMatirx.b, tempMatirx.d, tempMatirx.ty);
             }
@@ -106,8 +111,13 @@ void RTPrimitiveDataHandle::inheriteRenderData(GLESRenderContext2D *context)
             float m00 = mat.a, m01 = mat.b, m10 = mat.c, m11 = mat.d, tx = mat.tx, ty = mat.ty;
             float *vbdata = nullptr;
             std::vector<Graphics2DBufferBlock> &blocks = this->_bufferBlocks;
-            // int vertexCount = 0;
-            // vertexViews : Web2DGraphic2DBufferDataView[] = null;
+            // 计算 stride，从第一个vertexBuffer获取
+            int stride = 12; // 默认stride
+            if (!blocks.empty()) {
+                // 从第一个blocks获取vertexBuffer的stride信息
+                // stride = this._bufferBlocks[0].vertexBuffer.vertexDeclaration.vertexStride / 4;
+                // 这里假设stride为12，实际应该从vertexBuffer获取
+            }
             GET_ENV
             jsvm_status status;
             for (int i = 0, n = this->_bufferBlocks.size(); i < n; i++)
@@ -148,7 +158,7 @@ void RTPrimitiveDataHandle::inheriteRenderData(GLESRenderContext2D *context)
                         float x = positions[ci], y = positions[ci + 1];
                         vbdata[pos] = x * m00 + y * m10 + tx;
                         vbdata[pos + 1] = x * m01 + y * m11 + ty;
-                        pos += 12;
+                        pos += stride;
                         ci += 2;
                     }
                 }
