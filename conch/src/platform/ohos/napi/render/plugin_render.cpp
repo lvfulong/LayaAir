@@ -288,7 +288,7 @@ void PluginRender::OnSurfaceCreated(OH_NativeXComponent* component, void* window
     int32_t ret = OH_NativeXComponent_GetXComponentSize(component, window, &width_, &height_);
     if (ret == OH_NATIVEXCOMPONENT_RESULT_SUCCESS) {
         int32_t code = SET_USAGE;
-        OHNativeWindow *oHNativeWindow = static_cast<OHNativeWindow *>(window);
+        OHNativeWindow *oHNativeWindow = oHNativeWindow_ = static_cast<OHNativeWindow *>(window);
         int32_t ret = OH_NativeWindow_NativeWindowHandleOpt(oHNativeWindow, code, NATIVEBUFFER_USAGE_MEM_DMA);
 
         laya::BackendOptions options;

@@ -8,6 +8,8 @@
 #include <ace/xcomponent/native_interface_xcomponent.h>
 #include <napi/native_api.h>
 #include "../WorkerMessageQueue.h"
+#include "native_buffer/native_buffer.h"
+#include "native_window/external_window.h"
 
 class PluginRender {
 public:
@@ -80,6 +82,7 @@ public:
     float scrollDistance = 0.0;
     static uint64_t animationInterval_;
     static uint64_t lastTime;
+    OHNativeWindow *oHNativeWindow_;
 };
 
 #endif // _PLUGIN_RENDER_H_

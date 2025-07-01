@@ -820,6 +820,7 @@ endif()
 		libnative_window.so 
 		libnative_buffer.so
 		libohsensor.so
+		libnative_media_core.so
 		utils
 		core
 		jsbind

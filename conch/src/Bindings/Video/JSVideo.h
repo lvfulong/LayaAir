@@ -83,7 +83,15 @@ class JSVideo
 
     double GetVolume();
     void SetVolume(double val);
-
+/////
+    void SetMuted(bool value);
+    bool GetMuted();
+    void SetPlaybackRate(double value);
+    double GetPlaybackRate();
+    void SetVideoSurface(void* surface);
+    bool IsFrameUpdated();
+    void UpdateBitmapData(BitmapData* bitmapData);
+/////
     void CallHandle(const char *evtName);
 
     int32_t GetReadyState();
