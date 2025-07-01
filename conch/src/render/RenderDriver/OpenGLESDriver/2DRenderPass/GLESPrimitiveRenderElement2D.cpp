@@ -145,7 +145,8 @@ namespace laya
       // 上传图元着色器数据
       if (primitiveShaderData)
       {
-         shader->uploadUniforms(&(shader->m_materialUniformParamsMap), primitiveShaderData, true);
+         CommandEncoder primitiveUniformParamsMap = shader->_additionUniformParamsMaps.find("Sprite2DGraphics")->second;
+         shader->uploadUniforms(&primitiveUniformParamsMap, primitiveShaderData, true);
       }
 
       // 获取用于渲染状态的着色器数据

@@ -115,6 +115,14 @@ void GLESShaderInstance::_create2D()
         else if (passParms->hasPtrID(one->dataOffset)) {
             m_sceneUniformParamsMap.addShaderUniform(one);
         }
+        else if (_hasAdditionShaderData(one->dataOffset)!="")
+        {
+            std::string str = _hasAdditionShaderData(one->dataOffset);
+            if (_additionUniformParamsMaps.find(str) == _additionUniformParamsMaps.end()) {
+                _additionUniformParamsMaps[str] = CommandEncoder();
+            }
+            _additionUniformParamsMaps[str].addShaderUniform(one);
+        }
         else {
             m_materialUniformParamsMap.addShaderUniform(one);
         }
