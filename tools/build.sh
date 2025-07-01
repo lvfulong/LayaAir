@@ -353,11 +353,6 @@ function archive_ios {
     cp ios-${build_type}-arm64/conch/libconch.a armv64
     cp ios-${build_type}-x86_64/conch/libconch.a x86_64
     
-    cp ios-${build_type}-arm64/ghc/libghc.a armv64
-    cp ios-${build_type}-x86_64/ghc/libghc.a x86_64
-
-    cp ios-${build_type}-arm64/rapidxml/librapidxml.a armv64
-    cp ios-${build_type}-x86_64/rapidxml/librapidxml.a x86_64
     
     cp ios-${build_type}-arm64/modules/jsbind/libjsbind.a armv64
     cp ios-${build_type}-x86_64/modules/jsbind/libjsbind.a x86_64

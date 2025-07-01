@@ -11,10 +11,10 @@
 #include <map>
 #include <string>
 #include <utils/Log.h>
+#include <memory>
 
 namespace jsbind
 {
-template <typename ClassType> class ClassRegistry;
 struct ObjectRegistry
 {
     jsvm_ref objectRef_ = nullptr;
@@ -23,37 +23,21 @@ struct ObjectRegistry
 class ClassRegistryBase
 {
   public:
-    std::unordered_map<void *, ObjectRegistry> objects_;
-    // std::vector<ClassRegistryBase *> bases_;
-    // std::vector<ClassRegistryBase *> derivatives_;
     jsvm_ref classRef_ = nullptr;
-
+    bool isWrap_ = false;
   public:
     virtual ~ClassRegistryBase()
     {
     }
-    template <typename ClassType> ObjectRegistry *getObjectRegistry(ClassType *objectPointer)
-    {
-        auto it = objects_.find(objectPointer);
-        if (it != objects_.end())
-        {
-            return &it->second;
-        }
-
-        /*for (auto const info : derivatives_)
-         {
-             ObjectRegistry *result = info->getObjectRegistry(objectPointer);
-             if (result != nullptr)
-                 return result;
-         }*/
-
-        return nullptr;
-    }
+    virtual ObjectRegistry* getObjectRegistry(void* objectPointer) = 0;
 };
-template <typename ClassType> class ClassRegistry : public ClassRegistryBase
+template <typename ClassType, typename Traits> class ClassRegistry : public ClassRegistryBase
 {
   public:
-    typedef ClassType *(*ConstructorFunctionType)(jsvm_env env, jsvm_callback_info info);
+    using pointer_type = typename Traits::pointer_type;
+    using object_id = typename Traits::object_id;
+    using object_pointer_type = typename Traits::template object_pointer_type<ClassType>;
+    using ConstructorFunctionType = object_pointer_type(*)(jsvm_env env, jsvm_callback_info info);
     ClassRegistry()
     {
     }
@@ -64,7 +48,7 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
         for (; it != objects_.end(); it++)
         {
 
-            removeObjectRegistry(env, &it->second, (ClassType *)it->first);
+            removeObjectRegistry(env, it->second.get(), it->first);
         }
         objects_.clear();
 
@@ -76,7 +60,7 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
         assert(constructorFunctionMap_.find(numPara) == constructorFunctionMap_.end());
         constructorFunctionMap_.insert(std::make_pair(numPara, func));
     }
-    ClassType *ConstructObject(uint32_t numPara, jsvm_env env, jsvm_callback_info info)
+    object_pointer_type ConstructObject(uint32_t numPara, jsvm_env env, jsvm_callback_info info)
     {
         auto it = constructorFunctionMap_.find(numPara);
         if (it != constructorFunctionMap_.end())
@@ -87,16 +71,16 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
         DEBUG_CHECK(false);
         return nullptr;
     }
-    jsvm_value wrapCppObject(ClassType *objectPointer, bool callDestructor)
+    jsvm_value wrapCppObject(object_id objectPointer, bool callDestructor)
     {
         GET_ENV
         jsvm_status status;
         // 这个会重复，直接返回
-        auto it = objects_.find((void *)objectPointer);
+        auto it = objects_.find(Traits::to_pointer_type(objectPointer));
         if (it != objects_.end())
         {
             jsvm_value obj;
-            status = jsvm_get_reference_value(env, it->second.objectRef_, &obj);
+            status = jsvm_get_reference_value(env, it->second->objectRef_, &obj);
             DEBUG_CHECK(status == jsvm_status::jsvm_ok);
             return obj;
         }
@@ -114,12 +98,37 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
 
         jsvm_ref objectRef;
         DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-        status = jsvm_wrap(env, instance, reinterpret_cast<void *>(objectPointer), internal::destructor<ClassType>,
-                           nullptr, &objectRef);
+        status = jsvm_wrap(env, instance, reinterpret_cast<void *>(objectPointer), 
+                          static_cast<jsvm_finalize>(internal::destructor<ClassType, Traits>),
+                          nullptr, &objectRef);
 
-        this->objects_.emplace(objectPointer, ObjectRegistry{objectRef, callDestructor});
+        this->objects_.emplace(Traits::to_pointer_type(objectPointer), std::make_unique<ObjectRegistry>(ObjectRegistry{objectRef, callDestructor}));
 
         return instance;
+    }
+    object_pointer_type unwrapCppObject(jsvm_value value)
+    {
+        DEBUG_CHECK(value != nullptr);
+        GET_ENV
+        jsvm_status status;
+        jsvm_valuetype valueType;
+        status = jsvm_typeof(env, value, &valueType);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+        DEBUG_CHECK(valueType == jsvm_valuetype::jsvm_object)
+        //if (valueType != jsvm_valuetype::jsvm_object)
+        //{
+        //    return nullptr;
+        //}
+        ClassType *obj;
+        status = jsvm_unwrap(env, value, (void **)(&obj));
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+
+        auto it = objects_.find(Traits::to_pointer_type(obj));
+        if (it != objects_.end())
+        {
+            return Traits::template static_pointer_cast<ClassType>(it->first);
+        }
+        return nullptr;
     }
     void addBase(ClassRegistryBase *info)
     {
@@ -133,57 +142,86 @@ template <typename ClassType> class ClassRegistry : public ClassRegistryBase
         info->derivatives_.emplace_back(this);*/
     }
 
-    void removeObject(jsvm_env env, ClassType *objectPointer)
+    void removeObject(jsvm_env env, object_id objectPointer)
     {
         jsvm_status status;
-        auto it = objects_.find((void *)objectPointer);
+        auto it = objects_.find(Traits::to_pointer_type(objectPointer));
         // DEBUG_CHECK(it != objects_.end());
         if (it != objects_.end())
         {
-            removeObjectRegistry(env, &it->second, objectPointer);
+            removeObjectRegistry(env, it->second.get(), it->first);
             objects_.erase(it);
         }
     }
 
-    bool isWrap_ = false;
+    ObjectRegistry* getObjectRegistry(object_id objectPointer) override
+    {
+        auto it = objects_.find(Traits::to_pointer_type(objectPointer));
+        if (it != objects_.end())
+        {
+            return it->second.get();
+        }
 
+        /*for (auto const info : derivatives_)
+         {
+             ObjectRegistry *result = info->getObjectRegistry(objectPointer);
+             if (result != nullptr)
+                 return result;
+         }*/
+
+        return nullptr;
+    }
   private:
-    void removeObjectRegistry(jsvm_env env, ObjectRegistry *registry, ClassType *objectPointer)
+    void removeObjectRegistry(jsvm_env env, ObjectRegistry *registry, const pointer_type& objectPointer)
     {
         jsvm_status status;
         if (registry->callDestructor)
         {
-            internal::raw_destructor(objectPointer);
+            if constexpr (std::is_same_v<Traits, jsbind::raw_ptr_traits>) 
+            {
+                internal::raw_destructor(static_cast<ClassType*>(objectPointer));
+            } 
+            else 
+            {
+                //objectPointer.reset();
+            }
             // isolate_->AdjustAmountOfExternalAllocatedMemory(-static_cast<int64_t>(sizeof(ClassType)));
             status = jsvm_delete_reference(env, registry->objectRef_);
             DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         }
     }
 
-  private:
-    std::map<uint32_t, ConstructorFunctionType> constructorFunctionMap_;
+  public:
+      friend class ClassRegistryManager;
+      std::map<uint32_t, ConstructorFunctionType> constructorFunctionMap_;
+      std::unordered_map<pointer_type, std::unique_ptr<ObjectRegistry>> objects_;
+      // std::vector<ClassRegistryBase *> bases_;
+      // std::vector<ClassRegistryBase *> derivatives_;
 };
 
 class ClassRegistryManager
 {
   public:
-    template <typename ClassType> static ClassRegistry<ClassType> &getClassRegistry(type_info info)
+    
+    static ClassRegistryBase* getClassRegistry(type_info info)
     {
         auto it = classRegistryMap_.find(info.name().data());
         if (it != classRegistryMap_.end())
         {
-            return *((ClassRegistry<ClassType> *)it->second);
+            return it->second;
         }
-        auto item = new ClassRegistry<ClassType>();
-        classRegistryMap_.insert(std::make_pair(info.name().data(), item));
-        return *item;
+        return nullptr;
+    }
+    static void addClassRegistry(type_info info, ClassRegistryBase* classRegistry)
+    {
+        classRegistryMap_.insert(std::make_pair(info.name().data(), classRegistry));
     }
     template <typename ClassType> static void makeStrong(ClassType *objectPointer)
     {
         GET_ENV
         jsvm_status status;
-        ClassRegistry<ClassType> &classRegistry = getClassRegistry<ClassType>(type_id<ClassType>());
-        auto objectRegistry = classRegistry.getObjectRegistry(objectPointer);
+        ClassRegistryBase* classRegistry = getClassRegistry(type_id<ClassType>());
+        auto objectRegistry = classRegistry->getObjectRegistry(objectPointer);
         DEBUG_CHECK(objectRegistry != nullptr);
         uint32_t result;
         status = jsvm_reference_ref(env, objectRegistry->objectRef_, &result);
@@ -194,23 +232,28 @@ class ClassRegistryManager
     {
         GET_ENV
         jsvm_status status;
-        ClassRegistry<ClassType> &classRegistry = getClassRegistry<ClassType>(type_id<ClassType>());
-        auto objectRegistry = classRegistry.getObjectRegistry(objectPointer);
+        ClassRegistryBase* classRegistry = getClassRegistry(type_id<ClassType>());
+        auto objectRegistry = classRegistry->getObjectRegistry(objectPointer);
         DEBUG_CHECK(objectRegistry != nullptr);
         uint32_t result;
         status = jsvm_reference_unref(env, objectRegistry->objectRef_, &result);
         DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     }
-    template <typename ClassType> static jsvm_value wrapCppObject(ClassType *objectPointer, bool callDestructor)
+    template <typename ClassType, typename Traits> static jsvm_value wrapCppObject(ClassType *objectPointer, bool callDestructor)
     {
-        ClassRegistry<ClassType> &classRegistry = getClassRegistry<ClassType>(type_id<ClassType>());
-        return classRegistry.wrapCppObject(objectPointer, callDestructor);
+        ClassRegistry<ClassType, Traits>* classRegistry = static_cast<ClassRegistry<ClassType, Traits>*>(getClassRegistry(type_id<ClassType>()));
+        return classRegistry->wrapCppObject(objectPointer, callDestructor);
     }
-    template <typename ClassType> static void removeObject(ClassType* objectPointer)
+    template <typename ClassType, typename Traits> static typename Traits::template object_pointer_type<ClassType> unwrapCppObject(jsvm_value value)
+    {
+        ClassRegistry<ClassType, Traits>* classRegistry = static_cast<ClassRegistry<ClassType, Traits>*>(getClassRegistry(type_id<ClassType>()));
+        return classRegistry->unwrapCppObject(value);
+    }
+    template <typename ClassType, typename Traits> static void removeObject(ClassType* objectPointer)
     {
         GET_ENV
-        ClassRegistry<ClassType> &classRegistry = getClassRegistry<ClassType>(type_id<ClassType>());
-        classRegistry.removeObject(env, objectPointer);
+        ClassRegistry<ClassType, Traits>* classRegistry = static_cast<ClassRegistry<ClassType, Traits>*>(getClassRegistry(type_id<ClassType>()));
+        classRegistry->removeObject(env, Traits::pointer_id(objectPointer));
     }
     template <typename ClassType> static bool isWrappedClassOf()
     {
@@ -232,7 +275,7 @@ class ClassRegistryManager
     }
     static std::unordered_map<std::string, ClassRegistryBase *> classRegistryMap_;
 };
-template <typename ClassType> static jsvm_value New(jsvm_env env, jsvm_callback_info info)
+template <typename ClassType, typename Traits> static jsvm_value New(jsvm_env env, jsvm_callback_info info)
 {
     jsvm_status status;
     jsvm_value newTarget;
@@ -241,10 +284,10 @@ template <typename ClassType> static jsvm_value New(jsvm_env env, jsvm_callback_
     DEBUG_CHECK(newTarget != nullptr);
     {
 
-        ClassRegistry<ClassType> &classRegistry =
-            ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
+        ClassRegistry<ClassType, Traits> *classRegistry =
+            static_cast<ClassRegistry<ClassType, Traits>*>(ClassRegistryManager::getClassRegistry(type_id<ClassType>()));
         bool callDestructor = true;
-        if (classRegistry.isWrap_)
+        if (classRegistry->isWrap_)
         {
             jsvm_value jsThis;
             status = jsvm_get_cb_info(env, info, 0, nullptr, &jsThis, nullptr);
@@ -260,20 +303,21 @@ template <typename ClassType> static jsvm_value New(jsvm_env env, jsvm_callback_
             status = jsvm_get_cb_info(env, info, &argc, args, &jsThis, nullptr);
             DEBUG_CHECK(status == jsvm_status::jsvm_ok);
             DEBUG_CHECK(argc <= 8);
-            ClassType *object = classRegistry.ConstructObject(argc, env, info);
+            typename Traits::pointer_type object = classRegistry->ConstructObject(argc, env, info);
             jsvm_ref objectRef;
 
-            status = jsvm_wrap(env, jsThis, reinterpret_cast<void *>(object), internal::destructor<ClassType>, nullptr,
-                               &objectRef);
+            status = jsvm_wrap(env, jsThis, Traits::pointer_id(object), 
+                              static_cast<jsvm_finalize>(internal::destructor<ClassType, Traits>), nullptr,
+                              &objectRef);
             DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-            classRegistry.objects_.emplace(object, ObjectRegistry{objectRef, callDestructor});
+            classRegistry->objects_.emplace(object, std::make_unique<ObjectRegistry>(ObjectRegistry{objectRef, callDestructor}));
             return jsThis;
         }
     }
 #if 0
     else
     {
-        // ʹ��`MyObject(...)`���÷�ʽ
+        // ʹ`MyObject(...)`÷ʽ
         size_t argc = 1;
         napi_value args[1];
         napi_get_cb_info(env, info, &argc, args, nullptr, nullptr);
@@ -296,11 +340,14 @@ template <typename ClassType> static jsvm_value NewGlobalClass(jsvm_env env, jsv
 
     return thisVar;
 }
-template <typename ClassType> class class_
+template <typename ClassType, typename Traits = raw_ptr_traits> class class_
 {
   public:
-    class_() : classRegistry_(ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>()))
+    class_()
     {
+        classRegistry_ = new ClassRegistry<ClassType, Traits>();
+        DEBUG_CHECK(ClassRegistryManager::getClassRegistry(type_id<ClassType>()) == nullptr);
+        ClassRegistryManager::addClassRegistry(type_id<ClassType>(), classRegistry_);
         mergedPropertyDescriptorMap_.clear();
     }
     ~class_()
@@ -311,7 +358,7 @@ template <typename ClassType> class class_
 
     class_(class_ &&) = default;
     class_ &operator=(class_ &&) = delete;
-    ClassRegistry<ClassType> &classRegistry_;
+    ClassRegistry<ClassType, Traits> *classRegistry_;
 
     static std::unordered_map<const char *, jsvm_property_descriptor> mergedPropertyDescriptorMap_;
     mutable std::unordered_map<const char *, jsvm_property_descriptor> propertyDescriptorMap_;
@@ -321,7 +368,7 @@ template <typename ClassType> class class_
   public:
     template <typename... Args> class_ &constructor()
     {
-        classRegistry_.registerConstructor(sizeof...(Args), internal::InvokeClassConstructor<ClassType, Args...>);
+        classRegistry_->registerConstructor(sizeof...(Args), internal::InvokeClassConstructor<ClassType, Traits, Args...>);
         return *this;
     }
     template <typename ReturnType, typename... Args>
@@ -472,10 +519,10 @@ template <typename ClassType> class class_
     {
         static_assert(std::is_base_of<BaseType, ClassType>::value, "Class BaseType should be base for class ClassType");
 
-        ClassRegistry<BaseType> &baseClassRegistry =
-            ClassRegistryManager::getClassRegistry<BaseType>(type_id<BaseType>());
+        ClassRegistryBase* baseClassRegistry =
+            ClassRegistryManager::getClassRegistry(type_id<BaseType>());
         DEBUG_CHECK(inheritBaseCons_ == nullptr); // only inherit single base
-        inheritBaseCons_ = baseClassRegistry.classRef_;
+        inheritBaseCons_ = baseClassRegistry->classRef_;
         //DEBUG_CHECK(!class_<BaseType>::mergedPropertyDescriptorMap_.empty());
         propertyInheritBaseDescriptorMap_ = class_<BaseType>::mergedPropertyDescriptorMap_;
         return *this;
@@ -503,10 +550,10 @@ template <typename ClassType> class class_
         }
         // merge end
 
-        status = jsvm_define_class(env, className, JSVM_AUTO_LENGTH, New<ClassType>, propertyDescriptorVector.size(),
+        status = jsvm_define_class(env, className, JSVM_AUTO_LENGTH, New<ClassType, Traits>, propertyDescriptorVector.size(),
                                    propertyDescriptorVector.data(), &cons);
         DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-        status = jsvm_create_reference(env, cons, 1, &classRegistry_.classRef_);
+        status = jsvm_create_reference(env, cons, 1, &classRegistry_->classRef_);
         DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         status = jsvm_set_named_property(env, exports, className, cons);
         DEBUG_CHECK(status == jsvm_status::jsvm_ok);
@@ -545,16 +592,21 @@ template <typename ClassType> class class_
     }
 };
 
-template <typename ClassType> class global_class_
+template <typename ClassType, typename Traits = raw_ptr_traits> class global_class_
 {
   public:
-    global_class_() : classRegistry_(ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>())) {};
+    global_class_()
+    {
+        classRegistry_ = new ClassRegistry<ClassType, Traits>();
+        DEBUG_CHECK(ClassRegistryManager::getClassRegistry(type_id<ClassType>()) == nullptr);
+        ClassRegistryManager::addClassRegistry(type_id<ClassType>(), classRegistry_);
+    }
     global_class_(global_class_ const &) = delete;
     global_class_ &operator=(global_class_ const &) = delete;
 
     global_class_(global_class_ &&) = default;
     global_class_ &operator=(global_class_ &&) = delete;
-    ClassRegistry<ClassType> &classRegistry_;
+    ClassRegistry<ClassType, Traits> *classRegistry_;
     mutable std::vector<jsvm_property_descriptor> propertyDescriptorVector_;
 
   public:
@@ -568,6 +620,23 @@ template <typename ClassType> class global_class_
         descriptor.utf8name = name;
         descriptor.name = NULL;
         descriptor.method = internal::InvokeMethodStatic<ReturnType, Args...>;
+        descriptor.getter = NULL;
+        descriptor.setter = NULL;
+        descriptor.value = NULL;
+        descriptor.attributes = jsvm_property_attributes::jsvm_default;
+        descriptor.data = data;
+        propertyDescriptorVector_.push_back(descriptor);
+        return *this;
+    }
+    const global_class_& class_function_raw(const char* name, jsvm_value(*func)(jsvm_env env, jsvm_callback_info info)) const
+    {
+        FuncInfo<decltype(func)>* data = new FuncInfo<decltype(func)>(func);
+        internal::addDeinitializer([data]() { delete data; });
+        data->name = name;
+        jsvm_property_descriptor descriptor;
+        descriptor.utf8name = name;
+        descriptor.name = NULL;
+        descriptor.method = func;
         descriptor.getter = NULL;
         descriptor.setter = NULL;
         descriptor.value = NULL;
@@ -603,9 +672,6 @@ template <typename ClassType> class global_class_
         status = jsvm_define_class(env, className, JSVM_AUTO_LENGTH, NewGlobalClass<ClassType>,
                                    propertyDescriptorVector_.size(), propertyDescriptorVector_.data(), &cons);
         DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-        ClassRegistry<ClassType> &baseClassRegistry =
-            ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
-
         jsvm_value instanceValue = nullptr;
         status = jsvm_new_instance(env, cons, 0, nullptr, &instanceValue);
         DEBUG_CHECK(status == jsvm_status::jsvm_ok);
@@ -616,25 +682,29 @@ template <typename ClassType> class global_class_
         return exports;
     }
 };
-template <typename ClassType> jsvm_value wrapCppObject(ClassType *objectPointer, bool callDestructor)
+template <typename ClassType, typename Traits> jsvm_value wrapCppObject(ClassType *objectPointer, bool callDestructor)
 {
-    return ClassRegistryManager::wrapCppObject<ClassType>(objectPointer, callDestructor);
+    return ClassRegistryManager::wrapCppObject<ClassType, Traits>(objectPointer, callDestructor);
+}
+template <typename ClassType, typename Traits> typename Traits::template object_pointer_type<ClassType> unwrapCppObject(jsvm_value value)
+{
+    return ClassRegistryManager::unwrapCppObject<ClassType, Traits>(value);
 }
 template <typename ClassType> bool isWrappedClassOf()
 {
     return ClassRegistryManager::isWrappedClassOf<ClassType>();
 }
 
-template <typename ClassType>
-std::unordered_map<const char *, jsvm_property_descriptor> class_<ClassType>::mergedPropertyDescriptorMap_;
+template <typename ClassType, typename Traits>
+std::unordered_map<const char *, jsvm_property_descriptor> class_<ClassType, Traits>::mergedPropertyDescriptorMap_;
 namespace internal
 {
-template <typename ClassType> static void destructor(jsvm_env env, void *nativeObject, void * /*finalize_hint*/)
+template <typename ClassType, typename Traits> static void destructor(jsvm_env env, void *nativeObject, void * /*finalize_hint*/)
 {
-    ClassRegistry<ClassType> &classRegistry = ClassRegistryManager::getClassRegistry<ClassType>(type_id<ClassType>());
+    ClassRegistry<ClassType, Traits> *classRegistry = static_cast<ClassRegistry<ClassType, Traits>*>(ClassRegistryManager::getClassRegistry(type_id<ClassType>()));
     ClassType *object = static_cast<ClassType *>(nativeObject);
     DEBUG_CHECK(object != nullptr);
-    classRegistry.removeObject(env, object);
+    classRegistry->removeObject(env, object);
 }
 } // namespace internal
 } // namespace jsbind

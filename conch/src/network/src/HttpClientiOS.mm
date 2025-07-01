@@ -79,8 +79,8 @@
         statusCode = 0;
     }
     // ���ļ�û��buffer
-    laya::JCBuffer jb;
-    m_downloader->m_functionOnEnd(jb, "", "", 0/*CURLE_OK*/, statusCode, "");
+    std::shared_ptr<laya::Data> data = laya::Data::makeEmpty();
+    m_downloader->m_functionOnEnd(data, "", "", 0/*CURLE_OK*/, statusCode, "");
     delete m_downloader;
     // dispatch_semaphore_signal(sem);
 }
@@ -142,10 +142,6 @@ class HttpURLSessionDownloaderImpl
     // onProgressFunction m_functionOnProgress;
 
     // onEndFunction m_functionOnEnd;
-
-    char *m_pResponseData = nullptr;
-
-    int m_nResponseDataLength = 0;
 
     HttpClientiOS *m_downloader;
 
@@ -251,10 +247,6 @@ void HttpURLSessionDownloaderImpl::doRequest()
                 if (data != nil)
                 {
 
-                    m_nResponseDataLength = data.length;
-                    m_pResponseData = new char[m_nResponseDataLength];
-                    memcpy(m_pResponseData, data.bytes, m_nResponseDataLength);
-
                     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
                     statusCode = httpResponse.statusCode;
 
@@ -276,19 +268,20 @@ void HttpURLSessionDownloaderImpl::doRequest()
                         NSError* e;
                         [data writeToFile:[NSString stringWithUTF8String:m_localFilePath.c_str()] options:0 error:&e];
                     }*/
-                    if (m_nResponseDataLength <= 0)
+                    auto responseDataLength = data.length;
+                    if (responseDataLength <= 0)
                     {
-                        JCBuffer jb;
-                        m_downloader->m_functionOnEnd(jb, "", "", 0/*CURLE_OK*/, statusCode, getResponseHeaders());
+                        std::shared_ptr<Data> d = Data::makeEmpty();
+                        m_downloader->m_functionOnEnd(d, "", "", 0/*CURLE_OK*/, statusCode, getResponseHeaders());
                         delete m_downloader;
                         // onFailure(statusCode);
                     }
                     else
                     {
-                        JCBuffer buf((void *)m_pResponseData, m_nResponseDataLength, false, true);
+                        std::shared_ptr<Data> d = Data::makeWithCopy((void *)data.bytes, responseDataLength);
                         // request->m_responseCallback(buf, pCurl->m_strLocalAddr, pCurl->m_strSvAddr, 0/*CURLE_OK*/,
                         // pCurl->m_nResponseCode, pCurl->m_strResponseHead);
-                        m_downloader->m_functionOnEnd(buf, "", "", 0/*CURLE_OK*/, statusCode, getResponseHeaders());
+                        m_downloader->m_functionOnEnd(d, "", "", 0/*CURLE_OK*/, statusCode, getResponseHeaders());
                         delete m_downloader;
                     }
                 }
@@ -309,8 +302,8 @@ void HttpURLSessionDownloaderImpl::doRequest()
                         {
                             // curl ִ��ʧ��
                             static std::string nullstr;
-                            JCBuffer jb;
-                            m_downloader->m_functionOnEnd(jb, "", "", 7/*CURLE_COULDNT_CONNECT*/, statusCode, nullstr);
+                            std::shared_ptr<Data> data = Data::makeEmpty();
+                            m_downloader->m_functionOnEnd(data, "", "", 7/*CURLE_COULDNT_CONNECT*/, statusCode, nullstr);
                         }
                         delete m_downloader;
                     }

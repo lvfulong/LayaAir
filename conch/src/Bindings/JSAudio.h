@@ -4,14 +4,16 @@
 
 #include <stdio.h>
 #include <jsbind/JSBind.h>
-#include "resource/Audio/JCAudioInterface.h"
 #include <utils/JCBuffer.h>
-
+#include <audio/Decoder.h>
+#include <audio/Audio.h>
+#include <audio/AudioPlayer.h>
+#include <functional>
 
 namespace laya 
 {
     class AudioRenderInfo;
-    class JSAudio : public JCAudioInterface
+    class JSAudio
     {
     public:
 		enum EXT_TYPE
@@ -59,11 +61,11 @@ namespace laya
 
 	    float getVolume();
 
-        void setCurrentTime(float nCurrentTime);
+        void setCurrentTime(double nCurrentTime);
 
-        float getCurrentTime();
+        double getCurrentTime();
 
-		float getDuration();
+		double getDuration();
 
     public:
 
@@ -107,7 +109,6 @@ namespace laya
         std::string		        m_sSrc;					//src
 
         float                   m_nVolume;				//音量
-		float 					m_fDuration;			//秒
 
 	    std::shared_ptr<int>	m_CallbackRef;
 
@@ -127,6 +128,10 @@ namespace laya
 
 		// 用户请求stop，但是现在还在下载
 		bool					m_bShouldStop = false;
+
+		std::shared_ptr<audio::Decoder> m_decoder;
+		std::shared_ptr<audio::Audio> m_audio;
+		audio::AudioPlayer* m_audioPlayer{nullptr};
     };
 }
 

@@ -57,10 +57,10 @@ namespace laya{
         auto extdata = reinterpret_cast<JSDownloader::jsCallbackData*>(external_onok);
         DEBUG_CHECK(extdata != nullptr);
 
-        //这个buffer不要删除，是js的问题
-        JCBuffer buff(ab.getData(), ab.getByteLength(), false, false);
+        //能否避免拷贝
+        std::shared_ptr<Data> data = Data::makeWithCopy(ab.getData(), ab.getByteLength());
         //执行
-        extdata->cFunc(buff, localPath.c_str());
+        extdata->cFunc(data, localPath.c_str());
         //清理
         extdata->jsFunc.reset();
         delete extdata;
@@ -94,7 +94,7 @@ namespace laya{
         jsvm_value external_onok;
         status = jsvm_create_external(env, data, nullptr, nullptr, &external_onok);
 
-        auto obj = jsbind::MakeObject();
+        auto obj = jsbind::makeObject();
         jsbind::set_option(obj, "onDownloadEnd", func);
         jsbind::set_option(obj, "external_onok", external_onok);
 

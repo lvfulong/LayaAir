@@ -70,19 +70,19 @@ ArrayBuffer ArrayBuffer::Make(jsvm_value arrayBuffer)
     jsvm_typedarray_type type;
     jsvm_value buffer;
     size_t byteOffset;
-    if (Local::isTypedArray(arrayBuffer))
+    if (jsbind::isTypedArray(arrayBuffer))
     {
         jsvm_get_typedarray_info(env, arrayBuffer, &type, &length, &data, &buffer, &byteOffset);
         return ArrayBuffer(arrayBuffer, static_cast<uint8_t *>(data),
                            getBytePerElement(static_cast<ArrayBuffer::Type>(type)) * length,
                            static_cast<ArrayBuffer::Type>(type));
     }
-    else if (Local::isDataView(arrayBuffer))
+    else if (jsbind::isDataView(arrayBuffer))
     {
         jsvm_get_dataview_info(env, arrayBuffer, &length, &data, &buffer, &byteOffset);
         return ArrayBuffer(arrayBuffer, static_cast<uint8_t *>(data), length, ArrayBuffer::DATA_VIEW);
     }
-    else if (Local::isArrayBuffer(arrayBuffer))
+    else if (jsbind::isArrayBuffer(arrayBuffer))
     {
         jsvm_get_arraybuffer_info(env, arrayBuffer, &data, &length);
         return ArrayBuffer(arrayBuffer, static_cast<uint8_t *>(data), length, ArrayBuffer::ARRAY_BUFFER);

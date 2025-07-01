@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <CommCtrl.h>
 #include <string>
+#include <memory>
 
 namespace laya {
 
@@ -107,5 +108,6 @@ namespace laya {
 		RECT m_ncRect;
 
 		int m_refCount;
+		std::shared_ptr<int>        m_CallbackRef;
 	};
 };

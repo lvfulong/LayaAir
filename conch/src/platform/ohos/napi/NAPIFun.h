@@ -1,7 +1,6 @@
 #ifndef _NAPIFUN_
 #define _NAPIFUN_
 
-#include "Audio/JCAudioManager.h"
 #include "JCConch.h"
 #include "JCScriptRuntime.h"
 #include "JCSystemConfig.h"
@@ -30,7 +29,6 @@ class NAPIFun
         return &NAPIFun::fun_;
     }
     static void ConchNAPI_init(napi_value assetManager, std::string url, std::string filesDir, std::string cacheDir);
-    static void ConchNAPI_audioMusicPlayEnd();
     static void ConchNAPI_networkChanged(int nNetworkType);
     static void ConchNAPI_inputChange(int keycode);
     static void ConchNAPI_RunJS(const std::string &js);

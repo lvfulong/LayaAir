@@ -31,7 +31,7 @@ template <typename K, typename V> class LRUCache
     std::unordered_map<K, Node *> cache;
     Node *head;
     Node *tail;
-
+    std::function<void(const K &key, const V &value)> onEvict;
     void addNode(Node *node)
     {
         node->prev = head;
@@ -62,7 +62,11 @@ template <typename K, typename V> class LRUCache
     }
 
   public:
-    explicit LRUCache(size_t capacity) : capacity(capacity)
+    enum Capacity
+    {
+        kUnlimitedCapacity,
+    };
+    explicit LRUCache(size_t capacity, std::function<void(const K &key, const V &value)> onEvict = nullptr) : capacity(capacity), onEvict(onEvict)
     {
         // 初始化双向链表
         head = new Node(K(), V());
@@ -77,7 +81,10 @@ template <typename K, typename V> class LRUCache
         delete head;
         delete tail;
     }
-
+    void setOnEvict(std::function<void(const K &key, const V &value)> onEvict)
+    {
+        this->onEvict = onEvict;
+    }
     std::optional<V> get(const K &key)
     {
         if (cache.find(key) == cache.end())
@@ -89,7 +96,7 @@ template <typename K, typename V> class LRUCache
         return node->value;
     }
 
-    void put(const K &key, const V &value, std::function<void(const K &key, const V &value)> onEvict = nullptr)
+    void put(const K &key, const V &value)
     {
         if (cache.find(key) != cache.end())
         {
@@ -102,21 +109,22 @@ template <typename K, typename V> class LRUCache
             Node *node = new Node(key, value);
             cache[key] = node;
             addNode(node);
-            while (cache.size() > capacity)
+            while (capacity != kUnlimitedCapacity && cache.size() > capacity)
             {
-                Node *tail = popTail();
-                if (onEvict)
-                {
-                    onEvict(tail->key, tail->value);
-                }
-                cache.erase(tail->key);
-                delete tail;
+                removeOldest();
             }
         }
     }
 
     void clear()
     {
+        for (auto &item : cache)
+        {
+            if (onEvict)
+            {
+                onEvict(item.first, item.second->value);
+            }
+        }
         while (head->next != tail)
         {
             Node *temp = head->next;
@@ -125,7 +133,24 @@ template <typename K, typename V> class LRUCache
             delete temp;
         }
     }
-
+    void removeOldest()
+    {
+        Node *temp = popTail();
+        cache.erase(temp->key);
+        if (onEvict)
+        {
+            onEvict(temp->key, temp->value);
+        }
+        delete temp;
+    }
+    std::optional<V> peekOldest()
+    {
+        if (head->next == tail)
+        {
+            return std::nullopt;
+        }
+        return tail->prev->value;
+    }   
     void iterate(std::function<void(const K &key, const V &value)> callback)
     {
         Node *current = head->next;
@@ -135,13 +160,6 @@ template <typename K, typename V> class LRUCache
             current = current->next;
         }
     }
-
-    void clearAndSetCapacity(size_t newCapacity)
-    {
-        clear();
-        capacity = newCapacity;
-    }
-
     size_t getCapacity() const
     {
         return capacity;

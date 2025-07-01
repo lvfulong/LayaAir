@@ -41,7 +41,7 @@ static void stream_component_close(VideoState *is, int stream_index)
     AVFormatContext *ic = is->ic;
     AVCodecParameters *codecpar;
 
-    if (stream_index < 0 || stream_index >= ic->nb_streams)
+    if (ic == NULL || stream_index < 0 || stream_index >= ic->nb_streams)
         return;
     codecpar = ic->streams[stream_index]->codecpar;
 
@@ -100,6 +100,10 @@ static void stream_close(VideoState *is)
 {
     /* XXX: use a special url_shutdown call to abort parse cleanly */
     is->abort_request = 1;
+    if (is->read_tid == NULL)
+    {
+        return;
+    }
     SDL_WaitThread(is->read_tid, NULL);
 
     /* close each stream */
@@ -126,6 +130,7 @@ static void stream_close(VideoState *is)
     if (is->img_convert_ctx)
     {
         sws_freeContext(is->img_convert_ctx);
+        is->img_convert_ctx = NULL;
     }
     if (is->vis_texture)
         SDL_DestroyTexture(is->vis_texture);
@@ -318,12 +323,15 @@ bool stream_open(VideoState *is, unsigned char *buffer, int length, const AVInpu
     is->m_iobuffer_ptr = (unsigned char *)av_malloc(IO_BUFFER_SIZE);
     return stream_open(is, iformat);
 }
-
-void stream_seek(VideoState *is, int64_t pos, int rel) {
+/* seek in the stream */
+void stream_seek(VideoState *is, int64_t pos, int64_t rel, int by_bytes)
+{
     if (!is->seek_req) {
         is->seek_pos = pos;
         is->seek_rel = rel;
         is->seek_flags &= ~AVSEEK_FLAG_BYTE;
+        if (by_bytes)
+            is->seek_flags |= AVSEEK_FLAG_BYTE;
         is->seek_req = 1;
         SDL_CondSignal(is->continue_read_thread);
     }

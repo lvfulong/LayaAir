@@ -125,15 +125,15 @@ namespace laya{
 				if (pCurl->m_nCurlRet != 0/*CURLE_OK*/) {
 					//curl 执行失败
 					static std::string nullstr;
-					JCBuffer jb;
-					mOnEnd(jb, pCurl->m_strLocalAddr, pCurl->m_strSvAddr, pCurl->m_nCurlRet, pCurl->m_nResponseCode, nullstr);
+					std::shared_ptr<Data> data = Data::makeEmpty();
+					mOnEnd(data, pCurl->m_strLocalAddr, pCurl->m_strSvAddr, pCurl->m_nCurlRet, pCurl->m_nResponseCode, nullstr);
 				}
 				else {
 					//bool bHttpOK = pCurl->m_nResponseCode >= 200 && pCurl->m_nResponseCode < 300;
 					LOGI("Download end:%d", pCurl->m_nResponseCode);
 					if (bBigFile || iContentBuffSize <= 0) {//大文件没有buffer
-						JCBuffer jb;
-						mOnEnd(jb, pCurl->m_strLocalAddr, pCurl->m_strSvAddr,
+						std::shared_ptr<Data> data = Data::makeEmpty();
+						mOnEnd(data, pCurl->m_strLocalAddr, pCurl->m_strSvAddr,
 							0/*CURLE_OK*/, pCurl->m_nResponseCode,
 							pCurl->m_strResponseHead);
 					}
@@ -148,9 +148,8 @@ namespace laya{
 								pContentBuff = posthandleData;
 							}
 						}
-
-						JCBuffer buf((void*)pContentBuff, iContentBuffSize, false, true);
-						mOnEnd(buf, pCurl->m_strLocalAddr, pCurl->m_strSvAddr,
+						std::shared_ptr<Data> data = Data::makeAdopted(pContentBuff, iContentBuffSize, Data::DeleteProc);
+						mOnEnd(data, pCurl->m_strLocalAddr, pCurl->m_strSvAddr,
 							0/*CURLE_OK*/, pCurl->m_nResponseCode,
 							pCurl->m_strResponseHead);
 					}
@@ -239,7 +238,7 @@ namespace laya{
 
 
 #endif
-	void JCDownloadMgr::defCompleteFunc(JCBuffer&,const std::string&, const std::string&,
+	void JCDownloadMgr::defCompleteFunc(const std::shared_ptr<Data>& data,const std::string&, const std::string&,
         int,int,const std::string&){};
 	int JCDownloadMgr::defProgressFunc(unsigned int, unsigned int,float){return 0;}
 

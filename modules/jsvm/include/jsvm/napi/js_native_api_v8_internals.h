@@ -79,7 +79,7 @@ template <typename T> using Persistent = v8::Global<T>;
 
 using PersistentToLocal = node::PersistentToLocal;
 
-[[noreturn]] inline void OnFatalError(const char *location, const char *message)
+/*[[noreturn]]*/ inline void OnFatalError(const char *location, const char *message)
 {
     // node::OnFatalError(location, message);
 }

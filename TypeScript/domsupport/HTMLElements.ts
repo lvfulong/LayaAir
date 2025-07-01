@@ -910,9 +910,6 @@ class HTMLAudioElement extends HTMLMediaElement<ConchAudio> {
         this.tagName = "AUDIO";
     }
     readyState: number = 0;
-    setLoop(loop) {
-        this._nativeObj.setLoop(loop);
-    }
 
     stop() {
         this._nativeObj.stop();

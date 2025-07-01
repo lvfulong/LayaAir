@@ -113,7 +113,7 @@ jsvm_value JSNetwork::uploadFile(jsbind::Local object)
             if (uploadTask->m_onFailCallback.isValid() && uploadTask->m_onSuccessCallback.getLocal().isFunction())
             {
 
-                auto res = jsbind::MakeObject();
+                auto res = jsbind::makeObject();
                 jsbind::set_option(res, "data", data);
                 jsbind::set_option(res, "statusCode", statusCode);
 

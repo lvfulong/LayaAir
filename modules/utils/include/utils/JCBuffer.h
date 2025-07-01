@@ -389,6 +389,7 @@ namespace laya
 		int								m_nLen;
 	};
 
+    //可变数据
     class Buffer {
     public:
         Buffer() = default;

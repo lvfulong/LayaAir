@@ -6014,9 +6014,6 @@ class HTMLAudioElement extends HTMLMediaElement {
         this.readyState = 0;
         this.tagName = "AUDIO";
     }
-    setLoop(loop) {
-        this._nativeObj.setLoop(loop);
-    }
     stop() {
         this._nativeObj.stop();
     }
@@ -6245,6 +6242,7 @@ class Document extends Node {
                 return;
             console.log(">>>>>>>>>>>>>>>eval src=" + t.src);
             var t1 = Date.now();
+            window.document["currentScript"] = t.src;
             window.evalJS(t._stext);
             console.log(">>>>>>>>>>>>>>>>>eval take time:" + (Date.now() - t1));
             var e = new Event("load");

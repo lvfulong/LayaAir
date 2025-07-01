@@ -105,8 +105,6 @@ namespace laya
 
         static void enableEncodeURI(bool b);
 
-        static void setSoundGarbageCollectionTime(int nTime);
-
 		static bool getConchWebGL();
 
         static GraphicsAPI getGraphicsAPI();
@@ -121,6 +119,13 @@ namespace laya
         static const char* getTelCountryCode();
 
         static int getMemoryUsageInByte();
+
+        static void setAudioMaxCacheSizeInBytes(int size);
+        static int getAudioMaxCacheSizeInBytes();
+        static int getAudioCurrentCacheSizeInBytes();
+        static void clearAudioCache();
+        static void setAudioStreamThreshold(int byteNum);
+        static int getAudioStreamThreshold();
 
     public:
 	    static std::string				m_sGUID;

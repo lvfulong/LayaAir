@@ -103,29 +103,25 @@ namespace laya
     }
 	void JCFileResManager::createBufferURL(const std::string& url, const char* data, int bytes)
 	{
-		char* buffer = new char[bytes];
-		memcpy(buffer, data, bytes);
-		m_BufferURLMap.insert(std::make_pair(url, new JCBuffer((void*)buffer, bytes, true, true)));
+        std::shared_ptr<Data> d = Data::makeWithCopy((void*)data, bytes);
+		m_BufferURLMap.insert(std::make_pair(url, d));
 	}
 	void JCFileResManager::revokeBufferURL(const std::string& url)
 	{
-		std::map<std::string, JCBuffer*>::iterator it = m_BufferURLMap.find(url);
+		auto it = m_BufferURLMap.find(url);
 		if (it != m_BufferURLMap.end())
 		{
-			delete it->second;
 			m_BufferURLMap.erase(it);
 		}
 	}
-	bool JCFileResManager::searchBufferURL(const std::string& url, char** data, int& bytes)
+	std::shared_ptr<Data> JCFileResManager::searchBufferURL(const std::string& url)
 	{
-		std::map<std::string, JCBuffer*>::iterator it = m_BufferURLMap.find(url);
+		auto it = m_BufferURLMap.find(url);
 		if (it != m_BufferURLMap.end())
 		{
-			*data = it->second->m_pPtr;
-			bytes = it->second->m_nLen;
-			return true;
+            return it->second;
 		}
-		return false;
+		return nullptr;
 	}
 
 }

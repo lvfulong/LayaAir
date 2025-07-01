@@ -159,7 +159,7 @@ namespace laya
         }
         m_nDownloadState = 0;
         JCFileRes* pFileRes = (JCFileRes*)p_pRes;
-        if (pFileRes->m_pBuffer.get())
+        if (pFileRes->m_data && pFileRes->m_data->size() > 0)
         {
 		
             //同步加载
@@ -169,7 +169,7 @@ namespace laya
             else
             {
                 imgDecodeCB cb = std::bind(&JSImage::onDecodeEndDecThread, this, std::placeholders::_1, callbackref);
-                loadImageMemASync(pFileRes->m_pBuffer, pFileRes->m_nLength, cb);
+                loadImageMemASync(pFileRes->m_data, cb);
             }
         }
         else
@@ -217,12 +217,6 @@ namespace laya
             LOGE("JSImage::pushBitmapData array buffer size < width * height * 4");
         }
     }
-
-    static void deleter(char* p)
-    {
-        //不删除 JS保证在onDecodeEndDecThread前pArrayBuffer不垃圾回收
-    }
-
     void JSImage::putDataJS(jsbind::ArrayBuffer arrayBuffer)
     {
         DEBUG_CHECK(arrayBuffer.isValid());
@@ -238,8 +232,8 @@ namespace laya
         m_sUrl = sCachePath;
         std::weak_ptr<int> cbref(m_CallbackRef);
         imgDecodeCB cb = std::bind(&JSImage::onDecodeEndDecThread, this, std::placeholders::_1, cbref);
-        std::shared_ptr<char> pBuffer(pArrayBufferPtr, deleter);
-        loadImageMemASync(pBuffer, nABLen, cb);
+        std::shared_ptr<Data> pBuffer = Data::makeWithCopy(pArrayBufferPtr, nABLen);
+        loadImageMemASync(pBuffer, cb);
 
     }
     void JSImage::setBase64(const char* base64)
@@ -254,8 +248,9 @@ namespace laya
         std::weak_ptr<int> cbref(m_CallbackRef);
         imgDecodeCB cb = std::bind(&JSImage::onDecodeEndDecThread, this, std::placeholders::_1, cbref);
         int length = 0;
-        std::shared_ptr<char> pBuffer(base64_decode((const unsigned char*)base64, strlen(base64), &length));
-        loadImageMemASync(pBuffer, length, cb);
+        char* data = base64_decode((const unsigned char*)base64, strlen(base64), &length);
+        std::shared_ptr<Data> d = Data::makeAdopted(data, length, Data::DeleteProc);
+        loadImageMemASync(d, cb);
     }
     void JSImage::putBitmapData(char* pData, int width, int height )
     {
@@ -280,13 +275,13 @@ namespace laya
     }
     jsvm_value JSImage::getImageData( int p_nX,int p_nY,int p_nW,int p_nH )
     {
-	    if( m_bComplete == false ) return jsbind::MakeNull();
-	    if( m_pImage == NULL ) return jsbind::MakeNull();
+	    if( m_bComplete == false ) return jsbind::makeNull();
+	    if( m_pImage == NULL ) return jsbind::makeNull();
 	    BitmapData* pImg = &(m_pImage->m_kBitmapData);
 	    if( pImg  )
 	    {
-		    if( p_nX < 0 || p_nY < 0 || p_nX >= pImg->m_nWidth || p_nY >= pImg->m_nHeight )return jsbind::MakeNull();
-		    if( ( p_nX + p_nW ) > pImg->m_nWidth || ( p_nY + p_nH ) > pImg->m_nHeight  )return jsbind::MakeNull();
+		    if( p_nX < 0 || p_nY < 0 || p_nX >= pImg->m_nWidth || p_nY >= pImg->m_nHeight )return jsbind::makeNull();
+		    if( ( p_nX + p_nW ) > pImg->m_nWidth || ( p_nY + p_nH ) > pImg->m_nHeight  )return jsbind::makeNull();
 
             if (pImg->m_pImageData != NULL)
             {
@@ -309,7 +304,7 @@ namespace laya
 		        }
             }
 	    }
-	    return jsbind::MakeNull();
+	    return jsbind::makeNull();
     }
     int JSImage::getImageID()
     {

@@ -179,25 +179,24 @@ void HttpClientCurl::didCompleteTransfer(CURLcode result)
         if (bBigFile)
         {
             // ���ļ�û��buffer
-            laya::JCBuffer jb;
-            this->m_functionOnEnd(jb, "", "", 0 /*CURLE_OK*/, m_statusCode, m_responseHead);
+            std::shared_ptr<Data> data = Data::makeEmpty();
+            this->m_functionOnEnd(data, "", "", 0 /*CURLE_OK*/, m_statusCode, m_responseHead);
         }
         else
         {
             if (bufferBytes <= 0)
             {
-                laya::JCBuffer jb;
-                this->m_functionOnEnd(jb, "", "", 0 /*CURLE_OK*/, m_statusCode, m_responseHead);
+                std::shared_ptr<Data> data = Data::makeEmpty();
+                this->m_functionOnEnd(data, "", "", 0 /*CURLE_OK*/, m_statusCode, m_responseHead);
             }
             else
             {
-                char *result = new char[bufferBytes];
-                memcpy(result, m_recieveData.data(), bufferBytes);
-                laya::JCBuffer buf((void *)result, bufferBytes, false, true);
+				// todo not copy
+                std::shared_ptr<Data> data = Data::makeWithCopy((void *)m_recieveData.data(), bufferBytes);
                 // request->m_responseCallback(buf, pCurl->m_strLocalAddr,
                 // pCurl->m_strSvAddr, 0/*CURLE_OK*/, pCurl->m_nResponseCode,
                 // pCurl->m_strResponseHead);
-                this->m_functionOnEnd(buf, "", "", 0 /*CURLE_OK*/, m_statusCode, m_responseHead);
+                this->m_functionOnEnd(data, "", "", 0 /*CURLE_OK*/, m_statusCode, m_responseHead);
             }
         }
     }

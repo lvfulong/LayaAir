@@ -97,9 +97,6 @@ namespace laya
         void jsUrlback();
         void jsUrlbackJSFunction();
 
-        void restoreAudio();
-        void jsRestoreAudioFunction();
-
         void onNetworkChanged(int nType);
         void onNetworkChangedCallJSFunction(int nType);
 

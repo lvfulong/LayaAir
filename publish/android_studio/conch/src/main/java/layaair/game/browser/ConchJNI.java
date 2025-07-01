@@ -50,7 +50,6 @@ public class ConchJNI {
 	public static native void exportStaticMethodToC( String packcls);
 	public static native void alertCallback();
 	public static native void RunJS(String jsstring);
-	public static native void audioMusicPlayEnd();
 	public static native void networkChanged( int p_nNetworkType );
 	public static native void inputChange(int keyCode);
 	public static native void handleKeyboardInput(String strValue);
@@ -59,4 +58,5 @@ public class ConchJNI {
 	public static native void reloadJS();
 	public static native void urlBack();
 	public static native void handleAsyncMessageMethodNative(long nativeHandle, String result);
+	public static native void onTrimMemory(int level);
 }

@@ -198,6 +198,7 @@ public class LayaVideoPlayer implements IVideoRenderTarget.Callback{
         try {
             //Uri videoUri = Uri.parse(m_url);
             m_readyState = ReadyState.HAVE_NOTHING;
+            m_mediaPlayer.start();
             emit("loadstart");
             if (true) {
                 String proxyUrl = LayaConch5.GetInstance().httpProxyCacheServer.getProxyUrl(m_url);
@@ -327,7 +328,7 @@ public class LayaVideoPlayer implements IVideoRenderTarget.Callback{
             return true;
         }
 
-        Log.i(TAG, "[Debug][Video]IsPaused: " +  m_mediaPlayer.isPlaying());
+        //Log.i(TAG, "[Debug][Video]IsPaused: " +  m_mediaPlayer.isPlaying());
         return !m_mediaPlayer.isPlaying();
     }
 

@@ -21,7 +21,6 @@
 #include <downloadMgr/JCDownloadMgr.h>
 #include "JCSystemConfig.h"
 #include <LayaGL/JCLayaGL.h>
-#include <Audio/JCAudioManager.h>
 #include <Bindings/JSInput.h>
 #include <thread>
 #include <platform/OS.h>
@@ -152,7 +151,7 @@ namespace laya
         JCDownloadMgr::delInstance();
         
         s_pScriptRuntime.reset();
-        delete JCAudioManager::GetInstance();
+        m_pAudioPlayer.reset();
         s_pConchRender.reset();
 
         LOGI("onAppDestroy...");
@@ -166,7 +165,6 @@ namespace laya
             return;
         }
         JCConch::s_pScriptRuntime->start(m_strStartJS.c_str());
-        JCAudioManager::GetInstance();
         m_isAppStarted = true;
         JCConch::s_pScriptRuntime->loadJSScript();
 	}
@@ -270,17 +268,11 @@ namespace laya
     }
     void JCConch::onAppPause() {
         DEBUG_CHECK(isScriptThread());
-#if defined(OS_ANDROID) || defined(OS_OHOS)  
-            if( laya::JCAudioManager::GetInstance()->getMp3Mute() == false && laya::JCAudioManager::GetInstance()->getMp3Stopped() == false)
+#if defined(OS_ANDROID) || defined(OS_OHOS)
+            if (m_pAudioPlayer)
             {
-                #if defined(OS_ANDROID)
-                JCAudioManager::GetInstance()->pauseMp3();
-                #endif
-                #if defined(OS_OHOS)
-                NapiHelper::GetInstance()->pauseBackgroundMusic();
-                #endif
+                m_pAudioPlayer->onPause();
             }
-            laya::JCAudioManager::GetInstance()->m_pWavPlayer->pause();
 #endif
             auto pScriptRuntime = JCConch::s_pScriptRuntime;
             if (pScriptRuntime)
@@ -290,18 +282,11 @@ namespace laya
     }
     void JCConch::onAppResume() {
         DEBUG_CHECK(isScriptThread());
-#if defined(OS_ANDROID) || defined(OS_OHOS)  
-            //继续声音
-            if( laya::JCAudioManager::GetInstance()->getMp3Mute() == false && laya::JCAudioManager::GetInstance()->getMp3Stopped() == false)
+#if defined(OS_ANDROID) || defined(OS_OHOS)
+            if (m_pAudioPlayer)
             {
-                #if defined(OS_ANDROID)
-                laya::JCAudioManager::GetInstance()->resumeMp3();
-                #endif
-                #if defined(OS_OHOS)
-                NapiHelper::GetInstance()->resumeBackgroundMusic();
-                #endif
+                m_pAudioPlayer->onResume();
             }
-            laya::JCAudioManager::GetInstance()->m_pWavPlayer->resume();
 #endif
             auto pScriptRuntime = JCConch::s_pScriptRuntime;
             if (pScriptRuntime)

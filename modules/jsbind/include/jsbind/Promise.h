@@ -2,6 +2,8 @@
 #define __JSBIND_PROMISE_H__
 
 #include <jsvm/JSVM_Types.h>
+#include <jsvm/JSEnv.h>
+#include <jsbind/internal/ValueTraits.h>
 
 namespace jsbind
 {

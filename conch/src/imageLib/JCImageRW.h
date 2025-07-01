@@ -14,6 +14,8 @@
 #define PNG_UINT32 unsigned int
 #include <utils/Preprocessor.h>
 #include "BitmapData.h"
+#include <utils/Data.h>
+
 namespace laya
 {
 
@@ -39,7 +41,7 @@ namespace laya
     BitmapData loadLocalImageSync( const char* p_pszFile );
 
 
-	void loadImageMemASync(std::shared_ptr<char> p_pBuff, int p_nLenth, imgDecodeCB p_CB);
+	void loadImageMemASync(const std::shared_ptr<Data>& data, imgDecodeCB p_CB);
 
 	ImageType getImgType( const char* p_pMem, int p_nLength );
 

@@ -26,7 +26,6 @@ import layaair.game.browser.ConchJNI;
 import layaair.game.browser.LayaEditBox;
 import layaair.game.device.DevID;
 import layaair.game.utility.Constants;
-import layaair.game.utility.LayaAudioMusic;
 import layaair.game.utility.ProcessInfo;
 import layaair.game.utility.Utils;
 
@@ -698,8 +697,12 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener {
 		}
 		delInstance();
 
-		LayaAudioMusic.uninit();
 		destroy();
+
+		ConchJNI.uninit();
+		//退出进程，否则会出现某一进程执行了退出然后又执行初始化，流程脏数据导致崩溃
+		android.os.Process.killProcess(android.os.Process.myPid());
+		System.exit(0);
 	}
 	@SuppressLint("NewApi") @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void destroy()
@@ -731,6 +734,7 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener {
 		}
 		mCtx = null;
 		m_layaEventListener = null;
+	
 	}
 
 	public void delInstance()
@@ -900,5 +904,9 @@ public class LayaConch5 implements ILayaGameEgine,OnKeyListener {
 	@Override
 	public void  setStringOnBackPressed(String str) {
 		m_strOnBackPressed = str;
+	}
+	@Override
+	public void onTrimMemory(int level) {
+		ConchJNI.onTrimMemory(level);
 	}
 }

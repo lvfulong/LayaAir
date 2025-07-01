@@ -13,8 +13,8 @@ namespace jsbind
 namespace internal
 {
 
-template <typename T, typename Tuple, size_t... Seq>
-T *tuple_call_class_constructor(jsvm_env env, jsvm_callback_info info, std::index_sequence<Seq...>)
+template <typename T,typename Traits, typename Tuple, size_t... Seq>
+auto tuple_call_class_constructor(jsvm_env env, jsvm_callback_info info, std::index_sequence<Seq...>)
 {
 
     size_t argc = sizeof...(Seq);
@@ -23,7 +23,7 @@ T *tuple_call_class_constructor(jsvm_env env, jsvm_callback_info info, std::inde
     void *data;
     jsvm_get_cb_info(env, info, &argc, argv, &_this, &data);
 
-    return new T(ValueTraits<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(argv[Seq])...);
+    return Traits::template create<T>(ValueTraits<typename std::tuple_element<Seq, Tuple>::type>::ToCpp(argv[Seq])...);//todo std::forward?
 }
 
 template <typename Tuple, typename Func, size_t... Seq>
@@ -172,9 +172,9 @@ jsvm_value InvokeClassMethodOptionalOverride(jsvm_env env, jsvm_callback_info in
                                                                         std::make_index_sequence<sizeof...(Args)>());
 }
 
-template <typename ClassType, typename... Args> ClassType *InvokeClassConstructor(jsvm_env env, jsvm_callback_info info)
+template <typename ClassType, typename Traits, typename... Args> auto InvokeClassConstructor(jsvm_env env, jsvm_callback_info info)
 {
-    return tuple_call_class_constructor<ClassType, std::tuple<Args...>>(env, info,
+    return tuple_call_class_constructor<ClassType, Traits, std::tuple<Args...>>(env, info,
                                                                         std::make_index_sequence<sizeof...(Args)>());
 }
 

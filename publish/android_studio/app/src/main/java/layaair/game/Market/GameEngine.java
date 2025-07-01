@@ -167,4 +167,7 @@ public class GameEngine implements IPlugin {
 		Log.d(TAG, "onRequestPermissionsResult: requestCode " + requestCode);
 		mLayaGameEngine.onRequestPermissionsResult(requestCode, permissions, grantResults);
 	}
+	public void onTrimMemory(int level) {
+		mLayaGameEngine.onTrimMemory(level);
+	}
 }

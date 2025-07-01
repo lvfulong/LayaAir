@@ -13,7 +13,7 @@ namespace laya
         {
             return jsbind::Make<std::string>(item.value());  
         }
-        return jsbind::MakeNull();
+        return jsbind::makeNull();
     }
     void JSLocalStorage::setItem(const std::string &key, const std::string &value)
     {
@@ -38,7 +38,7 @@ namespace laya
         {
             return jsbind::Make<std::string>(key.value());
         }
-        return jsbind::MakeNull();
+        return jsbind::makeNull();
     }
     void JSLocalStorage::exportJS(jsbind::Object &context)
     {

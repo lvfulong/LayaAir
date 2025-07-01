@@ -21,7 +21,7 @@ namespace laya
 	}
 	jsvm_value JSLaunchOptions::getQuery()
 	{
-		return jsbind::MakeUndefined();
+		return jsbind::makeUndefined();
 	}
 	const char* JSLaunchOptions::getShareTicket()
 	{
@@ -29,7 +29,7 @@ namespace laya
 	}
 	jsvm_value JSLaunchOptions::getReferrerInfo()
 	{
-		return jsbind::MakeUndefined();
+		return jsbind::makeUndefined();
 	}
     void JSLaunchOptions::exportJS(jsbind::Object& context)
     {
