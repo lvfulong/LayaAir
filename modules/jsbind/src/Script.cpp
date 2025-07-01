@@ -1,6 +1,6 @@
 #include <jsbind/Error.h>
 #include <jsbind/Script.h>
-#include <jsbind/internal/Value.h>
+#include <jsbind/Value.h>
 
 namespace jsbind
 {

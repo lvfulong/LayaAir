@@ -5,10 +5,7 @@
 #include <cmath>
 #include <utils/Preprocessor.h>
 
-#if defined(JPEG_XL)
-#include <jxl/decode.h>
-#include <jxl/decode_cxx.h>
-#endif
+
 //------------------------------------------------------------------------------
 namespace laya
 {
@@ -17,81 +14,6 @@ namespace laya
 	int LoadGif(BitmapData *pBitmapData, unsigned char *memData, int size);
 	bool saveJpeg(int width, int height, int bpp, char *buffer, int quality, const char *filename);
 	std::shared_ptr<JCWorkerThread> g_DecThread = NULL; // 全局的解码线程
-#if defined(JPEG_XL)
-	bool LoadJXLFromMem(BitmapData *pBitmapData, unsigned char *memData, int size){
-		printf("Starting to load JXL from memory...\n");
-
-		auto dec = JxlDecoderMake(nullptr);
-		if (JXL_DEC_SUCCESS != JxlDecoderSubscribeEvents(dec.get(),
-														 JXL_DEC_BASIC_INFO | JXL_DEC_COLOR_ENCODING | JXL_DEC_FULL_IMAGE))
-		{
-			printf("Failed to subscribe to decoder events\n");
-			return false;
-		}
-
-		JxlBasicInfo info;
-		JxlPixelFormat format = {4, JXL_TYPE_UINT8, JXL_LITTLE_ENDIAN, 0};
-
-		JxlDecoderSetInput(dec.get(), memData, size);
-
-		JxlDecoderStatus status = JXL_DEC_NEED_MORE_INPUT;
-		while (status != JXL_DEC_SUCCESS)
-		{
-			status = JxlDecoderProcessInput(dec.get());
-
-			if (status == JXL_DEC_ERROR)
-			{
-				printf("Decoder error\n");
-				return false;
-			}
-			else if (status == JXL_DEC_NEED_MORE_INPUT)
-			{
-				printf("Error: need more input, but we provided all data\n");
-				return false;
-			}
-			else if (status == JXL_DEC_BASIC_INFO)
-			{
-				if (JXL_DEC_SUCCESS != JxlDecoderGetBasicInfo(dec.get(), &info))
-				{
-					printf("Failed to get basic info\n");
-					return false;
-				}
-				pBitmapData->m_nWidth = info.xsize;
-				pBitmapData->m_nHeight = info.ysize;
-				pBitmapData->m_nBpp = 4; // RGBA
-
-				printf("Image dimensions: %d x %d\n", pBitmapData->m_nWidth, pBitmapData->m_nHeight);
-				printf("Channels: %d\n", pBitmapData->m_nBpp);
-			}
-			else if (status == JXL_DEC_NEED_IMAGE_OUT_BUFFER)
-			{
-				size_t buffer_size;
-				if (JXL_DEC_SUCCESS != JxlDecoderImageOutBufferSize(dec.get(), &format, &buffer_size))
-				{
-					printf("Failed to get output buffer size\n");
-					return false;
-				}
-				pBitmapData->m_pImageData = new char[buffer_size];
-				if (JXL_DEC_SUCCESS != JxlDecoderSetImageOutBuffer(dec.get(), &format, pBitmapData->m_pImageData, buffer_size))
-				{
-					printf("Failed to set output buffer\n");
-					delete[] pBitmapData->m_pImageData;
-					return false;
-				}
-				printf("Allocated output buffer of size: %zu bytes\n", buffer_size);
-			}
-			else if (status == JXL_DEC_FULL_IMAGE)
-			{
-				printf("Full image decoded successfully\n");
-			}
-		}
-
-		JxlDecoderCloseInput(dec.get());
-
-		printf("JXL loading complete\n");
-		return true;
-	}
-#endif
 	bool loadImageMemSync(const char *p_pMem, int p_nLenth, BitmapData &p_bmp)
 	{
 		ImageType imgType = getImgType(p_pMem, p_nLenth);
@@ -108,11 +30,6 @@ namespace laya
 			break;
 		case ImgType_gif:
 			return LoadGif(&p_bmp, (unsigned char *)p_pMem, p_nLenth) != 0;
-			break;
-#if defined(JPEG_XL)
-		case ImgType_JXL:
-			return LoadJXLFromMem(&p_bmp, (unsigned char *)p_pMem, p_nLenth);
-#endif
 			break;
 		case ImgType_unknow:
 		default:
@@ -131,21 +48,25 @@ namespace laya
         }
         return bmp;
     }
-	void _AsyncLoadImage(std::shared_ptr<char> p_pBuff, int p_nLenth, imgDecodeCB p_CB){
-		std::shared_ptr<char> pMem = p_pBuff;
+	void _AsyncLoadImage(const std::shared_ptr<Data>& data, imgDecodeCB p_CB)
+	{
         BitmapData bmp;
-		bool b = loadImageMemSync(pMem.get(), p_nLenth, bmp );
-		if( b ){
+		bool b = loadImageMemSync((const char*)data->bytes(), data->size(), bmp );
+		if(b)
+		{
 			p_CB(bmp);
-		}else{
+		}
+		else
+		{
 			if(bmp.m_pImageData ) delete [] bmp.m_pImageData ;
 			bmp.m_pImageData = 0;
 			p_CB(bmp);
 		}
 	}
-	void loadImageMemASync(std::shared_ptr<char> p_pBuff, int p_nLenth, imgDecodeCB p_CB){
+	void loadImageMemASync(const std::shared_ptr<Data>& data, imgDecodeCB p_CB)
+	{
 		if (g_DecThread) {
-			g_DecThread->post( std::bind(_AsyncLoadImage, p_pBuff, p_nLenth,p_CB ) );
+			g_DecThread->post(std::bind(_AsyncLoadImage, data, p_CB));
 		}
 	}
 	ImageType getImgType( const char* p_pMem, int p_nLength ){
@@ -157,13 +78,6 @@ namespace laya
 		if( idval == pngID )return ImgType_png;
 		else if( idval==gifID ) return ImgType_gif;
 		else if( (idval &0xffffff) == jpegID ) return ImgType_jpeg;
-#if defined(JPEG_XL)
-		 // 使用 libjxl 检查文件格式
-    	JxlSignature signature = JxlSignatureCheck(reinterpret_cast<const uint8_t*>(p_pMem), p_nLength);
-		if(signature == JXL_SIG_CODESTREAM || signature == JXL_SIG_CONTAINER){
-			return ImgType_JXL;
-		}
-#endif
 		return ImgType_unknow;
 	}
 	bool getImageBaseInfo( const char* p_pMem, int p_nLength, ImageBaseInfo& p_Info ){

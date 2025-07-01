@@ -1,7 +1,7 @@
 #ifndef __JSBIND_VALUE_TRAITS__H__
 #define __JSBIND_VALUE_TRAITS__H__
 
-#include "jsbind/internal/Value.h"
+#include "jsbind/Value.h"
 #include "jsvm/JSVM.h"
 #include "jsvm/JSVM_Types.h"
 #include "jsvm/napi/js_native_api.h"
@@ -11,11 +11,15 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#include <memory>
+#include <type_traits>
 
 namespace jsbind
 {
 template <typename ClassType> bool isWrappedClassOf();
-template <typename ClassType> jsvm_value wrapCppObject(ClassType *objectPointer, bool callDestructor);
+template <typename ClassType, typename Traits> jsvm_value wrapCppObject(ClassType *objectPointer, bool callDestructor);
+template <typename ClassType, typename Traits> typename Traits::template object_pointer_type<ClassType> unwrapCppObject(jsvm_value value);
+
 namespace internal
 {
 template <class T> struct is_value_object;
@@ -24,10 +28,10 @@ template <typename T>
 struct is_wrapped_class : std::conjunction<std::is_class<T>, std::negation<internal::is_value_object<T>>,
                                            // std::negation<detail::is_string<T>>,
                                            std::negation<internal::is_mapping<T>>,
-                                           std::negation<internal::is_sequence<T>>>
+                                           std::negation<internal::is_sequence<T>>,
+                                           std::negation<internal::is_shared_ptr<T>>>
 // std::negation<detail::is_array<T>>,
-// std::negation<detail::is_tuple<T>>,
-// std::negation<detail::is_shared_ptr<T>>>
+// std::negation<detail::is_tuple<T>>
 {
 };
 
@@ -40,15 +44,15 @@ template <typename T> class ValueTraits<T, std::enable_if_t<std::is_enum<T>::val
   public:
     static T ToCpp(jsvm_value value)
     {
-        return static_cast<T>(internal::getInt32(value));
+        return static_cast<T>(getInt32(value));
     }
     static jsvm_value ToJs(T value, bool callDestructor = true)
     {
-        return internal::makeInt32(static_cast<int32_t>(value));
+        return makeInt32(static_cast<int32_t>(value));
     }
     static bool is(jsvm_value value)
     {
-        return internal::isNumber(value);
+        return isNumber(value);
     }
 };
 
@@ -58,7 +62,7 @@ template <typename T> class ValueTraits<T, std::enable_if_t<internal::is_wrapped
     static jsvm_value ToJs(T value, bool callDestructor = true)
     {
         T *object = new T(value); // copy construct to avoid life cycle issues
-        return wrapCppObject<T>(object, callDestructor);
+        return wrapCppObject<T, raw_ptr_traits>(object, callDestructor);
     }
 
     static T &ToCpp(jsvm_value value)
@@ -89,9 +93,9 @@ template <typename T> class ValueTraits<T *, std::enable_if_t<internal::is_wrapp
     {
         if (value == nullptr)
         {
-            internal::makeNull();
+            return makeNull();
         }
-        return wrapCppObject<T>(value, callDestructor);
+        return wrapCppObject<T, raw_ptr_traits>(value, callDestructor);
     }
     static T *ToCpp(jsvm_value value)
     {
@@ -124,20 +128,42 @@ template <typename T> struct ValueTraits<T &> : ValueTraits<T>
 template <typename T> struct ValueTraits<const T &> : ValueTraits<T>
 {
 };
+
+template <typename T> class ValueTraits<std::shared_ptr<T>, std::enable_if_t<internal::is_wrapped_class<T>::value>>
+{
+  public:
+    static jsvm_value ToJs(std::shared_ptr<T> value, bool callDestructor = true)
+    {
+        if (value == nullptr)
+        {
+            return makeNull();
+        }
+        return wrapCppObject<T, shared_ptr_traits>(value, callDestructor);
+    }
+    static std::shared_ptr<T> ToCpp(jsvm_value value)
+    {
+        DEBUG_CHECK(value != nullptr);
+        return unwrapCppObject<T, shared_ptr_traits>(value);
+    }
+    static bool is(jsvm_value value)
+    {
+        return isWrappedClassOf<T>();
+    }
+};
 template <> class ValueTraits<int32_t>
 {
   public:
     static int32_t ToCpp(jsvm_value value)
     {
-        return internal::getInt32(value);
+        return getInt32(value);
     }
     static jsvm_value ToJs(int32_t value, bool callDestructor = true)
     {
-        return internal::makeInt32(value);
+        return makeInt32(value);
     }
     static bool is(jsvm_value value)
     {
-        return internal::isNumber(value);
+        return isNumber(value);
     }
 };
 
@@ -149,15 +175,15 @@ template <> class ValueTraits<uint32_t>
   public:
     static uint32_t ToCpp(jsvm_value value)
     {
-        return internal::getUint32(value);
+        return getUint32(value);
     }
     static jsvm_value ToJs(uint32_t value, bool callDestructor = true)
     {
-        return internal::makeUint32(value);
+        return makeUint32(value);
     }
     static bool is(jsvm_value value)
     {
-        return internal::isNumber(value);
+        return isNumber(value);
     }
 };
 
@@ -169,7 +195,7 @@ template <> class ValueTraits<long>
     static jsvm_value ToJs(long value, bool callDestructor = true)
     {
         static_assert(sizeof(long) == 8);
-        return internal::makeInt64Noloss(value);
+        return makeInt64Noloss(value);
     }
     static long ToCpp(jsvm_value value)
     {
@@ -181,11 +207,11 @@ template <> class ValueTraits<long>
         {
             return 0;
         }
-        return internal::getInt64Noloss(value);
+        return getInt64Noloss(value);
     }
     static bool is(jsvm_value value)
     {
-       return internal::isBigInt(value);
+       return isBigInt(value);
     }
 };
 #endif
@@ -203,15 +229,15 @@ template <> class ValueTraits<int64_t>
         {
             return 0;
         }
-        return internal::getInt64Noloss(value);
+        return getInt64Noloss(value);
     }
     static jsvm_value ToJs(int64_t value, bool callDestructor = true)
     {
-        return internal::makeInt64Noloss(value);
+        return makeInt64Noloss(value);
     }
     static bool is(jsvm_value value)
     {
-       return internal::isBigInt(value);
+       return isBigInt(value);
     }
 };
 template <> class ValueTraits<uint64_t>
@@ -223,15 +249,15 @@ template <> class ValueTraits<uint64_t>
         {
             return 0;
         }*/
-        return internal::getUint64Noloss(value);
+        return getUint64Noloss(value);
     }
     static jsvm_value ToJs(uint64_t value, bool callDestructor = true)
     {
-        return internal::makeUint64Noloss(value);
+        return makeUint64Noloss(value);
     }
     static bool is(jsvm_value value)
     {
-       return internal::isBigInt(value);
+       return isBigInt(value);
     }
 };
 
@@ -240,15 +266,15 @@ template <> class ValueTraits<uint16_t>
   public:
     static uint16_t ToCpp(jsvm_value value)
     {
-        return static_cast<uint8_t>(internal::getUint32(value));
+        return static_cast<uint16_t>(getUint32(value));
     }
     static jsvm_value ToJs(uint16_t value, bool callDestructor = true)
     {
-        return internal::makeUint32(static_cast<uint8_t>(value));
+        return makeUint32(static_cast<uint32_t>(value));
     }
     static bool is(jsvm_value value)
     {
-        return internal::isNumber(value);
+        return isNumber(value);
     }
 };
 template <> class ValueTraits<uint8_t>
@@ -256,15 +282,15 @@ template <> class ValueTraits<uint8_t>
   public:
     static uint8_t ToCpp(jsvm_value value)
     {
-        return static_cast<uint8_t>(internal::getUint32(value));
+        return static_cast<uint8_t>(getUint32(value));
     }
     static jsvm_value ToJs(uint8_t value, bool callDestructor = true)
     {
-        return internal::makeUint32(static_cast<uint8_t>(value));
+        return makeUint32(static_cast<uint8_t>(value));
     }
     static bool is(jsvm_value value)
     {
-        return internal::isNumber(value);
+        return isNumber(value);
     }
 };
 template <> class ValueTraits<const uint8_t &> : public ValueTraits<uint8_t>
@@ -276,15 +302,15 @@ template <> class ValueTraits<bool>
   public:
     static bool ToCpp(jsvm_value value)
     {
-        return internal::getBool(value);
+        return getBool(value);
     }
     static jsvm_value ToJs(bool value, bool callDestructor = true)
     {
-        return internal::makeBool(value);
+        return makeBool(value);
     }
     static bool is(jsvm_value value)
     {
-        return internal::isBool(value);
+        return isBool(value);
     }
 };
 
@@ -293,15 +319,15 @@ template <> class ValueTraits<float>
   public:
     static float ToCpp(jsvm_value value)
     {
-        return static_cast<float>(internal::getDouble(value));
+        return static_cast<float>(getDouble(value));
     }
     static jsvm_value ToJs(float value, bool callDestructor = true)
     {
-        return internal::makeDouble(static_cast<float>(value));
+        return makeDouble(static_cast<float>(value));
     }
    static bool is(jsvm_value value)
     {
-        return internal::isNumber(value);
+        return isNumber(value);
     }
 };
 
@@ -311,16 +337,16 @@ template <> class ValueTraits<double>
   public:
     static double ToCpp(jsvm_value value)
     {
-        return internal::getDouble(value);
+        return getDouble(value);
     }
     static jsvm_value ToJs(double value, bool callDestructor = true)
     {
-        return internal::makeDouble(value);
+        return makeDouble(value);
     }
 
     static bool is(jsvm_value value)
     {
-        return internal::isNumber(value);
+        return isNumber(value);
     }
 };
 
@@ -330,15 +356,15 @@ template <> class ValueTraits<std::u16string>
   public:
     static std::u16string ToCpp(jsvm_value value)
     {
-        return internal::getStringUtf16(value);
+        return getStringUtf16(value);
     }
     static jsvm_value ToJs(const std::u16string &value, bool callDestructor = true)
     {
-        return internal::makeStringUtf16(value);
+        return makeStringUtf16(value.c_str(), value.length());
     }
     static bool is(jsvm_value value)
     {
-        return internal::isString(value);
+        return isString(value);
     }
 };
 // utf8 string
@@ -356,15 +382,15 @@ template <> class ValueTraits<std::string>
         {
             return "";
         }*/
-        return internal::getStringUtf8(value);
+        return getStringUtf8(value);
     }
     static jsvm_value ToJs(const std::string &value, bool callDestructor = true)
     {
-        return internal::makeStringUtf8(value);
+        return makeStringUtf8(value.c_str(), value.length());
     }
     static bool is(jsvm_value value)
     {
-        return internal::isString(value);
+        return isString(value);
     }
 };
 
@@ -401,15 +427,15 @@ template <> class ValueTraits<const char *>
     {
         return "";
     }*/
-        return from_type(internal::getStringUtf8(value));
+        return from_type(getStringUtf8(value));
     }
     static jsvm_value ToJs(std::string_view value, bool callDestructor = true)
     {
-        return internal::makeStringUtf8(value.data());
+        return makeStringUtf8(value.data(), value.length());
     }
     static bool is(jsvm_value value)
     {
-        return internal::isString(value);
+        return isString(value);
     }
 };
 
@@ -440,16 +466,16 @@ template <> class ValueTraits<void>
     {
         if (0 == value)
         {
-            return internal::makeUndefined();
+            return makeUndefined();
         }
         else
         {
-            return internal::makeNull();
+            return makeNull();
         }
     }
     static bool is(jsvm_value value)
     {
-        return internal::isNull(value) || internal::isUndefined(value);
+        return isNull(value) || isUndefined(value);
     }
 };
 

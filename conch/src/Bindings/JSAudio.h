@@ -4,14 +4,16 @@
 
 #include <stdio.h>
 #include <jsbind/JSBind.h>
-#include "resource/Audio/JCAudioInterface.h"
 #include <utils/JCBuffer.h>
-
+#include <audio/Decoder.h>
+#include <audio/Audio.h>
+#include <audio/AudioPlayer.h>
+#include <functional>
 
 namespace laya 
 {
     class AudioRenderInfo;
-    class JSAudio : public JCAudioInterface
+    class JSAudio
     {
     public:
 		enum EXT_TYPE
@@ -59,15 +61,11 @@ namespace laya
 
 	    float getVolume();
 
-        void setCurrentTime(float nCurrentTime);
+        void setCurrentTime(double nCurrentTime);
 
-        float getCurrentTime();
+        double getCurrentTime();
 
-		float getDuration();
-
-		void setIsBackgroundMusic(bool p_bIsBackgroundMusic);
-
-		bool getIsBackgroundMusic();
+		double getDuration();
 
     public:
 
@@ -111,7 +109,6 @@ namespace laya
         std::string		        m_sSrc;					//src
 
         float                   m_nVolume;				//音量
-		float 					m_fDuration;			//秒
 
 	    std::shared_ptr<int>	m_CallbackRef;
 
@@ -121,17 +118,20 @@ namespace laya
 		jsbind::Persistent         m_pJSFunctionCanPlay;   //JS的回调
 		jsbind::Persistent         m_pJSFunctionError;     //JS的回调
         AudioRenderInfo* m_audioRenderInfo;
-
+		void reset();
     private:
 
         bool			        m_bNeedHandlePlay;
 
-		bool					m_bIsBackgroundMusic = false;
 
 		int						m_nState = EXT_STATE_INVALID;
 
 		// 用户请求stop，但是现在还在下载
 		bool					m_bShouldStop = false;
+
+		std::shared_ptr<audio::Decoder> m_decoder;
+		std::shared_ptr<audio::Audio> m_audio;
+		audio::AudioPlayer* m_audioPlayer{nullptr};
     };
 }
 

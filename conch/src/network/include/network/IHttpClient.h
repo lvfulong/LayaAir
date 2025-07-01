@@ -6,7 +6,7 @@
 #include <mutex>
 #include <set>
 #include <string>
-#include <utils/JCBuffer.h>
+#include <utils/Data.h>
 
 namespace laya
 {
@@ -30,7 +30,7 @@ class IHttpClient
     std::string m_url;
     std::string m_localFilePath;
     typedef std::function<int(unsigned int, unsigned int, float)> onProgressFunction;
-    typedef std::function<void(JCBuffer &buff, const std::string &localip, const std::string &svip, int curlret,
+    typedef std::function<void(const std::shared_ptr<Data>& data, const std::string &localip, const std::string &svip, int curlret,
                                int httpret, const std::string &httpresheader)>
         onEndFunction;
     onProgressFunction m_functionOnProgress;

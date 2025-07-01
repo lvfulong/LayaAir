@@ -8,14 +8,12 @@ set(PUBLIC_HEADER_DIR include)
 set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/ArrayBuffer.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/internal/ValueTraits.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/internal/Value.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/internal/Invoke.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Local.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Persistent.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Class.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Utility.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Date.h
-    ${PUBLIC_HEADER_DIR}/${TARGET}/String.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Script.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Promise.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Object.h
@@ -34,7 +32,6 @@ set(SOURCES
     src/Persistent.cpp
     src/Local.cpp
     src/Date.cpp
-    src/String.cpp
     src/Script.cpp
     src/Promise.cpp
     src/JSBind.cpp
@@ -46,12 +43,11 @@ include_directories(${PUBLIC_HEADER_DIR})
 
 add_library(${TARGET} STATIC ${HEADERS} ${SOURCES})
 target_include_directories(${TARGET} PUBLIC ${PUBLIC_HEADER_DIR})
-set_target_properties(${TARGET} PROPERTIES FOLDER conch/${TARGET})
 target_link_libraries(${TARGET}
     utils
     jsvm
 )
-target_precompile_headers(${TARGET} PRIVATE ${HEADERS})
+
 set_target_properties(${TARGET} PROPERTIES FOLDER modules)
 # set(INSTALL_TYPE ARCHIVE)
 # install(TARGETS ${TARGET} ${INSTALL_TYPE} DESTINATION lib/${HEADERS})

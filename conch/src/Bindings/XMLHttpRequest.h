@@ -122,7 +122,7 @@ namespace laya
 
 	private:
         typedef std::map<std::string, std::string> HTTPHeaderMap;
-        std::function<void(JCBuffer&, const std::string&, const std::string&, int, int, const std::string&)>		m_funcPostComplete;
+        std::function<void(const std::shared_ptr<Data>&, const std::string&, const std::string&, int, int, const std::string&)>		m_funcPostComplete;
         State                   m_state;
         bool                    m_uploadComplete;
         bool                    m_error;

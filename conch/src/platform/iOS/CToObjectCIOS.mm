@@ -1,15 +1,5 @@
-/**
- @file			UIEditBox.mm
- @brief         继承textField类
- @author		wyw
- @version		1.0
- @date			2014_8_26
- @company       JoyChina
- */
-
 #import <UIKit/UIKit.h>
 #import "CToObjectC.h"
-#import "Audio/JCMp3Player.h"
 #import "LayaEditBox.h"
 #import "CToObjectCIOS.h"
 #import <utils/JCColor.h>
@@ -23,7 +13,6 @@
 #import "LayaEditBoxDelegate.h"
 #import "LayaEditBox.h"
 #import "TouchFilter.h"
-#import "Audio/JCMp3Player.h"
 #import "LayaAlert.h"
 #import "LayaDeviceSensor.h"
 #import "LayaScreenShotter.h"
@@ -35,6 +24,7 @@
 #import "JCSystemConfig.h"
 #import <CoreHaptics/CoreHaptics.h>
 #include <sys/sysctl.h>
+#import <Bindings/JSMemory.h>
 
 //文字相关的函数
 //-----------------------------------------------------------------
@@ -822,32 +812,6 @@ void CToObjectCSaveImageToAlbum(const char* imgPath)
     postCmdInt2StringParam* param = [[postCmdInt2StringParam alloc] init:0 _p0:imgPath _p1:""];
     [CToObjectCIOS performSelectorOnMainThread:@selector(postCmdToSaveImageToAlbum:) withObject:param waitUntilDone:NO];
 }
-void CToObjectCPlayMp3Audio( const char* p_sUrl,int p_nTimes,float nCurrentTime )
-{
-    JCMp3Player* pMp3Player = [conchRuntime GetIOSConchRuntime]->m_pMp3Player;
-    NSString* nsValue = [NSString stringWithUTF8String:p_sUrl];
-    [pMp3Player playMp3:nsValue times:p_nTimes currentTime:nCurrentTime];
-}
-void CToObjectCSetMp3Volume( float p_nVolume )
-{
-    JCMp3Player* pMp3Player = [conchRuntime GetIOSConchRuntime]->m_pMp3Player;
-    [pMp3Player setVolume:p_nVolume];
-}
-void CToObjectCStopMp3()
-{
-    JCMp3Player* pMp3Player = [conchRuntime GetIOSConchRuntime]->m_pMp3Player;
-    [pMp3Player stopMp3];
-}
-void CToObjectCResumeMp3()
-{
-    JCMp3Player* pMp3Player = [conchRuntime GetIOSConchRuntime]->m_pMp3Player;
-    [pMp3Player resumeMp3];
-}
-void CToObjectCPauseMp3()
-{
-    JCMp3Player* pMp3Player = [conchRuntime GetIOSConchRuntime]->m_pMp3Player;
-    [pMp3Player pauseMp3];
-}
 /*
     注意啦，CToObjectCRunJSLoop和CToObjectCRunStopJSLoop 这两个函数轻易别动，坑太深
     1、这个是js的线程，添加了一个timer，这个timer一直循环调用 runjsLoop函数
@@ -902,25 +866,7 @@ bool memoryInfo(vm_statistics_data_t *vmStats)
 }
 long CToObjectCGetTotalMem()
 {
-    vm_statistics_data_t vmStats;
-    if ( memoryInfo(&vmStats))
-    {
-        NSLog(@">>>>>>>>>>>>>>>>>>>ios info free: %u\nactive: %u\ninactive: %u\nwire: %u\nzero fill: %u\nreactivations: %u\npageins: %u\npageouts: %u\nfaults: %u\ncow_faults: %u\nlookups: %u\nhits: %u",
-              vmStats.free_count * vm_page_size,
-              vmStats.active_count * vm_page_size,
-              vmStats.inactive_count * vm_page_size,
-              vmStats.wire_count * vm_page_size,
-              vmStats.zero_fill_count * vm_page_size,
-              vmStats.reactivations * vm_page_size,
-              vmStats.pageins * vm_page_size,
-              vmStats.pageouts * vm_page_size,
-              vmStats.faults,
-              vmStats.cow_faults,
-              vmStats.lookups,
-              vmStats.hits
-              );
-    }
-    return (long)(NSRealMemoryAvailable() / 1024);
+    return (long)([NSProcessInfo processInfo].physicalMemory / 1024);
 }
 long CToObjectCGetUsedMem()
 {
@@ -1480,4 +1426,8 @@ std::string CToObjectCGetFilesDir()
 std::string CToObjectCGetCacheDir()
 {
     return [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject] UTF8String];
+}
+void CToObjectCOnMemoryWarning()
+{
+    laya::JSMemory::fireMemoryWarning(-1);
 }

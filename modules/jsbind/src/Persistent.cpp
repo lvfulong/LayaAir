@@ -6,7 +6,7 @@ Persistent::Persistent(jsvm_value value)
 {
     GET_ENV
     jsvm_status status;
-    if (!internal::isNull(value) && !internal::isUndefined(value))
+    if (!isNull(value) && !isUndefined(value))
     {
         status = jsvm_create_reference(env, value, 1, &ref_);
         DEBUG_CHECK(status == jsvm_status::jsvm_ok);

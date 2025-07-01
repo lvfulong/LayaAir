@@ -7,6 +7,7 @@
 #include <napi/native_api.h>
 #include <utils/JCCommonMethod.h>
 #include <utils/Log.h>
+#include <utils/Data.h>
 
 namespace laya
 {
@@ -107,8 +108,8 @@ void HttpClientOHOS_onFailureImpl(int64_t ptr, int code)
     {
         // curl ִ��ʧ��
         static std::string nullstr;
-        laya::JCBuffer jb;
-        downloader->m_functionOnEnd(jb, "", "", 7 /*CURLE_COULDNT_CONNECT*/, code, nullstr);
+        std::shared_ptr<laya::Data> data = laya::Data::makeEmpty(); 
+        downloader->m_functionOnEnd(data, "", "", 7 /*CURLE_COULDNT_CONNECT*/, code, nullstr);
     }
 
     delete downloader;
@@ -123,25 +124,23 @@ void HttpClientOHOS_onResponseImpl(int64_t ptr, char *buffer, int bufferBytes, i
     if (bBigFile)
     {
         // ���ļ�û��buffer
-        laya::JCBuffer jb;
-        downloader->m_functionOnEnd(jb, "", "", 0 /*CURLE_OK*/, responseCode, header);
+        std::shared_ptr<laya::Data> data = laya::Data::makeEmpty();
+        downloader->m_functionOnEnd(data, "", "", 0 /*CURLE_OK*/, responseCode, header);
     }
     else
     {
         if (bufferBytes <= 0)
         {
-            laya::JCBuffer jb;
-            downloader->m_functionOnEnd(jb, "", "", 0 /*CURLE_OK*/, responseCode, header);
+            std::shared_ptr<laya::Data> data = laya::Data::makeEmpty();
+            downloader->m_functionOnEnd(data, "", "", 0 /*CURLE_OK*/, responseCode, header);
         }
         else
         {
-            char *result = new char[bufferBytes];
-            memcpy(result, buffer, bufferBytes);
-            laya::JCBuffer buf((void *)result, bufferBytes, false, true);
+            std::shared_ptr<laya::Data> data = laya::Data::makeWithCopy((void *)buffer, bufferBytes);
             // request->m_responseCallback(buf, pCurl->m_strLocalAddr,
             // pCurl->m_strSvAddr, 0/*CURLE_OK*/, pCurl->m_nResponseCode,
             // pCurl->m_strResponseHead);
-            downloader->m_functionOnEnd(buf, "", "", 0 /*CURLE_OK*/, responseCode, header);
+            downloader->m_functionOnEnd(data, "", "", 0 /*CURLE_OK*/, responseCode, header);
         }
     }
 

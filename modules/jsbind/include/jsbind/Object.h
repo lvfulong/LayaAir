@@ -6,6 +6,7 @@
 #include <jsbind/internal/Invoke.h>
 #include <jsbind/internal/ValueTraits.h>
 #include <jsvm/JSVM_Types.h>
+#include <jsbind/Class.h>
 #include <jsbind/Enum.h>
 
 namespace jsbind
@@ -174,7 +175,7 @@ template <typename T> jsvm_value convert_value_object_to_js(T *value)
     DEBUG_CHECK(jsbind::value_object<T>::is_bound && "casting from an unbound value_type");
     if (value == nullptr)
     {
-        return internal::makeNull();
+        return makeNull();
     }
     return convert_value_object_to_js(*value);
 }
@@ -256,13 +257,13 @@ class Object
     {
         return Enum_(this, name);
     }
-    template <typename T> Object &class_(const char *name, jsbind::class_<T> &cl)
+    template <typename T, typename Traits> Object &class_(const char *name, jsbind::class_<T, Traits> &cl)
     {
         GET_ENV
         cl.Export(env, object_, name);
         return *this;
     }
-    template <typename T> Object &global_class_(const char *name, jsbind::global_class_<T> &cl, T *instance = nullptr)
+    template <typename T, typename Traits> Object &global_class_(const char *name, jsbind::global_class_<T, Traits> &cl, T *instance = nullptr)
     {
         GET_ENV
         cl.Export(env, object_, name);

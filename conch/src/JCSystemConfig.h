@@ -43,6 +43,7 @@ class JCSystemConfig
     uint64_t m_frameIntervalInMs = (uint64_t)(1000.f / 60);
     bool m_useSwappy = true;
     bool m_runInBackground = false;
+    int m_audioStreamThreshold = 1024 * 1024; // 1MB
 };
 extern JCSystemConfig g_kSystemConfig;
 } // namespace laya

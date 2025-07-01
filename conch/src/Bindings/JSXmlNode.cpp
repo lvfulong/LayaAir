@@ -45,19 +45,19 @@ namespace laya
     }
     jsvm_value  JSXmlNode::getFirstChild()
     {
-        return jsbind::MakeNull();
+        return jsbind::makeNull();
     }
     jsvm_value JSXmlNode::getLastChild()
     {
-        return jsbind::MakeNull();
+        return jsbind::makeNull();
     }
     jsvm_value  JSXmlNode::getPreviousSibling()
     {
-        return jsbind::MakeNull();
+        return jsbind::makeNull();
     }
     jsvm_value  JSXmlNode::getNextSibling()
     {
-        return jsbind::MakeNull();
+        return jsbind::makeNull();
     }
     const char * JSXmlNode::getNodeName()
     {

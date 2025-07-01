@@ -1,7 +1,7 @@
 #ifndef __JSBIND_ARRAYBUFFER_H_
 #define __JSBIND_ARRAYBUFFER_H_
 
-#include <jsbind/internal/Value.h>
+#include <jsbind/Value.h>
 #include <jsbind/internal/ValueTraits.h>
 #include <jsvm/JSVM_Types.h>
 
@@ -124,7 +124,7 @@ template <> class ValueTraits<ArrayBuffer>
     }
     static bool is(jsvm_value value)
     {
-        return internal::isArrayBuffer(value) || internal::isArrayBufferView(value);
+        return isArrayBuffer(value) || isArrayBufferView(value);
     }
 };
 template <> class ValueTraits<const ArrayBuffer &> : public ValueTraits<ArrayBuffer>

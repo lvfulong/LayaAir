@@ -34,6 +34,29 @@ class Win32VideoHandler final : public IVideoHandler
         m_videoPlayer.renderVideo();
     }
 
+    double getCurrentTime() {
+        // 实现获取当前播放时间的逻辑
+        return m_videoPlayer.getCurrentPosition();
+    }
+
+    double getDuration() {
+        return m_videoPlayer.getDuration();
+    }
+
+    double getVolume() {
+        return m_videoPlayer.getVolume();
+    }
+
+    void setVolume(double volume) {
+        m_videoPlayer.setVolume(volume);
+    }
+
+    void seek(double time) {
+        // 实现跳转到指定时间的逻辑
+        m_videoPlayer.seekTo(time);
+    }
+
+
     ffplay::VideoPlayer m_videoPlayer;
 };
 
@@ -48,7 +71,9 @@ JSVideo::JSVideo()
     m_pJCVideo->setVideoHandler(m_pVideoHandler);
 
     ((Win32VideoHandler *)m_pVideoHandler)
-        ->m_videoPlayer.setEmit(std::bind(&JSVideo::CallHandle, this, std::placeholders::_1));
+        ->m_videoPlayer.setEmit([this](const std::string& eventName) {
+            CallHandle(eventName.c_str());
+        });
 }
 
 JSVideo::~JSVideo()
@@ -66,7 +91,6 @@ void JSVideo::_releaseHandler()
 void JSVideo::LoadInternal(const std::string &path)
 {
     ((Win32VideoHandler *)m_pVideoHandler)->m_videoPlayer.setMedia(path);
-    // CallHandle("loadedmetadata");
 }
 void JSVideo::LoadInternal(char *buffer, int length)
 {
@@ -122,7 +146,7 @@ double JSVideo::GetVideoHeight()
 
 double JSVideo::GetWidth()
 {
-    NOT_IMPLEMENT_RET(0);
+    return GetVideoWidth();
 }
 
 void JSVideo::SetWidth(double val)
@@ -132,7 +156,7 @@ void JSVideo::SetWidth(double val)
 
 double JSVideo::GetHeight()
 {
-    NOT_IMPLEMENT_RET(0);
+    return GetVideoHeight();
 }
 
 void JSVideo::SetHeight(double val)
@@ -141,27 +165,27 @@ void JSVideo::SetHeight(double val)
 
 double JSVideo::GetCurrentTime()
 {
-    NOT_IMPLEMENT_RET(0);
+    return ((Win32VideoHandler *)m_pVideoHandler)->getCurrentTime();
 }
 
 void JSVideo::SetCurrentTime(double val)
 {
-    NOT_IMPLEMENT();
+    ((Win32VideoHandler *)m_pVideoHandler)->seek(val);
 }
 
 double JSVideo::GetDuration()
 {
-    NOT_IMPLEMENT_RET(0);
+    return ((Win32VideoHandler *)m_pVideoHandler)->getDuration();
 }
 
 double JSVideo::GetVolume()
 {
-    NOT_IMPLEMENT_RET(0);
+    return ((Win32VideoHandler *)m_pVideoHandler)->getVolume();
 }
 
 void JSVideo::SetVolume(double val)
 {
-    NOT_IMPLEMENT();
+    ((Win32VideoHandler *)m_pVideoHandler)->setVolume(val);
 }
 
 void JSVideo::SetX(double val)

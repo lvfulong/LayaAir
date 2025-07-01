@@ -1,6 +1,6 @@
 
 #include <jsbind/Promise.h>
-#include <jsbind/internal/Value.h>
+#include <jsbind/Value.h>
 namespace jsbind
 {
 Promise Promise::Make()

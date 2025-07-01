@@ -12,12 +12,12 @@ namespace laya
             static unsigned char hash[SHA1_DIGEST_LENGTH];
             if (!CryptoCore::sha1(data.getData(), data.getByteLength(), hash))
             {
-                return jsbind::MakeNull();
+                return jsbind::makeNull();
             }
             jsbind::ArrayBuffer result = jsbind::ArrayBuffer::MakeArrayBuffer(hash, SHA1_DIGEST_LENGTH);
             return result.getHandle();      
         }
-        return jsbind::MakeNull();
+        return jsbind::makeNull();
     }
     void JSSubtleCrypto::exportJS(jsbind::Object& context)
     {

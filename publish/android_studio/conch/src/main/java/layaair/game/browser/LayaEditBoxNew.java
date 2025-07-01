@@ -125,11 +125,11 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 	}
 	public void close() {
 		Log.d(TAG, "close ");
+		ConchJNI.handleKeyboardConfirm(mEditBox.getText().toString());
+		ConchJNI.handleKeyboardComplete(mEditBox.getText().toString());
 		InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(mEditBox.getWindowToken(), 0);
 		LayaEditBox.hideSoftKeyBorad();
-		ConchJNI.handleKeyboardConfirm(mEditBox.getText().toString());
-		ConchJNI.handleKeyboardComplete(mEditBox.getText().toString());
 		mRootLayout.setVisibility(View.INVISIBLE);
 		LayaConch5.ms_layaConche.getAbsLayout().removeViewInLayout(mRootLayout);
 		mKeyboardHeightProvider.close();
@@ -144,7 +144,7 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 		((Activity)exp.m_pEngine.mCtx).runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				if (LayaEditBoxNew.instance != null && !LayaEditBoxNew.instance.mConfirmHold) {
+				if (LayaEditBoxNew.instance != null) {
 					LayaEditBoxNew.instance.close();
 				}
 			}
@@ -173,10 +173,7 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 					return false;
 				}
 				else {
-					ConchJNI.handleKeyboardConfirm(LayaEditBoxNew.this.mEditBox.getText().toString());
-					if (!LayaEditBoxNew.this.mConfirmHold) {
-						LayaEditBoxNew.this.close();
-					}
+					LayaEditBoxNew.this.close();
 					return false;
 				}
 			}
@@ -297,9 +294,7 @@ public class LayaEditBoxNew implements KeyboardHeightObserver
 		mEditboxPanelBg.setOnTouchListener(new View.OnTouchListener() {                 //parent为Editext外面那层布局
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				if (!LayaEditBoxNew.this.mConfirmHold) {
-					LayaEditBoxNew.this.close();
-				}
+				LayaEditBoxNew.this.close();
 				return false;
 			}
 		});

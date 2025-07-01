@@ -144,7 +144,13 @@ namespace laya {
 		//m_font = CreateFont(m_style->fontSize, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, TEXT("Arial"));
 		//m_font = CreateFont(-MulDiv(m_style->fontSize * m_style->scaleX, GetDeviceCaps(GetDC(g_hWnd), LOGPIXELSY), 72), 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, TEXT("Arial"));
 		// Send Message for creating
-		SendEditBoxCustomEvent([this]() {
+		m_CallbackRef.reset(new int(1));
+		std::weak_ptr<int> cbref(m_CallbackRef);
+		SendEditBoxCustomEvent([this, cbref]() {
+			if (!cbref.lock())
+			{
+				return;
+			}
 			this->Init();
 		});
 	}

@@ -11,16 +11,32 @@
 #include "JSFile.h"
 #include "../../JCScriptRuntime.h"
 #include <functional>
-#include "../../Audio/JCAudioManager.h"
 #include "../../JCSystemConfig.h"
 #include "JCConch.h"
-
+#include <audio/AudioDecoderCache.h>
+#include <audio/StreamDecoder.h>
+#include <profiler/Profiler.h>
 namespace laya
 {
     //------------------------------------------------------------------------------
     JSAudio::JSAudio()
     {
-        m_nCurrentTime = 0;
+	    reset();
+	    jsbind::AdjustAmountOfExternalAllocatedMemory( 534 );
+	    JCMemorySurvey::GetInstance()->newClass( "audio",534,this );
+	    m_CallbackRef.reset(new int(1));
+		m_audioPlayer = &JCConch::s_pConch->getAudioPlayer();
+    }
+    //------------------------------------------------------------------------------
+    JSAudio::~JSAudio()
+    {
+        JCMemorySurvey::GetInstance()->releaseClass( "audio",this );
+	    //JCAudioManager::GetInstance()->delWav(this, m_sSrc);
+	    //JCAudioManager::GetInstance()->delMp3Obj(this);
+    }
+	void JSAudio::reset()
+	{
+		m_nCurrentTime = 0;
 	    m_bNeedHandlePlay = false;
 	    m_bAutoPlay = false;
 	    m_bLoop = false;
@@ -29,18 +45,13 @@ namespace laya
 	    m_sSrc = "";
 	    m_bDownloaded = false;
         m_audioRenderInfo = NULL;
-		m_fDuration = std::numeric_limits<double>::quiet_NaN();
-	    jsbind::AdjustAmountOfExternalAllocatedMemory( 534 );
-	    JCMemorySurvey::GetInstance()->newClass( "audio",534,this );
-	    m_CallbackRef.reset(new int(1));
-    }
-    //------------------------------------------------------------------------------
-    JSAudio::~JSAudio()
-    {
-        JCMemorySurvey::GetInstance()->releaseClass( "audio",this );
-	    JCAudioManager::GetInstance()->delWav(this, m_sSrc);
-	    JCAudioManager::GetInstance()->delMp3Obj(this);
-    }
+		if (m_audio)
+		{
+			m_audioPlayer->stop(m_audio);
+			m_decoder.reset();
+			m_audio.reset();
+		}
+	}
     //------------------------------------------------------------------------------
     void JSAudio::addEventListener( const char* p_sName, jsvm_value p_pFunction )
     {
@@ -52,6 +63,10 @@ namespace laya
 	    {
 		    m_pJSFunctionCanPlay = jsbind::Persistent(p_pFunction);
 	    }
+		else if (strcmp(p_sName, "canplay") == 0)
+		{
+			//todo
+		}
 	    else if (strcmp(p_sName, "error") == 0)
 	    {
 		    m_pJSFunctionError = jsbind::Persistent(p_pFunction);
@@ -82,22 +97,17 @@ namespace laya
 	    return m_bLoop;
     }
     //------------------------------------------------------------------------------
-    void JSAudio::setMuted( bool p_bMuted )
+    void JSAudio::setMuted(bool p_bMuted)
     {
 	    m_bMuted = p_bMuted;
 		if (m_nType == EXT_INVALID)
 		{
 			return;
 		}
-		/*if (m_nType == EXT_MP3 && m_bIsBackgroundMusic)
 	    {
-		    JCAudioManager::GetInstance()->setMp3Mute( m_bMuted );
-	    }
-	    else*/
-	    {
-            if (m_audioRenderInfo && m_audioRenderInfo->m_pAudio == this)
+            if (m_audio)
             {
-                JCAudioManager::GetInstance()->setWavVolume(m_audioRenderInfo, m_bMuted ? 0 : m_nVolume);
+                m_audioPlayer->setVolume(m_audio, m_bMuted ? 0 : m_nVolume);
             }
 	    }
     }
@@ -113,6 +123,7 @@ namespace laya
         std::string sSrc = p_sSrc;
 		if (sSrc == "")
 		{
+			reset();
 			return;
 		}
 	    if( m_sSrc == sSrc )
@@ -162,17 +173,16 @@ namespace laya
 			return;
 		}
 
-
-	    //这段代码是查找，是否在缓存中已经有此音乐了，直接找到播放
-	    JCWaveInfo* pWavInfo = JCAudioManager::GetInstance()->FindWaveInfo( p_sSrc );
-	    if( pWavInfo != NULL )
+		auto decoder = audio::AudioDecoderCache::get(m_sSrc);
+	    if(decoder)
 	    {
 		    m_bDownloaded = true;
-			m_fDuration = pWavInfo->m_fDuration;
+			m_decoder = decoder;
+			DEBUG_CHECK(m_decoder);
             std::weak_ptr<int> cbref(m_CallbackRef);
-            std::function<void(void)> pFunction = std::bind(&JSAudio::onCanplayCallJSFunction,this, cbref);
+            std::function<void(void)> pFunction = std::bind(&JSAudio::onCanplayCallJSFunction, this, cbref);
             postToJS( pFunction );
-		    if( m_bAutoPlay == true )
+		    if(m_bAutoPlay == true)
 		    {
 			    play();
 		    }
@@ -198,35 +208,28 @@ namespace laya
 	    if( !callbackref.lock() )return false;
 	    laya::JCResStateDispatcher* pRes = (laya::JCResStateDispatcher*)p_pRes;
 	    laya::JCFileRes* pFileRes = (laya::JCFileRes*)pRes;
-	    if( pFileRes->m_pBuffer.get()==NULL || pFileRes->m_nLength==0 )
+	    if( !pFileRes->m_data || pFileRes->m_data->size() == 0)
         {
 		    return false;
 	    }
-	    JCBuffer p_buf;
-	    p_buf.m_pPtr=pFileRes->m_pBuffer.get();
-	    p_buf.m_nLen = pFileRes->m_nLength;
 	    m_bDownloaded = true;
        // std::weak_ptr<int> cbref(m_CallbackRef);
         //std::function<void(void)> pFunction = std::bind(&JSAudio::onCanplayCallJSFunction,this, callbackref);
 
-		JCWaveInfo* info=nullptr;
-	    /*if( m_nType == EXT_MP3 && m_bIsBackgroundMusic)
-	    {
-		    if( m_bAutoPlay || m_bNeedHandlePlay == true )
-		    {
-			    m_bNeedHandlePlay = false;
-			    play();
-		    }
-	    }
-		else */
-		if (m_nType == EXT_MP3){
-			info = JCAudioManager::GetInstance()->AddWaveInfoMp3(m_sSrc, (unsigned char*)p_buf.m_pPtr, (int)(p_buf.m_nLen), this);
-		}else{
-		    info = JCAudioManager::GetInstance()->AddWaveInfo( m_sSrc, p_buf, (int)(p_buf.m_nLen), this, m_nType == EXT_OGG);
-	    }
-		if(info){
-			m_fDuration = info->m_fDuration;
-
+		if (pFileRes->m_data->size() >= g_kSystemConfig.m_audioStreamThreshold && (m_nType == EXT_MP3 || m_nType == EXT_OGG))
+		{
+			Profiler_ZoneScoped("audio::AudioDecoderCache::createStreamDecoder", 0xff0000);
+			m_decoder = audio::AudioDecoderCache::createStreamDecoder(m_sSrc, pFileRes->m_data);
+			//流式解码
+			//m_decoder = audio::AudioDecoderCache::createStaticDecoder(m_sSrc, pFileRes->m_data);
+		}
+		else
+		{
+			Profiler_ZoneScoped("audio::AudioDecoderCache::createStaticDecoder", 0xff0000);
+			m_decoder = audio::AudioDecoderCache::createStaticDecoder(m_sSrc, pFileRes->m_data);
+		}
+		if(m_decoder) 
+		{
 			auto pFunction = std::bind(&JSAudio::onCanplayCallJSFunction, this, callbackref);
 			postToJS( pFunction );
 
@@ -253,27 +256,22 @@ namespace laya
 		{
 			return;
 		}
-		/*if (m_nType == EXT_MP3 && m_bIsBackgroundMusic)
-	    {
-		    JCAudioManager::GetInstance()->setMp3Volume( m_nVolume );
-	    }
-	    else*/
-	    {
-            if (m_audioRenderInfo && m_audioRenderInfo->m_pAudio == this)
-            {
-                JCAudioManager::GetInstance()->setWavVolume(m_audioRenderInfo,m_nVolume);
-            }
-	    }
+	  	if(m_audio)
+	  	{
+			m_audioPlayer->setVolume(m_audio, m_nVolume);
+	  	}
     }
-    //------------------------------------------------------------------------------
     float JSAudio::getVolume()
     {
 	    return m_nVolume;
     }
-    //------------------------------------------------------------------------------
-
-	float JSAudio::getDuration(){
-		return m_fDuration;
+	double JSAudio::getDuration()
+	{
+		if (m_audio)
+		{
+			return m_audioPlayer->getDuration(m_audio);
+		}
+		return std::numeric_limits<double>::quiet_NaN();
 	}
 
     void JSAudio::play()
@@ -293,26 +291,38 @@ namespace laya
 			return;
 		}
 		m_nState = EXT_STATE_PLAY;
-		/*if (m_nType == EXT_MP3 && m_bIsBackgroundMusic)
-        {
-            JCAudioManager::GetInstance()->stopMp3();
-            if (g_kSystemConfig.m_bUseDcc)
-            {
-                if (m_sLocalFileName.length() > 0)
-                {
-                    JCAudioManager::GetInstance()->playMp3(m_sLocalFileName.c_str(), m_bLoop ? -1 : 0, (int)m_nCurrentTime, this);
-                }
-                else
-                {
-                    JCAudioManager::GetInstance()->playMp3(m_sSrc.c_str(), m_bLoop ? -1 : 0, (int)m_nCurrentTime, this);
-                }
-            }
-            else
-            {
-                JCAudioManager::GetInstance()->playMp3(m_sLocalFileName.c_str(), m_bLoop ? -1 : 0, (int)m_nCurrentTime, this);
-            }
-	    }
-	    else */if (m_nType == EXT_MP3/* && !m_bIsBackgroundMusic*/)
+		if (m_decoder)
+		{
+			Profiler_ZoneScoped("SAudio::play()", 0x0000ff);
+			if (!m_audio)
+			{
+				m_audio = m_audioPlayer->createAudio(m_decoder);
+			}
+			std::weak_ptr<int> cbref(m_CallbackRef);
+			m_audio->setOnPlayEnd([this, cbref](){
+				if(!cbref.lock())
+				{
+					return;
+				}
+				m_nState = EXT_STATE_PLAY_END;
+				auto pFunction = std::bind(&JSAudio::onPlayEndCallJSFunction,this, cbref);
+				postToJS( pFunction );
+			});
+			m_audioPlayer->play(m_audio);
+
+			//audioPlayer.setCurrentTime(m_audio, m_nCurrentTime);
+			if (m_bMuted) 
+			{
+				//m_audio->setVolume(0);
+			}
+			else
+			{
+				//m_audio->setVolume(m_nVolume);
+			}
+		}
+
+#if 0
+		if (m_nType == EXT_MP3)
 	    {			
 #if !defined(OS_LINUX)
 		    m_audioRenderInfo = JCAudioManager::GetInstance()->playWavMp3( this, m_sSrc, m_nCurrentTime);
@@ -333,23 +343,15 @@ namespace laya
 				JCAudioManager::GetInstance()->setWavVolume(m_audioRenderInfo, m_nVolume);
 			}
 		}
-
+#endif
     }
     //------------------------------------------------------------------------------
     void JSAudio::pause()
     {
-
-
-			
 		if (m_nType == EXT_INVALID)
 		{
 			return;
 		}
-		
-		/*if (m_nType == EXT_MP3 && m_bIsBackgroundMusic)
-	    {
-		    JCAudioManager::GetInstance()->pauseMp3();
-	    }*/
         else
         {
 			if (m_nState != EXT_STATE_PLAY)
@@ -358,11 +360,10 @@ namespace laya
 			}
 
 			m_nState = EXT_STATE_PAUSE;
-            if (m_audioRenderInfo && m_audioRenderInfo->m_pAudio == this)
+            if (m_audio)
             {
 				m_nCurrentTime = getCurrentTime();
-                JCAudioManager::GetInstance()->stopWav(m_audioRenderInfo);
-                m_audioRenderInfo = NULL;
+                m_audioPlayer->pause(m_audio);
             }
         }
     }
@@ -373,10 +374,6 @@ namespace laya
 		{
 			return;
 		}
-		/*if (m_nType == EXT_MP3 && m_bIsBackgroundMusic)
-	    {
-		    JCAudioManager::GetInstance()->stopMp3();
-	    }*/
         else
         {
 			if (m_nState != EXT_STATE_PLAY)
@@ -386,28 +383,37 @@ namespace laya
 			}
 			m_bShouldStop = false;//正确执行stop了，不需要记录了
 			m_nState = EXT_STATE_STOP;
-            if (m_audioRenderInfo && m_audioRenderInfo->m_pAudio == this)
+            if (m_audio)
             {
 				m_nCurrentTime = getCurrentTime();
-                JCAudioManager::GetInstance()->stopWav(m_audioRenderInfo);
-                m_audioRenderInfo = NULL;
+				m_audioPlayer->stop(m_audio);
+				m_audio.reset();
             }
         }
     }
-    void JSAudio::setCurrentTime(float nCurrentTime)
+    void JSAudio::setCurrentTime(double nCurrentTime)
     {
         m_nCurrentTime = nCurrentTime;
+		if (m_audio)
+		{
+			m_audioPlayer->seek(m_audio, nCurrentTime);
+		}
     }
-    float JSAudio::getCurrentTime()
+    double JSAudio::getCurrentTime()
     {
-		if (m_audioRenderInfo && m_audioRenderInfo->m_pAudio == this)
+		if (m_audio)
+		{
+			return m_audioPlayer->tell(m_audio);
+		}
+
+		/*if (m_audioRenderInfo && m_audioRenderInfo->m_pAudio == this)
 		{
 			return JCAudioManager::GetInstance()->getCurrentTime(m_audioRenderInfo);
         }
 		else if (m_nState == EXT_STATE_STOP || m_nState == EXT_STATE_PAUSE)
 		{
 			return m_nCurrentTime;
-		}
+		}*/
         return 0;
     }
     //------------------------------------------------------------------------------
@@ -436,15 +442,6 @@ namespace laya
 	    if (!callbackref.lock())return;
 	    m_pJSFunctionError.call<void>(jsbind::toLocal(this), p_nErrorCode);
     }
-	void JSAudio::setIsBackgroundMusic(bool p_bIsBackgroundMusic)
-	{
-		m_bIsBackgroundMusic = p_bIsBackgroundMusic;
-	}
-
-	bool JSAudio::getIsBackgroundMusic()
-	{
-		return m_bIsBackgroundMusic;
-	}
     void JSAudio::exportJS(jsbind::Object& context)
     {
 		jsbind::class_<JSAudio> class_binding;
@@ -455,8 +452,6 @@ namespace laya
         class_binding.property("volume", &JSAudio::getVolume, &JSAudio::setVolume);
 		class_binding.property("duration",&JSAudio::getDuration);
         class_binding.property("currentTime", &JSAudio::getCurrentTime, &JSAudio::setCurrentTime);
-		class_binding.property("isBackgroundMusic", &JSAudio::getIsBackgroundMusic, &JSAudio::setIsBackgroundMusic);
-	    class_binding.function("setLoop", &JSAudio::setLoop);
 	    class_binding.function("play", &JSAudio::play);
 	    class_binding.function("pause", &JSAudio::pause);
 	    class_binding.function("stop", &JSAudio::stop);

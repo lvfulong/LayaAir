@@ -212,5 +212,6 @@ bool stream_open(VideoState *is, unsigned char *buffer, int length, const AVInpu
 void do_pause(VideoState *is);
 void do_play(VideoState *is);
 void do_exit(VideoState *is);
+void stream_seek(VideoState *is, int64_t pos, int64_t rel, int by_bytes);
 } // namespace ffplay
 #endif

@@ -97,9 +97,6 @@ namespace laya
         void jsUrlback();
         void jsUrlbackJSFunction();
 
-        void restoreAudio();
-        void jsRestoreAudioFunction();
-
         void onNetworkChanged(int nType);
         void onNetworkChangedCallJSFunction(int nType);
 
@@ -116,7 +113,6 @@ namespace laya
     public:
         JCConch*                            m_pConch;
         JCCommandEncoderBuffer*				m_pRenderCmd;                   
-		bool                                m_bHasJSThread;	                //js线程是否在工作
         jsbind::Persistent                         m_pJSOnFrameFunction;
         jsbind::Persistent                         m_pJSOnDrawFunction;            //垂直回扫同步
         jsbind::Persistent                         m_pJSOnResizeFunction;
@@ -140,7 +136,6 @@ namespace laya
         std::string                         m_strStartJS;
         JCFileResManager*                   m_pFileResMgr;                  //外部设置的。本地不允许删除
         JCFileSource*                       m_pAssetsRes;	                //外部设置的。本地不允许删除
-        bool                                m_bIsExit;
         char*                               m_pOtherBufferSharedWidthJS;
         int							        m_nUpdateCount;                 //update次数
         JCUrl*                              m_pUrl;

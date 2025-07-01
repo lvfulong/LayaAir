@@ -73,7 +73,9 @@ void GLESVertexBuffer::orphanStorage()
 void GLESVertexBuffer::setDataJS(jsbind::ArrayBuffer arrayBuffer, int bufferOffset /* = 0*/, int dataStartIndex /* = 0*/,
                                  double dataCount /*= Number.MAX_SAFE_INTEGER*/)
 {
-    DEBUG_CHECK(arrayBuffer.isValid());
-    setData(reinterpret_cast<const char*>(arrayBuffer.getData()), arrayBuffer.getByteLength(), bufferOffset, dataStartIndex, dataCount);
+    if (arrayBuffer.isValid())// null or undefined
+    {
+        setData(reinterpret_cast<const char*>(arrayBuffer.getData()), arrayBuffer.getByteLength(), bufferOffset, dataStartIndex, dataCount);
+    }
 }
 } // namespace laya

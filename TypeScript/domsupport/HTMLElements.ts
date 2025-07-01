@@ -782,7 +782,7 @@ class HTMLMediaElement<ConchMedia extends any> extends HTMLElement /*implements 
     set src(val) {
         this._src = val;
         //this._src = encodeURI(this._src);
-        this._nativeObj.src = window.location.resolve(this._src);
+        this._nativeObj.src = (val == "") ? "" : window.location.resolve(this._src);
     }
 
     get src() {
@@ -910,9 +910,6 @@ class HTMLAudioElement extends HTMLMediaElement<ConchAudio> {
         this.tagName = "AUDIO";
     }
     readyState: number = 0;
-    setLoop(loop) {
-        this._nativeObj.setLoop(loop);
-    }
 
     stop() {
         this._nativeObj.stop();
@@ -925,20 +922,24 @@ class HTMLAudioElement extends HTMLMediaElement<ConchAudio> {
 	}
     */
 
-    set isBackgroundMusic(v) {
-        this._nativeObj.isBackgroundMusic = v;
-    }
-    get isBackgroundMusic() {
-        return this._nativeObj.isBackgroundMusic;
-    }
-
     set muted(v) {
         this._nativeObj.muted = v;
     }
     get muted() {
         return this._nativeObj.muted;
     }
-
+    set onended(v) {
+         this.addEventListener("ended", v);
+    }
+    set onerror(v) {
+         this.addEventListener("error", v);
+    }
+    set oncanplaythrough(v) {
+         this.addEventListener("canplaythrough", v);
+    }
+    set oncanplay(v) {
+         this.addEventListener("canplay", v);
+    }
     addEventListener(type: string, listener: EventListenerOrEventListenerObject, useCapture?: boolean): void {
         super.addEventListener(type, listener, useCapture);
         var _t = this;

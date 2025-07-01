@@ -38,11 +38,11 @@ namespace laya
     void JSDOM_onDownloadOK(JSDOMParser* pThis, JCResStateDispatcher* p_pRes, std::weak_ptr<int>& callbackref)
     {
         JCFileRes* pFileRes = (JCFileRes*)p_pRes;
-        if (pFileRes->m_pBuffer != NULL)
+        if (pFileRes->m_data)
         {
-            int length = pFileRes->m_nLength;
+            int length = pFileRes->m_data->size();
             std::string xmlstr;
-            xmlstr.assign(pFileRes->m_pBuffer.get(), length);
+            xmlstr.assign((char*)pFileRes->m_data->data(), length);
             auto pFunction = std::bind(&JSDOMParser::onLoadedCallJSFunction, pThis, xmlstr, callbackref);
             postToJS(pFunction);
         }

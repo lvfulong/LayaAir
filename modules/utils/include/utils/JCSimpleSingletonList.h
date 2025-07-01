@@ -13,7 +13,7 @@
 #include <vector>
 #include "Log.h"
 #include <cassert>
-
+#include <algorithm>
 namespace laya
 {
 	template <class T>

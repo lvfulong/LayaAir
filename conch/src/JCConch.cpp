@@ -21,7 +21,6 @@
 #include <downloadMgr/JCDownloadMgr.h>
 #include "JCSystemConfig.h"
 #include <LayaGL/JCLayaGL.h>
-#include <Audio/JCAudioManager.h>
 #include <Bindings/JSInput.h>
 #include <thread>
 #include <platform/OS.h>
@@ -49,6 +48,7 @@
 int g_nInnerWidth = 1024;
 int g_nInnerHeight = 768;
 bool g_bGLCanvasSizeChanged = false;
+static bool s_needReload = false;
 
 namespace laya
 {
@@ -151,7 +151,7 @@ namespace laya
         JCDownloadMgr::delInstance();
         
         s_pScriptRuntime.reset();
-        delete JCAudioManager::GetInstance();
+        m_pAudioPlayer.reset();
         s_pConchRender.reset();
 
         LOGI("onAppDestroy...");
@@ -165,19 +165,23 @@ namespace laya
             return;
         }
         JCConch::s_pScriptRuntime->start(m_strStartJS.c_str());
-        JCAudioManager::GetInstance();
         m_isAppStarted = true;
         JCConch::s_pScriptRuntime->loadJSScript();
 	}
-    void JCConch::reload() 
-    {
+
+    void JCConch::_realReload() {
         DEBUG_CHECK(isScriptThread());
         LOGI("JCConch::reload start...");
+
         //先通知消息管理器，关闭各个线程之间的post
         //lvtodo m_ThreadCmdMgr.stop();
         JCConch::s_pScriptRuntime->reload();
         LOGI("JCConch::reload end.");
-        
+    }
+    void JCConch::reload()
+    {
+        DEBUG_CHECK(isScriptThread());
+        s_needReload = true;        
     }
     int JCConch::urlHistoryLength() 
     {
@@ -230,6 +234,10 @@ namespace laya
         {
             pScriptRuntime->update();
         }
+        if (s_needReload) {
+            _realReload();
+            s_needReload = false;
+        }
         Profiler_MarkFrame(); 
     }
     void JCConch::dispatchInputEvent(inputEvent e)
@@ -260,17 +268,11 @@ namespace laya
     }
     void JCConch::onAppPause() {
         DEBUG_CHECK(isScriptThread());
-#if defined(OS_ANDROID) || defined(OS_OHOS)  
-            if( laya::JCAudioManager::GetInstance()->getMp3Mute() == false && laya::JCAudioManager::GetInstance()->getMp3Stopped() == false)
+#if defined(OS_ANDROID) || defined(OS_OHOS)
+            if (m_pAudioPlayer)
             {
-                #if defined(OS_ANDROID)
-                JCAudioManager::GetInstance()->pauseMp3();
-                #endif
-                #if defined(OS_OHOS)
-                NapiHelper::GetInstance()->pauseBackgroundMusic();
-                #endif
+                m_pAudioPlayer->onPause();
             }
-            laya::JCAudioManager::GetInstance()->m_pWavPlayer->pause();
 #endif
             auto pScriptRuntime = JCConch::s_pScriptRuntime;
             if (pScriptRuntime)
@@ -280,18 +282,11 @@ namespace laya
     }
     void JCConch::onAppResume() {
         DEBUG_CHECK(isScriptThread());
-#if defined(OS_ANDROID) || defined(OS_OHOS)  
-            //继续声音
-            if( laya::JCAudioManager::GetInstance()->getMp3Mute() == false && laya::JCAudioManager::GetInstance()->getMp3Stopped() == false)
+#if defined(OS_ANDROID) || defined(OS_OHOS)
+            if (m_pAudioPlayer)
             {
-                #if defined(OS_ANDROID)
-                laya::JCAudioManager::GetInstance()->resumeMp3();
-                #endif
-                #if defined(OS_OHOS)
-                NapiHelper::GetInstance()->resumeBackgroundMusic();
-                #endif
+                m_pAudioPlayer->onResume();
             }
-            laya::JCAudioManager::GetInstance()->m_pWavPlayer->resume();
 #endif
             auto pScriptRuntime = JCConch::s_pScriptRuntime;
             if (pScriptRuntime)

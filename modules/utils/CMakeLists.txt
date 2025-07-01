@@ -87,7 +87,6 @@ include_directories(${PUBLIC_HEADER_DIR})
 
 add_library(${TARGET} STATIC ${HEADERS} ${SOURCES})
 target_include_directories(${TARGET} PUBLIC ${PUBLIC_HEADER_DIR})
-set_target_properties(${TARGET} PROPERTIES FOLDER conch/${TARGET})
 target_link_libraries(${TARGET}
     rapidxml
     ghc
@@ -112,6 +111,9 @@ if(OS_WINDOWS OR OS_LINUX)
     install(FILES ${CONCH_PUBLIC_HEADERS} DESTINATION include/${TARGET})
 endif()
 
-add_executable(test_lrucache tests/TestLRUCache.cpp)
-target_link_libraries(test_lrucache PRIVATE gtest utils)
-set_target_properties(test_lrucache PROPERTIES FOLDER tests)
+
+if(BUILD_TESTING)
+    add_executable(test_lrucache tests/TestLRUCache.cpp)
+    target_link_libraries(test_lrucache PRIVATE gtest utils)
+    set_target_properties(test_lrucache PROPERTIES FOLDER tests)
+endif()

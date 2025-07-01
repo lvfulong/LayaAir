@@ -228,4 +228,10 @@ public class MainActivity extends Activity {
         super.onWindowFocusChanged(hasFocus);
         hideNavigationBar();
     }
+    @Override
+    public void onTrimMemory(int level) {
+        if (GameEngine.getInstance() != null) {
+            GameEngine.getInstance().onTrimMemory(level);
+        }
+    }
 }

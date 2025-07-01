@@ -155,7 +155,7 @@ template <typename T> class ValueTraits<std::vector<T *>>
     }
     static bool is(jsvm_value value)
     {
-        return internal::isArray(value);
+        return isArray(value);
     }
 };
 template <typename T> class ValueTraits<const std::vector<T *> &> : public ValueTraits<std::vector<T *>>

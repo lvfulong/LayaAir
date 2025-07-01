@@ -38,6 +38,7 @@ extern "C"
 #include "libswresample/swresample.h"
 #include "libswscale/swscale.h"
 }
+#define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_thread.h>
 #include <utils/Log.h>

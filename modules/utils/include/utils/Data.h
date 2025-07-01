@@ -6,7 +6,7 @@
 
 namespace laya
 {
-
+//不可变数据
 class Data
 {
   public:

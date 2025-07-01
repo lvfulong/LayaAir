@@ -52,11 +52,6 @@ if(CONCH_USE_OLD_CURL_DOWNLOAD)
 	src/downloadMgr/JCCurlWrap.cpp)
 endif()
 
-if(CONCH_USE_JPEG_XL)
-	list(APPEND CONCH_SRC
-	src/imageLib/JPEGXLImageDecoder.h
-	src/imageLib/JPEGXLImageDecoder.cpp)
-endif()
 if(CONCH_USE_DCC)
 	list(APPEND CONCH_SRC
 	src/downloadCache/DCC2/JCFileResDCC2.cpp
@@ -294,8 +289,7 @@ list(APPEND CONCH_SRC
 	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTBatchBuffer.cpp
 	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTBatchBuffer.h
 
-	src/Audio/JCAudioManager.cpp
-	src/Audio/JCAudioManager.h
+
 	src/downloadMgr/JCDownloadMgr.h
 	src/downloadMgr/JCDownloadMgr.cpp
 	src/downloadMgr/JCHttpHeader.h
@@ -346,6 +340,8 @@ list(APPEND CONCH_SRC
 	# 暴露给JS的类
 	src/Bindings/JSDevice.h
 	src/Bindings/JSDevice.cpp
+	src/Bindings/JSDataCache.h
+	src/Bindings/JSDataCache.cpp
 	src/Bindings/JSNetwork.h
 	src/Bindings/JSNetwork.cpp
 	src/Bindings/Bullet/LayaBulletExport.h
@@ -419,9 +415,13 @@ list(APPEND CONCH_SRC
 	src/Bindings/JSSubtleCrypto.cpp
 	src/Bindings/JSProfiler.h
 	src/Bindings/JSProfiler.cpp
+	src/Bindings/JSMemory.h
+	src/Bindings/JSMemory.cpp
+	src/Bindings/JSTestSharedPointer.h
+	src/Bindings/JSTestSharedPointer.cpp
 	src/Extention/LayaExtWind.cpp
 	
-	src/OpenAL/
+
 	src/LayaGL/JCIDGenerator.h
 	src/LayaGL/JCIDGenerator.cpp
 	src/LayaGL/JCLayaGL.h
@@ -435,14 +435,6 @@ list(APPEND CONCH_SRC
 	src/resource/JCResource.cpp
 	src/resource/JCFileResManager.h
 	src/resource/JCFileResManager.cpp
-	src/resource/Audio/JCAudioInterface.h
-	src/resource/Audio/JCMp3Interface.h
-	src/resource/Audio/JCOggParser.h
-	src/resource/Audio/JCOggParser.cpp
-	src/resource/Audio/JCWaveInfo.h
-	src/resource/Audio/JCWaveInfo.cpp
-	src/resource/Audio/JCWaveParser.h
-	src/resource/Audio/JCWaveParser.cpp
 	src/WebSocket/Uri.h
 	src/WebSocket/Uri.cpp
 	src/WebSocket/WebSocket.h
@@ -475,8 +467,6 @@ if(OS_IOS)
 		src/platform/iOS
 	)
 	list(APPEND CONCH_SRC
-		src/Audio/ios/JCAudioMp3Player.cpp
-		src/Audio/ios/JCAudioMp3Player.h
 		src/downloadCache/JCIosFileSource.h
 		src/downloadCache/JCIosFileSource.cpp
 		src/Bindings/Video/JSVideo_IOSImpl.cpp
@@ -522,10 +512,8 @@ if(OS_IOS)
 		src/platform/iOS/Notification/LayaNotifyInterface.h
 		src/platform/iOS/Notification/LayaNotifyManager.h
 		src/platform/iOS/Notification/LayaNotifyManager.m
-		src/platform/iOS/Audio/JCMp3Player.h
-		src/platform/iOS/Audio/JCMp3Player.mm
-		src/platform/iOS/UIEditBoxWX.h
-		src/platform/iOS/UIEditBoxWX.mm
+		src/platform/iOS/UIEditBoxNew.h
+		src/platform/iOS/UIEditBoxNew.mm
 		src/platform/iOS/LayaOpenGLESView.h
 		src/platform/iOS/LayaOpenGLESView.mm
 		src/platform/iOS/Utils.h
@@ -536,23 +524,12 @@ if(OS_IOS)
 		src/network/src/UploadTaskiOS.h
 		src/network/src/UploadTaskiOS.mm
 		src/2D/src/CanvasRenderingContext2DCG.mm
-		src/resource/Audio/JCMp3Parser.h
-		src/resource/Audio/JCMp3Parser.cpp
-		src/resource/Audio/JCAudioWavPlayer.h
-		src/resource/Audio/JCAudioWavPlayer.cpp
 	)
 elseif(OS_ANDROID)
 	list(APPEND PLATFORM_HEADER_DIR
 		src/platform/Android
-		src/OpenAL/include
-		src/OpenAL/OpenAL32/Include
 	)
 	list(APPEND CONCH_SRC
-	src/Audio/android/JCAudioMp3Media.cpp
-		src/Audio/android/JCAudioMp3Media.h
-
-		# Audio/android/JCAudioMp3Player.cpp
-		# Audio/android/JCAudioMp3Player.h
 		src/downloadCache/JCAndroidFileSource.h
 		src/network/src/HttpClientAndroid.cpp
 		src/platform/Android/JNIFun.cpp
@@ -564,10 +541,6 @@ elseif(OS_ANDROID)
 		src/Bindings/JSAndroidEditBox.cpp
 		src/backend/src/OpenGLBackendAndroidEGL.cpp
 		src/2D/src/CanvasRenderingContext2DAndroid.cpp
-		src/resource/Audio/JCMp3Parser.h
-		src/resource/Audio/JCMp3Parser.cpp
-		src/resource/Audio/JCAudioWavPlayer.h
-		src/resource/Audio/JCAudioWavPlayer.cpp
 		src/network/src/UploadTaskAndroid.h	
 		src/network/src/UploadTaskAndroid.cpp
 	)
@@ -578,8 +551,6 @@ elseif(OS_WINDOWS)
 	list(APPEND CONCH_SRC
 		src/downloadCache/JCIosFileSource.h
 		src/downloadCache/JCIosFileSource.cpp
-		src/Audio/windows/JCAudioMp3Player.cpp
-		src/Audio/windows/JCAudioMp3Player.h
 		src/Bindings/EditBox/WinEditBox.h
 		src/Bindings/EditBox/WinEditBox.cpp
 		src/Bindings/Video/JSVideo_Win32Impl.cpp
@@ -587,12 +558,8 @@ elseif(OS_WINDOWS)
 		src/Bindings/JSWindowEditBox.cpp
 		src/backend/src/OpenGLBackendWinEGL.cpp
 		src/2D/src/CanvasRenderingContext2DWin.cpp
-		src/resource/Audio/JCMp3Parser.h
-		src/resource/Audio/JCMp3Parser.cpp
 		src/Exports.cpp
 		src/Application/App.cpp
-		src/resource/Audio/JCAudioWavPlayer.h
-		src/resource/Audio/JCAudioWavPlayer.cpp
 		src/platform/src/OSWin.cpp
 		src/network/src/UploadTaskCurl.h
 		src/network/src/UploadTaskCurl.cpp
@@ -619,12 +586,9 @@ elseif(OS_OHOS)
 		src/Bindings/Video/JSVideo_OHOSImpl.cpp
 		src/2D/src/CanvasRenderingContext2DOHOS.cpp
 		src/Bindings/JSOHOSEditBox.cpp
-		src/resource/Audio/JCAudioWavplayer.cpp
-		src/Audio/ohos/JCAudioMp3Player.cpp
 		src/network/src/HttpClientOHOS.cpp
 		src/network/src/UploadTaskCurl.h
 		src/network/src/UploadTaskCurl.cpp
-		src/resource/Audio/JCMp3Parser.cpp
 	)
 elseif(OS_LINUX)
 	list(APPEND PLATFORM_HEADER_DIR
@@ -639,8 +603,6 @@ elseif(OS_LINUX)
 		src/Bindings/JSLinuxEditBox.cpp
 		src/Exports.cpp
 		src/Application/App.cpp
-		src/resource/Audio/JCAudioWavPlayer.h
-		src/resource/Audio/JCAudioWavPlayer.cpp
 		src/platform/src/OSLinux.cpp
 		src/network/src/UploadTaskCurl.h
 		src/network/src/UploadTaskCurl.cpp
@@ -691,6 +653,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 set(LINK_LIBS
 	profiler
 	crypto_core
+	audio
 	)
 if(USE_PHYSX)
 	list(APPEND LINK_LIBS
@@ -718,29 +681,13 @@ if(CONCH_USE_CURL_DOWNLOAD)
 	)
 endif()
 
-if(CONCH_USE_JPEG_XL)
-	if(OS_WINDOWS)
-		list(APPEND LINK_LIBS
-			jxl
-		)
-	else()
-		list(APPEND LINK_LIBS
-			jxl
-			brotlidec
-			brotlicommon
-			hwy
-		)
-	endif()
-endif()
+
 
 if(OS_ANDROID)
 	# if(ANDROID_ABI STREQUAL "x86")
 	# set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-warn-shared-textrel")
 	# endif()
 	message(${ANDROID_PLATFORM_LEVEL})
-
-	# for openal
-	target_compile_definitions(${PROJECT_NAME} PRIVATE AL_ALEXT_PROTOTYPES)
 	target_link_libraries(${PROJECT_NAME}
 	${LINK_LIBS}
 		android
@@ -758,16 +705,11 @@ if(OS_ANDROID)
 		jsbind
 		jsvm
 		zlib
-		mpg123
 		zip
 		websockets
 		png
 		jpeg
 		jpeg-turbo
-		openal
-		vorbisfile
-		vorbis
-		ogg
 		#freetype
 
 		# curl
@@ -815,7 +757,6 @@ elseif(OS_IOS)
 		jsbind
 		jsvm
 		zlib
-		mpg123
 		zip
 		crypto
 		ssl
@@ -824,10 +765,6 @@ elseif(OS_IOS)
 		jpeg
 		jpeg-turbo
 
-		# openal
-		vorbisfile
-		vorbis
-		ogg
 		#freetype
 
 		# curl
@@ -859,7 +796,6 @@ elseif(OS_WINDOWS)
 		jsbind
 		jsvm
 		zlib
-		mpg123
 		zip
 		crypto
 		ssl
@@ -867,10 +803,6 @@ elseif(OS_WINDOWS)
 		png
 		jpeg
 		jpeg-turbo
-		openal
-		vorbisfile
-		vorbis
-		ogg
 		#freetype
 		#v8
 		#v8_libbase
@@ -911,6 +843,7 @@ endif()
 		libnative_window.so 
 		libnative_buffer.so
 		libohsensor.so
+		libnative_media_core.so
 		utils
 		core
 		jsbind
@@ -922,14 +855,9 @@ endif()
 		BulletDynamics
 		BulletCollision
 		LinearMath
-		vorbisfile
-		vorbis
-		ogg
 		aki_jsbind
 		ssl
 		crypto
-		mpg123
-		openal
 		webstorage	
 		) 
 elseif(OS_LINUX)
@@ -962,16 +890,11 @@ elseif(OS_LINUX)
 		utils
 		jsbind
 		zlib
-		#mpg123
 		zip
 		websockets
 		png
 		jpeg
 		jpeg-turbo
-		openal
-		vorbisfile
-		vorbis
-		ogg
 		curl
 		v8_monolith
 		BulletDynamics
@@ -1019,34 +942,36 @@ if(OS_OHOS)
 	install(TARGETS ${PROJECT_NAME} DESTINATION lib/${BUILDING_ARCH})
 endif()
 
-
-add_executable(test_canvas2d
+if(BUILD_TESTING)
+	add_executable(test_canvas2d
 		src/2D/tests/TestFontParser.cpp
 		src/2D/tests/FontDescription.cpp
 		src/2D/tests/FontDescriptionParser.cpp
-)
-target_link_libraries(test_canvas2d PRIVATE gtest conch)
-set_target_properties(test_canvas2d PROPERTIES FOLDER tests)
+	)
+	target_link_libraries(test_canvas2d PRIVATE gtest conch)
+	set_target_properties(test_canvas2d PROPERTIES FOLDER tests)
+endif()
 
-
-add_executable(benchmark_canvas2d
+if(BUILD_BENCHMARK)
+	add_executable(benchmark_canvas2d
 		src/2D/benchmark/BenchmarkFontParser.cpp
 		src/2D/tests/FontDescription.cpp
 		src/2D/tests/FontDescriptionParser.cpp
-)
-target_compile_definitions(benchmark_canvas2d PRIVATE BENCHMARK_STATIC_DEFINE)
-target_link_libraries(benchmark_canvas2d PRIVATE benchmark benchmark_main conch)
-set_target_properties(benchmark_canvas2d PROPERTIES FOLDER benchmarks)
-
-
-
-
-add_executable(test_uploadfile
-		src/network/tests/UploadFileTest.cpp
-)
-set(TETS_LIBS)
-if(OS_IOS)
-	list(APPEND TETS_LIBS "-framework Foundation")
+	)
+	target_compile_definitions(benchmark_canvas2d PRIVATE BENCHMARK_STATIC_DEFINE)
+	target_link_libraries(benchmark_canvas2d PRIVATE benchmark benchmark_main conch)
+	set_target_properties(benchmark_canvas2d PROPERTIES FOLDER benchmarks)
 endif()
-target_link_libraries(test_uploadfile PRIVATE gtest conch ${TETS_LIBS})
-set_target_properties(test_uploadfile PROPERTIES FOLDER tests)
+
+
+if(BUILD_TESTING)
+	add_executable(test_uploadfile
+		src/network/tests/UploadFileTest.cpp
+	)
+	set(TETS_LIBS)
+	if(OS_IOS)
+		list(APPEND TETS_LIBS "-framework Foundation")
+	endif()
+	target_link_libraries(test_uploadfile PRIVATE gtest conch ${TETS_LIBS})
+	set_target_properties(test_uploadfile PROPERTIES FOLDER tests)
+endif()

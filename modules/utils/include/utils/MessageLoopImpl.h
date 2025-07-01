@@ -15,6 +15,7 @@ class MessageLoopImpl
     virtual void enqueue(nano_seconds_t time, std::function<void()> &&task) = 0;
     virtual void iterate() = 0;
     virtual void stop() = 0;
+    virtual void start() = 0;
   private:
 };
 } // namespace laya

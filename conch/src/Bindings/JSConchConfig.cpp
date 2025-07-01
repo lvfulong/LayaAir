@@ -21,11 +21,10 @@
 #include "../../JCConchRender.h"
 #include "../../JCConch.h"
 #include "../../WebSocket/WebSocket.h"
-#include <resource/Audio/JCAudioWavPlayer.h>
-#include "../../Audio/JCAudioManager.h"
 #include <LayaGL/JCLayaGL.h>
 #include <LayaGL/JCLayaGLDispatch.h>
 #include <string>
+#include <audio/AudioDecoderCache.h>
 
 extern int g_nLogLevel;
 extern int g_nInnerWidth;
@@ -310,15 +309,15 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
     const char* JSConchConfig::getRuntimeVersion()
     {
 #ifdef OS_IOS
-        return "ios-conch6-release-3.3.0-beta.3";
+        return "ios-conch6-release-3.3.0-beta.4";
 #elif OS_ANDROID
-        return "android-conch6-release-3.3.0-beta.3";
+        return "android-conch6-release-3.3.0-beta.4";
 #elif OS_WINDOWS
-        return "window-conch6-release-3.3.0-beta.3";
+        return "window-conch6-release-3.3.0-beta.4";
 #elif OS_OHOS
-        return "ohos-conch6-release-3.3.0-beta.3";
+        return "ohos-conch6-release-3.3.0-beta.4";
 #elif OS_LINUX
-        return "linux-conch6-release-3.3.0-beta.3";
+        return "linux-conch6-release-3.3.0-beta.4";
 #endif
     }
 	//机型
@@ -581,10 +580,6 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
     {
         return g_kSystemConfig.m_nJSDebugPort;
     }
-    void JSConchConfig::setSoundGarbageCollectionTime(int nTime)
-    {
-        JCAudioWavPlayer::s_nGarbageCollectionTime = nTime;
-    }
 	bool JSConchConfig::getConchWebGL()
 	{
 		return g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL;//lv todo delete
@@ -596,6 +591,30 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
     int JSConchConfig::getMemoryUsageInByte()
     {
         return OS::getMemoryUsageInByte();
+    }
+    void JSConchConfig::setAudioMaxCacheSizeInBytes(int size)
+    {
+        audio::AudioDecoderCache::setMaxSizeInBytes(size);
+    }
+    int JSConchConfig::getAudioMaxCacheSizeInBytes()
+    {
+        return audio::AudioDecoderCache::getMaxSizeInBytes();
+    }
+    int JSConchConfig::getAudioCurrentCacheSizeInBytes()
+    {
+        return audio::AudioDecoderCache::getCurrentSizeInBytes();
+    }
+    void JSConchConfig::clearAudioCache()
+    {
+        audio::AudioDecoderCache::clear();
+    }
+    void JSConchConfig::setAudioStreamThreshold(int byteNum)
+    {
+        g_kSystemConfig.m_audioStreamThreshold = byteNum;
+    }
+    int JSConchConfig::getAudioStreamThreshold()
+    {
+        return g_kSystemConfig.m_audioStreamThreshold;
     }
     void JSConchConfig::exportJS(jsbind::Object& context)
     {
@@ -644,7 +663,6 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
 		 class_binding.class_function("printAllMemorySurvey", &JSConchConfig::printAllMemorySurvey);
 		 class_binding.class_function("enableEncodeURI", &JSConchConfig::enableEncodeURI);
          class_binding.class_function("getGraphicsAPI", &JSConchConfig::getGraphicsAPI);
-		 class_binding.class_function("setSoundGarbageCollectionTime", &JSConchConfig::setSoundGarbageCollectionTime);
 		 class_binding.class_function("setLanguage", &JSConchConfig::setLanguage);
 		 class_binding.class_function("getLanguage", &JSConchConfig::getLanguage);
          class_binding.class_function("getModel", &JSConchConfig::getModel);
@@ -656,6 +674,10 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         class_binding.class_property("JSDebugPort", &JSConchConfig::getJSDebugPort, &JSConchConfig::setJSDebugPort);
         class_binding.class_property("conchWebGL", &JSConchConfig::getConchWebGL);
         class_binding.class_property("urlIgnoreCase", &JSConchConfig::getUrlIgnoreCase, &JSConchConfig::setUrlIgnoreCase);
+        class_binding.class_property("audioMaxCacheSizeInBytes", &JSConchConfig::getAudioMaxCacheSizeInBytes, &JSConchConfig::setAudioMaxCacheSizeInBytes);
+        class_binding.class_function("getAudioCurrentCacheSizeInBytes", &JSConchConfig::getAudioCurrentCacheSizeInBytes);
+        class_binding.class_function("clearAudioCache", &JSConchConfig::clearAudioCache);
+        class_binding.class_property("audioStreamThreshold", &JSConchConfig::getAudioStreamThreshold, &JSConchConfig::setAudioStreamThreshold);
         context.global_class_("conchConfig", class_binding);
     }
 }

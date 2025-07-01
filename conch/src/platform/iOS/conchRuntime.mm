@@ -1,6 +1,5 @@
 #import "conchRuntime.h"
 #import "Reachability/Reachability.h"
-#import "Audio/JCMp3Player.h"
 #import <utils/JCColor.h>
 #import "JCScriptRuntime.h"
 #import "CToObjectC.h"
@@ -8,12 +7,10 @@
 #import "Notification/LayaNotifyManager.h"
 #import <downloadCache/JCIosFileSource.h>
 #import "JCConch.h"
-#import "Audio/JCAudioManager.h"
 #import "LayaEditBoxDelegate.h"
 #import "LayaEditBox.h"
 #import "TouchFilter.h"
 #import <jsbind/JSBind.h>
-//#import <Bindings/JSLayaNative.h>
 #import "LayaAlert.h"
 #import "CToObjectCIOS.h"
 #import "Reflection/refection.h"
@@ -21,11 +18,11 @@
 #import "LayaDeviceSensor.h"
 #import <resource/JCFileResManager.h>
 #import "JCSystemConfig.h"
-#import "UIEditBoxWX.h"
+#import "UIEditBoxNew.h"
 #import "LayaVideoPlayer.h"
 #import <Bindings/JSConchConfig.h>
 #import "LayaOpenGLESView.h"
-
+#import <audio/AudioPlayer.h>
 
 @implementation FuncObj
 -(id)init:(std::function<void(void)>)func
@@ -43,7 +40,7 @@
 @implementation conchRuntime
 {
     laya::BackendOptions m_options;
-    UIEditBoxWX*  m_UIEditBoxWX;
+    UIEditBoxNew*  m_UIEditBoxNew;
 }
 
 extern bool g_bGLCanvasSizeChanged;
@@ -77,7 +74,6 @@ static conchRuntime* g_pIOSConchRuntime = nil;
         m_nGLViewOffset = 0;
         m_pEditBox = NULL;
         m_pEditBoxDelegate = NULL;
-        m_pMp3Player = NULL;
         m_pNetworkListener = NULL;
         m_fRetinaValue = 1;
         m_pNSTimer = nil;
@@ -166,41 +162,37 @@ static conchRuntime* g_pIOSConchRuntime = nil;
 
     [m_pEditBoxDelegate setRetinaValue:m_fRetinaValue];
     m_pEditBox = [[LayaEditBox alloc]initWithParentView:m_pView EditBoxDelegate:m_pEditBoxDelegate ScreenRatio:m_fRetinaValue ];
-    m_pMp3Player = [[JCMp3Player alloc] init];
 }
 
 void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruption_state)
 {
-    ALCcontext *context = laya::JCAudioManager::GetInstance()->m_pWavPlayer->m_pContext;
     if (kAudioSessionBeginInterruption == interruption_state)
     {
-        alcMakeContextCurrent(nullptr);
+        laya::JCConch::s_pConch->getAudioPlayer().onPause();
     }
     else if (kAudioSessionEndInterruption == interruption_state)
     {
         OSStatus result = AudioSessionSetActive(true);
         if (result) NSLog(@"Error setting audio session active! %d\n", result);
         
-        alcMakeContextCurrent(context);
+        laya::JCConch::s_pConch->getAudioPlayer().onResume();
     }
 }
 
 -(void)handleInterruption:(NSNotification*)notification
 {
     static bool resumeOnBecomingActive = false;
-    ALCcontext *context = laya::JCAudioManager::GetInstance()->m_pWavPlayer->m_pContext;
     if ([notification.name isEqualToString:AVAudioSessionInterruptionNotification]) {
         NSInteger reason = [[[notification userInfo] objectForKey:AVAudioSessionInterruptionTypeKey] integerValue];
         if (reason == AVAudioSessionInterruptionTypeBegan) {
-            alcMakeContextCurrent(NULL);
+            laya::JCConch::s_pConch->getAudioPlayer().onPause();
         }
         
         if (reason == AVAudioSessionInterruptionTypeEnded) {
             if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
                 NSError *error = nil;
                 [[AVAudioSession sharedInstance] setActive:YES error:&error];
-                alcMakeContextCurrent(context);
-                laya::JCConch::s_pScriptRuntime->restoreAudio();
+                laya::JCConch::s_pConch->getAudioPlayer().onResume();
             } else {
                 resumeOnBecomingActive = true;
             }
@@ -218,8 +210,7 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
             return;
         }
         [[AVAudioSession sharedInstance] setActive:YES error:&error];
-        alcMakeContextCurrent(context);
-        laya::JCConch::s_pScriptRuntime->restoreAudio();
+        laya::JCConch::s_pConch->getAudioPlayer().onResume();
     }
 }
 -(void)update
@@ -271,6 +262,7 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
     {
         pScriptRuntime->jsGC();
     }
+    CToObjectCOnMemoryWarning();
 }
 //------------------------------------------------------------------------------
 -(void) initConch
@@ -326,7 +318,7 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
         
         // initialize the default values of LayaVideoPlayer
         [LayaVideoPlayer setCurParentView:m_pView withRetianValue:m_fRetinaValue];
-        m_UIEditBoxWX = nil;
+        m_UIEditBoxNew = nil;
         
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChanged:)
         //                                             name:UIDeviceOrientationDidChangeNotification object:[UIDevice currentDevice]];
@@ -996,28 +988,28 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
 }
 -(void)showKeyboard:(NSString*)defaultValue maxLength:(int)maxLength multiple:(bool)multiple confirmHold:(bool)confirmHold confirmType:(NSString*)confirmType prompt:(NSString*)prompt promptColor:(NSString*)promptColor inputType:(NSString*)inputType
 {
-    if (m_UIEditBoxWX == nil)
+    if (m_UIEditBoxNew == nil)
     {
-        m_UIEditBoxWX = [[UIEditBoxWX alloc] initWithMultiple:multiple];
+        m_UIEditBoxNew = [[UIEditBoxNew alloc] initWithMultiple:multiple];
     }
     else
     {
-        [m_UIEditBoxWX initWithMultiple:multiple];
+        [m_UIEditBoxNew initWithMultiple:multiple];
     }
-    m_UIEditBoxWX.defaultText = defaultValue;
-    m_UIEditBoxWX.maxLength = maxLength;
-    m_UIEditBoxWX.confirmHold = confirmHold;
-    m_UIEditBoxWX.confirmType = confirmType;
-    m_UIEditBoxWX.prompt = prompt;
-    m_UIEditBoxWX.promptColor = promptColor;
-    m_UIEditBoxWX.inputType = inputType;
-    [m_UIEditBoxWX becomeFirstResponder];
+    m_UIEditBoxNew.defaultText = defaultValue;
+    m_UIEditBoxNew.maxLength = maxLength;
+    m_UIEditBoxNew.confirmHold = confirmHold;
+    m_UIEditBoxNew.confirmType = confirmType;
+    m_UIEditBoxNew.prompt = prompt;
+    m_UIEditBoxNew.promptColor = promptColor;
+    m_UIEditBoxNew.inputType = inputType;
+    [m_UIEditBoxNew becomeFirstResponder];
 }
 
 -(void)hideKeyboard
 {
-    if (m_UIEditBoxWX != nil) {
-        [m_UIEditBoxWX hideKeyboard:FALSE];
+    if (m_UIEditBoxNew != nil) {
+        [m_UIEditBoxNew hideKeyboard];
     }
 }
 -(void)alert:(NSString*)sInfo

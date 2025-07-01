@@ -26,6 +26,8 @@
 #include "../downloadCache/DCC2/JSDownloader.h"
 #include "JSDevice.h"
 #include "JSNetwork.h"
+#include "JSDataCache.h"
+#include "JSMemory.h"
 
 laya::JCZip *g_ZipPackage = NULL;
 //------------------------------------------------------------------------------
@@ -160,7 +162,7 @@ namespace laya
     {
         if (!JCConch::s_pScriptRuntime->m_pAssetsRes)
         {
-            return jsbind::MakeNull();
+            return jsbind::makeNull();
         }
         int sz = 0;
         unsigned char* pBuff = NULL;
@@ -184,7 +186,7 @@ namespace laya
                 return ab.getHandle();
             }
         }
-        return jsbind::MakeNull();
+        return jsbind::makeNull();
     }
     void JSRuntime::setScreenWakeLock(bool bWakeLock)
     {
@@ -265,7 +267,7 @@ namespace laya
                 return jsbind::ArrayBuffer::MakeArrayBuffer(reinterpret_cast<uint8_t*>(ret.first), ret.second).getHandle();
             }
         }
-        return jsbind::MakeNull();
+        return jsbind::makeNull();
     }
     jsvm_value JSRuntime::convertBitmapToJpeg(jsbind::ArrayBuffer arrayBuffer, int w, int h)
     {
@@ -278,7 +280,7 @@ namespace laya
                 return jsbind::ArrayBuffer::MakeArrayBuffer(reinterpret_cast<uint8_t*>(ret.first), ret.second).getHandle();
             }
         }
-        return jsbind::MakeNull();
+        return jsbind::makeNull();
     }
 	void JSRuntime::exit()
     {
@@ -367,7 +369,7 @@ namespace laya
             return jsbind::Make<JSArrayBufferRef*>(pArrayBufferRef);
         }
         LOGE("JSRuntime::createArrayBufferRef type error");
-        return jsbind::MakeNull();
+        return jsbind::makeNull();
     }
     bool JSRuntime::registerFont(const std::string& family, jsbind::Local pathOrArrayBuffer)
     {
@@ -404,7 +406,7 @@ namespace laya
         return 0;
     }
 
-    void onDownloaded_JS(JCBuffer & p_Buff,
+    void onDownloaded_JS(const std::shared_ptr<Data>& data,
             int pnCurlRet,
             int pnHttpRet,
             std::shared_ptr<jsbind::Persistent>& jsOnComp,
@@ -413,7 +415,7 @@ namespace laya
         auto onCompleteLocal = jsOnComp->getLocal();
         if (onCompleteLocal.isValid() && onCompleteLocal.isFunction())
         {
-            auto ab = jsbind::ArrayBuffer::MakeArrayBuffer((uint8_t*)p_Buff.m_pPtr, p_Buff.m_nLen);
+            auto ab = jsbind::ArrayBuffer::MakeArrayBuffer((uint8_t*)data->bytes(), data->size());
             onCompleteLocal.call<void>(jsvm::global(), ab, "","");
             //释放持久句柄
             jsOnComp->reset();
@@ -423,14 +425,10 @@ namespace laya
         {
             // 抛出错误或处理非函数情况
         }
-        
-        //释放buffer
-        p_Buff.m_bNeedDel = true;
-        p_Buff.free();
     }
 
     void onDownloaded(
-        JCBuffer& p_Buff,
+        const std::shared_ptr<Data>& data,
         const std::string& pLocalAddr,
         const std::string& pSvAddr,
         int pnCurlRet,
@@ -449,8 +447,7 @@ namespace laya
         //    }
         //}
 
-        p_Buff.m_bNeedDel = false; //下载线程不要删除，js那边删
-        postToJS(std::bind(onDownloaded_JS, p_Buff, pnCurlRet, pnHttpRet, jsOnComp, jsOnProg));
+        postToJS(std::bind(onDownloaded_JS, data, pnCurlRet, pnHttpRet, jsOnComp, jsOnProg));
     }
 
     /**
@@ -480,14 +477,6 @@ namespace laya
         pNetLoader->download(url.c_str(), 0, onProg, onComp, 0, 0);
     }
 
-    // 下载完成后在 JS 线程调用回调
-    void onDownloadComplete(std::function<void(JCBuffer, const std::string&, const std::string&)> callback) {
-        // 在这里使用 DirectDownloader 的结果调用 JavaScript 的回调函数
-        // 该函数应由 postToJS 在 JS 线程中回调来执行
-        //callback();
-    }
-
-
     void JSRuntime::setDownloader(jsvm_value obj){
         std::shared_ptr<JSDownloader> jsdownloader = std::make_shared<JSDownloader>();
         jsdownloader->setJSDownloader(obj);
@@ -502,22 +491,22 @@ namespace laya
         if (eventName.isNull() || eventName.isUndefined())
         {
             LOGE("Error: postAsyncMessage eventName is null or undefined");
-            return jsbind::MakeUndefined();
+            return jsbind::makeUndefined();
         }
         if (!eventName.isString())
         {
             LOGE("Error: postAsyncMessage eventName is not string");
-            return jsbind::MakeUndefined();
+            return jsbind::makeUndefined();
         }
         if (data.isNull() || data.isUndefined())
         {
             LOGE("Error: postAsyncMessage data is null or undefined");
-            return jsbind::MakeUndefined();
+            return jsbind::makeUndefined();
         }
         if (!data.isString())
         {
             LOGE("Error: postAsyncMessage data is not string");
-            return jsbind::MakeUndefined();
+            return jsbind::makeUndefined();
         }
         return OS::postAsyncMessage(callbackRef, eventName.as<std::string>(), data.as<std::string>());
     }
@@ -554,6 +543,8 @@ namespace laya
         jsbind::global_class_<JSRuntime> class_binding;
         JSDevice::exportJS(class_binding);
         JSNetwork::exportJS(context, class_binding);
+        JSDataCache::exportJS(class_binding);
+        JSMemory::exportJS(class_binding);
 		class_binding.class_function("postAsyncMessage", &JSRuntime::postAsyncMessage);
         class_binding.class_function("postSyncMessage", &JSRuntime::postSyncMessage);
 		class_binding.class_function("setGlobalRepaint", &JSRuntime::setGlobalRepaint);
