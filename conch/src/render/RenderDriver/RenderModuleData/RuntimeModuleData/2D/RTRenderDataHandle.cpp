@@ -7,6 +7,7 @@
 #include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderContext2D.h>
 #include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderElement2D.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESRenderGeometryElement.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESVertexBuffer.h>
 
 namespace laya
 {
@@ -66,6 +67,17 @@ void RTPrimitiveDataHandle::applyVertexBufferBlock(const std::vector<Graphics2DB
     this->_needUpdateBuffer = !blocks.empty();
 }
 
+int32_t RTPrimitiveDataHandle::getVertexStride(const std::vector<Graphics2DBufferBlock> &blocks)
+{
+    if (blocks.empty())
+        return 0;
+    GLESVertexBuffer* vertexBuffer = blocks[0].vertexBuffer.getLocal()["_nativeObj"].as<GLESVertexBuffer*>();
+    std::unordered_map<int32_t, VertexStateContext> &shaderValues = vertexBuffer->_shaderValues;
+    if (shaderValues.empty())
+        return 0;
+    return shaderValues.begin()->second.vertexStride;
+}
+
 void RTPrimitiveDataHandle::inheriteRenderData(GLESRenderContext2D *context)
 {
     auto data = this->_owner->spriteShaderData;
@@ -111,14 +123,8 @@ void RTPrimitiveDataHandle::inheriteRenderData(GLESRenderContext2D *context)
             float m00 = mat.a, m01 = mat.b, m10 = mat.c, m11 = mat.d, tx = mat.tx, ty = mat.ty;
             float *vbdata = nullptr;
             std::vector<Graphics2DBufferBlock> &blocks = this->_bufferBlocks;
-            // 计算 stride，从第一个vertexBuffer获取
-            int stride = 12; // 默认stride
-            if (!blocks.empty()) {
-                // 从第一个blocks获取vertexBuffer的stride信息
-                // stride = this._bufferBlocks[0].vertexBuffer.vertexDeclaration.vertexStride / 4;
-                // 这里假设stride为12，实际应该从vertexBuffer获取
-            }
-            GET_ENV
+            int stride = getVertexStride(blocks) / 4;
+            GET_ENV;
             jsvm_status status;
             for (int i = 0, n = this->_bufferBlocks.size(); i < n; i++)
             {

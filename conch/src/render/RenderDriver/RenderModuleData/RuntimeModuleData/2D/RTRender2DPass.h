@@ -8,6 +8,7 @@
 #include <map>
 #include <set>
 #include <utils/FastSinglelist.h>
+#include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESInternalRT.h>
 #include <vector>
 
 namespace laya
@@ -65,6 +66,7 @@ class RTRender2DPass
     void setRenderTexture(GLESInternalRT *value)
     {
         this->renderTexture = value;
+        this->texture = value->m_textures[0];
     }
     void setShaderDataJS(jsvm_value v)
     {

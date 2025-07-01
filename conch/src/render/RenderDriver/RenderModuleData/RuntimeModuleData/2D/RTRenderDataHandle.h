@@ -67,11 +67,12 @@ public:
         _mask = value;
     }   
     void applyVertexBufferBlock(const std::vector<Graphics2DBufferBlock>& blocks);
-    void inheriteRenderData(GLESRenderContext2D* context) override;
+    void inheriteRenderData(GLESRenderContext2D *context) override;
     std::vector<Graphics2DBufferBlock>& _getBlocks() { return _bufferBlocks; };
     std::vector<RT2DGraphic2DBufferDataView*>& _getCloneViews();
     void updateCloneViews();
 private:
+    int32_t getVertexStride(const std::vector<Graphics2DBufferBlock>& blocks);
     std::vector<Graphics2DBufferBlock> _bufferBlocks;
     bool _needUpdateBuffer{false};
     int _modifiedFrame{-1};

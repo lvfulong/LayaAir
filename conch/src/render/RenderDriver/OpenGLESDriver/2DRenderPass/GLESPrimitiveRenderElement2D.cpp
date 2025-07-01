@@ -129,24 +129,11 @@ namespace laya
 
       // 绑定着色器
       shader->bind();
-
+      _uploadGlobalAndPass(shader, context);
       // 上传2D着色器数据
       if (value2DShaderData)
       {
          shader->uploadUniforms(&(shader->m_sprite2DUniformParamsMap), value2DShaderData, true);
-      }
-
-      // 上传全局着色器数据
-      GLESShaderData *global = getGlobalShaderData();
-      if (global)
-      {
-         shader->uploadUniforms(&(shader->m_sceneUniformParamsMap), global, true);
-      }
-
-      // 上传pass数据
-      if (context->passData)
-      {
-         shader->uploadUniforms(&(shader->m_sceneUniformParamsMap), context->passData, true);
       }
 
       // 上传材质着色器数据

@@ -66,6 +66,7 @@ namespace laya
 	protected:
 		virtual void _compileShader(GLESRenderContext2D* context);
 		virtual void _renderByShaderInstance(GLESShaderInstance* shader, GLESRenderContext2D* context);
+		virtual void _uploadGlobalAndPass(GLESShaderInstance* shader, GLESRenderContext2D* context);
 		GLESShaderData* getGlobalShaderData();
 	};
 

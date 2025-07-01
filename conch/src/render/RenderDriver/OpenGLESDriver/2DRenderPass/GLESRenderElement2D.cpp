@@ -112,20 +112,12 @@ void GLESRenderElement2D::_compileShader(GLESRenderContext2D *context)
         _shaderInstances.add(shader);
     }
 }
-void GLESRenderElement2D::_renderByShaderInstance(GLESShaderInstance *shader, GLESRenderContext2D *context)
-{
-    if (!shader->complete())
-        return;
-    shader->bind();
-    if (value2DShaderData)
-    {
-        shader->uploadUniforms(&(shader->m_sprite2DUniformParamsMap), value2DShaderData, true);
-    }
 
+void GLESRenderElement2D::_uploadGlobalAndPass(GLESShaderInstance *shader, GLESRenderContext2D *context){
     GLESShaderData *global = getGlobalShaderData();
     if (global)
     {
-        shader->uploadUniforms(&(shader->m_sceneUniformParamsMap), global, true);
+        shader->uploadUniforms(&(shader->m_cameraUniformParamsMap), global, true);
     }
 
     if (context->passData)
@@ -133,6 +125,20 @@ void GLESRenderElement2D::_renderByShaderInstance(GLESShaderInstance *shader, GL
         shader->uploadUniforms(&(shader->m_sceneUniformParamsMap), context->passData, true);
     }
 
+}
+
+void GLESRenderElement2D::_renderByShaderInstance(GLESShaderInstance *shader, GLESRenderContext2D *context)
+{
+    if (!shader->complete())
+        return;
+    shader->bind();
+    _uploadGlobalAndPass(shader, context);
+    
+    if (value2DShaderData)
+    {
+        shader->uploadUniforms(&(shader->m_sprite2DUniformParamsMap), value2DShaderData, true);
+    }
+    
     if (materialShaderData)
     {
         shader->uploadUniforms(&(shader->m_materialUniformParamsMap), materialShaderData, true);
