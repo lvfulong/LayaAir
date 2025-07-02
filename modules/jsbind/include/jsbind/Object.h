@@ -129,10 +129,18 @@ namespace internal
 template <typename T> T convert_value_object_from_js(jsvm_value value)
 {
     DEBUG_CHECK(jsbind::value_object<T>::is_bound && "casting to an unbound value_type");
-    T ret{};
+    T ret{}; 
+    GET_ENV
+    jsvm_valuetype valueType;
+    jsvm_status status = jsvm_typeof(env, value, &valueType);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+    if (valueType != jsvm_valuetype::jsvm_object)
+    {
+        return ret;
+    }
     for (auto &field : jsbind::value_object<T>::fields)
     {
-        GET_ENV
+       
         jsvm_status status;
         jsvm_value prop;
         status = jsvm_get_named_property(env, value, field.field_name.c_str(), &prop);

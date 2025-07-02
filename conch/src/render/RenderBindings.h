@@ -1312,6 +1312,7 @@ class RenderBindings
             class_binding.function("destroy", &RTRenderStruct2D::destroy);
             class_binding.function("setSpriteShaderData", &RTRenderStruct2D::setSpriteShaderData);
             class_binding.function("setGlobalRenderData", &RTRenderStruct2D::setGlobalRenderData);
+            class_binding.function("setRenderUpdate", &RTRenderStruct2D::setRenderUpdate);
             context.class_("conchRTRenderStruct2D", class_binding);
         }
         {
