@@ -29,6 +29,45 @@ void GLESIndexBuffer::_changeMemory(int bytelength) {
     }
 }
 
+void GLESIndexBuffer::setData(char *data, uint32_t byteLength, uint32_t bufferOffset, uint32_t dataStartIndex, uint32_t dataCount)
+{
+    GLESBufferState *curBufSta = GLESBufferState::_curBindedBufferState;
+    if (curBufSta) 
+    {
+            curBufSta->unBind();//避免影响VAO
+            {
+                this->_glBuffer->bindBuffer();
+                bool needSubData = dataStartIndex != 0 || static_cast<int64_t>(dataCount) != 9007199254740991; /*dataCount !== Number.MAX_SAFE_INTEGER*/
+                if (needSubData) 
+                {
+                    //Uint8Array subData = new Uint8Array(buffer, dataStartIndex, dataCount);
+                    char *subData = data + dataStartIndex;
+                    this->_glBuffer->setData(subData, dataCount, bufferOffset);
+                } 
+                else 
+                {
+                    this->_glBuffer->setData(data, byteLength, bufferOffset);
+                }
+            }
+            curBufSta->bind();
+        }
+        else
+         {
+            this->_glBuffer->bindBuffer();
+            bool needSubData = dataStartIndex != 0 || static_cast<int64_t>(dataCount) != 9007199254740991; /*dataCount !== Number.MAX_SAFE_INTEGER*/
+            if (needSubData) 
+            {
+                //var subData: Uint8Array = new Uint8Array(buffer, dataStartIndex, dataCount);
+                char *subData = data + dataStartIndex;
+                this->_glBuffer->setData(subData, dataCount,bufferOffset);
+            } 
+            else 
+            {
+                this->_glBuffer->setData(data, byteLength, bufferOffset);
+            }
+        }
+}
+
 void GLESIndexBuffer::_setIndexDataLength(uint32_t data)
 {
     _changeMemory(data);

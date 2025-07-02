@@ -13,6 +13,7 @@ class GLESIndexBuffer // : public IIndexBuffer
   public:
     GLESIndexBuffer(BufferTargetType targetType, BufferUsage bufferUsageType);
     ~GLESIndexBuffer();
+    void setData(char *data, uint32_t byteLength, uint32_t bufferOffset, uint32_t dataStartIndex, uint32_t dataCount);
     void _setIndexDataLength(uint32_t data);
     void _setIndexData(char *data, uint32_t byteLength, uint32_t bufferOffset);
     void _setIndexDataJS(jsbind::ArrayBuffer arrayBuffer, uint32_t bufferOffset);

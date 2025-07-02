@@ -77,7 +77,8 @@ void RT2DGraphicWholeBuffer::upload()
         }
         RT2DGraphic2DBufferDataView* pLast = this->_last.getLocal().as<RT2DGraphic2DBufferDataView*>();
         int len = pLast->_start + pLast->_length - uploadStart;
-
+        int offset = uploadStart * 2;
+        offset = floor(offset / 4) * 4;
         // jsvm_value ab = jsbind::Local(this->_bufferData.getHandle())["buffer"].getHandle();
         // DEBUG_CHECK(jsbind::Local(ab).isArrayBuffer());
         // void* data = nullptr;
@@ -86,7 +87,9 @@ void RT2DGraphicWholeBuffer::upload()
         // DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         //let tempUint16Array = new Uint16Array(this.bufferData.buffer, uploadStart * 2, len);
         //(this.buffer as IIndexBuffer)._setIndexData(tempUint16Array, uploadStart * 2);
-        _bufferAsIndexBuffer->_setIndexData((char*)data, len, uploadStart * 2);
+
+        _bufferAsIndexBuffer->setData((char*)data, len, offset, offset, len * 2 + (uploadStart * 2 - offset));
+       // _bufferAsIndexBuffer->_setIndexData((char*)data, len, len * 2 + (uploadStart * 2 - offset));
 
         this->_needResetData = false;
     }
