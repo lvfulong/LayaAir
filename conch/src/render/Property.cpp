@@ -256,6 +256,12 @@ namespace laya
         ShaderDefines2D::UNIFORM_CLIPMATPOS = LayaGL::m_pWebglEngine->propertyNameToID("u_clipMatPos");
     }
 
+    uint32_t BaseRenderNode2D::BASERENDER2DCOLOR = 0;
+    void BaseRenderNode2D::__init__()
+    {
+        BaseRenderNode2D::BASERENDER2DCOLOR = LayaGL::m_pWebglEngine->propertyNameToID("u_baseRenderColor");
+    }
+
     //RenderableSprite3D
     uint32_t RenderableSprite3D::LIGHTMAPSCALEOFFSET;
     uint32_t RenderableSprite3D::LIGHTMAP;

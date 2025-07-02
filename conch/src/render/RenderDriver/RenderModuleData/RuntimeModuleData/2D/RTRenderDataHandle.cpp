@@ -2,6 +2,7 @@
 #include "RT2DGraphic2DBufferDataView.h"
 #include "RTRenderStruct2D.h"
 #include <core/math/Matrix.h>
+#include <core/math/Color.h>
 #include <render/3D/design/renderEnum/IndexFormat.h>
 #include <render/Property.h>
 #include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESRenderContext2D.h>
@@ -247,6 +248,75 @@ void RTPrimitiveDataHandle::updateCloneViews()
         }
     }
     cloneViews.resize(blockLength);
+}
+
+// RTMesh2DRenderDataHandle实现
+Color* RTMesh2DRenderDataHandle::_setRenderColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+
+RTMesh2DRenderDataHandle::RTMesh2DRenderDataHandle() 
+{
+
+}
+
+RTMesh2DRenderDataHandle::~RTMesh2DRenderDataHandle()
+{
+}
+
+void RTMesh2DRenderDataHandle::inheriteRenderData(GLESRenderContext2D* context)
+{
+    // 调用基类方法
+    RTRender2DDataHandle::inheriteRenderData(context);
+    
+    if (!_owner || !_owner->spriteShaderData)
+        return;
+    
+    // 更新渲染透明度
+    if (_renderAlpha != _owner->globalAlpha)
+    {
+        float globalAlpha = _owner->globalAlpha;
+        float a = globalAlpha * _baseColor.a;
+        _setRenderColor->r = _baseColor.r * a;
+        _setRenderColor->g = _baseColor.g * a;
+        _setRenderColor->b = _baseColor.b * a;
+        _setRenderColor->a = a;
+        
+        // 设置颜色到shader数据
+        _owner->spriteShaderData->setColor(BaseRenderNode2D::BASERENDER2DCOLOR, *_setRenderColor);
+        _renderAlpha = globalAlpha;
+    }
+}
+
+// RTSpineRenderDataHandle实现
+RTSpineRenderDataHandle::RTSpineRenderDataHandle()
+    : _offset(0.0f, 0.0f)
+{
+}
+
+RTSpineRenderDataHandle::~RTSpineRenderDataHandle()
+{
+}
+
+void RTSpineRenderDataHandle::inheriteRenderData(GLESRenderContext2D* context)
+{
+    if (!_owner || !_owner->spriteShaderData)
+        return;
+    
+    const Matrix& trans = _owner->getRenderMatrix();
+    const Matrix& mat = trans;
+    
+    float ofx = -_offset.x;
+    float ofy = _offset.y;
+    
+    _nMatrix_0.setValue(mat.a, mat.b, mat.tx + mat.a * ofx + mat.c * ofy);
+    _nMatrix_1.setValue(mat.c, mat.d, mat.ty + mat.b * ofx + mat.d * ofy);
+    
+    // 重新设置为基础矩阵 (对应TypeScript中最后两行的覆盖)
+    _nMatrix_0.setValue(mat.a, mat.b, mat.tx);
+    _nMatrix_1.setValue(mat.c, mat.d, mat.ty);
+    
+    // 设置uniform到shader数据
+    _owner->spriteShaderData->setVector3(ShaderDefines2D::UNIFORM_NMATRIX_0, _nMatrix_0);
+    _owner->spriteShaderData->setVector3(ShaderDefines2D::UNIFORM_NMATRIX_1, _nMatrix_1);
 }
 
 } // namespace laya

@@ -105,6 +105,7 @@ namespace laya
          // 添加图元着色器数据定义
          if (primitiveShaderData)
          {
+            pass->additionShaderData = new std::vector<std::string>{"Sprite2DGraphics"};
             comDef->addDefineDatas(primitiveShaderData->_defineDatas);
          }
 

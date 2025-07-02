@@ -9,6 +9,7 @@
 #include <string>
 #include <render/BlendMode.h>
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTRender2DPass.h>
+#include <jsvm/JSVM_Types.h>
 
 namespace laya
 {
@@ -152,7 +153,7 @@ class RTRenderStruct2D
         this->renderElements = value;
     } 
       
-    GLESShaderData *spriteShaderData;
+    GLESShaderData *spriteShaderData = nullptr;
     void setSpriteShaderData(GLESShaderData *value)
     {
         this->spriteShaderData = value;
@@ -205,6 +206,7 @@ class RTRenderStruct2D
     void updateChildren(ChildrenUpdateType type);
     void _updateBlendMode();
     void _initClipInfo();
+    void setShaderData(BlendMode blendMode, GLESShaderData* data, bool premultipliedAlpha = true);
     structTransform* _trans = nullptr;
     RTGlobalRenderData*_globalRenderData = nullptr;
     RTRender2DDataHandle *_renderDataHandler = nullptr;

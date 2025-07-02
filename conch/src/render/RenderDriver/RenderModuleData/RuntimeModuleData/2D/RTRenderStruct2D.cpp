@@ -4,12 +4,15 @@
 #include <render/Const.h>
 #include "RTRender2DPass.h"
 #include <render/Property.h>
+#include <render/3D/temp/RenderState.h>
+#include <jsvm/JSVM_Types.h>
+#include <jsbind/Persistent.h>
 namespace laya
 {
 // 默认裁剪信息
 static IClipInfo s_DefaultClipInfo(Vector4((float)Const::MAX_CLIP_SIZE, 0.0f, 0.0f, (float)Const::MAX_CLIP_SIZE), Vector4(0.0f, 0.0f, 0.0f, 0.0f), Matrix());
 RTRenderStruct2D::RTRenderStruct2D()
-{
+{ 
 }
 
 RTRenderStruct2D::~RTRenderStruct2D()
@@ -117,8 +120,40 @@ void RTRenderStruct2D::_updateBlendMode()
 {
     if (!spriteShaderData)
         return;
-    //std::string blendMode = getBlendMode();
-    // BlendModeHandler::setShaderData(blendMode, spriteShaderData); lvtodo
+    BlendMode blendMode = getBlendMode();
+    setShaderData(blendMode, spriteShaderData); 
+}
+
+void RTRenderStruct2D::setShaderData(BlendMode blendMode, GLESShaderData* data, bool premultipliedAlpha)
+{
+
+    switch (blendMode) {
+        case BlendMode::Add:        // add
+        case BlendMode::Screen:     // screen  
+        case BlendMode::Light:      // light
+            data->setInt(Shader3D::BLEND_SRC, RenderState::BLENDPARAM_ONE);
+            data->setInt(Shader3D::BLEND_DST, RenderState::BLENDPARAM_ONE);
+            break;
+        case BlendMode::Multiply:   // BlendMultiply
+            data->setInt(Shader3D::BLEND_SRC, RenderState::BLENDPARAM_DST_COLOR);
+            data->setInt(Shader3D::BLEND_DST, RenderState::BLENDPARAM_ONE_MINUS_SRC_ALPHA);
+            break;
+        case BlendMode::Mask:       // mask
+            data->setInt(Shader3D::BLEND_SRC, RenderState::BLENDPARAM_ZERO);
+            data->setInt(Shader3D::BLEND_DST, RenderState::BLENDPARAM_SRC_ALPHA);
+            break;
+        case BlendMode::DestinationOut: // destination
+            data->setInt(Shader3D::BLEND_SRC, RenderState::BLENDPARAM_ZERO);
+            data->setInt(Shader3D::BLEND_DST, RenderState::BLENDPARAM_ZERO);
+            break;
+        case BlendMode::SourceAlpha: // not premul alpha
+            data->setInt(Shader3D::BLEND_SRC, RenderState::BLENDPARAM_SRC_ALPHA);
+            data->setInt(Shader3D::BLEND_DST, RenderState::BLENDPARAM_ONE_MINUS_SRC_ALPHA);
+            break;
+        default:// premul alpha
+            data->setInt(Shader3D::BLEND_SRC, premultipliedAlpha ? RenderState::BLENDPARAM_ONE : RenderState::BLENDPARAM_SRC_ALPHA);
+            data->setInt(Shader3D::BLEND_DST, RenderState::BLENDPARAM_ONE_MINUS_SRC_ALPHA);
+    }
 }
 
 void RTRenderStruct2D::setClipRect(Rectangle rect)

@@ -1275,6 +1275,20 @@ class RenderBindings
             context.class_("conchRTPrimitiveDataHandle", class_binding);
         }
         {
+            jsbind::class_<RTMesh2DRenderDataHandle> class_binding;
+            class_binding.constructor<>();
+            class_binding.inherit<RTRender2DDataHandle>();
+            class_binding.function("setBaseColor", &RTMesh2DRenderDataHandle::setBaseColor);
+            context.class_("conchRTMesh2DRenderDataHandle", class_binding);
+        }
+        {
+            jsbind::class_<RTSpineRenderDataHandle> class_binding;
+            class_binding.constructor<>();
+            class_binding.inherit<RTRender2DDataHandle>();
+            class_binding.function("setOffset", &RTSpineRenderDataHandle::setOffset);
+            context.class_("conchRTSpineRenderDataHandle", class_binding);
+        }
+        {
             jsbind::class_<RTGlobalRenderData> class_binding;
             class_binding.constructor<>();
             class_binding.function("setCullRect", &RTGlobalRenderData::setCullRect);

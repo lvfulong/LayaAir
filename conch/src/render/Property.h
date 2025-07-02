@@ -178,6 +178,13 @@ public:
     static void __init__();
 };
 
+class BaseRenderNode2D
+{
+public:
+    static uint32_t BASERENDER2DCOLOR;
+    static void __init__();
+};
+
 class RenderableSprite3D
 {
 public:
