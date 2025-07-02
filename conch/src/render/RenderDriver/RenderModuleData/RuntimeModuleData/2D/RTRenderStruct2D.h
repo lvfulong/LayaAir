@@ -107,15 +107,15 @@ class RTRenderStruct2D
     }
 
     float globalAlpha = 1.0;
-    float alpha = 1.0;
+    float _alpha = 1.0;
 
     float getAlpha()
     {
-        return this->alpha;
+        return this->_alpha;
     }
     void setAlpha(float value)
     {
-        this->alpha = value;
+        this->_alpha = value;
         if (this->parent){
             this->globalAlpha = this->parent->globalAlpha * value;
         }else{
@@ -191,7 +191,7 @@ class RTRenderStruct2D
     }
 
     void setRepaint();
-    RTRenderStruct2D *addChild(RTRenderStruct2D *child, int32_t index);
+    void addChild(RTRenderStruct2D *child, int32_t index);
     void updateChildIndex(RTRenderStruct2D *child, int32_t oldIndex, int32_t index);
     void removeChild(RTRenderStruct2D *child);
     void setClipRect(Rectangle rect);

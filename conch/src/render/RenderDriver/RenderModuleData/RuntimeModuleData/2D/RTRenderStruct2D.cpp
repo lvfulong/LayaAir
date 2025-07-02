@@ -236,7 +236,7 @@ void RTRenderStruct2D::updateChildren(ChildrenUpdateType type)
 
         if (updateAlpha)
         {
-            child->globalAlpha = alpha * child->alpha;
+            child->globalAlpha = alpha * child->_alpha;
             updateChild = true;
         }
 
@@ -261,29 +261,29 @@ void RTRenderStruct2D::updateChildren(ChildrenUpdateType type)
 
 void RTRenderStruct2D::setRepaint()
 {
-    if (this->_pass)
+    RTRender2DPass* pass = this->getPass();
+    if (pass)
     {
-        this->_pass->repaint = true;
+        pass->repaint = true;
     }
 }
 
-RTRenderStruct2D* RTRenderStruct2D::addChild(RTRenderStruct2D* child, int32_t index)
+void RTRenderStruct2D::addChild(RTRenderStruct2D* child, int32_t index)
 {
     child->parent = this;
     children.insert(children.begin() + index, child);
 
     child->_parentClipInfo = this->getClipInfo();
     child->_parentBlendMode = this->getBlendMode();
-    child->_parentPass = this->_pass;
+    child->_parentPass = this->getPass();
 
     updateChildren(ChildrenUpdateType::All);
-    return child;
 }
 void RTRenderStruct2D::updateChildIndex(RTRenderStruct2D* child, int32_t oldIndex, int32_t index)
 {
     if (oldIndex == index)
         return;
-
+    DEBUG_CHECK(oldIndex >=0 && index >= 0);
     children.erase(children.begin() + oldIndex);
     if (index >= children.size()) {
         children.push_back(child);
@@ -302,7 +302,8 @@ void RTRenderStruct2D::removeChild(RTRenderStruct2D* child)
 
         child->_parentPass = nullptr;
         child->_parentClipInfo = nullptr;
-        child->_parentBlendMode = BlendMode::Invalid; // lvtodo
+        child->_parentBlendMode = BlendMode::Invalid;
+        child->globalAlpha = child->_alpha;
         child->updateChildren(ChildrenUpdateType::All);
     }
 }

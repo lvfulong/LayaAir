@@ -1721,7 +1721,6 @@ namespace laya
         }).get();
     }
     int JCLayaGL::getShaderParameter(const char* src,int type,int name) {
-        //lvtodo
         std::string source = src;
         return JCConch::s_pConchRender->postTaskFromJSToRenderSync([name, type, &source]()->int {
             JCConch::s_pScriptRuntime->dispatchLayaGLBuffer(false);

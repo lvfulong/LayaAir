@@ -172,9 +172,6 @@ namespace laya
     void JCConch::_realReload() {
         DEBUG_CHECK(isScriptThread());
         LOGI("JCConch::reload start...");
-
-        //先通知消息管理器，关闭各个线程之间的post
-        //lvtodo m_ThreadCmdMgr.stop();
         JCConch::s_pScriptRuntime->reload();
         LOGI("JCConch::reload end.");
     }
