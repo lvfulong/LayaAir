@@ -164,13 +164,15 @@ namespace laya
     {
         m_funcOnStateChg = jsbind::Persistent(pObj);
     }
-    void _onPostComplete_JSThread(XMLHttpRequest* pxhr, char* p_Buff, int p_nLen, bool p_bBin, std::weak_ptr<int> cbref) 
+    void _onPostComplete_JSThread(XMLHttpRequest* pxhr, const std::shared_ptr<Data>& data, bool p_bBin, std::weak_ptr<int> cbref) 
     {
         if (!cbref.lock())
             return;       
         //检查一下js环境
         //if (!pxhr->IsMyJsEnv())
         //    return;
+        char* p_Buff = (char*)data->data();
+        int p_nLen = data->size();
         if (p_Buff) 
         {
             if (p_bBin) 
@@ -241,30 +243,9 @@ namespace laya
         }
         else
         {
-            postToJS(std::bind(_onPostComplete_JSThread, pxhr, (char*)data->data(), (int)data->size(), bBin, callbackref));
+            postToJS(std::bind(_onPostComplete_JSThread, pxhr, data, bBin, callbackref));
         }
     }
-    /*
-    void XMLHttpRequest::set_onreadystatechange1(jsvm_value pObj)
-    {
-        v8::HandleScope sc(mpJsIso);
-        bool isfunc = pObj->IsFunction();
-        //v8::Persistent<v8::Function>* pFunc = new v8::Persistent<v8::Function>(pIso, v8::Local<v8::Function>::Cast(pObj));
-        v8::Persistent<v8::Object>* ppf = weakHoldJsObj(v8::Local<v8::Object>::Cast(pObj));
-        mpJsOnReadyStateChange = (JsFunction*) ppf; //是否危险，需要测试 // v8::Persistent<v8::Function>::Cast(*ppf);
-    }
-    */
-    /*
-    void XMLHttpRequest::setPostCB1(jsvm_value p_onOK, jsvm_value p_onError) 
-    {
-        v8::HandleScope sc(mpJsIso);
-        mpJsPostComplete = (JsFunction*)weakHoldJsObj(v8::Local<v8::Object>::Cast(p_onOK));
-        mpJsPostError = (JsFunction*)weakHoldJsObj(v8::Local<v8::Object>::Cast(p_onError));
-        std::weak_ptr<int> cbref(m_CallbackRef);
-        m_funcPostComplete = std::bind(_onPostComplete, this, std::placeholders::_1, cbref);
-        m_funcPostError = std::bind(_onPostError, this, std::placeholders::_1, cbref);
-    }
-    */
     void XMLHttpRequest::postString(const char* p_pszUrl, const char* p_pszString, jsvm_value p_funOnOK, jsvm_value p_funOnErr) 
     {
         JCDownloadMgr* pdmgr = JCDownloadMgr::getInstance();
