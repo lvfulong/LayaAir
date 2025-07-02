@@ -200,7 +200,6 @@ namespace laya
                     pxhr->m_jsfunPostComplete.call<void>(jsbind::toLocal(pxhr), "");
                 }
             }
-            delete[] p_Buff;
         }
         else 
         {
