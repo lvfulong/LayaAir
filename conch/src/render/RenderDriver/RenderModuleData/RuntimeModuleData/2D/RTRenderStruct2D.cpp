@@ -321,7 +321,14 @@ void RTRenderStruct2D::renderUpdate(GLESRenderContext2D* context)
 }
 
 void RTRenderStruct2D::setRenderUpdate(jsvm_value function){
-    m_JSFunctionRenderUpdate = jsbind::Persistent(function);
+    if (jsbind::isFunction(function)) 
+    {
+        m_JSFunctionRenderUpdate = jsbind::Persistent(function);
+    }
+    else
+    {
+        m_JSFunctionRenderUpdate.reset();
+    }
 }
 
 void RTRenderStruct2D::destroy()
