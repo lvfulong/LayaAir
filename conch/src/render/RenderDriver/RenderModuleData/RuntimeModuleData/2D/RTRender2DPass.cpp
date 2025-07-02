@@ -127,8 +127,8 @@ void RTRender2DPass::_initRenderProcess(GLESRenderContext2D *context)
     if (rt) {
         //context->invertY = rt->_invertY;
         context->setRenderTarget(rt, this->doClearColor, this->_clearColor);    
-        sizeX = this->texture->getWidth();
-        sizeY = this->texture->getHeight();
+        sizeX = this->m_renderTextureWidth;
+        sizeY = this->m_renderTextureHeight;
         this->_updateInvertMatrix();
         this->_shaderdata->addDefine(ShaderDefines2D::RENDERTEXTURE);
     } else {
@@ -168,16 +168,21 @@ void RTRender2DPass::uploadBuffer()
 void RTRender2DPass::_updateInvertMatrix()
 {
     structTransform * rootTrans = this->root->_trans;
+    if (!rootTrans) return this->_setInvertMatrix(1, 0, 0, 1, 0, 0);
     Matrix temp;
     RTRenderStruct2D *mask = this->mask;
     if (mask && mask->_trans)
     {
-        // globalMatrix
-        Matrix &rootMatrix = rootTrans->matrix;
-        // localMatrix
         Matrix &maskMatrix = mask->_trans->matrix;
-
-        Matrix::mul(maskMatrix, rootMatrix, temp);
+        if (mask->parent)
+        {
+            maskMatrix.copyTo(temp);
+        }
+        else
+        {
+            Matrix &rootMatrix = rootTrans->matrix;  
+            Matrix::mul(maskMatrix, rootMatrix, temp);
+        }
         temp.invert();
     }
     else

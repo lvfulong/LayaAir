@@ -63,10 +63,11 @@ class RTRender2DPass
     {
         this->mask = value;
     }
-    void setRenderTexture(GLESInternalRT *value)
+    void setRenderTexture(GLESInternalRT *value, int width, int height)
     {
         this->renderTexture = value;
-        this->texture = value->m_textures[0];
+        this->m_renderTextureWidth = width;
+        this->m_renderTextureHeight = height;
     }
     void setShaderDataJS(jsvm_value v)
     {
@@ -142,7 +143,8 @@ class RTRender2DPass
     bool repaint = true;
 
     GLESInternalRT *renderTexture = nullptr;
-    GLESInternalTex *texture = nullptr;
+    int32_t m_renderTextureWidth{ 0 };
+    int32_t m_renderTextureHeight{ 0 };
     int32_t priority = 0;
     uint32_t renderLayerMask = 0x00000000;
     Vector4 cullRect;
