@@ -48,7 +48,7 @@ class RTRender2DDataHandle
     }
     void setNeedUseMatrix(bool value);
 
-    void destroy();
+    virtual void destroy();
     virtual void inheriteRenderData(GLESRenderContext2D *context);
 
   public:
@@ -73,6 +73,7 @@ public:
     std::vector<Graphics2DBufferBlock>& _getBlocks() { return _bufferBlocks; };
     std::vector<RT2DGraphic2DBufferDataView*>& _getCloneViews();
     void updateCloneViews();
+    void destroy() override;
 private:
     int32_t getVertexStride(const std::vector<Graphics2DBufferBlock> &blocks);
     std::vector<Graphics2DBufferBlock> _bufferBlocks;
@@ -80,6 +81,7 @@ private:
     int _modifiedFrame{-1};
     std::vector<RT2DGraphic2DBufferDataView*> _cloneViews;
     RT2DGraphic2DBufferDataView* _cloneView(RT2DGraphic2DBufferDataView* view, RT2DGraphic2DBufferDataView* oView = nullptr);
+    std::vector<GLESRenderGeometryElement*> _geometryToFree;
 };
 
 // 网格2D渲染数据处理器

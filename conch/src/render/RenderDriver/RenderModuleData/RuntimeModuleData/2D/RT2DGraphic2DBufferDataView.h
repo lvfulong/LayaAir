@@ -136,14 +136,10 @@ class RT2DGraphic2DBufferDataView
 
     jsbind::Persistent _next;//RT2DGraphic2DBufferDataView *
     jsbind::Persistent _prev;//RT2DGraphic2DBufferDataView *
-    jsbind::Persistent geometry;//GLESRenderGeometryElement *
-    void setGeometry(jsvm_value data)
+    GLESRenderGeometryElement* _geometry;
+    void setGeometry(GLESRenderGeometryElement* data)
     {
-        this->geometry = jsbind::Persistent(data);
-    }
-    jsvm_value getGeometry(jsvm_value data)
-    {
-        this->geometry.getHandle();
+        this->_geometry = data;
     }
     void modify();
     void updateView(jsvm_value wholeData);

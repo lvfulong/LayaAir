@@ -56,16 +56,23 @@ void RTRender2DDataHandle::inheriteRenderData(GLESRenderContext2D *context)
 
 RTPrimitiveDataHandle::RTPrimitiveDataHandle()
 {
+    _geometryToFree.reserve(16);
 }
 
 RTPrimitiveDataHandle::~RTPrimitiveDataHandle()
 {
     // 清理资源
+    for (auto& geometry : _geometryToFree)
+    {
+        delete geometry;
+    }
+    _geometryToFree.clear();
 }
 void RTPrimitiveDataHandle::applyVertexBufferBlock(const std::vector<Graphics2DBufferBlock> &blocks)
 {
     this->_bufferBlocks = blocks;
     this->_needUpdateBuffer = !blocks.empty();
+    this->updateCloneViews();
 }
 
 int32_t RTPrimitiveDataHandle::getVertexStride(const std::vector<Graphics2DBufferBlock> &blocks)
@@ -180,28 +187,22 @@ void RTPrimitiveDataHandle::inheriteRenderData(GLESRenderContext2D *context)
 RT2DGraphic2DBufferDataView *RTPrimitiveDataHandle::_cloneView(RT2DGraphic2DBufferDataView *view,
                                                                RT2DGraphic2DBufferDataView *oView)
 {
-    if (!view)
-        return nullptr;
 
-    // 创建新的视图对象，使用相同的参数
-    RT2DGraphic2DBufferDataView *clone =
-        new RT2DGraphic2DBufferDataView(BufferModifyType::Index, view->_start, view->_length, view->_stride);
-
-    // 处理 geometry
-    if (oView && oView->geometry)
+    DEBUG_CHECK(view != nullptr);
+    RT2DGraphic2DBufferDataView *clone = view->clone(false, false);
+    if (oView && oView->_geometry)
     {
-        clone->geometry = oView->geometry;
+        clone->_geometry = oView->_geometry;
     }
     else
     {
-        // 创建新的 geometry
         GLESRenderGeometryElement *geometry = new GLESRenderGeometryElement();
         geometry->setMeshTopology(MeshTopology::Triangles);
         geometry->setDrawType(DrawType::DrawElement);
         geometry->setIndexFormat(IndexFormat::UInt16);
-        clone->geometry = jsbind::toPersistent(geometry);
+        clone->_geometry = geometry;
+        _geometryToFree.push_back(geometry);
     }
-    clone->_data = view->_data;
     return clone;
 }
 
@@ -210,11 +211,11 @@ std::vector<RT2DGraphic2DBufferDataView*>& RTPrimitiveDataHandle::_getCloneViews
     if (_cloneViews.empty() && !_bufferBlocks.empty())
     {
         _cloneViews.resize(_bufferBlocks.size());
-        for (size_t i = 0; i < _bufferBlocks.size(); i++)
+        for (size_t i = 0, n = _bufferBlocks.size(); i < n; i++)
         {
-            jsbind::Persistent view = _bufferBlocks[i].indexView;
+            jsbind::Persistent indexView = _bufferBlocks[i].indexView;
             RT2DGraphic2DBufferDataView *nativeView =
-                view.getLocal()["_nativeObj"].as<RT2DGraphic2DBufferDataView *>();
+                indexView.getLocal()["_nativeObj"].as<RT2DGraphic2DBufferDataView *>();
             _cloneViews[i] = _cloneView(nativeView);
         }
     }
@@ -241,7 +242,7 @@ void RTPrimitiveDataHandle::updateCloneViews()
         {
             if (_cView)
             {
-                GLESRenderGeometryElement* geomerty = _cView->geometry.getLocal().as<GLESRenderGeometryElement*>();
+                GLESRenderGeometryElement* geomerty = _cView->_geometry;
                 geomerty->destroy();
                 delete _cView;
             }
@@ -249,7 +250,20 @@ void RTPrimitiveDataHandle::updateCloneViews()
     }
     cloneViews.resize(blockLength);
 }
+void  RTPrimitiveDataHandle::destroy()
+{
+    RTPrimitiveDataHandle::destroy();
 
+    if (!this->_cloneViews.empty())
+    {
+        for (int i = 0, n = this->_cloneViews.size(); i < n; i++)
+        {
+            this->_cloneViews[i]->_geometry->destroy();
+        }
+        this->_cloneViews.clear();
+    }
+    this->_bufferBlocks.clear();
+}
 // RTMesh2DRenderDataHandle实现
 Color* RTMesh2DRenderDataHandle::_setRenderColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 

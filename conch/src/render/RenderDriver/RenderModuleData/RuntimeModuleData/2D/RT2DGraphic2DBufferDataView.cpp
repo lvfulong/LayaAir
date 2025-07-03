@@ -38,22 +38,20 @@ void RT2DGraphicWholeBuffer::upload()
 
         int start = 0;
         int length = 0;
-        auto geometry = pView->geometry;
+        auto geometry = pView->_geometry;
         bool needUpdate = false;
         int uploadStart = this->_needResetData ? 0 : this->_updateRange.x;
 
 
-        auto pGeometry = geometry.getLocal().as<GLESRenderGeometryElement*>();
         // let mark = 0 ;
         while (pView) {
             // mark++;
-            if (pGeometry != pView->geometry.getLocal().as<GLESRenderGeometryElement*>()) {//切换geometry时，检查上一个是否需要提交
+            if (geometry != pView->_geometry) {//切换geometry时，检查上一个是否需要提交
                 if (needUpdate) {// 设置上一个的绘制状态
-                    pGeometry->clearRenderParams();
-                    pGeometry->setDrawElementParams(length, start * 2);
+                    geometry->clearRenderParams();
+                    geometry->setDrawElementParams(length, start * 2);
                 }
-                geometry = pView->geometry;
-                pGeometry = geometry.getLocal().as<GLESRenderGeometryElement*>();
+                geometry = pView->_geometry;
                 start = start + length;
                 length = 0;
             }
@@ -72,8 +70,8 @@ void RT2DGraphicWholeBuffer::upload()
         }
 
         if (needUpdate) {
-            pGeometry->clearRenderParams();
-            pGeometry->setDrawElementParams(length, start * 2);
+            geometry->clearRenderParams();
+            geometry->setDrawElementParams(length, start * 2);
         }
         RT2DGraphic2DBufferDataView* pLast = this->_last.getLocal().as<RT2DGraphic2DBufferDataView*>();
         int len = pLast->_start + pLast->_length - uploadStart;

@@ -307,7 +307,7 @@ void RTGraphicsBatch::batchIndexBuffer(RTRenderStruct2D* struct2d, RTBatchBuffer
         // Update buffer state and geometry
         buffer->indexCount += cview->_length;
         buffer->wholeBuffer->modifyOneView(cview);
-        GLESRenderGeometryElement* geometry = cview->geometry.getLocal().as<GLESRenderGeometryElement*>();
+        GLESRenderGeometryElement* geometry = cview->_geometry;
 
         geometry->setBufferState(bufferState);
         buffer->geometryList.push_back(geometry);
