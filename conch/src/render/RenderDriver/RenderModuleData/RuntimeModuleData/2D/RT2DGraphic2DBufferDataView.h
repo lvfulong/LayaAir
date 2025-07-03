@@ -103,8 +103,9 @@ class RT2DGraphicWholeBuffer
 class RT2DGraphic2DBufferDataView
 {
   public:
-    RT2DGraphic2DBufferDataView(BufferModifyType type, int start, int length, int stride);
+    RT2DGraphic2DBufferDataView(BufferModifyType type, int start, int length, int stride, bool create);
     ~RT2DGraphic2DBufferDataView();
+    RT2DGraphic2DBufferDataView* clone(bool cloneOwner = true, bool create = true);
     void destroy();
     int _start;      // element start
     int _length;     // element length

@@ -197,7 +197,7 @@ void RT2DGraphicWholeBuffer::destroy()
     this->_bufferData.reset();
 }
 
-RT2DGraphic2DBufferDataView::RT2DGraphic2DBufferDataView(BufferModifyType type, int start, int length, int stride)
+RT2DGraphic2DBufferDataView::RT2DGraphic2DBufferDataView(BufferModifyType type, int start, int length, int stride, bool create)
     : modifyType(type), _start(start), _length(length), _stride(stride), isModified(false)
 {
 }
@@ -282,5 +282,17 @@ void RT2DGraphic2DBufferDataView::updateView(jsvm_value wholeData)
         }
     }
 }
+RT2DGraphic2DBufferDataView* RT2DGraphic2DBufferDataView::clone(bool cloneOwner, bool create)
+{
+    DEBUG_CHECK(this->modifyType == BufferModifyType::Index); 
+    DEBUG_CHECK(!cloneOwner && !create);
 
+    //let owner = cloneOwner ? this.owner : null
+    RT2DGraphic2DBufferDataView* nview = new RT2DGraphic2DBufferDataView(this->modifyType, this->_start, this->_length, this->_stride, create);
+    if (!create)
+    {
+        nview->_data = this->_data;
+    }
+    return nview;
+}
 } // namespace laya
