@@ -1260,6 +1260,7 @@ class RenderBindings
             class_binding.constructor<>();
             class_binding.function("setOwner", &RTRender2DDataHandle::setOwner);
             class_binding.property("needUseMatrix", &RTRender2DDataHandle::getNeedUseMatrix, &RTRender2DDataHandle::setNeedUseMatrix);
+            class_binding.function("inheriteRenderData", &RTRender2DDataHandle::inheriteRenderData);
             class_binding.function("destroy", &RTRender2DDataHandle::destroy);
             context.class_("conchRTRender2DDataHandle", class_binding);
         }
@@ -1267,9 +1268,6 @@ class RenderBindings
             jsbind::class_<RTPrimitiveDataHandle> class_binding;
             class_binding.constructor<>();
             class_binding.inherit<RTRender2DDataHandle>();
-            //class_binding.function("setOwner", &RTPrimitiveDataHandle::setOwner);
-            //class_binding.property("needUseMatrix", &RTPrimitiveDataHandle::getNeedUseMatrix, &RTPrimitiveDataHandle::setNeedUseMatrix);
-            //class_binding.function("destroy", &RTPrimitiveDataHandle::destroy);
             class_binding.function("setMask", &RTPrimitiveDataHandle::setMask);
             class_binding.function("applyVertexBufferBlock", &RTPrimitiveDataHandle::applyVertexBufferBlock);
             context.class_("conchRTPrimitiveDataHandle", class_binding);
