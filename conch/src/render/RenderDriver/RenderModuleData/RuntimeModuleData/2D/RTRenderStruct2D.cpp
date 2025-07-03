@@ -10,7 +10,7 @@
 namespace laya
 {
 // 默认裁剪信息
-static IClipInfo s_DefaultClipInfo(Vector4((float)Const::MAX_CLIP_SIZE, 0.0f, 0.0f, (float)Const::MAX_CLIP_SIZE), Vector4(0.0f, 0.0f, 0.0f, 0.0f), Matrix());
+static IClipInfo s_DefaultClipInfo(Vector4((float)Const::MAX_CLIP_SIZE, 0.0f, 0.0f, (float)Const::MAX_CLIP_SIZE), Vector4(0.0f, 0.0f, 0.0f, 0.0f), Matrix(), 0);
 RTRenderStruct2D::RTRenderStruct2D()
 { 
 }
@@ -48,11 +48,6 @@ void RTRenderStruct2D::_handleInterData()
                 cm->d = height * mat->d;
 
                 if (parentClipUpdateFrame != -1) {
-                    Matrix* parentMat = &_parentClipInfo->clipMatrix;
-                    float parentMinX = parentMat->tx;
-                    float parentMinY = parentMat->ty;
-                    float parentMaxX = parentMinX + parentMat->a;
-                    float parentMaxY = parentMinY + parentMat->d;
 
                     Vector4* parentClipPos = &_parentClipInfo->clipMatPos;
                     float offsetx = parentClipPos->z - parentClipPos->x;
@@ -60,6 +55,14 @@ void RTRenderStruct2D::_handleInterData()
 
                     // 计算交集
                     if (cm->a > 0 && cm->d > 0) {
+
+                        Matrix* parentMat = &_parentClipInfo->clipMatrix;
+                        float parentMinX = parentMat->tx;
+                        float parentMinY = parentMat->ty;
+                        float parentMaxX = parentMinX + parentMat->a;
+                        float parentMaxY = parentMinY + parentMat->d;
+
+
                         float cmaxx = tx + cm->a;
                         float cmaxy = ty + cm->d;
 
@@ -110,8 +113,8 @@ void RTRenderStruct2D::_handleInterData()
 
         // global alpha
         if (needUploadAlpha) {
-            data->setNumber(ShaderDefines2D::UNIFORM_VERTALPHA, globalAlpha);
-            needUploadAlpha = false;
+            data->setNumber(ShaderDefines2D::UNIFORM_VERTALPHA, this->globalAlpha);
+            this->needUploadAlpha = false;
         }
     }
 }
@@ -158,6 +161,10 @@ void RTRenderStruct2D::setShaderData(BlendMode blendMode, GLESShaderData* data, 
 
 void RTRenderStruct2D::setClipRect(Rectangle rect)
 {
+    if (_clipRect != nullptr)
+    {
+        delete _clipRect;
+    }
     _clipRect = new Rectangle(rect);
     _initClipInfo();
     updateChildren(ChildrenUpdateType::Clip);
@@ -169,6 +176,7 @@ void RTRenderStruct2D::_initClipInfo()
     {
         _clipInfo = new IClipInfo();
     }
+    _clipInfo->_updateFrame = -1;
 }
 
 IClipInfo *RTRenderStruct2D::getClipInfo()
@@ -207,7 +215,7 @@ void RTRenderStruct2D::updateChildren(ChildrenUpdateType type)
 
     if (static_cast<uint32_t>(type) & static_cast<uint32_t>(ChildrenUpdateType::Pass))
     {
-        pass = this->_pass;
+        pass = this->getPass();
         priority = pass ? pass->priority + 1 : 0;
         updatePass = true;
     }
@@ -216,18 +224,18 @@ void RTRenderStruct2D::updateChildren(ChildrenUpdateType type)
     {
         bool updateChild = false;
         if (updateClip)
-        {
+        { 
+            child->_parentClipInfo = info;
             if (!child->_clipInfo)
             {
-                child->_parentClipInfo = info;
                 updateChild = true;
             }
         }
 
         if (updateBlend)
         {
-            if (child->getBlendMode() != BlendMode::Invalid)//lvtodo
-            { // lvtodo
+            if (child->getBlendMode() != BlendMode::Invalid)
+            {
                 child->_parentBlendMode = blendMode;
                 child->_updateBlendMode();
                 updateChild = true;
@@ -236,7 +244,7 @@ void RTRenderStruct2D::updateChildren(ChildrenUpdateType type)
 
         if (updateAlpha)
         {
-            child->globalAlpha = alpha * child->_alpha;
+            child->globalAlpha = alpha * child->getAlpha();
             updateChild = true;
         }
 

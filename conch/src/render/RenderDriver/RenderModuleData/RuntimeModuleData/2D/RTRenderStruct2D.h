@@ -25,7 +25,7 @@ class IClipInfo
     Matrix clipMatrix;
     int _updateFrame;
     IClipInfo() = default;
-    IClipInfo(const Vector4 &dir, const Vector4 &pos, const Matrix &m) : clipMatDir(dir), clipMatPos(pos), clipMatrix(m)
+    IClipInfo(const Vector4 &dir, const Vector4 &pos, const Matrix &m, int updateFrame) : clipMatDir(dir), clipMatPos(pos), clipMatrix(m), _updateFrame(updateFrame)
     {
     }
 };
@@ -62,7 +62,7 @@ class RTRenderStruct2D
     ~RTRenderStruct2D();
 
     // 2D渲染组织流程数据
-    int32_t zIndex;
+    int32_t zIndex = 0;
     Rectangle rect;
     const Rectangle &getRect()
     {
@@ -73,7 +73,7 @@ class RTRenderStruct2D
     {
         this->rect = value;
     }
-    int32_t renderLayer = -1;
+    int32_t renderLayer = 1;
     RTRenderStruct2D *parent = nullptr;
     void setParent(RTRenderStruct2D *value)
     {
@@ -87,8 +87,6 @@ class RTRenderStruct2D
     int32_t renderType = -1;
     uint32_t renderUpdateMask = 0;
 
-    // 渲染继承累加数据
-    Matrix renderMatrix;
 
     const Matrix &getRenderMatrix()
     {
@@ -97,13 +95,18 @@ class RTRenderStruct2D
 
     void setRenderMatrix(const Matrix &value , int loopCount)
     {
-        if (!_trans)
+        if (_trans)
+        {
+            _trans->matrix = value;
+            _trans->modifiedFrame = loopCount;
+        }
+        else
         {
             _trans = new structTransform();
-        }
 
-        _trans->matrix = value;
-        _trans->modifiedFrame = loopCount;
+            _trans->matrix = value;
+            _trans->modifiedFrame = loopCount;
+        }
     }
 
     float globalAlpha = 1.0;
@@ -165,7 +168,7 @@ class RTRenderStruct2D
             _renderDataHandler->_owner = this;
     }
 
-    RTGlobalRenderData*getGlobalRenderData() const
+    RTGlobalRenderData* getGlobalRenderData() const
     {
         return _globalRenderData;
     }
@@ -180,9 +183,9 @@ class RTRenderStruct2D
     }
     void setPass(RTRender2DPass *value)
     {
-        _pass = value;
-        if (value)
-        {
+        if (value != _pass)
+        { 
+            _pass = value;
             if (_parentPass) {
                 value->priority = _parentPass->priority + 1;
             }
