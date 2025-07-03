@@ -134,6 +134,7 @@ void RTRenderStruct2D::setShaderData(BlendMode blendMode, GLESShaderData* data, 
         case BlendMode::Add:        // add
         case BlendMode::Screen:     // screen  
         case BlendMode::Light:      // light
+        case BlendMode::Lighter:
             data->setInt(Shader3D::BLEND_SRC, RenderState::BLENDPARAM_ONE);
             data->setInt(Shader3D::BLEND_DST, RenderState::BLENDPARAM_ONE);
             break;
@@ -154,6 +155,7 @@ void RTRenderStruct2D::setShaderData(BlendMode blendMode, GLESShaderData* data, 
             data->setInt(Shader3D::BLEND_DST, RenderState::BLENDPARAM_ONE_MINUS_SRC_ALPHA);
             break;
         default:// premul alpha
+        //lightOld addOld normal
             data->setInt(Shader3D::BLEND_SRC, premultipliedAlpha ? RenderState::BLENDPARAM_ONE : RenderState::BLENDPARAM_SRC_ALPHA);
             data->setInt(Shader3D::BLEND_DST, RenderState::BLENDPARAM_ONE_MINUS_SRC_ALPHA);
     }
@@ -191,7 +193,9 @@ void RTRenderStruct2D::updateChildren(ChildrenUpdateType type)
     float alpha;
     int32_t priority = 0;
     RTRender2DPass *pass = nullptr;
-    bool updateBlend = false, updateClip = false, updateAlpha = false, updatePass = false;
+    GLESShaderData *globalShaderData = nullptr;
+    RTGlobalRenderData *globalRenderData = nullptr;
+    bool updateBlend = false, updateClip = false, updateAlpha = false, updatePass = false, updateGlobal = false;
 
     if (static_cast<uint32_t>(type) & static_cast<uint32_t>(ChildrenUpdateType::Clip))
     {
@@ -218,6 +222,13 @@ void RTRenderStruct2D::updateChildren(ChildrenUpdateType type)
         pass = this->getPass();
         priority = pass ? pass->priority + 1 : 0;
         updatePass = true;
+    }
+
+    if (static_cast<uint32_t>(type) & static_cast<uint32_t>(ChildrenUpdateType::Global))
+    {
+        updateGlobal = true;
+        globalShaderData = this->_globalShaderData;
+        globalRenderData = this->_globalRenderData;
     }
 
     for (const auto &child : children)
@@ -260,6 +271,17 @@ void RTRenderStruct2D::updateChildren(ChildrenUpdateType type)
             updateChild = true;
         }
 
+        if (updateGlobal)
+        {
+            if (!child->_globalRenderData)
+            {
+                updateChild = true;
+                child->_globalShaderData = globalShaderData;
+            }
+
+            child->_parentGlobalRenderData = globalRenderData;
+        }
+
         if (updateChild)
         {
             child->updateChildren(type);
@@ -284,6 +306,8 @@ void RTRenderStruct2D::addChild(RTRenderStruct2D* child, int32_t index)
     child->_parentClipInfo = this->getClipInfo();
     child->_parentBlendMode = this->getBlendMode();
     child->_parentPass = this->getPass();
+    child->_parentGlobalRenderData = this->getGlobalRenderData();
+    if (!child->_globalRenderData) child->_globalShaderData = this->_globalShaderData;
 
     updateChildren(ChildrenUpdateType::All);
 }
@@ -312,6 +336,8 @@ void RTRenderStruct2D::removeChild(RTRenderStruct2D* child)
         child->_parentClipInfo = nullptr;
         child->_parentBlendMode = BlendMode::Invalid;
         child->globalAlpha = child->_alpha;
+        child->_parentGlobalRenderData = nullptr;
+        if (!child->_globalRenderData) child->_globalShaderData = nullptr;
         child->updateChildren(ChildrenUpdateType::All);
     }
 }

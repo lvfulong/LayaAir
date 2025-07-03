@@ -10,6 +10,7 @@
 #include <render/BlendMode.h>
 #include <render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTRender2DPass.h>
 #include <jsvm/JSVM_Types.h>
+#include <render/Const.h>
 
 namespace laya
 {
@@ -51,6 +52,7 @@ enum class ChildrenUpdateType
     Blend = 2,
     Alpha = 4,
     Pass = 8,
+    Global = 16,
 };
 class GLESRenderElement2D;
 class RTRender2DPass;
@@ -84,7 +86,7 @@ class RTRenderStruct2D
     {
         this->children = value;
     }
-    int32_t renderType = -1;
+    BaseRender2DType renderType = BaseRender2DType::empty;
     uint32_t renderUpdateMask = 0;
 
 
@@ -170,11 +172,17 @@ class RTRenderStruct2D
 
     RTGlobalRenderData* getGlobalRenderData() const
     {
-        return _globalRenderData;
+        return _globalRenderData ? _globalRenderData : _parentGlobalRenderData;
     }
     void setGlobalRenderData(RTGlobalRenderData*value)
     {
+        if (value) {
+            _globalShaderData = value->globalShaderData;
+        } else {
+            _globalShaderData = nullptr;
+        }
         _globalRenderData = value;
+        updateChildren(ChildrenUpdateType::Global);
     }
 
     RTRender2DPass *getPass() const
@@ -212,6 +220,8 @@ class RTRenderStruct2D
     void setShaderData(BlendMode blendMode, GLESShaderData* data, bool premultipliedAlpha = true);
     structTransform* _trans = nullptr;
     RTGlobalRenderData*_globalRenderData = nullptr;
+    RTGlobalRenderData*_parentGlobalRenderData = nullptr;
+    GLESShaderData *_globalShaderData = nullptr;
     RTRender2DDataHandle *_renderDataHandler = nullptr;
     RTRender2DPass *_pass = nullptr;
     RTRender2DPass *_parentPass = nullptr;

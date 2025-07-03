@@ -20,6 +20,7 @@
 #include <render/Property.h>
 #include <unordered_map>
 #include "JCConch.h"
+#include "render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTGraphicsBatch.h"
 #include "LayaAir/2D/ScreenCanvasContext2D.h"
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESUniformBufferManager.h"
 namespace laya
@@ -50,6 +51,7 @@ GLESEngine::GLESEngine(WebGLConfig config, WebGLMode webglMode)
         CommandProperty::__init__();
         MeshSprite3DShaderDeclaration::__init__();
         SimpleSkinRender3DProperty::__init__();
+        RTGraphicsBatch::__init__();
         
     }
     std::vector<std::string> names;

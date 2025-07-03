@@ -6,6 +6,7 @@
 #include <render/3D/design/renderEnum/DrawType.h>
 #include <render/3D/design/renderEnum/IndexFormat.h>
 #include <render/3D/design/renderEnum/RenderPologyMode.h>
+#include <render/Const.h>
 #include <utils/Log.h>
 #include <jsbind/jsbind.h>
 namespace laya
@@ -21,6 +22,14 @@ RTGraphicsBatch::RTGraphicsBatch()
 
 RTGraphicsBatch::~RTGraphicsBatch()
 {
+}
+
+void RTGraphicsBatch::__init__()
+{
+    if (instance)
+        return;
+    instance = new RTGraphicsBatch();
+    BatchManager::regisBatch(BaseRender2DType::graphics, instance);
 }
 
 GLESPrimitiveRenderElement2D *RTGraphicsBatch::createRenderElement2D()
@@ -57,7 +66,7 @@ void RTGraphicsBatch::recoverRenderElement2D(GLESPrimitiveRenderElement2D *value
     _pool.push_back(value);
 }
 
-void RTGraphicsBatch::batchRenderElement(FastSinglelist<GLESPrimitiveRenderElement2D *> &list, int start, int length, FastSinglelist<GLESPrimitiveRenderElement2D *> &recoverList, RTBatchBuffer* buffer)
+void RTGraphicsBatch::batchRenderElement(FastSinglelist<GLESRenderElement2D *> &list, int start, int length, FastSinglelist<GLESRenderElement2D *> &recoverList, RTBatchBuffer* buffer)
 {
     auto &elementArray = list._elements;
     int batchStart = -1;
@@ -68,7 +77,7 @@ void RTGraphicsBatch::batchRenderElement(FastSinglelist<GLESPrimitiveRenderEleme
     for (int index = 0; index <= end; index++)
     {
         int offset = start + index;
-        GLESPrimitiveRenderElement2D *element = elementArray[offset];
+        GLESPrimitiveRenderElement2D *element = static_cast<GLESPrimitiveRenderElement2D*>(elementArray[offset]);
 
         if (canAddToBatch(element, batchContext))
         {
@@ -128,7 +137,7 @@ void RTGraphicsBatch::batchRenderElement(FastSinglelist<GLESPrimitiveRenderEleme
     }
 }
 
-void RTGraphicsBatch::batch(FastSinglelist<GLESPrimitiveRenderElement2D *> &list, int start, int length, FastSinglelist<GLESPrimitiveRenderElement2D *> &recoverList, RTBatchBuffer* buffer, BatchContext& batchContext)
+void RTGraphicsBatch::batch(FastSinglelist<GLESRenderElement2D *> &list, int start, int length, FastSinglelist<GLESRenderElement2D *> &recoverList, RTBatchBuffer* buffer, BatchContext& batchContext)
 {
     auto &elementArray = list._elements;
     GLESPrimitiveRenderElement2D *staticBatchRenderElement = createRenderElement2D();
@@ -137,7 +146,7 @@ void RTGraphicsBatch::batch(FastSinglelist<GLESPrimitiveRenderElement2D *> &list
     for (int i = 0; i < length; i++)
     {
         int offset = start + i;
-        GLESPrimitiveRenderElement2D *element = elementArray[offset];
+        GLESPrimitiveRenderElement2D *element = static_cast<GLESPrimitiveRenderElement2D*>(elementArray[offset]);
         auto geometry = buffer->geometryList[i] ? buffer->geometryList[i] : element->geometry;
 
         if (!i)
@@ -309,13 +318,13 @@ void RTGraphicsBatch::batchIndexBuffer(RTRenderStruct2D* struct2d, RTBatchBuffer
     buffer->updateBufLength();
 }
 
-void RTGraphicsBatch::recover(FastSinglelist<GLESPrimitiveRenderElement2D *> &list)
+void RTGraphicsBatch::recover(FastSinglelist<GLESRenderElement2D *> &list)
 {
     int length = list.getLength();
     auto &recoverArray = list._elements;
     for (int i = 0; i < length; i++)
     {
-        GLESPrimitiveRenderElement2D *info = recoverArray[i];
+        GLESPrimitiveRenderElement2D *info = static_cast<GLESPrimitiveRenderElement2D*>(recoverArray[i]);
         RTGraphicsBatch::recoverRenderElement2D(info);
     }
     list.clear();
