@@ -3,6 +3,7 @@
 
 #include <utils/FastSinglelist.h>
 #include "RTBatchBuffer.h"
+#include <render/Const.h>
 
 namespace laya
 {
@@ -24,10 +25,10 @@ class PassRenderList
     void batch();
 
   public:
-    void _batchStart(int type, int elementLength);
+    void _batchStart(BaseRender2DType type, int elementLength);
 
     FastSinglelist<Batch2DInfo *> _batchInfoList{false};
-    int _currentType = -1;
+    BaseRender2DType _currentType = BaseRender2DType::empty;
     int _currentElementCount = 0;
     Batch2DInfo *_currentBatch = nullptr;
     FastSinglelist<RTRenderStruct2D *> structs{false};

@@ -12,5 +12,15 @@ enum class Const
 
     MAX_CLIP_SIZE = 99999999,
 };
+
+enum class BaseRender2DType {
+    empty = -1,
+    baseRenderNode = 0,
+    spine = 1,
+    particle = 2,
+    spineSimple = 3,
+    graphics = 4
+};
+
 } // namespace laya
 #endif

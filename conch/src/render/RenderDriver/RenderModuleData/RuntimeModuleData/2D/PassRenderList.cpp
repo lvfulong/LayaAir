@@ -52,7 +52,7 @@ void PassRenderList::add(RTRenderStruct2D *struct2d)
     }
 }
 
-void PassRenderList::_batchStart(int type, int elementLength)
+void PassRenderList::_batchStart(BaseRender2DType type, int elementLength)
 {
     if (this->_currentType == type)
     {
@@ -132,7 +132,7 @@ void PassRenderList::reset()
     }
     _batchInfoList.resetLength();
     _currentBatch = nullptr;
-    _currentType = -1;
+    _currentType = BaseRender2DType::empty;
 }
 
 } // namespace laya

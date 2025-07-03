@@ -57,6 +57,12 @@ void RTRender2DPass::cullAndSort(GLESRenderContext2D *context2D, RTRenderStruct2
         return;
     struct2d->_handleInterData();
 
+    RTGlobalRenderData *globalRenderData = struct2d->getGlobalRenderData();
+    if (globalRenderData
+        && (struct2d->renderLayer & globalRenderData->renderLayerMask) == 0) {
+        return;
+    }
+
     struct2d->renderUpdate(context2D);
     this->addStruct(struct2d);
 

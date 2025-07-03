@@ -160,9 +160,9 @@ void GLESRenderElement2D::_renderByShaderInstance(GLESShaderInstance *shader, GL
 GLESShaderData *GLESRenderElement2D::getGlobalShaderData()
 {
     RTRenderStruct2D *owner = _owner;
-    if (owner && owner->_globalRenderData && owner->_globalRenderData->globalShaderData)
+    if (owner && owner->_globalShaderData)
     {
-        return owner->_globalRenderData->globalShaderData;
+        return owner->_globalShaderData;
     }
     return nullptr;
 }

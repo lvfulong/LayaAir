@@ -56,10 +56,10 @@ class Batch2DInfo
 class BatchManager
 {
   public:
-    static void regisBatch(int renderElementType, IBatch2DRender *batch);
+    static void regisBatch(BaseRender2DType renderElementType, IBatch2DRender *batch);
 
  public:
-    static std::unordered_map<int, IBatch2DRender *> _batchMapManager;
+    static std::unordered_map<BaseRender2DType, IBatch2DRender *> _batchMapManager;
 };
 } // namespace laya
 #endif // __BATCHMANAGER_H__

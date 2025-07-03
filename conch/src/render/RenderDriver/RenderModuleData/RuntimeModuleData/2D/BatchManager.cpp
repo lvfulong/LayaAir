@@ -2,13 +2,14 @@
 #include <unordered_map>
 #include <utils/Log.h>
 #include <vector>
+#include <render/Const.h>
 
 namespace laya
 {
 std::vector<Batch2DInfo *> Batch2DInfo::_pool;
-std::unordered_map<int, IBatch2DRender *> BatchManager::_batchMapManager;
+std::unordered_map<BaseRender2DType, IBatch2DRender *> BatchManager::_batchMapManager;
 
-void BatchManager::regisBatch(int renderElementType, IBatch2DRender *batch)
+void BatchManager::regisBatch(BaseRender2DType renderElementType, IBatch2DRender *batch)
 {
     if (_batchMapManager.find(renderElementType) != _batchMapManager.end())
     {

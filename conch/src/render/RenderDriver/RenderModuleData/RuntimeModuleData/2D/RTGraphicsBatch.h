@@ -66,7 +66,7 @@ class RTGraphicsBatch : public IBatch2DRender
 
   public:
     static RTGraphicsBatch *instance;
-
+    static void __init__();
     RTGraphicsBatch();
     ~RTGraphicsBatch();
 
@@ -83,7 +83,7 @@ class RTGraphicsBatch : public IBatch2DRender
     /**
      * @brief 批量渲染元素
      */
-    void batchRenderElement(FastSinglelist<GLESPrimitiveRenderElement2D *> &list, int start, int length, FastSinglelist<GLESPrimitiveRenderElement2D *> &recoverList, RTBatchBuffer* buffer);
+    void batchRenderElement(FastSinglelist<GLESRenderElement2D *> &list, int start, int length, FastSinglelist<GLESRenderElement2D *> &recoverList, RTBatchBuffer* buffer) override;
 
     /**
      * @brief 检查元素是否可以加入当前批次
@@ -96,18 +96,18 @@ class RTGraphicsBatch : public IBatch2DRender
     /**
      * @brief 回收资源
      */
-    void recover(FastSinglelist<GLESPrimitiveRenderElement2D *> &list);
+    void recover(FastSinglelist<GLESRenderElement2D *> &list) override;
 
     /**
      * @brief 处理索引缓冲区
      */
-    void batchIndexBuffer(RTRenderStruct2D* struct2d, RTBatchBuffer* buffer, int offset);
+    void batchIndexBuffer(RTRenderStruct2D* struct2d, RTBatchBuffer* buffer, int offset) override;
 
   private:
     /**
      * @brief 执行批量处理
      */
-    void batch(FastSinglelist<GLESPrimitiveRenderElement2D *> &list, int start, int length, FastSinglelist<GLESPrimitiveRenderElement2D *> &recoverList, RTBatchBuffer* buffer, BatchContext& batchContext);
+    void batch(FastSinglelist<GLESRenderElement2D *> &list, int start, int length, FastSinglelist<GLESRenderElement2D *> &recoverList, RTBatchBuffer* buffer, BatchContext& batchContext);
 
   private:
     static std::vector<GLESPrimitiveRenderElement2D *> _pool;
