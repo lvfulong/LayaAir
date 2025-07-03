@@ -54,9 +54,14 @@ template <typename ClassType> Persistent toPersistent(ClassType* objectPointer)
     GET_ENV
     ClassRegistryBase* classRegistry = ClassRegistryManager::getClassRegistry(type_id<ClassType>());
     auto objectRegistry = classRegistry->getObjectRegistry(objectPointer);
-    DEBUG_CHECK(objectRegistry != nullptr);
-
-    return Persistent(objectRegistry->objectRef_);
+    if (objectRegistry != nullptr)
+    {
+        return Persistent(objectRegistry->objectRef_);
+    }
+    else
+    {
+        return Persistent(jsbind::internal::ValueTraits<ClassType*>::ToJs(objectPointer));
+    }
 }
 extern void AdjustAmountOfExternalAllocatedMemory(int p_nMemorySize);
 
