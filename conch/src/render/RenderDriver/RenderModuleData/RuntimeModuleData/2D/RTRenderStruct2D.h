@@ -205,7 +205,28 @@ class RTRenderStruct2D
     void addChild(RTRenderStruct2D *child, int32_t index);
     void updateChildIndex(RTRenderStruct2D *child, int32_t oldIndex, int32_t index);
     void removeChild(RTRenderStruct2D *child);
-    void setClipRect(jsvm_value rect);
+    void setClipRect(jsvm_value rect)
+    {
+        if (jsbind::isUndefined(rect) || jsbind::isNull(rect))
+        {
+            if (_clipRect != nullptr)
+            {
+                delete _clipRect;
+            }
+            _clipRect = nullptr;
+            if (_clipInfo)
+            {
+                delete _clipInfo;
+            }
+            _clipInfo = nullptr;
+        }
+        else
+        {
+            _clipRect = new Rectangle(jsbind::as<Rectangle>(rect));
+            _initClipInfo();
+        }
+        updateChildren(ChildrenUpdateType::Clip);
+    }
 
     void renderUpdate(GLESRenderContext2D *context);
     void setRenderUpdate(jsvm_value function);
