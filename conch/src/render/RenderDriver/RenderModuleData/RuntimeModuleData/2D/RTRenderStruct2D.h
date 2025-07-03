@@ -197,7 +197,7 @@ class RTRenderStruct2D
     void addChild(RTRenderStruct2D *child, int32_t index);
     void updateChildIndex(RTRenderStruct2D *child, int32_t oldIndex, int32_t index);
     void removeChild(RTRenderStruct2D *child);
-    void setClipRect(Rectangle rect);
+    void setClipRect(jsvm_value rect);
 
     void renderUpdate(GLESRenderContext2D *context);
     void setRenderUpdate(jsvm_value function);

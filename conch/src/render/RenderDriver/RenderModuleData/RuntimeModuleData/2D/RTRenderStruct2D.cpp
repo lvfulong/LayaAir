@@ -159,14 +159,26 @@ void RTRenderStruct2D::setShaderData(BlendMode blendMode, GLESShaderData* data, 
     }
 }
 
-void RTRenderStruct2D::setClipRect(Rectangle rect)
+void RTRenderStruct2D::setClipRect(jsvm_value rect)
 {
-    if (_clipRect != nullptr)
+    if (jsbind::isUndefined(rect) || jsbind::isNull(rect))
     {
-        delete _clipRect;
+        if (_clipRect != nullptr)
+        {
+            delete _clipRect;
+        }
+        _clipRect = nullptr;
+        if (_clipInfo)
+        {
+            delete _clipInfo;
+        } 
+        _clipInfo = nullptr;
     }
-    _clipRect = new Rectangle(rect);
-    _initClipInfo();
+    else
+    { 
+        _clipRect = new Rectangle(jsbind::as<Rectangle>(rect));
+        _initClipInfo();
+    }
     updateChildren(ChildrenUpdateType::Clip);
 }
 
@@ -175,8 +187,12 @@ void RTRenderStruct2D::_initClipInfo()
     if (!_clipInfo)
     {
         _clipInfo = new IClipInfo();
+        _clipInfo->_updateFrame = -1;
     }
-    _clipInfo->_updateFrame = -1;
+    else
+    {
+        _clipInfo->_updateFrame = -1;
+    }
 }
 
 IClipInfo *RTRenderStruct2D::getClipInfo()
