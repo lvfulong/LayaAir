@@ -83,7 +83,7 @@ int32_t RTPrimitiveDataHandle::getVertexStride(const std::vector<Graphics2DBuffe
     std::unordered_map<int32_t, VertexStateContext> &shaderValues = vertexBuffer->_shaderValues;
     if (shaderValues.empty())
         return 0;
-    return shaderValues.begin()->second.vertexStride;
+    return shaderValues.begin()->second.vertexStride;//lvtodo
 }
 
 void RTPrimitiveDataHandle::inheriteRenderData(GLESRenderContext2D *context)
@@ -100,7 +100,7 @@ void RTPrimitiveDataHandle::inheriteRenderData(GLESRenderContext2D *context)
 
         const Matrix &mat = _owner->getRenderMatrix();
 
-        if (/*!this._vertexBufferBlocks || */ this->_bufferBlocks.empty())
+        if (/*!this._vertexBufferBlocks || */ !this->_bufferBlocks.empty())
         {
             // 更新位置
             if (this->_mask && this->_mask->_trans)
@@ -110,7 +110,7 @@ void RTPrimitiveDataHandle::inheriteRenderData(GLESRenderContext2D *context)
                 if (this->_mask->parent) {
                     tempMatirx = maskMatrix;
                 } else {
-                    tempMatirx = Matrix::mul(maskMatrix, mat, Matrix::TEMP);
+                    tempMatirx = Matrix::mul(maskMatrix, mat, tempMatirx);
                 }
                 this->_nMatrix_0.setValue(tempMatirx.a, tempMatirx.c, tempMatirx.tx);
                 this->_nMatrix_1.setValue(tempMatirx.b, tempMatirx.d, tempMatirx.ty);
