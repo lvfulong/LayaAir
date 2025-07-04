@@ -17,7 +17,7 @@ RT2DGraphicWholeBuffer::~RT2DGraphicWholeBuffer()
 }
 void RT2DGraphicWholeBuffer::resetData(int byteLength)
 {
-    _resetDataCallback.call<void>(jsvm::global(), byteLength);
+    _resetDataCallback.call<void>(jsvm::global(), byteLength);//lvtodo
 }
 void RT2DGraphicWholeBuffer::upload()
 {
@@ -150,7 +150,7 @@ void RT2DGraphicWholeBuffer::addDataView(RT2DGraphic2DBufferDataView *view)
         this->_last.getLocal().as<RT2DGraphic2DBufferDataView*>()->_next = jsbind::toPersistent(view);
         view->_prev = this->_last;
     }
-    view->owner = jsbind::toPersistent(this);
+    view->owner = this;
     this->_last = jsbind::toPersistent(view);
     this->_num++;
 }
@@ -163,7 +163,8 @@ void RT2DGraphicWholeBuffer::clearBufferViews()
 }
 void RT2DGraphicWholeBuffer::removeDataView(RT2DGraphic2DBufferDataView* view)
 {
-    view->owner.reset();// = null;
+
+    view->owner = nullptr;
     //ib 调用
     // let index = this._views.indexOf(view);
     // this._views.splice(index, 1);
@@ -202,39 +203,36 @@ RT2DGraphic2DBufferDataView::RT2DGraphic2DBufferDataView(BufferModifyType type, 
 
 RT2DGraphic2DBufferDataView::~RT2DGraphic2DBufferDataView()
 {
-    destroy();
-}
 
-void RT2DGraphic2DBufferDataView::destroy()
-{
-    _data.reset();
-    _next.reset();
-    _prev.reset();
-    owner.reset();
 }
 
 jsvm_value RT2DGraphic2DBufferDataView::getData()
 {
-    RT2DGraphicWholeBuffer* p = owner.getLocal().as<RT2DGraphicWholeBuffer*>();
-    if (this->modifyType == BufferModifyType::Vertex && p->_needResetData)
+    if (this->modifyType == BufferModifyType::Vertex && this->owner->_needResetData)
     {
-        updateView(p->_bufferData.getHandle());
+        updateView(this->owner->_bufferData.getHandle());
     }
     return _data.getHandle();
 }
+void RT2DGraphic2DBufferDataView::setData(jsvm_value data)
+{
 
+    DEBUG_CHECK(_data.isValid());
+    jsbind::Local setFunction = _data.getLocal()["set"];
+    DEBUG_CHECK(!setFunction.isNull() && !setFunction.isUndefined() && setFunction.isFunction());
+    setFunction.call<void>(_data.getHandle(), data);
+}
 void RT2DGraphic2DBufferDataView::modify()
 {
-    RT2DGraphicWholeBuffer* p = owner.getLocal().as<RT2DGraphicWholeBuffer*>();
     if (this->modifyType == BufferModifyType::Index)
     {
-        p->modifyOneView(this);
-        RTRender2DPass::setBuffer(p);
+        this->owner->modifyOneView(this);
+        RTRender2DPass::setBuffer(this->owner);
     }
     else
     {
-        p->modifyOneView(this);
-        RTRender2DPass::setBuffer(p);
+        this->owner->modifyOneView(this);
+        RTRender2DPass::setBuffer(this->owner);
     }
 }
 

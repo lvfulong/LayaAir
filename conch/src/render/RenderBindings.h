@@ -1215,13 +1215,10 @@ class RenderBindings
             class_binding.property_field("isModified", &RT2DGraphic2DBufferDataView::isModified);
             class_binding.function("setGeometry", &RT2DGraphic2DBufferDataView::setGeometry);
             class_binding.function("setOwner", &RT2DGraphic2DBufferDataView::setOwner); 
-            class_binding.function("getData", &RT2DGraphic2DBufferDataView::getData);
-            
             class_binding.function("modify", &RT2DGraphic2DBufferDataView::modify);
-
-
-           
             class_binding.function("_updateView", &RT2DGraphic2DBufferDataView::updateView);
+            class_binding.function("getData", &RT2DGraphic2DBufferDataView::getData);
+            class_binding.function("setData", &RT2DGraphic2DBufferDataView::setData);
             class_binding.property("_data", &RT2DGraphic2DBufferDataView::getDataJS, &RT2DGraphic2DBufferDataView::setDataJS);
             context.class_("conchRT2DGraphic2DBufferDataView", class_binding);
             

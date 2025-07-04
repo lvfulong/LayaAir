@@ -106,24 +106,21 @@ class RT2DGraphic2DBufferDataView
     RT2DGraphic2DBufferDataView(BufferModifyType type, int start, int length, int stride, bool create);
     ~RT2DGraphic2DBufferDataView();
     RT2DGraphic2DBufferDataView* clone(bool cloneOwner = true, bool create = true);
-    void destroy();
     int _start;      // element start
     int _length;     // element length
     int _stride = 1; // element stride
-    jsbind::Persistent owner;//RT2DGraphicWholeBuffer *
+    RT2DGraphicWholeBuffer* owner = nullptr;
     
-    void setOwner(jsvm_value data)
+    void setOwner(RT2DGraphicWholeBuffer* data)
     {
-        this->owner = jsbind::Persistent(data);
-    }
-    jsvm_value getOwner(jsvm_value data)
-    {
-        this->owner.getHandle();
+        this->owner = data;
     }
     //int _mark = 0;
     BufferModifyType modifyType;
     bool isModified = false;
     jsbind::Persistent _data; // Float32Array[] | Uint16Array;
+    void setData(jsvm_value data);
+    jsvm_value getData();
     void setDataJS(jsvm_value data)
     {
         _data = jsbind::Persistent(data);
@@ -132,8 +129,6 @@ class RT2DGraphic2DBufferDataView
     {
         return _data.getHandle();
     }
-    jsvm_value getData();
-
     jsbind::Persistent _next;//RT2DGraphic2DBufferDataView *
     jsbind::Persistent _prev;//RT2DGraphic2DBufferDataView *
     GLESRenderGeometryElement* _geometry;

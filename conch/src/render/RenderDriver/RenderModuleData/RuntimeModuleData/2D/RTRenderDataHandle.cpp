@@ -230,25 +230,28 @@ void RTPrimitiveDataHandle::updateCloneViews()
 
     for (size_t i = 0; i < length; i++)
     {
-        RT2DGraphic2DBufferDataView *_cView = cloneViews[i];
+        RT2DGraphic2DBufferDataView *view = cloneViews[i];
         if (i < _bufferBlocks.size())
         {
             jsbind::Persistent jsView = _bufferBlocks[i].indexView;
             RT2DGraphic2DBufferDataView *nativeView =
                 jsView.getLocal()["_nativeObj"].as<RT2DGraphic2DBufferDataView *>();
-            cloneViews[i] = _cloneView(nativeView, _cView);
+            cloneViews[i] = _cloneView(nativeView, view);
         }
         else
         {
-            if (_cView)
+            if (view)
             {
-                GLESRenderGeometryElement* geomerty = _cView->_geometry;
-                geomerty->destroy();
-                delete _cView;
+                view->_geometry->destroy();
+                if (view->owner)
+                {
+                    view->owner->removeDataView(view);
+                }
+                //delete view;
             }
         }
     }
-    cloneViews.resize(blockLength);
+    this->_cloneViews.resize(blockLength);
 }
 void  RTPrimitiveDataHandle::destroy()
 {
