@@ -10,17 +10,15 @@ namespace laya
 
 PassRenderList::PassRenderList()
 {
-    _batchBuffer = new RTBatchBuffer();
+    _batchContexts.resize(static_cast<int>(BaseRender2DType::count));
+    for (int i = 0; i < static_cast<int>(BaseRender2DType::count); i++)
+    {
+        _batchContexts[i] = nullptr;
+    }
 }
 
 PassRenderList::~PassRenderList()
 {
-    clear();
-    if (_batchBuffer)
-    {
-        delete _batchBuffer;
-        _batchBuffer = nullptr;
-    }
 }
 
 void PassRenderList::add(RTRenderStruct2D *struct2d)
@@ -48,7 +46,7 @@ void PassRenderList::add(RTRenderStruct2D *struct2d)
     if (this->_currentBatch && this->_currentBatch->batchFun)
     {
         int offset = this->_currentBatch->indexStart + this->_currentBatch->elementLength - n;
-        this->_currentBatch->batchFun->batchIndexBuffer(struct2d, this->_batchBuffer, offset);
+        this->_currentBatch->batchFun->prepare(struct2d, this->_currentBatch->batchContext, offset); 
     }
 }
 
@@ -68,6 +66,17 @@ void PassRenderList::_batchStart(BaseRender2DType type, int elementLength)
     this->_currentBatch = Batch2DInfo::create();
     this->_currentBatch->batch = false;
     this->_currentBatch->batchFun = BatchManager::_batchMapManager[type];
+
+    if (this->_currentBatch->batchFun) {
+        GraphicsBatchContext* context = this->_batchContexts[static_cast<int>(type)];
+        if (!context) {
+            context = static_cast<GraphicsBatchContext*>(this->_currentBatch->batchFun->createBatchContext());
+            this->_batchContexts[static_cast<int>(type)] = context;
+         }
+         this->_currentBatch->batchContext = context;
+      }
+
+
     this->_currentBatch->indexStart = this->renderElements.getLength();
     this->_currentBatch->elementLength = elementLength;
     this->_currentType = type;
@@ -87,7 +96,7 @@ void PassRenderList::batch()
         Batch2DInfo *info = _batchInfoList._elements[i];
         if (info->batch)
         {
-            info->batchFun->batchRenderElement(this->renderElements, info->indexStart, info->elementLength, this->_recoverList, this->_batchBuffer);
+            info->batchFun->batchRenderElement(this->renderElements, info->indexStart, info->elementLength, info->batchContext);
         }
         else
         {
@@ -102,10 +111,19 @@ void PassRenderList::remove(RTRenderStruct2D *struct2d)
     structs.remove(struct2d);
 }
 
-void PassRenderList::clear()
+void PassRenderList::destroy()
 {
     structs.clear();
     clearRenderElements();
+    for (int i = 0; i < static_cast<int>(BaseRender2DType::count); i++)
+    {
+        if (_batchContexts[i])
+        {
+            delete _batchContexts[i];
+            _batchContexts[i] = nullptr;
+        }
+    }
+    _batchContexts.clear();
 }
 
 void PassRenderList::clearRenderElements()
@@ -118,17 +136,12 @@ void PassRenderList::reset()
 {
     this->structs.resetLength();
     this->renderElements.resetLength();
-
-    this->_batchBuffer->clear();
-
-    for (int i = 0, n = _batchInfoList.getLength(); i < n; i++)
+    for (int i = 0, n = _batchContexts.size(); i < n; i++)
     {
-        Batch2DInfo *element = _batchInfoList._elements[i];
-        if (element->batch)
+        if (_batchContexts[i])
         {
-            element->batchFun->recover(this->_recoverList);
+            _batchContexts[i]->reset();
         }
-        Batch2DInfo::recover(element);
     }
     _batchInfoList.resetLength();
     _currentBatch = nullptr;

@@ -15,11 +15,14 @@ RTBatchBuffer::RTBatchBuffer()
     
     wholeBuffer->setIndexBuffer(indexBuffer);
     wholeBuffer->_modifyType = BufferModifyType::Index;
-    indexCount = 0;
-    maxIndexCount = 0;
 }
 
 RTBatchBuffer::~RTBatchBuffer()
+{
+
+}
+
+void RTBatchBuffer::destroy()
 {
     clear();
     for (auto& pair : bufferStates)
@@ -43,7 +46,8 @@ void RTBatchBuffer::updateBufLength()
 {
     if (maxIndexCount <= indexCount)
     {
-        int nLength = (indexCount + STEP - 1) / STEP * STEP;
+
+        int nLength = ceil((float)this->indexCount / STEP) * STEP;
         int byteLength = nLength * 2;
         indexBuffer->_setIndexDataLength(byteLength);
         wholeBuffer->resetData(byteLength);
@@ -51,15 +55,14 @@ void RTBatchBuffer::updateBufLength()
     }
 }
 
-GLESBufferState* RTBatchBuffer::bindBuffer(jsbind::Persistent buffer)
+GLESBufferState* RTBatchBuffer::bindBuffer(GLESVertexBuffer* buffer)
 {
-    GLESVertexBuffer* vertexBuffer = buffer.getLocal()["_nativeObj"].as<GLESVertexBuffer*>();
-    auto it = bufferStates.find(vertexBuffer);
+    auto it = bufferStates.find(buffer);
     if (it == bufferStates.end())
     {
         GLESBufferState* bufferState = new GLESBufferState();
-        bufferState->applyState({vertexBuffer}, indexBuffer);
-        bufferStates[vertexBuffer] = bufferState;
+        bufferState->applyState({buffer}, indexBuffer);
+        bufferStates[buffer] = bufferState;
         return bufferState;
     }
     return it->second;

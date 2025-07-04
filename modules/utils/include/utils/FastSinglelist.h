@@ -82,7 +82,11 @@ template <class T> class FastSinglelist
     inline void subLengthOne()
     {
         m_nLength--;
-    }  
+    }
+    inline void addLengthOne()
+    {
+        m_nLength++;
+    }
   public:
     std::vector<T> _elements;
 

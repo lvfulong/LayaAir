@@ -4,7 +4,7 @@
 #include <utils/FastSinglelist.h>
 #include "RTBatchBuffer.h"
 #include <render/Const.h>
-
+#include "GraphicsBatchContext.h"
 namespace laya
 {
 class Batch2DInfo;
@@ -19,7 +19,7 @@ class PassRenderList
 
     void add(RTRenderStruct2D *struct2d);
     void remove(RTRenderStruct2D *struct2d);
-    void clear();
+    void destroy();
     void clearRenderElements();
     void reset();
     void batch();
@@ -33,8 +33,7 @@ class PassRenderList
     Batch2DInfo *_currentBatch = nullptr;
     FastSinglelist<RTRenderStruct2D *> structs{false};
     FastSinglelist<GLESRenderElement2D *> renderElements{false};
-    FastSinglelist<GLESRenderElement2D *> _recoverList{false};
-    RTBatchBuffer* _batchBuffer = nullptr;
+    std::vector<GraphicsBatchContext*> _batchContexts;
     int renderListType = -1;
     int zOrder = 0;
     uint32_t _dirtyFlag = 0;

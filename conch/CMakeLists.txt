@@ -288,6 +288,8 @@ list(APPEND CONCH_SRC
 	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTRender2DPassManager.h
 	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTBatchBuffer.cpp
 	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTBatchBuffer.h
+	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/GraphicsBatchContext.cpp
+	src/render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/GraphicsBatchContext.h
 
 
 	src/downloadMgr/JCDownloadMgr.h

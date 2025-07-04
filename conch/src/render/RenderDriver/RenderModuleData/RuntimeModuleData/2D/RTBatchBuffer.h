@@ -1,7 +1,7 @@
 #ifndef __RT_BATCH_BUFFER_H__
 #define __RT_BATCH_BUFFER_H__
 
-#include <map>
+#include <unordered_map>
 #include <vector>
 #include <jsbind/JSBind.h>
 #include "render/RenderDriver/OpenGLESDriver/RenderDevice/GLESIndexBuffer.h"
@@ -24,15 +24,15 @@ public:
     ~RTBatchBuffer();
 
     void updateBufLength();
-    GLESBufferState* bindBuffer(jsbind::Persistent buffer);
+    GLESBufferState* bindBuffer(GLESVertexBuffer* buffer);
     void clear();
-
+    void destroy();
 public:
     GLESIndexBuffer* indexBuffer;
     RT2DGraphicWholeBuffer* wholeBuffer;
-    int indexCount;
-    int maxIndexCount;
-    std::map<GLESVertexBuffer*, GLESBufferState*> bufferStates;
+    int indexCount = 0;
+    int maxIndexCount = 0;
+    std::unordered_map<GLESVertexBuffer*, GLESBufferState*> bufferStates;
     std::vector<GLESRenderGeometryElement*> geometryList;
 };
 

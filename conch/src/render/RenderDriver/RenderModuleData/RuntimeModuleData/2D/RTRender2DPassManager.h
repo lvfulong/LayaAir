@@ -19,7 +19,7 @@ class RTRender2DPassManager
 {
   private:
     bool _modefy = false;
-    std::vector<RTRender2DPass *> _passes;
+    std::vector<RTRender2DPass *> _passes;//lvtodo
 
     void _sortPassesByPriority();
 

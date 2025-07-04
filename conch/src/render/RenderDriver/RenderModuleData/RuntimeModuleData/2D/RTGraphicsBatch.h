@@ -6,7 +6,6 @@
 #include "RTBatchBuffer.h"
 #include <render/RenderDriver/OpenGLESDriver/2DRenderPass/GLESPrimitiveRenderElement2D.h>
 #include <utils/FastSinglelist.h>
-
 #include <vector>
 
 namespace laya
@@ -80,10 +79,8 @@ class RTGraphicsBatch : public IBatch2DRender
      */
     static void recoverRenderElement2D(GLESPrimitiveRenderElement2D *value);
 
-    /**
-     * @brief 批量渲染元素
-     */
-    void batchRenderElement(FastSinglelist<GLESRenderElement2D *> &list, int start, int length, FastSinglelist<GLESRenderElement2D *> &recoverList, RTBatchBuffer* buffer) override;
+
+    void batchRenderElement(FastSinglelist<GLESRenderElement2D*>& list, int start, int length, IBatch2DContext* context) override;
 
     /**
      * @brief 检查元素是否可以加入当前批次
@@ -96,18 +93,17 @@ class RTGraphicsBatch : public IBatch2DRender
     /**
      * @brief 回收资源
      */
-    void recover(FastSinglelist<GLESRenderElement2D *> &list) override;
+    void recover(FastSinglelist<GLESRenderElement2D*> &list);
 
-    /**
-     * @brief 处理索引缓冲区
-     */
-    void batchIndexBuffer(RTRenderStruct2D* struct2d, RTBatchBuffer* buffer, int offset) override;
+    void prepare(RTRenderStruct2D* struct2d, IBatch2DContext* context, int offset) override;
+
+    IBatch2DContext* createBatchContext() override;
 
   private:
     /**
      * @brief 执行批量处理
      */
-    void batch(FastSinglelist<GLESRenderElement2D *> &list, int start, int length, FastSinglelist<GLESRenderElement2D *> &recoverList, RTBatchBuffer* buffer, BatchContext& batchContext);
+    void batch(FastSinglelist<GLESRenderElement2D *> &list, int start, int length, IBatch2DContext* context, BatchContext* batchContext);
 
   private:
     static std::vector<GLESPrimitiveRenderElement2D *> _pool;

@@ -10,19 +10,27 @@
 namespace laya
 {
 class GLESRenderElement2D;
+class IBatch2DContext
+{
+  public:
+    virtual ~IBatch2DContext() = default;
+    virtual void reset() = 0;
+    virtual void destroy() = 0;
+};
 class IBatch2DRender
 {
   public:
     virtual ~IBatch2DRender() = default;
-    virtual void batchRenderElement(FastSinglelist<GLESRenderElement2D *> &list, int start, int length , FastSinglelist<GLESRenderElement2D *> &recoverList, RTBatchBuffer* buffer) = 0;
-    virtual void recover(FastSinglelist<GLESRenderElement2D *> &list) = 0;
-    virtual void batchIndexBuffer(RTRenderStruct2D* struct2d, RTBatchBuffer* buffer, int offset) = 0;
+    virtual IBatch2DContext* createBatchContext() = 0;
+    virtual void batchRenderElement(FastSinglelist<GLESRenderElement2D *> &list, int start, int length , IBatch2DContext* context) = 0;
+    virtual void prepare(RTRenderStruct2D* struct2d, IBatch2DContext* context, int offset) = 0;
 };
 
 class Batch2DInfo
 {
   public:
     IBatch2DRender *batchFun = nullptr;
+    IBatch2DContext *batchContext = nullptr;
     bool batch = false;
     int indexStart = -1;
     int elementLength = 0;

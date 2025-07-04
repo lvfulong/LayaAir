@@ -28,12 +28,15 @@ void RT2DGraphicWholeBuffer::upload()
     jsvm_typedarray_type type;
     jsvm_value buffer; //arraybuffer
     size_t byteOffset;
-    jsvm_value jsArray = this->_bufferData.getHandle();
-    status = jsvm_get_typedarray_info(env, jsArray, &type, &length, &data, &buffer, &byteOffset);
-    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+    jsvm_value jsArray;
 
     if (BufferModifyType::Index == this->_modifyType)
     {
+        jsArray = this->_bufferData.getHandle();
+        status = jsvm_get_typedarray_info(env, jsArray, &type, &length, &data, &buffer, &byteOffset);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+
+
         RT2DGraphic2DBufferDataView* pView = this->_first.getLocal().as<RT2DGraphic2DBufferDataView*>();
 
         int start = 0;
@@ -221,6 +224,7 @@ void RT2DGraphic2DBufferDataView::setData(jsvm_value data)
     jsbind::Local setFunction = _data.getLocal()["set"];
     DEBUG_CHECK(!setFunction.isNull() && !setFunction.isUndefined() && setFunction.isFunction());
     setFunction.call<void>(_data.getHandle(), data);
+    modify();
 }
 void RT2DGraphic2DBufferDataView::modify()
 {

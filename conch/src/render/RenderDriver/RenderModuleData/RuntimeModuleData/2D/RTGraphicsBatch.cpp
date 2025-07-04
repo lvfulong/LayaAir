@@ -9,6 +9,8 @@
 #include <render/Const.h>
 #include <utils/Log.h>
 #include <jsbind/jsbind.h>
+#include "GraphicsBatchContext.h"
+
 namespace laya
 {
 
@@ -22,6 +24,7 @@ RTGraphicsBatch::RTGraphicsBatch()
 
 RTGraphicsBatch::~RTGraphicsBatch()
 {
+
 }
 
 void RTGraphicsBatch::__init__()
@@ -40,6 +43,7 @@ GLESPrimitiveRenderElement2D *RTGraphicsBatch::createRenderElement2D()
         _pool.pop_back();
         return element;
     }
+
 
     GLESPrimitiveRenderElement2D *element = new GLESPrimitiveRenderElement2D();
     element->geometry = new GLESRenderGeometryElement();
@@ -66,7 +70,7 @@ void RTGraphicsBatch::recoverRenderElement2D(GLESPrimitiveRenderElement2D *value
     _pool.push_back(value);
 }
 
-void RTGraphicsBatch::batchRenderElement(FastSinglelist<GLESRenderElement2D *> &list, int start, int length, FastSinglelist<GLESRenderElement2D *> &recoverList, RTBatchBuffer* buffer)
+void RTGraphicsBatch::batchRenderElement(FastSinglelist<GLESRenderElement2D*>& list, int start, int length, IBatch2DContext* context)
 {
     auto &elementArray = list._elements;
     int batchStart = -1;
@@ -99,7 +103,7 @@ void RTGraphicsBatch::batchRenderElement(FastSinglelist<GLESRenderElement2D *> &
             // 无法加入当前批次，结束当前批次
             if (count > 1)
             {
-                batch(list, batchStart + start, count, recoverList, buffer, batchContext);
+                batch(list, batchStart + start, count, context, &batchContext);
             }
             else if (count == 1)
             {
@@ -129,7 +133,7 @@ void RTGraphicsBatch::batchRenderElement(FastSinglelist<GLESRenderElement2D *> &
     // 处理最后的批次
     if (count > 1)
     {
-        batch(list, batchStart + start, count, recoverList, buffer, batchContext);
+        batch(list, batchStart + start, count, context, &batchContext);
     }
     else if (count == 1)
     {
@@ -137,12 +141,12 @@ void RTGraphicsBatch::batchRenderElement(FastSinglelist<GLESRenderElement2D *> &
     }
 }
 
-void RTGraphicsBatch::batch(FastSinglelist<GLESRenderElement2D *> &list, int start, int length, FastSinglelist<GLESRenderElement2D *> &recoverList, RTBatchBuffer* buffer, BatchContext& batchContext)
+void RTGraphicsBatch::batch(FastSinglelist<GLESRenderElement2D *> &list, int start, int length, IBatch2DContext* context, BatchContext* batchContext)
 {
     auto &elementArray = list._elements;
-    GLESPrimitiveRenderElement2D *staticBatchRenderElement = createRenderElement2D();
+    GLESPrimitiveRenderElement2D *staticBatchRenderElement = static_cast<GraphicsBatchContext*>(context)->getRenderElement();
     std::vector<std::vector<int>> drawArray;
-
+    RTBatchBuffer* buffer = static_cast<GraphicsBatchContext*>(context)->_batchBuffer;
     for (int i = 0; i < length; i++)
     {
         int offset = start + i;
@@ -156,7 +160,7 @@ void RTGraphicsBatch::batch(FastSinglelist<GLESRenderElement2D *> &list, int sta
             staticBatchRenderElement->value2DShaderData = element->value2DShaderData;
             staticBatchRenderElement->subShader = element->subShader;
             staticBatchRenderElement->renderStateIsBySprite = element->renderStateIsBySprite;
-            staticBatchRenderElement->primitiveShaderData = static_cast<GLESShaderData*>(batchContext.shaderData);
+            staticBatchRenderElement->primitiveShaderData = static_cast<GLESShaderData*>(batchContext->shaderData);
         }
 
         TEMP_SINGLE_LIST.clear();
@@ -203,8 +207,6 @@ void RTGraphicsBatch::batch(FastSinglelist<GLESRenderElement2D *> &list, int sta
     {
         geometry->setDrawElementParams(currentCount, currentOffset);
     }
-
-    recoverList.add(staticBatchRenderElement);
     list.add(staticBatchRenderElement);
 }
 
@@ -290,19 +292,24 @@ bool RTGraphicsBatch::canAddToBatch(GLESPrimitiveRenderElement2D* element, Batch
     }
     return batchContext.isCompatible(element);
 }
-
-void RTGraphicsBatch::batchIndexBuffer(RTRenderStruct2D* struct2d, RTBatchBuffer* buffer, int offset)
+IBatch2DContext* RTGraphicsBatch::createBatchContext()
+{
+    return new GraphicsBatchContext();
+}
+void RTGraphicsBatch::prepare(RTRenderStruct2D* struct2d, IBatch2DContext* context, int offset)
 {
     RTPrimitiveDataHandle* handle = static_cast<RTPrimitiveDataHandle*>(struct2d->_renderDataHandler);
     std::vector<Graphics2DBufferBlock>& blocks = handle->_getBlocks();
-    if (blocks.empty()) return;
+    if (blocks.empty()) return; 
 
+    RTBatchBuffer* buffer = static_cast<GraphicsBatchContext*>(context)->_batchBuffer;
     std::vector<RT2DGraphic2DBufferDataView*>& cviews = handle->_getCloneViews();
     for (size_t i = 0, n = blocks.size(); i < n; i++)
     {
         RT2DGraphic2DBufferDataView* cview = cviews[i];
         Graphics2DBufferBlock& block = blocks[i];
-        GLESBufferState* bufferState = buffer->bindBuffer(block.vertexBuffer);
+        GLESVertexBuffer* vertexBuffer = block.vertexBuffer.getLocal()["_nativeObj"].as<GLESVertexBuffer*>();
+        GLESBufferState* bufferState = buffer->bindBuffer(vertexBuffer);
         
         // Update buffer state and geometry
         buffer->indexCount += cview->_length;

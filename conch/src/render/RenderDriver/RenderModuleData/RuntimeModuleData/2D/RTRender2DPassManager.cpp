@@ -15,11 +15,12 @@ namespace laya
 void RTRender2DPassManager::removePass(RTRender2DPass *pass)
 {
     auto it = std::find(_passes.begin(), _passes.end(), pass);
-    if (it != _passes.end())
+    if (it == _passes.end())
     {
-        _passes.erase(it);
-        _modefy = true;
+        return;
     }
+    _passes.erase(it);
+    _modefy = true;
 }
 
 void RTRender2DPassManager::apply(GLESRenderContext2D *context)
@@ -46,6 +47,11 @@ void RTRender2DPassManager::clear()
 
 void RTRender2DPassManager::addPass(RTRender2DPass *pass)
 {
+    auto it = std::find(_passes.begin(), _passes.end(), pass);
+    if (it != _passes.end())
+    {
+      return;
+    }
     _passes.push_back(pass);
     _modefy = true;
 }
@@ -53,6 +59,6 @@ void RTRender2DPassManager::addPass(RTRender2DPass *pass)
 void RTRender2DPassManager::_sortPassesByPriority()
 {
     std::sort(_passes.begin(), _passes.end(),
-              [](RTRender2DPass *a, RTRender2DPass *b) { return b->priority > a->priority; });
+              [](RTRender2DPass *a, RTRender2DPass *b) { return b->priority > a->priority; });// 按 priority 从大到小排序lvtodo
 }
 } // namespace laya
