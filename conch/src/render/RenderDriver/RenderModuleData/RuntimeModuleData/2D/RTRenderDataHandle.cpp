@@ -100,7 +100,7 @@ void RTPrimitiveDataHandle::inheriteRenderData(GLESRenderContext2D *context)
 
         const Matrix &mat = _owner->getRenderMatrix();
 
-        if (/*!this._vertexBufferBlocks || */ !this->_bufferBlocks.empty())
+        if (/*!this._vertexBufferBlocks || */ this->_bufferBlocks.empty())
         {
             // 更新位置
             if (this->_mask && this->_mask->_trans)

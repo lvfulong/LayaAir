@@ -1207,19 +1207,16 @@ class RenderBindings
         //2D
         {
             jsbind::class_<RT2DGraphic2DBufferDataView> class_binding;
-            class_binding.constructor<BufferModifyType, int, int, int, bool>();
+            class_binding.constructor<RT2DGraphicWholeBuffer*, BufferModifyType, int, int, int, bool>();
             class_binding.property_field("start", &RT2DGraphic2DBufferDataView::_start);
             class_binding.property_field("length", &RT2DGraphic2DBufferDataView::_length);
             class_binding.property_field("stride", &RT2DGraphic2DBufferDataView::_stride);
             class_binding.property_field("modifyType", &RT2DGraphic2DBufferDataView::modifyType);
-            class_binding.property_field("isModified", &RT2DGraphic2DBufferDataView::isModified);
             class_binding.function("setGeometry", &RT2DGraphic2DBufferDataView::setGeometry);
-            class_binding.function("setOwner", &RT2DGraphic2DBufferDataView::setOwner); 
             class_binding.function("modify", &RT2DGraphic2DBufferDataView::modify);
             class_binding.function("_updateView", &RT2DGraphic2DBufferDataView::updateView);
             class_binding.function("getData", &RT2DGraphic2DBufferDataView::getData);
             class_binding.function("setData", &RT2DGraphic2DBufferDataView::setData);
-            class_binding.property("_data", &RT2DGraphic2DBufferDataView::getDataJS, &RT2DGraphic2DBufferDataView::setDataJS);
             context.class_("conchRT2DGraphic2DBufferDataView", class_binding);
             
         }
@@ -1227,16 +1224,12 @@ class RenderBindings
             jsbind::class_<RT2DGraphicWholeBuffer> class_binding;
             class_binding.constructor<>();
             class_binding.property("buffer", &RT2DGraphicWholeBuffer::getBufferJS, &RT2DGraphicWholeBuffer::setBufferJS);
-            class_binding.property("bufferData", &RT2DGraphicWholeBuffer::getBufferDataJS, &RT2DGraphicWholeBuffer::setBufferDataJS);   
-            class_binding.property_field("modifyType", &RT2DGraphicWholeBuffer::_modifyType);
-            //class_binding.function("resetData", &RT2DGraphicWholeBuffer::resetData);
+            class_binding.property("arrayBuffer", &RT2DGraphicWholeBuffer::getArrayBufferJS, &RT2DGraphicWholeBuffer::setArrayBufferJS);   
             class_binding.function("removeDataView", &RT2DGraphicWholeBuffer::removeDataView);
             class_binding.function("clearBufferViews", &RT2DGraphicWholeBuffer::clearBufferViews); 
             class_binding.function("destroy", &RT2DGraphicWholeBuffer::destroy);
-            
-
             class_binding.function("_addDataView", &RT2DGraphicWholeBuffer::addDataView);
-            class_binding.function("setResetDataCallback", &RT2DGraphicWholeBuffer::setResetDataCallback);
+            class_binding.function("resetData", &RT2DGraphicWholeBuffer::resetData);
             class_binding.property_field("_needResetData", &RT2DGraphicWholeBuffer::_needResetData);
             context.class_("conchRT2DGraphicWholeBuffer", class_binding);
             

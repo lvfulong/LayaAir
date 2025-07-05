@@ -20,10 +20,6 @@ class GLESRenderGeometryElement;
 class RT2DGraphicWholeBuffer
 {
   public:
-    void setResetDataCallback(jsvm_value value)
-    {
-        _resetDataCallback = jsbind::Persistent(value);
-    }
     jsvm_value getBufferJS()
     {
         return _buffer.getHandle();
@@ -44,13 +40,13 @@ class RT2DGraphicWholeBuffer
         
         _buffer = jsbind::Persistent(value);
     }
-    jsvm_value getBufferDataJS()
+    jsvm_value getArrayBufferJS()
     {
-        return _bufferData.getHandle();
+        return _arrayBuffer.getHandle();
     }
-    void setBufferDataJS(jsvm_value value)
+    void setArrayBufferJS(jsvm_value value)
     {
-        _bufferData = jsbind::Persistent(value);
+        _arrayBuffer = jsbind::Persistent(value);
     }
 
     void setIndexBuffer(GLESIndexBuffer* value)
@@ -70,7 +66,8 @@ class RT2DGraphicWholeBuffer
         return _bufferAsVertexBuffer;
     }
     jsbind::Persistent _buffer;     // IVertexBuffer | IIndexBuffer
-    jsbind::Persistent _bufferData; // Float32Array | Uint16Array
+    jsbind::Persistent _arrayBuffer;
+    jsbind::Persistent _dataView; // Float32Array | Uint16Array
     BufferModifyType _modifyType;
     bool _needResetData{false};
     bool _inPass{false};
@@ -92,18 +89,17 @@ class RT2DGraphicWholeBuffer
     jsbind::Persistent _first;//RT2DGraphic2DBufferDataView*
     jsbind::Persistent _last;//RT2DGraphic2DBufferDataView*
 
-    //int _mark = 0;
     int _num = 0;
 
     GLESIndexBuffer* _bufferAsIndexBuffer = nullptr;
     GLESVertexBuffer* _bufferAsVertexBuffer = nullptr;
-    jsbind::Persistent _resetDataCallback;
+    //jsbind::Persistent _resetDataCallback;
 };
 
 class RT2DGraphic2DBufferDataView
 {
   public:
-    RT2DGraphic2DBufferDataView(BufferModifyType type, int start, int length, int stride, bool create);
+    RT2DGraphic2DBufferDataView(RT2DGraphicWholeBuffer* owner, BufferModifyType type, int start, int length, int stride, bool create);
     ~RT2DGraphic2DBufferDataView();
     RT2DGraphic2DBufferDataView* clone(bool cloneOwner = true, bool create = true);
     int _start;      // element start
@@ -115,20 +111,11 @@ class RT2DGraphic2DBufferDataView
     {
         this->owner = data;
     }
-    //int _mark = 0;
     BufferModifyType modifyType;
-    bool isModified = false;
-    jsbind::Persistent _data; // Float32Array[] | Uint16Array;
+    jsbind::Persistent _arrayBuffer;
+    jsbind::Persistent _view; // Float32Array | Uint16Array;
     void setData(jsvm_value data);
     jsvm_value getData();
-    void setDataJS(jsvm_value data)
-    {
-        _data = jsbind::Persistent(data);
-    }
-    jsvm_value getDataJS()
-    {
-        return _data.getHandle();
-    }
     jsbind::Persistent _next;//RT2DGraphic2DBufferDataView *
     jsbind::Persistent _prev;//RT2DGraphic2DBufferDataView *
     GLESRenderGeometryElement* _geometry;

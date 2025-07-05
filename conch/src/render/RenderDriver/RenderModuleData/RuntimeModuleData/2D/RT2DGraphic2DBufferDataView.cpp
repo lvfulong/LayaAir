@@ -17,28 +17,56 @@ RT2DGraphicWholeBuffer::~RT2DGraphicWholeBuffer()
 }
 void RT2DGraphicWholeBuffer::resetData(int byteLength)
 {
-    _resetDataCallback.call<void>(jsvm::global(), byteLength);//lvtodo
+    GET_ENV
+    jsvm_status status;
+    jsvm_value arrayBuffer;
+    uint8_t* outputBuffer = nullptr;
+    status = jsvm_create_arraybuffer(env, byteLength, reinterpret_cast<void**>(&outputBuffer), &arrayBuffer);//this.arrayBuffer = new ArrayBuffer(byteLength);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+    this->_arrayBuffer = jsbind::Persistent(arrayBuffer);
+    //copy Buffer
+    if (BufferModifyType::Index == this->_modifyType) 
+    {
+        jsvm_value newData;
+        status = jsvm_create_typedarray(env, jsvm_typedarray_type::jsvm_uint16_array, byteLength / 2, arrayBuffer, 0, &newData);//let newData = new Uint16Array(this.arrayBuffer);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+        if (this->_dataView) 
+        {
+            //newData.set(this._dataView);
+            jsbind::Local setFunction = jsbind::Local(newData)["set"];
+            setFunction.call<void>(newData, this->_dataView.getHandle());
+        }
+        this->_dataView = jsbind::Persistent(newData);
+    }
+    else
+    {
+        jsvm_value newData;
+        status = jsvm_create_typedarray(env, jsvm_typedarray_type::jsvm_float32_array, byteLength / 4, arrayBuffer, 0, &newData);//let newData = new Float32Array(this.arrayBuffer);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+        if (this->_dataView) 
+        {
+            //newData.set(this._dataView);
+            jsbind::Local setFunction = jsbind::Local(newData)["set"];
+            setFunction.call<void>(newData, this->_dataView.getHandle());
+        }
+        this->_dataView = jsbind::Persistent(newData);
+    }
+    this->_needResetData = true;
 }
 void RT2DGraphicWholeBuffer::upload()
 {
     GET_ENV
     jsvm_status status;
     void* data = nullptr; //data
-    size_t length;
+    size_t byteLength;
     jsvm_typedarray_type type;
-    jsvm_value buffer; //arraybuffer
     size_t byteOffset;
-    jsvm_value jsArray;
+    status = jsvm_get_arraybuffer_info(env, this->_arrayBuffer.getHandle(), &data, &byteLength);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
 
     if (BufferModifyType::Index == this->_modifyType)
     {
-        jsArray = this->_bufferData.getHandle();
-        status = jsvm_get_typedarray_info(env, jsArray, &type, &length, &data, &buffer, &byteOffset);
-        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-
-
         RT2DGraphic2DBufferDataView* pView = this->_first.getLocal().as<RT2DGraphic2DBufferDataView*>();
-
         int start = 0;
         int length = 0;
         auto geometry = pView->_geometry;
@@ -65,7 +93,7 @@ void RT2DGraphicWholeBuffer::upload()
 
             if (needUpdate) {
                 pView->_start = start;
-                pView->updateView(jsArray);
+                pView->updateView(this->_dataView.getHandle());
             }
 
             length += pView->_length;
@@ -80,18 +108,8 @@ void RT2DGraphicWholeBuffer::upload()
         int len = pLast->_start + pLast->_length - uploadStart;
         int offset = uploadStart * 2;
         offset = floor(offset / 4) * 4;
-        // jsvm_value ab = jsbind::Local(this->_bufferData.getHandle())["buffer"].getHandle();
-        // DEBUG_CHECK(jsbind::Local(ab).isArrayBuffer());
-        // void* data = nullptr;
-        // size_t l;
-        // status = jsvm_get_arraybuffer_info(env, ab, &data, &l);
-        // DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-        //let tempUint16Array = new Uint16Array(this.bufferData.buffer, uploadStart * 2, len);
-        //(this.buffer as IIndexBuffer)._setIndexData(tempUint16Array, uploadStart * 2);
 
-        _bufferAsIndexBuffer->setData((char*)data, len, offset, offset, len * 2 + (uploadStart * 2 - offset));
-       // _bufferAsIndexBuffer->_setIndexData((char*)data, len, len * 2 + (uploadStart * 2 - offset));
-
+        _bufferAsIndexBuffer->setData((char*)data, byteLength, offset, offset, len * 2 + (uploadStart * 2 - offset));
         this->_needResetData = false;
     }
     else
@@ -101,26 +119,16 @@ void RT2DGraphicWholeBuffer::upload()
             RT2DGraphic2DBufferDataView* pView = this->_first.getLocal().as<RT2DGraphic2DBufferDataView*>();
             while (pView)
             {
-                pView->updateView(jsArray); // 先更新偏移再提交
+                pView->updateView(this->_dataView.getHandle()); // 先更新偏移再提交
                 pView = pView->_next.getLocal().as<RT2DGraphic2DBufferDataView*>();
             }
-            // jsvm_value ab = jsbind::Local(this->_bufferData.getHandle())["buffer"].getHandle();
-            // DEBUG_CHECK(jsbind::Local(ab).isArrayBuffer());
-            // void* data = nullptr;
-            // size_t byteLength;
-            // status = jsvm_get_arraybuffer_info(env, ab, &data, &byteLength);
-            // DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-            _bufferAsVertexBuffer->setData((const char*)data, length * 4, 0, 0, length * 4);
+            _bufferAsVertexBuffer->setData((const char*)data, byteLength, 0, 0, byteLength);
             this->_needResetData = false;
         }
         else
         {
             if (this->_updateRange.y <= this->_updateRange.x)
                 return;
-            // jsvm_value ab = jsbind::Local(this->_bufferData.getHandle())["buffer"].getHandle();
-            size_t byteLength = (this->_updateRange.y - this->_updateRange.x) * 4;
-            // status = jsvm_get_arraybuffer_info(env, ab, &data, &byteLength);
-            // DEBUG_CHECK(status == jsvm_status::jsvm_ok);
             _bufferAsVertexBuffer->setData((const char*)data, byteLength, this->_updateRange.x * 4, this->_updateRange.x * 4,
                          (this->_updateRange.y - this->_updateRange.x) * 4);
         }
@@ -196,12 +204,39 @@ void RT2DGraphicWholeBuffer::destroy()
 {
     this->_first.reset();// = nullptr;
     this->_last.reset();// = nullptr;
-    this->_bufferData.reset();
+    this->_dataView.reset();
+    this->_arrayBuffer.reset();
 }
 
-RT2DGraphic2DBufferDataView::RT2DGraphic2DBufferDataView(BufferModifyType type, int start, int length, int stride, bool create)
-    : modifyType(type), _start(start), _length(length), _stride(stride), isModified(false)
+RT2DGraphic2DBufferDataView::RT2DGraphic2DBufferDataView(RT2DGraphicWholeBuffer* owner, BufferModifyType type, int start, int length, int stride, bool create)
+    : owner(owner), modifyType(type), _start(start), _length(length), _stride(stride)
 {
+    if (create)
+    {
+        if (this->modifyType == BufferModifyType::Index)
+        {
+
+
+            //this->_arrayBuffer = new ArrayBuffer(length * 2);
+            GET_ENV
+            jsvm_status status;
+            jsvm_value arrayBuffer;
+            uint8_t* outputBuffer = nullptr;
+            status = jsvm_create_arraybuffer(env, length * 2, reinterpret_cast<void**>(&outputBuffer), &arrayBuffer);
+            DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+            this->_arrayBuffer = jsbind::Persistent(arrayBuffer);
+            //this._view = new Uint16Array(this._arrayBuffer);
+            jsvm_value v;
+            status = jsvm_create_typedarray(env, jsvm_typedarray_type::jsvm_uint16_array, length, arrayBuffer, 0, &v);
+            DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+            this->_view = jsbind::Persistent(v);
+        }
+        else 
+        {
+            this->updateView(owner->_dataView.getHandle());
+            owner->addDataView(this);
+        }
+    }
 }
 
 RT2DGraphic2DBufferDataView::~RT2DGraphic2DBufferDataView()
@@ -213,17 +248,16 @@ jsvm_value RT2DGraphic2DBufferDataView::getData()
 {
     if (this->modifyType == BufferModifyType::Vertex && this->owner->_needResetData)
     {
-        updateView(this->owner->_bufferData.getHandle());
+        updateView(this->owner->_dataView.getHandle());
     }
-    return _data.getHandle();
+    return _view.getHandle();
 }
 void RT2DGraphic2DBufferDataView::setData(jsvm_value data)
 {
-
-    DEBUG_CHECK(_data.isValid());
-    jsbind::Local setFunction = _data.getLocal()["set"];
+    DEBUG_CHECK(_view.isValid());
+    jsbind::Local setFunction = _view.getLocal()["set"];
     DEBUG_CHECK(!setFunction.isNull() && !setFunction.isUndefined() && setFunction.isFunction());
-    setFunction.call<void>(_data.getHandle(), data);
+    setFunction.call<void>(_view.getHandle(), data);
     modify();
 }
 void RT2DGraphic2DBufferDataView::modify()
@@ -249,7 +283,7 @@ void RT2DGraphic2DBufferDataView::updateView(jsvm_value wholeData)
         jsvm_value value;
 
         jsbind::Local setFunction = jsbind::Local(wholeData)["set"];
-        setFunction.call<void>(wholeData, _data.getHandle(), this->_start);
+        setFunction.call<void>(wholeData, _view.getHandle(), this->_start);
     }
     else
     {
@@ -265,8 +299,6 @@ void RT2DGraphic2DBufferDataView::updateView(jsvm_value wholeData)
 
         status = jsvm_get_typedarray_info(env, wholeData, &type, &length, &data, &buffer, &byteOffset);
         DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-        // this._data = new (wholeData.constructor as any)(wholeData.buffer, this.start * wholeData.BYTES_PER_ELEMENT,
-        // this.length);
         if (type == jsvm_typedarray_type::jsvm_float32_array)
         {
             jsvm_value float32_array;
@@ -274,7 +306,7 @@ void RT2DGraphic2DBufferDataView::updateView(jsvm_value wholeData)
             status = jsvm_create_typedarray(env, jsvm_typedarray_type::jsvm_float32_array, this->_length, buffer,
                                             this->_start * 4 /*Float32Array.BYTES_PER_ELEMENT*/, &float32_array);
             DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-            this->_data = jsbind::Persistent(float32_array);
+            this->_view = jsbind::Persistent(float32_array);
         }
         else
         {
@@ -287,11 +319,11 @@ RT2DGraphic2DBufferDataView* RT2DGraphic2DBufferDataView::clone(bool cloneOwner,
     DEBUG_CHECK(this->modifyType == BufferModifyType::Index); 
     DEBUG_CHECK(!cloneOwner && !create);
 
-    //let owner = cloneOwner ? this.owner : null
-    RT2DGraphic2DBufferDataView* nview = new RT2DGraphic2DBufferDataView(this->modifyType, this->_start, this->_length, this->_stride, create);
+    auto owner = cloneOwner ? this->owner : nullptr;
+    RT2DGraphic2DBufferDataView* nview = new RT2DGraphic2DBufferDataView(owner, this->modifyType, this->_start, this->_length, this->_stride, create);
     if (!create)
     {
-        nview->_data = this->_data;
+        nview->_view = this->_view;
     }
     return nview;
 }
