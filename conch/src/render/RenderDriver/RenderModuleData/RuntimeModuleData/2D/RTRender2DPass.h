@@ -121,7 +121,7 @@ class RTRender2DPass
 
   public:
     bool enable = true;
-    bool _enableBatch = false;
+    bool _enableBatch = true;
     bool getEnableBatch()
     {
         return this->_enableBatch;
