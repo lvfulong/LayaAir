@@ -21,7 +21,7 @@ PassRenderList::~PassRenderList()
 {
 }
 
-void PassRenderList::add(RTRenderStruct2D *struct2d)
+void PassRenderList::add(RTRenderStruct2D *struct2d, bool isBatch)
 {
     structs.add(struct2d);
 
@@ -31,19 +31,36 @@ void PassRenderList::add(RTRenderStruct2D *struct2d)
 
     if (n == 1)
     {
-        this->_batchStart(struct2d->renderType, 1);
-        this->renderElements.add(struct2d->renderElements[0]);
+        if (isBatch)
+        {
+            this->_batchStart(struct2d->renderType, 1);
+            this->renderElements.add(struct2d->renderElements[0]);
+        }
+        else
+        {
+            this->renderElements.add(struct2d->renderElements[0]);
+        }
     }
     else
     {
-        this->_batchStart(struct2d->renderType, n);
-        for (int i = 0; i < n; i++)
+        if (isBatch)
         {
-            this->renderElements.add(struct2d->renderElements[i]);
+            this->_batchStart(struct2d->renderType, n);
+            for (int i = 0; i < n; i++)
+            {
+                this->renderElements.add(struct2d->renderElements[i]);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < n; i++)
+            {
+                this->renderElements.add(struct2d->renderElements[i]);
+            }
         }
     }
 
-    if (this->_currentBatch && this->_currentBatch->batchFun)
+    if (isBatch && this->_currentBatch->batchFun)
     {
         int offset = this->_currentBatch->indexStart + this->_currentBatch->elementLength - n;
         this->_currentBatch->batchFun->prepare(struct2d, this->_currentBatch->batchContext, offset); 

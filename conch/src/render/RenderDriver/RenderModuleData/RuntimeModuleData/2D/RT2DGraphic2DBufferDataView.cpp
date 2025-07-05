@@ -92,7 +92,7 @@ void RT2DGraphicWholeBuffer::upload()
             needUpdate = this->_needResetData || start >= uploadStart;
 
             if (needUpdate) {
-                pView->_start = start;
+                pView->setStart(start);
                 pView->updateView(this->_dataView.getHandle());
             }
 
@@ -105,7 +105,7 @@ void RT2DGraphicWholeBuffer::upload()
             geometry->setDrawElementParams(length, start * 2);
         }
         RT2DGraphic2DBufferDataView* pLast = this->_last.getLocal().as<RT2DGraphic2DBufferDataView*>();
-        int len = pLast->_start + pLast->_length - uploadStart;
+        int len = pLast->getStart() + pLast->_length - uploadStart;
         int offset = uploadStart * 2;
         offset = floor(offset / 4) * 4;
 
@@ -142,8 +142,8 @@ void RT2DGraphicWholeBuffer::modifyOneView(RT2DGraphic2DBufferDataView *view)
     {
         this->addDataView(view);
     }
-    _updateRange.y = std::max(double(view->_start + view->_length), _updateRange.y);
-    _updateRange.x = std::min(double(view->_start), _updateRange.x);
+    _updateRange.y = std::max(double(view->getStart() + view->_length), _updateRange.y);
+    _updateRange.x = std::min(double(view->getStart()), _updateRange.x);
 }
 
 void RT2DGraphicWholeBuffer::addDataView(RT2DGraphic2DBufferDataView *view)
@@ -154,7 +154,7 @@ void RT2DGraphicWholeBuffer::addDataView(RT2DGraphic2DBufferDataView *view)
     if (!this->_first)
     {
         this->_first = jsbind::toPersistent(view);
-        this->_first.getLocal().as<RT2DGraphic2DBufferDataView*>()->_start = 0;
+        this->_first.getLocal().as<RT2DGraphic2DBufferDataView*>()->setStart(0);
     }
     if (this->_last)
     {
@@ -196,8 +196,8 @@ void RT2DGraphicWholeBuffer::removeDataView(RT2DGraphic2DBufferDataView* view)
     view->_next.reset();// = nullptr;
     view->_prev.reset();// = nullptr;
 
-    this->_updateRange.x = std::min((double)view->_start, this->_updateRange.x);
-    this->_updateRange.y = std::max((double)view->_start + view->_length, this->_updateRange.y);
+    this->_updateRange.x = std::min((double)view->getStart(), this->_updateRange.x);
+    this->_updateRange.y = std::max((double)view->getStart() + view->_length, this->_updateRange.y);
     this->_num--;
 }
 void RT2DGraphicWholeBuffer::destroy()
@@ -284,6 +284,7 @@ void RT2DGraphic2DBufferDataView::updateView(jsvm_value wholeData)
 
         jsbind::Local setFunction = jsbind::Local(wholeData)["set"];
         setFunction.call<void>(wholeData, _view.getHandle(), this->_start);
+        
     }
     else
     {
@@ -313,6 +314,7 @@ void RT2DGraphic2DBufferDataView::updateView(jsvm_value wholeData)
             DEBUG_CHECK(false);
         }
     }
+    //LOGI("updateView: %d", this->_start);
 }
 RT2DGraphic2DBufferDataView* RT2DGraphic2DBufferDataView::clone(bool cloneOwner, bool create)
 {

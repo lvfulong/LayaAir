@@ -38,7 +38,7 @@ void RTRender2DPass::addStruct(RTRenderStruct2D *object)
         _lists[zOrder] = new PassRenderList();
         _lists[zOrder]->zOrder = zOrder;
     }
-    _lists[zOrder]->add(object);
+    _lists[zOrder]->add(object, this->_enableBatch);
 }
 // lvtodo checkout 由下到达顺序
 void RTRender2DPass::removeStruct(RTRenderStruct2D *object)

@@ -102,7 +102,22 @@ class RT2DGraphic2DBufferDataView
     RT2DGraphic2DBufferDataView(RT2DGraphicWholeBuffer* owner, BufferModifyType type, int start, int length, int stride, bool create);
     ~RT2DGraphic2DBufferDataView();
     RT2DGraphic2DBufferDataView* clone(bool cloneOwner = true, bool create = true);
+private:
     int _start;      // element start
+ 
+public:   
+    int getStart()
+    {
+        return _start;
+    }
+    void setStart(int value)
+    {
+        if (value > 0)
+        {
+            LOGI("ddd");
+        }
+        _start = value;
+    }
     int _length;     // element length
     int _stride = 1; // element stride
     RT2DGraphicWholeBuffer* owner = nullptr;

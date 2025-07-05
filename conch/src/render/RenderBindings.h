@@ -1208,7 +1208,7 @@ class RenderBindings
         {
             jsbind::class_<RT2DGraphic2DBufferDataView> class_binding;
             class_binding.constructor<RT2DGraphicWholeBuffer*, BufferModifyType, int, int, int, bool>();
-            class_binding.property_field("start", &RT2DGraphic2DBufferDataView::_start);
+            class_binding.property("start", &RT2DGraphic2DBufferDataView::getStart, &RT2DGraphic2DBufferDataView::setStart);
             class_binding.property_field("length", &RT2DGraphic2DBufferDataView::_length);
             class_binding.property_field("stride", &RT2DGraphic2DBufferDataView::_stride);
             class_binding.property_field("modifyType", &RT2DGraphic2DBufferDataView::modifyType);
