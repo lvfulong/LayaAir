@@ -2,13 +2,13 @@
 #define __RTRENDERSTRUCT2D_H__
 
 #include "RTRenderDataHandle.h"
+#include "RTRender2DPass.h"
 #include <core/math/Matrix.h>
 #include <core/math/Rectangle.h>
 #include <core/math/Vector4.h>
 #include <render/RenderDriver/OpenGLESDriver/RenderDevice/GLESShaderData.h>
 #include <string>
 #include <render/BlendMode.h>
-#include <render/RenderDriver/RenderModuleData/RuntimeModuleData/2D/RTRender2DPass.h>
 #include <jsvm/JSVM_Types.h>
 #include <render/Const.h>
 
@@ -55,7 +55,6 @@ enum class ChildrenUpdateType
     Global = 16,
 };
 class GLESRenderElement2D;
-class RTRender2DPass;
 class GLESRenderContext2D;
 class RTRenderStruct2D
 {

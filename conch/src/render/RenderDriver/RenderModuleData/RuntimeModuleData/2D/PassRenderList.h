@@ -17,7 +17,7 @@ class PassRenderList
     PassRenderList();
     ~PassRenderList();
 
-    void add(RTRenderStruct2D *struct2d, bool isBatch);
+    void add(RTRenderStruct2D *struct2d, bool isBatch = true);
     void remove(RTRenderStruct2D *struct2d);
     void destroy();
     void clearRenderElements();

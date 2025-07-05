@@ -7,6 +7,8 @@
 #include <render/3D/temp/RenderState.h>
 #include <jsvm/JSVM_Types.h>
 #include <jsbind/Persistent.h>
+#include "RTRender2DPass.h"
+
 namespace laya
 {
 // 默认裁剪信息
@@ -300,7 +302,11 @@ void RTRenderStruct2D::addChild(RTRenderStruct2D* child, int32_t index)
 
     child->_parentClipInfo = this->getClipInfo();
     child->_parentBlendMode = this->getBlendMode();
-    child->_parentPass = this->getPass();
+    RTRender2DPass *parentPass = this->getPass();
+    child->_parentPass = parentPass;
+    if (child->_pass && parentPass) {
+        child->_pass->priority = parentPass->priority + 1;
+    }
     child->_parentGlobalRenderData = this->getGlobalRenderData();
     if (!child->_globalRenderData) child->_globalShaderData = this->_globalShaderData;
 
@@ -328,6 +334,9 @@ void RTRenderStruct2D::removeChild(RTRenderStruct2D* child)
         children.erase(it);
 
         child->_parentPass = nullptr;
+        if (child->_pass) {
+            child->_pass->priority = 0;
+        }
         child->_parentClipInfo = nullptr;
         child->_parentBlendMode = BlendMode::Invalid;
         child->globalAlpha = child->_alpha;

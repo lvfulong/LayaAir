@@ -59,10 +59,8 @@ class RTRender2DPass
     {
         this->root = value;
     }
-    void setMask(RTRenderStruct2D *value)
-    {
-        this->mask = value;
-    }
+    void setMask(RTRenderStruct2D* value);
+    
     void setRenderTexture(GLESInternalRT *value, int width, int height)
     {
         this->renderTexture = value;
@@ -146,6 +144,12 @@ class RTRender2DPass
     int32_t m_renderTextureWidth{ 0 };
     int32_t m_renderTextureHeight{ 0 };
     int32_t priority = 0;
+    void setPriority(int32_t value);
+    
+    int32_t getPriority()
+    {
+        return this->priority;
+    }
     uint32_t renderLayerMask = 0x00000000;
     Vector4 cullRect;
     Vector2 renderOffset;

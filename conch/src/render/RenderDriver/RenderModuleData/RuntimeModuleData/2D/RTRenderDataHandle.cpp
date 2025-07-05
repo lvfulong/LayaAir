@@ -106,14 +106,8 @@ void RTPrimitiveDataHandle::inheriteRenderData(GLESRenderContext2D *context)
             if (this->_mask && this->_mask->_trans)
             {
                 const Matrix &maskMatrix = this->_mask->getRenderMatrix();
-                Matrix tempMatirx;
-                if (this->_mask->parent) {
-                    tempMatirx = maskMatrix;
-                } else {
-                    tempMatirx = Matrix::mul(maskMatrix, mat, tempMatirx);
-                }
-                this->_nMatrix_0.setValue(tempMatirx.a, tempMatirx.c, tempMatirx.tx);
-                this->_nMatrix_1.setValue(tempMatirx.b, tempMatirx.d, tempMatirx.ty);
+                this->_nMatrix_0.setValue(maskMatrix.a, maskMatrix.c, maskMatrix.tx);
+                this->_nMatrix_1.setValue(maskMatrix.b, maskMatrix.d, maskMatrix.ty);
             }
             else
             {

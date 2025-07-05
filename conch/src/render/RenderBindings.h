@@ -1328,7 +1328,7 @@ class RenderBindings
             class_binding.function("setMask", &RTRender2DPass::setMask);
             class_binding.property_field("repaint", &RTRender2DPass::repaint);
             class_binding.function("setRenderTexture", &RTRender2DPass::setRenderTexture);
-            class_binding.property_field("priority", &RTRender2DPass::priority);
+            class_binding.property("priority", &RTRender2DPass::getPriority, &RTRender2DPass::setPriority);
             class_binding.property_field("renderLayerMask", &RTRender2DPass::renderLayerMask);
             class_binding.property_field("cullRect", &RTRender2DPass::cullRect);
             class_binding.function("setClearColor", &RTRender2DPass::setClearColor);

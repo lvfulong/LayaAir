@@ -29,6 +29,27 @@ RTRender2DPass::~RTRender2DPass()
 {
 }
 
+void RTRender2DPass::setMask(RTRenderStruct2D* value)
+{
+    this->mask = value;
+    if (value) {
+        RTRender2DPass* pass = value->getPass();
+        if (pass) {
+            pass->priority = this->priority + 1;
+        }
+    }
+}
+
+void RTRender2DPass::setPriority(int32_t value){
+    this->priority = value;
+    if (this->mask) {
+        RTRender2DPass* pass = this->mask->getPass();
+        if (pass) {
+            pass->priority = value + 1;
+        }
+    }
+}
+
 void RTRender2DPass::addStruct(RTRenderStruct2D *object)
 {
     auto zOrder = object->zIndex;
@@ -112,11 +133,11 @@ void RTRender2DPass::render(GLESRenderContext2D *context)
 
     repaint = false;
 
-    if (this->mask && this->mask->getPass() && this->mask->getPass()->enable)
-    {
-        this->mask->getPass()->renderTexture = this->renderTexture;
-        this->mask->getPass()->fowardRender(context);
-        this->mask->getPass()->renderTexture = nullptr;
+    if (this->mask && this->mask->enable) {
+        this->mask->renderUpdate(context);
+        if (!this->mask->renderElements.empty()) {
+            context->drawRenderElementOne(this->mask->renderElements[0]);
+        }
     }
 
     callRenderCallback();
@@ -180,15 +201,7 @@ void RTRender2DPass::_updateInvertMatrix()
     if (mask && mask->_trans)
     {
         Matrix &maskMatrix = mask->_trans->matrix;
-        if (mask->parent)
-        {
-            maskMatrix.copyTo(temp);
-        }
-        else
-        {
-            Matrix &rootMatrix = rootTrans->matrix;  
-            Matrix::mul(maskMatrix, rootMatrix, temp);
-        }
+        maskMatrix.copyTo(temp);
         temp.invert();
     }
     else
