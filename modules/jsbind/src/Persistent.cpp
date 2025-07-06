@@ -4,6 +4,7 @@ namespace jsbind
 {
 Persistent::Persistent(jsvm_value value)
 {
+    DEBUG_CHECK(ref_ == nullptr);
     GET_ENV
     jsvm_status status;
     if (!isNull(value) && !isUndefined(value))
@@ -14,6 +15,7 @@ Persistent::Persistent(jsvm_value value)
 }
 Persistent::Persistent(jsvm_ref value)
 {
+    DEBUG_CHECK(ref_ == nullptr);
     DEBUG_CHECK(value != nullptr);
     GET_ENV
     ref_ = value;
@@ -25,6 +27,7 @@ Persistent::Persistent(jsvm_ref value)
 }
 Persistent::Persistent(const Persistent &that)
 {
+    DEBUG_CHECK(ref_ == nullptr);
     GET_ENV
     if (that.ref_ != nullptr)
     {
@@ -45,7 +48,10 @@ Persistent &Persistent::operator=(const Persistent &that)
     }
     if (that.ref_ != nullptr)
     {
-        reset();
+        if (ref_ != nullptr)
+        {
+            reset();
+        }
         ref_ = that.ref_;
         jsvm_status status;
         uint32_t count;
@@ -54,16 +60,25 @@ Persistent &Persistent::operator=(const Persistent &that)
     }
     return *this;
 }
-Persistent::Persistent(Persistent &&that):ref_(that.ref_)
+Persistent::Persistent(Persistent &&that)//:ref_(that.ref_)
 {
+    DEBUG_CHECK(ref_ == nullptr);
+    ref_ = that.ref_;
     that.ref_ = nullptr;
 }
 Persistent& Persistent::operator=(Persistent &&that)
 {
-    if (this != &that) {
-        ref_ = that.ref_;
-        that.ref_ = nullptr;
+    if (this == &that || this->ref_ == that.ref_)
+    {
+        return *this;
     }
+    if (ref_ != nullptr)
+    {
+        reset();
+    }
+    ref_ = that.ref_;
+    that.ref_ = nullptr;
+    
     return *this;
 }
 Persistent::~Persistent()
@@ -79,6 +94,10 @@ void Persistent::reset()
         jsvm_status status;
         uint32_t count;
         status = jsvm_reference_unref(env, ref_, &count);
+        //if (count==0)
+        //{
+        //    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+        //}
         DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         if (count == 0)
         {
