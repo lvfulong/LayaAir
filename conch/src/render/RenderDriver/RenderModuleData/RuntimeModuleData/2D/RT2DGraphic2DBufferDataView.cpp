@@ -154,7 +154,7 @@ void RT2DGraphicWholeBuffer::addDataView(RT2DGraphic2DBufferDataView *view)
     if (!this->_first)
     {
         this->_first = jsbind::toPersistent(view);
-        this->_first.getLocal().as<RT2DGraphic2DBufferDataView*>()->setStart(0);
+        view->setStart(0);
     }
     if (this->_last)
     {
@@ -241,7 +241,7 @@ RT2DGraphic2DBufferDataView::RT2DGraphic2DBufferDataView(RT2DGraphicWholeBuffer*
 
 RT2DGraphic2DBufferDataView::~RT2DGraphic2DBufferDataView()
 {
-
+    //LOGI("ddd");
 }
 
 jsvm_value RT2DGraphic2DBufferDataView::getData()
@@ -327,6 +327,7 @@ RT2DGraphic2DBufferDataView* RT2DGraphic2DBufferDataView::clone(bool cloneOwner,
     {
         nview->_view = this->_view;
     }
+    nview->_isClone = true;
     return nview;
 }
 } // namespace laya

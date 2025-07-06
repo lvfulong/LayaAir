@@ -84,7 +84,7 @@ class RT2DGraphicWholeBuffer
 
   private:
     friend class RT2DGraphic2DBufferDataView;
-    std::vector<RT2DGraphic2DBufferDataView *> _views;
+    //std::vector<RT2DGraphic2DBufferDataView *> _views;
     Vector2 _updateRange = Vector2(100000000, -100000000);
     jsbind::Persistent _first;//RT2DGraphic2DBufferDataView*
     jsbind::Persistent _last;//RT2DGraphic2DBufferDataView*
@@ -104,7 +104,7 @@ class RT2DGraphic2DBufferDataView
     RT2DGraphic2DBufferDataView* clone(bool cloneOwner = true, bool create = true);
 private:
     int _start;      // element start
- 
+    bool _isClone = false;
 public:   
     int getStart()
     {

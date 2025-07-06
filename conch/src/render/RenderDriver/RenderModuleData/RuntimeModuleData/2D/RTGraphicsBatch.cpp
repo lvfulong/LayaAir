@@ -303,10 +303,10 @@ void RTGraphicsBatch::prepare(RTRenderStruct2D* struct2d, IBatch2DContext* conte
     if (blocks.empty()) return; 
 
     RTBatchBuffer* buffer = static_cast<GraphicsBatchContext*>(context)->_batchBuffer;
-    std::vector<RT2DGraphic2DBufferDataView*>& cviews = handle->_getCloneViews();
+    std::vector<jsbind::Persistent>& cviews = handle->_getCloneViews();
     for (size_t i = 0, n = blocks.size(); i < n; i++)
     {
-        RT2DGraphic2DBufferDataView* cview = cviews[i];
+        RT2DGraphic2DBufferDataView* cview = cviews[i].getLocal().as<RT2DGraphic2DBufferDataView*>();
         Graphics2DBufferBlock& block = blocks[i];
         GLESVertexBuffer* vertexBuffer = block.vertexBuffer.getLocal()["_nativeObj"].as<GLESVertexBuffer*>();
         GLESBufferState* bufferState = buffer->bindBuffer(vertexBuffer);

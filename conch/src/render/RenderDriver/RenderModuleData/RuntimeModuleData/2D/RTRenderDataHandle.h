@@ -71,7 +71,7 @@ public:
     void applyVertexBufferBlock(const std::vector<Graphics2DBufferBlock>& blocks);
     void inheriteRenderData(GLESRenderContext2D *context) override;
     std::vector<Graphics2DBufferBlock>& _getBlocks() { return _bufferBlocks; };
-    std::vector<RT2DGraphic2DBufferDataView*>& _getCloneViews();
+    std::vector<jsbind::Persistent>& _getCloneViews();
     void updateCloneViews();
     void destroy() override;
 private:
@@ -79,7 +79,7 @@ private:
     std::vector<Graphics2DBufferBlock> _bufferBlocks;
     bool _needUpdateBuffer{false};
     int _modifiedFrame{-1};
-    std::vector<RT2DGraphic2DBufferDataView*> _cloneViews;
+    std::vector<jsbind::Persistent> _cloneViews;//RT2DGraphic2DBufferDataView*
     RT2DGraphic2DBufferDataView* _cloneView(RT2DGraphic2DBufferDataView* view, RT2DGraphic2DBufferDataView* oView = nullptr);
     std::vector<GLESRenderGeometryElement*> _geometryToFree;
 };

@@ -39,6 +39,10 @@ Persistent::Persistent(const Persistent &that)
 Persistent &Persistent::operator=(const Persistent &that)
 {
     GET_ENV
+    if (this == &that || this->ref_ == that.ref_)
+    {
+        return *this;
+    }
     if (that.ref_ != nullptr)
     {
         reset();
@@ -50,7 +54,18 @@ Persistent &Persistent::operator=(const Persistent &that)
     }
     return *this;
 }
-
+Persistent::Persistent(Persistent &&that):ref_(that.ref_)
+{
+    that.ref_ = nullptr;
+}
+Persistent& Persistent::operator=(Persistent &&that)
+{
+    if (this != &that) {
+        ref_ = that.ref_;
+        that.ref_ = nullptr;
+    }
+    return *this;
+}
 Persistent::~Persistent()
 {
     reset();

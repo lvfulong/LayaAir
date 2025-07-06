@@ -200,17 +200,17 @@ RT2DGraphic2DBufferDataView *RTPrimitiveDataHandle::_cloneView(RT2DGraphic2DBuff
     return clone;
 }
 
-std::vector<RT2DGraphic2DBufferDataView*>& RTPrimitiveDataHandle::_getCloneViews()
+std::vector<jsbind::Persistent>& RTPrimitiveDataHandle::_getCloneViews()
 {
     if (_cloneViews.empty() && !_bufferBlocks.empty())
     {
         _cloneViews.resize(_bufferBlocks.size());
         for (size_t i = 0, n = _bufferBlocks.size(); i < n; i++)
         {
-            jsbind::Persistent indexView = _bufferBlocks[i].indexView;
+            jsbind::Persistent& indexView = _bufferBlocks[i].indexView;
             RT2DGraphic2DBufferDataView *nativeView =
                 indexView.getLocal()["_nativeObj"].as<RT2DGraphic2DBufferDataView *>();
-            _cloneViews[i] = _cloneView(nativeView);
+            _cloneViews[i] = jsbind::toPersistent(_cloneView(nativeView));
         }
     }
     return _cloneViews;
@@ -218,19 +218,20 @@ std::vector<RT2DGraphic2DBufferDataView*>& RTPrimitiveDataHandle::_getCloneViews
 
 void RTPrimitiveDataHandle::updateCloneViews()
 {
-    std::vector<RT2DGraphic2DBufferDataView*>& cloneViews = _getCloneViews();
+    std::vector<jsbind::Persistent>& cloneViews = _getCloneViews();
     size_t blockLength = _bufferBlocks.size();
     size_t length = std::max(cloneViews.size(), blockLength);
 
     for (size_t i = 0; i < length; i++)
     {
-        RT2DGraphic2DBufferDataView *view = cloneViews[i];
+        jsbind::Persistent& jsview = cloneViews[i];
+        RT2DGraphic2DBufferDataView* view = jsview.getLocal().as<RT2DGraphic2DBufferDataView*>();
         if (i < _bufferBlocks.size())
         {
-            jsbind::Persistent jsView = _bufferBlocks[i].indexView;
+            jsbind::Persistent& jsView = _bufferBlocks[i].indexView;
             RT2DGraphic2DBufferDataView *nativeView =
                 jsView.getLocal()["_nativeObj"].as<RT2DGraphic2DBufferDataView *>();
-            cloneViews[i] = _cloneView(nativeView, view);
+            cloneViews[i] = jsbind::toPersistent(_cloneView(nativeView, view));
         }
         else
         {
@@ -255,7 +256,7 @@ void  RTPrimitiveDataHandle::destroy()
     {
         for (int i = 0, n = this->_cloneViews.size(); i < n; i++)
         {
-            this->_cloneViews[i]->_geometry->destroy();
+            this->_cloneViews[i].getLocal().as<RT2DGraphic2DBufferDataView*>()->_geometry->destroy();
         }
         this->_cloneViews.clear();
     }

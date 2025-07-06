@@ -15,10 +15,11 @@ class Persistent
     explicit Persistent(jsvm_value);
 
     Persistent(const Persistent &);
-
     Persistent &operator=(const Persistent &);
-
+    Persistent(Persistent&&);
+    Persistent& operator=(Persistent&&);
     ~Persistent();
+
     template <typename ReturnType, typename... Args> ReturnType call(jsvm_value recv, const Args &...args)
     {
         if (isValid() && getLocal().isFunction())
