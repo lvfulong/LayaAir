@@ -91,7 +91,7 @@ public:
     virtual ~RTMesh2DRenderDataHandle();
 
     Color getBaseColor() const { return _baseColor; }
-    void setBaseColor(Color& value) { _baseColor = value; _renderAlpha = -1.0f; };
+    void setBaseColor(const Color& value) { _baseColor = value; _renderAlpha = -1.0f; };
     virtual void inheriteRenderData(GLESRenderContext2D *context) override;
 
 private:

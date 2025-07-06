@@ -8,7 +8,7 @@
 #include <render/3D/design/renderEnum/RenderPologyMode.h>
 #include <render/Const.h>
 #include <utils/Log.h>
-#include <jsbind/jsbind.h>
+#include <jsbind/JSBind.h>
 #include "GraphicsBatchContext.h"
 
 namespace laya
