@@ -334,5 +334,6 @@ void RT2DGraphic2DBufferDataView::cloneView(RT2DGraphic2DBufferDataView* view)
 {
     view->_view = this->_view;
     view->_arrayBuffer = this->_arrayBuffer;
+    view->_length = this->_length;
 }
 } // namespace laya

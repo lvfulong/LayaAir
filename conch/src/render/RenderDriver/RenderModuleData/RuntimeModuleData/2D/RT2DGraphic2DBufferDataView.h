@@ -112,10 +112,6 @@ public:
     }
     void setStart(int value)
     {
-        if (value > 0)
-        {
-            LOGI("ddd");
-        }
         _start = value;
     }
     int _length;     // element length
@@ -133,7 +129,7 @@ public:
     jsvm_value getData();
     jsbind::Persistent _next;//RT2DGraphic2DBufferDataView *
     jsbind::Persistent _prev;//RT2DGraphic2DBufferDataView *
-    GLESRenderGeometryElement* _geometry;
+    GLESRenderGeometryElement* _geometry = nullptr;
     void setGeometry(GLESRenderGeometryElement* data)
     {
         this->_geometry = data;

@@ -1231,6 +1231,7 @@ class RenderBindings
             class_binding.function("_addDataView", &RT2DGraphicWholeBuffer::addDataView);
             class_binding.function("resetData", &RT2DGraphicWholeBuffer::resetData);
             class_binding.property_field("_needResetData", &RT2DGraphicWholeBuffer::_needResetData);
+            class_binding.property_field("modifyType", &RT2DGraphicWholeBuffer::_modifyType);
             context.class_("conchRT2DGraphicWholeBuffer", class_binding);
             
         }

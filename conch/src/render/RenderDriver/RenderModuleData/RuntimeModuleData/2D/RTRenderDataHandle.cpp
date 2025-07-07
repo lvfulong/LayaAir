@@ -252,7 +252,7 @@ void RTPrimitiveDataHandle::updateCloneViews()
 }
 void  RTPrimitiveDataHandle::destroy()
 {
-    RTPrimitiveDataHandle::destroy();
+    RTRender2DDataHandle::destroy();
 
     if (!this->_cloneViews.empty())
     {
