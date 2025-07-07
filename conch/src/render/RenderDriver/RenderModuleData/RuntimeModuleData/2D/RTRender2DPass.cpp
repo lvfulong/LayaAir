@@ -110,41 +110,62 @@ void RTRender2DPass::fowardRender(GLESRenderContext2D *context)
 
 void RTRender2DPass::render(GLESRenderContext2D *context)
 {
-    // 清理zOrder相关队列
-    for (auto &list : _lists)
+    if (this->repaint)
     {
-        if (list.second)
-            list.second->reset();
-    }
-
-    updateRenderQueue(context);
-    uploadBuffer();
-
-    for (auto &list : _lists)
-    {
-        if (!list.second || !list.second->renderElements.getLength())
-            continue;
-        if (getEnableBatch())
+        // 清理zOrder相关队列
+        for (auto& list : _lists)
         {
-            list.second->batch();
+            if (list.second)
+                list.second->reset();
         }
-        context->drawRenderElementList(list.second->renderElements);
-    }
 
-    repaint = false;
+        updateRenderQueue(context);
+        RTRender2DPass::uploadBuffer();
 
-    if (this->mask && this->mask->enable) {
-        this->mask->renderUpdate(context);
-        if (!this->mask->renderElements.empty()) {
-            context->drawRenderElementOne(this->mask->renderElements[0]);
+        bool enableBatch = this->_enableBatch;
+        for (int i = 0, len = _lists.size(); i < len; i++) {
+
+            auto it = _lists.find(i);
+            if (it == _lists.end() || it->second->renderElements.getLength() == 0)
+            {
+                continue;
+            }
+            if (enableBatch)
+            {
+                it->second->batch();
+            }
+            context->drawRenderElementList(it->second->renderElements);
         }
+        
+
+        if (this->mask && this->mask->enable) {
+            this->mask->renderUpdate(context);
+            if (!this->mask->renderElements.empty()) {
+                context->drawRenderElementOne(this->mask->renderElements[0]);
+            }
+        }
+
+        callRenderCallback();
+
+        // 处理后期处理
+        //if (this.postProcess && this.postProcess.enabled) {
+        //    this.postProcess._context.command.apply(true);
+        //}
     }
+    else
+    {
+        for (int i = 0, len = _lists.size(); i < len; i++) {
 
-    callRenderCallback();
+            auto it = _lists.find(i);
+            if (it == _lists.end() || it->second->renderElements.getLength() == 0)
+            {
+                continue;
+            }
+            context->drawRenderElementList(it->second->renderElements);
+        }
 
-    // if (postProcess && postProcess->enabled) {
-    //     postProcess->_context->command->apply(true);
-    // }
+    }
+    this->repaint = false;
 }
 
 void RTRender2DPass::_initRenderProcess(GLESRenderContext2D *context)

@@ -14,7 +14,7 @@ namespace laya
 	public:
 		static void setCompileDefine(RTDefineDatas* value);
 		GLESRenderElement2D();
-		~GLESRenderElement2D();
+		virtual ~GLESRenderElement2D();
 		void destroy();
 		void _preUpdatePre(GLESRenderContext2D* context);
 		void _render(GLESRenderContext2D* context);
