@@ -151,7 +151,19 @@ void RTGraphicsBatch::batch(FastSinglelist<GLESRenderElement2D *> &list, int sta
     {
         int offset = start + i;
         GLESPrimitiveRenderElement2D *element = static_cast<GLESPrimitiveRenderElement2D*>(elementArray[offset]);
-        auto geometry = buffer->geometryList[i] ? buffer->geometryList[i] : element->geometry;
+
+        
+        auto it = buffer->geometryList.find(i);
+
+        GLESRenderGeometryElement* geometry = nullptr;
+        if (it != buffer->geometryList.end())
+        {
+            geometry = it->second;
+        }
+        else
+        {
+            geometry = element->geometry;
+        }
 
         if (!i)
         {
@@ -317,7 +329,7 @@ void RTGraphicsBatch::prepare(RTRenderStruct2D* struct2d, IBatch2DContext* conte
         GLESRenderGeometryElement* geometry = cview->_geometry;
 
         geometry->setBufferState(bufferState);
-        buffer->geometryList.push_back(geometry);
+        buffer->geometryList[offset + i] = geometry;
     }
 
     // Set buffer and update length

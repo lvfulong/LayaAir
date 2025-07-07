@@ -33,7 +33,7 @@ public:
     int indexCount = 0;
     int maxIndexCount = 0;
     std::unordered_map<GLESVertexBuffer*, GLESBufferState*> bufferStates;
-    std::vector<GLESRenderGeometryElement*> geometryList;
+    std::unordered_map<int, GLESRenderGeometryElement*> geometryList;
 };
 
 } // namespace laya
