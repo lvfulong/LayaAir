@@ -183,13 +183,15 @@ RT2DGraphic2DBufferDataView *RTPrimitiveDataHandle::_cloneView(RT2DGraphic2DBuff
 {
 
     DEBUG_CHECK(view != nullptr);
-    RT2DGraphic2DBufferDataView *clone = view->clone(false, false);
+    RT2DGraphic2DBufferDataView* clone = nullptr;
     if (oView && oView->_geometry)
     {
-        clone->_geometry = oView->_geometry;
+        clone = oView;
+        view->cloneView(clone);
     }
     else
     {
+        clone = view->clone(false, false);
         GLESRenderGeometryElement *geometry = new GLESRenderGeometryElement();
         geometry->setMeshTopology(MeshTopology::Triangles);
         geometry->setDrawType(DrawType::DrawElement);

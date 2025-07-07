@@ -134,15 +134,17 @@ template <typename T> T convert_value_object_from_js(jsvm_value value)
     jsvm_valuetype valueType;
     jsvm_status status = jsvm_typeof(env, value, &valueType);
     DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-    if (valueType != jsvm_valuetype::jsvm_object)
+    if (valueType == jsvm_valuetype::jsvm_undefined || valueType == jsvm_valuetype::jsvm_null)
     {
+        LOGW("warn convert_value_object_from_js paramter is null or undefined");
         return ret;
     }
+    DEBUG_CHECK(valueType == jsvm_valuetype::jsvm_object);
     for (auto &field : jsbind::value_object<T>::fields)
     {
        
         jsvm_status status;
-        jsvm_value prop;
+        jsvm_value prop = nullptr;
         status = jsvm_get_named_property(env, value, field.field_name.c_str(), &prop);
         DEBUG_CHECK(status == jsvm_status::jsvm_ok);
 

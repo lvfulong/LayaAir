@@ -325,9 +325,14 @@ RT2DGraphic2DBufferDataView* RT2DGraphic2DBufferDataView::clone(bool cloneOwner,
     RT2DGraphic2DBufferDataView* nview = new RT2DGraphic2DBufferDataView(owner, this->modifyType, this->_start, this->_length, this->_stride, create);
     if (!create)
     {
-        nview->_view = this->_view;
+        this->cloneView(nview);
     }
     nview->_isClone = true;
     return nview;
+}
+void RT2DGraphic2DBufferDataView::cloneView(RT2DGraphic2DBufferDataView* view)
+{
+    view->_view = this->_view;
+    view->_arrayBuffer = this->_arrayBuffer;
 }
 } // namespace laya

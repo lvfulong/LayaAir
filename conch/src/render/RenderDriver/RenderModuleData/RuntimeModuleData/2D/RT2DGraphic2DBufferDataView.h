@@ -144,6 +144,7 @@ public:
     {
         return {_start, _length};
     }
+    void cloneView(RT2DGraphic2DBufferDataView* view);
 };
 
 } // namespace laya
