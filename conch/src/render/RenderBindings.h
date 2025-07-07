@@ -470,6 +470,7 @@ class RenderBindings
             class_binding.property_field("_indexType", &GLESIndexBuffer::_indexType);
             class_binding.function("_setIndexDataLength", &GLESIndexBuffer::_setIndexDataLength);
             class_binding.function("_setIndexData", &GLESIndexBuffer::_setIndexDataJS);
+            class_binding.function("setData", &GLESIndexBuffer::setDataJS);
             class_binding.function("destroy", &GLESIndexBuffer::destroy);
             context.class_("conchGLESIndexBuffer", class_binding);
         }
@@ -545,6 +546,14 @@ class RenderBindings
             class_binding.property("depthTest", &RenderState::getDepthTest, &RenderState::setDepthTest);
             class_binding.property("depthWrite", &RenderState::getDepthWrite, &RenderState::setDepthWrite);
             class_binding.property("stencilWrite", &RenderState::getStencilWrite, &RenderState::setStencilWrite);
+            class_binding.property("stencilWriteMask", &RenderState::getStencilWriteMask, &RenderState::setStencilWriteMask);
+            class_binding.property("stencilReadMask", &RenderState::getStencilReadMask, &RenderState::setStencilReadMask);
+
+            class_binding.property("depthBias", &RenderState::getDepthBias, &RenderState::setDepthBias);
+            class_binding.property("depthBiasConstant", &RenderState::getDepthBiasConstant, &RenderState::setDepthBiasConstant);
+            class_binding.property("depthBiasSlopeScale", &RenderState::getDepthBiasSlopeScale, &RenderState::setDepthBiasSlopeScale);
+            class_binding.property("depthBiasClamp", &RenderState::getDepthBiasClamp, &RenderState::setDepthBiasClamp);
+
             class_binding.property("stencilTest", &RenderState::getStencilTest, &RenderState::setStencilTest);
             class_binding.property("stencilRef", &RenderState::getStencilRef, &RenderState::setStencilRef);
             class_binding.function("setStencilOp", &RenderState::setStencilOp);

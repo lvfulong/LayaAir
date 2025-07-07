@@ -86,6 +86,12 @@ class Shader3D
     static uint32_t STENCIL_WRITE;
     static uint32_t STENCIL_Ref;
     static uint32_t STENCIL_Op;
+    static uint32_t STENCIL_WRITE_MASK;
+    static uint32_t STENCIL_READ_MASK;
+    static uint32_t DEPTH_BIAS;
+    static uint32_t DEPTH_BIAS_CONSTANT;
+    static uint32_t DEPTH_BIAS_SLOPESCALE;
+    static uint32_t DEPTH_BIAS_CLAMP;
     static void __init__();
 };
 class ShadowCasterPassProperty

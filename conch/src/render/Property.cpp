@@ -111,6 +111,12 @@ namespace laya
     uint32_t Shader3D::STENCIL_WRITE = 0;
     uint32_t Shader3D::STENCIL_Ref = 0;
     uint32_t Shader3D::STENCIL_Op = 0;
+    uint32_t Shader3D::STENCIL_WRITE_MASK = 0;
+    uint32_t Shader3D::STENCIL_READ_MASK = 0;
+    uint32_t Shader3D::DEPTH_BIAS = 0;
+    uint32_t Shader3D::DEPTH_BIAS_CONSTANT = 0;
+    uint32_t Shader3D::DEPTH_BIAS_SLOPESCALE = 0;
+    uint32_t Shader3D::DEPTH_BIAS_CLAMP = 0;
     void Shader3D::__init__()
     {
         Shader3D::CULL = LayaGL::m_pWebglEngine->propertyNameToID("s_Cull");
@@ -130,6 +136,13 @@ namespace laya
         Shader3D::STENCIL_TEST = LayaGL::m_pWebglEngine->propertyNameToID("s_StencilTest");
         Shader3D::STENCIL_WRITE = LayaGL::m_pWebglEngine->propertyNameToID("s_StencilWrite");
         Shader3D::STENCIL_Op = LayaGL::m_pWebglEngine->propertyNameToID("s_StencilOp");
+
+        Shader3D::STENCIL_WRITE_MASK = LayaGL::m_pWebglEngine->propertyNameToID("s_StencilWriteMask");
+        Shader3D::STENCIL_READ_MASK = LayaGL::m_pWebglEngine->propertyNameToID("s_StencilReadMask");
+        Shader3D::DEPTH_BIAS = LayaGL::m_pWebglEngine->propertyNameToID("s_DepthBias");
+        Shader3D::DEPTH_BIAS_CONSTANT = LayaGL::m_pWebglEngine->propertyNameToID("s_DepthBiasConstant");
+        Shader3D::DEPTH_BIAS_SLOPESCALE = LayaGL::m_pWebglEngine->propertyNameToID("s_DepthBiasSlopeScale");
+        Shader3D::DEPTH_BIAS_CLAMP = LayaGL::m_pWebglEngine->propertyNameToID("s_DepthBiasClamp");
     }
     uint32_t ShadowCasterPassProperty::SHADOW_BIAS = 0;
     uint32_t ShadowCasterPassProperty::SHADOW_LIGHT_DIRECTION = 0;

@@ -1518,7 +1518,7 @@ GLESInternalTex *GLTextureContext::createRenderTextureCubeInternal(TextureDimens
 
 GLESInternalRT *GLTextureContext::createRenderTargetInternal(int width, int height, RenderTargetFormat colorFormat,
                                                              RenderTargetFormat depthStencilFormat, bool generateMipmap,
-                                                             bool sRGB, int multiSamples)
+                                                             bool sRGB, int multiSamples, bool storage)
 {
     multiSamples = 1;
 

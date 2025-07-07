@@ -1057,7 +1057,7 @@ namespace laya
         return internalTex;
     }
 
-	GLESInternalRT* GL2TextureContext::createRenderTargetInternal(int width, int height, RenderTargetFormat colorFormat, RenderTargetFormat depthStencilFormat, bool generateMipmap, bool sRGB, int multiSamples)
+	GLESInternalRT* GL2TextureContext::createRenderTargetInternal(int width, int height, RenderTargetFormat colorFormat, RenderTargetFormat depthStencilFormat, bool generateMipmap, bool sRGB, int multiSamples,bool storage)
 	{
 		GLESInternalTex* texture = createRenderTextureInternal(TextureDimension::Tex2D, width, height, colorFormat, generateMipmap, sRGB);
 
