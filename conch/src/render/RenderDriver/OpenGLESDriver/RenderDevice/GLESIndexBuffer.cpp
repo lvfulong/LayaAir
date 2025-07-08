@@ -74,6 +74,38 @@ void GLESIndexBuffer::_setIndexDataJS(jsbind::ArrayBuffer arrayBuffer, uint32_t 
     }
 }
 
+void GLESIndexBuffer::setData(const char* buffer, int bufferBytes, int bufferOffset, int dataStartIndex, double dataCount)
+{
+    GLESBufferState* curBufSta = GLESBufferState::_curBindedBufferState;
+    if (curBufSta) {
+        curBufSta->unBind();
+    }
+    this->_glBuffer->bindBuffer();
+    bool needSubData = dataStartIndex != 0 || static_cast<int64_t>(dataCount) != 9007199254740991; /* || dataCount != Number.MAX_SAFE_INTEGER*/;
+    if (needSubData) {
+        if (static_cast<int64_t>(dataCount) == 9007199254740991)
+        {
+            dataCount = bufferBytes;
+        }
+        this->_glBuffer->setData((const char*)(buffer + dataStartIndex), dataCount, bufferOffset);
+    }
+    else
+    {
+        this->_glBuffer->setData((const char*)(buffer), bufferBytes, bufferOffset);
+    }
+    if (curBufSta) {
+        curBufSta->bind();
+    }
+}
+
+void GLESIndexBuffer::setDataJS(jsbind::ArrayBuffer arrayBuffer, int bufferOffset, int dataStartIndex, double dataCount)
+{
+    if (arrayBuffer.isValid())// null or undefined
+    {
+        setData(reinterpret_cast<const char*>(arrayBuffer.getData()), arrayBuffer.getByteLength(), bufferOffset, dataStartIndex, dataCount);
+    }
+}
+
 void GLESIndexBuffer::destroy()
 {
     if (_glBuffer != nullptr)

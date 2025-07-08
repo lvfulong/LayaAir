@@ -22,12 +22,22 @@ namespace laya
 		bool m_depthMask = true;
 		GLenum m_depthFunc = 0;
 		bool m_stencilTest = false;
+		bool m_stencilWrite;
 		GLenum m_stencilFunc = 0;
-		bool m_stencilMask = false;
+		//bool m_stencilMask = false;
+		GLenum m_stencilWriteMask;//cache value
+		GLenum m_curStencilWriteMask;
+		GLuint m_stencilReadMask;
 		GLint m_stencilRef = 0;
 		GLenum m_stencilOp_fail = 0;
 		GLenum m_stencilOp_zfail = 0;
 		GLenum m_stencilOp_zpass = 0;
+
+		bool m_depthBias;
+		GLfloat m_depthBiasConstant;
+		GLfloat m_DepthBiasSlope;
+		GLfloat m_depthBiasClamp;
+
 		bool m_blend = false;
 		GLenum m_blendEquation = 0;
 		GLenum m_blendEquationRGB = 0;
@@ -240,22 +250,27 @@ namespace laya
 				}
 			}
 		}
-		void setStencilMask(bool value) ;
+		void setStencilMask(bool value);
 
-		void setStencilFunc(CompareFunction compareFunction, int ref) 
+		void setStencilWriteMask(GLenum value);
+		
+		void setDephthBiasFactor(GLfloat constantFactor, GLfloat slopeFactor, float clamp = 0.0);
+		
+		void setStencilFunc(CompareFunction compareFunction, int ref,GLuint mask)
 		{
 			GLenum fun = _getGLCompareFunction(compareFunction);
 			if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
 			{
-				glStencilFunc(fun, ref, 0xff);
+				glStencilFunc(fun, ref, mask);
 			}
 			else
 			{
-				if (fun != m_stencilFunc || ref != m_stencilRef) 
+				if (fun != m_stencilFunc || ref != m_stencilRef || mask != m_stencilReadMask)
 				{
 					m_stencilFunc = fun;
 					m_stencilRef = ref;
-					glStencilFunc(fun, ref, 0xff);
+					m_stencilReadMask = mask;
+					glStencilFunc(fun, ref, mask);
 				}
 			}
 		} 
@@ -279,6 +294,14 @@ namespace laya
 				}
 			}
 		}
+
+		void setDepthBias(bool value) {
+		/*	if (value != m_depthBias) {
+				m_depthBias = value;
+				value ? glEnable(GL_POLYGON_OFFSET_FILL) : glDisable(GL_POLYGON_OFFSET_FILL);
+			}*/
+		}
+
 		void setBlend(bool value) 
 		{
 			if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
@@ -294,6 +317,7 @@ namespace laya
 				}
 			}
 		}
+
 		void setBlendEquation(BlendEquationSeparate equation) 
 		{
 			GLenum blendEquation = _getBlendOperation(equation);
@@ -377,7 +401,7 @@ namespace laya
 				}
 			}
 		}
-		void setCullFace(bool value) 
+		void setCullFace(bool value)
 		{
 			if (g_kSystemConfig.m_graphicsAPI == GraphicsAPI::WebGL)
 			{

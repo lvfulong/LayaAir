@@ -80,18 +80,23 @@ void GLESRenderContext3D::runCMDList(const std::vector<GLESRenderCMD*>& cmds) {
 
 void GLESRenderContext3D::setCameraData(GLESShaderData *shaderData)
 {
-    this->cameraData = shaderData;
-    if (shaderData != nullptr) {
+    cameraData = shaderData;
+    if (LayaGL::m_pWebglEngine->enableUniformBufferObject && shaderData != nullptr) {
         GLESCommandUniformMap* cameraCommand = GLESCommandUniformMap::createGlobalUniformMap(BaseCameraProperty::UBONAME_CAMERA.c_str());
         cameraData->createUniformBuffer(BaseCameraProperty::UBONAME_CAMERA, cameraCommand);
     };
 }
-void GLESRenderContext3D::setSceneData(GLESShaderData *sceneData)
+void GLESRenderContext3D::setSceneData(GLESShaderData *shaderData)
 {
-    this->sceneData = sceneData;
-    if (sceneData != nullptr) {
-        GLESCommandUniformMap* sceneCommand = GLESCommandUniformMap::createGlobalUniformMap(Scene3DShaderDeclaration::UBONAME_SCENE.c_str());
-        sceneData->createUniformBuffer(Scene3DShaderDeclaration::UBONAME_SCENE, sceneCommand);
+    sceneData = shaderData;
+    if (LayaGL::m_pWebglEngine->enableUniformBufferObject && sceneData != nullptr) {
+        for (int i = 0, n = _preDrawUnifromMaps.size();i < n;i++) {
+            const char* key = _preDrawUnifromMaps[i].c_str();
+            GLESCommandUniformMap* uniformMap = GLESCommandUniformMap::createGlobalUniformMap(key);
+            if (uniformMap->_idata.size() > 0) {
+                sceneData->createUniformBuffer(key, uniformMap);
+            }
+        }
     };
 }
 
@@ -140,7 +145,7 @@ void GLESRenderContext3D::_start()
     LayaGL::m_pWebglEngine->scissor(viewPort.x, viewPort.y, viewPort.width, viewPort.height);
     if (this->_clearFlag != static_cast<RenderClearFlagBits>(RenderClearFlag::Nothing))
     {
-        LayaGL::m_pWebglEngine->clearRenderTexture(_clearFlag, &clearColor, clearDepth);
+        LayaGL::m_pWebglEngine->clearRenderTexture(_clearFlag, &clearColor, clearDepth, clearStencil);
     }
     LayaGL::m_pWebglEngine->scissor(scissor.x, scissor.y, scissor.z, scissor.w);
 }

@@ -97,7 +97,7 @@ class GLTextureContext : public GLObject
     virtual GLuint createRenderbuffer(int width, int height, int internalFormat, int samples);
     virtual GLESInternalRT *createRenderTargetInternal(int width, int height, RenderTargetFormat colorFormat,
                                                        RenderTargetFormat depthStencilFormat, bool generateMipmap,
-                                                       bool sRGB, int multiSamples);
+                                                       bool sRGB, int multiSamples,bool storage = false);
     virtual GLESInternalRT *createRenderTargetCubeInternal(int size, RenderTargetFormat colorFormat,
                                                            RenderTargetFormat depthStencilFormat, bool generateMipmap,
                                                            bool sRGB, int multiSamples);

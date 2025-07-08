@@ -171,59 +171,85 @@ void GLESShaderInstance::uploadRenderStateBlendDepth(GLESShaderData *shaderDatas
 }
 void GLESShaderInstance::uploadRenderStateBlendDepthByShader(GLESShaderData *shaderDatas)
 {
+    GLRenderState* glState = LayaGL::m_pWebglEngine->getRenderState();
     RenderState *renderState = this->_shaderPass->renderState;
     bool *a = renderState->depthWrite != nullptr ? renderState->depthWrite
                                                  : (bool *)shaderDatas->getData<int32_t>(Shader3D::DEPTH_WRITE);
     bool *depthWrite = a != nullptr ? a : RenderState::Default.depthWrite;
-    RenderStateContext::setDepthMask(*depthWrite);
+    glState->setDepthMask(*depthWrite);
     int32_t *b = renderState->depthTest != nullptr ? renderState->depthTest
                                                    : shaderDatas->getData<int32_t>(Shader3D::DEPTH_TEST);
     int32_t *depthTest = b != nullptr ? b : RenderState::Default.depthTest;
     if (*depthTest == RenderState::DEPTHTEST_OFF)
     {
-        RenderStateContext::setDepthTest(false);
+        glState->setDepthTest(false);
     }
     else
     {
-        glEnable(GL_DEPTH_TEST);
-        RenderStateContext::setDepthTest(true);
-        RenderStateContext::setDepthFunc((CompareFunction)*depthTest);
+        glState->setDepthTest(true);
+        glState->setDepthFunc((CompareFunction)*depthTest);
     }
+
+    //stencil
     bool *c = renderState->stencilWrite != nullptr ? renderState->stencilWrite
                                                    : (bool *)shaderDatas->getData<int32_t>(Shader3D::STENCIL_WRITE);
-    bool *stencilWrite = c != nullptr ? c : RenderState::Default.stencilWrite;
-
-    int32_t *d = renderState->stencilTest != nullptr ? renderState->stencilTest
-                                                     : shaderDatas->getData<int32_t>(Shader3D::STENCIL_TEST);
-    int32_t *stencilTest = d != nullptr ? d : RenderState::Default.stencilTest;
-    RenderStateContext::setStencilMask(*stencilWrite);
-    if (stencilWrite)
+    bool* stencilWrite = c != nullptr ? c : RenderState::Default.stencilWrite;    
+    int32_t* stencilWriteMask = renderState->stencilWriteMask!=nullptr? renderState->stencilWriteMask
+        : shaderDatas->getData<int32_t>(Shader3D::STENCIL_WRITE_MASK);
+    stencilWriteMask = stencilWriteMask != nullptr ? stencilWriteMask : RenderState::Default.stencilWriteMask;
+    ;
+    glState->setStencilMask(stencilWrite);
+    glState->setStencilWriteMask((*stencilWrite) ? (*stencilWriteMask) : 0x00);
+  
+    if (*stencilWrite)
     {
         Vector3 *e = renderState->stencilOp != nullptr ? renderState->stencilOp
                                                        : shaderDatas->getData<Vector3>(Shader3D::STENCIL_Op);
         Vector3 *stencilOp = e != nullptr ? e : RenderState::Default.stencilOp;
 
-        RenderStateContext::setstencilOp((StencilOperation)stencilOp->x, (StencilOperation)stencilOp->y,
+        glState->setstencilOp((StencilOperation)stencilOp->x, (StencilOperation)stencilOp->y,
                                          (StencilOperation)stencilOp->z);
     }
+     int32_t *d = renderState->stencilTest != nullptr ? renderState->stencilTest
+                                                   : shaderDatas->getData<int32_t>(Shader3D::STENCIL_TEST);
+      int32_t *stencilTest = d != nullptr ? d : RenderState::Default.stencilTest;
+      glState->setStencilTest(*stencilTest);
     if (*stencilTest == RenderState::STENCILTEST_OFF)
     {
-        RenderStateContext::setStencilTest(false);
+        glState->setStencilTest(false);
     }
     else
     {
         int32_t *f = renderState->stencilRef != nullptr ? renderState->stencilRef
                                                         : shaderDatas->getData<int32_t>(Shader3D::STENCIL_Ref);
         int32_t *stencilRef = f != nullptr ? f : RenderState::Default.stencilRef;
-        RenderStateContext::setStencilTest(true);
-        RenderStateContext::setStencilFunc((CompareFunction)*stencilTest, *stencilRef);
+        int32_t *stencilReadMask = renderState->stencilReadMask != nullptr ? renderState->stencilReadMask
+            : shaderDatas->getData<int32_t>(Shader3D::STENCIL_READ_MASK);
+        glState->setStencilTest(true);
+        glState->setStencilFunc((CompareFunction)*stencilTest, *stencilRef, *stencilReadMask);
     }
+
+    // depth bias
+    bool* depthBias = renderState->depthBias!=nullptr ? renderState->depthBias : (bool*)shaderDatas->getData<int32_t>(Shader3D::DEPTH_BIAS);
+    depthBias = depthBias != nullptr ? depthBias : RenderState::Default.depthBias;
+
+    if (*depthBias) {
+        float* depthBiasConstant = renderState->depthBiasConstant != nullptr ? renderState->depthBiasConstant : (float*)shaderDatas->getData<int32_t>(Shader3D::DEPTH_BIAS_CONSTANT);
+        depthBiasConstant = depthBiasConstant != nullptr ? depthBiasConstant : RenderState::Default.depthBiasConstant;
+        float* depthBiasSlopeScale = renderState->depthBiasSlopeScale != nullptr ? renderState->depthBiasSlopeScale : (float*)shaderDatas->getData<int32_t>(Shader3D::DEPTH_BIAS_SLOPESCALE);
+        depthBiasSlopeScale = depthBiasSlopeScale != nullptr ? depthBiasSlopeScale : RenderState::Default.depthBiasSlopeScale;
+        float* depthBiasClamp = renderState->depthBiasClamp != nullptr ? renderState->depthBiasClamp : (float*)shaderDatas->getData<int32_t>(Shader3D::DEPTH_BIAS_CLAMP);
+        depthBiasClamp = depthBiasClamp != nullptr ? depthBiasClamp : RenderState::Default.depthBiasClamp;
+        glState->setDephthBiasFactor(*depthBiasConstant, *depthBiasSlopeScale, *depthBiasClamp);
+    }
+
+
     int32_t *g = renderState->blend != nullptr ? renderState->blend : shaderDatas->getData<int32_t>(Shader3D::BLEND);
     int32_t *blend = g != nullptr ? g : RenderState::Default.blend;
     switch (*blend)
     {
     case RenderState::BLEND_DISABLE:
-        RenderStateContext::setBlend(false);
+        glState->setBlend(false);
         break;
     case RenderState::BLEND_ENABLE_ALL: {
         int32_t *a = renderState->blendEquation != nullptr ? renderState->blendEquation
@@ -238,9 +264,9 @@ void GLESShaderInstance::uploadRenderStateBlendDepthByShader(GLESShaderData *sha
                                                       : shaderDatas->getData<int32_t>(Shader3D::BLEND_DST);
         int32_t *dstBlend = c != nullptr ? c : RenderState::Default.dstBlend;
 
-        RenderStateContext::setBlend(true);
-        RenderStateContext::setBlendEquation((BlendEquationSeparate)*blendEquation);
-        RenderStateContext::setBlendFunc((BlendFactor)*srcBlend, (BlendFactor)*dstBlend);
+        glState->setBlend(true);
+        glState->setBlendEquation((BlendEquationSeparate)*blendEquation);
+        glState->setBlendFunc((BlendFactor)*srcBlend, (BlendFactor)*dstBlend);
     }
     break;
     case RenderState::BLEND_ENABLE_SEPERATE: {
@@ -270,10 +296,10 @@ void GLESShaderInstance::uploadRenderStateBlendDepthByShader(GLESShaderData *sha
                                                            : shaderDatas->getData<int32_t>(Shader3D::BLEND_DST_ALPHA);
         int32_t *dstAlpha = f != nullptr ? f : RenderState::Default.dstBlendAlpha;
 
-        RenderStateContext::setBlend(true);
-        RenderStateContext::setBlendEquationSeparate((BlendEquationSeparate)*blendEquationRGB,
+        glState->setBlend(true);
+        glState->setBlendEquationSeparate((BlendEquationSeparate)*blendEquationRGB,
                                                      (BlendEquationSeparate)*blendEquationAlpha);
-        RenderStateContext::setBlendFuncSeperate((BlendFactor)*srcRGB, (BlendFactor)*dstRGB, (BlendFactor)*srcAlpha,
+        glState->setBlendFuncSeperate((BlendFactor)*srcRGB, (BlendFactor)*dstRGB, (BlendFactor)*srcAlpha,
                                                  (BlendFactor)*dstAlpha);
     }
     break;
@@ -281,47 +307,68 @@ void GLESShaderInstance::uploadRenderStateBlendDepthByShader(GLESShaderData *sha
 }
 void GLESShaderInstance::uploadRenderStateBlendDepthByMaterial(GLESShaderData *shaderDatas)
 {
-
+    GLRenderState* glState = LayaGL::m_pWebglEngine->getRenderState();
     bool *depthWrite = (bool *)shaderDatas->getData<int32_t>(Shader3D::DEPTH_WRITE);
     depthWrite = depthWrite != nullptr ? depthWrite : RenderState::Default.depthWrite;
-    RenderStateContext::setDepthMask(*depthWrite);
+    glState->setDepthMask(*depthWrite);
 
     int32_t *depthTest = shaderDatas->getData<int32_t>(Shader3D::DEPTH_TEST);
 
     depthTest = depthTest != nullptr ? depthTest : RenderState::Default.depthTest;
     if (*depthTest == RenderState::DEPTHTEST_OFF)
     {
-        RenderStateContext::setDepthTest(false);
+        glState->setDepthTest(false);
     }
     else
     {
-        RenderStateContext::setDepthTest(true);
-        RenderStateContext::setDepthFunc((CompareFunction)*depthTest);
+        glState->setDepthTest(true);
+        glState->setDepthFunc((CompareFunction)*depthTest);
     }
-    bool *stencilWrite = (bool *)shaderDatas->getData<int32_t>(Shader3D::STENCIL_WRITE);
+    bool *stencilMask = (bool *)shaderDatas->getData<int32_t>(Shader3D::STENCIL_WRITE);
+    stencilMask = stencilMask != nullptr ? stencilMask : RenderState::Default.stencilWrite;
+    glState->setStencilMask(*stencilMask);
 
-    stencilWrite = stencilWrite != nullptr ? stencilWrite : RenderState::Default.stencilWrite;
-    RenderStateContext::setStencilMask(*stencilWrite);
-    if (*stencilWrite)
+    int32_t* stencilWriteMask = (int32_t*)shaderDatas->getData<int32_t>(Shader3D::STENCIL_WRITE_MASK);
+    stencilWriteMask = stencilWriteMask != nullptr ? stencilWriteMask : RenderState::Default.stencilWriteMask;
+    stencilWriteMask = (*stencilMask) ? stencilWriteMask : (0x00);
+    glState->setStencilWriteMask((*stencilMask) ? *stencilWriteMask : (0x00));
+
+    if (*stencilMask)
     {
         Vector3 *stencilOp = shaderDatas->getData<Vector3>(Shader3D::STENCIL_Op);
         stencilOp = stencilOp != nullptr ? stencilOp : RenderState::Default.stencilOp;
-        RenderStateContext::setstencilOp((StencilOperation)stencilOp->x, (StencilOperation)stencilOp->y,
+        glState->setstencilOp((StencilOperation)stencilOp->x, (StencilOperation)stencilOp->y,
                                          (StencilOperation)stencilOp->z);
     }
     int32_t *stencilTest = shaderDatas->getData<int32_t>(Shader3D::STENCIL_TEST);
     stencilTest = stencilTest != nullptr ? stencilTest : RenderState::Default.stencilTest;
     if (*stencilTest == RenderState::STENCILTEST_OFF)
     {
-        RenderStateContext::setStencilTest(false);
+        glState->setStencilTest(false);
     }
     else
     {
         int32_t *stencilRef = shaderDatas->getData<int32_t>(Shader3D::STENCIL_Ref);
         stencilRef = stencilRef != nullptr ? stencilRef : RenderState::Default.stencilRef;
-        RenderStateContext::setStencilTest(true);
-        RenderStateContext::setStencilFunc((CompareFunction)*stencilTest, *stencilRef);
+
+        int32_t* stencilReadMask = shaderDatas->getData<int32_t>(Shader3D::STENCIL_READ_MASK);
+        stencilReadMask = stencilReadMask != nullptr ? stencilReadMask : RenderState::Default.stencilReadMask;
+        glState->setStencilTest(true);
+        glState->setStencilFunc((CompareFunction)*stencilTest, *stencilRef, *stencilReadMask);
     }
+
+    bool* depthBias = (bool*)shaderDatas->getData<int32_t>(Shader3D::DEPTH_BIAS);
+    depthBias = depthBias != nullptr ? depthBias : RenderState::Default.depthBias;
+    if (*depthBias) {
+        float* depthBiasConstant = (float*)shaderDatas->getData<float>(Shader3D::DEPTH_BIAS_CONSTANT);
+        depthBiasConstant = depthBiasConstant != nullptr ? depthBiasConstant : RenderState::Default.depthBiasConstant;
+        float* depthBiasSlopeScale = (float*)shaderDatas->getData<float>(Shader3D::DEPTH_BIAS_SLOPESCALE);
+        depthBiasSlopeScale = depthBiasSlopeScale != nullptr ? depthBiasSlopeScale : RenderState::Default.depthBiasSlopeScale;
+        float* depthBiasClamp = (float*)shaderDatas->getData<float>(Shader3D::DEPTH_BIAS_CLAMP);
+        depthBiasClamp = depthBiasClamp != nullptr ? depthBiasClamp : RenderState::Default.depthBiasClamp;
+        glState->setDephthBiasFactor(*depthBiasConstant, *depthBiasSlopeScale, *depthBiasClamp);
+    }
+
     int32_t *blend = shaderDatas->getData<int32_t>(Shader3D::BLEND);
     blend = blend != nullptr ? blend : RenderState::Default.blend;
     switch (*blend)
@@ -333,9 +380,9 @@ void GLESShaderInstance::uploadRenderStateBlendDepthByMaterial(GLESShaderData *s
         srcBlend = srcBlend != nullptr ? srcBlend : RenderState::Default.srcBlend;
         int32_t *dstBlend = shaderDatas->getData<int32_t>(Shader3D::BLEND_DST);
         dstBlend = dstBlend != nullptr ? dstBlend : RenderState::Default.dstBlend;
-        RenderStateContext::setBlend(true);
-        RenderStateContext::setBlendEquation((BlendEquationSeparate)*blendEquation);
-        RenderStateContext::setBlendFunc((BlendFactor)*srcBlend, (BlendFactor)*dstBlend);
+        glState->setBlend(true);
+        glState->setBlendEquation((BlendEquationSeparate)*blendEquation);
+        glState->setBlendFunc((BlendFactor)*srcBlend, (BlendFactor)*dstBlend);
     }
     break;
     case RenderState::BLEND_ENABLE_SEPERATE: {
@@ -352,21 +399,22 @@ void GLESShaderInstance::uploadRenderStateBlendDepthByMaterial(GLESShaderData *s
         srcAlpha = srcAlpha != nullptr ? srcAlpha : RenderState::Default.srcBlendAlpha;
         int32_t *dstAlpha = shaderDatas->getData<int32_t>(Shader3D::BLEND_DST_ALPHA);
         dstAlpha = dstAlpha != nullptr ? dstAlpha : RenderState::Default.dstBlendAlpha;
-        RenderStateContext::setBlend(true);
-        RenderStateContext::setBlendEquationSeparate((BlendEquationSeparate)*blendEquationRGB,
+        glState->setBlend(true);
+        glState->setBlendEquationSeparate((BlendEquationSeparate)*blendEquationRGB,
                                                      (BlendEquationSeparate)*blendEquationAlpha);
-        RenderStateContext::setBlendFuncSeperate((BlendFactor)*srcRGB, (BlendFactor)*dstRGB, (BlendFactor)*srcAlpha,
+        glState->setBlendFuncSeperate((BlendFactor)*srcRGB, (BlendFactor)*dstRGB, (BlendFactor)*srcAlpha,
                                                  (BlendFactor)*dstAlpha);
     }
     break;
     case RenderState::BLEND_DISABLE:
     default:
-        RenderStateContext::setBlend(false);
+        glState->setBlend(false);
         break;
     };
 }
 void GLESShaderInstance::uploadRenderStateFrontFace(GLESShaderData *shaderDatas, bool isTarget, bool invertFront)
 {
+    GLRenderState* glState = LayaGL::m_pWebglEngine->getRenderState();
     RenderState *renderState = this->_shaderPass->renderState;
 
     int32_t *cull = shaderDatas->getData<int32_t>(Shader3D::CULL);
@@ -381,33 +429,30 @@ void GLESShaderInstance::uploadRenderStateFrontFace(GLESShaderData *shaderDatas,
     switch (*cull)
     {
     case RenderState::CULL_NONE:
-        RenderStateContext::setCullFace(false);
+        glState->setCullFace(false);
         if (isTarget != invertFront)
             forntFace = CullMode::Front; // gl.CCW
         else
             forntFace = CullMode::Back;
-        RenderStateContext::setFrontFace(forntFace);
+        glState->setFrontFace(forntFace);
         break;
     case RenderState::CULL_FRONT:
-        RenderStateContext::setCullFace(true);
+        glState->setCullFace(true);
         if (isTarget == invertFront)
             forntFace = CullMode::Front; // gl.CCW
         else
             forntFace = CullMode::Back;
-        RenderStateContext::setFrontFace(forntFace);
+        glState->setFrontFace(forntFace);
         break;
     case RenderState::CULL_BACK:
-        RenderStateContext::setCullFace(true);
+        glState->setCullFace(true);
         if (isTarget != invertFront)
             forntFace = CullMode::Front; // gl.CCW
         else
             forntFace = CullMode::Back;
-        RenderStateContext::setFrontFace(forntFace);
+        glState->setFrontFace(forntFace);
         break;
     }
 }
-/*haderInstance* GLESShaderInstance::getShaderInstance(uint32_t id)
-{
-    return JCConch::s_pConchRender->m_pShaderInstanceManager->getResource(id);
-}*/
+
 } // namespace laya
