@@ -42,20 +42,22 @@ template <typename ClassType, typename Traits> class ClassRegistry : public Clas
     }
     virtual ~ClassRegistry()
     { 
-        
-#if 0
         // while exit or reload app all refs delete in DeleteMe()
+        bool deleteRef = false;
         GET_ENV
        
         auto it = objects_.begin();
         for (; it != objects_.end(); it++)
         {
-            removeObjectRegistry(env, it->second.get(), it->first);
+            removeObjectRegistry(env, it->second.get(), it->first, false);
         }
         objects_.clear();
         
-        jsvm_delete_reference(env, classRef_);
-#endif
+        if (deleteRef)
+        {
+            jsvm_delete_reference(env, classRef_);
+        }
+
     }
 
     void registerConstructor(uint32_t numPara, ConstructorFunctionType func)
@@ -145,14 +147,14 @@ template <typename ClassType, typename Traits> class ClassRegistry : public Clas
         info->derivatives_.emplace_back(this);*/
     }
 
-    void removeObject(jsvm_env env, object_id objectPointer)
+    void removeObject(jsvm_env env, object_id objectPointer, bool deleteRef)
     {
         jsvm_status status;
         auto it = objects_.find(Traits::to_pointer_type(objectPointer));
         // DEBUG_CHECK(it != objects_.end());
         if (it != objects_.end())
         {
-            removeObjectRegistry(env, it->second.get(), it->first);
+            removeObjectRegistry(env, it->second.get(), it->first, deleteRef);
             objects_.erase(it);
         }
     }
@@ -175,21 +177,27 @@ template <typename ClassType, typename Traits> class ClassRegistry : public Clas
         return nullptr;
     }
   private:
-    void removeObjectRegistry(jsvm_env env, ObjectRegistry *registry, const pointer_type& objectPointer)
+    void removeObjectRegistry(jsvm_env env, ObjectRegistry *registry, const pointer_type& objectPointer, bool deleteRef)
     {
+       
         jsvm_status status;
         {
             if constexpr (std::is_same_v<Traits, jsbind::raw_ptr_traits>) 
-            {
+            { 
+                //LOGI("delete ~ %p", objectPointer);
                 internal::raw_destructor(static_cast<ClassType*>(objectPointer));
             } 
             else 
             {
+                //LOGI("delete ~ %p", objectPointer.get());
                 //objectPointer.reset();
             }
             // isolate_->AdjustAmountOfExternalAllocatedMemory(-static_cast<int64_t>(sizeof(ClassType)));
-            status = jsvm_delete_reference(env, registry->objectRef_);
-            DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+            if (deleteRef)
+            {
+                status = jsvm_delete_reference(env, registry->objectRef_);
+                DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+            }
         }
     }
 
@@ -251,12 +259,7 @@ class ClassRegistryManager
         ClassRegistry<ClassType, Traits>* classRegistry = static_cast<ClassRegistry<ClassType, Traits>*>(getClassRegistry(type_id<ClassType>()));
         return classRegistry->unwrapCppObject(value);
     }
-    template <typename ClassType, typename Traits> static void removeObject(ClassType* objectPointer)
-    {
-        GET_ENV
-        ClassRegistry<ClassType, Traits>* classRegistry = static_cast<ClassRegistry<ClassType, Traits>*>(getClassRegistry(type_id<ClassType>()));
-        classRegistry->removeObject(env, Traits::pointer_id(objectPointer));
-    }
+
     template <typename ClassType> static bool isWrappedClassOf()
     {
         auto it = classRegistryMap_.find(type_id<ClassType>().name().data());
@@ -708,7 +711,7 @@ template <typename ClassType, typename Traits> static void destructor(jsvm_env e
     {
         ClassType* object = static_cast<ClassType*>(nativeObject);
         DEBUG_CHECK(object != nullptr);
-        classRegistry->removeObject(env, object);
+        classRegistry->removeObject(env, object, true);
     }
 }
 } // namespace internal
