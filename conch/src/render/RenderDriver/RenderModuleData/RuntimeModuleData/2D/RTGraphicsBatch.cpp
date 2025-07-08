@@ -326,10 +326,15 @@ void RTGraphicsBatch::prepare(RTRenderStruct2D* struct2d, IBatch2DContext* conte
         // Update buffer state and geometry
         buffer->indexCount += cview->_length;
         buffer->wholeBuffer->modifyOneView(cview);
-        GLESRenderGeometryElement* geometry = cview->_geometry;
 
-        geometry->setBufferState(bufferState);
-        buffer->geometryList[offset + i] = geometry;
+        cview->_geometry->setBufferState(bufferState);
+
+        if (cview->_geometry->_bufferState != bufferState) 
+        {
+            cview->_geometry->_bufferState = bufferState;
+        }
+
+        buffer->geometryList[offset + i] = cview->_geometry;
     }
 
     // Set buffer and update length

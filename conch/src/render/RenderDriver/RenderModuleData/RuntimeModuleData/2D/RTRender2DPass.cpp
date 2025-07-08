@@ -161,6 +161,25 @@ void RTRender2DPass::render(GLESRenderContext2D *context)
             {
                 continue;
             }
+            
+            auto& structs = it->second->structs;
+            for (int j = 0 , m = structs.getLength(); j < m; j++) {
+               RTRenderStruct2D* struct2d = structs._elements[j];
+               if (struct2d) {
+                    struct2d->renderUpdate(context);
+               }
+            }
+        }
+        RTRender2DPass::uploadBuffer();
+        for (int i = 0, len = _lists.size(); i < len; i++)
+        {
+
+            auto it = _lists.find(i);
+            if (it == _lists.end() || it->second->renderElements.getLength() == 0)
+            {
+                continue;
+            }
+            
             context->drawRenderElementList(it->second->renderElements);
         }
 
