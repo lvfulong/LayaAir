@@ -41,17 +41,21 @@ template <typename ClassType, typename Traits> class ClassRegistry : public Clas
     {
     }
     virtual ~ClassRegistry()
-    {
+    { 
+        
+#if 0
+        // while exit or reload app all refs delete in DeleteMe()
         GET_ENV
+       
         auto it = objects_.begin();
         for (; it != objects_.end(); it++)
         {
-
             removeObjectRegistry(env, it->second.get(), it->first);
         }
         objects_.clear();
-
+        
         jsvm_delete_reference(env, classRef_);
+#endif
     }
 
     void registerConstructor(uint32_t numPara, ConstructorFunctionType func)
@@ -184,9 +188,8 @@ template <typename ClassType, typename Traits> class ClassRegistry : public Clas
                 //objectPointer.reset();
             }
             // isolate_->AdjustAmountOfExternalAllocatedMemory(-static_cast<int64_t>(sizeof(ClassType)));
-            // all refs delete in DeleteMe()
-            //status = jsvm_delete_reference(env, registry->objectRef_);
-            //DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+            status = jsvm_delete_reference(env, registry->objectRef_);
+            DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         }
     }
 
@@ -701,9 +704,12 @@ namespace internal
 template <typename ClassType, typename Traits> static void destructor(jsvm_env env, void *nativeObject, void * /*finalize_hint*/)
 {
     ClassRegistry<ClassType, Traits> *classRegistry = static_cast<ClassRegistry<ClassType, Traits>*>(ClassRegistryManager::getClassRegistry(type_id<ClassType>()));
-    ClassType *object = static_cast<ClassType *>(nativeObject);
-    DEBUG_CHECK(object != nullptr);
-    classRegistry->removeObject(env, object);
+    if (classRegistry != nullptr)
+    {
+        ClassType* object = static_cast<ClassType*>(nativeObject);
+        DEBUG_CHECK(object != nullptr);
+        classRegistry->removeObject(env, object);
+    }
 }
 } // namespace internal
 } // namespace jsbind

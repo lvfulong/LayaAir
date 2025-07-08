@@ -104,11 +104,12 @@ void ScriptVM::initialize()
 
 void ScriptVM::uninitialize()
 {
+    jsbind::runDeinitializers();
     jsvm_close_handle_scope(m_env, m_handleScope); // 关闭Handle scope
     jsvm_close_env_scope(m_env, m_envScope); // 关闭Env scope
     jsvm_close_vm_scope(m_vm, m_vmScope);    // 关闭VM scope
     jsvm_destroy_env(m_env);                 // 销毁一个JS执行上下文环境
     jsvm_destroy_vm(m_vm);                   // 销毁JavaScript引擎实例
-    jsbind::runDeinitializers();
+    
 }
 } // namespace laya
