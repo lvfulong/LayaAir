@@ -50,7 +50,7 @@ GLESPrimitiveRenderElement2D *RTGraphicsBatch::createRenderElement2D()
     element->geometry->setMeshTopology(MeshTopology::Triangles);
     element->geometry->setDrawType(DrawType::DrawElement);
     element->geometry->setIndexFormat(IndexFormat::UInt16);
-    // element.nodeCommonMap = ["Sprite2D"];
+    element->setCommonUniformMap({"Sprite2D"});
     element->renderStateIsBySprite = false;
     return element;
 }
