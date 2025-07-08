@@ -321,7 +321,7 @@ void GLESEngine::colorMask(bool r, bool g, bool b, bool a)
 {
     glColorMask(r, g, b, a);
 }
-void GLESEngine::clearRenderTexture(uint32_t clearFlag, const Color *clearcolor, float clearDepth)
+void GLESEngine::clearRenderTexture(uint32_t clearFlag, const Color *clearcolor, float clearDepth,int clearStencilValue)
 {
 
     uint32_t flag = 0;
@@ -348,8 +348,8 @@ void GLESEngine::clearRenderTexture(uint32_t clearFlag, const Color *clearcolor,
     }
     if ((uint32_t)clearFlag & (uint32_t)RenderClearFlag::Stencil)
     {
-        glClearStencil(0); // todo clearStencil
-        m_renderState->setStencilMask(true);
+        glClearStencil(clearStencilValue); // todo clearStencil
+        m_renderState->setStencilWriteMask(true);
         flag |= GL_STENCIL_BUFFER_BIT;
     }
     if (flag)

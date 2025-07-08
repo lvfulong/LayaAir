@@ -37,7 +37,7 @@ namespace laya
         void setCubeKTXData(GLESInternalTex *texture, const KTXTextureInfo &ktxInfo) override;
 		GLuint createRenderbuffer(int width, int height, int internalFormat, int samples) override;
 	
-		GLESInternalRT* createRenderTargetInternal(int width, int height, RenderTargetFormat colorFormat, RenderTargetFormat depthStencilFormat, bool generateMipmap, bool sRGB, int multiSamples) override;
+		GLESInternalRT* createRenderTargetInternal(int width, int height, RenderTargetFormat colorFormat, RenderTargetFormat depthStencilFormat, bool generateMipmap, bool sRGB, int multiSamples,bool storage = false) override;
 		GLESInternalRT* createRenderTargetCubeInternal(int size, RenderTargetFormat colorFormat, RenderTargetFormat depthStencilFormat, bool generateMipmap, bool sRGB, int multiSamples) override;
 		void unbindRenderTarget(GLESInternalRT* renderTarget) override;
 		void bindRenderTarget(GLESInternalRT* renderTarget, int faceIndex) override;

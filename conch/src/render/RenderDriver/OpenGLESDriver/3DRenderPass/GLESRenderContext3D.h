@@ -51,7 +51,7 @@ public:
         return cameraData;
     }
 
-    void setSceneData(GLESShaderData* sceneData);
+    void setSceneData(GLESShaderData* shaderData);
    
     void setViewport(const Viewport &value)
     {

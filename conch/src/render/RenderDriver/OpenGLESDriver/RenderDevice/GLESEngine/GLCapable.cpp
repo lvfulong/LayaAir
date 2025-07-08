@@ -109,6 +109,8 @@ namespace laya
 		m_capabilityMap[RenderCapable::MSAA] = value;
 		m_capabilityMap[RenderCapable::UnifromBufferObject] = value;
 		m_capabilityMap[RenderCapable::Texture3D] = value;
+		m_capabilityMap[RenderCapable::ComputeShader] = false;
+		m_capabilityMap[RenderCapable::StorageBuffer] =false;
 	}
 	void GLCapable::initExtension(bool isWebgl2)
 	{

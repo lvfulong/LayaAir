@@ -29,6 +29,8 @@ namespace laya
 		Texture3D,
 		Texture_FloatLinearFiltering,
     	Texture_HalfFloatLinearFiltering,
+		ComputeShader,
+		StorageBuffer
 	};
 }
 

@@ -130,15 +130,43 @@ namespace laya
 		void setDepthTest(int32_t value);
 		bool getDepthWrite();
 		void setDepthWrite(bool value);
+
+
 		bool getStencilWrite();
 		void setStencilWrite(bool value);
 		int32_t getStencilTest();
 		void setStencilTest(int32_t value);
+
+		int32_t getStencilWriteMask();
+		void setStencilWriteMask(int32_t value);
+
+
+		int32_t getStencilReadMask();
+		void setStencilReadMask(int32_t value);
+
 		int32_t getStencilRef();
 		void setStencilRef(int32_t value);
 		//void setBlendConstColor(float r, float g, float b, float a);
 		void setStencilOp(const Vector3& value);
 		Vector3* getStencilOp();
+
+		/** 是否开启深度偏移 */
+		bool getDepthBias();
+		void setDepthBias(bool value);
+
+		/** 深度偏移常量 */
+		float getDepthBiasConstant();
+		void setDepthBiasConstant(float value);
+
+		/** 深度偏移斜率缩放 */
+		float getDepthBiasSlopeScale();
+		void setDepthBiasSlopeScale(float value);
+
+
+		/** 深度偏移限制值 */
+		float getDepthBiasClamp();
+		void setDepthBiasClamp(float value);
+
 		void setNull();
 		static RenderState Default;
 	public:
@@ -150,7 +178,6 @@ namespace laya
 		int32_t*		    dstBlendRGB;
 		int32_t*			srcBlendAlpha;
 		int32_t*			dstBlendAlpha;
-		//Vector4			blendConstColor;
 		int32_t*			blendEquation;
 		int32_t*			blendEquationRGB;
 		int32_t*			blendEquationAlpha;
@@ -160,11 +187,13 @@ namespace laya
 		int32_t*			stencilTest;
 		int32_t*			stencilRef;
 		Vector3*			stencilOp;
-		//double*				stencilOpX;
-		//double*				stencilOpY;
-		//double*				stencilOpZ;//double? 
-
-
+		
+		int32_t* stencilWriteMask;
+		int32_t* stencilReadMask;
+		bool* depthBias;
+		float*	depthBiasConstant;
+		float* depthBiasSlopeScale;
+		float*	depthBiasClamp;
 
 		int32_t			m_cull;
 		int32_t			m_blend;
@@ -174,7 +203,6 @@ namespace laya
 		int32_t		    m_dstBlendRGB;
 		int32_t			m_srcBlendAlpha;
 		int32_t			m_dstBlendAlpha;
-		//Vector4		blendConstColor;
 		int32_t			m_blendEquation;
 		int32_t			m_blendEquationRGB;
 		int32_t			m_blendEquationAlpha;
@@ -184,9 +212,14 @@ namespace laya
 		int32_t			m_stencilTest;
 		int32_t			m_stencilRef;
 		Vector3			m_stencilOp;
-		//int32_t			stencilOpX;
-		//int32_t			stencilOpY;
-		//int32_t			stencilOpZ;
+
+		int32_t m_stencilWriteMask;
+		int32_t m_stencilReadMask;
+		bool m_depthBias;
+		float m_depthBiasConstant;
+		float m_depthBiasSlopeScale;
+		float m_depthBiasClamp;
+
 	};
 }
 #endif //__RenderState_H__
