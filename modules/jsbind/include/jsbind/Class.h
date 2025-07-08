@@ -259,7 +259,12 @@ class ClassRegistryManager
         ClassRegistry<ClassType, Traits>* classRegistry = static_cast<ClassRegistry<ClassType, Traits>*>(getClassRegistry(type_id<ClassType>()));
         return classRegistry->unwrapCppObject(value);
     }
-
+    template <typename ClassType, typename Traits> static void removeObject(ClassType* objectPointer)
+    {
+        GET_ENV
+            ClassRegistry<ClassType, Traits>* classRegistry = static_cast<ClassRegistry<ClassType, Traits>*>(getClassRegistry(type_id<ClassType>()));
+        classRegistry->removeObject(env, Traits::pointer_id(objectPointer), true);
+    }
     template <typename ClassType> static bool isWrappedClassOf()
     {
         auto it = classRegistryMap_.find(type_id<ClassType>().name().data());
