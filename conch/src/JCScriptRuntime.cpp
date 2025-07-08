@@ -287,9 +287,8 @@ namespace laya
 #if !defined(OS_LINUX) && !defined(OS_WINDOWS)
         m_pCurEditBox = NULL;
 #endif
-        jsbind::runDeinitializers();
         JSGlobalDisExportC();
-        jsvm_close_inspector(env);
+		jsvm_close_inspector(env);
 
         JCConch::s_pConch->getAudioPlayer().clear();
     

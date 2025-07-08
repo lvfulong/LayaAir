@@ -1,6 +1,8 @@
 #include "ScriptVM.h"
 #include <cstring>
 #include <profiler/Profiler.h>
+#include <jsbind/JSBind.h>
+
 namespace laya
 {
 
@@ -107,5 +109,6 @@ void ScriptVM::uninitialize()
     jsvm_close_vm_scope(m_vm, m_vmScope);    // 关闭VM scope
     jsvm_destroy_env(m_env);                 // 销毁一个JS执行上下文环境
     jsvm_destroy_vm(m_vm);                   // 销毁JavaScript引擎实例
+    jsbind::runDeinitializers();
 }
 } // namespace laya

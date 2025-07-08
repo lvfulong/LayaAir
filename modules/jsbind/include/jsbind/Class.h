@@ -184,8 +184,9 @@ template <typename ClassType, typename Traits> class ClassRegistry : public Clas
                 //objectPointer.reset();
             }
             // isolate_->AdjustAmountOfExternalAllocatedMemory(-static_cast<int64_t>(sizeof(ClassType)));
-            status = jsvm_delete_reference(env, registry->objectRef_);
-            DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+            // all refs delete in DeleteMe()
+            //status = jsvm_delete_reference(env, registry->objectRef_);
+            //DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         }
     }
 

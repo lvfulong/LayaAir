@@ -242,7 +242,7 @@ void RTRenderStruct2D::updateChildren(ChildrenUpdateType type)
 
         if (updateBlend)
         {
-            if (child->getBlendMode() != BlendMode::Invalid)
+            if (child->getBlendMode() == BlendMode::Invalid)
             {
                 child->_parentBlendMode = blendMode;
                 child->_updateBlendMode();
