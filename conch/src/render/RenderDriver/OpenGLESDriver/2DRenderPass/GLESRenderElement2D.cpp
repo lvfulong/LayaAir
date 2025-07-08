@@ -61,7 +61,7 @@ void GLESRenderElement2D::_compileShader(GLESRenderContext2D *context)
         if (pass->pipelineMode != context->pipelineMode)
             continue;
         RTDefineDatas *comDef = GLESRenderElement2D::_compileDefines;
-        GLESShaderData *global = getGlobalShaderData();
+        GLESShaderData *global = this->globalShaderData;
         if (global)
         {
             global->_defineDatas->cloneTo(comDef);
@@ -114,7 +114,7 @@ void GLESRenderElement2D::_compileShader(GLESRenderContext2D *context)
 }
 
 void GLESRenderElement2D::_uploadGlobalAndPass(GLESShaderInstance *shader, GLESRenderContext2D *context){
-    GLESShaderData *global = getGlobalShaderData();
+    GLESShaderData *global = this->globalShaderData;
     if (global)
     {
         shader->uploadUniforms(&(shader->m_cameraUniformParamsMap), global, true);
@@ -129,7 +129,7 @@ void GLESRenderElement2D::_uploadGlobalAndPass(GLESShaderInstance *shader, GLESR
 
 void GLESRenderElement2D::_renderByShaderInstance(GLESShaderInstance *shader, GLESRenderContext2D *context)
 {
-    if (!shader->complete())
+    if (!shader->complete() || !this->geometry)
         return;
     shader->bind();
     _uploadGlobalAndPass(shader, context);
@@ -157,13 +157,4 @@ void GLESRenderElement2D::_renderByShaderInstance(GLESShaderInstance *shader, GL
     LayaGL::m_pWebglEngine->getDrawContext()->drawGeometryElement(geometry);
 }
 
-GLESShaderData *GLESRenderElement2D::getGlobalShaderData()
-{
-    RTRenderStruct2D *owner = _owner;
-    if (owner && owner->_globalShaderData)
-    {
-        return owner->_globalShaderData;
-    }
-    return nullptr;
-}
 } // namespace laya

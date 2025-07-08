@@ -52,7 +52,7 @@ namespace laya
 
          RTDefineDatas *comDef = GLESRenderElement2D::_compileDefines;
          // 设置全局着色器数据
-         GLESShaderData *global = getGlobalShaderData();
+         GLESShaderData *global = this->globalShaderData;
          if (global)
          {
             global->_defineDatas->cloneTo(comDef);
@@ -125,8 +125,8 @@ namespace laya
 
    void GLESPrimitiveRenderElement2D::_renderByShaderInstance(GLESShaderInstance *shader, GLESRenderContext2D *context)
    {
-      if (!shader->complete())
-         return;
+       if (!shader->complete() || !this->geometry)
+           return;
 
       // 绑定着色器
       shader->bind();

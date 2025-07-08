@@ -50,6 +50,10 @@ namespace laya
 		{
 			this->_owner = value;
 		}
+		void setGlobalShaderData(GLESShaderData* value)
+		{
+			this->globalShaderData = value;
+		}
 	public:
 		static RTDefineDatas* _compileDefines;
 		GLESShaderData* materialShaderData = nullptr;
@@ -59,6 +63,7 @@ namespace laya
 		bool renderStateIsBySprite = true;
 		int32_t _type = 0;
 		RTRenderStruct2D* _owner = nullptr;
+		GLESShaderData* globalShaderData = nullptr;
 	protected:
 		std::vector<std::string> _commonUniformMap;
 		JCSingletonList<GLESShaderInstance*> _shaderInstances = JCSingletonList<GLESShaderInstance*>(false);
@@ -67,7 +72,6 @@ namespace laya
 		virtual void _compileShader(GLESRenderContext2D* context);
 		virtual void _renderByShaderInstance(GLESShaderInstance* shader, GLESRenderContext2D* context);
 		virtual void _uploadGlobalAndPass(GLESShaderInstance* shader, GLESRenderContext2D* context);
-		GLESShaderData* getGlobalShaderData();
 	};
 
 } // namespace laya

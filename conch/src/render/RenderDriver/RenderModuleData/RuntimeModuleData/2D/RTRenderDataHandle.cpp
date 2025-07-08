@@ -222,9 +222,23 @@ void RTPrimitiveDataHandle::updateCloneViews()
 {
     std::vector<jsbind::Persistent>& cloneViews = _getCloneViews();
     size_t blockLength = _bufferBlocks.size();
-    size_t length = std::max(cloneViews.size(), blockLength);
+    size_t cloneLength = cloneViews.size();
 
-    for (size_t i = 0; i < length; i++)
+    if (cloneLength > blockLength) {//超出
+        for (size_t i = blockLength; i < cloneLength; i++) {
+            jsbind::Persistent& jsview = cloneViews[i];
+            RT2DGraphic2DBufferDataView* view = jsview.getLocal().as<RT2DGraphic2DBufferDataView*>();
+            view->_geometry->destroy();
+            if (view->owner)
+            {
+                view->owner->removeDataView(view);
+            }
+        }
+    }
+
+    this->_cloneViews.resize(blockLength);
+
+    for (size_t i = 0; i < blockLength; i++)
     {
         jsbind::Persistent& jsview = cloneViews[i];
         RT2DGraphic2DBufferDataView* view = jsview.getLocal().as<RT2DGraphic2DBufferDataView*>();
@@ -235,20 +249,7 @@ void RTPrimitiveDataHandle::updateCloneViews()
                 jsView.getLocal()["_nativeObj"].as<RT2DGraphic2DBufferDataView *>();
             cloneViews[i] = jsbind::toPersistent(_cloneView(nativeView, view));
         }
-        else
-        {
-            if (view)
-            {
-                view->_geometry->destroy();
-                if (view->owner)
-                {
-                    view->owner->removeDataView(view);
-                }
-                //delete view;
-            }
-        }
     }
-    this->_cloneViews.resize(blockLength);
 }
 void  RTPrimitiveDataHandle::destroy()
 {
