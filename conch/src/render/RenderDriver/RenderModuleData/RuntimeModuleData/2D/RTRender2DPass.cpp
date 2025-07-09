@@ -19,9 +19,9 @@ RTRender2DPass::RTRender2DPass()
     _invertMat_0 = Vector3(1, 1, 0);
     _invertMat_1 = Vector3(0, 0, 0);
 }
-RTRender2DPass::RTRender2DPass(jsvm_value value)
+RTRender2DPass::RTRender2DPass(GLESShaderData* value)
 {
-    setShaderDataJS(value);
+    _shaderdata = value;
     _invertMat_0 = Vector3(1, 1, 0);
     _invertMat_1 = Vector3(0, 0, 0);
 }

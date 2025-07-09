@@ -788,7 +788,7 @@ class RenderBindings
             jsbind::class_<GLESRenderContext2D> class_binding;
             class_binding.constructor<>();
             class_binding.function("setGlobalConfigShaderData", &GLESRenderContext2D::setGlobalConfigShaderData);
-            class_binding.function("setPassShaderData", &GLESRenderContext2D::setPassShaderData);
+            class_binding.property("passData", &GLESRenderContext2D::getPassData, &GLESRenderContext2D::setPassData);
             class_binding.function("setRenderTarget", &GLESRenderContext2D::setRenderTarget);
             class_binding.function("setOffscreenView", &GLESRenderContext2D::setOffscreenView);
             class_binding.function("drawRenderElementOne", &GLESRenderContext2D::drawRenderElementOne);
@@ -1331,6 +1331,7 @@ class RenderBindings
         {
             jsbind::class_<RTRender2DPass> class_binding;
             class_binding.constructor<>();
+            class_binding.constructor<GLESShaderData*>();
             class_binding.property_field("enable", &RTRender2DPass::enable);
             class_binding.property("enableBatch", &RTRender2DPass::getEnableBatch, &RTRender2DPass::setEnableBatch);
             class_binding.property_field("isSupport", &RTRender2DPass::isSupport);
@@ -1350,7 +1351,6 @@ class RenderBindings
             class_binding.function("destroy", &RTRender2DPass::destroy);
             class_binding.function("needRender", &RTRender2DPass::needRender);
             class_binding.property("renderOffset", &RTRender2DPass::getRenderOffset, &RTRender2DPass::setRenderOffset); 
-            class_binding.property("shaderData", &RTRender2DPass::getShaderDataJS, &RTRender2DPass::setShaderDataJS); 
             class_binding.function("setRenderCallback", &RTRender2DPass::setRenderCallbackJS);
             context.class_("conchRTRender2DPass", class_binding);
         }

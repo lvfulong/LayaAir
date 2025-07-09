@@ -27,7 +27,7 @@ class RTRender2DPass
 {
   public:
     RTRender2DPass();
-    RTRender2DPass(jsvm_value value);
+    RTRender2DPass(GLESShaderData* value);
     ~RTRender2DPass();
     bool needRender()
     {
@@ -66,23 +66,6 @@ class RTRender2DPass
         this->renderTexture = value;
         this->m_renderTextureWidth = width;
         this->m_renderTextureHeight = height;
-    }
-    void setShaderDataJS(jsvm_value v)
-    {
-        jsbind::Local  value(v);
-        _shaderDataJS = jsbind::Persistent(v);
-        if (value.isNull() || value.isUndefined())
-        {
-            _shaderdata = nullptr;
-        }
-        else
-        {
-            _shaderdata = jsbind::as<GLESShaderData *>(value["_nativeObj"].getHandle());
-        }
-    }
-    jsvm_value getShaderDataJS()
-    {
-        return _shaderDataJS.getHandle();
     }
     const Vector2 &getRenderOffset()
     {
@@ -153,7 +136,6 @@ class RTRender2DPass
     uint32_t renderLayerMask = 0x00000000;
     Vector4 cullRect;
     Vector2 renderOffset;
-    jsbind::Persistent _shaderDataJS;// GLESShaderData
     jsbind::Persistent m_renderCallbackJS;// js call
 };
 

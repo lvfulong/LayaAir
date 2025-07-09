@@ -33,22 +33,13 @@ class GLESRenderContext2D
         globalConfigShaderData = value;
     }
 
-    void setPassShaderData(jsvm_value v)
+    void setPassData(GLESShaderData* v)
     {
-        jsbind::Local value(v);
-        _passDataJS = jsbind::Persistent(v);
-        if (value.isNull() || value.isUndefined())
-        {
-            passData = nullptr;
-        }
-        else
-        {
-            passData = jsbind::as<GLESShaderData *>(value["_nativeObj"].getHandle());
-        }
+        passData = v;
     }
-    jsvm_value getPassData()
+    GLESShaderData* getPassData()
     {
-        return _passDataJS.getHandle();
+        return passData;
     }
 
   public:
@@ -57,7 +48,6 @@ class GLESRenderContext2D
     RTDefineDatas *globalConfigShaderData = nullptr;
     GLESInternalRT *destRT = nullptr;
     GLESShaderData *passData = nullptr;
-    jsbind::Persistent _passDataJS;
 
   private:
     Color _clearColor;
