@@ -136,7 +136,7 @@ bool ALSourcePool::recycleSource(std::shared_ptr<Audio> audio, bool stop)
     if (i != m_playing.end())
     {
         if (stop)
-            audio->doStop();
+            audio->doStop(false);
         m_sources.push(i->second);
         m_playing.erase(audio);
         
@@ -174,7 +174,7 @@ void ALSourcePool::clear()
     ScopedLock lock(*this);
     for (const auto &i : m_playing)
     {
-        i.first->doStop();
+        i.first->doStop(true);
     }
     m_playing.clear();
     m_activeAudioCount.store(0);

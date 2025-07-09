@@ -274,7 +274,7 @@ bool Audio::update()
     }
     return false;
 }
-void Audio::doStop()
+void Audio::doStop(bool isShutdown)
 {
     if (!isValid())
         return;
@@ -303,7 +303,7 @@ void Audio::doStop()
     m_offsetSamples = 0;
     m_source = AL_NONE;
 
-    if (m_onPlayEnd)
+    if (!isShutdown && m_onPlayEnd)
     {
         m_onPlayEnd();
     }

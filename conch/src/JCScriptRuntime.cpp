@@ -262,6 +262,7 @@ namespace laya
         //    return;
         //}
         LOGI("js thread exiting...");
+        JCConch::s_pConch->getAudioPlayer().clear();
         //m_nThreadState = 0;
         m_pJSOnFrameFunction.reset();
         m_pJSOnResizeFunction.reset();
@@ -290,7 +291,7 @@ namespace laya
         JSGlobalDisExportC();
 		jsvm_close_inspector(env);
 
-        JCConch::s_pConch->getAudioPlayer().clear();
+        
     
         m_pArrayBufferManager->clearAll();
         

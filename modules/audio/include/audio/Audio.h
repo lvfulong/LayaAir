@@ -54,7 +54,7 @@ class Audio : public std::enable_shared_from_this<Audio>
   private:
     friend class ALSourcePool;
     bool doPlay(ALuint source);
-    void doStop();
+    void doStop(bool isShutdown);
     void doPrepare();
     void doResume();
     bool update();
