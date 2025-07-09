@@ -42,7 +42,7 @@ namespace laya
 
 	void GLESRenderContext2D::drawRenderElementOne(GLESRenderElement2D* node)
 	{
-		node->_preUpdatePre(this);
+		node->_prepare(this);
 		node->_render(this);
 	}
 
@@ -69,7 +69,7 @@ namespace laya
 	{
 		for (int i  = 0, n  = list.getLength(); i < n; i++) {
 			GLESRenderElement2D* element = list._elements[i];
-			element->_preUpdatePre(this);//render
+			element->_prepare(this);//render
 		}
 		for (int i = 0, n = list.getLength(); i < n; i++) {
 			GLESRenderElement2D* element = list._elements[i];

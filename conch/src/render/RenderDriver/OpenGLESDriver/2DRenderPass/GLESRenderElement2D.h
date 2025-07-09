@@ -16,7 +16,7 @@ namespace laya
 		GLESRenderElement2D();
 		virtual ~GLESRenderElement2D();
 		void destroy();
-		void _preUpdatePre(GLESRenderContext2D* context);
+		void _prepare(GLESRenderContext2D* context);
 		void _render(GLESRenderContext2D* context);
 		void setCommonUniformMap(const std::vector<std::string>& value)
 		{

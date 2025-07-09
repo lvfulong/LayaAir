@@ -31,8 +31,15 @@ void GLESRenderElement2D::destroy()
     RTSubShader *subshader = nullptr;
 }
 
-void GLESRenderElement2D::_preUpdatePre(GLESRenderContext2D *context)
+void GLESRenderElement2D::_prepare(GLESRenderContext2D *context)
 {
+    if (this->_owner && this->_owner->_globalShaderData) {
+        this->globalShaderData = this->_owner->_globalShaderData;
+    }
+    else {
+        this->globalShaderData = nullptr;
+    }
+
     _compileShader(context);
 }
 
@@ -49,6 +56,7 @@ void GLESRenderElement2D::_render(GLESRenderContext2D *context)
             _renderByShaderInstance(_shaderInstances.m_vElements[j], context);
         }
     }
+    this->globalShaderData = nullptr;
 }
 
 void GLESRenderElement2D::_compileShader(GLESRenderContext2D *context)
