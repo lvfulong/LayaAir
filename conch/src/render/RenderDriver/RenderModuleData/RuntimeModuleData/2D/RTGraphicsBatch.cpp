@@ -146,6 +146,7 @@ void RTGraphicsBatch::batch(FastSinglelist<GLESRenderElement2D *> &list, int sta
     auto &elementArray = list._elements;
     GLESPrimitiveRenderElement2D *staticBatchRenderElement = static_cast<GraphicsBatchContext*>(context)->getRenderElement();
     std::vector<std::vector<int>> drawArray;
+    std::vector<int> drawLengths;
     RTBatchBuffer* buffer = static_cast<GraphicsBatchContext*>(context)->_batchBuffer;
     for (int i = 0; i < length; i++)
     {
@@ -153,7 +154,7 @@ void RTGraphicsBatch::batch(FastSinglelist<GLESRenderElement2D *> &list, int sta
         GLESPrimitiveRenderElement2D *element = static_cast<GLESPrimitiveRenderElement2D*>(elementArray[offset]);
 
         
-        auto it = buffer->geometryList.find(i);
+        auto it = buffer->geometryList.find(offset);
 
         GLESRenderGeometryElement* geometry = nullptr;
         if (it != buffer->geometryList.end())
@@ -175,9 +176,10 @@ void RTGraphicsBatch::batch(FastSinglelist<GLESRenderElement2D *> &list, int sta
             staticBatchRenderElement->primitiveShaderData = static_cast<GLESShaderData*>(batchContext->shaderData);
         }
 
-        TEMP_SINGLE_LIST.clear();
+        //TEMP_SINGLE_LIST.clear();
         geometry->getDrawDataParams(TEMP_SINGLE_LIST);
         drawArray.push_back(TEMP_SINGLE_LIST._elements);
+        drawLengths.push_back(TEMP_SINGLE_LIST.getLength());
     }
 
     auto geometry = staticBatchRenderElement->geometry;
@@ -189,7 +191,8 @@ void RTGraphicsBatch::batch(FastSinglelist<GLESRenderElement2D *> &list, int sta
     for (int i = 0; i < len; i++)
     {
         auto &drawParam = drawArray[i];
-        for (size_t j = 0; j < drawParam.size(); j += 2)
+        auto drawLength = drawLengths[i];
+        for (size_t j = 0; j < drawLength; j += 2)
         {
             int offset = drawParam[j];
             int count = drawParam[j + 1];
