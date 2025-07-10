@@ -24,6 +24,7 @@ set(HEADERS
     ${PUBLIC_HEADER_DIR}/${TARGET}/Function.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/JSBind.h
     ${PUBLIC_HEADER_DIR}/${TARGET}/Error.h
+    ${PUBLIC_HEADER_DIR}/${TARGET}/Reference.h
 )
 
 set(SOURCES
@@ -37,6 +38,7 @@ set(SOURCES
     src/JSBind.cpp
     src/Enum.cpp
     src/Error.cpp
+    src/Reference.cpp
 )
 
 include_directories(${PUBLIC_HEADER_DIR})

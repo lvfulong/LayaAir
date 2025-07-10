@@ -141,7 +141,7 @@ void RTShaderPass::_resizeCacheShaderMap(void *cacheMap, uint32_t hierarchy, uin
 // }
 void RTShaderPass::setCreateShaderInstanceFunction(jsvm_value value)
 {
-    m_createShaderInstanceFunctionJS = jsbind::Persistent(value);
+    m_createShaderInstanceFunctionJS.reset(value);
 }
 GLESShaderInstance *RTShaderPass::callCreateShaderInstanceFunction()
 {

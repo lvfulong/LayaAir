@@ -12,6 +12,7 @@
 #include <jsbind/Map.h>
 #include <jsbind/Object.h>
 #include <jsbind/Persistent.h>
+#include <jsbind/Reference.h>
 #include <jsbind/Promise.h>
 #include <jsbind/Script.h>
 #include <jsbind/Value.h>
@@ -49,18 +50,21 @@ template <typename ClassType> jsvm_value toLocal(ClassType *objectPointer)
     return result;
 }
 
-template <typename ClassType> Persistent toPersistent(ClassType* objectPointer)
+template <typename ClassType> Reference<ClassType> toReference(ClassType* objectPointer)
 {
     GET_ENV
     ClassRegistryBase* classRegistry = ClassRegistryManager::getClassRegistry(type_id<ClassType>());
     auto objectRegistry = classRegistry->getObjectRegistry(objectPointer);
     if (objectRegistry != nullptr)
     {
-        return Persistent(objectRegistry->objectRef_);
+        return Reference<ClassType>(objectRegistry->objectRef_);
     }
     else
     {
-        return Persistent(jsbind::internal::ValueTraits<ClassType*>::ToJs(objectPointer));
+        jsvm_ref ref = nullptr;
+        jsvm_status status = jsvm_create_reference(env, jsbind::internal::ValueTraits<ClassType*>::ToJs(objectPointer), 1, &ref);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+        return Reference<ClassType>(ref);
     }
 }
 extern void AdjustAmountOfExternalAllocatedMemory(int p_nMemorySize);

@@ -137,7 +137,7 @@ void GLESRenderElement2D::_uploadGlobalAndPass(GLESShaderInstance *shader, GLESR
 
 void GLESRenderElement2D::_renderByShaderInstance(GLESShaderInstance *shader, GLESRenderContext2D *context)
 {
-    if (!shader->complete() || !this->geometry)
+    if (!shader->complete() || !this->geometry || !this->geometry->_bufferState)
         return;
     shader->bind();
     _uploadGlobalAndPass(shader, context);

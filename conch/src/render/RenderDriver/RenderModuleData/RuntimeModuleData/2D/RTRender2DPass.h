@@ -77,7 +77,7 @@ class RTRender2DPass
     }
     void setRenderCallbackJS(jsvm_value value)
     {
-        m_renderCallbackJS = jsbind::Persistent(value);
+        m_renderCallbackJS.reset(value);
     }
     void callRenderCallback()
     {

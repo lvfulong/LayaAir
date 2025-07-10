@@ -38,7 +38,7 @@ class RT2DGraphicWholeBuffer
             _bufferAsVertexBuffer = jsbind::as<GLESVertexBuffer *>(v["_nativeObj"].getHandle());
         }
         
-        _buffer = jsbind::Persistent(value);
+        _buffer.reset(value);
     }
     jsvm_value getArrayBufferJS()
     {
@@ -46,7 +46,7 @@ class RT2DGraphicWholeBuffer
     }
     void setArrayBufferJS(jsvm_value value)
     {
-        _arrayBuffer = jsbind::Persistent(value);
+        _arrayBuffer.reset(value);
     }
 
     void setIndexBuffer(GLESIndexBuffer* value)
@@ -86,8 +86,8 @@ class RT2DGraphicWholeBuffer
     friend class RT2DGraphic2DBufferDataView;
     //std::vector<RT2DGraphic2DBufferDataView *> _views;
     Vector2 _updateRange = Vector2(100000000, -100000000);
-    jsbind::Persistent _first;//RT2DGraphic2DBufferDataView*
-    jsbind::Persistent _last;//RT2DGraphic2DBufferDataView*
+    jsbind::Reference<RT2DGraphic2DBufferDataView> _first;
+    jsbind::Reference<RT2DGraphic2DBufferDataView> _last;
 
     int _num = 0;
 
@@ -127,8 +127,8 @@ public:
     jsbind::Persistent _view; // Float32Array | Uint16Array;
     void setData(jsvm_value data);
     jsvm_value getData();
-    jsbind::Persistent _next;//RT2DGraphic2DBufferDataView *
-    jsbind::Persistent _prev;//RT2DGraphic2DBufferDataView *
+    jsbind::Reference<RT2DGraphic2DBufferDataView> _next;
+    jsbind::Reference<RT2DGraphic2DBufferDataView> _prev;
     GLESRenderGeometryElement* _geometry = nullptr;
     void setGeometry(GLESRenderGeometryElement* data)
     {

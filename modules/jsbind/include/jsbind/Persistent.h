@@ -3,21 +3,21 @@
 
 #include <jsbind/Class.h>
 #include <jsbind/Local.h>
-#include <jsvm/JSVM_Types.h>
 #include <jsbind/internal/ValueTraits.h>
+#include <jsvm/JSVM_Types.h>
 namespace jsbind
 {
+// 主要用于引用外部传入的js对象，避免js对象被垃圾回收。如JS回调函数等
 class Persistent
 {
   public:
     Persistent() = default;
-    explicit Persistent(jsvm_ref);
     explicit Persistent(jsvm_value);
 
     Persistent(const Persistent &);
     Persistent &operator=(const Persistent &);
-    Persistent(Persistent&&);
-    Persistent& operator=(Persistent&&);
+    Persistent(Persistent &&);
+    Persistent &operator=(Persistent &&);
     ~Persistent();
 
     template <typename ReturnType, typename... Args> ReturnType call(jsvm_value recv, const Args &...args)
@@ -42,7 +42,7 @@ class Persistent
             return ReturnType();
         }
     }
-        template <typename ReturnType, typename... Args> ReturnType call(const char*  name, const Args &...args)
+    template <typename ReturnType, typename... Args> ReturnType call(const char *name, const Args &...args)
     {
         if (isValid() && getLocal().isFunction())
         {
@@ -53,7 +53,7 @@ class Persistent
             return ReturnType();
         }
     }
-    template <typename ReturnType, typename... Args> ReturnType call(const char*  name, const Args &...args) const
+    template <typename ReturnType, typename... Args> ReturnType call(const char *name, const Args &...args) const
     {
         if (isValid() && getLocal().isFunction())
         {
@@ -68,8 +68,8 @@ class Persistent
     {
         return ref_ != nullptr;
     }
-    explicit operator bool() const noexcept 
-    { 
+    explicit operator bool() const noexcept
+    {
         return isValid() && !getLocal().isUndefined() && !getLocal().isNull();
     }
     inline jsvm_value getHandle() const
@@ -92,6 +92,7 @@ class Persistent
     }
 
     void reset();
+    void reset(jsvm_value value);
     inline Local getLocal() const
     {
         return Local(getHandle());
@@ -102,22 +103,22 @@ class Persistent
 };
 namespace internal
 {
-    template <> class ValueTraits<Persistent>
+template <> class ValueTraits<Persistent>
+{
+  public:
+    static Persistent ToCpp(jsvm_value value)
     {
-    public:
-        static Persistent ToCpp(jsvm_value value)
-        {
-            return Persistent(value);
-        }
-        static jsvm_value ToJs(Persistent value, bool callDestructor = true)
-        {
-            return value.getHandle();
-        }
-        static bool is(jsvm_value value)
-        {
-            return true;
-        }
-    };
-}
+        return Persistent(value);
+    }
+    static jsvm_value ToJs(Persistent value, bool callDestructor = true)
+    {
+        return value.getHandle();
+    }
+    static bool is(jsvm_value value)
+    {
+        return true;
+    }
+};
+} // namespace internal
 } // namespace jsbind
 #endif

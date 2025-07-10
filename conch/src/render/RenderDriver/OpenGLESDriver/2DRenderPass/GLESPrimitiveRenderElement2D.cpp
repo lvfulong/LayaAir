@@ -125,7 +125,7 @@ namespace laya
 
    void GLESPrimitiveRenderElement2D::_renderByShaderInstance(GLESShaderInstance *shader, GLESRenderContext2D *context)
    {
-       if (!shader->complete() || !this->geometry)
+       if (!shader->complete() || !this->geometry || !this->geometry->_bufferState)
            return;
 
       // 绑定着色器

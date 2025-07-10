@@ -129,11 +129,11 @@ bool RTBaseRenderNode::_needRender(BoundFrustum *pBoundFrustum)
 }
 void RTBaseRenderNode::setRenderUpdatePre(jsvm_value function)
 {
-    m_JSFunctionRenderUpdatePre = jsbind::Persistent(function);
+    m_JSFunctionRenderUpdatePre.reset(function);
 }
 void RTBaseRenderNode::setCalculateBoundingBox(jsvm_value function)
 {
-    m_JSFunctionCalculateBoundingBox = jsbind::Persistent(function);
+    m_JSFunctionCalculateBoundingBox.reset(function);
 }
 void RTBaseRenderNode::setCommonUniformMap(const std::vector<std::string> &value)
 {

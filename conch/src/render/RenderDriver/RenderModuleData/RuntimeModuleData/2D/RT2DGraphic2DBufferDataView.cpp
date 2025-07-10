@@ -23,7 +23,7 @@ void RT2DGraphicWholeBuffer::resetData(int byteLength)
     uint8_t* outputBuffer = nullptr;
     status = jsvm_create_arraybuffer(env, byteLength, reinterpret_cast<void**>(&outputBuffer), &arrayBuffer);//this.arrayBuffer = new ArrayBuffer(byteLength);
     DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-    this->_arrayBuffer = jsbind::Persistent(arrayBuffer);
+    this->_arrayBuffer.reset(arrayBuffer);
     //copy Buffer
     if (BufferModifyType::Index == this->_modifyType) 
     {
@@ -153,16 +153,16 @@ void RT2DGraphicWholeBuffer::addDataView(RT2DGraphic2DBufferDataView *view)
 
     if (!this->_first)
     {
-        this->_first = jsbind::toPersistent(view);
+        this->_first = jsbind::toReference(view);
         view->setStart(0);
     }
     if (this->_last)
     {
-        this->_last.getLocal().as<RT2DGraphic2DBufferDataView*>()->_next = jsbind::toPersistent(view);
+        this->_last.getLocal().as<RT2DGraphic2DBufferDataView*>()->_next = jsbind::toReference(view);
         view->_prev = this->_last;
     }
     view->owner = this;
-    this->_last = jsbind::toPersistent(view);
+    this->_last = jsbind::toReference(view);
     this->_num++;
 }
 void RT2DGraphicWholeBuffer::clearBufferViews()

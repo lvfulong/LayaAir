@@ -135,7 +135,7 @@ void RTPrimitiveDataHandle::inheriteRenderData(GLESRenderContext2D *context)
                 for (int index = 0, n = vertexs.size(); index < n; index++)
                 {
                     std::vector<float> &positions = vertexs[index].positions;
-                    std::vector<jsbind::Persistent> &vertexViews = vertexs[index].vertexViews;
+                    auto &vertexViews = vertexs[index].vertexViews;
                     int vertexCount = positions.size() / 2;
                     RT2DGraphic2DBufferDataView *dataView = nullptr;
                     pos = 0, ci = 0, dataViewIndex = 0;
@@ -202,17 +202,17 @@ RT2DGraphic2DBufferDataView *RTPrimitiveDataHandle::_cloneView(RT2DGraphic2DBuff
     return clone;
 }
 
-std::vector<jsbind::Persistent>& RTPrimitiveDataHandle::_getCloneViews()
+std::vector<jsbind::Reference<RT2DGraphic2DBufferDataView>>& RTPrimitiveDataHandle::_getCloneViews()
 {
     if (_cloneViews.empty() && !_bufferBlocks.empty())
     {
         _cloneViews.resize(_bufferBlocks.size());
         for (size_t i = 0, n = _bufferBlocks.size(); i < n; i++)
         {
-            jsbind::Persistent& indexView = _bufferBlocks[i].indexView;
+            auto& indexView = _bufferBlocks[i].indexView;
             RT2DGraphic2DBufferDataView *nativeView =
                 indexView.getLocal()["_nativeObj"].as<RT2DGraphic2DBufferDataView *>();
-            _cloneViews[i] = jsbind::toPersistent(_cloneView(nativeView));
+            _cloneViews[i] = jsbind::toReference<RT2DGraphic2DBufferDataView>(_cloneView(nativeView));
         }
     }
     return _cloneViews;
@@ -220,13 +220,13 @@ std::vector<jsbind::Persistent>& RTPrimitiveDataHandle::_getCloneViews()
 
 void RTPrimitiveDataHandle::updateCloneViews()
 {
-    std::vector<jsbind::Persistent>& cloneViews = _getCloneViews();
+    auto& cloneViews = _getCloneViews();
     size_t blockLength = _bufferBlocks.size();
     size_t cloneLength = cloneViews.size();
 
     if (cloneLength > blockLength) {//超出
         for (size_t i = blockLength; i < cloneLength; i++) {
-            jsbind::Persistent& jsview = cloneViews[i];
+            auto& jsview = cloneViews[i];
             RT2DGraphic2DBufferDataView* view = jsview.getLocal().as<RT2DGraphic2DBufferDataView*>();
             view->_geometry->destroy();
             if (view->owner)
@@ -240,14 +240,14 @@ void RTPrimitiveDataHandle::updateCloneViews()
 
     for (size_t i = 0; i < blockLength; i++)
     {
-        jsbind::Persistent& jsview = cloneViews[i];
+        auto& jsview = cloneViews[i];
         RT2DGraphic2DBufferDataView* view = jsview.getLocal().as<RT2DGraphic2DBufferDataView*>();
         if (i < _bufferBlocks.size())
         {
-            jsbind::Persistent& jsView = _bufferBlocks[i].indexView;
+            auto& jsView = _bufferBlocks[i].indexView;
             RT2DGraphic2DBufferDataView *nativeView =
                 jsView.getLocal()["_nativeObj"].as<RT2DGraphic2DBufferDataView *>();
-            cloneViews[i] = jsbind::toPersistent(_cloneView(nativeView, view));
+            cloneViews[i] = jsbind::toReference(_cloneView(nativeView, view));
         }
     }
 }

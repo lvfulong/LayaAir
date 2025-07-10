@@ -135,6 +135,30 @@ template <typename ClassType, typename Traits> class ClassRegistry : public Clas
         }
         return nullptr;
     }
+    ObjectRegistry* getObjectRef(jsvm_value value)
+    {
+        DEBUG_CHECK(value != nullptr);
+        GET_ENV
+        jsvm_status status;
+        jsvm_valuetype valueType;
+        status = jsvm_typeof(env, value, &valueType);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+        DEBUG_CHECK(valueType == jsvm_valuetype::jsvm_object)
+        //if (valueType != jsvm_valuetype::jsvm_object)
+        //{
+        //    return nullptr;
+        //}
+        ClassType *obj;
+        status = jsvm_unwrap(env, value, (void **)(&obj));
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+
+        auto it = objects_.find(Traits::to_pointer_type(obj));
+        if (it != objects_.end())
+        {
+            return it->second.get();
+        }
+        return nullptr;
+    }
     void addBase(ClassRegistryBase *info)
     {
         /*auto it = std::find(bases_.begin(), bases_.end(), info);
