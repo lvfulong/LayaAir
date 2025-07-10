@@ -77,7 +77,7 @@ namespace laya{
 
     void JSDownloader::setJSDownloader(jsvm_value obj){
         //转成持久句柄。
-        m_jsDownloader = jsbind::Persistent(obj);
+        m_jsDownloader.reset(obj); 
     }
 
     void JSDownloader::download(const char* pszUrl, onDownloadedFunc onok){
@@ -89,7 +89,7 @@ namespace laya{
         jsCallbackData* data = new jsCallbackData();
         data->pThis = this;
         data->cFunc = onok;
-        data->jsFunc = jsbind::Persistent(func);
+        data->jsFunc.reset(func); 
 
         jsvm_value external_onok;
         status = jsvm_create_external(env, data, nullptr, nullptr, &external_onok);

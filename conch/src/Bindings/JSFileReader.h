@@ -16,7 +16,7 @@ namespace laya
             {return (pfn.getHandle());} \
             void Set_##pfn( jsvm_value p_pfn)  \
             {   \
-                pfn = jsbind::Persistent(p_pfn);    \
+                pfn.reset(p_pfn);    \
             }
 
     class JsFileReader

@@ -40,7 +40,7 @@ void JSAndroidEditBox::addEventListener(const char* p_sName, jsvm_value p_pFunct
 {
     if(strcmp( p_sName,"input" ) == 0)
     {
-        m_pJSFunctionOnInput = jsbind::Persistent(p_pFunction);
+        m_pJSFunctionOnInput.reset(p_pFunction);
     }
     else if(strcmp( p_sName,"keydown" ) == 0)
     {

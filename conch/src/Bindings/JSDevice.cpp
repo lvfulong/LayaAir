@@ -153,7 +153,7 @@ void JSDevice::showKeyboard(jsbind::Local object)
 }
 void JSDevice::onKeyboardInput(jsvm_value object)
 {
-    JSDevice::m_pOnKeyboardInput = jsbind::Persistent(object);
+    JSDevice::m_pOnKeyboardInput.reset(object);  
 }
 void JSDevice::offKeyboardInput()
 {
@@ -174,7 +174,7 @@ void JSDevice::handleKeyboardInput(const char *strValue)
 void JSDevice::onKeyboardConfirm(jsvm_value object)
 {
 
-    JSDevice::m_pOnKeyboardConfirm = jsbind::Persistent(object);
+    JSDevice::m_pOnKeyboardConfirm.reset(object); 
 }
 
 void JSDevice::offKeyboardConfirm()
@@ -196,7 +196,7 @@ void JSDevice::handleKeyboardConfirm(const char *strValue)
 void JSDevice::onKeyboardComplete(jsvm_value object)
 {
 
-    JSDevice::m_pOnKeyboardComplete = jsbind::Persistent(object);
+    JSDevice::m_pOnKeyboardComplete.reset(object);
 }
 
 void JSDevice::offKeyboardComplete()

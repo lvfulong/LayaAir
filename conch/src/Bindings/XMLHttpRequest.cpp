@@ -162,7 +162,7 @@ namespace laya
     }
     void XMLHttpRequest::set_onreadystatechange(jsvm_value pObj)
     {
-        m_funcOnStateChg = jsbind::Persistent(pObj);
+        m_funcOnStateChg.reset(pObj); 
     }
     void _onPostComplete_JSThread(XMLHttpRequest* pxhr, const std::shared_ptr<Data>& data, bool p_bBin, std::weak_ptr<int> cbref) 
     {
@@ -249,8 +249,8 @@ namespace laya
     void XMLHttpRequest::postString(const char* p_pszUrl, const char* p_pszString, jsvm_value p_funOnOK, jsvm_value p_funOnErr) 
     {
         JCDownloadMgr* pdmgr = JCDownloadMgr::getInstance();
-        m_jsfunPostError = jsbind::Persistent(p_funOnErr);
-        m_jsfunPostComplete = jsbind::Persistent(p_funOnOK);
+        m_jsfunPostError.reset(p_funOnErr);
+        m_jsfunPostComplete.reset(p_funOnOK);
         if (!pdmgr) 
         {
             //error
@@ -291,8 +291,8 @@ namespace laya
     */
     void XMLHttpRequest::setPostCB(jsvm_value p_onOK, jsvm_value p_onError) 
     {
-        m_jsfunPostComplete = jsbind::Persistent(p_onOK);
-        m_jsfunPostError = jsbind::Persistent(p_onError);
+        m_jsfunPostComplete.reset(p_onOK); 
+        m_jsfunPostError.reset(p_onError);
         std::weak_ptr<int> cbref(m_CallbackRef);
         m_funcPostComplete = std::bind(_onPostComplete, this, isBin(),
             std::placeholders::_1, 

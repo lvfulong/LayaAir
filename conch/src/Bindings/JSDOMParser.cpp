@@ -67,7 +67,7 @@ namespace laya
     }
     void JSDOMParser::SetOnload(jsvm_value p_pFunction)
     {
-        m_pOnLoadJSFunction = jsbind::Persistent(p_pFunction);
+        m_pOnLoadJSFunction.reset(p_pFunction); 
     }
     jsvm_value JSDOMParser::GetOnload()
     {
@@ -75,7 +75,7 @@ namespace laya
     }
     void JSDOMParser::SetOnError(jsvm_value p_pFunction)
     {
-        m_pOnErrorJSFunction = jsbind::Persistent(p_pFunction);
+        m_pOnErrorJSFunction.reset(p_pFunction); 
     }
     jsvm_value JSDOMParser::GetOnError()
     {

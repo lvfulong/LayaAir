@@ -83,17 +83,17 @@ jsvm_value JSNetwork::uploadFile(jsbind::Local object)
     
     if (object["success"].isFunction())
     {
-        uploadTask->m_onSuccessCallback = jsbind::Persistent(object["success"].as<jsvm_value>());
+        uploadTask->m_onSuccessCallback.reset(object["success"].as<jsvm_value>());
     }
 
     if (object["fail"].isFunction())
     {
-        uploadTask->m_onFailCallback = jsbind::Persistent(object["fail"].as<jsvm_value>());
+        uploadTask->m_onFailCallback.reset(object["fail"].as<jsvm_value>());
     }
 
     if (object["complete"].isFunction())
     {
-        uploadTask->m_onCompleteCallback = jsbind::Persistent(object["complete"].as<jsvm_value>());
+        uploadTask->m_onCompleteCallback.reset(object["complete"].as<jsvm_value>()); 
     }
     // todo ������������ �����Ϊshared_ptr
     IUploadTask::Description desc;

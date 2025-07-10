@@ -80,7 +80,7 @@ namespace laya
         if (!m_bCreateChilds)
         {
             jsvm_value pJSValue = jsbind::Make<std::vector<JSXmlNode*>>(m_childNodes);
-            m_jsChildNodes = jsbind::Persistent(pJSValue);
+            m_jsChildNodes.reset(pJSValue);
             m_bCreateChilds = true;
         }
         return m_jsChildNodes.getHandle();
@@ -91,7 +91,7 @@ namespace laya
         {
             m_bCreateAttribs = true;
             jsvm_value pJSValue = jsbind::Make<std::vector<JSXmlAttr*>>(m_attributes);
-            m_jsAttribs = jsbind::Persistent(pJSValue);
+            m_jsAttribs.reset(pJSValue);
         }
         return m_jsAttribs.getHandle();
     }

@@ -259,7 +259,7 @@ template <typename T> class wrapper : public T, public internal::WrapperBase
 
     template <typename... Args> explicit wrapper(jsvm_value wrapped, Args &&...args) : T(std::forward<Args>(args)...)
     {
-        wrapped_ = jsbind::Persistent(wrapped);
+        wrapped_.reset(wrapped); 
     }
 
     ~wrapper()

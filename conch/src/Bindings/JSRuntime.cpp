@@ -36,11 +36,11 @@ namespace laya
     std::string JSRuntime::m_strReturn;
     void JSRuntime::setOnFrameFunction(jsvm_value p_pFunction)
     {
-        JCConch::s_pScriptRuntime->m_pJSOnFrameFunction = jsbind::Persistent(p_pFunction);
+        JCConch::s_pScriptRuntime->m_pJSOnFrameFunction.reset(p_pFunction);
     }
     void JSRuntime::setZipPackage(jsvm_value p_pFunction)
     {
-        JCConch::s_pScriptRuntime->m_pJSZipPackage = jsbind::Persistent(p_pFunction);
+        JCConch::s_pScriptRuntime->m_pJSZipPackage.reset(p_pFunction);
         JSZip* zip = jsbind::as<JSZip*>(JCConch::s_pScriptRuntime->m_pJSZipPackage.getHandle());
 		if (zip)
 		{
@@ -49,35 +49,35 @@ namespace laya
     }
     void JSRuntime::setOnDrawFunction(jsvm_value p_pFunction) 
     {
-        JCConch::s_pScriptRuntime->m_pJSOnDrawFunction = jsbind::Persistent(p_pFunction);
+        JCConch::s_pScriptRuntime->m_pJSOnDrawFunction.reset(p_pFunction);
     }
     void JSRuntime::setOnResizeFunction(jsvm_value p_onresize)
     {
-        JCConch::s_pScriptRuntime->m_pJSOnResizeFunction = jsbind::Persistent(p_onresize);
+        JCConch::s_pScriptRuntime->m_pJSOnResizeFunction.reset(p_onresize);
     }
     void JSRuntime::setOnBlurFunction(jsvm_value p_pFunction)
     {
-        JCConch::s_pScriptRuntime->m_pJSOnBlurFunction = jsbind::Persistent(p_pFunction);
+        JCConch::s_pScriptRuntime->m_pJSOnBlurFunction.reset(p_pFunction); 
     }
     void JSRuntime::setOnFocusFunction(jsvm_value p_pFunction)
     {
-        JCConch::s_pScriptRuntime->m_pJSOnFocusFunction = jsbind::Persistent(p_pFunction);
+        JCConch::s_pScriptRuntime->m_pJSOnFocusFunction.reset(p_pFunction); 
     }
     void  JSRuntime::setGetWorldTransformFunction(jsvm_value p_pFunction)
     {
-        JCConch::s_pScriptRuntime->m_bJSBulletGetWorldTransformHandle = jsbind::Persistent(p_pFunction);
+        JCConch::s_pScriptRuntime->m_bJSBulletGetWorldTransformHandle.reset(p_pFunction);
     }
     void  JSRuntime::setSetWorldTransformFunction(jsvm_value p_pFunction)
     {
-        JCConch::s_pScriptRuntime->m_bJSBulletSetWorldTransformHandle = jsbind::Persistent(p_pFunction);
+        JCConch::s_pScriptRuntime->m_bJSBulletSetWorldTransformHandle.reset(p_pFunction);
     }
 	void  JSRuntime::setBulletDrawLineFunction(jsvm_value p_pFunction)
 	{
-		JCConch::s_pScriptRuntime->m_bJSBulletDrawLineHandle = jsbind::Persistent(p_pFunction);
+		JCConch::s_pScriptRuntime->m_bJSBulletDrawLineHandle.reset(p_pFunction);
 	}
 	void  JSRuntime::setBulletClearLineFunction(jsvm_value p_pFunction)
 	{
-		JCConch::s_pScriptRuntime->m_bJSBulletClearLineHandle = jsbind::Persistent(p_pFunction);
+		JCConch::s_pScriptRuntime->m_bJSBulletClearLineHandle.reset(p_pFunction);
 	}
     void JSRuntime::setBuffer(jsbind::ArrayBuffer arrayBuffer) 
     {
@@ -125,27 +125,27 @@ namespace laya
     }
     void JSRuntime::setMouseEvtFunction(jsvm_value p_pFunction)
     {
-        JCConch::s_pScriptRuntime->m_pJSMouseEvtFunction = jsbind::Persistent(p_pFunction);
+        JCConch::s_pScriptRuntime->m_pJSMouseEvtFunction.reset(p_pFunction); 
     }
     void JSRuntime::setTouchEvtFunction(jsvm_value p_pFunction)
     {
-        JCConch::s_pScriptRuntime->m_pJSTouchEvtFunction = jsbind::Persistent(p_pFunction);
+        JCConch::s_pScriptRuntime->m_pJSTouchEvtFunction.reset(p_pFunction); 
     }
     void JSRuntime::setDeviceMotionEvtFunction(jsvm_value p_pFunction)
     {
-        JCConch::s_pScriptRuntime->m_pJSDeviceMotionEvtFunction = jsbind::Persistent(p_pFunction);
+        JCConch::s_pScriptRuntime->m_pJSDeviceMotionEvtFunction.reset(p_pFunction); 
     }
     void JSRuntime::setKeyEvtFunction(jsvm_value p_pFunction)
     {
-        JCConch::s_pScriptRuntime->m_pJSKeyEvtFunction = jsbind::Persistent(p_pFunction);
+        JCConch::s_pScriptRuntime->m_pJSKeyEvtFunction.reset(p_pFunction); 
     }
     void JSRuntime::setNetworkEvtFunction(jsvm_value p_pFunction)
     {
-        JCConch::s_pScriptRuntime->m_pJSNetworkEvtFunction = jsbind::Persistent(p_pFunction);
+        JCConch::s_pScriptRuntime->m_pJSNetworkEvtFunction.reset(p_pFunction); 
     }
     void JSRuntime::captureScreen(jsvm_value p_pFunction)
     {
-        JCConch::s_pScriptRuntime->m_pJSOnceOtherEvtFuction = jsbind::Persistent(p_pFunction);
+        JCConch::s_pScriptRuntime->m_pJSOnceOtherEvtFuction.reset(p_pFunction); 
         JCConch::s_pConchRender->requestCaptureScreen();
     }
     std::string JSRuntime::getCachePath() 
@@ -309,7 +309,7 @@ namespace laya
 	}
     void JSRuntime::setOnUnhandledRejection(jsvm_value p_pFunction)
     {
-	    JCConch::s_pScriptRuntime->m_pJSOnUnhandledRejectionFunction = jsbind::Persistent(p_pFunction);
+	    JCConch::s_pScriptRuntime->m_pJSOnUnhandledRejectionFunction.reset(p_pFunction);
     }
     jsvm_value JSRuntime::getOnUnhandledRejection()
     {
@@ -317,7 +317,7 @@ namespace laya
     }
 	void JSRuntime::setScreenOrientation(const char* p_strOrientation, jsvm_value p_pFunction)
 	{
-		JCConch::s_pScriptRuntime->m_pJSOnScreenOrientationChanged = jsbind::Persistent(p_pFunction);
+		JCConch::s_pScriptRuntime->m_pJSOnScreenOrientationChanged.reset(p_pFunction);
 		static std::unordered_map<std::string, int> nameToVal = {
 			{"landscape", 0},{ "portrait", 1 }, {"user", 2 },{ "behind", 3 }, {"sensor", 4 },{ "nosensor", 5 }, {"sensor_landscape", 6 },{ "sensorLandscape", 6 },
 		{"sensor_portrait", 7 }, {"sensorPortrait", 7 },{ "reverse_landscape", 8 }, {"reverseLandscape", 8 },{ "reverse_portrait", 9 }, {"reversePortrait", 9 },{ "full_sensor", 10 }, {"fullSensor", 10 },
@@ -333,7 +333,7 @@ namespace laya
 	}
 	void JSRuntime::setGlobalRepaint(jsvm_value p_pFunction)
 	{
-		JCConch::s_pScriptRuntime->m_pJSSetGlobalRepaintFunction = jsbind::Persistent(p_pFunction);
+		JCConch::s_pScriptRuntime->m_pJSSetGlobalRepaintFunction.reset(p_pFunction);
 	}
 	void JSRuntime::setGlobalRepaintCall()
 	{
@@ -344,7 +344,7 @@ namespace laya
 	}
     void JSRuntime::setOnError(jsvm_value p_pFunction)
     {
-        JCConch::s_pScriptRuntime->m_pJSOnErrorFunction = jsbind::Persistent(p_pFunction);
+        JCConch::s_pScriptRuntime->m_pJSOnErrorFunction.reset(p_pFunction);
 
     }
 	struct SkinnedMatrixCache

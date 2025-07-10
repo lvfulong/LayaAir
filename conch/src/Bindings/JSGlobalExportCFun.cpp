@@ -132,8 +132,8 @@ namespace laya
         JSFuncWrapper(jsvm_value onprog, jsvm_value onComp)
         {
 
-            funcOnProg = jsbind::Persistent(onprog);
-            funcOnComp = jsbind::Persistent(onComp);
+            funcOnProg.reset(onprog); 
+            funcOnComp.reset(onComp);
             stop = false;
         }
 		~JSFuncWrapper()

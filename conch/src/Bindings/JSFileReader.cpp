@@ -96,7 +96,7 @@ namespace laya
         {
             return;
         }
-        m_hFileObject = jsbind::Persistent(p_pFile);
+        m_hFileObject.reset(p_pFile); 
         __LoadRemoteFile(m_pFile);
     }
     void JsFileReader::readAsText(jsvm_value p_pFile)
@@ -107,12 +107,12 @@ namespace laya
         {
             return;
         }
-        m_hFileObject = jsbind::Persistent(p_pFile);
+        m_hFileObject.reset(p_pFile); 
         __LoadRemoteFile(m_pFile);
     }
     void JsFileReader::readAsDataURL(jsvm_value p_pFile)
     {
-        m_hFileObject = jsbind::Persistent(p_pFile);
+        m_hFileObject.reset(p_pFile); 
         return;
     }
     void JsFileReader::__LoadLocalFile(JsFile *p_pFile)

@@ -57,11 +57,11 @@ namespace laya
     {
 	    if( strcmp( p_sName,"ended" ) == 0 )
 	    {
-		    m_pJSFunctionAudioEnd = jsbind::Persistent(p_pFunction);
+		    m_pJSFunctionAudioEnd.reset(p_pFunction);
 	    }
 	    else if(strcmp(p_sName,"canplaythrough")==0)
 	    {
-		    m_pJSFunctionCanPlay = jsbind::Persistent(p_pFunction);
+		    m_pJSFunctionCanPlay.reset(p_pFunction);
 	    }
 		else if (strcmp(p_sName, "canplay") == 0)
 		{
@@ -69,7 +69,7 @@ namespace laya
 		}
 	    else if (strcmp(p_sName, "error") == 0)
 	    {
-		    m_pJSFunctionError = jsbind::Persistent(p_pFunction);
+		    m_pJSFunctionError.reset(p_pFunction);
 	    }
         else
         {

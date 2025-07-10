@@ -124,7 +124,7 @@ void JSVideo::RemoveEvent(const char *evtName)
 
 void JSVideo::_setDispatchEventFunc(jsvm_value emitFunc)
 {
-    m_dispatchHandle = jsbind::Persistent(emitFunc);
+    m_dispatchHandle.reset(emitFunc); 
 }
 
 void JSVideo::CallHandle(const char *evtName)

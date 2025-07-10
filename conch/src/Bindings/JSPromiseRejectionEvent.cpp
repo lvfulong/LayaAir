@@ -27,11 +27,11 @@ namespace laya
     }
 	void JSPromiseRejectionEvent::setReason(jsvm_value pObj)
 	{
-		m_pReason = jsbind::Persistent(pObj);
+		m_pReason.reset(pObj); 
 	}
 	void JSPromiseRejectionEvent::setPromise(jsvm_value pObj)
 	{
-		m_pPromise = jsbind::Persistent(pObj);
+		m_pPromise.reset(pObj); 
 	}
 	void JSPromiseRejectionEvent::setType(const char* strType)
 	{

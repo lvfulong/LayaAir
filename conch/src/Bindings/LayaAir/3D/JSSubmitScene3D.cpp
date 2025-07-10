@@ -15,7 +15,7 @@ namespace laya
 	//------------------------------------------------------------------------------
 	JSSubmitScene3D::JSSubmitScene3D(jsvm_value pCallback) : ISubmit(SubmitType::ThreeDimension)
 	{
-		m_pJSFunctionRenderSubmit = jsbind::Persistent(pCallback);
+		m_pJSFunctionRenderSubmit.reset(pCallback); 
 		jsbind::AdjustAmountOfExternalAllocatedMemory(128);
 		JCMemorySurvey::GetInstance()->newClass("conchSubmitScene3D", 128, this);
 	}

@@ -90,7 +90,7 @@ namespace laya
     }
     void JSImage::SetOnload(jsvm_value p_pFunction )
     {
-	    m_pOnLoad = jsbind::Persistent(p_pFunction);
+	    m_pOnLoad.reset(p_pFunction); 
     }
     jsvm_value JSImage::GetOnload()
     {
@@ -98,7 +98,7 @@ namespace laya
     }
     void JSImage::SetOnError(jsvm_value p_pFunction )
     {
-	    m_pOnError = jsbind::Persistent(p_pFunction);
+	    m_pOnError.reset(p_pFunction); 
     }
     jsvm_value JSImage::GetOnError()
     {
@@ -110,7 +110,7 @@ namespace laya
     }
     void JSImage::setObj(jsvm_value obj)
     {
-        m_pObj = jsbind::Persistent(obj);
+        m_pObj.reset(obj);
     }
     const char* JSImage::getSrc()
     {

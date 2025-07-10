@@ -165,7 +165,7 @@ namespace laya
     //------------------------------------------------------------------------------
     void JSWebSocket::SetOnOpen(jsvm_value p_pFunction)
     {
-        m_pJSFunctionOnOpen = jsbind::Persistent(p_pFunction);
+        m_pJSFunctionOnOpen.reset(p_pFunction); 
     }
     //------------------------------------------------------------------------------
     jsvm_value JSWebSocket::GetOnOpen()
@@ -175,7 +175,7 @@ namespace laya
     //------------------------------------------------------------------------------
     void JSWebSocket::SetOnMessage(jsvm_value p_pFunction)
     {
-        m_pJSFunctionOnMessage = jsbind::Persistent(p_pFunction);
+        m_pJSFunctionOnMessage.reset(p_pFunction); 
     }
     //------------------------------------------------------------------------------
     jsvm_value JSWebSocket::GetOnMessage()
@@ -185,7 +185,7 @@ namespace laya
     //------------------------------------------------------------------------------
     void JSWebSocket::SetOnClose(jsvm_value function)
     {
-        m_pJSFunctionOnClose = jsbind::Persistent(function);
+        m_pJSFunctionOnClose.reset(function); 
     }
     //------------------------------------------------------------------------------
     jsvm_value JSWebSocket::GetOnClose()
@@ -195,7 +195,7 @@ namespace laya
     //------------------------------------------------------------------------------
     void JSWebSocket::SetOnError(jsvm_value function)
     {
-        m_pJSFunctionOnError = jsbind::Persistent(function);
+        m_pJSFunctionOnError.reset(function); 
     }
     //------------------------------------------------------------------------------
     jsvm_value JSWebSocket::GetOnError()
