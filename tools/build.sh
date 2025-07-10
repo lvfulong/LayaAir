@@ -376,6 +376,9 @@ function archive_ios {
 
     cp ios-${build_type}-arm64/modules/core/libcore.a armv64
     cp ios-${build_type}-x86_64/modules/core/libcore.a x86_64
+    
+    cp ios-${build_type}-arm64/modules/audio/libaudio.a armv64
+    cp ios-${build_type}-x86_64/modules/audio/libaudio.a x86_64
 
     cp ios-${build_type}-arm64/modules/crypto_core/libcrypto_core.a armv64
     cp ios-${build_type}-x86_64/modules/crypto_core/libcrypto_core.a x86_64
