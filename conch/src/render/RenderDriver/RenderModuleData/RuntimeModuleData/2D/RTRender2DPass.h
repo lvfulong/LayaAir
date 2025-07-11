@@ -137,6 +137,7 @@ class RTRender2DPass
     Vector4 cullRect;
     Vector2 renderOffset;
     jsbind::Persistent m_renderCallbackJS;// js call
+    bool _destroyed = false;
 };
 
 } // namespace laya

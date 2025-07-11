@@ -78,9 +78,8 @@ void RTRender2DPass::cullAndSort(GLESRenderContext2D *context2D, RTRenderStruct2
         return;
     struct2d->_handleInterData();
 
-    RTGlobalRenderData *globalRenderData = struct2d->getGlobalRenderData();
-    if (globalRenderData
-        && (struct2d->renderLayer & globalRenderData->renderLayerMask) == 0) {
+    if (struct2d->_parentGlobalRenderData
+        && (struct2d->renderLayer & struct2d->_parentGlobalRenderData->renderLayerMask) == 0) {
         return;
     }
 
@@ -278,6 +277,11 @@ void RTRender2DPass::_setRenderSize(float x, float y)
 
 void RTRender2DPass::destroy()
 {
+    if (this->_destroyed) 
+    {
+        return;
+    }
+    this->_destroyed = true;
 #if 0
     for (auto list : _lists) {
         delete list;
