@@ -25,10 +25,10 @@ GLESRenderElement2D::~GLESRenderElement2D()
 void GLESRenderElement2D::destroy()
 {
     _shaderInstances.clear();
-    GLESShaderData *materialShaderData = nullptr;
-    GLESShaderData *value2DShaderData = nullptr;
-    GLESRenderGeometryElement *geometry = nullptr;
-    RTSubShader *subshader = nullptr;
+    this->materialShaderData = nullptr;
+    this->value2DShaderData = nullptr;
+    this->geometry = nullptr;
+    //this->subshader = nullptr;
 }
 
 void GLESRenderElement2D::_prepare(GLESRenderContext2D *context)
