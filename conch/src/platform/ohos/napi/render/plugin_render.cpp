@@ -312,7 +312,6 @@ void PluginRender::OnSurfaceChanged(OH_NativeXComponent* component, void* window
 void PluginRender::OnSurfaceDestroyed(OH_NativeXComponent* component, void* window)
 {
     LOGD("PluginRender::OnSurfaceDestroyed");
-    //lvtodo
     // delete eglCore_;
     // eglCore_ = nullptr;
 }

@@ -59,6 +59,6 @@ void RTRender2DPassManager::addPass(RTRender2DPass *pass)
 void RTRender2DPassManager::_sortPassesByPriority()
 {
     std::sort(_passes.begin(), _passes.end(),
-              [](RTRender2DPass *a, RTRender2DPass *b) { return b->priority > a->priority; });// 按 priority 从大到小排序lvtodo
+              [](RTRender2DPass *a, RTRender2DPass *b) { return b->priority < a->priority; });// 按 priority 从大到小排序
 }
 } // namespace laya
