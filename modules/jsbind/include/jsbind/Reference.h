@@ -7,6 +7,7 @@
 #include <jsvm/JSVM_Types.h>
 namespace jsbind
 {
+// 主要用于引用内部部传入的C++封装js对象，避免js对象被垃圾回收。
 template <typename T> class Reference
 {
   public:

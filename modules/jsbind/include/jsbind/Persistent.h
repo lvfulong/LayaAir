@@ -79,7 +79,7 @@ class Persistent
         jsvm_value value;
         if (isValid())
         {
-            status = jsvm_get_reference_value(env, ref_, &value);
+            status = jsvm_get_reference_value(env, *ref_, &value);
             DEBUG_CHECK(status == jsvm_status::jsvm_ok);
             return value;
         }
@@ -99,7 +99,7 @@ class Persistent
     }
 
   private:
-    jsvm_ref ref_ = nullptr;
+    jsvm_ref* ref_ = nullptr;
 };
 namespace internal
 {
@@ -110,7 +110,7 @@ template <> class ValueTraits<Persistent>
     {
         return Persistent(value);
     }
-    static jsvm_value ToJs(Persistent value, bool callDestructor = true)
+    static jsvm_value ToJs(const Persistent& value, bool callDestructor = true)
     {
         return value.getHandle();
     }

@@ -2,16 +2,17 @@
 
 namespace jsbind
 {
+static void PersistentFinalizer(jsvm_env env, void* data, void* hint)
+{
+    jsvm_ref* ref = (jsvm_ref*)data;
+    jsvm_status status = jsvm_delete_reference(env, *ref);
+    DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+    delete (jsvm_ref*)data;
+ }
 Persistent::Persistent(jsvm_value value)
 {
     DEBUG_CHECK(ref_ == nullptr);
-    GET_ENV
-    jsvm_status status;
-    if (!isNull(value) && !isUndefined(value))
-    {
-        status = jsvm_create_reference(env, value, 1, &ref_);
-        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-    }
+    reset(value);
 }
 Persistent::~Persistent()
 {
@@ -28,7 +29,13 @@ void Persistent::reset(jsvm_value value)
     jsvm_status status;
     if (!isNull(value) && !isUndefined(value))
     {
-        status = jsvm_create_reference(env, value, 1, &ref_);
+        ref_ = new jsvm_ref();
+        //This API can be called multiple times on a single JavaScript object.
+        status = jsvm_add_finalizer(env, value, ref_, PersistentFinalizer, nullptr, ref_);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+        uint32_t result;
+        status = jsvm_reference_ref(env, *ref_, &result);
+        DEBUG_CHECK(result == 1);
         DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     }
 }
@@ -40,10 +47,7 @@ void Persistent::reset()
         GET_ENV
         jsvm_status status;
         uint32_t count;
-        status = jsvm_reference_unref(env, ref_, &count);
-        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-        DEBUG_CHECK(count == 0);
-        status = jsvm_delete_reference(env, ref_);
+        status = jsvm_reference_unref(env, *ref_, &count);
         DEBUG_CHECK(status == jsvm_status::jsvm_ok);
         ref_ = nullptr;
     }
@@ -55,10 +59,15 @@ Persistent &Persistent::operator=(const Persistent &that)
     {
         return *this;
     }
-    if (that.ref_ != nullptr)
+   
+    reset();
+    this->ref_ = that.ref_;
+    jsvm_status status;
+    uint32_t result;
+    if (this->ref_ != nullptr)
     {
-        // 同一个jsvalue两个ref引用
-        reset(that.getHandle());
+        status = jsvm_reference_ref(env, *ref_, &result);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     }
     return *this;
 }
@@ -81,10 +90,14 @@ Persistent::Persistent(const Persistent &that)
 {
     DEBUG_CHECK(ref_ == nullptr);
     GET_ENV
-    if (that.ref_ != nullptr)
+
+    this->ref_ = that.ref_;
+    jsvm_status status;
+    uint32_t result;
+    if (this->ref_ != nullptr)
     {
-        // 同一个jsvalue两个ref引用
-        reset(that.getHandle());
+        status = jsvm_reference_ref(env, *ref_, &result);
+        DEBUG_CHECK(status == jsvm_status::jsvm_ok);
     }
 }
 Persistent::Persistent(Persistent &&that) //: ref_(that.ref_)

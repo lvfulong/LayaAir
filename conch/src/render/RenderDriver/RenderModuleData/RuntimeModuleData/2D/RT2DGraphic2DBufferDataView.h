@@ -130,9 +130,11 @@ public:
     jsbind::Reference<RT2DGraphic2DBufferDataView> _next;
     jsbind::Reference<RT2DGraphic2DBufferDataView> _prev;
     GLESRenderGeometryElement* _geometry = nullptr;
+    jsbind::Reference<GLESRenderGeometryElement> _geometryRef;
     void setGeometry(GLESRenderGeometryElement* data)
     {
         this->_geometry = data;
+        _geometryRef.reset(data);//lvtodo crash 为啥JS引用不住
     }
     void modify();
     void updateView(jsvm_value wholeData);
