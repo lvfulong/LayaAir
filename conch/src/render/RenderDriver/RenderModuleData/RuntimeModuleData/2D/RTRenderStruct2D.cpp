@@ -372,19 +372,17 @@ void RTRenderStruct2D::setRenderUpdate(jsvm_value function){
 
 void RTRenderStruct2D::destroy()
 {
-    //_clipInfo = nullptr;
-    //_parentClipInfo = nullptr;
+    this->_clipInfo = nullptr;
+    this->_parentClipInfo = nullptr;
     if (_clipRect != nullptr)
     {
         delete _clipRect;
         _clipRect = nullptr;
     }
-    // renderElements.length = 0;
-    // renderElements = nullptr;
-    // spriteShaderData = nullptr;
-    // parent = nullptr;
-    // children.length = 0;
-    // children = nullptr;
-    //_pass = nullptr;
+    this->renderElements.clear();
+    this->children.clear();
+    this->spriteShaderData = nullptr;
+    this->parent = nullptr;
+    this->_pass = nullptr;
 }
 } // namespace laya

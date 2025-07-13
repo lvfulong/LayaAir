@@ -282,18 +282,21 @@ void RTRender2DPass::destroy()
         return;
     }
     this->_destroyed = true;
-#if 0
-    for (auto list : _lists) {
-        delete list;
-    }
-    _lists.clear();
-    root = nullptr;
-    renderTexture = nullptr;
-    //postProcess = nullptr;
-    if (shaderData) {
-        shaderData->destroy();
-        shaderData = nullptr;
-    }
-#endif
+
+    for (int i = 0, n = _lists.size(); i < n; i++) {
+         if (_lists[i]) {
+            _lists[i]->destroy();
+            delete _lists[i];
+         }
+      }
+      _lists.clear();
+      root = nullptr;
+      renderTexture = nullptr;
+      //postProcess = nullptr;
+      if (_shaderdata)
+      {
+        _shaderdata->destroy();
+        _shaderdata = nullptr;
+      }
 }
 } // namespace laya
