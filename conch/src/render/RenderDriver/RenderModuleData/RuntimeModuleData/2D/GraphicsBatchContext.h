@@ -61,7 +61,8 @@ namespace laya
                 GLESPrimitiveRenderElement2D* element = elements[i];
                 RTGraphicsBatch::recoverRenderElement2D(element);
             }
-            //this._list.destroy();
+           
+            this->_list.resetLength(); //this._list.destroy()
             this->_batchBuffer->destroy();
         }
     };

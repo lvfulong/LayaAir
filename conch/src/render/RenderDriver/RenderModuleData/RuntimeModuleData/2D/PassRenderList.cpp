@@ -136,6 +136,7 @@ void PassRenderList::destroy()
     {
         if (_batchContexts[i])
         {
+            _batchContexts[i]->destroy();
             delete _batchContexts[i];
             _batchContexts[i] = nullptr;
         }
