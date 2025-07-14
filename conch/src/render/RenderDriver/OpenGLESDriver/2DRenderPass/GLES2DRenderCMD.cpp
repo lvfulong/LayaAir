@@ -22,6 +22,7 @@ void laya::GLESSetRendertarget2DCMD::apply(void* context)
         ctx->invertY = false;
 
     ctx->setRenderTarget(_rt, _clearColor, _clearColorValue);
+    ctx->passData->setVector2(ShaderDefines2D::UNIFORM_SIZE, _size);
 }
 
 laya::GLESDraw2DElementCMD::GLESDraw2DElementCMD()

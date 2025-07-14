@@ -13,7 +13,7 @@ namespace laya{
 		~GLESSetRendertarget2DCMD();
 		void apply(void* context) override;
 		void clearColorValue(const Color& color) { _clearColorValue = color; };
-		void setRT(GLESInternalRT* rt) { _rt = rt; };
+		void setRT(GLESInternalRT* rt , float width , float height) { _rt = rt; _size.x = width; _size.y = height; };
 		void setClearColor(bool value) { _clearColor = value; };
 		void setinvertY(bool value) { _invertY = value; };
 	private:
@@ -21,6 +21,7 @@ namespace laya{
 		Color _clearColorValue;
 		bool _clearColor;
 		bool _invertY;
+		Vector2 _size;
 	};
 
 	class GLESDraw2DElementCMD :GLESRenderCMD {
