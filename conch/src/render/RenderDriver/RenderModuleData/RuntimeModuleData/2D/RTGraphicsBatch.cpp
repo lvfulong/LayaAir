@@ -66,7 +66,9 @@ void RTGraphicsBatch::recoverRenderElement2D(GLESPrimitiveRenderElement2D *value
     value->value2DShaderData = nullptr;
     value->primitiveShaderData = nullptr;
     value->subShader = nullptr;
+    value->_owner = nullptr;
     value->renderStateIsBySprite = false;
+    value->globalShaderData = nullptr;
     _pool.push_back(value);
 }
 
@@ -174,6 +176,7 @@ void RTGraphicsBatch::batch(FastSinglelist<GLESRenderElement2D *> &list, int sta
             staticBatchRenderElement->subShader = element->subShader;
             staticBatchRenderElement->renderStateIsBySprite = element->renderStateIsBySprite;
             staticBatchRenderElement->primitiveShaderData = static_cast<GLESShaderData*>(batchContext->shaderData);
+            staticBatchRenderElement->_owner = element->_owner;
         }
 
         //TEMP_SINGLE_LIST.clear();
@@ -239,7 +242,7 @@ void RTGraphicsBatch::BatchContext::reset()
     globalRenderData = nullptr;
 }
 
-void RTGraphicsBatch::BatchContext::initFromElement(GLESPrimitiveRenderElement2D* element)
+void RTGraphicsBatch::BatchContext::    initFromElement(GLESPrimitiveRenderElement2D* element)
 {
     textureId = element->_type & (~63);
     shaderData = element->primitiveShaderData;
