@@ -44,7 +44,7 @@ public class ConchSurfaceView extends SurfaceView {
     public boolean onTouchEvent(MotionEvent event)
     {
         super.onTouchEvent(event);
-        if(event != null)
+        if(event != null && mTouchFilter != null)
         {
             mTouchFilter.onTouchEvent(event);
         }
