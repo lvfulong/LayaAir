@@ -56,6 +56,9 @@ template <typename K, typename V> class LRUCache
 
     Node *popTail()
     {
+        if (head->next == tail) {
+            return nullptr; // 没有节点可以弹出
+        }
         Node *res = tail->prev;
         removeNode(res);
         return res;
@@ -98,6 +101,11 @@ template <typename K, typename V> class LRUCache
 
     void put(const K &key, const V &value)
     {
+        // 如果容量为0，拒绝所有put操作
+        if (capacity == 0) {
+            return;
+        }
+        
         if (cache.find(key) != cache.end())
         {
             Node *node = cache[key];
@@ -136,6 +144,9 @@ template <typename K, typename V> class LRUCache
     void removeOldest()
     {
         Node *temp = popTail();
+        if (temp == nullptr) {
+            return; // 没有节点可以移除
+        }
         cache.erase(temp->key);
         if (onEvict)
         {
