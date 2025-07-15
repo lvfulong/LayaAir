@@ -616,6 +616,17 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
     {
         return g_kSystemConfig.m_audioStreamThreshold;
     }
+    
+    void JSConchConfig::setMaxPumpMessageLoopTime(float value)
+    {
+        g_kSystemConfig.m_maxPumpMessageLoopTime = value;
+        LOGI("setMaxPumpMessageLoopTime: %f", value);
+    }
+    float JSConchConfig::getMaxPumpMessageLoopTime()
+    {
+        return g_kSystemConfig.m_maxPumpMessageLoopTime;
+    }
+
     void JSConchConfig::exportJS(jsbind::Object& context)
     {
         jsbind::global_class_<JSConchConfig> class_binding;
@@ -678,6 +689,7 @@ void JSConchConfig::setScreenOrientation(int p_nOrientation)
         class_binding.class_function("getAudioCurrentCacheSizeInBytes", &JSConchConfig::getAudioCurrentCacheSizeInBytes);
         class_binding.class_function("clearAudioCache", &JSConchConfig::clearAudioCache);
         class_binding.class_property("audioStreamThreshold", &JSConchConfig::getAudioStreamThreshold, &JSConchConfig::setAudioStreamThreshold);
+        class_binding.class_property("maxPumpMessageLoopTime", &JSConchConfig::getMaxPumpMessageLoopTime, &JSConchConfig::setMaxPumpMessageLoopTime);
         context.global_class_("conchConfig", class_binding);
     }
 }

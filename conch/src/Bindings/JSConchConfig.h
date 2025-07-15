@@ -127,6 +127,8 @@ namespace laya
         static void setAudioStreamThreshold(int byteNum);
         static int getAudioStreamThreshold();
 
+        static void setMaxPumpMessageLoopTime(float value);
+        static float getMaxPumpMessageLoopTime();
     public:
 	    static std::string				m_sGUID;
 	    static std::string				m_sDeviceModel;

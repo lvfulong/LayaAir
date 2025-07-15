@@ -44,6 +44,7 @@ class JCSystemConfig
     bool m_useSwappy = true;
     bool m_runInBackground = false;
     int m_audioStreamThreshold = 1024 * 1024; // 1MB
+    float m_maxPumpMessageLoopTime = 0.016f;//(单位： 秒)用于设置一帧内V8的PumpMessageLoop的执行时间
 };
 extern JCSystemConfig g_kSystemConfig;
 } // namespace laya

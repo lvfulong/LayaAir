@@ -2,7 +2,8 @@
 #include <cstring>
 #include <profiler/Profiler.h>
 #include <jsbind/JSBind.h>
-
+#include "JCSystemConfig.h"
+#include <ctime>
 namespace laya
 {
 
@@ -30,13 +31,24 @@ void ScriptVM::runLoop(jsvm_env env, std::function<bool(jsvm_env)> funcLoop)
                 continue;
             }
             isolate->PerformMicrotaskCheckpoint();*/
-            bool result = false;
-            do
+            
+            clock_t beginTime = clock();
+             while(true)
             {
                 Profiler_ZoneScoped("jsvm_pump_messageloop", 0xff0000);
+                bool result = false;
+                
                 status = jsvm_pump_messageloop(m_vm, &result);
                 DEBUG_CHECK(status == jsvm_status::jsvm_ok);
-            } while (result);
+                if (!result)
+                {
+                    break;
+                }
+                if (std::clock() - beginTime >= static_cast<float>(CLOCKS_PER_SEC) * g_kSystemConfig.m_maxPumpMessageLoopTime)
+                {
+                    break;
+                }
+            }
 
             status = jsvm_perform_microtask_checkpoint(m_vm);
             DEBUG_CHECK(status == jsvm_status::jsvm_ok);
