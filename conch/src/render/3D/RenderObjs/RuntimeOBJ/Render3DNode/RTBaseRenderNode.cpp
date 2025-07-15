@@ -41,8 +41,11 @@ void RTBaseRenderNode::_calculateBoundingBox()
     }
     else
     {
-        const Matrix4x4 &worldMat = this->transform->getWorldMatrix();
-        this->baseGeometryBounds->_tranform(worldMat, *this->bounds);
+        if (this->baseGeometryBounds != nullptr)
+        {
+            const Matrix4x4 &worldMat = this->transform->getWorldMatrix();
+            this->baseGeometryBounds->_tranform(worldMat, *this->bounds);
+        }
     }
 }
 void RTBaseRenderNode::setBaseGeometryBounds(JSBounds *bounds)
