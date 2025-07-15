@@ -388,7 +388,10 @@ namespace laya
 
 			return (MathUtils3D::nearEqual(e[0], oe[0]) && MathUtils3D::nearEqual(e[1], oe[1]) && MathUtils3D::nearEqual(e[2], oe[2]) && MathUtils3D::nearEqual(e[3], oe[3]) && MathUtils3D::nearEqual(e[4], oe[4]) && MathUtils3D::nearEqual(e[5], oe[5]) && MathUtils3D::nearEqual(e[6], oe[6]) && MathUtils3D::nearEqual(e[7], oe[7]) && MathUtils3D::nearEqual(e[8], oe[8]) && MathUtils3D::nearEqual(e[9], oe[9]) && MathUtils3D::nearEqual(e[10], oe[10]) && MathUtils3D::nearEqual(e[11], oe[11]) && MathUtils3D::nearEqual(e[12], oe[12]) && MathUtils3D::nearEqual(e[13], oe[13]) && MathUtils3D::nearEqual(e[14], oe[14]) && MathUtils3D::nearEqual(e[15], oe[15]));
 		}
-
+		bool equalsStrict(const Matrix4x4& other)
+		{
+			return memcmp(this->elements, other.elements, 16 * sizeof(float)) == 0;
+		}
 		bool decomposeTransRotScale(Vector3& translation, Quaternion& rotation, Vector3& scale)
 		{
 			Matrix4x4 rotationMatrix;

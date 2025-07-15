@@ -328,6 +328,7 @@ namespace laya
         if (m_pJSOnDrawFunction.isValid())
         {
 			Profiler_ZoneScoped("JSOnDraw", 0x00ff00);
+
             //JS_TRY;
             m_pJSOnDrawFunction.call<void>(jsvm::global(), nTime);
             //JS_CATCH;

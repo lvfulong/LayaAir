@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <math.h>
+#include "MathUtils3D.h"
 
 namespace laya
 {
@@ -12,16 +13,16 @@ namespace laya
 		static Vector2 ZERO;
 		static Vector2 ONE;
 
-		double x;
-		double y;
+		float x;
+		float y;
 
-		Vector2(double x = 0.0f, double y = 0.0f)
+		Vector2(float x = 0.0f, float y = 0.0f)
 		{
 			this->x = x;
 			this->y = y;
 		}
 
-		void setValue(double x, double y)
+		void setValue(float x, float y)
 		{
 			this->x = x;
 			this->y = y;
@@ -31,26 +32,26 @@ namespace laya
 			out.x = a.x * b;
 			out.y = a.y * b;
 		}
-		void fromArray(double* array, int offset = 0)
+		void fromArray(float* array, int offset = 0)
 		{
 			this->x = array[offset + 0];
 			this->y = array[offset + 1];
 		}
-		void toArray(double* array, int offset = 0) {
+		void toArray(float* array, int offset = 0) {
 			array[offset + 0] = this->x;
 			array[offset + 1] = this->y;
 		}
 
-		static double dot(const Vector2& a, const Vector2& b)
+		static float dot(const Vector2& a, const Vector2& b)
 		{
 			return (a.x * b.x) + (a.y * b.y);
 		}
 
 		static void normalize(const Vector2& s, Vector2& out)
 		{
-			double x = s.x;
-			double y = s.y;
-			double len = x * x + y * y;
+			float x = s.x;
+			float y = s.y;
+			float len = x * x + y * y;
 			if (len > 0)
 			{
 				len = 1.0f / sqrt(len);
@@ -59,12 +60,19 @@ namespace laya
 			}
 		}
 
-		static double scalarLength(const Vector2& a)
+		static float scalarLength(const Vector2& a)
 		{
-			double x = a.x, y = a.y;
+			float x = a.x, y = a.y;
 			return sqrt(x * x + y * y);
 		}
-
+		static bool equals(const Vector2& a, const Vector2& b)
+		{
+			return MathUtils3D::nearEqual(a.x, b.x) && MathUtils3D::nearEqual(a.y, b.y);
+		}
+		bool equalsStrict(const Vector2& other)
+		{
+			return memcmp(this, &other, 2 * sizeof(float)) == 0;
+		}
 		/*clone(): any {
 			var destVector2: Vector2 = new Vector2();
 			this.cloneTo(destVector2);

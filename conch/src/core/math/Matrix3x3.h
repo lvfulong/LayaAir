@@ -336,6 +336,10 @@ namespace laya
 			me[5] = v0.y;
 			me[8] = v0.z;
 		}
+		bool equalsStrict(const Matrix3x3& other)
+		{
+			return memcmp(this->elements, other.elements, 9 * sizeof(float)) == 0;
+		}
 	};
 }
 #endif

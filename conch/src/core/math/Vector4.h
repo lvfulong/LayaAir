@@ -24,12 +24,12 @@ namespace laya
 
 		static Vector4 UnitW;
 
-		double x;
-		double y;
-		double z;
-		double w;
+		float x;
+		float y;
+		float z;
+		float w;
 
-		Vector4(double x = 0.0f, double y = 0.0f, double z = 0.0f, double w = 0.0f)
+		Vector4(float x = 0.0f, float y = 0.0f, float z = 0.0f, float w = 0.0f)
 		{
 			this->x = x;
 			this->y = y;
@@ -37,7 +37,7 @@ namespace laya
 			this->w = w;
 		}
 
-		void setValue(double x, double y, double z, double w)
+		void setValue(float x, float y, float z, float w)
 		{
 			this->x = x;
 			this->y = y;
@@ -45,14 +45,14 @@ namespace laya
 			this->w = w;
 		}
 
-		void fromArray(double* array, int offset = 0)
+		void fromArray(float* array, int offset = 0)
 		{
 			this->x = array[offset + 0];
 			this->y = array[offset + 1];
 			this->z = array[offset + 2];
 			this->w = array[offset + 3];
 		}
-		void toArray(double* array, int offset = 0)
+		void toArray(float* array, int offset = 0)
 		{
 			array[offset + 0] = this->x;
 			array[offset + 1] = this->y;
@@ -73,9 +73,9 @@ namespace laya
 			this->cloneTo(destVector4);
 			return destVector4;
 		}*/
-		static void lerp(const Vector4& a, const Vector4& b, double t, Vector4& out)
+		static void lerp(const Vector4& a, const Vector4& b, float t, Vector4& out)
 		{
-			double ax = a.x, ay = a.y, az = a.z, aw = a.w;
+			float ax = a.x, ay = a.y, az = a.z, aw = a.w;
 			out.x = ax + t * (b.x - ax);
 			out.y = ay + t * (b.y - ay);
 			out.z = az + t * (b.z - az);
@@ -87,25 +87,29 @@ namespace laya
 		{
 			return MathUtils3D::nearEqual(abs(a.x), abs(b.x)) && MathUtils3D::nearEqual(abs(a.y), abs(b.y)) && MathUtils3D::nearEqual(abs(a.z), abs(b.z)) && MathUtils3D::nearEqual(abs(a.w), abs(b.w));
 		}
-		double length()
+		bool equalsStrict(const Vector4& other)
+		{
+			return memcmp(this, &other, 4 * sizeof(float)) == 0;
+		}
+		float length()
 		{
 			return sqrt(this->x * this->x + this->y * this->y + this->z * this->z + this->w * this->w);
 		}
-		double length() const
+		float length() const
 		{
 			return sqrt(this->x * this->x + this->y * this->y + this->z * this->z + this->w * this->w);
 		}
-		double lengthSquared()
+		float lengthSquared()
 		{
 			return this->x * this->x + this->y * this->y + this->z * this->z + this->w * this->w;
 		}
 
 		static void normalize(const Vector4& s, Vector4& out)
 		{
-			double len = s.length();
+			float len = s.length();
 			if (len > 0.0f)
 			{
-				double inverse = 1.0f / len;
+				float inverse = 1.0f / len;
 				out.x = s.x * inverse;
 				out.y = s.y * inverse;
 				out.z = s.z * inverse;
@@ -146,20 +150,20 @@ namespace laya
 
 		static void Clamp(const Vector4& value, const Vector4& min, const Vector4& max, Vector4& out)
 		{
-			double x = value.x;
-			double y = value.y;
-			double z = value.z;
-			double w = value.w;
+			float x = value.x;
+			float y = value.y;
+			float z = value.z;
+			float w = value.w;
 
-			double mineX = min.x;
-			double mineY = min.y;
-			double mineZ = min.z;
-			double mineW = min.w;
+			float mineX = min.x;
+			float mineY = min.y;
+			float mineZ = min.z;
+			float mineW = min.w;
 
-			double maxeX = max.x;
-			double maxeY = max.y;
-			double maxeZ = max.z;
-			double maxeW = max.w;
+			float maxeX = max.x;
+			float maxeY = max.y;
+			float maxeZ = max.z;
+			float maxeW = max.w;
 
 			x = (x > maxeX) ? maxeX : x;
 			x = (x < mineX) ? mineX : x;
@@ -178,26 +182,26 @@ namespace laya
 			out.z = z;
 			out.w = w;
 		}
-		static double distanceSquared(const Vector4& value1, const Vector4& value2)
+		static float distanceSquared(const Vector4& value1, const Vector4& value2)
 		{
-			double x = value1.x - value2.x;
-			double y = value1.y - value2.y;
-			double z = value1.z - value2.z;
-			double w = value1.w - value2.w;
+			float x = value1.x - value2.x;
+			float y = value1.y - value2.y;
+			float z = value1.z - value2.z;
+			float w = value1.w - value2.w;
 
 			return (x * x) + (y * y) + (z * z) + (w * w);
 		}
 
-		static double distance(const Vector4& value1, const Vector4& value2)
+		static float distance(const Vector4& value1, const Vector4& value2)
 		{
-			double x = value1.x - value2.x;
-			double y = value1.y - value2.y;
-			double z = value1.z - value2.z;
-			double w = value1.w - value2.w;
+			float x = value1.x - value2.x;
+			float y = value1.y - value2.y;
+			float z = value1.z - value2.z;
+			float w = value1.w - value2.w;
 
 			return sqrt((x * x) + (y * y) + (z * z) + (w * w));
 		}
-		static double dot(const Vector4& a, const Vector4& b)
+		static float dot(const Vector4& a, const Vector4& b)
 		{
 			return (a.x * b.x) + (a.y * b.y) + (a.z * b.z) + (a.w * b.w);
 		}

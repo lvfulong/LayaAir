@@ -142,8 +142,8 @@ void RT2DGraphicWholeBuffer::modifyOneView(RT2DGraphic2DBufferDataView *view)
     {
         this->addDataView(view);
     }
-    _updateRange.y = std::max(double(view->getStart() + view->_length), _updateRange.y);
-    _updateRange.x = std::min(double(view->getStart()), _updateRange.x);
+    _updateRange.y = std::max(float(view->getStart() + view->_length), _updateRange.y);
+    _updateRange.x = std::min(float(view->getStart()), _updateRange.x);
 }
 
 void RT2DGraphicWholeBuffer::addDataView(RT2DGraphic2DBufferDataView *view)
@@ -196,8 +196,8 @@ void RT2DGraphicWholeBuffer::removeDataView(RT2DGraphic2DBufferDataView* view)
     view->_next.reset();// = nullptr;
     view->_prev.reset();// = nullptr;
 
-    this->_updateRange.x = std::min((double)view->getStart(), this->_updateRange.x);
-    this->_updateRange.y = std::max((double)view->getStart() + view->_length, this->_updateRange.y);
+    this->_updateRange.x = std::min((float)view->getStart(), this->_updateRange.x);
+    this->_updateRange.y = std::max((float)view->getStart() + view->_length, this->_updateRange.y);
     this->_num--;
 }
 void RT2DGraphicWholeBuffer::destroy()

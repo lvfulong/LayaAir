@@ -70,7 +70,7 @@ public://bind
     void _calculateBoundingBox();
     uint32_t renderNodeType;
     JSRTTransform* transform = nullptr;
-    float distanceForSort;
+    float distanceForSort = 0;
     float sortingFudge = 0;
     bool castShadow;
     bool receiveShadow;

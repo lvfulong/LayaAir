@@ -103,6 +103,10 @@ namespace laya
 			destObject.b = this->b;
 			destObject.a = this->a;
 		}
+		bool equalsStrict(const Color& other)
+		{
+			return memcmp(this, &other, 4 * sizeof(float)) == 0;
+		}
 		/*clone(): any {
 		var dest: Color = new Color();
 		this.cloneTo(dest);

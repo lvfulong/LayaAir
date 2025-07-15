@@ -32,23 +32,23 @@ namespace laya
 
 		static Vector3 _Up;
 
-		double x;
-		double y;
-		double z;
+		float x;
+		float y;
+		float z;
 
-		static double distanceSquared(const Vector3& value1, const Vector3& value2)
+		static float distanceSquared(const Vector3& value1, const Vector3& value2)
 		{
-			double x = value1.x - value2.x;
-			double y = value1.y - value2.y;
-			double z = value1.z - value2.z;
+			float x = value1.x - value2.x;
+			float y = value1.y - value2.y;
+			float z = value1.z - value2.z;
 			return (x * x) + (y * y) + (z * z);
 		}
 
-		static double distance(const Vector3& value1, const Vector3& value2)
+		static float distance(const Vector3& value1, const Vector3& value2)
 		{
-			double x = value1.x - value2.x;
-			double y = value1.y - value2.y;
-			double z = value1.z - value2.z;
+			float x = value1.x - value2.x;
+			float y = value1.y - value2.y;
+			float z = value1.z - value2.z;
 			return sqrt((x * x) + (y * y) + (z * z));
 		}
 
@@ -68,21 +68,21 @@ namespace laya
 
 		static void transformQuat(const Vector3& source, const Quaternion& rotation, Vector3& out);
 
-		static double scalarLength(const Vector3& a)
+		static float scalarLength(const Vector3& a)
 		{
-			double x = a.x, y = a.y, z = a.z;
+			float x = a.x, y = a.y, z = a.z;
 			return sqrt(x * x + y * y + z * z);
 		}
 
-		static double scalarLengthSquared(const Vector3& a)
+		static float scalarLengthSquared(const Vector3& a)
 		{
-			double x = a.x, y = a.y, z = a.z;
+			float x = a.x, y = a.y, z = a.z;
 			return x * x + y * y + z * z;
 		}
 		static void normalize(const Vector3& s, Vector3& out)
 		{
-			double x = s.x, y = s.y, z = s.z;
-			double len = x * x + y * y + z * z;
+			float x = s.x, y = s.y, z = s.z;
+			float len = x * x + y * y + z * z;
 			if (len > 0)
 			{
 				len = 1.0f / sqrt(len);
@@ -99,16 +99,16 @@ namespace laya
 			out.z = a.z * b.z;
 		}
 
-		static void scale(const Vector3& a, double b, Vector3& out)
+		static void scale(const Vector3& a, float b, Vector3& out)
 		{
 			out.x = a.x * b;
 			out.y = a.y * b;
 			out.z = a.z * b;
 		}
 
-		static void lerp(const Vector3& a, const Vector3& b, double t, Vector3& out)
+		static void lerp(const Vector3& a, const Vector3& b, float t, Vector3& out)
 		{
-			double ax = a.x, ay = a.y, az = a.z;
+			float ax = a.x, ay = a.y, az = a.z;
 			out.x = ax + t * (b.x - ax);
 			out.y = ay + t * (b.y - ay);
 			out.z = az + t * (b.z - az);
@@ -124,17 +124,17 @@ namespace laya
 
 		static void Clamp(const Vector3& value, const Vector3& min, const Vector3& max , Vector3&out )
 		{
-			double x = value.x;
-			double y = value.y;
-			double z = value.z;
+			float x = value.x;
+			float y = value.y;
+			float z = value.z;
 
-			double mineX = min.x;
-			double mineY = min.y;
-			double mineZ = min.z;
+			float mineX = min.x;
+			float mineY = min.y;
+			float mineZ = min.z;
 
-			double maxeX = max.x;
-			double maxeY = max.y;
-			double maxeZ = max.z;
+			float maxeX = max.x;
+			float maxeY = max.y;
+			float maxeZ = max.z;
 
 			x = (x > maxeX) ? maxeX : x;
 			x = (x < mineX) ? mineX : x;
@@ -166,13 +166,13 @@ namespace laya
 
 		static void cross(const Vector3& a, const Vector3& b, Vector3& o)
 		{
-			double ax = a.x, ay = a.y, az = a.z, bx = b.x, by = b.y, bz = b.z;
+			float ax = a.x, ay = a.y, az = a.z, bx = b.x, by = b.y, bz = b.z;
 			o.x = ay * bz - az * by;
 			o.y = az * bx - ax * bz;
 			o.z = ax * by - ay * bx;
 		}
 
-		static double dot(const Vector3& a, const Vector3& b)
+		static float dot(const Vector3& a, const Vector3& b)
 		{
 			return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
 		}
@@ -181,28 +181,31 @@ namespace laya
 		{
 			return MathUtils3D::nearEqual(a.x, b.x) && MathUtils3D::nearEqual(a.y, b.y) && MathUtils3D::nearEqual(a.z, b.z);
 		}
-	
-		Vector3(double x = 0.0f, double y = 0.0f, double z = 0.0f)
+		bool equalsStrict(const Vector3& other)
+		{
+			return memcmp(this, &other, 3 * sizeof(float)) == 0;
+		}
+		Vector3(float x = 0.0f, float y = 0.0f, float z = 0.0f)
 		{
 			this->x = x;
 			this->y = y;
 			this->z = z;
 		}
-		void setValue(double x, double y, double z)
+		void setValue(float x, float y, float z)
 		{
 			this->x = x;
 			this->y = y;
 			this->z = z;
 		}
 
-		void fromArray(double* array, int offset = 0)
+		void fromArray(float* array, int offset = 0)
 		{
 			this->x = array[offset + 0];
 			this->y = array[offset + 1];
 			this->z = array[offset + 2];
 		}
 
-		void toArray(double* array, int offset = 0)
+		void toArray(float* array, int offset = 0)
 		{
 			array[offset + 0] = this->x;
 			array[offset + 1] = this->y;
