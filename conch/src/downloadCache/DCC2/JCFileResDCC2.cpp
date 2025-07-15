@@ -61,21 +61,29 @@ void JCFileResDCC2::onDownloaded(const std::shared_ptr<Data> &data, const std::s
         return onDownloadError(0, 0, p_cbref); // 不知道错误码
     }
 #endif
-    m_data = data;
-    m_strLocalPath = pszLocalPach ? pszLocalPach : "";
-    if (!m_bSendToJS_complete)
+    if (pnCurlRet != 0 || (pnHttpRet >= 400 && pnHttpRet < 500))
     {
         std::weak_ptr<int> wptr(m_CallbackRef);
-        m_bSendToJS_complete = true; // 这里肯定是js线程，可以处理这个标志
-        if (isScriptThread())
+        return onDownloadError(pnCurlRet, pnHttpRet, wptr);
+    }
+    else 
+    {
+        m_data = data;
+        m_strLocalPath = pszLocalPach ? pszLocalPach : "";
+        if (!m_bSendToJS_complete)
         {
-            // 如果本身就在js线程，则立即做，这样可以节省一帧
-            onResDownloadOK_JSThread(wptr);
-        }
-        else
-        {
-            std::function<void()> cb = std::bind(&JCFileResDCC2::onResDownloadOK_JSThread, this, wptr);
-            postToJS(cb);
+            std::weak_ptr<int> wptr(m_CallbackRef);
+            m_bSendToJS_complete = true; // 这里肯定是js线程，可以处理这个标志
+            if (isScriptThread())
+            {
+                // 如果本身就在js线程，则立即做，这样可以节省一帧
+                onResDownloadOK_JSThread(wptr);
+            }
+            else
+            {
+                std::function<void()> cb = std::bind(&JCFileResDCC2::onResDownloadOK_JSThread, this, wptr);
+                postToJS(cb);
+            }
         }
     }
 }

@@ -140,8 +140,7 @@ void RTDefineDatas::cloneTo(RTDefineDatas *defines)
         var mask : Array<number> = this._mask;*/
     int32_t count = _length;
     defines->_mask.resize(count);
-    for (uint32_t i = 0; i < count; i++)
-        defines->_mask[i] = _mask[i];
+    memcpy(defines->_mask.data(), _mask.data(), count * sizeof(int32_t));
     defines->_length = _length;
 }
 void RTDefineDatas::destroy()
