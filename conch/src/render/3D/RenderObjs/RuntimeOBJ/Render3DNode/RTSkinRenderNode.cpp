@@ -34,10 +34,10 @@ namespace laya
 					
 			}
 			else {
-				if (bones.size() == 0)
-					return;
-				JSRTTransform* bone = bones[index];
-				if (bone) {
+				if (bones.size() > index)
+				{
+					JSRTTransform* bone = bones.at(index);
+					DEBUG_CHECK(bone != nullptr);
 					laya::Utils3D::_mulMatrixArray(bone->getWorldMatrix().elements, inverseBindPose[index].elements, 0, data, k * 16);
 				}
 					
