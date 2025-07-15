@@ -650,9 +650,7 @@ namespace laya
 			if (s == d) {
 				return;
 			}
-			for (i = 0; i < 16; ++i) {
-				d[i] = s[i];
-			}
+			memcpy(d, s, 16 * sizeof(float));
 		}
 
 		/*cloneByArray(destObject:Float32Array) {
