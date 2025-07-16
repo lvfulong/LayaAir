@@ -29,6 +29,108 @@ enum PROFILER_SYSTEM
 #define Profiler_MarkFrameStart(name)
 #define Profiler_MarkFrameEnd(name)
 #endif
+
+
+
+#if defined(TRACY_PROFILER_ENABLED)
+namespace laya
+{
+enum class Category: uint32_t
+{
+    Common = 1 << 0,
+    System = 1 << 1,
+    Render = 1 << 2,
+    JavaScriptCommon = 1 << 3,
+    Wait = 1 << 4,
+    Audio = 1 << 5,
+    IO = 1 << 6,
+    None = 0,
+    All = static_cast<std::underlying_type_t<Category>>(0xffffffff),
+};
+
+enum class CategoryColor: uint32_t
+{
+    Common = tracy::Color::Gray,
+    System = tracy::Color::Olive,
+    Render = tracy::Color::ForestGreen,
+    JavaScriptCommon = tracy::Color::DarkBlue3,
+    Wait = tracy::Color::Goldenrod,
+    Audio = tracy::Color::Tomato,
+    IO = tracy::Color::SaddleBrown,
+};
+
+using CategoryType = std::underlying_type_t<Category>;
+
+constexpr Category operator&(Category a, Category b)
+{
+    return static_cast<Category>(static_cast<CategoryType>(a) & static_cast<CategoryType>(b));
+}
+
+constexpr Category operator|(Category a, Category b)
+{
+    return static_cast<Category>(static_cast<CategoryType>(a) | static_cast<CategoryType>(b));
+}
+
+constexpr Category operator^(Category a, Category b)
+{
+    return static_cast<Category>(static_cast<CategoryType>(a) ^ static_cast<CategoryType>(b));
+}
+
+constexpr Category operator~(Category x)
+{
+    return static_cast<Category>(~static_cast<CategoryType>(x));
+}
+
+constexpr Category operator&=(Category &x, Category y)
+{
+    x = x & y;
+    return x;
+}
+
+constexpr Category operator|=(Category &x, Category y)
+{
+    x = x | y;
+    return x;
+}
+
+constexpr Category operator^=(Category &x, Category y)
+{
+    x = x ^ y;
+    return x;
+}
+
+extern Category g_categoryFilter;
+}
+
+#define TRACE_CATEGORY_FILTER (laya::g_categoryFilter)
+#define TRACE_CATEGORY_IS_ENABLED_I(category) (static_cast<std::underlying_type_t<laya::Category>>(TRACE_CATEGORY_FILTER & laya::Category::category)
+#define TRACE_CATEGORY_IS_ENABLED(category) (static_cast<bool>(TRACE_CATEGORY_FILTER & laya::Category::category))
+#define TRACE_CATEGORY_COLOR(category) (static_cast<uint32_t>(laya::CategoryColor::category))
+#endif 
+
+#if defined(TRACY_ENABLED)
+#include <tracy/Tracy.hpp>
+#define ZoneScoped_Category(category) ZoneNamedC(__tracy_scoped_zone, TRACE_CATEGORY_COLOR(category), TRACE_CATEGORY_IS_ENABLED(category))
+#define ZoneScopedN_Category(name, category) ZoneNamedNC(__tracy_scoped_zone, name, TRACE_CATEGORY_COLOR(category), TRACE_CATEGORY_IS_ENABLED(category))
+#define ZoneScopedC_Category(color, category) ZoneNamedC(__tracy_scoped_zone, color, TRACE_CATEGORY_IS_ENABLED(category))
+#define ZoneScopedNC_Category(name, color, category) ZoneNamedNC(__tracy_scoped_zone, name, color, TRACE_CATEGORY_IS_ENABLED(category))
+
+#define ZoneScoped ZoneScoped_Category(Common)
+#define ZoneScopedN(name) ZoneScopedN_Category(name, Common)
+#define ZoneScopedC(color) ZoneScopedC_Category(color, Common)
+#define ZoneScopedNC(name, color) ZoneScopedNC_Category(name, color, Common)
+#else
+#define ZoneScoped_Category(category)
+#define ZoneScopedN_Category(name, category)
+#define ZoneScopedC_Category(color, category)
+#define ZoneScopedNC_Category(name, color, category)
+#define ZoneScoped
+#define ZoneScopedN(name)
+#define ZoneScopedC(color)
+#define ZoneScopedNC(name, color)
+#endif
+
+
 namespace laya
 {
 void Profiler_ZoneStartForJS(const std::string &strName);
