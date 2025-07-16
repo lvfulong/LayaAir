@@ -50,22 +50,22 @@ void JSConsole::log(int p_nType, const char *p_sBuffer)
     switch (logType)
     {
     case LogType::Warn:
-        LOGW(" %s", p_sBuffer);
+        LOGW("%s", p_sBuffer);
         break;
     case LogType::Error:
-        LOGE(" %s", p_sBuffer);
+        LOGE("%s", p_sBuffer);
         break;
     case LogType::Debug:
-        LOGD(" %s", p_sBuffer);
+        LOGD("%s", p_sBuffer);
         break;
     case LogType::Info:
-        LOGI(" %s", p_sBuffer);
+        LOGI("%s", p_sBuffer);
         break;
     case LogType::Fatal:
-        LOGF(" %s", p_sBuffer);
+        LOGF("%s", p_sBuffer);
         break;
     default:
-        LOGI(" %s", p_sBuffer);
+        LOGI("%s", p_sBuffer);
         break;
     }
 #endif

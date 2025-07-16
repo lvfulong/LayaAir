@@ -160,7 +160,7 @@ class XMLHttpRequest extends EventTarget{
     open(type:string,url:string,async:boolean)
     {
         //url = encodeURI(url);
-        console.log('xhr.'+type+' url='+url);
+        //console.log('xhr.'+type+' url='+url);
         if(!url)return;
 		type=type.toUpperCase();
 		async=true;

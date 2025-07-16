@@ -22,23 +22,23 @@ namespace laya
 		//static Quaternion NAN;
 
 
-		double x;
-		double y;
-		double z;
-		double w;
+		float x;
+		float y;
+		float z;
+		float w;
 
-		static void createFromYawPitchRoll(double yaw, double pitch, double roll, Quaternion& out)
+		static void createFromYawPitchRoll(float yaw, float pitch, float roll, Quaternion& out)
 		{
-			double halfRoll = roll * 0.5f;
-			double halfPitch = pitch * 0.5f;
-			double halfYaw = yaw * 0.5f;
+			float halfRoll = roll * 0.5f;
+			float halfPitch = pitch * 0.5f;
+			float halfYaw = yaw * 0.5f;
 
-			double sinRoll = sin(halfRoll);
-			double cosRoll = cos(halfRoll);
-			double sinPitch = sin(halfPitch);
-			double cosPitch = cos(halfPitch);
-			double sinYaw = sin(halfYaw);
-			double cosYaw = cos(halfYaw);
+			float sinRoll = sin(halfRoll);	
+			float cosRoll = cos(halfRoll);
+			float sinPitch = sin(halfPitch);
+			float cosPitch = cos(halfPitch);
+			float sinYaw = sin(halfYaw);
+			float cosYaw = cos(halfYaw);
 
 
 			out.x = (cosYaw * sinPitch * cosRoll) + (sinYaw * cosPitch * sinRoll);
@@ -49,25 +49,25 @@ namespace laya
 
 		static void multiply(const Quaternion& left, const Quaternion& right, Quaternion& out)
 		{
-			double lx = left.x;
-			double ly = left.y;
-			double lz = left.z;
-			double lw = left.w;
-			double rx = right.x;
-			double ry = right.y;
-			double rz = right.z;
-			double rw = right.w;
-			double a = (ly * rz - lz * ry);
-			double b = (lz * rx - lx * rz);
-			double c = (lx * ry - ly * rx);
-			double d = (lx * rx + ly * ry + lz * rz);
+			float lx = left.x;
+			float ly = left.y;
+			float lz = left.z;
+			float lw = left.w;
+			float rx = right.x;
+			float ry = right.y;
+			float rz = right.z;
+			float rw = right.w; 
+			float a = (ly * rz - lz * ry);
+			float b = (lz * rx - lx * rz);
+			float c = (lx * ry - ly * rx);
+			float d = (lx * rx + ly * ry + lz * rz);
 			out.x = (lx * rw + rx * lw) + a;
 			out.y = (ly * rw + ry * lw) + b;
 			out.z = (lz * rw + rz * lw) + c;
 			out.w = lw * rw - d;
 		}
 
-		static double arcTanAngle(double x, double y)
+		static float arcTanAngle(float x, float y)
 		{
 			if (x == 0.0f)
 			{
@@ -95,10 +95,10 @@ namespace laya
 			angle.y = Quaternion::arcTanAngle(-Quaternion::TEMPVector30.z, -Quaternion::TEMPVector30.x);
 		}
 
-		static void createFromAxisAngle(const Vector3& axis, double rad, Quaternion& out)
+		static void createFromAxisAngle(const Vector3& axis, float rad, Quaternion& out)
 		{
 			rad = rad * 0.5f;
-			double s = sin(rad);
+			float s = sin(rad);
 			out.x = s * axis.x;
 			out.y = s * axis.y;
 			out.z = s * axis.z;
@@ -109,9 +109,9 @@ namespace laya
 
 		static Quaternion& slerp(const Quaternion& left, const Quaternion& right, double t, Quaternion& out)
 		{
-			double ax = left.x, ay = left.y, az = left.z, aw = left.w, bx = right.x, by = right.y, bz = right.z, bw = right.w;
+			float ax = left.x, ay = left.y, az = left.z, aw = left.w, bx = right.x, by = right.y, bz = right.z, bw = right.w;
 
-			double omega, cosom, sinom, scale0, scale1;
+			float omega, cosom, sinom, scale0, scale1;
 
 			// calc cosine 
 			cosom = ax * bx + ay * by + az * bz + aw * bw;
@@ -151,7 +151,7 @@ namespace laya
 
 		static void lerp(const Quaternion& left, const Quaternion& right, double amount, Quaternion& out)
 		{
-			double inverse = 1.0f - amount;
+			float inverse = 1.0f - amount;
 			if (Quaternion::dot(left, right) >= 0.0f)
 			{
 				out.x = (inverse * left.x) + (amount * right.x);
@@ -177,12 +177,12 @@ namespace laya
 			out.w = left.w + right.w;
 		}
 
-		static double dot(const Quaternion& left, const Quaternion& right)
+		static float dot(const Quaternion& left, const Quaternion& right)
 		{
 			return left.x * right.x + left.y * right.y + left.z * right.z + left.w * right.w;
 		}
 
-		Quaternion(double x = 0.0f, double y = 0.0f, double z = 0.0f, double w = 1.0f)
+		Quaternion(float x = 0.0f, float y = 0.0f, float z = 0.0f, float w = 1.0f)
 		{
 			this->x = x;
 			this->y = y;
@@ -190,7 +190,7 @@ namespace laya
 			this->w = w;
 		}
 
-		void setValue(double x, double y, double z, double w)
+		void setValue(float x, float y, float z, float w)
 		{
 			this->x = x;
 			this->y = y;
@@ -198,7 +198,7 @@ namespace laya
 			this->w = w;
 		}
 
-		void scaling(double scaling, Quaternion& out)
+		void scaling(float scaling, Quaternion& out)
 		{
 			out.x = this->x * scaling;
 			out.y = this->y * scaling;
@@ -208,7 +208,7 @@ namespace laya
 
 		void normalize(Quaternion& out) 
 		{
-			double len = this->x * this->x + this->y * this->y + this->z * this->z + this->w * this->w;
+			float len = this->x * this->x + this->y * this->y + this->z * this->z + this->w * this->w;
 			if (len > 0)
 			{
 				len = 1 / sqrt(len);
@@ -218,16 +218,16 @@ namespace laya
 				out.w = this->w * len;
 			}
 		}
-		double length()
+		float length()
 		{
 			return sqrt(this->x * this->x + this->y * this->y + this->z * this->z + this->w * this->w);
 		}
 
-		void rotateX(double rad, Quaternion& out)
+		void rotateX(float rad, Quaternion& out) 
 		{
 			rad *= 0.5f;
 
-			double bx = sin(rad), bw = cos(rad);
+			float bx = sin(rad), bw = cos(rad);
 
 			out.x = this->x * bw + this->w * bx;
 			out.y = this->y * bw + this->z * bx;
@@ -235,11 +235,11 @@ namespace laya
 			out.w = this->w * bw - this->x * bx;
 		}
 
-		void rotateY(double rad, Quaternion& out)
+		void rotateY(float rad, Quaternion& out)
 		{
 			rad *= 0.5f;
 
-			double by = sin(rad), bw = cos(rad);
+			float by = sin(rad), bw = cos(rad);
 
 			out.x = this->x * bw - this->z * by;
 			out.y = this->y * bw + this->w * by;
@@ -247,10 +247,10 @@ namespace laya
 			out.w = this->w * bw - this->y * by;
 		}
 
-		void rotateZ(double rad, Quaternion& out)
+		void rotateZ(float rad, Quaternion& out)
 		{
 			rad *= 0.5f;
-			double bz = sin(rad), bw = cos(rad);
+			float bz = sin(rad), bw = cos(rad);
 
 			out.x = this->x * bw + this->y * bz;
 			out.y = this->y * bw - this->x * bz;
@@ -261,9 +261,9 @@ namespace laya
 		void getYawPitchRoll(Vector3& out) const;
 		void invert(Quaternion& out) const
 		{
-			double a0 = this->x, a1 = this->y, a2 = this->z, a3  = this->w;
-			double dot = a0 * a0 + a1 * a1 + a2 * a2 + a3 * a3;
-			double invDot = dot ? 1.0f / dot : 0.0f;
+			float a0 = this->x, a1 = this->y, a2 = this->z, a3  = this->w;
+			float dot = a0 * a0 + a1 * a1 + a2 * a2 + a3 * a3;
+			float invDot = dot ? 1.0f / dot : 0.0f;
 
 			// TODO: Would be faster to return [0,0,0,0] immediately if dot == 0
 			out.x = -a0 * invDot;
@@ -279,7 +279,7 @@ namespace laya
 			this->z = 0.0f;
 			this->w = 1.0f;
 		}
-		void fromArray(double* farray, int offset = 0)
+		void fromArray(float* farray, int offset = 0)
 		{
 			this->x = farray[offset + 0];
 			this->y = farray[offset + 1];
@@ -305,7 +305,10 @@ namespace laya
 		{
 			return MathUtils3D::nearEqual(this->x, b.x) && MathUtils3D::nearEqual(this->y, b.y) && MathUtils3D::nearEqual(this->z, b.z) && MathUtils3D::nearEqual(this->w, b.w);
 		}
-
+		bool equalsStrict(const Quaternion& other)
+		{
+			return memcmp(this, &other, 4 * sizeof(float)) == 0;
+		}
 		static void rotationLookAt(const Vector3& forward, const Vector3& up, Quaternion& out)
 		{
 			Quaternion::lookAt(Vector3::_ZERO, forward, up, out);
@@ -313,17 +316,17 @@ namespace laya
 
 		static void lookAt(const Vector3& eye, const Vector3& target, const Vector3& up, Quaternion& out);
 
-		double lengthSquared()
+		float lengthSquared()
 		{
 			return (this->x * this->x) + (this->y * this->y) + (this->z * this->z) + (this->w * this->w);
 		}
-		double lengthSquared() const
+		float lengthSquared() const
 		{
 			return (this->x * this->x) + (this->y * this->y) + (this->z * this->z) + (this->w * this->w);
 		}
 		static void invert(const Quaternion& value, Quaternion& out)
 		{
-			double lengthSq = value.lengthSquared();
+			float lengthSq = value.lengthSquared();  
 			if (!MathUtils3D::isZero(lengthSq)) {
 				lengthSq = 1.0f / lengthSq;
 

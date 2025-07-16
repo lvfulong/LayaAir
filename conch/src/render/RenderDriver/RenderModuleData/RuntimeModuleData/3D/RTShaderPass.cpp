@@ -30,8 +30,8 @@ void RTShaderPass::setCacheShader(RTDefineDatas *compileDefine, GLESShaderInstan
 {
     void *cacheShaders = &_cacheSharders;
     // var mask : Array<number> = compileDefine._mask;
-    uint32_t endIndex = compileDefine->_length - 1;
-    uint32_t maxEndIndex = _cacheShaderHierarchy - 1;
+    int32_t endIndex = compileDefine->_length - 1;
+    int32_t maxEndIndex = _cacheShaderHierarchy - 1;
     for (uint32_t i = 0; i < maxEndIndex; i++)
     {
         uint32_t subMask = endIndex < i ? 0 : compileDefine->_mask[i];
@@ -64,8 +64,8 @@ RTShaderPass::CacheShaderItem *RTShaderPass::getCacheShader(RTDefineDatas *compi
         _cacheShaderHierarchy = maskLength;
     }
     // var mask : Array<number> = compileDefine._mask;
-    uint32_t endIndex = compileDefine->_length - 1;
-    uint32_t maxEndIndex = _cacheShaderHierarchy - 1;
+    int32_t endIndex = compileDefine->_length - 1;
+    int32_t maxEndIndex = _cacheShaderHierarchy - 1;
     for (uint32_t i = 0; i < maxEndIndex; i++)
     {
         uint32_t subMask = endIndex < i ? 0 : compileDefine->_mask[i];
@@ -160,6 +160,7 @@ void RTShaderPass::setAdditionShaderData(const std::vector<std::string>& value)
 }
 void RTShaderPass::destroy()
 {
-    // todo
+    m_createShaderInstanceFunctionJS.reset();
+    nodeCommonMap.clear();
 }
 } // namespace laya

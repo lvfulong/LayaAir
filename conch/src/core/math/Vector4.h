@@ -85,7 +85,7 @@ namespace laya
 
 		static bool equals(const Vector4& a, const Vector4& b)
 		{
-			return MathUtils3D::nearEqual(abs(a.x), abs(b.x)) && MathUtils3D::nearEqual(abs(a.y), abs(b.y)) && MathUtils3D::nearEqual(abs(a.z), abs(b.z)) && MathUtils3D::nearEqual(abs(a.w), abs(b.w));
+			return MathUtils3D::nearEqual(a.x, b.x) && MathUtils3D::nearEqual(a.y, b.y) && MathUtils3D::nearEqual(a.z, b.z) && MathUtils3D::nearEqual(a.w, b.w);
 		}
 		bool equalsStrict(const Vector4& other)
 		{

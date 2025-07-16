@@ -17,7 +17,7 @@
         android:maxHeight="200dp"
         android:maxWidth="200dp"
         android:src="@drawable/layabox"
-        tools:scaleType="fitCenter" />
+        android:scaleType="fitCenter" />
 
     <TextView
         android:id="@+id/tipsView"

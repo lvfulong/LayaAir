@@ -19,7 +19,7 @@ namespace laya
 
 	void Vector3::transformQuat(const Vector3& source, const Quaternion& rotation, Vector3& out)
 	{
-		double x = source.x, y = source.y, z = source.z, qx = rotation.x, qy = rotation.y, qz = rotation.z, qw = rotation.w,
+		float x = source.x, y = source.y, z = source.z, qx = rotation.x, qy = rotation.y, qz = rotation.z, qw = rotation.w,
 
 			ix = qw * x + qy * z - qz * y, iy = qw * y + qz * x - qx * z, iz = qw * z + qx * y - qy * x, iw = -qx * x - qy * y - qz * z;
 
