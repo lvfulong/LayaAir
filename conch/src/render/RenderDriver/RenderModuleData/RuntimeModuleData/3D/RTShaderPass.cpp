@@ -8,7 +8,6 @@ RTShaderPass::RTShaderPass()
 
 RTShaderPass::~RTShaderPass()
 {
-    // TODO
 }
 void RTShaderPass::setCacheShaderJS(RTDefineDatas *compileDefine, GLESShaderInstance* shader, jsvm_value jsShaderInstanceWrapper)
 {
@@ -66,7 +65,7 @@ RTShaderPass::CacheShaderItem *RTShaderPass::getCacheShader(RTDefineDatas *compi
     // var mask : Array<number> = compileDefine._mask;
     int32_t endIndex = compileDefine->_length - 1;
     int32_t maxEndIndex = _cacheShaderHierarchy - 1;
-    for (uint32_t i = 0; i < maxEndIndex; i++)
+    for (int32_t i = 0; i < maxEndIndex; i++)
     {
         uint32_t subMask = endIndex < i ? 0 : compileDefine->_mask[i];
         std::unordered_map<uint32_t, void *> *maped = (std::unordered_map<uint32_t, void *> *)cacheShaders;
@@ -95,7 +94,7 @@ RTShaderPass::CacheShaderItem *RTShaderPass::getCacheShader(RTDefineDatas *compi
 
 void RTShaderPass::_resizeCacheShaderMap(void *cacheMap, uint32_t hierarchy, uint32_t resizeLength)
 {
-    uint32_t end = _cacheShaderHierarchy - 1;
+    int32_t end = _cacheShaderHierarchy - 1;
     if (hierarchy == end)
     {
         std::unordered_map<uint32_t, void *>* shaderinstanceMap =
