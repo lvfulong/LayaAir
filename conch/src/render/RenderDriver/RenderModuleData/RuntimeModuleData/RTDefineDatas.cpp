@@ -89,9 +89,9 @@ void RTDefineDatas::clear()
 
 void RTDefineDatas::addDefineDatas(RTDefineDatas *defines)
 {
-    if (defines == nullptr || defines->_mask.empty())
+    if (defines == nullptr)
     {   
-        LOGE("defines is nullptr or empty");
+        LOGE("defines is nullptr");
         return;
     }
     // var addMask : Array<number> = define._mask;

@@ -150,6 +150,7 @@ list(APPEND CONCH_SRC
 	src/render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLShaderInstance.cpp
 	src/render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLObject.h
 	src/render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLObject.cpp
+	src/render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/Disposable.h
 	src/render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLEnum/WebGLExtension.h
 	src/render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLEnum/WebGLMode.h
 	src/render/RenderDriver/OpenGLESDriver/RenderDevice/GLESEngine/GLBuffer.h
